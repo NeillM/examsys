@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -39,9 +39,9 @@ if (!isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['copyontopaper']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -49,15 +49,12 @@ if (!isset($_POST['submit'])) {
     td {font-size:80%}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
     function checkForm() {
-      checkOption = -1
-      for (i=0; i<theForm.property_id.length; i++) {
-        if (theForm.property_id[i].checked) {
-          checkOption = i;
-        }
-      }
-      if (checkOption == -1) {
+      var checkOption = $('input:radio[name=property_id]:checked').val();
+
+      if (typeof checkOption == 'undefined') {
         alert("Please select which paper you would like to add the question to.");
         return false;
       }
@@ -96,7 +93,7 @@ if (!isset($_POST['submit'])) {
 
   <p style="margin:4px; text-align:justify; font-size:70%"><img src="../artwork/small_warning_16.png" width="16" height="16" alt="<?php echo $string['warning']; ?>" border="0" /><?php echo $string['msg1']; ?></p>
   <p style="margin:4px; text-align:justify; font-size:70%"><img src="../artwork/small_padlock.png" width="16" height="16" alt="<?php echo $string['warning']; ?>" border="0" /><?php echo $string['msg2']; ?></p>
-  
+
   <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:4px" id="paperlist">
   <table cellpadding="0" cellspacing="1" border="0" width="95%">
 <?php
@@ -114,7 +111,7 @@ if (!isset($_POST['submit'])) {
     }
   }
   $result->close();
-  
+
   echo "</table>\n</div>";
   echo "<div align=\"center\"><input type=\"submit\" style=\"width:120px\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" style=\"width:120px\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
@@ -126,7 +123,7 @@ if (!isset($_POST['submit'])) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
   <title><?php echo $string['copyontopaper']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; text-align:center}
@@ -139,7 +136,7 @@ if (!isset($_POST['submit'])) {
   $logger = new Logger($mysqli);
 
   //- Handle paper data first ------------------------------------------------------------------------------------------------------------------------------------
-  
+
   // Get the maximum display position for an existing paper.
   $result = $mysqli->prepare("SELECT MAX(display_pos), MAX(screen) FROM papers WHERE paper=?");
   $result->bind_param('i', $property_id);
@@ -152,7 +149,7 @@ if (!isset($_POST['submit'])) {
 
   //- Copy the question(s) ------------------------------------------------------------------------------------------------------------------------------------------
   $q_IDs = explode(',', $_GET['q_id']);
-  
+
   for ($i=1; $i<count($q_IDs); $i++) {
     $result = $mysqli->prepare("SELECT * FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
     $result->bind_param('i', $q_IDs[$i]);
@@ -209,7 +206,7 @@ if (!isset($_POST['submit'])) {
           }
         }
       }
-      
+
       if ($line == 0) {  // First record - write out the question, all the rest are options.
         $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
         $addQuestion->bind_param('ssssssssisssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
@@ -223,12 +220,12 @@ if (!isset($_POST['submit'])) {
 
         // Lookup and copy the keywords
         $keywords = QuestionUtils::get_keywords($q_IDs[$i], $mysqli);
-        QuestionUtils::add_keywords($keywords, $question_id, $mysqli);     
+        QuestionUtils::add_keywords($keywords, $question_id, $mysqli);
 
         // Lookup modules
         $modules = QuestionUtils::get_modules($q_IDs[$i], $mysqli);
-        QuestionUtils::add_modules($modules, $question_id, $mysqli);     
-        
+        QuestionUtils::add_modules($modules, $question_id, $mysqli);
+
       }
       $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
       $addOption->bind_param('isssssssddd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
@@ -248,7 +245,7 @@ if (!isset($_POST['submit'])) {
 
   echo "<p>" . sprintf($string['success'], Paper_utils::get_title($property_id, $mysqli)) . "</p>\n";
   echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.close();\" /></p>\n";
-  
+
   $mysqli->close();
 }
 ?>
