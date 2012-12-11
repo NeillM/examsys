@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- *
- * @author Rob Ingram
- * @version 1.0
- * @copyright Copyright (c) 2012 The University of Nottingham
- * @package
- */
-
 // Likert Scales data - this is how the settings are saved, separate columns with vertical bars (<br /> tages can be used for break lines)
 $string['failpass3'] = 'Nie zdany|Na granicy|Zdany';
 $string['lowhigh3'] = 'Niskie||Wysokie';
