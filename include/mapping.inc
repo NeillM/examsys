@@ -553,10 +553,10 @@ function getObjectivesByMapping($thisModuleid, $session, $paperID, $questionID, 
   return $objsByMapping;
 }
 
-function copyObjectives($objectives, $module, $dest_session, $db) {
+function copyObjectives($objectives, $idMod, $module, $dest_session, $db) {
 	// Get highest identifier - can't rely on time as we may loop in < 1 second
-	$result = $db->prepare("SELECT MAX(identifier) AS largest FROM sessions WHERE moduleID = ?");
-	$result->bind_param('s', $module);
+	$result = $db->prepare("SELECT MAX(identifier) AS largest FROM sessions WHERE idMod = ?");
+	$result->bind_param('s', $idMod);
 	$result->execute();
 	$result->bind_result($largest);
 	$i = 0;
@@ -574,8 +574,8 @@ function copyObjectives($objectives, $module, $dest_session, $db) {
 		$occurrence_new = date('Y-m-d H:i:s', mktime(9, 0, 0, $occurrence_parts[1], $occurrence_parts[0], $occurrence_parts[2] + 1));
 		
 		// Save it
-    $stmt = $db->prepare("INSERT INTO sessions(identifier, moduleID, title, source_url, calendar_year, occurrence) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param('ssssss', $identifier, $module, $session['title'], $session['source_url'], $dest_session, $occurrence_new);
+    $stmt = $db->prepare("INSERT INTO sessions(identifier, idMod, title, source_url, calendar_year, occurrence) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('sissss', $identifier, $idMod, $session['title'], $session['source_url'], $dest_session, $occurrence_new);
 		$stmt->execute();
 		$err = $stmt->error;
     $stmt->close();
@@ -600,8 +600,8 @@ function copyObjectives($objectives, $module, $dest_session, $db) {
     if (isset($session['objectives'])) {
       foreach ($session['objectives'] as $objective) {
         // Save them against the new session identifier
-        $stmt = $db->prepare("INSERT INTO objectives(obj_id, objective, moduleID, identifier, calendar_year, sequence) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('issssi', $obj_id, $objective['content'], $module, $identifier, $dest_session, $objective['sequence']);
+        $stmt = $db->prepare("INSERT INTO objectives(obj_id, objective, idMod, identifier, calendar_year, sequence) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('isissi', $obj_id, $objective['content'], $idMod, $identifier, $dest_session, $objective['sequence']);
         $stmt->execute();
         $err = $stmt->error;
         $stmt->close();
