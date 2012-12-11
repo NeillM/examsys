@@ -456,7 +456,7 @@ if ($language != 'en') {
       if ($key == '') {
         echo "<th>";
       } else {
-        echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;";
+        echo "<th class=\"vert_div\">&nbsp;";
       }
       if ($sortby == $key and $ordering == 'asc') {
         echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repcourse=" . $_GET['repcourse'] . "&module=" . $_GET['module'] . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=$percent&direction=$direction&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
@@ -545,8 +545,6 @@ if ($language != 'en') {
         echo '<tr';
         if ($user_results[$i]['questions'] < $question_no) {
           $scatter_data .= "0\n0\n";
-          //fwrite($scatter_file,"0\n");
-          //fwrite($scatter_file,"0\n");
           $class = 'redln';
         } else {
           $class = 'greyln';
@@ -558,8 +556,6 @@ if ($language != 'en') {
             $distribution[$temp_location] = 1;
           }
           $scatter_data .= $temp_location . "\n" . $user_results[$i]['duration'] . "\n";
-          //fwrite($scatter_file,$temp_location . "\n");
-          //fwrite($scatter_file,$user_results[$i]['duration'] . "\n");
         }
         if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
           $role_css = 'staff';
