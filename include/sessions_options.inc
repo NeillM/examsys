@@ -37,15 +37,16 @@ $idMod = $_GET['module'];
 $session = date_utils::get_current_academic_year();
 $vle_api_cache = array();
 $vle_api = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mysqli);
+$module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
 if ($vle_api != '') {
   $vle = VLEFactory::GetVLEAPI($vle_api);
-  $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
   $objsBySession = $vle->getObjectives($module_code, $session);
   $vle_name = $vle->getFriendlyName();
   $vle_name_a = $vle->getFriendlyName(true);
 } else {
   require_once '../include/mapping.inc';
-  $objsBySession = getObjectives($idMod, $session, '', '', $mysqli, 'all');
+  $modules_array = array($idMod => $module_code);
+  $objsBySession = getObjectives($modules_array, $session, '', '', $mysqli, 'all');
 }
 ?>
 <script language="JavaScript">

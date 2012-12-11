@@ -232,8 +232,6 @@ echo '</table><br />';
 
 //get session information
 $result = $mysqli->prepare("SELECT sessions.title, source_url, sessions.calendar_year, sessions.occurrence, obj_id, objective FROM sessions LEFT JOIN objectives ON sessions.identifier=objectives.identifier AND sessions.calendar_year = objectives.calendar_year AND sessions.idMod = objectives.idMod WHERE sessions.idMod = ? and sessions.identifier = ? AND sessions.calendar_year = ? ORDER BY sequence");
-echo "SELECT sessions.title, source_url, sessions.calendar_year, sessions.occurrence, obj_id, objective FROM sessions LEFT JOIN objectives ON sessions.identifier=objectives.identifier AND sessions.calendar_year = objectives.calendar_year AND sessions.idMod = objectives.idMod WHERE sessions.idMod = $moduleID and sessions.identifier = $identifier AND sessions.calendar_year = '$session' ORDER BY sequence";
-echo $mysqli->error;
 $result->bind_param('iis', $moduleID, $identifier, $session);
 $result->execute();
 $result->bind_result($title, $source_url, $calendar_year, $occurrence, $obj_id, $objective);
@@ -254,8 +252,6 @@ while ($result->fetch()) {
   }
 }
 $result->close();
-
-var_dump($sess);
 
 echo "<form name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "\" method=\"post\" onsubmit=\"return checkForm();\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
 

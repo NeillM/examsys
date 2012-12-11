@@ -121,8 +121,8 @@ check_var('module', 'GET', true, false);
   $id = 0;
 	$first = true;
 
-  if (count($objsBySession) > 0 and isset($objsBySession[$_GET['module']])) {
-    foreach ($objsBySession[$_GET['module']] as $session) {
+  if (count($objsBySession) > 0 and isset($objsBySession[$module])) {
+    foreach ($objsBySession[$module] as $session) {
       if (isset($session['objectives'])) {
         $objectives_no = count($session['objectives']);
       } else {
