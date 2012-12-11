@@ -19,8 +19,9 @@ tinyMCE.init({
     content_css : cfgRootPath + "/css/editor.css",
     entity_encoding : "named",
 
-      setup : function(ed) {
-        ed.onInit.add(function(ed, evt) {
+
+    setup : function(ed) {
+      ed.onInit.add(function(ed, evt) {
 
         var dom = ed.dom;
         tinymce.dom.Event.add(dom.getRoot(), 'blur', function(e) {
@@ -37,6 +38,24 @@ tinyMCE.init({
             }
           }
         });
+      });
+
+      // If there is no text content, return nothing.
+      // After http://alastairc.ac/2010/03/removing-emtpy-html-tags-from-tinymce/
+      ed.onPostProcess.add(function(ed, o) {
+        var text = o.content;
+
+        if (text != '') {
+          text = text.replace(/^<div>&nbsp;<\/div>/, '');
+          text = text.replace(/^<p>&nbsp;<\/p>/, '');
+          text = text.replace(/^<div><\/div>/, '');
+          text = text.replace(/^<p><\/p>/, '');
+          text = text.replace(/^<br \/>/, '');
+          text = text.replace(/^<br \/>/, '');
+          text = text.replace(/^<br \/>/, '');
+          text = text.replace(/^\s*/, '');
+        }
+        o.content = text;
       });
     }
 });
