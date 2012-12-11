@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
+* 
 * Class total reports, included functions used in:
-*
+*    
 *    class_totals.php
 *    class_totals_csv.php
 *    class_totals_xml.php
 *    assessment_marks.php
-*
+* 
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -52,7 +52,7 @@ function getRandomDetails($questionID, &$random_q_ids) {
   $old_q_media_height = '';
   $old_correct = array();
   $old_option_text = array();
-
+  
   $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, last_edited, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
   $result->bind_param('i', $questionID);
   $result->execute();
@@ -174,13 +174,13 @@ function get_ss_pass(&$pass_score, &$distinction_score) {
 
   $ebel_marks = array();
   $ebel_percents = array();
-
+  
   $std_types = array('EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2');
   foreach ($std_types as $std_type) {
     $ebel_marks[$std_type] = 0;
     $ebel_percents[$std_type] = 0;
   }
-
+  
   $std_total = 0;
   $question_no = 0;
 
@@ -228,7 +228,7 @@ function get_ss_pass(&$pass_score, &$distinction_score) {
     $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
     $pass_score = ($cut_marks / ($total_marks  * 100)) * 100;
     $pass_score = round($pass_score,1);
-
+    
     if ($ebel_percents['EE2'] === NULL) {
       $distinction_score = -1;
     } else {
@@ -337,7 +337,7 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
       $master_array[$user_number]['adj_percent'] = round(($tmp_user_mark/$total_marks)*100);
     }
   }
-
+  
   $master_array[$user_number]['started'] = $tmp['started'];
   $master_array[$user_number]['username'] = $tmp['username'];
   $master_array[$user_number]['tmp_userID'] = $tmp['tmp_userID'];
@@ -359,9 +359,7 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   $master_array[$user_number]['paper_type'] = $tmp['paper_type'];
   $master_array[$user_number]['room'] = $tmp['room'];
   $master_array[$user_number]['visible'] = 1;    // Default to visible unless switched off below.
-  $master_array[$user_number]['visible'] = 1;    // Default to visible unless switched off below.
-  $master_array[$user_number]['timer_started'] = $tmp['timer_started'];
-
+  
   // Add metadata
   if (!empty($met_array)) {
     foreach ($met_array as $type) {
@@ -372,7 +370,7 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
       }
     }
   }
-
+  
   // Check metadata exclusions
   $i = 1;
   while (isset($_GET["meta$i"])) {
@@ -387,13 +385,11 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   if ($master_array[$user_number]['visible'] == 1) {
     $display_no++;
   }
-
+  
   for ($i=0; $i<$cohort_size; $i++) {
-
     if ($student_cohort[$i]['username'] == $tmp['username']) {
       $student_cohort[$i]['taken'] = 1;
     }
-
   }
   $master_array[$user_number]['marking_complete'] = $marking_comp;
 
@@ -445,7 +441,7 @@ function extract_blank_correct($option_text, $display_method, $paper_buffer, $qu
 $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
 function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status, &$tmp_mark, &$tmp_user_mark_array, $random_q_ids, $tmp_userID) {
   global $paper_buffer, $user_results, $tmp_array, $multi_part_qns, $explodeCache;
-
+    
   if ($status == 'Experimental') $exclude[$q_id] = '1111111111111111111111111111111111111111';
 
   $skip_random = false;
@@ -464,7 +460,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
   } else {
     $question = &$paper_buffer[$q_id];
   }
-
+  
   if (!$skip_random and $question['score_method'] != 'Mark per Question' and isset($multi_part_qns[$question['q_type']])) {
     if ($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') {
       if (!isset($tmp_user_mark_array[$q_id])) $tmp_user_mark_array[$q_id] = array();
@@ -480,7 +476,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       for ($a=0; $a<$count_paper_answers; $a++) {
         if ($paper_answers[$a] != '') {
           $answers_correct = 0;
-          $answers_incorrect = 0;
+          $answers_incorrect = 0;          
           if ($question['q_type'] == 'extmatch') {
             $sub_paper_answers = explode('$', $paper_answers[$a]);
             if (isset($user_answers[$a])) {
@@ -503,7 +499,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
               }
               $section++;
             }
-
+            
             $section_mark = ($answers_correct * $question['marks_correct']) + ($answers_incorrect * $question['marks_incorrect']);
             $tmp_mark += $section_mark;
             // This is excluding whole question parts (not answers/marks).
@@ -552,7 +548,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
                 }
               }
             }
-
+            
             if ($match == true) {
               $tmp_mark += $question['marks_correct'];
               $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
@@ -615,9 +611,9 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       } else {
         $tmp_exclude = '0000000000000000000000000000000000000000';
       }
-
+          
       $correct_labels = array();
-
+      
       $tmp_first_split = explode(';', $question['correct'][0]);
       $tmp_second_split = explode('$', $tmp_first_split[11]);
 
@@ -646,7 +642,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         $tmp_parts = explode('~', $value);
         $correct_labels[$key] = $tmp_parts[0];
       }
-
+   
       $user_split1 = explode(';', $tmp_user_answer);
       $user_split2 = explode('$', $user_split1[1]);
 
@@ -670,7 +666,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         }
         $i++;
       }
-
+      
       // If the user has not answered the question pad out with zero marks.
       if (isset($tmp_user_mark_array[$q_id])) {
         $user_answer_no = count($tmp_user_mark_array[$q_id]);
@@ -682,7 +678,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
           $tmp_user_mark_array[$q_id][] = 0;
         }
       }
-
+      
       $question['correct_labels'] = $correct_labels;
     }
   } else {
@@ -879,66 +875,25 @@ if ($old_status != 'Experimental') {
 $cohort_size = 0;
 $out_of_range = 0;
 if ($_GET['absent'] == 1) {
-
   // Get students in the cohort.
   $student_cohort = array();
-
-  $sql = "SELECT DISTINCT
-                         users.id
-                       , users.username
-                       , title
-                       , surname
-                       , first_names
-                       , initials
-                       , student_id
-                       , grade
-                       , moduleid
-                       , gender
-                       , log_start_time.id
-          FROM
-                ( student_modules, users, sid, log_start_time )
-          WHERE
-                student_modules.userID = sid.userID
-          AND
-                student_modules.userID = users.id
-          AND
-                users.id = log_start_time.userID
-          AND
-                users.roles
-          LIKE
-                '%Student%'
-          AND
-                moduleid
-          IN
-                ('" . str_replace(",","','",$moduleID) . "')
-          AND
-               calendar_year=?";
-
-  $result = $mysqli->prepare( $sql );
+  $result = $mysqli->prepare("SELECT DISTINCT users.id, users.username, title, surname, first_names, initials, student_id, grade, moduleid, gender FROM (student_modules, users, sid) WHERE student_modules.userID=sid.userID AND student_modules.userID=users.id AND users.roles LIKE '%Student%' AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') AND calendar_year=?");
   $result->bind_param('s', $calendar_year);
   $result->execute();
-  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender, $log_log_start_time_id );
+  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
   while ($result->fetch()) {
-    $student_cohort[$cohort_size]['username']    = $tmp_username;
-    $student_cohort[$cohort_size]['tmp_userID']  = $tmp_userID;
-    $student_cohort[$cohort_size]['name']        = str_replace("'","",$surname) . ',' . $first_names;
-    $student_cohort[$cohort_size]['title']       = $title;
-    $student_cohort[$cohort_size]['surname']     = demo_replace($surname, $demo);
+    $student_cohort[$cohort_size]['username'] = $tmp_username;
+    $student_cohort[$cohort_size]['tmp_userID'] = $tmp_userID;
+    $student_cohort[$cohort_size]['name'] = str_replace("'","",$surname) . ',' . $first_names;
+    $student_cohort[$cohort_size]['title'] = $title;
+    $student_cohort[$cohort_size]['surname'] = demo_replace($surname, $demo);
     $student_cohort[$cohort_size]['first_names'] = demo_replace($first_names, $demo);
-    $student_cohort[$cohort_size]['initials']    = demo_replace($initials, $demo);
-    $student_cohort[$cohort_size]['student_id']  = demo_replace_number($student_id, $demo);
-    $student_cohort[$cohort_size]['grade']       = $grade;
-    $student_cohort[$cohort_size]['module']      = $moduleid;
-    $student_cohort[$cohort_size]['gender']      = $gender;
-    $student_cohort[$cohort_size]['taken']       = 0;
-
-    $student_cohort[$cohort_size]['timer_started'] = false;
-
-    if( $log_log_start_time_id != null){
-      $student_cohort[$cohort_size]['timer_started'] = true;
-    }
-
-
+    $student_cohort[$cohort_size]['initials'] = demo_replace($initials, $demo);
+    $student_cohort[$cohort_size]['student_id'] = demo_replace_number($student_id, $demo);
+    $student_cohort[$cohort_size]['grade'] = $grade;
+    $student_cohort[$cohort_size]['module'] = $moduleid;
+    $student_cohort[$cohort_size]['gender'] = $gender;
+    $student_cohort[$cohort_size]['taken'] = 0;
     $cohort_size++;
   }
   $result->close();
@@ -992,142 +947,20 @@ if (isset($_GET['studentsonly']) and $_GET['studentsonly'] == 0) {
 
 // Get log data.
 if ($paper_type == '0') {
-
-  $cfg_long_date_time = $configObject->get('cfg_long_date_time');
-
-  $sql = '  (SELECT DISTINCT log0.q_id
-                          , 0 AS paper_type
-                          , grade
-                          , roles
-                          , screen
-                          , duration
-                          , log0.started AS order_started
-                          , user_answer
-                          , DATE_FORMAT( log0.started, "' . $cfg_long_date_time . '") AS display_started
-                          , log_metadata.year
-                          , title
-                          , surname
-                          , initials
-                          , first_names
-                          , gender
-                          , ipaddress
-                          , username
-                          , users.id
-                          , student_id
-                          , REPLACE( user_answer,"\"","\'" ) AS user_answer
-                          , q_type
-                          , log0.userID
-                          , mark
-                          , status
-                          , attempt
-                          , log_start_time.id
-              FROM
-                  log0, log_metadata, questions,  log_start_time, users
-              LEFT JOIN
-                  sid
-              ON
-                  users.id = sid.userID
-              WHERE
-                  log0.q_paper = log_metadata.paperID
-              AND
-                  log0.userID  = log_metadata.userID
-              AND
-                  log0.started = log_metadata.started
-              AND
-                  log0.q_id    = questions.q_id
-              AND
-                  users.id     = log_start_time.userID
-              AND
-                  q_paper=?
-              AND
-                  users.id = log0.userID
-              AND
-                  grade LIKE ?
-              ' . $roles_sql . '
-              AND
-                  log0.started >= ?
-              AND
-                  log0.started <= ? )
-            UNION ALL
-                ( SELECT
-                      log1.q_id
-                    , 1 AS paper_type
-                    , grade
-                    , roles
-                    , screen
-                    , duration
-                    , log1.started AS order_started
-                    , user_answer
-                    , DATE_FORMAT( log1.started, "' . $cfg_long_date_time . '" ) AS display_started
-                    , log_metadata.year
-                    , title
-                    , surname
-                    , initials
-                    , first_names
-                    , gender
-                    , ipaddress
-                    , username
-                    , users.id
-                    , student_id
-                    , REPLACE( user_answer,"\"","\'" ) AS user_answer
-                    , q_type
-                    , log1.userID
-                    , mark
-                    , status
-                    , attempt
-                    , log_start_time.id
-                  FROM
-                    (log1, log_metadata, questions, log_start_time, users )
-                  LEFT JOIN
-                        sid
-                  ON
-                        users.id = sid.userID
-                  WHERE
-                        log1.q_paper = log_metadata.paperID
-                  AND
-                        log1.userID  = log_metadata.userID
-                  AND
-                        log1.started = log_metadata.started
-                  AND
-                        log1.q_id    = questions.q_id
-                  AND
-                        users.id     = log_start_time.userID
-                  AND
-                        q_paper=?
-                  AND
-                        users.id = log1.userID
-                  AND
-                        grade LIKE ?
-                  '. $roles_sql . '
-                  AND
-                      log1.started >= ?
-                  AND
-                      log1.started <= ?
-                    )
-                  ORDER BY
-                      userID
-                    , order_started
-                   , screen';
-
-  $log_query = $mysqli->prepare( $sql );
-
-  echo $mysqli->error;
-
+  $log_query = $mysqli->prepare("(SELECT DISTINCT log0.q_id, 0 AS paper_type, grade, roles, screen, duration, log0.started AS order_started, user_answer, DATE_FORMAT(log0.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log0.userID, mark, status, attempt FROM (log0, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log0.q_paper=log_metadata.paperID AND log0.userID=log_metadata.userID AND log0.started=log_metadata.started AND log0.q_id=questions.q_id AND q_paper=? AND users.id=log0.userID AND grade LIKE ? $roles_sql AND log0.started>=? AND log0.started<=?) UNION ALL (SELECT log1.q_id, 1 AS paper_type, grade, roles, screen, duration, log1.started AS order_started, user_answer, DATE_FORMAT(log1.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log1.userID, mark, status, attempt FROM (log1, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log1.q_paper=log_metadata.paperID AND log1.userID=log_metadata.userID AND log1.started=log_metadata.started AND log1.q_id=questions.q_id AND q_paper=? AND users.id=log1.userID AND grade LIKE ? $roles_sql AND log1.started>=? AND log1.started<=?) ORDER BY userID, order_started, screen");
   $log_query->bind_param('isssisss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
-
-
 } elseif ($paper_type == '2') {
-  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, log2.started, user_answer, DATE_FORMAT(log2.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log2.userID, mark, status, attempt, log_start_time.id FROM (log2, log_metadata, questions, log_start_time, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log2.q_paper=log_metadata.paperID AND log2.userID=log_metadata.userID AND log2.started=log_metadata.started AND log2.q_id=questions.q_id AND q_paper=? AND users.id=log2.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log2.started, INTERVAL 2 MINUTE)>=? AND log2.started<=? AND users.id = log_start_time.userID ORDER BY userID, log2.started, screen");
+  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, log2.started, user_answer, DATE_FORMAT(log2.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log2.userID, mark, status, attempt FROM (log2, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log2.q_paper=log_metadata.paperID AND log2.userID=log_metadata.userID AND log2.started=log_metadata.started AND log2.q_id=questions.q_id AND q_paper=? AND users.id=log2.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log2.started, INTERVAL 2 MINUTE)>=? AND log2.started<=? ORDER BY userID, log2.started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '5') {
-  $log_query =   $mysqli->prepare("SELECT DISTINCT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, log5.started, NULL AS user_answer, DATE_FORMAT(log5.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, username, users.id, student_id, NULL AS user_answer, q_type, log5.userID, mark, status, 1 AS attempt, log_start_time.id FROM (log5, log_metadata, questions, log_start_time, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log5.q_paper=log_metadata.paperID AND log5.userID=log_metadata.userID AND log5.started=log_metadata.started AND log5.q_id=questions.q_id AND q_paper=? AND users.id=log5.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log5.started, INTERVAL 2 MINUTE)>=? AND log5.started<=? AND users.id = log_start_time.userID ORDER BY userID, log5.started, screen");
+  $log_query =   $mysqli->prepare("SELECT DISTINCT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, log5.started, NULL AS user_answer, DATE_FORMAT(log5.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, username, users.id, student_id, NULL AS user_answer, q_type, log5.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log5.q_paper=log_metadata.paperID AND log5.userID=log_metadata.userID AND log5.started=log_metadata.started AND log5.q_id=questions.q_id AND q_paper=? AND users.id=log5.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log5.started, INTERVAL 2 MINUTE)>=? AND log5.started<=? ORDER BY userID, log5.started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } else {
-  $log_query = $mysqli->prepare("SELECT DISTINCT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, log$paper_type.started, user_answer, DATE_FORMAT(log$paper_type.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log$paper_type.userID, mark, status, attempt, log_start_time.id FROM (log$paper_type, log_metadata, questions, log_start_time, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND grade LIKE ? $roles_sql AND log$paper_type.started>=? AND log$paper_type.started<=? AND users.id = log_start_time.userID ORDER BY userID, started, screen");
+  $log_query = $mysqli->prepare("SELECT DISTINCT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, log$paper_type.started, user_answer, DATE_FORMAT(log$paper_type.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log$paper_type.userID, mark, status, attempt FROM (log$paper_type, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND grade LIKE ? $roles_sql AND log$paper_type.started>=? AND log$paper_type.started<=? ORDER BY userID, started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 }
 $log_query->execute();
-$log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $gender, $ipaddress, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt, $log_start_time_id );
+$log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $gender, $ipaddress, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt);
 
 $user_no    = 0;
 $display_no = 0;
@@ -1157,7 +990,7 @@ if (isset($_GET['absent'])) {
 } else {
   $absent = 0;
 }
-
+    
 $warnings = array('deleted_qns' => array());
 while ($log_query->fetch() !== null) {
   if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and $user_modules[$tmp_userID]['moduleid'] != $_GET['repmodule']) {
@@ -1176,47 +1009,36 @@ while ($log_query->fetch() !== null) {
       $marking_complete = 1;
     }
     $tmp_array = array();
-    $tmp_array['started']         = $started;
-    $tmp_array['username']        = $username;
-    $tmp_array['tmp_userID']      = $tmp_userID;
-
+    $tmp_array['started'] = $started;
+    $tmp_array['username'] = $username;
+    $tmp_array['tmp_userID'] = $tmp_userID;
     if (isset($user_modules[$tmp_userID]['moduleid'])) {
       $tmp_array['module'] = $user_modules[$tmp_userID]['moduleid'];
     } else {
       $tmp_array['module'] = '';
     }
-
-    $tmp_array['attempt']         = $attempt;
-    $tmp_array['grade']           = $grade;
-    $tmp_array['roles']           = $tmp_roles;
-    $tmp_array['year']            = $year;
+    $tmp_array['attempt'] = $attempt;
+    $tmp_array['grade'] = $grade;
+    $tmp_array['roles'] = $tmp_roles;
+    $tmp_array['year'] = $year;
     $tmp_array['display_started'] = $display_started;
-    $tmp_array['title']           = $title;
-    $tmp_array['name']            = str_replace("'","",$surname) . ',' . $first_names;
-    $tmp_array['surname']         = $surname;
-    $tmp_array['initials']        = $initials;
-    $tmp_array['first_names']     = $first_names;
-    $tmp_array['student_id']      = $student_id;
-    $tmp_array['gender']          = $gender;
-    $tmp_array['ipaddress']       = $ipaddress;
-
+    $tmp_array['title'] = $title;
+    $tmp_array['name'] = str_replace("'","",$surname) . ',' . $first_names;
+    $tmp_array['surname'] = $surname;
+    $tmp_array['initials'] = $initials;
+    $tmp_array['first_names'] = $first_names;
+    $tmp_array['student_id'] = $student_id;
+    $tmp_array['gender'] = $gender;
+    $tmp_array['ipaddress'] = $ipaddress;
     if (isset($ipaddresses[$ipaddress])) {
       $tmp_array['room'] = $ipaddresses[$ipaddress];
     } else {
       $tmp_array['room'] = '<span style="color:#808080">&lt;unknown&gt;</span>';
     }
-
-    $tmp_array['xmean']            = 0;
-    $tmp_array['xmean_adjusted']   = 0;
-    $tmp_array['duration']         = $user_duration;
-    $tmp_array['paper_type']       = $paper_type;
-
-    $tmp_array['timer_started'] = false;
-
-    if( $log_start_time_id != null){
-       $tmp_array['timer_started'] = true;
-    }
-
+    $tmp_array['xmean'] = 0;
+    $tmp_array['xmean_adjusted'] = 0;
+    $tmp_array['duration'] = $user_duration;
+    $tmp_array['paper_type'] = $paper_type;
   }
   getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID);
 
@@ -1240,7 +1062,7 @@ if (!empty($tmp_array)) {
     $log_query->free_result();
     $log_query->close();
     writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $student_metadata_array);
-
+  
     if ($percent < 100) {
       // Sort by mark order.
       $sortby = 'mark';
@@ -1266,7 +1088,7 @@ if (!empty($tmp_array)) {
         }
       }
     }
-
+  
     if ($absent == 1) {
       // Add in students in cohort who haven't taken the exam.
       $count_student_cohort = count($student_cohort);
@@ -1296,18 +1118,17 @@ if (!empty($tmp_array)) {
           $user_results[$user_no]['room'] = '';
           $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
           $user_results[$user_no]['roles'] = 'Student';
-          $user_results[$user_no]['timer_started'] = $student_cohort[$i]['timer_started'];
           $user_no++;
         }
       }
     }
-
+    
     /*
     // Remove additional users from array who do not match passed metadata settings.
     $meta_parts = explode('=',$_GET['meta1']);
     for ($i=0; $i<$user_no; $i++) {
       $type = $meta_parts[0];
-
+      
       if (isset($user_results[$i]) and $user_results[$i]['metadata'][$type] != $meta_parts[1]) {
         $total_mark -= $user_results[$i]['mark'];
         $total_adjusted_mark -= ($user_results[$i]['mark']-$total_random_mark);
@@ -1315,7 +1136,7 @@ if (!empty($tmp_array)) {
       }
     }
     */
-
+    
     // Sort the arrays
     sort($median);
     if (isset($_GET['sortby'])) {
@@ -1343,7 +1164,7 @@ if (!empty($tmp_array)) {
     } else {
       $absent = 0;
     }
-
+    
     $tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
     if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
     $user_results = array_csort($user_results, $tmp_sort, $ordering);
