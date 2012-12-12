@@ -1,0 +1,22 @@
+body {
+  background-color:#FCFCFC;
+  color:black;
+  font-size:90%;
+}
+.mainbox {
+  background-color:#F1F5FB;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:40px;
+  padding:20px;
+  width:400px;
+  border:1px solid #95AEC8;
+  border-radius:5px;
+}
+.field {
+  width:80px;
+}
+.msg {
+  font-size:90%;
+  padding-bottom:10px;
+}
