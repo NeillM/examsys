@@ -303,6 +303,10 @@ class Authentication {
     }
   }
 
+  function display_debug() {
+    var_dump($this->debug);
+  }
+
 }
 
 class authtypereturn {

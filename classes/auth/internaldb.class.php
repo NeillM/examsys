@@ -43,12 +43,9 @@ class internaldb {
 
 
   function register_callback_routines() {
-
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
     $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
     $this->calling_object->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
-
-
   }
 
   function set_fail() {
