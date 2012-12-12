@@ -15,3 +15,11 @@ function do_staff_login($browser) {
   $browser->click("name=submit-UserPW");
   $browser->waitForPageToLoad("30000");
 }
+
+function do_student_login($browser, $username, $password) {
+  $browser->open("/staff/");
+  $browser->type("name=PHP_USER", $username);
+  $browser->type("name=PHP_PW", $password);
+  $browser->click("name=submit-UserPW");
+  $browser->waitForPageToLoad("30000");
+}
