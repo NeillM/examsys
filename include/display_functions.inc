@@ -119,6 +119,11 @@ function get_unanswered_screens($screen_data, $user_answers, $questions, $paperI
               $incomplete_screens[$i] = 1;
             }
             break;
+          case 'likert':
+            if (strpos($current_answer, 'u') !== false) {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
           case 'matrix':
             $parts = explode('|', $current_answer);
             foreach ($parts as $part) {
@@ -158,7 +163,6 @@ function get_unanswered_screens($screen_data, $user_answers, $questions, $paperI
             }
             break;
         }
-        
       }
     }
   } 

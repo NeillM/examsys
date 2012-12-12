@@ -198,9 +198,7 @@ if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
 }
 while ($stmt->fetch()) {
   $no_screens = $screen;
-  if ($q_type != 'info') {
-    $screen_data[$no_screens][] = array($q_type, $q_id);
-  }
+  $screen_data[$no_screens][] = array($q_type, $q_id);
   /*
   $add_q = ($q_type == 'info') ? 0 : 1;
   if (!isset($screen_data[$no_screens])) {
@@ -672,9 +670,9 @@ if ($css != '') {
     submitType = 'userSubmit';
     document.questions.button_pressed.value='fire_exit';
     if (usingAjax) {
-        document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>&dont_record=true";
+      document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>&dont_record=true";
     } else {
-        document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
+      document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
     }
     ajaxSave();
   }
@@ -687,32 +685,28 @@ if ($css != '') {
 
 $method = 'StartClock()';
 
-if( $exam_duration != NULL){
+if ($exam_duration != NULL) {
+  $method                 = '';
+  $exam_duration          = $exam_duration * 60;
+  $new_remaining_duration = $exam_duration;
+  $userID                 = $userObject->get_user_ID();
+  $log_start_time         = new LogStartTime( $userID, $property_id, $mysqli );
+  $start_time             = $log_start_time->get_start_time() or $log_start_time->save(); ;
 
-    $method                 = '';
-    $exam_duration          = $exam_duration * 60;
-    $new_remaining_duration = $exam_duration;
-    $userID                 = $userObject->get_user_ID();
-    $log_start_time           = new LogStartTime( $userID, $property_id, $mysqli );
-    $start_time             = $log_start_time->get_start_time() or $log_start_time->save(); ;
+  // If there is an existing record in log duration
+  if ($start_time !== false){
 
-    // If there is an existing record in log duration
+    $start_time              = strtotime( $start_time );
+    $now                     = time();
+    $time_elapsed            = $now - $start_time;
+    $new_remaining_duration  = $exam_duration - $time_elapsed;
 
-    if( $start_time !== false){
-
-      $start_time              = strtotime( $start_time );
-      $now                     = time();
-      $time_elapsed            = $now - $start_time;
-      $new_remaining_duration  = $exam_duration - $time_elapsed;
-
-
-      if( $new_remaining_duration < 1 ){
-        $new_remaining_duration = 0;
-      }
-
+    if ($new_remaining_duration < 1) {
+      $new_remaining_duration = 0;
     }
+  }
 
-    $method = 'StartTimer(' . $new_remaining_duration . ')';
+  $method = 'StartTimer(' . $new_remaining_duration . ')';
 }
 
 if ($userObject->has_role('Student')) {
@@ -745,7 +739,7 @@ if ($current_screen < $no_screens) {
     // Get users previous answers for the current screen.
     if ($paper_type == '_late') {
       //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
-      $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
+      $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID = ? AND started = ? and q_paper = ?");
       $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $property_id);
       $log_data->execute();
       $log_data->store_result();
@@ -764,7 +758,7 @@ if ($current_screen < $no_screens) {
       $log_data->close();
     }
     //get user answers from whichever log is pointed to by log$paper_type
-    $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$paper_type WHERE userID=? AND started=? and q_paper=? ORDER BY id");
+    $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$paper_type WHERE userID = ? AND started = ? and q_paper = ? ORDER BY id");
     $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $property_id);
     $log_data->execute();
     $log_data->store_result();
@@ -860,35 +854,29 @@ if ($current_screen < $no_screens) {
       echo '<table cellspacing="1" cellpadding="1" border="0" class="screens"><tr>';
       for ($i=1; $i<=$no_screens; $i++) {
         if ($incomplete_screens[$i] == 1) {
-          echo '<td class="scr_un">';
+          echo '<td class="scr_un"';
         } else {
-          echo '<td class="scr_ans">';
+          echo '<td class="scr_ans"';
         }
-        /*
-        echo "<td title=\"";
-        if (isset($screen_data[$i])) {
-          echo count($screen_data[$i]);
+        $no_questions = 0;
+        foreach ($screen_data[$i] as $screen_question) {
+          if ($screen_question[0] != 'info' ) {
+            $no_questions++;
+          } 
+        }
+        if ($no_questions == 1) {
+          echo ' title="' . $no_questions . ' question">';
         } else {
-          echo '0';
+          echo ' title="' . $no_questions . ' questions">';
         }
-
-        if ($i == $current_screen) {
-          if (isset($screen_data[$i]) and count($screen_data[$i]) == 1) {
-            echo " question\" class=\"s1\">";
-          } else {
-            echo " questions\" class=\"s1\">";
-          }
-        } else {
-          if (isset($screen_data[$i]) and $screen_data[$i] == 1) {
-            echo " question\" class=\"s0\">";
-          } else {
-            echo " questions\" class=\"s0\">";
-          }
-          if ($i < $current_screen and isset($screen_data[$i])) $question_offset += count($screen_data[$i]);
-        }
-        */
         
-        if ($i < $current_screen and isset($screen_data[$i])) $question_offset += count($screen_data[$i]);
+        if ($i < $current_screen and isset($screen_data[$i])) {
+          foreach ($screen_data[$i] as $screen_question) {
+            if ($screen_question[0] != 'info' ) {
+              $question_offset++;
+            }
+          }
+        }
         echo "$i</td>\n";
       }
       echo '</tr><tr>';
@@ -910,7 +898,7 @@ if ($current_screen < $no_screens) {
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   //display the questions
-  foreach($questions_array as &$question) {
+  foreach ($questions_array as &$question) {
     if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span style=\"background-color:#FFC0C0\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
