@@ -14,7 +14,7 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
 
   public function testCompletePaperCorrect()
   {
-    do_student_login($this, 'teststudent1', 'xhb@19T*');
+    do_student_login($this, 'teststudent4', 'fiu&52K3');
 
     $this->open("/user_index.php?id=11355244387102");
     $this->click("id=start");
@@ -64,7 +64,7 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
 
   public function testCompletePaperIncorrect()
   {
-    do_student_login($this, 'teststudent2', 'nrt%52YQ');
+    do_student_login($this, 'teststudent5', 'sjg!12T^');
 
     $this->open("/user_index.php?id=11355244387102");
     $this->click("id=start");
@@ -90,6 +90,40 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("xpath=(//input[@name='q1' and @value='2'])");
     $this->click("xpath=(//input[@name='q2' and @value='3'])");
     $this->select("name=q3", "label=Option Two");
+    $this->click("id=finish");
+    $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
+    $this->waitForPageToLoad("30000");
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
+  }
+
+  public function testCompletePaperMixed()
+  {
+    do_student_login($this, 'teststudent6', 'ara!68X7');
+
+    $this->open("/user_index.php?id=11355244387102");
+    $this->click("id=start");
+    $this->waitForPopUp("paper", "30000");
+    $this->selectWindow("name=paper");
+
+    $this->click("name=q1");
+    $this->click("xpath=(//input[@name='q2'])[1]");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+
+    $this->select("name=q1", "label=Option Three");
+    $this->click("xpath=(//input[@name='q2'])[2]");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+
+    $this->click("name=q1");
+    $this->select("name=q2", "label=Option M");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+
+
+    $this->click("xpath=(//input[@name='q1' and @value='2'])");
+    $this->click("xpath=(//input[@name='q2' and @value='2'])");
+    $this->select("name=q3", "label=Option Three");
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
