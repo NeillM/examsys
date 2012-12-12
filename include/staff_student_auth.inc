@@ -172,47 +172,17 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 
   $authentication->do_authentication();
 
-  //$uID=$authentication->get_userID();
+  $uID=$authentication->get_userID();
 
   // at this point I have an auth object with a userid
 
-  $uID=$userObject->get_user_ID();
+//  $uID=$userObject->get_user_ID();
   $userObject->load($uID);
   $userObject->db_user_change();
 
-  print "<br />DEBUG OP:<br />";
-var_dump($authentication->debug);
 
 
-
-
-print "<br />FULL OBJECT DUMP:<br />";
-
-
-
-
-var_dump($authentication);
-
-
-
-exit();
-exit();
-
-
-
-
-
-  if (isset($_POST['rogo-login-form-std'])) {
-    $_SERVER['PHP_AUTH_USER'] = $_POST['ROGO_USER'];
-    $_SERVER['PHP_AUTH_PW'] = $_POST['ROGO_PW'];
-    $_SESSION['PHP_USER'] = $_POST['ROGO_USER'];
-    $_SESSION['PHP_PW'] = $_POST['ROGO_PW'];
-  } elseif (isset($_SESSION['PHP_USER'])) {
-    $_SERVER['PHP_AUTH_USER'] = $_SESSION['PHP_USER'];
-    $_SERVER['PHP_AUTH_PW'] = $_SESSION['PHP_PW'];
-  }
-
-  if (!$lti->valid) {
+/*  if (!$lti->valid) {
     if (!isset($_SERVER['PHP_AUTH_USER']) and !($lti->valid)) {
 
       //replace with function for standard login failure
@@ -290,7 +260,7 @@ exit();
         }
       }
     }
-  }
+  }*/
 } else {
   display_notice('Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', '../artwork/browser.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";

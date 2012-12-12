@@ -80,7 +80,7 @@ function gen_random_salt() {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 
-    <title>Rogo <?php echo $rogo_version . ' to ' . $version; ?> update Script</title>
+    <title>Rogo <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -137,7 +137,7 @@ if (!isset($_POST['update'])) {
     <?php
     if (!InstallUtils::configFileIsWriteable()) {
       ?>
-       <h2><?php echo $string['updatefromversion'] . ' ' . $rogo_version . ' to ' . $version; ?></h2>
+       <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get('rogo_version') . ' to ' . $version; ?></h2>
        <div><?php echo $string['warning1']; ?></div>
        <div><?php echo $string['warning1']; ?></div>
       <?php

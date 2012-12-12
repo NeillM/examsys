@@ -26,9 +26,10 @@ class internaldb {
   private $db;
   private $calling_object;
   private $updatable = FALSE;
+  public $rogoid = FALSE;
 
 
-  function __construct($calling_object, $settings, $db, &$returndata, $number, $form) {
+  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form) {
     $this->db = new mysqli();
     $this->db = $db;
     $this->calling_object = $calling_object;
@@ -37,6 +38,7 @@ class internaldb {
     $this->retdata = $returndata[$number];
     $this->form = $form;
     $this->settings = $settings;
+    $this->name = $name;
   }
 
 
@@ -147,8 +149,9 @@ class internaldb {
       $this->retdata->success = TRUE;
       $this->retdata->form = 'std';
       $this->retdata->rogoid = $id;
+      $this->rogoid = $id;
       $this->retdata->url = '';
-      $authobj->retdata=$this->retdata;
+      $authobj->retdata = $this->retdata;
       $this->retdata->message = 'Internal DB Correctly Authenticated';
 
       return TRUE;

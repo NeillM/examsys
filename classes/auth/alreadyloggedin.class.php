@@ -25,8 +25,9 @@ class alreadyloggedin {
   private $db;
   private $calling_object;
   private $updatable = FALSE;
+  public $rogoid;
 
-  function __construct($calling_object, $settings, $db, &$returndata, $number, $form) {
+  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form)  {
     $this->db = new mysqli();
     $this->db = $db;
     $this->calling_object = $calling_object;
@@ -35,6 +36,7 @@ class alreadyloggedin {
     $this->retdata = $returndata[$number];
     $this->form = $form;
     $this->settings = $settings;
+    $this->name=$name;
     if (session_id() == '') {
       $this->debug[] = 'SESSION NOT FOUND';
       session_name('RogoAuthentication');
@@ -53,6 +55,10 @@ class alreadyloggedin {
 
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
 
+    $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
+
+    $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
+
     $this->calling_object->register_callback(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
 
 
@@ -60,7 +66,7 @@ class alreadyloggedin {
 
   function auth($authobj) {
     $this->retdata->debug[] = 'Authing';
-    $this->retdata->debug[] = var_export($_SESSION, TRUE);
+    $this->retdata->debug[] = str_replace("\n",'',trim(rtrim(var_export($_SESSION, TRUE))));
     if (isset($_SESSION['authenticationObj']['loggedin']['userid']) and $_SESSION['authenticationObj']['loggedin']['userid'] > 0) {
       $this->retdata->debug[] = 'userid found in session';
       if (isset($this->settings['timeout']) and $this->settings['timeout'] != 0 and (($_SESSION['authenticationObj']['loggedin']['time'] + $this->settings['timeout']) > time())) {
@@ -73,6 +79,7 @@ class alreadyloggedin {
         $this->retdata->debug[] = 'Successfully authenticated';
         $this->retdata->success = TRUE;
         $this->retdata->rogoid = $_SESSION['authenticationObj']['loggedin']['userid'];
+        $this->rogoid = $_SESSION['authenticationObj']['loggedin']['userid'];
 
         $authobj->rogoid=&$this->retdata->rogoid;
         return TRUE;
