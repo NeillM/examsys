@@ -30,7 +30,7 @@ require './include/paper_security.inc';
 
 require './classes/paperutils.class.php';
 require './classes/moduleutils.class.php';
-require '../classes/logstarttime.class.php';
+require './classes/logstarttime.class.php';
 require './classes/logmetadata.class.php';
 
 check_var('id', 'GET', true, false);
