@@ -37,7 +37,9 @@ require '../classes/paperutils.class.php';
 
 check_var('id', 'GET', true, false);
 
-getSpecialSettings($userObject->get_user_ID(), $mysqli);
+$userID = $userObject->get_user_ID();
+
+getSpecialSettings( $userID, $mysqli);
 
 if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
   $paper_properties->bind_param('s', $_GET['id']);
@@ -79,7 +81,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
 
       // Check time security
       check_datetime($start_date, $end_date);
-      
+
       //Check room security
       $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
 
@@ -93,6 +95,10 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
         $paper_type = '_late';
       }
     }
+
+    $log_metadata = new LogMetadata( $userObject, $paperID, $mysqli );
+    $log_metadata->set_completed_to_now();
+
     if (isset($_GET['type'])) $log_type = $_GET['type'];
   }
   $paper_properties->close();

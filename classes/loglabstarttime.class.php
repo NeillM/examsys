@@ -15,18 +15,18 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Repository class for the log_start_time table
+* Repository for the log_lab_start_time table
 * @author Ben Parish
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
 
-class LogStartTime {
+class LogLabStartTime {
 
-
-  private $student_id;
+  private $lab_id;
   private $paper_id;
+  private $invigilator_id;
 
   /*
    * @var mysqli $db
@@ -34,32 +34,34 @@ class LogStartTime {
 
   private $db;
 
-  public function __construct( $studentID, $paper_id, mysqli $db ) {
-    $this->student_id = $studentID;
-    $this->paper_id   = $paper_id;
-    $this->db         = $db;
+  public function __construct( $lab_id
+                             , $paper_id
+                             , $invigilator_id
+                             , mysqli $db ) {
+
+    $this->lab_id          = $lab_id;
+    $this->paper_id        = $paper_id;
+    $this->invigilator_id  = $invigilator_id;
+    $this->db              = $db;
   }
 
-  /**
-   * Gets the time the user start_time the paper
-   * @param int $user_id
-   * @param int $paper_id
-   * @return string
-   */
   public function get_start_time() {
 
     $query = 'SELECT
-                start_time
+                  MAX( start_time )
               FROM
-                log_start_time
+                log_lab_start_time
               WHERE
-                userID  = ?
+                labID   = ?
               AND
-                paperID = ?;';
+                paperID = ?';
 
     $stmt  = $this->db->prepare( $query );
 
-    $stmt->bind_param( 'ii', $this->student_id, $this->paper_id );
+    $stmt->bind_param( 'ii'
+                     , $this->lab_id
+                     , $this->paper_id );
+
     $stmt->execute();
     $stmt->store_result();
 
@@ -77,48 +79,50 @@ class LogStartTime {
 
   }
 
-  public function insert() {
-
-    // BP Using date() is more reliable when interacting
-    // with the front end javascript timer than Mysql server's NOW()
-
+ public function save() {
 
     $query    = 'INSERT INTO
-                  log_start_time
-                          ( userID
-                          , paperID
-                          , start_time
-                          )
-                 VALUES
-                    ( ?
-                    , ?
-                    , ? )';
+                    log_lab_start_time
+                            ( labID
+                            , paperID
+                            , invigilatorID
+                            , start_time )
+                   VALUES
+                      ( ?
+                      , ?
+                      , ?
+                      , ? )';
 
-    $stmt       = $this->db->prepare( $query );
-    $start_time = date ( 'Y-m-d H:i:s' );
+    $stmt     = $this->db->prepare( $query );
 
-    $stmt->bind_param('iis', $this->student_id, $this->paper_id, $start_time );
+    $stmt->bind_param( 'iiis'
+                     , $this->labID
+                     , $this->paper_id
+                     , $this->invigilator_id
+                     , $end_time );
 
     $stmt->execute();
     $stmt->close();
 
-
-    return $start_time;
+    return $end_time;
 
   }
+
 
   public function delete() {
 
     $query    = 'DELETE FROM
-                   log_start_time
+                   log_lab_start_time
                  WHERE
-                   userID  = ?
+                   labID   = ?
                  AND
                    paperID = ?';
 
-    $stmt  = $this->db->prepare( $query );
+    $stmt     = $this->db->prepare( $query );
 
-    $stmt->bind_param('ii', $this->student_id, $this->paper_id );
+    $stmt->bind_param( 'ii'
+                     , $this->labID
+                     , $this->paper_id );
     $stmt->execute();
     $stmt->close();
 

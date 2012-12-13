@@ -68,34 +68,11 @@ if ($userObject->has_role('Student')) {
     $paper_type = '_late';
   }
 
-  $userID       = $userObject->get_user_ID();
-  $log_metadata = new LogMetadata( $userID, $property_id, $mysqli );
+  $log_metadata = new LogMetadata( $userObject, $property_id, $mysqli );
 
   check_whether_student_has_finished( $log_metadata );
 
 }
-
-// BP Logging duration
-if( isset( $_POST['theTime'] ) and $exam_duration !== NULL ){
-
-  $exam_duration   = $exam_duration * 60;
-  $userID          = $userObject->get_user_ID();
-  $log_start_time  = new LogStartTime( $userID, $property_id, $mysqli );
-  $start_time      = $log_start_time->get_start_time();
-  $start_time      = strtotime( $start_time );
-  $now             = time();
-  $time_elapsed    = $now - $start_time;
-
-  $new_remaining_duration  = $exam_duration - $time_elapsed;
-
-  if( $new_remaining_duration < 1 ){
-    $new_remaining_duration = 0;
-  }
-
-  $log_start_time->save( $new_remaining_duration );
-
-}
-
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
 
