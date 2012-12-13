@@ -339,26 +339,22 @@ if ($textsize > 120) {
     }
   } else {
 
-    $disabled = "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" disabled />\n";
+    $hide_restart = true;
 
-    // BP Added additional conditionals to display restart button if the user's time spend has not been exceeded and disable if exceeded
-
-    $no_time_left = (( $display_remaining_time === true and $remaining_time === 0 ) or $has_finished );
-
-
-    $show_restart = false;
-
-    if ( $navigation == 1 and time() < $paper_end) {
-      $show_restart = true;
-    } elseif ($navigation == 0 and $paper_screens > $log_max_screen ) {
-      $show_restart = true;
+    if ( ( $navigation == 1 and time() < $paper_end ) or ( $navigation == 0 and $paper_screens > $log_max_screen ) ) {
+      $hide_restart = false;
     }
+
+    // Has the student run out of time or clicked the 'Finish' button?
+
+    $no_time_left = ( ( $display_remaining_time === true and $remaining_time === 0 ) or $has_finished );
 
     if( $no_time_left ){
-      $show_restart = false;
+      $hide_restart = true;
     }
 
-    if( (int) $test_type == 0 and $no_time_left ){
+    if( $hide_restart ){
+      $disabled = "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" disabled />\n";
       echo $disabled;
     } elseif ($test_type > 0 and $log_info->num_rows > 0) {
       echo " <input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
