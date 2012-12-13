@@ -71,7 +71,6 @@ ob_start();
       }
       return true ;
     }
-    return false;
   }
   // POP UP MENU
   function popMenu(tmpStarted, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
