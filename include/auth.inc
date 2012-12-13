@@ -47,6 +47,7 @@ function access_denied($message, $output_header = false, $output_footer = true) 
   display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
 
   if ($output_header == true) {
+/*
     print <<<END
 
 <div>
@@ -57,7 +58,7 @@ function access_denied($message, $output_header = false, $output_footer = true) 
 </form>
 </div>
 END;
-
+*/
 
 
   }

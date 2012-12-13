@@ -15,7 +15,7 @@
  * @copyright Copyright (c) 2012 The University of Nottingham
  * @package
  */
-class alreadyloggedin {
+class alreadyloggedin_auth {
   private $name;
   private $number;
   private $returndata;
@@ -83,6 +83,10 @@ class alreadyloggedin {
       }
 
     }
+
+    $this->retdata->debug[]='No valid userid found in session';
+    $this->retdata->success = FALSE;
+    $this->retdata->rogoid = 0;
 
     return FALSE;
 

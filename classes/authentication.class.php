@@ -27,6 +27,8 @@ class Authentication {
   public $success;
   public $form;
 
+  public $successfullauthmodule;
+
   private $callbackregister;
   private $callbackregisterdata;
 
@@ -70,12 +72,13 @@ class Authentication {
 
     foreach ($this->config as $number => $auth) {
       $authtype = $auth[0];
+      $authtype1=$authtype . '_auth';
       $settings = $auth[1];
       $name= $auth[2];
       $this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
       require_once $this->configObj->get('cfg_web_root') . 'classes/auth/' . $authtype . '.class.php';
       $this->returndata[$number] = new authtypereturn();
-      $this->authObj[$number] = new $authtype($this, $settings, $number, $name, $this->db, $this->returndata, $this->form);
+      $this->authObj[$number] = new $authtype1($this, $settings, $number, $name, $this->db, $this->returndata, $this->form);
       $this->append_auth_object_debug($number);
       $this->debug[] = "Running Registering callback routines for #$number";
       $this->authObj[$number]->register_callback_routines();
@@ -87,6 +90,11 @@ class Authentication {
   function load_config() {
 
     $this->config = $this->configObj->get('authentication');
+
+    if(!isset($this->config)) {
+      display_notice('No Authentication configured', 'No Authentication configured has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
+exit();
+    }
 
     $this->debug[] = 'Loaded Config for authentication';
   }
@@ -148,15 +156,17 @@ class Authentication {
       foreach ($this->callbackregister['auth'] as $number => $callback) {
         $returned = call_user_func_array($callback, array(&$authobj));
         $objid=key($this->callbackregisterdata['auth'][$number]);
+        $this->append_auth_object_debug($objid);
         if ($returned !== FALSE) {
           $this->success = TRUE;
           $this->userid=$this->authObj[$objid]->rogoid;
-          $this->debug[]='Rogo ID is:: ' . $this->userid;
+          $this->debug[]='Rogo ID is:: ' . $this->userid . " from object $objid";
  //         $this->debug[]=var_dump($this->authObj[$objid],TRUE);
+          $this->successfullauthmodule[]=$objid;
 
         }
 
-        $this->append_auth_object_debug($objid);
+
         if (($this->success and (!isset($settings['dont_break_on_success']) or (isset($settings['dont_break_on_success']) and !$settings['dont_break_on_success'])))) {
           break;
         }

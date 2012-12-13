@@ -15,7 +15,7 @@
  * @copyright Copyright (c) 2012 The University of Nottingham
  * @package
  */
-class internaldb {
+class internaldb_auth {
 
   private $name;
   private $number;
@@ -131,7 +131,7 @@ class internaldb {
     $this->updatable = TRUE;
     $encrypt_password = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password, $old_encrypt_type);
 
-    $this->retdata->debug[] = 'encrypted password strings' . $encrypt_password . ':::' . $pass;
+    $this->retdata->debug[] = 'encrypted password strings ' . $encrypt_password . ':::' . $pass;
 
     if ($encrypt_password == $pass) {
       $this->updatable = FALSE;
@@ -161,7 +161,7 @@ class internaldb {
 
   function update_password($postauthsuccessobj = '') {
     $this->retdata->debug[] = 'Called update_password';
-    if ($this->updatable === TRUE and (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== TRUE)) {
+    if ($this->updatable === TRUE and (!isset($this->settings['donotupdatepassword']) or (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== TRUE))) {
       $this->retdata->debug[] = 'Updating Password';
       extract($this->settings);
       $encpw_details = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);

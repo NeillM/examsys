@@ -180,9 +180,13 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   $userObject->load($uID);
   $userObject->db_user_change();
 
+
   var_dump($userObject);
  $authentication->display_debug();
 exit();
+
+
+
 
 /*  if (!$lti->valid) {
     if (!isset($_SERVER['PHP_AUTH_USER']) and !($lti->valid)) {
@@ -268,7 +272,6 @@ exit();
   echo "\n</body>\n</html>\n";
   exit;
 }
-
 
 
 

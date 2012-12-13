@@ -80,7 +80,7 @@ function gen_random_salt() {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 
-    <title>Rogo <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
+    <title>Rogo <?php echo $rogo_version . ' to ' . $version; ?> update Script</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -4908,6 +4908,48 @@ QUERY;
   echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_students TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
 
   $mysqli->query( 'FLUSH PRIVILEGES' );
+
+  //cczsa1 13/12/2012 - Convert authentication in config file to  new format
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+
+  $addauth=true;
+  foreach($cfg as $k=>$v) {
+    $found=strpos($v,'$authentication = array(');
+    if($found!==false) {
+      $addauth=false;
+    }
+    $found=strpos($v,'$cfg_encrypt_salt');
+    if($found!==false) {
+      $saltloc=$k+1;
+    }
+  }
+
+  if($addauth==true) {
+    $extra1='';
+    $array_new[]="\n";
+    $array_new[]='$authentication = array(' ."\n";
+    if($cfg_use_ldap === true) {
+      $extra1=',';
+    }
+    $array_new[]="array('internaldb', array('table' => 'users', 'username_col' => 'username', 'passwd_col' => 'password', 'id_col' => 'id', 'encrypt' => 'SHA-512', 'encrypt_salt' => \$cfg_encrypt_salt), 'Internal Database')$extra1\n";
+    if($cfg_use_ldap=== true) {
+      $array_new[]="array('ldap',array( 'table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix),'LDAP')\n";
+    }
+
+    $array_new[]=");\n";
+    array_splice($cfg,$saltloc,0,$array_new);
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root. 'config/config.inc.php', $cfg_web_root . 'config/config.inc.preauthchange.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    } else {
+      echo"<li>Changed config file to new authentication method</li>";
+    }
+  }
 
 
   // End ------------------------------------------------------------------

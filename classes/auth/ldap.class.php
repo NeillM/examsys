@@ -18,7 +18,7 @@
 
 include_once $configObj->get('cfg_web_root') . 'lang/en/include/common.inc';
 
-class ldapauth {
+class ldap_auth {
 
   private $name;
   private $number;
@@ -72,7 +72,6 @@ class ldapauth {
   function register_callback_routines() {
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
     $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
-    $this->calling_object->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
   }
 
   function set_fail() {
@@ -96,16 +95,18 @@ class ldapauth {
 
       return FALSE;
     }
-    $ldap = ldap_connect($cfg_ldap_server);
+    $ldap = ldap_connect($ldap_server);
     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-    if (ldap_bind($ldap, $cfg_ldap_bind_rdn, $cfg_ldap_bind_password)) {
-      if (!($search = @ldap_search($ldap, $cfg_ldap_search_dn, $cfg_ldap_user_prefix . $this->form['std']->username))) {
+    if (ldap_bind($ldap, $ldap_bind_rdn, $ldap_bind_password)) {
+      $this->retdata->debug[]='Sucessfull initial bind to ldap server';
+      if (!($search = @ldap_search($ldap, $ldap_search_dn, $ldap_user_prefix . $this->form['std']->username))) {
         $this->retdata->debug[] = $string['ldapservernosearch'];
         $this->set_fail();
 
         return FALSE;
       } else {
+
         $info = ldap_get_entries($ldap, $search);
         /*
                 if($lookup_info === 1 and $info['count'] > 0) {
@@ -114,6 +115,7 @@ class ldapauth {
                 }
         */
         if ($info['count'] == 1) {
+          $this->retdata->debug[]='Found user in ldap';
           $dn = $info[0]['dn'];
         } else {
           $this->retdata->debug[] = '<strong>' . $string['noldapaccount'] . '</strong>';
@@ -123,7 +125,8 @@ class ldapauth {
         }
       }
 
-      if (@ldap_bind($ldap, $dn, utf8_encode($p))) {
+      if (@ldap_bind($ldap, $dn, utf8_encode($this->form['std']->password))) {
+        $this->retdata->debug[]='Successfully bound to ldap as the user with their password';
         ldap_unbind($ldap);
         /*
                if($lookup_info === 2) {
