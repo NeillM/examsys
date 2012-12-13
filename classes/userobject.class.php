@@ -23,6 +23,7 @@
  * @copyright Copyright (c) 2012 The University of Nottingham
  * @package
  */
+
 require_once $cfg_web_root . 'classes/schoolutils.class.php';
 
 class UserObject {
@@ -440,6 +441,7 @@ class UserObject {
   }
 
   function load($userID) {
+    $this->userID=$userID;
     $stmt = $this->db->prepare("SELECT roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id=?");
     $stmt->bind_param('i', $userID);
     $stmt->execute();

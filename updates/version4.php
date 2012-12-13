@@ -4927,6 +4927,7 @@ QUERY;
   // 30/11/2012
   // Adding a new table log_start_time
 
+
   $updater_utils = new UpdaterUtils( $mysqli, $cfg_db_database );
 
   $does_table_exist = $updater_utils->does_table_exist( 'log_start_time' );
@@ -4938,8 +4939,8 @@ QUERY;
                                  , userID       int            unsigned NOT NULL
                                  , paperID      int            unsigned NOT NULL
                                  , start_time   datetime       NOT NULL
-                                 , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
-                               ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+                               , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
+                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
 
 
     $result = $mysqli->query( $sql );
@@ -4980,8 +4981,47 @@ QUERY;
   echo '<li>' . $sql  . '</li>' . "\n";
   $mysqli->query( 'FLUSH PRIVILEGES' );
 
+  //cczsa1 13/12/2012 - Convert authentication in config file to  new format
 
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
 
+  $addauth=true;
+  foreach($cfg as $k=>$v) {
+    $found=strpos($v,'$authentication = array(');
+    if($found!==false) {
+      $addauth=false;
+    }
+    $found=strpos($v,'$cfg_encrypt_salt');
+    if($found!==false) {
+      $saltloc=$k+1;
+    }
+  }
+
+  if($addauth==true) {
+    $extra1='';
+    $array_new[]="\n";
+    $array_new[]='$authentication = array(' ."\n";
+    if($cfg_use_ldap === true) {
+      $extra1=',';
+    }
+    $array_new[]="array('internaldb', array('table' => 'users', 'username_col' => 'username', 'passwd_col' => 'password', 'id_col' => 'id', 'encrypt' => 'SHA-512', 'encrypt_salt' => \$cfg_encrypt_salt), 'Internal Database')$extra1\n";
+    if($cfg_use_ldap=== true) {
+      $array_new[]="array('ldap',array( 'table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix),'LDAP')\n";
+    }
+
+    $array_new[]=");\n";
+    array_splice($cfg,$saltloc,0,$array_new);
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root. 'config/config.inc.php', $cfg_web_root . 'config/config.inc.preauthchange.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    } else {
+      echo"<li>Changed config file to new authentication method</li>";
+    }
+  }
 
 
   // End ------------------------------------------------------------------

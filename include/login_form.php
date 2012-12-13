@@ -23,11 +23,11 @@
     
   <div style="margin-left:65px">
   <table>
-  <tr><td>Username</td><td><input type="text" name="username" /></td></tr>
-  <tr><td>Password</td><td><input type="password" name="password" /></td></tr>
+  <tr><td>Username</td><td><input type="text" name="ROGO_USER" /></td></tr>
+  <tr><td>Password</td><td><input type="password" name="ROGO_PW" /></td></tr>
   </table>
   <br />
-  <input type="submit" name="submit" value=" Sign In " style="width:160px" />&nbsp;&nbsp;<input type="submit" name="submit" value=" Cancel " />
+  <input type="submit" name="rogo-login-form-std" value=" Sign In " style="width:160px" />&nbsp;&nbsp;<input type="submit" name="cancel" value=" Cancel " />
   </div>
 
 </div>
