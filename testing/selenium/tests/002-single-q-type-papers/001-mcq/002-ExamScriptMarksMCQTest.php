@@ -24,7 +24,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '1 out of 1');
-    $this->assertElementContainsText('//table[2]/tbody/tr[3]/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '1 out of 1');
     $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '2 out of 2');
     $this->assertElementContainsText('//table[3]/tbody/tr[3]/td[2]/p/span', '1 out of 1');
     $this->assertElementContainsText('//table[4]/tbody/tr/td[2]/p/span', '1 out of 1');
@@ -51,7 +51,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '0 out of 1');
-    $this->assertElementContainsText('//table[2]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
     $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '0 out of 2');
     $this->assertElementContainsText('//table[3]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
     $this->assertElementContainsText('//table[4]/tbody/tr/td[2]/p/span', '0 out of 1');
@@ -78,7 +78,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '1 out of 1');
-    $this->assertElementContainsText('//table[2]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
     $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '0 out of 2');
     $this->assertElementContainsText('//table[3]/tbody/tr[3]/td[2]/p/span', '1 out of 1');
     $this->assertElementContainsText('//table[4]/tbody/tr/td[2]/p/span', '1 out of 1');

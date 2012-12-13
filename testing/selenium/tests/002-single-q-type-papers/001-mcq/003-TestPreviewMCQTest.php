@@ -20,6 +20,9 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=start");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
+    $this->assertTextPresent('Multi Choice Questions');
+    $this->assertTextPresent('Note: MCQ 1 notes for students');
+    $this->assertTextPresent('MCQ 1 scenario');
     $this->assertTextPresent('MCQ 1, vertical, display order, 1 mark, Option One correct');
     $this->assertTextPresent('MCQ 2, horizontal, display order, 1 mark, Option Two correct');
     $this->assertCssCount('css=input[type="radio"]', 6);
