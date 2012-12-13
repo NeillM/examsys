@@ -14,6 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['timerreset'] = 'Timer reset'; //NIKO
-$string['msg']        = 'The timer was successfully reset.'; //NIKO
+$string['timerreset'] = 'Timer reset';
+$string['msg']        = 'The timer was successfully reset.';
 ?>
