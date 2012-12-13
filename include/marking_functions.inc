@@ -110,7 +110,6 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
   $old_q_id = 0;
   $old_q_type = '';
   $random_on = false;
-  $branch_no = 0;
   $option_order = '';
   $old_display_pos = 0;
   if (isset($preview_q_id)) {
@@ -127,21 +126,11 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
       if ($q_type != 'info') $tmp_question_no++;
       $selected_q_id = array();
-      $branch_no = 0;
       $random_on = false;
     }
-    if ($q_type == 'random' or $q_type == 'branching' or $q_type == 'keyword_based') {
-      if ($q_type == 'random' or $q_type == 'keyword_based') {
-        $selected_q_id[] = (isset($_POST['q' . $tmp_question_no . '_randomID'])) ? $_POST['q' . $tmp_question_no . '_randomID'] : 0;
-      } else {
-  	    if (isset($_POST['q' . $q_id . '_' . $branch_no . '_branchID'])) {
-	        // the user went down branch $branch_no so saw the questions stored in option option_text
-          // put these in an array to lookup and add to the paper_array
-	        $selected_q_id = explode(',',$option_text);
-	      }
-	      $branch_no++;
-      }
-
+    if ($q_type == 'random' or $q_type == 'keyword_based') {
+      $selected_q_id[] = (isset($_POST['q' . $tmp_question_no . '_randomID'])) ? $_POST['q' . $tmp_question_no . '_randomID'] : 0;
+      
       if ($random_on == false and count($selected_q_id) > 0) {
         foreach ($selected_q_id as &$used_qid) {
 	        // Look up database.

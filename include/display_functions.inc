@@ -60,6 +60,7 @@ function get_unanswered_screens($screen_data, $user_answers, $questions, $paperI
       for ($a=1; $a<=$tmp_answer_no; $a++) {
         $current_q_id = $screen_data[$i][$a-1][1];
         $current_answer = $answers[$current_q_id];
+        
         switch ($screen_data[$i][$a-1][0]) {
           case 'area':
             $parts = explode(';', $current_answer);
@@ -215,8 +216,8 @@ function checkVariables($number) {
   return $new_number;
 }
 
-function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset, $user_answers, &$unanswered) {
-  global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $user_order, $string, $language, $configObject, $configObject;
+function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered) {
+  global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $user_order, $string, $language, $configObject, $configObject, $unanswered_color;
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
 
@@ -252,7 +253,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
     } else {
       // Set the order array to what is stored in the users log record
-      $question['option_order'] = explode(',',$user_order[$current_screen][$q_id]);
+      $question['option_order'] = explode(',', $user_order[$current_screen][$q_id]);
     }
 
     // Re-arrange the options array
@@ -282,7 +283,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
   if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
     if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert') {
-      echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
+      echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
       if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
       echo "</td><td>";
       if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
@@ -291,7 +292,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     }
     if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area') {
       if ($li_set == 0) {
-        echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
+        echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
         if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
         echo '</td><td>';
       }
@@ -300,7 +301,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     }
     if ($question['q_type'] != 'likert') {
       if ($li_set == 0) {
-        echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
+        echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
         if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
         echo '</td><td>';
       }
@@ -431,7 +432,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
     case 'sct':
       if ($question['scenario'] != '') {
-        echo "<tr><td class=\"question_no\">" . ($question_no + $question_offset) . ".&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">" . $string['clinicalvignette'] . "</td></tr>\n";
+        echo "<tr><td class=\"question_no\">" . $question['assigned_number'] . ".&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">" . $string['clinicalvignette'] . "</td></tr>\n";
         echo '<tr><td style="vertical-align:top; text-align:right">';
         if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
         echo "</td><td>";
@@ -441,7 +442,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
       if ($question['q_media'] != '') {
         if ($li_set == 0) {
-          echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
+          echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
           if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
           echo '</td><td>';
         }
@@ -615,7 +616,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         } else {
           echo '<tr>';
         }
-        echo '<td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
+        echo '<td class="q_no">' . $question['assigned_number'] . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
         $scale_size = substr_count($question['display_method'],'|');
         if ($likert_display[$scale_size] == 'true') {
           echo "<td style=\"text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\"";
@@ -970,7 +971,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
           echo "<div align=\"left\" class=\"unans\">";
           $unanswered = true;
-          $tmp_bgcolor = '#FFC0C0';
+          $tmp_bgcolor = $unanswered_color;
         } else {
           echo "<div align=\"left\">";
           $tmp_bgcolor = $bgcolor;

@@ -38,11 +38,12 @@ global $userObject;
 
 check_var('id', 'GET', true, false);
 
-function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
-  global $mysqli, $used_questions;
-
+function randomQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_data, $used_questions, $db) {
   $selected_q_id = '';
-  if(isset($user_answers[$current_screen])) {
+  $current_screen = $random_q_data['screen'];
+  $q_no = $random_q_data['no_on_screen'];
+  
+  if (isset($user_answers[$current_screen])) {
     //match user's answers with random question ID.
     $question_on_screen = array_keys($user_answers[$current_screen]);
     $selected_q_id = current($question_on_screen);
@@ -50,14 +51,14 @@ function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answer
       $selected_q_id = next($question_on_screen);
     }
   }
-
+  
   if ($selected_q_id == '') {
     // Generate a random question ID.
     $random_q_no = count($random_q_data['options']);
     $try = 0;
     $unique = false;
     while ($unique == false and $try < 9999) {
-      $selected_no = rand(0,$random_q_no-1);
+      $selected_no = rand(0, $random_q_no-1);
       $selected_q_id = $random_q_data['options'][$selected_no]['option_text'];
       if (!isset($used_questions[$selected_q_id])) $unique = true;
       $try++;
@@ -66,13 +67,16 @@ function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answer
   }
 
   // Look up selected question and overwrite data.
-  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+  $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
   $question_data->bind_param('i', $selected_q_id);
   $question_data->execute();
   $question_data->store_result();
   $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
   while ($question_data->fetch()) {
     if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
+      $question['assigned_number'] = $random_q_data['assigned_number'];
+      $question['no_on_screen'] = $q_no;
+      $question['screen'] = $random_q_data['screen'];
       $question['theme'] = $theme;
       $question['scenario'] = $scenario;
       $question['leadin'] = $leadin;
@@ -90,14 +94,28 @@ function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answer
     }
     $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   }
-  $questions[] = $question;
-  echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
+  
+  // Overwrite the screen data.
+  $screen_no = count($screen_data);
+  for ($i=1; $i<=$screen_no; $i++) {
+    $q_no = count($screen_data[$i]);
+    for ($a=0; $a<$q_no; $a++) {
+      if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
+        $screen_data[$i][$a][0] = $q_type;
+        $screen_data[$i][$a][1] = $q_id;
+      }
+    }
+  }
+  
+  return $question;
 }
 
-function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
-  global $mysqli, $used_questions, $string;
-
+function keywordQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_data, $used_questions, $db, $string) {
   $selected_q_id = '';
+  $unique = true;
+  $current_screen = $random_q_data['screen'];
+  $q_no = $random_q_data['no_on_screen'];
+  
   if (isset($user_answers[$current_screen])) {
     //match user's answers with random question ID.
     $question_on_screen = array_keys($user_answers[$current_screen]);
@@ -110,7 +128,7 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
   if ($selected_q_id == '') {
     // Generate a random question ID from keywords.
     $question_ids = array();
-    $question_data = $mysqli->prepare("SELECT DISTINCT q_id FROM keywords_question WHERE keywordID=?");
+    $question_data = $db->prepare("SELECT DISTINCT q_id FROM keywords_question WHERE keywordID = ?");
     $question_data->bind_param('i', $random_q_data['options'][0]['option_text']);
     $question_data->execute();
     $question_data->bind_result($q_id);
@@ -131,14 +149,17 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
   }
 
   if ($unique) {
-    // Look up selected question and overwrite data.
-    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+    // Look up selected question and overwrite the question data.
+    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id = ? AND questions.q_id = options.o_id ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
     $question_data->execute();
     $question_data->store_result();
     $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
     while ($question_data->fetch()) {
       if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
+        $question['assigned_number'] = $random_q_data['assigned_number'];
+        $question['no_on_screen'] = $q_no;
+        $question['screen'] = $random_q_data['screen'];
         $question['theme'] = $theme;
         $question['scenario'] = $scenario;
         $question['leadin'] = $leadin;
@@ -156,7 +177,19 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
       }
       $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
     }
-    echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
+    $question_data->close();
+    
+    // Overwrite the screen data.
+    $screen_no = count($screen_data);
+    for ($i=1; $i<=$screen_no; $i++) {
+      $q_no = count($screen_data[$i]);
+      for ($a=0; $a<$q_no; $a++) {
+        if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
+          $screen_data[$i][$a][0] = $q_type;
+          $screen_data[$i][$a][1] = $q_id;
+        }
+      }
+    }
   } else {
     $question['leadin'] = '<span style="color: #f00;">' . $string['error_keywords'] . '</span>';
     $question['q_type'] = 'keyword_based';
@@ -166,17 +199,18 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
     $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
     $question['options'] = array();
   }
-  $questions[] = $question;
+  
+  return $question;
 }
 
 if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 
 if ($userObject->is_special_needs()) {
-  $stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?");
+  $stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userid = ?");
   $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
+  $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
   $stmt->fetch();
   $stmt->close();
 }
@@ -200,14 +234,6 @@ if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
 while ($stmt->fetch()) {
   $no_screens = $screen;
   $screen_data[$no_screens][] = array($q_type, $q_id);
-  /*
-  $add_q = ($q_type == 'info') ? 0 : 1;
-  if (!isset($screen_data[$no_screens])) {
-    $screen_data[$no_screens] = $add_q;
-  } else {
-    $screen_data[$no_screens] += $add_q;
-  }
-  */
 }
 $stmt->free_result();
 $stmt->close();
@@ -228,6 +254,7 @@ if (!isset($marks_color) or $marks_color == 'NULL' or $marks_color == '') $marks
 if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
 if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
 if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
+$unanswered_color = '#FFC0C0';
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
@@ -371,6 +398,10 @@ if ($marks_color != '#808080') {
 }
 if ($fgcolor != '#000000' and $fgcolor != 'black') {
   $css .= ".act {color:$fgcolor}\n";
+}
+if ($unanswered_color != '#FFC0C0') {
+  $css .= ".unans {background-color:$unanswered_color}\n";
+  $css .= ".scr_un {background-color:$unanswered_color}\n";
 }
 if (count($reference_materials) > 0) {
   $css .= "#maincontent {position:fixed; right:" . ($max_ref_width + 1) . "px}\n";
@@ -745,22 +776,35 @@ if ($css != '') {
   $previous_q_type = '';
 
   if (isset($_GET['q_id'])) {
-    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND q_id=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+    $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND q_id=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
     $question_data->bind_param('ii', $property_id, $_GET['q_id']);
   } else {
-    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
-    $question_data->bind_param('ii', $property_id, $current_screen);
+    $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+    $question_data->bind_param('i', $property_id);
   }
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
+  $question_data->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
   $num_rows = $question_data->num_rows;
   $q_no = 0;
+  $assigned_number = 0;
+  $no_on_screen = 0;
+  $old_screen = 0;
   //build the questions_array
   $tmp_questions_array = array();
   while ($question_data->fetch()) {
     if ($q_no == 0 or $tmp_questions_array[$q_no]['q_id'] != $q_id or $tmp_questions_array[$q_no]['display_pos'] != $display_pos) {
       $q_no++;
+      if ($screen != $old_screen) {
+        $no_on_screen = 0;
+      }
+      if ($q_type != 'info') {
+        $assigned_number++;
+        $no_on_screen++;
+      }
+      $tmp_questions_array[$q_no]['assigned_number'] = $assigned_number;
+      $tmp_questions_array[$q_no]['no_on_screen'] = $no_on_screen;
+      $tmp_questions_array[$q_no]['screen'] = $screen;
       $tmp_questions_array[$q_no]['theme'] = trim($theme);
       $tmp_questions_array[$q_no]['scenario'] = trim($scenario);
       $tmp_questions_array[$q_no]['leadin'] = trim($leadin);
@@ -778,26 +822,28 @@ if ($css != '') {
       $used_questions[$q_id] = 1;
     }
     $tmp_questions_array[$q_no]['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+    $old_screen = $screen;
   }
   $question_data->close();
-
+  
   //look for braching and random questions and overwrite as needed
   $questions_array = array();
-  $tmp_q_no = 0;
-  foreach ($tmp_questions_array as &$question) {
-    if ($question['q_type'] != 'info') {
-      $tmp_q_no++;
-    }
+  foreach ($tmp_questions_array as $question) {
     if ($question['q_type'] == 'random') {
-      randomQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no);
+      $question = randomQOverwrite($question, $paper_type, $user_answers, $screen_data, $used_questions, $mysqli);
+      if ($current_screen == $question['screen']) {
+        echo "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
+      }
     } elseif ($question['q_type'] == 'keyword_based') {
-      keywordQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no);
-    } else {
-      $questions_array[] = $question;
+      $question = keywordQOverwrite($question, $paper_type, $user_answers, $screen_data, $used_questions, $mysqli, $string);
+      if ($current_screen == $question['screen'] and $question['q_id'] != -1) {
+        echo "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
+      }
     }
+    $questions_array[] = $question;
   }
   unset($tmp_questions_array);
-
+  
   $unanswered = false;
 
     $incomplete_screens = get_unanswered_screens($screen_data, $user_answers, $questions_array, $property_id, $mysqli);
@@ -896,17 +942,19 @@ if ($css != '') {
   } else {
     echo '<tr><td>';
   }
-
+  
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   //display the questions
   foreach($questions_array as &$question) {
-    if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span style=\"background-color:#FFC0C0\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
-    if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
-    if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $question_offset, $user_answers, $unanswered);
-    $previous_q_type = $question['q_type'];
-    $q_displayed++;
+    if ($question['screen'] == $current_screen) {
+      if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span class=\"unans\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
+      if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
+      if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+      display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
+      $previous_q_type = $question['q_type'];
+      $q_displayed++;
+    }
   }
 
   echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
@@ -926,7 +974,7 @@ if ($css != '') {
       echo $string['finishnote'];
       if ($bidirectional == 1) echo "<br />" . $string['gobackpink'];
     }
-    echo "</div>\n<br >\n";
+    echo "</div>\n<br />\n";
   } elseif ($bidirectional == 0) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
     if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';

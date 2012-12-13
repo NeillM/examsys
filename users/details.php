@@ -123,10 +123,10 @@ if (isset($_POST['update']) and $demo == false) {
   $tmp_email = $_POST['email'];
 
   if (isset($_POST['password']) and $_POST['password'] != '') {
-    $result = $mysqli->prepare("UPDATE users SET roles=?, title=?, initials=?, surname=?, grade=?, yearofstudy=?, username=?, password=?, email=?, first_names=?, gender=? WHERE id=?");
+    $result = $mysqli->prepare("UPDATE users SET roles = ?, title = ?, initials = ?, surname = ?, grade = ?, yearofstudy = ?, username = ?, password = ?, email = ?, first_names = ?, gender = ? WHERE id = ?");
     $result->bind_param('sssssisssssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $_POST['password'], $tmp_email, $tmp_first_names, $_POST['gender'], $_POST['old_userID']);
   } else {
-    $result = $mysqli->prepare("UPDATE users SET roles=?, title=?, initials=?, surname=?, grade=?, yearofstudy=?, username=?, email=?, first_names=?, gender=? WHERE id=?");
+    $result = $mysqli->prepare("UPDATE users SET roles = ?, title = ?, initials = ?, surname = ?, grade = ?, yearofstudy = ?, username = ?, email = ?, first_names = ?, gender = ? WHERE id = ?");
     $result->bind_param('sssssissssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $tmp_email, $tmp_first_names, $_POST['gender'], $_POST['old_userID']);
   }
   $result->execute();
@@ -134,7 +134,7 @@ if (isset($_POST['update']) and $demo == false) {
 
   //Remove from teams if 'left'.
   if ($grade == 'left') {
-    $result = $mysqli->prepare("DELETE FROM modules_staff WHERE memberID=?");
+    $result = $mysqli->prepare("DELETE FROM modules_staff WHERE memberID = ?");
     $result->bind_param('i', $_POST['old_userID']);
     $result->execute();
     $result->close();
@@ -142,18 +142,18 @@ if (isset($_POST['update']) and $demo == false) {
 
   $username = $_POST['username'];
   //Update 'sid' table;
-  $result = $mysqli->prepare("DELETE FROM sid WHERE userID=?");
+  $result = $mysqli->prepare("DELETE FROM sid WHERE userID = ?");
   $result->bind_param('i', $_POST['old_userID']);
   $result->execute();
   $result->close();
   if (isset($_POST['sid']) and $_POST['sid'] != '' and $_POST['sid'] != $string['unknown']) {
-    $result = $mysqli->prepare("INSERT INTO sid VALUES (?,?)");
+    $result = $mysqli->prepare("INSERT INTO sid VALUES (?, ?)");
     $result->bind_param('si', $_POST['sid'], $_POST['old_userID']);
     $result->execute();
     $result->close();
   }
 } elseif (isset($_POST['updateadmin'])) {
-  $result = $mysqli->prepare("DELETE FROM admin_access WHERE userID=?");
+  $result = $mysqli->prepare("DELETE FROM admin_access WHERE userID = ?");
   $result->bind_param('i', $_GET['userID']);
   $result->execute();
   $result->close();
@@ -179,20 +179,21 @@ if (isset($_POST['update']) and $demo == false) {
   if ($_POST['theme_radio'] == '0') $themecolor = 'NULL';
   $labelcolor = $_POST['labelcolor'];
   if ($_POST['labels_radio'] == '0') $labelcolor = 'NULL';
-  if (isset($_POST['unanswered_radio']) and $_POST['unanswered_radio'] == '0') $unanswered = 'NULL';
+  $unansweredcolor = $_POST['unansweredcolor'];
+  if ($_POST['unanswered_radio'] == '0') $unansweredcolor = 'NULL';
 
-  $result = $mysqli->prepare("DELETE FROM special_needs WHERE userID=?");
+  $result = $mysqli->prepare("DELETE FROM special_needs WHERE userID = ?");
   $result->bind_param('i', $_GET['userID']);
   $result->execute();
   $result->close();
 
-  if ($background != 'NULL' or $foreground != 'NULL' or $marks_color != 'NULL' or $textsize != 'null' or $extra_time != 'null' or $themecolor != 'NULL' or $labelcolor != 'NULL') {
-    $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL,?,?,?,?,?,?,?,?,?,?)");
-    $result->bind_param('issiisssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $_POST['font'],$unanswered);
+  if ($background != 'NULL' or $foreground != 'NULL' or $marks_color != 'NULL' or $textsize != 'null' or $extra_time != 'null' or $themecolor != 'NULL' or $labelcolor != 'NULL' or $unansweredcolor != 'NULL') {
+    $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $result->bind_param('issiisssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $_POST['font'], $unansweredcolor);
     $result->execute();
     $result->close();
 
-    $result = $mysqli->prepare("UPDATE users SET special_needs=1 WHERE id=?");
+    $result = $mysqli->prepare("UPDATE users SET special_needs = 1 WHERE id=?");
     $result->bind_param('i', $_GET['userID']);
     $result->execute();
     $result->close();
@@ -846,11 +847,11 @@ if (isset($_POST['update']) and $demo == false) {
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"text-align:left\">";
 
-  $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userID=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userID=? LIMIT 1");
   $result->bind_param('i', $tmp_id);
   $result->execute();
   $result->store_result();
-  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font);
+  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor);
   $result->fetch();
   if ($result->num_rows == 0) {
     $textsize = '';
@@ -861,6 +862,7 @@ if (isset($_POST['update']) and $demo == false) {
     $labelcolor = '';
     $marks_color = '';
     $font = '';
+    $unansweredcolor = '';
   } else {
     $special_needs = true;
     if ($background == 'NULL') $background = '';
@@ -869,6 +871,7 @@ if (isset($_POST['update']) and $demo == false) {
     if ($labelcolor == 'NULL') $labelcolor = '';
     if ($marks_color == 'NULL') $marks_color = '';
     if ($font == 'NULL') $font = '';
+    if ($unansweredcolor == 'NULL') $unansweredcolor = '';
   }
   $result->close();
 ?>
@@ -878,7 +881,7 @@ if (isset($_POST['update']) and $demo == false) {
 <select name="extra_time">
 <option value="null"><?php echo $string['noextratime']; ?></option>
 <?php
-  $times = array(10, 25, 33, 50, 100);
+  $times = array(5, 10, 25, 33, 50, 100, 200, 300);
   foreach ($times as $individual_time) {
     if ($individual_time == $extra_time) {
       echo "<option value=\"$individual_time\" selected>$individual_time%</option>\n";
@@ -987,6 +990,19 @@ if (isset($_POST['update']) and $demo == false) {
     echo "<div onclick=\"showPicker('labelcolor',event); document.getElementById('labels_radio_on').checked=true;\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
   } else {
     echo "<div onclick=\"showPicker('labelcolor',event); document.getElementById('labels_radio_on').checked=true;\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
+  }
+?>
+</td>
+</tr>
+<tr>
+<td>Unanswered</td>
+<td><input type="radio" name="unanswered_radio" value="0"<?php if ($unansweredcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input type="radio" name="unanswered_radio" id="unanswered_radio_on" value="1"<?php if ($unansweredcolor != '') echo ' checked'; ?> />
+<?php
+  if ($unansweredcolor == '') {
+    echo "<div onclick=\"showPicker('unansweredcolor',event); document.getElementById('unanswered_radio_on').checked=true;\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
+  } else {
+    echo "<div onclick=\"showPicker('unansweredcolor',event); document.getElementById('unanswered_radio_on').checked=true;\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$unansweredcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
   }
 ?>
 </td>
