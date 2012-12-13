@@ -584,7 +584,7 @@ if ($language != 'en') {
       if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
         $bg_color = '#FFC0C0';
         ?>
-        <tr class="nonattend"><td>&nbsp;</td>
+        <tr class="nonattend" id="res<?php echo $i+1 ?>"><td>&nbsp;</td>
         <td onclick="popMenu('', '<?php echo $tmp_userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $adj_percent; ?>', event);<?php echo $onclick; ?>" />
         &nbsp;<?php echo title; ?>&nbsp;<?php echo $surname ?>,&nbsp;
         <span class="grey"><?php echo $first_names ?></span>
@@ -602,7 +602,7 @@ if ($language != 'en') {
         } else {
           $late_submissions = 'n';
         }
-        echo '<tr';
+        echo '<tr id="res' . ($i+1) . '"';
         if ($user_results[$i]['questions'] < $question_no) {
           $scatter_data .= "0\n0\n";
           //fwrite($scatter_file,"0\n");
