@@ -4984,53 +4984,6 @@ QUERY;
 
 
 
-  //bparish 05/12/2012 - Add new table to support a timer for summative exams
-
-  $does_table_exist = $updater_utils->does_table_exist( 'log_lab_start_time' );
-
-  if ( $does_table_exist === false ){
-
-    $sql    = 'CREATE TABLE
-                 log_lab_start_time( id            int            PRIMARY KEY NOT NULL AUTO_INCREMENT
-                                   , labID         int(10)   unsigned NOT NULL
-                                   , paperID       int(10)   unsigned NOT NULL
-                                   , invigilatorID int(10)   unsigned NOT NULL
-                                   , start_time      datetime  NOT NULL
-                                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
-
-    $result = $mysqli->query( $sql );
-
-    if ( $result !== TRUE ) {
-      printf( "Error: %s\n", $mysqli->error );
-    }
-
-
-    echo '<li>CREATE TABLE log_extra_time ( id, labID, paperID, invigilatorID, start_time )</li>';
-  }
-
-
-  $does_table_exist = $updater_utils->does_table_exist( 'log_extra_time' );
-
-  if ( $does_table_exist === false ){
-
-    $sql    = 'CREATE TABLE
-                 log_extra_time( id                     int unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
-                               , log_lab_start_time_id  int unsigned NOT NULL
-                               , userID                 int unsigned NOT NULL
-                               , end_time               int          NOT NULL
-                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
-
-    $result = $mysqli->query( $sql );
-
-    if ( $result !== TRUE ) {
-      printf( "Error: %s\n", $mysqli->error );
-    }
-
-
-    echo '<li>CREATE TABLE log_extra_time ( id, log_lab_start_time_id, userID, end_time )</li>';
-  }
-
-
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
