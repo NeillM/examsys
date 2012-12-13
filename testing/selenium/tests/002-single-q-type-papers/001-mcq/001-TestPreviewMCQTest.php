@@ -1,7 +1,7 @@
 <?php
 require_once 'shared.inc.php';
 
-class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
+class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected $install_type = ' \(local\)';
   protected $page_root = 'https://rogo.local';
