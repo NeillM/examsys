@@ -41,14 +41,14 @@
   $stmt->close();
   
   if ($paper_password == '') {
-    access_denied('Access to this paper is not currently allowed.', true, true);
+    UserNotices::access_denied('Access to this paper is not currently allowed.', true, true);
   }
 
   if (!isset($_SERVER['PHP_AUTH_USER'])) {
-    access_denied('Authentication with Rogo has failed.', true, true);
+    UserNotices::access_denied('Authentication with Rogo has failed.', true, true);
   } else {
     if ($_SERVER['PHP_AUTH_USER'] != 'sctreviewer' or $_SERVER['PHP_AUTH_PW'] != $paper_password) {
-      access_denied('Authentication with Rogo has failed.', true, true);
+      UserNotices::access_denied('Authentication with Rogo has failed.', true, true);
     }
   }
   

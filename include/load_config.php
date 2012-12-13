@@ -16,14 +16,13 @@
  * @package
  */
 
-  $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
-
+$root                  = str_replace( '/include', '/', str_replace('\\', '/', dirname(__FILE__) ) );
 
 require_once $root . 'classes/configobject.class.php';
 
-$configObject=Config::Instance();
+$configObject          = Config::Instance();
 
-$cfg_web_root=$configObject->get('cfg_web_root');
-$cfg_editor_javascript  = $configObject->get('cfg_editor_javascript');
-$cfg_editor_name        = $configObject->get('cfg_editor_name');
+$cfg_web_root          = $configObject->get( 'cfg_web_root' );
+$cfg_editor_javascript = $configObject->get( 'cfg_editor_javascript' );
+$cfg_editor_name       = $configObject->get( 'cfg_editor_name' );
 

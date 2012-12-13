@@ -28,15 +28,17 @@ require_once '../include/marking_functions.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
+require      '../classes/logmetadata.class.php';
+require      '../classes/logstarttime.class.php';
 
 $displayDebug = false; //ajax call so debug info messes up the output
 
 check_var('id', 'GET', true, false);
 
-$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, password FROM properties WHERE crypt_name=? LIMIT 1");
+$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), exam_duration as duration, calendar_year, password FROM properties WHERE crypt_name=? LIMIT 1");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
-$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $calendar_year, $password);
+$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $exam_duration, $calendar_year, $password);
 $stmt->fetch();
 $stmt->close();
 
@@ -65,6 +67,11 @@ if ($userObject->has_role('Student')) {
   if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
     $paper_type = '_late';
   }
+
+  $log_metadata = new LogMetadata( $userObject, $property_id, $mysqli );
+
+  check_whether_student_has_finished( $log_metadata );
+
 }
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;

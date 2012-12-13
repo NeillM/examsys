@@ -92,7 +92,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     document.getElementById('menu' + ID).style.display = current;
 
     <?php
-      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '$protocol" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '$protocol" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '$protocol" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
+      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
     ?>
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
     document.getElementById('icon' + ID).setAttribute('src',icon);
@@ -354,7 +354,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 ?>
   <tr><td>
   <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($userObject, $mysqli, 'questions'); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', 100); ?></div>
   <div style="margin-left:4px"><br /><?php echo $string['status']; search_utils::display_status_dropdown(); ?></div>
   <div style="margin-left:4px"><br /><?php echo $string['blooms']; search_utils::display_blooms_dropdown(); ?></div>
   

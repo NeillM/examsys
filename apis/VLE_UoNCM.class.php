@@ -25,7 +25,7 @@
 */
 
 require_once 'VLEAPI.if.php';
-require_once $cfg_web_root . 'webServices/RestRequest.class';
+require_once $configObject->get('cfg_web_root') . 'webServices/RestRequest.class';
 
 class VLE_UoNCM implements iVLEAPI {
   private $_root_url = 'http://curriculum.nottingham.ac.uk/%s/index.php/';

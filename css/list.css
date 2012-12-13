@@ -3,15 +3,15 @@
   text-decoration:none
 }
 .col {
-  padding-left:5px;
+  padding-left:5px !important;
   vertical-align:top;
 }
 .col10 {
-  padding-left:10px;
+  padding-left:10px !important;
   vertical-align:top;
 }
 .col30 {
-  padding-left:30px;
+  padding-left:30px !important;
   vertical-align:top;
 }
 .l:hover {

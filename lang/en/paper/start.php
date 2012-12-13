@@ -1,4 +1,19 @@
 <?php
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+
 require_once '../lang/' . $language . '/include/months.inc';
 require_once '../lang/' . $language . '/question/sct_shared.php';
 require_once '../lang/' . $language . '/include/paper_security.inc';
@@ -21,6 +36,7 @@ $string['unansweredquestion'] = '= unanswered question';
 $string['negmarking'] = 'negative marking';
 $string['bonusmark'] = 'for correct options, plus %d bonus %s for fully correct order';
 $string['calculator'] = 'Calculator';
+$string['timeremaining'] = 'Time remaining';
 $string['finishnote'] = '<strong>NOTE:</strong> Please complete all questions before clicking &#145;Finish&#146;, you will not be able to go back.';
 $string['gobackpink'] = 'When you go back unanswered questions will be highlighted in pink.';
 $string['fireexit'] = 'Fire Exit';

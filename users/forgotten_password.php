@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'classes/formutils.class.php';
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
-$mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $configObject->get('dbclass'));
 
 $email = (isset($_GET['email'])) ? $_GET['email'] : '';
 $message = '';
@@ -36,10 +36,10 @@ $form_util = new FormUtils();
 
 if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
   $email = $_POST['email'];
-  
+
   // Process the form submission
   $errors = $form_util->check_required(array('email' => $string['emailaddress']));
-  
+
   if(count($errors) == 0) {
   // Check if the supplied value is an email address (avoid an unnecessary DB call)
     if(!$form_util->is_email($email)) {
@@ -57,7 +57,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
       } else {
         // If they do exist, create a token and send it to them in an email
         $token = substr(md5(rand(10000000,99999999)), 0, 15);
-        
+
         // Check if there is already a token for the user and update reather than continually adding new ones
         // if they refresh the browser
         $stmt = $mysqli->prepare("SELECT id FROM password_tokens WHERE user_id=? ORDER BY id DESC LIMIT 1");
@@ -77,7 +77,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
           $updatetoken->execute();
           $updatetoken->close();
         }
-        
+
         $email_body = <<< EMAIL
 <!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">
 <html>
@@ -92,8 +92,8 @@ h2 {font-size:120%}
 <body>
 EMAIL;
 
-        $email_body .= sprintf($string['emailhtml'], $title, $surname, $_SERVER['HTTP_HOST'], $token, $support_email);
-        
+        $email_body .= sprintf($string['emailhtml'], $title, $surname, $_SERVER['HTTP_HOST'], $token, $configObject->get('support_email'));
+
         $email_body .= <<< EMAIL
 </body>
 </html>
@@ -101,7 +101,7 @@ EMAIL;
 
         $mail_to = $email;
         $subject = "Rogo {$string['passwordreset']}";
-        $headers = "From: " . $support_email . "\n";
+        $headers = "From: " . $configObject->get('support_email') . "\n";
         $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
         if(!@mail ($mail_to, $subject, $email_body, $headers)) {
           $errors[] = sprintf($string['couldntsendemail'], $email);
@@ -119,9 +119,9 @@ EMAIL;
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['forgottenpassword'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />
   <style type="text/css">

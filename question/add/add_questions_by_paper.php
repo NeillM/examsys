@@ -37,9 +37,6 @@ require_once '../../classes/questionutils.class.php';
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
     body {font-size:90%}
-    a:link {color:black}
-    a:visited {color:black}
-    a:hover {color:black}
     .divider {font-size:80%; font-weight:bold; padding-left:6px}
     .s {padding-left:6px}
     .q_no {text-align:right; width:35px}
@@ -53,7 +50,7 @@ require_once '../../classes/questionutils.class.php';
     }
 
     function populateTicks() {
-      q_array = parent.top.controls.document.theform.questions_to_add.value.split(",");
+      q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
       for (i=0; i<q_array.length; i++) { 
         var obj = document.getElementById(q_array[i]);
         if (obj != null) {
@@ -78,7 +75,7 @@ require_once '../../classes/questionutils.class.php';
   echo "<input type=\"hidden\" name=\"screen\" value=\"1\" />\n";
   echo "<table class=\"header\">\n";
   echo "<tr><th colspan=\"7\" style=\"font-size:160%; font-weight:bold\">&nbsp;$paper_title</th></tr>\n";
-  echo "<tr><th></th><th></th><th style=\"text-align:right\"><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;</th><th>" . $string['question'] . "&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['type'] . "&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['modified'] . "&nbsp;</th></tr>\n";
+  echo "<tr><th></th><th></th><th>&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['question'] . "&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['type'] . "&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['modified'] . "&nbsp;</th></tr>\n";
   echo "<tr><th colspan=\"7\" class=\"bevel\"></th></tr>\n";
 
   // Get the questions in order off the paper.

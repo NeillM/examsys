@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * View internal and external reviewers comments
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -26,10 +26,10 @@
 
   require '../include/staff_auth.inc';
   require '../include/media.inc';
-  
+
   $type = $_GET['type'];
   $paperID = $_GET['paperID'];
-  
+
   function displayRank($rank_position) {
     if ($rank_position == 1) {
       $html = '1st';
@@ -71,7 +71,7 @@
           $tmp_action = $string[$comments_data[$questionID][$reviewer]['action']];
           $tmp_response = nl2br($comments_data[$questionID][$reviewer]['response']);
         }
-        
+
         if (trim($tmp_response) == '') $tmp_response = '<span style="color:#808080">' . $string['noresponse'] . '</span>';
         $html .= "<tr class=\"$status reviewline\"><td class=\"reviewline\"><img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" /></td><td class=\"reviewline\">" . $comments_data[$questionID][$reviewer]['name'] . "</td><td class=\"reviewline\">$tmp_comment</td><td class=\"reviewline\">$tmp_action</td><td class=\"reviewline\">$tmp_response</td></tr>\n";
       }
@@ -82,13 +82,17 @@
       }
     }
     $html .= "</table></td></tr>\n";
-    
+
     return $html;
   }
 
   function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std) {
-    global $language, $configObject->get('cfg_root_path');
-    
+    global $language;
+
+    $configObject = Config::Instance();
+
+    $cfg_root_path = $configObject->get('cfg_root_path');
+
     if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
     echo "<tr>\n";
 
@@ -147,9 +151,9 @@
           write_string('</object>');
           write_string('<!--<![endif]-->');
           write_string('</object>');
-          
+
           sendTextToAS3('<?php echo $language; ?>','q<?php echo $q_no; ?>', 1, '<?php echo '../media/' . $q_media; ?>', '<?php echo $correct; ?>', '<?php echo $correct; ?>');
-          
+
         </script>
         <input type="hidden" name="q<?php echo $q_no; ?>" id="q<?php echo $q_no; ?>" />
         <?php
@@ -215,7 +219,7 @@
             } else {
               echo "<tr><td style=\"font-weight:bold\">$false_label</td><td>$individual_option</td></tr>\n";
             }
-          }            
+          }
           break;
         case 'labelling':
           $tmp_std_array = explode(',',$std);
@@ -237,7 +241,7 @@
             }
           }
           $max_col2-=10;
-          
+
           $max_label = max($max_col1, $max_col2);
 
           $tmp_height = $q_media_height;
@@ -284,7 +288,7 @@
               </script>
               </div>
           <?php
-          
+
           break;
         case 'mcq':
           $i = 0;
@@ -326,7 +330,7 @@
           foreach ($correct_buf as $individual_correct) {
             if ($individual_correct > $rank_no and $individual_correct < 9990) $rank_no = $individual_correct;
           }
-          
+
           $i = 0;
           foreach ($options as $individual_option) {
             $i++;
@@ -383,7 +387,7 @@
           echo "</tr>\n";
           $row_no++;
         }
-      }    
+      }
       echo '</table>';
       echo "</ol>\n</td></tr>\n";
     } elseif ($q_type == 'extmatch') {
@@ -396,12 +400,12 @@
       $tmp_answers_array = explode('|',$correct_buf[0]);
       $tmp_std_array = explode(',',$std);
       $std_part = 0;
-      
+
       $tmp_text_no = 0;
       $tmp_media_no = 0;
       foreach ($matching_scenarios as $single_scenario) {
         if (trim($single_scenario) != '') $tmp_text_no++;
-      }          
+      }
       foreach ($tmp_media_array as $single_media) {
         if (trim($single_media) != '') $tmp_media_no++;
       }
@@ -410,7 +414,7 @@
       } else {
         $total_scenarios = $tmp_media_no;
       }
-      
+
       echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
       if ($tmp_media_array[0] != '') {
         echo "<div align=\"center\">" . display_media($tmp_media_array[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '') . "</div>\n";
@@ -446,7 +450,7 @@
       echo "</ol>\n";
     }
     echo "</td></tr>\n";
-    
+
     // Display comments here.
     if ($q_type != 'info') echo displayComments($q_id, $comments, $q_type, $q_no);
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
@@ -458,9 +462,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo ucfirst($type); ?> Comments Report</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
@@ -475,8 +479,8 @@
   .OK {}
   .Minor {}
   .Major {}
-  
-  
+
+
   .screenbrk {
     color:#15428B;
     font-weight:bold;
@@ -571,7 +575,7 @@ if (isset($_GET['scrOfY'])) {
     foreach ($reviewers_split as $incomplete_individual) {
       $incomplete_array[$incomplete_individual] = '1';
     }
-  
+
     // Capture reviewer comments data first.
     $result = $mysqli->prepare("SELECT title, initials, surname, q_id, comment, category, DATE_FORMAT(reviewed,'%d/%m/%Y %T') AS reviewed, reviewer, action, response FROM (review_comments, users) WHERE review_comments.reviewer=users.id AND review_type=? AND q_paper=?");
     $result->bind_param('si', $type,$paperID);
@@ -581,7 +585,7 @@ if (isset($_GET['scrOfY'])) {
       if (isset($incomplete_array[$tmp_reviewer])) {
         unset($incomplete_array[$tmp_reviewer]);
       }
-    
+
       $comments_array[$tmp_q_id][$tmp_reviewer]['name'] = $title . ' ' . $initials . ' ' . $surname;
       $comments_array[$tmp_q_id][$tmp_reviewer]['reviewed'] = $reviewed;
       $comments_array[$tmp_q_id][$tmp_reviewer]['comment'] = $comment;
@@ -590,7 +594,7 @@ if (isset($_GET['scrOfY'])) {
       $comments_array[$tmp_q_id][$tmp_reviewer]['response'] = $response;
     }
     $result->close();
-  
+
     $incomplete_names = array();
     $reviewers = explode(',',$reviewers);
     foreach ($incomplete_array as $reviwer=>$flag) {
@@ -601,11 +605,11 @@ if (isset($_GET['scrOfY'])) {
       $result->bind_result($tmp_title, $tmp_initials, $tmp_surname);
       $result->fetch();
       $result->close();
-      
+
       $incomplete_names[] = $tmp_title . ' ' . $tmp_initials . ' ' . $tmp_surname;
     }
   }
-  
+
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     $folder = $_GET['folder'];

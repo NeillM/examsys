@@ -176,7 +176,7 @@ SQL;
       $user_can_delete = "AND idMod IN (" . implode(',',array_keys($userObj->get_staff_modules())) . ")"; //users can only remove modules if they are on the team
     }
 
-    $editProperties = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? $user_can_delete");
+    $editProperties = $db->prepare("DELETE FROM questions_modules WHERE q_id = ? $user_can_delete");
     $editProperties->bind_param('i', $q_id);
     $editProperties->execute();
     $editProperties->close();

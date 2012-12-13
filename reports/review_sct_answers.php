@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -28,7 +28,7 @@ require '../include/errors.inc';
 
 function saveResponseData($optID, $experts, $max_experts) {
   global $mysqli;
-  
+
   $marks = ($max_experts > 0) ? $experts / $max_experts : 0;
   $stmt = $mysqli->prepare("UPDATE options SET correct=?, marks_correct=? WHERE id_num=?");
   $stmt->bind_param('sdi', $experts, $marks, $optID);
@@ -53,21 +53,21 @@ function display_question($question, &$question_no, $reviews, &$string) {
     echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
     $li_set = 1;
   }
-  
+
   $sct_parts = explode('~',$question['leadin']);
   echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
   $sct_titles = array(1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']);
   echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">{$string['newinformation']}</td></tr>\n";
   echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
   echo "</table>\n";
-    
+
   echo '<p><strong>';
   echo $string['thenthis'] . ' ';
   echo mb_strtolower($sct_titles[$question['display_method']], 'UTF-8');
   echo ' ' . $string['becomes'] . ':';
   echo '</strong></p>';
   echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
-  
+
   $no_experts = 0;
   $max_experts = 0;
   for ($i=1; $i<=count($question['options']); $i++) {
@@ -76,7 +76,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
       if($reviews[$question['q_id']][$i] > $max_experts) $max_experts = $reviews[$question['q_id']][$i];
     }
   }
-  
+
   $part_id = 0;
   foreach ($question['options'] as $optionID => $option_text) {
     $part_id++;
@@ -93,7 +93,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
     }
   }
   echo "</table>\n</blockquote>\n";
-  
+
   echo "<span style=\"color:#808080\">{$string['briefreasonwhy']}</span><br /><ul>";
   if (isset($reviews[$question['q_id']]) and count($reviews[$question['q_id']]['reason']) > 0) {
     foreach($reviews[$question['q_id']]['reason'] as $comment) {
@@ -113,8 +113,8 @@ function display_question($question, &$question_no, $reviews, &$string) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title><?php echo $string['sctresponses'] . " $configObject->get('cfg_install_type')"; ?></title>
+
+  <title><?php echo $string['sctresponses'] . " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -143,7 +143,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
   $stmt->fetch();
   $stmt->close();
 
-    
+
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     $folder = $_GET['folder'];
@@ -154,7 +154,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
     $result->fetch();
     $result->close();
   }
-  
+
   echo "<table class=\"header\">\n";
   echo "<tr><th>";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
@@ -164,7 +164,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
-  
+
   echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">SCT Responses/Reasons</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"{$string['help']}\" border=\"0\" /></a></th></tr>\n";
   echo '<tr><th class="bevel" colspan="2"></th></tr>';
 
@@ -176,7 +176,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
   //Capture reviewer data
   $reviewer_data = array();
   $reviewer_list = array();
-  
+
   $stmt = $mysqli->prepare("SELECT reviewer_name, q_id, answer, reason FROM sct_reviews WHERE paperID=?");
   $stmt->bind_param('i', $_GET['paperID']);
   $stmt->execute();
@@ -191,7 +191,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
     $reviewer_data[$q_id]['reason'][$reviewer_name] = $reason;
   }
   $stmt->close();
-  
+
   //build the questions_array
   $old_q_id = '';
   $q_no = 0;
@@ -217,15 +217,15 @@ function display_question($question, &$question_no, $reviews, &$string) {
       $questions_array[$q_no]['q_option_order'] = $q_option_order;
     }
     $questions_array[$q_no]['options'][$id_num] = $option_text;
-    
+
     $old_q_id = $q_id;
   }
   $stmt->close();
-  
+
   //display the questions
   foreach($questions_array as &$question) {
     if ($question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    display_question($question, $question_no, $reviewer_data, $string);	
+    display_question($question, $question_no, $reviewer_data, $string);
   }
 ?>
 </table>

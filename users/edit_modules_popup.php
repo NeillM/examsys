@@ -17,7 +17,7 @@
 /**
 *
 * Edit a students modules
-*  
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -27,10 +27,10 @@
   require_once '../include/admin_auth.inc';
   require_once '../include/errors.inc';
   require_once '../classes/dateutils.class.php';
-  
+
   function drawTabs($current_tab) {
     global $string;
-    
+
     $html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $_GET['session'] . ':</strong></td>';
     for ($i=1; $i<=3; $i++) {
       if ($i == $current_tab) {
@@ -45,29 +45,29 @@
 
   function list_modules($mod, $id, $student_mod) {
     $old_letter = '';
-    
+
     if ($id == '1') {
       echo "<div style=\"display:block; width:100%; border-bottom:10px\" id=\"list$id\">";
     } else {
       echo "<div style=\"display:none; width:100%; border-bottom:10px\" id=\"list$id\">";
     }
-    
+
     echo drawTabs($id);
-    
+
     if ($id == '1') {
       echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
     } else {
       echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
     }
-    
+
     foreach($mod as $idMod => $mod_info) {
       $moduleid = $mod_info['moduleid'];
       $fullname = $mod_info['fullname'];
-      
+
       if ($old_letter != strtoupper(substr($moduleid,0,1))) {
         echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>&nbsp;" . strtoupper(substr($moduleid,0,1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
       }
-   
+
       if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
         echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" checked />&nbsp;$moduleid:&nbsp;$fullname</div>\n";
       } else {
@@ -77,19 +77,19 @@
     }
     echo "</div>\n</div>\n";
   }
-  
+
   if (isset($_POST['submit'])) {
-    for ($attempt=1; $attempt<=3; $attempt++) {
+    for ( $attempt=1; $attempt<=3; $attempt++ ) {
       // Clear the student of all modules.
       $result = $mysqli->prepare("DELETE FROM modules_student WHERE userID=? AND calendar_year=? AND attempt=?");
       $result->bind_param('isi', $_POST['userID'], $_POST['session'], $attempt);
-      $result->execute();  
+      $result->execute();
       $result->close();
-      
+
       // Insert a record for each module.
-      for ($i=0; $i<$_POST['mod_count']; $i++) {
-        if (isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '') {
-          $result = $mysqli->prepare("INSERT INTO modules_student VALUES (NULL,?,?,?,?,0)");
+      for ( $i=1; $i<=$_POST['mod_count']; $i++ ) {
+        if ( isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '' ) {
+          $result = $mysqli->prepare( 'INSERT INTO modules_student VALUES (NULL,?,?,?,?,0)' );
           $result->bind_param('iisi', $_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $_POST['session'], $attempt);
           $result->execute();
           $result->close();
@@ -102,9 +102,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $_POST['session'] . ' ' . $string['modules']; ?></title>
-  
+
   <script type="text/javascript">
     function closeWindow() {
       window.opener.location.href = 'details.php?userID=<?php echo $_POST['userID']; ?>&tab=modules';
@@ -127,9 +127,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $session; ?> Modules</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#E3EFFF; margin:8px 4px 4px 4px}
@@ -143,15 +143,15 @@
         document.getElementById(objectID).style.backgroundColor = 'white';
       }
     }
-    
+
     function showTab(tabID) {
       document.getElementById('list1').style.display = 'none';
       document.getElementById('list2').style.display = 'none';
       document.getElementById('list3').style.display = 'none';
-      
+
       document.getElementById(tabID).style.display = 'block';
     }
-    
+
     function resizeList() {
       var winW = 630, winH = 460;
       if (document.body && document.body.offsetWidth) {
@@ -190,10 +190,10 @@
   $result->close();
 
   $module_no = 0;
-  $old_year = '';  
+  $old_year = '';
   $modules = array();
   $mod_count = 0;
-  
+
   $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid=schools.id AND active=1 ORDER BY moduleid");
   $result->execute();
   $result->store_result();
@@ -204,7 +204,7 @@
     $mod_count++;
   }
   $result->close();
-  
+
   if ($mod_count == 0) {
     echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;" . $string['nomodules'] . " <strong>" . $_GET['session'] . "</strong>.</div>";
   } else {
@@ -212,7 +212,7 @@
     list_modules($modules, 2, $student_modules);
     list_modules($modules, 3, $student_modules);
   }
- 
+
   echo "<input type=\"hidden\" name=\"mod_count\" value=\"$mod_count\" /></div></td>\n</tr>\n";
   echo "<input type=\"hidden\" name=\"userID\" value=\"" . $_GET['userID'] . "\" /></div></td>\n</tr>\n";
   echo "<input type=\"hidden\" name=\"session\" value=\"" . $session . "\" /></div></td>\n</tr>\n";

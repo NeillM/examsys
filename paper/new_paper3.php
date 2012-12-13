@@ -79,11 +79,12 @@
   $first = true;
   for ($i=0; $i<$_POST['module_no']; $i++) {
     if (isset($_POST['module' . $i])) {
+      $module_code = module_utils::get_moduleID($_POST['module' . $i], $mysqli);
       if ($first == true) {
-        $first_module = module_utils::get_moduleID($_POST['module' . $i], $mysqli);
+        $first_module = $module_code;
         $first = false;
       } 
-      $modules[$_POST['module' . $i]] = $_POST['module' . $i];
+      $modules[$_POST['module' . $i]] = $module_code;
     }
   }
   //add the modules to the paper

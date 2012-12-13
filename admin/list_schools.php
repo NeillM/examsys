@@ -67,8 +67,8 @@ $result->close();
 </tr>
 <tr>
 <th><div class="col10"><?php echo $string['name']; ?>&nbsp;</div></th>
-<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['faculty']; ?>&nbsp;</th>
-<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modules']; ?>&nbsp;</th>
+<th class="vert_div">&nbsp;<?php echo $string['faculty']; ?>&nbsp;</th>
+<th class="vert_div">&nbsp;<?php echo $string['modules']; ?>&nbsp;</th>
 </tr>
 <tr><th colspan="3" class="bevel"></th></tr>
 <?php
@@ -83,7 +83,7 @@ if ($faculties > 0) {
   while ($result->fetch()) {
     if ($old_faculty != $faculty) {
       $del = ($faculty_deleted != '') ? ' class="deleted"' : '';
-      echo "<tr><td colspan=\"4\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; padding-bottom:5px; width:100%\"><tr><td{$del}><nobr>$faculty</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+      echo "<tr><td colspan=\"4\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; padding-bottom:5px; width:99%\"><tr><td{$del}><nobr>$faculty</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
     echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit('$id')\" class=\"l\"><td><div class=\"col30\">$school</div></td><td class=\"col\">$faculty</td><td><div class=\"no\">" . number_format($module_no) . "</div></td></tr>\n";
     $old_faculty = $faculty;

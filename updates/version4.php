@@ -22,9 +22,10 @@
 * @package
 */
 
-require_once '../config/config.inc.php';
+require_once '../include/load_config.php';
 
 require_once '../classes/installutils.class.php';
+require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
 require_once '../classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
@@ -78,9 +79,9 @@ function gen_random_salt() {
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-    <title>Rogo <?php echo $rogo_version . ' to ' . $version; ?> update Script</title>
+    <title>Rogo <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -110,7 +111,7 @@ function gen_random_salt() {
       <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
       <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
       <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogo</div>
-      <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $rogo_version . ' to ' . $version; ?>)</div>
+      <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $configObject->get('rogo_version') . ' to ' . $version; ?>)</div>
       </th>
       <th style="text-align:right; padding-right:10px">
       <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" />
@@ -165,11 +166,13 @@ if (!isset($_POST['update'])) {
   <?php
 
 } else {
-  if (!isset($cfg_db_charset)) {
+  if ($configObject->get('cfg_db_charset') == null) {
     $cfg_db_charset = 'latin1';
+  } else {
+    $cfg_db_charset = $configObject->get('cfg_db_charset');
   }
 
-  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database, $cfg_db_charset, $dbclass);
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $configObject->get('cfg_db_database'), $cfg_db_charset, $configObject->get('dbclass'));
 
   if ($mysqli->connect_error) {
     echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' .  $_POST['mysql_admin_pass'] . '</div>';
@@ -177,6 +180,14 @@ if (!isset($_POST['update'])) {
     echo "</html>";
     exit;
   }
+
+  // Avoid repeated method calls
+  $cfg_db_database = $configObject->get('cfg_db_database');
+  $cfg_db_student_user = $configObject->get('cfg_db_student_user');
+  $cfg_db_staff_user = $configObject->get('cfg_db_staff_user');
+  $cfg_db_host = $configObject->get('cfg_db_host');
+  $cfg_db_username = $configObject->get('cfg_db_username');
+  $cfg_db_external_user = $configObject->get('cfg_db_external_user');
 
   echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>\n<ol>";
   ob_start();
@@ -3924,6 +3935,7 @@ if (!isset($_POST['update'])) {
       echo '<li class="error">ERROR: could not set permissions ' . $sql . '</li>';
     }
   }
+
   // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
   $result->execute();
@@ -4903,10 +4915,70 @@ QUERY;
   echo "<li>GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
 
   //brzsw 22/11/2012 - Add new grants for invigilator users needing select from properties_modules
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules_students TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_students TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
 
+  $mysqli->query( 'FLUSH PRIVILEGES' );
+
+
+
+
+  // 30/11/2012
+  // Adding a new table log_start_time
+
+
+  $updater_utils = new UpdaterUtils( $mysqli, $cfg_db_database );
+
+  $does_table_exist = $updater_utils->does_table_exist( 'log_start_time' );
+
+  if ( $does_table_exist === false ){
+
+    $sql    = 'CREATE TABLE
+                 log_start_time(   id           int            PRIMARY KEY NOT NULL AUTO_INCREMENT
+                                 , userID       int            unsigned NOT NULL
+                                 , paperID      int            unsigned NOT NULL
+                                 , start_time   datetime       NOT NULL
+                               , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
+                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+
+
+    $result = $mysqli->query( $sql );
+
+    if ( $result !== TRUE ) {
+      printf( "Error: %s\n", $mysqli->error );
+    }
+
+
+    echo '<li>CREATE TABLE log_start_time ( id, userID, paperID, start_time )</li>';
+  }
+
+
+
+  $does_column_exist = $updater_utils->does_column_exist( 'log_metadata'
+                                                        , 'completed' );
+  if( $does_column_exist === false ){
+
+    $sql = "ALTER TABLE log_metadata ADD completed DATETIME NULL";
+
+    $result = $mysqli->query( $sql );
+
+    if ( $result !== TRUE ) {
+      printf( "Error: %s\n", $mysqli->error );
+    }
+
+    echo '<li>' . $sql . '</li>' . ".\n";
+  }
+
+
+
+  $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.log_start_time TO \'' . $cfg_db_student_user . '\'@\'' .  $cfg_db_host . '\'';
+  $mysqli->query( $sql );
+  echo '<li>' . $sql  . '</li>' . "\n";
+
+  $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_start_time TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
+  $mysqli->query( $sql );
+  echo '<li>' . $sql  . '</li>' . "\n";
   $mysqli->query( 'FLUSH PRIVILEGES' );
 
   //cczsa1 13/12/2012 - Convert authentication in config file to  new format

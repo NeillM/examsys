@@ -79,14 +79,14 @@ Class CourseUtils {
    */
   static function course_exists($name, $db) {
     // Check for unique course
-    $unique_courseid = true;
+    $unique_courseid = false;
     
     $result = $db->prepare("SELECT id FROM courses WHERE name=?");
     $result->bind_param('s', $name);
     $result->execute();
     $result->store_result();
-    if ($result->num_rows == 0) {
-      $unique_courseid = false;
+    if ($result->num_rows > 0) {
+      $unique_courseid = true;
     }
     $result->free_result();
     $result->close();

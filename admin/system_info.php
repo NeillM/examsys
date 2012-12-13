@@ -140,10 +140,10 @@ require_once '../classes/dateutils.class.php';
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:400px">
 <tr><td colspan="2" class="sechead"><?php echo $string['application']; ?></td></tr>
 <tr><td><?php echo $string['version']; ?></td><td><?php echo $configObject->get('rogo_version'); ?></td></tr>
-<tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root') ?></td></tr>
-<tr><td><?php echo $string['database']; ?></td><td><?php echo $cfg_db_database; ?></td></tr>
+<tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
+<tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
 <?php
-if ($cfg_use_ldap == true) {
+if ($configObject->get('cfg_use_ldap') == true) {
   echo "<tr><td>" . $string['authentication'] . "</td><td>LDAP</td></tr>\n";
 } else {
   echo "<tr><td>" . $string['authentication'] . "</td><td>Internal</td></tr>\n";

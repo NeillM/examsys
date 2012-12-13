@@ -15,13 +15,13 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
-  
+
   require '../../include/staff_student_auth.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -29,20 +29,20 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Online Tutorial<?php echo " $configObject->get('cfg_install_type')"; ?></title>
+  <title>Online Tutorial<?php echo " " . $configObject->get('cfg_install_type') ?></title>
   <style type="text/css">
     html, body {margin:0;	padding:0; height:100%; width:100%}
   </style>
 </head>
 <body>
 <?php
-   
+
    echo "<embed width=\"100%\" height=\"100%\" src='./images/" . $_GET['tutorial'] . "' />";
-  
+
    if ($userObject->has_role(array('SysAdmin','External'))) {   // Don't record the homepage or SysAdmin activities.
     $result = $mysqli->prepare("INSERT INTO help_tutorial_log VALUES (NULL, ?, ?, NOW(), ?)");
     $result->bind_param('sis', 'student', $userObject->get_user_ID(), $_GET['tutorial']);
-    $result->execute();  
+    $result->execute();
     $result->close();
   }
 ?>

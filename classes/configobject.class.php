@@ -22,6 +22,7 @@ class Config {
    * @var array
    */
   public $data;
+  private static $inst;
 
   /**
    *
@@ -29,11 +30,10 @@ class Config {
 
   public static function Instance()
   {
-    static $inst = null;
-    if ($inst == null) {
-      $inst = new Config();
+    if (!is_object(self::$inst)) {
+      self::$inst = new Config();
     }
-    return $inst;
+    return self::$inst;
   }
 
   private function __construct() {
@@ -64,5 +64,7 @@ class Config {
       }
       return $dat;
     }
+
+    return null;
   }
 }

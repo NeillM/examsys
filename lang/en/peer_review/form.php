@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- *
- * @author Rob Ingram
- * @version 1.0
- * @copyright Copyright (c) 2012 The University of Nottingham
- * @package
- */
-
 require_once '../lang/' . $language . '/include/paper_security.inc';
 
 $string['peerreview'] = 'Peer Review';

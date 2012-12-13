@@ -105,6 +105,8 @@ Class module_utils {
   }
   
   static function get_moduleid_from_id($modID, $db) {
+    $modID = intval($modID);
+  
     $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ?");
     $result->bind_param('i', $modID);
     $result->execute();

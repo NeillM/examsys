@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -69,7 +69,7 @@
   }
   $result->free_result();
   $result->close();
-  
+
   function checkSession($session) {
     $updated_session = $session;
     if (preg_match( '/\d\d\d\d.\d\d\d\d/' , $_POST['new_paper'], $matches) == 1) {
@@ -82,7 +82,7 @@
 
     return $updated_session;
   }
-  
+
   $calendar_year = $new_calendar_year = '';
   $moduleID = NULL;
   $error = array();
@@ -117,7 +117,7 @@
   } else {    // Copy the paper and the questions.
     // Copy the properties (properties table)
     $new_paper_id = copyProperties($userObject->get_user_ID(), $mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject);
-  	
+
     // Copy the question and option data (questions and options tables)
     $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper=? ORDER BY display_pos");
     $result->bind_param('i', $_POST['paperID']);
@@ -126,7 +126,7 @@
     $result->bind_result($question, $screen, $display_pos);
     $old_qids = array();
     $new_qids = array();
-    $q_no = 0;   
+    $q_no = 0;
     while ($result->fetch()) {
       $line = 0;
       $qData = $mysqli->prepare("SELECT * FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
@@ -135,7 +135,7 @@
       $qData->store_result();
       $qData->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
       while ($qData->fetch()) {
-        $old_qids[$question] = $question; 
+        $old_qids[$question] = $question;
         // Question data
         if ($line == 0) {
           if ($q_type != 'info') $q_no++;
@@ -237,7 +237,7 @@
           $trackChange->bind_param('iis', $new_paper_id, $userObject->get_user_ID(), $question_id);
           $trackChange->execute();
           $trackChange->close();
-          
+
           // Lookup and copy the keywords
           $keyword_result = $mysqli->prepare("SELECT keywordID FROM keywords_question WHERE q_id=?");
           $keyword_result->bind_param('i', $question);
@@ -280,7 +280,7 @@
           }
           $option_text = implode(',',$new_option_text);
         }
-      
+
         $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
         $addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
         $addOption->execute();
@@ -329,7 +329,7 @@
           }
         }
         $mappings_copy_objID = implode(',', $mappings_copy_objID);
-        
+
         //copy the objectives for each session where the objective still exists
         $i = 0;
         foreach ($old_qids as $old_id) {
@@ -349,15 +349,15 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō: <?php echo $string['copypaper'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../body.css" />
   <link rel="stylesheet" type="text/css" href="../submenu.css" />
 </head>
 <?php
   if (count($error) == 0) {
-  	echo "<body onload=\"javascript:window.location='" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$new_paper_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "';\">";
+  	echo "<body onload=\"javascript:window.location='" . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$new_paper_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "';\">";
   } else {
 ?>
   <body onclick="hideMenus()">
@@ -382,7 +382,7 @@
     }
    ?>
     </ul>
-    <div style="text-align:center"><input type="button" name="OK" value=" <?php echo $string['ok']; ?> " onclick="javascript:window.location='<?php echo $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $new_paper_id . '&module=' . $_POST['module'] . '&folder=' . $_POST['folder']; ?>'" style="width:100px" /></div>
+    <div style="text-align:center"><input type="button" name="OK" value=" <?php echo $string['ok']; ?> " onclick="javascript:window.location='<?php echo $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $new_paper_id . '&module=' . $_POST['module'] . '&folder=' . $_POST['folder']; ?>'" style="width:100px" /></div>
     <br />
     </td>
     </tr>
@@ -394,10 +394,10 @@
 <?php
   }
   $mysqli->close();
-  
+
   function copyProperties($userID, $mysqlidb, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj) {
     global $configObject;
-    
+
     $moduleIDs = Paper_utils::get_modules($_POST['paperID'],$mysqlidb);
 
     $result = $mysqlidb->prepare("SELECT * FROM properties WHERE property_id=? LIMIT 1");
@@ -407,10 +407,10 @@
     $result->bind_result($property_id, $paper_title, $start_date, $end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $paper_owner, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $deleted, $created, $random_mark, $total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $latex_needed, $password, $retired, $crypt_name);
     $result->fetch();
     $result->close();
-    
+
     $tmp_exam_duration = $exam_duration;
     $paper_type = $_POST['paper_type'];      // Override the paper type with what is posted.
-    
+
     if ($paper_type == 2) {
       if ($configObject->get('cfg_summative_mgmt')) {
         $tmp_start_date = NULL;
@@ -435,13 +435,13 @@
     if ($tmp_internal_review_deadline == '') $tmp_internal_review_deadline = NULL;
 
     $new_calendar_year = checkSession($calendar_year);
-    
+
     $addPaper = $mysqlidb->prepare("INSERT INTO properties VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)");
     $addPaper->bind_param('ssssssssssssisiiisssisidissssssssssis', $_POST['new_paper'], $tmp_start_date, $tmp_end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $userID, $folder, $labs, $rubric, $calculator, $externals, $tmp_exam_duration, $tmp_random_mark, $tmp_total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $new_calendar_year, $internal_reviewers, $tmp_external_review_deadline, $tmp_internal_review_deadline, $sound_demo, $latex_needed, $password);
     $addPaper->execute();
     $new_paper_id = $mysqlidb->insert_id;
     $addPaper->close();
-    
+
     //set the modules on the new paper
     Paper_utils::update_modules($moduleIDs, $new_paper_id, $mysqlidb, $userObj);
 
@@ -451,13 +451,13 @@
       } else {
         $barriers_needed = 0;
       }
-      
+
       $result = $mysqlidb->prepare("INSERT INTO scheduling VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
       $result->bind_param('isissis', $new_paper_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
-      $result->execute();  
+      $result->execute();
       $result->close();
     }
-    
+
     // Query the database to get the creation date and then set crypt_name.
     $result2 = $mysqlidb->prepare("SELECT property_id, UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id=?");
     $result2->bind_param('i', $new_paper_id);
@@ -466,14 +466,14 @@
     $result2->bind_result($property_id, $created, $paper_ownerID);
     $result2->fetch();
     $result2->close();
-    
+
     $hash = $property_id . $created . $paper_ownerID;
-    
+
     $update = $mysqlidb->prepare("UPDATE properties SET crypt_name=? WHERE property_id=?");
     $update->bind_param('si', $hash, $property_id);
     $update->execute();
     $update->close();
-    
+
     return $new_paper_id;
   }
 ?>

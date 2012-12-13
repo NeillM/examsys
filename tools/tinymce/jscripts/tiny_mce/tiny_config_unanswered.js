@@ -11,5 +11,26 @@
     theme_advanced_toolbar_location : "top", 
     theme_advanced_toolbar_align : "left",
     // Example content CSS (should be your site CSS) 
-    content_css : cfgRootPath + "/css/editor_pink.css"
-}); 
+    content_css : cfgRootPath + "/css/editor_pink.css",
+
+
+    setup : function(ed) {
+      // If there is no text content, return nothing.
+      // After http://alastairc.ac/2010/03/removing-emtpy-html-tags-from-tinymce/
+      ed.onPostProcess.add(function(ed, o) {
+        var text = o.content;
+
+        if (text != '') {
+          text = text.replace(/^<div>&nbsp;<\/div>/, '');
+          text = text.replace(/^<p>&nbsp;<\/p>/, '');
+          text = text.replace(/^<div><\/div>/, '');
+          text = text.replace(/^<p><\/p>/, '');
+          text = text.replace(/^<br \/>/, '');
+          text = text.replace(/^<br \/>/, '');
+          text = text.replace(/^<br \/>/, '');
+          text = text.replace(/^\s*/, '');
+        }
+        o.content = text;
+      });
+    }
+  });

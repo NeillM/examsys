@@ -1,4 +1,19 @@
 <?php
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
@@ -21,7 +36,7 @@ $string['export12'] = 'Eksport 1.2'; //cognate
 $string['import'] = 'Import'; //cognate
 $string['currentquestiontasks'] = 'Działania dot. aktualnego pytania';
 $string['editquestion'] = 'Edytuj pytania';
-$string['previewquestion'] = 'Preview Question'; // Niko
+$string['previewquestion'] = 'Podgląd pytania';
 $string['information'] = 'Informacje';
 $string['copyontopaperx'] = 'Przekopiuj do arkusza X...';
 $string['moveup'] = 'Przesuń do góry';
@@ -83,6 +98,7 @@ $string['frequencyanalysis'] = 'Analiza częstości i różnicowania (U-L)';
 $string['learningobjectiveanalysis'] = 'Analiza celów kształcenia';
 $string['exportresponsescsvnum'] = 'Eksportuj odpowiedzi jako plik CSV (wartości)'; 
 $string['exportresponsescsvtext'] = 'Eksportuj odpowiedzi jako plik CSV (tekst)'; 
+$string['exportbooleancsv'] = 'Eksportuj poprawność odpowiedzi jako plik CSV';
 $string['exportmarkscsv'] = 'Eksportuj punktację jako plik CSV';
 $string['individualportfoliosheets'] = 'Indywidualne arkusze Portfolio';
 $string['exportratingscsv'] = 'Eksportuj zaszeregowanie jako plik CSV';

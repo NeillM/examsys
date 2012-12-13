@@ -1,4 +1,19 @@
 <?php
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+
 require_once '../lang/' . $language . '/include/months.inc';
 require_once '../lang/' . $language . '/question/sct_shared.php';
 require_once '../lang/' . $language . '/include/paper_security.inc';
@@ -21,6 +36,7 @@ $string['unansweredquestion'] = '= pytanie bez odpowiedzi';
 $string['negmarking'] = 'ujemna punktacja';
 $string['bonusmark'] = 'dla prawidłowej opcji, plus %d punkt%s dodatkowy za poprawną kolejność';
 $string['calculator'] = 'Kalkulator';
+$string['timeremaining'] = 'Pozostały czas'; 
 $string['finishnote'] = '<strong>Uwaga:</strong> Należy udzielić wszystkich odpowiedzi przed wybraniem &#145;Zakończ&#146; - powrót nie jest możliwy.';
 $string['gobackpink'] = 'Po powrocie, pytania, na które nie udzielono odpowiedzi będą podświetlone na różowo.';
 $string['fireexit'] = 'Ewakuacja pożarowa';
@@ -29,7 +45,7 @@ $string['javacheck1'] = 'Czy wypełniłeś wszystkie odpowiedzi na ekranie - pow
 $string['javacheck2'] = "Czy na pewno chcesz finalizować? Po wybraniu 'OK' nie będziesz mógł powrócić.";
 $string['error_keywords'] = 'BŁĄD: nie można odszukać unikalnego pytania dla podanych słów kluczowych';
 $string['error_paper'] = 'Wskazany arkusz nie mógł być odnaleziony.';
-$string['error_qtype'] = 'No question type defined.'; // Niko
+$string['error_qtype'] = 'Nie zdefiniowano typu pytania.';
 $string['holddownctrlkey'] = '(Trzymając &lt;CTRL&gt; klikaj myszą aby zaznaczyć/odznaczyć opcje)';
 $string['msgselectable1'] = 'Zaznaczono zbyt dużo opcji!\n\nW tym pytaniu mogą być zaznaczone tylko';
 $string['msgselectable2'] = 'elementy.';

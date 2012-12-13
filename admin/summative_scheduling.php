@@ -80,10 +80,10 @@ function getLabs($labs, $mysqlidb) {
 </tr>
 <tr>
 <th><div class="col10 s"><?php echo $string['title']; ?>&nbsp;</div></th>
-<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['month']; ?>&nbsp;</th>
-<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['campus']; ?>&nbsp;</th>
-<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modules']; ?>&nbsp;</th>
-<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['cohortsize']; ?>&nbsp;</th>
+<th class="vert_div">&nbsp;<?php echo $string['month']; ?>&nbsp;</th>
+<th class="vert_div">&nbsp;<?php echo $string['campus']; ?>&nbsp;</th>
+<th class="vert_div">&nbsp;<?php echo $string['modules']; ?>&nbsp;</th>
+<th class="vert_div">&nbsp;<?php echo $string['cohortsize']; ?>&nbsp;</th>
 
 </tr>
 <tr><th colspan="5" class="bevel"></th></tr>

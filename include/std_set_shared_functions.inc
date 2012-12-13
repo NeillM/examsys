@@ -23,7 +23,9 @@
 */
 
 function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
-  global $configObject->get('cfg_long_date_time');
+  global $configObject;
+  
+  $configObject->get('cfg_long_date_time');
   $reviews = array();
   
   if ($mode == 'index') {
@@ -422,7 +424,9 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
 }
 
 function display_option($firstoption, $q_id, $question_no, &$part_id, $display_option, $std_method, $is_group, &$marks, $exclude, $review_val, &$matching_options, $review_mean, $tmp_reviews, $option_no, &$stdID, &$std_excluded, $total_rank_no, $require_na, $bgcolor, $feedback) {
-  global $string, $language, $configObject->get('cfg_root_path');
+  global $string, $language, $configObject;
+  
+  $configObject->get('cfg_root_path');
   $qn_excluded = ($exclude == '1');
   
   switch ($firstoption['q_type']) {

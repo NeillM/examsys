@@ -1,4 +1,19 @@
 <?php
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+
 $string['classtotals'] = 'Zestawienie klasy';
 $string['studentsonly'] = 'Tylko studenci';
 $string['paper'] = 'Arkusz';
@@ -11,7 +26,7 @@ $string['nocompletions'] = 'brak prac ukończonych';
 $string['candidateabsent'] = 'kandydat nieobecny';
 $string['candidatesabsent'] = 'kandydaci nieobecni';
 $string['failureno'] = 'Liczba niezdałych';
-$string['passno'] = 'Liczba zdałych'; 
+$string['passno'] = 'Liczba zdałych';
 $string['distinctionno'] = 'Liczba wyróżnień';
 $string['totalmarks'] = 'Całkowita liczba dostępnych punktów';
 $string['passmark'] = 'Liczba punktów na zaliczenie';
@@ -62,6 +77,7 @@ $string['summary'] = 'Podsumowanie';
 $string['examscript'] = 'Zapis egzaminu';
 $string['feedback'] = 'Odzew';
 $string['studentprofile'] = 'Profil studenta';
+$string['resettimer'] = 'Resetowanie czasomierza';
 $string['newnote'] = 'Nowa notatka...';
 $string['reassigntouser'] = 'Przypisanie ponowne do użytkownika...';
 $string['latesubmissions'] = 'Spóźnione przedłożenie';
@@ -78,5 +94,5 @@ $string['notcompleted'] = 'Uwaga: nie wypełniono wszystkich ekranów';
 $string['unknown'] = '&nbsp;&lt;Nieznany&gt;';
 $string['markingnotcomplete'] = 'Punktacja nie zakończona';
 $string['of'] = ' z ';
-$string['percentofcohort'] = '% grupy'; 
+$string['percentofcohort'] = '% grupy';
 ?>

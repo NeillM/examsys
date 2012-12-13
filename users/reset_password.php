@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'classes/formutils.class.php';
 require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
-$mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $configObject->get('dbclass'));
 
 $password = $password_confirm = $email = '';
 $message = '';
@@ -61,12 +61,12 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
     $email = $_POST['email'];
     $errors[] = $string['emailaddressinvalid'];
   }
-  if($_POST['password'] != $_POST['password_confirm']) $errors[] = $string['passwordsnotmatch'];  
-  
-  if(count($errors) == 0) {    
+  if($_POST['password'] != $_POST['password_confirm']) $errors[] = $string['passwordsnotmatch'];
+
+  if(count($errors) == 0) {
     $email = $_POST['email'];
     $password = $_POST['password'];
-    
+
     // Check if email address matches that of the user in the token record
     $stmt = $mysqli->prepare("SELECT username, email, roles FROM users WHERE id=?");
     $stmt->bind_param('i', $user_id);
@@ -81,7 +81,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
         $errors[] = $string['incorrectemail'];
       } else {
         // Update user's password
-        $new_pw = encpw($cfg_encrypt_salt, $username, $password);
+        $new_pw = encpw($configObject->get('cfg_encrypt_salt'), $username, $password);
         $update = $mysqli->prepare("UPDATE users SET password=? WHERE id=?");
         $update->bind_param('si', $new_pw, $user_id);
         if(!$update->execute()) {
@@ -92,18 +92,18 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
           $delete->bind_param('i', $user_id);
           $delete->execute();
           $delete->close();
-          
-          $redirect_url = $protocol. $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/";
-          if ($userObject->has_role('External Examiner')) {
+
+          $redirect_url = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/";
+          if (strpos($userroles, 'External Examiner') !== false) {
             $redirect_url .= "reviews/";
-          } elseif ($userObject->has_role('Invigilator')) {
+          } elseif (strpos($userroles, 'Invigilator') !== false) {
             $redirect_url .= "invigilator/";
-          } elseif ($userObject->has_role('Student')) {
+          } elseif (strpos($userroles, 'Student') !== false) {
             $redirect_url .= "students/";
-          } elseif ($userObject->has_role('Staff')) {
+          } elseif (strpos($userroles, 'Staff') !== false) {
             $redirect_url .= "staff/";
           }
-          
+
           $message = $string['passwordupdated'] . ' <a href="' . $redirect_url . '">' . $string['login'] . '</a>.';
         }
         $update->close();
@@ -118,16 +118,16 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title><?php echo $string['resetpassword'] . " $configObject->get('cfg_install_type')"; ?></title>
-  
+
+  <title><?php echo $string['resetpassword'] . " " . $configObject->get('cfg_install_type') ?></title>
+
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />
   <style type="text/css">
     body {font-size:90%}
     .field {padding-top:4px; padding-left:6px; font-weight:bold}
   </style>
-  
+
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">

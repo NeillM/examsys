@@ -30,6 +30,8 @@ require '../include/display_functions.inc';
 require '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
+require '../classes/logstarttime.class.php';
+require '../classes/timer.class.php';
 require '../include/paper_security.inc';
 
 global $userObject;
@@ -183,26 +185,29 @@ if ($userObject->is_special_needs()) {
 $screen_data = array();
 
 if (isset($_GET['q_id'])) {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
+  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
   $stmt->bind_param('si', $_GET['id'], $_GET['q_id']);
 } else {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
+  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
   $stmt->bind_param('s', $_GET['id']);
 }
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $calendar_year, $latex_needed, $password, $q_type);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $exam_duration, $calendar_year, $latex_needed, $password, $q_type, $q_id);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
-  access_denied($string['error_paper'], $output_header = false);
+   UserNotices::access_denied($string['error_paper'], $output_header = false);
 }
 while ($stmt->fetch()) {
   $no_screens = $screen;
+  $screen_data[$no_screens][] = array($q_type, $q_id);
+  /*
   $add_q = ($q_type == 'info') ? 0 : 1;
   if (!isset($screen_data[$no_screens])) {
     $screen_data[$no_screens] = $add_q;
   } else {
     $screen_data[$no_screens] += $add_q;
   }
+  */
 }
 $stmt->free_result();
 $stmt->close();
@@ -570,7 +575,7 @@ if ($css != '') {
   }
 
   var startAutoSave = function () {
-    autoSaveRef = setTimeout("autoSave()",<?php echo (($cfg_autosave_timeout + rand(-5,5)) * 1000); ?>);
+    autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get('cfg_autosave_timeout') + rand(-5,5)) * 1000); ?>);
   }
 
   var stopAutoSave = function() {
@@ -675,63 +680,13 @@ if ($css != '') {
 </script>
 </head>
 <?php
-if ($userObject->has_role('Student')) {
-  echo '<body oncontextmenu="return false;" onload="StartClock();" onunload="KillClock()">';
-} else {
-  echo '<body onload="StartClock();" onunload="KillClock()">';
-}
-$show_ref_material = false;
-echo "<div id=\"maincontent\">\n";
 
-if ($current_screen < $no_screens) {
-  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . $url_mod . "\">";
-} else {
-  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . $url_mod . "\">";
-}
-?>
-  <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<?php
-if (!isset($_GET['q_id'])) {
-?>
-  <tr><td valign="top">
-<?php
+  $show_ref_material = false;
+
+  if (!isset($_GET['q_id'])) {
     if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
       record_marks($property_id, $mysqli, $userObject->get_user_ID(), $paper_type, $grade, $year, $attempt, $userroles);
     }
-    echo $top_table_html;
-    echo '<tr><td><div class="paper">' . $paper_title . '</div>';
-    $question_offset = 0;
-    if ($no_screens > 1) {
-      echo '<table cellspacing="1" cellpadding="1" border="0" class="screens"><tr>';
-      for ($i=1; $i<=$no_screens; $i++) {
-        echo "<td title=\"";
-        if (isset($screen_data[$i])) {
-          echo $screen_data[$i];
-        } else {
-          echo '0';
-        }
-        if ($i == $current_screen) {
-          if (isset($screen_data[$i]) and $screen_data[$i] == 1) {
-            echo " question\" class=\"s1\">";
-          } else {
-            echo " questions\" class=\"s1\">";
-          }
-        } else {
-          if (isset($screen_data[$i]) and $screen_data[$i] == 1) {
-            echo " question\" class=\"s0\">";
-          } else {
-            echo " questions\" class=\"s0\">";
-          }
-          if ($i < $current_screen and isset($screen_data[$i])) $question_offset += $screen_data[$i];
-        }
-        echo "$i</td>\n";
-      }
-      echo '</tr></table>';
-    }
-    echo '</td>';
-    echo $logo_html;
-  } else {
-    echo '<tr><td>';
   }
 
   $user_answers = array();
@@ -800,8 +755,6 @@ if (!isset($_GET['q_id'])) {
   $question_data->store_result();
   $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
   $num_rows = $question_data->num_rows;
-  echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
-  echo "<col width=\"40\"><col>\n";
   $q_no = 0;
   //build the questions_array
   $tmp_questions_array = array();
@@ -847,6 +800,105 @@ if (!isset($_GET['q_id'])) {
 
   $unanswered = false;
 
+    $incomplete_screens = get_unanswered_screens($screen_data, $user_answers, $questions_array, $property_id, $mysqli);
+
+  //BP If the duration is set then show timer
+
+  $method = 'StartClock()';
+
+  if( $exam_duration != NULL ){
+
+    $studentID         = $userObject->get_user_ID();
+    $log_start_time = new LogStartTime( $studentID, $property_id, $mysqli );
+    $timer          = new Timer( $log_start_time, $exam_duration );
+    $start_time     = $timer->get_start_time();
+
+    $is_preview_first_visit = ( $current_screen == 1 and $screen_pre_submitted == 0 and isset( $_GET['mode'] ) and $_GET['mode'] == 'preview' );
+
+    // Reset if in preview mode so staff are not locked out
+    if( $start_time and $userObject->has_role( 'Staff' ) and $is_preview_first_visit ){
+      $timer->reset();
+      $timer->start();
+    }
+
+    if( $start_time === false ){
+      $timer->start();
+    }
+
+    $remaining_time = $timer->calculate_remaining_time();
+    $method         = 'StartTimer(' . $remaining_time . ')';
+
+  }
+
+
+  if ($userObject->has_role('Student')) {
+    echo '<body oncontextmenu="return false;"onload="' . $method . ';" onclose="KillClock();">';
+  } else {
+    echo '<body onload="' . $method . ';" onunload="KillClock();">';
+  }
+
+  echo "<div id=\"maincontent\">\n";
+
+  if ($current_screen < $no_screens) {
+    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . $url_mod . "\">";
+  } else {
+    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . $url_mod . "\">";
+  }
+  ?>
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<?php
+  if (!isset($_GET['q_id'])) {
+    echo "<tr><td valign=\"top\">\n";
+    echo $top_table_html;
+    echo '<tr><td><div class="paper">' . $paper_title . '</div>';
+    $question_offset = 0;
+    if ($no_screens > 1) {
+      echo '<table cellspacing="1" cellpadding="1" border="0" class="screens"><tr>';
+      for ($i=1; $i<=$no_screens; $i++) {
+        if ($incomplete_screens[$i] == 1) {
+          echo '<td class="scr_un"';
+        } else {
+          echo '<td class="scr_ans"';
+        }
+        $no_questions = 0;
+        foreach ($screen_data[$i] as $screen_question) {
+          if ($screen_question[0] != 'info' ) {
+            $no_questions++;
+          } 
+        }
+        if ($no_questions == 1) {
+          echo ' title="' . $no_questions . ' question">';
+        } else {
+          echo ' title="' . $no_questions . ' questions">';
+        }
+        
+        if ($i < $current_screen and isset($screen_data[$i])) {
+          foreach ($screen_data[$i] as $screen_question) {
+            if ($screen_question[0] != 'info' ) {
+              $question_offset++;
+            }
+          }
+        }
+        echo "$i</td>\n";
+      }
+      echo '</tr><tr>';
+      for ($i=1; $i<=$no_screens; $i++) {
+        if ($i == $current_screen) {
+          echo '<td class="scr_cur"></td>';
+        } else {
+          echo '<td></td>';
+        }
+      }
+      echo '</tr></table>';
+    }
+    echo '</td>';
+    echo $logo_html;
+  } else {
+    echo '<tr><td>';
+  }
+
+  echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
+  echo "<col width=\"40\"><col>\n";
   //display the questions
   foreach($questions_array as &$question) {
     if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span style=\"background-color:#FFC0C0\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
@@ -881,13 +933,25 @@ if (!isset($_GET['q_id'])) {
     printf($string['pleasecomplete'], $current_screen);
     echo "</div>\n<br >\n";
   }
-  
+
   //echo '<div id="mymsg">Hi</div>';  // Remove when working.
 
   echo '<div id="saveError"><img alt="Warning" src="/artwork/no_save.png" /> <div><strong>' .  $string['savefailed'] . '</strong><br />' . $string['tryagain'] . '</div></div>';
 
   echo $bottom_html;
-  echo '<input type="text" style="background-color:transparent;text-align:center;font-size:80%;color:white;border:0px" id="theTime" size="8" /></td><td align="right">';
+  ?>
+  <span>
+  <?php
+  if( $exam_duration != NULL ){
+      echo $string['timeremaining'] . ':';
+  }
+
+  ?>
+  <input id="theTime" name="theTime" type="text" style="width:60px;background-color:transparent;text-align:center;font-size:100%;color:white;border:0px" size="8" />
+  </span>
+  <?php
+  echo '</td><td align="right">';
+
   echo '<span id="savemsg"></span>';
   if ($bidirectional == 1 and $no_screens > 1) {
     if ($current_screen > 2) echo "<input input id=\"prevous\" type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous';\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
@@ -943,6 +1007,7 @@ if ($unanswered) {
 
 </body>
 </html>
+
 
 
 

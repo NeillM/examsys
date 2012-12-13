@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Allows the properties of a paper to be edited.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -52,11 +52,11 @@ if (isset($_POST['Submit'])) {
   } else {
     $display_feedback = 0;
   }
-    
+
   $tmp_marking = $_POST['marking'];
   if ($tmp_marking == '') $tmp_marking = '0';
   if ($tmp_marking == '2') $tmp_marking = $_POST['std_set'];
-        
+
   $tmp_pass_mark = $_POST['pass_mark'];
   if ($tmp_pass_mark == '') $tmp_pass_mark = 40;
 
@@ -67,7 +67,7 @@ if (isset($_POST['Submit'])) {
   $editProperties->bind_param('siiiiiii', $tmp_marking, $tmp_pass_mark, $tmp_distinction_mark, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $_POST['paperID']);
   $editProperties->execute();
   $editProperties->close();
-  
+
   // Release objectives-based feedback
   $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=? AND type='objectives'");
   $editProperties->bind_param('i', $_POST['paperID']);
@@ -122,7 +122,7 @@ if (isset($_POST['Submit'])) {
   <?php
 } else {
   $option_no = 1;
-  
+
   $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, paper_title, paper_type, start_date, end_date, timezone, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, moduleID, calendar_year, sound_demo, crypt_name FROM properties WHERE property_id=?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
@@ -135,8 +135,8 @@ if (isset($_POST['Submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Properties<?php echo " $configObject->get('cfg_install_type')"; ?></title>
+
+  <title>Properties<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
@@ -200,7 +200,7 @@ if (isset($_POST['Submit'])) {
      echo "<td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\" disabled>\n";
      echo "<option value=\"\"></option>";
      $additional = '';
-     
+
      $team_query = $mysqli->prepare("SELECT DISTINCT name FROM teams WHERE memberID=? ORDER BY name");
      $team_query->bind_param('s', $userObject->get_user_ID());
      $team_query->execute();
@@ -214,10 +214,10 @@ if (isset($_POST['Submit'])) {
        }
      }
      $team_query->close();
-     
+
      if ($additional != '') $additional .= ')';
      if ($folder != '') $additional .= ' OR id=' . $folder;
-     
+
      $folder_details = $mysqli->prepare("SELECT id, name FROM folders WHERE ownerID=? $additional ORDER BY name");
      $folder_details->bind_param('s', $userObject->get_user_ID());
      $folder_details->execute();
@@ -234,7 +234,7 @@ if (isset($_POST['Submit'])) {
      }
      $folder_details->close();
      echo "</select>\n</td></tr>\n";
-     
+
      echo "<tr><td align=\"right\" valign=\"top\">";
      if ($paper_type != '4') echo $string['feedback'] .  '&nbsp';
      echo "</td><td colspan=\"3\">";
@@ -251,9 +251,9 @@ if (isset($_POST['Submit'])) {
          echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" checked />";
        }
        $feedback_details->close();
-     
+
        echo $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name</a></div>\n";
-     
+
        // Question-based Feedback
        $idfeedback_release = '';
        $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='questions'");
@@ -267,7 +267,7 @@ if (isset($_POST['Submit'])) {
          echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" checked />";
        }
        $feedback_details->close();
-     
+
        echo $string['questionfeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name</a></div>\n";
      }
      if ($paper_type == '0') {
@@ -288,9 +288,9 @@ if (isset($_POST['Submit'])) {
        echo '<div id="feedback_off" style="display:none">';
      }
      echo "<br />&nbsp;</div>";
-     
+
      echo "<tr>\n";
-     
+
      if ($paper_type == '4') {
        echo '<input type="hidden" name="bgcolor" value="' . $bgcolor . '" />';
        echo '<input type="hidden" name="fgcolor" value="' . $fgcolor . '" />';
@@ -309,12 +309,12 @@ if (isset($_POST['Submit'])) {
        } else {
          echo "<td align=\"right\">" . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\" disabled><option value=\"0\" selected>" . $string['unidirectional'] ."</option><option value=\"1\">" . $string['bidirectional'] ."</option></select></td></tr>\n";
        }
-       
+
        echo "<tr>\n";
        echo "<td align=\"right\">" . $string['background'] . "&nbsp;</td><td><div onclick=\"showPicker('bgcolor',event)\" id=\"span_bgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$bgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"bgcolor\" name=\"bgcolor\" value=\"$bgcolor\" /></td>";
        echo "<td align=\"right\">" . $string['foreground'] . "&nbsp;</td><td><div onclick=\"showPicker('fgcolor',event)\" id=\"span_fgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$fgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"fgcolor\" name=\"fgcolor\" value=\"$fgcolor\" /></td>";
        echo "</tr>\n";
-   
+
        echo "<tr>\n";
        echo "<td align=\"right\">" . $string['theme'] . "&nbsp;</td><td><div onclick=\"showPicker('themecolor',event)\" id=\"span_themecolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" /></td>";
        echo "<td align=\"right\">" . $string['labelsnotes'] . "&nbsp;</td><td><div onclick=\"showPicker('labelcolor',event)\" id=\"span_labelcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" /></td>";

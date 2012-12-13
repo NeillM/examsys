@@ -85,10 +85,10 @@ if (isset($_GET['order'])) {
 <tr><th colspan="5"style="font-size:160%; font-weight:bold">&nbsp;by Paper</th></tr>
 <tr>
   <th>&nbsp;</th>
-  <th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo show_order_link($paper_type, $string['title'], 'paper_title', $order, $direction) ?></th>
-  <th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo show_order_link($paper_type, $string['module'], 'moduleID', $order, $direction) ?></th>
-  <th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo show_order_link($paper_type, $string['owner'], 'surname', $order, $direction) ?></th>
-  <th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo show_order_link($paper_type, $string['created'], 'created', $order, $direction) ?></th>
+  <th class="vert_div">&nbsp;<?php echo show_order_link($paper_type, $string['title'], 'paper_title', $order, $direction) ?></th>
+  <th class="vert_div">&nbsp;<?php echo show_order_link($paper_type, $string['module'], 'moduleID', $order, $direction) ?></th>
+  <th class="vert_div">&nbsp;<?php echo show_order_link($paper_type, $string['owner'], 'surname', $order, $direction) ?></th>
+  <th class="vert_div">&nbsp;<?php echo show_order_link($paper_type, $string['created'], 'created', $order, $direction) ?></th>
 </tr>
 <tr><th colspan="5" class="bevel"></th></tr>
 <?php

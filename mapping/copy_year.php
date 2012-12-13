@@ -25,6 +25,7 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/mapping.inc';
+require_once '../classes/moduleutils.class.php';
 
 $errors = array();
 
@@ -34,10 +35,13 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
 	$errors[] = "Source and destination years cannot be the same";
 } else {
 	// Get the sessions for the source year
-	$objectives = getObjectives($_POST['moduleID'], $_POST['source_y'], '', '', $mysqli);
+
+  $module_code = module_utils::get_moduleid_from_id($_POST['moduleID'], $mysqli);
+  $modules_array = array($_POST['moduleID'] => $module_code);
+	$objectives = getObjectives($modules_array, $_POST['source_y'], '', '', $mysqli);
 	
 	try {
-		copyObjectives($objectives, $_POST['moduleID'], $_POST['dest_y'], $mysqli);
+		copyObjectives($objectives, $_POST['moduleID'], $module_code, $_POST['dest_y'], $mysqli);
 	} catch(Exception $ex) {
 		$errors[] = "An error occured when copying the objectives. Please try again.";
 	}
@@ -57,7 +61,7 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
 </head>
 <?php
 if (count($errors) == 0) {
-	echo "<body onload=\"javascript:window.location='" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['moduleID'] . "';\"></body></html>";
+	echo "<body onload=\"javascript:window.location='" . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['moduleID'] . "';\"></body></html>";
 } else {
 ?>
   <body onclick="hideMenus()">

@@ -43,7 +43,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
     $error_description .= '<br /><br /><span style="color:#808080">' . $string['errormsg'] . ' <a href="mailto:' . $support_email . '" style="color:blue">' . $support_email . '</a></span>';
   }
   
-  display_notice($error_title, $error_description, $configObject->get('cfg_root_path') . '/artwork/bomb.png', '#C00000');
+  UserNotices::display_notice($error_title, $error_description, $configObject->get('cfg_root_path') . '/artwork/bomb.png', '#C00000');
 
   if ($headers == false) {
     echo "</body>\n</html>\n";

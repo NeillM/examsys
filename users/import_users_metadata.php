@@ -24,23 +24,26 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/sidebar_menu.inc';
-require '../include/errors.inc';
-require '../classes/dateutils.class.php';
-require '../classes/moduleutils.class.php';
+require_once '../include/staff_auth.inc';
+require_once '../include/sidebar_menu.inc';
+require_once '../include/errors.inc';
+require_once '../classes/dateutils.class.php';
+require_once '../classes/moduleutils.class.php';
 
 check_var('module', 'GET', true, false);
 set_time_limit(0);
 ob_start();
 
-  
+
 // Folder security checks
 $folder = '';
-$module = $_GET['module'];
+$idMod = $_GET['module'];
 
-if (module_utils::module_exists($module, $mysqli) === false) {  
-  display_error($string['modulenotfound'], sprintf($string['modulenotfoundmsg'], $module), false, true);
+// Get the moduleid
+$module = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
+
+if ($module === false) {
+  display_error($string['modulenotfound'], $string['modulenotfoundmsg'], false, true);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -48,13 +51,13 @@ if (module_utils::module_exists($module, $mysqli) === false) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō: <?php echo $string['importmetadata'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  
+
   <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script type="text/javascript">
@@ -86,10 +89,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
     echo '<div id="msg">' . $string['loadingdata'] . '</div>';
     ob_flush();
     flush();
-  
-    // Get the moduleid
-    $idMod = module_utils::get_idMod($_GET['module'], $mysqli);
-  
+
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv"))  {
         echo 'Problem - ';
@@ -110,7 +110,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
       } else {
         // Load the IDs for all students in the module
         $student_id_array = array();
-        $stmt = $mysqli->prepare("SELECT users.id, username, student_id FROM (users, modules_student, modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=modules_student.userID AND modules_student.idMod = modules.id AND moduleid=? AND calendar_year=? ORDER BY username");
+        $stmt = $mysqli->prepare("SELECT users.id, username, student_id FROM (users, modules_student, modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=modules_student.userID AND modules_student.idMod = modules.id AND idMod=? AND calendar_year=? ORDER BY username");
         $stmt->bind_param('ss', $_GET['module'], $_POST['session']);
         $stmt->execute();
         $stmt->bind_result($id, $username, $student_id);
@@ -119,11 +119,11 @@ if (module_utils::module_exists($module, $mysqli) === false) {
           $student_id_array[$student_id] = $id;  // Reference by Student ID
         }
         $stmt->close();
-        
+
         $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv');
         $type = '';
         $value = '';
-        
+
         $line_no = 0;
         $col_no = 0;
         $unknown_users = array();
@@ -136,8 +136,9 @@ if (module_utils::module_exists($module, $mysqli) === false) {
             $heading = $cols;
             $col_no = count($cols);
           } else {
+            // 'username' can be either the real username or sid
             $username = trim($cols[0]);
-            
+
             // Check see if user was found
             echo "checking $username<br />";
             if (!isset($student_id_array[$username])) {
@@ -162,11 +163,11 @@ if (module_utils::module_exists($module, $mysqli) === false) {
       echo count($unknown_users) . " " . $string['notrecognised'] . "\n<ul>\n";
       foreach ($unknown_users as $unknown) {
         echo "<li>$unknown</li>\n";
-      }    
+      }
       echo "</ul>\n";
     }
     echo "<br />\n<input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../folder/details.php?module=" . $_GET['module'] . "';\" /></div>";
-    
+
     unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv");
 
     $mysqli->close();
@@ -196,7 +197,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
   echo "<option value=\"" . ($parts[0]-1) . "/" . ($parts[1]-1) . "\">" . ($parts[0]-1) . "/" . ($parts[1]-1) . "</option>\n";
   echo "<option value=\"$current_year\" selected>$current_year</option>\n";
   echo "<option value=\"" . ($parts[0]+1) . "/" . ($parts[1]+1) . "\">" . ($parts[0]+1) . "/" . ($parts[1]+1) . "</option>\n";
-  
+
 ?>
 </select></td></tr>
 <tr><td><?php echo $string['file']; ?></td><td><input type="file" size="50" name="csvfile" /></td></tr>

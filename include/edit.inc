@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -55,7 +55,7 @@ function check_fullSave($q_id, $mysqli) {
 
   $result = $mysqli->prepare("SELECT locked FROM questions WHERE q_id=?");
   $result->bind_param('i',$q_id);
-  $result->execute();  
+  $result->execute();
   $result->bind_result($locked);
   $result->fetch();
   $result->close();
@@ -68,29 +68,32 @@ function check_fullSave($q_id, $mysqli) {
 }
 
 function redirect($userObject,$mysqli) {
-  global $protocol, $q_id, $configObject;
+  global $q_id, $configObject;
   // Release the lock.
   if ($_POST['checkout_author'] == $userObject->get_user_ID()) {
     $result = $mysqli->prepare("UPDATE questions SET checkout_time=NULL, checkout_authorID=NULL WHERE q_id=?");
     $result->bind_param('i', $q_id);
-    $result->execute();  
+    $result->execute();
     $result->close();
   }
 
+  $url_prefix = 'location: ' . $configObject->get( 'protocol' ) . $_SERVER['HTTP_HOST'] . $configObject->get( 'cfg_root_path' );
+
   if (substr($_POST['paperID'],0,5) == 'list:') {
     $type = substr($_POST['paperID'],5);
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/question/list.php?type=$type&keyword=" . $_POST['keyword'] . "&team=" . $_POST['team']);
+    $url =  $url_prefix . "/question/list.php?type=$type&keyword=" . $_POST['keyword'] . "&team=" . $_POST['team'];
   } elseif ($_POST['calling'] == 'find') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/question/search.php");
+    $url =  $url_prefix . "/question/search.php";
   } elseif ($_POST['calling'] == 'paper') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
+    $url =  $url_prefix . "/paper/details.php?paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY'];
   } elseif ($_POST['calling'] == 'external_comments') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reports/review_comments.php?type=external&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
+    $url =  $url_prefix . "/reports/review_comments.php?type=external&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY'];
   } elseif ($_POST['calling'] == 'internal_comments') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reports/review_comments.php?type=internal&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
+    $url =  $url_prefix . "/reports/review_comments.php?type=internal&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY'];
   } else {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/staff/index.php");
+    $url =  $url_prefix . "/staff/index.php";
   }
+  header( $url );
   $mysqli->close();
   exit;   // Stop script execution after the redirect.
 }
@@ -99,32 +102,32 @@ function save_external_responses($dblink, $question, $ids, $actions, $responses,
   // Record responses to external examiner comments.
     $comments = $question->get_comments($paper_id);
     $changed = false;
-    
+
     $i = 0;
     foreach ($ids as $id) {
       $action = $actions[$i];
       $response = $responses[$i];
-      
+
       if($action != $comments[$id]['action'] or $response != $comments[$id]['response']) {
         $result = $dblink->prepare("UPDATE review_comments SET action=?, response=? WHERE id=?");
         $result->bind_param('ssi', $action, $response, $id);
-        $result->execute();  
+        $result->execute();
         $result->close();
-        
+
         $comments[$id]['action'] = $action;
         $comments[$id]['response'] = $response;
         $changed = true;
       }
       $i++;
     }
-    
+
     if($changed) $question->set_comments($comments);
   }
 
 function check_edit_rights($q_id, $checkout_authorID, $checkout_authorName, $checkout_time, $locked, $dblink, $userObject) {
   global $tmp_ownerID, $REPLACEMEuserIDold;
   $disabled = '';
-  
+
   if (check_MSCAA($q_id, $dblink)) {    // Check for MSC-AA question
     $disabled = 'mscaa';
   } elseif ($locked != '') {            // Check if locked
@@ -133,7 +136,7 @@ function check_edit_rights($q_id, $checkout_authorID, $checkout_authorName, $che
   } else {                              // Check out editing rights against current user
     $checkout_author = check_lock_status($checkout_authorID, $checkout_authorName, $checkout_time, $disabled, $dblink, $q_id, $userObject);
   }
-  
+
   return $disabled;
 }
 
@@ -149,7 +152,7 @@ function check_MSCAA($q_id, $dblink) {
     $mscaa = true;
   }
   $stmt->close();
-  
+
   return $mscaa;
 }
 
@@ -171,11 +174,11 @@ function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_t
     // Set the lock to the current time/author.
     $editLock = $dblink->prepare("UPDATE questions SET checkout_time=NOW(), checkout_authorID=? WHERE q_id=?");
     $editLock->bind_param('ii', $userObject->get_user_ID(), $questionID);
-    $editLock->execute();  
+    $editLock->execute();
     $editLock->close();
     $checkout_authorID = check_out_paper($dblink, $questionID, $userObject->get_user_ID());
   }
-  
+
   return $checkout_authorID;
 }
 
@@ -188,14 +191,14 @@ function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_t
 function check_out_paper($dblink, $q_id, $user_id) {
   $editLock = $dblink->prepare("UPDATE questions SET checkout_time=NOW(), checkout_authorID=? WHERE q_id=?");
   $editLock->bind_param('ii', $user_id, $q_id);
-  $editLock->execute();  
+  $editLock->execute();
   $editLock->close();
   return $user_id;
 }
 
 function record_trackChanges($type, $questionID, $old_value, $new_value, $part, $current_userID, &$changes) {
   global $mysqli;
-  
+
   if ($old_value != $new_value) {
     $changes = true;
     //echo "INSERT INTO track_changes VALUES (NULL,$type,$questionID,$current_userID,$old_value,$new_value,NOW(),$part)<br />";
@@ -215,60 +218,60 @@ function hidden_edit_fields() {
   } else {
     $html .= '<input type="hidden" name="calling" value="" />';
   }
-  
+
   if (isset($_GET['paperID'])) {
     $html .= '<input type="hidden" name="paperID" value="' . $_GET['paperID'] . '" />';
   } else {
     $html .= '<input type="hidden" name="paperID" value="" />';
   }
- 
+
   if (isset($_GET['module'])) {
     $html .= '<input type="hidden" name="module" value="' . $_GET['module'] . '" />';
   } else {
     $html .= '<input type="hidden" name="module" value="" />';
   }
- 
+
   if (isset($_GET['folder'])) {
     $html .= '<input type="hidden" name="folder" value="' . $_GET['folder'] . '" />';
   } else {
     $html .= '<input type="hidden" name="folder" value="" />';
   }
- 
+
   if (isset($_GET['scrOfY'])) {
     $html .= '<input type="hidden" name="scrOfY" value="' . $_GET['scrOfY'] . '" />';
   } else {
     $html .= '<input type="hidden" name="scrOfY" value="" />';
   }
- 
+
   if (isset($_GET['keyword'])) {
     $html .= '<input type="hidden" name="keyword" value="' . str_replace('"', '&quot;', $_GET['keyword']) . '" />';
   } else {
     $html .= '<input type="hidden" name="keyword" value="" />';
   }
-  
+
   if (isset($_GET['team'])) {
     $html .= '<input type="hidden" name="team" value="' . $_GET['team'] . '" />';
   } else {
     $html .= '<input type="hidden" name="team" value="" />';
   }
-  
+
   if (isset($checkout_author)) {
     $html .= '<input type="hidden" name="checkout_author" value="' . $checkout_author . '" />';
   } else {
     $html .= '<input type="hidden" name="checkout_author" value="" />';
   }
-  
+
   return $html;
 }
 
 function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $checkout_author, $paper_id, $paper_count, &$string) {
   $html = '';
-  
+
   if ($mode == $string['edit']) {
     $save_disabled = '';
     $value = $string['save'];
     $name = 'submit';
-    
+
     if ($disabled != '') {
       if ($locked != '' or $checkout_author == '') {
         $value = $string['limitedsave'];
@@ -277,7 +280,7 @@ function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $check
         $name = 'bogus';
       }
     }
-    
+
     $html .= <<< HTML
       <input id="submit-save" name="{$name}" value="{$value}" type="submit" class="submit"{$save_disabled} />
 
@@ -293,7 +296,7 @@ HTML;
 
 HTML;
     }
-  
+
   } else {
     $html .= <<< HTML
 <input type="submit" id="addbank" name="addbank" value="{$string['addtobank']}" class="submit">
@@ -306,12 +309,12 @@ HTML;
 HTML;
     }
   }
-  
+
   $html .= <<< HTML
       <input id="submit-cancel" name="submit-cancel" value="{$string['cancel']}" type="submit" class="submit cancel" />
 
 HTML;
-  
+
   return $html;
 }
 
@@ -326,7 +329,7 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
   $display_pos++;
 
   if ($screen == 0) $screen++;
-  
+
   if ($branching_question == true) {
     //Get the Question ID of the source question
     $result = $mysqli->prepare("SELECT scenario FROM questions WHERE q_id=?");
@@ -335,7 +338,7 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
     $result->bind_result($scenario);
     $result->fetch();
     $result->close();
-    
+
     //Get the screen number of the source question on the paper
     $result = $mysqli->prepare("SELECT screen FROM papers WHERE paper=? AND question=?");
     $result->bind_param('ii', $p_id, $scenario);
@@ -343,14 +346,14 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
     $result->bind_result($source_screen);
     $result->fetch();
     $result->close();
-    
+
     if ($source_screen == $screen) $screen++;
   }
-  
+
   //force random mark to recaculate
   $result = $mysqli->prepare("UPDATE properties SET random_mark=NULL, total_mark=NULL WHERE property_id=?");
   $result->bind_param('i', $p_id);
-  $result->execute();  
+  $result->execute();
   $result->close();
 
   if ($result = $mysqli->prepare("INSERT INTO papers VALUES (NULL,?,?,?,?)")) {
@@ -373,9 +376,9 @@ function disable_locked($question, &$dis_class, &$dis_readonly) {
   }
 }
 
-function wysywig_or_non_editable($dis_class, $id, $field, $value, $width=756, $height=70) {
+function wysywig_or_non_editable($dis_class, $id, $field, $value, $width=756, $height=220) {
   if ($dis_class == '') {
-    $html = wysiwyg_editor($id, $field, $value, $width=756, $height=70);
+    $html = wysiwyg_editor($id, $field, $value, $width, $height );
   } else {
     $value_safe = htmlentities(htmlspecialchars_decode($value));
     $html = <<< HTML

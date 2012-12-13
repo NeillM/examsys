@@ -1,4 +1,19 @@
 <?php
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+
 // Only translate the text on the right hand side.
 $timezone_array = array(
   'Pacific/Samoa' => '(UTC-11:00) Samoa',
@@ -32,7 +47,5 @@ $timezone_array = array(
   'Australia/Melbourne' => '(UTC+10:00) Canberra, Melbourne, Sydney',
   'Asia/Vladivostok' => '(UTC+11:00) Wyspy Salomona, Nowa Kaledonia',
   'Pacific/Auckland' => '(UTC+12:00) Auckland, Wellington'
-); 
-
-//
+);
 ?>

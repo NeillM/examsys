@@ -11,6 +11,15 @@
   padding:0px;
   border:0px
 }
+.header th.vert_div {
+  background-image:url('../../artwork/header_vertical_line.gif');
+  background-repeat:no-repeat;
+  padding-top:2px !important;
+  padding-bottom:2px !important;
+}
+.header th.vert_div a{
+  color:black;
+}
 .bevel {
   width:100%;
   height:3px;

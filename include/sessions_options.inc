@@ -37,15 +37,16 @@ $idMod = $_GET['module'];
 $session = date_utils::get_current_academic_year();
 $vle_api_cache = array();
 $vle_api = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mysqli);
+$module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
 if ($vle_api != '') {
   $vle = VLEFactory::GetVLEAPI($vle_api);
-  $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
   $objsBySession = $vle->getObjectives($module_code, $session);
   $vle_name = $vle->getFriendlyName();
   $vle_name_a = $vle->getFriendlyName(true);
 } else {
   require_once '../include/mapping.inc';
-  $objsBySession = getObjectives($idMod, $session, '', '', $mysqli, 'all');
+  $modules_array = array($idMod => $module_code);
+  $objsBySession = getObjectives($modules_array, $session, '', '', $mysqli, 'all');
 }
 ?>
 <script language="JavaScript">
@@ -96,7 +97,7 @@ if ($vle_api != '') {
     document.getElementById('menu' + ID).style.display = current;
 
     <?php
-      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '$protocol" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '$protocol" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '$protocol" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
+      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
     ?>
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
     document.getElementById('icon' + ID).setAttribute('src',icon);
@@ -110,7 +111,7 @@ if ($vle_api != '') {
   }
 
   function jumpTo() {
-    window.top.location = '<?php echo $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path'); ?>/paper_frame.php?paperID=' + document.releaseform.paperID.value;
+    window.top.location = '<?php echo $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path'); ?>/paper_frame.php?paperID=' + document.releaseform.paperID.value;
   }
 
   function showSessCopyMenu(e) {

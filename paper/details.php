@@ -43,14 +43,14 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
   $tmp_date = new DateTime();
   $tmp_date->modify('+28 day');
   $tmp_start_date = $tmp_date->format('Ymd' . '100000');
-  $tmp_end_date = $tmp_date->format('Ymd' . '100000');        
+  $tmp_end_date = $tmp_date->format('Ymd' . '100000');
 
   // Update the paper date so that it does not immediately re-lock
   $editPaper = $mysqli->prepare("UPDATE properties SET start_date=?, end_date=? WHERE property_id=?");
   $editPaper->bind_param('ssi', $tmp_start_date, $tmp_end_date, $paperID);
   $editPaper->execute();
   $editPaper->close();
-  
+
   // Update the questions to take lock off
   $editPaper = $mysqli->prepare("UPDATE questions INNER JOIN papers ON questions.q_id=papers.question AND paper=? SET questions.locked=NULL");
   $editPaper->bind_param('i', $paperID);
@@ -68,7 +68,7 @@ $result->close();
 
 function check_duplicates($q_screens) {
   global $string;
-  
+
   foreach ($q_screens as $q_screen=>$qs) {
     if (count($qs) > 1) {
       echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td colspan=\"4\" class=\"warn\"><strong>Duplicate questions:</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
@@ -299,9 +299,9 @@ function check_latex_random($q_ids, $mysqli) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō<?php echo ' ' . $configObject->get('rogo_version') . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -329,7 +329,7 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
 <script defer="defer" type="text/javascript">
   var paperID='<?php echo $_GET['paperID'] ?>';
-  
+
   function addQID(qID, pID, clearall) {
     if (clearall) {
       document.PapersMenu.questionID.value = ',' + qID;
@@ -350,7 +350,7 @@ function check_latex_random($q_ids, $mysqli) {
   function clearAll() {
     $('.highlight').removeClass('highlight');
   }
-  
+
   function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, menuID, subparts, evt) {
     document.getElementById('menu2a').style.display = 'none';
     if (menuID == '2b') {
@@ -406,9 +406,9 @@ function check_latex_random($q_ids, $mysqli) {
       var addLink = $('#add_break');
       activateAddBreak(addLink);
     }
-    
+
     if (document.PapersMenu.questionID.value == '') {
-      qOff();    
+      qOff();
     }
   }
 
@@ -473,7 +473,7 @@ function check_latex_random($q_ids, $mysqli) {
   } else {
     $active_date = 0;
   }
-  
+
   if (date("YmdHis", time()) >= $start_date and $paper_type == '2' and $start_date !== null) {
     $summative_lock = true;
   } else {
@@ -578,7 +578,7 @@ function check_latex_random($q_ids, $mysqli) {
   $options = 0;
   $neg_marking = false;
   $rnd_q_ids = array();
-  
+
   // Get the questions (if any).
   $result = $mysqli->prepare("SELECT theme, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, o_media, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
   $result->bind_param('i', $paperID);
@@ -677,7 +677,7 @@ function check_latex_random($q_ids, $mysqli) {
         $paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);
         QuestionUtils::add_modules($paper_modules, $q_id, $mysqli);
       }
-      
+
       //prevent php errors by populating $excluded[$q_id]
       if (!isset($excluded[$q_id])) {
         $excluded[$q_id] = NULL;
@@ -699,7 +699,7 @@ function check_latex_random($q_ids, $mysqli) {
     if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
   $result->close();
-  
+
   if ($row_no > 0) {
     $temp_array[$row_no]['options'] = $options;
     $temp_array[$row_no]['o_media'] = $old_o_media;
@@ -777,10 +777,10 @@ function check_latex_random($q_ids, $mysqli) {
   }
 
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
-  
+
   //blank row to preserve table layout when using table-layout: fixed - needed to increase ie8 latex rendering speed
   echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
-  
+
   echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
   if ($module != '') {
     $module_code = module_utils::get_moduleid_from_id($module, $mysqli);
@@ -820,13 +820,13 @@ function check_latex_random($q_ids, $mysqli) {
     <th class="icon">&nbsp;</th>
     <th>&nbsp;</th>
     <th class="q-cell"><?php echo $string['question']; ?></th>
-    <th class="t"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
-    <th class="m"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['marks']; ?>&nbsp;</th>
-    <th class="d"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
+    <th class="t vert_div">&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
+    <th class="m vert_div">&nbsp;<?php echo $string['marks']; ?>&nbsp;</th>
+    <th class="d vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
     </tr>
     <tr><th colspan="6" class="bevel"></th></tr>
   <?php
-  
+
   if ($summative_lock) {
     echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" style=\"position:relative; top:2px\" />&nbsp;&nbsp;</div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td><td style=\"text-align:right\"><div class=\"yellowwarn\">";
     if ($userObject->has_role('Admin')) {
@@ -837,7 +837,7 @@ function check_latex_random($q_ids, $mysqli) {
       $result->bind_result($record_no);
       $result->fetch();
       $result->close();
-   
+
       if ($record_no == 0) {
         echo '<input type="button" name="unlock" value=" ' . $string['unlock'] . ' " onclick="window.location=\'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder . '&scrOfY=0&unlock=1\'" />';
       } else {
@@ -850,11 +850,11 @@ function check_latex_random($q_ids, $mysqli) {
     if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
     if (substr($display_start_date,6,4) > (date("Y")+1)) {
       echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
-      printf($string['farfuturewarning'], $display_start_date); 
+      printf($string['farfuturewarning'], $display_start_date);
       echo "</td></tr>\n";
-    } elseif ($tmp_hour < $cfg_hour_warning) {
+    } elseif ( $tmp_hour < $configObject->get( 'cfg_hour_warning' ) ) {
       echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
-      printf($string['earlywarning'], $cfg_hour_warning);
+      printf($string['earlywarning'], $configObject->get( 'cfg_hour_warning' ) );
       echo "</td></tr>\n";
     }
   }
@@ -955,7 +955,7 @@ function check_latex_random($q_ids, $mysqli) {
       $question_number++;
       echo "<td class=\"q_no\">$question_number.</td>";
     }
-    
+
     echo "<td class=\"l\">";
     echo $theme_str;
     if ($temp_array[$x]['q_type'] == 'random') {
@@ -1038,7 +1038,7 @@ function check_latex_random($q_ids, $mysqli) {
       echo "<tr><td colspan=\"4\"></td><td style=\"color:#808080; text-align:right\">" . round($total_random_mark,2) . "&nbsp;</td><td style=\"color:#808080\">(" . round(((round($total_random_mark,2) / $total_marks) * 100), 0) . "%) " . $string['randommark'] . "</td></tr>\n";
     }
   }
-  
+
   if ($paper_type != '3') {
     check_duplicates($q_screen);
   }
@@ -1060,7 +1060,7 @@ function check_latex_random($q_ids, $mysqli) {
       }
     }
   }
-  
+
   if ($marking == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
     $editPaper = $mysqli->prepare("UPDATE properties SET marking=0 WHERE property_id=?");
     $editPaper->bind_param('i', $paperID);

@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * function used by the add question scripts
-* 
+*
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -87,13 +87,13 @@ function insert_into_options($o_id, $option_text, $o_media, $o_media_width, $o_m
   return $mysqli->insert_id;
 }
 
-function wysiwyg_editor($name, $replace, $content='', $width=756, $height=70) {
+function wysiwyg_editor($name, $replace, $content='', $width=756, $height=120) {
   global $cfg_editor_name;
 
   $html = '';
-  
+
   $content = htmlspecialchars($content);
-  
+
   if ($cfg_editor_name == 'tinymce') {
     $html .= "<textarea class=\"mceEditor\" id=\"$replace\" name=\"$replace\" style=\"width:" . $width . "px; height:" . $height . "px; margin: 0\" rows=\"5\" cols=\"20\">$content</textarea>\n";
   } else {
@@ -101,13 +101,13 @@ function wysiwyg_editor($name, $replace, $content='', $width=756, $height=70) {
     $height = $height - 6;
     $html .= "<textarea name=\"$replace\" style=\"width:" . $width . "px; height:" . $height . "px\">$content</textarea>\n";
   }
-  
+
   return $html;
 }
 
 function option_order($selected = '') {
   $items = array('Display Order','Alphabetic','Random');
-  
+
   $html = "<select id=\"option_order\" name=\"option_order\">\n";
   foreach ($items as $item) {
     if ($selected == strtolower($item)) {
@@ -117,11 +117,11 @@ function option_order($selected = '') {
     }
   }
   $html .= "</select>\n";
-  
+
   if ($selected != '') {
     $html .= '<input type="hidden" name="old_option_order" value="' . $selected . '" />';
   }
-  
+
   return $html;
 }
 
@@ -176,12 +176,12 @@ HTML;
 
 HTML;
     }
-  
+
     $html .= <<< HTML
 
   				</tbody>
         </table>
-        
+
 HTML;
   } else {
     // Shouldn't happen if we're recording question creation as a change
@@ -189,9 +189,9 @@ HTML;
         <p>{$string['nochangesrecorded']}</p>
 
 HTML;
-  
+
   }
-  
+
   return $html;
 }
 
@@ -226,11 +226,11 @@ HTML;
           break;
       }
       $img_status = $status[0];
-      
+
       $alt = ($i % 2 == 0) ? ' class="alt"' : '';
       $comment_str = ($comment['comment'] == '') ? $string['nocomments'] : nl2br($comment['comment']);
       $type_translated = $string[strtolower($comment['type'])];
-      
+
       $html .= <<< HTML
   					<tr{$alt}>
               <td><img src="../../artwork/{$img_status}_comment.png" width="16" height="16" alt="{$status[1]}" /></td>
@@ -240,9 +240,9 @@ HTML;
                 <select name="actions[]">
 
 HTML;
-    
+
       $actions = array('Not actioned' => $string['notactioned'], 'Read - disagree' => $string['readdisagree'], 'Read - actioned' => $string['readactioned']);
-      
+
       foreach ($actions as $action => $act_text) {
         $sel = ($comment['action'] == $action) ? ' selected="selected"' : '';
         $html .= <<< HTML
@@ -250,7 +250,7 @@ HTML;
 
 HTML;
       }
-    
+
       $html .= <<< HTML
                   </select>
                 <input type="hidden" name="comment_ids[]" value="{$id}" />
@@ -263,7 +263,7 @@ HTML;
 HTML;
       $i++;
     }
-    
+
     $html .= <<< HTML
             </tbody>
         </table>
@@ -275,7 +275,7 @@ HTML;
 
 HTML;
   }
-  
+
   return $html;
 }
 

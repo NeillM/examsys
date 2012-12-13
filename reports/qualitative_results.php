@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -29,9 +29,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Qualitative Analysis<?php echo " $configObject->get('cfg_install_type')"; ?></title>
-  
+
+  <title>Qualitative Analysis<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
   body {font-size:90%}
@@ -81,7 +81,7 @@
   $result->bind_param('iissss', $_GET['paperID'], $_GET['paperID'], $_GET['repcourse'], $_GET['repyear'], $startdate, $enddate);
   $result->execute();
   $result->bind_result($screen, $theme, $started, $tmp_username, $surname, $q_id, $leadin, $user_answer);
-  
+
   while ($row = $result->fetch()) {
     if ($theme != '') $old_theme = $theme;
     if ($old_q_id != $q_id or $old_screen < $screen) {

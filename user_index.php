@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Displays a summary of a particular paper. Initial screen called by a VLE and is used to launch start.php.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -30,6 +30,9 @@ require './include/paper_security.inc';
 
 require './classes/paperutils.class.php';
 require './classes/moduleutils.class.php';
+require './classes/logstarttime.class.php';
+require './classes/logmetadata.class.php';
+require './classes/timer.class.php';
 
 check_var('id', 'GET', true, false);
 
@@ -81,11 +84,11 @@ if ($userObject->is_special_needs()) {
   $textsize = '';
   $font = '';
 }
-  
+
 //if blank reset to defaults
 if ($textsize == '') $textsize = 95;
 if ($font == '') $font = 'Arial';
-  
+
 $person = $userObject->get_title() . ' ' . $userObject->get_surname();
 $total_random_mark = 0;
 $total_marks = 0;
@@ -100,7 +103,7 @@ $paper_info->fetch();
 
 if ($paper_info->num_rows == 0) {
   $tmp_string = sprintf($string['papernotfound']);
-  access_denied($tmp_string, false);
+   UserNotices::access_denied($tmp_string, false);
 }
 $paper_info->free_result();
 $paper_info->close();
@@ -133,15 +136,47 @@ if ($userObject->has_role('Student')) {
 
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 }
+
+$display_remaining_time = false;
+$remaining_minutes      = '';
+$remaining_seconds      = '';
+
+// If it is then check if there is an existing record in log_start_time and get the time remaining from that
+// It is isn't then the student hasn't started taking the exam and therefore the time remaining will be the
+// exam_duration for that paper
+
+$has_finished = false;
+
+if( $exam_duration !== null ){
+
+  $display_remaining_time = true;
+
+  $studentID         = $userObject->get_user_ID();
+  $log_start_time    = new LogStartTime( $studentID, $property_id, $mysqli );
+
+  $timer             = new Timer( $log_start_time, $exam_duration );
+  $remaining_time    = $timer->calculate_remaining_time();
+
+  $remaining_minutes = (int) ( $remaining_time / 60 );
+  $remaining_seconds = (int) ( $remaining_time % 60 );
+
+  $exam_duration     = $exam_duration * 60;
+
+  $log_metadata      = new LogMetadata( $userObject, $property_id, $mysqli );
+  $has_finished      = $log_metadata->is_users_paper_completed();
+}
+
+
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['startscreen']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <style type="text/css">
     body {font-size:<?php echo $textsize; ?>%}
@@ -151,7 +186,7 @@ if ($userObject->has_role('Student')) {
     .w {font-size:90%;color:#C00000;font-weight:bold}
     p { margin: 2px 0 8px 0 }
   </style>
-  
+
   <script language="JavaScript">
   function startPaper() {
     var paperURL = "./paper/start.php?id=<?php echo $_GET['id']; ?>";
@@ -251,13 +286,24 @@ if ($textsize > 120) {
   } else {
     echo '<td></td><td></td>';
   }
-  
+
+  if( $display_remaining_time === true ){
+    ?>
+    <tr>
+       <td></td>
+       <td></td>
+       <td class="f"><?php echo $string['timeremaining'] ?></td>
+       <td><?php echo $remaining_minutes ?> mins <?php echo $remaining_seconds ?> secs</td>
+    </tr>
+
+    <?php
+  }
   if ($sound_demo == '1') {
     echo "<tr><td colspan=\"4\" style=\"text-align:center\"><span style=\"color:#D27800;font-size:90%;font-weight:bold\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"./paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
     echo "<param name=\"wmode\" value=\"transparent\" />\n";
     echo "<param name=\"movie\" value=\"./paper/player_mp3_maxi.swf\" />\n";
     echo "<param name=\"FlashVars\" value=\"mp3={$configObject->get('cfg_root_path')}/paper/sound_demo.mp3&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
-    echo "</object></td></tr>\n";  
+    echo "</object></td></tr>\n";
   }
 
   echo '<tr><td style="text-align:center" colspan="4"><br />';
@@ -273,9 +319,9 @@ if ($textsize > 120) {
     if ($switch_info->num_rows > 0) echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='../index.php'\" />&nbsp;&nbsp;&nbsp;&nbsp;\n";
     $switch_info->close();
   }
-  
+
   $display_date = '';
-  
+
   if ($test_type == 0) {
     $log_info = $mysqli->prepare("SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 0 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log0 WHERE q_paper = ? AND userID = ? GROUP BY started DESC, screen UNION SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log1 WHERE q_paper = ? AND userID = ? GROUP BY started DESC, screen");
     $log_info->bind_param('iiii', $property_id, $userObject->get_user_ID(), $property_id, $userObject->get_user_ID());
@@ -292,18 +338,26 @@ if ($textsize > 120) {
       echo '<div style="font-size:90%;color:#C00000"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailablestudents'] . '</div>';
     }
   } else {
-    if ($test_type > 0 and $log_info->num_rows > 0) {
-      if ($navigation == 1) {
-        if (time() < $paper_end) {
-          echo " <input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
-        }
-      } elseif ($navigation == 0) {
-        if ($paper_screens > $log_max_screen) {
-          echo " <input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
-        }
-      } else {
-        echo "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" disabled />\n";
-      }
+
+    $hide_restart = true;
+
+    if ( ( $navigation == 1 and time() < $paper_end ) or ( $navigation == 0 and $paper_screens > $log_max_screen ) ) {
+      $hide_restart = false;
+    }
+
+    // Has the student run out of time or clicked the 'Finish' button?
+
+    $no_time_left = ( ( $display_remaining_time === true and $remaining_time === 0 ) or $has_finished );
+
+    if( $no_time_left ){
+      $hide_restart = true;
+    }
+
+    if( $hide_restart ){
+      $disabled = "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" disabled />\n";
+      echo $disabled;
+    } elseif ($test_type > 0 and $log_info->num_rows > 0) {
+      echo " <input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
     } elseif ($test_type != 2 and (time() < $paper_start or time() > $paper_end)) {
       echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
       echo '<br /><div class="w"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailable'] . '</div>';
@@ -315,7 +369,7 @@ if ($textsize > 120) {
     }
   }
   echo '<br />&nbsp;';
-  
+
   if ($test_type != 2) {
     // Display previous attempts
     $old_started = '';

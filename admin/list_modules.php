@@ -73,20 +73,19 @@ require '../include/sort.inc';
   // output table header
   $table_order = array($string['moduleid']=>'moduleid', $string['name']=>'name', $string['school']=>'school', $string['active']=>'active');
   foreach ($table_order as $display => $key) {
-    echo '<th><nobr>';
     if ($key == 'moduleid') {
-      echo '<div style="padding-left:10px">';
+      echo '<th class="vert_div" style="padding-left:10px">';
     } else {
-      echo '<div><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;';
+      echo '<th class="vert_div">&nbsp;';
     }
     if ($sortby == $key and $ordering == 'asc') {
-      echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div>";
+      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div>";
     } elseif ($sortby == $key and $ordering == 'desc') {
-      echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div>";
+      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div>";
     } else {
-      echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;</div>";
+      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;</div>";
     }
-    echo "</nobr></th>\n";
+    echo "</th>\n";
   }
 ?>
 </tr>
