@@ -32,6 +32,7 @@ require './classes/paperutils.class.php';
 require './classes/moduleutils.class.php';
 require './classes/logstarttime.class.php';
 require './classes/logmetadata.class.php';
+require './classes/timer.class.php';
 
 check_var('id', 'GET', true, false);
 
@@ -136,62 +137,34 @@ if ($userObject->has_role('Student')) {
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 }
 
-
-// BP Get log_duration info
-
 $display_remaining_time = false;
-$remaining_minutes = '';
-$remaining_seconds = '';
+$remaining_minutes      = '';
+$remaining_seconds      = '';
 
-// Determine if this is an application form and that an exam_duration is set
-// If it is then check if there is an existing record in log_duration and get the time remaining from that
-// It is isn't then the applicant hasn't started and therefore the time remaining will be the exam_duration for that paper
+// If it is then check if there is an existing record in log_start_time and get the time remaining from that
+// It is isn't then the student hasn't started taking the exam and therefore the time remaining will be the
+// exam_duration for that paper
 
 $has_finished = false;
 
 if( $exam_duration !== null ){
 
-  $userID = $userObject->get_user_ID();
-
-  $log_duration  = new LogStartTime( $userID, $property_id, $mysqli );
-  $log_metadata  = new LogMetadata( $userID, $property_id, $mysqli );
-
   $display_remaining_time = true;
 
-  $start_time    = $log_duration->get_start_time();
+  $studentID         = $userObject->get_user_ID();
+  $log_start_time    = new LogStartTime( $studentID, $property_id, $mysqli );
 
-  $exam_duration = $exam_duration * 60;
+  $timer             = new Timer( $log_start_time, $exam_duration );
+  $remaining_time    = $timer->calculate_remaining_time();
 
-  if( $start_time !== false ){
+  $remaining_minutes = (int) ( $remaining_time / 60 );
+  $remaining_seconds = (int) ( $remaining_time % 60 );
 
-    $start_time   = strtotime( $start_time );
-    $now          = time();
+  $exam_duration     = $exam_duration * 60;
 
-    $time_elapsed = $now - $start_time;
-
-    // $time elapsed is always negative so addition is needed
-    $new_remaining_duration  = $exam_duration - $time_elapsed;
-
-    if( $new_remaining_duration < 1 ){
-      $new_remaining_duration = 0;
-    }
-
-    $remaining_minutes = (int) ( $new_remaining_duration / 60 );
-    $remaining_seconds = (int) ( $new_remaining_duration % 60 );
-
-  }else{
-
-    $new_remaining_duration = $exam_duration;
-    $remaining_minutes      = $exam_duration / 60;
-    $remaining_seconds      = 0;
-  }
-
-  $exam_duration = $exam_duration / 60;
-  $has_finished = $log_metadata->is_users_paper_completed();
+  $log_metadata      = new LogMetadata( $userObject, $property_id, $mysqli );
+  $has_finished      = $log_metadata->is_users_paper_completed();
 }
-
-
-
 
 
 
@@ -365,33 +338,30 @@ if ($textsize > 120) {
       echo '<div style="font-size:90%;color:#C00000"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailablestudents'] . '</div>';
     }
   } else {
-    if ($test_type > 0 and $log_info->num_rows > 0) {
 
-      $disabled = "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" disabled />\n";
+    $disabled = "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" disabled />\n";
 
-      // BP Added additional conditionals to display restart button if the user's time spend has not been exceeded and disable if exceeded
+    // BP Added additional conditionals to display restart button if the user's time spend has not been exceeded and disable if exceeded
 
-      $no_time_left = (( $display_remaining_time === true and $new_remaining_duration === 0 ) or $has_finished );
+    $no_time_left = (( $display_remaining_time === true and $remaining_time === 0 ) or $has_finished );
 
+
+    $show_restart = false;
+
+    if ( $navigation == 1 and time() < $paper_end) {
+      $show_restart = true;
+    } elseif ($navigation == 0 and $paper_screens > $log_max_screen ) {
+      $show_restart = true;
+    }
+
+    if( $no_time_left ){
       $show_restart = false;
+    }
 
-      if ( $navigation == 1 and time() < $paper_end) {
-        $show_restart = true;
-      } elseif ($navigation == 0 and $paper_screens > $log_max_screen ) {
-        $show_restart = true;
-      }
-
-      if( $test_type == '7' and $no_time_left ){
-        $show_restart = false;
-      }
-
-      if( $show_restart ){
-        echo " <input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
-      }else{
-        echo $disabled;
-      }
-
-
+    if( (int) $test_type == 0 and $no_time_left ){
+      echo $disabled;
+    } elseif ($test_type > 0 and $log_info->num_rows > 0) {
+      echo " <input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
     } elseif ($test_type != 2 and (time() < $paper_start or time() > $paper_end)) {
       echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
       echo '<br /><div class="w"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailable'] . '</div>';

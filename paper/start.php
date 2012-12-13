@@ -31,6 +31,7 @@ require '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require '../classes/logstarttime.class.php';
+require '../classes/timer.class.php';
 require '../include/paper_security.inc';
 
 global $userObject;
@@ -670,9 +671,9 @@ if ($css != '') {
     submitType = 'userSubmit';
     document.questions.button_pressed.value='fire_exit';
     if (usingAjax) {
-      document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>&dont_record=true";
+        document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>&dont_record=true";
     } else {
-      document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
+        document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
     }
     ajaxSave();
   }
@@ -680,52 +681,8 @@ if ($css != '') {
 </head>
 <?php
 
-//BP If the duration is set then show timer
-//BP NOTE: A record is created in log_start_time even if sysadmin and in preview mode
+  $show_ref_material = false;
 
-$method = 'StartClock()';
-
-if ($exam_duration != NULL) {
-  $method                 = '';
-  $exam_duration          = $exam_duration * 60;
-  $new_remaining_duration = $exam_duration;
-  $userID                 = $userObject->get_user_ID();
-  $log_start_time         = new LogStartTime( $userID, $property_id, $mysqli );
-  $start_time             = $log_start_time->get_start_time() or $log_start_time->save(); ;
-
-  // If there is an existing record in log duration
-  if ($start_time !== false){
-
-    $start_time              = strtotime( $start_time );
-    $now                     = time();
-    $time_elapsed            = $now - $start_time;
-    $new_remaining_duration  = $exam_duration - $time_elapsed;
-
-    if ($new_remaining_duration < 1) {
-      $new_remaining_duration = 0;
-    }
-  }
-
-  $method = 'StartTimer(' . $new_remaining_duration . ')';
-}
-
-if ($userObject->has_role('Student')) {
-  echo '<body oncontextmenu="return false;"onload="' . $method . ';" onclose="KillClock();">';
-} else {
-  echo '<body onload="' . $method . ';" onunload="KillClock();">';
-}
-
-$show_ref_material = false;
-echo "<div id=\"maincontent\">\n";
-
-if ($current_screen < $no_screens) {
-  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . $url_mod . "\">";
-} else {
-  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . $url_mod . "\">";
-}
-?>
-  <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<?php
   if (!isset($_GET['q_id'])) {
     if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
       record_marks($property_id, $mysqli, $userObject->get_user_ID(), $paper_type, $grade, $year, $attempt, $userroles);
@@ -739,7 +696,7 @@ if ($current_screen < $no_screens) {
     // Get users previous answers for the current screen.
     if ($paper_type == '_late') {
       //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
-      $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID = ? AND started = ? and q_paper = ?");
+      $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
       $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $property_id);
       $log_data->execute();
       $log_data->store_result();
@@ -758,7 +715,7 @@ if ($current_screen < $no_screens) {
       $log_data->close();
     }
     //get user answers from whichever log is pointed to by log$paper_type
-    $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$paper_type WHERE userID = ? AND started = ? and q_paper = ? ORDER BY id");
+    $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$paper_type WHERE userID=? AND started=? and q_paper=? ORDER BY id");
     $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $property_id);
     $log_data->execute();
     $log_data->store_result();
@@ -777,7 +734,7 @@ if ($current_screen < $no_screens) {
     }
     $log_data->close();
   }
-  
+
   $old_leadin = '';
   $old_q_type = '';
   $old_q_id = 0;
@@ -842,9 +799,54 @@ if ($current_screen < $no_screens) {
   unset($tmp_questions_array);
 
   $unanswered = false;
-  
-  $incomplete_screens = get_unanswered_screens($screen_data, $user_answers, $questions_array, $property_id, $mysqli);
 
+    $incomplete_screens = get_unanswered_screens($screen_data, $user_answers, $questions_array, $property_id, $mysqli);
+
+  //BP If the duration is set then show timer
+
+  $method = 'StartClock()';
+
+  if( $exam_duration != NULL ){
+
+    $studentID         = $userObject->get_user_ID();
+    $log_start_time = new LogStartTime( $studentID, $property_id, $mysqli );
+    $timer          = new Timer( $log_start_time, $exam_duration );
+    $start_time     = $timer->get_start_time();
+
+    $is_preview_first_visit = ( $current_screen == 1 and $screen_pre_submitted == 0 and isset( $_GET['mode'] ) and $_GET['mode'] == 'preview' );
+
+    // Reset if in preview mode so staff are not locked out
+    if( $start_time and $userObject->has_role( 'Staff' ) and $is_preview_first_visit ){
+      $timer->reset();
+      $timer->start();
+    }
+
+    if( $start_time === false ){
+      $timer->start();
+    }
+
+    $remaining_time = $timer->calculate_remaining_time();
+    $method         = 'StartTimer(' . $remaining_time . ')';
+
+  }
+
+
+  if ($userObject->has_role('Student')) {
+    echo '<body oncontextmenu="return false;"onload="' . $method . ';" onclose="KillClock();">';
+  } else {
+    echo '<body onload="' . $method . ';" onunload="KillClock();">';
+  }
+
+  echo "<div id=\"maincontent\">\n";
+
+  if ($current_screen < $no_screens) {
+    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . $url_mod . "\">";
+  } else {
+    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . $url_mod . "\">";
+  }
+  ?>
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<?php
   if (!isset($_GET['q_id'])) {
     echo "<tr><td valign=\"top\">\n";
     echo $top_table_html;
@@ -898,7 +900,7 @@ if ($current_screen < $no_screens) {
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   //display the questions
-  foreach ($questions_array as &$question) {
+  foreach($questions_array as &$question) {
     if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span style=\"background-color:#FFC0C0\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
@@ -1005,6 +1007,7 @@ if ($unanswered) {
 
 </body>
 </html>
+
 
 
 
