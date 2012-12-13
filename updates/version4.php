@@ -4915,11 +4915,13 @@ QUERY;
   echo "<li>GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
 
   //brzsw 22/11/2012 - Add new grants for invigilator users needing select from properties_modules
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules_students TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_students TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
 
   $mysqli->query( 'FLUSH PRIVILEGES' );
+
+
 
 
   // 30/11/2012
@@ -4933,8 +4935,8 @@ QUERY;
 
     $sql    = 'CREATE TABLE
                  log_start_time(   id           int            PRIMARY KEY NOT NULL AUTO_INCREMENT
-                                 , userID       int(10)        unsigned NOT NULL
-                                 , paperID      int(10)        unsigned NOT NULL
+                                 , userID       int            unsigned NOT NULL
+                                 , paperID      int            unsigned NOT NULL
                                  , start_time   datetime       NOT NULL
                                  , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
                                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
@@ -4979,6 +4981,54 @@ QUERY;
   $mysqli->query( 'FLUSH PRIVILEGES' );
 
 
+
+
+
+  //bparish 05/12/2012 - Add new table to support a timer for summative exams
+
+  $does_table_exist = $updater_utils->does_table_exist( 'log_lab_start_time' );
+
+  if ( $does_table_exist === false ){
+
+    $sql    = 'CREATE TABLE
+                 log_lab_start_time( id            int            PRIMARY KEY NOT NULL AUTO_INCREMENT
+                                   , labID         int(10)   unsigned NOT NULL
+                                   , paperID       int(10)   unsigned NOT NULL
+                                   , invigilatorID int(10)   unsigned NOT NULL
+                                   , start_time      datetime  NOT NULL
+                                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+
+    $result = $mysqli->query( $sql );
+
+    if ( $result !== TRUE ) {
+      printf( "Error: %s\n", $mysqli->error );
+    }
+
+
+    echo '<li>CREATE TABLE log_extra_time ( id, labID, paperID, invigilatorID, start_time )</li>';
+  }
+
+
+  $does_table_exist = $updater_utils->does_table_exist( 'log_extra_time' );
+
+  if ( $does_table_exist === false ){
+
+    $sql    = 'CREATE TABLE
+                 log_extra_time( id                     int unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
+                               , log_lab_start_time_id  int unsigned NOT NULL
+                               , userID                 int unsigned NOT NULL
+                               , end_time               int          NOT NULL
+                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+
+    $result = $mysqli->query( $sql );
+
+    if ( $result !== TRUE ) {
+      printf( "Error: %s\n", $mysqli->error );
+    }
+
+
+    echo '<li>CREATE TABLE log_extra_time ( id, log_lab_start_time_id, userID, end_time )</li>';
+  }
 
 
   // End ------------------------------------------------------------------
