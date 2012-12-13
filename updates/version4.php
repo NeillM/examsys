@@ -188,6 +188,7 @@ if (!isset($_POST['update'])) {
   $cfg_db_host = $configObject->get('cfg_db_host');
   $cfg_db_username = $configObject->get('cfg_db_username');
   $cfg_db_external_user = $configObject->get('cfg_db_external_user');
+  $cfg_use_ldap = $configObject->get('cfg_use_ldap');
 
   echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>\n<ol>";
   ob_start();
