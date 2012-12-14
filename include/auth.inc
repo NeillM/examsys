@@ -50,7 +50,7 @@ function access_denied($message, $output_header = false, $output_footer = true) 
   //This function has been replaced by usernotices.class.php
   throw new Exception("This function has been replaced by usernotices.class.php");
   exit;
-  
+
 }
 
 
@@ -193,7 +193,7 @@ global $configObject;
       }
 
       if ($userObj->has_role('Staff') and count($split_username) > 1) {
-        //for Sysadmin only 
+        //for Sysadmin only
         if ($split_username[1] == 'staff') {
           //set the role to staff
           $userroles = 'Staff';
@@ -256,7 +256,7 @@ function encpw($salt, $u, $p, $type = 'SHA-512') {
     $full_salt = '$1$' . substr(md5($u), 0, 8) . '$'; // Simple MD5, for barckwards compatibility
     $new_password = crypt($p, $full_salt);
   }
-  
+
   return $new_password;
 }
 
