@@ -92,7 +92,7 @@ class Authentication {
     $this->config = $this->configObj->get('authentication');
 
     if(!isset($this->config)) {
-      display_notice('No Authentication configured', 'No Authentication configured has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
+      UserNotices::display_notice('No Authentication configured', 'No Authentication configured has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
 exit();
     }
 
