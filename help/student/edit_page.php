@@ -27,7 +27,7 @@
   require '../../include/sysadmin_auth.inc';
   require '../../include/errors.inc';
   require '../../include/help.inc';
-  header('Content-Type: text/html; charset=' . {$configObject->get('cfg_page_charset')});
+  header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
   
   if (isset($_POST['save_changes'])) {
     // Update help file record
