@@ -270,7 +270,7 @@ function get_ss_hon() {
   return mypercentile($marks_data,0.2);
 }
 
-function mypercentile($data,$percentile) {
+function mypercentile($data, $percentile) {
   $count = count($data);
   if ($count == 0) {
     return '';
@@ -358,7 +358,6 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   $master_array[$user_number]['questions'] = $tmp['questions'];
   $master_array[$user_number]['paper_type'] = $tmp['paper_type'];
   $master_array[$user_number]['room'] = $tmp['room'];
-  $master_array[$user_number]['visible'] = 1;    // Default to visible unless switched off below.
   $master_array[$user_number]['visible'] = 1;    // Default to visible unless switched off below.
   $master_array[$user_number]['timer_started'] = $tmp['timer_started'];
 
