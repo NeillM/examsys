@@ -1332,7 +1332,7 @@ CREATE TABLE `properties` (
 
 LOCK TABLES `properties` WRITE;
 /*!40000 ALTER TABLE `properties` DISABLE KEYS */;
-INSERT INTO `properties` VALUES (1,'Multiple Choice Base','2012-01-11 00:00:00','2032-01-11 00:00:00','Europe/London','0','','','white','black','#316AC5','#C00000','1','0','1',40,70,102,'','','',1,'',NULL,NULL,'2012-12-11 16:46:27',4,12,'1','1','1','1','0','','',NULL,NULL,'0',0,'',NULL,'11355244387102'),(2,'Multiple Response Base','2013-01-13 00:00:00','2032-01-13 00:00:00','Europe/London','0','','','white','black','#316AC5','#C00000','1','0','1',40,70,102,'','','',1,'',NULL,NULL,'2012-12-13 16:01:48',9.83333,27,'1','1','1','1','0','','',NULL,NULL,'0',0,'',NULL,'21355414508102');
+INSERT INTO `properties` VALUES (1,'Multiple Choice Base','2012-01-11 00:00:00','2032-01-11 00:00:00','Europe/London','0','','','white','black','#316AC5','#C00000','1','0','1',40,70,102,'','','',1,'',NULL,NULL,'2012-12-11 16:46:27',4,12,'1','1','1','1','0','','',NULL,NULL,'0',0,'',NULL,'11355244387102'),(2,'Multiple Response Base','2012-01-13 00:00:00','2032-01-13 00:00:00','Europe/London','0','','','white','black','#316AC5','#C00000','1','0','1',40,70,102,'','','',1,'',NULL,NULL,'2012-12-13 16:01:48',9.83333,27,'1','1','1','1','0','','',NULL,NULL,'0',0,'',NULL,'21355414508102');
 /*!40000 ALTER TABLE `properties` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1506,7 +1506,7 @@ CREATE TABLE `recent_papers` (
 
 LOCK TABLES `recent_papers` WRITE;
 /*!40000 ALTER TABLE `recent_papers` DISABLE KEYS */;
-INSERT INTO `recent_papers` VALUES (1,1,'2012-12-12 11:38:04'),(102,1,'2012-12-14 11:02:30'),(102,2,'2012-12-14 11:01:52'),(103,1,'2012-12-12 10:33:50');
+INSERT INTO `recent_papers` VALUES (1,1,'2012-12-12 11:38:04'),(102,1,'2012-12-14 11:02:30'),(102,2,'2012-12-14 11:09:31'),(103,1,'2012-12-12 10:33:50');
 /*!40000 ALTER TABLE `recent_papers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2227,4 +2227,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-12-14 11:05:37
+-- Dump completed on 2012-12-14 11:09:40
