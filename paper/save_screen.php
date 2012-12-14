@@ -70,8 +70,6 @@ if ($userObject->has_role('Student')) {
 
   $log_metadata = new LogMetadata( $userObject, $property_id, $mysqli );
 
-  check_whether_student_has_finished( $log_metadata );
-
 }
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;

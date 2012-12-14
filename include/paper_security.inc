@@ -22,20 +22,6 @@
 * @package
 */
 
-function check_whether_student_has_finished( LogMetadata $log_metadata ){
-  global $string;
-
-  $has_finished_paper = $log_metadata->is_users_paper_completed();
-
-  if( $has_finished_paper ){
-
-    $notice = UserNotices::get_instance();
-
-    $notice->display_access_denied( $string['paper_completed'], $output_header = false);
-
-  }
-
-}
 
 function check_labs($paper_type, $labs, $pword, $mysqlidb, $notice = NULL) {
   global $string;

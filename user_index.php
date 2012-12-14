@@ -145,8 +145,6 @@ $remaining_seconds      = '';
 // It is isn't then the student hasn't started taking the exam and therefore the time remaining will be the
 // exam_duration for that paper
 
-$has_finished = false;
-
 if( $exam_duration !== null ){
 
   $display_remaining_time = true;
@@ -163,7 +161,7 @@ if( $exam_duration !== null ){
   $exam_duration     = $exam_duration * 60;
 
   $log_metadata      = new LogMetadata( $userObject, $property_id, $mysqli );
-  $has_finished      = $log_metadata->is_users_paper_completed();
+
 }
 
 
@@ -347,7 +345,7 @@ if ($textsize > 120) {
 
     // Has the student run out of time or clicked the 'Finish' button?
 
-    $no_time_left = ( ( $display_remaining_time === true and $remaining_time === 0 ) or $has_finished );
+    $no_time_left = ( $display_remaining_time === true and $remaining_time === 0 );
 
     if( $no_time_left ){
       $hide_restart = true;
