@@ -5025,6 +5025,16 @@ QUERY;
   }
 
 
+  //2012/12/14 cczsa1 add permission for db user to access properties & ip_addresses tables for guestlogin authentication module.
+
+  $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.properties TO \'' . $cfg_db_username . '\'@\'' .  $cfg_db_host . '\'';
+  $mysqli->query( $sql );
+  echo '<li>' . $sql  . '</li>' . "\n";
+  $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.ip_addresses TO \'' . $cfg_db_username . '\'@\'' .  $cfg_db_host . '\'';
+  $mysqli->query( $sql );
+  echo '<li>' . $sql  . '</li>' . "\n";
+
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 

@@ -285,7 +285,7 @@ class Authentication {
       foreach ($this->callbackregister['postauthsuccess'] as $number => $callback) {
         $this->debug[] = 'run authsuccess callback ' . get_class($callback[0]) . ':' . $callback[1];
         call_user_func_array($callback, array($postauthsuccessobj));
-        $objid = key($this->callbackregisterdata['authauthsuccess'][$number]);
+        $objid = key($this->callbackregisterdata['postauthsuccess'][$number]);
         $this->append_auth_object_debug($objid);
       }
     }
