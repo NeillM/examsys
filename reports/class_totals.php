@@ -53,6 +53,7 @@ ob_start();
   }
 </style>
 
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../js/staff_help.js"></script>
 <script language="JavaScript">
   var ie  = document.all;
@@ -87,9 +88,13 @@ ob_start();
     document.getElementById('loglate').value = tmpLogLate;
     document.getElementById('percent').value = tmpPercent;
 
+    top_pos = currentY+scrOfY;
+    if (top_pos > ($(window).height() + scrOfY - 130)) {
+      top_pos = $(window).height() + scrOfY - 130;
+    }
     document.getElementById('menudiv').style.left = currentX+scrOfX + 'px';
-    document.getElementById('menudiv').style.top = currentY+scrOfY + 'px';
-
+    document.getElementById('menudiv').style.top = top_pos + 'px';
+    
     document.getElementById('menudiv').style.display = "";
     document.getElementById('item1b').style.backgroundColor='#FFFFFF';
     document.getElementById('item2b').style.backgroundColor='#FFFFFF';
@@ -123,52 +128,34 @@ ob_start();
     return false ;
   }
 
-  function getScrollXY() {
-    var scrOfX = 0, scrOfY = 0;
-    if( typeof( window.pageYOffset ) == 'number' ) {
-      //Netscape compliant
-      scrOfY = window.pageYOffset;
-      scrOfX = window.pageXOffset;
-    } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-      //DOM compliant
-      scrOfY = document.body.scrollTop;
-      scrOfX = document.body.scrollLeft;
-    } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-      //IE6 standards compliant mode
-      scrOfY = document.documentElement.scrollTop;
-      scrOfX = document.documentElement.scrollLeft;
-    }
-    parent.frames['menu'].document.PapersMenu.scrOfY.value = scrOfY;
-  }
-
   function menuRowOn(rowID) {
     // Left menu column
-    document.getElementById('item'+rowID+'a').style.backgroundColor='#FFE7A2';
-    document.getElementById('item'+rowID+'a').style.borderTop='1px solid #FFBD69';
-    document.getElementById('item'+rowID+'a').style.borderBottom='1px solid #FFBD69';
-    document.getElementById('item'+rowID+'a').style.borderLeft='1px solid #FFBD69';
+    document.getElementById('item'+rowID+'a').style.backgroundColor = '#FFE7A2';
+    document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #FFBD69';
+    document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #FFBD69';
+    document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #FFBD69';
 
     // Right menu column
-    document.getElementById('item'+rowID+'b').style.backgroundColor='#FFE7A2';
-    document.getElementById('item'+rowID+'b').style.borderTop='1px solid #FFBD69';
-    document.getElementById('item'+rowID+'b').style.borderBottom='1px solid #FFBD69';
-    document.getElementById('item'+rowID+'b').style.borderRight='1px solid #FFBD69';
-    document.getElementById('item'+rowID+'b').style.borderLeft='1px solid #FFE7A2';
+    document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFE7A2';
+    document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFBD69';
+    document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFBD69';
+    document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFBD69';
+    document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFE7A2';
   }
 
   function menuRowOff(rowID) {
     // Left menu column
-    document.getElementById('item'+rowID+'a').style.backgroundColor='#F1F5FB';
-    document.getElementById('item'+rowID+'a').style.borderTop='1px solid #F1F5FB';
-    document.getElementById('item'+rowID+'a').style.borderBottom='1px solid #F1F5FB';
-    document.getElementById('item'+rowID+'a').style.borderLeft='1px solid #F1F5FB';
+    document.getElementById('item'+rowID+'a').style.backgroundColor = '#F1F5FB';
+    document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #F1F5FB';
+    document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #F1F5FB';
+    document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #F1F5FB';
 
     // Right menu column
-    document.getElementById('item'+rowID+'b').style.backgroundColor='#FFFFFF';
-    document.getElementById('item'+rowID+'b').style.borderTop='1px solid #FFFFFF';
-    document.getElementById('item'+rowID+'b').style.borderBottom='1px solid #FFFFFF';
-    document.getElementById('item'+rowID+'b').style.borderRight='1px solid #FFFFFF';
-    document.getElementById('item'+rowID+'b').style.borderLeft='1px solid #FFFFFF';
+    document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFFFFF';
+    document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFFFFF';
+    document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFFFFF';
+    document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFFFFF';
+    document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFFFFF';
   }
 
   function confirmSubmit() {
@@ -267,7 +254,11 @@ ob_start();
           document.getElementById('noteMsg').innerHTML = XMLHttpRequestObject.responseText;
           document.getElementById('noteDiv').style.display="block";
           document.getElementById('noteDiv').style.left = currentX+scrOfX+16 + 'px';
-          document.getElementById('noteDiv').style.top = currentY+scrOfY-16 + 'px';
+          top_pos = currentY+scrOfY-16;
+          if (top_pos > ($(window).height() + scrOfY - 130)) {
+            top_pos = $(window).height() + scrOfY - 130;
+          }
+          document.getElementById('noteDiv').style.top = top_pos + 'px';
           delete XMLHttpRequestObject;
           XMLHttpRequestObject = null;
         }
@@ -315,14 +306,13 @@ ob_start();
     }
   }
 
-  function hideTimerReset(){
-    document.getElementById( 'reset_timer' ).style.display = 'none';
+  function hideTimerReset() {
+    document.getElementById('reset_timer').style.display = 'none';
   }
 
   function showTimerReset(){
-    document.getElementById( 'reset_timer' ).style.display = '';
+    document.getElementById('reset_timer').style.display = '';
   }
-
 
   document.onmousedown = mouseSelect;
 </script>
@@ -501,7 +491,7 @@ if ($language != 'en') {
       if ($key == '') {
         echo "<th>";
       } else {
-        echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;";
+        echo "<th class=\"vert_div\">&nbsp;";
       }
       if ($sortby == $key and $ordering == 'asc') {
         echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repcourse=" . $_GET['repcourse'] . "&module=" . $_GET['module'] . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=$percent&direction=$direction&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
@@ -569,7 +559,7 @@ if ($language != 'en') {
 
     $onclick = '';
 
-    if ( $timer_started == false ){
+    if ( $timer_started == false ) {
       $onclick = 'hideTimerReset();';
     }
 
@@ -579,7 +569,6 @@ if ($language != 'en') {
       } else {
         $reassign = 'y';
       }
-
 
       if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
         $bg_color = '#FFC0C0';
@@ -605,8 +594,6 @@ if ($language != 'en') {
         echo '<tr id="res' . ($i+1) . '"';
         if ($user_results[$i]['questions'] < $question_no) {
           $scatter_data .= "0\n0\n";
-          //fwrite($scatter_file,"0\n");
-          //fwrite($scatter_file,"0\n");
           $class = 'redln';
         } else {
           $class = 'greyln';
@@ -618,8 +605,6 @@ if ($language != 'en') {
             $distribution[$temp_location] = 1;
           }
           $scatter_data .= $temp_location . "\n" . $user_results[$i]['duration'] . "\n";
-          //fwrite($scatter_file,$temp_location . "\n");
-          //fwrite($scatter_file,$user_results[$i]['duration'] . "\n");
         }
         if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
           $role_css = 'staff';
@@ -842,10 +827,20 @@ if ($language != 'en') {
       echo '</td><td>&nbsp;</td>';
     }
     echo "</tr>\n";
+    
+    if ($cohort_size > 0) {
+      $percent_failures = round(($failures / $cohort_size) * 100);
+      $percent_passes = round(($passes / $cohort_size) * 100);
+      $percent_honours = round(($honours / $cohort_size) * 100);
+    } else {
+      $percent_failures = 0;
+      $percent_passes = 0;
+      $percent_honours = 0;  
+    }
 
-    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">$failures</td><td>(" . round(($failures / $cohort_size) * 100) . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['passno'] . "</td><td class=\"r\">$passes</td><td>(" . round(($passes / $cohort_size) * 100) . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\">$honours</td><td>(" . round(($honours / $cohort_size) * 100) . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">$failures</td><td>(" . $percent_failures . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['passno'] . "</td><td class=\"r\">$passes</td><td>(" . $percent_passes . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\">$honours</td><td>(" . $percent_honours . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
 
     echo "<tr><td class=\"field\">" . $string['totalmarks'] . "</td><td class=\"r\">";
     if ($total_marks < $orig_total_marks) echo "<span class=\"exclude\">$orig_total_marks</span>&nbsp;&nbsp;";
@@ -869,8 +864,8 @@ if ($language != 'en') {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     } else {
-      echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . round($ss_pass,2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-      if ($ss_hon > 0) echo "<tr><td class=\"field\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . round($ss_hon,2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . round($ss_pass, 2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      if ($ss_hon > 0) echo "<tr><td class=\"field\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . round($ss_hon, 2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       if ($completed_no > 0) {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td><td>&nbsp;</td></tr>\n";
       } else {
@@ -882,7 +877,7 @@ if ($language != 'en') {
     if ($completed_no == 0) {
       echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . round($stddev_percent,1) . "%)</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . round($stddev_percent, 1) . "%)</td><td>&nbsp;</td></tr>\n";
     }
     echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td class=\"r\">$max_mark</td><td>(" . number_format($max_percent) . "%)</td><td>&nbsp;</td></tr>\n";
     if ($min_mark == 9999) $min_mark = 0;
@@ -898,7 +893,7 @@ if ($language != 'en') {
     if ($completed_no <= 1) {
       echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"r\">" . formatsec(round($total_time / $completed_no,0)) . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"r\">" . formatsec(round($total_time / $completed_no, 0)) . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     }
     if (count($excluded) > 0) {
       echo "<tr><td class=\"field\">" . $string['excludedquestions'] . "</td><td colspan=\"3\">$display_excluded</td></tr>\n";
@@ -964,36 +959,36 @@ if ($language != 'en') {
         // Perform replacement.
         $message = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html><head>\n<title>$paper</title>\n<style type=\"text/css\">\nbody {font-family: Arial,sans-serif; background-color: white; color:black}</style>\n</head>\n<body>";
         $message .= $_POST['emailtemplate'];
-        $message = str_replace("{student-title}",$user_results[$i]['title'],$message);
-        $message = str_replace("{student-last-name}",$user_results[$i]['surname'],$message);
-        $message = str_replace("{student-mark}",$user_results[$i]['mark'],$message);
-        $message = str_replace("{student-percent}",$user_results[$i]['adj_percent'],$message);
-        $message = str_replace("{total-paper-mark}",$total_marks,$message);
-        $message = str_replace("{student-time}",formatsec($user_results[$i]['duration']),$message);
-        $message = str_replace("{class-mean-mark}",$mean_mark,$message);
-        $message = str_replace("{class-mean-percent}",$mean_percent,$message);
+        $message = str_replace("{student-title}", $user_results[$i]['title'], $message);
+        $message = str_replace("{student-last-name}", $user_results[$i]['surname'], $message);
+        $message = str_replace("{student-mark}", $user_results[$i]['mark'], $message);
+        $message = str_replace("{student-percent}", $user_results[$i]['adj_percent'], $message);
+        $message = str_replace("{total-paper-mark}", $total_marks, $message);
+        $message = str_replace("{student-time}", formatsec($user_results[$i]['duration']), $message);
+        $message = str_replace("{class-mean-mark}", $mean_mark, $message);
+        $message = str_replace("{class-mean-percent}", $mean_percent, $message);
         if ($completed_no-1 == 0) {
-          $message = str_replace("{class-stdev}",0,$message);
+          $message = str_replace("{class-stdev}", 0, $message);
         } else {
-          $message = str_replace("{class-stdev}",number_format($stddev_mark, 2, '.', ','),$message);
+          $message = str_replace("{class-stdev}", number_format($stddev_mark, 2, '.', ','), $message);
         }
-        $message = str_replace("{class-max-mark}",$max_mark,$message);
-        $message = str_replace("{class-min-mark}",$min_mark,$message);
-        $message = str_replace("{class-mean-time}",formatsec(round($total_time / $completed_no,0)),$message);
-        $message = str_replace("{random-mark}",number_format($total_random_mark, 1, '.', ','),$message);
-        $message = str_replace("{paper-title}",$paper,$message);
+        $message = str_replace("{class-max-mark}", $max_mark, $message);
+        $message = str_replace("{class-min-mark}", $min_mark, $message);
+        $message = str_replace("{class-mean-time}", formatsec(round($total_time / $completed_no,0)), $message);
+        $message = str_replace("{random-mark}", number_format($total_random_mark, 1, '.', ','), $message);
+        $message = str_replace("{paper-title}", $paper, $message);
 
         $to = $user_results[$i]['username'] . '@nottingham.ac.uk';
 
         $subject = $_POST['subject'];
-        $subject = str_replace("{total-paper-mark}",$total_marks,$subject);
-        $subject = str_replace("{class-mean-mark}",round($total_mark / $completed_no, 1),$subject);
-        $subject = str_replace("{class-mean-percent}",$mean_percent,$subject);
-        $subject = str_replace("{class-max-mark}",$max_mark,$subject);
-        $subject = str_replace("{class-min-mark}",$min_mark,$subject);
-        $subject = str_replace("{class-mean-time}",formatsec(round($total_time / $completed_no,0)),$subject);
-        $subject = str_replace("{random-mark}",number_format($total_random_mark, 1, '.', ','),$subject);
-        $subject = str_replace("{paper-title}",$paper,$subject);
+        $subject = str_replace("{total-paper-mark}", $total_marks, $subject);
+        $subject = str_replace("{class-mean-mark}", round($total_mark / $completed_no, 1), $subject);
+        $subject = str_replace("{class-mean-percent}", $mean_percent, $subject);
+        $subject = str_replace("{class-max-mark}", $max_mark, $subject);
+        $subject = str_replace("{class-min-mark}", $min_mark, $subject);
+        $subject = str_replace("{class-mean-time}", formatsec(round($total_time / $completed_no,0)), $subject);
+        $subject = str_replace("{random-mark}", number_format($total_random_mark, 1, '.', ','), $subject);
+        $subject = str_replace("{paper-title}", $paper, $subject);
 
         $headers = "From: " . $_POST['from'] . "\n";
         $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";

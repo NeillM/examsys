@@ -22,10 +22,12 @@ td {
   text-align:right
 }
 .redln {
-  border-bottom:solid red 1px
+  border-bottom:solid red 1px;
+  line-height:150%;
 }
 .greyln {
-  border-bottom:solid #EEEEEE 1px
+  border-bottom:solid #EEEEEE 1px;
+  line-height:150%;
 }
 .ordered {
   background-color:#F7F7F7
