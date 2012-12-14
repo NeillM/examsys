@@ -72,7 +72,7 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
                   function swfLoaded1(message) {
                     var num = message.substring(5,message.length);
                     
-                    setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $media['filename']; ?>', '<?php echo $tmp_correct; ?>');
+                    setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $media['filename']; ?>', '<?php echo $tmp_correct; ?>','#FFC0C0');
                   }
                   write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($media['width'] + 306); ?>" height="<?php echo $plugin_height; ?>" align="middle">');
                   write_string('<param name="allowScriptAccess" value="always" />');

@@ -1,4 +1,4 @@
-function setUpFlash(num, flashId, lang, image, config, answer, extra) {
+function setUpFlash(num, flashId, lang, image, config, answer, extra, colour) {
   var swf;
   if (navigator.appName.indexOf("Microsoft") != -1) {
     swf = document.getElementById(flashId);
@@ -15,9 +15,11 @@ function setUpFlash(num, flashId, lang, image, config, answer, extra) {
   if (extra != undefined) {
     swf.extraInfo(extra);
   }
-}
+  if (colour != undefined) {
+    swf.colourInfo(colour);
+  }}
 
-function addLoadEvent(func, num, flashId, image, config, answer, extra) {
+function addLoadEvent(func, num, flashId, image, config, answer, extra, colour) {
   var oldonload = window.onload;
   if (typeof window.onload != 'function') {
     window.onload = func
@@ -26,7 +28,7 @@ function addLoadEvent(func, num, flashId, image, config, answer, extra) {
       if (oldonload) {
         oldonload();
       }
-      func(num, flashId, image, config, answer, extra);
+      func(num, flashId, image, config, answer, extra, colour);
     }
   }
 }

@@ -2079,7 +2079,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   <script language="JavaScript">
     function swfLoaded<?php echo $question_no; ?>(message) {
       var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>', '<?php echo $extra; ?>');
+      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>', '<?php echo $extra; ?>','#FFC0C0');
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
@@ -2258,7 +2258,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
 ?> 
   function swfLoaded<?php echo $question_no; ?>(message) {
     var num = message.substring(5,message.length);
-    setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','<?php echo $extra ; ?>');
+    setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','<?php echo $extra ; ?>','#FFC0C0');
   }
   write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
   write_string('<param name="allowScriptAccess" value="always" />');
