@@ -27,7 +27,19 @@
   <tr><td>Password</td><td><input type="password" name="ROGO_PW" /></td></tr>
   </table>
   <br />
-  <input type="submit" name="rogo-login-form-std" value=" Sign In " style="width:160px" />&nbsp;&nbsp;<input type="submit" name="cancel" value=" Cancel " />
+  <input type="submit" name="rogo-login-form-std" value=" Sign In " style="width:160px" />
+<?php
+    if(isset($displaystdformobj->buttons)) {
+      foreach($displaystdformobj->buttons as $object) {
+        echo <<<END
+$object->pretext
+<input type="$object->type" name="$object->name" value="$object->value" style="$object->style" />
+$object->posttext
+END;
+      }
+    }
+    //<input type="submit" name="cancel" value=" Cancel " />
+?>
   </div>
 
 </div>

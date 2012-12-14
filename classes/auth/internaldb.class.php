@@ -41,7 +41,6 @@ class internaldb_auth {
     $this->name = $name;
   }
 
-
   function register_callback_routines() {
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
     $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
@@ -56,7 +55,7 @@ class internaldb_auth {
   }
 
   function failauth(&$postauthfailreturn) {
-    $this->retdata->debug[] = 'Fail function passed ' . var_export($postauthfailreturn, TRUE);
+    $this->retdata->debug[] = 'Fail function run';// . var_export($postauthfailreturn, TRUE);
 
     //   $this->retdata->debug[]='info:' . var_export($this->settings,TRUE);
 
@@ -75,7 +74,7 @@ class internaldb_auth {
       $postauthfailreturn->exit = FALSE;
       $postauthfailreturn->stop = FALSE;
     }
-    $this->retdata->debug[] = 'post run ' . var_export($postauthfailreturn, TRUE);
+
 
     return;
 

@@ -32,14 +32,16 @@ class Authentication {
   private $callbackregister;
   private $callbackregisterdata;
 
+  public $authinfo;
+
   function __construct($configObj, $db) {
     $this->db = $db;
     $this->configObj = $configObj;
 
     $this->load_config();
 
-    if($this->config[0][0]!=='alreadyloggedin') {
-      array_unshift($this->config,array('alreadyloggedin', array('timeout'=>0),'Internal Authentication'));
+    if ($this->config[0][0] !== 'alreadyloggedin') {
+      array_unshift($this->config, array('alreadyloggedin', array('timeout' => 0), 'Internal Authentication'));
     }
 
     // get form data here?
@@ -59,6 +61,7 @@ class Authentication {
       $return = session_start();
       if ($return === FALSE) {
         $this->debug[] = 'session failed to initialise';
+
         return;
         //session start failure
       }
@@ -72,9 +75,9 @@ class Authentication {
 
     foreach ($this->config as $number => $auth) {
       $authtype = $auth[0];
-      $authtype1=$authtype . '_auth';
+      $authtype1 = $authtype . '_auth';
       $settings = $auth[1];
-      $name= $auth[2];
+      $name = $auth[2];
       $this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
       require_once $this->configObj->get('cfg_web_root') . 'classes/auth/' . $authtype . '.class.php';
       $this->returndata[$number] = new authtypereturn();
@@ -83,6 +86,7 @@ class Authentication {
       $this->debug[] = "Running Registering callback routines for #$number";
       $this->authObj[$number]->register_callback_routines();
       $this->append_auth_object_debug($number);
+      $this->authinfo[$number] = array($name => $authtype);
     }
 
   }
@@ -91,22 +95,22 @@ class Authentication {
 
     $this->config = $this->configObj->get('authentication');
 
-    if(!isset($this->config)) {
+    if (!isset($this->config)) {
       UserNotices::display_notice('No Authentication configured', 'No Authentication configured has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
-exit();
+      exit();
     }
 
     $this->debug[] = 'Loaded Config for authentication';
   }
 
-  function register_callback($callback, $section, $number, $name, $insert = false) {
-    if (!in_array($section, array('preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail')) or !is_callable($callback)) {
+  function register_callback($callback, $section, $number, $name, $insert = FALSE) {
+    if (!in_array($section, array('preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform')) or !is_callable($callback)) {
       //attempting to register callback to invalid section
       $this->debug[] = 'register_callback failed ' . $section . ' from ' . get_class($callback[0]) . ' ' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
-      return false;
+      return FALSE;
     }
     $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
-    if ($insert == true) {
+    if ($insert == TRUE) {
       array_unshift($this->callbackregister[$section], $callback);
       array_unshift($this->callbackregisterdata[$section], array($number => $name));
     } else {
@@ -114,27 +118,48 @@ exit();
       $this->callbackregisterdata[$section][] = array($number => $name);
 
     }
-    return true;
+
+    return TRUE;
   }
 
-  function display_form() {
-    $override=$this->configObj->get('cfg_web_root') . '/config/login_form.php';
+  function display_std_form() {
+
+    $displaystdformobj = new stdClass();
+    if (isset($this->callbackregister['displaystdform'])) {
+      foreach ($this->callbackregister['displaystdform'] as $number => $callback) {
+        call_user_func_array($callback, array(&$displaystdformobj));
+        $objid = key($this->callbackregisterdata['displaystdform'][$number]);
+        $this->append_auth_object_debug($objid);
+      }
+    }
+
+    $override = $this->configObj->get('cfg_web_root') . '/config/login_form.php';
     $this->debug[] = 'Display form';
-    if(file_exists($override)) {
-      include $override;
+    if (file_exists($override)) {
+      require $override;
     } else {
-      include $this->configObj->get('cfg_web_root') . '/include/login_form.php';
+      require $this->configObj->get('cfg_web_root') . '/include/login_form.php';
     }
   }
 
-  function display_form_error() {
-    $override=$this->configObj->get('cfg_web_root') . '/config/login_error_form.php';
+  function display_error_form() {
+
+    $displayerrformobj = new stdClass();
+    if (isset($this->callbackregister['displayerrform'])) {
+      foreach ($this->callbackregister['displayerrform'] as $number => $callback) {
+        call_user_func_array($callback, array(&$displayerrformobj));
+        $objid = key($this->callbackregisterdata['displayerrform'][$number]);
+        $this->append_auth_object_debug($objid);
+      }
+    }
+
+    $override = $this->configObj->get('cfg_web_root') . '/config/login_error_form.php';
     $this->debug[] = 'Display error form & reset attempt count';
-    $_SESSION['authenticationObj']['attempt']=0;
-    if(file_exists($override)) {
-      include $override;
+    $_SESSION['authenticationObj']['attempt'] = 0;
+    if (file_exists($override)) {
+      require $override;
     } else {
-      include $this->configObj->get('cfg_web_root') . '/include/login_error_form.php';
+      require $this->configObj->get('cfg_web_root') . '/include/login_error_form.php';
     }
   }
 
@@ -146,7 +171,7 @@ exit();
     if (isset($this->callbackregister['preauth'])) {
       foreach ($this->callbackregister['preauth'] as $number => $callback) {
         call_user_func_array($callback, array($preauthobj));
-        $objid=key($this->callbackregisterdata['auth'][$number]);
+        $objid = key($this->callbackregisterdata['preauth'][$number]);
         $this->append_auth_object_debug($objid);
       }
     }
@@ -155,14 +180,14 @@ exit();
     if (isset($this->callbackregister['auth'])) {
       foreach ($this->callbackregister['auth'] as $number => $callback) {
         $returned = call_user_func_array($callback, array(&$authobj));
-        $objid=key($this->callbackregisterdata['auth'][$number]);
+        $objid = key($this->callbackregisterdata['auth'][$number]);
         $this->append_auth_object_debug($objid);
         if ($returned !== FALSE) {
           $this->success = TRUE;
-          $this->userid=$this->authObj[$objid]->rogoid;
-          $this->debug[]='Rogo ID is:: ' . $this->userid . " from object $objid";
- //         $this->debug[]=var_dump($this->authObj[$objid],TRUE);
-          $this->successfullauthmodule[]=$objid;
+          $this->userid = $this->authObj[$objid]->rogoid;
+          $this->debug[] = 'Rogo ID is:: ' . $this->userid . " from object $objid";
+          //         $this->debug[]=var_dump($this->authObj[$objid],TRUE);
+          $this->successfullauthmodule[] = $objid;
 
         }
 
@@ -177,7 +202,7 @@ exit();
     if (isset($this->callbackregister['postauth'])) {
       foreach ($this->callbackregister['postauth'] as $number => $callback) {
         call_user_func_array($callback, array($postauthobj));
-        $objid=key($this->callbackregisterdata['auth'][$number]);
+        $objid = key($this->callbackregisterdata['postauth'][$number]);
         $this->append_auth_object_debug($objid);
       }
     }
@@ -190,9 +215,9 @@ exit();
       if (isset($this->callbackregister['postauthfail'])) {
         foreach ($this->callbackregister['postauthfail'] as $number => $callback) {
           call_user_func_array($callback, array(&$postauthfailobj));
-          $objid=key($this->callbackregisterdata['auth'][$number]);
+          $objid = key($this->callbackregisterdata['postauthfail'][$number]);
           $this->append_auth_object_debug($objid);
-
+          $this->debug[] = 'parameters after running ' . var_export($postauthfailobj, TRUE);
           if (isset($postauthfailobj->callback)) {
             call_user_func_array($postauthfailobj->callback, $postauthfailobj);
             if ($postauthfailobj->exit === TRUE) {
@@ -203,7 +228,7 @@ exit();
 
           if ($postauthfailobj->form == 'err') {
 
-            $this->display_form_error();
+            $this->display_error_form();
 
             if ($postauthfailobj->exit === TRUE) {
               var_dump($this->debug);
@@ -213,7 +238,7 @@ exit();
 
           if ($postauthfailobj->form == 'std') {
 
-            $this->display_form();
+            $this->display_std_form();
 
             if ($postauthfailobj->exit === TRUE) {
               var_dump($this->debug);
@@ -248,8 +273,9 @@ exit();
 
     if ($this->success !== TRUE) {
       $this->debug[] = 'Success is not TRUE or FALSE';
+
       //something went very wrong;
-      return false;
+      return FALSE;
 
     }
 
@@ -257,9 +283,9 @@ exit();
     $postauthsuccessobj = new stdClass();
     if (isset($this->callbackregister['postauthsuccess'])) {
       foreach ($this->callbackregister['postauthsuccess'] as $number => $callback) {
-        $this->debug[]='run authsuccess callback ' . get_class($callback[0]) .':' . $callback[1];
+        $this->debug[] = 'run authsuccess callback ' . get_class($callback[0]) . ':' . $callback[1];
         call_user_func_array($callback, array($postauthsuccessobj));
-        $objid=key($this->callbackregisterdata['auth'][$number]);
+        $objid = key($this->callbackregisterdata['authauthsuccess'][$number]);
         $this->append_auth_object_debug($objid);
       }
     }
@@ -296,8 +322,8 @@ exit();
   }
 
   function store_data_in_session() {
-    $_SESSION['authenticationObj']['loggedin']['userid']=$this->get_userid();
-    $_SESSION['authenticationObj']['loggedin']['time']=time();
+    $_SESSION['authenticationObj']['loggedin']['userid'] = $this->get_userid();
+    $_SESSION['authenticationObj']['loggedin']['time'] = time();
     $_SESSION['authenticationObj']['attempt'] = 0;
   }
 
@@ -309,7 +335,9 @@ exit();
   function append_auth_object_debug($number, $desc = '') {
     $new_messages = $this->returndata[$number]->get_new_debug_messages();
     foreach ($new_messages as $key => $value) {
-      $this->debug[] = "authObj[$number:$key]:$desc: $value";
+      $info1 = $this->authinfo[$number];
+      $info = key($info1) . ':' . current($info1);
+      $this->debug[] = "authObj($info)[$number:$key]:$desc: $value";
     }
   }
 
@@ -336,6 +364,7 @@ class authtypereturn {
     while (isset($this->debug[$this->debugpointer])) {
       $returnarray[$this->debugpointer] = $this->debug[$this->debugpointer++];
     }
+
     return $returnarray;
   }
 }
@@ -355,3 +384,21 @@ class postauthfailreturn extends stdClass {
   }
 }
 
+class displaystdformobjbutton extends stdClass {
+  public $pretext;
+  public $posttext;
+  public $type;
+  public $name;
+  public $value;
+  public $style;
+
+  function __construct() {
+    $this->pretext = '';
+    $this->posttext = '';
+    $this->type = '';
+    $this->name = '';
+    $this->value = '';
+    $this->style = '';
+  }
+
+}
