@@ -1,7 +1,7 @@
 <?php
 require_once 'shared.inc.php';
 
-class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
+class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected $install_type;
   protected $page_root;
