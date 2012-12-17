@@ -84,9 +84,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   $ebel_grid_template = $_POST['ebel_grid_template'];
 
-  $module_added = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
+  module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
 
-  if ($module_added and isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
+  if (isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
     $enrolements = 0;
 
     // Get the current academic session
