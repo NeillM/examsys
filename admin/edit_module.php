@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -67,15 +67,18 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   // Update the properties of the module.
   $tmp_modulecode = trim($_POST['modulecode']);
   $tmp_fullname = trim($_POST['fullname']);
-  $tmp_checklist = substr($checklist, 1); 
-  
-  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=?, neg_marking=?, ebel_grid_template=? WHERE id=?");
-  $result->bind_param('ssisssiiiii', $tmp_modulecode, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['ebel_grid_template'], $_GET['moduleid']);
-  $result->execute();
-  $result->close();
+  $tmp_checklist = substr($checklist, 1);
+
+  if ($tmp_modulecode != '' and $tmp_fullname != '' and $_POST['schoolid'] != '') {
+    $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=?, neg_marking=?, ebel_grid_template=? WHERE id=?");
+    $result->bind_param('ssisssiiiii', $tmp_modulecode, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['ebel_grid_template'], $_GET['moduleid']);
+    $result->execute();
+    $result->close();
+  }
 
   $mysqli->close();
   header("location: list_modules.php");
+  exit;
 } else {
   $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id=?");
   $stmt->bind_param('i', $_GET['moduleid']);
@@ -104,21 +107,30 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .field {font-weight:bold; text-align:right; padding-right:10px}
+    .error {color:#800000}
+    input.error, select.error {background-color:#FFD9D9; border:1px solid #800000}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script language="JavaScript">
-    function checkForm() {
-      if (myform.moduleid.value == "") {
-        alert ("<?php echo $string['entermoduleidentifier']; ?>");
-        return false;
-      }
-      if (myform.fullname.value == "") {
-        alert ("<?php echo $string['entermoduletitle']; ?>");
-        return false;
-      }
-    }
-    
+    $(function () {
+      $('#module_form').validate({
+        messages: {
+          modulecode: '<div><?php echo $string['entermoduleid']; ?></div>',
+          fullname: '<div><?php echo $string['entermoduletitle']; ?></div>',
+          schoolid: '<div><?php echo $string['selectschool']; ?></div>'
+        }
+      });
+<?php
+  if ($unique_moduleid == false) {
+?>
+      $('#modulecode').addClass('error');
+<?php
+  }
+?>
+    });
+
     function showHideGrid() {
       if (document.getElementById('stdset').checked) {
         document.getElementById('ebelgrid').style.display = 'table-row';
@@ -126,15 +138,15 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         document.getElementById('ebelgrid').style.display = 'none';
       }
     }
-    
+
     function setSidebarMenu() {
       $('#menu1a').css('display','none');
       $('#menu1b').css('display','block');
       $('#lineID').val('<?php echo $_GET['moduleid']; ?>');
     }
-    
+
     $(document).ready(setSidebarMenu);
-  
+
   <?php
   if ($unique_moduleid == false) {
   ?>
@@ -163,21 +175,13 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   </table>
   <br />
   <div align="center">
-  <form name="myform" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>?moduleid=<?php echo $_GET['moduleid']; ?>">
+  <form id="module_form" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?moduleid=<?php echo $_GET['moduleid']; ?>">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
-    <?php
-    if ($unique_moduleid == false) {
-      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"modulecode\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$modulecode\" /></td></tr>\n";
-    } else {
-    ?>
-      <tr><td class="field"><?php echo $string['moduleid']; ?></td><td><input type="text" size="10" name="modulecode" value="<?php echo $modulecode; ?>" /></td></tr>
-    <?php
-    }
-    ?>
-    <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="fullname" value="<?php echo $fullname; ?>" /></td></tr>
+    <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" id="modulecode" name="modulecode" value="<?php echo $modulecode ?>" class="required" /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php echo $fullname ?>" class="required" /></td></tr>
   <?php
     $old_faculty = '';
-    echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
+    echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select id=\"schoolid\" name=\"schoolid\" class=\"required\">\n<option value=\"\"></option>\n";
     $result = $mysqli->prepare("SELECT schools.id, school, faculty.name FROM schools, faculty WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY faculty.name, school");
     $result->execute();
     $result->bind_result($id, $list_school, $faculty);
@@ -195,7 +199,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     $result->close();
     echo "</optgroup>\n</select></td></tr>\n";
-    
+
     if (strpos($checklist,'peer') !== false) {
       $peer = 1;
     } else {
@@ -216,7 +220,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     } else {
       $mapping = 0;
     }
-    
+
     echo '<tr><td class="field">' . $string['smsapi'] . '</td><td><select name="sms_api">';
     foreach ($cfg_sms_sources as $key=>$value) {
       if ($sms == $value) {
