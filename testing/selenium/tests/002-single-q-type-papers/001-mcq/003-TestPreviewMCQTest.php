@@ -35,6 +35,10 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 4, vertical, alphabetic, 1 mark, Option M correct');
     $this->assertCssCount('css=input[type="radio"]', 3);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
+    // Order of alphabetic question
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[1]/td[2]', 'Option B');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[2]/td[2]', 'Option M');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[3]/td[2]', 'Option X');
 
     $this->select("name=q1", "label=Option Two");
     $this->click("xpath=(//input[@name='q2'])[2]");
@@ -44,6 +48,13 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 6, DDL, alphabetic, 2 marks, Option X correct');
     $this->assertCssCount('css=input[type="radio"]', 3);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
+    // Order of alphabetic questions
+    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="2"]', '0');
+    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="1"]', '2');
+    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="3"]', '4');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[2]', 'Option B');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[3]', 'Option M');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[4]', 'Option X');
 
     $this->click("name=q1");
     $this->select("name=q2", "label=Option X");
@@ -85,6 +96,10 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 4, vertical, alphabetic, 1 mark, Option M correct');
     $this->assertCssCount('css=input[type="radio"]', 3);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
+    // Order of alphabetic question
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[1]/td[2]', 'Option B');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[2]/td[2]', 'Option M');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[3]/td[2]', 'Option X');
 
     $this->select("name=q1", "label=Option Three");
     $this->click("xpath=(//input[@name='q2'])[1]");
@@ -94,6 +109,13 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 6, DDL, alphabetic, 2 marks, Option X correct');
     $this->assertCssCount('css=input[type="radio"]', 3);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
+    // Order of alphabetic questions
+    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="2"]', '0');
+    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="1"]', '2');
+    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="3"]', '4');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[2]', 'Option B');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[3]', 'Option M');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[4]', 'Option X');
 
     $this->click("xpath=(//input[@name='q1'])[3]");
     $this->select("name=q2", "label=Option M");
@@ -134,6 +156,10 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 4, vertical, alphabetic, 1 mark, Option M correct');
     $this->assertCssCount('css=input[type="radio"]', 3);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
+    // Order of alphabetic question
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[1]/td[2]', 'Option B');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[2]/td[2]', 'Option M');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[3]/td[2]', 'Option X');
 
     $this->select("name=q1", "label=Option Three");
     $this->click("xpath=(//input[@name='q2'])[2]");
@@ -143,6 +169,13 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 6, DDL, alphabetic, 2 marks, Option X correct');
     $this->assertCssCount('css=input[type="radio"]', 3);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
+    // Order of alphabetic questions
+    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="2"]', '0');
+    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="1"]', '2');
+    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="3"]', '4');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[2]', 'Option B');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[3]', 'Option M');
+    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[4]', 'Option X');
 
     $this->click("name=q1");
     $this->select("name=q2", "label=Option M");
