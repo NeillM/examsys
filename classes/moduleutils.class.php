@@ -29,7 +29,7 @@ Class module_utils {
 
   static function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db,$sms_import = 0) {
 
-    if (module_utils::module_exists($moduleid, $db) !== false) {
+    if ($moduleid == '' or $fullname == '' or $schoolID == '' or module_utils::module_exists($moduleid, $db) !== false) {
       return false;
     }
 
@@ -103,10 +103,10 @@ Class module_utils {
 
     return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist);
   }
-  
+
   static function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
-  
+
     $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ?");
     $result->bind_param('i', $modID);
     $result->execute();
@@ -118,17 +118,17 @@ Class module_utils {
       return false;
     }
     $result->close();
-    
+
     return $moduleid;
   }
-  
+
   static function get_idMod($module_id, $db) {
     if (is_array($module_id)) {
       $ids = array();
-      
+
       $sql = implode("','", $module_id);
       $sql = str_replace("',' ", "','", $sql);
-    
+
       $result = $db->prepare("SELECT id FROM modules WHERE moduleid IN ('$sql')");
       $result->execute();
       $result->store_result();
@@ -140,7 +140,7 @@ Class module_utils {
       if (count($ids) == 0) {
         return false;
       }
-      return $ids;      
+      return $ids;
     } else {
       $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ?");
       $result->bind_param('s', $module_id);

@@ -3,16 +3,12 @@ require_once 'shared.inc.php';
 
 class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
 {
-  protected $install_type;
-  protected $page_root;
+  protected $install_type = ' \(local\)';
 
   protected function setUp()
   {
-    $this->install_type = get_install_type();
-    $this->page_root = get_root_url();
-
     $this->setBrowser("*firefox");
-    $this->setBrowserUrl($this->page_root . '/');
+    $this->setBrowserUrl("https://rogo.local/");
   }
 
   public function testCreateUser()
@@ -30,15 +26,15 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTitle('Rogō: Create New User' . $this->install_type);
 
     $this->type("id=new_first_names", "Testing");
-    $this->type("id=new_surname", "Staff2");
-    $this->type("id=new_email", "teststaff2@test.com");
-    $this->type("id=new_username", "teststaff2");
-    $this->type("id=new_password", "VN4wExNHKN");
+    $this->type("id=new_surname", "Staff");
+    $this->type("id=new_email", "teststaff@test.com");
+    $this->type("id=new_username", "teststaff");
+    $this->type("id=new_password", "lxn&98X21");
     $this->select("id=new_grade", "label=Academic Lecturer");
     $this->select("id=new_gender", "label=Male");
     $this->click("css=td > input[name=\"submit\"]");
     $this->waitForPageToLoad("30000");
-    $this->assertTextPresent('New account created for Mr Staff2');
+    $this->assertTextPresent('New account created for Mr Staff');
   }
 
   // TODO: Can this actually be done?  Don't think Selenium can cope with alerts generated on page load
@@ -112,7 +108,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
   {
     do_admin_login($this);
 
-    $this->open("/users/details.php?userID=154");
+    $this->open("/users/details.php?userID=103");
     $this->click("//td[@onclick=\"showTab('Teams_tab')\"]");
     $this->click("link=Edit Teams...");
     $this->waitForPopUp("editmodule", "30000");
@@ -137,7 +133,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("link=School of Selenium Testing");
     $this->click("link=exact:S01SET: Selenium Testing");
     $this->waitForPageToLoad("30000");
-    $this->assertElementContainsText("//div[8]/form/div/ul/li[2]/span", 'Staff2, T. Mr');
+    $this->assertElementContainsText("css=li > span", 'Staff, T. Mr');
   }
 
   /**
@@ -145,7 +141,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
    */
   public function testUserCanLogIn()
   {
-    do_staff_login($this, 'teststaff2', 'VN4wExNHKN');
+    do_staff_login($this);
     $this->assertTextPresent('My Modules');
   }
 

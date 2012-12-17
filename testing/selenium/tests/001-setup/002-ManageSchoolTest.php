@@ -3,14 +3,11 @@ require_once 'shared.inc.php';
 
 class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
 {
-  protected $install_type;
-  protected $page_root;
+  protected $install_type = ' \(local\)';
+  protected $page_root = 'https://rogo.local';
 
   protected function setUp()
   {
-    $this->install_type = get_install_type();
-    $this->page_root = get_root_url();
-
     $this->setBrowser("*firefox");
     $this->setBrowserUrl($this->page_root . '/');
   }
