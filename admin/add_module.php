@@ -36,6 +36,7 @@ if (is_object($SMS)) {
 }
 
 $unique_moduleid = true;
+$tmp_modulecode = '';
 if (isset($_POST['submit'])) {
   // Check for unique moduleID
   //TODO this has been moved to moduleutils
@@ -175,20 +176,29 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .field {font-weight:bold; text-align:right; padding-right:10px}
+    .error {color:#800000}
+    input.error {background-color:#FFD9D9; border:1px solid #800000}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script language="JavaScript">
-    function checkForm() {
-      if (myform.moduleid.value == "") {
-        alert ("<?php echo $string['entermoduleid']; ?>");
-        return false;
-      }
-      if (myform.fullname.value == "") {
-        alert ("<?php echo $string['entermoduletitle']; ?>");
-        return false;
-      }
-    }
+    $(function () {
+      $('#module_form').validate({
+        messages: {
+          modulecode: '<div><?php echo $string['entermoduleid']; ?></div>',
+          fullname: '<div><?php echo $string['entermoduletitle']; ?></div>'
+        }
+      });
+<?php
+  if ($unique_moduleid == false) {
+?>
+      $('#modulecode').addClass('error');
+<?php
+  }
+?>
+    });
 
     function showHideGrid() {
       if (document.getElementById('stdset').checked) {
@@ -211,16 +221,10 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   </table>
   <br />
   <div align="center">
-  <form name="myform" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+  <form id="module_form" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
-    <?php
-    if ($unique_moduleid == false) {
-      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"modulecode\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$tmp_modulecode\" /></td></tr>\n";
-    } else {
-      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"modulecode\" value=\"\" /></td></tr>\n";
-    }
-    ?>
-    <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname']; ?>" /></td></tr>
+    <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" id="modulecode" name="modulecode" value="<?php echo $tmp_modulecode ?>" class="required" /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname']; ?>" class="required" /></td></tr>
 
 <?php
   $old_faculty = '';
