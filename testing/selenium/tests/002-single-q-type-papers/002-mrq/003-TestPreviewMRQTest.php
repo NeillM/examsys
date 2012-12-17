@@ -28,6 +28,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 1, display order, mark per option, 1 mark, Option One and Option Three correct');
     $this->assertTextPresent('MRQ 2, alphabetic, mark per option, 1 mark, Option B and Option P correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="2_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="2_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="2_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="2_4"]', 'Option X');
 
     $this->click("id=q1_1");
     $this->click("id=q1_3");
@@ -48,6 +53,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 5, alphabetic, mark per question, 1 mark, Option M and Option X correct');
     $this->assertTextPresent('MRQ 6, random, mark per question, 2 marks, Option Two and Option Three correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="1_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="1_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="1_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="1_4"]', 'Option X');
 
     $this->click("id=q1_1");
     $this->click("id=q1_3");
@@ -61,6 +71,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 7, display order, mark per option, 1 mark correct, -1 mark incorrect, Option One and Option Four correct');
     $this->assertTextPresent('MRQ 8, alphabetic, mark per option, 2 marks correct, -1 mark incorrect, Option B and Option X correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="2_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="2_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="2_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="2_4"]', 'Option X');
 
     $this->click("id=q1_1");
     $this->click("id=q1_4");
@@ -81,6 +96,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 11, alphabetic, mark per question, 1 mark correct, -1 mark incorrect, Option M and Option B correct');
     $this->assertTextPresent('MRQ 12, random, mark per question, 3 marks correct, -2 marks incorrect, Option Two and Option Four correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="1_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="1_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="1_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="1_4"]', 'Option X');
 
     $this->click("id=q1_1");
     $this->click("id=q1_2");
@@ -106,6 +126,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 1, display order, mark per option, 1 mark, Option One and Option Three correct');
     $this->assertTextPresent('MRQ 2, alphabetic, mark per option, 1 mark, Option B and Option P correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="2_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="2_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="2_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="2_4"]', 'Option X');
 
     $this->click("id=q1_2");
     $this->click("id=q1_4");
@@ -126,6 +151,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 5, alphabetic, mark per question, 1 mark, Option M and Option X correct');
     $this->assertTextPresent('MRQ 6, random, mark per question, 2 marks, Option Two and Option Three correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="1_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="1_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="1_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="1_4"]', 'Option X');
 
     $this->click("id=q1_2");
     $this->click("id=q1_4");
@@ -139,6 +169,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 7, display order, mark per option, 1 mark correct, -1 mark incorrect, Option One and Option Four correct');
     $this->assertTextPresent('MRQ 8, alphabetic, mark per option, 2 marks correct, -1 mark incorrect, Option B and Option X correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="2_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="2_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="2_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="2_4"]', 'Option X');
 
     $this->click("id=q1_2");
     $this->click("id=q1_3");
@@ -159,6 +194,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 11, alphabetic, mark per question, 1 mark correct, -1 mark incorrect, Option M and Option B correct');
     $this->assertTextPresent('MRQ 12, random, mark per question, 3 marks correct, -2 marks incorrect, Option Two and Option Four correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="1_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="1_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="1_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="1_4"]', 'Option X');
 
     $this->click("id=q1_4");
     $this->click("id=q1_3");
@@ -184,6 +224,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 1, display order, mark per option, 1 mark, Option One and Option Three correct');
     $this->assertTextPresent('MRQ 2, alphabetic, mark per option, 1 mark, Option B and Option P correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="2_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="2_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="2_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="2_4"]', 'Option X');
 
     $this->click("id=q1_2");
     $this->click("id=q1_3");
@@ -204,6 +249,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 5, alphabetic, mark per question, 1 mark, Option M and Option X correct');
     $this->assertTextPresent('MRQ 6, random, mark per question, 2 marks, Option Two and Option Three correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="1_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="1_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="1_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="1_4"]', 'Option X');
 
     $this->click("id=q1_2");
     $this->click("id=q1_4");
@@ -217,6 +267,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 7, display order, mark per option, 1 mark correct, -1 mark incorrect, Option One and Option Four correct');
     $this->assertTextPresent('MRQ 8, alphabetic, mark per option, 2 marks correct, -1 mark incorrect, Option B and Option X correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="2_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="2_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="2_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="2_4"]', 'Option X');
 
     $this->click("id=q1_1");
     $this->click("id=q1_4");
@@ -237,6 +292,11 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 11, alphabetic, mark per question, 1 mark correct, -1 mark incorrect, Option M and Option B correct');
     $this->assertTextPresent('MRQ 12, random, mark per question, 3 marks correct, -2 marks incorrect, Option Two and Option Four correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    // Order of alphabetic question
+    $this->assertElementContainsText('//*[@id="1_1"]', 'Option B');
+    $this->assertElementContainsText('//*[@id="1_2"]', 'Option M');
+    $this->assertElementContainsText('//*[@id="1_3"]', 'Option P');
+    $this->assertElementContainsText('//*[@id="1_4"]', 'Option X');
 
     $this->click("id=q1_1");
     $this->click("id=q1_2");
