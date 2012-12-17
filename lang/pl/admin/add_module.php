@@ -17,6 +17,7 @@
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['entermoduleid'] = 'Podaj identyfikator modułu.';
 $string['entermoduletitle'] = 'Podaj tytuł modułu.';
+$string['selectschool'] = 'Please select a school for the module.'; // Niko
 $string['moduleid'] = 'Identyfikator modułu';
 $string['name'] = 'Nazwa';
 $string['school'] = 'Katedra';
@@ -33,7 +34,7 @@ $string['negativemarking'] = 'Punktacja ujemna';
 $string['add'] = 'Dodaj';
 $string['save'] = 'Zachowaj';
 $string['createmodule'] = 'Utwórz nowy moduł';
-$string['bulkmoduleimport'] = 'Skomasowany import modułów'; 
+$string['bulkmoduleimport'] = 'Skomasowany import modułów';
 $string['editmodule'] = 'Edytuj moduł';
 $string['modulefolder'] = 'Folder modułu';
 $string['studentcohort'] = 'Grupa studentów';

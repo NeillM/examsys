@@ -177,7 +177,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <style type="text/css">
     .field {font-weight:bold; text-align:right; padding-right:10px}
     .error {color:#800000}
-    input.error {background-color:#FFD9D9; border:1px solid #800000}
+    input.error, select.error {background-color:#FFD9D9; border:1px solid #800000}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -188,7 +188,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $('#module_form').validate({
         messages: {
           modulecode: '<div><?php echo $string['entermoduleid']; ?></div>',
-          fullname: '<div><?php echo $string['entermoduletitle']; ?></div>'
+          fullname: '<div><?php echo $string['entermoduletitle']; ?></div>',
+          schoolid: '<div><?php echo $string['selectschool']; ?></div>'
         }
       });
 <?php
@@ -228,7 +229,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
 <?php
   $old_faculty = '';
-  echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
+  echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select id=\"schoolid\" name=\"schoolid\" class=\"required\">\n<option value=\"\"></option>\n";
   $result = $mysqli->prepare("SELECT schools.id, school, faculty.name FROM schools, faculty WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY faculty.name, school");
   $result->execute();
   $result->bind_result($id, $school, $faculty);
