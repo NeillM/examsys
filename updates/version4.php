@@ -4940,7 +4940,7 @@ QUERY;
                                  , userID       int            unsigned NOT NULL
                                  , paperID      int            unsigned NOT NULL
                                  , start_time   datetime       NOT NULL
-                               , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
+                                 , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
                              ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
 
 
@@ -5033,6 +5033,44 @@ QUERY;
   $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.ip_addresses TO \'' . $cfg_db_username . '\'@\'' .  $cfg_db_host . '\'';
   $mysqli->query( $sql );
   echo '<li>' . $sql  . '</li>' . "\n";
+  
+  
+  
+
+  //2012/12/14 bparish - Add new table to support a timer for summative exams
+
+  $does_table_exist = $updater_utils->does_table_exist( 'log_lab_end_time' );
+
+  if ( $does_table_exist === false ){
+
+    $sql    = 'CREATE TABLE
+                 log_lab_end_time(   id            int unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
+                                   , labID         int unsigned NOT NULL
+                                   , paperID       int unsigned NOT NULL
+                                   , invigilatorID int unsigned NOT NULL
+                                   , end_time      int unsigned NOT NULL
+                                   , CONSTRAINT    key_lab_paper_invig_time UNIQUE ( labID, paperID, invigilatorID, end_time )
+                                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+
+    $result = $mysqli->query( $sql );
+
+    if ( $result !== TRUE ) {
+      printf( "Error: %s\n", $mysqli->error );
+    }
+
+    echo '<li>CREATE TABLE log_lab_end_time ( id, labID, paperID, invigilatorID, end_time )</li>';
+
+    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_lab_end_time TO \'' . $cfg_db_inv_username . '\'@\''. $cfg_db_host . "'";
+    $mysqli->query( $sql );
+    echo '<li>' . $sql  . '</li>' . "\n";
+
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.log_lab_end_time TO \'' . $cfg_db_student_user . '\'@\''. $cfg_db_host . "'";
+    $mysqli->query( $sql );
+    echo '<li>' . $sql  . '</li>' . "\n";
+
+    $mysqli->query( 'FLUSH PRIVILEGES' );
+
+  }
 
 
   // End ------------------------------------------------------------------
