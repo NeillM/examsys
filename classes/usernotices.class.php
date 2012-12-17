@@ -24,46 +24,17 @@
 * @package
 */
 
-Class UserNotices {
+require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
+
+Class UserNotices extends RogoStaticSingleton {
   
-  private static $inst;
+  public static $inst = NULL;
+  public static $class_name = 'UserNotices';
 
   /**
-  * Create and return the Global instance of UserNotices for use in the Local 
-  * scope
+  * constructor
   */
-  public static function get_instance()
-  {
-    if (!is_object(self::$inst)) {
-      self::$inst = new UserNotices();
-    }
-    return self::$inst;
-  }
-
-  /**
-  * STATIC wrapper function to enable old style code to work
-  *
-  * Code should be converted to use get_instance with display_access_denied
-  */
-  public static function access_denied ($message, $output_header = false, $output_footer = true) {
-    $obj = self::get_instance();
-    $obj->display_access_denied($message, $output_header, $output_footer);
-  }
-
-  /**
-  * STATIC wrapper function to enable old style code to work
-  *
-  * Code should be converted to use get_instance with display_notice_to_user
-  */
-  public static function display_notice ($title, $msg, $icon, $title_color = 'black') {
-    $obj = self::get_instance();
-    $obj->display_notice_to_user($title, $msg, $icon, $title_color);
-  }
-
-  /**
-  * Private constructor can only be instantiated by UserNotices::get_instance
-  */
-  private function __construct() {}
+  public function __construct() {}
 
   /**
    * This function will output a message to the user 
@@ -74,7 +45,7 @@ Class UserNotices {
    * @param string $title_color color of the tile text
    *
    */
-  function display_notice_to_user($title, $msg, $icon, $title_color = 'black') {
+  private function display_notice($title, $msg, $icon, $title_color = 'black') {
     $configObject = Config::Instance();
     $rp = $configObject->get('cfg_root_path');
     echo "<html>\n";
@@ -98,7 +69,7 @@ Class UserNotices {
    * @param string $output_header if true output 401 headers
    *
    */
-  function display_access_denied($message, $output_header = false, $output_footer = true) {
+  private function access_denied($message, $output_header = false, $output_footer = true) {
     global $mysqli, $string;
 
     $this->display_notice_to_user(  $string['accessdenied'], 
@@ -119,9 +90,11 @@ Class UserNotices {
 
     if ($output_footer) {
       echo "\n</body>\n</html>";
-      $mysqli->close();
-      exit;
+      if(is_object($mysqli)) {
+        $mysqli->close();
+      }
     }
+    exit;
   }
 
 }
