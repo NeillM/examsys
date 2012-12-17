@@ -23,7 +23,9 @@
 */
 
 require '../include/invigilator_auth.inc';
-require_once '../classes/networkutils.class.php';
+require '../include/errors.inc';
+require_once '../classes/propertyobject.class.php';
+require '../classes/log_lab_endtime.class.php';
 
 function get_students($modules, $session, $paperID, $exam_length) {
   global $string, $mysqli;
@@ -72,7 +74,7 @@ function get_students($modules, $session, $paperID, $exam_length) {
   $results->bind_param('s', $session);
   $results->execute();
   $results->store_result();
-  $results->bind_result($extra_time, $tmp_userID, $surname, $first_names, $title);
+  $results->bind_result( $extra_time, $tmp_userID, $surname, $first_names, $title );
   while ($results->fetch()) {
     if ($extra_time == '') {
       echo "<tr><td></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span>";
@@ -112,6 +114,12 @@ function emergencyNumbers($support_numbers) {
   }
   echo "</table>\n";
 }
+
+
+if( isset( $_POST['start_exam_form'] ) ){
+  check_var( 'paper_id', 'POST', true, false );
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -138,7 +146,7 @@ function emergencyNumbers($support_numbers) {
       clockID  = 0;
     }
     var tDate = new Date();
-    document.getElementById('theTime').value = "" + ((tDate.getHours() < 10) ? "0" : "") + tDate.getHours() +
+    document.getElementById('theTime').value = "<?php echo $string[ 'currenttime' ]; ?> " + ((tDate.getHours() < 10) ? "0" : "") + tDate.getHours() +
       ((tDate.getMinutes()  < 10) ? ":0" : ":") + tDate.getMinutes() +
       ((tDate.getSeconds() < 10) ? ":0" : ":") + tDate.getSeconds();
       clockID = setTimeout("UpdateClock()", 1000);
@@ -211,16 +219,22 @@ function emergencyNumbers($support_numbers) {
 ?>
 <table class="header">
 <tr>
-<th><div style="padding-left:10px; font-size:24pt; font-weight:bold">
-<?php
-  if ($room_name == '') {
-    echo NetworkUtils::get_ipaddress() . $string['unknownlab'];
-  } else {
-    echo $string['lab'] . ' ' . $room_name;
-  }
-?>
-</div><div style="padding-left:10px; font-size:10pt; font-weight:bold"><?php echo $string['invigilatoraccess']; ?></div></th>
-<th style="text-align:right"><input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theTime" />&nbsp;</th></tr>
+  <th><div style="padding-left:10px; font-size:24pt; font-weight:bold">
+  <?php
+    if ($room_name == '') {
+      echo NetworkUtils::get_ipaddress() . $string['unknownlab'];
+    } else {
+      echo $string['lab'] . ' ' . $room_name;
+    }
+  ?>
+  </div><div style="padding-left:10px; font-size:10pt; font-weight:bold"><?php echo $string['invigilatoraccess']; ?></div>
+  </th>
+  <th style="text-align:right">
+  <input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theTime" />
+  <input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theEndTime" />
+  &nbsp;
+  </th>
+</tr>
 <tr><th colspan="2" class="bevel"></th></tr>
 </table>
 <br />
@@ -231,14 +245,15 @@ function emergencyNumbers($support_numbers) {
   $sql = 'SELECT
               properties.property_id
             , paper_title
-            , date_format( start_date,"%d/%m/%Y %T" )
+            , start_date
+            , end_date
             , exam_duration
             , calendar_year
             , password
           FROM
               properties
           WHERE
-              paper_type="2"
+              paper_type = "2"
           AND
               labs
           LIKE
@@ -255,19 +270,99 @@ function emergencyNumbers($support_numbers) {
   $paper_results->bind_param('s', $current_lab);
   $paper_results->execute();
   $paper_results->store_result();
-  $paper_results->bind_result( $property_id, $paper_title, $start_date, $exam_duration, $calendar_year, $password );
+  $paper_results->bind_result( $property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password );
+
+  $property_object = new PropertyObject();
 
   if ( $paper_results->num_rows > 0 and $room_name != '' ) {
 
     $col_width = round(100 / ($paper_results->num_rows + 1));
-    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:95%\">\n<tr>\n";
-
+    ?>
+    <table cellpadding="2" cellspacing="0" border="0" style="font-size:95%">
+    <tr>
+    <?php
     while ( $paper_results->fetch() ) {
-      echo "<td style=\"vertical-align:top; width:$col_width%\"><div style=\"display:inline\"><img src=\"../artwork/summative.png\" align=\"left\" width=\"48\" height=\"48\" alt=\"paper icon\" border=\"0\" /></div><div style=\"margin-left:52px; display:block\"><strong>$paper_title</strong><br />" . $string['start'] . " $start_date<br />" . $string['duration'] . " $exam_duration " . $string['mins'] . " &nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"newPaperNote($property_id); return false;\" style=\"color:blue\">" . $string['papernote'] . "</a>";
-      if ($password != '') {
-        echo "<br />Password: $password";
+
+      $invigilator_id = $userObject->get_user_ID();
+
+      $property_object->set_property_id( $property_id );
+      $property_object->set_start_date( $start_date );
+      $property_object->set_end_date( $end_date );
+      $property_object->set_exam_duration( $exam_duration );
+
+      $log_lab_endtime = new LogLabEndTime( $lab
+                                          , $invigilator_id
+                                          , $property_object
+                                          , $mysqli );
+
+      // Has 'Start' button been submitted
+
+      $end_datetime = $log_lab_endtime->get_end_time();
+
+      if( isset( $_POST['start_exam_form'] ) ){
+
+        $paper_id = (int) $_POST[ 'paper_id' ];
+
+        // Does the submitted paperID correspond it to the currently iterated paper?
+
+        if( $paper_id == (int) $property_id ){
+          $end_datetime = $log_lab_endtime->save();
+        }
+
       }
-      echo "</div><hr style=\"border:0px; height:1px\" noshade=\"noshade\" size=\"1\" />";
+
+      $start_datetime = new DateTime( $start_date );
+      $start_date     = $start_datetime->format( 'd/m/Y H:i:s' );
+
+      $end_date       = $end_datetime->format( 'd/m/Y H:i:s' );
+      $end_time       = $end_datetime->format( 'H:i:s' );
+
+
+      if( $paper_results->num_rows < 2 ){
+      ?>
+
+      <script language="JavaScript" type="text/javascript">
+         document.getElementById('theEndTime').value = "<?php echo $string[ 'end' ] ?> <?php echo $end_time; ?>";
+      </script>
+
+      <?php
+      }
+
+      ?>
+      <td style="vertical-align:top; width:$col_width%">
+      <div style="display:inline">
+        <img src="../artwork/summative.png" align="left" width="48" height="48" alt="paper icon" border="0" />
+      </div>
+
+      <div style="margin-left:52px; display:block">
+        <strong><?php echo $paper_title; ?></strong>
+        <br />
+        <?php echo $string['start'] . '  ' . $start_date; ?>
+        <br />
+        <?php echo $string['end']   . '&nbsp;&nbsp;  ' . $end_date;   ?>
+        <br />
+        <?php echo $string['duration'] . '  ' .  $exam_duration . '  ' . $string['mins']; ?>&nbsp;&nbsp;&nbsp;
+
+        <a href="" onclick="newPaperNote(<?php echo $property_id ?>); return false;" style="color:blue">
+         <?php echo $string['papernote']; ?>
+        </a>
+
+        <?php
+
+        if ($password != '') {
+          echo "<br />Password: $password";
+        }
+
+        ?>
+      </div>
+      <hr style="border:0px; height:1px" noshade="noshade" size="1" />
+
+
+      <form id="start_exam_form" method="post" action="<?php echo $_SERVER[ 'PHP_SELF' ] ?>">
+      <input id="start_exam_button" name="start_exam_form" type="submit" value="Start" />
+      <input name="paper_id" type="hidden" value="<?php echo $property_id ?>" />
+      </form>
+      <?php
 
       $sql  = 'SELECT
                   idMod as moduleID

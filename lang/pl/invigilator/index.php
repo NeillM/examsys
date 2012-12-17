@@ -19,7 +19,9 @@ $string['lab'] = 'Pracownia:';
 $string['unknownlab'] = ' - nieznana pracownia';
 $string['nopapersfound'] = 'Nie znaleziono arkuszy!';
 $string['emergencynumbers'] = 'Numery awaryjne';
+$string['currenttime']     = 'Current Time:';//NIKO
 $string['start'] = 'Start:'; //cognate
+$string['end']   = 'End:'; //NIKO
 $string['duration'] = 'Czas trwania:';
 $string['mins'] = 'min.';
 $string['papernote'] = 'Uwagi dot. arkusza';
@@ -33,14 +35,14 @@ $string['checklist'] = '<div><strong>Lista zadań</strong></div>
     <li>Użyj konta \'gość\' dla każdego studenta, który nie mógł się zalogować</li>
     <li><strong>Uwaga:</strong> Nie rozpoczynaj przed zaplanowanym czasem startu</li>
     </ol>
-    
+
     <div><em>W czasie egzaminu</em></div>
     <ol>
     <li>Rejestruj drobne problemy w plikach studentów (<a href="%shelp.html" target="_blank">przykładowe problemy</a>)</li>
     <li>Rejestruj problemy z treściami arkuszy/pytań</li>
     <li>Zadzwoń na poniższy numer w razie większych kłopotów</li>
     </ol>
-    
+
     <div><em>Po egzaminie</em></div>
     <ol start="4">
     <li>"To już koniec egzaminu. Proszę przejść do ostatniego ekranu i kliknąć na \'Zakończ\'."</li>

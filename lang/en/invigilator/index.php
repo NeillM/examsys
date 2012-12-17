@@ -19,9 +19,11 @@ $string['lab'] = 'Lab:';
 $string['unknownlab'] = ' - unknown lab';
 $string['nopapersfound'] = 'No papers found!';
 $string['emergencynumbers'] = 'Emergency Numbers';
-$string['start'] = 'Start:';
-$string['duration'] = 'Duration:';
-$string['mins'] = 'mins';
+$string['currenttime']     = 'Current Time:';
+$string['start']     = 'Start:';
+$string['end']       = 'End:';
+$string['duration']  = 'Duration';
+$string['mins']      = 'mins';
 $string['papernote'] = 'Paper Note';
 $string['extratime'] = 'Extra Time';
 $string['checklist'] = '<div><strong>Tasklist</strong></div>
@@ -33,14 +35,14 @@ $string['checklist'] = '<div><strong>Tasklist</strong></div>
     <li>Use \'guest\' accounts for anyone not able to log in</li>
     <li><strong>NOTE:</strong> Do not start before scheduled start time</li>
     </ol>
-    
+
     <div><em>Mid-Exam</em></div>
     <ol>
     <li>Record minor problems in the students\' file (<a href="%shelp.html" target="_blank">example problems</a>)</li>
     <li>Record problems with paper/question content</li>
     <li>Call number below for major problems</li>
     </ol>
-    
+
     <div><em>Post-Exam</em></div>
     <ol start="4">
     <li>"That is the end of the exam. Please navigate to the last screen and click \'Finish\'."</li>
