@@ -35,10 +35,12 @@ class VLE_NLE implements iVLEAPI {
    * @return mixed Array of session and objective data in format required by Rogō
    */
   public function getObjectives($moduleID, $session) {
+    global $userObject;
+    
     $req = new RestRequest("http://www.nle.nottingham.ac.uk/webServices/getObjectives/$moduleID/$session");
-    $split_username = explode('_', $_SERVER['PHP_AUTH_USER']);
+    $split_username = explode('_', $userObject->get_username());
     $req->setUsername($split_username[0]);
-    $req->setPassword($_SERVER['PHP_AUTH_PW']);
+    $req->setPassword($_SESSION['authenticationObj']['loggedin']['password']);
     $req->execute();
     return $req->getResponseBody();
   }

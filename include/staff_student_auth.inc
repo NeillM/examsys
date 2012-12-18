@@ -91,7 +91,7 @@ if ($configObject->get('protocol') == 'https://' and $_SERVER['SERVER_PORT'] != 
 }
 if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version)) {
   $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $configObject->get('dbclass'));
-  if(!isset($userObject)) {
+  if (!isset($userObject)) {
     global $userObject;
     $userObject = new UserObject($configObject, $mysqli);
   }
@@ -172,7 +172,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 
   $authentication->do_authentication();
 
-  $uID=$authentication->get_userID();
+  $uID = $authentication->get_userID();
 
   // at this point I have an auth object with a userid
 

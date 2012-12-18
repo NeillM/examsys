@@ -284,6 +284,14 @@ class UserObject {
   }
 
   /**
+   * Return the user's password
+   * @return string password
+   */
+  function get_password() {
+    return $this->password;
+  }
+
+  /**
    * Get a list of modules the current user has access to.
    * @return array of staff module that this user has access to.
    */
@@ -441,7 +449,7 @@ class UserObject {
   }
 
   function load($userID) {
-    $this->userID=$userID;
+    $this->userID = $userID;
     $stmt = $this->db->prepare("SELECT roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id=?");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
@@ -450,7 +458,7 @@ class UserObject {
     $stmt->fetch();
     $record_no = $stmt->num_rows();
     $stmt->close();
-    if($record_no==0) {
+    if ($record_no == 0) {
       return false;
     }
 

@@ -47,10 +47,6 @@ $enddate = $_GET['enddate'];
     body {font-size:90%}
     h1 {margin-left:15px; font-size:18pt}
     p {margin-left:15px; margin-right:15px}
-    .q_no {text-align:right; vertical-align:top}
-    .grey {color:#808080}
-    img {border: none;}
-    li {list-style:none; padding-bottom:5px}
   </style>
 </head>
 <body>
@@ -91,7 +87,7 @@ $enddate = $_GET['enddate'];
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
   
@@ -164,10 +160,10 @@ $enddate = $_GET['enddate'];
     <?php
     echo "<blockquote><table cellspacing=\"0\" cellpadding=\"2\" border=\"0\">\n";
     foreach($objectives as $id => $obj_data) {
-      if($obj_data['ratio'] > 79.9) {
+      if($obj_data['ratio'] >= 80) {
        $img_src = '../artwork/ok_comment.png';
        $session_string = '';
-      } else if ($obj_data['ratio'] > 40.9) {
+      } else if ($obj_data['ratio'] >= 50) {
        $img_src = '../artwork/minor_comment.png';
       } else {
        $img_src = '../artwork/major_comment.png';    

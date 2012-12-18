@@ -20,6 +20,7 @@
 class Authentication {
 
   private $userid;
+  private $password;
   private $db, $configObj;
   private $config;
   public $returndata;
@@ -322,6 +323,9 @@ class Authentication {
   }
 
   function store_data_in_session() {
+    if (!isset($_SESSION['authenticationObj']['loggedin']['password'])) {
+      $_SESSION['authenticationObj']['loggedin']['password'] = $this->get_password();
+    }
     $_SESSION['authenticationObj']['loggedin']['userid'] = $this->get_userid();
     $_SESSION['authenticationObj']['loggedin']['time'] = time();
     $_SESSION['authenticationObj']['attempt'] = 0;
@@ -330,6 +334,10 @@ class Authentication {
 
   function get_userid() {
     return $this->userid;
+  }
+
+  function get_password() {
+    return $this->form['std']->password;
   }
 
   function append_auth_object_debug($number, $desc = '') {
