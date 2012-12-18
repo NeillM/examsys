@@ -25,7 +25,7 @@
 require_once $cfg_web_root . '/classes/usernotices.class.php';
 require_once $cfg_web_root . '/classes/moduleutils.class.php';
 
-function check_labs($paper_type, $labs, $pword, $string, $configObj, $db) {
+function check_labs($paper_type, $labs, $pword, $string, $db) {
   $low_bandwidth = 0;
   $address = NetworkUtils::get_ipaddress();
   $notices = new UserNotices;

@@ -128,7 +128,6 @@ function keywordQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_
   if ($selected_q_id == '') {
     // Generate a random question ID from keywords.
     $question_ids = array();
-    var_dump($random_q_data['options'][0]['option_text']);
     $question_data = $db->prepare("SELECT DISTINCT q_id FROM keywords_question WHERE keywordID = ?");
     $question_data->bind_param('i', $random_q_data['options'][0]['option_text']);
     $question_data->execute();
@@ -268,7 +267,7 @@ if ($userObject->has_role('Student')) {
   check_datetime($start_date, $end_date);
 
   //Check room security
-  $low_bandwidth = check_labs($paper_type, $labs, $password, $string, $configObject, $mysqli);
+  $low_bandwidth = check_labs($paper_type, $labs, $password, $string, $mysqli);
 
   // get modules if the user is a student and the paper is not formative
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);

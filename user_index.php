@@ -132,7 +132,7 @@ if ($userObject->has_role('Student')) {
 
   $low_bandwidth = 0;
   //Check this PC is registered for this exam
-  $low_bandwidth = check_labs($test_type, $labs, $password, $string, $configObject, $mysqli);
+  $low_bandwidth = check_labs($test_type, $labs, $password, $string, $mysqli);
 
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 }
