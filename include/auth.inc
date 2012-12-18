@@ -25,7 +25,7 @@
  */
 
 $path = '';
-if(isset($cfg_web_root)) {
+if (isset($cfg_web_root)) {
   $path = $cfg_web_root;
 } else {
   $path = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));

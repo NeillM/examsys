@@ -24,20 +24,10 @@
  * @package
  */
 
-require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
 
-Class module_utils extends RogoStaticSingleton {
-  
-  public static $inst = NULL;
-  public static $class_name = 'module_utils';
+Class module_utils {
 
-  /**
-  * constructor
-  */
-  public function __construct() {}
-
-
-  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db,$sms_import = 0) {
+  static function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db,$sms_import = 0) {
 
     if ($moduleid == '' or $fullname == '' or $schoolID == '' or module_utils::module_exists($moduleid, $db) !== false) {
       return false;
@@ -71,7 +61,7 @@ Class module_utils extends RogoStaticSingleton {
     return true;
   }
 
-  public function module_exists($moduleid, $db) {
+  static function module_exists($moduleid, $db) {
     // Check for unique moduleID
     $unique_moduleid = true;
     $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
@@ -97,7 +87,7 @@ Class module_utils extends RogoStaticSingleton {
     return $unique_moduleid;
   }
 
-  public function get_full_details_by_ID($modID, $db) {
+  static function get_full_details_by_ID($modID, $db) {
     // returns false if not self enrol else returns needed data;
     $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id = ?");
     $result->bind_param('i', $modID);
@@ -114,7 +104,7 @@ Class module_utils extends RogoStaticSingleton {
     return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist);
   }
 
-  public function get_moduleid_from_id($modID, $db) {
+  static function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
 
     $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ?");
@@ -132,7 +122,7 @@ Class module_utils extends RogoStaticSingleton {
     return $moduleid;
   }
 
-  public function get_idMod($module_id, $db) {
+  static function get_idMod($module_id, $db) {
     if (is_array($module_id)) {
       $ids = array();
 
@@ -167,7 +157,7 @@ Class module_utils extends RogoStaticSingleton {
     }
   }
 
-  public function get_moduleID($idMod, $db) {
+  static function get_moduleID($idMod, $db) {
     $result = $db->prepare("SELECT moduleID FROM modules WHERE id = ?");
     $result->bind_param('s', $idMod);
     $result->execute();
