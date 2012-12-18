@@ -314,19 +314,27 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
       echo "<td title=\"" . $screen_data[$i];
       if ($i == $current_screen) {
         if ($screen_data[$i] == 1) {
-          echo " question\" class=\"s1\">";
+          echo " question\" class=\"scr_ans\">";
         } else {
-          echo " questions\" class=\"s1\">";
+          echo " questions\" class=\"scr_ans\">";
         }
       } else {
         if ($screen_data[$i] == 1) {
-          echo " question\" class=\"s0\">";
+          echo " question\" class=\"scr_ans\">";
         } else {
-          echo " questions\" class=\"s0\">";
+          echo " questions\" class=\"scr_ans\">";
         }
         if ($i < $current_screen) $question_offset += $screen_data[$i];
       }
-      echo "$i</td>\n";
+      echo "$i</td>";
+    }
+    echo "</tr>\n<tr>";
+    for ($i=1; $i<=$no_screens; $i++) {
+      if ($i == $current_screen) {
+        echo '<td class="scr_cur"></td>';
+      } else {
+        echo '<td></td>';
+      }
     }
     echo '</tr></table>';
   }
@@ -419,7 +427,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo "<input type=\"hidden\" name=\"button_pressed\" value=\"\" />\n";
 
   echo $bottom_html;
-  echo '<input type="text" style="background-color:transparent; text-align:center; font-size:80%; color:white; border:0px" id="theTime" size="8" /></td><td align="right">';
+  echo '<input type="text" style="background-color:transparent; text-align:center; color:white; border:0px" id="theTime" size="8" /></td><td align="right">';
   if ($bidirectional == 1 and $no_screens > 1) {
     if ($current_screen > 2) echo "<input type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous'; document.questions.action='start.php?id=" . $_GET['id'] . "'\" style=\"width:120px\" value=\"&nbsp;&lt; Screen " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
     if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
