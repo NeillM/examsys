@@ -50,7 +50,7 @@ $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 if ($userObject->has_role('Student')) {
 
   // Check for additional password on the paper
-  check_paper_password($password);
+  check_paper_password($password, $string);
 
   // Check time security
   check_datetime($start_date, $end_date);

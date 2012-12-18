@@ -53,7 +53,7 @@ Class RogoStaticSingleton {
   public static function  __callStatic($name, $args)
   {
   	//if(is_callable(array(static::$inst,$name))) {
-		call_user_func_array(array(static::$inst,$name), $args);
+		//call_user_func_array(array(static::$inst,$name), $args);
 	//} else {
 	//	throw new Excption($name . " not implimented in " . static::$class_name); 
 	//}

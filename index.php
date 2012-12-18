@@ -121,7 +121,7 @@ require_once './classes/paperutils.class.php';
     } else {
       $machineOK = true;
     }
-    if (strpos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
+    if (strpos($userObject->get_username(), 'user') !== 0) {
       $moduleIDs = Paper_utils::get_modules($property_id, $mysqli);
       if (count($moduleIDs) > 0) {
         $moduleOK = false;
@@ -130,7 +130,7 @@ require_once './classes/paperutils.class.php';
         } else {
           $cal_sql = '';
         }
-        $module_in = implode(",",array_keys($moduleIDs));
+        $module_in = implode(',', array_keys($moduleIDs));
         $moduleInfo = $mysqli->prepare("SELECT userID FROM modules_student WHERE userID=? $cal_sql AND idMod IN ($module_in)");
         $moduleInfo->bind_param('i', $userObject->get_user_ID());
         $moduleInfo->execute();
@@ -140,13 +140,13 @@ require_once './classes/paperutils.class.php';
         if ($moduleInfo->num_rows() > 0) $moduleOK = true;
         $moduleInfo->close();
       } else {
+        $moduleOK = true;
+      }
+    } else {
       $moduleOK = true;
     }
-  } else {
-  $moduleOK = true;
-}
-if ($machineOK == true and $moduleOK == true) {
-  $paper_display[$paper_no]['paper_title'] = $paper_title;
+    if ($machineOK == true and $moduleOK == true) {
+      $paper_display[$paper_no]['paper_title'] = $paper_title;
       $paper_display[$paper_no]['crypt_name'] = $crypt_name;
       $paper_display[$paper_no]['paper_type'] = $paper_type;
       $paper_display[$paper_no]['max_screen'] = $max_screen;

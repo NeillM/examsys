@@ -5072,6 +5072,17 @@ QUERY;
 
   }
 
+  //18/12/2012 brzsw - Add new table to support a timer for summative exams
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>";
+
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'</li>";
+  
+  ob_flush();
+  flush();
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

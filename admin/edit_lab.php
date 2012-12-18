@@ -38,7 +38,11 @@
     foreach ($addresses as $individual_address) {
       $ip_address = trim($individual_address);
       if ($ip_address != '') {
-        $hostname = gethostbyaddr($ip_address);
+        if ($configObject->get('cfg_client_lookup') == 'name') {
+          $hostname = $ip_address;
+        } else {
+          $hostname = gethostbyaddr($ip_address);
+        }
         $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL, ?, ?, ?, ?)");
         $result->bind_param('issi', $_GET['labID'], $ip_address, $hostname, $_POST['low_bandwidth']);
         $result->execute();  
@@ -90,7 +94,7 @@
       echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(231); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
       echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
       echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:200px\"><div><strong>" . $string['ipaddresses'] . "</strong></div>\n";
-      echo "<textarea cols=\"20\" rows=\"28\" style=\"width:200px; height:590px\" name=\"addresses\">\n";
+      echo "<textarea cols=\"20\" rows=\"28\" style=\"width:250px; height:590px\" name=\"addresses\">\n";
     }
     echo $address . "\n";
     $ip_no++;

@@ -60,7 +60,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
     
     if ($userObject->has_role('Student')) {
       // Check for additional password on the paper
-      check_paper_password($password);
+      check_paper_password($password, $string);
     
       $display_correct_answer = 1;
       $display_question_mark = 1;

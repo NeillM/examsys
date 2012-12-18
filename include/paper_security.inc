@@ -25,34 +25,34 @@
 require_once $cfg_web_root . '/classes/usernotices.class.php';
 require_once $cfg_web_root . '/classes/moduleutils.class.php';
 
-function check_labs($paper_type, $labs, $pword, $mysqlidb) {
-  global $string;
-
+function check_labs($paper_type, $labs, $pword, $string, $configObj, $db) {
   $low_bandwidth = 0;
-
+  $address = NetworkUtils::get_ipaddress();
+  $notices = new UserNotices;
+  
   if ($labs != '') {
-    $stmt = $mysqlidb->prepare("SELECT low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
-    $stmt->bind_param('s', $_SERVER['REMOTE_ADDR']);
+    $stmt = $db->prepare("SELECT low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
+    $stmt->bind_param('s', $address);
     $stmt->execute();
     $stmt->bind_result($low_bandwidth);
     $stmt->store_result();
     $stmt->fetch();
     if ($stmt->num_rows == 0) {
-      UserNotices::access_denied($string['denied_location'], false);
+      $notices->access_denied($string['denied_location'], false);
     }
     $stmt->close();
   } else {
     // Exit if a summative exam is on no labs and no password.
     if ($paper_type == '2' and trim($pword) == '') {
-      UserNotices::access_denied($string['specificpassword'], false);
+      $notices->access_denied($string['specificpassword'], false);
     }
   }
 
   return $low_bandwidth;
 }
 
-function check_paper_password($password, $show_form=false) {
-  global $string;
+function check_paper_password($password, $string, $show_form = false) {
+  $notices = new UserNotices;
 
   if ($password != '') {
     if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
@@ -61,10 +61,10 @@ function check_paper_password($password, $show_form=false) {
           setcookie('paperpwd', $_POST['paperpwd']);
         } else {
           echo render_password_form($string);
-          UserNotices::access_denied($string['passwordrequired'],false);
+          $notices->access_denied($string['passwordrequired'],false);
         }
       } else {
-        UserNotices::access_denied($string['specificpassword'], false);
+        $notices->access_denied($string['specificpassword'], false);
       }
     }
   }
@@ -73,14 +73,18 @@ function check_paper_password($password, $show_form=false) {
 function check_datetime($start_date, $end_date) {
   global $string;
 
+  $notices = new UserNotices;
+
   if ((time()+120) < $start_date or (time()-3600) > $end_date) {
     $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
-    UserNotices::access_denied($tmp_string, $output_header = false);
+    $notices->access_denied($tmp_string, $output_header = false);
   }
 }
 
 function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
   global $string;
+
+  $notices = new UserNotices;
 
   $attempt = 1;
   $usern = $userObj->get_username();
@@ -110,13 +114,13 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
           }
         }
         $tmp_string = sprintf($string['notregistered'], $userObj->get_title(), $userObj->get_surname(), $userObj->get_username(), $html, $calendar_year);
-        UserNotices::access_denied($tmp_string, $output_header = false);
+        $notices->access_denied($tmp_string, $output_header = false);
       } else {
         $stmt->fetch();
       }
       $stmt->close();
     } else {
-      UserNotices::access_denied($string['error_module'], false);
+      $notices->access_denied($string['error_module'], false);
     }
   }
 
@@ -126,6 +130,8 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
 // Needs fixing
 function check_metadata($property_id, $userObj, $moduleIDs, $db) {
   global $string;
+
+  $notices = new UserNotices;
 
   $stmt = $db->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ?");
   $stmt->bind_param('i', $property_id);
@@ -139,7 +145,7 @@ function check_metadata($property_id, $userObj, $moduleIDs, $db) {
     $check_security->store_result();
     if ($check_security->num_rows == 0) {
       $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-      UserNotices::access_denied($tmp_string, $output_header = false);
+      $notices->access_denied($tmp_string, $output_header = false);
     }
     $check_security->close();
   }

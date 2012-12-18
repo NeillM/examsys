@@ -78,13 +78,13 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
       if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
       // Check for additional password on the paper
-      check_paper_password($password);
+      check_paper_password($password, $string);
 
       // Check time security
       check_datetime($start_date, $end_date);
 
       //Check room security
-      $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
+      $low_bandwidth = check_labs($paper_type, $labs, $password, $string, $configObject, $mysqli);
 
       // get modules if the user is a student and the paper is not formative
       $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);

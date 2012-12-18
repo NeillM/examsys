@@ -30,12 +30,19 @@ Class NetworkUtils {
    * @return mixed client ip address
 	 */
   static function get_ipaddress() {
-    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-      $tmp_parts = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-      $tmp_client_ipaddress = trim($tmp_parts[0]);
+    global $configObject;
+  
+    if ($configObject->get('cfg_client_lookup') == 'name') {
+      $tmp_client_ipaddress = gethostbyaddr($_SERVER['REMOTE_ADDR']);
     } else {
-      $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
+      if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $tmp_parts = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
+        $tmp_client_ipaddress = trim($tmp_parts[0]);
+      } else {
+        $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
+      }
     }
+    
     return $tmp_client_ipaddress;
   }
 

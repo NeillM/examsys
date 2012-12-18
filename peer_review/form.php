@@ -96,10 +96,10 @@ if (stripos($userroles,'Student') !== false) {
   
   // Check room security
   $paper_type = '6';
-  $low_bandwidth = check_labs($paper_type, $labs, '', $mysqli);
+  $low_bandwidth = check_labs($paper_type, $labs, '', $string, $configObject, $mysqli);
 
   // Check for additional password on the paper
-  check_paper_password($password, true);
+  check_paper_password($password, $string, true);
 }
 
 // Get questions on the paper

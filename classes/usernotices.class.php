@@ -69,10 +69,10 @@ Class UserNotices extends RogoStaticSingleton {
    * @param string $output_header if true output 401 headers
    *
    */
-  private function access_denied($message, $output_header = false, $output_footer = true) {
+  public function access_denied($message, $output_header = false, $output_footer = true) {
     global $mysqli, $string;
-
-    $this->display_notice_to_user(  $string['accessdenied'], 
+    
+    $this->display_notice(  $string['accessdenied'], 
                                   $message, 
                                   '/artwork/access_denied.png', 
                                   '#C00000'
@@ -94,7 +94,7 @@ Class UserNotices extends RogoStaticSingleton {
         $mysqli->close();
       }
     }
-    exit;
+    exit();
   }
 
 }

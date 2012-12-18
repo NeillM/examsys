@@ -29,7 +29,7 @@ require './include/errors.inc';
 require './include/paper_security.inc';
 
 require './classes/paperutils.class.php';
-require './classes/moduleutils.class.php';
+require_once './classes/moduleutils.class.php';
 require './classes/logstarttime.class.php';
 require './classes/logmetadata.class.php';
 require './classes/timer.class.php';
@@ -128,11 +128,11 @@ $previously_submitted = 0;
 
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
-  check_paper_password($password, true);
+  check_paper_password($password, $string, true);
 
   $low_bandwidth = 0;
   //Check this PC is registered for this exam
-  $low_bandwidth = check_labs($test_type, $labs, $password, $mysqli);
+  $low_bandwidth = check_labs($test_type, $labs, $password, $string, $configObject, $mysqli);
 
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 }
@@ -239,14 +239,14 @@ if ($textsize > 120) {
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {
-    if (file_exists($cfg_web_root . 'users/photos/' . $_SERVER['PHP_AUTH_USER'] . '.jpg')) {
+    if (file_exists($cfg_web_root . 'users/photos/' . $userObject->get_username() . '.jpg')) {
       echo '<td rowspan="';
       if ($sound_demo == '1') {
         echo '8';
       } else {
         echo '7';
       }
-      echo '" style="border-left:1px solid #95AEC8;background-color:white;width:180px;text-align:center;vertical-align:bottom"><img src="./users/photos/' . $_SERVER['PHP_AUTH_USER'] . '.jpg" width="180" height="270" border="0" alt="Photo" /></td>';
+      echo '" style="border-left:1px solid #95AEC8;background-color:white;width:180px;text-align:center;vertical-align:bottom"><img src="./users/photos/' . $userObject->get_username() . '.jpg" width="180" height="270" border="0" alt="Photo" /></td>';
     }
   }
   echo '</tr>';
