@@ -2257,6 +2257,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   $extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
 ?> 
   function swfLoaded<?php echo $question_no; ?>(message) {
+      $configObject=Config::Instance();
     var num = message.substring(5,message.length);
     setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','<?php echo $extra ; ?>','#FFC0C0');
   }
