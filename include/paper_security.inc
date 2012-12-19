@@ -28,7 +28,7 @@ require_once $cfg_web_root . '/classes/moduleutils.class.php';
 function check_labs($paper_type, $labs, $pword, $string, $db) {
   $low_bandwidth = 0;
   $address = NetworkUtils::get_ipaddress();
-  $notices = new UserNotices;
+  $notices = UserNotices::get_instance();
   
   if ($labs != '') {
     $stmt = $db->prepare("SELECT low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
@@ -52,7 +52,7 @@ function check_labs($paper_type, $labs, $pword, $string, $db) {
 }
 
 function check_paper_password($password, $string, $show_form = false) {
-  $notices = new UserNotices;
+  $notices = UserNotices::get_instance();
 
   if ($password != '') {
     if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
@@ -73,7 +73,7 @@ function check_paper_password($password, $string, $show_form = false) {
 function check_datetime($start_date, $end_date) {
   global $string;
 
-  $notices = new UserNotices;
+  $notices = UserNotices::get_instance();
 
   if ((time()+120) < $start_date or (time()-3600) > $end_date) {
     $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
@@ -84,7 +84,7 @@ function check_datetime($start_date, $end_date) {
 function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
   global $string;
 
-  $notices = new UserNotices;
+  $notices = UserNotices::get_instance();
 
   $attempt = 1;
   $usern = $userObj->get_username();
@@ -131,7 +131,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
 function check_metadata($property_id, $userObj, $moduleIDs, $db) {
   global $string;
 
-  $notices = new UserNotices;
+  $notices = UserNotices::get_instance();
 
   $stmt = $db->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ?");
   $stmt->bind_param('i', $property_id);

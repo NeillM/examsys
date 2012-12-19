@@ -29,7 +29,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  
   <title><?php echo $string['labdetails']; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -51,7 +53,7 @@
   $results->store_result();
   $results->bind_result($name, $address, $hostname, $campus, $building, $room_no, $timetabling, $it_support, $plagarism, $low_bandwidth);
   $ip_no = 0;
-  while ($row = $results->fetch()) {
+  while ($results->fetch()) {
     if ($ip_no == 0) {
       echo "<table class=\"header\">\n";
       echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php\">" . $string['administrativetools'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./list_labs.php\">" . $string['computerlabs'] . "</a></div><div style=\"font-size:220%; font-weight:bold; margin-left:10px\">$name</div></th>\n";
@@ -60,10 +62,14 @@
       echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:440px\"><div><strong>" . $string['ipaddresses'] . " (" . $results->num_rows . ")</strong></div>\n<div style=\"height:590px; overflow-y:scroll; border: 1px solid #EEEDE5\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
     }
     
-    if ($address == $hostname) {
-      echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:135px; color:red\">$address</td><td style=\"color:red\">$hostname</td></tr>\n";
+    if ($configObject->get('cfg_client_lookup') == 'name') {
+      echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:135px\">$address</td></tr>\n";
     } else {
-      echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:135px\">$address</td><td style=\"color:#808080\">$hostname</td></tr>\n";
+      if ($address == $hostname) {
+        echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:200px; color:red\">$address</td><td style=\"color:red\">$hostname</td></tr>\n";
+      } else {
+        echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:200px\">$address</td><td style=\"color:#808080\">$hostname</td></tr>\n";
+      }
     }
     
     $ip_no++;
@@ -81,7 +87,7 @@
   echo "<br /><div><strong>" . $string['timetabling'] . "</strong></div>\n<div>$timetabling</div>\n";
   echo "<br /><div><strong>" . $string['itsupport'] . "</strong></div>\n<div>$it_support</div>\n";
   echo "<br /><div><strong>" . $string['plagarism'] . "</strong></div>\n<div>$plagarism</div>\n";
-  if ($userObject->has_role(array('SysAdmin','Admin'))) {
+  if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
     echo "<br /><br /><input type=\"button\" onclick=\"window.location='edit_lab.php?labID=" . $_GET['labID'] . "'\" value=\"" . $string['edit'] . "\" style=\"width:120px\" />\n";
   }
   echo "</td></tr>\n</table>\n";

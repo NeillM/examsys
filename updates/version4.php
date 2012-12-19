@@ -4986,7 +4986,7 @@ QUERY;
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
-  $addauth=true;
+  $addauth = true;
   foreach($cfg as $k=>$v) {
     $found=strpos($v,'$authentication = array(');
     if($found!==false) {
@@ -4998,15 +4998,15 @@ QUERY;
     }
   }
 
-  if($addauth==true) {
+  if ($addauth == true) {
     $extra1='';
-    $array_new[]="\n";
-    $array_new[]='$authentication = array(' ."\n";
-    if($cfg_use_ldap === true) {
+    $array_new[] = "\n";
+    $array_new[] = '$authentication = array(' ."\n";
+    if ($cfg_use_ldap === true) {
       $extra1=',';
     }
     $array_new[]="array('internaldb', array('table' => 'users', 'username_col' => 'username', 'passwd_col' => 'password', 'id_col' => 'id', 'encrypt' => 'SHA-512', 'encrypt_salt' => \$cfg_encrypt_salt), 'Internal Database')$extra1\n";
-    if($cfg_use_ldap=== true) {
+    if ($cfg_use_ldap=== true) {
       $array_new[]="array('ldap',array( 'table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix),'LDAP')\n";
     }
 
@@ -5083,6 +5083,59 @@ QUERY;
   
   ob_flush();
   flush();
+
+  // 19/12/2012 - Enlarge the size of the address field.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='ip_addresses' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='address'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'char(60)') {
+    $adjust = $mysqli->prepare("ALTER TABLE ip_addresses CHANGE COLUMN address address char(60)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE ip_addresses CHANGE COLUMN address address char(60)</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  
+  // 19/12/2012 - Add new line to configuration file
+  $new_cfg_str = array();
+  $new_cfg_str[] = "\$cfg_client_lookup = 'ipaddress';\r\n";
+  $new_cfg_str[] = "\r\n";
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg_new = array();
+  $found = false;
+  foreach ($cfg as $curline=>$line) {
+
+    if (strpos($line,'cfg_client_lookup') !== false) {
+      $found = true;
+    }
+    if (strpos($line,'cfg_summative_mgmt') !== false) {
+      $target_line = $curline + 1;
+    }
+    $cfg_new[] = $line;
+  }
+
+  if (!$found) {
+    //add the new config chunk
+    array_splice($cfg_new,$target_line,0,$new_cfg_str);
+
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old13.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Add cfg_summative_mgmt config variable</li>\n";
+  }
+  
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
