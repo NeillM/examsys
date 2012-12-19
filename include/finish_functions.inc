@@ -145,7 +145,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
 
 function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $mysqlidb, $preview_q_id=null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $strong_on, $strong_off;
-  
+  $configObject=Config::Instance();
   $strong_on = '';
   $strong_off = '';
 
@@ -2257,7 +2257,8 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   $extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
 ?> 
   function swfLoaded<?php echo $question_no; ?>(message) {
-      $configObject=Config::Instance();
+
+
     var num = message.substring(5,message.length);
     setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','<?php echo $extra ; ?>','#FFC0C0');
   }
