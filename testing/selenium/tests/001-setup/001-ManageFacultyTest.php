@@ -3,12 +3,16 @@ require_once 'shared.inc.php';
 
 class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
 {
-  protected $install_type = ' \(local\)';
+  protected $install_type;
+  protected $page_root;
 
   protected function setUp()
   {
+    $this->install_type = get_install_type();
+    $this->page_root = get_root_url();
+
     $this->setBrowser("*firefox");
-    $this->setBrowserUrl("https://rogo.local/");
+    $this->setBrowserUrl($this->page_root . '/');
   }
 
   public function testCreateFaculty()
