@@ -5216,7 +5216,6 @@ QUERY;
     //add the new config chunk
     array_splice($cfg_new, $target_line, 0, $new_cfg_str);
 
-
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old13.php');
     }
@@ -5224,7 +5223,7 @@ QUERY;
     if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
-    echo "<li>Add cfg_summative_mgmt config variable</li>\n";
+    echo "<li>Add cfg_autosave_settimeout config variable</li>\n";
   }
 
   // 20/12/2012 - Remove line from configuration file
@@ -5238,8 +5237,44 @@ QUERY;
   if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
+  
+  // 20/12/2012 - Add new line to configuration file
+  $new_cfg_str = array();
+  $new_cfg_str[] = "\$cfg_client_lookup = 'ipaddress';\r\n";
+  $new_cfg_str[] = "\r\n";
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg_new = array();
+  $found = false;
+  $target_line = 26;
+  foreach ($cfg as $curline=>$line) {
+
+    if (strpos($line,'cfg_client_lookup') !== false) {
+      $found = true;
+    }
+    if (strpos($line,'cfg_summative_mgmt') !== false) {
+      $target_line = $curline + 1;
+    }
+    $cfg_new[] = $line;
+  }
+
+  if (!$found) {
+    //add the new config chunk
+    array_splice($cfg_new,$target_line,0,$new_cfg_str);
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old13.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Add cfg_client_lookup config variable</li>\n";
+  }
+  
 
 
+  
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
