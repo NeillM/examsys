@@ -6,8 +6,7 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
   protected $install_type;
   protected $page_root;
 
-  protected function setUp()
-  {
+  protected function setUp() {
     $this->install_type = get_install_type();
     $this->page_root = get_root_url();
 
@@ -15,8 +14,7 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testCreateFaculty()
-  {
+  public function testCreateFaculty() {
     do_admin_login($this);
 
     $this->create_faculty('Faculty of Short Lived');

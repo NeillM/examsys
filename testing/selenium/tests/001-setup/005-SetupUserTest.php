@@ -6,8 +6,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
   protected $install_type;
   protected $page_root;
 
-  protected function setUp()
-  {
+  protected function setUp() {
     $this->install_type = get_install_type();
     $this->page_root = get_root_url();
 
@@ -15,8 +14,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testCreateUser()
-  {
+  public function testCreateUser() {
     // TODO: this should be different user to standard staff user
     do_admin_login($this);
 
@@ -108,8 +106,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
   /**
    * @depends testCreateUser
    */
-  public function testAddUserToTeam()
-  {
+  public function testAddUserToTeam() {
     do_admin_login($this);
 
     $this->open("/users/details.php?userID=154");
@@ -127,8 +124,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
   /**
    * @depends testAddUserToTeam
    */
-  public function testUserAppearsInTeamList()
-  {
+  public function testUserAppearsInTeamList() {
     do_admin_login($this);
 
     $this->open("/staff/");
@@ -143,8 +139,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
   /**
    * @depends testCreateUser
    */
-  public function testUserCanLogIn()
-  {
+  public function testUserCanLogIn() {
     do_staff_login($this, 'teststaff2', 'VN4wExNHKN');
     $this->assertTextPresent('My Modules');
   }

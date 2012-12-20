@@ -6,8 +6,7 @@ class ManageCourseTest extends PHPUnit_Extensions_SeleniumTestCase
   protected $install_type;
   protected $page_root;
 
-  protected function setUp()
-  {
+  protected function setUp() {
     $this->install_type = get_install_type();
     $this->page_root = get_root_url();
 
@@ -15,8 +14,7 @@ class ManageCourseTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testCreateCourse()
-  {
+  public function testCreateCourse() {
     do_admin_login($this);
 
     $this->open("/admin/index.php");
@@ -39,8 +37,7 @@ class ManageCourseTest extends PHPUnit_Extensions_SeleniumTestCase
   /**
    * @depends testCreateCourse
    */
-  public function testEditCourse()
-  {
+  public function testEditCourse() {
     do_admin_login($this);
 
     $this->open("/admin/list_courses.php");
@@ -60,8 +57,7 @@ class ManageCourseTest extends PHPUnit_Extensions_SeleniumTestCase
   /**
    * @depends testCreateCourse
    */
-  public function testDeleteCourse()
-  {
+  public function testDeleteCourse() {
     do_admin_login($this);
 
     $this->open("/admin/list_courses.php");
@@ -77,8 +73,7 @@ class ManageCourseTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextNotPresent('Short Lived Course2');
   }
 
-  public function testCantCreateDuplicateCourse()
-  {
+  public function testCantCreateDuplicateCourse() {
     do_admin_login($this);
 
     $this->open("/admin/list_courses.php");

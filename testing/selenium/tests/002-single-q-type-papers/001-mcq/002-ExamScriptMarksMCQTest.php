@@ -6,8 +6,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
   protected $install_type;
   protected $page_root;
 
-  protected function setUp()
-  {
+  protected function setUp() {
     $this->install_type = get_install_type();
     $this->page_root = get_root_url();
 
@@ -15,8 +14,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testAllCorrect()
-  {
+  public function testAllCorrect() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20121213150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
@@ -42,8 +40,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '100%');
   }
 
-  public function testAllIncorrect()
-  {
+  public function testAllIncorrect() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20121213150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
@@ -69,8 +66,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-33%');
   }
 
-  public function testMixed()
-  {
+  public function testMixed() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20121213150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");

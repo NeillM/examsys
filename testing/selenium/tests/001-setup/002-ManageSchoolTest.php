@@ -6,8 +6,7 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
   protected $install_type;
   protected $page_root;
 
-  protected function setUp()
-  {
+  protected function setUp() {
     $this->install_type = get_install_type();
     $this->page_root = get_root_url();
 
@@ -15,8 +14,7 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testCreateSchool()
-  {
+  public function testCreateSchool() {
     do_admin_login($this);
 
     $this->open("/admin/index.php");
@@ -38,8 +36,7 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
   /**
    * @depends testCreateSchool
    */
-  public function testEditSchool()
-  {
+  public function testEditSchool() {
     do_admin_login($this);
 
     $this->open("/admin/list_schools.php");
@@ -55,8 +52,7 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
   /**
    * @depends testCreateSchool
    */
-  public function testDeleteSchool()
-  {
+  public function testDeleteSchool() {
     do_admin_login($this);
 
     $this->open("/admin/list_schools.php");
@@ -72,8 +68,7 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextNotPresent('School of Short Lived2');
   }
 
-  public function testCantCreateDuplicateSchool()
-  {
+  public function testCantCreateDuplicateSchool() {
     do_admin_login($this);
 
     $this->open("/admin/index.php");

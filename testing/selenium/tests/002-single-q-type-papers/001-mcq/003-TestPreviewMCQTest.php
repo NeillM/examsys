@@ -6,8 +6,7 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
   protected $install_type;
   protected $page_root;
 
-  protected function setUp()
-  {
+  protected function setUp() {
     $this->install_type = get_install_type();
     $this->page_root = get_root_url();
 
@@ -15,8 +14,7 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testCompletePaperCorrect()
-  {
+  public function testCompletePaperCorrect() {
     do_student_login($this, 'teststudent4', 'fiu&52K3');
 
     $this->open("/user_index.php?id=11355244387102");
@@ -79,8 +77,7 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
   }
 
-  public function testCompletePaperIncorrect()
-  {
+  public function testCompletePaperIncorrect() {
     do_student_login($this, 'teststudent5', 'sjg!12T^');
 
     $this->open("/user_index.php?id=11355244387102");
@@ -139,8 +136,7 @@ class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
   }
 
-  public function testCompletePaperMixed()
-  {
+  public function testCompletePaperMixed() {
     do_student_login($this, 'teststudent6', 'ara!68X7');
 
     $this->open("/user_index.php?id=11355244387102");
