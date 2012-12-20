@@ -100,7 +100,7 @@ class ldap_auth {
     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
     if (ldap_bind($ldap, $ldap_bind_rdn, $ldap_bind_password)) {
-      $this->retdata->debug[]='Sucessfull initial bind to ldap server';
+      $this->retdata->debug[] = 'Sucessfull initial bind to ldap server';
       if (!($search = @ldap_search($ldap, $ldap_search_dn, $ldap_user_prefix . $this->form['std']->username))) {
         $this->retdata->debug[] = $string['ldapservernosearch'];
         $this->set_fail();
@@ -116,7 +116,7 @@ class ldap_auth {
                 }
         */
         if ($info['count'] == 1) {
-          $this->retdata->debug[]='Found user in ldap';
+          $this->retdata->debug[] = 'Found user in ldap';
           $dn = $info[0]['dn'];
         } else {
           $this->retdata->debug[] = '<strong>' . $string['noldapaccount'] . '</strong>';
@@ -127,7 +127,7 @@ class ldap_auth {
       }
 
       if (@ldap_bind($ldap, $dn, utf8_encode($this->form['std']->password))) {
-        $this->retdata->debug[]='Successfully bound to ldap as the user with their password';
+        $this->retdata->debug[] = 'Successfully bound to ldap as the user with their password';
         ldap_unbind($ldap);
         /*
                if($lookup_info === 2) {
@@ -141,7 +141,7 @@ class ldap_auth {
         $result->bind_param('s', $this->form['std']->username);
         $result->execute();
         $result->store_result();
-        $this->retdata->debug[]='sql is:' . $sql . ' with parameter:' . $this->form['std']->username;
+        $this->retdata->debug[] = 'sql is:' . $sql . ' with parameter:' . $this->form['std']->username;
 
         $result->bind_result($uname, $id);
         $result->fetch();

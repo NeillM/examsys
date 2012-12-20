@@ -6,7 +6,15 @@
  * Time: 12:00
  * To change this template use File | Settings | File Templates.
  */
-
+/**
+ *
+ * The lti integration functions.
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2012 The University of Nottingham
+ * @package
+ */
 require_once $cfg_web_root . 'classes/userutils.class.php';
 require_once $cfg_web_root . 'classes/smsutils.class.php';
 

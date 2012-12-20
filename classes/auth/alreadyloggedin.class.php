@@ -83,7 +83,7 @@ class alreadyloggedin_auth {
 
     }
 
-    $this->retdata->debug[]='No valid userid found in session';
+    $this->retdata->debug[] = 'No valid userid found in session';
     $this->retdata->success = FALSE;
     $this->retdata->rogoid = 0;
 

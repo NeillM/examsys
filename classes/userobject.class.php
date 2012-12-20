@@ -57,22 +57,22 @@ class UserObject {
   function old_load($array) {
     list($this->password, $this->userID, $this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs, $this->record_no, $this->split_username) = $array;
 
-    if (strpos($this->userroles, 'SysAdmin') !== false) {
+    if (strpos($this->userroles, 'SysAdmin') !== FALSE) {
       $this->roles['SysAdmin'] = 1;
     }
-    if (strpos($this->userroles, 'Admin') !== false and strpos($this->userroles, 'SysAdmin') === false) {
+    if (strpos($this->userroles, 'Admin') !== FALSE and strpos($this->userroles, 'SysAdmin') === FALSE) {
       $this->roles['Admin'] = 1;
     }
-    if (strpos($this->userroles, 'Staff') !== false or strpos($this->userroles, 'Admin') !== false) { // Process staff first to get higher priority than students --no need
+    if (strpos($this->userroles, 'Staff') !== FALSE or strpos($this->userroles, 'Admin') !== FALSE) { // Process staff first to get higher priority than students --no need
       $this->roles['Staff'] = 1;
     }
-    if (strpos($this->userroles, 'Student') !== false) {
+    if (strpos($this->userroles, 'Student') !== FALSE) {
       $this->roles['Student'] = 1;
     }
-    if (strpos($this->userroles, 'External Examiner') !== false) {
+    if (strpos($this->userroles, 'External Examiner') !== FALSE) {
       $this->roles['ExternalExaminer'] = 1;
     }
-    if (strpos($this->userroles, 'Invigilator') !== false) {
+    if (strpos($this->userroles, 'Invigilator') !== FALSE) {
       $this->roles['Invigilator'] = 1;
     }
   }
@@ -98,7 +98,7 @@ class UserObject {
     if (is_string($roles)) {
       if ($exclusive == 0  or ($exclusive == 1 and count($this->roles) == 1)) {
         if (isset($this->roles[$roles])) {
-          return true;
+          return TRUE;
         }
       }
     } else {
@@ -106,12 +106,13 @@ class UserObject {
       if ($exclusive == 0 or ($exclusive == 1 and count($this->roles) == count($roles))) {
         foreach ($roles as $role) {
           if (isset($this->roles[$role])) {
-            return true;
+            return TRUE;
           }
         }
       }
     }
-    return false;
+
+    return FALSE;
   }
 
   /**
@@ -150,12 +151,13 @@ class UserObject {
 
     if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       //this is not a staff user so it cant be on any modules
-      return false;
+      return FALSE;
     }
 
     if (count($this->staffModules) < 1) {
       $this->load_staff_modules();
     }
+
     return $this->staffModules;
   }
 
@@ -167,7 +169,7 @@ class UserObject {
 
     if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       //this is not a staff user so it cant be on any modules
-      return false;
+      return FALSE;
     }
 
     if (count($this->staffModules) < 1) {
@@ -181,25 +183,25 @@ class UserObject {
         }
         foreach ($moduleID as $idMod => $full_moduleID) {
           if (isset($this->staffModules[$idMod])) {
-            return true;
+            return TRUE;
           }
         }
         break;
       case 'string':
         if (in_array($moduleID, $this->staffModules)) {
-          return true;
+          return TRUE;
         }
         break;
       case 'integer':
         if (isset($this->staffModules[$moduleID])) {
-          return true;
+          return TRUE;
         }
         break;
       default:
-        return false;
+        return FALSE;
     }
 
-    return false;
+    return FALSE;
   }
 
   /**
@@ -237,9 +239,10 @@ class UserObject {
    */
   function is_special_needs() {
     if ($this->special_needs != 0) {
-      return true;
+      return TRUE;
     }
-    return false;
+
+    return FALSE;
   }
 
   /**
@@ -253,6 +256,7 @@ class UserObject {
 
   /**
    * Return the user's title
+   *
    * @return string Title
    */
   function get_title() {
@@ -261,6 +265,7 @@ class UserObject {
 
   /**
    * Return the user's initials
+   *
    * @return string Initials
    */
   function get_initials() {
@@ -269,6 +274,7 @@ class UserObject {
 
   /**
    * Return the user's surname
+   *
    * @return string Surname
    */
   function get_surname() {
@@ -277,6 +283,7 @@ class UserObject {
 
   /**
    * Return the user's username
+   *
    * @return string username
    */
   function &get_username() {
@@ -285,6 +292,7 @@ class UserObject {
 
   /**
    * Return the user's password
+   *
    * @return string password
    */
   function get_password() {
@@ -293,6 +301,7 @@ class UserObject {
 
   /**
    * Get a list of modules the current user has access to.
+   *
    * @return array of staff module that this user has access to.
    */
   function get_staff_accessable_modules($additional_mods = array()) {
@@ -300,7 +309,7 @@ class UserObject {
 
     $staff_modules_sql = implode(',', array_keys($this->get_staff_modules()));
     $default_modules = array_keys($this->get_staff_modules());
-    
+
     $new_array = array_merge($default_modules, $additional_mods);
     $staff_modules_sql = implode(',', array_unique($new_array));
 
@@ -358,6 +367,7 @@ class UserObject {
 
   /**
    * checks to see is user is on a student module
+   *
    * @param $moduleID an integer or string of a module
    * @param $calendar_year the calendar year being looked for
    * @return bool true if student member is on a module
@@ -366,7 +376,7 @@ class UserObject {
 
     if (!$this->has_role('Student')) {
       //this is not a staff user so it cant be on any modules
-      return false;
+      return FALSE;
     }
 
     if (count($this->studentModules) < 1) {
@@ -380,25 +390,25 @@ class UserObject {
         }
         foreach ($moduleID as $idMod => $full_moduleID) {
           if (isset($this->studentModules[$calendar_year][$idMod])) {
-            return true;
+            return TRUE;
           }
         }
         break;
       case 'string':
         if (in_array($moduleID, $this->studentModules[$calendar_year])) {
-          return true;
+          return TRUE;
         }
         break;
       case 'integer':
         if (isset($this->studentModules[$calendar_year][$moduleID])) {
-          return true;
+          return TRUE;
         }
         break;
       default:
-        return false;
+        return FALSE;
     }
 
-    return false;
+    return FALSE;
   }
 
   /**
@@ -413,12 +423,12 @@ class UserObject {
   function add_student_to_module($idMod, $attempt, $session, $auto_update = 0) {
     // need to check its a self reg module
 
-    if (module_utils::get_full_details_by_ID($idMod, $this->db) === false) {
-      return false;
+    if (module_utils::get_full_details_by_ID($idMod, $this->db) === FALSE) {
+      return FALSE;
     }
     if (UserUtils::is_user_on_module($this, $idMod, $session, $this->db)) {
       //don't add a user to a module multiple times
-      return true;
+      return TRUE;
     }
     $return = UserUtils::add_student_to_module($this->get_user_ID(), $idMod, $attempt, $session, $auto_update);
 
@@ -430,17 +440,19 @@ class UserObject {
 
   /**
    * add current user to module as staff
+   *
    * @param $idMod
    */
   function add_staff_to_module($idMod) {
     $return = UserUtils::add_staff_to_module($this->get_user_ID(), $idMod, $this->db);
     $this->load_staff_modules();
-    
+
     return $return;
   }
 
   /**
    * remove current user to module as staff //not implimented
+   *
    * @param $idMod
    */
   function remove_staff_from_module($idMod) {
@@ -459,25 +471,25 @@ class UserObject {
     $record_no = $stmt->num_rows();
     $stmt->close();
     if ($record_no == 0) {
-      return false;
+      return FALSE;
     }
 
-    if (strpos($this->userroles, 'SysAdmin') !== false) {
+    if (strpos($this->userroles, 'SysAdmin') !== FALSE) {
       $this->roles['SysAdmin'] = 1;
     }
-    if (strpos($this->userroles, 'Admin') !== false and strpos($this->userroles, 'SysAdmin') === false) {
+    if (strpos($this->userroles, 'Admin') !== FALSE and strpos($this->userroles, 'SysAdmin') === FALSE) {
       $this->roles['Admin'] = 1;
     }
-    if (strpos($this->userroles, 'Staff') !== false or strpos($this->userroles, 'Admin') !== false) { // Process staff first to get higher priority than students --no need
+    if (strpos($this->userroles, 'Staff') !== FALSE or strpos($this->userroles, 'Admin') !== FALSE) { // Process staff first to get higher priority than students --no need
       $this->roles['Staff'] = 1;
     }
-    if (strpos($this->userroles, 'Student') !== false) {
+    if (strpos($this->userroles, 'Student') !== FALSE) {
       $this->roles['Student'] = 1;
     }
-    if (strpos($this->userroles, 'External Examiner') !== false) {
+    if (strpos($this->userroles, 'External Examiner') !== FALSE) {
       $this->roles['ExternalExaminer'] = 1;
     }
-    if (strpos($this->userroles, 'Invigilator') !== false) {
+    if (strpos($this->userroles, 'Invigilator') !== FALSE) {
       $this->roles['Invigilator'] = 1;
     }
 
@@ -486,27 +498,35 @@ class UserObject {
   function db_user_change() {
     global $db_errors, $string;
 
-    $getback=array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd','cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
+    $getback = array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd', 'cfg_db_admin_user', 'cfg_db_admin_passwd', 'cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd', 'cfg_db_external_user', 'cfg_db_external_passwd', 'cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
 
-    $arr=$this->configObj->get($getback);
-    foreach($arr as $k=>$v) {
-      ${$k}=$v;
+    $arr = $this->configObj->get($getback);
+    foreach ($arr as $k => $v) {
+      ${$k} = $v;
     }
 
     $userroles = $this->old_getuserroles();
     //select the aproprate database user
     if ($this->has_role('SysAdmin')) {
       $result = $this->db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
-    } else if ($this->has_role(array('Staff','Admin'))) { // Process staff first to get higher priority than students
-      $result = $this->db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
-    } else if ($this->has_role('Student')) {
-      $result = $this->db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
-    } else if ($this->has_role('External Examiner')) {
-      $result = $this->db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
-    } else if ($this->has_role('Invigilator')) {
-      $result = $this->db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
     } else {
-      $result = false;
+      if ($this->has_role(array('Staff', 'Admin'))) { // Process staff first to get higher priority than students
+        $result = $this->db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
+      } else {
+        if ($this->has_role('Student')) {
+          $result = $this->db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
+        } else {
+          if ($this->has_role('External Examiner')) {
+            $result = $this->db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
+          } else {
+            if ($this->has_role('Invigilator')) {
+              $result = $this->db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
+            } else {
+              $result = FALSE;
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -41,14 +41,14 @@ class Authentication {
 
     $this->load_config();
 
-    $notfound=true;
-    foreach($this->config as $opt) {
-      if($opt[0]==='alreadyloggedin') {
-        $notfound=false;
+    $notfound = TRUE;
+    foreach ($this->config as $opt) {
+      if ($opt[0] === 'alreadyloggedin') {
+        $notfound = FALSE;
       }
     }
 
-    if ($notfound === true) {
+    if ($notfound === TRUE) {
       array_unshift($this->config, array('alreadyloggedin', array('timeout' => 0), 'Internal Authentication'));
     }
 
@@ -82,19 +82,25 @@ class Authentication {
 
 
     foreach ($this->config as $number => $auth) {
+
+
       $authtype = $auth[0];
       $authtype1 = $authtype . '_auth';
       $settings = $auth[1];
       $name = $auth[2];
       $this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
+
+
+
       require_once $this->configObj->get('cfg_web_root') . 'classes/auth/' . $authtype . '.class.php';
       $this->returndata[$number] = new authtypereturn();
+      $this->authinfo[$number] = array($name => $authtype);
       $this->authObj[$number] = new $authtype1($this, $settings, $number, $name, $this->db, $this->returndata, $this->form);
       $this->append_auth_object_debug($number);
       $this->debug[] = "Running Registering callback routines for #$number";
       $this->authObj[$number]->register_callback_routines();
       $this->append_auth_object_debug($number);
-      $this->authinfo[$number] = array($name => $authtype);
+
     }
     $initobj = new stdClass();
     if (isset($this->callbackregister['init'])) {

@@ -55,7 +55,7 @@ class internaldb_auth {
   }
 
   function failauth(&$postauthfailreturn) {
-    $this->retdata->debug[] = 'Fail function run';// . var_export($postauthfailreturn, TRUE);
+    $this->retdata->debug[] = 'Fail function run'; // . var_export($postauthfailreturn, TRUE);
 
     //   $this->retdata->debug[]='info:' . var_export($this->settings,TRUE);
 

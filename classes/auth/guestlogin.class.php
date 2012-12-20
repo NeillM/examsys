@@ -51,12 +51,12 @@ class guestlogin_auth {
     // detect if we should display login button
     $paper_match = FALSE;
     $ip_match = FALSE;
-    $query="SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type IN ('1','2') AND labs != ''";
+    $query = "SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type IN ('1','2') AND labs != ''";
     $results = $this->db->prepare($query);
     if ($this->db->error) {
       try {
-        $e=$this->db->error;
-        $en=$this->db->errno;
+        $e = $this->db->error;
+        $en = $this->db->errno;
         throw new Exception("MySQL error $e <br> Query:<br> $query", $en);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
@@ -68,12 +68,12 @@ class guestlogin_auth {
     $results->bind_result($labs);
     while ($results->fetch()) {
       $paper_match = TRUE;
-      $query="SELECT address FROM ip_addresses WHERE lab IN ($labs)";
+      $query = "SELECT address FROM ip_addresses WHERE lab IN ($labs)";
       $sub_results = $this->db->prepare($query);
       if ($this->db->error) {
         try {
-          $e=$this->db->error;
-          $en=$this->db->errno;
+          $e = $this->db->error;
+          $en = $this->db->errno;
           throw new Exception("MySQL error $e <br> Query:<br> $query", $en);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
@@ -83,16 +83,16 @@ class guestlogin_auth {
       $sub_results->execute();
       $sub_results->store_result();
       $sub_results->bind_result($address);
-      $labs_list='';
+      $labs_list = '';
       while ($sub_results->fetch()) {
-        $labs_list= $labs_list .' ' .$address;
+        $labs_list = $labs_list . ' ' . $address;
         if (NetworkUtils::get_ipaddress() == $address) $ip_match = TRUE;
       }
       $sub_results->close();
     }
     $results->close();
 
-$this->retdata->debug[]='Status paper_match:'.var_export($paper_match,TRUE) . ' ip_match:'.var_export($ip_match,TRUE). ' ip address:' . var_export(NetworkUtils::get_ipaddress(),TRUE) . ' <br> ' . $labs . ' ' . $labs_list;
+    $this->retdata->debug[] = 'Status paper_match:' . var_export($paper_match, TRUE) . ' ip_match:' . var_export($ip_match, TRUE) . ' ip address:' . var_export(NetworkUtils::get_ipaddress(), TRUE) . ' <br> ' . $labs . ' ' . $labs_list;
     if ($paper_match === TRUE and $ip_match === TRUE) { //($displaybutton === TRUE) {
       $this->retdata->debug[] = 'Adding New Button';
       $newbutton = new displaystdformobjbutton();
