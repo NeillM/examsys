@@ -24,9 +24,7 @@
 
 require_once $cfg_web_root . 'classes/mathsutils.class.php';
 
-function get_unanswered_screens($screen_data, $user_answers, $questions, $paperID, $db) {
-  $screen_no = count($screen_data);  
-  
+function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questions, $paperID, $db) {
   $incomplete_screens = array_fill(1, $screen_no, 0);  // Set all screens to be initinally complete
   
   // Get some extra details for labelling type questions

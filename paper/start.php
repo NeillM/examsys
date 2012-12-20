@@ -98,7 +98,11 @@ function randomQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_d
   // Overwrite the screen data.
   $screen_no = count($screen_data);
   for ($i=1; $i<=$screen_no; $i++) {
-    $q_no = count($screen_data[$i]);
+    if (isset($screen_data[$i])) {
+      $q_no = count($screen_data[$i]);
+    } else {
+      $q_no = 0;
+    }
     for ($a=0; $a<$q_no; $a++) {
       if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
         $screen_data[$i][$a][0] = $q_type;
@@ -182,7 +186,11 @@ function keywordQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_
     // Overwrite the screen data.
     $screen_no = count($screen_data);
     for ($i=1; $i<=$screen_no; $i++) {
-      $q_no = count($screen_data[$i]);
+      if (isset($screen_data[$i])) {
+        $q_no = count($screen_data[$i]);
+      } else {
+        $q_no = 0;
+      }
       for ($a=0; $a<$q_no; $a++) {
         if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
           $screen_data[$i][$a][0] = $q_type;
@@ -233,7 +241,9 @@ if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
 }
 while ($stmt->fetch()) {
   $no_screens = $screen;
-  $screen_data[$no_screens][] = array($q_type, $q_id);
+  if ($q_type != 'info') {
+    $screen_data[$no_screens][] = array($q_type, $q_id);
+  }
 }
 $stmt->free_result();
 $stmt->close();
@@ -845,8 +855,8 @@ if ($css != '') {
   unset($tmp_questions_array);
   
   $unanswered = false;
-
-    $incomplete_screens = get_unanswered_screens($screen_data, $user_answers, $questions_array, $property_id, $mysqli);
+  
+  $incomplete_screens = get_unanswered_screens($no_screens, $screen_data, $user_answers, $questions_array, $property_id, $mysqli);
 
   //BP If the duration is set then show timer
 
@@ -854,7 +864,7 @@ if ($css != '') {
 
   if( $exam_duration != NULL ){
 
-    $studentID         = $userObject->get_user_ID();
+    $studentID      = $userObject->get_user_ID();
     $log_start_time = new LogStartTime( $studentID, $property_id, $mysqli );
     $timer          = new Timer( $log_start_time, $exam_duration );
     $start_time     = $timer->get_start_time();
@@ -899,18 +909,21 @@ if ($css != '') {
     echo '<tr><td><div class="paper">' . $paper_title . '</div>';
     $question_offset = 0;
     if ($no_screens > 1) {
-      echo '<table cellspacing="1" cellpadding="1" border="0" class="screens"><tr>';
       for ($i=1; $i<=$no_screens; $i++) {
-        if ($incomplete_screens[$i] == 1) {
-          echo '<td class="scr_un"';
+        if ($i == $current_screen) {
+          echo '<div class="scr_cur"';
         } else {
-          echo '<td class="scr_ans"';
+          if ($incomplete_screens[$i] == 1) {
+            echo '<div class="scr_un"';
+          } else {
+            echo '<div class="scr_ans"';
+          }
         }
         $no_questions = 0;
-        foreach ($screen_data[$i] as $screen_question) {
-          if ($screen_question[0] != 'info' ) {
+        if (isset($screen_data[$i])) {
+          foreach ($screen_data[$i] as $screen_question) {
             $no_questions++;
-          } 
+          }
         }
         if ($no_questions == 1) {
           echo ' title="' . $no_questions . ' question">';
@@ -925,17 +938,19 @@ if ($css != '') {
             }
           }
         }
-        echo "$i</td>\n";
+        echo "$i</div>\n";
       }
-      echo '</tr><tr>';
+      echo "<div style=\"clear:both\"></div>\n";
+      
+      
       for ($i=1; $i<=$no_screens; $i++) {
         if ($i == $current_screen) {
-          echo '<td class="scr_cur"></td>';
+          echo '<div class="scr_arrow"></div>';
         } else {
-          echo '<td></td>';
+          echo '<div class="scr_spacer">&nbsp;</div>';
         }
       }
-      echo '</tr></table>';
+      
     }
     echo '</td>';
     echo $logo_html;
