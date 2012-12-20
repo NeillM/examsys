@@ -41,7 +41,14 @@ class Authentication {
 
     $this->load_config();
 
-    if ($this->config[0][0] !== 'alreadyloggedin') {
+    $notfound=true;
+    foreach($this->config as $opt) {
+      if($opt[0]==='alreadyloggedin') {
+        $notfound=false;
+      }
+    }
+
+    if ($notfound === true) {
       array_unshift($this->config, array('alreadyloggedin', array('timeout' => 0), 'Internal Authentication'));
     }
 
