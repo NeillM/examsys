@@ -969,12 +969,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         break;
       case 'hotspot':
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
-          echo "<div align=\"left\" class=\"unans\">";
           $unanswered = true;
-          $tmp_bgcolor = $unanswered_color;
-        } else {
-          echo "<div align=\"left\">";
-          $tmp_bgcolor = $bgcolor;
         }
         $hotspot_no = substr_count($question['options'][0]['correct'],'|') + 1;
         $tmp_height = $question['q_media_height'] + 30;
@@ -984,6 +979,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
         ?>
+        <div align="left">
         <script language="JavaScript">
           function swfLoaded<?php echo $question_no; ?>(message) {
             var num = message.substring(5,message.length);
@@ -994,8 +990,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           write_string('<param name="allowScriptAccess" value="always" />');
           write_string('<param name="movie" value="../paper/hotspot_question.swf" />');
           write_string('<param name="quality" value="high" />');
-          write_string('<param name="bgcolor" value="<?php echo $tmp_bgcolor; ?>" />');
-          write_string('<embed src="../paper/hotspot_question.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+          write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+          write_string('<embed src="../paper/hotspot_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
           write_string('</object>');
         </script>
         </div>
@@ -1015,7 +1011,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_labels = 0;
         $max_col1 = 0;
         $max_col2 = 0;
-        $tmp_first_split = explode(";", $question['options'][0]['correct']);
+        $tmp_first_split = explode(';', $question['options'][0]['correct']);
         $tmp_second_split = explode('|', $tmp_first_split[11]);
         foreach ($tmp_second_split as $ind_label) {
           $label_parts = explode('$', $ind_label);
@@ -1040,16 +1036,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
 
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
-          echo "<div align=\"center\" class=\"unans\">\n";
           $unanswered = true;
-          $tmp_bgcolor = '#FFC0C0';
-        } else {
-          echo "<div align=\"center\">\n";
-          $tmp_bgcolor = $bgcolor;
         }
         $tmp_correct = trim($question['options'][0]['correct']);
         $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
   ?>
+    <div align="center">
     <script language="javascript">
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
@@ -1059,8 +1051,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       write_string('<param name="allowScriptAccess" value="always" />');
       write_string('<param name="movie" value="../paper/label_question.swf" />');
       write_string('<param name="quality" value="high" />');
-      write_string('<param name="bgcolor" value="<?php echo $tmp_bgcolor; ?>" />');
-      write_string('<embed src="../paper/label_question.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+      write_string('<embed src="../paper/label_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
  		</script>
 

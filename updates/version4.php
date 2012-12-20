@@ -5101,10 +5101,11 @@ QUERY;
   }
   $result->close();
   
-  
-  // 19/12/2012 - Add new line to configuration file
+  // 20/12/2012 - Add new line to configuration file
   $new_cfg_str = array();
-  $new_cfg_str[] = "\$cfg_client_lookup = 'ipaddress';\r\n";
+  $new_cfg_str[] = "  \$cfg_autosave_settimeout = 10;\r\n";
+  $new_cfg_str[] = "  \$cfg_autosave_frequency  = 180;\r\n";
+  $new_cfg_str[] = "  \$cfg_autosave_retrylimit = 3;\r\n";
   $new_cfg_str[] = "\r\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
@@ -5112,10 +5113,10 @@ QUERY;
   $found = false;
   foreach ($cfg as $curline=>$line) {
 
-    if (strpos($line,'cfg_client_lookup') !== false) {
+    if (strpos($line,'cfg_autosave_settimeout') !== false) {
       $found = true;
     }
-    if (strpos($line,'cfg_summative_mgmt') !== false) {
+    if (strpos($line,'cfg_autosave_timeout') !== false or strpos($line,'cfg_autosave_frequency') !== false) {
       $target_line = $curline + 1;
     }
     $cfg_new[] = $line;
@@ -5136,7 +5137,19 @@ QUERY;
     echo "<li>Add cfg_summative_mgmt config variable</li>\n";
   }
   
-
+  // 20/12/2012 - Remove line from configuration file
+  $cfg_new = array();
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  foreach ($cfg as $curline=>$line) {
+    if (strpos($line,'cfg_autosave_timeout') === false) {
+      $cfg_new[] = $line;
+    }
+  }
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+  }
+  
+  
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 

@@ -606,7 +606,7 @@ if ($css != '') {
   }
 
   var startAutoSave = function () {
-    autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get('cfg_autosave_timeout') + rand(-5,5)) * 1000); ?>);
+    autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get('cfg_autosave_frequency') + rand(-5,5)) * 1000); ?>);
   }
 
   var stopAutoSave = function() {
@@ -637,10 +637,10 @@ if ($css != '') {
           type: 'post',
           data: $('#qForm').serialize(),
           dataType: 'html',
-          timeout: 2500,
+          timeout: <?php echo ($configObject->get('cfg_autosave_settimeout') * 1000); ?>,
           cache: false,
           tryCount : 0,
-          retryLimit : 3, //try 3 times b4 error
+          retryLimit : <?php echo $configObject->get('cfg_autosave_retrylimit'); ?>, //try 3 times before erroring
           beforeSend: function() {
               submitPending = true;
               success = false;
