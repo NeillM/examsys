@@ -28,7 +28,7 @@ set_error_handler("customErrorHandler");
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   global $debug_pagestart, $dbclass;
- // global $userObject; // TODO fix this fudge
+  global $userObject; // TODO fix this fudge
 
   global $configObject;
 
@@ -100,7 +100,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     }
 
     $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
-    $log_error->bind_param('issssssssisss', $GLOBALS['userObject']->get_user_ID(), $_SERVER['PHP_AUTH_USER'], $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
+    $log_error->bind_param('issssssssisss', $GLOBALS['userObject']->get_user_ID(), $userObject->get_username(), $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
     $log_error->execute();
     $log_error->close();
     $mysqli2->close();

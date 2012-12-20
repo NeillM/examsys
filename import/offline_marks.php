@@ -29,8 +29,10 @@
   $summative_lock = 0; 
   
   function marks_from_file($fileName) {
-    global $mysqli,  $configObject->get('cfg_tmpdir');
-  
+    global $mysqli;
+    $configObject=Config::Instance();
+    $configObject->get('cfg_tmpdir');
+  global $userObject;
     // Get properties of the paper.
     $result = $mysqli->prepare("SELECT property_id, calendar_year, start_date FROM properties WHERE property_id=?");
     $result->bind_param('i', $_GET['paperID']);
@@ -40,7 +42,7 @@
     $result->close();
     
     if ($property_id == '') {   // Paper could not be found, exit.
-      unlink( $configObject->get('cfg_tmpdir') . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
+      unlink( $configObject->get('cfg_tmpdir') . $userObject->get_username() . '_spotter_marks.csv');
       exit;    
     }
     $moduleIDs=Paper_utils::get_modules($_GET['paperID'], $mysqli);
@@ -142,12 +144,12 @@
 
   if (isset($_POST['submit']) and $_POST['submit']) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $_SERVER['PHP_AUTH_USER'] . "_spotter_marks.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_username() . "_spotter_marks.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
-        marks_from_file( $configObject->get('cfg_tmpdir') . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
-        unlink( $configObject->get('cfg_tmpdir') . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
+        marks_from_file( $configObject->get('cfg_tmpdir') . $userObject->get_username() . '_spotter_marks.csv');
+        unlink( $configObject->get('cfg_tmpdir') . $userObject->get_username() . '_spotter_marks.csv');
         ?>
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html>

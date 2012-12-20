@@ -279,7 +279,7 @@ class UserObject {
    * Return the user's username
    * @return string username
    */
-  function get_username() {
+  function &get_username() {
     return $this->username;
   }
 

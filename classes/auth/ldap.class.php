@@ -43,6 +43,11 @@ class ldap_auth {
     $this->name = $name;
   }
 
+  function register_callback_routines() {
+    $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
+  }
+
   function failauth(&$postauthfailreturn) {
     $this->retdata->debug[] = 'Fail function passed ' . var_export($postauthfailreturn, TRUE);
 
@@ -69,10 +74,6 @@ class ldap_auth {
 
   }
 
-  function register_callback_routines() {
-    $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
-  }
 
   function set_fail() {
     $this->retdata->success = FALSE;

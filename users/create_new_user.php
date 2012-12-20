@@ -81,7 +81,7 @@ if (isset($_POST['submit']) and $unique_username == true) {
     // Send out email welcome.
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
       $result = $mysqli->prepare("SELECT email FROM users WHERE username=?");
-      $result->bind_param('s', $_SERVER['PHP_AUTH_USER']);
+      $result->bind_param('s', $userObject->get_username());
       $result->execute();
       $result->bind_result($tmp_email);
       $result->fetch();

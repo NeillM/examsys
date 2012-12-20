@@ -15,37 +15,49 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* Utility class for language related functionality
-* 
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for language related functionality
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2012 The University of Nottingham
+ * @package
+ */
 
 
 Class LangUtils {
 
   static function getLang($web_root) {
-    $langs = explode(',',strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+    $langs = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
     $language = '';
     $i = 0;
 
     while ($i < count($langs) and $language == '') {
-      $parts = explode(';',$langs[$i]);
+      $parts = explode(';', $langs[$i]);
       $test_lang = $parts[0];
-      if (file_exists($web_root . "/lang/" . substr($test_lang,0,5) . "/")) {
-        $language = substr($test_lang,0,5);
-      } elseif (file_exists($web_root . "/lang/" . substr($test_lang,0,2) . "/")) {
-        $language = substr($test_lang,0,2);
+      if (file_exists($web_root . "/lang/" . substr($test_lang, 0, 5) . "/")) {
+        $language = substr($test_lang, 0, 5);
+      } elseif (file_exists($web_root . "/lang/" . substr($test_lang, 0, 2) . "/")) {
+        $language = substr($test_lang, 0, 2);
       }
       $i++;
     }
-    
-    if ($language == '') $language = 'en';   // Default to English if no languages found
-    
+
+    if ($language == '') $language = 'en'; // Default to English if no languages found
+
     return $language;
+  }
+
+  static function loadlangfile($file) {
+    $cfg_web_root = $configObj->get('cfg_web_root');
+    $language = LangUtils::getLang($cfg_web_root);
+    $configObj = Config::Instance();
+
+    $lang_path = " {$cfg_web_root}lang/$language/" . $file;
+
+    if (file_exists($lang_path)) {
+      require $lang_path;
+    }
   }
 }
 

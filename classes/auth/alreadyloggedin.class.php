@@ -54,7 +54,6 @@ class alreadyloggedin_auth {
   function register_callback_routines() {
 
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
-
     $this->calling_object->register_callback(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
 
 

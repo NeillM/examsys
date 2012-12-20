@@ -89,6 +89,15 @@ class Authentication {
       $this->append_auth_object_debug($number);
       $this->authinfo[$number] = array($name => $authtype);
     }
+    $initobj = new stdClass();
+    if (isset($this->callbackregister['init'])) {
+      foreach ($this->callbackregister['init'] as $number => $callback) {
+        call_user_func_array($callback, array(&$initobj));
+        $objid = key($this->callbackregisterdata['init'][$number]);
+        $this->append_auth_object_debug($objid);
+      }
+    }
+
 
   }
 
@@ -105,7 +114,7 @@ class Authentication {
   }
 
   function register_callback($callback, $section, $number, $name, $insert = FALSE) {
-    if (!in_array($section, array('preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform')) or !is_callable($callback)) {
+    if (!in_array($section, array('init', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform')) or !is_callable($callback)) {
       //attempting to register callback to invalid section
       $this->debug[] = 'register_callback failed ' . $section . ' from ' . get_class($callback[0]) . ' ' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
       return FALSE;
@@ -323,9 +332,9 @@ class Authentication {
   }
 
   function store_data_in_session() {
-    if (!isset($_SESSION['authenticationObj']['loggedin']['password'])) {
-      $_SESSION['authenticationObj']['loggedin']['password'] = $this->get_password();
-    }
+    /*   if (!isset($_SESSION['authenticationObj']['loggedin']['password'])) {
+         $_SESSION['authenticationObj']['loggedin']['password'] = $this->get_password();
+       }*/
     $_SESSION['authenticationObj']['loggedin']['userid'] = $this->get_userid();
     $_SESSION['authenticationObj']['loggedin']['time'] = time();
     $_SESSION['authenticationObj']['attempt'] = 0;

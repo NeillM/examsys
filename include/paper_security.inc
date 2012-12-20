@@ -88,9 +88,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
 
   $attempt = 1;
   $usern = $userObj->get_username();
-  if (isset($_SERVER['PHP_AUTH_USER'])) {
-    $usern = $_SERVER['PHP_AUTH_USER'];
-  }
+
 
   if (stripos($usern, 'user') !== 0) {
      if (count($moduleIDs) > 0) {

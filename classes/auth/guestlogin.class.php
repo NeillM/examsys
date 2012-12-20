@@ -83,14 +83,16 @@ class guestlogin_auth {
       $sub_results->execute();
       $sub_results->store_result();
       $sub_results->bind_result($address);
+      $labs_list='';
       while ($sub_results->fetch()) {
+        $labs_list= $labs_list .' ' .$address;
         if (NetworkUtils::get_ipaddress() == $address) $ip_match = TRUE;
       }
       $sub_results->close();
     }
     $results->close();
 
-
+$this->retdata->debug[]='Status paper_match:'.var_export($paper_match,TRUE) . ' ip_match:'.var_export($ip_match,TRUE). ' ip address:' . var_export(NetworkUtils::get_ipaddress(),TRUE) . ' <br> ' . $labs . ' ' . $labs_list;
     if ($paper_match === TRUE and $ip_match === TRUE) { //($displaybutton === TRUE) {
       $this->retdata->debug[] = 'Adding New Button';
       $newbutton = new displaystdformobjbutton();
