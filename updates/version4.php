@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2012 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/load_config.php';
 
@@ -60,6 +60,7 @@ function convert_year($old_year) {
     default:
       $new_year = 1;
   }
+
   return $new_year;
 }
 
@@ -67,115 +68,213 @@ function gen_random_salt() {
   $salt = '';
   $characters = 'abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-  for ($i=0; $i<16; $i++) {
-    $salt .= substr($characters, rand(0,61), 1);
+  for ($i = 0; $i < 16; $i++) {
+    $salt .= substr($characters, rand(0, 61), 1);
   }
 
   return $salt;
 }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-    <title>Rogo <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
+      <title>Rogo <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
 
-    <link rel="stylesheet" type="text/css" href="../css/body.css" />
-    <link rel="stylesheet" type="text/css" href="../css/header.css" />
-    <style type="text/css">
-      body {font-size:90%}
-      h1 {font-size:140%; color:#1F497D}
-      h2 {font-size:120%; color:#1F497D}
-      .error {color:red; font-weight:bold}
-      .warning {float:none; color:red; padding-left: .5em; vertical-align:top}
-      label {float:left; width:150px; padding-left:0em; text-align:left}
-      p {clear:both}
-      .submit {text-align:center; padding-top:2em}
-      table {border:none}
-      .h {margin-top:1.5em; margin-bottom:0.5em; width:100%; color:#1E3287}
-      .h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%}
-      td.line {width:98%}
-      input[type=text], input[type=password] {width:140px}
-      form {padding:1em}
-      form div {padding-left:2em}
-    </style>
-    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+      <link rel="stylesheet" type="text/css" href="../css/header.css"/>
+      <style type="text/css">
+          body {
+              font-size: 90%
+          }
+
+          h1 {
+              font-size: 140%;
+              color: #1F497D
+          }
+
+          h2 {
+              font-size: 120%;
+              color: #1F497D
+          }
+
+          .error {
+              color: red;
+              font-weight: bold
+          }
+
+          .warning {
+              float: none;
+              color: red;
+              padding-left: .5em;
+              vertical-align: top
+          }
+
+          label {
+              float: left;
+              width: 150px;
+              padding-left: 0em;
+              text-align: left
+          }
+
+          p {
+              clear: both
+          }
+
+          .submit {
+              text-align: center;
+              padding-top: 2em
+          }
+
+          table {
+              border: none
+          }
+
+          .h {
+              margin-top: 1.5em;
+              margin-bottom: 0.5em;
+              width: 100%;
+              color: #1E3287
+          }
+
+          .h hr {
+              border: 0px;
+              height: 1px;
+              color: #E5E5E5;
+              background-color: #E5E5E5;
+              width: 100%
+          }
+
+          td.line {
+              width: 98%
+          }
+
+          input[type=text], input[type=password] {
+              width: 140px
+          }
+
+          form {
+              padding: 1em
+          }
+
+          form div {
+              padding-left: 2em
+          }
+      </style>
+      <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+      <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   </head>
   <body>
   <table class="header">
-    <tr>
-      <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
-      <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
-      <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogo</div>
-      <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $configObject->get('rogo_version') . ' to ' . $version; ?>)</div>
-      </th>
-      <th style="text-align:right; padding-right:10px">
-      <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" />
-      </th>
-    </tr>
-    <tr>
-      <th colspan="2" class="bevel"></th>
-    </tr>
+      <tr>
+          <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
+              <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0"
+                   style="float:left; padding-right:8px"/>
+
+              <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogo</div>
+              <div style="color:#1F497D; font-size:9pt">Update Utility
+                  (<?php echo $configObject->get('rogo_version') . ' to ' . $version; ?>)
+              </div>
+          </th>
+          <th style="text-align:right; padding-right:10px">
+              <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0"/>
+          </th>
+      </tr>
+      <tr>
+          <th colspan="2" class="bevel"></th>
+      </tr>
   </table>
 <?php
 if (!isset($_POST['update'])) {
-?>
-    <script type="text/javascript">
-      $(document).ready(function(){
-          $("#installForm").validate();
-      });
+  ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#installForm").validate();
+    });
 
-      $(document).ready(function() {
-        $('#useLdap').change(function() {
+    $(document).ready(function () {
+        $('#useLdap').change(function () {
             $('#ldapOptions').toggle();
-          });
-      });
-    </script>
+        });
+    });
+</script>
+  <?php
+  if (!InstallUtils::configFileIsWriteable()) {
+    ?>
+  <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get('rogo_version') . ' to ' . $version; ?></h2>
+  <div><?php echo $string['warning1']; ?></div>
+  <div><?php echo $string['warning1']; ?></div>
     <?php
-    if (!InstallUtils::configFileIsWriteable()) {
-      ?>
-       <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get('rogo_version') . ' to ' . $version; ?></h2>
-       <div><?php echo $string['warning1']; ?></div>
-       <div><?php echo $string['warning1']; ?></div>
-      <?php
-    } else {
-      ?>
-      <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+  } else {
+    ?>
+  <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <div><?php printf($string['msg1'], $version); ?></div>
-        <table class="h"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-          <div><?php echo $string['msg2']; ?></div>
-          <br />
-          <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
-          <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass" /></div>
+      <table class="h">
+          <tr>
+              <td>
+                  <nobr><?php echo $string['databaseadminuser']; ?></nobr>
+              </td>
+              <td class="line">
+                  <hr/>
+              </td>
+          </tr>
+      </table>
+      <div><?php echo $string['msg2']; ?></div>
+      <br/>
 
-          <table class="h"><tr><td><nobr><?php echo $string['onlinehelpsystems']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-          <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox" value="" name="update_staff_help" checked="checked" /></div>
-          <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox" value="" name="update_student_help" checked="checked" /></div>
+      <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value=""
+                                                                                             name="mysql_admin_user"
+                                                                                             class="required"
+                                                                                             minlength="2"/></div>
+      <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value=""
+                                                                                             name="mysql_admin_pass"/>
+      </div>
 
-       <div class="submit"> <input type="submit" name="update" value="<?php echo $string['startupdate']; ?>" /> </div>
-     </form>
+      <table class="h">
+          <tr>
+              <td>
+                  <nobr><?php echo $string['onlinehelpsystems']; ?></nobr>
+              </td>
+              <td class="line">
+                  <hr/>
+              </td>
+          </tr>
+      </table>
+      <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox"
+                                                                                                   value=""
+                                                                                                   name="update_staff_help"
+                                                                                                   checked="checked"/>
+      </div>
+      <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox"
+                                                                                                       value=""
+                                                                                                       name="update_student_help"
+                                                                                                       checked="checked"/>
+      </div>
+
+      <div class="submit"><input type="submit" name="update" value="<?php echo $string['startupdate']; ?>"/></div>
+  </form>
     <?php
-   }
-   ?>
+  }
+  ?>
    </body>
    </html>
   <?php
 
 } else {
-  if ($configObject->get('cfg_db_charset') == null) {
+  if ($configObject->get('cfg_db_charset') == NULL) {
     $cfg_db_charset = 'latin1';
   } else {
     $cfg_db_charset = $configObject->get('cfg_db_charset');
   }
 
-  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $configObject->get('cfg_db_database'), $cfg_db_charset, $configObject->get('dbclass'));
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $configObject->get('cfg_db_database'), $cfg_db_charset, $configObject->get('dbclass'));
 
   if ($mysqli->connect_error) {
-    echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' .  $_POST['mysql_admin_pass'] . '</div>';
+    echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' . $_POST['mysql_admin_pass'] . '</div>';
     echo "</body>";
     echo "</html>";
     exit;
@@ -285,7 +384,7 @@ if (!isset($_POST['update'])) {
     $group_list = rtrim($group_list, ';');
 
     // Update the group review setting group field to name/date string
-    if ($group_list != ''){
+    if ($group_list != '') {
       $update = $mysqli->prepare("UPDATE standards_setting SET group_review = ? WHERE paperID = ? AND method = 'Modified Angoff' AND group_review = 'Yes'");
       $update->bind_param('si', $group_list, $paperID);
       $update->execute();
@@ -342,7 +441,7 @@ if (!isset($_POST['update'])) {
     $sch_data->close();
 
     // Populate the new field
-    foreach($schools as $school_name=>$schoolid) {
+    foreach ($schools as $school_name => $schoolid) {
       $adjust = $mysqli->prepare("UPDATE modules SET schoolid=? WHERE school=?");
       $adjust->bind_param('is', $schoolid, $school_name);
       $adjust->execute();
@@ -513,142 +612,142 @@ if (!isset($_POST['update'])) {
     $cfg_db_staff_user = $cfg_db_database . '_staff';
     $cfg_db_staff_passwd = gen_password(16);
     $cfg_db_external_user = $cfg_db_database . '_ext';
-    $cfg_db_external_passwd  = gen_password(16);
+    $cfg_db_external_passwd = gen_password(16);
     $cfg_db_sysadmin_user = $cfg_db_database . '_sys';
     $cfg_db_sysadmin_passwd = gen_password(16);
 
     $priv_SQL = array();
     //create 'database user authentication user' and grant permissions
-    $mysqli->query("CREATE USER  '" . $cfg_db_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_password . "'");
+    $mysqli->query("CREATE USER  '" . $cfg_db_username . "'@'" . $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_password . "'");
     echo "<li>NEW DB USER:: $cfg_db_username created</li>";
-    $priv_SQL[] = "GRANT SELECT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".sid TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_modules TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".schools TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_metadata_security TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, UPDATE, INSERT, DELETE ON " . $cfg_db_database . ".password_tokens TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users_metadata TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".labs TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".admin_access TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT,INSERT ON " . $cfg_db_database . ".temp_users TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, UPDATE ON " . $cfg_db_database . ".users TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".sid TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_modules TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".schools TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_metadata_security TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, UPDATE, INSERT, DELETE ON " . $cfg_db_database . ".password_tokens TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users_metadata TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".labs TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".admin_access TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT,INSERT ON " . $cfg_db_database . ".temp_users TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
 
     //create 'database user student user' and grant permissions
-    $mysqli->query("CREATE USER  '" . $cfg_db_student_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_student_passwd . "'");
+    $mysqli->query("CREATE USER  '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_student_passwd . "'");
     echo "<li>NEW DB USER:: $cfg_db_student_user created</li>";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".options TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".feedback_release TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".ip_addresses TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".modules TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".objectives TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_metadata_security TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".relationships TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".student_modules TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".schools TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users_metadata TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".labs TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".question_exclude TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".sessions TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".sid TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_log TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_searches TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_tutorial_log TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log0 TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log1 TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log2 TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log3 TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log4 TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log4_overall TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_late TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_metadata TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".temp_users TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".options TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".feedback_release TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".ip_addresses TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".modules TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".objectives TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_metadata_security TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".relationships TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".student_modules TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".schools TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users_metadata TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".labs TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".question_exclude TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".sessions TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".sid TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_log TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_searches TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_tutorial_log TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log0 TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log1 TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log3 TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log4 TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log4_overall TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log5 TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_late TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_metadata TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".temp_users TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
     //create 'database user external user' and grant permissions
-    $mysqli->query("CREATE USER  '" . $cfg_db_external_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_external_passwd . "'");
+    $mysqli->query("CREATE USER  '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_external_passwd . "'");
     echo "<li>NEW DB USER:: $cfg_db_external_user created</li>";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".options TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".teams TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".staff_help TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log0 TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log1 TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log3 TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log4 TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log4_overall TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log5 TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_late TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_metadata TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".review_comments TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".options TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".teams TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".staff_help TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log0 TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log1 TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log3 TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log4 TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log4_overall TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log5 TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_late TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_metadata TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".review_comments TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
     //create 'database user staff user' and grant permissions
-    $mysqli->query("CREATE USER  '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_staff_passwd . "'");
+    $mysqli->query("CREATE USER  '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_staff_passwd . "'");
     echo "<li>NEW DB USER:: $cfg_db_staff_user created</li>";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".* TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".users_metadata TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sid TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".password_tokens TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".special_needs TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".student_modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".student_notes TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".papers TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".questions TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".questions_metadata TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".options TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".feedback_release TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".paper_metadata_security TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".paper_notes TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".standards_setting TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".ebel TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".question_exclude TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".keywords_question TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".keywords_user TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".objectives TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".relationships TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".review_comments TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".recent_papers TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".teams TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_log TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_searches TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_tutorial_log TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log0 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log1 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log2 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log3 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log4 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log4_overall TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_late TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_metadata TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".textbox_marking TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".textbox_remark TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".track_changes TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".temp_users TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sessions TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".* TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".users_metadata TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sid TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".password_tokens TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".special_needs TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".student_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".student_notes TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".papers TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".questions TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".questions_metadata TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".options TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".feedback_release TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".paper_metadata_security TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".paper_notes TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".ebel TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".question_exclude TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".keywords_question TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".keywords_user TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".objectives TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".relationships TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".review_comments TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".recent_papers TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".teams TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_log TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_searches TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_tutorial_log TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log0 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log1 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log3 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log4 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log4_overall TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log5 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_late TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_metadata TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".textbox_marking TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".textbox_remark TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".track_changes TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".temp_users TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sessions TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
 
-    $mysqli->query("CREATE USER  '" . $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_sysadmin_passwd . "'");
+    $mysqli->query("CREATE USER  '" . $cfg_db_sysadmin_user . "'@'" . $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_sysadmin_passwd . "'");
     echo "<li>NEW DB USER:: $cfg_db_sysadmin_user created</li>";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $cfg_db_database . ".* TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $cfg_db_database . ".* TO '" . $cfg_db_sysadmin_user . "'@'" . $cfg_db_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
     foreach ($priv_SQL as $sql) {
@@ -661,8 +760,8 @@ if (!isset($_POST['update'])) {
 
     //Old users will be missing permision to delete from textbox_marking and textbox_remark just add them in
     $priv_SQL = Array();
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".textbox_marking TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".textbox_remark TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".textbox_marking TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".textbox_remark TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
       $mysqli->query($sql);
@@ -676,23 +775,23 @@ if (!isset($_POST['update'])) {
     //
     //  update the config file!!
     //
-    $new_cfg_str[] =  "// Local database\n";
-    $new_cfg_str[] =  "  \$cfg_db_username = '$cfg_db_username';\n";
-    $new_cfg_str[] =  "  \$cfg_db_passwd = '$cfg_db_password';\n";
-    $new_cfg_str[] =  "  \$cfg_db_database = '$cfg_db_database';\n";
-    $new_cfg_str[] =  "  \$cfg_db_host 	  = '$cfg_db_host';\n";
-    $new_cfg_str[] =  "// student db user \n";
-    $new_cfg_str[] =  "  \$cfg_db_student_user = '$cfg_db_student_user';\n";
-    $new_cfg_str[] =  "  \$cfg_db_student_passwd = '$cfg_db_student_passwd';\n";
-    $new_cfg_str[] =  "// staff db user\n";
-    $new_cfg_str[] =  "  \$cfg_db_staff_user = '$cfg_db_staff_user';\n";
-    $new_cfg_str[] =  "  \$cfg_db_staff_passwd = '$cfg_db_staff_passwd';\n";
-    $new_cfg_str[] =  "// external examiner db user\n";
-    $new_cfg_str[] =  "  \$cfg_db_external_user = '$cfg_db_external_user';\n";
-    $new_cfg_str[] =  "  \$cfg_db_external_passwd = '$cfg_db_external_passwd';\n";
-    $new_cfg_str[] =  "// sysdamin db user\n";
-    $new_cfg_str[] =  "  \$cfg_db_sysadmin_user = '$cfg_db_sysadmin_user';\n";
-    $new_cfg_str[] =  "  \$cfg_db_sysadmin_passwd = '$cfg_db_sysadmin_passwd';\n";
+    $new_cfg_str[] = "// Local database\n";
+    $new_cfg_str[] = "  \$cfg_db_username = '$cfg_db_username';\n";
+    $new_cfg_str[] = "  \$cfg_db_passwd = '$cfg_db_password';\n";
+    $new_cfg_str[] = "  \$cfg_db_database = '$cfg_db_database';\n";
+    $new_cfg_str[] = "  \$cfg_db_host 	  = '$cfg_db_host';\n";
+    $new_cfg_str[] = "// student db user \n";
+    $new_cfg_str[] = "  \$cfg_db_student_user = '$cfg_db_student_user';\n";
+    $new_cfg_str[] = "  \$cfg_db_student_passwd = '$cfg_db_student_passwd';\n";
+    $new_cfg_str[] = "// staff db user\n";
+    $new_cfg_str[] = "  \$cfg_db_staff_user = '$cfg_db_staff_user';\n";
+    $new_cfg_str[] = "  \$cfg_db_staff_passwd = '$cfg_db_staff_passwd';\n";
+    $new_cfg_str[] = "// external examiner db user\n";
+    $new_cfg_str[] = "  \$cfg_db_external_user = '$cfg_db_external_user';\n";
+    $new_cfg_str[] = "  \$cfg_db_external_passwd = '$cfg_db_external_passwd';\n";
+    $new_cfg_str[] = "// sysdamin db user\n";
+    $new_cfg_str[] = "  \$cfg_db_sysadmin_user = '$cfg_db_sysadmin_user';\n";
+    $new_cfg_str[] = "  \$cfg_db_sysadmin_passwd = '$cfg_db_sysadmin_passwd';\n";
 
     $cfg = file($cfg_web_root . 'config/config.inc.php');
 
@@ -700,26 +799,26 @@ if (!isset($_POST['update'])) {
     $cfg_new = array();
     $remove_array = array('Local database', 'cfg_db_username', 'cfg_db_passwd', 'cfg_db_database', 'cfg_db_host');
     foreach ($cfg as $line) {
-       $remove = false;
-       foreach ($remove_array as $needle) {
-         if (stripos($line,$needle) !== false) {
-            $remove = true;
-            break 1;
-         }
-       }
-       if (!$remove) {
-         $cfg_new[] = $line;
-       }
+      $remove = FALSE;
+      foreach ($remove_array as $needle) {
+        if (stripos($line, $needle) !== FALSE) {
+          $remove = TRUE;
+          break 1;
+        }
+      }
+      if (!$remove) {
+        $cfg_new[] = $line;
+      }
     }
 
     //add the new config chunk
-    array_splice($cfg_new,18,0,$new_cfg_str);
+    array_splice($cfg_new, 18, 0, $new_cfg_str);
 
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root. 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -727,25 +826,25 @@ if (!isset($_POST['update'])) {
   } // END Create DB user
 
   // 26/08/2011 - Add date and time formats to config file.
-  $new_cfg_str[] =  "// Date formats in MySQL DATE_FORMAT format\n";
-  $new_cfg_str[] =  "  \$cfg_short_date = '%m/%d/%y';\n";
-  $new_cfg_str[] =  "  \$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
-  $new_cfg_str[] =  "  \$cfg_timezone = 'Europe/London';\n";
+  $new_cfg_str[] = "// Date formats in MySQL DATE_FORMAT format\n";
+  $new_cfg_str[] = "  \$cfg_short_date = '%m/%d/%y';\n";
+  $new_cfg_str[] = "  \$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
+  $new_cfg_str[] = "  \$cfg_timezone = 'Europe/London';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'Date formats in MySQL DATE_FORMAT') !== false) {
-      $found = true;
+    if (strpos($line, 'Date formats in MySQL DATE_FORMAT') !== FALSE) {
+      $found = TRUE;
     }
   }
 
   if (!$found) {
-    array_splice($cfg,36,0,$new_cfg_str);
+    array_splice($cfg, 36, 0, $new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old2.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<div>Added date and time formats to config file.</div>\n";
@@ -755,22 +854,22 @@ if (!isset($_POST['update'])) {
 
   // 05/09/2011 - Add company name config file.
   $new_cfg_str = array();
-  $new_cfg_str[] =  "\$cfg_company = 'The University of Nottingham';\n";
+  $new_cfg_str[] = "\$cfg_company = 'The University of Nottingham';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'cfg_company') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_company') !== FALSE) {
+      $found = TRUE;
     }
   }
 
   if (!$found) {
-    array_splice($cfg,16,0,$new_cfg_str);
+    array_splice($cfg, 16, 0, $new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added company name config file.</li>\n";
@@ -924,7 +1023,7 @@ if (!isset($_POST['update'])) {
       $adjust->close();
       ob_flush();
       flush();
-   }
+    }
     $q_data->close();
   }
   $result->close();
@@ -1013,7 +1112,7 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== false) {
+    if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== FALSE) {
       $sql = array();
       $sql[] = "INSERT INTO `ebel_grid_templates` (id,EE,EI,EN,ME,MI,MN,HE,HI,HN,EE2,EI2,EN2,ME2,MI2,MN2,HE2,HI2,HN2,name) VALUES (1,65,60,55,60,55,50,55,50,45,0,0,0,0,0,0,0,0,0,'BMedSci')";
       $sql[] = "INSERT INTO `ebel_grid_templates` (id,EE,EI,EN,ME,MI,MN,HE,HI,HN,EE2,EI2,EN2,ME2,MI2,MN2,HE2,HI2,HN2,name) VALUES (2,80,60,55,55,50,35,45,35,30,0,0,0,0,0,0,0,0,0,'BMBS')";
@@ -1039,7 +1138,7 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   $result->close();
 
-  if (strpos($column_type,'smallint') !== false) {
+  if (strpos($column_type, 'smallint') !== FALSE) {
     $result = $mysqli->prepare("ALTER TABLE papers CHANGE COLUMN question question INT(4) UNSIGNED NOT NULL DEFAULT 0;");
     $result->execute();
     $result->close();
@@ -1242,7 +1341,7 @@ if (!isset($_POST['update'])) {
       } else {
         $new_correct .= 'single;menu';
       }
-      for ($i=8; $i<count($parts); $i++) {
+      for ($i = 8; $i < count($parts); $i++) {
         $new_correct .= ';' . $parts[$i];
       }
 
@@ -1268,16 +1367,16 @@ if (!isset($_POST['update'])) {
 
     $priv_SQL = array();
     //create 'database user SCT user' and grant permissions
-    $mysqli->query("CREATE USER  '" . $cfg_db_sct_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_sct_password . "'");
+    $mysqli->query("CREATE USER  '" . $cfg_db_sct_username . "'@'" . $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_sct_password . "'");
     echo "<li>NEW DB USER:: $cfg_db_sct_username created</li>";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions_metadata TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".options TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_metadata_security TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_notes TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sct_reviews TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '" . $cfg_db_sct_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '" . $cfg_db_sct_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions_metadata TO '" . $cfg_db_sct_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".options TO '" . $cfg_db_sct_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '" . $cfg_db_sct_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_metadata_security TO '" . $cfg_db_sct_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_notes TO '" . $cfg_db_sct_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sct_reviews TO '" . $cfg_db_sct_username . "'@'" . $cfg_db_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
     foreach ($priv_SQL as $sql) {
@@ -1293,9 +1392,9 @@ if (!isset($_POST['update'])) {
     //
 
     $new_cfg_str = array();
-    $new_cfg_str[] =  "// SCT db user\n";
-    $new_cfg_str[] =  "  \$cfg_db_sct_user = '$cfg_db_sct_username';\n";
-    $new_cfg_str[] =  "  \$cfg_db_sct_passwd = '$cfg_db_sct_password';\n";
+    $new_cfg_str[] = "// SCT db user\n";
+    $new_cfg_str[] = "  \$cfg_db_sct_user = '$cfg_db_sct_username';\n";
+    $new_cfg_str[] = "  \$cfg_db_sct_passwd = '$cfg_db_sct_password';\n";
 
     $cfg = file($cfg_web_root . 'config/config.inc.php');
 
@@ -1307,7 +1406,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -1327,24 +1426,24 @@ if (!isset($_POST['update'])) {
 
     $priv_SQL = array();
     //create 'database user SCT user' and grant permissions
-    $mysqli->query("CREATE USER  '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_inv_password . "'");
+    $mysqli->query("CREATE USER  '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_inv_password . "'");
     echo "<li>NEW DB USER:: $cfg_db_inv_username created</li>";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_modules TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".sid TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".ip_addresses TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".labs TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".student_notes TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".paper_notes TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_modules TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".sid TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".ip_addresses TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".labs TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".student_notes TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".paper_notes TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
     foreach ($priv_SQL as $sql) {
       $mysqli->query($sql);
 
-        @ob_flush();
-        @flush();
+      @ob_flush();
+      @flush();
 
 
       if ($mysqli->errno != 0) {
@@ -1357,9 +1456,9 @@ if (!isset($_POST['update'])) {
     //
 
     $new_cfg_str = array();
-    $new_cfg_str[] =  "// Invigilator user\n";
-    $new_cfg_str[] =  "  \$cfg_db_inv_user = '$cfg_db_inv_username';\n";
-    $new_cfg_str[] =  "  \$cfg_db_inv_passwd = '$cfg_db_inv_password';\n";
+    $new_cfg_str[] = "// Invigilator user\n";
+    $new_cfg_str[] = "  \$cfg_db_inv_user = '$cfg_db_inv_username';\n";
+    $new_cfg_str[] = "  \$cfg_db_inv_passwd = '$cfg_db_inv_password';\n";
 
     $cfg = file($cfg_web_root . 'config/config.inc.php');
 
@@ -1371,7 +1470,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -1455,8 +1554,8 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    $convert_years = array('year1'=>1,'year2'=>2,'year3'=>3,'year4'=>4,'year5'=>5,'year6'=>6,'cp1'=>3,'cp2'=>4,'cp3'=>5,'f1'=>5,'graduate'=>6);
-    foreach ($convert_years as $old_year=>$new_year) {
+    $convert_years = array('year1' => 1, 'year2' => 2, 'year3' => 3, 'year4' => 4, 'year5' => 5, 'year6' => 6, 'cp1' => 3, 'cp2' => 4, 'cp3' => 5, 'f1' => 5, 'graduate' => 6);
+    foreach ($convert_years as $old_year => $new_year) {
       $adjust = $mysqli->prepare("UPDATE log4_overall SET yearofstudy=$new_year WHERE year='$old_year'");
       $adjust->execute();
       $adjust->close();
@@ -1570,13 +1669,13 @@ if (!isset($_POST['update'])) {
     $adjust->close();
     echo "<li>ALTER TABLE properties CHANGE COLUMN paper_type paper_type enum('0','1','2','3','4','5','6')</li>\n";
   }
-  $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
   $result->close();
 
   ob_flush();
@@ -1621,7 +1720,7 @@ if (!isset($_POST['update'])) {
   $result->bind_result($column_type);
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $result2 = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees' AND TABLE_SCHEMA='$cfg_db_database'");    // Check to see if Degrees exists, more recently renamed Courses.
+    $result2 = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees' AND TABLE_SCHEMA='$cfg_db_database'"); // Check to see if Degrees exists, more recently renamed Courses.
     $result2->execute();
     $result2->store_result();
     $result2->bind_result($table_name);
@@ -1638,28 +1737,28 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 13/01/2012 - Add new character set to configuration file.
-  $new_cfg_str[] =  "  \$cfg_db_charset = 'latin1';\n";
+  $new_cfg_str[] = "  \$cfg_db_charset = 'latin1';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
   //remove refrances to old vars
   $cfg_new = array();
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'cfg_db_charset') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_db_charset') !== FALSE) {
+      $found = TRUE;
     }
     $cfg_new[] = $line;
   }
 
   if (!$found) {
     //add the new config chunk
-    array_splice($cfg_new,25,0,$new_cfg_str);
+    array_splice($cfg_new, 25, 0, $new_cfg_str);
 
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added database charset.</li>\n";
@@ -1708,13 +1807,13 @@ if (!isset($_POST['update'])) {
   $cfg_new = array();
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   foreach ($cfg as $line) {
-    if (strpos($line,'ts_version') !== false) {
+    if (strpos($line, 'ts_version') !== FALSE) {
       $cfg_new[] = "\$rogo_version = '$version';\n";
     } else {
       $cfg_new[] = $line;
     }
   }
-  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
 
@@ -1724,20 +1823,20 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "require \$root . '/include/path_functions.inc.php';\n\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'dirname(__FILE__)') !== false) {
-      $found = true;
+    if (strpos($line, 'dirname(__FILE__)') !== FALSE) {
+      $found = TRUE;
     }
   }
 
   if (!$found) {
-    array_splice($cfg,11,0,$new_cfg_str);
+    array_splice($cfg, 11, 0, $new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added root path functions to config file.</li>\n";
@@ -1751,18 +1850,18 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "\$cfg_root_path = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'cfg_root_path') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_root_path') !== FALSE) {
+      $found = TRUE;
     }
   }
 
   if (!$found) {
     $index = 0;
     foreach ($cfg as $line) {
-      if (strpos($line,'cfg_web_root =') !== false) {
-        $found = true;
+      if (strpos($line, 'cfg_web_root =') !== FALSE) {
+        $found = TRUE;
         break;
       }
       $index++;
@@ -1780,7 +1879,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old5.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added URL root to config file.</li>\n";
@@ -1800,18 +1899,18 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "SCRIPT;\n\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'Root path for JS') !== false) {
-      $found = true;
+    if (strpos($line, 'Root path for JS') !== FALSE) {
+      $found = TRUE;
     }
   }
 
   if (!$found) {
     $index = 0;
     foreach ($cfg as $line) {
-      if (strpos($line,'//Editor') !== false) {
-        $found = true;
+      if (strpos($line, '//Editor') !== FALSE) {
+        $found = TRUE;
         break;
       }
       $index++;
@@ -1834,8 +1933,8 @@ if (!isset($_POST['update'])) {
 
     $index = 0;
     foreach ($cfg as $line) {
-      if (strpos($line,'cfg_editor_javascript =') !== false) {
-        $found = true;
+      if (strpos($line, 'cfg_editor_javascript =') !== FALSE) {
+        $found = TRUE;
         break;
       }
       $index++;
@@ -1845,11 +1944,11 @@ if (!isset($_POST['update'])) {
       unset($cfg[$index]);
 
       // Editor JS string was sometimes split over multiple lines. Check and remove if this is the case
-      if (substr(trim($cfg[$index+2]), 0, 2) == '";') {
-        unset($cfg[$index+2]);
+      if (substr(trim($cfg[$index + 2]), 0, 2) == '";') {
+        unset($cfg[$index + 2]);
       }
-      if (substr(trim($cfg[$index+1]), 0, 16) == '<script language') {
-        unset($cfg[$index+1]);
+      if (substr(trim($cfg[$index + 1]), 0, 16) == '<script language') {
+        unset($cfg[$index + 1]);
       }
 
       $cfg = array_values($cfg);
@@ -1863,7 +1962,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old6.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added root path for JavaScript to config file.</li>\n";
@@ -1879,26 +1978,26 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "    break;\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   $last_break = 0;
   $index = 0;
   foreach ($cfg as $line) {
-    if (strpos($line,'default:') !== false) {
-      $found = true;
+    if (strpos($line, 'default:') !== FALSE) {
+      $found = TRUE;
     }
-    if (strpos($line,'break;') !== false) {
+    if (strpos($line, 'break;') !== FALSE) {
       $last_break = $index;
     }
     $index++;
   }
 
   if (!$found) {
-    array_splice($cfg, $last_break+1, 0, $new_cfg_str);
+    array_splice($cfg, $last_break + 1, 0, $new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old7.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added default install type to config file.</li>\n";
@@ -1926,8 +2025,8 @@ if (!isset($_POST['update'])) {
   //$priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_metadata_security TO 'notts_login'@'". self::$cfg_db_host . "'";
   //  $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".password_tokens TO 'notts_login'@'". self::$cfg_db_host . "'";
 
-    @ob_flush();
-    @flush();
+  @ob_flush();
+  @flush();
 
 
   // 06/02/2012 - Change schools from text to integers in courses table
@@ -1955,7 +2054,7 @@ if (!isset($_POST['update'])) {
     $sch_data->close();
 
     // Populate the new field
-    foreach($schools as $school_name=>$schoolid) {
+    foreach ($schools as $school_name => $schoolid) {
       $adjust = $mysqli->prepare("UPDATE courses SET schoolid=? WHERE school=?");
       $adjust->bind_param('is', $schoolid, $school_name);
       $adjust->execute();
@@ -1976,26 +2075,26 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "  \$cfg_ldap_user_prefix   = 'sAMAccountName='; // Nottingham specific.  Please change.\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   $ldap_pass_location = 0;
   $index = 0;
   foreach ($cfg as $line) {
-    if (strpos($line,'cfg_ldap_user_prefix') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_ldap_user_prefix') !== FALSE) {
+      $found = TRUE;
     }
-    if (strpos($line,'cfg_ldap_bind_password') !== false) {
+    if (strpos($line, 'cfg_ldap_bind_password') !== FALSE) {
       $ldap_pass_location = $index;
     }
     $index++;
   }
 
   if (!$found) {
-    array_splice($cfg, $ldap_pass_location+1, 0, $new_cfg_str);
+    array_splice($cfg, $ldap_pass_location + 1, 0, $new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old8.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added LDAP user search prefix to config file.\n";
@@ -2005,15 +2104,15 @@ if (!isset($_POST['update'])) {
   }
 
   // 24/02/2012 - Add new page character set to configuration file.
-  $new_cfg_str =  array("\$cfg_page_charset = 'UTF-8';\n");
+  $new_cfg_str = array("\$cfg_page_charset = 'UTF-8';\n");
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
   //remove refrances to old vars
   $cfg_new = array();
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'cfg_page_charset') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_page_charset') !== FALSE) {
+      $found = TRUE;
     }
     $cfg_new[] = $line;
   }
@@ -2021,8 +2120,8 @@ if (!isset($_POST['update'])) {
   if (!$found) {
     $index = 0;
     foreach ($cfg as $line) {
-      if (strpos($line, '$protocol') !== false) {
-        $found = true;
+      if (strpos($line, '$protocol') !== FALSE) {
+        $found = TRUE;
         break;
       }
       $index++;
@@ -2037,7 +2136,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old8.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added page charset to configuration file.</li>\n";
@@ -2062,25 +2161,25 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".announcements TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".announcements TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".announcements TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".announcements TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'</li>\n";
 
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-  $sql = "GRANT UPDATE ON " . $cfg_db_database . ".password_tokens TO '" . $cfg_db_username . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT UPDATE ON " . $cfg_db_database . ".password_tokens TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT UPDATE ON " . $cfg_db_database . ".password_tokens TO '" . $cfg_db_username . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT UPDATE ON " . $cfg_db_database . ".password_tokens TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'</li>\n";
 
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sessions TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sessions TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sessions TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sessions TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
   ob_flush();
   flush();
@@ -2120,12 +2219,12 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() == 0) {
     echo "<li>CREATE INDEX idx_std_set ON standards_setting (std_set)</li>\n";
-    if(!$mysqli->real_query("CREATE INDEX idx_std_set ON standards_setting (std_set)")) {
-        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_std_set ON standards_setting (std_set)")) {
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_setterID ON standards_setting (setterID)</li>\n";
-    if(!$mysqli->real_query("CREATE INDEX idx_setterID ON standards_setting (setterID)")) {
-        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_setterID ON standards_setting (setterID)")) {
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
   }
   $result->close();
@@ -2136,12 +2235,12 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() == 0) {
     echo "<li>CREATE INDEX idx_log_metadata_student_grade ON log_metadata (paperID)</li>\n";
-    if(!$mysqli->real_query("CREATE INDEX idx_log_metadata_student_grade ON log_metadata (student_grade)")) {
-        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_log_metadata_student_grade ON log_metadata (student_grade)")) {
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_log_metadata_paperID ON log_metadata (paperID)</li>\n";
-    if(!$mysqli->real_query("CREATE INDEX idx_log_metadata_paperID ON log_metadata (paperID)")) {
-        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_log_metadata_paperID ON log_metadata (paperID)")) {
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
   }
   $result->close();
@@ -2152,20 +2251,20 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() == 0) {
     echo "<li>CREATE INDEX idx_log0_screen ON log0 (screen)</li>\n";
-    if(!$mysqli->real_query("CREATE INDEX idx_log0_screen ON log0 (screen)")) {
-        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_log0_screen ON log0 (screen)")) {
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_log1_screen ON log1 (screen)</li>\n";
-    if(!$mysqli->real_query("CREATE INDEX idx_log1_screen ON log1 (screen)")) {
-        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_log1_screen ON log1 (screen)")) {
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_log2_screen ON log2 (screen)</li>\n";
-    if(!$mysqli->real_query("CREATE INDEX idx_log2_screen ON log2 (screen)")) {
-        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_log2_screen ON log2 (screen)")) {
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_log3_screen ON log3 (screen)</li>\n";
-    if(!$mysqli->real_query("CREATE INDEX idx_log3_screen ON log3 (screen)")) {
-        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_log3_screen ON log3 (screen)")) {
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
   }
   $result->close();
@@ -2176,14 +2275,14 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() == 0) {
     echo "<li>CREATE INDEX idx_courses_name ON courses (name)</li>\n";
-    if(!$mysqli->real_query("CREATE INDEX idx_courses_name ON courses (name)")) {
-        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_courses_name ON courses (name)")) {
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
   }
   $result->close();
 
-    @ob_flush();
-    @flush();
+  @ob_flush();
+  @flush();
 
 
   // 19/03/2012 - Add 'reference_material' and 'paper_reference' tables
@@ -2201,17 +2300,17 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_material TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_material TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'</li>\n";
 
     // Table to hold Reference modules
     $adjust = $mysqli->prepare("CREATE TABLE reference_modules (id int not null primary key auto_increment, refID mediumint unsigned, moduleID mediumint unsigned)");
@@ -2221,17 +2320,17 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'</li>\n";
 
     // Table to assign Reference material to papers
     $adjust = $mysqli->prepare("CREATE TABLE reference_papers (id int not null primary key auto_increment, paperID mediumint, refID mediumint)");
@@ -2241,17 +2340,17 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_papers TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_papers TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'</li>\n";
   }
   $result->close();
 
@@ -2932,7 +3031,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type,'unsigned') === false) {
+  if (strpos($data_type, 'unsigned') === FALSE) {
     $adjust = $mysqli->prepare("ALTER TABLE recent_papers CHANGE COLUMN paperID paperID mediumint unsigned");
     $adjust->execute();
     $adjust->close();
@@ -2949,7 +3048,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type,'unsigned') === false) {
+  if (strpos($data_type, 'unsigned') === FALSE) {
     $adjust = $mysqli->prepare("ALTER TABLE reference_papers CHANGE COLUMN paperID paperID mediumint unsigned");
     $adjust->execute();
     $adjust->close();
@@ -2966,7 +3065,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type,'unsigned') === false) {
+  if (strpos($data_type, 'unsigned') === FALSE) {
     $adjust = $mysqli->prepare("ALTER TABLE relationships CHANGE COLUMN paper_id paper_id mediumint unsigned");
     $adjust->execute();
     $adjust->close();
@@ -2983,7 +3082,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type,'2019/20') === false) {
+  if (strpos($data_type, '2019/20') === FALSE) {
     $adjust = $mysqli->prepare("ALTER TABLE relationships CHANGE COLUMN calendar_year calendar_year enum('2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')");
     $adjust->execute();
     $adjust->close();
@@ -3000,7 +3099,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type,'2019/20') === false) {
+  if (strpos($data_type, '2019/20') === FALSE) {
     $adjust = $mysqli->prepare("ALTER TABLE sessions CHANGE COLUMN calendar_year calendar_year enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')");
     $adjust->execute();
     $adjust->close();
@@ -3017,7 +3116,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type,'2019/20') === false) {
+  if (strpos($data_type, '2019/20') === FALSE) {
     $adjust = $mysqli->prepare("ALTER TABLE sessions CHANGE COLUMN calendar_year calendar_year enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')");
     $adjust->execute();
     $adjust->close();
@@ -3034,7 +3133,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type,'2019/20') === false) {
+  if (strpos($data_type, '2019/20') === FALSE) {
     $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN calendar_year calendar_year enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')");
     $adjust->execute();
     $adjust->close();
@@ -3051,7 +3150,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type,'2019/20') === false) {
+  if (strpos($data_type, '2019/20') === FALSE) {
     $adjust = $mysqli->prepare("ALTER TABLE objectives CHANGE COLUMN calendar_year calendar_year enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')");
     $adjust->execute();
     $adjust->close();
@@ -3306,7 +3405,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type,'unsigned') === false) {
+  if (strpos($data_type, 'unsigned') === FALSE) {
     $adjust = $mysqli->prepare("ALTER TABLE admin_access CHANGE COLUMN userID userID int unsigned");
     $adjust->execute();
     $adjust->close();
@@ -3353,17 +3452,17 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '" . $cfg_db_sysadmin_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '" . $cfg_db_sysadmin_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
   }
 
   @ob_flush();
@@ -3371,28 +3470,28 @@ if (!isset($_POST['update'])) {
 
   // 24/04/2012 - Add default timezone config file.
   $new_cfg_str = array();
-  $new_cfg_str[] =  "  date_default_timezone_set(\$cfg_timezone);\n";
+  $new_cfg_str[] = "  date_default_timezone_set(\$cfg_timezone);\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   $target_line = 53;
   $cur_line = 0;
   foreach ($cfg as $line) {
-    if (strpos($line,'date_default_timezone_set') !== false) {
-      $found = true;
+    if (strpos($line, 'date_default_timezone_set') !== FALSE) {
+      $found = TRUE;
     }
-    if (strpos($line,'cfg_timezone') !== false) {
+    if (strpos($line, 'cfg_timezone') !== FALSE) {
       $target_line = $cur_line + 1;
     }
     $cur_line++;
   }
 
   if (!$found) {
-    array_splice($cfg,$target_line,0,$new_cfg_str);
+    array_splice($cfg, $target_line, 0, $new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add default timezone config file.</li>\n";
@@ -3400,28 +3499,28 @@ if (!isset($_POST['update'])) {
     flush();
   }
 
-    @ob_flush();
-    @flush();
+  @ob_flush();
+  @flush();
 
 
   // 24/04/2012 - Add temp directory specification to config file.
   $new_cfg_str = array();
-  $new_cfg_str[] =  "\$cfg_tmpdir = '/tmp/';\n";
+  $new_cfg_str[] = "\$cfg_tmpdir = '/tmp/';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'cfg_tmpdir') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_tmpdir') !== FALSE) {
+      $found = TRUE;
     }
   }
 
   if (!$found) {
-    array_splice($cfg,22,0,$new_cfg_str);
+    array_splice($cfg, 22, 0, $new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add temp directory to config file.</li>\n";
@@ -3429,19 +3528,19 @@ if (!isset($_POST['update'])) {
     flush();
   }
 
-    @ob_flush();
-    @flush();
+  @ob_flush();
+  @flush();
 
 
   // 25/04/2012 - Remove define lines not used.
   $new_cfg_str = array();
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,"define('TOUCHSTONE'") === false and strpos($line,"define('DIR_SEPARATOR'") === false and strpos($line,"\$news") === false) {
+    if (strpos($line, "define('TOUCHSTONE'") === FALSE and strpos($line, "define('DIR_SEPARATOR'") === FALSE and strpos($line, "\$news") === FALSE) {
       $new_cfg_str[] = $line;
     } else {
-      $found = true;
+      $found = TRUE;
     }
   }
 
@@ -3452,7 +3551,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Removed unneccessary lines from configuration (defines and \$news).</li>\n";
@@ -3476,20 +3575,21 @@ if (!isset($_POST['update'])) {
     $adjust->execute();
     $adjust->close();
     echo "<li>TRUNCATE staff_help</li>\n";
-    $file=file_get_contents('../install/staff_help.sql');
+    $file = file_get_contents('../install/staff_help.sql');
     $mysqli->multi_query($file);
     if ($mysqli->error) {
       try {
         throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());        exit();
+        echo nl2br($e->getTraceAsString());
+        exit();
       }
     }
     $ext = '';
     while ($mysqli->more_results()) {
       $mysqli->next_result();
-      if ($mysqli->insert_id>0) $ext = $ext . ' '.  $mysqli->insert_id;
+      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
     }
     echo "<li>LOADED staff_help: " . $ext . "</li>\n";
   }
@@ -3509,7 +3609,7 @@ if (!isset($_POST['update'])) {
     $adjust->close();
     echo "<li>TRUNCATE student_help</li>\n";
 
-    $file=file_get_contents('../install/student_help.sql');
+    $file = file_get_contents('../install/student_help.sql');
     $mysqli->multi_query($file);
     if ($mysqli->error) {
       try {
@@ -3520,37 +3620,37 @@ if (!isset($_POST['update'])) {
         exit();
       }
     }
-    $ext='';
+    $ext = '';
     while ($mysqli->more_results()) {
       $mysqli->next_result();
-      if ($mysqli->insert_id>0) $ext = $ext . ' '.  $mysqli->insert_id;
+      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
     }
-    echo "<li>LOADED student_help: " . $ext. "</li>\n";
+    echo "<li>LOADED student_help: " . $ext . "</li>\n";
   }
 
   // 02/05/2012 - Update the version number
   $cfg_new = array();
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   foreach ($cfg as $line) {
-    if (strpos($line,'rogo_version') !== false) {
+    if (strpos($line, 'rogo_version') !== FALSE) {
       $cfg_new[] = "\$rogo_version = '$version';\n";
     } else {
       $cfg_new[] = $line;
     }
   }
-  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
-    @ob_flush();
-    @flush();
+  @ob_flush();
+  @flush();
 
   // Staff user was missing DELETE privileges on properties in the install script
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
-    @ob_flush();
-    @flush();
+  @ob_flush();
+  @flush();
 
   // 15/05/2012 -  Add LTI Tables
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND TABLE_SCHEMA='$cfg_db_database'");
@@ -3558,21 +3658,21 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($column_type);
   $result->fetch();
-  if ( $result->num_rows() == 0 ) {
+  if ($result->num_rows() == 0) {
     // Table to hold Reference material
-    $sql="CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_user` (  `oauth_consumer_key` varchar(200) NOT NULL,  `user_id` varchar(200) NOT NULL,  `rogo_id` int(11) NOT NULL,  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`user_id`),  KEY `rogo_id` (`rogo_id`)) ENGINE=InnoDB";
+    $sql = "CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_user` (  `oauth_consumer_key` varchar(200) NOT NULL,  `user_id` varchar(200) NOT NULL,  `rogo_id` int(11) NOT NULL,  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`user_id`),  KEY `rogo_id` (`rogo_id`)) ENGINE=InnoDB";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>\n";
 
-    $sql="CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_resource` (  `oauth_consumer_key` varchar(255) NOT NULL DEFAULT '',  `lti_resource_id` varchar(255) NOT NULL,  `internal_id` varchar(255) DEFAULT NULL,  `itype` varchar(255) DEFAULT NULL,  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),  KEY `destination2` (`itype`),  KEY `destination` (`internal_id`)) ENGINE=InnoDB";
+    $sql = "CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_resource` (  `oauth_consumer_key` varchar(255) NOT NULL DEFAULT '',  `lti_resource_id` varchar(255) NOT NULL,  `internal_id` varchar(255) DEFAULT NULL,  `itype` varchar(255) DEFAULT NULL,  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),  KEY `destination2` (`itype`),  KEY `destination` (`internal_id`)) ENGINE=InnoDB";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>\n";
 
-    $sql="CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_keys` (  `id` mediumint(9) NOT NULL AUTO_INCREMENT,  `oauth_consumer_key` char(255)NOT NULL,  `secret` char(255)DEFAULT NULL,  `name` char(255) DEFAULT NULL,  `context_id` char(255) DEFAULT NULL,  `created_at` datetime NOT NULL, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`id`)) ENGINE=InnoDB";
+    $sql = "CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_keys` (  `id` mediumint(9) NOT NULL AUTO_INCREMENT,  `oauth_consumer_key` char(255)NOT NULL,  `secret` char(255)DEFAULT NULL,  `name` char(255) DEFAULT NULL,  `context_id` char(255) DEFAULT NULL,  `created_at` datetime NOT NULL, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`id`)) ENGINE=InnoDB";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
@@ -3581,32 +3681,32 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_keys TO '".  $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_keys TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
     echo "<li>$sql</li>\n";
 
-    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_keys TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_keys TO '" . $cfg_db_sysadmin_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
     echo "<li>$sql</li>\n";
 
-    $sql="GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_user TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_user TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
     echo "<li>$sql</li>\n";
 
-    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_resource TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_resource TO '" . $cfg_db_sysadmin_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
     echo "<li>$sql</li>\n";
 
-    $sql="GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_resource TO '". $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_resource TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
     echo "<li>$sql</li>\n";
 
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".lti_resource TO '". $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".lti_resource TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
     echo "<li>$sql</li>\n";
   }
-    @ob_flush();
-    @flush();
+  @ob_flush();
+  @flush();
 
   // 16/05/2012 - Enlarge the size of the password field to hold higher level of encryption SHA-512.
   $data_len = 0;
@@ -3630,28 +3730,28 @@ if (!isset($_POST['update'])) {
   // 16/05/2012 - Add encryption salt to config file.
   $new_cfg_str = array();
   //$new_cfg_str[] =  "  \$cfg_encrypt_salt = 'K8m2hzflkgjzdfgj';\n";
-  $new_cfg_str[] =  "  \$cfg_encrypt_salt       = '" . gen_random_salt() . "';    // Do not alter if not on LDAP.\n";
+  $new_cfg_str[] = "  \$cfg_encrypt_salt       = '" . gen_random_salt() . "';    // Do not alter if not on LDAP.\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   $cur_line = 0;
   $target_line = 66;
   foreach ($cfg as $line) {
-    if (strpos($line,'cfg_encrypt_salt') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_encrypt_salt') !== FALSE) {
+      $found = TRUE;
     }
-    if (strpos($line,'cfg_use_ldap') !== false) {
+    if (strpos($line, 'cfg_use_ldap') !== FALSE) {
       $target_line = $cur_line + 1;
     }
     $cur_line++;
   }
 
   if (!$found) {
-    array_splice($cfg,$target_line,0,$new_cfg_str);
+    array_splice($cfg, $target_line, 0, $new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add \$cfg_encrypt_salt to config file.</li>\n";
@@ -3669,26 +3769,26 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($column_type);
   $result->fetch();
-  if ($result->num_rows() == 0 ) {
-    $sql="ALTER TABLE `lti_keys` CHANGE `created_at` `deleted` DATETIME NULL , CHANGE `updated_at` `updated_at` DATETIME NOT NULL";
+  if ($result->num_rows() == 0) {
+    $sql = "ALTER TABLE `lti_keys` CHANGE `created_at` `deleted` DATETIME NULL , CHANGE `updated_at` `updated_at` DATETIME NOT NULL";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
 
-    $sql="UPDATE `lti_keys` set `deleted`=NULL WHERE `deleted`='0000-00-00 00:00:00'";
+    $sql = "UPDATE `lti_keys` set `deleted`=NULL WHERE `deleted`='0000-00-00 00:00:00'";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
 
-    $sql="ALTER TABLE `lti_resource` CHANGE `updated` `updated` DATETIME NOT NULL";
+    $sql = "ALTER TABLE `lti_resource` CHANGE `updated` `updated` DATETIME NOT NULL";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
 
-    $sql="ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` DATETIME NOT NULL";
+    $sql = "ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` DATETIME NOT NULL";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
@@ -3741,17 +3841,17 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 28/05/2012 - Add new autosave timeout.
-  $new_cfg_str =  array("\n//Paper auto saving time out in seconds - default 180s == 3 minutes\n",
-                        "  \$cfg_autosave_timeout = 180;\n");
+  $new_cfg_str = array("\n//Paper auto saving time out in seconds - default 180s == 3 minutes\n",
+    "  \$cfg_autosave_timeout = 180;\n");
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
   //remove refrances to old vars
   $cfg_new = array();
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'cfg_autosave_timeout') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_autosave_timeout') !== FALSE) {
+      $found = TRUE;
     }
     $cfg_new[] = $line;
   }
@@ -3759,8 +3859,8 @@ if (!isset($_POST['update'])) {
   if (!$found) {
     $index = 0;
     foreach ($cfg as $line) {
-      if (strpos($line, '$cfg_hour_warning') !== false) {
-        $found = true;
+      if (strpos($line, '$cfg_hour_warning') !== FALSE) {
+        $found = TRUE;
         break;
       }
       $index++;
@@ -3775,15 +3875,15 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old10.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added  new autosave timeout to configuration file.</li>\n";
   }
 
- // 28/05/2012 - Add permission for external examiners to view student help.
+  // 28/05/2012 - Add permission for external examiners to view student help.
   $priv_SQL = array();
-  $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
   $priv_SQL[] = "FLUSH PRIVILEGES";
   foreach ($priv_SQL as $sql) {
     $mysqli->query($sql);
@@ -3815,33 +3915,33 @@ if (!isset($_POST['update'])) {
     $adjust->close();
     echo "<li>ALTER TABLE scheduling ADD UNIQUE idx_paperID (paperID)</li>\n";
 
-    $sql = "GRANT SELECT, INSERT, DELETE ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, DELETE ON " . $cfg_db_database . ".scheduling TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, DELETE ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, DELETE ON " . $cfg_db_database . ".scheduling TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
     $new_cfg_str = array();
-    $new_cfg_str[] =  "\$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.";
+    $new_cfg_str[] = "\$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.";
     $cfg = file($cfg_web_root . 'config/config.inc.php');
-    $found = false;
+    $found = FALSE;
     $cur_line = 0;
     $target_line = 24;
     foreach ($cfg as $line) {
-      if (strpos($line,'cfg_summative_mgmt') !== false) {
-        $found = true;
+      if (strpos($line, 'cfg_summative_mgmt') !== FALSE) {
+        $found = TRUE;
       }
-      if (strpos($line,'cfg_tmpdir') !== false) {
+      if (strpos($line, 'cfg_tmpdir') !== FALSE) {
         $target_line = $cur_line + 1;
       }
       $cur_line++;
     }
 
     if (!$found) {
-      array_splice($cfg,$target_line,0,$new_cfg_str);
+      array_splice($cfg, $target_line, 0, $new_cfg_str);
       if (file_exists($cfg_web_root . 'config/config.inc.php')) {
         rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
       }
 
-      if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
         echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
       }
       echo "<li>Add \$cfg_summative_mgmt = false.</li>\n";
@@ -3870,9 +3970,9 @@ if (!isset($_POST['update'])) {
     $adjust->close();
     echo "<li>ALTER TABLE performance_main ADD INDEX idx_q_id (q_id)</li>\n";
 
-    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_main TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_main TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_main TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_main TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
     $adjust = $mysqli->prepare("CREATE TABLE performance_details (perform_id int, part_no tinyint, p tinyint, d tinyint)");
     $adjust->execute();
@@ -3886,15 +3986,15 @@ if (!isset($_POST['update'])) {
     $adjust->close();
     echo "<li>ALTER TABLE performance_details ADD INDEX idx_perform_id (perform_id)</li>\n";
 
-    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_details TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_details TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_details TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_details TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
   }
   $result->close();
 
   // Delete permission might be missing on log_late for staff (21/06/2012)
   $priv_SQL = array();
-  $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_late TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_late TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $priv_SQL[] = "FLUSH PRIVILEGES";
   foreach ($priv_SQL as $sql) {
     $mysqli->query($sql);
@@ -3922,9 +4022,9 @@ if (!isset($_POST['update'])) {
 
   // Delete permission might be missing on papers and state (28/06/2012)
   $priv_SQL = array();
-  $priv_SQL[] = "GRANT DELETE ON " . $cfg_db_database . ".papers TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-  $priv_SQL[] = "GRANT DELETE ON " . $cfg_db_database . ".state TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-  $priv_SQL[] = "GRANT DELETE ON " . $cfg_db_database . ".state TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $priv_SQL[] = "GRANT DELETE ON " . $cfg_db_database . ".papers TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+  $priv_SQL[] = "GRANT DELETE ON " . $cfg_db_database . ".state TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+  $priv_SQL[] = "GRANT DELETE ON " . $cfg_db_database . ".state TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
   $priv_SQL[] = "FLUSH PRIVILEGES";
   foreach ($priv_SQL as $sql) {
     $mysqli->query($sql);
@@ -3942,7 +4042,7 @@ if (!isset($_POST['update'])) {
   $result->execute();
   $result->store_result();
   $result->bind_result($name);
-  $skip_table = Array('help_log'=>1,'help_searches'=>1,'help_tutorial_log'=>1,'staff_help'=>1,'student_help'=>1);
+  $skip_table = Array('help_log' => 1, 'help_searches' => 1, 'help_tutorial_log' => 1, 'staff_help' => 1, 'student_help' => 1);
   while ($result->fetch()) {
     if (isset($skip_table[$name])) {
       continue;
@@ -4055,22 +4155,22 @@ if (!isset($_POST['update'])) {
 
   // 03/08/2012 - Add session change over date.
   $new_cfg_str = array();
-  $new_cfg_str[] =  "\$cfg_academic_year_start = '07/01';\n";
+  $new_cfg_str[] = "\$cfg_academic_year_start = '07/01';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  $found = FALSE;
   foreach ($cfg as $line) {
-    if (strpos($line,'cfg_academic_year_start') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_academic_year_start') !== FALSE) {
+      $found = TRUE;
     }
   }
 
   if (!$found) {
-    array_splice($cfg,20,0,$new_cfg_str);
+    array_splice($cfg, 20, 0, $new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added academic_year_start to config file.</li>\n";
@@ -4088,10 +4188,10 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($facultyID);
   $result->fetch();
-  $rows=$result->num_rows();
+  $rows = $result->num_rows();
   $result->close();
   if ($rows == 0) {
-    $facultyID = FacultyUtils::add_faculty('UNKNOWN Faculty', $mysqli );
+    $facultyID = FacultyUtils::add_faculty('UNKNOWN Faculty', $mysqli);
     echo "<li>Adding Unknown Faculty</li>\n";
   }
 
@@ -4100,31 +4200,31 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($id1);
   $result->fetch();
-  $rows=$result->num_rows();
+  $rows = $result->num_rows();
   $result->close();
   if ($rows == 0) {
-    $scoolID = SchoolUtils::add_school(  $facultyID, 'UNKNOWN School', $mysqli);
+    $scoolID = SchoolUtils::add_school($facultyID, 'UNKNOWN School', $mysqli);
     echo "<li>Adding Unknown School</li>\n";
   }
 
   // 24/08/2012 -- add access to on External Examiners
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".staff_help TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".staff_help TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".users TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".users TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
-  $sql = "GRANT SELECT,INSERT ON " . $cfg_db_database . ".help_log TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT,INSERT ON " . $cfg_db_database . ".help_log TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
-  $sql = "GRANT SELECT,INSERT ON " . $cfg_db_database . ".help_searches TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT,INSERT ON " . $cfg_db_database . ".help_searches TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
@@ -4153,7 +4253,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $sql="CREATE INDEX `idx_facultyID` ON `schools` (`facultyID`)";
+    $sql = "CREATE INDEX `idx_facultyID` ON `schools` (`facultyID`)";
     echo "<li>$sql</li>\n";
     if (!$mysqli->real_query($sql)) {
       echo "<li>" . $mysqli->error . "</li>\n";
@@ -4162,37 +4262,35 @@ if (!isset($_POST['update'])) {
   $result->close();
 
 
-
-
   // cczsa1 2012/09/05 update table structure to match new lti (somehow this has dissapeared from this file somewhere in the past)
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_user' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='oauth_consumer_key'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
   $result->fetch();
-  if ($result->num_rows() > 0 ) {
-    $sql="UPDATE `lti_user` set oauth_consumer_key=CONCAT(oauth_consumer_key,':',user_id)";
+  if ($result->num_rows() > 0) {
+    $sql = "UPDATE `lti_user` set oauth_consumer_key=CONCAT(oauth_consumer_key,':',user_id)";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
 
-    $sql="ALTER TABLE `lti_user` DROP COLUMN user_id";
+    $sql = "ALTER TABLE `lti_user` DROP COLUMN user_id";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
-    $sql="ALTER TABLE `lti_user` CHANGE `oauth_consumer_key` `lti_user_key` varchar(255)";
+    $sql = "ALTER TABLE `lti_user` CHANGE `oauth_consumer_key` `lti_user_key` varchar(255)";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
-    $sql="ALTER TABLE `lti_user` CHANGE `rogo_id` `lti_user_equ` varchar(255) NOT NULL";
+    $sql = "ALTER TABLE `lti_user` CHANGE `rogo_id` `lti_user_equ` varchar(255) NOT NULL";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
-    $sql="ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` datetime NOT NULL";
+    $sql = "ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` datetime NOT NULL";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
@@ -4202,7 +4300,6 @@ if (!isset($_POST['update'])) {
   @flush();
 
 
-
   $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_context' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
   $result->execute();
   $result->store_result();
@@ -4210,18 +4307,18 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() > 0) {
 
-    $sql="UPDATE `lti_context` SET `oaurth_consumer_key`=CONCAT(`oauth_consumer_key`,':',`lti_context_id`)";
+    $sql = "UPDATE `lti_context` SET `oaurth_consumer_key`=CONCAT(`oauth_consumer_key`,':',`lti_context_id`)";
     $adjust = $mysqli->prepare($sql);
 
     echo "<li>$sql</li>";
 
-    $sql="ALTER TABLE `lti_context` DROP `lti_context_id`";
+    $sql = "ALTER TABLE `lti_context` DROP `lti_context_id`";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
 
-    $sql="ALTER TABLE `lti_context` CHANGE `oauth_consumer_key` `lti_context_key` VARCHAR( 255 ) NOT NULL ";
+    $sql = "ALTER TABLE `lti_context` CHANGE `oauth_consumer_key` `lti_context_key` VARCHAR( 255 ) NOT NULL ";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
@@ -4240,31 +4337,31 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() > 0) {
 
-    $sql="UPDATE `lti_resource` SET `lti_resource_id`=CONCAT(`oauth_consumer_key`,':',`lti_resource_id`)";
+    $sql = "UPDATE `lti_resource` SET `lti_resource_id`=CONCAT(`oauth_consumer_key`,':',`lti_resource_id`)";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
 
-    $sql="ALTER TABLE `lti_resource` DROP `oauth_consumer_key`";
+    $sql = "ALTER TABLE `lti_resource` DROP `oauth_consumer_key`";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
 
-    $sql="ALTER TABLE `lti_resource` CHANGE `lti_resource_id` `lti_resource_key` VARCHAR( 255 ) NOT NULL ";
+    $sql = "ALTER TABLE `lti_resource` CHANGE `lti_resource_id` `lti_resource_key` VARCHAR( 255 ) NOT NULL ";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
 
-    $sql="ALTER TABLE `lti_resource` CHANGE `itype` `internal_type` VARCHAR( 255 ) NOT NULL ";
+    $sql = "ALTER TABLE `lti_resource` CHANGE `itype` `internal_type` VARCHAR( 255 ) NOT NULL ";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>";
 
-    $sql="ALTER TABLE `lti_resource` CHANGE `updated` `updated_on` DATETIME";
+    $sql = "ALTER TABLE `lti_resource` CHANGE `updated` `updated_on` DATETIME";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
@@ -4281,7 +4378,7 @@ if (!isset($_POST['update'])) {
   $result->bind_result($column_type);
   $result->fetch();
   if ($result->num_rows() > 0) {
-    $sql="ALTER TABLE `lti_keys` CHANGE `updated_at` `updated_on` DATETIME";
+    $sql = "ALTER TABLE `lti_keys` CHANGE `updated_at` `updated_on` DATETIME";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
@@ -4293,26 +4390,26 @@ if (!isset($_POST['update'])) {
   @flush();
 
   // 03/09/2012 Permissions fix for staff users
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log5 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_metadata TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_metadata TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
-  $sql="GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
   //cczsa1 2012-09-07 add permission to sid table for main user
-  $sql="GRANT SELECT, INSERT ON " . $cfg_db_database . ".sid TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".sid TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
   @ob_flush();
   @flush();
 
-  $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_username . "'@'" . $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
@@ -4342,7 +4439,7 @@ if (!isset($_POST['update'])) {
 
 
   // 17/09/2012 cczsa1 update to make database consistant with new install
-  $findsql="SELECT column_type from information_schema.COLUMNS where TABLE_NAME='student_modules'  and TABLE_SCHEMA='". $cfg_db_database . "' and column_type=\"enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15')\"";
+  $findsql = "SELECT column_type from information_schema.COLUMNS where TABLE_NAME='student_modules'  and TABLE_SCHEMA='" . $cfg_db_database . "' and column_type=\"enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15')\"";
   $result = $mysqli->prepare($findsql);
   $result->execute();
   $result->store_result();
@@ -4350,7 +4447,7 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() > 0) {
 
-    $sql="ALTER TABLE `student_modules` CHANGE `calendar_year` `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL";
+    $sql = "ALTER TABLE `student_modules` CHANGE `calendar_year` `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
@@ -4362,7 +4459,7 @@ if (!isset($_POST['update'])) {
   @flush();
 
 
-  $findsql="SELECT column_type from information_schema.COLUMNS where TABLE_NAME='users_metadata'  and TABLE_SCHEMA='". $cfg_db_database . "'  and column_name='userID' and column_type like 'int%unsigned'";
+  $findsql = "SELECT column_type from information_schema.COLUMNS where TABLE_NAME='users_metadata'  and TABLE_SCHEMA='" . $cfg_db_database . "'  and column_name='userID' and column_type like 'int%unsigned'";
   $result = $mysqli->prepare($findsql);
   $result->execute();
   $result->store_result();
@@ -4370,7 +4467,7 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() == 0) {
 
-    $sql="ALTER TABLE `users_metadata` CHANGE `userID` `userID` int unsigned default NULL";
+    $sql = "ALTER TABLE `users_metadata` CHANGE `userID` `userID` int unsigned default NULL";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
@@ -4382,7 +4479,7 @@ if (!isset($_POST['update'])) {
   @flush();
 
 
-  $findsql="SELECT column_type from information_schema.COLUMNS where TABLE_NAME='textbox_remark'  and TABLE_SCHEMA='". $cfg_db_database . "'  and column_name='paperID' and column_type like 'mediumint%unsigned'";
+  $findsql = "SELECT column_type from information_schema.COLUMNS where TABLE_NAME='textbox_remark'  and TABLE_SCHEMA='" . $cfg_db_database . "'  and column_name='paperID' and column_type like 'mediumint%unsigned'";
   $result = $mysqli->prepare($findsql);
   $result->execute();
   $result->store_result();
@@ -4390,7 +4487,7 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() == 0) {
 
-    $sql="ALTER TABLE `textbox_remark` CHANGE `paperID` `paperID` mediumint unsigned DEFAULT NULL";
+    $sql = "ALTER TABLE `textbox_remark` CHANGE `paperID` `paperID` mediumint unsigned DEFAULT NULL";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
@@ -4403,13 +4500,13 @@ if (!isset($_POST['update'])) {
 
   //remove references to old vars
   $cfg_new = array();
-  $found = false;
-  foreach ($cfg as $curline=>$line) {
+  $found = FALSE;
+  foreach ($cfg as $curline => $line) {
 
-    if (strpos($line,'cfg_lti_allow_module_self_reg') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_lti_allow_module_self_reg') !== FALSE) {
+      $found = TRUE;
     }
-    if (strpos($line,'cfg_sms_api') !== false) {
+    if (strpos($line, 'cfg_sms_api') !== FALSE) {
       $target_line = $curline + 1;
     }
     $cfg_new[] = $line;
@@ -4417,14 +4514,14 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     //add the new config chunk
-    array_splice($cfg_new,$target_line,0,$new_cfg_str);
+    array_splice($cfg_new, $target_line, 0, $new_cfg_str);
 
 
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old12.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add lti config variables</li>\n";
@@ -4433,7 +4530,7 @@ if (!isset($_POST['update'])) {
   @ob_flush();
   @flush();
 
-  $sql = "GRANT INSERT ON " . $cfg_db_database . ".sms_imports TO '". $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+  $sql = "GRANT INSERT ON " . $cfg_db_database . ".sms_imports TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
@@ -4680,7 +4777,7 @@ QUERY;
   $result->execute();
   $result->store_result();
   $result->fetch();
-  if ($result->num_rows() == 0 ) {
+  if ($result->num_rows() == 0) {
     $adjust = $mysqli->prepare("CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int, constraint pk_properties_module primary key (property_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1");
     $adjust->execute();
     $adjust->close();
@@ -4689,7 +4786,7 @@ QUERY;
     flush();
     $res = $mysqli->prepare("SELECT id, moduleid FROM modules");
     $res->execute();
-    $res->bind_result($id,$moduleid);
+    $res->bind_result($id, $moduleid);
     $modules = array();
     while ($res->fetch()) {
       $modules[$moduleid] = $id;
@@ -4704,13 +4801,13 @@ QUERY;
     echo "<br />Populating properties_modules ";
     $i = 0;
     while ($res->fetch()) {
-      $paper_modules = explode(',',$moduleID);
+      $paper_modules = explode(',', $moduleID);
       foreach ($paper_modules as $m) {
         $insert_res->bind_param('ii', $property_id, $modules[$m]);
         $insert_res->execute();
       }
       echo ".";
-      if($i % 80 == 0) echo "\n";
+      if ($i % 80 == 0) echo "\n";
       ob_flush();
       flush();
     }
@@ -4738,8 +4835,8 @@ QUERY;
     echo "<br/>Populating questions_modules ";
     $i = 0;
     while ($res->fetch()) {
-      $questions_modules = explode(',',$moduleID);
-      foreach($questions_modules as $m) {
+      $questions_modules = explode(',', $moduleID);
+      foreach ($questions_modules as $m) {
         $insert_res->bind_param('ii', $q_id, $modules[$m]);
         $insert_res->execute();
       }
@@ -4772,13 +4869,13 @@ QUERY;
     echo "<br />Populating properties_modules ";
     $i = 0;
     while ($res->fetch()) {
-      $folder_modules = explode(',',$moduleID);
+      $folder_modules = explode(',', $moduleID);
       foreach ($folder_modules as $m) {
         $insert_res->bind_param('ii', $folder_id, $modules[$m]);
         $insert_res->execute();
       }
       echo ".";
-      if($i % 80 == 0) echo "\n";
+      if ($i % 80 == 0) echo "\n";
       ob_flush();
       flush();
     }
@@ -4793,13 +4890,13 @@ QUERY;
     //translate moduleID to idMod in all tables
     $mysqli->query("ALTER TABLE sessions DROP PRIMARY KEY");
     $tables = array(
-                    'objectives ' => 'moduleID',
-                    'relationships' => 'module_id',
-                    'sessions' => 'moduleID',
-                    'sms_imports' => 'moduleid',
-                    'student_modules' => 'moduleid',
-                    'teams' => 'name'
-                    );
+      'objectives ' => 'moduleID',
+      'relationships' => 'module_id',
+      'sessions' => 'moduleID',
+      'sms_imports' => 'moduleid',
+      'student_modules' => 'moduleid',
+      'teams' => 'name'
+    );
     foreach ($tables as $table => $col) {
       echo "<li>UPDATING $col in $table</li>";
       ob_flush();
@@ -4828,7 +4925,7 @@ QUERY;
   $result->close();
 
   // 02/11/2012 - Add new field to special_needs table.
-  $findsql = "SELECT column_type from information_schema.COLUMNS where TABLE_NAME='special_needs'  and TABLE_SCHEMA='". $cfg_db_database . "'  and column_name='unanswered'";
+  $findsql = "SELECT column_type from information_schema.COLUMNS where TABLE_NAME='special_needs'  and TABLE_SCHEMA='" . $cfg_db_database . "'  and column_name='unanswered'";
   $result = $mysqli->prepare($findsql);
   $result->execute();
   $result->store_result();
@@ -4852,14 +4949,13 @@ QUERY;
   $findsql->store_result();
   $findsql->bind_result($data_type);
   $findsql->fetch();
-  if($findsql->num_rows() == 0) {
-    $sql="ALTER TABLE `sys_errors` ADD COLUMN `variables` LONGTEXT, ADD COLUMN `backtrace` LONGTEXT";
+  if ($findsql->num_rows() == 0) {
+    $sql = "ALTER TABLE `sys_errors` ADD COLUMN `variables` LONGTEXT, ADD COLUMN `backtrace` LONGTEXT";
     $adjust = $mysqli->prepare($sql);
     if ($mysqli->error) {
       try {
         throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $sql", $mysqli->errno);
-      }
-      catch (Exception $e) {
+      } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
       }
@@ -4871,71 +4967,69 @@ QUERY;
   $findsql->close();
 
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to questions.
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".questions_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".questions_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".questions_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".questions_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".modules_staff TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".modules_staff TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
   //brzsw 15/11/2012 - Add new grants for staff users needing to add modules to papers.
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
 
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
-  $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
 
   //brzab3 14/11/2012 - Add new grants for student users needing select from schools.
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".schools TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".schools TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".schools TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".schools TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>\n";
 
   //BP 22/11/2012 - Add new grants for invigilator users needing select from properties_modules
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'</li>\n";
 
   //brzsw 22/11/2012 - Add new grants for invigilator users needing select from properties_modules
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'</li>\n";
 
-  $mysqli->query( 'FLUSH PRIVILEGES' );
-
-
+  $mysqli->query('FLUSH PRIVILEGES');
 
 
   // 30/11/2012
   // Adding a new table log_start_time
 
 
-  $updater_utils = new UpdaterUtils( $mysqli, $cfg_db_database );
+  $updater_utils = new UpdaterUtils($mysqli, $cfg_db_database);
 
-  $does_table_exist = $updater_utils->does_table_exist( 'log_start_time' );
+  $does_table_exist = $updater_utils->does_table_exist('log_start_time');
 
-  if ( $does_table_exist === false ){
+  if ($does_table_exist === FALSE) {
 
-    $sql    = 'CREATE TABLE
+    $sql = 'CREATE TABLE
                  log_start_time(   id           int            PRIMARY KEY NOT NULL AUTO_INCREMENT
                                  , userID       int            unsigned NOT NULL
                                  , paperID      int            unsigned NOT NULL
@@ -4944,10 +5038,10 @@ QUERY;
                              ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
 
 
-    $result = $mysqli->query( $sql );
+    $result = $mysqli->query($sql);
 
-    if ( $result !== TRUE ) {
-      printf( "Error: %s\n", $mysqli->error );
+    if ($result !== TRUE) {
+      printf("Error: %s\n", $mysqli->error);
     }
 
 
@@ -4955,69 +5049,67 @@ QUERY;
   }
 
 
-
-  $does_column_exist = $updater_utils->does_column_exist( 'log_metadata'
-                                                        , 'completed' );
-  if( $does_column_exist === false ){
+  $does_column_exist = $updater_utils->does_column_exist('log_metadata'
+    , 'completed');
+  if ($does_column_exist === FALSE) {
 
     $sql = "ALTER TABLE log_metadata ADD completed DATETIME NULL";
 
-    $result = $mysqli->query( $sql );
+    $result = $mysqli->query($sql);
 
-    if ( $result !== TRUE ) {
-      printf( "Error: %s\n", $mysqli->error );
+    if ($result !== TRUE) {
+      printf("Error: %s\n", $mysqli->error);
     }
 
     echo '<li>' . $sql . '</li>' . ".\n";
   }
 
 
+  $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.log_start_time TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+  $mysqli->query($sql);
+  echo '<li>' . $sql . '</li>' . "\n";
 
-  $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.log_start_time TO \'' . $cfg_db_student_user . '\'@\'' .  $cfg_db_host . '\'';
-  $mysqli->query( $sql );
-  echo '<li>' . $sql  . '</li>' . "\n";
-
-  $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_start_time TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
-  $mysqli->query( $sql );
-  echo '<li>' . $sql  . '</li>' . "\n";
-  $mysqli->query( 'FLUSH PRIVILEGES' );
+  $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_start_time TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo '<li>' . $sql . '</li>' . "\n";
+  $mysqli->query('FLUSH PRIVILEGES');
 
   //cczsa1 13/12/2012 - Convert authentication in config file to  new format
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
-  $addauth = true;
-  foreach($cfg as $k=>$v) {
-    $found=strpos($v,'$authentication = array(');
-    if($found!==false) {
-      $addauth=false;
+  $addauth = TRUE;
+  foreach ($cfg as $k => $v) {
+    $found = strpos($v, '$authentication = array(');
+    if ($found !== FALSE) {
+      $addauth = FALSE;
     }
-    $found=strpos($v,'$cfg_encrypt_salt');
-    if($found!==false) {
-      $saltloc=$k+1;
+    $found = strpos($v, '$cfg_encrypt_salt');
+    if ($found !== FALSE) {
+      $saltloc = $k + 1;
     }
   }
 
-  if ($addauth == true) {
-    $extra1='';
+  if ($addauth == TRUE) {
+    $extra1 = '';
     $array_new[] = "\n";
-    $array_new[] = '$authentication = array(' ."\n";
-    if ($cfg_use_ldap === true) {
-      $extra1=',';
+    $array_new[] = '$authentication = array(' . "\n";
+    if ($cfg_use_ldap === TRUE) {
+      $extra1 = ',';
     }
-    $array_new[]="array('internaldb', array('table' => 'users', 'username_col' => 'username', 'passwd_col' => 'password', 'id_col' => 'id', 'encrypt' => 'SHA-512', 'encrypt_salt' => \$cfg_encrypt_salt), 'Internal Database')$extra1\n";
-    if ($cfg_use_ldap=== true) {
-      $array_new[]="array('ldap',array( 'table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix),'LDAP')\n";
+    $array_new[] = "array('internaldb', array('table' => 'users', 'username_col' => 'username', 'passwd_col' => 'password', 'id_col' => 'id', 'encrypt' => 'SHA-512', 'encrypt_salt' => \$cfg_encrypt_salt), 'Internal Database')$extra1\n";
+    if ($cfg_use_ldap === TRUE) {
+      $array_new[] = "array('ldap',array( 'table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix),'LDAP')\n";
     }
 
-    $array_new[]=");\n";
-    array_splice($cfg,$saltloc,0,$array_new);
+    $array_new[] = ");\n";
+    array_splice($cfg, $saltloc, 0, $array_new);
 
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root. 'config/config.inc.php', $cfg_web_root . 'config/config.inc.preauthchange.php');
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.preauthchange.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     } else {
       echo"<li>Changed config file to new authentication method</li>";
@@ -5027,23 +5119,21 @@ QUERY;
 
   //2012/12/14 cczsa1 add permission for db user to access properties & ip_addresses tables for guestlogin authentication module.
 
-  $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.properties TO \'' . $cfg_db_username . '\'@\'' .  $cfg_db_host . '\'';
-  $mysqli->query( $sql );
-  echo '<li>' . $sql  . '</li>' . "\n";
-  $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.ip_addresses TO \'' . $cfg_db_username . '\'@\'' .  $cfg_db_host . '\'';
-  $mysqli->query( $sql );
-  echo '<li>' . $sql  . '</li>' . "\n";
-  
-  
-  
+  $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.properties TO \'' . $cfg_db_username . '\'@\'' . $cfg_db_host . '\'';
+  $mysqli->query($sql);
+  echo '<li>' . $sql . '</li>' . "\n";
+  $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.ip_addresses TO \'' . $cfg_db_username . '\'@\'' . $cfg_db_host . '\'';
+  $mysqli->query($sql);
+  echo '<li>' . $sql . '</li>' . "\n";
+
 
   //2012/12/14 bparish - Add new table to support a timer for summative exams
 
-  $does_table_exist = $updater_utils->does_table_exist( 'log_lab_end_time' );
+  $does_table_exist = $updater_utils->does_table_exist('log_lab_end_time');
 
-  if ( $does_table_exist === false ){
+  if ($does_table_exist === FALSE) {
 
-    $sql    = 'CREATE TABLE
+    $sql = 'CREATE TABLE
                  log_lab_end_time(   id            int unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
                                    , labID         int unsigned NOT NULL
                                    , paperID       int unsigned NOT NULL
@@ -5052,35 +5142,35 @@ QUERY;
                                    , CONSTRAINT    key_lab_paper_invig_time UNIQUE ( labID, paperID, invigilatorID, end_time )
                                  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
 
-    $result = $mysqli->query( $sql );
+    $result = $mysqli->query($sql);
 
-    if ( $result !== TRUE ) {
-      printf( "Error: %s\n", $mysqli->error );
+    if ($result !== TRUE) {
+      printf("Error: %s\n", $mysqli->error);
     }
 
     echo '<li>CREATE TABLE log_lab_end_time ( id, labID, paperID, invigilatorID, end_time )</li>';
 
-    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_lab_end_time TO \'' . $cfg_db_inv_username . '\'@\''. $cfg_db_host . "'";
-    $mysqli->query( $sql );
-    echo '<li>' . $sql  . '</li>' . "\n";
+    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_lab_end_time TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo '<li>' . $sql . '</li>' . "\n";
 
-    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.log_lab_end_time TO \'' . $cfg_db_student_user . '\'@\''. $cfg_db_host . "'";
-    $mysqli->query( $sql );
-    echo '<li>' . $sql  . '</li>' . "\n";
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.log_lab_end_time TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo '<li>' . $sql . '</li>' . "\n";
 
-    $mysqli->query( 'FLUSH PRIVILEGES' );
+    $mysqli->query('FLUSH PRIVILEGES');
 
   }
 
   //18/12/2012 brzsw - Add new table to support a timer for summative exams
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'</li>";
 
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'</li>";
-  
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'</li>";
+
   ob_flush();
   flush();
 
@@ -5100,7 +5190,7 @@ QUERY;
     flush();
   }
   $result->close();
-  
+
   // 20/12/2012 - Add new line to configuration file
   $new_cfg_str = array();
   $new_cfg_str[] = "  \$cfg_autosave_settimeout = 10;\r\n";
@@ -5110,13 +5200,13 @@ QUERY;
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $cfg_new = array();
-  $found = false;
-  foreach ($cfg as $curline=>$line) {
+  $found = FALSE;
+  foreach ($cfg as $curline => $line) {
 
-    if (strpos($line,'cfg_autosave_settimeout') !== false) {
-      $found = true;
+    if (strpos($line, 'cfg_autosave_settimeout') !== FALSE) {
+      $found = TRUE;
     }
-    if (strpos($line,'cfg_autosave_timeout') !== false or strpos($line,'cfg_autosave_frequency') !== false) {
+    if (strpos($line, 'cfg_autosave_timeout') !== FALSE or strpos($line, 'cfg_autosave_frequency') !== FALSE) {
       $target_line = $curline + 1;
     }
     $cfg_new[] = $line;
@@ -5124,32 +5214,32 @@ QUERY;
 
   if (!$found) {
     //add the new config chunk
-    array_splice($cfg_new,$target_line,0,$new_cfg_str);
+    array_splice($cfg_new, $target_line, 0, $new_cfg_str);
 
 
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old13.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add cfg_summative_mgmt config variable</li>\n";
   }
-  
+
   // 20/12/2012 - Remove line from configuration file
   $cfg_new = array();
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  foreach ($cfg as $curline=>$line) {
-    if (strpos($line,'cfg_autosave_timeout') === false) {
+  foreach ($cfg as $curline => $line) {
+    if (strpos($line, 'cfg_autosave_timeout') === FALSE) {
       $cfg_new[] = $line;
     }
   }
-  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
-  
-  
+
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
