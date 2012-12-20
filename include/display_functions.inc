@@ -57,8 +57,11 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
       
       for ($a=1; $a<=$tmp_answer_no; $a++) {
         $current_q_id = $screen_data[$i][$a-1][1];
-        $current_answer = $answers[$current_q_id];
-        
+        if (isset($answers[$current_q_id])) {
+          $current_answer = $answers[$current_q_id];
+        } else {
+          $current_answer = '';
+        }
         switch ($screen_data[$i][$a-1][0]) {
           case 'area':
             $parts = explode(';', $current_answer);

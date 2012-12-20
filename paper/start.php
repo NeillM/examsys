@@ -838,16 +838,18 @@ if ($css != '') {
   
   //look for braching and random questions and overwrite as needed
   $questions_array = array();
+  $hidden_html = '';
   foreach ($tmp_questions_array as $question) {
     if ($question['q_type'] == 'random') {
       $question = randomQOverwrite($question, $paper_type, $user_answers, $screen_data, $used_questions, $mysqli);
       if ($current_screen == $question['screen']) {
-        echo "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
+        $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
       }
     } elseif ($question['q_type'] == 'keyword_based') {
       $question = keywordQOverwrite($question, $paper_type, $user_answers, $screen_data, $used_questions, $mysqli, $string);
+      //var_dump($current_screen, $question['screen'], $question['q_id']);
       if ($current_screen == $question['screen'] and $question['q_id'] != -1) {
-        echo "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
+        $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
       }
     }
     $questions_array[] = $question;
@@ -900,6 +902,7 @@ if ($css != '') {
   } else {
     echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . $url_mod . "\">";
   }
+  echo $hidden_html;
   ?>
     <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <?php

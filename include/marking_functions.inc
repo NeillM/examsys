@@ -99,7 +99,7 @@ function get_log_metadata_record_id($u_id, $p_id, $sessionid, $db) {
  * @param mixed $userroles
  *
  */
-function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $student_year, $attempt, $userroles, $preview_q_id=null) {
+function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $student_year, $attempt, $userroles, $preview_q_id = null) {
   global $original_paper_type; //TODO: move this into the function definition
   $screen_no =  $_POST['old_screen'];
   $extra_duration = $_POST['previous_duration'];
@@ -205,18 +205,18 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
   $all_items_abstain = true;
   $dismiss = '';
   foreach ($paper_array as &$row) {
-    $q_log_id = 0;
-    $q_id = $row['q_id'];
-    $scenario = $row['scenario'];
-    $q_type = $row['q_type'];
-    $option_text = $row['option_text'];
-    $q_media = $row['q_media'];
-    $correct = $row['correct'];
-    $score_method = $row['score_method'];
-    $display_method = $row['display_method'];
-    $marks_correct = $row['marks_correct'];
-    $marks_incorrect = $row['marks_incorrect'];
-    $marks_partial = $row['marks_partial'];
+    $q_log_id         = 0;
+    $q_id             = $row['q_id'];
+    $scenario         = $row['scenario'];
+    $q_type           = $row['q_type'];
+    $option_text      = $row['option_text'];
+    $q_media          = $row['q_media'];
+    $correct          = $row['correct'];
+    $score_method     = $row['score_method'];
+    $display_method   = $row['display_method'];
+    $marks_correct    = $row['marks_correct'];
+    $marks_incorrect  = $row['marks_incorrect'];
+    $marks_partial    = $row['marks_partial'];
 
     $display_pos = $row['display_pos'];
     if ($old_q_id != $q_id or $display_pos != $old_display_pos) {
