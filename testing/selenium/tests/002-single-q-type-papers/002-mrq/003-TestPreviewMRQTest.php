@@ -17,8 +17,6 @@ class TestPreviewMRQTest extends PHPUnit_Extensions_SeleniumTestCase
 
   public function testCompletePaperCorrect()
   {
-    // TODO: test order of alphabetic questions
-
     do_student_login($this, 'teststudent4', 'fiu&52K3');
 
     $this->open("/user_index.php?id=21355414508102");
