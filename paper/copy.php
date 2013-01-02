@@ -26,10 +26,12 @@
   require_once '../include/errors.inc';
   require_once '../include/media.inc';
   require_once '../include/mapping.inc';
+  
   require_once '../classes/paperutils.class.php';
+  require_once '../classes/logger.class.php';
 
   // Check to see if that paper name has already been taken.
-  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title=?");
+  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ?");
   $result->bind_param('s', $_POST['new_paper']);
   $result->execute();
   $result->store_result();
@@ -48,7 +50,7 @@
 
     <table border="0" cellpadding="4" cellspacing="1" style="background-color:#FF0000">
     <tr>
-    <td valign="middle" style="background-color: white"><img src="../artwork/access_denied.png" width="48" height="48" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['titlewarning']; ?></span></td>
+    <td valign="middle" style="background-color: white"><img src="../artwork/red_warning.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['titlewarning']; ?></span></td>
     </tr>
     <tr>
     <td style="background-color:#FFC0C0">
@@ -91,13 +93,13 @@
     $new_paper_id = copyProperties($userObject->get_user_ID(), $mysqli, $calendar_year, $new_calendar_year, $moduleIDs);
 
     // Copy the question pointers (papers table)
-    $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper=?");
+    $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper = ?");
     $result->bind_param('i', $_POST['paperID']);
     $result->execute();
     $result->store_result();
     $result->bind_result($question, $screen, $display_pos);
     $qids = array();
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       $qids[] = $question;
       $addPaper = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
       $addPaper->bind_param('iiii', $new_paper_id, $question, $screen, $display_pos);
@@ -202,11 +204,11 @@
         if ($marks_correct == '') $marks_correct = 1;
         if ($line == 0) {  // First record - write out the question, all the rest are options.
         	$bloom = (empty($bloom)) ? NULL : $bloom;
-          $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type,theme,scenario,leadin,correct_fback,incorrect_fback,display_method,notes,ownerID,q_media,q_media_width, q_media_height, creation_date,last_edited,bloom,scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked,std,status,q_option_order,score_method) VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
+          $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
 
           if ($mysqli->error) {
             try {
-              throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+              throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> ", $mysqli->errno);
             }
             catch (Exception $e) {
               echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -217,7 +219,7 @@
           $addQuestion->bind_param('ssssssssisssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
           $addQuestion->execute();
           $new_qids[] = $question_id = $mysqli->insert_id;
-          if($q_type == 'calculation') $caculation_qid_map[$q_id] = $question_id;
+          if ($q_type == 'calculation') $caculation_qid_map[$q_id] = $question_id;
           $addQuestion->close();
 
           // Add in a record to the papers table.
@@ -227,25 +229,19 @@
           $addNewPaper->close();
 
           // Create a track changes record to say where question was copied from.
-          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Copied Question', ?, ?, ?, ?, NOW(), 'Copied Question')");
-          $trackChange->bind_param('iiss', $question_id, $userObject->get_user_ID(), $question, $question_id);
-          $trackChange->execute();
-          $trackChange->close();
-
+          $logger = new Logger($mysqli);
+          $logger->track_change('Copied Question', $question_id, $userObject->get_user_ID(), $question, $question_id, 'Copied Question');
           // Create a track changes record to say new question added to paper.
-          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Alter Paper', ?, ?, '', ?, NOW(), 'Add Question')");
-          $trackChange->bind_param('iis', $new_paper_id, $userObject->get_user_ID(), $question_id);
-          $trackChange->execute();
-          $trackChange->close();
-
+          $logger->track_change('Alter Paper', $new_paper_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
+          
           // Lookup and copy the keywords
-          $keyword_result = $mysqli->prepare("SELECT keywordID FROM keywords_question WHERE q_id=?");
+          $keyword_result = $mysqli->prepare("SELECT keywordID FROM keywords_question WHERE q_id = ?");
           $keyword_result->bind_param('i', $question);
           $keyword_result->execute();
           $keyword_result->store_result();
           $keyword_result->bind_result($keywordID);
           while ($keyword_result->fetch()){
-            $addKeyword = $mysqli->prepare("INSERT INTO keywords_question VALUES (?,?)");
+            $addKeyword = $mysqli->prepare("INSERT INTO keywords_question VALUES (?, ?)");
             $addKeyword->bind_param('ii', $question_id, $keywordID);
             $addKeyword->execute();
             $addKeyword->close();
@@ -257,22 +253,22 @@
         if($q_type == 'calculation') {
           $options = explode(',',$option_text);
           $new_option_text = array();
-          foreach($options as $opt) {
-            if(stristr($opt,'var') !== false) {
-              $old_calc_q_id = substr($opt,4);
+          foreach ($options as $opt) {
+            if (stristr($opt, 'var') !== false) {
+              $old_calc_q_id = substr($opt, 4);
               if(!isset($caculation_qid_map[$old_calc_q_id])) {
                 $error[] = sprintf($string['caculation_link_update_error'], $opt);
                 $new_option_text[] = $opt;
               } else {
-                $new_option_text[] = substr($opt,0,4) . $caculation_qid_map[$old_calc_q_id];
+                $new_option_text[] = substr($opt, 0, 4) . $caculation_qid_map[$old_calc_q_id];
               }
-            } else if(stristr($opt,'ans') !== false){
+            } elseif (stristr($opt,'ans') !== false){
               $old_calc_q_id = substr($opt,3);
-              if(!isset($caculation_qid_map[$old_calc_q_id])) {
+              if (!isset($caculation_qid_map[$old_calc_q_id])) {
                 $error[] = sprintf($string['caculation_link_update_error'], $opt);
                 $new_option_text[] = $opt;
               } else {
-                $new_option_text[] = substr($opt,0,3) . $caculation_qid_map[$old_calc_q_id];
+                $new_option_text[] = substr($opt, 0, 3) . $caculation_qid_map[$old_calc_q_id];
               }
             } else {
               $new_option_text[] = $opt;
