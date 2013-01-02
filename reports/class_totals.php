@@ -89,8 +89,8 @@ ob_start();
     document.getElementById('percent').value = tmpPercent;
 
     top_pos = currentY+scrOfY;
-    if (top_pos > ($(window).height() + scrOfY - 130)) {
-      top_pos = $(window).height() + scrOfY - 130;
+    if (top_pos > ($(window).height() + scrOfY - 140)) {
+      top_pos = $(window).height() + scrOfY - 140;
     }
     document.getElementById('menudiv').style.left = currentX+scrOfX + 'px';
     document.getElementById('menudiv').style.top = top_pos + 'px';
