@@ -18,7 +18,7 @@
 * 
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
+* @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
 require_once $cfg_web_root . 'classes/paperutils.class.php';

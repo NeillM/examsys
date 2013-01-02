@@ -18,7 +18,7 @@
 * Repository class for the log_start_time table
 * @author Ben Parish
 * @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
+* @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
 

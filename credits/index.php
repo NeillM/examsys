@@ -18,7 +18,7 @@
 * 
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
+* @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
   require '../include/load_config.php';
@@ -48,7 +48,7 @@
 <div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:5px">
 <br />
 <br />
-<p>Rogō <?php echo $configObject->get('rogo_version'); . ' ' . $string['msg']; ?></p>
+<p>Rogō <?php echo $configObject->get('rogo_version') . ' ' . $string['msg']; ?></p>
 <br />
 <table cellpadding="0" cellspacing="0" border="0" style="width:650px">
 <tr><td style="vertical-align:top; width:250px">

@@ -19,7 +19,7 @@
 * This script can only be called from start.php for ajax saving'.
 * @author Anthony Brown
 * @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
+* @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
 

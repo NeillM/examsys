@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['credits'] = 'Credits';
-$string['msg'] = 'is copyright &copy; 2012 and is held by the University of Nottingham. It is released under a <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GPL v3.0</a> open source license whereby partners can modify, extend and contribute to the project.';
+$string['msg'] = 'is copyright &copy; 2013 and is held by the University of Nottingham. It is released under a <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GPL v3.0</a> open source license whereby partners can modify, extend and contribute to the project.';
 $string['designprogramming'] = 'Design &amp; Programming';
 $string['languagepacks'] = 'Language Packs';
 $string['editor'] = 'WYSIWYG Editor';
