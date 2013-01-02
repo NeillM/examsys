@@ -263,14 +263,14 @@ var_dump(array($c_internal_id,$course_title));
     // sixth is the module title.  if it starts MISSING: then there is need for manual intervention to complete this correctly
 
 
-    if(count($data)===0) {
-      self::invalid_module_code($c_internal_id,$data,'no returned data');
+    if (count($data) === 0) {
+      self::invalid_module_code($c_internal_id, $data, 'no returned data');
     }
 
     return $data;
   }
 
-  function invalid_module_code($c_internal_id,$data,$location='') {
+  function invalid_module_code($c_internal_id, $data, $location='') {
     UserNotices::display_notice("Module code error", 'There is a problem with the module code as the translation code has resulted in an error.  Please contact Learning Team Support <a href="mailto:learning-team-support@nottingham.ac.uk">learning-team-support@nottingham.ac.uk</a>  Please include this debug info below:', '/artwork/access_denied.png', '#C00000');
 
     echo '<p>Incoming Module Code: ' . $c_internal_id .'</p>';

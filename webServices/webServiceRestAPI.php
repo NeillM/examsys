@@ -45,7 +45,7 @@ if (substr_count($_GET['url'], '/') > 0) {
 }
 if ($action == 'getModulePaperList') {
   $userroles = 'Staff';
-  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
 
   db_change_user($mysqli);
 

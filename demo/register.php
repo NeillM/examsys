@@ -42,7 +42,7 @@ if (strcmp($configObject->get('cfg_install_type'), 'demo') != 0) { // If the ins
 
 $userroles = 'SysAdmin';
 //$cfg_db_admin_user, $cfg_db_admin_passwd
-$mysqli = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+$mysqli = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
 
 db_change_user($mysqli);
 

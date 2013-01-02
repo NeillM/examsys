@@ -30,7 +30,7 @@
   require_once $cfg_web_root . 'classes/dbutils.class.php';
 
   // Connect to the database as the SCT user.
-  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sct_user, $cfg_db_sct_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sct_user, $cfg_db_sct_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
 
   // Check for key parameters
   check_var('paperID', 'POST', true, false);

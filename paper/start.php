@@ -237,7 +237,7 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $exam_duration, $calendar_year, $latex_needed, $password, $q_type, $q_id);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
-  UserNotices::access_denied($string['error_paper'], $output_header = false);
+  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
 }
 while ($stmt->fetch()) {
   $no_screens = $screen;

@@ -22,47 +22,47 @@
 * @package
 */
 
-  require_once $cfg_web_root . 'classes/dbutils.class.php';
-  require_once $cfg_web_root . 'include/auth.inc';
+require_once $cfg_web_root . 'classes/dbutils.class.php';
+require_once $cfg_web_root . 'include/auth.inc';
 
-  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+$mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
+
+if (isset($_GET['paperID'])) {
+  $paperID = $_GET['paperID'];
+} else {
+  $paperID = $_POST['paperID'];
+}
   
-  if (isset($_GET['paperID'])) {
-    $paperID = $_GET['paperID'];
-  } else {
-    $paperID = $_POST['paperID'];
+$stmt = $mysqli->prepare("SELECT password FROM properties WHERE property_id=?");
+$stmt->bind_param('i', $paperID);
+$stmt->execute();
+$stmt->bind_result($paper_password);
+$stmt->fetch();
+$stmt->close();
+
+if ($paper_password == '') {
+  $notice->access_denied($mysqli, $string, 'Access to this paper is not currently allowed.', true, true);
+}
+
+if (!isset($_SERVER['PHP_AUTH_USER'])) {
+  $notice->access_denied($mysqli, $string, 'Authentication with Rogo has failed.', true, true);
+} else {
+  if ($_SERVER['PHP_AUTH_USER'] != 'sctreviewer' or $_SERVER['PHP_AUTH_PW'] != $paper_password) {
+    $notice->access_denied($mysqli, $string, 'Authentication with Rogo has failed.', true, true);
   }
-    
-  $stmt = $mysqli->prepare("SELECT password FROM properties WHERE property_id=?");
+}
+
+
+function getPaperTitle($paperID, $db) {
+  $paper_title = '';
+  
+  $stmt = $db->prepare("SELECT paper_title FROM properties WHERE property_id=?");
   $stmt->bind_param('i', $paperID);
   $stmt->execute();
-  $stmt->bind_result($paper_password);
+  $stmt->bind_result($paper_title);
   $stmt->fetch();
   $stmt->close();
   
-  if ($paper_password == '') {
-    UserNotices::access_denied('Access to this paper is not currently allowed.', true, true);
-  }
-
-  if (!isset($_SERVER['PHP_AUTH_USER'])) {
-    UserNotices::access_denied('Authentication with Rogo has failed.', true, true);
-  } else {
-    if ($_SERVER['PHP_AUTH_USER'] != 'sctreviewer' or $_SERVER['PHP_AUTH_PW'] != $paper_password) {
-      UserNotices::access_denied('Authentication with Rogo has failed.', true, true);
-    }
-  }
-  
-  
-  function getPaperTitle($paperID, $db) {
-    $paper_title = '';
-    
-    $stmt = $db->prepare("SELECT paper_title FROM properties WHERE property_id=?");
-    $stmt->bind_param('i', $paperID);
-    $stmt->execute();
-    $stmt->bind_result($paper_title);
-    $stmt->fetch();
-    $stmt->close();
-    
-    return $paper_title;  
-  }
+  return $paper_title;  
+}
 ?>

@@ -27,7 +27,7 @@
 require_once 'staff_student_auth.inc';
   
 if (!$userObject->has_role('SysAdmin')) {
-  UserNotices::access_denied($string['accessdeniedsysadmin'], true);
+  $notice->access_denied($mysqli, $string, $string['accessdeniedsysadmin'], true);
 } 
 
 // Get staff_modules.

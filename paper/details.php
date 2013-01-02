@@ -293,6 +293,20 @@ function check_latex_random($q_ids, $mysqli) {
   return $latex;
 }
 
+$max_screen = 0;
+
+$result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos), paper_ownerID, paper_title, pass_mark, users.title, users.initials, users.surname, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%is') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed, retired, crypt_name, labs, calendar_year, exam_duration, display_question_mark, fullscreen, externals, internal_reviewers FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? AND paper_ownerID=users.id GROUP BY paper_title LIMIT 1");
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->bind_result($max_screen, $max_display_pos, $paper_ownerID, $paper_title, $pass_mark, $title, $initials, $surname, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed, $retired, $crypt_name, $labs, $session, $exam_duration, $display_question_mark, $fullscreen, $externals, $internal_reviewers);
+$result->fetch();
+$result->close();
+
+if (!isset($paper_title)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice($string['papernotfound'], $msg, '../artwork/red_warning_48.png', '#C00000', true, true);
+  exit();
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onscroll="scrollXY();" onclick="hideMenus(); hideAssStatsMenu(event);">
@@ -457,15 +471,6 @@ function check_latex_random($q_ids, $mysqli) {
   }
 </script>
 <?php
-  $max_screen = 0;
-
-  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos), paper_ownerID, paper_title, pass_mark, users.title, users.initials, users.surname, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%is') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed, retired, crypt_name, labs, calendar_year, exam_duration, display_question_mark, fullscreen, externals, internal_reviewers FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? AND paper_ownerID=users.id GROUP BY paper_title LIMIT 1");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($max_screen, $max_display_pos, $paper_ownerID, $paper_title, $pass_mark, $title, $initials, $surname, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed, $retired, $crypt_name, $labs, $session, $exam_duration, $display_question_mark, $fullscreen, $externals, $internal_reviewers);
-  $result->fetch();
-  $result->close();
-
   $paper_owner = $title  . ' ' . $initials . ', ' . $surname;
 
   if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
@@ -490,19 +495,6 @@ function check_latex_random($q_ids, $mysqli) {
 <body onscroll="scrollXY();"<?php if (isset($_GET['scrOfY'])) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ');"'; ?> onselectstart="return false">
 
 <?php
-  if (!isset($paper_title)) {
-  ?>
-    <div id="left-sidebar" class="sidebar">
-    </div>
-    <div id="content" class="content"><br />
-  <?php
-    echo "<div style=\"position:absolute; left:230px; top:10px\"><img src=\"../artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
-    echo "<h1 class=\"midblue_header\" style=\"margin-left:70px;font-size:160%\">" . $string['papernotfound'] . "</h1>\n";
-    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px; border:none; margin-left:70px; color:#C0C0C0; background-color:#C0C0C0\" />\n<div style=\"margin-top:10px; margin-left:70px\">" . sprintf($string['furtherassistance'], $support_email, $support_email). "</div>\n";
-    echo "</div>\n</body>\n</html>\n";
-    $mysqli->close();
-    exit;
-  }
   if ($deleted != '') {
   ?>
     <div id="left-sidebar" class="sidebar">

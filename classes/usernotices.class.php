@@ -45,20 +45,26 @@ Class UserNotices extends RogoStaticSingleton {
    * @param string $title_color color of the tile text
    *
    */
-  private function display_notice($title, $msg, $icon, $title_color = 'black') {
+  public function display_notice($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
     $configObject = Config::Instance();
     $rp = $configObject->get('cfg_root_path');
-    echo "<html>\n";
-    echo "<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
-    echo "<meta http-equiv=\"content-type\" content=\"text/html;charset={$rp}\" />\n";
-    echo "<title>$title</title>\n";
-    echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/body.css\" />\n";
-    echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/notice.css\" />\n";
-    echo "</head>\n<body>\n";
-    echo "<div style=\"position:absolute; left:10px; top:10px\">";
-    echo "<img src=\"$rp" . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
-    echo "<h1 style=\"color:$title_color\">$title</h1>\n";
-    echo "<hr />\n<p>$msg</p>";
+    
+    if ($output_header == true) {
+      echo "<html>\n";
+      echo "<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
+      echo "<meta http-equiv=\"content-type\" content=\"text/html;charset={$rp}\" />\n";
+      echo "<title>$title</title>\n";
+      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/body.css\" />\n";
+      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/notice.css\" />\n";
+      echo "</head>\n<body>\n";
+    }
+    echo "<div style=\"float:left; padding-left:10px; height:200px; width:60px\"><img src=\"$rp" . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
+    echo "<div><h1 style=\"color:$title_color\">$title</h1>\n";
+    echo "<hr />\n<p>$msg</p></div>";
+
+    if ($output_footer == true) {
+      echo "\n</body>\n</html>";
+    }
   }
 
   /**
@@ -69,14 +75,9 @@ Class UserNotices extends RogoStaticSingleton {
    * @param string $output_header if true output 401 headers
    *
    */
-  public function access_denied($message, $output_header = false, $output_footer = true) {
-    global $mysqli, $string;
+  public function access_denied($mysqli, $string, $message, $output_header = false, $output_footer = true) {
     
-    $this->display_notice(  $string['accessdenied'], 
-                                  $message, 
-                                  '/artwork/access_denied.png', 
-                                  '#C00000'
-                                );
+    $this->display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
 
     if ($output_header == true) {
       echo '<div>';
@@ -88,9 +89,9 @@ Class UserNotices extends RogoStaticSingleton {
       echo '</div>';
     }
 
-    if ($output_footer) {
+    if ($output_footer == true) {
       echo "\n</body>\n</html>";
-      if(is_object($mysqli)) {
+      if (is_object($mysqli)) {
         $mysqli->close();
       }
     }

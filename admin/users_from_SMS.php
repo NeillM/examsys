@@ -46,7 +46,7 @@ require_once $path . '/classes/dbutils.class.php';
 require_once $path . '/classes/userutils.class.php';
 require_once $path . '/include/auth.inc';
 
-$mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+$mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
 
 // Calculate what the current academic session is.
 $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
@@ -69,14 +69,8 @@ while ($module_data->fetch()) {
   $replaced_module = str_replace('_UNMC','',$module);
   $replaced_module = str_replace('_UNNC','',$replaced_module);
   //------------------------------------
-$cnt=$module_data->num_rows;
+  $cnt=$module_data->num_rows;
   $cnt1=$module_data->num_rows();
-
-/*
-  print "Getting:  $replaced_module\r\n<br>";
-  @ob_flush();
-  @flush();
-*/
 
   // Get the currently enrolled students in Rogo for the module.
   $current_users = array();
@@ -100,12 +94,6 @@ $cnt=$module_data->num_rows;
     $current_users[$username]['student_id'] = $student_id;
   }
   $student_data->close();
-
-/*
-  print "<br><pre>";
-  print_r($current_users);
-  print "</pre><br>";
-*/
 
   // Look up SMS
   $returned_data = @file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);

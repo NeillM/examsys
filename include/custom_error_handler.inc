@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'classes/dbutils.class.php';
 set_error_handler("customErrorHandler");
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
-  global $debug_pagestart, $dbclass;
+  global $debug_pagestart, $dbclass, $notice;
   global $userObject; // TODO fix this fudge
 
   global $configObject;
@@ -79,7 +79,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
     // Query may fail if we try to insert while another statement is open.
     // Since we don't have a handle on the original statement, create another DB link
-    $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $configObject->get('dbclass'));
+    $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
     $paperID = NULL;
     if (isset($_GET['paperID'])) {

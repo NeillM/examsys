@@ -32,7 +32,7 @@ require_once $cfg_web_root . 'classes/moduleutils.class.php';
 global $userObject;
 
 if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
-  UserNotices::access_denied('You are attempting to access a <strong>Staff Only</strong> page.', true);
+  $notice->access_denied($mysqli, $string, 'You are attempting to access a <strong>Staff Only</strong> page.', true);
 }
 
 // Redirect External Examiners if they are straying
@@ -88,23 +88,25 @@ if ($userObject->has_role('SysAdmin')) {
 
       // Get the moduleID of the paper
       $moduleIDs = Paper_utils::get_modules($tmp_paperID, $mysqli);
-      $module_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
-
-      // Check which Schools the moduleID(s) are in.
-      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)"); 
-      $result->bind_param('i',$userObject->get_user_ID());
-      $result->execute();
-      $result->store_result();
-      $result->bind_result($paper_school);
-      if ($result->num_rows() > 0) {
-        $on_staff_module = true;
-      } else {
-        $on_staff_module = false;
+      $module_in = implode(',', array_keys($moduleIDs));
+      
+      if ($module_in != '') {
+        // Check which Schools the moduleID(s) are in.
+        $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)"); 
+        $result->bind_param('i', $userObject->get_user_ID());
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($paper_school);
+        if ($result->num_rows() > 0) {
+          $on_staff_module = true;
+        } else {
+          $on_staff_module = false;
+        }
+        $result->close();
       }
-      $result->close();
 
       // Override access for the system training module.
-      if ($on_staff_module == false and strpos($moduleID, 'SYSTEM') === false) {
+      if ($on_staff_module == false and strpos($module_in, 'SYSTEM') === false) {
         //TODO Why is this here!!
         $failed_paper = true;
       }
@@ -114,21 +116,27 @@ if ($userObject->has_role('SysAdmin')) {
 
   if ($on_staff_module == false and isset($_GET['module']) and $_GET['module'] != '') {
     // Is 'Admin' on the module as normal
-    $result = $mysqli->prepare("SELECT groupID FROM modules_staff WHERE memberID=? AND name=?");
-    $result->bind_param('is', $userObject->get_user_ID(), $_GET['module']);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($groupID);
-    if ($result->num_rows() > 0) {
-      $on_staff_module = true;
-    } else {
-      $on_staff_module = false;
+    $on_staff_module = false;
+    $module_list = explode(',', $_GET['module']);
+    foreach ($module_list as $module) {
+      if ($userObject->is_staff_user_on_module((int)$module)) {
+        $on_staff_module = true;
+      }
     }
-    $result->close();
-
+    
+    // Parse all the parts of the passed data for safety
+    $modules_passed = explode(',', $_GET['module']);
+    $module_in = array();
+    foreach ($modules_passed as $individual_module) {
+      if (is_numeric($individual_module)) {
+        $module_in[] = $individual_module;
+      }
+    }
+    $module_in = implode(',', $module_in);
+    
     if ($on_staff_module == false) { // Check which Schools the moduleID(s) are in and match school to 'Admin' person.
-      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND moduleid=?");
-      $result->bind_param('is', $userObject->get_user_ID(), $_GET['module']);
+      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)");
+      $result->bind_param('i', $userObject->get_user_ID());
       $result->execute();
       $result->store_result();
       $result->bind_result($paper_school);
@@ -143,7 +151,7 @@ if ($userObject->has_role('SysAdmin')) {
     // Override access for the system training module.
     if ($on_staff_module == false and strpos($_GET['module'], 'SYSTEM') === false) {
       $message = ($failed_paper) ? $string['denied_paper'] : $string['denied_folder'];
-      UserNotices::access_denied($message, false);
+      $notice->access_denied($mysqli, $string, $message, false);
     }
   }
 
@@ -181,7 +189,7 @@ if ($userObject->has_role('SysAdmin')) {
 
           if (!$is_admin) {
             $result->close();
-            UserNotices::access_denied($string['denied_question'], false);
+            $notice->access_denied($mysqli, $string, $string['denied_question'], false);
           }
         }
         $result->close();
@@ -203,9 +211,7 @@ if ($userObject->has_role('SysAdmin')) {
       }
     }
     if ($staff_module_match == false) {
-      
-      UserNotices::access_denied(str_replace('%s', module_utils::get_moduleid_from_id($_GET['module'], $mysqli), $string['denied_team']), false);
-      //access_denied(str_replace('%s', $_GET['module'], $string['denied_team']), false);
+      $notice->access_denied($mysqli, $string, str_replace('%s', module_utils::get_moduleid_from_id($_GET['module'], $mysqli), $string['denied_team']), false);
     }
   }
 
@@ -227,7 +233,7 @@ if ($userObject->has_role('SysAdmin')) {
       }
 
       if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
-        UserNotices::access_denied($string['denied_paper'], false);
+        $notice->access_denied($mysqli, $string, $string['denied_paper'], false);
       }
     }
   }
@@ -255,7 +261,7 @@ if ($userObject->has_role('SysAdmin')) {
 
         //allow acsess to the TRAIN module for training!
         if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
-          UserNotices::access_denied($string['denied_question'], false);
+          $notice->access_denied($mysqli, $string, $string['denied_question'], false);
         }
       }
     }

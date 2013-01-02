@@ -32,27 +32,7 @@ if (isset($cfg_web_root)) {
 }
 require_once $path . '/classes/usernotices.class.php';
 
-function display_notice($title, $msg, $icon, $title_color = 'black') {
-  global $configObject;
-  //This function has been replaced by usernotices.class.php
-  throw new Exception("This function has been replaced by usernotices.class.php");
-}
-
-/**
- * This function will output an access denied warning and terminate script execution
- *
- * @param string $message string message to display
- * @param string $output_header if true output 401 headers
- *
- */
-function access_denied($message, $output_header = false, $output_footer = true) {
-  global $mysqli, $string, $configObject;
-  //This function has been replaced by usernotices.class.php
-  throw new Exception("This function has been replaced by usernotices.class.php");
-  exit;
-
-}
-
+$notice = UserNotices::get_instance();
 
 /**
  * This is function ad_auth authenticat a user agenat LDAP or AD

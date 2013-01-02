@@ -53,9 +53,9 @@ while ($results->fetch()) {
 $results->close();
 
 if ($paper_match == false) {
-  UserNotices::access_denied($string['cannotfindexams'], false, true);
+  $notice->access_denied($mysqli, $string, $string['cannotfindexams'], false, true);
 } elseif ($ip_match == false) {
-  UserNotices::access_denied($string['denied_msg'], false, true);
+  $notice->access_denied($mysqli, $string, $string['denied_msg'], false, true);
 }
 ?>
 
