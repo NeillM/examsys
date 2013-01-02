@@ -69,9 +69,9 @@
       }
 
       if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
-        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" checked />&nbsp;$moduleid:&nbsp;$fullname</div>\n";
+        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" id=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $idMod . "\">$moduleid:&nbsp;$fullname</label></div>\n";
       } else {
-        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" />&nbsp;$moduleid:&nbsp;$fullname</div>\n";
+        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" id=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $idMod . "\">$moduleid:&nbsp;$fullname</label></div>\n";
       }
       $old_letter = strtoupper(substr($moduleid,0,1));
     }

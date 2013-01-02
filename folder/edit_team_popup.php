@@ -137,16 +137,17 @@ if (isset($_POST['submit'])) {
     }
    
     if ($match == true) {
-      echo "<div class=\"r2\" id=\"div$staff_no\"><input type=\"checkbox\" onclick=\"toggle('div$staff_no')\" name=\"staff$staff_no\" value=\"" . $tmp_id . "\" checked=\"checked\" />";
+      echo "<div class=\"r2\" id=\"div$staff_no\"><input type=\"checkbox\" onclick=\"toggle('div$staff_no')\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . "\" checked=\"checked\" />";
     } else {
-      echo "<div class=\"r1\" id=\"div$staff_no\"><input type=\"checkbox\" onclick=\"toggle('div$staff_no')\" name=\"staff$staff_no\" value=\"" . $tmp_id . "\" />";
+      echo "<div class=\"r1\" id=\"div$staff_no\"><input type=\"checkbox\" onclick=\"toggle('div$staff_no')\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . "\" />";
     }
+    echo "<label for=\"staff$staff_no\">";
     if ($tmp_first_names != '') {
       $display_text = $tmp_first_names;
     } else {
       $display_text = $tmp_initials;
     }
-    echo " " . $tmp_surname . '<span class="g">, ' . $display_text . '. ' . $tmp_title . "</span></div>\n";
+    echo " " . $tmp_surname . '<span class="g">, ' . $display_text . '. ' . $tmp_title . "</span></label></div>\n";
     $old_letter = strtoupper(substr($tmp_surname, 0, 1));
     $staff_no++;
   }

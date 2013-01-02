@@ -148,12 +148,12 @@ for ($size=200; $size<850; $size+=50) {
     }
     if ($match == true) {
       if ($userObject->is_staff_user_on_module($modID) or $userObject->has_role('SysAdmin')) {
-        echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"$modID\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'], 0, 60) . "</div>\n";
+        echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"$modID\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'], 0, 60) . "</label></div>\n";
       } else {
         echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"$modID\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
       }
     } else {
-      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"$modID\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'], 0, 60) . "</div>\n";
+      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"$modID\">&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'], 0, 60) . "</label></div>\n";
     }
     $module_no++;  
     $old_school = $module['school'];        

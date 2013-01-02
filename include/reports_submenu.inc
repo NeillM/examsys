@@ -65,13 +65,13 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
       extra_data += '&meta' + i + '=' + document.getElementById(meta_ref).value;
     }
     
-    document.getElementById('stats_menu').style.display='none';
-    if (document.stats_menu.absent.checked == true) {
+    document.getElementById('stats_menu').style.display = 'none';
+    if (document.getElementById('absent').checked == true) {
       absent = '&absent=1';
     } else {
       absent = '&absent=0';
     }
-    if (document.stats_menu.studentsonly.checked == true) {
+    if (document.getElementById('studentsonly').checked == true) {
       studentsonly = '&studentsonly=1';
     } else {
       studentsonly = '&studentsonly=0';
@@ -339,7 +339,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     echo "</td></tr>\n";
   }
   
-  echo "<tr><td colspan=\"2\">" . $string['incabsentcandidates'] . "&nbsp;<input type=\"checkbox\" name=\"absent\" value=\"1\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $string['studentsonly'] . "&nbsp;<input type=\"checkbox\" name=\"studentsonly\" value=\"1\" checked=\"checked\" /></td></tr>\n";
+  echo "<tr><td colspan=\"2\"><label for=\"absent\">" . $string['incabsentcandidates'] . "</label>&nbsp;<input type=\"checkbox\" name=\"absent\" id=\"absent\" value=\"1\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for=\"studentsonly\">" . $string['studentsonly'] . "</label>&nbsp;<input type=\"checkbox\" name=\"studentsonly\" id=\"studentsonly\" value=\"1\" checked=\"checked\" /></td></tr>\n";
 
   if ($paper_type == '3') {
     echo "<tr><td>" . $string['year'] . "</td><td><select name=\"repyear\">\n";
