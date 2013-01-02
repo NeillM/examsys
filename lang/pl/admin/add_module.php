@@ -17,7 +17,7 @@
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['entermoduleid'] = 'Podaj identyfikator modułu.';
 $string['entermoduletitle'] = 'Podaj tytuł modułu.';
-$string['selectschool'] = 'Please select a school for the module.'; // Niko
+$string['selectschool'] = 'Wybierz katedrę dla modułu.'; 
 $string['moduleid'] = 'Identyfikator modułu';
 $string['name'] = 'Nazwa';
 $string['school'] = 'Katedra';
