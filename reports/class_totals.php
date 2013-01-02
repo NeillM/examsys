@@ -574,9 +574,8 @@ if ($language != 'en') {
         $bg_color = '#FFC0C0';
         ?>
         <tr class="nonattend" id="res<?php echo $i+1 ?>"><td>&nbsp;</td>
-        <td onclick="popMenu('', '<?php echo $tmp_userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $adj_percent; ?>', event);<?php echo $onclick; ?>" />
-        &nbsp;<?php echo title; ?>&nbsp;<?php echo $surname ?>,&nbsp;
-        <span class="grey"><?php echo $first_names ?></span>
+        <td class="padl" onclick="popMenu('', '<?php echo $tmp_userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $adj_percent; ?>', event);<?php echo $onclick; ?>" />
+        <?php echo "$title&nbsp;$surname ,&nbsp;"; ?><span class="grey"><?php echo $first_names ?></span>
         <?php
         if ($user_results[$i]['student_id'] == '') {
           echo "<td class=\"padl grey\">" . $string['unknown'] . "</td>";

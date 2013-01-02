@@ -879,6 +879,9 @@ $cohort_size = 0;
 $out_of_range = 0;
 if ($_GET['absent'] == 1) {
 
+  $moduleID = Paper_utils::get_modules($_GET['paperID'],$mysqli);
+  $moduleID_in =  implode(',', array_keys($moduleID));
+
   // Get students in the cohort.
   $student_cohort = array();
 
@@ -894,28 +897,28 @@ if ($_GET['absent'] == 1) {
                        , moduleid
                        , gender
           FROM
-                ( student_modules, users, sid )
+                ( modules_student, modules, users, sid )
           WHERE
-                student_modules.userID = sid.userID
+                modules_student.userID = sid.userID
           AND
-                student_modules.userID = users.id
+                modules_student.userID = users.id
           AND
-                users.id = log_start_time.userID
+                modules_student.idMod = modules.id
           AND
                 users.roles
           LIKE
                 '%Student%'
           AND
-                moduleid
+                idMod
           IN
-                ('" . str_replace(",","','",$moduleID) . "')
+                ($moduleID_in)
           AND
-               calendar_year=?";
-
+               calendar_year = ?";
+               
   $result = $mysqli->prepare( $sql );
   $result->bind_param('s', $calendar_year);
   $result->execute();
-  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender, $log_log_start_time_id );
+  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
   while ($result->fetch()) {
     $student_cohort[$cohort_size]['username']    = $tmp_username;
     $student_cohort[$cohort_size]['tmp_userID']  = $tmp_userID;
