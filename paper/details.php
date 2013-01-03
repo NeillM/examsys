@@ -304,7 +304,7 @@ $result->close();
 
 if (!isset($paper_title)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice($string['papernotfound'], $msg, '../artwork/red_warning_48.png', '#C00000', true, true);
+  $notice->display_notice($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
   exit();
 }
 ?>

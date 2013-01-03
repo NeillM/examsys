@@ -39,5 +39,6 @@ $string['papernotavailablestudents'] = 'Paper not available to students at this 
 $string['nottakenpaper'] = '(You have not yet taken this paper.)';
 $string['donotstart'] = "Do <strong>not</strong> click 'Start &gt;&gt;' until instructed to by an invigilator.";
 $string['minutes'] = 'minutes';
-$string['papernotfound'] = 'The requested paper cannot be found.';
+$string['papernotfound'] = 'Paper not Found';
+$string['requestedpaper'] = 'The requested paper cannot be found.';
 ?>

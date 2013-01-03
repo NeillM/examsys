@@ -39,5 +39,6 @@ $string['papernotavailablestudents'] = 'Arkusz czasowo niedostępny dla student�
 $string['nottakenpaper'] = '(Nie podjąłeś się jeszcze rozwiązania tego arkusza.)';
 $string['donotstart'] = "<strong>Nie</strong> wybieraj przycisku 'Start &gt;&gt;' do czasu decyzji osoby nadzorującej.";
 $string['minutes'] = 'minut(y)';
-$string['papernotfound'] = 'Wybrany arkusz nie jest dostępny.';
+$string['papernotfound'] = 'Nie odnaleziono arkusza';
+$string['requestedpaper'] = 'Wybrany arkusz nie jest dostępny.';
 ?>

@@ -68,8 +68,8 @@ function displayPrevTake($markTotal, $adjPercent, $totalRandomMark, $marking_sty
 
 if ($userObject->is_special_needs()) {
   //look up special_needs data
-  if ($stmt = $mysqli->prepare("SELECT extra_time, textsize, font FROM special_needs WHERE userid=?")) {
-    $stmt->bind_param('i',$userObject->get_user_ID());
+  if ($stmt = $mysqli->prepare("SELECT extra_time, textsize, font FROM special_needs WHERE userid = ?")) {
+    $stmt->bind_param('i', $userObject->get_user_ID());
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($extra_time, $textsize, $font);
@@ -102,8 +102,8 @@ $paper_info->store_result();
 $paper_info->fetch();
 
 if ($paper_info->num_rows == 0) {
-  $tmp_string = sprintf($string['papernotfound']);
-  $notice->access_denied($mysqli, $string, $tmp_string, false);
+  $notice->display_notice($string['papernotfound'], sprintf($string['requestedpaper']), '../artwork/paper_not_found.png', $title_color = '#C00000', true, true);
+  exit;
 }
 $paper_info->free_result();
 $paper_info->close();
@@ -145,8 +145,7 @@ $remaining_seconds      = '';
 // It is isn't then the student hasn't started taking the exam and therefore the time remaining will be the
 // exam_duration for that paper
 
-if( $exam_duration !== null ){
-
+if ($exam_duration !== null){
   $display_remaining_time = true;
 
   $studentID         = $userObject->get_user_ID();
@@ -161,10 +160,7 @@ if( $exam_duration !== null ){
   $exam_duration     = $exam_duration * 60;
 
   $log_metadata      = new LogMetadata( $userObject, $property_id, $mysqli );
-
 }
-
-
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -189,7 +185,7 @@ if( $exam_duration !== null ){
   function startPaper() {
     var paperURL = "./paper/start.php?id=<?php echo $_GET['id']; ?>";
 <?php
-  if (($userObject->has_role(array('Staff'),'Admin')) and isset($_GET['mode']) and $_GET['mode'] == 'preview') {
+  if ($userObject->has_role(array('Staff','Admin','SysAdmin')) and isset($_GET['mode']) and $_GET['mode'] == 'preview') {
 ?>
     paperURL += '&mode=preview';
 <?php
@@ -202,7 +198,7 @@ if( $exam_duration !== null ){
     }
     document.getElementById('start').value = '<?php echo $string['restart']; ?>';
   }
-  function reviewPaper(started,type) {
+  function reviewPaper(started, type) {
     exam=window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       exam.focus();
