@@ -101,7 +101,7 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 <br />
 
 <div class="submenuheading" id="banktasks"><?php echo $string['questionbank']; ?></div>
-<table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:9px">
+<table class="sidebar_tbl">
 <tr><td class="ico"><a href="#" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Papers" /></a></td><td class="menuitem sub"><a href="#" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><span id="type"><?php echo $string['questionsbytype']; ?></span></a></td></tr>
 <tr><td class="ico"><a href="#" onclick="showMenu('popup2','banktasks','team',myOptions2,myURLs2,event); return false;"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Teams" /></a></td><td class="menuitem sub"><a href="#" onclick="showMenu('popup2','banktasks','team',myOptions2,myURLs2,event); return false;"><span id="team"><?php echo $string['questionsbyteam']; ?></span></a></td></tr>
 <tr><td class="ico"><a href="#" onclick="showMenu('popup3','banktasks','keyword',myOptions3,myURLs3,event); return false;"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Keywords" /></a></td><td class="menuitem sub"><a href="#" onclick="showMenu('popup3','banktasks','keyword',myOptions3,myURLs3,event); return false;"><span id="keyword"><?php echo $string['questionsbykeyword']; ?></span></a></td></tr>
