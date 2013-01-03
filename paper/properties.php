@@ -957,7 +957,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      }
      echo "<br />&nbsp;</div>";
 
-     echo "<tr>\n";
+     echo "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '4') {
        echo '<input type="hidden" name="bgcolor" value="' . $bgcolor . '" />';
@@ -1095,18 +1095,18 @@ if ($paper_type != '4' and $paper_type != '5') {
 </tr>
 </table>
 
-<table id="prologue" style="width:100%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="prologue" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/prologue_heading_icon.png" width="22" height="29" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['prologueheading']; ?></td></tr>
   <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit2', 'paper_prologue', $paper_prologue, 688, 498);
+    echo "<tr><td>" . wysiwyg_editor('oEdit2', 'paper_prologue', $paper_prologue, 722, 520);
   ?>
 </td></tr>
 </table>
 
-<table id="postscript" style="width:100%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="postscript" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/postscript_heading_icon.png" width="22" height="29" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['postscriptheading']; ?></td></tr>
 <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit3', 'paper_postscript', $paper_postscript, 688, 498);
+    echo "<tr><td>" . wysiwyg_editor('oEdit3', 'paper_postscript', $paper_postscript, 722, 520);
   ?>
 </td></tr>
 </table>
@@ -1373,12 +1373,9 @@ if ($paper_type != '4' and $paper_type != '5') {
   </td></tr>
 </table>
 
-<table id="rubric" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
-<tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/rubric_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['rubricheading']; ?></td></tr>
-  <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit4', 'rubric_text', $rubric, 686, 498);
-  ?>
-  </td></tr>
+<table id="rubric" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+  <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/rubric_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['rubricheading']; ?></td></tr>
+  <tr><td><?php echo wysiwyg_editor('oEdit4', 'rubric_text', $rubric, 722, 520); ?></td></tr>
 </table>
 
 <table id="reviewers" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
