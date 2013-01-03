@@ -313,7 +313,7 @@ class UserObject {
     $new_array = array_merge($default_modules, $additional_mods);
     $staff_modules_sql = implode(',', array_unique($new_array));
 
-    if ($staff_modules_sql != '' or $this->has_role('Admin')) {
+    if ($staff_modules_sql != '' or $this->has_role(array('SysAdmin', 'Admin'))) {
       if ($this->has_role('SysAdmin')) {
         $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID";
       } elseif ($this->has_role('Admin')) {
