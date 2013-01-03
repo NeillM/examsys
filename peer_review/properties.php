@@ -24,14 +24,58 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/add_edit.inc';  // to clear MS Office tags
+require_once '../include/staff_auth.inc';
+require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
-require '../lang/' . $language. '/include/timezones.inc';
+require_once '../lang/' . $language. '/include/timezones.inc';
+require_once '../classes/paperutils.class.php';
+require_once '../classes/moduleutils.class.php';
 
 function modulo($n,$b) {
   return $n-$b*floor($n/$b);
+}
+
+function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) {
+  if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
+    $r1class = 'r1disabled';
+    $r2class = 'r2disabled';
+    $disabled = ' disabled';
+    $html = "<div style=\"height:425px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
+  } else {
+    $r1class = 'r1';
+    $r2class = 'r2';
+    $disabled = '';
+    $html = "<div style=\"height:425px; overflow-y:scroll;border:1px solid #7F9DB9; font-size:90%\">";
+  }
+
+  $current_labs = explode(',',$labs);
+
+  $result = $db->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
+  $result->execute();
+  $result->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
+  $lab_no = 0;
+  $old_campus = '';
+  while ($result->fetch()) {
+    if ($old_campus != $lab_campus) {
+      $html .= "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
+    }
+    $match = false;
+    foreach ($current_labs as $individual_lab) {
+      if ($lab_id == $individual_lab) $match = true;
+    }
+    if ($match) {
+      $html .= "<div class=\"$r2class\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
+    } else {
+      $html .= "<div class=\"$r1class\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\">&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
+    }
+    $lab_no++;
+    $old_campus = $lab_campus;
+  }
+  $result->close();
+  $html .= "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div>";
+
+  return $html;
 }
 
 if (isset($_POST['Submit'])) {
@@ -78,19 +122,24 @@ if (isset($_POST['Submit'])) {
       $end_date->modify("-" . $_POST['timezone'] . " hour");
     }
 
-    $module_string = '';
-    $first_module = '';
+    $paper_modules = array();
     for ($i=0; $i<$_POST['module_no']; $i++) {
       if (isset($_POST['module' . $i])) {
-        if ($module_string == '') {
-          $module_string = $_POST['module' . $i];
-          $first_module = $_POST['module' . $i];
+        if (count($paper_modules) == 0) {
+          $paper_modules[$_POST['module' . $i]] = $_POST['module' . $i];
+          $first_module_idMod = $_POST['module' . $i];
+          //$first_module_id = module_utils::get_moduleID($_POST['module' . $i], $mysqli);
+          $first_module_id = $_POST['module' . $i];
         } else {
-          $module_string .= ',' . $_POST['module' . $i];
+          $paper_modules[$_POST['module' . $i]] = $_POST['module' . $i];
         }
       }
     }
-    
+
+    if (isset($_POST['cal_mod']) and $_POST['cal_mod'] != '') {    // If set override the module ID with what the dialog box was called with.
+      $first_module_id = $_POST['cal_mod'];
+    }
+
     $lab_string = '';
     for ($i=0; $i<$_POST['lab_no']; $i++) {
       if (isset($_POST["lab$i"])) {
@@ -130,10 +179,12 @@ if (isset($_POST['Submit'])) {
     $tmp_postscript = $_POST['paper_postscript'];
     $tmp_postscript = clearMSOtags($tmp_postscript);
 
-    $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, start_date=?, end_date=?, timezone=?, moduleID=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, folder=?, labs=?, calendar_year=?, password=?, rubric=?, paper_prologue=?, paper_postscript=?, marking=?, display_correct_answer=?, display_question_mark=? WHERE property_id=?");
-    $editProperties->bind_param('sssssssssssssssssssi', $paper_title, $tmp_start_date, $tmp_end_date, $timezone, $module_string, $bgcolor, $fgcolor, $themecolor, $labelcolor, $folderID, $lab_string, $_POST['calendar_year'], $password, $rubric, $tmp_prologue, $tmp_postscript, $tmp_marking, $display_photos, $display_question_mark, $paperID);
+    $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, start_date=?, end_date=?, timezone=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, folder=?, labs=?, calendar_year=?, password=?, rubric=?, paper_prologue=?, paper_postscript=?, marking=?, display_correct_answer=?, display_question_mark=? WHERE property_id=?");
+    $editProperties->bind_param('ssssssssssssssssssi', $paper_title, $tmp_start_date, $tmp_end_date, $timezone, $bgcolor, $fgcolor, $themecolor, $labelcolor, $folderID, $lab_string, $_POST['calendar_year'], $password, $rubric, $tmp_prologue, $tmp_postscript, $tmp_marking, $display_photos, $display_question_mark, $paperID);
     $editProperties->execute();
     $editProperties->close();
+    
+    Paper_utils::update_modules($paper_modules,$paperID,$mysqli,$userObject);
     
     // Set the questions team on this paper.
     $result = $mysqli->prepare("SELECT q_id FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY display_pos");
@@ -142,10 +193,7 @@ if (isset($_POST['Submit'])) {
     $result->store_result();
     $result->bind_result($q_id);
     while ($result->fetch()) {
-      $editPaper = $mysqli->prepare("UPDATE questions SET q_group=? WHERE q_id=?");
-      $editPaper->bind_param('si', $first_module, $q_id);
-      $editPaper->execute();
-      $editPaper->close();
+      QuestionUtils::update_modules_from_papers($q_id, $mysqli);
     }
     $result->close();
   ?>
@@ -158,11 +206,11 @@ if (isset($_POST['Submit'])) {
     <meta http-equiv="pragma" content="no-cache" />
     <script language="JavaScript">
       function closeWindow() {
-        window.opener.location = "/paper/details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
+        window.opener.location = "/paper/details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module_id; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
         window.close();
       }
       function updateParent() {
-        window.opener.parent.location = "/paper/details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>";
+        window.opener.parent.location = "/paper/details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module_id; ?>";
         window.close();
       }
     </script></head>
@@ -190,10 +238,10 @@ if (isset($_POST['Submit'])) {
   $option_no = 1;
   
   // Get the main properties of the paper
-  $result = $mysqli->prepare("SELECT paper_title, paper_type, start_date, end_date, timezone, bgcolor, fgcolor, themecolor, labelcolor, folder, labs, moduleID, calendar_year, password, crypt_name, paper_prologue, paper_postscript, marking, display_correct_answer AS display_photos, display_question_mark AS review FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT paper_title, paper_type, start_date, end_date, timezone, bgcolor, fgcolor, themecolor, labelcolor, folder, labs, calendar_year, password, crypt_name, paper_prologue, paper_postscript, marking, display_correct_answer AS display_photos, display_question_mark AS review FROM properties WHERE property_id = ?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($paper_title, $paper_type, $start_date, $end_date, $timezone, $bgcolor, $fgcolor, $themecolor, $labelcolor, $folder, $labs, $moduleID, $calendar_year, $password, $crypt_name, $paper_prologue, $paper_postscript, $marking, $display_photos, $review);
+  $result->bind_result($paper_title, $paper_type, $start_date, $end_date, $timezone, $bgcolor, $fgcolor, $themecolor, $labelcolor, $folder, $labs, $calendar_year, $password, $crypt_name, $paper_prologue, $paper_postscript, $marking, $display_photos, $review);
   $result->fetch();
   $result->close();
   
@@ -218,18 +266,21 @@ if (isset($_POST['Submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {background-color:#F1F5FB}
-    .indenton {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
-    .indentoff {text-indent:-23px; padding-left:23px; background-color:white}
+    table {text-align:left}
+    .r1 {text-indent:-23px; padding-left:23px; background-color:white}
+    .r2 {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
+    .r1disabled {text-indent:-23px; padding-left:23px; background-color:white; color:#808080}
+    .r2disabled {text-indent:-23px; padding-left:23px; background-color:#DDDDDD; color:#808080}
   </style>
 
   <?php echo $cfg_editor_javascript; ?>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
-      if (document.getElementById(objectID).className == 'indentoff') {
-        document.getElementById(objectID).className = 'indenton';
+      if (document.getElementById(objectID).className == 'r2') {
+        document.getElementById(objectID).className = 'r1';
       } else {
-        document.getElementById(objectID).className = 'indentoff';
+        document.getElementById(objectID).className = 'r2';
       }
     }
     
@@ -323,9 +374,9 @@ if (isset($_POST['Submit'])) {
   require '../tools/colour_picker/colour_picker.inc';
 ?>
 <table border="0" cellpadding="1" cellspacing="5" style="width:100%; height:645px; font-size:90%">
-<tr><td valign="top" style="background-color:white; border:1px solid #7F9DB9; width:120px">
+<tr><td valign="top" style="background-color:white; border:1px solid #7F9DB9; width:140px">
 
-<table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:120px">
+<table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:140px">
 <tr><td id="button_general" style="background-image:url('../artwork/2007_button_on.png'); height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('general')" onmouseout="buttonout('general')" onclick="buttonclick('general')">&nbsp;<?php echo $string['generaltab']; ?></td></tr>
 <tr><td id="button_security" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('security')" onmouseout="buttonout('security')" onclick="buttonclick('security')">&nbsp;<?php echo $string['securitytab']; ?></td></tr>
 <tr><td id="button_prologue" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('prologue')" onmouseout="buttonout('prologue')" onclick="buttonclick('prologue')">&nbsp;<?php echo $string['prologuetab']; ?></td></tr>
@@ -344,47 +395,35 @@ if (isset($_POST['Submit'])) {
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['paperdetails'] . "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-     echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($crypt_name) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($crypt_name) ."</a></td></tr>\n";
+     echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($crypt_name) ."\" target=\"_blank\" style=\"color:blue\">" . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($crypt_name) ."</a></td></tr>\n";
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"$paper_title\" name=\"paper_title\" /><input type=\"hidden\" name=\"original_paper_title\" value=\"$paper_title\"><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td colspan=\"3\" valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\">\n";
+     
      echo "<option value=\"\"></option>";
      $additional = '';
-     
-     $team_query = $mysqli->prepare("SELECT DISTINCT name FROM teams WHERE memberID=? ORDER BY name");
-     $team_query->bind_param('s', $userObject->get_user_ID());
-     $team_query->execute();
-     $team_query->store_result();
-     $team_query->bind_result($team_name);
-     while ($team_query->fetch()) {
-       if ($team_name != '') {
-         if ($additional == '') {
-           $additional = ' OR team_name IN ("' . $team_name . '"';
-         } else {
-           $additional .= ',"' . $team_name . '"';
-         }
+
+     if (is_array($staff_modules) and count($staff_modules) > 0) {
+       $additional = ' OR idMod IN ("' . implode("','",array_keys($staff_modules)) . '")';
+     }
+
+     if ($folder != '') $additional .= ' OR id=' . $folder;
+
+     $folder_details = $mysqli->prepare("SELECT id, name FROM folders, folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID=?$additional) AND deleted IS NULL ORDER BY name");
+     $folder_details->bind_param('s', $userObject->get_user_ID());
+     $folder_details->execute();
+     $folder_details->bind_result($folder_id, $folder_name);
+     while ($folder_details->fetch()) {
+       $path_parts = substr_count($folder_name,';');
+       $folder_array = explode(';',$folder_name);
+       $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
+       if ($folder == $folder_id) {
+         echo "<option value=\"" . $folder_id . "\" selected>" . $display_name . "</option>";
+       } else {
+         echo "<option value=\"" . $folder_id . "\">" . $display_name . "</option>";
        }
      }
-     $team_query->close();
-     
-    if ($additional != '') $additional .= ')';
-    if ($folder != '') $additional .= ' OR id=' . $folder;
-     
-    $folder_details = $mysqli->prepare("SELECT id, name FROM folders WHERE ownerID=? $additional ORDER BY name");
-    $folder_details->bind_param('s', $userObject->get_user_ID());
-    $folder_details->execute();
-    $folder_details->bind_result($folder_id, $folder_name);
-    while ($folder_details->fetch()) {
-      $path_parts = substr_count($folder_name,';');
-      $folder_array = explode(';',$folder_name);
-      $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
-      if ($folder == $folder_id) {
-        echo "<option value=\"" . $folder_id . "\" selected>" . $display_name . "</option>";
-      } else {
-        echo "<option value=\"" . $folder_id . "\">" . $display_name . "</option>";
-      }
-    }
-    $folder_details->close();
-    echo "</select>\n</td></tr>\n";
+     $folder_details->close();
+     echo "</select>\n</td></tr>\n";
      
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";     
 
@@ -415,8 +454,7 @@ if (isset($_POST['Submit'])) {
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     echo "<tr><td align=\"right\">Group Details&nbsp;</td><td><select name=\"type\">\n";
     
-    $field_details = $mysqli->prepare("SELECT DISTINCT type FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND modules.moduleid=? ORDER BY type");
-    $field_details->bind_param('s', $moduleID);
+    $field_details = $mysqli->prepare("SELECT DISTINCT type FROM users_metadata, modules WHERE users_metadata.idMod=modules.id AND modules.id IN (" . implode(",",array_keys($staff_modules)) . ") ORDER BY type");
     $field_details->execute();
     $field_details->bind_result($type);
     while ($field_details->fetch()) {
@@ -624,17 +662,16 @@ if (isset($_POST['Submit'])) {
     echo "<tr><td rowspan=\"3\" style=\"vertical-align:top\">";
     
     echo "<div style=\"display:block; width:400px; height:425px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
-    
-    $modules_array = explode(',',$moduleID);
-    $total_modules = array_merge($teams, $modules_array);
-    
+    $modules_array = Paper_utils::get_modules($_GET['paperID'], $mysqli);
+    $total_modules = array_merge($staff_modules, $modules_array);
+
     $module_sql = implode("','", $total_modules);
     if ($module_sql != '') $module_sql = "'$module_sql'";
-    
+
     if ($module_sql == '') {
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"0\" /></div>\n";
     } else {
-      $module_array = search_utils::get_teams($teams, $userroles, $userObject->get_user_ID(), $mysqli);
+      $module_array = $userObject->get_staff_accessable_modules();
       $module_no = 0;
       $old_school = '';
       foreach ($module_array as $module) {
@@ -646,47 +683,22 @@ if (isset($_POST['Submit'])) {
           if ($separate_module == $module['id']) $match = true;
         }
         if ($match == true) {
-          if (in_array($module['id'],$teams) or $userObject->has_role('SysAdmin')) {
-            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+          if (in_array($module['id'], $staff_modules) or $userObject->has_role('SysAdmin')) {
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           } else {
-            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           }
         } else {
-          echo "<div class=\"indentoff\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+          echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
         }
-        $module_no++;  
-        $old_school = $module['school'];        
+        $module_no++;
+        $old_school = $module['school'];
       }
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n";
     }
     echo "</td>\n";
     
-    echo "<td><div style=\"height:425px; overflow-y:scroll;border:1px solid #7F9DB9; font-size:90%\">";
-    $current_labs = explode(',',$labs);
-    
-    $lab_details = $mysqli->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
-    $lab_details->execute();
-    $lab_details->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
-    $lab_no = 0;
-    $old_campus = '';
-    while ($lab_details->fetch()) {
-      if ($old_campus != $lab_campus) {
-        echo "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
-      }
-      $match = false;
-      foreach ($current_labs as $individual_lab) {
-        if ($lab_id == $individual_lab) $match = true;
-      }
-      if ($match) {
-        echo "<div class=\"indenton\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\" onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
-      } else {
-        echo "<div class=\"indentoff\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\" onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\">&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
-      }
-      $lab_no++;
-      $old_campus = $lab_campus;
-    }
-    $lab_details->close();
-    echo "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div></td>\n</tr>";
+    echo "<td>" . output_labs($labs, $configObject->get('cfg_summative_mgmt'), $paper_type, $userObject, $mysqli) . "</td></tr>\n";
 
   ?>
   </td></tr>
