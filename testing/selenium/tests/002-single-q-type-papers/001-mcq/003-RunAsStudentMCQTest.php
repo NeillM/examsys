@@ -1,7 +1,7 @@
 <?php
 require_once 'shared.inc.php';
 
-class TestPreviewMCQTest extends PHPUnit_Extensions_SeleniumTestCase
+class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected $install_type;
   protected $page_root;
