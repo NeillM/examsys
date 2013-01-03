@@ -31,16 +31,16 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
 
   // Get all the users on the module(s) the paper is on.
   if (is_array($moduleIDs)) {
-    $moduleIDs_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
-    $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM modules_student,modules WHERE modules.id = modules_student.idMod and idMod IN ($moduleIDs_in)");
+    $moduleIDs_in = implode(',', array_keys($moduleIDs));
+    $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM modules_student, modules WHERE modules.id = modules_student.idMod and idMod IN ($moduleIDs_in)");
     $mod_query->execute();
     $mod_query->bind_result($tmp_userID, $tmp_moduleid);
     $mod_query->store_result();
     while ($mod_query->fetch()) {
-	  if (isset($repmodule) and $repmodule != '' and $tmp_moduleid != $repmodule) {
-      continue; //this user is not on the module set in repmodule so dont put them in the array
-	  }
-	  if ($users_on_modules == '') {
+      if (isset($repmodule) and $repmodule != '' and $tmp_moduleid != $repmodule) {
+        continue; //this user is not on the module set in repmodule so dont put them in the array
+      }
+      if ($users_on_modules == '') {
         $users_on_modules = "'" . $tmp_userID . "'";
       } else {
         $users_on_modules .= ",'" . $tmp_userID . "'";
@@ -68,7 +68,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
   } else {
     $marks_query = "SELECT log$paper_type.userID, sum(mark) AS total_mark FROM (log$paper_type, log_metadata) WHERE log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND q_paper=$paperID AND DATE_ADD(log_metadata.started, INTERVAL 2 MINUTE)>='$startdate' AND log_metadata.started<='$enddate' AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND student_grade LIKE '" . $repcourse . "' AND year LIKE '" . $repyear . "'$student_modules_sql GROUP BY log$paper_type.userID, q_paper, log$paper_type.started ORDER BY total_mark " . $direction;
   }
-
+  
   $student_no = 0;
   $student_list = '';
   

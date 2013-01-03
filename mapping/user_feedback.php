@@ -194,7 +194,7 @@
   $objectives = array();
   $qid_list = substr($qid_list,0,-1);
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
-
+  
   unset($objByModule['none_of_the_above']);
   if (count($objByModule) > 0) {
     foreach ($objByModule as $module => $mappings) {
