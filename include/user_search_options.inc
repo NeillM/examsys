@@ -215,7 +215,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 <table class="sidebar_tbl" id="menu2a">
 <tr><td><img src="../artwork/user_file_icon_grey_16.gif" width="16" height="16" alt="User Details" /></td><td class="greymenuitem"><?php echo $string['viewuserfile']; ?></td></tr>
 <?php
-  if ($userObject->has_role(array('Admin','SysAdmin'))) {
+  if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="Create User" /></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
     if ($userObject->has_role('SysAdmin')) {
       echo '<tr><td class="ico"><img src="../artwork/delete_user_16_grey.png" width="16" height="16" alt="Create" /></a></td><td class="greymenuitem">' . $string['deleteuser'] . '</td></tr>';
@@ -227,7 +227,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 <table class="sidebar_tbl" style="display:none" id="menu2b">
 <tr><td class="ico"><a href="#" onclick="viewProfileSingle(); return false;"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
 <?php
-  if ($userObject->has_role(array('Admin','SysAdmin'))) {
+  if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td class="ico"><img src="../artwork/small_user_icon_grey.gif" width="16" height="16" alt="Create" /></td><td class="greymenuitem">' . $string['createnewuser'] . '</td></tr>';
   }
 ?>
@@ -236,7 +236,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 <table class="sidebar_tbl" style="display:none" id="menu2c">
 <tr><td class="ico"><a onclick="viewProfileSingle(); return false;" href="#"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
 <?php
-  if ($userObject->has_role(array('Admin','SysAdmin'))) {
+  if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="Create" /></a></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
   }
   if ($userObject->has_role('SysAdmin')) {
@@ -247,37 +247,15 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 
 <br />
 <?php
-if ($userObject->has_role('Admin')) {
+if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
   echo "<div class=\"submenuheading\">{$string['cohorttasks']}</div>\n";
+
+  echo "<table class=\"sidebar_tbl\">\n";
+  echo '<tr><td class="ico"><a href="import_users.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importusers'] . '" /></a></td><td class="menuitem"><a href="import_users.php">' . $string['importusers'] . '</a></td></tr>';
+  echo '<tr><td class="ico"><a href="import_modules.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importmodules'] . '" /></a></td><td class="menuitem"><a href="import_modules.php">' . $string['importmodules'] . '</a></td></tr>';
+  echo "</table>\n";
 }
 ?>
-
-<table class="sidebar_tbl" id="menu3a">
-<?php
-  if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
-    echo '<tr><td class="ico"><a href="import_users.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importusers'] . '" /></a></td><td class="menuitem"><a href="import_users.php">' . $string['importusers'] . '</a></td></tr>';
-    echo '<tr><td class="ico"><a href="import_student_module_info.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importmodules'] . '" /></a></td><td class="menuitem"><a href="import_modules.php">' . $string['importmodules'] . '</a></td></tr>';
-  }
-?>
-</table>
-
-<table class="sidebar_tbl" style="display:none" id="menu3b">
-<?php
-  if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
-    echo '<tr><td class="ico"><a href="import_users.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importusers'] . '" /></a></td><td class="menuitem"><a href="import_users.php">' . $string['importusers'] . '</a></td></tr>';
-    echo '<tr><td class="ico"><a href="import_student_module_info.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importmodules'] . '" /></a></td><td class="menuitem"><a href="import_student_module_info.php">' . $string['importmodules'] . '</a></td></tr>';
-  }
-?>
-</table>
-
-<table class="sidebar_tbl" style="display:none" id="menu3c">
-<?php
-  if ($userObject->has_role('Admin')) {
-    echo '<tr><td class="ico"><a href="import_users.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importusers'] . '" /></a></td><td class="menuitem"><a href="import_users.php">' . $string['importusers'] . '</a></td></tr>';
-    echo '<tr><td class="ico"><a href="import_student_module_info.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importmodules'] . '" /></a></td><td class="menuitem"><a href="import_modules.php">' . $string['importmodules'] . '</a></td></tr>';
-  }
-?>
-</table>
 
 <input type="hidden" id="userID" name="userID" value="" />
 </form>

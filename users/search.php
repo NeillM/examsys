@@ -513,28 +513,11 @@ if ($sortby == 'title') {
     $old_year = $tmp_yearofstudy;
     $x++;
   }
+  $user_data->close();
+  $mysqli->close();
 ?>
 </table>
 </div>
 
-<script language="JavaScript">
-<?php
-  if ($user_data->num_rows > 0) {
-    if ($userObject->has_role('SysAdmin')) {
-      echo "document.getElementById('menu3a').style.display = 'none';\n";
-      echo "document.getElementById('menu3c').style.display = 'block';\n";
-    } else {
-      echo "document.getElementById('menu3a').style.display = 'none';\n";
-      echo "document.getElementById('menu3b').style.display = 'block';\n";
-    }
-  } else {
-    echo "document.getElementById('menu3a').style.display = 'block';\n";
-    echo "document.getElementById('menu3b').style.display = 'none';\n";
-    echo "document.getElementById('menu3c').style.display = 'none';\n";
-  }
-  $user_data->close();
-  $mysqli->close();
-?>
-</script>
 </body>
 </html>
