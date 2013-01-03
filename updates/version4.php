@@ -5016,6 +5016,11 @@ QUERY;
   $mysqli->query($sql);
   echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'</li>\n";
 
+  //brzsw 02/01/2013 - Add new grants for staff users needing change properties_modules
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
+
   $mysqli->query('FLUSH PRIVILEGES');
 
 
