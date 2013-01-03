@@ -26,6 +26,7 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 require_once 'summary_report.inc';
+require_once '../classes/paperutils.class.php';
 
 check_var('paperID', 'GET', true, false);
 check_var('startdate', 'GET', true, false);
@@ -156,8 +157,8 @@ check_var('enddate', 'GET', true, false);
 <?php
   echo "<table class=\"header\" style=\"font-size:80%\">\n";
   echo "<tr><th colspan=\"" . ($heading_no + 7) . "\"><div class=\"breadcrumb\">";
-  if ($idMod != '') {
-    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $idMod . '">' . $moduleID_text . '</a>';
+  if (isset( $_GET['module'] ) and $_GET['module'] != '') {
+    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   } elseif ($folder != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } else {
@@ -215,7 +216,8 @@ check_var('enddate', 'GET', true, false);
     if ($student_userID > 0) {
       $master_array[$user_number]['icon'] = ($user_data[$student_userID]['have_review']) ? 'peer_review_16.gif' : 'peer_review_retired_16.png';
       $mean_total = 0;
-      $master_array[$user_number]['student_id'] = $student_userID;
+      $master_array[$user_number]['userid'] = $student_userID;
+      $master_array[$user_number]['student_id'] = $student['student_id'];
       $master_array[$user_number]['title'] = $student['title'];
       $master_array[$user_number]['surname'] = $student['surname'];
       $master_array[$user_number]['first_names'] = $student['first_names'];
@@ -279,8 +281,8 @@ check_var('enddate', 'GET', true, false);
   for ($i=0; $i<$user_number; $i++) {
     if ($student_userID > 0) {
       echo '<tr>';
-      echo '<td class="greyln"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" border="0" onclick="ItemSelMenu(' . $master_array[$i]['student_id'] . ', event);" /></td>';
-      echo '<td class="greyln" onclick="ItemSelMenu(' . $master_array[$i]['student_id'] . ', event);">' . $master_array[$i]['title'] . ' ' . $master_array[$i]['surname'] . ', <span class="fn">' . $master_array[$i]['first_names'] . '</span></td>';
+      echo '<td class="greyln"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" border="0" onclick="ItemSelMenu(' . $master_array[$i]['userid'] . ', event);" /></td>';
+      echo '<td class="greyln" onclick="ItemSelMenu(' . $master_array[$i]['userid'] . ', event);">' . $master_array[$i]['title'] . ' ' . $master_array[$i]['surname'] . ', <span class="fn">' . $master_array[$i]['first_names'] . '</span></td>';
       echo '<td class="greyln">' . $master_array[$i]['student_id'] . '</td>';
       if ($master_array[$i]['have_review'] == 'Complete') {
         echo '<td class="greyln">Complete</td>';

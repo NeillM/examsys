@@ -78,7 +78,7 @@ $stmt->execute();
 $stmt->bind_result($tmp_checklist);
 $check[] = array();
 while ($stmt->fetch()) {
-  $tmp = explode(',',$tmp_checklist);
+  $tmp = explode(',', $tmp_checklist);
   foreach ($tmp as $c) {
     $check[$c] = $c;
   }

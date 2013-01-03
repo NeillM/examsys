@@ -52,7 +52,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     }
 
     document.getElementById('stats_menu').style.display='none';
-    window.location.href = url + "paperID=" + document.stats_menu.paperID.value + "&startdate=" + document.stats_menu.start_year.value + document.stats_menu.start_month.value + document.stats_menu.start_day.value + document.stats_menu.start_time.value + "&enddate=" + document.stats_menu.end_year.value + document.stats_menu.end_month.value + document.stats_menu.end_day.value + document.stats_menu.end_time.value + "&repmodule=" + document.stats_menu.repmodule.value + "&repcourse=" + document.stats_menu.repcourse.value + extra_data;
+    window.location.href = url + "paperID=" + document.stats_menu.paperID.value + "&startdate=" + document.stats_menu.start_year.value + document.stats_menu.start_month.value + document.stats_menu.start_day.value + document.stats_menu.start_time.value + "&enddate=" + document.stats_menu.end_year.value + document.stats_menu.end_month.value + document.stats_menu.end_day.value + document.stats_menu.end_time.value + "&repmodule=" + document.stats_menu.repmodule.value + "&repcourse=" + document.stats_menu.repcourse.value + extra_data + "&module=<?php echo $module_list[0]; ?>";
   }
   <?php
   } else {

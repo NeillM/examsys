@@ -44,12 +44,14 @@ function padDecimals($number, $rounding) {
 }
 
 // Get some properties of the paper.
-$result = $mysqli->prepare("SELECT p.property_id, p.paper_title, m.id, m.moduleid, p.calendar_year, p.rubric, p.marking, p.display_question_mark FROM properties p INNER JOIN properties_modules pm ON p.property_id=pm.property_id INNER JOIN modules m ON pm.idMod=m.id WHERE p.property_id=?");
+$result = $mysqli->prepare("SELECT property_id, paper_title, calendar_year, rubric, marking, display_question_mark FROM properties WHERE property_id = ?");
 $result->bind_param('i', $_GET['paperID']);
 $result->execute();
-$result->bind_result($property_id, $paper_title, $idMod, $moduleID_text, $calendar_year, $type, $marking, $review_type);
+$result->bind_result($property_id, $paper_title, $calendar_year, $type, $marking, $review_type);
 $result->fetch();
 $result->close();
+
+$modules_array = Paper_utils::get_modules($_GET['paperID'], $mysqli);
 
 // Get questions on the paper
 $questions = array();
@@ -91,11 +93,11 @@ $user_data = array();
 $groups = array();
 
 if ($group == '%') {
-  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND idMod=? AND calendar_year=? AND type=? ORDER BY surname, initials");
-  $result->bind_param('iss', $idMod, $calendar_year, $type);
+  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND idMod IN (" . implode(',', array_keys($modules_array)) . ") AND calendar_year=? AND type=? ORDER BY surname, initials");
+  $result->bind_param('ss', $calendar_year, $type);
 } else {
-  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND idMod=? AND calendar_year=? AND type=? AND value=? ORDER BY surname, initials");
-  $result->bind_param('isss', $idMod, $calendar_year, $type, $group);
+  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND idMod IN (" . implode(',', array_keys($modules_array)) . ") AND calendar_year=? AND type=? AND value=? ORDER BY surname, initials");
+  $result->bind_param('sss', $calendar_year, $type, $group);
 }
 $result->execute();
 $result->bind_result($userID, $group, $surname, $first_names, $title, $student_id); //TODO userID here?
@@ -116,6 +118,7 @@ $users = implode(',', $users);
 
 // Load results from Log6
 $reviewers = array();
+
 $result = $mysqli->prepare("SELECT reviewerID, peerID, q_id, rating FROM log6 WHERE reviewerID IN ($users) AND paperID=? AND started>? AND started<? ORDER BY started");
 $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
 $result->execute();
