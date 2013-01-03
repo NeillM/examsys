@@ -878,8 +878,8 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<option value=\"\"></option>";
      $additional = '';
 
-     if(is_array($staff_modules) and count($staff_modules) > 0) {
-      $additional = ' OR idMod IN ("' . implode("','",array_keys($staff_modules)) . '")';
+     if (is_array($staff_modules) and count($staff_modules) > 0) {
+       $additional = ' OR idMod IN ("' . implode("','",array_keys($staff_modules)) . '")';
      }
 
      if ($folder != '') $additional .= ' OR id=' . $folder;
