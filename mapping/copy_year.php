@@ -51,7 +51,7 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title>Rogō: Copy Objectives<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>

@@ -53,7 +53,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title>Variable Link</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <style type="text/css">
   body {color:black; background-color:white; font-family:Arial,sans-serif; margin:0px; font-size:90%}
   .q_no {text-align:right; vertical-align:top; cursor:pointer; width:40px; padding-right:6px}

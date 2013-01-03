@@ -261,7 +261,7 @@ $current_screen = 1;
     echo "<title>" . $string['assessment'] . "</title>\n";
   }
   ?>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="imagetoolbar" content="no">
   <meta http-equiv="imagetoolbar" content="false">
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
