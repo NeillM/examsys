@@ -126,11 +126,11 @@ $display_end_date = $display_end_date->format($tmp_cfg_long_date_time);
 
 $previously_submitted = 0;
 
+$low_bandwidth = 0;
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
   check_paper_password($password, $string, true);
 
-  $low_bandwidth = 0;
   //Check this PC is registered for this exam
   $low_bandwidth = check_labs($test_type, $labs, $password, $string, $mysqli);
 
