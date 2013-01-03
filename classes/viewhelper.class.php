@@ -49,7 +49,11 @@ class ViewHelper {
       $text = $texts[$i];
       
       $html .= str_repeat("\t", $tablevel);
-      $sel = ((is_array($selected) and in_array($value, $selected)) or strval($selected) == strval($value)) ? ' selected="selected"' : '';
+      if (is_array($selected)) {
+        $sel = in_array($value, $selected) ? ' selected="selected"' : '';
+      } else {
+        $sel = strval($selected) == strval($value) ? ' selected="selected"' : '';
+      }
       if (!is_array($css_class)) {
         $class = ($css_class != '') ? ' class="' . $css_class . '"' : '';
       } else {
