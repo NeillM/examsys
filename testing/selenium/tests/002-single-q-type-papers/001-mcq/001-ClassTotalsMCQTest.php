@@ -52,6 +52,9 @@ class ClassTotalsMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Median
     $this->assertElementContainsText('//table/tbody/tr[20]/td/table/tbody/tr[9]/td[2]', '-4');
     $this->assertElementContainsText('//table/tbody/tr[20]/td/table/tbody/tr[9]/td[3]', '(-33%)');
+    // Standard Deviation
+    $this->assertElementContainsText('//table/tbody/tr[20]/td/table/tbody/tr[10]/td[2]', '8.02');
+    $this->assertElementContainsText('//table/tbody/tr[20]/td/table/tbody/tr[10]/td[3]', '(66.7%)');
     // Max
     $this->assertElementContainsText('//table/tbody/tr[20]/td/table/tbody/tr[11]/td[2]', '12');
     $this->assertElementContainsText('//table/tbody/tr[20]/td/table/tbody/tr[11]/td[3]', '(100%)');
