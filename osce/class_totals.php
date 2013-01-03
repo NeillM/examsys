@@ -30,12 +30,16 @@ require 'class_totals.inc';
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  
   <title>Rogō: <?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="JavaScript">
     var ie  = document.all
     var ns6 = document.getElementById&&!document.all
@@ -58,27 +62,20 @@ require 'class_totals.inc';
     // POP UP MENU
     function popMenu(tmpStarted, currentUserID, e) {
       if (!e) var e = window.event;
+      var currentX = e.clientX;
+      var currentY = e.clientY;
+      var scrOfX = $('body,html').scrollLeft();
+      var scrOfY = $('body,html').scrollTop();
 
       document.getElementById('started').value = tmpStarted;
       document.getElementById('tmp_userID').value = currentUserID;
 
-      var scrOfX = 0, scrOfY = 0;
-      if( typeof( window.pageYOffset ) == 'number' ) {
-        //Netscape compliant
-        scrOfY = window.pageYOffset;
-        scrOfX = window.pageXOffset;
-      } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-        //DOM compliant
-        scrOfY = document.body.scrollTop;
-        scrOfX = document.body.scrollLeft;
-      } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-        //IE6 standards compliant mode
-        scrOfY = document.documentElement.scrollTop;
-        scrOfX = document.documentElement.scrollLeft;
+      top_pos = currentY+scrOfY;
+      if (top_pos > ($(window).height() + scrOfY - 75)) {
+        top_pos = $(window).height() + scrOfY - 75;
       }
-
       document.getElementById('menudiv').style.left = e.clientX+scrOfX + 'px';
-      document.getElementById('menudiv').style.top = e.clientY+scrOfY + 'px';
+      document.getElementById('menudiv').style.top = top_pos + 'px';
 
       document.getElementById('menudiv').style.display = "";
       document.getElementById('item1b').style.backgroundColor = '#FFFFFF';
@@ -136,6 +133,8 @@ require 'class_totals.inc';
       document.getElementById('menudiv').style.display = 'none';
       window.top.location = '/users/details.php?userID=' + document.getElementById('tmp_userID').value;
     }
+    
+    document.onmousedown = mouseSelect;
   </script>
   </head>
 
@@ -268,34 +267,34 @@ require 'class_totals.inc';
   }
   
   echo '</tr>';
-  echo "\n<tr style=\"height:4px\"><th colspan=\"8\" class=\"bevel\"></th></tr>\n";
+  echo "\n<tr><th colspan=\"8\" class=\"bevel\"></th></tr>\n";
 
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
       echo "<tr style=\"background-color:#FFC0C0\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../users/details.php?userID=" . $user_results[$i]['tmp_userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"5\" style=\"text-align:center; font-weight:bold\">" . $string['noattendance'] . "</td></tr>\n";
     } else {
       echo "<tr><td><img src=\"../artwork/osce_16.gif\" style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['tmp_userID'] . "', event);\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" /></td>";
-      echo '<td';
+      echo "<td class=\"greyln\"";
       if ($sortby == 'name') echo ' style="background-color:#F7F7F7"';
       echo ">&nbsp;<span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "', '" . $user_results[$i]['tmp_userID'] . "', event);\">" . $user_results[$i]['title'] . " " . $user_results[$i]['surname'] . ", <span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></td>";
-      echo "<td";
+      echo "<td class=\"greyln\"";
       if ($sortby == 'student_id') echo ' style="background-color:#F7F7F7"';
       echo ">&nbsp;" . $user_results[$i]['student_id'] . "</td>";
-      echo "<td";
+      echo "<td class=\"greyln\"";
       if ($sortby == 'grade') echo ' style="background-color:#F7F7F7"';
       echo ">&nbsp;" . $user_results[$i]['grade'] . "</td>";
-      echo "<td";
+      echo "<td class=\"greyln\"";
       if ($sortby == 'numeric_score') echo ' style="background-color:#F7F7F7"';
       echo ">&nbsp;" . $user_results[$i]['numeric_score'] . "</td>";
-      echo "<td";
+      echo "<td class=\"greyln\"";
       if ($sortby == 'classification') echo ' style="background-color:#F7F7F7"';
       echo ">&nbsp;";
       if(isset($labels[$user_results[$i]['classification']])) echo $labels[$user_results[$i]['classification']];
       echo "</td>";
-      echo "<td";
+      echo "<td class=\"greyln\"";
       if ($sortby == 'started') echo ' style="background-color:#F7F7F7"';
       echo ">&nbsp;" . $user_results[$i]['display_started'] . "</td>\n";
-      echo "<td";
+      echo "<td class=\"greyln\"";
       if ($sortby == 'examiner') echo ' style="background-color:#F7F7F7"';
       echo ">&nbsp;" . $user_results[$i]['examiner'] . "</td></tr>\n";
     }

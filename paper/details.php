@@ -408,7 +408,7 @@ if (!isset($paper_title)) {
 
     document.getElementById('stats_menu').style.display = 'none';
     document.getElementById('copy_submenu').style.display = 'none';
-    document.getElementById('change_screen_submenu').style.display='none';
+    document.getElementById('change_screen_submenu').style.display = 'none';
 
     if (evt != null) {
       evt.cancelBubble = true;
@@ -442,7 +442,7 @@ if (!isset($paper_title)) {
 
     document.getElementById('stats_menu').style.display = 'none';
     document.getElementById('copy_submenu').style.display = 'none';
-    document.getElementById('change_screen_submenu').style.display='none';
+    document.getElementById('change_screen_submenu').style.display = 'none';
 
     hideMenus();
 
@@ -453,21 +453,7 @@ if (!isset($paper_title)) {
   }
 
   function scrollXY() {
-    var scrOfX = 0, scrOfY = 0;
-    if( typeof( window.pageYOffset ) == 'number' ) {
-      //Netscape compliant
-      scrOfY = window.pageYOffset;
-      scrOfX = window.pageXOffset;
-    } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-      //DOM compliant
-      scrOfY = document.body.scrollTop;
-      scrOfX = document.body.scrollLeft;
-    } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-      //IE6 standards compliant mode
-      scrOfY = document.documentElement.scrollTop;
-      scrOfX = document.documentElement.scrollLeft;
-    }
-    document.getElementById('scrOfY').value = scrOfY;
+    document.getElementById('scrOfY').value = $('body,html').scrollTop();
   }
 </script>
 <?php

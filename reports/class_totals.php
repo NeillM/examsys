@@ -78,8 +78,8 @@ ob_start();
     if (!e) var e = window.event;
     var currentX = e.clientX;
     var currentY = e.clientY;
-    var scrOfX = getScrollX();
-    var scrOfY = getScrollY();
+    var scrOfX = $('body,html').scrollLeft();
+    var scrOfY = $('body,html').scrollTop();
 
     document.getElementById('started').value = tmpStarted;
     document.getElementById('userID').value = tmpUserID;
@@ -96,31 +96,31 @@ ob_start();
     document.getElementById('menudiv').style.top = top_pos + 'px';
     
     document.getElementById('menudiv').style.display = "";
-    document.getElementById('item1b').style.backgroundColor='#FFFFFF';
-    document.getElementById('item2b').style.backgroundColor='#FFFFFF';
-    document.getElementById('item3b').style.backgroundColor='#FFFFFF';
-    document.getElementById('item4b').style.backgroundColor='#FFFFFF';
-    document.getElementById('item5b').style.backgroundColor='#FFFFFF';
+    document.getElementById('item1b').style.backgroundColor = '#FFFFFF';
+    document.getElementById('item2b').style.backgroundColor = '#FFFFFF';
+    document.getElementById('item3b').style.backgroundColor = '#FFFFFF';
+    document.getElementById('item4b').style.backgroundColor = '#FFFFFF';
+    document.getElementById('item5b').style.backgroundColor = '#FFFFFF';
 
     if (tmpStarted == '') {
-      document.getElementById('item1b').style.color='#C0C0C0';
-      document.getElementById('item2b').style.color='#C0C0C0';
+      document.getElementById('item1b').style.color = '#C0C0C0';
+      document.getElementById('item2b').style.color = '#C0C0C0';
     } else {
-      document.getElementById('item1b').style.color='#000000';
-      document.getElementById('item2b').style.color='#000000';
+      document.getElementById('item1b').style.color = '#000000';
+      document.getElementById('item2b').style.color = '#000000';
     }
 
     if (tmpReassign == 'y') {
-      document.getElementById('item6b').style.color='#000000';
+      document.getElementById('item6b').style.color = '#000000';
     } else {
-      document.getElementById('item6b').style.color='#C0C0C0';
+      document.getElementById('item6b').style.color = '#C0C0C0';
     }
 
     if (tmpLogLate == 'y') {
-      document.getElementById('item7b').style.color='#000000';
+      document.getElementById('item7b').style.color = '#000000';
       document.getElementById('log_late_icon').style.display = 'block';
     } else {
-      document.getElementById('item7b').style.color='#C0C0C0';
+      document.getElementById('item7b').style.color = '#C0C0C0';
       document.getElementById('log_late_icon').style.display = 'none';
     }
 
@@ -234,9 +234,8 @@ ob_start();
     if (!e) var e = window.event;
 	  var currentX = e.clientX;
 	  var currentY = e.clientY;
-    var scrOfX = getScrollX();
-	  var scrOfY = getScrollY();
-
+    var scrOfX = $('body,html').scrollLeft();
+    var scrOfY = $('body,html').scrollTop();
 	  var XMLHttpRequestObject = false;
 
     if (window.XMLHttpRequest) {
@@ -265,36 +264,6 @@ ob_start();
       }
       XMLHttpRequestObject.send(null);
     }
-  }
-
-  function getScrollX() {
-    var scrollOfX = 0;
-    if( typeof( window.pageYOffset ) == 'number' ) {
-      //Netscape compliant
-      scrollOfX = window.pageXOffset;
-    } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-      //DOM compliant
-      scrollOfX = document.body.scrollLeft;
-    } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-      //IE6 standards compliant mode
-      scrollOfX = document.documentElement.scrollLeft;
-    }
-    return scrollOfX;
-  }
-
-  function getScrollY() {
-    var scrollOfY = 0;
-    if( typeof( window.pageYOffset ) == 'number' ) {
-      //Netscape compliant
-      scrollOfY = window.pageYOffset;
-    } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-      //DOM compliant
-      scrollOfY = document.body.scrollTop;
-    } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-      //IE6 standards compliant mode
-      scrollOfY = document.documentElement.scrollTop;
-    }
-    return scrollOfY;
   }
 
   function resetTimer() {

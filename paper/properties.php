@@ -552,6 +552,7 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
   <?php echo $cfg_editor_javascript; ?>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
     $(getMeta);
 

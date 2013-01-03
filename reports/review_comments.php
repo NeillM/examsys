@@ -49,7 +49,7 @@
     global $incomplete_names, $type, $string, $language;
 
     $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
-    $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQuestion('$qtype',$questionID,$qno)\" style=\"cursor:pointer\" src=\"../artwork/edit_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" border=\"0\" /></td></tr>\n";
+    $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" style=\"cursor:pointer\" src=\"../artwork/edit.png\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" border=\"0\" /></td></tr>\n";
     $html .= "<tr><td style=\"width:20px\"><div class=\"reviewbar\">&nbsp;</div></td><td style=\"width:20%\"><div class=\"reviewbar\">" . $string['reviewer'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['comment'] . "</div></td><td style=\"width:10%\"><div class=\"reviewbar\">" . $string['action'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['response'] . "</div></td></tr>\n";
     if (isset($comments_data[$questionID])) {
       foreach ($comments_data[$questionID] as $reviewer => $index) {
@@ -470,42 +470,40 @@
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
-  table {font-size:100%;table-layout:auto}
-  h1 {margin-left:15px; font-size:18pt}
-  p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
-  .figures {text-align:right}
-  .q_no {text-align:right; vertical-align:top; width:50px}
-  .grey {color:#808080}
-  .OK {}
-  .Minor {}
-  .Major {}
-
-
-  .screenbrk {
-    color:#15428B;
-    font-weight:bold;
-    font-size:90%;
-    height:70px;
-    width:100%;
-    border-top: 1px solid #B5C4DF;
-    background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-    background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
-  }
-  .reviewbar {
-    padding:2px;
-    color:black;
-    width:100%;
-    background: -moz-linear-gradient(top, #FFFFFF, #C5DEFF);
-    background: -webkit-linear-gradient(top, #FFFFFF, #C5DEFF);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#C5DEFF');
-    border-top: 1px solid #6593CF;
-    border-bottom: 1px solid #6593CF;
-  }
-  .reviewline {
-    padding:2px;
-    border-bottom:solid 1px #E3EFFF;
-  }
+    table {font-size:100%;table-layout:auto}
+    h1 {margin-left:15px; font-size:18pt}
+    p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
+    .figures {text-align:right}
+    .q_no {text-align:right; vertical-align:top; width:50px}
+    .grey {color:#808080}
+    .OK {}
+    .Minor {}
+    .Major {}
+    .screenbrk {
+      color:#15428B;
+      font-weight:bold;
+      font-size:90%;
+      height:70px;
+      width:100%;
+      border-top: 1px solid #B5C4DF;
+      background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
+      background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
+    }
+    .reviewbar {
+      padding:2px;
+      color:black;
+      width:100%;
+      background: -moz-linear-gradient(top, #FFFFFF, #C5DEFF);
+      background: -webkit-linear-gradient(top, #FFFFFF, #C5DEFF);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#C5DEFF');
+      border-top: 1px solid #6593CF;
+      border-bottom: 1px solid #6593CF;
+    }
+    .reviewline {
+      padding:2px;
+      border-bottom:solid 1px #E3EFFF;
+    }
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -516,25 +514,11 @@
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script language="JavaScript">
     function getScrollXY() {
-      var scrOfX = 0, scrOfY = 0;
-      if( typeof( window.pageYOffset ) == 'number' ) {
-        //Netscape compliant
-        scrOfY = window.pageYOffset;
-        scrOfX = window.pageXOffset;
-      } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-        //DOM compliant
-        scrOfY = document.body.scrollTop;
-        scrOfX = document.body.scrollLeft;
-      } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-        //IE6 standards compliant mode
-        scrOfY = document.documentElement.scrollTop;
-        scrOfX = document.documentElement.scrollLeft;
-      }
-      document.getElementById('scrOfY').value = scrOfY;
+      document.getElementById('scrOfY').value = $('body,html').scrollTop();
     }
 
-    function editQuestion(qtype,qid,qno) {
-      location.href='../question/edit/index.php?type=' + qtype + '&q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value + '&tab=comments';
+    function editQ(qid, qno) {
+      location.href='../question/edit/index.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value + '&tab=comments';
     }
 
     function showHideSerious() {
@@ -557,7 +541,7 @@ if (isset($_GET['scrOfY'])) {
 <table class="header">
 <?php
   // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, marking, pass_mark, externals, internal_reviewers FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT paper_type, paper_title, marking, pass_mark, externals, internal_reviewers FROM properties WHERE property_id = ?");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($paper_type, $paper, $marking, $pass_mark, $external_reviewers, $internal_reviewers);
@@ -577,7 +561,7 @@ if (isset($_GET['scrOfY'])) {
     }
 
     // Capture reviewer comments data first.
-    $result = $mysqli->prepare("SELECT title, initials, surname, q_id, comment, category, DATE_FORMAT(reviewed,'%d/%m/%Y %T') AS reviewed, reviewer, action, response FROM (review_comments, users) WHERE review_comments.reviewer=users.id AND review_type=? AND q_paper=?");
+    $result = $mysqli->prepare("SELECT title, initials, surname, q_id, comment, category, DATE_FORMAT(reviewed,'%d/%m/%Y %T') AS reviewed, reviewer, action, response FROM (review_comments, users) WHERE review_comments.reviewer = users.id AND review_type = ? AND q_paper = ?");
     $result->bind_param('si', $type,$paperID);
     $result->execute();
     $result->bind_result($title, $initials, $surname, $tmp_q_id, $comment, $category, $reviewed, $tmp_reviewer, $action, $response);
@@ -586,11 +570,11 @@ if (isset($_GET['scrOfY'])) {
         unset($incomplete_array[$tmp_reviewer]);
       }
 
-      $comments_array[$tmp_q_id][$tmp_reviewer]['name'] = $title . ' ' . $initials . ' ' . $surname;
+      $comments_array[$tmp_q_id][$tmp_reviewer]['name']     = $title . ' ' . $initials . ' ' . $surname;
       $comments_array[$tmp_q_id][$tmp_reviewer]['reviewed'] = $reviewed;
-      $comments_array[$tmp_q_id][$tmp_reviewer]['comment'] = $comment;
+      $comments_array[$tmp_q_id][$tmp_reviewer]['comment']  = $comment;
       $comments_array[$tmp_q_id][$tmp_reviewer]['category'] = $category;
-      $comments_array[$tmp_q_id][$tmp_reviewer]['action'] = $action;
+      $comments_array[$tmp_q_id][$tmp_reviewer]['action']   = $action;
       $comments_array[$tmp_q_id][$tmp_reviewer]['response'] = $response;
     }
     $result->close();
@@ -629,7 +613,7 @@ if (isset($_GET['scrOfY'])) {
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std FROM (properties, papers, questions, options) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num");
+  $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std FROM (properties, papers, questions, options) WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND questions.q_id = options.o_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
