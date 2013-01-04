@@ -197,7 +197,7 @@ require_once '../include/staff_auth.inc';
 
   // -- Display any papers for review ---------------------------------
   $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND internal_review_deadline >= NOW() AND properties.property_id=papers.paper AND internal_reviewers LIKE ? GROUP BY paper");
-  $db=$mysqli;
+  $db = $mysqli;
   if ($db->error) {
     try {
       throw new Exception("MySQL error $db->error <br> Query:<br> $query", $db->errno);
@@ -207,12 +207,12 @@ require_once '../include/staff_auth.inc';
       echo nl2br($e->getTraceAsString());
     }
   }
-  $tmp='%' . $userObject->get_user_ID() . '%';
+  $tmp = '%' . $userObject->get_user_ID() . '%';
   $result->bind_param('s', $tmp);
-  $db=$mysqli;
+  $db = $mysqli;
   if ($db->error) {
     try {
-      throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+      throw new Exception("MySQL error $db->error <br> Query:<br> $query", $db->errno);
     }
     catch (Exception $e) {
       echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -225,7 +225,7 @@ require_once '../include/staff_auth.inc';
 
   if ($result->num_rows() > 0) {
     echo "<br />\n";
-    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>Papers for Review</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['papersforreview'] . " (" . $result->num_rows() . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   }
   while ($result->fetch()) {
     $reviewed = '';
@@ -238,7 +238,7 @@ require_once '../include/staff_auth.inc';
     echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"#\" onclick=\"startPaper('" . $crypt_name . "'," . $fullscreen . "); return false;\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" border=\"0\" /></a></td>\n";
     echo "  <td><a href=\"#\" onclick=\"startPaper('" . $crypt_name . "'," . $fullscreen . "); return false;\">" . $paper_title . "</a><br /><div style=\"color:#C00000\">Deadline: " . $internal_review_deadline . "</div>";
     if ($reviewed == '') {
-      echo "<span style=\"color:white; background-color:red\">&nbsp;" . $string['notreviewed'] . "&nbsp;</span>";
+      echo "<span style=\"color:white; background-color:#FF4040\">&nbsp;" . $string['notreviewed'] . "&nbsp;</span>";
     } else {
       echo "<span style=\"color:#808080\">" . $string['reviewed'] . ": $reviewed</span>";
     }
@@ -311,7 +311,7 @@ require_once '../include/staff_auth.inc';
     $result->bind_result($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password);
     $result->store_result();
     if ($result->num_rows > 0) {
-      echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['unassignedpapers'] . " (" . $result->num_rows . ")<nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+      echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['unassignedpapers'] . " (" . $result->num_rows . ")<nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
       while ($result->fetch()) {
         display_paper_icon($userObject->get_user_ID(), $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
       }

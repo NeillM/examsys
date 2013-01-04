@@ -40,7 +40,7 @@
     p {line-height:150%}
   </style>
 
-  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/student_help.js"></script>
   <script language="JavaScript">
     function startPaper(paperID, fullsc) {
       var winwidth = screen.width-80;
@@ -76,7 +76,7 @@
 <p style="margin-left:15px; font-weight:bold"><?php echo $string['yourpapersforreview']; ?></p>
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
 <?php
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,' {$configObject->get('cfg_short_date')}') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id=papers.paper AND externals LIKE ? GROUP BY paper");
+  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,' {$configObject->get('cfg_short_date')}') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id=papers.paper AND externals LIKE ? GROUP BY paper ORDER BY paper_title");
   $tVar= '%'. $userObject->get_user_ID() . '%';
   $result->bind_param('s', $tVar);
   $result->execute();
@@ -95,7 +95,7 @@
     echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('$crypt_name',$fullscreen); return false;\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" border=\"0\" /></a></td>\n";
     echo "  <td><a href=\"#\" onclick=\"startPaper('$crypt_name',$fullscreen); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
     if (date("Ymd") > $external_review_deadline) {
-      printf($string['expired'], $cfg_company);
+      printf($string['expired'], $configObject->get('cfg_company'));
     } else {
       if ($display_deadline == '00/00/0000') {
         echo $string['notset'];
@@ -105,7 +105,7 @@
     }
     echo '</div>';
     if ($reviewed == '') {
-      echo '<span style="color:white; background-color:red; padding-left:5px; padding-right:5px">' . $string['notreviewed'] . '</span>';
+      echo '<span style="color:white; background-color:#FF4040; padding-left:5px; padding-right:5px">' . $string['notreviewed'] . '</span>';
     } else {
       echo '<span style="color:#808080">' . sprintf($string['reviewed'], $reviewed) . '</span>';
     }
@@ -117,20 +117,20 @@
   }
   $result->close();
   echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n<tr><td colspan=\"2\" style=\"text-align:left\"><hr noshade=\"noshade\" align=\"left\" style=\"text-align:left; background-color:#C0C0C0; color:#C0C0C0; height:1px; border:0; width:400px\" /></td>\n</tr>\n";
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"#\" onclick=\"launchHelp(); return false;\"><img src=\"../artwork/help_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td>\n</td><td><a href=\"#\" onclick=\"launchHelp(); return false;\">" . $string['helpandsupport'] . "</a><br /><span style=\"color:#808080\">" . $string['onlinesupportsystem'] . "</span></td></tr>\n";
+  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"#\" onclick=\"launchHelp(31); return false;\"><img src=\"../artwork/help_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td>\n</td><td><a href=\"#\" onclick=\"launchHelp(31); return false;\">" . $string['helpandsupport'] . "</a><br /><span style=\"color:#808080\">" . $string['onlinesupportsystem'] . "</span></td></tr>\n";
 
   echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/email_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td>\n</td><td><a href=\"mailto:$support_email\">$support_email</a><br /><span style=\"color:#808080\">" . $string['helpandsupportext'] . "</span></td></tr>\n";
+  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:" . $configObject->get('support_email') . "\"><img src=\"../artwork/email_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td>\n</td><td><a href=\"mailto:" . $configObject->get('support_email') . "\">" . $configObject->get('support_email') . "</a><br /><span style=\"color:#808080\">" . $string['helpandsupportext'] . "</span></td></tr>\n";
 
   echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/osi_logo.png\" width=\"56\" height=\"66\" alt=\"Open Source Initiative\" border=\"0\" /></a></td>\n</td><td><span style=\"color:#808080\">" . sprintf($string['rogodetails'], $configObject->get('rogo_version')) . "</a> <a href=\"http://rogo-oss.nottingham.ac.uk\">rogo-oss.nottingham.ac.uk</a></td></tr>\n";
+  echo "<tr><td width=\"66\" style=\"text-align:center\"><img src=\"../artwork/osi_logo.png\" width=\"56\" height=\"66\" alt=\"Open Source Initiative\" /></td>\n</td><td><span style=\"color:#808080\">" . sprintf($string['rogodetails'], $configObject->get('rogo_version')) . "</a> <a href=\"http://rogo-oss.nottingham.ac.uk\">rogo-oss.nottingham.ac.uk</a></td></tr>\n";
   $mysqli->close();
 ?>
 
 </table>
 <br />&nbsp;<br />
 
-<div style="margin-left:10px; font-size:80%; color:#808080"><?php printf($string['copyrightmsg'], $cfg_company); ?></div>
+<div style="margin-left:10px; font-size:80%; color:#808080"><?php printf($string['copyrightmsg'], $configObject->get('cfg_company')); ?></div>
 
 </body>
 </html>

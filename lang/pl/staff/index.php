@@ -57,5 +57,6 @@ $string['author'] = 'Autor';
 $string['duplicatefoldername'] = 'Ta nazwa folderu jest już wykorzystywana, użyj innej.';
 $string['loggedinas'] = 'Jesteś zalogowany jako';
 $string['eassessmentmanagementsystem'] = 'System zarządzania oceną';
-$string['nomodules'] = 'Nie jesteś członkiem żadnego zespołu. Skontaktuj się z nami, aby uzyskać pomoc:';  
+$string['nomodules'] = 'Nie jesteś członkiem żadnego zespołu. Skontaktuj się z nami, aby uzyskać pomoc:';
+$string['papersforreview'] = 'Papers for Review';  // Niko
 ?>

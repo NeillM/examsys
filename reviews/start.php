@@ -52,19 +52,18 @@ $stmt->close();
 
 // Get how many screens make up the question paper.
 $screen_data = array();
-$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, q_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, UNIX_TIMESTAMP(external_review_deadline), UNIX_TIMESTAMP(internal_review_deadline), latex_needed, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
+$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, q_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, UNIX_TIMESTAMP(external_review_deadline), UNIX_TIMESTAMP(internal_review_deadline), latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $q_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $calendar_year, $external_review_deadline, $internal_review_deadline, $latex_needed, $password);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $q_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $calendar_year, $external_review_deadline, $internal_review_deadline, $latex_needed, $password, $q_type, $q_id);
 while ($stmt->fetch()) {
   $no_screens = $screen;
   $original_paper_type = $paper_type;
-  if (!isset($screen_data[$no_screens])) { 
-    $screen_data[$no_screens] = 1;
-  } else {
-    $screen_data[$no_screens]++;
-  } 
+  if ($q_type != 'info') {
+    $screen_data[$no_screens][] = array($q_type, $q_id);
+  }
+
   // If set overwrite the default colours with the current users' special settings
   if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
   if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
@@ -146,6 +145,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
 <meta http-equiv="imagetoolbar" content="false">
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
+<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <style type="text/css">
 pre {
 white-space: pre-wrap; /* css-3 */
@@ -309,40 +309,50 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
   $question_offset = 0;
   if ($no_screens > 1) {
-    echo '<table cellspacing="1" cellpadding="1" border="0" style="font-weight:bold; color:white"><tr>';
-    for ($i=1; $i<=$no_screens; $i++) {
-      echo "<td title=\"" . $screen_data[$i];
-      if ($i == $current_screen) {
-        if ($screen_data[$i] == 1) {
-          echo " question\" class=\"scr_ans\">";
-        } else {
-          echo " questions\" class=\"scr_ans\">";
-        }
-      } else {
-        if ($screen_data[$i] == 1) {
-          echo " question\" class=\"scr_ans\">";
-        } else {
-          echo " questions\" class=\"scr_ans\">";
-        }
-        if ($i < $current_screen) $question_offset += $screen_data[$i];
-      }
-      echo "$i</td>";
-    }
-    echo "</tr>\n<tr>";
     for ($i=1; $i<=$no_screens; $i++) {
       if ($i == $current_screen) {
-        echo '<td class="scr_cur"></td>';
+        echo '<div class="scr_cur"';
       } else {
-        echo '<td></td>';
+        echo '<div class="scr_ans"';
+      }
+      $no_questions = 0;
+      if (isset($screen_data[$i])) {
+        foreach ($screen_data[$i] as $screen_question) {
+          $no_questions++;
+        }
+      }
+      if ($no_questions == 1) {
+        echo ' title="' . $no_questions . ' question">';
+      } else {
+        echo ' title="' . $no_questions . ' questions">';
+      }
+      
+      if ($i < $current_screen and isset($screen_data[$i])) {
+        foreach ($screen_data[$i] as $screen_question) {
+          if ($screen_question[0] != 'info' ) {
+            $question_offset++;
+          }
+        }
+      }
+      echo "$i</div>\n";
+    }
+    echo "<div style=\"clear:both\"></div>\n";
+    
+    
+    for ($i=1; $i<=$no_screens; $i++) {
+      if ($i == $current_screen) {
+        echo '<div class="scr_arrow"></div>';
+      } else {
+        echo '<div class="scr_spacer">&nbsp;</div>';
       }
     }
-    echo '</tr></table>';
+    
   }
   echo '</td>';
   echo $logo_html;
   
   if ((time() > $review_deadline or time() > $start_date) and $start_date != '') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:50px; height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:50px; height:32px; text-align:right\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";
   }
   
   $previous_duration = 0;

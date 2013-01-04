@@ -70,7 +70,7 @@ class UserObject {
       $this->roles['Student'] = 1;
     }
     if (strpos($this->userroles, 'External Examiner') !== FALSE) {
-      $this->roles['ExternalExaminer'] = 1;
+      $this->roles['External Examiner'] = 1;
     }
     if (strpos($this->userroles, 'Invigilator') !== FALSE) {
       $this->roles['Invigilator'] = 1;
@@ -487,7 +487,7 @@ class UserObject {
       $this->roles['Student'] = 1;
     }
     if (strpos($this->userroles, 'External Examiner') !== FALSE) {
-      $this->roles['ExternalExaminer'] = 1;
+      $this->roles['External Examiner'] = 1;
     }
     if (strpos($this->userroles, 'Invigilator') !== FALSE) {
       $this->roles['Invigilator'] = 1;

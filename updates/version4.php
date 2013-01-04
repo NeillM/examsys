@@ -5021,6 +5021,11 @@ QUERY;
   $mysqli->query($sql);
   echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'</li>\n";
 
+  //brzsw 04/01/2013 - Add new grants for external examiners
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'</li>\n";
+
   $mysqli->query('FLUSH PRIVILEGES');
 
 
