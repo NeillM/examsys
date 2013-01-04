@@ -89,8 +89,11 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
             }
             break;
           case 'extmatch':
-            if (strpos($current_answer, 'u') !== false) {
-              $incomplete_screens[$i] = 1;
+            $parts = explode('|', $current_answer);
+            foreach ($parts as $part) {
+              if ($part == '' or $part == 'u') {
+                $incomplete_screens[$i] = 1;
+              }
             }
             break;
           case 'hotspot':
