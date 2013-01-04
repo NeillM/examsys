@@ -127,6 +127,8 @@ class UserObject {
 
   function set_demo() {
     $this->demomode = TRUE;
+    $this->configObj->append('cfg_install_type'," (DEMO mode)");
+
   }
 
   /**
@@ -475,7 +477,7 @@ class UserObject {
   }
 
   function impersonate($userid) {
-    if (!$getauthobj->userObj->has_role('SysAdmin')) {
+    if ($this->has_role('SysAdmin')) {
       $this->store_original_user();
       $this->load($userid);
       $this->configObj->append('cfg_install_type'," as $this->title $this->surname");
