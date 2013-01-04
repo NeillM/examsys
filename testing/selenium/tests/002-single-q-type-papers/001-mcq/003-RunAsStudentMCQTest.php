@@ -67,6 +67,9 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
   }
 
+  /**
+   * @depends testQuestionPresenceAndOrder
+   */
   public function testCompletePaperCorrect() {
     do_student_login($this, 'teststudent4', 'fiu&52K3');
 
@@ -115,6 +118,9 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '100.0%');
   }
 
+  /**
+   * @depends testQuestionPresenceAndOrder
+   */
   public function testCompletePaperIncorrect() {
     do_student_login($this, 'teststudent5', 'sjg!12T^');
 
@@ -163,6 +169,9 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-33.3%');
   }
 
+  /**
+   * @depends testQuestionPresenceAndOrder
+   */
   public function testCompletePaperMixed() {
     do_student_login($this, 'teststudent6', 'ara!68X7');
 
