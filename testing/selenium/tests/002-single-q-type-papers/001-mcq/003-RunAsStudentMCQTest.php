@@ -14,8 +14,8 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testCompletePaperCorrect() {
-    do_student_login($this, 'teststudent4', 'fiu&52K3');
+  public function testQuestionPresenceAndOrder() {
+    do_student_login($this, 'teststudent7', 'ogk_14DI');
 
     $this->open("/user_index.php?id=11355244387102");
     $this->click("id=start");
@@ -28,8 +28,6 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 2, horizontal, display order, 1 mark, Option Two correct');
     $this->assertCssCount('css=input[type="radio"]', 6);
 
-    $this->click("name=q1");
-    $this->click("xpath=(//input[@name='q2'])[2]");
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('MCQ 3, DDL, display order, 2 marks, Option Two correct');
@@ -41,8 +39,6 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[2]/td[2]', 'Option M');
     $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[3]/td[2]', 'Option X');
 
-    $this->select("name=q1", "label=Option Two");
-    $this->click("xpath=(//input[@name='q2'])[2]");
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('MCQ 5, horizontal, alphabetic, 1 mark, Option B correct');
@@ -57,8 +53,6 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[3]', 'Option M');
     $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[4]', 'Option X');
 
-    $this->click("name=q1");
-    $this->select("name=q2", "label=Option X");
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('MCQ 7, vertical, random, 1 mark, -1 mark incorrect, Option One correct');
@@ -67,6 +61,34 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertCssCount('css=input[type="radio"]', 6);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
 
+    $this->click("id=finish");
+    $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
+    $this->waitForPageToLoad("30000");
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
+  }
+
+  public function testCompletePaperCorrect() {
+    do_student_login($this, 'teststudent4', 'fiu&52K3');
+
+    $this->open("/user_index.php?id=11355244387102");
+    $this->click("id=start");
+    $this->waitForPopUp("paper", "30000");
+    $this->selectWindow("name=paper");
+
+    $this->click("name=q1");
+    $this->click("xpath=(//input[@name='q2'])[2]");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+
+    $this->select("name=q1", "label=Option Two");
+    $this->click("xpath=(//input[@name='q2'])[2]");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+
+    $this->click("name=q1");
+    $this->select("name=q2", "label=Option X");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
 
     $this->click("xpath=(//input[@name='q1' and @value='1'])");
     $this->click("xpath=(//input[@name='q2' and @value='2'])");
@@ -75,6 +97,22 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
     $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
+
+    // Individual Question Marks
+    $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '2 out of 2');
+    $this->assertElementContainsText('//table[3]/tbody/tr[3]/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[4]/tbody/tr/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[4]/tbody/tr[3]/td[2]/p/span', '2 out of 2');
+    $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[5]/tbody/tr[3]/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[5]/tbody/tr[5]/td[2]/p/span', '2 out of 2');
+
+    // Overall Marks
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '12 out of 12');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '100.0%');
   }
 
   public function testCompletePaperIncorrect() {
@@ -84,48 +122,21 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=start");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
-    $this->assertTextPresent('MCQ 1, vertical, display order, 1 mark, Option One correct');
-    $this->assertTextPresent('MCQ 2, horizontal, display order, 1 mark, Option Two correct');
-    $this->assertCssCount('css=input[type="radio"]', 6);
 
     $this->click("xpath=(//input[@name='q1'])[2]");
     $this->click("xpath=(//input[@name='q2'])[1]");
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
-    $this->assertTextPresent('MCQ 3, DDL, display order, 2 marks, Option Two correct');
-    $this->assertTextPresent('MCQ 4, vertical, alphabetic, 1 mark, Option M correct');
-    $this->assertCssCount('css=input[type="radio"]', 3);
-    $this->assertCssCount('css=select', 2); // Include page jump DDL
-    // Order of alphabetic question
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[1]/td[2]', 'Option B');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[2]/td[2]', 'Option M');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[3]/td[2]', 'Option X');
 
     $this->select("name=q1", "label=Option Three");
     $this->click("xpath=(//input[@name='q2'])[1]");
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
-    $this->assertTextPresent('MCQ 5, horizontal, alphabetic, 1 mark, Option B correct');
-    $this->assertTextPresent('MCQ 6, DDL, alphabetic, 2 marks, Option X correct');
-    $this->assertCssCount('css=input[type="radio"]', 3);
-    $this->assertCssCount('css=select', 2); // Include page jump DDL
-    // Order of alphabetic questions
-    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="2"]', '0');
-    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="1"]', '2');
-    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="3"]', '4');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[2]', 'Option B');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[3]', 'Option M');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[4]', 'Option X');
 
     $this->click("xpath=(//input[@name='q1'])[3]");
     $this->select("name=q2", "label=Option M");
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
-    $this->assertTextPresent('MCQ 7, vertical, random, 1 mark, -1 mark incorrect, Option One correct');
-    $this->assertTextPresent('MCQ 8, horizontal, random, 1 mark, -2 marks incorrect, Option Two correct');
-    $this->assertTextPresent('MCQ 9, DDL, random, 2 marks, -1 mark incorrect, Option Three correct');
-    $this->assertCssCount('css=input[type="radio"]', 6);
-    $this->assertCssCount('css=select', 2); // Include page jump DDL
 
     $this->click("xpath=(//input[@name='q1' and @value='2'])");
     $this->click("xpath=(//input[@name='q2' and @value='3'])");
@@ -134,6 +145,22 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
     $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
+
+    // Individual Question Marks
+    $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[3]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[4]/tbody/tr/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[4]/tbody/tr[3]/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/p/span', '-1 out of 1');
+    $this->assertElementContainsText('//table[5]/tbody/tr[3]/td[2]/p/span', '-2 out of 1');
+    $this->assertElementContainsText('//table[5]/tbody/tr[5]/td[2]/p/span', '-1 out of 2');
+
+    // Overall Marks
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-4 out of 12');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-33.3%');
   }
 
   public function testCompletePaperMixed() {
@@ -143,48 +170,21 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=start");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
-    $this->assertTextPresent('MCQ 1, vertical, display order, 1 mark, Option One correct');
-    $this->assertTextPresent('MCQ 2, horizontal, display order, 1 mark, Option Two correct');
-    $this->assertCssCount('css=input[type="radio"]', 6);
 
     $this->click("name=q1");
     $this->click("xpath=(//input[@name='q2'])[1]");
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
-    $this->assertTextPresent('MCQ 3, DDL, display order, 2 marks, Option Two correct');
-    $this->assertTextPresent('MCQ 4, vertical, alphabetic, 1 mark, Option M correct');
-    $this->assertCssCount('css=input[type="radio"]', 3);
-    $this->assertCssCount('css=select', 2); // Include page jump DDL
-    // Order of alphabetic question
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[1]/td[2]', 'Option B');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[2]/td[2]', 'Option M');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[3]/td[2]', 'Option X');
 
     $this->select("name=q1", "label=Option Three");
     $this->click("xpath=(//input[@name='q2'])[2]");
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
-    $this->assertTextPresent('MCQ 5, horizontal, alphabetic, 1 mark, Option B correct');
-    $this->assertTextPresent('MCQ 6, DDL, alphabetic, 2 marks, Option X correct');
-    $this->assertCssCount('css=input[type="radio"]', 3);
-    $this->assertCssCount('css=select', 2); // Include page jump DDL
-    // Order of alphabetic questions
-    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="2"]', '0');
-    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="1"]', '2');
-    $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="3"]', '4');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[2]', 'Option B');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[3]', 'Option M');
-    $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/div/select/option[4]', 'Option X');
 
     $this->click("name=q1");
     $this->select("name=q2", "label=Option M");
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
-    $this->assertTextPresent('MCQ 7, vertical, random, 1 mark, -1 mark incorrect, Option One correct');
-    $this->assertTextPresent('MCQ 8, horizontal, random, 1 mark, -2 marks incorrect, Option Two correct');
-    $this->assertTextPresent('MCQ 9, DDL, random, 2 marks, -1 mark incorrect, Option Three correct');
-    $this->assertCssCount('css=input[type="radio"]', 6);
-    $this->assertCssCount('css=select', 2); // Include page jump DDL
 
     $this->click("xpath=(//input[@name='q1' and @value='2'])");
     $this->click("xpath=(//input[@name='q2' and @value='2'])");
@@ -193,6 +193,22 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
     $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
+
+    // Individual Question Marks
+    $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[3]/tbody/tr[3]/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[4]/tbody/tr/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[4]/tbody/tr[3]/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/p/span', '-1 out of 1');
+    $this->assertElementContainsText('//table[5]/tbody/tr[3]/td[2]/p/span', '1 out of 1');
+    $this->assertElementContainsText('//table[5]/tbody/tr[5]/td[2]/p/span', '2 out of 2');
+
+    // Overall Marks
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '5 out of 12');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '41.7%');
   }
 }
 ?>
