@@ -15,33 +15,11 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
+require_once 'outline_authentication.class.php';
 
 include_once $configObj->get('cfg_web_root') . 'lang/en/include/common.inc';
 
-class ldap_auth {
-
-  private $name;
-  private $number;
-  private $returndata;
-  private $retdata;
-  private $form;
-  private $settings;
-  private $db;
-  private $calling_object;
-  private $updatable = FALSE;
-  public $rogoid = FALSE;
-
-  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form) {
-    $this->db = new mysqli();
-    $this->db = $db;
-    $this->calling_object = $calling_object;
-    $this->returndata = $returndata;
-    $this->number = $number;
-    $this->retdata = $returndata[$number];
-    $this->form = $form;
-    $this->settings = $settings;
-    $this->name = $name;
-  }
+class ldap_auth extends outline_authentication {
 
   function register_callback_routines() {
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
@@ -74,13 +52,6 @@ class ldap_auth {
 
   }
 
-
-  function set_fail() {
-    $this->retdata->success = FALSE;
-    $this->retdata->form = 'std';
-    $this->retdata->rogoid = 0;
-    $this->retdata->url = '';
-  }
 
   function auth($authobj) {
     global $string;

@@ -17,34 +17,17 @@
  */
 
 require_once $configObj->get('cfg_web_root') . 'LTI/ims-lti/UoN_LTI.php';
+require_once 'outline_authentication.class.php';
 
 
-class ltilogin_auth {
+class ltilogin_auth extends outline_authentication {
 
-  private $name;
-  private $number;
-  private $returndata;
-  private $retdata;
-  private $form;
-  private $settings;
-  private $db;
-  private $calling_object;
-  private $updatable = FALSE;
-  public $rogoid = FALSE;
 
   private $lti;
 
-  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form) {
-    $this->db = new mysqli();
-    $this->db = $db;
-    $this->calling_object = $calling_object;
-    $this->returndata = $returndata;
-    $this->number = $number;
-    $this->retdata = $returndata[$number];
-    $this->form = $form;
-    $this->settings = $settings;
-    $this->name = $name;
+  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, &$form) {
 
+    parent::__construct($calling_object, $settings, $number, $name, $db, $returndata, $form);
     if (session_id() == '') {
       $this->debug[] = 'SESSION NOT FOUND';
       session_name('RogoAuthentication');
@@ -71,26 +54,45 @@ class ltilogin_auth {
 //    $this->calling_object->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
   }
 
-  function set_fail() {
-    $this->retdata->success = FALSE;
-    $this->retdata->form = 'std';
-    $this->retdata->rogoid = 0;
-    $this->retdata->url = '';
-  }
 
   function auth($authobj) {
 
     if (!$this->lti->valid) {
-      $this->retdata->debug[] = 'Not valid LTI Launch';
+      $this->retdata->debug[] = 'Not valid LTI Launch: ' .  $this->lti->message;
       $this->set_fail();
 
       return FALSE;
     }
 
-    // code similar to staff_student auth line 105
+    $this->retdata->debug[] = 'Starting to lookup user';
+    $returned = $this->lti->lookup_lti_user();
 
+    $this->retdata->debug[] = 'Data returned from lti lookup was: ' . var_export($returned, TRUE);
 
+    if ($returned !== FALSE) {
+      $this->retdata->success = TRUE;
+      $this->retdata->form = 'std';
+      $this->retdata->rogoid = $returned[0];
+      $this->rogoid = $returned[0];
+      $this->retdata->url = '';
+      $authobj->retdata = $this->retdata;
+      $this->retdata->debug[] = 'LTI lookup successful';
 
+      return TRUE;
+    }
+
+    var_dump($returned);
+
+    var_dump($this);
+    exit();
+
+    // lti valid but no user id associated with it.
+    // need to authenticate the user but ignore lti & already logged in etc
+
+    if(!isset($_SESSION['authenticationObj']['ltilogin']['lookupstage'])) {
+      //display message
+      //      UserNotices::display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
+    }
   }
 
 

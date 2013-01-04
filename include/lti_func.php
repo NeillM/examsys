@@ -28,7 +28,7 @@
  * Function to support LTI capability
  * @param object $db database object
  * @param object $lti lti object
- * @return false if issue else array of userid and last updated data
+ * @return bool false if issue else array of userid and last updated data
  */
 
 function usercheck($db, $lti) {

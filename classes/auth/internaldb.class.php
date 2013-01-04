@@ -15,20 +15,14 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-class internaldb_auth {
+require_once 'outline_authentication.class.php';
 
-  private $name;
-  private $number;
-  private $returndata;
-  private $retdata;
-  private $form;
-  private $settings;
-  private $db;
-  private $calling_object;
+class internaldb_auth extends outline_authentication {
+
+
   private $updatable = FALSE;
-  public $rogoid = FALSE;
 
-
+/*
   function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form) {
     $this->db = new mysqli();
     $this->db = $db;
@@ -40,11 +34,13 @@ class internaldb_auth {
     $this->settings = $settings;
     $this->name = $name;
   }
+*/
 
   function register_callback_routines() {
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
     $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
     $this->calling_object->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
+    $this->calling_object->register_callback(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
   }
 
   function set_fail() {
@@ -77,6 +73,41 @@ class internaldb_auth {
 
 
     return;
+
+  }
+
+  function lookupuser($lookupuserobj) {
+
+    if (!isset($lookupuserobj->username)) {
+      $this->retdata->debug[] = 'Lookup user has nothing to lookup';
+
+    }
+    extract($this->settings);
+    $sql = "SELECT $username_col as username, $passwd_col as passwd, $id_col as id FROM $table WHERE $username_col=?";
+    $result = $this->db->prepare($sql);
+    $result->bind_param('s', $lookupuserobj->username);
+    $result->execute();
+    $result->store_result();
+
+    $result->bind_result($uname, $pass, $id);
+    /*
+        if ($result->num_rows() !== 1) {
+          // return not sucessfull either no user or multiple matches
+          $this->retdata->debug[] = 'Lookup user record number not = 1 no user or multiple user found';
+
+          return FALSE;
+
+        }
+        */
+    while ($result->fetch()) {
+      $datastore = new stdClass();
+      $datastore->userid = $id;
+      $datastore->uname = $uname;
+      $lookupuserobj->results[] = $datastore;
+      $this->retdata->debug[] = var_export($datastore, TRUE);
+    }
+
+    $lookupuserobj->found = TRUE;
 
   }
 

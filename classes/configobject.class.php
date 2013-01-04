@@ -67,4 +67,22 @@ class Config {
 
     return null;
   }
+
+  function getbyref($var) {
+    if (is_string($var)) {
+      if (isset($this->data[$var])) {
+        return $this->data[$var];
+      }
+    } elseif(is_array($var)) {
+      $dat=array();
+      foreach($var as $key) {
+        if(isset($this->data[$key])) {
+          $dat[$key]=$this->data[$key];
+        }
+      }
+      return $dat;
+    }
+
+    return null;
+  }
 }

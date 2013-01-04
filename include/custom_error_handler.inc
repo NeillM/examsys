@@ -100,7 +100,14 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     }
 
     $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
-    $log_error->bind_param('issssssssisss', $GLOBALS['userObject']->get_user_ID(), $userObject->get_username(), $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
+    $userid=0;
+    $username='PRE LOGIN';
+    if(isset($GLOBALS['userObject'])) {
+      $userid=$GLOBALS['userObject']->get_user_ID();
+      $username=$userObject->get_username();
+    }
+
+    $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
     $log_error->execute();
     $log_error->close();
     $mysqli2->close();
@@ -124,6 +131,9 @@ function DebugBackTraceDisplay($obj) {
     if ($called['function'] == 'customErrorHandler') {
       $str .= '<br />#' . $key . ' CustomeErrorHandler';
     } else {
+      if(!isset($called['line'])) {
+        $called['line']='Unknown!';
+      }
       $str = $str . '<br />#' . $key . ' ' . $called['function'] . ' called at [' . $called['file'] . ':' . $called['line'] . ']';
     }
   }

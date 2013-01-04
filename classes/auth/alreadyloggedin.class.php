@@ -15,28 +15,14 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-class alreadyloggedin_auth {
-  private $name;
-  private $number;
-  private $returndata;
-  private $retdata;
-  private $form;
-  private $settings;
-  private $db;
-  private $calling_object;
-  private $updatable = FALSE;
-  public $rogoid;
+require_once 'outline_authentication.class.php';
 
-  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form) {
-    $this->db = new mysqli();
-    $this->db = $db;
-    $this->calling_object = $calling_object;
-    $this->returndata = $returndata;
-    $this->number = $number;
-    $this->retdata = $returndata[$number];
-    $this->form = $form;
-    $this->settings = $settings;
-    $this->name = $name;
+class alreadyloggedin_auth extends outline_authentication {
+
+
+  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, &$form) {
+
+    parent::__construct($calling_object, $settings, $number, $name, $db, $returndata, $form);
     if (session_id() == '') {
       $this->debug[] = 'SESSION NOT FOUND';
       session_name('RogoAuthentication');
@@ -52,16 +38,14 @@ class alreadyloggedin_auth {
   }
 
   function register_callback_routines() {
-
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $this->calling_object->register_callback(array($this, 'store_user'), 'sessionstore', $this->number, $this->name);
     $this->calling_object->register_callback(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
-
-
   }
 
   function auth($authobj) {
-    $this->retdata->debug[] = 'Authing';
-    $this->retdata->debug[] = str_replace("\n", '', trim(rtrim(var_export($_SESSION, TRUE))));
+    $this->savetodebug('Authing');
+    $this->savetodebug(str_replace("\n", '', trim(rtrim(var_export($_SESSION, TRUE)))));
     if (isset($_SESSION['authenticationObj']['loggedin']['userid']) and $_SESSION['authenticationObj']['loggedin']['userid'] > 0 and $_SESSION['authenticationObj']['loggedin']['userid'] != '' and $_SESSION['authenticationObj']['loggedin']['userid'] != 'null' and is_int($_SESSION['authenticationObj']['loggedin']['userid'])) {
       $this->retdata->debug[] = 'userid found in session';
       if (isset($this->settings['timeout']) and $this->settings['timeout'] != 0 and (($_SESSION['authenticationObj']['loggedin']['time'] + $this->settings['timeout']) > time())) {
@@ -71,12 +55,12 @@ class alreadyloggedin_auth {
 
         return FALSE;
       } else {
-        $this->retdata->debug[] = 'Successfully authenticated';
+        $this->savetodebug('Successfully authenticated');
         $this->retdata->success = TRUE;
         $this->retdata->rogoid = $_SESSION['authenticationObj']['loggedin']['userid'];
         $this->rogoid = $_SESSION['authenticationObj']['loggedin']['userid'];
 
-        $authobj->rogoid =& $this->retdata->rogoid;
+        $authobj->rogoid = &$this->retdata->rogoid;
 
         return TRUE;
       }
@@ -91,9 +75,34 @@ class alreadyloggedin_auth {
 
   }
 
-  function update_time($postauthsuccessobj = '') {
-    $this->retdata->debugp[] = 'Updated stored time in session';
+  function store_user(&$sessionstoreobj) {
+    $this->savetodebug('session store');
+    $_SESSION['authenticationObj']['loggedin']['userid'] = $this->calling_object->get_userid();
     $_SESSION['authenticationObj']['loggedin']['time'] = time();
+    $_SESSION['authenticationObj']['attempt'] = 0;
+  }
+
+  function update_time($postauthsuccessobj = '') {
+    $this->savetodebug('Updated stored time in session');
+    $_SESSION['authenticationObj']['loggedin']['time'] = time();
+
+    $lookupuserobj = new stdClass();
+    list($callbacklist, $callbackregisterdatalist) = $this->calling_object->get_callback('sessionstore'); //  run this when needing to store auth data to session
+
+    if (is_array(($callbacklist))) {
+      //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
+      foreach ($callbacklist as $number => $callback) {
+
+        call_user_func_array($callback, array(&$lookupuserobj));
+        $objid = key($callbackregisterdatalist[$number]);
+        $new_messages = $this->returndata[$objid]->get_new_debug_messages();
+        foreach ($new_messages as $key => $value) {
+          $info1 = $this->calling_object->authinfo[$objid];
+          $info = key($info1) . ':' . current($info1);
+          $this->savetodebug("Session Store:authObj($info)[$number:$key]: $value");
+        }
+      }
+    }
   }
 
 }

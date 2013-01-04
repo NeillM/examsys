@@ -33,8 +33,11 @@ class UserObject {
    * @var
    */
   private $password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username;
-
+  private $demomode = FALSE;
   private $roles, $staffModules, $studentModules, $db, $configObj;
+
+
+  private $originaluser;
 
   /**
    * constructor
@@ -44,8 +47,8 @@ class UserObject {
    * @return none
    */
   function __construct($configObject, &$db) {
-    $this->db = $db;
-    $this->configObj = $configObject;
+    $this->db = & $db;
+    $this->configObj = & $configObject;
   }
 
   /**
@@ -54,6 +57,7 @@ class UserObject {
    * @param $array array of data in old format
    * @return array
    */
+  /*
   function old_load($array) {
     list($this->password, $this->userID, $this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs, $this->record_no, $this->split_username) = $array;
 
@@ -70,12 +74,13 @@ class UserObject {
       $this->roles['Student'] = 1;
     }
     if (strpos($this->userroles, 'External Examiner') !== FALSE) {
-      $this->roles['External Examiner'] = 1;
+      $this->roles['ExternalExaminer'] = 1;
     }
     if (strpos($this->userroles, 'Invigilator') !== FALSE) {
       $this->roles['Invigilator'] = 1;
     }
   }
+*/
 
   /**
    * TEMP Function exports user roles in old style
@@ -113,6 +118,15 @@ class UserObject {
     }
 
     return FALSE;
+  }
+
+
+  function is_demo() {
+    return $this->demomode;
+  }
+
+  function set_demo() {
+    $this->demomode = TRUE;
   }
 
   /**
@@ -460,6 +474,16 @@ class UserObject {
     trigger_error('remove_staff_from_module not yet implimented', E_USER_WARNING);
   }
 
+  function store_original_user() {
+    $data = new stdClass();
+    $data->title = $this->title;
+    $data->initials = $this->initials;
+    $data->username = $this->username;
+    $data->email = $this->email;
+    $data->roles = $this->roles;
+    $this->originaluser = $data;
+  }
+
   function load($userID) {
     $this->userID = $userID;
     $stmt = $this->db->prepare("SELECT roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id=?");
@@ -474,25 +498,32 @@ class UserObject {
       return FALSE;
     }
 
-    if (strpos($this->userroles, 'SysAdmin') !== FALSE) {
-      $this->roles['SysAdmin'] = 1;
-    }
-    if (strpos($this->userroles, 'Admin') !== FALSE and strpos($this->userroles, 'SysAdmin') === FALSE) {
-      $this->roles['Admin'] = 1;
-    }
-    if (strpos($this->userroles, 'Staff') !== FALSE or strpos($this->userroles, 'Admin') !== FALSE) { // Process staff first to get higher priority than students --no need
-      $this->roles['Staff'] = 1;
-    }
-    if (strpos($this->userroles, 'Student') !== FALSE) {
-      $this->roles['Student'] = 1;
-    }
-    if (strpos($this->userroles, 'External Examiner') !== FALSE) {
-      $this->roles['External Examiner'] = 1;
-    }
-    if (strpos($this->userroles, 'Invigilator') !== FALSE) {
-      $this->roles['Invigilator'] = 1;
-    }
+    $temp = explode(',', $this->userroles);
 
+    foreach ($temp as $value) {
+      $this->roles[$value] = 1;
+    }
+    unset($this->userroles);
+    /*
+        if (strpos($this->userroles, 'SysAdmin') !== FALSE) {
+          $this->roles['SysAdmin'] = 1;
+        }
+        if (strpos($this->userroles, 'Admin') !== FALSE and strpos($this->userroles, 'SysAdmin') === FALSE) {
+          $this->roles['Admin'] = 1;
+        }
+        if (strpos($this->userroles, 'Staff') !== FALSE or strpos($this->userroles, 'Admin') !== FALSE) { // Process staff first to get higher priority than students --no need
+          $this->roles['Staff'] = 1;
+        }
+        if (strpos($this->userroles, 'Student') !== FALSE) {
+          $this->roles['Student'] = 1;
+        }
+        if (strpos($this->userroles, 'External Examiner') !== FALSE) {
+      $this->roles['External Examiner'] = 1;
+        }
+        if (strpos($this->userroles, 'Invigilator') !== FALSE) {
+          $this->roles['Invigilator'] = 1;
+        }
+    */
   }
 
   function db_user_change() {
@@ -505,7 +536,7 @@ class UserObject {
       ${$k} = $v;
     }
 
-    $userroles = $this->old_getuserroles();
+    //$userroles = $this->old_getuserroles();
     //select the aproprate database user
     if ($this->has_role('SysAdmin')) {
       $result = $this->db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);

@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 global $configObject;
-require_once $cfg_web_root . 'classes/userutils.class.php';
+require_once $configObject->get('cfg_web_root') . 'classes/userutils.class.php';
 
 class lti_integration {
 
@@ -17,8 +17,8 @@ class lti_integration {
     // Load the appropriate  lti integration class (if new one found load that else use this)
 
     global $configObject;
-    if (file_exists($cfg_web_root . 'config/integration/lti_integration.class.php')) {
-      require_once $cfg_web_root . 'config/integration/lti_integration.class.php';
+    if (file_exists($configObject->get('cfg_web_root') . 'config/integration/lti_integration.class.php')) {
+      require_once $configObject->get('cfg_web_root') . 'config/integration/lti_integration.class.php';
       return new lti_integration_extended();
     }
     else {

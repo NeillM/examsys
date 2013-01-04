@@ -35,9 +35,9 @@ class Authentication {
 
   public $authinfo;
 
-  function __construct($configObj, $db) {
+  function __construct(&$configObj, $db) {
     $this->db = $db;
-    $this->configObj = $configObj;
+    $this->configObj = & $configObj;
 
     $this->load_config();
 
@@ -89,9 +89,6 @@ class Authentication {
       $settings = $auth[1];
       $name = $auth[2];
       $this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
-
-
-
       require_once $this->configObj->get('cfg_web_root') . 'classes/auth/' . $authtype . '.class.php';
       $this->returndata[$number] = new authtypereturn();
       $this->authinfo[$number] = array($name => $authtype);
@@ -117,7 +114,7 @@ class Authentication {
   function load_config() {
     global $notice;
 
-    $this->config = $this->configObj->get('authentication');
+    $this->config = & $this->configObj->getbyref('authentication');
 
     if (!isset($this->config)) {
       $notice->display_notice('No Authentication configured', 'No Authentication configured has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
@@ -128,7 +125,7 @@ class Authentication {
   }
 
   function register_callback($callback, $section, $number, $name, $insert = FALSE) {
-    if (!in_array($section, array('init', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform')) or !is_callable($callback)) {
+    if (!in_array($section, array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'getauthobj', 'sessionstore')) or !is_callable($callback)) {
       //attempting to register callback to invalid section
       $this->debug[] = 'register_callback failed ' . $section . ' from ' . get_class($callback[0]) . ' ' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
       return FALSE;
@@ -145,6 +142,11 @@ class Authentication {
 
     return TRUE;
   }
+
+  function get_callback($section) {
+    return array(&$this->callbackregister[$section], &$this->callbackregisterdata[$section]);
+  }
+
 
   function display_std_form() {
 
@@ -194,7 +196,7 @@ class Authentication {
     $preauthobj = new stdClass();
     if (isset($this->callbackregister['preauth'])) {
       foreach ($this->callbackregister['preauth'] as $number => $callback) {
-        call_user_func_array($callback, array($preauthobj));
+        call_user_func_array($callback, array(&$preauthobj));
         $objid = key($this->callbackregisterdata['preauth'][$number]);
         $this->append_auth_object_debug($objid);
       }
@@ -305,10 +307,13 @@ class Authentication {
 
 
     $postauthsuccessobj = new stdClass();
+
+    $postauthsuccessobj->userid =& $this->userid;
+
     if (isset($this->callbackregister['postauthsuccess'])) {
       foreach ($this->callbackregister['postauthsuccess'] as $number => $callback) {
         $this->debug[] = 'run authsuccess callback ' . get_class($callback[0]) . ':' . $callback[1];
-        call_user_func_array($callback, array($postauthsuccessobj));
+        call_user_func_array($callback, array(&$postauthsuccessobj));
         $objid = key($this->callbackregisterdata['postauthsuccess'][$number]);
         $this->append_auth_object_debug($objid);
       }
@@ -375,6 +380,40 @@ class Authentication {
   function display_debug() {
     var_dump($this->debug);
   }
+
+  function get_auth_obj(&$getauth) {
+    if (!is_object($getauth)) {
+      $getauthobj->userid = $getauth;
+      $getauthobj->userObj = new UserObject($this->configObj, $this->db);
+      $getauthobj->userObj->load($getauth);
+    } else {
+      $getauthobj = &$getauth;
+      if (!isset($getauthobj->userObj)) {
+        //serious error
+        $getauthobj->userObj = new UserObject($this->configObj, $this->db);
+      }
+
+      $getauthobj->userObj->load($this->get_userid());
+    }
+    //$uID = $this->get_userID();
+
+
+
+
+
+
+    if (isset($this->callbackregister['getauthobj'])) {
+      foreach ($this->callbackregister['getauthobj'] as $number => $callback) {
+        $this->debug[] = 'run getauthobj callback ' . get_class($callback[0]) . ':' . $callback[1];
+        call_user_func_array($callback, array(&$getauthobj));
+        $objid = key($this->callbackregisterdata['getauthobj'][$number]);
+        $this->append_auth_object_debug($objid);
+      }
+    }
+
+    return $getauthobj->userObj;
+  }
+
 
 }
 

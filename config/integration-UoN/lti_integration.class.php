@@ -15,8 +15,9 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-require_once $cfg_web_root . 'classes/userutils.class.php';
-require_once $cfg_web_root . 'classes/smsutils.class.php';
+
+require_once $configObj->get('cfg_web_root') . 'classes/userutils.class.php';
+require_once $configObj->get('cfg_web_root') . 'classes/smsutils.class.php';
 
 class lti_integration_extended extends lti_integration {
 
