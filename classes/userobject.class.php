@@ -122,13 +122,17 @@ class UserObject {
 
 
   function is_demo() {
-    return $this->demomode;
+    if ($this->demomode or $this->has_role('Demo')) {
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   function set_demo() {
     $this->demomode = TRUE;
-    $this->configObj->append('cfg_install_type'," (DEMO mode)");
-
+    $this->configObj->append('cfg_install_type', " (DEMO mode)");
+    $this->roles['Demo'] = 1;
   }
 
   /**
@@ -480,7 +484,7 @@ class UserObject {
     if ($this->has_role('SysAdmin')) {
       $this->store_original_user();
       $this->load($userid);
-      $this->configObj->append('cfg_install_type'," as $this->title $this->surname");
+      $this->configObj->append('cfg_install_type', " as $this->title $this->surname");
     }
   }
 
