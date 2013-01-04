@@ -114,7 +114,7 @@ class Authentication {
   function load_config() {
     global $notice;
 
-    $this->config = & $this->configObj->getbyref('authentication');
+    $this->config =  $this->configObj->getbyref('authentication');
 
     if (!isset($this->config)) {
       $notice->display_notice('No Authentication configured', 'No Authentication configured has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');

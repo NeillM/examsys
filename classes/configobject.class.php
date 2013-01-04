@@ -50,6 +50,14 @@ class Config {
     return $this->data;
   }
 
+  function set($var,$value) {
+    $this->data[$var]=$value;
+  }
+
+  function append($var,$value) {
+    $this->data[$var]=$this->data[$var] . $value;
+  }
+
   function get($var) {
     if (is_string($var)) {
       if (isset($this->data[$var])) {

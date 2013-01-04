@@ -21,12 +21,11 @@ class impersonation_auth extends outline_authentication {
   }
 
   function changewhoiam(&$getauthobj) {
-    if(!is_null($_SESSION['authenticationObj']['impersination']['newuserid'])) {
-if(!$getauthobj->userObj->has_role('SysAdmin')) {
-  $this->savetodebug('Cannot change user as not a SysAdmin');
-}
-      $getauthobj->userObj->store_original_user();
-      $getauthobj->userObj->load($_SESSION['authenticationObj']['impersination']['newuserid']);
+    if (!is_null($_SESSION['authenticationObj']['impersonation']['newuserid'])) {
+      if (!$getauthobj->userObj->has_role('SysAdmin')) {
+        $this->savetodebug('Cannot change user as not a SysAdmin');
+      }
+      $getauthobj->userObj->impersonate($_SESSION['authenticationObj']['impersonation']['newuserid']);
     }
     if ($_SESSION['authenticationObj']['impersination']['demo'] === TRUE) {
       $this->savetodebug('Changing user status to DEMO');
@@ -38,7 +37,7 @@ if(!$getauthobj->userObj->has_role('SysAdmin')) {
 
   function storedata(&$sessionstoreobj) {
     $this->savetodebug('session store');
-    $_SESSION['authenticationObj']['impersination']['newuserid'] = $this->newuserid;
+    $_SESSION['authenticationObj']['impersonation']['newuserid'] = $this->newuserid;
     $_SESSION['authenticationObj']['impersination']['demo'] = $this->demo;
   }
 
@@ -59,16 +58,16 @@ if(!$getauthobj->userObj->has_role('SysAdmin')) {
     }
 
     if ($continue !== TRUE) {
-      if (isset($_SESSION['authenticationObj']['impersination']['newuserid']) or isset($_SESSION['authenticationObj']['impersination']['demo'])) {
+      if (isset($_SESSION['authenticationObj']['impersonation']['newuserid']) or isset($_SESSION['authenticationObj']['impersination']['demo'])) {
         $this->savetodebug('Found store data in session for impersination');
-        $this->newuserid = $_SESSION['authenticationObj']['impersination']['newuserid'];
+        $this->newuserid = $_SESSION['authenticationObj']['impersonation']['newuserid'];
         $this->demo = $_SESSION['authenticationObj']['impersination']['demo'];
       }
 
       return;
     }
 
-    if ((strcasecmp($usernameparts[1], 'demo') == 0 ) or (isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'demo') == 0 ) )  {
+    if ((strcasecmp($usernameparts[1], 'demo') == 0) or (isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'demo') == 0)) {
       $this->demo = TRUE;
       $this->retdata->debug[] = 'Demo mode detected';
       $this->active = TRUE;

@@ -37,7 +37,7 @@ class UserObject {
   private $roles, $staffModules, $studentModules, $db, $configObj;
 
 
-  private $originaluser;
+  private $impersonateduser;
 
   /**
    * constructor
@@ -474,6 +474,14 @@ class UserObject {
     trigger_error('remove_staff_from_module not yet implimented', E_USER_WARNING);
   }
 
+  function impersonate($userid) {
+    if (!$getauthobj->userObj->has_role('SysAdmin')) {
+      $this->store_original_user();
+      $this->load($userid);
+      $this->configObj->append('cfg_install_type'," as ")
+    }
+  }
+
   function store_original_user() {
     $data = new stdClass();
     $data->title = $this->title;
@@ -481,7 +489,7 @@ class UserObject {
     $data->username = $this->username;
     $data->email = $this->email;
     $data->roles = $this->roles;
-    $this->originaluser = $data;
+    $this->impersonatedfrom = $data;
   }
 
   function load($userID) {
