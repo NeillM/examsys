@@ -3841,8 +3841,6 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 28/05/2012 - Add new autosave timeout.
-  $new_cfg_str = array("\n//Paper auto saving time out in seconds - default 180s == 3 minutes\n",
-    "  \$cfg_autosave_timeout = 180;\n");
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
@@ -3857,6 +3855,7 @@ if (!isset($_POST['update'])) {
   }
 
   if (!$found) {
+    $new_cfg_str = array("\$cfg_autosave_timeout = 180;\n");
     $index = 0;
     foreach ($cfg as $line) {
       if (strpos($line, '$cfg_hour_warning') !== FALSE) {
