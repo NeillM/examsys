@@ -478,7 +478,7 @@ class UserObject {
     if (!$getauthobj->userObj->has_role('SysAdmin')) {
       $this->store_original_user();
       $this->load($userid);
-      $this->configObj->append('cfg_install_type'," as ")
+      $this->configObj->append('cfg_install_type'," as $this->title $this->surname");
     }
   }
 

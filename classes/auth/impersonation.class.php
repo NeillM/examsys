@@ -27,7 +27,7 @@ class impersonation_auth extends outline_authentication {
       }
       $getauthobj->userObj->impersonate($_SESSION['authenticationObj']['impersonation']['newuserid']);
     }
-    if ($_SESSION['authenticationObj']['impersination']['demo'] === TRUE) {
+    if ($_SESSION['authenticationObj']['impersonation']['demo'] === TRUE) {
       $this->savetodebug('Changing user status to DEMO');
       $getauthobj->userObj->set_demo();
     }
@@ -38,7 +38,7 @@ class impersonation_auth extends outline_authentication {
   function storedata(&$sessionstoreobj) {
     $this->savetodebug('session store');
     $_SESSION['authenticationObj']['impersonation']['newuserid'] = $this->newuserid;
-    $_SESSION['authenticationObj']['impersination']['demo'] = $this->demo;
+    $_SESSION['authenticationObj']['impersonation']['demo'] = $this->demo;
   }
 
   function checkwhattodo(&$preauthobj) {
@@ -58,10 +58,10 @@ class impersonation_auth extends outline_authentication {
     }
 
     if ($continue !== TRUE) {
-      if (isset($_SESSION['authenticationObj']['impersonation']['newuserid']) or isset($_SESSION['authenticationObj']['impersination']['demo'])) {
+      if (isset($_SESSION['authenticationObj']['impersonation']['newuserid']) or isset($_SESSION['authenticationObj']['impersonation']['demo'])) {
         $this->savetodebug('Found store data in session for impersination');
         $this->newuserid = $_SESSION['authenticationObj']['impersonation']['newuserid'];
-        $this->demo = $_SESSION['authenticationObj']['impersination']['demo'];
+        $this->demo = $_SESSION['authenticationObj']['impersonation']['demo'];
       }
 
       return;
