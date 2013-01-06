@@ -29,59 +29,78 @@ class Timer {
    */
 
   private $log_start_time;
-  private $exam_duration;
-  private $start_time;
 
+  private $exam_duration;
+  private $start_datetime;
+
+  /*
+   * @param LogStartTime $log_start_time
+   * @param int $exam_duration
+   */
   public function __construct( LogStartTime $log_start_time
-                                          , $exam_duration ) {
+                             ,              $exam_duration ) {
     $this->log_start_time = $log_start_time;
     $this->exam_duration  = $exam_duration;
   }
 
-  public function get_start_time(){
-
-    if( $this->start_time == null ){
-      $this->start_time = $this->log_start_time->get_start_time();
-    }
-
-    return $this->start_time;
-  }
-
+  /*
+   * @return DateTime
+   */
   public function start(){
     return $this->log_start_time->insert();
   }
 
+  /*
+   * @return bool
+   */
   public function is_started(){
     return ( $this->get_start_time() !== null );
   }
 
+
   public function reset(){
-    return $this->log_start_time->delete();
+    $this->log_start_time->delete();
   }
 
+  /*
+   * @retun int
+   */
   public function calculate_remaining_time() {
 
-    $exam_duration  = $this->exam_duration;
-    $exam_duration  = $exam_duration * 60;
+    $exam_duration_mins  = $this->exam_duration;
+    $exam_duration_secs  = $exam_duration_mins * 60;
 
     // get existing start time or create a new one
-    $start_time      = $this->get_start_time();
+    $start_datetime      = $this->get_start_datetime();
 
-    if( $start_time === false){
-      return $exam_duration;
+    if( $start_datetime === false){
+      return $exam_duration_secs;
     }
 
-    $start_time      = strtotime( $start_time );
-    $now             = time();
-    $time_elapsed    = $now - $start_time;
-    $remaining_time  = $exam_duration - $time_elapsed;
+    $start_timestamp     = $start_datetime->getTimestamp();
+    $now_datetime        = new DateTime;
+    $now_timestamp       = $now_datetime->getTimestamp();
+    $time_elapsed_secs   = $now_timestamp - $start_timestamp;
+    $remaining_time_secs = $exam_duration_secs - $time_elapsed_secs;
 
-    if( $remaining_time < 1 ){
-      $remaining_time = 0;
+    if( $remaining_time_secs < 1 ){
+      $remaining_time_secs = 0;
     }
 
-    return $remaining_time;
+    return $remaining_time_secs;
 
+  }
+
+  /*
+   * @return DateTime
+   */
+  public  function get_start_datetime(){
+
+    if( $this->start_datetime == null ){
+      $this->start_datetime = $this->log_start_time->get_start_datetime();
+    }
+
+    return $this->start_datetime;
   }
 
 
