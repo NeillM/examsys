@@ -32,7 +32,7 @@ class UserObject {
   /**
    * @var
    */
-  private $password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username;
+  private $password, $userID, $userroles, $title, $initials, $first_names, $surname, $username, $email, $grade, $year, $special_needs, $special_needs_percentage, $record_no, $split_username;
   private $demomode = FALSE;
   private $roles, $staffModules, $studentModules, $db, $configObj;
 
@@ -163,6 +163,15 @@ class UserObject {
   }
 
   /**
+   * @param string userID
+   * @return UserObject
+   */
+  function set_user_ID( $user_id ) {
+    $this->userID = user_id;
+    return $this;
+  }
+
+  /**
    * get the staff modules
    *
    * @return false if not staff else an array of the modules by id & CODE
@@ -268,10 +277,19 @@ class UserObject {
   /**
    * returns the grade of the user
    *
-   * @return the grade
+   * @return string grade
    */
   function get_grade() {
     return $this->grade;
+  }
+
+  /**
+   * @param string title
+   * @return UserObject
+   */
+  function set_title( $title ) {
+    $this->title = $title;
+	return $this;
   }
 
   /**
@@ -290,6 +308,33 @@ class UserObject {
    */
   function get_initials() {
     return $this->initials;
+  }
+
+  /**
+   * @param string first_names
+   * return UserObject
+   */
+  public function set_first_names( $first_names ) {
+    $this->first_names = $first_names;
+    return $this;
+  }
+
+  /**
+   *  Return the user's first names
+   *
+   * @return string first_names
+   */
+  public function get_first_names() {
+    return $this->first_names;
+  }
+
+  /**
+   * @param string $surname
+   * @return UserObject
+   */
+  function set_surname( $surname ) {
+    $this->surname = $surname;
+    return $this;
   }
 
   /**
@@ -317,6 +362,38 @@ class UserObject {
    */
   function get_password() {
     return $this->password;
+  }
+
+  /**
+   * @param string special_needs
+   */
+  public function set_special_needs( $special_needs ) {
+    $this->special_needs = $special_needs;
+  }
+
+  /**
+   * Return the user's special needs
+   *
+   * @return string password
+   */
+  public function get_special_needs() {
+    return $this->special_needs;
+  }
+
+  /**
+   * @param string special_needs_percentage
+   */
+  public function set_special_needs_percentage( $special_needs_percentage ) {
+    $this->special_needs_percentage = $special_needs_percentage;
+  }
+
+  /**
+   * Return the user's special needs percentage
+   *
+   * @return string password
+   */
+  public function get_special_needs_percentage() {
+    return $this->special_needs_percentage;
   }
 
   /**
@@ -488,23 +565,36 @@ class UserObject {
     }
   }
 
-  function store_original_user() {
-    $data = new stdClass();
-    $data->title = $this->title;
-    $data->initials = $this->initials;
-    $data->username = $this->username;
-    $data->email = $this->email;
-    $data->roles = $this->roles;
-    $this->impersonatedfrom = $data;
-  }
-
   function load($userID) {
     $this->userID = $userID;
-    $stmt = $this->db->prepare("SELECT roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id=?");
+
+    $sql = 'SELECT
+                   roles
+                 , title
+                 , initials
+                 , surname
+                 , username
+                 , email
+                 , grade
+                 , yearofstudy
+                 , special_needs
+                 , extra_time as special_needs_percentage
+             FROM
+                users
+             LEFT OUTER JOIN
+                special_needs
+             ON
+                users.id = special_needs.userID
+             WHERE
+                user_deleted IS NULL
+             AND
+                id = ?';
+
+    $stmt = $this->db->prepare( $sql );
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs);
+    $stmt->bind_result($this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs, $this->special_needs_percentage );
     $stmt->fetch();
     $record_no = $stmt->num_rows();
     $stmt->close();
@@ -519,24 +609,24 @@ class UserObject {
     }
     unset($this->userroles);
     /*
-        if (strpos($this->userroles, 'SysAdmin') !== FALSE) {
-          $this->roles['SysAdmin'] = 1;
-        }
-        if (strpos($this->userroles, 'Admin') !== FALSE and strpos($this->userroles, 'SysAdmin') === FALSE) {
-          $this->roles['Admin'] = 1;
-        }
-        if (strpos($this->userroles, 'Staff') !== FALSE or strpos($this->userroles, 'Admin') !== FALSE) { // Process staff first to get higher priority than students --no need
-          $this->roles['Staff'] = 1;
-        }
-        if (strpos($this->userroles, 'Student') !== FALSE) {
-          $this->roles['Student'] = 1;
-        }
-        if (strpos($this->userroles, 'External Examiner') !== FALSE) {
-      $this->roles['External Examiner'] = 1;
-        }
-        if (strpos($this->userroles, 'Invigilator') !== FALSE) {
-          $this->roles['Invigilator'] = 1;
-        }
+    if (strpos($this->userroles, 'SysAdmin') !== FALSE) {
+      $this->roles['SysAdmin'] = 1;
+    }
+    if (strpos($this->userroles, 'Admin') !== FALSE and strpos($this->userroles, 'SysAdmin') === FALSE) {
+      $this->roles['Admin'] = 1;
+    }
+    if (strpos($this->userroles, 'Staff') !== FALSE or strpos($this->userroles, 'Admin') !== FALSE) { // Process staff first to get higher priority than students --no need
+      $this->roles['Staff'] = 1;
+    }
+    if (strpos($this->userroles, 'Student') !== FALSE) {
+      $this->roles['Student'] = 1;
+    }
+    if (strpos($this->userroles, 'External Examiner') !== FALSE) {
+      $this->roles['ExternalExaminer'] = 1;
+    }
+    if (strpos($this->userroles, 'Invigilator') !== FALSE) {
+      $this->roles['Invigilator'] = 1;
+    }
     */
   }
 
