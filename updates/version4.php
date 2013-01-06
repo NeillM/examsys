@@ -5246,7 +5246,7 @@ QUERY;
   if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
-  
+
   // 20/12/2012 - Add new line to configuration file
   $new_cfg_str = array();
   $new_cfg_str[] = "\$cfg_client_lookup = 'ipaddress';\r\n";
@@ -5280,10 +5280,45 @@ QUERY;
     }
     echo "<li>Add cfg_client_lookup config variable</li>\n";
   }
-  
+
+  //2012/12/18 bparish - Add new table to enable a students time to be extended when taking summative exams
+
+  $does_table_exist = $updater_utils->does_table_exist( 'log_extra_time' );
+
+  if ( $does_table_exist === false ){
+
+    $sql    = 'CREATE TABLE
+                     log_extra_time( id            int unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
+                                   , labID         int unsigned NOT NULL
+                                   , paperID       int unsigned NOT NULL
+                                   , invigilatorID int unsigned NOT NULL
+                                   , userID        int unsigned NOT NULL
+                                   , extra_time    int unsigned NOT NULL
+                                   , end_date      int unsigned NOT NULL
+                                   , CONSTRAINT    key_lab_id_paper_id_user_id UNIQUE ( labID, paperID, userID )
+                                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+
+    $result = $mysqli->query( $sql );
+
+    if ( $result !== TRUE ) {
+      printf( "Error: %s\n", $mysqli->error );
+    }
 
 
-  
+    echo '<li>CREATE TABLE log_extra_time ( id, log_lab_end_time_id, userID, end_time )</li>';
+
+    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_extra_time TO \'' . $cfg_db_inv_username . '\'@\''. $cfg_db_host . "'";
+    $mysqli->query( $sql );
+    echo '<li>' . $sql  . '</li>' . "\n";
+
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.log_extra_time TO \'' . $cfg_db_student_user . '\'@\''. $cfg_db_host . "'";
+    $mysqli->query( $sql );
+    echo '<li>' . $sql  . '</li>' . "\n";
+
+    $mysqli->query( 'FLUSH PRIVILEGES' );
+  }
+
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
