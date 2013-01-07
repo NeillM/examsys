@@ -14,8 +14,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testQuestionPresenceAndOrder() {
-    do_student_login($this, 'teststudent7', 'ogk_14DI');
+  public function testQuestionPresenceAndOrderPlusUnanswered() {
+    do_student_login($this, 'teststudent10', 'jgl!34Z^');
 
     $this->open("/user_index.php?id=31357211657102");
     $this->click("id=start");
@@ -410,11 +410,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102');
   }
 
-  /**
-   * @depends testQuestionPresenceAndOrder
-   */
   public function testCompletePaperCorrect() {
-    do_student_login($this, 'teststudent4', 'fiu&52K3');
+    do_student_login($this, 'teststudent11', 'bkt_66Y4');
 
     $this->open("/user_index.php?id=31357211657102");
     $this->click("id=start");
@@ -704,7 +701,7 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
   }
 
   public function testCompletePaperIncorrect() {
-    do_student_login($this, 'teststudent5', 'sjg!12T^');
+    do_student_login($this, 'teststudent12', 'rmu_74L4');
 
     $this->open("/user_index.php?id=31357211657102");
     $this->click("id=start");
@@ -993,7 +990,7 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
   }
 
   public function testCompletePaperMixed() {
-    do_student_login($this, 'teststudent6', 'ara!68X7');
+    do_student_login($this, 'teststudent13', 'hii.420R');
 
     $this->open("/user_index.php?id=31357211657102");
     $this->click("id=start");

@@ -20,21 +20,21 @@ class ClassTotalsMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20130117150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
 
     // Individuals
-    $this->assertElementContainsText('//table/tbody/tr[4]/td[5]', '-8');
-    $this->assertElementContainsText('//table/tbody/tr[4]/td[6]', '-30%');
-    $this->assertElementContainsText('//table/tbody/tr[4]/td[7]', 'Fail');
+    $this->assertElementContainsText('//tr[@id="res1"]/td[5]', '-8');
+    $this->assertElementContainsText('//tr[@id="res1"]/td[6]', '-30%');
+    $this->assertElementContainsText('//tr[@id="res1"]/td[7]', 'Fail');
 
-    $this->assertElementContainsText('//table/tbody/tr[5]/td[5]', '27');
-    $this->assertElementContainsText('//table/tbody/tr[5]/td[6]', '100%');
-    $this->assertElementContainsText('//table/tbody/tr[5]/td[7]', 'Distinction');
+    $this->assertElementContainsText('//tr[@id="res2"]/td[5]', '27');
+    $this->assertElementContainsText('//tr[@id="res2"]/td[6]', '100%');
+    $this->assertElementContainsText('//tr[@id="res2"]/td[7]', 'Distinction');
 
-    $this->assertElementContainsText('//table/tbody/tr[6]/td[5]', '-8');
-    $this->assertElementContainsText('//table/tbody/tr[6]/td[6]', '-30%');
-    $this->assertElementContainsText('//table/tbody/tr[6]/td[7]', 'Fail');
+    $this->assertElementContainsText('//tr[@id="res3"]/td[5]', '-8');
+    $this->assertElementContainsText('//tr[@id="res3"]/td[6]', '-30%');
+    $this->assertElementContainsText('//tr[@id="res3"]/td[7]', 'Fail');
 
-    $this->assertElementContainsText('//table/tbody/tr[7]/td[5]', '3.5');
-    $this->assertElementContainsText('//table/tbody/tr[7]/td[6]', '13%');
-    $this->assertElementContainsText('//table/tbody/tr[7]/td[7]', 'Fail');
+    $this->assertElementContainsText('//tr[@id="res4"]/td[5]', '3.5');
+    $this->assertElementContainsText('//tr[@id="res4"]/td[6]', '13%');
+    $this->assertElementContainsText('//tr[@id="res4"]/td[7]', 'Fail');
 
     // Overall
 
