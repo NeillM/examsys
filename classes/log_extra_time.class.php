@@ -46,6 +46,12 @@ class LogExtraTime {
   private $db;
   private $msg;
 
+  /**
+   * @return LogLabEndTime $log_lab_end_time
+   * @return UserObject    $student_object
+   * @return mysqli        $db
+   */
+
   public function __construct( LogLabEndTime $log_lab_end_time
                              , UserObject    $student_object
                              , mysqli        $db ) {
@@ -56,6 +62,9 @@ class LogExtraTime {
 
   }
 
+  /*
+   * @return int
+   */
 
   public function get_extra_time_secs() {
 
@@ -100,7 +109,6 @@ class LogExtraTime {
   }
 
   /*
-   * This gets the
    * @return DateTime
   */
   public function get_end_date_datetime() {
