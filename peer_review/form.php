@@ -25,6 +25,7 @@
 require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
+require_once '../classes/paperutils.class.php';
 
 check_var('id', 'GET', true, false);
 
@@ -57,12 +58,14 @@ function display_question($qID, $details, $member_userID, &$row_no, $columns, $m
 }
 
 // Get some properties of the paper.
-$result = $mysqli->prepare("SELECT property_id, paper_title, modules.id, properties.moduleID, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, display_question_mark as review, labs, password FROM (properties, modules) WHERE properties.moduleID=modules.moduleid AND crypt_name=? LIMIT 1");
+$result = $mysqli->prepare("SELECT property_id, paper_title, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, display_question_mark as review, labs, password FROM properties WHERE crypt_name = ? LIMIT 1");
 $result->bind_param('s', $_GET['id']);
 $result->execute();
-$result->bind_result($property_id, $paper_title, $moduleID, $moduleID_text, $start_date, $end_date, $calendar_year, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $type, $paper_prologue, $marking, $display_photos, $review, $labs, $password);
+$result->bind_result($property_id, $paper_title, $start_date, $end_date, $calendar_year, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $type, $paper_prologue, $marking, $display_photos, $review, $labs, $password);
 $result->fetch();
 $result->close();
+
+$modules = Paper_utils::get_modules($property_id, $mysqli);
 
 if ($calendar_year == '') {
   display_error('Error', 'No Academic Session is set.', false, true);
@@ -72,8 +75,8 @@ if ($type == '') {   // What metadata field to use.
 }
 
 // Get special settings for the Student.
-if ($special_needs == 1) { //TODO FIX THIS TO OBJECT
-  $stmt = $mysqli->prepare("SELECT background, foreground, textsize, themecolor, labelcolor, font FROM special_needs WHERE userid=?");
+if ($userObject->is_special_needs()) {
+  $stmt = $mysqli->prepare("SELECT background, foreground, textsize, themecolor, labelcolor, font FROM special_needs WHERE userid = ?");
   $stmt->bind_param('i',$userObject->get_user_ID());
   $stmt->execute();
   $stmt->store_result();
@@ -90,7 +93,7 @@ if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecol
 if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
 if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
 
-if (stripos($userroles,'Student') !== false) {
+if ($userObject->has_role('Student')) {
   // Check time security
   check_datetime($start_date, $end_date);
   
@@ -107,7 +110,7 @@ $questions = array();
 $old_options = array();
 $old_questionID = 0;
 
-$result = $mysqli->prepare("SELECT question, scenario, leadin, display_method, q_type, option_text FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper=? AND questions.q_id=options.o_id ORDER BY display_pos");
+$result = $mysqli->prepare("SELECT question, scenario, leadin, display_method, q_type, option_text FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper = ? AND questions.q_id = options.o_id ORDER BY display_pos");
 $result->bind_param('i', $property_id);
 $result->execute();
 $result->bind_result($questionID, $scenario, $leadin, $display_method, $q_type, $option_text);
@@ -140,9 +143,9 @@ $parts = explode('|', $display_method);
 $columns = count($parts) - 1;
 
 // Get the group of the current user.
-if (stripos($userroles,'Student') !== false) {     // Student user
-  $result = $mysqli->prepare("SELECT value FROM users_metadata WHERE moduleID=? AND calendar_year=? AND type=? AND userID=? LIMIT 1");
-  $result->bind_param('issi', $moduleID, $calendar_year, $type, $userObject->get_user_ID());
+if ($userObject->has_role('Student')) {
+  $result = $mysqli->prepare("SELECT value FROM users_metadata WHERE idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? AND type = ? AND userID = ? LIMIT 1");
+  $result->bind_param('ssi', $calendar_year, $type, $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($group);
   $result->fetch();
@@ -151,8 +154,8 @@ if (stripos($userroles,'Student') !== false) {     // Student user
   if (isset($_GET['group'])) {
     $group = $_GET['group'];
   } else {
-    $result = $mysqli->prepare("SELECT value FROM users_metadata WHERE moduleID=? AND calendar_year=? AND type=? LIMIT 1");
-    $result->bind_param('iss', $moduleID, $calendar_year, $type);
+    $result = $mysqli->prepare("SELECT value FROM users_metadata WHERE idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? AND type = ? LIMIT 1");
+    $result->bind_param('ss', $calendar_year, $type);
     $result->execute();
     $result->bind_result($group);
     $result->fetch();
@@ -166,7 +169,7 @@ if ($group == '') {
 
 if (isset($_POST['submit'] )) {
   // Check for any previously saved records.
-  $result = $mysqli->prepare("SELECT id, peerID, q_id, rating FROM log6 WHERE reviewerID=? AND paperID=?");
+  $result = $mysqli->prepare("SELECT id, peerID, q_id, rating FROM log6 WHERE reviewerID = ? AND paperID = ?");
   $result->bind_param('ii', $userObject->get_user_ID(), $property_id);
   $result->execute();
   $result->bind_result($id, $peerID, $q_id, $rating);
@@ -183,8 +186,8 @@ if (isset($_POST['submit'] )) {
 
   if ($review == '1') {
     // Get the other users in the same group.
-    $result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? AND value=?");
-    $result->bind_param('isss', $moduleID, $calendar_year, $type, $group);
+    $result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID = users.id AND users_metadata.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? AND type = ? AND value = ?");
+    $result->bind_param('sss', $calendar_year, $type, $group);
     $result->execute();
     $result->store_result();
     $result->bind_result($member_username, $member_title, $member_surname, $member_first_names, $member_userID);
@@ -200,7 +203,7 @@ if (isset($_POST['submit'] )) {
           }
         
           if (isset($saved_results[$member_userID][$questionID]['id'])) {
-            $result2 = $mysqli->prepare("UPDATE log6 SET started=?, rating=? WHERE id=?");
+            $result2 = $mysqli->prepare("UPDATE log6 SET started = ?, rating = ? WHERE id = ?");
             $result2->bind_param('sii', $current_time, $rating, $saved_results[$member_userID][$questionID]['id']);
             $result2->execute();
             $result2->close();
@@ -228,7 +231,7 @@ if (isset($_POST['submit'] )) {
       }
     
       if (isset($saved_results[$member_userID][$questionID]['id'])) {
-        $result2 = $mysqli->prepare("UPDATE log6 SET started=NOW(), rating=? WHERE id=?");
+        $result2 = $mysqli->prepare("UPDATE log6 SET started = NOW(), rating = ? WHERE id = ?");
         $result2->bind_param('ii', $rating, $saved_results[$member_userID][$questionID]['id']);
         $result2->execute();
         $result2->close();
@@ -286,7 +289,7 @@ if (isset($_POST['submit'] )) {
   </div>
   <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>Reviewer:</strong> ' . $title .' ' . $surname . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ' . $group . '</strong></div></td></tr></table>';
+  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>Reviewer:</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ' . $group . '</strong></div></td></tr></table>';
   
   if ($language == 'en') {
     echo '<p style="margin-left:10px; font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank You</p>';
@@ -298,7 +301,7 @@ if (isset($_POST['submit'] )) {
 } else {
   // Get existing values.
   $saved_results = array();
-  $result = $mysqli->prepare("SELECT id, peerID, q_id, rating FROM log6 WHERE reviewerID=? AND paperID=?");
+  $result = $mysqli->prepare("SELECT id, peerID, q_id, rating FROM log6 WHERE reviewerID = ? AND paperID = ?");
   $result->bind_param('ii', $userObject->get_user_ID(), $property_id);
   $result->execute();
   $result->bind_result($id, $peerID, $q_id, $rating);
@@ -339,13 +342,13 @@ if (isset($_POST['submit'] )) {
   echo "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\">\n";
 
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>Reviewer:</strong> ' . $title .' ' . $surname . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ';
-  if (stripos($userroles,'Student') !== false) {
+  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>Reviewer:</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ';
+  if ($userObject->has_role('Student')) {
     echo $group;
   } else {
     echo "<select name=\"group\" id=\"group\" onchange=\"changeGroup();\">\n";
-    $result = $mysqli->prepare("SELECT DISTINCT value FROM users_metadata WHERE moduleID=? AND calendar_year=? AND type=? ORDER BY value");
-    $result->bind_param('iss', $moduleID, $calendar_year, $type);
+    $result = $mysqli->prepare("SELECT DISTINCT value FROM users_metadata WHERE idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? AND type = ? ORDER BY value");
+    $result->bind_param('ss', $calendar_year, $type);
     $result->execute();
     $result->bind_result($tmp_group);
     while ($result->fetch()) {
@@ -371,8 +374,8 @@ if (isset($_POST['submit'] )) {
   
   if ($review == '1') {
     // Get the other users in the same group.
-    $result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? AND value=? ORDER BY surname, initials");
-    $result->bind_param('isss', $moduleID, $calendar_year, $type, $group);
+    $result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year=? AND type=? AND value=? ORDER BY surname, initials");
+    $result->bind_param('sss', $calendar_year, $type, $group);
     $result->execute();
     $result->bind_result($member_username, $member_title, $member_surname, $member_first_names, $member_userID);
     while ($result->fetch()) {
@@ -420,7 +423,7 @@ if (isset($_POST['submit'] )) {
   echo "</table>\n";
 
   echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td style=\"border-top:1px solid #164994;background-color:#2765AB;background-image:url('../artwork/title_gradient.png');background-repeat:repeat-y;background-position:center; text-align:center\">";
-  if (stripos($userroles,'Student') !== false) {
+  if ($userObject->has_role('Student')) {
     echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" style=\"width:100px\" />";
   } else {
     echo "<input type=\"button\" name=\"close\" value=\"Close\" style=\"width:100px\" onclick=\"window.close();\" />";

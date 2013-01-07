@@ -24,17 +24,20 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require '../include/paper_security.inc';
+require_once '../include/paper_security.inc';
+require_once '../classes/paperutils.class.php';
 
 check_var('paperID', 'GET', true, false);
 
 // Get some properties of the paper.
-$result = $mysqli->prepare("SELECT property_id, paper_title, modules.id, properties.moduleID, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, labs, crypt_name, display_question_mark FROM (properties, modules) WHERE properties.moduleID=modules.moduleid AND property_id=? LIMIT 1");
+$result = $mysqli->prepare("SELECT property_id, paper_title, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, labs, crypt_name, display_question_mark FROM properties WHERE property_id = ? LIMIT 1");
 $result->bind_param('i', $_GET['paperID']);
 $result->execute();
-$result->bind_result($property_id, $paper_title, $moduleID, $moduleID_text, $start_date, $end_date, $calendar_year, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $type, $paper_prologue, $marking, $display_photos, $labs, $crypt_name, $review_type);
+$result->bind_result($property_id, $paper_title, $start_date, $end_date, $calendar_year, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $type, $paper_prologue, $marking, $display_photos, $labs, $crypt_name, $review_type);
 $result->fetch();
 $result->close();
+
+$modules = Paper_utils::get_modules($property_id, $mysqli);
 
 if ($calendar_year == '') {
   display_error('Error', 'No Academic Session is set.', false, true);
@@ -54,7 +57,7 @@ if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
 // Get questions on the paper
 $questions = array();
 
-$result = $mysqli->prepare("SELECT question, q_type, leadin, display_method FROM (papers, questions) WHERE papers.question=questions.q_id AND paper=? ORDER BY display_pos");
+$result = $mysqli->prepare("SELECT question, q_type, leadin, display_method FROM (papers, questions) WHERE papers.question = questions.q_id AND paper = ? ORDER BY display_pos");
 $result->bind_param('i', $property_id);
 $result->execute();
 $result->bind_result($questionID, $q_type, $leadin, $display_method);
@@ -66,15 +69,15 @@ $result->close();
 
 // Work out the scale.
 if ($q_type == 'likert') {
-$parts = explode('|', $display_method);
-$columns = count($parts) - 1;
+  $parts = explode('|', $display_method);
+  $columns = count($parts) - 1;
 } elseif ($q_type == 'mcq') {
   $parts = array();
-  $result = $mysqli->prepare("SELECT option_text FROM options WHERE o_id=?");
+  $result = $mysqli->prepare("SELECT option_text FROM options WHERE o_id = ?");
   $result->bind_param('i', $questionID);
   $result->execute();
   $result->bind_result($o_text);
-  while($result->fetch()) {
+  while ($result->fetch()) {
     $parts[] = $o_text;
   }
   $result->close();
@@ -82,9 +85,10 @@ $columns = count($parts) - 1;
 } else {
   $columns = 0;
 }
+
 // Get the group of the current user.
-$result = $mysqli->prepare("SELECT value FROM users_metadata WHERE moduleID=? AND calendar_year=? AND type=? AND userID=? LIMIT 1");
-$result->bind_param('issi', $moduleID, $calendar_year, $type, $_GET['userID']);
+$result = $mysqli->prepare("SELECT value FROM users_metadata WHERE idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? AND type = ? AND userID = ? LIMIT 1");
+$result->bind_param('ssi', $calendar_year, $type, $_GET['userID']);
 $result->execute();
 $result->bind_result($group);
 $result->fetch();
@@ -102,13 +106,12 @@ $result->bind_result($student_username, $student_surname, $student_first_names, 
 $result->fetch();
 $result->close();
 
-
 // Get existing values.
 $saved_results = array();
 if ($review_type == '1') {
-  $result = $mysqli->prepare("SELECT id, reviewerID, q_id, rating FROM log6 WHERE peerID=? AND paperID=?");
+  $result = $mysqli->prepare("SELECT id, reviewerID, q_id, rating FROM log6 WHERE peerID = ? AND paperID = ?");
 } else {
-  $result = $mysqli->prepare("SELECT id, reviewerID, q_id, rating FROM log6 WHERE reviewerID=? AND paperID=?");
+  $result = $mysqli->prepare("SELECT id, reviewerID, q_id, rating FROM log6 WHERE reviewerID = ? AND paperID = ?");
 }
 $result->bind_param('ii', $_GET['userID'], $property_id);
 $result->execute();
@@ -154,7 +157,7 @@ $result->close();
 echo "<form>\n";
 
 echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
-echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>Student:</strong> ' . $student_title . ' ' . $student_surname . ', ' . $student_first_names . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ' . $group . '</div></td><td width="160"><img src="../artwork/uni_logo.png" width="160" height="67" alt="Logo" /></td></tr>';
+echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>Student:</strong> ' . $student_title . ' ' . $student_surname . ', ' . $student_first_names . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ' . $group . '</div></td><td width="160"><img src="../config/logo.png" width="160" height="67" alt="Logo" /></td></tr>';
 echo '</table>';
 
 echo "<br />\n<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" style=\"margin-left:auto; margin-right:auto\">\n";
@@ -166,8 +169,8 @@ if (trim($paper_prologue) != '') {
   
 // Get the other users in the same group.
 if ($review_type == '1') {
-  $result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? AND value=? AND userID!=? ORDER BY surname, initials");
-  $result->bind_param('isssi', $moduleID, $calendar_year, $type, $group, $_GET['userID']);
+  $result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND users_metadata.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? AND type = ? AND value = ? AND userID != ? ORDER BY surname, initials");
+  $result->bind_param('sssi', $calendar_year, $type, $group, $_GET['userID']);
   $result->execute();
   $result->bind_result($member_username, $member_title, $member_surname, $member_first_names, $member_userID);
   while ($result->fetch()) {
