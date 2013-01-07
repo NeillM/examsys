@@ -82,7 +82,7 @@ if (isset($_GET['order'])) {
 ?>
 <body>
 <table class="header">
-<tr><th colspan="5"style="font-size:160%; font-weight:bold">&nbsp;by Paper</th></tr>
+<tr><th colspan="5"style="font-size:160%; font-weight:bold">&nbsp;<?php echo $string['bypaper'];?></th></tr>
 <tr>
   <th>&nbsp;</th>
   <th class="vert_div">&nbsp;<?php echo show_order_link($paper_type, $string['title'], 'paper_title', $order, $direction) ?></th>

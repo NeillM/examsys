@@ -15,6 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['title'] = 'Tytuł';
+$string['bypaper'] = 'wg. arkusza';
 $string['module'] = 'Moduł';
 $string['owner'] = 'Właściciel';
 $string['created'] = 'Utworzono';
