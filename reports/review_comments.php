@@ -24,437 +24,440 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/media.inc';
+require '../include/staff_auth.inc';
+require '../include/media.inc';
 
-  $type = $_GET['type'];
-  $paperID = $_GET['paperID'];
+require_once '../classes/moduleutils.class.php';
+require_once '../classes/folderutils.class.php';
 
-  function displayRank($rank_position) {
-    if ($rank_position == 1) {
-      $html = '1st';
-    } elseif ($rank_position == 2) {
-      $html = '2nd';
-    } elseif ($rank_position == 3) {
-      $html = '3rd';
-    } elseif ($rank_position == 9990) {
-      $html = $string['na'];
+$type = $_GET['type'];
+$paperID = $_GET['paperID'];
+
+function displayRank($rank_position) {
+  if ($rank_position == 1) {
+    $html = '1st';
+  } elseif ($rank_position == 2) {
+    $html = '2nd';
+  } elseif ($rank_position == 3) {
+    $html = '3rd';
+  } elseif ($rank_position == 9990) {
+    $html = $string['na'];
+  } else {
+    $html = $rank_position . 'th';
+  }
+  return $html;
+}
+
+function displayComments($questionID, $comments_data, $qtype, $qno) {
+  global $incomplete_names, $type, $string, $language;
+
+  $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
+  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" style=\"cursor:pointer\" src=\"../artwork/edit.png\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" border=\"0\" /></td></tr>\n";
+  $html .= "<tr><td style=\"width:20px\"><div class=\"reviewbar\">&nbsp;</div></td><td style=\"width:20%\"><div class=\"reviewbar\">" . $string['reviewer'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['comment'] . "</div></td><td style=\"width:10%\"><div class=\"reviewbar\">" . $string['action'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['response'] . "</div></td></tr>\n";
+  if (isset($comments_data[$questionID])) {
+    foreach ($comments_data[$questionID] as $reviewer => $index) {
+      $image = 'ok_comment.png';
+      $status = 'OK';
+      if ($comments_data[$questionID][$reviewer]['category'] == 2) {
+        $image = 'minor_comment.png';
+        $status = 'Minor';
+      } elseif ($comments_data[$questionID][$reviewer]['category'] == 3) {
+        $image = 'major_comment.png';
+        $status = 'Major';
+      }
+      $tmp_comment = nl2br($comments_data[$questionID][$reviewer]['comment']);
+      if (trim($tmp_comment) == '') {
+        $tmp_comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+        $tmp_action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+        $tmp_response = '<span style="color:#808080">' . $string['na'] . '</span>';
+      } else {
+        $tmp_action = $string[$comments_data[$questionID][$reviewer]['action']];
+        $tmp_response = nl2br($comments_data[$questionID][$reviewer]['response']);
+      }
+
+      if (trim($tmp_response) == '') $tmp_response = '<span style="color:#808080">' . $string['noresponse'] . '</span>';
+      $html .= "<tr class=\"$status reviewline\"><td class=\"reviewline\"><img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" /></td><td class=\"reviewline\">" . $comments_data[$questionID][$reviewer]['name'] . "</td><td class=\"reviewline\">$tmp_comment</td><td class=\"reviewline\">$tmp_action</td><td class=\"reviewline\">$tmp_response</td></tr>\n";
+    }
+  }
+  if (isset($incomplete_names)) {
+    foreach ($incomplete_names as $single_incomplete) {
+      $html .= "<tr class=\"OK\"><td class=\"reviewline\">&nbsp;</td><td class=\"reviewline\" style=\"color:#C00000\">$single_incomplete</td><td class=\"reviewline\" style=\"color:#C00000; text-align:center\" colspan=\"3\">" . $string['notreviewed'] . "</td></tr>\n";
+    }
+  }
+  $html .= "</table></td></tr>\n";
+
+  return $html;
+}
+
+function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std) {
+  global $language;
+
+  $configObject = Config::Instance();
+
+  $cfg_root_path = $configObject->get('cfg_root_path');
+
+  if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
+  echo "<tr>\n";
+
+  if ($q_type != 'extmatch' and $q_type != 'matrix') {
+    if ($q_type == 'info') {
+      echo "<td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">$leadin\n";
     } else {
-      $html = $rank_position . 'th';
-    }
-    return $html;
-  }
-
-  function displayComments($questionID, $comments_data, $qtype, $qno) {
-    global $incomplete_names, $type, $string, $language;
-
-    $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
-    $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" style=\"cursor:pointer\" src=\"../artwork/edit.png\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" border=\"0\" /></td></tr>\n";
-    $html .= "<tr><td style=\"width:20px\"><div class=\"reviewbar\">&nbsp;</div></td><td style=\"width:20%\"><div class=\"reviewbar\">" . $string['reviewer'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['comment'] . "</div></td><td style=\"width:10%\"><div class=\"reviewbar\">" . $string['action'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['response'] . "</div></td></tr>\n";
-    if (isset($comments_data[$questionID])) {
-      foreach ($comments_data[$questionID] as $reviewer => $index) {
-        $image = 'ok_comment.png';
-        $status = 'OK';
-        if ($comments_data[$questionID][$reviewer]['category'] == 2) {
-          $image = 'minor_comment.png';
-          $status = 'Minor';
-        } elseif ($comments_data[$questionID][$reviewer]['category'] == 3) {
-          $image = 'major_comment.png';
-          $status = 'Major';
+      if ($scenario != '') {
+        echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br />\n";
+        echo $leadin;
+        if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
+          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
         }
-        $tmp_comment = nl2br($comments_data[$questionID][$reviewer]['comment']);
-        if (trim($tmp_comment) == '') {
-          $tmp_comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-          $tmp_action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-          $tmp_response = '<span style="color:#808080">' . $string['na'] . '</span>';
+        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
+      } else {
+        echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
+        if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
+          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
+        }
+        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
+      }
+    }
+    switch ($q_type) {
+      case 'area':
+      ?>
+      <br />
+      <script language="javascript">
+        write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($q_media_width + 2); ?>" height="<?php echo ($q_media_height + 1); ?>" id="externalinterfaceq<?php echo $q_no; ?>_1" align="top">');
+        write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
+        write_string('<param name="quality" value="high" />');
+        write_string('<param name="bgcolor" value="#ffffff" />');
+        write_string('<param name="play" value="true" />');
+        write_string('<param name="loop" value="true" />');
+        write_string('<param name="wmode" value="opaque" />');
+        write_string('<param name="scale" value="showall" />');
+        write_string('<param name="menu" value="true" />');
+        write_string('<param name="devicefont" value="false" />');
+        write_string('<param name="salign" value="top" />');
+        write_string('<param name="allowScriptAccess" value="sameDomain" />');
+        write_string('<!--[if !IE]>-->');
+        write_string('<object type="application/x-shockwave-flash" data="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $q_no; ?>_2" width="<?php echo ($q_media_width + 2); ?>" height="<?php echo ($q_media_height + 1); ?>">');
+        write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
+        write_string('<param name="quality" value="high" />');
+        write_string('<param name="bgcolor" value="#ffffff" />');
+        write_string('<param name="play" value="true" />');
+        write_string('<param name="loop" value="true" />');
+        write_string('<param name="wmode" value="opaque" />');
+        write_string('<param name="scale" value="showall" />');
+        write_string('<param name="menu" value="true" />');
+        write_string('<param name="devicefont" value="false" />');
+        write_string('<param name="salign" value="top" />');
+        write_string('<param name="allowScriptAccess" value="sameDomain" />');
+        write_string('<!--<![endif]-->');
+        write_string('<a href="https://www.adobe.com/go/getflash"> <img src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>');
+        write_string('<!--[if !IE]>-->');
+        write_string('</object>');
+        write_string('<!--<![endif]-->');
+        write_string('</object>');
+
+        sendTextToAS3('<?php echo $language; ?>','q<?php echo $q_no; ?>', 1, '<?php echo '../media/' . $q_media; ?>', '<?php echo $correct; ?>', '<?php echo $correct; ?>');
+
+      </script>
+      <input type="hidden" name="q<?php echo $q_no; ?>" id="q<?php echo $q_no; ?>" />
+      <?php
+        break;
+      case 'blank':
+        $options[0] = preg_replace("| mark=\"([0-9]{1,3})\"|","",$options[0]);
+        $options[0] = preg_replace("| size=\"([0-9]{1,3})\"|","",$options[0]);
+        $blank_details = array();
+        $blank_details = explode('[blank',$options[0]);
+        $array_size = count($blank_details);
+        $blank_count = 0;
+        while ($blank_count < $array_size) {
+          if (strpos($blank_details[$blank_count],'[/blank]') === false) {
+            echo $blank_details[$blank_count];
+          } else {
+            $end_start_tag = strpos($blank_details[$blank_count],']');
+            $start_end_tag = strpos($blank_details[$blank_count],'[/blank]');
+            $blank_options = substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
+            $remainder = substr($blank_details[$blank_count], ($start_end_tag+8));
+
+            if ($display_method == 'dropdown') {
+              echo '<select>';
+              $options_array = array();
+              $options_array = explode(',',$blank_options);
+              $i = 0;
+              foreach ($options_array as $individual_blank_option) {
+                $individual_blank_option = trim($individual_blank_option);
+                if ($i == 0) {
+                  echo '<option value="" selected="selected">' . $individual_blank_option . '</option>';
+                } else {
+                  echo '<option value="">' . $individual_blank_option . '</option>';
+                }
+                $i++;
+              }
+              echo '</select>';
+            } else {
+              // Correct answer.
+              $correct_options = explode(',' , $blank_options);
+              echo '<input type="text" size="10" value="' . $correct_options[0] . '" />';
+            }
+            echo $remainder;
+          }
+          $blank_count++;
+        }
+        break;
+      case 'calculation':
+        break;
+      case 'dichotomous':
+        $tmp_std_array = explode(',', $std);
+        $std_part = 0;
+        if ($score_method == 'YN_Positive') {
+          $true_label = 'Yes';
+          $false_label = 'No';
         } else {
-          $tmp_action = $string[$comments_data[$questionID][$reviewer]['action']];
-          $tmp_response = nl2br($comments_data[$questionID][$reviewer]['response']);
+          $true_label = 'True';
+          $false_label = 'False';
+        }
+        $i = 0;
+        foreach ($options as $individual_option) {
+          $i++;
+          if ($correct_buf[$i-1] == 't') {
+            echo "<tr><td style=\"font-weight:bold\">$true_label</td><td>$individual_option</td></tr>\n";
+          } else {
+            echo "<tr><td style=\"font-weight:bold\">$false_label</td><td>$individual_option</td></tr>\n";
+          }
+        }
+        break;
+      case 'labelling':
+        $tmp_std_array = explode(',',$std);
+        $std_part = 0;
+        $tmp_std_array = explode(',',$std);
+        $std_part = 0;
+        $max_col1 = 0;
+        $max_col2 = 0;
+        $tmp_first_split = explode(';', $correct);
+        $tmp_second_split = explode('|', $tmp_first_split[11]);
+        foreach ($tmp_second_split as $ind_label) {
+          $label_parts = explode('$', $ind_label);
+          if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
+            if ($label_parts[0] < 10) {
+              $max_col1 = $label_parts[0];
+            } else {
+              $max_col2 = $label_parts[0];
+            }
+          }
+        }
+        $max_col2-=10;
+
+        $max_label = max($max_col1, $max_col2);
+
+        $tmp_height = $q_media_height;
+        if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
+        $correct = str_replace('"', '&#034;', $correct);
+        $correct = str_replace("'", '&#039;', $correct);
+?>
+  <div align="center">
+  <script language="JavaScript">
+    function swfLoaded<?php echo $q_no; ?>(message) {
+      var num = message.substring(5,message.length);
+      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '','#FFC0C0');
+    }
+    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
+    write_string('<param name="allowScriptAccess" value="always" />');
+    write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/reports/label_analysis.swf" />');
+    write_string('<param name="quality" value="high" />');
+    write_string('<param name="bgcolor" value="#ffffff" />');
+    write_string('<embed src="<?php echo $configObject->get('cfg_root_path') ?>/reports/label_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('</object>');
+  </script>
+  </div>
+  <br />
+<?php
+        break;
+      case 'hotspot':
+        $tmp_width = ($q_media_width + 301);
+        if ($tmp_width < 375) $tmp_width = 375;
+        $tmp_height = $q_media_height + 30;
+        ?>
+            <div>
+            <script language="JavaScript">
+              function swfLoaded<?php echo $q_no; ?>(message) {
+                var num = message.substring(5,message.length);
+                setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo str_replace('&nbsp;', ' ', $correct); ?>', '', '1,1,0000000000000','#FFC0C0');
+              }
+              write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo $tmp_height; ?>" align="middle">');
+              write_string('<param name="allowScriptAccess" value="always" />');
+              write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/paper/hotspot_answer.swf" />');
+              write_string('<param name="quality" value="high" />');
+              write_string('<param name="bgcolor" value="white" />');
+              write_string('<embed src="<?php echo $configObject->get('cfg_root_path') ?>/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo 'white'; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+              write_string('</object>');
+            </script>
+            </div>
+        <?php
+
+        break;
+      case 'mcq':
+        $i = 0;
+        foreach ($options as $individual_option) {
+          $i++;
+          if ($correct == $i) {
+            echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
+          } else {
+            echo "<tr><td><input type=\"radio\" /></td><td>$individual_option</td></tr>\n";
+          }
+        }
+        break;
+      case 'true_false':
+        if ($correct == 't') {
+          echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>True</td></tr>\n";
+          echo "<tr><td><input type=\"radio\" /></td><td>False</td></tr>\n";
+        } else {
+          echo "<tr><td><input type=\"radio\" /></td><td>True</td></tr>\n";
+          echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>False</td></tr>\n";
+        }
+        break;
+      case 'mrq':
+        $tmp_std_array = explode(',',$std);
+        $i = 0;
+        $correct_stems = 0;
+        foreach ($options as $individual_option) {
+          $i++;
+          if ($correct_buf[$i-1] == 'y') {
+            echo "<tr><td><input type=\"checkbox\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
+          } else {
+            echo "<tr><td><input type=\"checkbox\" /></td><td>$individual_option</td></tr>\n";
+          }
+        }
+        break;
+      case 'rank':
+        $tmp_std_array = explode(',', $std);
+        $std_part = 0;
+        $rank_no = 0;
+        foreach ($correct_buf as $individual_correct) {
+          if ($individual_correct > $rank_no and $individual_correct < 9990) $rank_no = $individual_correct;
         }
 
-        if (trim($tmp_response) == '') $tmp_response = '<span style="color:#808080">' . $string['noresponse'] . '</span>';
-        $html .= "<tr class=\"$status reviewline\"><td class=\"reviewline\"><img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" /></td><td class=\"reviewline\">" . $comments_data[$questionID][$reviewer]['name'] . "</td><td class=\"reviewline\">$tmp_comment</td><td class=\"reviewline\">$tmp_action</td><td class=\"reviewline\">$tmp_response</td></tr>\n";
-      }
+        $i = 0;
+        foreach ($options as $individual_option) {
+          $i++;
+          echo "<tr><td><select><option value=\"\"></option>";
+          for ($a=1; $a<=$rank_no; $a++) {
+            //echo '<option value="">' . displayRank($correct_buf[$a]) . '</option>';
+            if ($correct_buf[$i-1] == $a) {
+              echo '<option value="" selected="selected">' . displayRank($a) . '</option>';
+            } else {
+              echo '<option value="">' . displayRank($a) . '</option>';
+            }
+          }
+          echo "</select></td><td>$individual_option</td></tr>\n";
+        }
+        break;
+      case 'textbox':
+        $correct_answers = explode(';', $correct);
+        foreach ($correct_answers as $single_answer) {
+          $answer_count[$single_answer] = 0;
+        }
+        break;
     }
-    if (isset($incomplete_names)) {
-      foreach ($incomplete_names as $single_incomplete) {
-        $html .= "<tr class=\"OK\"><td class=\"reviewline\">&nbsp;</td><td class=\"reviewline\" style=\"color:#C00000\">$single_incomplete</td><td class=\"reviewline\" style=\"color:#C00000; text-align:center\" colspan=\"3\">" . $string['notreviewed'] . "</td></tr>\n";
-      }
+    if ($q_type != 'info' and $q_type != 'blank' and $q_type != 'labelling' and $q_type != 'hotspot') echo "</table></p>\n";
+  } elseif ($q_type == 'matrix') {
+    $matching_scenarios = explode('|', $scenario);
+    $correct_answers = explode('|', $correct);
+    echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
+    echo '<ol type="i">';
+    $i = 0;
+    echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
+    echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
+    foreach ($options as $single_option) {
+      echo '<td>' . $single_option . '</td>';
     }
-    $html .= "</table></td></tr>\n";
 
-    return $html;
-  }
-
-  function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std) {
-    global $language;
-
-    $configObject = Config::Instance();
-
-    $cfg_root_path = $configObject->get('cfg_root_path');
-
-    if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
     echo "<tr>\n";
 
-    if ($q_type != 'extmatch' and $q_type != 'matrix') {
-      if ($q_type == 'info') {
-        echo "<td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">$leadin\n";
-      } else {
-        if ($scenario != '') {
-          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br />\n";
-          echo $leadin;
-          if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
-            echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
-          }
-          if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
-        } else {
-          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
-          if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
-            echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
-          }
-          if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
-        }
-      }
-      switch ($q_type) {
-        case 'area':
-        ?>
-        <br />
-        <script language="javascript">
-          write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($q_media_width + 2); ?>" height="<?php echo ($q_media_height + 1); ?>" id="externalinterfaceq<?php echo $q_no; ?>_1" align="top">');
-          write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
-          write_string('<param name="quality" value="high" />');
-          write_string('<param name="bgcolor" value="#ffffff" />');
-          write_string('<param name="play" value="true" />');
-          write_string('<param name="loop" value="true" />');
-          write_string('<param name="wmode" value="opaque" />');
-          write_string('<param name="scale" value="showall" />');
-          write_string('<param name="menu" value="true" />');
-          write_string('<param name="devicefont" value="false" />');
-          write_string('<param name="salign" value="top" />');
-          write_string('<param name="allowScriptAccess" value="sameDomain" />');
-          write_string('<!--[if !IE]>-->');
-          write_string('<object type="application/x-shockwave-flash" data="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $q_no; ?>_2" width="<?php echo ($q_media_width + 2); ?>" height="<?php echo ($q_media_height + 1); ?>">');
-          write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
-          write_string('<param name="quality" value="high" />');
-          write_string('<param name="bgcolor" value="#ffffff" />');
-          write_string('<param name="play" value="true" />');
-          write_string('<param name="loop" value="true" />');
-          write_string('<param name="wmode" value="opaque" />');
-          write_string('<param name="scale" value="showall" />');
-          write_string('<param name="menu" value="true" />');
-          write_string('<param name="devicefont" value="false" />');
-          write_string('<param name="salign" value="top" />');
-          write_string('<param name="allowScriptAccess" value="sameDomain" />');
-          write_string('<!--<![endif]-->');
-          write_string('<a href="https://www.adobe.com/go/getflash"> <img src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>');
-          write_string('<!--[if !IE]>-->');
-          write_string('</object>');
-          write_string('<!--<![endif]-->');
-          write_string('</object>');
-
-          sendTextToAS3('<?php echo $language; ?>','q<?php echo $q_no; ?>', 1, '<?php echo '../media/' . $q_media; ?>', '<?php echo $correct; ?>', '<?php echo $correct; ?>');
-
-        </script>
-        <input type="hidden" name="q<?php echo $q_no; ?>" id="q<?php echo $q_no; ?>" />
-        <?php
-          break;
-        case 'blank':
-          $options[0] = preg_replace("| mark=\"([0-9]{1,3})\"|","",$options[0]);
-          $options[0] = preg_replace("| size=\"([0-9]{1,3})\"|","",$options[0]);
-          $blank_details = array();
-          $blank_details = explode('[blank',$options[0]);
-          $array_size = count($blank_details);
-          $blank_count = 0;
-          while ($blank_count < $array_size) {
-            if (strpos($blank_details[$blank_count],'[/blank]') === false) {
-              echo $blank_details[$blank_count];
-            } else {
-              $end_start_tag = strpos($blank_details[$blank_count],']');
-              $start_end_tag = strpos($blank_details[$blank_count],'[/blank]');
-              $blank_options = substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
-              $remainder = substr($blank_details[$blank_count], ($start_end_tag+8));
-
-              if ($display_method == 'dropdown') {
-                echo '<select>';
-                $options_array = array();
-                $options_array = explode(',',$blank_options);
-                $i = 0;
-                foreach ($options_array as $individual_blank_option) {
-                  $individual_blank_option = trim($individual_blank_option);
-                  if ($i == 0) {
-                    echo '<option value="" selected="selected">' . $individual_blank_option . '</option>';
-                  } else {
-                    echo '<option value="">' . $individual_blank_option . '</option>';
-                  }
-                  $i++;
-                }
-                echo '</select>';
-              } else {
-                // Correct answer.
-                $correct_options = explode(',' , $blank_options);
-                echo '<input type="text" size="10" value="' . $correct_options[0] . '" />';
-              }
-              echo $remainder;
-            }
-            $blank_count++;
-          }
-          break;
-        case 'calculation':
-          break;
-        case 'dichotomous':
-          $tmp_std_array = explode(',', $std);
-          $std_part = 0;
-          if ($score_method == 'YN_Positive') {
-            $true_label = 'Yes';
-            $false_label = 'No';
+    $row_no = 0;
+    foreach ($matching_scenarios as $single_scenario) {
+      if (trim($single_scenario) != '') {
+        echo "<tr>\n";
+        echo '<td align="right">' . chr(65 + $row_no) . '.</td><td>' . $single_scenario . '</td>';
+        $answer_no = 1;
+        $col_no = 1;
+        foreach ($options as $single_option) {
+          if ($correct_answers[$row_no] == $col_no) {
+            echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" checked /></div></td>';
           } else {
-            $true_label = 'True';
-            $false_label = 'False';
+            echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" /></div></td>';
           }
-          $i = 0;
-          foreach ($options as $individual_option) {
-            $i++;
-            if ($correct_buf[$i-1] == 't') {
-              echo "<tr><td style=\"font-weight:bold\">$true_label</td><td>$individual_option</td></tr>\n";
-            } else {
-              echo "<tr><td style=\"font-weight:bold\">$false_label</td><td>$individual_option</td></tr>\n";
-            }
-          }
-          break;
-        case 'labelling':
-          $tmp_std_array = explode(',',$std);
-          $std_part = 0;
-          $tmp_std_array = explode(',',$std);
-          $std_part = 0;
-          $max_col1 = 0;
-          $max_col2 = 0;
-          $tmp_first_split = explode(';', $correct);
-          $tmp_second_split = explode('|', $tmp_first_split[11]);
-          foreach ($tmp_second_split as $ind_label) {
-            $label_parts = explode('$', $ind_label);
-            if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
-              if ($label_parts[0] < 10) {
-                $max_col1 = $label_parts[0];
-              } else {
-                $max_col2 = $label_parts[0];
-              }
-            }
-          }
-          $max_col2-=10;
-
-          $max_label = max($max_col1, $max_col2);
-
-          $tmp_height = $q_media_height;
-          if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
-          $correct = str_replace('"', '&#034;', $correct);
-          $correct = str_replace("'", '&#039;', $correct);
-?>
-    <div align="center">
-    <script language="JavaScript">
-      function swfLoaded<?php echo $q_no; ?>(message) {
-        var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '','#FFC0C0');
-      }
-      write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
-      write_string('<param name="allowScriptAccess" value="always" />');
-      write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/reports/label_analysis.swf" />');
-      write_string('<param name="quality" value="high" />');
-      write_string('<param name="bgcolor" value="#ffffff" />');
-      write_string('<embed src="<?php echo $configObject->get('cfg_root_path') ?>/reports/label_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-      write_string('</object>');
-    </script>
-    </div>
-    <br />
-<?php
-          break;
-        case 'hotspot':
-          $tmp_width = ($q_media_width + 301);
-          if ($tmp_width < 375) $tmp_width = 375;
-          $tmp_height = $q_media_height + 30;
-          ?>
-              <div>
-              <script language="JavaScript">
-                function swfLoaded<?php echo $q_no; ?>(message) {
-                  var num = message.substring(5,message.length);
-                  setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo str_replace('&nbsp;', ' ', $correct); ?>', '', '1,1,0000000000000','#FFC0C0');
-                }
-                write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo $tmp_height; ?>" align="middle">');
-                write_string('<param name="allowScriptAccess" value="always" />');
-                write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/paper/hotspot_answer.swf" />');
-                write_string('<param name="quality" value="high" />');
-                write_string('<param name="bgcolor" value="white" />');
-                write_string('<embed src="<?php echo $configObject->get('cfg_root_path') ?>/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo 'white'; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-                write_string('</object>');
-              </script>
-              </div>
-          <?php
-
-          break;
-        case 'mcq':
-          $i = 0;
-          foreach ($options as $individual_option) {
-            $i++;
-            if ($correct == $i) {
-              echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
-            } else {
-              echo "<tr><td><input type=\"radio\" /></td><td>$individual_option</td></tr>\n";
-            }
-          }
-          break;
-        case 'true_false':
-          if ($correct == 't') {
-            echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>True</td></tr>\n";
-            echo "<tr><td><input type=\"radio\" /></td><td>False</td></tr>\n";
-          } else {
-            echo "<tr><td><input type=\"radio\" /></td><td>True</td></tr>\n";
-            echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>False</td></tr>\n";
-          }
-          break;
-        case 'mrq':
-          $tmp_std_array = explode(',',$std);
-          $i = 0;
-          $correct_stems = 0;
-          foreach ($options as $individual_option) {
-            $i++;
-            if ($correct_buf[$i-1] == 'y') {
-              echo "<tr><td><input type=\"checkbox\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
-            } else {
-              echo "<tr><td><input type=\"checkbox\" /></td><td>$individual_option</td></tr>\n";
-            }
-          }
-          break;
-        case 'rank':
-          $tmp_std_array = explode(',', $std);
-          $std_part = 0;
-          $rank_no = 0;
-          foreach ($correct_buf as $individual_correct) {
-            if ($individual_correct > $rank_no and $individual_correct < 9990) $rank_no = $individual_correct;
-          }
-
-          $i = 0;
-          foreach ($options as $individual_option) {
-            $i++;
-            echo "<tr><td><select><option value=\"\"></option>";
-            for ($a=1; $a<=$rank_no; $a++) {
-              //echo '<option value="">' . displayRank($correct_buf[$a]) . '</option>';
-              if ($correct_buf[$i-1] == $a) {
-                echo '<option value="" selected="selected">' . displayRank($a) . '</option>';
-              } else {
-                echo '<option value="">' . displayRank($a) . '</option>';
-              }
-            }
-            echo "</select></td><td>$individual_option</td></tr>\n";
-          }
-          break;
-        case 'textbox':
-          $correct_answers = explode(';', $correct);
-          foreach ($correct_answers as $single_answer) {
-            $answer_count[$single_answer] = 0;
-          }
-          break;
-      }
-      if ($q_type != 'info' and $q_type != 'blank' and $q_type != 'labelling' and $q_type != 'hotspot') echo "</table></p>\n";
-    } elseif ($q_type == 'matrix') {
-      $matching_scenarios = explode('|', $scenario);
-      $correct_answers = explode('|', $correct);
-      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
-      echo '<ol type="i">';
-      $i = 0;
-      echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
-      echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
-      foreach ($options as $single_option) {
-        echo '<td>' . $single_option . '</td>';
-      }
-
-      echo "<tr>\n";
-
-      $row_no = 0;
-      foreach ($matching_scenarios as $single_scenario) {
-        if (trim($single_scenario) != '') {
-          echo "<tr>\n";
-          echo '<td align="right">' . chr(65 + $row_no) . '.</td><td>' . $single_scenario . '</td>';
-          $answer_no = 1;
-          $col_no = 1;
-          foreach ($options as $single_option) {
-            if ($correct_answers[$row_no] == $col_no) {
-              echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" checked /></div></td>';
-            } else {
-              echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" /></div></td>';
-            }
-            $answer_no++;
-            $col_no++;
-          }
-          echo "</tr>\n";
-          $row_no++;
+          $answer_no++;
+          $col_no++;
         }
+        echo "</tr>\n";
+        $row_no++;
       }
-      echo '</table>';
-      echo "</ol>\n</td></tr>\n";
-    } elseif ($q_type == 'extmatch') {
-      $matching_scenarios = array();
-      $matching_scenarios = explode('|', $scenario);
-      $tmp_media_array = explode('|',$q_media);
-      $tmp_media_width_array = explode('|',$q_media_width);
-      $tmp_media_height_array = explode('|',$q_media_height);
-      $tmp_ext_scenarios = explode('|',$scenario);
-      $tmp_answers_array = explode('|',$correct_buf[0]);
-      $tmp_std_array = explode(',',$std);
-      $std_part = 0;
-
-      $tmp_text_no = 0;
-      $tmp_media_no = 0;
-      foreach ($matching_scenarios as $single_scenario) {
-        if (trim($single_scenario) != '') $tmp_text_no++;
-      }
-      foreach ($tmp_media_array as $single_media) {
-        if (trim($single_media) != '') $tmp_media_no++;
-      }
-      if ($tmp_text_no > $tmp_media_no) {
-        $total_scenarios = $tmp_text_no;
-      } else {
-        $total_scenarios = $tmp_media_no;
-      }
-
-      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
-      if ($tmp_media_array[0] != '') {
-        echo "<div align=\"center\">" . display_media($tmp_media_array[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '') . "</div>\n";
-      }
-      for ($i=1; $i<=$total_scenarios; $i++) {
-        echo "<li>\n";
-        if (isset($tmp_media_array[$i]) and $tmp_media_array[$i] != '') {
-          echo "<div>" . display_media($tmp_media_array[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '') . "</div>\n";
-        }
-        if ($tmp_ext_scenarios[$i-1]) echo $tmp_ext_scenarios[$i-1] . '<br />';
-        $option_no = 1;
-        $specific_answers = array();
-        $specific_answers = explode('$', $tmp_answers_array[$i-1]);
-        if (count($specific_answers) > 1) {
-          echo '<select multiple="multiple" size="10">';
-        } else {
-          echo '<select>';
-        }
-        foreach ($options as $individual_option) {
-          $answer_match = false;
-          for ($x=0; $x<count($specific_answers); $x++) {
-            if ($option_no == $specific_answers[$x]) $answer_match = true;
-          }
-          if ($answer_match == true) {
-            echo "<option value=\"\" selected=\"selected\">$individual_option</option>\n";
-          } else {
-            echo "<option value=\"\">$individual_option</option>\n";
-          }
-          $option_no++;
-        }
-        echo "</select><br />&nbsp;</li>\n";
-      }
-      echo "</ol>\n";
     }
-    echo "</td></tr>\n";
+    echo '</table>';
+    echo "</ol>\n</td></tr>\n";
+  } elseif ($q_type == 'extmatch') {
+    $matching_scenarios = array();
+    $matching_scenarios = explode('|', $scenario);
+    $tmp_media_array = explode('|',$q_media);
+    $tmp_media_width_array = explode('|',$q_media_width);
+    $tmp_media_height_array = explode('|',$q_media_height);
+    $tmp_ext_scenarios = explode('|',$scenario);
+    $tmp_answers_array = explode('|',$correct_buf[0]);
+    $tmp_std_array = explode(',',$std);
+    $std_part = 0;
 
-    // Display comments here.
-    if ($q_type != 'info') echo displayComments($q_id, $comments, $q_type, $q_no);
-    echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+    $tmp_text_no = 0;
+    $tmp_media_no = 0;
+    foreach ($matching_scenarios as $single_scenario) {
+      if (trim($single_scenario) != '') $tmp_text_no++;
+    }
+    foreach ($tmp_media_array as $single_media) {
+      if (trim($single_media) != '') $tmp_media_no++;
+    }
+    if ($tmp_text_no > $tmp_media_no) {
+      $total_scenarios = $tmp_text_no;
+    } else {
+      $total_scenarios = $tmp_media_no;
+    }
+
+    echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
+    if ($tmp_media_array[0] != '') {
+      echo "<div align=\"center\">" . display_media($tmp_media_array[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '') . "</div>\n";
+    }
+    for ($i=1; $i<=$total_scenarios; $i++) {
+      echo "<li>\n";
+      if (isset($tmp_media_array[$i]) and $tmp_media_array[$i] != '') {
+        echo "<div>" . display_media($tmp_media_array[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '') . "</div>\n";
+      }
+      if ($tmp_ext_scenarios[$i-1]) echo $tmp_ext_scenarios[$i-1] . '<br />';
+      $option_no = 1;
+      $specific_answers = array();
+      $specific_answers = explode('$', $tmp_answers_array[$i-1]);
+      if (count($specific_answers) > 1) {
+        echo '<select multiple="multiple" size="10">';
+      } else {
+        echo '<select>';
+      }
+      foreach ($options as $individual_option) {
+        $answer_match = false;
+        for ($x=0; $x<count($specific_answers); $x++) {
+          if ($option_no == $specific_answers[$x]) $answer_match = true;
+        }
+        if ($answer_match == true) {
+          echo "<option value=\"\" selected=\"selected\">$individual_option</option>\n";
+        } else {
+          echo "<option value=\"\">$individual_option</option>\n";
+        }
+        $option_no++;
+      }
+      echo "</select><br />&nbsp;</li>\n";
+    }
+    echo "</ol>\n";
   }
+  echo "</td></tr>\n";
+
+  // Display comments here.
+  if ($q_type != 'info') echo displayComments($q_id, $comments, $q_type, $q_no);
+  echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -594,17 +597,6 @@ if (isset($_GET['scrOfY'])) {
     }
   }
 
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
-
   // Capture the paper makeup.
   $display_header = true;
   $question_no = 0;
@@ -616,14 +608,15 @@ if (isset($_GET['scrOfY'])) {
   $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std FROM (properties, papers, questions, options) WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND questions.q_id = options.o_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $paperID);
   $result->execute();
+  $result->store_result();
   $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
   while ($result->fetch()) {
     if ($display_header == true) {
       echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-      if ($folder != '') {
-        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+      if (isset($_GET['folder']) and $_GET['folder'] != '') {
+        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
       } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
+        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
       }
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 

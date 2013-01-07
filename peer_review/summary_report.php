@@ -26,7 +26,9 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 require_once 'summary_report.inc';
+
 require_once '../classes/paperutils.class.php';
+require_once '../classes/folderutils.class.php';
 
 check_var('paperID', 'GET', true, false);
 check_var('startdate', 'GET', true, false);
@@ -159,8 +161,8 @@ check_var('enddate', 'GET', true, false);
   echo "<tr><th colspan=\"" . ($heading_no + 7) . "\"><div class=\"breadcrumb\">";
   if (isset( $_GET['module'] ) and $_GET['module'] != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  } elseif ($folder != '') {
-    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  } elseif (isset($_GET['folder'])) {
+    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } else {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
   }

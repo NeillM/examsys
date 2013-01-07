@@ -90,6 +90,10 @@
   $paper_type = 0;
   $unanswered = false;
   $user_answers[1] = array();
+  
+  if (isset($_GET['qNo'])) {
+    $question['assigned_number'] = $_GET['qNo'];
+  }
   display_question($question, $paper_type, 1, '', $question_no, $question_offset, $user_answers, $unanswered);	
 
   $question_nos[] = $old_q_id;

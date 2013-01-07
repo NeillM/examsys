@@ -26,7 +26,9 @@
 require '../include/staff_auth.inc';
 require '../include/question_types.inc';
 require '../include/mapping.inc';
+
 require_once '../classes/paperutils.class.php';
+require_once '../classes/folderutils.class.php';
 
 $paperID = $_GET['paperID'];
 
@@ -40,7 +42,7 @@ function getPaper($paperID) {
     $direction = 'asc';
   }
 
-  $result = $mysqli->prepare("SELECT paper_title, calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT paper_title, calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id = ? LIMIT 1");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($paper_title,  $session, $start_date, $end_date, $paper_type);
@@ -111,13 +113,14 @@ function getPaper($paperID) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .q_no {text-align:right; vertical-align:top; cursor:pointer}
+    .q_prev {color:#FF6300 !important}
     .divider {font-weight:normal; color:#1E3287; padding-left:6px}
     .mapping {font-size:90%; color:#FF6300; font-weight:normal}
     .mapping_exclueded {color:red;font-weight:normal;text-decoration:line-through}
     .unmapped {color:#C0C0C0}
     a {text-decoration: none}
     .m_s {background-image:url('../artwork/red_hash_background.png'); background-repeat:repeat}
-    .o_s {background-color:#99FF99}
+    .o_s {background-color:#EBF1DD}
     .nm_s {background-color:white}
     td.m_s {border:1px solid #c0c0c0}
     td.o_s {border:1px solid #c0c0c0}
@@ -140,27 +143,17 @@ function getPaper($paperID) {
     $direction = 'asc';
   }
 
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
-
-  $result = $mysqli->prepare("SELECT paper_title,  calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT paper_title,  calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id = ? LIMIT 1");
   $result->bind_param('i', $paperID);
   $result->execute();
+  $result->store_result();
   $result->bind_result($paper_title, $session, $start_date, $end_date, $paper_type);
   while ($result->fetch()) {
     echo "<table class=\"header\">\n";
     echo '<tr><th>';
     echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-    if ($folder != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    if (isset($_GET['folder']) and $_GET['folder'] != '') {
+      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
     } elseif (isset($_GET['module']) and $_GET['module'] != '') {
       $modules = explode(',', $_GET['module']);
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $modules[0] . '">' . $modules[0] . '</a>';
@@ -199,7 +192,7 @@ while ($papersRes->fetch()) {
 
 $papersRes->close();
 
-if(isset($papers_tmp)) {
+if (isset($papers_tmp)) {
   //$papers_tmp = array_reverse($papers_tmp);
   $i = 0;
   foreach ($papers_tmp as $p_id) {
@@ -217,14 +210,14 @@ $n = 0;
 foreach ($objsBySession as $p_id => $module) {
   foreach ($module as $moduleID => $sessions) {
     foreach ($sessions as $id => $session) {
-      if(isset($session['objectives'])) {
+      if (isset($session['objectives'])) {
         $objbuffer = $session['objectives'];
         if (!isset($allsession[$moduleID][$id])) {
           $allsession[$moduleID][$id] = $session;
           unset($allsession[$moduleID][$id]['objectives']);
         }
 
-        foreach($objbuffer as $obj) {
+        foreach ($objbuffer as $obj) {
           $allsession[$moduleID][$id]['objectives'][$obj['id']] = $obj;
           $allsession[$moduleID][$id]['objectives'][$obj['id']]['session'] = $papers[$p_id]['session'];
           $n++;
@@ -239,15 +232,15 @@ echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
 //table heading
 echo "<tr><th colspan=\"2\"></th>";
 $pcount = 0;
-foreach($papers as $p) {
+foreach ($papers as $p) {
   $pcount++;
 }
-foreach($papers as $p) {
+foreach ($papers as $p) {
   echo "<th style=\"width:" . round(50/$pcount,0) . "%\">" . $p['paper_title'] . "</th>";
 }
 echo "</tr>";
-foreach($allsession as $moduleID => $module) {
-  foreach($module as $identifier => $session) {
+foreach ($allsession as $moduleID => $module) {
+  foreach ($module as $identifier => $session) {
     echo '<tr><td colspan="' . ($pcount+2) . '" class="divider">';
     if ($session['class_code'] != '') {
       echo $session['class_code'] . ': ';
@@ -257,16 +250,16 @@ foreach($allsession as $moduleID => $module) {
     foreach ($session['objectives'] as $objID => $obj) {
       echo "<tr>\n\t<td style=\"width:2%\">&nbsp;</td><td style=\"width:48%\" class=\"obj\"><li>" . strip_tags($obj['content'], '<b><i><strong><em><sub><sup>') . "</li></td>\n";
       $objID = $obj['id'];
-      foreach($objsBySession as $p_id => $s) {
+      foreach ($objsBySession as $p_id => $s) {
         if (isset($s[$moduleID]) and array_key_exists($identifier,$s[$moduleID])) {
           $mapped = false;
-          if(isset($s[$moduleID][$identifier]['objectives'])) {
+          if (isset($s[$moduleID][$identifier]['objectives'])) {
             foreach ($s[$moduleID][$identifier]['objectives'] as $tmpObj) {
               if ($tmpObj['id'] == $objID) {
                 if (is_array($tmpObj['mapped'])) {
                   echo "\t<td class=\"o_s\">";
                   foreach($tmpObj['mapped'] as $qid) {
-                    echo "<span class=\"\" style=\"cursor:pointer\" title=\"" . $papers[$p_id]['questions'][$qid]['leadin'] . "\"><a href=\"../question/view_question.php?q_id=" . $papers[$p_id]['questions'][$qid]['q_id'] . "&qNo=" . $papers[$p_id]['questions'][$qid]['qnumber'] . "\" target=\"_blank\">Q" . $papers[$p_id]['questions'][$qid]['qnumber'] . "</a></span> ";
+                    echo "<span style=\"cursor:pointer\" title=\"" . $papers[$p_id]['questions'][$qid]['leadin'] . "\"><a class=\"q_prev\" href=\"../question/view_question.php?q_id=" . $papers[$p_id]['questions'][$qid]['q_id'] . "&qNo=" . $papers[$p_id]['questions'][$qid]['qnumber'] . "\" target=\"_blank\">Q" . $papers[$p_id]['questions'][$qid]['qnumber'] . "</a></span> ";
                   }
                 } else {
                   echo "\t<td class=\"nm_s\">";

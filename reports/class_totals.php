@@ -26,6 +26,7 @@
 
 require '../include/staff_auth.inc';
 require '../include/class_totals.inc';
+require_once '../classes/folderutils.class.php';
 
 function nicedate($original) {
   return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
@@ -432,20 +433,10 @@ if ($language != 'en') {
     $report_title = $string['classtotals'];
   }
 
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
 
-  if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif ( isset( $_GET['module'] ) and $_GET['module'] != '' ) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
@@ -453,8 +444,20 @@ if ($language != 'en') {
 
   echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
 
+  if (isset($_GET['folder'])) {
+    $tmp_folder = '&folder=' . $_GET['folder'];
+  } else {
+    $tmp_folder = '';
+  }
+  
+  if (isset($_GET['module'])) {
+    $tmp_module = '&module=' . $_GET['module'];
+  } else {
+    $tmp_module = '';
+  }
+  
   // output table header
-  if (isset($user_results[0])){
+  if (isset($user_results[0])) {
     echo "<tr style=\"font-size:110%\">\n";
     foreach ($table_order as $display => $key) {
       if ($key == '') {
@@ -463,11 +466,11 @@ if ($language != 'en') {
         echo "<th class=\"vert_div\">&nbsp;";
       }
       if ($sortby == $key and $ordering == 'asc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repcourse=" . $_GET['repcourse'] . "&module=" . $_GET['module'] . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=$percent&direction=$direction&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=$percent&direction=$direction&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
       } elseif ($sortby == $key and $ordering == 'desc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repcourse=" . $_GET['repcourse'] . "&module=" . $_GET['module'] . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=$percent&direction=$direction&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=$percent&direction=$direction&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
       } else {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repcourse=" . $_GET['repcourse'] . "&module=" . $_GET['module'] . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=$percent&direction=$direction&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;</th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=$percent&direction=$direction&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;</th>";
       }
     }
     echo "</tr>\n";

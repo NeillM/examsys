@@ -26,7 +26,9 @@ require '../include/staff_auth.inc';
 require '../include/question_types.inc';
 require '../include/mapping.inc';
 require '../include/errors.inc';
+
 require_once '../classes/paperutils.class.php';
+require_once '../classes/folderutils.class.php';
 
 check_var('paperID', 'GET', true, false);
 
@@ -69,28 +71,18 @@ $paperID = $_GET['paperID'];
     $ordering = 'screen';
     $direction = 'asc';
   }
-
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
     
   $result = $mysqli->prepare("SELECT paper_title, calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id=? LIMIT 1");
   $result->bind_param('i', $paperID);
   $result->execute();
+  $result->store_result();
   $result->bind_result($paper_title, $session, $start_date, $end_date, $paper_type);
   while ($result->fetch()) {
     echo "<table class=\"header\">\n";
     echo '<tr><th>';
     echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-    if ($folder != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    if (isset($_GET['folder']) and $_GET['folder'] != '') {
+      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
     } elseif (isset($_GET['module']) and $_GET['module'] != '') {
       $modules = explode(',', $_GET['module']);
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $modules[0] . '">' . $modules[0] . '</a>';

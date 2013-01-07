@@ -26,6 +26,7 @@ require '../include/staff_auth.inc';
 require '../include/mapping.inc';
 require '../include/feedback.inc';
 require_once '../include/sort.inc';
+require_once '../classes/folderutils.class.php';
 
 $paperID = $_GET['paperID'];
 $startdate = $_GET['startdate'];
@@ -55,7 +56,7 @@ $enddate = $_GET['enddate'];
   // Get some paper properties
   getPaperProperties($mysqli, $paperID);
   
-  if ($_GET['percent'] != 100 AND $_GET['percent'] != '') {
+  if ($_GET['percent'] != 100 and $_GET['percent'] != '') {
     $percent = $_GET['percent'];
   } else {
     $percent = 100;
@@ -70,22 +71,11 @@ $enddate = $_GET['enddate'];
   } else {
     $paper_title = $paper_title;
   }
-
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
   
   echo '<tr><th>';
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-  if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
@@ -100,7 +90,7 @@ $enddate = $_GET['enddate'];
   }
   echo '</table>';
   
-  $qid_list = substr($qid_list,0,-1); 
+  $qid_list = substr($qid_list, 0, -1); 
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
   unset($objByModule['none_of_the_above']);  
   if (count($objByModule) == 0) {
@@ -141,7 +131,7 @@ $enddate = $_GET['enddate'];
     <tr><td style="text-align:left"><table cellpadding="2" cellspacing="0" border="0">
     <?php
       echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['totalcandidate'] . '</td><td>' . number_format($user_total) . '</td></tr>';
-      if ($_GET['percent'] != 100 AND $_GET['percent'] != '') {
+      if ($_GET['percent'] != 100 and $_GET['percent'] != '') {
         if ($_GET['direction'] == 'desc') {
           echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['uppersize'] . '</td><td>' . $_GET['percent'] . '% (' . $student_no . ' ' . $string['candidates'] . ')</td></tr>';
         } else {
@@ -172,9 +162,6 @@ $enddate = $_GET['enddate'];
         $tmp_identifier = $obj_data['session']['identifier'];
       } else {
         $tmp_identifier = '';
-      }
-      if (isset($obj_data['session']['specificguide'])) {
-        $session_string = "&nbsp;&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" /></a>&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\">" . $obj_data['session']['sessiontitle'] . "</a>";
       }
       echo "<tr><td><img src=\"$img_src\" alt=\"" . $obj_data['mark_sum'] . ' out of ' . $obj_data['totalpos_sum'] . " objectives acquired\" width=\"16\" height=\"16\" /></td><td>" . floor(($obj_data['mark_sum']/$obj_data['totalpos_sum'])*100) . "%</td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
     }
