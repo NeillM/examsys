@@ -42,6 +42,15 @@ $userID = $userObject->get_user_ID();
 
 getSpecialSettings( $userID, $mysqli);
 
+$bgcolor = $userObject->get_bgcolor();
+$fgcolor = $userObject->get_fgcolor();
+$textsize = $userObject->get_textsize();
+$marks_color = $userObject->get_marks_color();
+$themecolor = $userObject->get_themecolor();
+$labelcolor = $userObject->get_labelcolor();
+$font = $userObject->get_font();
+$unanswered_color = $userObject->get_unanswered_color();
+
 if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
   $paper_properties->bind_param('s', $_GET['id']);
   $paper_properties->execute();
@@ -49,13 +58,13 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
   $paper_properties->bind_result($paperID, $labs, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
   while ($paper_properties->fetch()) {
     // If set overwrite the default colours with the current users' special settings
-    if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-    if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-    if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
-    if (!isset($marks_color) or $marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
-    if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-    if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
-    if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
+    if ($bgcolor == 'NULL') $bgcolor = $paper_bgcolor;
+    if ($fgcolor == 'NULL') $fgcolor = $paper_fgcolor;
+    if ($textsize == 'NULL') $textsize = 90;
+    if ($marks_color == 'NULL') $marks_color = '#808080';
+    if ($themecolor == 'NULL') $themecolor = $paper_themecolor;
+    if ($labelcolor == 'NULL') $labelcolor = $paper_labelcolor;
+    if ($font == 'NULL') $font = 'Arial';
     $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
     $log_type = $paper_type;

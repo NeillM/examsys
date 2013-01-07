@@ -76,14 +76,7 @@ function displayPrevTake($markTotal, $adjPercent, $totalRandomMark, $marking_sty
 
 if ($userObject->is_special_needs()) {
   //look up special_needs data
-  if ($stmt = $mysqli->prepare("SELECT extra_time, textsize, font FROM special_needs WHERE userid=?")) {
-    $stmt->bind_param('i',$userObject->get_user_ID());
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result( $special_needs_percentage, $textsize, $font);
-    $stmt->fetch();
-  }
-  $stmt->close();
+  $textsize = $userObject->get_textsize();
   if ($textsize != '') {
     $textsize = $textsize + 5;
   }

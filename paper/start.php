@@ -264,14 +264,23 @@ if (isset($_GET['q_id'])) {
 $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 
 // If set overwrite the default colours with the current users' special settings
-if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
-if (!isset($marks_color) or $marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
-if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
-if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
-$unanswered_color = '#FFC0C0';
+$bgcolor = $userObject->get_bgcolor();
+$fgcolor = $userObject->get_fgcolor();
+$textsize = $userObject->get_textsize();
+$marks_color = $userObject->get_marks_color();
+$themecolor = $userObject->get_themecolor();
+$labelcolor = $userObject->get_labelcolor();
+$font = $userObject->get_font();
+$unanswered_color = $userObject->get_unanswered_color();
+
+if ($bgcolor == 'NULL') $bgcolor = $paper_bgcolor;
+if ($fgcolor == 'NULL') $fgcolor = $paper_fgcolor;
+if ($textsize == 'NULL') $textsize = 90;
+if ($marks_color == 'NULL') $marks_color = '#808080';
+if ($themecolor == 'NULL') $themecolor = $paper_themecolor;
+if ($labelcolor == 'NULL') $labelcolor = $paper_labelcolor;
+if ($font == 'NULL') $font = 'Arial';
+if ($unanswered_color == 'NULL') $unanswered_color = '#FFC0C0';
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
@@ -302,7 +311,7 @@ if ($userObject->has_role('Student')) {
 
 $summative_exam_session_started = false;
 
-if( $exam_duration != null and (int) $paper_type == 2 ){
+if ($exam_duration != null and (int) $paper_type == 2){
 
   $current_ip_address = NetworkUtils::get_ipaddress();
 
@@ -333,19 +342,16 @@ if( $exam_duration != null and (int) $paper_type == 2 ){
 
   $student_end_datetime = $log_extra_time->get_end_date_datetime();
 
-  if( $student_end_datetime === false ){
+  if ($student_end_datetime === false) {
     $student_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
   }
 
 
-  if( $student_end_datetime === false ){
+  if ($student_end_datetime === false) {
     $student_end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
   }
 
-
-
   $end_date_timestamp = $student_end_datetime->getTimestamp();
-
 
 }
 

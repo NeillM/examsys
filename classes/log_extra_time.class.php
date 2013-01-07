@@ -68,38 +68,23 @@ class LogExtraTime {
 
   public function get_extra_time_secs() {
 
-    $query = 'SELECT
-                extra_time
-              FROM
-                log_extra_time
-              WHERE
-                labID   = ?
-              AND
-                userID  = ?
-              AND
-                paperID = ?';
-
-    $stmt  = $this->db->prepare( $query );
-
     $lab_id     = $this->get_lab_id();
     $student_id = $this->get_student_id();
     $paper_id   = $this->get_paper_id();
 
-    $stmt->bind_param( 'iii'
-                     , $lab_id
-                     , $student_id
-                     , $paper_id );
-
+    $query = 'SELECT extra_time FROM log_extra_time WHERE labID = ? AND userID = ? AND paperID = ?';
+    $stmt  = $this->db->prepare( $query );
+    $stmt->bind_param( 'iii', $lab_id, $student_id, $paper_id );
     $stmt->execute();
     $stmt->store_result();
 
-    if( $stmt->num_rows < 1 ){
+    if ($stmt->num_rows < 1) {
       $stmt->close();
 
       return false;
     }
 
-    $bindResult = $stmt->bind_result( $extra_time_secs );
+    $bindResult = $stmt->bind_result($extra_time_secs);
 
     $stmt->fetch();
     $stmt->close();

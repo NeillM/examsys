@@ -36,6 +36,8 @@ class UserObject {
   private $demomode = FALSE;
   private $roles, $staffModules, $studentModules, $db, $configObj;
 
+  // Special needs variables
+  private $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unanswered;
 
   private $impersonateduser;
 
@@ -92,6 +94,62 @@ class UserObject {
     return $this->userroles;
   }
 
+  function get_bgcolor() {
+    if (!isset($this->background)) {
+      return 'NULL';
+    }
+    return $this->background;
+  }
+  
+  function get_fgcolor() {
+    if (!isset($this->foreground)) {
+      return 'NULL';
+    }
+    return $this->foreground;
+  }
+  
+  function get_textsize() {
+    if ($this->textsize == 0) {
+      return 'NULL';
+    }
+    return $this->textsize;
+  }
+  
+  function get_marks_color() {
+    if (!isset($this->marks_color)) {
+      return 'NULL';
+    }
+    return $this->marks_color;
+  }
+  
+  function get_themecolor() {
+    if (!isset($this->themecolor)) {
+      return 'NULL';
+    }
+    return $this->themecolor;
+  }
+  
+  function get_labelcolor() {
+    if (!isset($this->labelcolor)) {
+      return 'NULL';
+    }
+    return $this->labelcolor;
+  }
+  
+  function get_font() {
+    if (!isset($this->font)) {
+      return 'NULL';
+    }
+    return $this->font;
+  }
+  
+  function get_unanswered_color() {
+    if (!isset($this->unanswered_color)) {
+      return 'NULL';
+    }
+    return $this->unanswered_color;
+  }
+  
   /**
    * checks if user has role(s) specified
    *
@@ -285,16 +343,6 @@ class UserObject {
   }
 
   /**
-   * @param string $title
-   * @return UserObject
-   */
-  function set_title($title) {
-    $this->title = $title;
-
-    return $this;
-  }
-
-  /**
    * Return the user's title
    *
    * @return string Title
@@ -313,32 +361,12 @@ class UserObject {
   }
 
   /**
-   * @param string $first_names
-   * @return UserObject
-   */
-  public function set_first_names($first_names) {
-    $this->first_names = $first_names;
-
-    return $this;
-  }
-
-  /**
    *  Return the user's first names
    *
    * @return string first_names
    */
   public function get_first_names() {
     return $this->first_names;
-  }
-
-  /**
-   * @param string $surname
-   * @return UserObject
-   */
-  function set_surname($surname) {
-    $this->surname = $surname;
-
-    return $this;
   }
 
   /**
@@ -369,13 +397,6 @@ class UserObject {
   }
 
   /**
-   * @param string special_needs
-   */
-  public function set_special_needs($special_needs) {
-    $this->special_needs = $special_needs;
-  }
-
-  /**
    * Return the user's special needs
    *
    * @return string password
@@ -385,19 +406,12 @@ class UserObject {
   }
 
   /**
-   * @param string special_needs_percentage
-   */
-  public function set_special_needs_percentage($special_needs_percentage) {
-    $this->special_needs_percentage = $special_needs_percentage;
-  }
-
-  /**
    * Return the user's special needs percentage
    *
    * @return string password
    */
   public function get_special_needs_percentage() {
-    return $this->special_needs_percentage;
+    return $this->extra_time;
   }
 
   /**
@@ -560,6 +574,14 @@ class UserObject {
     // not implimented
     trigger_error('remove_staff_from_module not yet implimented', E_USER_WARNING);
   }
+  
+  function record_login() {
+    // Update the last log in date in users.
+    $stmt = $this->db->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+    $stmt->bind_param('i', $this->get_user_ID());
+    $stmt->execute();
+    $stmt->close();
+  }
 
   function store_original_user() {
     $data = new stdClass();
@@ -582,38 +604,26 @@ class UserObject {
   function load($userID) {
     $this->userID = $userID;
 
-    $sql = 'SELECT
-                   roles
-                 , title
-                 , initials
-                 , surname
-                 , username
-                 , email
-                 , grade
-                 , yearofstudy
-                 , special_needs
-                 , extra_time as special_needs_percentage
-             FROM
-                users
-             LEFT OUTER JOIN
-                special_needs
-             ON
-                users.id = special_needs.userID
-             WHERE
-                user_deleted IS NULL
-             AND
-                id = ?';
-
-    $stmt = $this->db->prepare($sql);
+    $stmt = $this->db->prepare('SELECT roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id = ?');
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs, $this->special_needs_percentage);
+    $stmt->bind_result($this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs);
     $stmt->fetch();
     $record_no = $stmt->num_rows();
     $stmt->close();
     if ($record_no == 0) {
       return FALSE;
+    }
+    
+    if ($this->special_needs == 1) {
+      $stmt = $this->db->prepare('SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userID = ?');
+      $stmt->bind_param('i', $userID);
+      $stmt->execute();
+      $stmt->store_result();
+      $stmt->bind_result($this->background, $this->foreground, $this->textsize, $this->extra_time, $this->marks_color, $this->themecolor, $this->labelcolor, $this->font, $this->unanswered);
+      $stmt->fetch();
+      $stmt->close();
     }
 
     $temp = explode(',', $this->userroles);
@@ -622,26 +632,6 @@ class UserObject {
       $this->roles[$value] = 1;
     }
     unset($this->userroles);
-    /*
-    if (strpos($this->userroles, 'SysAdmin') !== FALSE) {
-      $this->roles['SysAdmin'] = 1;
-    }
-    if (strpos($this->userroles, 'Admin') !== FALSE and strpos($this->userroles, 'SysAdmin') === FALSE) {
-      $this->roles['Admin'] = 1;
-    }
-    if (strpos($this->userroles, 'Staff') !== FALSE or strpos($this->userroles, 'Admin') !== FALSE) { // Process staff first to get higher priority than students --no need
-      $this->roles['Staff'] = 1;
-    }
-    if (strpos($this->userroles, 'Student') !== FALSE) {
-      $this->roles['Student'] = 1;
-    }
-    if (strpos($this->userroles, 'External Examiner') !== FALSE) {
-      $this->roles['ExternalExaminer'] = 1;
-    }
-    if (strpos($this->userroles, 'Invigilator') !== FALSE) {
-      $this->roles['Invigilator'] = 1;
-    }
-    */
   }
 
   function db_user_change() {

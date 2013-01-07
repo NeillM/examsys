@@ -30,6 +30,7 @@ require_once '../include/sidebar_menu.inc';
 require_once '../classes/recyclebin.class.php';
 require_once '../config/index.inc';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/folderutils.class.php';
 
 global $userObject;
 
@@ -100,35 +101,18 @@ require_once '../include/staff_auth.inc';
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <?php
   // -- Create new folder ---------------------------------------------------
-  $duplicate_name = 0;
+  $duplicate_folder = false;
   if (isset($_POST['submit'])) {
     $new_folder_name = $_POST['folder_name'];
-    $folder_details = $mysqli->prepare("SELECT name FROM folders WHERE ownerID=?");
-    $folder_details->bind_param('i', $userObject->get_user_ID());
-    $folder_details->execute();
-    $folder_details->bind_result($existing_folder_name);
-    $folder_details->fetch();
-    while ($folder_details->fetch()) {
-      if ($existing_folder_name == $new_folder_name) $duplicate_name = 1;
-    }
-    $folder_details->close();
 
-    if ($duplicate_name == 0) {
-      if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL, ?, ?, NOW(), 'yellow', NULL)")) {
-        $folder_query->bind_param('is', $userObject->get_user_ID(), $new_folder_name);
-        $folder_query->execute();
-        $folder_query->close();
-      } else {
-        display_error("New Folder Error",$mysqli->error);
-      }
+    $duplicate_folder = folder_utils::folder_exists($new_folder_name, $userObject, $mysqli);
+    if ($duplicate_folder == false) {
+      folder_utils::create_folder($new_folder_name, $userObject, $mysqli);
     }
   }
 
   // Update the last log in date in users.
-  $stmt = $mysqli->prepare("UPDATE users SET last_login=NOW() WHERE id=?");
-  $stmt->bind_param('i', $userObject->get_user_ID());
-  $stmt->execute();
-  $stmt->close();
+  $userObject->record_login();
 ?>
 <script language="JavaScript">
   function startPaper(paperID, fullsc) {
@@ -268,8 +252,8 @@ require_once '../include/staff_auth.inc';
   }
   $result->close();
 
-  if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' or $duplicate_name == 1) {
-    if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_name == 1) {
+  if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' or $duplicate_folder == true) {
+    if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_folder == true) {
       echo "<script language=\"JavaScript\">alert(\"" . $string['duplicatefoldername'] . "\")</script>";
       echo "<div class=\"f\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" />&nbsp;<input style=\"background-color:#FFC0C0\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
     } elseif (!isset($_POST['submit'])) {
@@ -320,14 +304,9 @@ require_once '../include/staff_auth.inc';
   }
 
   $mysqli->close();
-
-
-
-  ?>
-
+?>
 
 </div>
 </div>
 </body>
 </html>
-
