@@ -61,6 +61,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     $old_initials = '';
     $old_surname = '';
     $old_questionID = 0;
+    $old_q_type = '';
     $question_no = 0;
     $std_total = 0;
     $review_no = 0;
@@ -176,6 +177,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $old_setterID = $setterID;
       $old_group_review = $group_review;
       $old_questionID = $questionID;
+      $old_q_type = $q_type;
     }  // End while loop
   
     $review_no++;
@@ -374,7 +376,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
         break;
       case 'rank':
         if ($correct < 9990) {
-          if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+          if (strpos($exclude[$old_q_id], '1') === false) {
             $marks_array[$old_q_id][$partID] = $marks_correct;
           } else {
             $marks_array[$old_q_id][$partID] = 0;
@@ -719,7 +721,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       }
       echo '</select></td>';
       echo "<td";
-      if ($qn_excluded) echo ' style="color:red; text-decoration:line-through"';
+      if (substr($exclude,0,1) == '1') echo ' style="color:red; text-decoration:line-through"';
       echo ">" . $display_option['option_text'] . "</td><td>&nbsp;</td>\n";
       
       if (($display_option['correct'] != 0 or $display_option['score_method'] == 'Mark per Option') and $display_option['score_method'] != 'Mark per Question') {
@@ -743,7 +745,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       break;
     case 'blank':
       if ($display_option['display_method'] == 'textboxes') {
-        $blank_details = explode('[blank]',$display_option['option_text']);
+        $blank_details = explode('[blank]', $display_option['option_text']);
         $array_size = count($blank_details);
         $blank_count = 1;
         while ($blank_count < $array_size) {
@@ -757,7 +759,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
           } else {
             $blank_size[$blank_count] = 15;
           }
-          $results=array();
+          $results = array();
           $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
           if (isset($results[1])) {
             $blank_mark[$blank_count] = $results[1];
@@ -769,7 +771,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
             $reviewScale .= reviewScale($question_no, $blank_count, $display_option['marks_correct'], $std_method, substr($exclude,$blank_count-1,1), $review_val, $stdID, $std_excluded, $is_group);
           }
           $exclude_str = '';
-          if (substr($exclude,$blank_count-1,1) == '1') {
+          if (substr($exclude, $blank_count-1, 1) == '1') {
             $exclude_str =  ' style="background-color:#FFC0C0; color:#800000"';
           }
           $screen_output[$blank_count] = "<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" value=\"" . $blank_parts[0] . "\" size=\"$blank_size[$blank_count]\"$exclude_str />" . $reviewScale . $blank_parts[1];
@@ -792,17 +794,17 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
         echo '<p>' . $blank_details[0];
         $blank_count = 1;
         while ($blank_count < $no_blanks) {
-        $not_used = preg_match("/mark=\"[0-9]{1,3}\"/",$blank_details[$blank_count],$results);
-        if (isset($results[1])) {
-          $blank_mark[$blank_count] = $results[1];
-        } else {
-          $blank_mark[$blank_count] = $display_option['marks_correct'];
-        }
+          $not_used = preg_match("/mark=\"[0-9]{1,3}\"/", $blank_details[$blank_count], $results);
+          if (isset($results[1])) {
+            $blank_mark[$blank_count] = $results[1];
+          } else {
+            $blank_mark[$blank_count] = $display_option['marks_correct'];
+          }
           $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
-          $answer_options = explode('[/blank]',$blank_details[$blank_count]);
-          $answer_list = explode(',',$answer_options[0]);
+          $answer_options = explode('[/blank]', $blank_details[$blank_count]);
+          $answer_list = explode(',', $answer_options[0]);
           echo "<select name=\"q" . $question_no . "_" . $part_id . "\"";
-          if (substr($exclude,$blank_count-1,1) == '1') echo ' style="background-color: rgb(255, 192, 192); color: rgb(128, 0, 0);"';
+          if (substr($exclude, $blank_count-1, 1) == '1') echo ' style="background-color: rgb(255, 192, 192); color: rgb(128, 0, 0);"';
           echo ">\n";
           echo "<option value=\"u\"></option>\n";
           $correct_answer = $answer_list[0];
@@ -815,7 +817,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
             }
           }
           echo '</select> ';
-          if($display_option['score_method'] == 'Mark per Option') {
+          if ($display_option['score_method'] == 'Mark per Option') {
             $review_val = get_review('blank', $std_method, $q_id, $blank_count, $tmp_reviews, $is_group);
             echo reviewScale($question_no, $part_id, $display_option['marks_correct'], $std_method, substr($exclude,$blank_count-1,1), $review_val, $stdID, $std_excluded, $is_group);
           }

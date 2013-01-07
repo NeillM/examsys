@@ -138,8 +138,7 @@ function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i,
   return number_format($top_ratio - $bottem_ratio,2);
 }
 
-function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mark, $totalpos, $opt_order, $analysis_type) {
-  global $stop_words;
+function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mark, $totalpos, $opt_order, $stop_words, $analysis_type) {
 
   if (!isset($log_array[$qID]['mark'])) $log_array[$qID]['mark'] = 0;
   if (!isset($log_array[$qID]['totalpos'])) $log_array[$qID]['totalpos'] = 0;
@@ -449,7 +448,7 @@ if (isset($_POST['submit'])) {
     $current_id = $_POST['id_' . $i];
     if ($current_id != $old_q_id) {
       if (strpos($old_status, '1') !== false) {
-        if ($result = $mysqli->prepare("INSERT INTO question_exclude VALUES (NULL, ?, ?, ?, $userObject->get_user_ID(), NOW(), '')")) {
+        if ($result = $mysqli->prepare("INSERT INTO question_exclude VALUES (NULL, ?, ?, ?, {$userObject->get_user_ID()}, NOW(), '')")) {
           $result->bind_param('iis', $_GET['paperID'], $old_q_id, $old_status);
           $result->execute();
           $result->close();
@@ -463,7 +462,7 @@ if (isset($_POST['submit'])) {
     $old_q_id = $_POST['id_' . $i];
   }
   if (strpos($old_status, '1') !== false) {
-    if ($result = $mysqli->prepare("INSERT INTO question_exclude VALUES (NULL, ?, ?, ?, $userObject->get_user_ID(), NOW(), '')")) {
+    if ($result = $mysqli->prepare("INSERT INTO question_exclude VALUES (NULL, ?, ?, ?, {$userObject->get_user_ID()}, NOW(), '')")) {
       $result->bind_param('iis', $_GET['paperID'], $old_q_id, $old_status);
       $result->execute();
       $result->close();
@@ -1792,12 +1791,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $result->bind_result($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, $started);
 
   while ($result->fetch()) {
-    storeData($freq_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, 'all');
+    storeData($freq_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, $stop_words, 'all');
     if (isset($bottom_cohort[$started][$username])) {
-      storeData($bottom_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, 'bottom');
+      storeData($bottom_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, $stop_words, 'bottom');
     }
     if (isset($top_cohort[$started][$username])) {
-      storeData($top_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, 'top');
+      storeData($top_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, $stop_words, 'top');
     }
   }
   $result->close();

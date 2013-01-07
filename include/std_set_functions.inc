@@ -37,7 +37,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
   
   $display_inline = array('dichotomous', 'mrq', 'rank', 'flash');
   
-  if (array_key_exists($q_id,$exclude)) {
+  if (array_key_exists($q_id, $exclude)) {
     $tmp_exclude = $exclude[$q_id];
   } else {
     $tmp_exclude = '0000000000000000000000000000000000000000';
@@ -87,6 +87,9 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
   } elseif ($options[0]['q_type'] == 'mrq') {
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
   } elseif ($options[0]['q_type'] == 'rank') {
+    if (strpos($tmp_exclude,'1') !== false) {    // If any option is excluded, exclude the whole question.
+      $tmp_exclude = '1111111111111111111111111111111111111111';
+    }
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
 
     for ($i=0; $i<$option_no; $i++) {
@@ -109,8 +112,19 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
     foreach ($options as $display_option) {
       $part_id++;
       $review_val = (in_array($options[0]['q_type'], $display_inline)) ? get_review($options[0]['q_type'], $std_method, $q_id, $part_id, $tmp_reviews, $is_group) : 0;
-      // MRQs and MCQs have multiple parts but are excluded as a whole
-      $exclude_this = ($options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'mrq') ? substr($tmp_exclude,($part_id-1),1) : substr($tmp_exclude,0,1);
+      
+      switch ($options[0]['q_type']) {
+        case 'blank':
+          $exclude_this = $tmp_exclude;
+          break;
+        case 'mcq':       // MRQs and MCQs have multiple parts but are excluded as a whole
+        case 'mrq':
+          $exclude_this = substr($tmp_exclude,0,1);
+          break;
+        default:
+          $exclude_this = substr($tmp_exclude,($part_id-1),1);
+          break;
+      }
       $feedback = ($options[0]['q_type'] == 'textbox') ? $old_correct_fback : '';
       display_option($options[0], $q_id, $question_no, $part_id, $display_option, $std_method, $is_group, $marks, $exclude_this, $review_val, $matching_options, 0, $tmp_reviews, $option_no, $stdID, $std_excluded, $total_rank_no, $require_na, $bgcolor, $feedback);
       $i++;
@@ -451,7 +465,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       }
     if ($neg_marking) echo ', ' . $string['negmarking'];
     echo ")</div>\n<br /></td></tr>\n";
-    //}
+    
     $total_marks += $marks;
   }
 }

@@ -28,8 +28,6 @@ require '../include/std_set_shared_functions.inc';
 $paperID = $_GET['paperID'];
 
 function displayReview($review, $userObj) {
-  global $REPLACEMEuserIDold, $userroles;
-  
   $setter_id = $review['setter_id'];
   
   if ($review['review_total'] == $review['total_marks']) {
