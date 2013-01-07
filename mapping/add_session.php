@@ -23,10 +23,6 @@
 */
   require '../include/staff_auth.inc';
 
-  if (in_array($_GET['module'], $teams) === false and $userObject->has_role('SysAdmin')) {
-      exit;
-  }
-
   $moduleID = $_GET['module'];
   if (isset($_POST['Save'])) {
     //save session
@@ -45,10 +41,10 @@
     $result->execute();
     $result->bind_result($largest);
     $i = 0;
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       $obj_id = $largest + 1;
     }
-    if($obj_id < 10) {
+    if ($obj_id < 10) {
       $obj_id = 123;
     }
     $result->close();
@@ -69,8 +65,8 @@
   } else if(isset($_POST['cancel']) and $_POST['cancel'] == 'Cancel') {
     header("Location: ./sessions_list.php?module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
   } else {
-    $stmt = $mysqli->prepare("SELECT calendar_year FROM student_modules, modules WHERE student_modules.moduleid=modules.moduleid AND student_modules.moduleid=? ORDER BY calendar_year DESC LIMIT 1");
-    $stmt->bind_param('s', $_GET['module']);
+    $stmt = $mysqli->prepare("SELECT calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND modules_student.idMod = ? ORDER BY calendar_year DESC LIMIT 1");
+    $stmt->bind_param('i', $_GET['module']);
     $stmt->execute();
     $stmt->bind_result($session);
     $stmt->fetch();
@@ -191,7 +187,7 @@
     }
     echo '<div id="content" class="content" style="font-size:80%">';
     echo "<table class=\"header\">\n";
-    echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$module&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['newsession'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
+    echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">" . module_utils::get_moduleid_from_id($module, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$module&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['newsession'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
     echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
     echo '</table><br/>';
 
