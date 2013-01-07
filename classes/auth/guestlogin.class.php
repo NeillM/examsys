@@ -23,6 +23,16 @@ class guestlogin_auth extends outline_authentication {
 
   function register_callback_routines() {
     $this->register_callback(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
+    $this->register_callback(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+  }
+
+  function errordisp(&$displayerrformobj) {
+    global $string;
+    if ($_SERVER['PHP_SELF'] == '/index.php') {
+      $this->savetodebug('adding temp account notice to error screen');
+      $message2 = $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a>";
+      $displayerrformobj->li[] = $message2;
+    }
   }
 
   function loginbutton(&$displaystdformobj) {

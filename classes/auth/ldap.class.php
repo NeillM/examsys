@@ -24,6 +24,13 @@ class ldap_auth extends outline_authentication {
   function register_callback_routines() {
     $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
     $this->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
+    $this->register_callback(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+  }
+
+  function errordisp(&$displayerrformobj) {
+    global $string;
+    $this->savetodebug('adding ldap notice to error screen');
+    $displayerrformobj->li[]=$string['tsonldap'];
   }
 
   function failauth(&$postauthfailreturn) {

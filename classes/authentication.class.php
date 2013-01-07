@@ -125,9 +125,9 @@ class Authentication {
   }
 
   function register_callback($callback, $section, $number, $name, $insert = FALSE) {
-    if (!in_array($section, array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'getauthobj', 'sessionstore')) or !is_callable($callback)) {
+    if (!in_array($section, array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'displayerrform', 'getauthobj', 'sessionstore')) or !is_callable($callback)) {
       //attempting to register callback to invalid section
-      $this->debug[] = 'register_callback failed ' . $section . ' from ' . get_class($callback[0]) . ' ' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
+      $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
       return FALSE;
     }
     $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
@@ -182,7 +182,7 @@ class Authentication {
     }
 
     $this->debug[] = 'Display error form & reset attempt count';
-    $_SESSION['authenticationObj']['attempt'] = 0;
+//    $_SESSION['authenticationObj']['attempt'] = 0; //TODO temp to keep error state
     if (file_exists($override)) {
       require $override;
     } else {
