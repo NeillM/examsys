@@ -14,8 +14,8 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testQuestionPresenceAndOrder() {
-    do_student_login($this, 'teststudent7', 'ogk_14DI');
+  public function testQuestionPresenceAndOrderPlusUnanswered() {
+    do_student_login($this, 'teststudent10', 'jgl!34Z^');
 
     $this->open("/user_index.php?id=21355414508102");
     $this->click("id=start");
@@ -85,13 +85,29 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
     $this->assertLocation($this->page_root . '/paper/finish.php?id=21355414508102');
+
+    // Individual Question Marks
+    $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[2]/span', '0 out of 2');
+    $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '0 out of 4');
+    $this->assertElementContainsText('//table[3]/tbody/tr[3]/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[4]/tbody/tr/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[4]/tbody/tr[3]/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[5]/tbody/tr[2]/td[2]/p[2]/span', '-2 out of 2');
+    $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p/span', '-2 out of 4');
+    $this->assertElementContainsText('//table[6]/tbody/tr/td[2]/p/span', '-1 out of 2');
+    $this->assertElementContainsText('//table[6]/tbody/tr[3]/td[2]/p/span', '-1 out of 2');
+    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '-2 out of 3');
+
+    // Overall Marks
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-8 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-29.6%');
   }
 
-  /**
-   * @depends testQuestionPresenceAndOrder
-   */
   public function testCompletePaperCorrect() {
-    do_student_login($this, 'teststudent4', 'fiu&52K3');
+    do_student_login($this, 'teststudent11', 'bkt_66Y4');
 
     $this->open("/user_index.php?id=21355414508102");
     $this->click("id=start");
@@ -162,11 +178,8 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '100.0%');
   }
 
-  /**
-   * @depends testQuestionPresenceAndOrder
-   */
   public function testCompletePaperIncorrect() {
-    do_student_login($this, 'teststudent5', 'sjg!12T^');
+    do_student_login($this, 'teststudent12', 'rmu_74L4');
 
     $this->open("/user_index.php?id=21355414508102");
     $this->click("id=start");
@@ -237,11 +250,8 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-29.6%');
   }
 
-  /**
-   * @depends testQuestionPresenceAndOrder
-   */
   public function testCompletePaperMixed() {
-    do_student_login($this, 'teststudent6', 'ara!68X7');
+    do_student_login($this, 'teststudent13', 'hii.420R');
 
     $this->open("/user_index.php?id=21355414508102");
     $this->click("id=start");
