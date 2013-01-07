@@ -284,7 +284,7 @@ class UserObject {
   }
 
   /**
-   * @param string title
+   * @param string $title
    * @return UserObject
    */
   function set_title( $title ) {
@@ -311,8 +311,8 @@ class UserObject {
   }
 
   /**
-   * @param string first_names
-   * return UserObject
+   * @param string $first_names
+   * @return UserObject
    */
   public function set_first_names( $first_names ) {
     $this->first_names = $first_names;
