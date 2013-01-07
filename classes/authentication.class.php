@@ -182,7 +182,7 @@ class Authentication {
     }
 
     $this->debug[] = 'Display error form & reset attempt count';
-//    $_SESSION['authenticationObj']['attempt'] = 0; //TODO temp to keep error state
+    $_SESSION['authenticationObj']['attempt'] = 0;
     if (file_exists($override)) {
       require $override;
     } else {
@@ -222,7 +222,7 @@ class Authentication {
         }
 
 
-        if (($this->success and (($this->authObj[$objid]->get_settings('dont_break_on_success') === false) or (($this->authObj[$objid]->get_settings('dont_break_on_success') !==false) and !$this->authObj[$objid]->get_settings('dont_break_on_success'))))) {
+        if (($this->success and (($this->authObj[$objid]->get_settings('dont_break_on_success') === FALSE) or (($this->authObj[$objid]->get_settings('dont_break_on_success') !== FALSE) and !$this->authObj[$objid]->get_settings('dont_break_on_success'))))) {
           break;
         }
       }
@@ -261,7 +261,7 @@ class Authentication {
             $this->display_error_form();
 
             if ($postauthfailobj->exit === TRUE) {
-              var_dump($this->debug);
+         //     var_dump($this->debug);
               exit();
             }
           }
@@ -271,7 +271,7 @@ class Authentication {
             $this->display_std_form();
 
             if ($postauthfailobj->exit === TRUE) {
-              var_dump($this->debug);
+            //  var_dump($this->debug);
               exit();
             }
           }
@@ -279,7 +279,7 @@ class Authentication {
           if (isset($postauthfailobj->url)) {
             header("Location: {$postauthfailobj->url}");
             if ($postauthfailobj->exit === TRUE) {
-              var_dump($this->debug);
+             // var_dump($this->debug);
               exit();
             }
           }
