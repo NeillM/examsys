@@ -25,7 +25,7 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/load_config.php';
-require '../classes/logstarttime.class.php';
+require '../classes/log_start_time.class.php';
 
 check_var( 'paperID', 'POST', true, false);
 check_var( 'userID', 'POST', true, false);
