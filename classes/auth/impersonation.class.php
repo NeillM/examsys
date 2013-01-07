@@ -6,11 +6,13 @@
  * Time: 11:21
  * To change this template use File | Settings | File Templates.
  */
-require_once 'outline_authentication.class.php';
 
 /**
  *
  */
+
+require_once 'outline_authentication.class.php';
+
 class impersonation_auth extends outline_authentication {
 
   private $active = FALSE;
@@ -92,7 +94,7 @@ class impersonation_auth extends outline_authentication {
         $objid = key($callbackregisterdatalist[$number]);
         $new_messages = $this->get_module_debug($objid);
         foreach ($new_messages as $key => $value) {
-          $info1 = $this->get_module_authinfo[$objid];
+          $info1 = $this->get_module_authinfo($objid);
           $info = key($info1) . ':' . current($info1);
           $this->savetodebug("Lookup User:authObj($info)[$number:$key]: $value");
         }
