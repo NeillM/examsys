@@ -519,6 +519,9 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
             $correct_answers = explode('$',$correct_options[$option_no - 1]);
             if (isset($_POST[$qid])) {
               $answer_count = count($_POST[$qid]);
+              if ($score_method == 'Mark per Question') {
+                $all_items_abstain = false;
+              }
             } else {
               $answer_count = 0;
             }
@@ -559,7 +562,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         if ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
           if ($mark == $totalpos) {
             $mark = $marks_correct;
-          } elseif ($all_items_abstain) {
+          } elseif ($all_items_abstain) { // Unanswered
             $mark = 0;
           } else {
             $mark = $marks_incorrect;
