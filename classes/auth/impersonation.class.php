@@ -8,6 +8,9 @@
  */
 require_once 'outline_authentication.class.php';
 
+/**
+ *
+ */
 class impersonation_auth extends outline_authentication {
 
   private $active = FALSE;
@@ -15,9 +18,9 @@ class impersonation_auth extends outline_authentication {
   private $newuserid;
 
   function register_callback_routines() {
-    $this->calling_object->register_callback(array($this, 'checkwhattodo'), 'preauth', $this->number, $this->name);
-    $this->calling_object->register_callback(array($this, 'changewhoiam'), 'getauthobj', $this->number, $this->name);
-    $this->calling_object->register_callback(array($this, 'storedata'), 'sessionstore', $this->number, $this->name);
+    $this->register_callback(array($this, 'checkwhattodo'), 'preauth', $this->number, $this->name);
+    $this->register_callback(array($this, 'changewhoiam'), 'getauthobj', $this->number, $this->name);
+    $this->register_callback(array($this, 'storedata'), 'sessionstore', $this->number, $this->name);
   }
 
   function changewhoiam(&$getauthobj) {
@@ -52,14 +55,14 @@ class impersonation_auth extends outline_authentication {
         if (isset($usernameparts[1])) {
           $continue = TRUE;
 
-          $this->retdata->debug[] = 'found separator char';
+          $this->savetodebug('found separator char');
         }
       }
     }
 
     if ($continue !== TRUE) {
       if (isset($_SESSION['authenticationObj']['impersonation']['newuserid']) or isset($_SESSION['authenticationObj']['impersonation']['demo'])) {
-        $this->savetodebug('Found store data in session for impersination');
+        $this->savetodebug('Found store data in session for impersonation');
         $this->newuserid = $_SESSION['authenticationObj']['impersonation']['newuserid'];
         $this->demo = $_SESSION['authenticationObj']['impersonation']['demo'];
       }
@@ -69,7 +72,7 @@ class impersonation_auth extends outline_authentication {
 
     if ((strcasecmp($usernameparts[1], 'demo') == 0) or (isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'demo') == 0)) {
       $this->demo = TRUE;
-      $this->retdata->debug[] = 'Demo mode detected';
+      $this->savetodebug('Demo mode detected');
       $this->active = TRUE;
       $this->form['std']->username = $usernameparts[0];
 
@@ -79,7 +82,7 @@ class impersonation_auth extends outline_authentication {
     $lookupuserobj = new stdClass();
     $lookupuserobj->username = $usernameparts[1];
     $lookupuserobj->found = FALSE;
-    list($callbacklist, $callbackregisterdatalist) = $this->calling_object->get_callback('lookupuser'); //  if (isset($this->calling_object->callbackregister['lookupuser'])) {
+    list($callbacklist, $callbackregisterdatalist) = $this->get_callback('lookupuser'); //  if (isset($this->calling_object->callbackregister['lookupuser'])) {
 
     if (is_array(($callbacklist))) {
       //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
@@ -87,20 +90,20 @@ class impersonation_auth extends outline_authentication {
 
         call_user_func_array($callback, array($lookupuserobj));
         $objid = key($callbackregisterdatalist[$number]);
-        $new_messages = $this->returndata[$objid]->get_new_debug_messages();
+        $new_messages = $this->get_module_debug($objid);
         foreach ($new_messages as $key => $value) {
-          $info1 = $this->calling_object->authinfo[$objid];
+          $info1 = $this->get_module_authinfo[$objid];
           $info = key($info1) . ':' . current($info1);
           $this->savetodebug("Lookup User:authObj($info)[$number:$key]: $value");
         }
       }
     }
+
     if ($lookupuserobj->found === TRUE) {
       $this->active = TRUE;
       //assuming first lookup is the one we want
       $this->newuserid = $lookupuserobj->results[0]->userid;
     }
-
 
     if ($this->active === TRUE) {
       $this->form['std']->username = $usernameparts[0];

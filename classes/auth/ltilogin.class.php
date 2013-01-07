@@ -29,11 +29,11 @@ class ltilogin_auth extends outline_authentication {
 
     parent::__construct($calling_object, $settings, $number, $name, $db, $returndata, $form);
     if (session_id() == '') {
-      $this->debug[] = 'SESSION NOT FOUND';
+      $this->savetodebug('SESSION NOT FOUND');
       session_name('RogoAuthentication');
       $return = session_start();
       if ($return === FALSE) {
-        $this->debug[] = 'session failed to initialise';
+        $this->savetodebug('session failed to initialise');
 
         return;
         //session start failure
@@ -43,13 +43,13 @@ class ltilogin_auth extends outline_authentication {
 
     $this->lti = new UoN_LTI($this->db);
 
-    $this->retdata->debug[] = 'Starting LTI';
+    $this->savetodebug('Starting LTI');
     $this->lti->init_lti();
 
   }
 
   function register_callback_routines() {
-    $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
 //    $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
 //    $this->calling_object->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
   }
@@ -58,16 +58,16 @@ class ltilogin_auth extends outline_authentication {
   function auth($authobj) {
 
     if (!$this->lti->valid) {
-      $this->retdata->debug[] = 'Not valid LTI Launch: ' .  $this->lti->message;
+      $this->savetodebug('Not valid LTI Launch: ' .  $this->lti->message);
       $this->set_fail();
 
       return FALSE;
     }
 
-    $this->retdata->debug[] = 'Starting to lookup user';
+    $this->savetodebug('Starting to lookup user');
     $returned = $this->lti->lookup_lti_user();
 
-    $this->retdata->debug[] = 'Data returned from lti lookup was: ' . var_export($returned, TRUE);
+    $this->savetodebug('Data returned from lti lookup was: ' . var_export($returned, TRUE));
 
     if ($returned !== FALSE) {
       $this->retdata->success = TRUE;
@@ -76,7 +76,7 @@ class ltilogin_auth extends outline_authentication {
       $this->rogoid = $returned[0];
       $this->retdata->url = '';
       $authobj->retdata = $this->retdata;
-      $this->retdata->debug[] = 'LTI lookup successful';
+      $this->savetodebug('LTI lookup successful');
 
       return TRUE;
     }

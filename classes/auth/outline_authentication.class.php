@@ -8,7 +8,7 @@
  */
 class outline_authentication {
 
-  protected  $name;
+  protected $name;
   protected $number;
   protected $returndata;
   protected $retdata;
@@ -19,12 +19,11 @@ class outline_authentication {
   public $rogoid = FALSE;
 
 
-
   function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form) {
     $this->db = new mysqli();
     $this->db = $db;
     $this->calling_object = $calling_object;
-    $this->returndata = &$returndata;
+    $this->returndata = & $returndata;
     $this->number = $number;
     $this->retdata = $returndata[$number];
     $this->form = $form;
@@ -43,5 +42,26 @@ class outline_authentication {
   function savetodebug($debugmessage) {
     $this->retdata->debug[] = $debugmessage;
   }
+
+  function get_callback($section) {
+    return $this->calling_object->get_callback($section);
+  }
+
+  function get_module_debug($objid) {
+    return $this->returndata[$objid]->get_new_debug_messages();
+  }
+
+  function get_module_authinfo($objid) {
+    return $this->calling_object->authinfo[$objid];
+  }
+
+  function register_callback($callback, $section, $number, $name, $insert = FALSE) {
+    return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
+  }
+
+  function register_callback_routines() {
+  }
+
+}
 
 }

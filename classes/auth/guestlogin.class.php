@@ -15,7 +15,11 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-class guestlogin_auth {
+
+require_once 'outline_authentication.class.php';
+
+
+class guestlogin_auth extends outline_authentication {
 
   private $name;
   private $number;
@@ -42,11 +46,11 @@ class guestlogin_auth {
   }
 
   function register_callback_routines() {
-    $this->calling_object->register_callback(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
+    $this->register_callback(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
   }
 
   function loginbutton(&$displaystdformobj) {
-    $this->retdata->debug[] = 'Button Check';
+    $this->savetodebug('Button Check');
     //$displaybutton = false;
     // detect if we should display login button
     $paper_match = FALSE;
@@ -92,9 +96,9 @@ class guestlogin_auth {
     }
     $results->close();
 
-    $this->retdata->debug[] = 'Status paper_match:' . var_export($paper_match, TRUE) . ' ip_match:' . var_export($ip_match, TRUE) . ' ip address:' . var_export(NetworkUtils::get_ipaddress(), TRUE) . ' <br> ' . $labs . ' ' . $labs_list;
+    $this->savetodebug('Status paper_match:' . var_export($paper_match, TRUE) . ' ip_match:' . var_export($ip_match, TRUE) . ' ip address:' . var_export(NetworkUtils::get_ipaddress(), TRUE) . ' <br> ' . $labs . ' ' . $labs_list);
     if ($paper_match === TRUE and $ip_match === TRUE) { //($displaybutton === TRUE) {
-      $this->retdata->debug[] = 'Adding New Button';
+      $this->savetodebug('Adding New Button');
       $newbutton = new displaystdformobjbutton();
       $newbutton->type = 'submit';
       $newbutton->value = ' Guest Login ';
