@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['extendtime']   = 'Extend Time';  //NIKO
-$string['extendtimeby'] = 'Extend Time By'; //NIKO
+$string['extendtime']   = 'Przedłuż czas';  
+$string['extendtimeby'] = 'Przedłuż czas o'; 
 $string['minutes']      = 'minut(y)';
-$string['submit']       = 'Submit'; //NIKO
-$string['close']        = 'Close'; //NIKO
+$string['submit']       = 'Wyślij'; 
+$string['close']        = 'Zamknij'; 
