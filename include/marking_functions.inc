@@ -519,7 +519,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
             $correct_answers = explode('$',$correct_options[$option_no - 1]);
             if (isset($_POST[$qid])) {
               $answer_count = count($_POST[$qid]);
-              if ($score_method == 'Mark per Question') {
+              if ($score_method == 'Mark per Question' and (is_array($_POST[$qid]) or $_POST[$qid] != 'u')) {
                 $all_items_abstain = false;
               }
             } else {
