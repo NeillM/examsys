@@ -189,6 +189,9 @@ class Authentication {
     }
   }
 
+  /**
+   * @return bool if authentication was successful
+   */
   function do_authentication() {
     $this->success = FALSE;
     $this->debug[] = 'Starting authentication';
@@ -218,7 +221,7 @@ class Authentication {
         }
 
 
-        if (($this->success and (!isset($settings['dont_break_on_success']) or (isset($settings['dont_break_on_success']) and !$settings['dont_break_on_success'])))) {
+        if (($this->success and (!isset($this->authObj[$objid]->get_settings('dont_break_on_success')) or (isset($this->authObj[$objid]->get_settings('dont_break_on_success')) and !$this->authObj[$objid]->get_settings('dont_break_on_success'))))) {
           break;
         }
       }
