@@ -30,15 +30,23 @@ require './include/paper_security.inc';
 
 require './classes/paperutils.class.php';
 require_once './classes/moduleutils.class.php';
-require './classes/logstarttime.class.php';
+require './classes/log_start_time.class.php';
 require './classes/logmetadata.class.php';
 require './classes/timer.class.php';
+require './classes/lab.class.php';
+require './classes/labobject.class.php';
+require './classes/propertyobject.class.php';
+require './classes/property.class.php';
+require './classes/log_extra_time.class.php';
+require './classes/log_lab_end_time.class.php';
+require './classes/summativetimer.class.php';
 
 check_var('id', 'GET', true, false);
 
-function display_duration($normal, $extra) {
+function display_duration($normal, $extra_time_mins, $special_needs_percentage) {
   $mins = $normal;
-  if ($extra != NULL) $mins .= ' + ' . ($normal/100)*$extra;
+  if ($extra_time_mins != NULL) $mins .= ' + ' . $extra_time_mins;
+  if ($special_needs_percentage != NULL) $mins .= ' + ' . ($normal/100)*$special_needs_percentage;
   return $mins;
 }
 
@@ -68,11 +76,11 @@ function displayPrevTake($markTotal, $adjPercent, $totalRandomMark, $marking_sty
 
 if ($userObject->is_special_needs()) {
   //look up special_needs data
-  if ($stmt = $mysqli->prepare("SELECT extra_time, textsize, font FROM special_needs WHERE userid = ?")) {
-    $stmt->bind_param('i', $userObject->get_user_ID());
+  if ($stmt = $mysqli->prepare("SELECT extra_time, textsize, font FROM special_needs WHERE userid=?")) {
+    $stmt->bind_param('i',$userObject->get_user_ID());
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($extra_time, $textsize, $font);
+    $stmt->bind_result( $special_needs_percentage, $textsize, $font);
     $stmt->fetch();
   }
   $stmt->close();
@@ -80,7 +88,7 @@ if ($userObject->is_special_needs()) {
     $textsize = $textsize + 5;
   }
 } else {
-  $extra_time = 0;
+  $special_needs_percentage = 0;
   $textsize = '';
   $font = '';
 }
@@ -94,10 +102,62 @@ $total_random_mark = 0;
 $total_marks = 0;
 
 //get paper info
-$paper_info = $mysqli->prepare("SELECT DISTINCT property_id, paper_title, random_mark, total_mark, bidirectional, screen, paper_type, UNIX_TIMESTAMP(start_date) AS start_date, start_date AS display_start_date, UNIX_TIMESTAMP(end_date) AS end_date, end_date AS display_end_date, timezone, fullscreen, marking, labs, rubric, exam_duration, calendar_year, sound_demo, password FROM (properties, papers) WHERE properties.crypt_name=? AND properties.property_id=papers.paper ORDER BY screen DESC LIMIT 1");
+
+$sql = 'SELECT DISTINCT
+                        property_id
+                      , paper_title
+                      , random_mark
+                      , total_mark
+                      , bidirectional
+                      , screen
+                      , paper_type
+                      , UNIX_TIMESTAMP(start_date) AS start_date
+                      , start_date AS display_start_date
+                      , UNIX_TIMESTAMP(end_date) AS end_date
+                      , end_date AS display_end_date
+                      , timezone
+                      , fullscreen
+                      , marking
+                      , labs
+                      , rubric
+                      , exam_duration
+                      , calendar_year
+                      , sound_demo
+                      , password
+            FROM ( properties, papers )
+
+            WHERE
+              properties.crypt_name  = ?
+            AND
+              properties.property_id = papers.paper
+            ORDER BY
+              screen
+              DESC LIMIT 1';
+
+$paper_info = $mysqli->prepare( $sql );
 $paper_info->bind_param('s', $_GET['id']);
 $paper_info->execute();
-$paper_info->bind_result($property_id, $paper_title, $total_random_mark, $total_marks, $navigation, $paper_screens, $test_type, $paper_start, $display_start_date, $paper_end, $display_end_date, $timezone, $fullscreen, $marking, $labs, $rubric, $exam_duration, $calendar_year, $sound_demo, $password);
+$paper_info->bind_result( $property_id
+                        , $paper_title
+                        , $total_random_mark
+                        , $total_marks
+                        , $navigation
+                        , $paper_screens
+                        , $test_type
+                        , $paper_start
+                        , $display_start_date
+                        , $paper_end
+                        , $display_end_date
+                        , $timezone
+                        , $fullscreen
+                        , $marking
+                        , $labs
+                        , $rubric
+                        , $exam_duration
+                        , $calendar_year
+                        , $sound_demo
+                        , $password );
+
 $paper_info->store_result();
 $paper_info->fetch();
 
@@ -141,25 +201,67 @@ $display_remaining_time = false;
 $remaining_minutes      = '';
 $remaining_seconds      = '';
 
-// If it is then check if there is an existing record in log_start_time and get the time remaining from that
-// It is isn't then the student hasn't started taking the exam and therefore the time remaining will be the
-// exam_duration for that paper
+/*
+ * BP If the duration is set then create a timer to calculate and display the remaining time
+ */
 
-if ($exam_duration !== null){
+$extra_time = null;
+
+if( $exam_duration !== null ){
+
   $display_remaining_time = true;
 
-  $studentID         = $userObject->get_user_ID();
-  $log_start_time    = new LogStartTime( $studentID, $property_id, $mysqli );
+  if( (int) $test_type == 2 ){
 
-  $timer             = new Timer( $log_start_time, $exam_duration );
-  $remaining_time    = $timer->calculate_remaining_time();
+    $current_ip_address = NetworkUtils::get_ipaddress();
+
+    $lab                = new Lab( $mysqli );
+    $lab_object         = $lab->get_lab_based_on_ip( $current_ip_address );
+
+    $property_object    = new PropertyObject();
+
+    $property_object->set_property_id( $property_id );
+
+    $property           = new Property( $property_object
+                                      , $mysqli );
+
+    $property_object    = $property->get_property();
+    $student_object     = $userObject;
+
+    $log_lab_end_time   = new LogLabEndTime( $lab_object
+                                           , $property_object
+                                           , $mysqli );
+
+    $log_extra_time     = new LogExtraTime( $log_lab_end_time
+                                          , $student_object
+                                          , $mysqli );
+
+    $extra_time_secs    = $log_extra_time->get_extra_time_secs();
+    $extra_time_mins    = $extra_time_secs / 60;
+
+    $summative_timer    = new SummativeTimer( $log_extra_time );
+
+    $remaining_time     = $summative_timer->calculate_remaining_time_secs();
+
+  }else{
+
+    $studentID         = $userObject->get_user_ID();
+
+    $log_start_time    = new LogStartTime( $studentID
+                                         , $property_id
+                                         , $mysqli );
+
+    $timer             = new Timer( $log_start_time
+                                  , $exam_duration );
+
+    $remaining_time    = $timer->calculate_remaining_time();
+
+
+  }
 
   $remaining_minutes = (int) ( $remaining_time / 60 );
   $remaining_seconds = (int) ( $remaining_time % 60 );
 
-  $exam_duration     = $exam_duration * 60;
-
-  $log_metadata      = new LogMetadata( $userObject, $property_id, $mysqli );
 }
 
 ?>
@@ -198,7 +300,7 @@ if ($exam_duration !== null){
     }
     document.getElementById('start').value = '<?php echo $string['restart']; ?>';
   }
-  function reviewPaper(started, type) {
+  function reviewPaper(started,type) {
     exam=window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       exam.focus();
@@ -276,7 +378,7 @@ if ($textsize > 120) {
   }
   echo "<tr><td class=\"f\"><nobr>&nbsp;" . $string['currentuser'] . "</nobr></td><td>$person</td>";
   if ($test_type == 2 and $exam_duration) {
-    echo '<td class="f">' . $string['duration'] . '</td><td>' . display_duration($exam_duration,$extra_time) . ' ' . $string['minutes'] . '</td>';
+    echo '<td class="f">' . $string['duration'] . '</td><td>' . display_duration( $exam_duration, $extra_time_mins, $special_needs_percentage ) . ' ' . $string['minutes'] . '</td>';
   } else {
     echo '<td></td><td></td>';
   }

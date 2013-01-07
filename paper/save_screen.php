@@ -28,8 +28,13 @@ require_once '../include/marking_functions.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
-require      '../classes/logmetadata.class.php';
-require      '../classes/logstarttime.class.php';
+require '../classes/logmetadata.class.php';
+require '../classes/lab.class.php';
+require '../classes/labobject.class.php';
+require '../classes/propertyobject.class.php';
+require '../classes/property.class.php';
+require '../classes/log_extra_time.class.php';
+require '../classes/log_lab_end_time.class.php';
 
 $displayDebug = false; //ajax call so debug info messes up the output
 
@@ -64,7 +69,34 @@ if ($userObject->has_role('Student')) {
   // Check for any metadata security restrictions
   check_metadata($property_id, $userObject, $modIDs, $mysqli);
 
-  if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
+
+  $summative_exam_session_started = false;
+
+  if( $exam_duration != null and (int) $paper_type == 2 ){
+
+    $current_ip_address = NetworkUtils::get_ipaddress();
+
+    $lab                = new Lab( $mysqli );
+    $lab_object         = $lab->get_lab_based_on_ip( $current_ip_address );
+
+    $property_object    = new PropertyObject();
+
+    $property_object->set_property_id( $property_id );
+
+    $property           = new Property( $property_object
+        , $mysqli );
+
+    $property_object    = $property->get_property();
+
+    $log_lab_end_time   = new LogLabEndTime( $lab_object
+                                            , $property_object
+                                            , $mysqli );
+
+    $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
+
+  }
+
+  if ( time() > $end_date and ( $paper_type == '1' or ( $paper_type == '2' and $summative_exam_session_started == false) ) ) {
     $paper_type = '_late';
   }
 

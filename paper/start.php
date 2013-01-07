@@ -26,13 +26,20 @@
 * @package
 */
 require '../include/staff_student_auth.inc';
+require '../include/paper_security.inc';
 require '../include/display_functions.inc';
 require '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
-require '../classes/logstarttime.class.php';
+require '../classes/log_start_time.class.php';
 require '../classes/timer.class.php';
-require '../include/paper_security.inc';
+require '../classes/lab.class.php';
+require '../classes/labobject.class.php';
+require '../classes/propertyobject.class.php';
+require '../classes/property.class.php';
+require '../classes/log_extra_time.class.php';
+require '../classes/log_lab_end_time.class.php';
+require '../classes/summativetimer.class.php';
 
 global $userObject;
 
@@ -42,7 +49,7 @@ function randomQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_d
   $selected_q_id = '';
   $current_screen = $random_q_data['screen'];
   $q_no = $random_q_data['no_on_screen'];
-  
+
   if (isset($user_answers[$current_screen])) {
     //match user's answers with random question ID.
     $question_on_screen = array_keys($user_answers[$current_screen]);
@@ -51,7 +58,7 @@ function randomQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_d
       $selected_q_id = next($question_on_screen);
     }
   }
-  
+
   if ($selected_q_id == '') {
     // Generate a random question ID.
     $random_q_no = count($random_q_data['options']);
@@ -94,7 +101,7 @@ function randomQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_d
     }
     $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   }
-  
+
   // Overwrite the screen data.
   $screen_no = count($screen_data);
   for ($i=1; $i<=$screen_no; $i++) {
@@ -110,7 +117,7 @@ function randomQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_d
       }
     }
   }
-  
+
   return $question;
 }
 
@@ -119,7 +126,7 @@ function keywordQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_
   $unique = true;
   $current_screen = $random_q_data['screen'];
   $q_no = $random_q_data['no_on_screen'];
-  
+
   if (isset($user_answers[$current_screen])) {
     //match user's answers with random question ID.
     $question_on_screen = array_keys($user_answers[$current_screen]);
@@ -182,7 +189,7 @@ function keywordQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_
       $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
     }
     $question_data->close();
-    
+
     // Overwrite the screen data.
     $screen_no = count($screen_data);
     for ($i=1; $i<=$screen_no; $i++) {
@@ -207,7 +214,7 @@ function keywordQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_
     $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
     $question['options'] = array();
   }
-  
+
   return $question;
 }
 
@@ -235,7 +242,7 @@ if (isset($_GET['q_id'])) {
 }
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $exam_duration, $calendar_year, $latex_needed, $password, $q_type, $q_id);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date_timestamp, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $exam_duration, $calendar_year, $latex_needed, $password, $q_type, $q_id);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
   $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
 }
@@ -274,7 +281,7 @@ if ($userObject->has_role('Student')) {
   check_paper_password($password, $string);
 
   // Check time security
-  check_datetime($start_date, $end_date);
+  check_datetime($start_date, $end_date_timestamp);
 
   //Check room security
   $low_bandwidth = check_labs($paper_type, $labs, $password, $string, $mysqli);
@@ -286,8 +293,61 @@ if ($userObject->has_role('Student')) {
   check_metadata($property_id, $userObject, $modIDs, $mysqli);
 }
 
+/*
+ * BP Determine the student's end_date timestamp for a summative exam that has been 'Started'.
+ * This is also used further down to make sure that the timer does not close the window if the exam session hasn't been 'started' by an invigilator
+ * If a summative exam session has been started  then record late answers in log_late
+ */
+
+
+$summative_exam_session_started = false;
+
+if( $exam_duration != null and (int) $paper_type == 2 ){
+
+  $current_ip_address = NetworkUtils::get_ipaddress();
+
+  $lab                = new Lab( $mysqli );
+  $lab_object         = $lab->get_lab_based_on_ip( $current_ip_address );
+
+  $property_object    = new PropertyObject();
+
+  $property_object->set_property_id( $property_id );
+
+  $property           = new Property( $property_object
+                                    , $mysqli );
+
+  $property_object    = $property->get_property();
+
+  $log_lab_end_time   = new LogLabEndTime( $lab_object
+                                         , $property_object
+                                         , $mysqli );
+
+  $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
+
+  $student_object     = $userObject;
+
+  $log_extra_time     = new LogExtraTime( $log_lab_end_time
+                                        , $student_object
+                                        , $mysqli );
+
+
+  $student_end_datetime = $log_extra_time->get_end_date_datetime();
+
+  if( $student_end_datetime === false ){
+    $student_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
+  }
+
+  if( $student_end_datetime === false ){
+    $student_end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
+  }
+
+  $end_date_timestamp = $student_end_datetime->getTimestamp();
+
+}
+
+
 //check for submissions after the enddate and set them to save in log_late
-if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) { //Mode is used for staff preview.
+if ( time() > $end_date_timestamp and ($paper_type == '1' or ( $paper_type == '2' and $summative_exam_session_started == false ) )) { //Mode is used for staff preview.
   $paper_type = '_late';
 }
 
@@ -426,7 +486,6 @@ if ($css != '') {
 <?php if ($latex_needed == 1) {?>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
-<script type="text/javascript" src="../js/start.js"></script>
 <script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
 <script language="javascript">
@@ -677,6 +736,7 @@ if ($css != '') {
           success: function (data, jqXHR, textStatus) {
               submitPending = false;
               //$('#mymsg').text(data);  // Remove when working.
+              //alert( data + ' ' + randomPageID);
               if (data == randomPageID) {
                   success = true;
                   saveSuccess();
@@ -719,6 +779,7 @@ if ($css != '') {
     ajaxSave();
   }
 </script>
+<script type="text/javascript" src="../js/start.js"></script>
 </head>
 <?php
 
@@ -835,7 +896,7 @@ if ($css != '') {
     $old_screen = $screen;
   }
   $question_data->close();
-  
+
   //look for braching and random questions and overwrite as needed
   $questions_array = array();
   $hidden_html = '';
@@ -855,37 +916,57 @@ if ($css != '') {
     $questions_array[] = $question;
   }
   unset($tmp_questions_array);
-  
+
   $unanswered = false;
-  
+
   $incomplete_screens = get_unanswered_screens($no_screens, $screen_data, $user_answers, $questions_array, $property_id, $mysqli);
 
-  //BP If the duration is set then show timer
+  // BP If the duration is set then show timer
 
   $method = 'StartClock()';
 
-  if( $exam_duration != NULL ){
+  if( $exam_duration != null ){
 
-    $studentID      = $userObject->get_user_ID();
-    $log_start_time = new LogStartTime( $studentID, $property_id, $mysqli );
-    $timer          = new Timer( $log_start_time, $exam_duration );
-    $start_time     = $timer->get_start_time();
+    $is_preview_mode = ( isset( $_GET['mode'] ) and $_GET['mode'] == 'preview' );
 
-    $is_preview_first_visit = ( $current_screen == 1 and $screen_pre_submitted == 0 and isset( $_GET['mode'] ) and $_GET['mode'] == 'preview' );
+    // Summative type. Time is only active in live.
+    if( (int) $paper_type == 2 and $is_preview_mode === false ){
 
-    // Reset if in preview mode so staff are not locked out
-    if( $start_time and $userObject->has_role( 'Staff' ) and $is_preview_first_visit ){
-      $timer->reset();
-      $timer->start();
+      $summative_timer    = new SummativeTimer( $log_extra_time );
+
+      $remaining_time     = $summative_timer->calculate_remaining_time_secs();
+
+      // Do not close the window if the invigilator has not clicked on the 'Start' button
+      if( $summative_exam_session_started === false ){
+        $method          = 'StartTimer(' . $remaining_time . ', false)';
+      }
+
+    // All other paper types
+
+    }else{
+
+      $studentID      = $userObject->get_user_ID();
+
+      $log_start_time = new LogStartTime( $studentID, $property_id, $mysqli );
+      $timer          = new Timer( $log_start_time, $exam_duration );
+      $start_datetime = $timer->get_start_datetime();
+
+      $is_preview_first_visit = ( $current_screen == 1 and $screen_pre_submitted == 0 and isset( $_GET['mode'] ) and $_GET['mode'] == 'preview' );
+
+      // Reset if in preview mode so staff are not locked out
+      if( $start_datetime and $userObject->has_role( 'Staff' ) and $is_preview_first_visit ){
+        $timer->reset();
+        $timer->start();
+      }
+
+      if( $start_datetime === false ){
+        $timer->start();
+      }
+
+      $remaining_time = $timer->calculate_remaining_time();
+
+      $method          = 'StartTimer(' . $remaining_time . ', true)';
     }
-
-    if( $start_time === false ){
-      $timer->start();
-    }
-
-    $remaining_time = $timer->calculate_remaining_time();
-    $method         = 'StartTimer(' . $remaining_time . ')';
-
   }
 
 
@@ -933,7 +1014,7 @@ if ($css != '') {
         } else {
           echo ' title="' . $no_questions . ' questions">';
         }
-        
+
         if ($i < $current_screen and isset($screen_data[$i])) {
           foreach ($screen_data[$i] as $screen_question) {
             if ($screen_question[0] != 'info' ) {
@@ -944,8 +1025,8 @@ if ($css != '') {
         echo "$i</div>\n";
       }
       echo "<div style=\"clear:both\"></div>\n";
-      
-      
+
+
       for ($i=1; $i<=$no_screens; $i++) {
         if ($i == $current_screen) {
           echo '<div class="scr_arrow"></div>';
@@ -953,14 +1034,14 @@ if ($css != '') {
           echo '<div class="scr_spacer">&nbsp;</div>';
         }
       }
-      
+
     }
     echo '</td>';
     echo $logo_html;
   } else {
     echo '<tr><td>';
   }
-  
+
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   //display the questions
@@ -1008,12 +1089,12 @@ if ($css != '') {
   ?>
   <span>
   <?php
-  if( $exam_duration != NULL ){
+  if( $exam_duration != null ){
       echo $string['timeremaining'] . ':';
   }
 
   ?>
-  <input id="theTime" name="theTime" type="text" style="width:60px;background-color:transparent;text-align:center;font-size:100%;color:white;border:0px" size="8" />
+  <input id="theTime" name="theTime" type="text" style="width:70px;background-color:transparent;text-align:center;font-size:100%;color:white;border:0px" size="8" />
   </span>
   <?php
   echo '</td><td align="right">';
