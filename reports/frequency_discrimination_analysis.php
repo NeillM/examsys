@@ -1279,7 +1279,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         } else {
           $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
         }
-        $tmp_pstat = ($freq_log[$q_id]['totalpos'] > 0) ? pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'], $q_id, 1) : 'p=' . 0;
+        $tmp_pstat = ($freq_log[$q_id]['totalpos'] > 0) ? pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'], $q_id, 1) : pStats(0, $q_id, 1);
         echo "<tr><td>" . $tmp_pstat . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
     }
