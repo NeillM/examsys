@@ -337,11 +337,15 @@ if( $exam_duration != null and (int) $paper_type == 2 ){
     $student_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
   }
 
+
   if( $student_end_datetime === false ){
     $student_end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
   }
 
+
+
   $end_date_timestamp = $student_end_datetime->getTimestamp();
+
 
 }
 
@@ -935,6 +939,8 @@ if ($css != '') {
       $summative_timer    = new SummativeTimer( $log_extra_time );
 
       $remaining_time     = $summative_timer->calculate_remaining_time_secs();
+
+      $method             = 'StartTimer(' . $remaining_time . ', true)';
 
       // Do not close the window if the invigilator has not clicked on the 'Start' button
       if( $summative_exam_session_started === false ){

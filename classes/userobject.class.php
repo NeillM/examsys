@@ -167,7 +167,7 @@ class UserObject {
    * @return UserObject
    */
   function set_user_ID( $user_id ) {
-    $this->userID = user_id;
+    $this->userID = $user_id;
     return $this;
   }
 
