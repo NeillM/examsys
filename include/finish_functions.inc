@@ -2407,7 +2407,7 @@ echo '</script>';
         $gradetoret = $user_mark / $total_marks;
         if ($gradetoret < 0) $gradetoret = 0;
         global $lti;
-        if ($lti->valid) {
+        if (isset($lit) and $lti->valid) {
           //return grade back to VLE
           $lti->send_grade($gradetoret);
         }
