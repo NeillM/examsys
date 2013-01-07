@@ -21,30 +21,6 @@ require_once 'outline_authentication.class.php';
 
 class guestlogin_auth extends outline_authentication {
 
-  private $name;
-  private $number;
-  private $returndata;
-  private $retdata;
-  private $form;
-  private $settings;
-  private $db;
-  private $calling_object;
-  private $updatable = FALSE;
-  public $rogoid = FALSE;
-
-
-  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form) {
-    $this->db = new mysqli();
-    $this->db = $db;
-    $this->calling_object = $calling_object;
-    $this->returndata = $returndata;
-    $this->number = $number;
-    $this->retdata = $returndata[$number];
-    $this->form = $form;
-    $this->settings = $settings;
-    $this->name = $name;
-  }
-
   function register_callback_routines() {
     $this->register_callback(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
   }

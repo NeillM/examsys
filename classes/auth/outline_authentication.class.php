@@ -64,4 +64,4 @@ class outline_authentication {
 
 }
 
-}
+

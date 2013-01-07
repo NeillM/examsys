@@ -97,7 +97,7 @@ class alreadyloggedin_auth extends outline_authentication {
         $objid = key($callbackregisterdatalist[$number]);
         $new_messages = $this->get_module_debug($objid);
         foreach ($new_messages as $key => $value) {
-          $info1 = $this->get_module)authinfo($objid);
+          $info1 = $this->get_module_authinfo($objid);
           $info = key($info1) . ':' . current($info1);
           $this->savetodebug("Session Store:authObj($info)[$number:$key]: $value");
         }
