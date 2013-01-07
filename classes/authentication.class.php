@@ -114,7 +114,7 @@ class Authentication {
   function load_config() {
     global $notice;
 
-    $this->config =  $this->configObj->getbyref('authentication');
+    $this->config = $this->configObj->getbyref('authentication');
 
     if (!isset($this->config)) {
       $notice->display_notice('No Authentication configured', 'No Authentication configured has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
@@ -169,8 +169,10 @@ class Authentication {
   }
 
   function display_error_form() {
-
+    $override = $this->configObj->get('cfg_web_root') . '/config/login_error_form.php';
     $displayerrformobj = new stdClass();
+    $displayerrformobj->override =& $override;
+
     if (isset($this->callbackregister['displayerrform'])) {
       foreach ($this->callbackregister['displayerrform'] as $number => $callback) {
         call_user_func_array($callback, array(&$displayerrformobj));
@@ -179,7 +181,6 @@ class Authentication {
       }
     }
 
-    $override = $this->configObj->get('cfg_web_root') . '/config/login_error_form.php';
     $this->debug[] = 'Display error form & reset attempt count';
     $_SESSION['authenticationObj']['attempt'] = 0;
     if (file_exists($override)) {
@@ -221,7 +222,7 @@ class Authentication {
         }
 
 
-        if (($this->success and (!isset($this->authObj[$objid]->get_settings('dont_break_on_success')) or (isset($this->authObj[$objid]->get_settings('dont_break_on_success')) and !$this->authObj[$objid]->get_settings('dont_break_on_success'))))) {
+        if (($this->success and (($this->authObj[$objid]->get_settings('dont_break_on_success') === false) or (($this->authObj[$objid]->get_settings('dont_break_on_success') !==false) and !$this->authObj[$objid]->get_settings('dont_break_on_success'))))) {
           break;
         }
       }
@@ -289,15 +290,7 @@ class Authentication {
           }
         }
       }
-
-      //failed actions
-      /*
-            if($_SESSION['authenticationObj']['attempt']==1) {
-              foreach ($this->config as $number => $auth) {
-                $action=$this->authObj[$number]->form();
-              }
-            }
-      */
+      //failed but no callbacks or callbacks finished
     }
 
     if ($this->success !== TRUE) {
@@ -307,7 +300,7 @@ class Authentication {
       return FALSE;
 
     }
-
+    // the auth has succeeded as above will stop it if its not true
 
     $postauthsuccessobj = new stdClass();
 
@@ -390,7 +383,7 @@ class Authentication {
       $getauthobj->userObj = new UserObject($this->configObj, $this->db);
       $getauthobj->userObj->load($getauth);
     } else {
-      $getauthobj = &$getauth;
+      $getauthobj = & $getauth;
       if (!isset($getauthobj->userObj)) {
         //serious error
         $getauthobj->userObj = new UserObject($this->configObj, $this->db);
@@ -399,10 +392,6 @@ class Authentication {
       $getauthobj->userObj->load($this->get_userid());
     }
     //$uID = $this->get_userID();
-
-
-
-
 
 
     if (isset($this->callbackregister['getauthobj'])) {

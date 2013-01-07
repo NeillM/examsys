@@ -102,10 +102,14 @@ class outline_authentication {
   }
 
   /**
-   * @param $setting string the setting to return
+   * @param $setting string the setting to return or false if it doesnt exist
    * @return mixed
    */
   function get_settings($setting) {
+    if (!isset($this->settings[$setting])) {
+      return FALSE;
+    }
+
     return $this->settings[$setting];
   }
 
