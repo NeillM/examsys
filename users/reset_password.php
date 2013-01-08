@@ -23,10 +23,14 @@
 */
 
 require_once '../include/load_config.php';
-require_once $cfg_web_root . 'classes/formutils.class.php';
-require_once $cfg_web_root . 'include/auth.inc';
-require_once $cfg_web_root . 'classes/lang.class.php';
-require_once $cfg_web_root . 'classes/dbutils.class.php';
+require_once '../classes/formutils.class.php';
+require_once '../include/auth.inc';
+require_once '../classes/lang.class.php';
+require_once '../classes/dbutils.class.php';
+require_once '../classes/usernotices.class.php';
+
+$notice = UserNotices::get_instance();
+
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 $password = $password_confirm = $email = '';
@@ -42,7 +46,7 @@ if ($token == '') {
   $critical_errors[] = $string['notokensupplied'];
 } else {
   // Check if the token exists and has not expired
-  $stmt = $mysqli->prepare("SELECT id, user_id FROM password_tokens WHERE token=? AND time > DATE_ADD(NOW(), INTERVAL -1 DAY) ORDER BY id DESC LIMIT 1");
+  $stmt = $mysqli->prepare("SELECT id, user_id FROM password_tokens WHERE token = ? AND time > DATE_ADD(NOW(), INTERVAL -1 DAY) ORDER BY id DESC LIMIT 1");
   $stmt->bind_param('s', $token);
   $stmt->execute();
   $stmt->store_result();
@@ -57,18 +61,18 @@ if ($token == '') {
 if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] != '') {
   // Process form submission
   $errors = $form_util->check_required(array('email' => $string['emailaddress'], 'password' => $string['password'], 'password_confirm' => $string['passwordconfirm']));
-  if(!$form_util->is_email($_POST['email'])) {
+  if (!$form_util->is_email($_POST['email'])) {
     $email = $_POST['email'];
     $errors[] = $string['emailaddressinvalid'];
   }
   if($_POST['password'] != $_POST['password_confirm']) $errors[] = $string['passwordsnotmatch'];
 
-  if(count($errors) == 0) {
+  if (count($errors) == 0) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
     // Check if email address matches that of the user in the token record
-    $stmt = $mysqli->prepare("SELECT username, email, roles FROM users WHERE id=?");
+    $stmt = $mysqli->prepare("SELECT username, email, roles FROM users WHERE id = ?");
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
     $stmt->store_result();
@@ -77,18 +81,18 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
     if ($stmt->num_rows == 0) {
       $critical_errors[] = $string['usernotfound'];
     } else {
-      if($email != $existing_email) {
+      if ($email != $existing_email) {
         $errors[] = $string['incorrectemail'];
       } else {
         // Update user's password
         $new_pw = encpw($configObject->get('cfg_encrypt_salt'), $username, $password);
-        $update = $mysqli->prepare("UPDATE users SET password=? WHERE id=?");
+        $update = $mysqli->prepare("UPDATE users SET password = ? WHERE id = ?");
         $update->bind_param('si', $new_pw, $user_id);
         if(!$update->execute()) {
           $errors[] = $string['databaseupdateerror'];
         } else {
           // Delete password token entry for this user
-          $delete = $mysqli->prepare("DELETE FROM password_tokens WHERE user_id=?");
+          $delete = $mysqli->prepare("DELETE FROM password_tokens WHERE user_id = ?");
           $delete->bind_param('i', $user_id);
           $delete->execute();
           $delete->close();
@@ -119,7 +123,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['resetpassword'] . " " . $configObject->get('cfg_install_type') ?></title>
+  <title><?php echo $string['resetpassword'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />

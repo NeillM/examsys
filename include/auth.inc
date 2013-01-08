@@ -24,13 +24,10 @@
  * @package
  */
 
-$path = '';
-if (isset($cfg_web_root)) {
-  $path = $cfg_web_root;
-} else {
-  $path = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
+if (!isset($cfg_web_root)) {
+  $cfg_web_root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 }
-require_once $path . '/classes/usernotices.class.php';
+require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 $notice = UserNotices::get_instance();
 

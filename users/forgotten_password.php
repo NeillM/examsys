@@ -23,9 +23,12 @@
 */
 
 require_once '../include/load_config.php';
-require_once $cfg_web_root . 'classes/formutils.class.php';
-require_once $cfg_web_root . 'classes/lang.class.php';
-require_once $cfg_web_root . 'classes/dbutils.class.php';
+require_once '../classes/formutils.class.php';
+require_once '../classes/lang.class.php';
+require_once '../classes/dbutils.class.php';
+require_once '../classes/usernotices.class.php';
+
+$notice = UserNotices::get_instance();
 
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 

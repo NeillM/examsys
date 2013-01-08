@@ -24,7 +24,7 @@
 * @package
 */
 
-require_once $path . '/classes/rogostaticsingleton.class.php';
+require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
 
 Class UserNotices extends RogoStaticSingleton {
   
