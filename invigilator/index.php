@@ -108,15 +108,21 @@ function get_students(                $modules
     $results->store_result();
     $results->bind_result( $extra_time_percentage, $student_id, $surname, $first_names, $title );
 
-    $student_object = new UserObject( $configObject
-                                    , $mysqli );
+  //  $student_object = new UserObject( $configObject
+  //                                  , $mysqli );
+      $student_object = array();
 
     while ( $results->fetch() ) {
-
+/*
       $student_object->set_user_ID( $student_id );
       $student_object->set_surname( $surname );
       $student_object->set_first_names( $first_names );
       $student_object->set_title( $title );
+*/
+      $student_object['user_ID']=$student_id;
+      $student_object['surname']=$surname;
+      $student_object['first_names']=$first_names;
+      $student_object['title']=$title;
 
       process_student_list( $log_lab_end_time
                           , $student_object
@@ -162,12 +168,16 @@ function get_students(                $modules
                          , $title );
 
     while ( $results->fetch() ) {
-
+/*
       $student_object->set_user_ID( $student_id );
       $student_object->set_surname( $surname );
       $student_object->set_first_names( $first_names );
       $student_object->set_title( $title );
-
+*/
+      $student_object['user_ID']=$student_id;
+      $student_object['surname']=$surname;
+      $student_object['first_names']=$first_names;
+      $student_object['title']=$title;
       process_student_list( $log_lab_end_time
                           , $student_object
                           , $property_object
@@ -197,7 +207,7 @@ function get_students(                $modules
 * @param mysqli         $mysqli
  */
 function process_student_list( LogLabEndTime  $log_lab_end_time
-                             , UserObject     $student_object
+                             ,       $student_object
                              , PropertyObject $property_object
                              , Config         $configObject
                              ,                $extra_time_percentage
@@ -285,10 +295,10 @@ function process_student_list( LogLabEndTime  $log_lab_end_time
 
   // Get student description
 
-  $tmp_userID                    = $student_object->get_user_ID();
-  $surname                       = $student_object->get_surname();
-  $first_names                   = $student_object->get_first_names();
-  $title                         = $student_object->get_title();
+  $tmp_userID                    = $student_object['user_ID'];
+  $surname                       = $student_object['surname'];
+  $first_names                   = $student_object['first_names'];
+  $title                         = $student_object['title'];
 
   $paperID                       = $property_object->get_property_id();
 
@@ -653,7 +663,7 @@ if ($language != 'en') {
     <tr>
     <?php
 
-     $student_object = new UserObject( $configObject, $mysqli );
+//     $student_object = new UserObject( $configObject, $mysqli );
 
      foreach ( $properties_list as $property_object ) {
 

@@ -53,7 +53,7 @@ class LogExtraTime {
    */
 
   public function __construct( LogLabEndTime $log_lab_end_time
-                             , UserObject    $student_object
+                             ,      $student_object
                              , mysqli        $db ) {
 
     $this->log_lab_end_time = $log_lab_end_time;
@@ -253,21 +253,21 @@ class LogExtraTime {
    * @return int
   */
   private function get_student_id(){
-    return $this->student_object->get_user_ID();
+    return $this->student_object['user_ID'];
   }
 
   /*
    * @return int
   */
   private function get_user_id(){
-    return $this->student_object->get_user_ID();
+    return $this->student_object['get_user_ID'];
   }
 
   /*
    * @return int
   */
   public function get_students_special_needs_percentage(){
-    return $this->student_object->get_special_needs_percentage();
+    return $this->student_object['special_needs_percentage'];
   }
 
   /*
