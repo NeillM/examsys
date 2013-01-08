@@ -271,7 +271,7 @@ class Authentication {
             $this->display_std_form();
 
             if ($postauthfailobj->exit === TRUE) {
-              var_dump($this->debug);
+            //  var_dump($this->debug);
               exit();
             }
           }
