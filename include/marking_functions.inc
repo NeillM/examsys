@@ -412,7 +412,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         if ($user_response == $correct) {
           $mark += $marks_correct;
           $no_correct++;
-        } elseif ($user_response != '') {
+        } elseif ($user_response != '' and $user_response != 'a') {
           $mark += $marks_incorrect;
           $no_incorrect++;
         }
