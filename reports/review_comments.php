@@ -90,38 +90,6 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
     $html .= "<tr><td class=\"reviewline$extra\">$image</td><td class=\"reviewline$extra\">$reviewer_name</td><td class=\"reviewline$extra\">$comment</td><td class=\"reviewline$extra\">$action</td><td class=\"reviewline$extra\">$response</td></tr>\n";
   }
   
-  /*
-  if (isset($comments_data[$questionID])) {
-    foreach ($comments_data[$questionID] as $reviewer => $index) {
-      $image = 'ok_comment.png';
-      $status = 'OK';
-      if ($comments_data[$questionID][$reviewer]['category'] == 2) {
-        $image = 'minor_comment.png';
-        $status = 'Minor';
-      } elseif ($comments_data[$questionID][$reviewer]['category'] == 3) {
-        $image = 'major_comment.png';
-        $status = 'Major';
-      }
-      $tmp_comment = nl2br($comments_data[$questionID][$reviewer]['comment']);
-      if (trim($tmp_comment) == '') {
-        $tmp_comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-        $tmp_action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-        $tmp_response = '<span style="color:#808080">' . $string['na'] . '</span>';
-      } else {
-        $tmp_action = $string[$comments_data[$questionID][$reviewer]['action']];
-        $tmp_response = nl2br($comments_data[$questionID][$reviewer]['response']);
-      }
-
-      if (trim($tmp_response) == '') $tmp_response = '<span style="color:#808080">' . $string['noresponse'] . '</span>';
-      $html .= "<tr class=\"$status reviewline\"><td class=\"reviewline\"><img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" /></td><td class=\"reviewline\">" . $comments_data[$questionID][$reviewer]['name'] . "</td><td class=\"reviewline\">$tmp_comment</td><td class=\"reviewline\">$tmp_action</td><td class=\"reviewline\">$tmp_response</td></tr>\n";
-    }
-  }
-  if (isset($incomplete_names)) {
-    foreach ($incomplete_names as $single_incomplete) {
-      $html .= "<tr class=\"OK\"><td class=\"reviewline\">&nbsp;</td><td class=\"reviewline\" style=\"color:#C00000\">$single_incomplete</td><td class=\"reviewline\" style=\"color:#C00000; text-align:center\" colspan=\"3\">" . $string['notreviewed'] . "</td></tr>\n";
-    }
-  }
-  */
   $html .= "</table></td></tr>\n";
 
   return $html;
