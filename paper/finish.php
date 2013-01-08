@@ -168,16 +168,9 @@ require '../config/finish.inc';
 ?>
 <script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
+<script type="text/javascript" src="../js/student_help.js"></script>
 <script language="JavaScript">
   window.history.go(1);
-
-  function launchHelp(pageID) {
-    helpwin=window.open("/help/student/index.php?id=" + pageID + "","help","width="+(screen.width-30)+",height="+(screen.height-100)+",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
-    helpwin.moveTo(10,10);
-    if (window.focus) {
-      helpwin.focus();
-    }
-  }
 </script>
 </head>
 
@@ -201,7 +194,7 @@ require '../config/finish.inc';
 
   if (isset($_GET['userid'])) {
     $temp_userID = $_GET['userid'];
-    $result = $mysqli->prepare("SELECT title, initials, surname, student_id FROM users LEFT JOIN sid ON users.id=sid.userID WHERE id=? LIMIT 1");
+    $result = $mysqli->prepare("SELECT title, initials, surname, student_id FROM users LEFT JOIN sid ON users.id = sid.userID WHERE id=? LIMIT 1");
     $result->bind_param('i', $_GET['userid']);
     $result->execute();
     $result->store_result();
@@ -223,7 +216,7 @@ require '../config/finish.inc';
   if (!isset($_GET['q_id'])) {
     echo $top_table_html;
     echo '<tr><td><div class="paper">' . $paper_title . '</div>';
-    if ($paper_type < 2 or $userObject->has_role(array('Staff','SysAdmin'))) {
+    if ($paper_type < 2 or $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
       if (isset($_GET['userid'])) echo " for $tmp_title $tmp_surname, $tmp_initials ($tmp_student_id)";
       echo '</span>';
@@ -239,7 +232,7 @@ require '../config/finish.inc';
   } elseif ($paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
     if ($userObject->has_role('Student')) {
       $show_feedback = false;
-    } elseif ($userObject->has_role(array('Staff' ,'SysAdmin'))) {
+    } elseif ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       $show_feedback = true;
     }
   }
