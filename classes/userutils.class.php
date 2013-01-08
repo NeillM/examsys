@@ -87,7 +87,7 @@ Class UserUtils {
    *
    */
   static function username_exists($username, $db) {
-    $stmt = $db->prepare("SELECT id FROM users WHERE username=?");
+    $stmt = $db->prepare("SELECT id FROM users WHERE username = ?");
     $stmt->bind_param('s', $username);
     $stmt->execute();
     $stmt->store_result();
@@ -108,7 +108,7 @@ Class UserUtils {
    *
    */
   static function studentid_exists($sid, $db) {
-    $stmt = $db->prepare("SELECT userID FROM sid WHERE student_id=?");
+    $stmt = $db->prepare("SELECT userID FROM sid WHERE student_id = ?");
     $stmt->bind_param('s', $sid);
     $stmt->execute();
     $stmt->store_result();
@@ -118,6 +118,34 @@ Class UserUtils {
     $stmt->close();
 
     return $exists;
+  }
+  
+  /**
+   * Check if a user has a particular role.
+   *
+   * @param integer $tmp_userID UserID of the user to be checked
+   * @param string $test_role the role to be checked
+   * @param object $db mysqli database connection
+   * @return bool whether role was found or not
+   *
+   */
+  static function has_user_role($tmp_userID, $test_role, $db) {
+    $stmt = $db->prepare("SELECT roles FROM users WHERE id = ? LIMIT 1");
+    $stmt->bind_param('i', $tmp_userID);
+    $stmt->execute();
+    $stmt->bind_result($roles);
+    $stmt->fetch();
+    $stmt->close();
+    
+    $roles_list = explode(',', $roles);
+    $match = false;
+    foreach ($roles_list as $individual_role) {
+      if ($individual_role == $test_role) {
+        $match = true;
+      }
+    }
+    
+    return $match;
   }
 
   /**
@@ -129,10 +157,14 @@ Class UserUtils {
    *
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
-    $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NULL, 'System')");
-    $stmt->bind_param('si', $idMod, $tmp_userID);
-    $stmt->execute();
-    $stmt->close();
+  
+    if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
+      $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NULL, 'System')");
+      $stmt->bind_param('si', $idMod, $tmp_userID);
+      $stmt->execute();
+      $stmt->close();
+    }
+    
   }
 
   /**
@@ -143,10 +175,10 @@ Class UserUtils {
    *
    */
   static function clear_staff_modules_by_moduleID($moduleID, $db) {
-    $result = $db->prepare("DELETE FROM modules_staff WHERE idMod = ?");
-    $result->bind_param('i', $moduleID);
-    $result->execute();
-    $result->close();
+    $stmt = $db->prepare("DELETE FROM modules_staff WHERE idMod = ?");
+    $stmt->bind_param('i', $moduleID);
+    $stmt->execute();
+    $stmt->close();
   }
 
   /**
@@ -161,7 +193,8 @@ Class UserUtils {
     $result->bind_param('i', $tmp_userID);
     $result->execute();
     $result->close();
-    if(isset($GLOBALS['userObject'])) {
+    
+    if (isset($GLOBALS['userObject'])) {
       $GLOBALS['userObject']->load_staff_modules();
     }
   }
@@ -252,13 +285,14 @@ Class UserUtils {
    *
    */
   static function is_user_on_module($tmp_userID, $idMod, $session, $db) {
-    $result = $db->prepare("SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
+    $result = $db->prepare("SELECT userID FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
     $result->bind_param('iss', $tmp_userID, $idMod, $session);
     $result->execute();
     $result->store_result();
     $result->bind_result($tmp_userID);
     $exists = ($result->num_rows > 0);
     $result->close();
+    
     return $exists;
   }
 

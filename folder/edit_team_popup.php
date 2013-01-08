@@ -27,18 +27,18 @@ require_once '../include/errors.inc';
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
-check_var('teamID', 'GET', true, false);
-$teamID = $_GET['teamID'];
-$module_code = module_utils::get_moduleid_from_id($_GET['teamID'], $mysqli);
+check_var('module', 'GET', true, false);
+$moduleID = $_GET['module'];
+$module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
 
 if (isset($_POST['submit'])) {
   // Clear the team of all members.
-  UserUtils::clear_staff_modules_by_moduleID($teamID, $mysqli);
+  UserUtils::clear_staff_modules_by_moduleID($moduleID, $mysqli);
   
   // Insert a record for each team member.
   for ($i=0; $i<$_POST['staff_no']; $i++) {
     if (isset($_POST["staff$i"]) and $_POST["staff$i"] != '') {
-      UserUtils::add_staff_to_module($_POST["staff$i"], $teamID, $mysqli);
+      UserUtils::add_staff_to_module($_POST["staff$i"], $moduleID, $mysqli);
     }
   }
 ?>
@@ -49,7 +49,7 @@ if (isset($_POST['submit'])) {
   <title><?php echo $string['teammembers'] . ' ' . $module_code; ?></title>
   <script language="JavaScript">
     function closeWindow() {
-      window.opener.location.href = '../folder/details.php?module=<?php echo $teamID; ?>';
+      window.opener.location.href = '../folder/details.php?module=<?php echo $moduleID; ?>';
       self.close();
     }
   </script>
@@ -113,7 +113,7 @@ if (isset($_POST['submit'])) {
   </table>
 
 <?php
-  $team_members = UserUtils::get_staff_modules_list_by_modID($_GET['teamID'], $mysqli);
+  $team_members = UserUtils::get_staff_modules_list_by_modID($_GET['module'], $mysqli);
 
   echo "<div style=\"height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:12px 4px 8px 4px; font-size:90%\" id=\"list\">";
   $staff_no = 0;

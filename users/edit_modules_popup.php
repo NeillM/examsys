@@ -60,7 +60,7 @@
       echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
     }
 
-    foreach($mod as $idMod => $mod_info) {
+    foreach ($mod as $idMod => $mod_info) {
       $moduleid = $mod_info['moduleid'];
       $fullname = $mod_info['fullname'];
 
@@ -73,23 +73,23 @@
       } else {
         echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" id=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $idMod . "\">$moduleid:&nbsp;$fullname</label></div>\n";
       }
-      $old_letter = strtoupper(substr($moduleid,0,1));
+      $old_letter = strtoupper(substr($moduleid, 0, 1));
     }
     echo "</div>\n</div>\n";
   }
 
   if (isset($_POST['submit'])) {
-    for ( $attempt=1; $attempt<=3; $attempt++ ) {
+    for ($attempt=1; $attempt<=3; $attempt++) {
       // Clear the student of all modules.
-      $result = $mysqli->prepare("DELETE FROM modules_student WHERE userID=? AND calendar_year=? AND attempt=?");
+      $result = $mysqli->prepare("DELETE FROM modules_student WHERE userID = ? AND calendar_year = ? AND attempt = ?");
       $result->bind_param('isi', $_POST['userID'], $_POST['session'], $attempt);
       $result->execute();
       $result->close();
 
       // Insert a record for each module.
-      for ( $i=1; $i<=$_POST['mod_count']; $i++ ) {
-        if ( isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '' ) {
-          $result = $mysqli->prepare( 'INSERT INTO modules_student VALUES (NULL,?,?,?,?,0)' );
+      for ($i=1; $i<=$_POST['mod_count']; $i++) {
+        if (isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '') {
+          $result = $mysqli->prepare( 'INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, 0)' );
           $result->bind_param('iisi', $_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $_POST['session'], $attempt);
           $result->execute();
           $result->close();

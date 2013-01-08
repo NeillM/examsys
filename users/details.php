@@ -108,7 +108,7 @@ function formatsec($seconds) {
   return $timestring;
 }
 
-if (isset($_POST['update']) and $demo == false) {
+if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('Admin', 'SysAdmin'))) {
   $initials = '';
   $first_names_array = explode(' ',$_POST['first_names']);
   foreach ($first_names_array as $individual_name) {
@@ -166,7 +166,7 @@ if (isset($_POST['update']) and $demo == false) {
       $result->close();
     }
   }
-} elseif (isset($_POST['updateaccess'])) {
+} elseif (isset($_POST['updateaccess']) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
   $background = $_POST['background'];
   if ($_POST['bg_radio'] == '0') $background = 'NULL';
   $foreground = $_POST['foreground'];
@@ -198,7 +198,7 @@ if (isset($_POST['update']) and $demo == false) {
     $result->execute();
     $result->close();
   }
-} elseif (isset($_POST['save_metadata'])) {
+} elseif (isset($_POST['save_metadata']) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
   for ($i=0; $i<$_POST['metadata_no']; $i++) {
     $result = $mysqli->prepare("REPLACE INTO users_metadata (userID, moduleID, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)");
     $result->bind_param('iisss', $_GET['userID'], $_POST["meta_moduleID$i"], $_POST["meta_type$i"], $_POST["meta_value$i"], $_POST["meta_calendar_year$i"]);
@@ -338,7 +338,7 @@ if (isset($_POST['update']) and $demo == false) {
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $_GET['userID']; ?>" method="post">
 <?php
 
-  if ($userObject->has_role(array('Admin','SysAdmin'))) {
+  if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     if (strpos($tmp_roles,'Student') !== false or stripos($tmp_roles,'graduate') !== false or strpos($tmp_roles,'left') !== false or strpos($tmp_roles,'suspended') !== false) {
       $student_photo =  $cfg_web_root . 'users/photos/' . $original_username . '.jpg';
       $row_no = 7;
@@ -506,7 +506,7 @@ if (isset($_POST['update']) and $demo == false) {
     echo "</select></td><td>&nbsp;" . $string['databaseid'] . "</td><td colspan=\"2\">" . $_GET['userID'] . "</td></tr>\n";
     echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
   } else {
-    if ($userObject->has_role('Student')) {
+    if (stripos($tmp_roles,'Student') !== false) {
       $student_photo =  $cfg_web_root ."users/photos/$username.jpg";
       $row_no = 10;
       if (file_exists($student_photo)) {
@@ -518,13 +518,13 @@ if (isset($_POST['update']) and $demo == false) {
       $row_no = 5;
       echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td width=\"110\">&nbsp;Name</td><td>$tmp_title $tmp_initials $tmp_surname</td></tr>\n";
     }
-    if ($userObject->has_role('Student')) {
+    if (stripos($tmp_roles,'Student') !== false) {
       if ($student_id == '') $student_id = $string['unknown'];
       echo "<tr><td>&nbsp;Student ID</td><td>$student_id</td></tr>\n";
     }
     echo "<tr><td>&nbsp;Email</td><td><a href=\"mailto:$email\">$email</a></td></tr>\n";
-    if ($tmp_roles == 'Student') {
-      echo "<tr><td>&nbsp;" . $string['yearofstudy'] . "</td><td>{$string['year']} $year</td></tr>\n";
+    if (stripos($tmp_roles,'Student') !== false) {
+      echo "<tr><td>&nbsp;" . $string['yearofstudy'] . "</td><td>{$string['year']} $tmp_year</td></tr>\n";
       echo "<tr><td>&nbsp;" . $string['course'] . "</td><td>$grade - $description</td></tr>\n";
     }
     echo "<tr><td>&nbsp;" . $string['username'] . "</td><td>$username</td></tr>\n";
@@ -854,23 +854,23 @@ if (isset($_POST['update']) and $demo == false) {
   $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor);
   $result->fetch();
   if ($result->num_rows == 0) {
-    $textsize = '';
-    $background = '';
-    $foreground = '';
-    $extra_time = '';
-    $themecolor = '';
-    $labelcolor = '';
-    $marks_color = '';
-    $font = '';
+    $textsize     = '';
+    $background   = '';
+    $foreground   = '';
+    $extra_time   = '';
+    $themecolor   = '';
+    $labelcolor   = '';
+    $marks_color  = '';
+    $font         = '';
     $unansweredcolor = '';
   } else {
     $special_needs = true;
-    if ($background == 'NULL') $background = '';
-    if ($foreground == 'NULL') $foreground = '';
-    if ($themecolor == 'NULL') $themecolor = '';
-    if ($labelcolor == 'NULL') $labelcolor = '';
+    if ($background == 'NULL')  $background = '';
+    if ($foreground == 'NULL')  $foreground = '';
+    if ($themecolor == 'NULL')  $themecolor = '';
+    if ($labelcolor == 'NULL')  $labelcolor = '';
     if ($marks_color == 'NULL') $marks_color = '';
-    if ($font == 'NULL') $font = '';
+    if ($font == 'NULL')        $font = '';
     if ($unansweredcolor == 'NULL') $unansweredcolor = '';
   }
   $result->close();
@@ -917,7 +917,7 @@ if (isset($_POST['update']) and $demo == false) {
 <select name="font">
 <option value="null"><?php echo $string['angledefault']; ?></option>
 <?php
-  $fontfamily = array('Arial','Arial Black','Calibri','Comic Sans MS','Courier New','Helvetica','Tahoma','Times New Roman','Verdana');
+  $fontfamily = array('Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana');
   foreach ($fontfamily as $individual_fontfamily) {
     if ($individual_fontfamily == $font) {
       echo "<option style=\"font-family:$individual_fontfamily\" value=\"$individual_fontfamily\" selected>$individual_fontfamily</option>\n";
@@ -1033,7 +1033,7 @@ if (isset($_POST['update']) and $demo == false) {
   $stmt->bind_result($mod_id, $moduleID, $fullname, $calendar_year, $type, $value);
   while ($stmt->fetch()) {
     echo "<tr><td>&nbsp;$moduleID: $fullname<input type=\"hidden\" name=\"meta_moduleID$metadata_no\" value=\"$mod_id\" /></td><td>$calendar_year<input type=\"hidden\" name=\"meta_calendar_year$metadata_no\" value=\"$calendar_year\" /></td><td>$type<input type=\"hidden\" name=\"meta_type$metadata_no\" value=\"$type\" /></td><td><select name=\"meta_value$metadata_no\">";
-    $result = $mysqli->prepare("SELECT DISTINCT value FROM users_metadata WHERE calendar_year=? AND idMod=? AND type=?");
+    $result = $mysqli->prepare("SELECT DISTINCT value FROM users_metadata WHERE calendar_year = ? AND idMod = ? AND type = ?");
     $result->bind_param('sis', $calendar_year, $mod_id, $type);
     $result->execute();
     $result->store_result();
@@ -1066,11 +1066,11 @@ if (isset($_POST['update']) and $demo == false) {
   echo drawTabs('Teams', 4, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['team'] . "</td><td class=\"coltitle\">&nbsp;</td><td class=\"coltitle\">" . $string['dateadded'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td></tr>\n";
   if ($userObject->has_role('Admin') or $userObject->has_role('SysAdmin')) {
-    echo "<tr><td colspan=\"4\"><a href=\"\" onclick=\"editMultiTeams(); return false;\">&nbsp;" . $string['editteams'] . "</a></td></tr>\n";
+    echo "<tr><td colspan=\"4\">&nbsp;<img onclick=\"editMultiTeams(); return false;\" src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editteams'] . "\" />&nbsp;<a href=\"\" onclick=\"editMultiTeams(); return false;\">" . $string['editteams'] . "</a></td></tr>\n";
   }
 
-  if ($userObject->has_role('Admin') or $userObject->has_role('SysAdmin') or $userObject->get_user_ID() == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
-    $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM modules_staff, modules WHERE modules_staff.idMod=modules.id AND memberID=? ORDER BY moduleID");
+  if ($userObject->has_role(array('SysAdmin', 'Admin')) or $userObject->get_user_ID() == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
+    $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? ORDER BY moduleID");
     $result->bind_param('i', $tmp_id);
     $result->execute();
     $result->store_result();

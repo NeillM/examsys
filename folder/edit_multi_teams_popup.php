@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once '../include/staff_auth.inc';
+require_once '../include/admin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/userutils.class.php';
 
@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Manage Teams</title>
+  <title><?php echo $string['manageteams'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <script language="JavaScript">
     function closeWindow() {
       window.opener.location.href = '../users/details.php?userID=<?php echo $_POST['userID']; ?>&tab=teams';
@@ -59,7 +59,7 @@ if (isset($_POST['submit'])) {
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-<title>Manage Teams</title>
+<title><?php echo $string['manageteams'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
@@ -102,7 +102,7 @@ if (isset($_POST['submit'])) {
 
 <?php
   $user_teams = array();
-  $result = $mysqli->prepare("SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND type='System' AND memberID=?");
+  $result = $mysqli->prepare("SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND type = 'System' AND memberID = ?");
   $result->bind_param('i', $_GET['userID']);
   $result->execute();
   $result->bind_result($moduleID, $idMod);
@@ -115,7 +115,7 @@ if (isset($_POST['submit'])) {
   $mod_no = 0;
   echo "<div style=\"height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:12px 4px 8px 4px; font-size:90%\" id=\"list\">";
   
-  $result = $mysqli->prepare("SELECT school, moduleid, fullname, modules.id FROM modules, schools WHERE modules.schoolid=schools.id AND active=1 ORDER BY school, moduleid");
+  $result = $mysqli->prepare("SELECT school, moduleid, fullname, modules.id FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 ORDER BY school, moduleid");
   $result->execute();
   $result->bind_result($school, $moduleid, $fullname, $idMod);
   while ($result->fetch()) {

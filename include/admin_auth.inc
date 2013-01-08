@@ -25,7 +25,7 @@
 */
 require_once 'staff_student_auth.inc';
 
-if ($userObject->has_role('Admin')) {
+if (!$userObject->has_role(array('SysAdmin','Admin'))) {
   $notice->access_denied($mysqli, $string, $string['accessdeniedadmin'],true);
 } 
 

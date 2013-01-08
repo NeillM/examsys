@@ -63,17 +63,13 @@ if (isset($_GET['folder'])) {
 }
 if ($folder != '') {
   $tmp_folder = $_GET['folder'];
-  $result = $mysqli->prepare("SELECT ownerID, name FROM folders WHERE id=?");
+  $result = $mysqli->prepare("SELECT ownerID, name FROM folders WHERE id = ?");
   $result->bind_param('i', $tmp_folder);
   $result->execute();
   $result->store_result();
   $result->bind_result($folder_ownerID, $orig_folder_name);
   $result->fetch();
   $result->close();
-
-  //var_dump($orig_folder_name);
-
-  //if (isset($staff_module) and $staff_module != '' and $staff_module == '') $module = $staff_module;
 
   $parent_list = array();
   if (substr_count($orig_folder_name,';') > 0) {
@@ -87,7 +83,7 @@ if ($folder != '') {
       } else {
         $part_sql .= ';' . $part;
       }
-      $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name=? AND ownerID=? LIMIT 1");
+      $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name = ? AND ownerID = ? LIMIT 1");
       $parent_results->bind_param('si', $part_sql, $userObject->get_user_ID());
       $parent_results->execute();
       $parent_results->bind_result($parent_id, $parent_name);
@@ -105,7 +101,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
 }
 
 if (isset($_POST['submit'])) {
-  $folder_results = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
+  $folder_results = $mysqli->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
   $folder_results->bind_param('i', $folder);
   $folder_results->execute();
   $folder_results->bind_result($folder_parent);
@@ -115,7 +111,7 @@ if (isset($_POST['submit'])) {
   $new_folder_name = $folder_parent . ';' . $_POST['folder_name'];
   $duplicate_name = 0;
 
-  $folder_details = $mysqli->prepare("SELECT name FROM folders WHERE ownerID=? AND name=?");
+  $folder_details = $mysqli->prepare("SELECT name FROM folders WHERE ownerID = ? AND name = ?");
   $folder_details->bind_param('is', $userObject->get_user_ID(), $new_folder_name);
   $folder_details->execute();
   $folder_details->store_result();
@@ -196,7 +192,7 @@ if ($folder != '') {
     }
 
     function addTeamMember() {
-      notice = window.open("edit_team_popup.php?teamID=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice = window.open("edit_team_popup.php?module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         notice.focus();
       }
@@ -241,7 +237,7 @@ $display_papers = true;
 // Get members of current folder.
 if (isset($_GET['module']) and $_GET['module'] != '') {
 
-  $member_details = $mysqli->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users, modules) WHERE modules_staff.idMod = modules.id AND modules_staff.memberID=users.id AND modules.id=? ORDER BY surname, initials");
+  $member_details = $mysqli->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users, modules) WHERE modules_staff.idMod = modules.id AND modules_staff.memberID = users.id AND modules.id = ? ORDER BY surname, initials");
   $member_details->bind_param('s', $module);
   $member_details->execute();
   $member_details->store_result();
@@ -256,7 +252,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
     if ($userObject->has_role('Demo')) {
       $tmp_html .= "<li><span style=\"color:#254280\">" . demo_replace_name($i) . "</span></li>\n";
       $i++;
-    } elseif ($userObject->has_role('Admin')) {
+    } elseif ($userObject->has_role(array('SysAdmin', 'Admin'))) {
       $tmp_html .= "<li><a style=\"color:#254280\" href=\"../users/details.php?userID=$tmp_userID&module=" . $_GET['module'] . "\" target=\"_top\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</a></li>\n";
     } else {
       $tmp_html .= "<li><span style=\"color:#254280\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</span></li>\n";
@@ -265,7 +261,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   }
   if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
   echo '<div style="box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC">';
-  if ($add_member == true or $userObject->has_role('Admin') or $userObject->has_role('SysAdmin')) {
+  if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
     echo '<div style="float:left; width:95%; padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" border="0" /></a></div></div>';
   } else {
     echo '<div style="padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB">' . $string['teammembers'] . '</div>';
