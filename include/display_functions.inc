@@ -26,10 +26,10 @@ require_once $cfg_web_root . 'classes/mathsutils.class.php';
 
 function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questions, $paperID, $db) {
   $incomplete_screens = array_fill(1, $screen_no, 0);  // Set all screens to be initinally complete
-  
+
   // Get some extra details for labelling type questions
   $label_data = array();
-  
+
   $stmt = $db->prepare("SELECT o_id, correct FROM options, papers WHERE papers.paper = ? AND papers.question = options.o_id");
   $stmt->bind_param('i', $paperID);
   $stmt->execute();
@@ -39,7 +39,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
     $label_data[$o_id] = $correct;
   }
   $stmt->close();
-  
+
   for ($i=1; $i<=$screen_no; $i++) {
     if (!isset($user_answers[$i])) {                            // No user answers exist for that screen
       $incomplete_screens[$i] = 1;
@@ -47,14 +47,14 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
       $incomplete_screens[$i] = 1;
     } else {                                                    // Right number of records but need to check if any are unanswered
       $tmp_answer_no = count($screen_data[$i]);
-      
+
       $answers = array();
       $a = 1;
       foreach ($user_answers[$i] as $q_id=>$individual_answer) {
         $answers[$q_id] = $individual_answer;
         $a++;
       }
-      
+
       for ($a=1; $a<=$tmp_answer_no; $a++) {
         $current_q_id = $screen_data[$i][$a-1][1];
         if (isset($answers[$current_q_id])) {
@@ -114,12 +114,12 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
                 $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
                 $placeholders++;
               }
-            }           
-            
+            }
+
             $user_parts = explode(';', $current_answer);
             $user_parts2 = explode('$', $user_parts[1]);
             $user_answer_no = (count($user_parts2) - 1) / 4;
-            
+
             if ($user_answer_no < $placeholders) {
               $incomplete_screens[$i] = 1;
             }
@@ -170,8 +170,8 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
         }
       }
     }
-  } 
-  
+  }
+
   return $incomplete_screens;
 }
 
@@ -553,12 +553,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $abstain = false;
         }
 
+        $class_mod = '';
         if ($tmp_user_answer == 'u' and $screen_pre_submitted == 1) {
-          echo '<tr class="unans"><td align="center">';
+          $class_mod = ' class="unans"';
           $unanswered = true;
-        } else {
-          echo '<tr><td align="center">';
         }
+
+        echo '<tr id="q' . $question_no . '_opt' . $part_id . '"' . $class_mod . '><td align="center">';
+
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
         if ($tmp_user_answer == 't') {
           echo '<input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="t" checked /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
