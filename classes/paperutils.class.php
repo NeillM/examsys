@@ -34,7 +34,7 @@ Class Paper_utils {
   * @param $questionID ID of the question to be added
   * @param $screen_no number of the screen to add to
   * @param $display_pos the display position of the new question
-  * @param $db database connection
+  * @param $db Database connection
   */
   static function add_question($paperID, $questionID, $screen_no, $display_pos, $db) {
     $result = $db->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
@@ -47,6 +47,7 @@ Class Paper_utils {
   * Return the user ID of the paper owner
   *
   * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
   * @return integer 
   */
   static function get_ownerID($paperID, $db) {
@@ -65,6 +66,7 @@ Class Paper_utils {
   * Return a array of modules assigned to a paper
   *
   * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
   * @return array 
   */
   static function get_modules($paperID, $db) {
@@ -79,6 +81,29 @@ Class Paper_utils {
     $result->close();
     
     return $modules;
+  } 
+
+  /**
+  * Return a array of metadata pairs assigned to a paper
+  *
+  * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
+  * @return array 
+  */
+  static function get_metadata($paperID, $db) {
+    $metadata = array();
+  
+    $result = $db->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($security_type, $security_value);
+    $result->store_result();
+    while ($result->fetch()) {
+      $metadata[$security_type] = $security_value;
+    }
+    $result->close();
+    
+    return $metadata;
   } 
 
   /**

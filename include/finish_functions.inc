@@ -24,18 +24,6 @@
 
 require_once $cfg_web_root . 'classes/stringutils.class.php';
 
-function getSpecialSettings($userID, $mysqlidb) {
-  global $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font;
-  
-  $stmt = $mysqlidb->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs, users WHERE users.id=special_needs.userid AND special_needs = 1 AND userid=?");
-  $stmt->bind_param('i', $userID);
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
-  $stmt->fetch();
-  $stmt->close();
-}
-
 function echo_content($html) {
   echo $html;
   if (strpos($html,'<div>') === false and strpos($html,'<p>') === false and strpos($html,'<br') === false) {

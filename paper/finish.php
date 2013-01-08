@@ -26,29 +26,27 @@
 */
 
 require '../include/staff_student_auth.inc';
-require '../include/marking_functions.inc';
-require '../include/calculate_marks.inc';
-require '../include/errors.inc';
-require '../include/mapping.inc';
-require '../include/media.inc';
-require '../include/finish_functions.inc';
-require '../include/paper_security.inc';
-require '../classes/paperutils.class.php';
-require '../classes/logmetadata.class.php';
+require_once '../include/marking_functions.inc';
+require_once '../include/calculate_marks.inc';
+require_once '../include/errors.inc';
+require_once '../include/mapping.inc';
+require_once '../include/media.inc';
+require_once '../include/finish_functions.inc';
+require_once '../include/paper_security.inc';
+require_once '../classes/paperutils.class.php';
+require_once '../classes/logmetadata.class.php';
 
 check_var('id', 'GET', true, false);
 
 $userID = $userObject->get_user_ID();
 
-getSpecialSettings( $userID, $mysqli);
-
-$bgcolor = $userObject->get_bgcolor();
-$fgcolor = $userObject->get_fgcolor();
-$textsize = $userObject->get_textsize();
-$marks_color = $userObject->get_marks_color();
-$themecolor = $userObject->get_themecolor();
-$labelcolor = $userObject->get_labelcolor();
-$font = $userObject->get_font();
+$bgcolor          = $userObject->get_bgcolor();
+$fgcolor          = $userObject->get_fgcolor();
+$textsize         = $userObject->get_textsize();
+$marks_color      = $userObject->get_marks_color();
+$themecolor       = $userObject->get_themecolor();
+$labelcolor       = $userObject->get_labelcolor();
+$font             = $userObject->get_font();
 $unanswered_color = $userObject->get_unanswered_color();
 
 if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
@@ -58,13 +56,13 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
   $paper_properties->bind_result($paperID, $labs, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
   while ($paper_properties->fetch()) {
     // If set overwrite the default colours with the current users' special settings
-    if ($bgcolor == 'NULL') $bgcolor = $paper_bgcolor;
-    if ($fgcolor == 'NULL') $fgcolor = $paper_fgcolor;
-    if ($textsize == 'NULL') $textsize = 90;
+    if ($bgcolor == 'NULL')     $bgcolor = $paper_bgcolor;
+    if ($fgcolor == 'NULL')     $fgcolor = $paper_fgcolor;
+    if ($textsize == 'NULL')    $textsize = 90;
     if ($marks_color == 'NULL') $marks_color = '#808080';
-    if ($themecolor == 'NULL') $themecolor = $paper_themecolor;
-    if ($labelcolor == 'NULL') $labelcolor = $paper_labelcolor;
-    if ($font == 'NULL') $font = 'Arial';
+    if ($themecolor == 'NULL')  $themecolor = $paper_themecolor;
+    if ($labelcolor == 'NULL')  $labelcolor = $paper_labelcolor;
+    if ($font == 'NULL')        $font = 'Arial';
     $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
     $log_type = $paper_type;
@@ -73,11 +71,11 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
 
     if ($userObject->has_role('Staff') and isset($_GET['userid']) and $_GET['userid'] != $userObject->get_user_ID()) {
       // Turn on all feedback if staff and a student exam script is being reviewed.
-      $display_correct_answer = 1;
-      $display_question_mark = 1;
-      $display_students_response = 1;
-      $display_feedback = 1;
-      $hide_if_unanswered = 0;
+      $display_correct_answer     = 1;
+      $display_question_mark      = 1;
+      $display_students_response  = 1;
+      $display_feedback           = 1;
+      $hide_if_unanswered         = 0;
     }
 
     $moduleID = Paper_utils::get_modules($paperID, $mysqli);
@@ -99,7 +97,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
       $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 
       // Check for any metadata security restrictions
-      check_metadata($paperID, $userObject, $modIDs, $mysqli);
+      check_metadata($paperID, $userObject, $modIDs, $string, $mysqli);
 
       if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
         $paper_type = '_late';

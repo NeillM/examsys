@@ -28,18 +28,18 @@ require './include/staff_student_auth.inc';
 require './include/errors.inc';
 require './include/paper_security.inc';
 
-require './classes/paperutils.class.php';
+require_once './classes/paperutils.class.php';
 require_once './classes/moduleutils.class.php';
-require './classes/log_start_time.class.php';
-require './classes/logmetadata.class.php';
-require './classes/timer.class.php';
-require './classes/lab.class.php';
-require './classes/labobject.class.php';
-require './classes/propertyobject.class.php';
-require './classes/property.class.php';
-require './classes/log_extra_time.class.php';
-require './classes/log_lab_end_time.class.php';
-require './classes/summativetimer.class.php';
+require_once './classes/log_start_time.class.php';
+require_once './classes/logmetadata.class.php';
+require_once './classes/timer.class.php';
+require_once './classes/lab.class.php';
+require_once './classes/labobject.class.php';
+require_once './classes/propertyobject.class.php';
+require_once './classes/property.class.php';
+require_once './classes/log_extra_time.class.php';
+require_once './classes/log_lab_end_time.class.php';
+require_once './classes/summativetimer.class.php';
 
 check_var('id', 'GET', true, false);
 
@@ -95,62 +95,11 @@ $total_random_mark = 0;
 $total_marks = 0;
 
 //get paper info
-
-$sql = 'SELECT DISTINCT
-                        property_id
-                      , paper_title
-                      , random_mark
-                      , total_mark
-                      , bidirectional
-                      , screen
-                      , paper_type
-                      , UNIX_TIMESTAMP(start_date) AS start_date
-                      , start_date AS display_start_date
-                      , UNIX_TIMESTAMP(end_date) AS end_date
-                      , end_date AS display_end_date
-                      , timezone
-                      , fullscreen
-                      , marking
-                      , labs
-                      , rubric
-                      , exam_duration
-                      , calendar_year
-                      , sound_demo
-                      , password
-            FROM ( properties, papers )
-
-            WHERE
-              properties.crypt_name  = ?
-            AND
-              properties.property_id = papers.paper
-            ORDER BY
-              screen
-              DESC LIMIT 1';
-
-$paper_info = $mysqli->prepare( $sql );
+$sql = 'SELECT DISTINCT property_id, paper_title, random_mark, total_mark, bidirectional, screen, paper_type, UNIX_TIMESTAMP(start_date) AS start_date, start_date AS display_start_date, UNIX_TIMESTAMP(end_date) AS end_date, end_date AS display_end_date, timezone, fullscreen, marking, labs, rubric, exam_duration, calendar_year, sound_demo, password FROM (properties, papers) WHERE properties.crypt_name = ? AND properties.property_id = papers.paper ORDER BY screen DESC LIMIT 1';
+$paper_info = $mysqli->prepare($sql);
 $paper_info->bind_param('s', $_GET['id']);
 $paper_info->execute();
-$paper_info->bind_result( $property_id
-                        , $paper_title
-                        , $total_random_mark
-                        , $total_marks
-                        , $navigation
-                        , $paper_screens
-                        , $test_type
-                        , $paper_start
-                        , $display_start_date
-                        , $paper_end
-                        , $display_end_date
-                        , $timezone
-                        , $fullscreen
-                        , $marking
-                        , $labs
-                        , $rubric
-                        , $exam_duration
-                        , $calendar_year
-                        , $sound_demo
-                        , $password );
-
+$paper_info->bind_result($property_id, $paper_title, $total_random_mark, $total_marks, $navigation, $paper_screens, $test_type, $paper_start, $display_start_date, $paper_end, $display_end_date, $timezone, $fullscreen, $marking, $labs, $rubric, $exam_duration, $calendar_year, $sound_demo, $password );
 $paper_info->store_result();
 $paper_info->fetch();
 
@@ -191,70 +140,41 @@ if ($userObject->has_role('Student')) {
 }
 
 $display_remaining_time = false;
-$remaining_minutes      = '';
-$remaining_seconds      = '';
+$remaining_minutes = '';
+$remaining_seconds = '';
 
 /*
  * BP If the duration is set then create a timer to calculate and display the remaining time
  */
-
 $extra_time = null;
 
-if( $exam_duration !== null ){
-
+if ($exam_duration !== null) {
   $display_remaining_time = true;
 
-  if( (int) $test_type == 2 ){
-
+  if ((int)$test_type == 2) {
     $current_ip_address = NetworkUtils::get_ipaddress();
-
     $lab                = new Lab( $mysqli );
-    $lab_object         = $lab->get_lab_based_on_ip( $current_ip_address );
-
+    $lab_object         = $lab->get_lab_based_on_ip($current_ip_address);
     $property_object    = new PropertyObject();
-
-    $property_object->set_property_id( $property_id );
-
-    $property           = new Property( $property_object
-                                      , $mysqli );
-
+    $property_object->set_property_id($property_id);
+    $property           = new Property($property_object, $mysqli);
     $property_object    = $property->get_property();
     $student_object     = $userObject;
-
-    $log_lab_end_time   = new LogLabEndTime( $lab_object
-                                           , $property_object
-                                           , $mysqli );
-
-    $log_extra_time     = new LogExtraTime( $log_lab_end_time
-                                          , $student_object
-                                          , $mysqli );
-
+    $log_lab_end_time   = new LogLabEndTime($lab_object, $property_object, $mysqli);
+    $log_extra_time     = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
     $extra_time_secs    = $log_extra_time->get_extra_time_secs();
     $extra_time_mins    = $extra_time_secs / 60;
-
     $summative_timer    = new SummativeTimer( $log_extra_time );
-
     $remaining_time     = $summative_timer->calculate_remaining_time_secs();
-
-  }else{
-
+  } else {
     $studentID         = $userObject->get_user_ID();
-
-    $log_start_time    = new LogStartTime( $studentID
-                                         , $property_id
-                                         , $mysqli );
-
-    $timer             = new Timer( $log_start_time
-                                  , $exam_duration );
-
+    $log_start_time    = new LogStartTime($studentID, $property_id, $mysqli);
+    $timer             = new Timer($log_start_time, $exam_duration);
     $remaining_time    = $timer->calculate_remaining_time();
-
-
   }
 
-  $remaining_minutes = (int) ( $remaining_time / 60 );
-  $remaining_seconds = (int) ( $remaining_time % 60 );
-
+  $remaining_minutes = (int) ($remaining_time / 60);
+  $remaining_seconds = (int) ($remaining_time % 60);
 }
 
 ?>
@@ -271,11 +191,13 @@ if( $exam_duration !== null ){
     body {font-size:<?php echo $textsize; ?>%}
     input {font-size:90%}
     td {text-align:left}
+    p { margin: 2px 0 8px 0 }
     .f {font-weight:bold; text-align:right;line-height:180%;padding-right:6px}
     .w {font-size:90%;color:#C00000;font-weight:bold}
-    p { margin: 2px 0 8px 0 }
+    .warn {color:#C00000; font-weight:bold}
   </style>
 
+  <script type="text/javascript" src="./js/student_help.js"></script>
   <script language="JavaScript">
   function startPaper() {
     var paperURL = "./paper/start.php?id=<?php echo $_GET['id']; ?>";
@@ -286,7 +208,6 @@ if( $exam_duration !== null ){
 <?php
   }
 ?>
-
     exam=window.open(paperURL,"paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
     if (window.focus) {
       exam.focus();
@@ -297,13 +218,6 @@ if( $exam_duration !== null ){
     exam=window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       exam.focus();
-    }
-  }
-  function launchHelp() {
-    help=window.open("./help/student/index.php","help","width="+(screen.width-30)+",height="+(screen.height-100)+",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
-    help.moveTo(10,10);
-    if (window.focus) {
-      help.focus();
     }
   }
   </script>
@@ -342,7 +256,13 @@ if ($textsize > 120) {
   }
   echo '</tr>';
   if ($rubric != '') echo '<tr><td class="f" style="vertical-align:top"><nobr>' . $string['rubric'] . '</nobr></td><td colspan="3" style="text-align:justify; line-height:140%; padding-right:20px; padding-bottom:15px">' . $rubric . '</td></tr>';
-  if ($test_type != 2) echo '<tr><td class="f"><nobr>' . $string['availability'] .'</nobr></td><td colspan="3">' . $display_start_date . ' to '. $display_end_date;
+  if ($test_type != 2) {
+    $html = '';
+    if (time() < $paper_start or time() > $paper_end) {
+      $html = ' class="warn"';
+    }
+    echo '<tr><td class="f"><nobr>' . $string['availability'] .'</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' to '. $display_end_date;
+  }
   if ($timezone != 'Europe/London') echo ' (' . str_replace('_',' ',$timezone) . ')';
   echo '<input type="hidden" name="startdate" value="' . $display_start_date . '" /><input type="hidden" name="testtype" value="' . $test_type . "\" /></td></tr>\n";
   echo "<tr><td class=\"f\"><nobr>" . $string['candidates'] . "</nobr></td><td colspan=\"3\">";
@@ -355,7 +275,21 @@ if ($textsize > 120) {
       $html .= ', ' . $mod_details['moduleid'];
     }
   }
-  echo $html . '</td></tr><tr><td class="f"><nobr>' . $string['screens'] . '</nobr></td><td>' . $paper_screens . '</td>';
+  echo $html . '</td></tr>';
+  
+  // Display any metadata
+  $metadata_security = true;
+  $metadata = Paper_utils::get_metadata($property_id, $mysqli);
+  foreach ($metadata as $security_type=>$security_value) {
+    $html = '';
+    if (!$userObject->has_metadata($modIDs, $security_type, $security_value)) {
+      $metadata_security = false;
+      $html = ' class="warn"';
+    }    
+    echo "<tr><td class=\"f\">$security_type</td><td$html>$security_value</td><td></td><td></td></tr>\n";
+  }
+  
+  echo '<tr><td class="f"><nobr>' . $string['screens'] . '</nobr></td><td>' . $paper_screens . '</td>';
   echo '<td class="f">' . $string['navigation'] . '</td><td>';
   if ($navigation == 1) {
     echo $string['bidirectional'];
@@ -371,12 +305,13 @@ if ($textsize > 120) {
   }
   echo "<tr><td class=\"f\"><nobr>&nbsp;" . $string['currentuser'] . "</nobr></td><td>$person</td>";
   if ($test_type == 2 and $exam_duration) {
-    echo '<td class="f">' . $string['duration'] . '</td><td>' . display_duration( $exam_duration, $extra_time_mins, $special_needs_percentage ) . ' ' . $string['minutes'] . '</td>';
+    echo '<td class="f">' . $string['duration'] . '</td><td>' . display_duration($exam_duration, $extra_time_mins, $special_needs_percentage) . ' ' . $string['minutes'] . '</td>';
   } else {
     echo '<td></td><td></td>';
   }
+  echo '</tr>';
 
-  if( $display_remaining_time === true ){
+  if ($display_remaining_time === true) {
     ?>
     <tr>
        <td></td>
@@ -387,6 +322,7 @@ if ($textsize > 120) {
 
     <?php
   }
+  
   if ($sound_demo == '1') {
     echo "<tr><td colspan=\"4\" style=\"text-align:center\"><span style=\"color:#D27800;font-size:90%;font-weight:bold\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"./paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
     echo "<param name=\"wmode\" value=\"transparent\" />\n";
@@ -397,7 +333,7 @@ if ($textsize > 120) {
 
   echo '<tr><td style="text-align:center" colspan="4"><br />';
   if ($test_type == 2) echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
-  echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['help'] . "\" name=\"help\" onclick=\"launchHelp();\" onkeypress=\"launchHelp();\" />\n";
+  echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['help'] . "\" name=\"help\" onclick=\"launchHelp(31);\" onkeypress=\"launchHelp(31);\" />\n";
   if ($test_type == 2) {
     $switch_info = $mysqli->prepare("SELECT property_id FROM properties WHERE paper_type IN('1','2') AND start_date > DATE_SUB(NOW(), INTERVAL 4 HOUR) AND start_date < DATE_ADD(NOW(), INTERVAL 3 HOUR) AND end_date < DATE_ADD(NOW(), INTERVAL 6 HOUR) AND property_id != ?");
     $switch_info->bind_param('i', $property_id);
@@ -421,32 +357,30 @@ if ($textsize > 120) {
   $log_info->execute();
   $log_info->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
   $log_info->store_result();
-  if ($userObject->has_role(array('Staff','Admin'))) {
+  if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
     echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
     if (time() < $paper_start or time() > $paper_end) {
       echo '<div style="font-size:90%;color:#C00000"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailablestudents'] . '</div>';
     }
   } else {
-
     $hide_restart = true;
 
-    if ( ( $navigation == 1 and time() < $paper_end ) or ( $navigation == 0 and $paper_screens > $log_max_screen ) ) {
+    if (($navigation == 1 and time() < $paper_end) or ($navigation == 0 and $paper_screens > $log_max_screen)) {
       $hide_restart = false;
     }
 
     // Has the student run out of time or clicked the 'Finish' button?
+    $no_time_left = ($display_remaining_time === true and $remaining_time === 0);
 
-    $no_time_left = ( $display_remaining_time === true and $remaining_time === 0 );
-
-    if( $no_time_left ){
+    if ($no_time_left) {
       $hide_restart = true;
     }
 
-    if( $hide_restart ){
+    if ($hide_restart == true or $metadata_security == false) {
       $disabled = "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" disabled />\n";
       echo $disabled;
     } elseif ($test_type > 0 and $log_info->num_rows > 0) {
-      echo " <input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
+      echo "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
     } elseif ($test_type != 2 and (time() < $paper_start or time() > $paper_end)) {
       echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
       echo '<br /><div class="w"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailable'] . '</div>';
@@ -510,7 +444,9 @@ if ($textsize > 120) {
       }
       echo '</td></tr></table><br />';
     } else {
-      if ($test_type != 2) echo '<hr style="background-color:#95AEC8; color:#95AEC8; height:1px; width:80%; border:0" /><p style="color:#808080">' . $string['nottakenpaper'] . '</p><br />';
+      if ($test_type != 2) {
+        echo '<hr style="background-color:#95AEC8; color:#95AEC8; height:1px; width:80%; border:0" /><p style="color:#808080">' . $string['nottakenpaper'] . '</p><br />';
+      }
     }
   }
   $mysqli->close();

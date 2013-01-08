@@ -24,6 +24,7 @@
 
 require_once $cfg_web_root . '/classes/usernotices.class.php';
 require_once $cfg_web_root . '/classes/moduleutils.class.php';
+require_once $cfg_web_root . '/classes/paperutils.class.php';
 
 function check_labs($paper_type, $labs, $pword, $string, $db) {
   $low_bandwidth = 0;
@@ -38,13 +39,13 @@ function check_labs($paper_type, $labs, $pword, $string, $db) {
     $stmt->store_result();
     $stmt->fetch();
     if ($stmt->num_rows == 0) {
-      $notices->access_denied($mysqli, $string, $string['denied_location'], false);
+      $notices->access_denied($db, $string, $string['denied_location'], false);
     }
     $stmt->close();
   } else {
     // Exit if a summative exam is on no labs and no password.
     if ($paper_type == '2' and trim($pword) == '') {
-      $notices->access_denied($mysqli, $string, $string['specificpassword'], false);
+      $notices->access_denied($db, $string, $string['specificpassword'], false);
     }
   }
 
@@ -52,6 +53,8 @@ function check_labs($paper_type, $labs, $pword, $string, $db) {
 }
 
 function check_paper_password($password, $string, $show_form = false) {
+  global $mysqli;
+
   $notices = UserNotices::get_instance();
 
   if ($password != '') {
@@ -71,7 +74,7 @@ function check_paper_password($password, $string, $show_form = false) {
 }
 
 function check_datetime($start_date, $end_date) {
-  global $string;
+  global $string, $mysqli;
 
   $notices = UserNotices::get_instance();
 
@@ -88,7 +91,6 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
 
   $attempt = 1;
   $usern = $userObj->get_username();
-
 
   if (stripos($usern, 'user') !== 0) {
      if (count($moduleIDs) > 0) {
@@ -112,42 +114,30 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
           }
         }
         $tmp_string = sprintf($string['notregistered'], $userObj->get_title(), $userObj->get_surname(), $userObj->get_username(), $html, $calendar_year);
-        $notices->access_denied($mysqli, $string, $tmp_string, $output_header = false);
+        $notices->access_denied($db, $string, $tmp_string, $output_header = false);
       } else {
         $stmt->fetch();
       }
       $stmt->close();
     } else {
-      $notices->access_denied($mysqli, $string, $string['error_module'], false);
+      $notices->access_denied($db, $string, $string['error_module'], false);
     }
   }
 
   return $attempt;
 }
 
-// Needs fixing
-function check_metadata($property_id, $userObj, $moduleIDs, $db) {
-  global $string;
-
+function check_metadata($property_id, $userObj, $moduleIDs, $string, $db) {
   $notices = UserNotices::get_instance();
+  
+  $metadata = Paper_utils::get_metadata($property_id, $db);
 
-  $stmt = $db->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ?");
-  $stmt->bind_param('i', $property_id);
-  $stmt->execute();
-  $stmt->bind_result($security_type, $security_value);
-  $stmt->store_result();
-  if ($stmt->fetch()) {
-    $check_security = $db->prepare("SELECT users_metadata.userID FROM users_metadata, modules WHERE users_metadata.moduleid = modules.id AND modules.id IN (" . implode(',', $moduleIDs) . ") AND userID = ? AND type = ? AND value=?");
-    $check_security->bind_param('iss', $userObj->get_user_ID(), $security_type, $security_value);
-    $check_security->execute();
-    $check_security->store_result();
-    if ($check_security->num_rows == 0) {
+  foreach ($metadata as $security_type=>$security_value) {
+    if (!$userObj->has_metadata($moduleIDs, $security_type, $security_value)) {
       $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-      $notices->access_denied($mysqli, $string, $tmp_string, $output_header = false);
+      $notices->access_denied($db, $string, $tmp_string, $output_header = false);
     }
-    $check_security->close();
   }
-  $stmt->close();
 }
 
 function render_password_form($string) {

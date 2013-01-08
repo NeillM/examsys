@@ -30,7 +30,7 @@ check_var('paperID', 'GET', true, false);
 <?php
 // Get the current metadata settings for the paper
 $current_settings = array();
-$stmt = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID=?");
+$stmt = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ?");
 $stmt->bind_param('i', $_GET['paperID']);
 $stmt->execute();
 $stmt->store_result();
@@ -50,7 +50,7 @@ if ($_GET['session'] != '') {
 }
 
 // Get the dropdown list values
-$stmt = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE modules.id=users_metadata.idMod AND modules.moduleid IN ('" . str_replace(",", "','", $_GET['modules']) . "') $sql_session GROUP BY value ORDER BY type, value");
+$stmt = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE modules.id = users_metadata.idMod AND modules.id IN (" . $_GET['modules'] . ") $sql_session GROUP BY value ORDER BY type, value");
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($type, $value);

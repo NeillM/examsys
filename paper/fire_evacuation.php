@@ -72,7 +72,7 @@ while ($stmt->fetch()) {
     $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 
     // Check for any metadata security restrictions
-    check_metadata($property_id, $userObject, $modIDs, $mysqli);
+    check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
 
     if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
       $paper_type = '_late';

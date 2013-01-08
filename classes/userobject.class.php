@@ -248,6 +248,21 @@ class UserObject {
 
     return $this->staffModules;
   }
+  
+  function has_metadata($modIDs, $security_type, $security_value) {
+    $has_data = true;
+  
+    $result = $this->db->prepare("SELECT users_metadata.userID FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (" . implode(',', $modIDs) . ") AND userID = ? AND type = ? AND value = ?");
+    $result->bind_param('iss', $this->get_user_ID(), $security_type, $security_value);
+    $result->execute();
+    $result->store_result();
+    if ($result->num_rows == 0) {
+      $has_data = false;
+    }
+    $result->close();
+  
+    return $has_data;
+  }
 
   /**
    * @param string $moduleID an array of modules keyed on idMod

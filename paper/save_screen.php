@@ -67,7 +67,7 @@ if ($userObject->has_role('Student')) {
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 
   // Check for any metadata security restrictions
-  check_metadata($property_id, $userObject, $modIDs, $mysqli);
+  check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
 
 
   $summative_exam_session_started = false;
