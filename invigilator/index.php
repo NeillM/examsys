@@ -179,7 +179,7 @@ function process_student_list(LogLabEndTime $log_lab_end_time, $student_object, 
   }
 
   $exam_duration_interval = new DateInterval('PT' . $exam_duration_mins . 'M');
-  $lab_session_start_datetime = $lab_session_end_datetime;
+  $lab_session_start_datetime = clone $lab_session_end_datetime;
   $lab_session_start_datetime->sub($exam_duration_interval);
 
   // Determine when the student's exam session will end
@@ -190,7 +190,7 @@ function process_student_list(LogLabEndTime $log_lab_end_time, $student_object, 
   $student_end_datetime = $log_extra_time->get_end_date_datetime();
 
   if ($student_end_datetime === FALSE) {
-    $student_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
+    $student_end_datetime = $lab_session_end_datetime;;  //$log_lab_end_time->get_session_end_date_datetime();
   }
 
   // Calculate whether student's extended 'end time' is before the current session's start time
