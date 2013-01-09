@@ -33,7 +33,7 @@ require_once './classes/moduleutils.class.php';
 require_once './classes/log_start_time.class.php';
 require_once './classes/logmetadata.class.php';
 require_once './classes/timer.class.php';
-require_once './classes/lab.class.php';
+require_once './classes/lab_factory.class.php';
 require_once './classes/labobject.class.php';
 require_once './classes/propertyobject.class.php';
 require_once './classes/property.class.php';
@@ -153,14 +153,14 @@ if ($exam_duration !== null) {
 
   if ((int)$test_type == 2) {
     $current_ip_address = NetworkUtils::get_ipaddress();
-    $lab                = new Lab( $mysqli );
-    $lab_object         = $lab->get_lab_based_on_ip($current_ip_address);
+    $lab_factory        = new LabFactory( $mysqli );
+    $lab_object         = $lab_factory->get_lab_based_on_ip($current_ip_address);
     $property_object    = new PropertyObject();
     $property_object->set_property_id($property_id);
     $property           = new Property($property_object, $mysqli);
     $property_object    = $property->get_property();
-    $usobj['user_ID']=$userObject->get_user_ID();
-
+    $usobj['user_ID']   = $userObject->get_user_ID();
+    $usobj['special_needs_percentage'] = $userObject->get_special_needs_percentage();
     $student_object     = $usobj;
     $log_lab_end_time   = new LogLabEndTime($lab_object, $property_object, $mysqli);
     $log_extra_time     = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
@@ -278,7 +278,7 @@ if ($textsize > 120) {
     }
   }
   echo $html . '</td></tr>';
-  
+
   // Display any metadata
   $metadata_security = true;
   $metadata = Paper_utils::get_metadata($property_id, $mysqli);
@@ -287,10 +287,10 @@ if ($textsize > 120) {
     if (!$userObject->has_metadata($modIDs, $security_type, $security_value)) {
       $metadata_security = false;
       $html = ' class="warn"';
-    }    
+    }
     echo "<tr><td class=\"f\">$security_type</td><td$html>$security_value</td><td></td><td></td></tr>\n";
   }
-  
+
   echo '<tr><td class="f"><nobr>' . $string['screens'] . '</nobr></td><td>' . $paper_screens . '</td>';
   echo '<td class="f">' . $string['navigation'] . '</td><td>';
   if ($navigation == 1) {
@@ -324,7 +324,7 @@ if ($textsize > 120) {
 
     <?php
   }
-  
+
   if ($sound_demo == '1') {
     echo "<tr><td colspan=\"4\" style=\"text-align:center\"><span style=\"color:#D27800;font-size:90%;font-weight:bold\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"./paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
     echo "<param name=\"wmode\" value=\"transparent\" />\n";

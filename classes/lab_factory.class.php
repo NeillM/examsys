@@ -24,7 +24,7 @@
  */
 
 
-class Lab {
+class LabFactory {
 
   /*
    * @var mysqli $db
