@@ -124,14 +124,7 @@ function get_students($modules, PropertyObject $property_object, LogLabEndTime $
         $student_object['surname'] = $surname;
         $student_object['first_names'] = $first_names;
         $student_object['title'] = $title;
-        process_student_list($log_lab_end_time
-          , $student_object
-          , $property_object
-          , $configObject
-          , $extra_time_percentage
-          , $notes_array
-          , $string
-          , $mysqli);
+        process_student_list($log_lab_end_time          , $student_object          , $property_object          , $configObject          , $extra_time_percentage          , $notes_array          , $string          , $mysqli);
       }
 
       $results->close();
@@ -190,7 +183,7 @@ function process_student_list(LogLabEndTime $log_lab_end_time, $student_object, 
   $student_end_datetime = $log_extra_time->get_end_date_datetime();
 
   if ($student_end_datetime === FALSE) {
-    $student_end_datetime = $lab_session_end_datetime;;  //$log_lab_end_time->get_session_end_date_datetime();
+    $student_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
   }
 
   // Calculate whether student's extended 'end time' is before the current session's start time
@@ -228,7 +221,9 @@ function process_student_list(LogLabEndTime $log_lab_end_time, $student_object, 
     $student_end_datetime = $paper_end_datetime;
   }
 
-  $formatted_end_time = $student_end_datetime->format('d/m/Y H:i:s');
+  $ft=clone $student_end_datetime;
+  $ft->setTimezone(new DateTimeZone($property_object->get_time_zone()));
+  $formatted_end_time = $ft->format('d/m/Y H:i:s');
 //$formatted_end_time = var_export($student_end_datetime, TRUE) . '::' . var_export($paper_end_datetime, TRUE) . '##' . $student_end_datetime->format('d/m/Y H:i:s');
   // Get student description
 
@@ -669,19 +664,24 @@ if ($properties_list->count() > 0) {
       if ($paper_id == (int)$property_id) {
         $invigilator_id = $userObject->get_user_ID();
         $time='PT' . $_POST['hour'] . 'H' . $_POST['minute'] . 'M';
-        $time='PT20H9M';
         $end_datetime = $log_lab_end_time->save($invigilator_id,$time);
       }
 
     }
 
+    $disptimezone=new datetimezone($property_object->get_time_zone());
     $start_datetime = new DateTime($start_date);
+    $start_datetime->setTimezone($disptimezone);
+
     $start_date = $start_datetime->format('d/m/Y H:i:s');
+
+    $end_datetime->setTimezone($disptimezone);
 
     $end_date = $end_datetime->format('d/m/Y H:i:s');
     $end_time = $end_datetime->format('H:i:s');
 
     $paper_end_datetime = $log_lab_end_time->get_paper_end_datetime();
+    $paper_end_datetime->setTimezone($disptimezone);
     $paper_end_date = $paper_end_datetime->format('d/m/Y H:i:s');
 
 

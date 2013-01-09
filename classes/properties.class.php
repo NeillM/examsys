@@ -15,12 +15,13 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Repository class for the properties table
-* @author Ben Parish
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ * Repository class for the properties table
+ *
+ * @author Ben Parish
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 class Properties {
 
@@ -40,8 +41,8 @@ class Properties {
   /*
    * @param mysqli $db
    */
-  public function __construct( mysqli $db ) {
-    $this->db              = $db;
+  public function __construct(mysqli $db) {
+    $this->db = $db;
     $this->data_collection = new SplObjectStorage();
   }
 
@@ -51,60 +52,35 @@ class Properties {
    */
   public function get_invigilator_properties($lab_object) {
 
-    $sql = 'SELECT
-                properties.property_id
-              , paper_title
-              , start_date
-              , end_date
-              , exam_duration
-              , calendar_year
-              , password
-            FROM
-                properties
-            WHERE
-                paper_type = "2"
-            AND
-                labs
-            LIKE
-                ?
-            AND
-                start_date < DATE_ADD( NOW(), interval 30 minute )
-            AND
-                end_date > NOW()
-            AND
-                deleted IS NULL';
+    $sql = 'SELECT properties.property_id, paper_title, start_date, end_date, exam_duration, calendar_year, password, timezone FROM properties WHERE paper_type = "2" AND labs LIKE ? AND start_date < DATE_ADD( NOW(), interval 30 minute ) AND end_date > NOW() AND deleted IS NULL';
 
-    $paper_results = $this->db->prepare( $sql );
+    $paper_results = $this->db->prepare($sql);
 
-    $paper_results->bind_param('s', $lab_object->get_id() );
+    $paper_results->bind_param('s', $lab_object->get_id()); //todo does this get function return a reference?
     $paper_results->execute();
     $paper_results->store_result();
-    $paper_results->bind_result( $property_id
-                               , $paper_title
-                               , $start_date
-                               , $end_date
-                               , $exam_duration
-                               , $calendar_year
-                               , $password );
+    $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone);
 
-    if ( $paper_results->num_rows < 0 ) {
+    if ($paper_results->num_rows < 0) {
       $paper_results->close();
-      return false;
+
+      return FALSE;
     }
 
-    while ( $paper_results->fetch() ) {
+    while ($paper_results->fetch()) {
 
       $property_object = new PropertyObject();
 
-      $property_object->set_property_id( $property_id );
+      $property_object->set_property_id($property_id);
       $property_object->set_paper_title($paper_title);
-      $property_object->set_start_date( $start_date );
-      $property_object->set_end_date( $end_date );
+      $property_object->set_start_date($start_date);
+      $property_object->set_end_date($end_date);
       $property_object->set_exam_duration($exam_duration);
       $property_object->set_calendar_year($calendar_year);
       $property_object->set_calendar_year($calendar_year);
+      $property_object->set_time_zone($timezone);
 
-      $this->data_collection->attach( $property_object );
+      $this->data_collection->attach($property_object);
     }
 
     $paper_results->close();

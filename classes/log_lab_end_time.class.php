@@ -142,15 +142,23 @@ if(is_null($time)) {
 
     $end_datetime = $this->calculate_end_datetime($start_time_datetime);
 } else {
-  $end_datetime = new DateTime();
+  $dispzone=new DateTimeZone($this->property_object->get_time_zone());
+  $end_datetime = new DateTime("now",$dispzone);
+
   $end_datetime->setTime(0,0,0);
   $dateinterval = new DateInterval($time);
+
   $end_datetime->add($dateinterval);
+
+
+  $curtz1=new DateTime();
+  $curtz=$curtz1->getTimezone();
+  $end_datetime->setTimezone($curtz);
 }
     $end_time = $end_datetime->getTimestamp();
 $tz=$this->property_object->get_time_zone();
 
-    print $tz . '##' . $time . '::'. $end_time . '@@' . var_export($end_datetime,TRUE);
+ //   print $tz . '##' . $time . '::'. $end_time . '@@' . var_export($end_datetime,TRUE);
 
     $lab_id = $this->get_lab_id();
     $paper_id = $this->get_paper_id();
