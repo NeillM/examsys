@@ -1364,5 +1364,235 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
     $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '30.1%');
   }
+
+  public function testCompletePaperWithAbstentions() {
+    do_student_login($this, 'teststudent14', 'mon~61Qt');
+
+    $this->open("/user_index.php?id=41357635970102");
+    $this->click("id=start");
+    $this->waitForPopUp("paper", "30000");
+    $this->selectWindow("name=paper");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("name=q1_1");
+    $this->click("xpath=(//input[@name='q1_2'])[2]");
+    $this->click("xpath=(//input[@name='q1_3'])[3]");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("xpath=(//input[@name='q2_2'])[3]");
+    $this->click("name=q2_1");
+    $this->click("xpath=(//input[@name='q2_4'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[2]");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_1'])[2]");
+    $this->click("xpath=(//input[@name='q1_2'])[3]");
+    $this->click("name=q1_3");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("name=q1_5");
+    $this->click("name=q2_1");
+    $this->click("xpath=(//input[@name='q2_2'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[3]");
+    $this->click("name=q2_4");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_2'])[2]");
+    $this->click("name=q1_1");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("xpath=(//input[@name='q1_3'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[3]");
+    $this->click("xpath=(//input[@name='q2_5'])[3]");
+    $this->click("xpath=(//input[@name='q2_4'])[2]");
+    $this->click("name=q2_2");
+    $this->click("name=q2_1");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_1'])[2]");
+    $this->click("xpath=(//input[@name='q1_2'])[2]");
+    $this->click("xpath=(//input[@name='q1_3'])[3]");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("name=q2_2");
+    $this->click("name=q2_1");
+    $this->click("xpath=(//input[@name='q2_4'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[2]");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_1'])[3]");
+    $this->click("xpath=(//input[@name='q1_2'])[2]");
+    $this->click("name=q1_3");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("xpath=(//input[@name='q1_5'])[3]");
+    $this->click("xpath=(//input[@name='q2_1'])[3]");
+    $this->click("xpath=(//input[@name='q2_2'])[2]");
+    $this->click("xpath=(//input[@name='q2_3'])[2]");
+    $this->click("xpath=(//input[@name='q2_4'])[3]");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_2'])[3]");
+    $this->click("name=q1_1");
+    $this->click("name=q1_4");
+    $this->click("xpath=(//input[@name='q1_3'])[2]");
+    $this->click("name=q2_1");
+    $this->click("xpath=(//input[@name='q2_2'])[2]");
+    $this->click("xpath=(//input[@name='q2_3'])[2]");
+    $this->click("name=q2_4");
+    $this->click("xpath=(//input[@name='q2_5'])[3]");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_1'])[3]");
+    $this->click("xpath=(//input[@name='q1_2'])[3]");
+    $this->click("xpath=(//input[@name='q1_3'])[3]");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("xpath=(//input[@name='q2_2'])[3]");
+    $this->click("xpath=(//input[@name='q2_1'])[3]");
+    $this->click("xpath=(//input[@name='q2_4'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[3]");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_3'])[3]");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("xpath=(//input[@name='q1_2'])[3]");
+    $this->click("xpath=(//input[@name='q1_5'])[3]");
+    $this->click("xpath=(//input[@name='q1_1'])[3]");
+    $this->click("xpath=(//input[@name='q2_1'])[3]");
+    $this->click("xpath=(//input[@name='q2_2'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[3]");
+    $this->click("xpath=(//input[@name='q2_4'])[3]");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_2'])[3]");
+    $this->click("xpath=(//input[@name='q1_1'])[3]");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("xpath=(//input[@name='q1_3'])[3]");
+    $this->click("xpath=(//input[@name='q2_2'])[3]");
+    $this->click("xpath=(//input[@name='q2_5'])[3]");
+    $this->click("xpath=(//input[@name='q2_1'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[3]");
+    $this->click("xpath=(//input[@name='q2_4'])[3]");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_1'])[3]");
+    $this->click("xpath=(//input[@name='q1_2'])[3]");
+    $this->click("xpath=(//input[@name='q1_3'])[3]");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("xpath=(//input[@name='q2_2'])[3]");
+    $this->click("xpath=(//input[@name='q2_1'])[3]");
+    $this->click("xpath=(//input[@name='q2_4'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[3]");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_5'])[3]");
+    $this->click("xpath=(//input[@name='q1_2'])[3]");
+    $this->click("xpath=(//input[@name='q1_3'])[3]");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("xpath=(//input[@name='q1_1'])[3]");
+    $this->click("xpath=(//input[@name='q2_1'])[3]");
+    $this->click("xpath=(//input[@name='q2_2'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[3]");
+    $this->click("xpath=(//input[@name='q2_4'])[3]");
+    $this->click("id=next");
+
+    $this->waitForPageToLoad("30000");
+    $this->click("xpath=(//input[@name='q1_2'])[3]");
+    $this->click("xpath=(//input[@name='q1_1'])[3]");
+    $this->click("xpath=(//input[@name='q1_4'])[3]");
+    $this->click("xpath=(//input[@name='q1_3'])[3]");
+    $this->click("xpath=(//input[@name='q2_4'])[3]");
+    $this->click("xpath=(//input[@name='q2_5'])[3]");
+    $this->click("xpath=(//input[@name='q2_1'])[3]");
+    $this->click("xpath=(//input[@name='q2_2'])[3]");
+    $this->click("xpath=(//input[@name='q2_3'])[3]");
+    $this->click("id=finish");
+    $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
+    $this->waitForPageToLoad("30000");
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=41357635970102');
+
+    // Individual Question Marks
+    $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[2]/span', '0 out of 4');
+    $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '0 out of 8');
+    $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '0 out of 5');
+    $this->assertElementContainsText('//table[3]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[4]/tbody/tr/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[4]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[5]/tbody/tr[2]/td[2]/p/span', '0 out of 4');
+    $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p/span', '0 out of 8');
+    $this->assertElementContainsText('//table[6]/tbody/tr/td[2]/p/span', '0 out of 5');
+    $this->assertElementContainsText('//table[6]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[8]/tbody/tr[2]/td[2]/p[2]/span', '0 out of 4');
+    $this->assertElementContainsText('//table[8]/tbody/tr[4]/td[2]/p/span', '0 out of 8');
+    $this->assertElementContainsText('//table[9]/tbody/tr/td[2]/p/span', '0 out of 5');
+    $this->assertElementContainsText('//table[9]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[10]/tbody/tr/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[10]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[11]/tbody/tr[2]/td[2]/p/span', '0 out of 4');
+    $this->assertElementContainsText('//table[11]/tbody/tr[4]/td[2]/p/span', '0 out of 8');
+    $this->assertElementContainsText('//table[12]/tbody/tr/td[2]/p/span', '0 out of 5');
+    $this->assertElementContainsText('//table[12]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[13]/tbody/tr/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[13]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[14]/tbody/tr[2]/td[2]/p[2]/span', '2 out of 4');
+    $this->assertElementContainsText('//table[14]/tbody/tr[4]/td[2]/p/span', '4 out of 8');
+    $this->assertElementContainsText('//table[15]/tbody/tr/td[2]/p/span', '0 out of 5');
+    $this->assertElementContainsText('//table[15]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[16]/tbody/tr/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[16]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[17]/tbody/tr[2]/td[2]/p/span', '0.5 out of 4');
+    $this->assertElementContainsText('//table[17]/tbody/tr[4]/td[2]/p/span', '3 out of 8');
+    $this->assertElementContainsText('//table[18]/tbody/tr/td[2]/p/span', '0 out of 5');
+    $this->assertElementContainsText('//table[18]/tbody/tr[4]/td[2]/p/span', '-0.5 out of 1');
+    $this->assertElementContainsText('//table[19]/tbody/tr/td[2]/p/span', '-1 out of 2');
+    $this->assertElementContainsText('//table[19]/tbody/tr[3]/td[2]/p/span', '-1 out of 1');
+    $this->assertElementContainsText('//table[20]/tbody/tr[2]/td[2]/p[2]/span', '0 out of 4');
+    $this->assertElementContainsText('//table[20]/tbody/tr[4]/td[2]/p/span', '0 out of 8');
+    $this->assertElementContainsText('//table[21]/tbody/tr/td[2]/p/span', '0 out of 5');
+    $this->assertElementContainsText('//table[21]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[22]/tbody/tr/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[22]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[23]/tbody/tr[2]/td[2]/p/span', '0 out of 4');
+    $this->assertElementContainsText('//table[23]/tbody/tr[4]/td[2]/p/span', '0 out of 8');
+    $this->assertElementContainsText('//table[24]/tbody/tr/td[2]/p/span', '0 out of 5');
+    $this->assertElementContainsText('//table[24]/tbody/tr[4]/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[25]/tbody/tr/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[25]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
+
+    // Overall Marks
+    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '7 out of 168');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '4.2%');
+  }
 }
 ?>
