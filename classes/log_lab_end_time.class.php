@@ -26,9 +26,8 @@
 class LogLabEndTime {
 
   /*
-   * @var LabObject $lab_object
+   * @var Lab $lab_object
   */
-
   private $lab_object;
 
   private $msg;
@@ -46,11 +45,11 @@ class LogLabEndTime {
   private $db;
 
   /*
-   * @param LabObject $lab_object
+   * @param Lab $lab_object
    * @param PropertyObject $property_object
    * @param mysqli $db
    */
-  public function __construct(LabObject $lab_object    , PropertyObject $property_object    , mysqli $db) {
+  public function __construct($lab_object, $property_object, $db) {
 
     $this->lab_object = $lab_object;
     $this->property_object = $property_object;

@@ -10,7 +10,7 @@
  */
 
 
-class LabObject {
+class Lab {
 
   private $id;
   private $name;

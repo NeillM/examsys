@@ -59,7 +59,7 @@ class LabFactory {
 
     $lab_results->fetch();
 
-    $lab_object = new LabObject();
+    $lab_object = new Lab();
 
     $lab_object->set_id($lab_id);
     $lab_object->set_name($room_name);
@@ -67,10 +67,7 @@ class LabFactory {
     $lab_results->close();
 
     return $lab_object;
-
   }
-
-
 }
 
 

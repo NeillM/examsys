@@ -46,10 +46,10 @@ class Properties {
   }
 
   /*
-   * @param  LabObject $lab_object
+   * @param  Lab $lab_object
    * @return SplObjectStorage
    */
-  public function get_invigilator_properties( LabObject $lab_object ) {
+  public function get_invigilator_properties($lab_object) {
 
     $sql = 'SELECT
                 properties.property_id
