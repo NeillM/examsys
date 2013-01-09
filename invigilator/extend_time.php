@@ -15,127 +15,133 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2012 The University of Nottingham
+ * @package
+ */
 
-  require '../include/invigilator_auth.inc';
-  require '../classes/propertyobject.class.php';
-  require '../classes/property.class.php';
-  require '../classes/lab.class.php';
-  require '../classes/labobject.class.php';
-  require '../classes/log_extra_time.class.php';
-  require '../classes/log_lab_end_time.class.php';
+require '../include/invigilator_auth.inc';
+require '../classes/propertyobject.class.php';
+require '../classes/property.class.php';
+require '../classes/lab.class.php';
+require '../classes/labobject.class.php';
+require '../classes/log_extra_time.class.php';
+require '../classes/log_lab_end_time.class.php';
 
-  if( isset( $_GET[ 'userID' ] ) ){
-    $student_id = $_GET[ 'userID' ];
-  }
+if (isset($_GET['userID'])) {
+  $student_id = $_GET['userID'];
+}
 
-  if( isset( $_POST[ 'userID' ] ) ){
-    $student_id = $_POST[ 'userID' ];
-  }
+if (isset($_POST['userID'])) {
+  $student_id = $_POST['userID'];
+}
 
-  if( isset( $_GET[ 'paperID' ] ) ){
-    $paper_id = $_GET[ 'paperID' ];
-  }
+if (isset($_GET['paperID'])) {
+  $paper_id = $_GET['paperID'];
+}
 
-  if( isset( $_POST[ 'paperID' ] ) ){
-    $paper_id = $_POST[ 'paperID' ];
-  }
+if (isset($_POST['paperID'])) {
+  $paper_id = $_POST['paperID'];
+}
 
 
-  $student_object = new UserObject( $configObject, $mysqli );
+//$student_object = new UserObject( $configObject, $mysqli );
 
-  $student_object->load( $student_id );
+$student_object = array();
 
-  $title    = $student_object->get_title();
-  $initials = $student_object->get_initials();
-  $surname  = $student_object->get_surname();
+//$student_object->load($student_id);
+$student_object['user_ID']=$student_id;
 
-  $current_ip_address = NetworkUtils::get_ipaddress();
+$stmt = $mysqli->prepare('SELECT title, initials, surname FROM users WHERE user_deleted IS NULL AND id = ?');
+$stmt->bind_param('i', $userID);
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result($student_object['title'], $student_object['initials'], $student_object['surname']);
+$stmt->fetch();
 
-  $lab             = new Lab( $mysqli );
-  $lab_object      = $lab->get_lab_based_on_ip( $current_ip_address );
+$title = $student_object['title'];
+$initials = $student_object['initials'];
+$surname = $student_object['surname'];
 
-  $property_object = new PropertyObject();
+$current_ip_address = NetworkUtils::get_ipaddress();
 
-  $property_object->set_property_id( $paper_id );
+$lab = new Lab($mysqli);
+$lab_object = $lab->get_lab_based_on_ip($current_ip_address);
 
-  $property           = new Property( $property_object
-                                    , $mysqli );
+$property_object = new PropertyObject();
 
-  $property_object    = $property->get_property();
+$property_object->set_property_id($paper_id);
 
-  $log_lab_end_time   = new LogLabEndTime( $lab_object
-                                         , $property_object
-                                         , $mysqli );
+$property = new Property($property_object, $mysqli);
 
-  $log_extra_time     = new LogExtraTime( $log_lab_end_time
-                                        , $student_object
-                                        , $mysqli );
+$property_object = $property->get_property();
 
-  $onload             = '';
+$log_lab_end_time = new LogLabEndTime($lab_object, $property_object, $mysqli);
 
-  if ( isset( $_POST[ 'submit' ] ) and (int) $_POST[ 'extra_time' ] > 0 ) {
+$log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
 
-    $special_needs_percentage     = $_POST[ 'extra_time' ];
+$onload = '';
 
-    $invigilator_id = $userObject->get_user_ID();
+if (isset($_POST['submit']) and (int)$_POST['extra_time'] > 0) {
 
-    $log_extra_time->save( $invigilator_id
-                         , $special_needs_percentage );
+  $special_needs_percentage = $_POST['extra_time'];
 
-    $onload         = 'closeWindow();';
-  }
+  $invigilator_id = $userObject->get_user_ID();
 
-  $special_needs_percentage = $log_extra_time->get_extra_time_secs();
-  $special_needs_percentage = $special_needs_percentage / 60;
+  $log_extra_time->save($invigilator_id, $special_needs_percentage);
 
-  $time_range = range( 0, 30, 5 );
+  $onload = 'closeWindow();';
+}
 
-  ?>
-  <html>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <head>
-  <title><?php echo $string['extendtime'] ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <script type="text/javascript">
-    function closeWindow() {
-      window.opener.location = window.opener.location.href;
-      window.close();
-    }
-  </script>
-  </head>
-  <body onload="<?php echo $onload; ?>">
-  <form id="extend_time_form" method="post" action="<?php echo $_SERVER[ 'PHP_SELF' ] ?>">
-      <p>&nbsp;<?php echo $title . ' ' . $initials . ' ' . $surname; ?></p>
-      <div style="text-align:center">
-        <?php echo $string['extendtimeby'] ?>
-        <select id="extra_time" name="extra_time">
-        <?php
-        foreach( $time_range as $time_increment ){
-          $selected = '';
+$special_needs_percentage = $log_extra_time->get_extra_time_secs();
+$special_needs_percentage = $special_needs_percentage / 60;
 
-          if( $time_increment === $special_needs_percentage ){
-            $selected = 'selected';
-          }
-        ?>
-          <option value="<?php echo $time_increment; ?>" <?php echo $selected ?>><?php echo $time_increment; ?></option>
-        <?php
+$time_range = range(0, 30, 5);
+
+?>
+<html>
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+<head>
+    <title><?php echo $string['extendtime'] ?></title>
+    <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+    <script type="text/javascript">
+        function closeWindow() {
+            window.opener.location = window.opener.location.href;
+            window.close();
         }
-        ?>
+    </script>
+</head>
+<body onload="<?php echo $onload; ?>">
+<form id="extend_time_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <p>&nbsp;<?php echo $title . ' ' . $initials . ' ' . $surname; ?></p>
+
+    <div style="text-align:center">
+      <?php echo $string['extendtimeby'] ?>
+        <select id="extra_time" name="extra_time">
+          <?php
+          foreach ($time_range as $time_increment) {
+            $selected = '';
+
+            if ($time_increment === $special_needs_percentage) {
+              $selected = 'selected';
+            }
+            ?>
+              <option value="<?php echo $time_increment; ?>" <?php echo $selected ?>><?php echo $time_increment; ?></option>
+            <?php
+          }
+          ?>
         </select>
-        <?php echo $string['minutes'] ?>
-      </div>
-      <div style="text-align:center; margin-top:20px;">
-        <input type="submit" style="width:100px" name="submit" value="<?php echo $string['submit']; ?>" />&nbsp;&nbsp;
-        <input style="width:100px" type="button" name="close" value="<?php echo $string['close']; ?>" onclick="window.close();" />
-      </div>
-      <input type="hidden" name="userID" value="<?php echo $student_id; ?>" />
-      <input type="hidden" name="paperID" value="<?php echo $paper_id; ?>" />
-  </form>
+      <?php echo $string['minutes'] ?>
+    </div>
+    <div style="text-align:center; margin-top:20px;">
+        <input type="submit" style="width:100px" name="submit" value="<?php echo $string['submit']; ?>"/>&nbsp;&nbsp;
+        <input style="width:100px" type="button" name="close" value="<?php echo $string['close']; ?>"
+               onclick="window.close();"/>
+    </div>
+    <input type="hidden" name="userID" value="<?php echo $student_id; ?>"/>
+    <input type="hidden" name="paperID" value="<?php echo $paper_id; ?>"/>
+</form>
 </body>
 </html>
