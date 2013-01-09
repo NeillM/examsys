@@ -47,126 +47,129 @@ function drawTabs($tab_array, $current_tab) {
 	return $html;
 }
 
-// Check if our student is in a lab
-$lab_info = $mysqli->prepare("SELECT lab FROM ip_addresses WHERE address=? LIMIT 1");
-$lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
-$lab_info->execute();
-$lab_info->bind_result($lab);
-$lab_info->store_result();
-$lab_info->fetch();
-if ($lab_info->num_rows == 0 or empty($lab)) {
-	$lab = -1;
-}
-$lab_info->close();
-
-// Get modules
-$modules = array();
-$i = 0;
-if ($stmt = $mysqli->prepare("SELECT idMod, m.moduleid, m.fullname, sm.calendar_year FROM modules m INNER JOIN modules_student sm ON m.id = sm.idMod WHERE sm.userID = ? AND m.active = 1 ORDER BY sm.calendar_year ASC, m.moduleid ASC")) {
-  $stmt->bind_param('i', $userObject->get_user_ID());
-  $stmt->execute();
-  $stmt->bind_result($idMod, $moduleID, $module_name, $module_year);
-  while ($stmt->fetch()) {
-		$modules[$i]['idMod'] = $idMod;
-		$modules[$i]['id'] = $moduleID;
-		$modules[$i]['name'] = $module_name;
-		$modules[$i]['year'] = $module_year;
-		$i++;
-  }
-}
-$stmt->close();
-
 $sessions_with_papers = array();
 
-// Get papers for this module - types 0,1,3, valid for this date
-$papers = 0;
-$papers_query = <<< QUERY
-SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM (properties p, properties_modules pm)
-INNER JOIN papers pa ON p.property_id = pa.paper
-WHERE p.paper_type IN ('0','1','3','6')
-AND p.property_id=pm.property_id
-AND idMod = ?
-AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
-AND p.start_date < NOW() AND p.end_date > NOW()
-AND p.deleted IS NULL
-GROUP BY p.property_id
-ORDER BY p.paper_title
-QUERY;
-
-for ($i = 0; $i < count($modules); $i++) {
-
-  if ($stmt = $mysqli->prepare($papers_query)) {
-
-	  $stmt->bind_param('is', $modules[$i]['idMod'], $modules[$i]['year']);
-	  $stmt->execute();
-	  $stmt->bind_result($paper_title, $paper_type, $labs, $start_date, $end_date, $screens, $calendar_year, $crypt_name, $password);
-	  $stmt->store_result();
-	  while ($stmt->fetch()) {
-	  	// Check if the user is able to access the paper from their current location
-	  	$lab_arr = (empty($labs)) ? array() : explode(',', $labs);
-	  	if (empty($lab_arr) or ($lab != -1 and in_array($lab, $lab_arr))) {
-	  		$screens = (empty($screens)) ? 0 : $screens;
-
-	  		// Don't show if 0 screens
-	  		if ($screens > 0) {
-					$modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name, 'password' => $password);
-					$papers++;
-
-					if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
-						$sessions_with_papers[] = $modules[$i]['year'];
-					}
-	  		}
-	  	}
-	  }
-    $stmt->close();
+if ($userObject->has_role('Student')) {
+  // Check if our student is in a lab
+  $lab_info = $mysqli->prepare("SELECT lab FROM ip_addresses WHERE address=? LIMIT 1");
+  $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
+  $lab_info->execute();
+  $lab_info->bind_result($lab);
+  $lab_info->store_result();
+  $lab_info->fetch();
+  if ($lab_info->num_rows == 0 or empty($lab)) {
+    $lab = -1;
   }
-}
+  $lab_info->close();
 
-// Get which papers a student has taken (for feedback purposes).
-$papers_taken = array();
-$log_query = "SELECT DISTINCT q_paper FROM log2 WHERE userID=?";
-$stmt = $mysqli->prepare($log_query);
-$stmt->bind_param('i', $userObject->get_user_ID());
-$stmt->execute();
-$stmt->bind_result($q_paper);
-while ($stmt->fetch()) {
-  $papers_taken[] = $q_paper;
-}
-$stmt->close();
+  // Get modules
+  $modules = array();
+  $i = 0;
+  if ($stmt = $mysqli->prepare("SELECT idMod, m.moduleid, m.fullname, sm.calendar_year FROM modules m INNER JOIN modules_student sm ON m.id = sm.idMod WHERE sm.userID = ? AND m.active = 1 ORDER BY sm.calendar_year ASC, m.moduleid ASC")) {
+    $stmt->bind_param('i', $userObject->get_user_ID());
+    $stmt->execute();
+    $stmt->bind_result($idMod, $moduleID, $module_name, $module_year);
+    while ($stmt->fetch()) {
+      $modules[$i]['idMod'] = $idMod;
+      $modules[$i]['id'] = $moduleID;
+      $modules[$i]['name'] = $module_name;
+      $modules[$i]['year'] = $module_year;
+      $i++;
+    }
+  }
+  $stmt->close();
 
-// Get any objectives-based feedback released.
-$feedback_query = <<< QUERY
-SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, p.start_date FROM (feedback_release f, properties p, properties_modules pm)
-WHERE f.paper_id = p.property_id
-AND p.property_id = pm.property_id
-AND idMod = ?
-AND NOW() > f.date
-AND p.paper_type IN ('0','1','2')
-AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
-AND p.end_date < NOW()
-ORDER BY p.paper_title
+  // Get papers for this module - types 0,1,3, valid for this date
+  $papers = 0;
+  $papers_query = <<< QUERY
+  SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM (properties p, properties_modules pm)
+  INNER JOIN papers pa ON p.property_id = pa.paper
+  WHERE p.paper_type IN ('0','1','3','6')
+  AND p.property_id=pm.property_id
+  AND idMod = ?
+  AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
+  AND p.start_date < NOW() AND p.end_date > NOW()
+  AND p.deleted IS NULL
+  GROUP BY p.property_id
+  ORDER BY p.paper_title
 QUERY;
 
-for ($i = 0; $i < count($modules); $i++) {
-	if ($stmt = $mysqli->prepare($feedback_query)) {
-	  $stmt->bind_param('is', $modules[$i]['idMod'], $modules[$i]['year']);
-	  $stmt->execute();
-	  $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type, $start_date);
-	  $stmt->store_result();
-	  while ($stmt->fetch()) {
-      if (in_array($paper_id, $papers_taken)) {
-        $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name);
-        $papers++;
+  for ($i = 0; $i < count($modules); $i++) {
 
-        if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
-          $sessions_with_papers[] = $modules[$i]['year'];
+    if ($stmt = $mysqli->prepare($papers_query)) {
+
+      $stmt->bind_param('is', $modules[$i]['idMod'], $modules[$i]['year']);
+      $stmt->execute();
+      $stmt->bind_result($paper_title, $paper_type, $labs, $start_date, $end_date, $screens, $calendar_year, $crypt_name, $password);
+      $stmt->store_result();
+      while ($stmt->fetch()) {
+        // Check if the user is able to access the paper from their current location
+        $lab_arr = (empty($labs)) ? array() : explode(',', $labs);
+        if (empty($lab_arr) or ($lab != -1 and in_array($lab, $lab_arr))) {
+          $screens = (empty($screens)) ? 0 : $screens;
+
+          // Don't show if 0 screens
+          if ($screens > 0) {
+            $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name, 'password' => $password);
+            $papers++;
+
+            if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
+              $sessions_with_papers[] = $modules[$i]['year'];
+            }
+          }
         }
       }
-	  }
+      $stmt->close();
+    }
+  }
 
-    $stmt->close();
+  // Get which papers a student has taken (for feedback purposes).
+  $papers_taken = array();
+  $log_query = "SELECT DISTINCT q_paper FROM log2 WHERE userID=?";
+  $stmt = $mysqli->prepare($log_query);
+  $stmt->bind_param('i', $userObject->get_user_ID());
+  $stmt->execute();
+  $stmt->bind_result($q_paper);
+  while ($stmt->fetch()) {
+    $papers_taken[] = $q_paper;
+  }
+  $stmt->close();
+
+  // Get any objectives-based feedback released.
+  $feedback_query = <<< QUERY
+  SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, p.start_date FROM (feedback_release f, properties p, properties_modules pm)
+  WHERE f.paper_id = p.property_id
+  AND p.property_id = pm.property_id
+  AND idMod = ?
+  AND NOW() > f.date
+  AND p.paper_type IN ('0','1','2')
+  AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
+  AND p.end_date < NOW()
+  ORDER BY p.paper_title
+QUERY;
+
+  for ($i = 0; $i < count($modules); $i++) {
+    if ($stmt = $mysqli->prepare($feedback_query)) {
+      $stmt->bind_param('is', $modules[$i]['idMod'], $modules[$i]['year']);
+      $stmt->execute();
+      $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type, $start_date);
+      $stmt->store_result();
+      while ($stmt->fetch()) {
+        if (in_array($paper_id, $papers_taken)) {
+          $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name);
+          $papers++;
+
+          if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
+            $sessions_with_papers[] = $modules[$i]['year'];
+          }
+        }
+      }
+
+      $stmt->close();
+    }
   }
 }
+
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -229,56 +232,61 @@ if (count($sessions_with_papers) > 0) {
 	</table>
 
 <?php
-// Check for any news/announcements
-$student_msg = '';
-$result = $mysqli->prepare("SELECT title, student_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
-$result->execute();
-$result->bind_result($news_title, $student_msg, $icon);
-$result->fetch();
-$result->close();
+if (!$userObject->has_role('Student')) {
+?>
+   <p style="margin-left:20px"><?php echo $string['staffmsg']; ?></p>
+<?php
+} else {
+  // Check for any news/announcements
+  $student_msg = '';
+  $result = $mysqli->prepare("SELECT title, student_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
+  $result->execute();
+  $result->bind_result($news_title, $student_msg, $icon);
+  $result->fetch();
+  $result->close();
 
-if ($student_msg != '') {
-  $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
-  echo "<br /><div class=\"announcement\"><div style=\"padding-left:80px; background: transparent url('../artwork/" . $news_icons[$icon] . "') no-repeat top left;\"><strong>$news_title</strong><br />\n<br />\n$student_msg</div></div>\n<br />\n";
-}
+  if ($student_msg != '') {
+    $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
+    echo "<br /><div class=\"announcement\"><div style=\"padding-left:80px; background: transparent url('../artwork/" . $news_icons[$icon] . "') no-repeat top left;\"><strong>$news_title</strong><br />\n<br />\n$student_msg</div></div>\n<br />\n";
+  }
 
-if ($papers > 0) {
-	$last_session = '';
+  if ($papers > 0) {
+  	$last_session = '';
 
-	foreach($modules as $module) {
-	  $mod_id = $module['id'];
-		if (!empty($module['papers'])) {
+  	foreach($modules as $module) {
+  	  $mod_id = $module['id'];
+  		if (!empty($module['papers'])) {
 
 
-			if ($module['year'] != $last_session) {
-				$visibility = 'style="display: none"';
-				if ($module['year'] == $default_session) {
-					$visibility = '';
-				}
-				if ($last_session != '') {
+  			if ($module['year'] != $last_session) {
+  				$visibility = 'style="display: none"';
+  				if ($module['year'] == $default_session) {
+  					$visibility = '';
+  				}
+  				if ($last_session != '') {
 ?>
 		</div>
 <?php
-				}
+  				}
 ?>
 		<div id="papers-<?php echo str_replace('/', '-', $module['year']) ?>"<?php echo $visibility; ?>>
 <?php
-				$last_session = $module['year'];
-			}
+  				$last_session = $module['year'];
+  			}
 ?>
 			<br clear="all" /><table border="0" style="margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287"><tr><td><nobr><?php echo("<strong>{$mod_id}</strong>: {$module['name']} (".count($module['papers']).")"); ?></nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>
 			<br />
 <?php
-			foreach($module['papers'] as $paper) {
-        if ($paper['type'] == '6') {
-          $script_name = '../peer_review/form.php';
-        } elseif ($paper['type'] == 'objectives') {
-          $script_name = '../mapping/user_feedback.php';
-        } elseif ($paper['type'] == 'questions') {
-          $script_name = '../paper/feedback.php';
-        } else {
-          $script_name = '../user_index.php';
-        }
+  			foreach($module['papers'] as $paper) {
+          if ($paper['type'] == '6') {
+            $script_name = '../peer_review/form.php';
+          } elseif ($paper['type'] == 'objectives') {
+            $script_name = '../mapping/user_feedback.php';
+          } elseif ($paper['type'] == 'questions') {
+            $script_name = '../paper/feedback.php';
+          } else {
+            $script_name = '../user_index.php';
+          }
 ?>
 			  <div class="file">
 			  	<table cellpadding="0" cellspacing="0" border="0">
@@ -289,10 +297,11 @@ if ($papers > 0) {
 	    				<td>
 	    					<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a>
 <?php
-if (isset($paper['password']) and $paper['password'] != '') {
+  if (isset($paper['password']) and $paper['password'] != '') {
 ?>
-  <img src="../artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%"><?php echo $string['passwordRequired'] ?></span><?php
-}
+  <img src="../artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%"><?php echo $string['passwordRequired'] ?></span>
+<?php
+  }
 ?>
                 <br />
 	    					<span style="color:#808080">
@@ -319,16 +328,17 @@ if (isset($paper['password']) and $paper['password'] != '') {
 	    		</table>
 	    	</div>
 <?php
-			}
-		}
-	}
+  			}
+  		}
+  	}
 ?>
 		</div>
 <?php
-} else {
+  } else {
 ?>
-	<p style="margin-left:20px"><?php echo $string['nopapers']; ?></p>
+	 <p style="margin-left:20px"><?php echo $string['nopapers']; ?></p>
 <?php
+  }
 }
 ?>
 </div>
