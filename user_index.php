@@ -159,7 +159,7 @@ if ($exam_duration !== null) {
     $property_object->set_property_id($property_id);
     $property           = new Property($property_object, $mysqli);
     $property_object    = $property->get_property();
-    $usobj['userID']=$userObject->get_user_ID();
+    $usobj['user_ID']=$userObject->get_user_ID();
 
     $student_object     = $usobj;
     $log_lab_end_time   = new LogLabEndTime($lab_object, $property_object, $mysqli);
