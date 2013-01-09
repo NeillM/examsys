@@ -234,7 +234,7 @@ if ($userObject->is_special_needs()) {
 $screen_data = array();
 
 if (isset($_GET['q_id'])) {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
+  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, 1, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
   $stmt->bind_param('si', $_GET['id'], $_GET['q_id']);
 } else {
   $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
@@ -254,12 +254,6 @@ while ($stmt->fetch()) {
 }
 $stmt->free_result();
 $stmt->close();
-
-if (isset($_GET['q_id'])) {
-  // Override for individual question preview
-  $no_screens = 1;
-  $screen_data[$no_screens] = ($q_type == 'info') ? 0 : 1;
-}
 
 $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 
@@ -857,7 +851,7 @@ if ($css != '') {
   $previous_q_type = '';
 
   if (isset($_GET['q_id'])) {
-    $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND q_id=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+    $question_data = $mysqli->prepare("SELECT 1, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND q_id=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
     $question_data->bind_param('ii', $property_id, $_GET['q_id']);
   } else {
     $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
