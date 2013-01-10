@@ -684,6 +684,8 @@ if ($properties_list->count() > 0) {
     $paper_end_datetime->setTimezone($disptimezone);
     $paper_end_date = $paper_end_datetime->format('d/m/Y H:i:s');
 
+    $end_time_h=$end_datetime->format('H');
+    $end_time_m=$end_datetime->format('i');
 
     if ($properties_list->count() < 2) {
       ?>
@@ -768,11 +770,11 @@ if ($properties_list->count() > 0) {
               &nbsp;
               <input id="end_exam_button" name="end_exam_form" type="submit" value="End At"/>
               Hour:<select name="hour">
-                  <?php for($hr=0;$hr<24;$hr++) { echo '<option value="' . $hr . '">' . $hr . '</option>'; } ?>
+                  <?php for($hr=0;$hr<24;$hr++) { $selected=''; if($hr==$end_time_h) echo '<option value="' . $hr . '"' . $selected . '>' . $hr . '</option>'; } ?>
               </select>
               &nbsp;
               Minute:<select name="minute">
-            <?php for($hr=0;$hr<60;$hr++) { echo '<option value="' . $hr . '">' . $hr . '</option>'; } ?>
+            <?php for($hr=0;$hr<60;$hr++) { $selected=''; if($hr==$end_time_m) { $selected='selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . $hr . '</option>'; } ?>
           </select>
 
 
