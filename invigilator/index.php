@@ -194,11 +194,6 @@ function process_student_list($log_lab_end_time, $student_object, $property_obje
   // Highlight student's who have gone over time
 
   $current_datetime = new DateTime();
-  $has_student_exceeded_end = ($student_end_datetime < $current_datetime);
-
-  if ($has_student_exceeded_end) {
-    $class = 'redwarn';
-  }
 
   // Calculate extra time
 
@@ -234,6 +229,11 @@ function process_student_list($log_lab_end_time, $student_object, $property_obje
 
   $paperID = $property_object->get_property_id();
 
+  $has_student_exceeded_end = ($student_end_datetime < $current_datetime);
+
+  if ($has_student_exceeded_end) {
+    $class = 'redwarn';
+  }
 
   ?>
 <tr class="<?php echo $class; ?>">
