@@ -24,7 +24,7 @@ class Lab {
   /**
    * @return string $id
    */
-  public function get_id() {
+  public function &get_id() {
     return $this->id;
   }
 

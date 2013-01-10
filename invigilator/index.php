@@ -183,7 +183,7 @@ function process_student_list($log_lab_end_time, $student_object, $property_obje
   $student_end_datetime = $log_extra_time->get_end_date_datetime();
 
   if ($student_end_datetime === FALSE) {
-    $student_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
+    $student_end_datetime = $lab_session_end_datetime;//$log_lab_end_time->get_session_end_date_datetime();
   }
 
   // Calculate whether student's extended 'end time' is before the current session's start time
