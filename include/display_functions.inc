@@ -1265,7 +1265,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_option_no++;
       }
       echo '</select>';
-      if ($answer_no > 1) echo '<div class="mk">' . $string['holddownctrlkey'] . '</div>';
+      if ($answer_no > 1) echo '<div id="q' . $question_no . '_mk" class="mk">' . $string['holddownctrlkey'] . '</div>';
       echo '</div></li>';
     }
     echo '</ol><input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" />';
@@ -1328,7 +1328,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($marks == 0) {
       echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     } else {
-      echo "<div class=\"mk\">($marks ";
+      echo "<div id=\"q{$question_no}_mk\" class=\"mk\">($marks ";
       if ($marks == 1) {
         echo $string['mark'];
       } else {
