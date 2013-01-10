@@ -27,6 +27,8 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 1, vertical, display order, 1 mark, Option One correct');
     $this->assertTextPresent('MCQ 2, horizontal, display order, 1 mark, Option Two correct');
     $this->assertCssCount('css=input[type="radio"]', 6);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
@@ -34,6 +36,8 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 4, vertical, alphabetic, 1 mark, Option M correct');
     $this->assertCssCount('css=input[type="radio"]', 3);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
     // Order of alphabetic question
     $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[1]/td[2]', 'Option B');
     $this->assertElementContainsText('//div/form/table/tbody/tr/td/table[2]/tbody/tr[3]/td[2]/blockquote/table/tbody/tr[2]/td[2]', 'Option M');
@@ -45,6 +49,8 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 6, DDL, alphabetic, 2 marks, Option X correct');
     $this->assertCssCount('css=input[type="radio"]', 3);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks)');
     // Order of alphabetic questions
     $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="2"]', '0');
     $this->assertElementIndex('//div/form/table/tbody/tr/td/table[2]/tbody/tr[2]/td[2]/blockquote/input[@name="q1" and @value="1"]', '2');
@@ -60,6 +66,9 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MCQ 9, DDL, random, 2 marks, -1 mark incorrect, Option Three correct');
     $this->assertCssCount('css=input[type="radio"]', 6);
     $this->assertCssCount('css=select', 2); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
+    $this->assertElementContainsText('//*[@id="q3_mk"]', '(2 marks, negative marking)');
 
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
