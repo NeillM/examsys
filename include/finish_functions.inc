@@ -430,16 +430,17 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     init_feedback($strong_on, $strong_off);
 
     if ($old_screen < $paper[$question]['screen']) {
+      $q_type = $paper[$question]['q_type'];
       echo '</table><br />';
       
       echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $paper[$question]['screen'] . '</span></div>';
       echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
-      if ($paper[$question]['q_type'] != 'info') {
+      if ($q_type != 'info') {
         if ($paper[$question]['theme'] != '') echo "<tr><td colspan=\"2\" class=\"theme\">" . $paper[$question]['theme'] . "</td></tr>\n";
         echo "<tr><td class=\"q_no\">" . $display_no . ".</td><td>";
       }
     } else {
-      if ($paper[$question]['q_type'] != 'info') {
+      if ($q_type != 'info') {
         if ($paper[$question]['theme'] != '') echo "<tr><td colspan=\"2\" class=\"theme\">" . $paper[$question]['theme'] . "</td></tr>\n";
         echo "<tr><td class=\"q_no\">" . $display_no . ".</td><td>";
       }
@@ -470,7 +471,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     $option_order = explode(',',$paper[$question]['option_order']);
     $question_no = $display_no;
 
-    switch ($paper[$question]['q_type']) {
+    switch ($q_type) {
       case 'area':
         if (isset($paper[$question]['user_answer'])) {
           $tmp_user_answer = $paper[$question]['user_answer'];
@@ -2307,104 +2308,27 @@ echo '</script>';
         echo '<p>' . $paper[$question]['leadin'] . '</p>';
         $paper[$question]['totalpos'] = 0;
         break;
-
     }
     
     // Display any objectives mapped
-    if ($paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert' and !isset($_GET['disable_mappings'])) {
-      $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $mysqlidb);
-      if (count($objByModule) > 0) {
-        echo "<br />\n<div class=\"objH\">" . $string['learningobjectives'] . "</div>\n<ul>\n";
-        foreach ($moduleID as $thisIdMod => $thisModuleid) {
-          if (isset($objByModule[$thisModuleid])) {
-            foreach ($objByModule[$thisModuleid] as $id => $mappingData) {
-              echo "<li>" . $mappingData['content'];
-              if ($mappingData['session']['source_url'] != '') echo "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" border=\"0\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
-              echo "</li>\n";
-            }
-          }
-        }
-        echo "</ul>\n";
-      }
-    }
+    echo display_mapped_objectives($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $question, $q_type, $string, $mysqlidb);
     
     // Write out the marks for the question
-    if ($tmp_display_question_mark == '1' and $paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert') {
-      if (isset($paper[$question]['mark']) and is_numeric($paper[$question]['mark'])) {
-        if ($paper[$question]['status'] == 'Experimental') {
-          echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0 - Experimental Question&nbsp;</span></p>';
-        } elseif ($paper[$question]['totalpos'] == 0) {
-          $paper[$question]['mark'] = 0; 
-          echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0&nbsp;</span></p>';
-        } else {
-          echo '<p class="mkpad"><span class="usermk">' . round($paper[$question]['mark'],2) . ' ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
-        }
-      } elseif ($paper[$question]['q_type'] == 'textbox') {
-        // Unmarked textbox questions.
-        echo '<p class="mkpad"><span class="usermk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
-      } else {
-        // User has skipped over question.
-        echo '<p class="mkpad"><span class="usermk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
-      }
-    }
+    echo display_question_mark($tmp_display_question_mark, $paper, $q_type, $question, $string);
+    
     if ($paper[$question]['status'] != 'Experimental') {
       $total_marks += $paper[$question]['totalpos'];
       if (isset($paper[$question]['mark'])) $user_mark += round($paper[$question]['mark'], 2);
     }
-    if ($paper[$question]['q_type'] != 'info') echo '</td></tr>';
+    if ($q_type != 'info') echo '</td></tr>';
     echo "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     $old_screen = $paper[$question]['screen'];
   }
   echo "</table>\n";
 
   // Marks summary
-  if ($total_marks > 0 and $paper_type != 3) {
-    echo '<br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" class="box">';
-    echo '<tr><td><table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
-    echo '<tr><td colspan="2" style="margin:0px; font-weight:bold; font-size:120%">' . $string['summaryofmarks'] . '</td></tr>';
-    if ($marking == 1) {
-      echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . $user_mark . " " . $string['outof'] . " $total_marks</td><td></td></tr>\n";
-      echo "<tr><td>" . $string['randommark'] . "</td><td style=\"text-align:right\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td><img onclick=\"launchHelp(31);\" src=\"../artwork/small_help_icon.gif\" style=\"cursor:pointer\" width=\"16\" height=\"16\" alt=\"help\" /></td></tr>\n";
-      echo "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td><td></td></tr>\n";
-      echo "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
-      if (isset($_GET['percent'])) {
-        echo $_GET['percent'];
-      } else {
-        if ( ($total_marks-$total_random_mark) > 0 and (($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100 > 0) {
-          echo number_format((($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100, 1, '.', ',');
-          $gradetoret = ($user_mark - $total_random_mark) / ($total_marks - $total_random_mark);
-          if ($gradetoret < 0) $gradetoret = 0;
-          global $lti;
-          if ($lti->valid) {
-            //return grade back to VLE
-            $lti->send_grade($gradetoret);
-          }
-        } else {
-          echo '0';
-        }
-      }
-      echo '%</td><td>' . $string['adjusted'] . '</td></tr>';
-    } else {
-      echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " " . $string['outof'] . " $total_marks</td></tr>\n";
-      echo "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td></tr>\n";
-      echo "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
-      if (isset($_GET['percent'])) {
-        echo $_GET['percent'];
-      } else {
-        echo number_format(($user_mark / $total_marks) * 100, 1, '.', ',');
-        $gradetoret = $user_mark / $total_marks;
-        if ($gradetoret < 0) $gradetoret = 0;
-        global $lti;
-        if (isset($lit) and $lti->valid) {
-          //return grade back to VLE
-          $lti->send_grade($gradetoret);
-        }
-      }
-      echo "%</td></tr>\n";
-    }
-    echo '</table></td></tr>';
-    echo '</table></div>';
-  }
+  echo display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $mysqlidb);
+  
   if ($paper_postscript != '') echo "<br />\n<blockquote>$paper_postscript</blockquote>\n";
   echo $bottom_html;
   if ($_SERVER['PHP_SELF'] == '/paper/finish.php') {
@@ -2413,5 +2337,122 @@ echo '</script>';
     echo '<tr><td>&nbsp;</td></tr>';
   }
   echo '</table>';
+}
+
+function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $question, $q_type, $string, $db) {
+  $html = '';
+  
+  if ($q_type != 'info' and $q_type != 'likert' and !isset($_GET['disable_mappings'])) {
+    $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $q_id, $db);
+    if (count($objByModule) > 0) {
+      $html .= "<br />\n<div class=\"objH\">" . $string['learningobjectives'] . "</div>\n<ul>\n";
+      foreach ($moduleID as $thisIdMod => $thisModuleid) {
+        if (isset($objByModule[$thisModuleid])) {
+          foreach ($objByModule[$thisModuleid] as $id => $mappingData) {
+            $html .= "<li>" . $mappingData['content'];
+            if ($mappingData['session']['source_url'] != '') echo "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" border=\"0\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
+            $html .= "</li>\n";
+          }
+        }
+      }
+      $html .= "</ul>\n";
+    }
+  }
+  
+  return $html;
+}
+
+function display_question_mark($tmp_display_question_mark, &$paper, $q_type, $question, $string) {
+  $html = '';
+
+  if ($tmp_display_question_mark == '1' and $q_type != 'info' and $q_type != 'likert') {
+    if (isset($paper[$question]['mark']) and is_numeric($paper[$question]['mark'])) {
+      if ($paper[$question]['status'] == 'Experimental') {
+        $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0 - Experimental Question&nbsp;</span></p>';
+      } elseif ($paper[$question]['totalpos'] == 0) {
+        $paper[$question]['mark'] = 0; 
+        $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0&nbsp;</span></p>';
+      } else {
+        $html .= '<p class="mkpad"><span class="usermk">' . round($paper[$question]['mark'],2) . ' ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+      }
+    } elseif ($q_type == 'textbox') {
+      // Unmarked textbox questions.
+      $html .= '<p class="mkpad"><span class="usermk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+    } else {
+      // User has skipped over question.
+      $html .= '<p class="mkpad"><span class="usermk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+    }
+  }
+  
+  return $html;
+}
+
+function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $db) {
+  global $lti;
+  
+  $html = '';
+          
+  if ($total_marks > 0 and $paper_type != 3) {
+    $html .= '<br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" class="box">';
+    $html .= '<tr><td><table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
+    $html .= '<tr><td colspan="3" style="margin:0px; font-weight:bold; font-size:120%">' . $string['summaryofmarks'] . '</td></tr>';
+    if ($marking == 1) {
+      $html .= "<tr><td style=\"width:170px\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:80px\">" . $user_mark . " " . $string['outof'] . " $total_marks</td><td></td></tr>\n";
+      $html .= "<tr><td>" . $string['randommark'] . "</td><td style=\"text-align:right\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td><img onclick=\"launchHelp(31);\" src=\"../artwork/small_help_icon.gif\" style=\"cursor:pointer\" width=\"16\" height=\"16\" alt=\"help\" /></td></tr>\n";
+      $html .= "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td><td></td></tr>\n";
+      $html .= "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
+      if (isset($_GET['percent'])) {
+        $percent = $_GET['percent'];
+      } else {
+        if ( ($total_marks-$total_random_mark) > 0 and (($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100 > 0) {
+          $percent = number_format((($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100, 1, '.', ',');
+          $gradetoret = ($user_mark - $total_random_mark) / ($total_marks - $total_random_mark);
+          if ($gradetoret < 0) $gradetoret = 0;
+          if (isset($lti) and $lti->valid) {
+            //return grade back to VLE
+            $lti->send_grade($gradetoret);
+          }
+        } else {
+          $percent = '0';
+        }
+      }
+      $html .= $percent . '%</td><td>' . $string['adjusted'] . '</td></tr>';
+    } else {
+      $html .= "<tr><td style=\"width:170px\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:80px\">" . round($user_mark,2) . " " . $string['outof'] . " $total_marks</td></tr>\n";
+      $html .= "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td></tr>\n";
+      $html .= "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
+      if (isset($_GET['percent'])) {
+        $percent = $_GET['percent'];
+      } else {
+        $percent = number_format(($user_mark / $total_marks) * 100, 1, '.', ',');
+        $gradetoret = $user_mark / $total_marks;
+        if ($gradetoret < 0) $gradetoret = 0;
+        if (isset($lit) and $lti->valid) {
+          //return grade back to VLE
+          $lti->send_grade($gradetoret);
+        }
+      }
+      $html .= "$percent%</td></tr>\n";
+    }
+    
+    $textual_feedback = Paper_utils::get_textual_feedback($paperID, $db, 'ASC');
+    
+    $msg = '';
+    for ($i=1; $i<=10; $i++) {
+      if (isset($textual_feedback[$i])) {
+        if ((int)$percent >= (int)$textual_feedback[$i]['boundary']) {
+          $msg = $textual_feedback[$i]['msg'];
+        }
+      }
+    }
+    if ($msg != '') {
+      $html .= "<tr><td>Feedback</td><td colspan=\"2\">$msg</td></tr>\n";
+    }
+    
+    $html .= '</table>';
+    $html .= "</td></tr>\n</table></div>\n";
+  }
+
+  return $html;
 }
 ?>

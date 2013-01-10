@@ -60,7 +60,25 @@ Class Paper_utils {
     $result->close();
 
     return $paper_ownerID;
-  } 
+  }
+  
+  static function get_textual_feedback($paperID, $db, $direction = 'ASC') {
+    $textual_feedback = array();
+    $i = 1;
+    
+    $result = $db->prepare("SELECT boundary, msg FROM paper_feedback WHERE paperID = ? ORDER BY boundary $direction");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($boundary, $msg);
+    while ($result->fetch()) {
+      $textual_feedback[$i]['msg'] = $msg;
+      $textual_feedback[$i]['boundary'] = $boundary;
+      $i++;
+    }
+    $result->close();
+    
+    return $textual_feedback;
+  }
 
   /**
   * Return a array of modules assigned to a paper

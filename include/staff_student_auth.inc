@@ -41,7 +41,7 @@ function handle_early_errors($errno, $errstr, $errfile, $errline) {
   return FALSE;
 }
 
-set_error_handler("handle_early_errors");
+//set_error_handler("handle_early_errors");
 
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));

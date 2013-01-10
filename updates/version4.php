@@ -4777,7 +4777,7 @@ QUERY;
   $result->store_result();
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $adjust = $mysqli->prepare("CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int, constraint pk_properties_module primary key (property_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1");
+    $adjust = $mysqli->prepare("CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int, constraint pk_properties_module primary key (property_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset");
     $adjust->execute();
     $adjust->close();
     echo "<li>CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int, constraint pk_properties_module primary key (property_id, idMod))</li>\n";
@@ -5041,10 +5041,10 @@ QUERY;
     $sql = 'CREATE TABLE
                  log_start_time(   id           int            PRIMARY KEY NOT NULL AUTO_INCREMENT
                                  , userID       int            unsigned NOT NULL
-                                 , paperID      int            unsigned NOT NULL
+                                 , paperID      mediumint      unsigned NOT NULL
                                  , start_time   datetime       NOT NULL
                                  , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
-                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+                             ) ENGINE=InnoDB DEFAULT CHARSET=' . $cfg_db_charset . ' PACK_KEYS=1 AUTO_INCREMENT=1;';
 
 
     $result = $mysqli->query($sql);
@@ -5144,12 +5144,12 @@ QUERY;
 
     $sql = 'CREATE TABLE
                  log_lab_end_time(   id            int unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
-                                   , labID         int unsigned NOT NULL
-                                   , paperID       int unsigned NOT NULL
+                                   , labID         smallint unsigned NOT NULL
+                                   , paperID       mediumint unsigned NOT NULL
                                    , invigilatorID int unsigned NOT NULL
                                    , end_time      int unsigned NOT NULL
                                    , CONSTRAINT    key_lab_paper_invig_time UNIQUE ( labID, paperID, invigilatorID, end_time )
-                                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+                                 ) ENGINE=InnoDB DEFAULT CHARSET=' . $cfg_db_charset . ' PACK_KEYS=1 AUTO_INCREMENT=1;';
 
     $result = $mysqli->query($sql);
 
@@ -5283,27 +5283,26 @@ QUERY;
 
   //2012/12/18 bparish - Add new table to enable a students time to be extended when taking summative exams
 
-  $does_table_exist = $updater_utils->does_table_exist( 'log_extra_time' );
+  $does_table_exist = $updater_utils->does_table_exist('log_extra_time');
 
-  if ( $does_table_exist === false ){
+  if ($does_table_exist === false) {
 
     $sql    = 'CREATE TABLE
                      log_extra_time( id            int unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
-                                   , labID         int unsigned NOT NULL
-                                   , paperID       int unsigned NOT NULL
+                                   , labID         smallint unsigned NOT NULL
+                                   , paperID       mediumint unsigned NOT NULL
                                    , invigilatorID int unsigned NOT NULL
                                    , userID        int unsigned NOT NULL
                                    , extra_time    int unsigned NOT NULL
                                    , end_date      int unsigned NOT NULL
                                    , CONSTRAINT    key_lab_id_paper_id_user_id UNIQUE ( labID, paperID, userID )
-                                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+                                 ) ENGINE=InnoDB DEFAULT CHARSET=' . $cfg_db_charset . ' PACK_KEYS=1 AUTO_INCREMENT=1;';
 
     $result = $mysqli->query( $sql );
 
-    if ( $result !== TRUE ) {
-      printf( "Error: %s\n", $mysqli->error );
+    if ($result !== TRUE) {
+      printf("Error: %s\n", $mysqli->error);
     }
-
 
     echo '<li>CREATE TABLE log_extra_time ( id, log_lab_end_time_id, userID, end_time )</li>';
 
@@ -5318,6 +5317,28 @@ QUERY;
     $mysqli->query( 'FLUSH PRIVILEGES' );
   }
 
+  // 09/01/2013 - Create new 'paper_feedback' table to hold feedback to be display after an assessment is completed.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='paper_feedback' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE paper_feedback (id int not null primary key auto_increment, paperID mediumint unsigned NOT NULL, boundary tinyint unsigned NOT NULL, msg text) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE paper_feedback (id int not null primary key auto_increment, paperID mediumint unsigned NOT NULL, boundary tinyint unsigned NOT NULL, msg text) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1</li>\n";
+    ob_flush();
+    flush();
+
+    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.paper_feedback TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
+    $mysqli->query( $sql );
+    echo '<li>' . $sql  . '</li>' . "\n";
+
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.paper_feedback TO \'' . $cfg_db_student_user . '\'@\''. $cfg_db_host . "'";
+    $mysqli->query( $sql );
+    echo '<li>' . $sql  . '</li>' . "\n";
+  }
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

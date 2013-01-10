@@ -1091,12 +1091,12 @@ if ($css != '') {
   ?>
   <span>
   <?php
-  if( $exam_duration != null ){
-      echo $string['timeremaining'] . ':';
+  if ($exam_duration != null) {
+    echo $string['timeremaining'] . ':';
   }
 
   ?>
-  <input id="theTime" name="theTime" type="text" style="width:70px;background-color:transparent;text-align:center;font-size:100%;color:white;border:0px" size="8" />
+  <input id="theTime" name="theTime" type="text" class="thetime" size="8" />
   </span>
   <?php
   echo '</td><td align="right">';

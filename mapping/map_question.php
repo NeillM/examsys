@@ -33,9 +33,10 @@ if (file_exists($cfg_web_root . "lang/$language/paper/start.php")) {
 require '../include/media.inc';
 $paperID = $_GET['paperID'];
 
-function display_q($mysqlidb) {
+function display_q($db) {
   global $bgcolor;
-  $question_data = $mysqlidb->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+  
+  $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
   $question_data->bind_param('i', $_GET['q_id']);
   $question_data->execute();
   $question_data->store_result();
@@ -58,6 +59,7 @@ function display_q($mysqlidb) {
       $question['q_media_width'] = $q_media_width;
       $question['q_media_height'] = $q_media_height;
       $question['dismiss'] = '';
+      $question['assigned_number'] = $_GET['qNo'];
     }
     $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   }
@@ -67,7 +69,13 @@ function display_q($mysqlidb) {
   $paper_type = 0;
   $bgcolor = 'white';
   $unanswered = false;
-  display_question($question, $paper_type, 1, '', $question_no, $question_offset, array(), $unanswered);	
+  
+  $question_offset = $_GET['qNo'];
+  
+  //display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered)
+  
+  $user_answers = array();
+  display_question($question, $paper_type, 1, $q_type, $question_no, $question_offset, $user_answers, $unanswered);	
   $question_nos[] = $old_q_id;
   echo "</table>\n";
 }

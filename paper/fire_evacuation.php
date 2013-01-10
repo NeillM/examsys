@@ -30,15 +30,15 @@
 */
 
 require '../include/staff_student_auth.inc';
-require '../include/marking_functions.inc';
-require '../include/errors.inc';
-require '../include/paper_security.inc';
+require_once '../include/marking_functions.inc';
+require_once '../include/errors.inc';
+require_once '../include/paper_security.inc';
 
-require '../classes/paperutils.class.php';
+require_once '../classes/paperutils.class.php';
 
 check_var('id', 'GET', true, false);
 
-if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
+if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid = ?")) {
   $stmt->bind_param('i',$userObject->get_user_ID());
   $stmt->execute();
   $stmt->store_result();

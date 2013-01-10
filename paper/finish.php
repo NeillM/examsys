@@ -239,6 +239,20 @@ require '../config/finish.inc';
 
   if ($show_feedback) {
     display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $mysqli, $preview_q_id);
+    
+    $textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli, 'ASC');
+    
+   
+    $percent = 65.9;
+    $msg = '';
+    for ($i=1; $i<=10; $i++) {
+      if (isset($textual_feedback[$i])) {
+        if ((int)$percent >= (int)$textual_feedback[$i]['boundary']) {
+          $msg = $textual_feedback[$i]['msg'];
+        }
+      }
+    }
+    
   } else {
     echo '<blockquote>';
     if ($language == 'en') {

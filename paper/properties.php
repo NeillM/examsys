@@ -323,7 +323,7 @@ if (isset($_POST['Submit'])) {
     $password = trim($_POST['password']);
     $paperID = $_POST['paperID'];
 
-    if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
+    if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
       $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, externals=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
       $editProperties->bind_param('ssssssssssiississsssssssssi', $paper_title, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $external_string, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
@@ -341,7 +341,7 @@ if (isset($_POST['Submit'])) {
     }
 
     // Release objectives-based feedback
-    $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=? AND type='objectives'");
+    $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
     $editProperties->bind_param('i', $_POST['paperID']);
     $editProperties->execute();
     $editProperties->close();
@@ -353,7 +353,7 @@ if (isset($_POST['Submit'])) {
     }
 
     // Release question-based feedback
-    $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=? AND type='questions'");
+    $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
     $editProperties->bind_param('i', $_POST['paperID']);
     $editProperties->execute();
     $editProperties->close();
@@ -363,9 +363,27 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
     }
+    
+    if ($paper_type != '2') {
+      // Update textual feedback
+      $textual_feedback = array();
+      $editProperties = $mysqli->prepare("DELETE FROM paper_feedback WHERE paperID = ?");
+      $editProperties->bind_param('i', $_POST['paperID']);
+      $editProperties->execute();
+      $editProperties->close();
+      
+      for ($i=1; $i<10; $i++) {
+        $editProperties = $mysqli->prepare("INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)");
+        if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
+          $editProperties->bind_param('iis', $_POST['paperID'], $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
+          $editProperties->execute();
+        }
+        $editProperties->close();      
+      }
+    }
 
     // Set the questions team on this paper.
-    $result = $mysqli->prepare("SELECT q_id FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY display_pos");
+    $result = $mysqli->prepare("SELECT q_id FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY display_pos");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->store_result();
@@ -380,7 +398,7 @@ if (isset($_POST['Submit'])) {
       $meta_type = $_POST['meta_type' . $i];
       $meta_value = $_POST['meta_value' . $i];
 
-      $editProperties = $mysqli->prepare("DELETE FROM paper_metadata_security WHERE paperID=? AND name=?");
+      $editProperties = $mysqli->prepare("DELETE FROM paper_metadata_security WHERE paperID = ? AND name = ?");
       $editProperties->bind_param('is', $paperID, $meta_type);
       $editProperties->execute();
       $editProperties->close();
@@ -395,7 +413,7 @@ if (isset($_POST['Submit'])) {
 
     // Get existing Reference Materials
     $existing_refs = array();
-    $result = $mysqli->prepare("SELECT refID FROM reference_papers WHERE paperID=?");
+    $result = $mysqli->prepare("SELECT refID FROM reference_papers WHERE paperID = ?");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->store_result();
@@ -423,7 +441,7 @@ if (isset($_POST['Submit'])) {
       }
     }
     foreach ($existing_refs as $existing_ref) {
-      $editProperties = $mysqli->prepare("DELETE FROM reference_papers WHERE paperID=? AND refID=?");
+      $editProperties = $mysqli->prepare("DELETE FROM reference_papers WHERE paperID = ? AND refID = ?");
       $editProperties->bind_param('ii', $paperID, $existing_ref);
       $editProperties->execute();
       $editProperties->close();
@@ -491,7 +509,7 @@ if (isset($_POST['Submit'])) {
 
   // Work out if any negative marking is used
   $neg_marking = false;
-  $result = $mysqli->prepare("SELECT marks_incorrect FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND paper=?");
+  $result = $mysqli->prepare("SELECT marks_incorrect FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($marks_incorrect);
@@ -501,6 +519,9 @@ if (isset($_POST['Submit'])) {
     }
   }
   $result->close();
+
+  // Load textual feedback
+  $textual_feedback = Paper_utils::get_textual_feedback($_GET['paperID'], $mysqli);
 
   // Get the main properties of the paper
   $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, hide_if_unanswered, paper_title, paper_type, start_date, end_date, timezone, paper_prologue, paper_postscript, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, calendar_year, internal_reviewers, external_review_deadline, internal_review_deadline, sound_demo, password, crypt_name FROM properties WHERE property_id=?");
@@ -524,11 +545,11 @@ if (isset($_POST['Submit'])) {
     $end_date = $end_date->format("Y/m/d H:i:s");
   }
 
-if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
-  $sum_disabled = ' disabled';
-} else {
-  $sum_disabled = '';
-}
+  if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
+    $sum_disabled = ' disabled';
+  } else {
+    $sum_disabled = '';
+  }
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -732,6 +753,7 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
       document.getElementById('general').style.display = 'none';
       document.getElementById('security').style.display = 'none';
       document.getElementById('reviewers').style.display = 'none';
+      document.getElementById('feedback').style.display = 'none';
       <?php
         if ($paper_type != '4' and $paper_type != '5') {
       ?>
@@ -742,34 +764,35 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
       <?php
         }
       ?>
-      document.getElementById(sectionID).style.display='';
+      document.getElementById(sectionID).style.display = '';
 
-      document.getElementById('tab1').style.background='';
-      document.getElementById('tab2').style.background='';
-      document.getElementById('tab3').style.background='';
+      document.getElementById('tab1').style.background = '';
+      document.getElementById('tab2').style.background = '';
+      document.getElementById('tab3').style.background = '';
+      document.getElementById('tab4').style.background = '';
       <?php
         if ($paper_type != '4' and $paper_type != '5') {
       ?>
-      document.getElementById('tab4').style.background='';
-      document.getElementById('tab5').style.background='';
-      document.getElementById('tab6').style.background='';
-      document.getElementById('tab7').style.background='';
+      document.getElementById('tab5').style.background = '';
+      document.getElementById('tab6').style.background = '';
+      document.getElementById('tab7').style.background = '';
+      document.getElementById('tab8').style.background = '';
       <?php
         }
       ?>
 
-      document.getElementById(tabID).style.background='url("../artwork/2007_button_on.png")';
+      document.getElementById(tabID).style.background = 'url("../artwork/2007_button_on.png")';
     }
 
     function buttonover(tabID) {
       if (document.getElementById(tabID).style.backgroundImage != 'url("../artwork/2007_button_on.png")') {
-        document.getElementById(tabID).style.backgroundImage='url("../artwork/2007_button_over.png")';
+        document.getElementById(tabID).style.backgroundImage = 'url("../artwork/2007_button_over.png")';
       }
     }
 
     function buttonout(tabID) {
       if (document.getElementById(tabID).style.backgroundImage != 'url("../artwork/2007_button_on.png")') {
-        document.getElementById(tabID).style.backgroundImage='';
+        document.getElementById(tabID).style.backgroundImage = '';
       }
     }
 
@@ -821,14 +844,15 @@ if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') {
   echo "<tr><td id=\"tab2\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab2')\" onmouseout=\"buttonout('tab2')\" onclick=\"buttonclick('security','tab2')\">&nbsp;" . $string['securitytab'] . "</td></tr>\n";
 }
 ?>
-<tr><td id="tab3" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab3')" onmouseout="buttonout('tab3')" onclick="buttonclick('reviewers','tab3')">&nbsp;<?php echo $string['reviewerstab']; ?></td></tr>
+<tr><td id="tab3" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab3')" onmouseout="buttonout('tab3')" onclick="buttonclick('feedback','tab3')">&nbsp;Feedback</td></tr>
+<tr><td id="tab4" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab4')" onmouseout="buttonout('tab4')" onclick="buttonclick('reviewers','tab4')">&nbsp;<?php echo $string['reviewerstab']; ?></td></tr>
 <?php
 if ($paper_type != '4' and $paper_type != '5') {
 ?>
-<tr><td id="tab4" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab4')" onmouseout="buttonout('tab4')" onclick="buttonclick('rubric','tab4')">&nbsp;<?php echo $string['rubrictab']; ?></td></tr>
-<tr><td id="tab5" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab5')" onmouseout="buttonout('tab5')" onclick="buttonclick('prologue','tab5')">&nbsp;<?php echo $string['prologuetab']; ?></td></tr>
-<tr><td id="tab6" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab6')" onmouseout="buttonout('tab6')" onclick="buttonclick('postscript','tab6')">&nbsp;<?php echo $string['postscripttab']; ?></td></tr>
-<tr><td id="tab7" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab7')" onmouseout="buttonout('tab7')" onclick="buttonclick('reference','tab7')">&nbsp;<?php echo $string['referencematerial']; ?></td></tr>
+<tr><td id="tab5" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab5')" onmouseout="buttonout('tab5')" onclick="buttonclick('rubric','tab5')">&nbsp;<?php echo $string['rubrictab']; ?></td></tr>
+<tr><td id="tab6" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab6')" onmouseout="buttonout('tab6')" onclick="buttonclick('prologue','tab6')">&nbsp;<?php echo $string['prologuetab']; ?></td></tr>
+<tr><td id="tab7" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab7')" onmouseout="buttonout('tab7')" onclick="buttonclick('postscript','tab7')">&nbsp;<?php echo $string['postscripttab']; ?></td></tr>
+<tr><td id="tab8" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab8')" onmouseout="buttonout('tab8')" onclick="buttonclick('reference','tab8')">&nbsp;<?php echo $string['referencematerial']; ?></td></tr>
 <?php
 }
 ?>
@@ -901,64 +925,6 @@ if ($paper_type != '4' and $paper_type != '5') {
      $folder_details->close();
      echo "</select>\n</td></tr>\n";
 
-     echo "<tr><td align=\"right\" valign=\"top\">";
-     if ($paper_type != '4') echo $string['feedback'] . '&nbsp';
-     echo "</td><td colspan=\"3\">";
-     if (in_array($paper_type, array('0', '1', '2', '5'))) {
-       // Objectives-based Feedback
-       $idfeedback_release = '';
-       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='objectives'");
-       $feedback_details->bind_param('i', $_GET['paperID']);
-       $feedback_details->execute();
-       $feedback_details->bind_result($idfeedback_release);
-       $feedback_details->fetch();
-       if ($idfeedback_release == '') {
-         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" />";
-       } else {
-         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" checked />";
-       }
-       $feedback_details->close();
-
-       echo $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name</a></div>\n";
-     }
-     if (in_array($paper_type, array('1', '2', '5'))) {
-       // Question-based Feedback
-       $idfeedback_release = '';
-       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='questions'");
-       $feedback_details->bind_param('i', $_GET['paperID']);
-       $feedback_details->execute();
-       $feedback_details->bind_result($idfeedback_release);
-       $feedback_details->fetch();
-       if ($idfeedback_release == '') {
-         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" />";
-       } else {
-         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" checked />";
-       }
-       $feedback_details->close();
-
-       echo $string['questionfeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name</a></div>\n";
-     }
-     if ($paper_type == '0') {
-       echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
-     } else {
-       echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%; display:none">';
-     }
-     if ($paper_type != '4') {
-     ?>
-     <tr><td colspan="4">&nbsp;</td></tr>
-     <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($display_students_response == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['ticks_crosses'];?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($display_question_mark == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($hide_if_unanswered == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['hideallfeedback'];?></td></tr>
-     <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($display_correct_answer == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['correctanswerhighlight'];?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($display_feedback == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['textfeedback'];?></td></tr>
-     <?php
-     }
-     echo "</table>\n";
-     if ($paper_type != '0') {
-       echo '<div id="feedback_off">';
-     } else {
-       echo '<div id="feedback_off" style="display:none">';
-     }
-     echo "<br />&nbsp;</div>";
-
-     echo "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '4') {
        echo '<input type="hidden" name="bgcolor" value="' . $bgcolor . '" />';
@@ -1377,6 +1343,88 @@ if ($paper_type != '4' and $paper_type != '5') {
 <table id="rubric" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
   <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/rubric_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['rubricheading']; ?></td></tr>
   <tr><td><?php echo wysiwyg_editor('oEdit4', 'rubric_text', $rubric, 722, 520); ?></td></tr>
+</table>
+
+<table id="feedback" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+  <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/feedback_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;Feedback</td></tr>
+
+  <?php  
+     echo "<tr><td colspan=\"2\" valign=\"top\">";
+     
+     if (in_array($paper_type, array('0', '1', '2', '5'))) {
+       // Objectives-based Feedback
+       $idfeedback_release = '';
+       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='objectives'");
+       $feedback_details->bind_param('i', $_GET['paperID']);
+       $feedback_details->execute();
+       $feedback_details->bind_result($idfeedback_release);
+       $feedback_details->fetch();
+       if ($idfeedback_release == '') {
+         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" />";
+       } else {
+         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" checked />";
+       }
+       $feedback_details->close();
+
+       echo $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name</a></div>\n";
+     }
+     if (in_array($paper_type, array('1', '2', '5'))) {
+       // Question-based Feedback
+       $idfeedback_release = '';
+       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='questions'");
+       $feedback_details->bind_param('i', $_GET['paperID']);
+       $feedback_details->execute();
+       $feedback_details->bind_result($idfeedback_release);
+       $feedback_details->fetch();
+       if ($idfeedback_release == '') {
+         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" />";
+       } else {
+         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" checked />";
+       }
+       $feedback_details->close();
+
+       echo $string['questionfeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name</a></div>\n";
+     }
+     if ($paper_type == '0') {
+       echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
+     } else {
+       echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%; display:none">';
+     }
+     if ($paper_type != '4') {
+     ?>
+     <tr><td colspan="4">&nbsp;</td></tr>
+     <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($display_students_response == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['ticks_crosses'];?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($display_question_mark == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($hide_if_unanswered == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['hideallfeedback'];?></td></tr>
+     <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($display_correct_answer == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['correctanswerhighlight'];?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($display_feedback == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['textfeedback'];?></td></tr>
+     <?php
+     }
+     echo "</table>\n";
+     if ($paper_type != '0') {
+       echo '<div id="feedback_off">';
+     } else {
+       echo '<div id="feedback_off" style="display:none">';
+     }
+     echo "<br />&nbsp;</div>";
+
+     echo "</td></tr>\n";
+     
+     if ($paper_type != '2') {
+       echo "<tr><td colspan=\"2\"style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;Textual Feedback</td></tr>\n";
+       echo "<tr><td style=\"text-align:center\">Above</td><td style=\"text-align:center\">Message</td></tr>\n";
+       for ($i=1; $i<=10; $i++) {
+         echo "<tr><td><select name=\"feedback_value$i\"><option value=\"\"></option>";
+         for ($percent=0; $percent<=100; $percent++) {
+           if (isset($textual_feedback[$i]['boundary']) and  $textual_feedback[$i]['boundary'] == $percent) {
+             echo "<option value=\"$percent\" selected>$percent%</option>";
+           } else {
+             echo "<option value=\"$percent\">$percent%</option>";
+           }
+         }
+         $msg = '';
+         if (isset($textual_feedback[$i]['msg'])) $msg = $textual_feedback[$i]['msg'];
+         echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"2\" style=\"width:620px\">$msg</textarea></td></tr>\n";
+       }
+     }
+     ?> 
 </table>
 
 <table id="reviewers" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
