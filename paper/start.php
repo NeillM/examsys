@@ -33,8 +33,8 @@ require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require '../classes/log_start_time.class.php';
 require '../classes/timer.class.php';
+require '../classes/lab_factory.class.php';
 require '../classes/lab.class.php';
-require '../classes/labobject.class.php';
 require '../classes/propertyobject.class.php';
 require '../classes/property.class.php';
 require '../classes/log_extra_time.class.php';
@@ -309,29 +309,25 @@ if ($exam_duration != null and (int) $paper_type == 2){
 
   $current_ip_address = NetworkUtils::get_ipaddress();
 
-  $lab                = new Lab( $mysqli );
-  $lab_object         = $lab->get_lab_based_on_ip( $current_ip_address );
+  $lab_factory = new LabFactory( $mysqli );
+  $lab_object = $lab_factory->get_lab_based_on_ip( $current_ip_address );
 
-  $property_object    = new PropertyObject();
+  $property_object = new PropertyObject();
 
   $property_object->set_property_id( $property_id );
 
-  $property           = new Property( $property_object
+  $property = new Property( $property_object
                                     , $mysqli );
 
-  $property_object    = $property->get_property();
+  $property_object = $property->get_property();
 
-  $log_lab_end_time   = new LogLabEndTime( $lab_object
-                                         , $property_object
-                                         , $mysqli );
+  $log_lab_end_time = new LogLabEndTime( $lab_object, $property_object, $mysqli );
 
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 
-  $student_object     = $userObject;
+  $student_object = $userObject;
 
-  $log_extra_time     = new LogExtraTime( $log_lab_end_time
-                                        , $student_object
-                                        , $mysqli );
+  $log_extra_time = new LogExtraTime( $log_lab_end_time, $student_object, $mysqli );
 
 
   $student_end_datetime = $log_extra_time->get_end_date_datetime();

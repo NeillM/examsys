@@ -27,11 +27,11 @@ require '../include/errors.inc';
 require '../classes/propertyobject.class.php';
 require '../classes/log_lab_end_time.class.php';
 require '../classes/properties.class.php';
-require '../classes/labobject.class.php';
+require '../classes/lab_factory.class.php';
 require '../classes/lab.class.php';
 require '../classes/log_extra_time.class.php';
 
-function get_students($modules, PropertyObject $property_object, LogLabEndTime $log_lab_end_time) {
+function get_students($modules, $property_object, $log_lab_end_time) {
 
   global $string, $mysqli;
 
@@ -145,7 +145,7 @@ function get_students($modules, PropertyObject $property_object, LogLabEndTime $
 * @param string         $string
 * @param mysqli         $mysqli
  */
-function process_student_list(LogLabEndTime $log_lab_end_time, $student_object, PropertyObject $property_object, Config $configObject, $extra_time_percentage, $notes_array, $string, mysqli $mysqli) {
+function process_student_list($log_lab_end_time, $student_object, $property_object, $configObject, $extra_time_percentage, $notes_array, $string, $mysqli) {
 
   // Determine when the current exam session will end
   if ($student_object['surname'] == 'Gray') {
@@ -298,7 +298,7 @@ if (isset($_POST['start_exam_form'])) {
 
 $current_ip_address = NetworkUtils::get_ipaddress();
 
-$lab = new Lab($mysqli);
+$lab = new LabFactory($mysqli);
 
 $lab_object = $lab->get_lab_based_on_ip($current_ip_address);
 $lab_id = $lab_object->get_id();

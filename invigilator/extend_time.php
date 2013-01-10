@@ -25,8 +25,8 @@
 require '../include/invigilator_auth.inc';
 require '../classes/propertyobject.class.php';
 require '../classes/property.class.php';
+require '../classes/lab_factory.class.php';
 require '../classes/lab.class.php';
-require '../classes/labobject.class.php';
 require '../classes/log_extra_time.class.php';
 require '../classes/log_lab_end_time.class.php';
 
@@ -67,8 +67,8 @@ $surname = $student_object['surname'];
 
 $current_ip_address = NetworkUtils::get_ipaddress();
 
-$lab = new Lab($mysqli);
-$lab_object = $lab->get_lab_based_on_ip($current_ip_address);
+$lab_factory = new LabFactory($mysqli);
+$lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address);
 
 $property_object = new PropertyObject();
 

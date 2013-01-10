@@ -29,8 +29,8 @@ require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
 require '../classes/logmetadata.class.php';
+require '../classes/lab_factory.class.php';
 require '../classes/lab.class.php';
-require '../classes/labobject.class.php';
 require '../classes/propertyobject.class.php';
 require '../classes/property.class.php';
 require '../classes/log_extra_time.class.php';
@@ -76,15 +76,14 @@ if ($userObject->has_role('Student')) {
 
     $current_ip_address = NetworkUtils::get_ipaddress();
 
-    $lab                = new Lab( $mysqli );
-    $lab_object         = $lab->get_lab_based_on_ip( $current_ip_address );
+    $lab_factory        = new LabFactory( $mysqli );
+    $lab_object         = $lab_factory->get_lab_based_on_ip( $current_ip_address );
 
     $property_object    = new PropertyObject();
 
     $property_object->set_property_id( $property_id );
 
-    $property           = new Property( $property_object
-        , $mysqli );
+    $property           = new Property( $property_object, $mysqli );
 
     $property_object    = $property->get_property();
 
