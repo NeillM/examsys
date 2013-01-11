@@ -16,7 +16,7 @@
 
 require_once '../lang/' . $language . '/folder/details.php';
 
-$string['staffmsg'] = 'This is the Rog&#333; student landing page. Were you looking for the <a href="../staff/">staff management screens</a>?'; // Niko
+$string['staffmsg'] = 'To jest strona systemu Rog&#333; przeznaczona dla studentów. Czy poszukiwałeś/łaś<a href="../staff/">stron zarządzania dla kadry</a>?'; // Niko
 $string['nopapers'] = 'Obecnie brak dostępnych arkuszy.';
 $string['to'] = 'do';
 $string['objectivesbased'] = 'Odzew dot. celów<br />dla oceny w';
