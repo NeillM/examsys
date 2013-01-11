@@ -23,12 +23,12 @@
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
-
 //global debug settings
+global $debug_pagestart, $displayDebug;
 $debug_pagestart = microtime();
+$displayDebug = true;
 register_shutdown_function('outputLoadTimes');
 $dbclass = 'debug_mysqli';
-$displayDebug = true;
   
 $queryInfo = array();
 Class debug_mysqli extends mysqli {
@@ -162,11 +162,10 @@ function outputLoadTimes() {
   if (!is_object($mysqli)) {
     return;
   }
-  
   if(!$displayDebug) {
     return;
   }
-  
+
   if (!$mysqli->closed) {
     $mysqli->cacheSqlProfile();
   }
