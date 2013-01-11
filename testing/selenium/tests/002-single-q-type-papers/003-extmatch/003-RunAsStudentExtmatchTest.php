@@ -26,6 +26,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 1, display order, 1 mark, 3 scenarios');
     $this->assertTextPresent('Ext Match 2, alphabetic, 2 marks, 4 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(3 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(8 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@name='q2_1']/option[2]", 'Option B');
     $this->assertElementContainsText("//select[@name='q2_1']/option[3]", 'Option C');
@@ -54,12 +56,16 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Negative Marking');
     $this->assertTextPresent('Ext Match 4, display order, 1 mark correct, -0.5 marks incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 7); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(3 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(3 marks, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Ext Match 5, alphabetic, 2 marks correct, -1 mark incorrect, 4 scenarios');
     $this->assertTextPresent('Ext Match 6, random, 1 mark correct, -1 mark incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(8 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(3 marks, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@name='q1_1']/option[2]", 'Option B');
     $this->assertElementContainsText("//select[@name='q1_1']/option[3]", 'Option C');
@@ -88,6 +94,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 7, display order, mark per question, 1 mark, 3 scenarios');
     $this->assertTextPresent('Ext Match 8, alphabetic, mark per question, 2 marks, 4 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@name='q2_1']/option[2]", 'Option B');
     $this->assertElementContainsText("//select[@name='q2_1']/option[3]", 'Option C');
@@ -116,12 +124,16 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Mark Per Question, Negative Marking');
     $this->assertTextPresent('Ext Match 10, display order, mark per question, 1 mark correct, -0.5 marks incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 7); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(3 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Ext Match 11, alphabetic, mark per question, 2 marks correct, -1 mark incorrect, 4 scenarios');
     $this->assertTextPresent('Ext Match 12, random, mark per question, 1 mark correct, -1 mark incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@name='q1_1']/option[2]", 'Option B');
     $this->assertElementContainsText("//select[@name='q1_1']/option[3]", 'Option C');
@@ -151,6 +163,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 14, alphabetic, 2 marks, 4 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 5); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(14 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@id='q2_1']/option[1]", 'Option B');
     $this->assertElementContainsText("//select[@id='q2_1']/option[2]", 'Option C');
@@ -180,6 +194,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 16, display order, 1 mark correct, -0.5 marks incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 7); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 4); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(5 marks, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
@@ -187,6 +203,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 18, random, 1 mark correct, -1 mark incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 5); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(14 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(5 marks, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@id='q1_1']/option[1]", 'Option B');
     $this->assertElementContainsText("//select[@id='q1_1']/option[2]", 'Option C');
@@ -216,6 +234,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 20, alphabetic, mark per question, 2 marks, 4 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 3); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@name='q2_1']/option[2]", 'Option B');
     $this->assertElementContainsText("//select[@name='q2_1']/option[3]", 'Option C');
@@ -245,6 +265,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 22, display order, mark per question, 1 mark correct, -0.5 marks incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 7); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 4); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(3 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
@@ -252,6 +274,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 24, random, mark per question, 1 mark correct, -1 mark incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 4); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@id='q1_1']/option[1]", 'Option B');
     $this->assertElementContainsText("//select[@id='q1_1']/option[2]", 'Option C');
@@ -281,6 +305,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 26, alphabetic, 2 marks, 4 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 7); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(6 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(16 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@id='q2_1']/option[1]", 'Option B');
     $this->assertElementContainsText("//select[@id='q2_1']/option[2]", 'Option C');
@@ -310,6 +336,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 28, display order, 1 mark correct, -0.5 marks incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 7); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 6); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(6 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(6 marks, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
@@ -317,6 +345,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 30, random, 1 mark correct, -1 mark incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 7); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(16 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(6 marks, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@id='q1_1']/option[1]", 'Option B');
     $this->assertElementContainsText("//select[@id='q1_1']/option[2]", 'Option C');
@@ -346,6 +376,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 32, alphabetic, mark per question, 2 marks, 4 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 7); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@id='q2_1']/option[1]", 'Option B');
     $this->assertElementContainsText("//select[@id='q2_1']/option[2]", 'Option C');
@@ -375,6 +407,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 34, display order, mark per question, 1 mark correct, -0.5 marks incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 7); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 6); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(3 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
@@ -382,6 +416,8 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Ext Match 36, random, mark per question, 1 mark correct, -1 mark incorrect, 3 scenarios');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
     $this->assertXpathCount("//select[@multiple='multiple']", 7); // Multi-select boxes
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText("//select[@id='q1_1']/option[1]", 'Option B');
     $this->assertElementContainsText("//select[@id='q1_1']/option[2]", 'Option C');
