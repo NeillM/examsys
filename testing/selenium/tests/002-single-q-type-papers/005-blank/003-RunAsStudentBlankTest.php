@@ -29,6 +29,9 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Fill in the Blank, DDL, Mark per Question');
     $this->assertTextPresent('Blank 3, DDL, mark per question, 2 marks, 2 blanks');
     $this->assertCssCount('css=select', 8); // Include page jump DDL
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(6 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q3_mk"]', '(2 marks)');
 
     $this->selectWindow("name=paper");
     $this->click("id=next");
@@ -42,6 +45,9 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Blank 6, textbox, 2 marks correct, -1 mark incorrect, 3 blanks');
     $this->assertCssCount('css=select', 4); // Include page jump DDL
     $this->assertCssCount('css=input[type="text"]', 6);    // Include timer box
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(3 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks)');
+    $this->assertElementContainsText('//*[@id="q3_mk"]', '(6 marks, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
@@ -50,6 +56,8 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Fill in the Blank, Textbox, Mark per Question, Negative Marking');
     $this->assertTextPresent('Blank 8, textbox, 3 marks correct, -1 mark incorrect, 3 blanks');
     $this->assertCssCount('css=input[type="text"]', 6);    // Include timer box
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(3 marks, negative marking)');
 
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
