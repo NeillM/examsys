@@ -82,14 +82,16 @@ class ltilogin_auth extends outline_authentication {
     if ($returned !== FALSE) {
       $this->retdata->success = TRUE;
       $this->retdata->form = 'std';
-      $this->retdata->rogoid = $returned[0];
       $this->rogoid = $returned[0];
+      $this->retdata->rogoid = &$this->rogoid;
       $this->retdata->url = '';
-      $authobj->retdata = $this->retdata;
+      $authobj->retdata = &$this->retdata;
       $this->savetodebug('LTI lookup successful');
 
       return TRUE;
     }
+
+    $this->calling_object->display_debug();
 
     var_dump($returned);
 

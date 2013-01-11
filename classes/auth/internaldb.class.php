@@ -130,7 +130,7 @@ class internaldb_auth extends outline_authentication {
 
     extract($this->settings);
 
-    if (!isset($this->form['std']->username) or !isset($this->form['std']->username) or $this->form['std']->username == '' or $this->form['std']->password == '') {
+    if (!isset($this->form['std']->username) or !isset($this->form['std']->password) or $this->form['std']->username == '' or $this->form['std']->password == '') {
       //return not sucessfull do not try
       $this->savetodebug('Check 1 blank entries');
 
