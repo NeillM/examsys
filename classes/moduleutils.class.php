@@ -14,20 +14,45 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
+
 /**
  *
- * Utility class for installer related functionality
+ * Wrapper class for old static style calls to module_utils::[Function]
  *
  * @author Anthony Brown
  * @version 1.0
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
+Class module_utils extends RogoStaticSingleton {
+  public static $inst = NULL;
+  public static $class_name = 'module'; //name of the new dynamic class
 
+  /**
+  * constructor
+  */
+  private function __construct() {}
 
-Class module_utils {
+}
 
-  static function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db,$sms_import = 0) {
+/**
+ *
+ * Utility class for module related functionality
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
+Class module {
+
+  /**
+  * constructor
+  */
+  public function __construct() {}
+
+  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db,$sms_import = 0) {
 
     if ($moduleid == '' or $fullname == '' or $schoolID == '' or module_utils::module_exists($moduleid, $db) !== false) {
       return false;
@@ -61,7 +86,7 @@ Class module_utils {
     return true;
   }
 
-  static function module_exists($moduleid, $db) {
+  public function module_exists($moduleid, $db) {
     // Check for unique moduleID
     $unique_moduleid = true;
     $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
@@ -87,7 +112,7 @@ Class module_utils {
     return $unique_moduleid;
   }
 
-  static function get_full_details_by_ID($modID, $db) {
+  public function get_full_details_by_ID($modID, $db) {
     // returns false if not self enrol else returns needed data;
     $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id = ?");
     $result->bind_param('i', $modID);
@@ -104,7 +129,7 @@ Class module_utils {
     return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist);
   }
 
-  static function get_moduleid_from_id($modID, $db) {
+  public function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
 
     $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ?");
@@ -122,7 +147,7 @@ Class module_utils {
     return $moduleid;
   }
 
-  static function get_idMod($module_id, $db) {
+  public function get_idMod($module_id, $db) {
     if (is_array($module_id)) {
       $ids = array();
 
@@ -157,7 +182,7 @@ Class module_utils {
     }
   }
 
-  static function get_moduleID($idMod, $db) {
+  public function get_moduleID($idMod, $db) {
     $result = $db->prepare("SELECT moduleID FROM modules WHERE id = ?");
     $result->bind_param('s', $idMod);
     $result->execute();

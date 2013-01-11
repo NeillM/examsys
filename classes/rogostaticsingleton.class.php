@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* A Class to be used as a base class for Rogo Singleton utility classes
+* A Class to be used as a base class for Rogo Singleton utility classes.
+* Also acts as a static wrapper to dynamic classes to enable unit testing  
+* of statistic called code
 *
 * @author Anthony Brown
 * @version 1.0
@@ -26,8 +28,8 @@
 Class RogoStaticSingleton {
   
   /**
-  * Create and return the Global instance of UserNotices for use in the Local 
-  * scope
+  * Create and return the Global instance of parent::$class_name for use in 
+  * the Local scope.
   */
   public static function get_instance()
   {
@@ -38,7 +40,7 @@ Class RogoStaticSingleton {
   }
 
   /**
-  * sets the Mock instance to return. ONLY used for testing 
+  * sets the Mock instance to return. ONLY used for unit testing 
   * 
   */
   public static function set_mock_instance($obj)
@@ -47,18 +49,23 @@ Class RogoStaticSingleton {
   }
 
   /**
-  *  
-  * 
+  *  Dynamicly map static function calls to dynamic methods the 
+  *  class defined in parent::$class_name 
   */
   public static function  __callStatic($name, $args)
   {
-  	if(is_callable(array(static::$inst,$name))) {
-		call_user_func_array(array(static::$inst,$name), $args);
-	} else {
-		throw new Exception($name . " not implimented in " . static::$class_name);
-	}
+    if (!is_object(static::$inst)) {
+      $inst = static::$inst = static::get_instance();
+    } else {
+      $inst = static::$inst;
+    }
+    
+  	if (is_callable(array($inst,$name))) {
+		  call_user_func_array(array($inst,$name), $args);
+  	} else {
+  		throw new Exception($name . " not implemented by " . static::$class_name); 
+  	}
   }
-
 }
 
 ?>
