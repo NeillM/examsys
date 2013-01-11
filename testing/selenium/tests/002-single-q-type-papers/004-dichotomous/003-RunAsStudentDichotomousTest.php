@@ -28,6 +28,8 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Dichotomous 1, True/False, display order, 1 mark, 4 stems, answers: T, F, F, T');
     $this->assertTextPresent('Dichotomous 2, True/False, alphabetic, 2 marks, 4 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 16);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(4 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(8 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q2_opt1"]/td[3]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q2_opt2"]/td[3]', 'Stem M');
@@ -40,11 +42,16 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('T/F Mark Per Question');
     $this->assertTextPresent('Dichotomous 4, True/False, display order, mark per question, 1 mark, 4 stems, answers: T, F, F, T');
     $this->assertCssCount('css=input[type="radio"]', 18);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Dichotomous 5, True/False, alphabetic, mark per question, 2 marks, 4 stems, answers');
     $this->assertTextPresent('Dichotomous 6, True/False, random, mark per question, 1 mark, 5 stems, answers');
+    $this->assertCssCount('css=input[type="radio"]', 18);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q1_opt1"]/td[3]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q1_opt2"]/td[3]', 'Stem M');
@@ -57,6 +64,8 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Dichotomous 7, True/False, display order, 1 mark correct, -0.5 marks incorrect, 4 stems, answers: T, F, F, T');
     $this->assertTextPresent('Dichotomous 8, True/False, alphabetic, 2 marks correct, -1 mark incorrect, 4 stems, answer');
     $this->assertCssCount('css=input[type="radio"]', 16);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(4 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(8 marks, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q2_opt1"]/td[3]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q2_opt2"]/td[3]', 'Stem M');
@@ -69,12 +78,16 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('T/F Mark Per Question, Negative Marking');
     $this->assertTextPresent('Dichotomous 10, True/False, display order, mark per question, 1 mark correct, -0.5 marks incorrect, 4 stems, answers: T, F, F, T');
     $this->assertCssCount('css=input[type="radio"]', 18);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Dichotomous 11, True/False, alphabetic, mark per question, 2 marks correct, -1 mark incorrect, 4 stems, answers');
     $this->assertTextPresent('Dichotomous 12, True/False, random, mark per question, 1 mark correct, -1 mark incorrect, 5 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 18);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q1_opt1"]/td[3]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q1_opt2"]/td[3]', 'Stem M');
@@ -89,6 +102,8 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Dichotomous 13, Yes/No, display order, 1 mark, 4 stems, answers: T, F, F, T');
     $this->assertTextPresent('Dichotomous 14, Yes/No, alphabetic, 2 marks, 4 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 16);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(4 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(8 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q2_opt1"]/td[3]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q2_opt2"]/td[3]', 'Stem M');
@@ -101,12 +116,16 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Y/N Mark Per Question');
     $this->assertTextPresent('Dichotomous 16, Yes/No, display order, mark per question, 1 mark, 4 stems, answers: T, F, F, T');
     $this->assertCssCount('css=input[type="radio"]', 18);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Dichotomous 17, Yes/No, alphabetic, mark per question, 2 marks, 4 stems, answers');
     $this->assertTextPresent('Dichotomous 18, Yes/No, random, mark per question, 1 mark, 5 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 18);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q1_opt1"]/td[3]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q1_opt2"]/td[3]', 'Stem M');
@@ -119,6 +138,8 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Dichotomous 19, Yes/No, display order, 1 mark correct, -0.5 marks incorrect, 4 stems, answers: T, F, F, T');
     $this->assertTextPresent('Dichotomous 20, Yes/No, alphabetic, 2 marks correct, -1 mark incorrect, 4 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 16);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(4 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(8 marks, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q2_opt1"]/td[3]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q2_opt2"]/td[3]', 'Stem M');
@@ -131,12 +152,16 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Y/N, Mark Per Question, Negative Marking');
     $this->assertTextPresent('Dichotomous 22, Yes/No, display order, mark per question, 1 mark correct, -0.5 marks incorrect, 4 stems, answers: T, F, F, T');
     $this->assertCssCount('css=input[type="radio"]', 18);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Dichotomous 23, Yes/No, alphabetic, mark per question, 2 marks correct, -1 mark incorrect, 4 stems, answers');
     $this->assertTextPresent('Dichotomous 24, Yes/No, random, mark per question, 1 mark correct, -1 mark incorrect, 5 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 18);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q1_opt1"]/td[3]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q1_opt2"]/td[3]', 'Stem M');
@@ -151,6 +176,8 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Dichotomous 25, True/False/Abstain, display order, 1 mark, 4 stems, answers: T, F, F, T');
     $this->assertTextPresent('Dichotomous 26, True/False/Abstain, alphabetic, 2 marks, 4 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 24);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(4 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(8 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q2_opt1"]/td[4]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q2_opt2"]/td[4]', 'Stem M');
@@ -163,12 +190,16 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('T/F/A Mark Per Question');
     $this->assertTextPresent('Dichotomous 28, True/False/Abstain, display order, mark per question, 1 mark, 4 stems, answers: T, F, F, T');
     $this->assertCssCount('css=input[type="radio"]', 27);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Dichotomous 29, True/False/Abstain, alphabetic, mark per question, 2 marks, 4 stems, answers');
     $this->assertTextPresent('Dichotomous 30, True/False/Abstain, random, mark per question, 1 mark, 5 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 27);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q1_opt1"]/td[4]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q1_opt2"]/td[4]', 'Stem M');
@@ -181,6 +212,8 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Dichotomous 31, True/False/Abstain, display order, 1 mark correct, -0.5 marks incorrect, 4 stems, answers: T, F, F, T');
     $this->assertTextPresent('Dichotomous 32, True/False/Abstain, alphabetic, 2 marks correct, -1 mark incorrect, 4 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 24);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(4 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(8 marks, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q2_opt1"]/td[4]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q2_opt2"]/td[4]', 'Stem M');
@@ -193,12 +226,16 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('T/F/A Mark Per Question, Negative Marking');
     $this->assertTextPresent('Dichotomous 34, True/False/Abstain, display order, mark per question, 1 mark correct, -0.5 marks incorrect, 4 stems, answers: T, F, F, T');
     $this->assertCssCount('css=input[type="radio"]', 27);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Dichotomous 35, True/False/Abstain, alphabetic, mark per question, 2 marks correct, -1 mark incorrect, 4 stems, answers');
     $this->assertTextPresent('Dichotomous 36, True/False/Abstain, random, mark per question, 1 mark correct, -1 mark incorrect, 5 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 27);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q1_opt1"]/td[4]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q1_opt2"]/td[4]', 'Stem M');
@@ -213,6 +250,8 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Dichotomous 37, Yes/No/Abstain, display order, 1 mark, 4 stems, answers: T, F, F, T');
     $this->assertTextPresent('Dichotomous 38, Yes/No/Abstain, alphabetic, 2 marks, 4 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 24);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(4 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(8 marks)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q2_opt1"]/td[4]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q2_opt2"]/td[4]', 'Stem M');
@@ -225,12 +264,16 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Y/N/A Mark Per Question');
     $this->assertTextPresent('Dichotomous 40, Yes/No/Abstain, display order, mark per question, 1 mark, 4 stems, answers: T, F, F, T');
     $this->assertCssCount('css=input[type="radio"]', 27);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Dichotomous 41, Yes/No/Abstain, alphabetic, mark per question, 2 marks, 4 stems, answers');
     $this->assertTextPresent('Dichotomous 42, Yes/No/Abstain, random, mark per question, 1 mark, 5 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 27);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q1_opt1"]/td[4]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q1_opt2"]/td[4]', 'Stem M');
@@ -243,6 +286,8 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Dichotomous 43, Yes/No/Abstain, display order, 1 mark correct, -0.5 marks incorrect, 4 stems, answers: T, F, F, T');
     $this->assertTextPresent('Dichotomous 44, Yes/No/Abstain, alphabetic, 2 marks correct, -1 mark incorrect, 4 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 24);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(4 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(8 marks, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q2_opt1"]/td[4]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q2_opt2"]/td[4]', 'Stem M');
@@ -255,12 +300,16 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Y/N/A, Mark Per Question, Negative Marking');
     $this->assertTextPresent('Dichotomous 46, Yes/No/Abstain, display order, mark per question, 1 mark correct, -0.5 marks incorrect, 4 stems, answers: T, F, F, T');
     $this->assertCssCount('css=input[type="radio"]', 27);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(5 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Dichotomous 47, Yes/No/Abstain, alphabetic, mark per question, 2 marks correct, -1 mark incorrect, 4 stems, answers');
     $this->assertTextPresent('Dichotomous 48, Yes/No/Abstain, random, mark per question, 1 mark correct, -1 mark incorrect, 5 stems, answers');
     $this->assertCssCount('css=input[type="radio"]', 27);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
     // Order of alphabetic questions
     $this->assertElementContainsText('//tr[@id="q1_opt1"]/td[4]', 'Stem B');
     $this->assertElementContainsText('//tr[@id="q1_opt2"]/td[4]', 'Stem M');
