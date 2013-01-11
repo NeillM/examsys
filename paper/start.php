@@ -325,7 +325,9 @@ if ($exam_duration != null and (int) $paper_type == 2){
 
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 
-  $student_object = $userObject;
+  $usobj['user_ID']   = $userObject->get_user_ID();
+  $usobj['special_needs_percentage'] = $userObject->get_special_needs_percentage();
+  $student_object     = $usobj;
 
   $log_extra_time = new LogExtraTime( $log_lab_end_time, $student_object, $mysqli );
 
