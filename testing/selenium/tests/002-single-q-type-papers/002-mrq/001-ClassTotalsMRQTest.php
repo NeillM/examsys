@@ -20,16 +20,16 @@ class ClassTotalsMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20130117150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
 
     // Individuals
-    $this->assertElementContainsText('//tr[@id="res1"]/td[5]', '-8');
-    $this->assertElementContainsText('//tr[@id="res1"]/td[6]', '-30%');
+    $this->assertElementContainsText('//tr[@id="res1"]/td[5]', '-9');
+    $this->assertElementContainsText('//tr[@id="res1"]/td[6]', '-33%');
     $this->assertElementContainsText('//tr[@id="res1"]/td[7]', 'Fail');
 
     $this->assertElementContainsText('//tr[@id="res2"]/td[5]', '27');
     $this->assertElementContainsText('//tr[@id="res2"]/td[6]', '100%');
     $this->assertElementContainsText('//tr[@id="res2"]/td[7]', 'Distinction');
 
-    $this->assertElementContainsText('//tr[@id="res3"]/td[5]', '-8');
-    $this->assertElementContainsText('//tr[@id="res3"]/td[6]', '-30%');
+    $this->assertElementContainsText('//tr[@id="res3"]/td[5]', '-9');
+    $this->assertElementContainsText('//tr[@id="res3"]/td[6]', '-33%');
     $this->assertElementContainsText('//tr[@id="res3"]/td[7]', 'Fail');
 
     $this->assertElementContainsText('//tr[@id="res4"]/td[5]', '3.5');
@@ -51,23 +51,23 @@ class ClassTotalsMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Total marks
     $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[6]/td[2]', '27');
     // Mean
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[8]/td[2]', '3.6');
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[8]/td[3]', '(13.3%)');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[8]/td[2]', '3.1');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[8]/td[3]', '(11.8%)');
     // Median
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[9]/td[2]', '-8');
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[9]/td[3]', '(-30%)');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[9]/td[2]', '-9');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[9]/td[3]', '(-33%)');
     // Standard Deviation
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[10]/td[2]', '16.50');
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[10]/td[3]', '(61.3%)');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[10]/td[2]', '16.97');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[10]/td[3]', '(62.7%)');
     // Max
     $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[11]/td[2]', '27');
     $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[11]/td[3]', '(100%)');
     // Min
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[12]/td[2]', '-8');
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[12]/td[3]', '(-30%)');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[12]/td[2]', '-9');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[12]/td[3]', '(-33%)');
     // Range
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[13]/td[2]', '35');
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[13]/td[3]', '(130%)');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[13]/td[2]', '36');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[13]/td[3]', '(133%)');
     // Top 10%
     $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[14]/td[2]', '73.9%');
     // Top 15%
@@ -77,7 +77,7 @@ class ClassTotalsMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Top 25%
     $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[17]/td[2]', '34.75%');
     // Bottom 10%
-    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[18]/td[2]', '-30%');
+    $this->assertElementContainsText('//table/tbody/tr[21]/td/table/tbody/tr[18]/td[2]', '-33%');
   }
 }
 ?>

@@ -27,6 +27,8 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 1, display order, mark per option, 1 mark, Option One and Option Three correct');
     $this->assertTextPresent('MRQ 2, alphabetic, mark per option, 1 mark, Option B and Option P correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks)');
     // Order of alphabetic question
     $this->assertElementContainsText('id=2_1', 'Option B');
     $this->assertElementContainsText('id=2_2', 'Option M');
@@ -38,12 +40,16 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 3, random, mark per option, 2 marks, Option One and Option Four correct');
     $this->assertTextPresent('MRQ 4, display order, mark per question, 2 marks, Option One and Option Two correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(4 marks)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('MRQ 5, alphabetic, mark per question, 1 mark, Option M and Option X correct');
     $this->assertTextPresent('MRQ 6, random, mark per question, 2 marks, Option Two and Option Three correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks)');
     // Order of alphabetic question
     $this->assertElementContainsText('id=1_1', 'Option B');
     $this->assertElementContainsText('id=1_2', 'Option M');
@@ -58,6 +64,8 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 7, display order, mark per option, 1 mark correct, -1 mark incorrect, Option One and Option Four correct');
     $this->assertTextPresent('MRQ 8, alphabetic, mark per option, 2 marks correct, -1 mark incorrect, Option B and Option X correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(4 marks, negative marking)');
     // Order of alphabetic question
     $this->assertElementContainsText('id=2_1', 'Option B');
     $this->assertElementContainsText('id=2_2', 'Option M');
@@ -69,12 +77,16 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('MRQ 9, random, mark per option, 1 mark correct, -0.5 marks incorrect, Option One and Option Three correct');
     $this->assertTextPresent('MRQ 10, display order, mark per question, 2 marks correct, -1 mark incorrect, Option One and Option Two correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks, negative marking)');
 
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('MRQ 11, alphabetic, mark per question, 1 mark correct, -1 mark incorrect, Option M and Option B correct');
     $this->assertTextPresent('MRQ 12, random, mark per question, 3 marks correct, -2 marks incorrect, Option Two and Option Four correct');
     $this->assertCssCount('css=input[type="checkbox"]', 8);
+    $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark, negative marking)');
+    $this->assertElementContainsText('//*[@id="q2_mk"]', '(3 marks, negative marking)');
     // Order of alphabetic question
     $this->assertElementContainsText('id=1_1', 'Option B');
     $this->assertElementContainsText('id=1_2', 'Option M');
@@ -97,13 +109,13 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p/span', '-2 out of 4');
     $this->assertElementContainsText('//table[6]/tbody/tr/td[2]/p/span', '-1 out of 2');
     $this->assertElementContainsText('//table[6]/tbody/tr[3]/td[2]/p/span', '-1 out of 2');
-    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '-1 out of 1');
     $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '-2 out of 3');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-8 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-9 out of 27');
     $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-29.6%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-33.3%');
   }
 
   public function testCompletePaperCorrect() {
@@ -241,13 +253,13 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p/span', '-2 out of 4');
     $this->assertElementContainsText('//table[6]/tbody/tr/td[2]/p/span', '-1 out of 2');
     $this->assertElementContainsText('//table[6]/tbody/tr[3]/td[2]/p/span', '-1 out of 2');
-    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '-1 out of 1');
     $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '-2 out of 3');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-8 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-9 out of 27');
     $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-29.6%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-33.3%');
   }
 
   public function testCompletePaperMixed() {

@@ -18,7 +18,7 @@ class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20130117150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-07 15:38:40',104,'0','n','n','-30',event);hideTimerReset();\"]");
+    $this->click("//span[@onclick=\"popMenu('2013-01-07 15:38:40',104,'0','n','n','-33',event);hideTimerReset();\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -34,13 +34,13 @@ class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p/span', '-2 out of 4');
     $this->assertElementContainsText('//table[6]/tbody/tr/td[2]/p/span', '-1 out of 2');
     $this->assertElementContainsText('//table[6]/tbody/tr[3]/td[2]/p/span', '-1 out of 2');
-    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '-1 out of 1');
     $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '-2 out of 3');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-8 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-9 out of 27');
     $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-30%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-33%');
   }
 
   public function testAllCorrect() {
@@ -76,7 +76,7 @@ class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20130117150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
-    $this->click("//span[@onclick=\"popMenu('2012-12-14 11:19:03',106,'0','n','n','-30',event);hideTimerReset();\"]");
+        $this->click("//span[@onclick=\"popMenu('2013-01-07 15:38:40',104,'0','n','n','-33',event);hideTimerReset();\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -92,13 +92,13 @@ class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p/span', '-2 out of 4');
     $this->assertElementContainsText('//table[6]/tbody/tr/td[2]/p/span', '-1 out of 2');
     $this->assertElementContainsText('//table[6]/tbody/tr[3]/td[2]/p/span', '-1 out of 2');
-    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '0 out of 1');
+    $this->assertElementContainsText('//table[7]/tbody/tr/td[2]/p/span', '-1 out of 1');
     $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '-2 out of 3');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-8 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-9 out of 27');
     $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-30%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-33%');
   }
 
   public function testMixed() {
