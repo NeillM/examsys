@@ -5340,6 +5340,58 @@ QUERY;
     echo '<li>' . $sql  . '</li>' . "\n";
   }
 
+  // 11/01/2013 - Create new 'lab_name' field in log_metadata table.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log_metadata' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='lab_name'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE log_metadata ADD COLUMN lab_name varchar(255)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log_metadata ADD COLUMN lab_name varchar(255)</li>\n";
+    ob_flush();
+    flush();
+
+    // Populate existing records.
+    $lab_lookup = array();
+    $result2 = $mysqli->prepare("SELECT address, name FROM (ip_addresses, labs) WHERE ip_addresses.lab = labs.id");
+    $result2->execute();
+    $result2->store_result();
+    $result2->bind_result($address, $lab_name);
+    while ($result2->fetch()) {
+      $lab_lookup[$address] = $lab_name;
+    }
+    $result2->close();
+    
+    // Backwards compatibility at UoN
+    $adjust = $mysqli->prepare("UPDATE log_metadata SET lab_name = 'Pope - A24' WHERE ipaddress IN ('128.243.137.9','128.243.137.10','128.243.137.161','128.243.137.23','128.243.137.24','128.243.137.25','128.243.137.26','128.243.137.28','128.243.137.29','128.243.137.32','128.243.137.34','128.243.137.81','128.243.137.131','128.243.137.143','128.243.137.144','128.243.137.146','128.243.137.148','128.243.137.149','128.243.137.151','128.243.137.153','128.243.137.154','128.243.137.156','128.243.137.157','128.243.137.158','128.243.137.160','128.243.137.159','128.243.137.155','128.243.137.152','128.243.137.16','128.243.137.147','128.243.137.145','128.243.137.142','128.243.137.141','128.243.137.76','128.243.137.33','128.243.137.31','128.243.137.30','128.243.137.27','128.243.137.18','128.243.137.11')");
+    $adjust->execute();
+    $adjust->close();    
+    $adjust = $mysqli->prepare("UPDATE log_metadata SET lab_name = 'Pope - A15' WHERE ipaddress IN ('128.243.137.5','128.243.137.13','128.243.137.14','128.243.137.15','128.243.137.17','128.243.137.19','128.243.137.21','128.243.137.22','128.243.137.63','128.243.137.67','128.243.137.86','128.243.137.88','128.243.137.96','128.243.137.97','128.243.137.104','128.243.137.107','128.243.137.108','128.243.137.110','128.243.137.111','128.243.137.112','128.243.137.114','128.243.137.115','128.243.137.117','128.243.137.118','128.243.137.119','128.243.137.120','128.243.137.123','128.243.137.124','128.243.137.125','128.243.137.126','128.243.137.129','128.243.137.130','128.243.137.133','128.243.137.135','128.243.137.140','128.243.137.150','128.243.137.163','128.243.137.165','128.243.137.166','128.243.137.167','128.243.137.168','128.243.137.169','128.243.137.170','128.243.137.171','128.243.137.172','128.243.137.173','128.243.137.174','128.243.137.175','128.243.137.176','128.243.137.178','128.243.137.179','128.243.137.177','128.243.137.180','128.243.137.186','128.243.137.190','128.243.137.194','128.243.137.202','128.243.137.205','128.243.137.207','128.243.137.208','128.243.137.209')");
+    $adjust->execute();
+    $adjust->close();
+   
+    // Look up log2 records and populate.
+    $result2 = $mysqli->prepare("SELECT DISTINCT ipaddress FROM log_metadata");
+    $result2->execute();
+    $result2->store_result();
+    $result2->bind_result($ipaddress);
+    while ($result2->fetch()) {
+      if (isset($lab_lookup[$ipaddress])) {
+        $labs_name = $lab_lookup[$ipaddress];
+        
+        $adjust = $mysqli->prepare("UPDATE log_metadata SET lab_name = ? WHERE ipaddress = ?");
+        $adjust->bind_param('ss', $labs_name, $ipaddress);
+        $adjust->execute();
+        $adjust->close();
+      }      
+    }
+    $result2->close();
+   
+  }
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 

@@ -171,8 +171,13 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
     if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'],$db) === false) {
       // Write log_metadata first on screen 1 only
       $tmp_ip_address = NetworkUtils::get_ipaddress();
-      $save_metadata = $db->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, NULL)");
-      $save_metadata->bind_param('iisssii', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt);
+      
+      $labf = new LabFactory($db);
+      $lab_obj = $labf->get_lab_based_on_ip($tmp_ip_address);
+      $room = $lab_obj->get_name();  
+      
+      $save_metadata = $db->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, NULL, ?)");
+      $save_metadata->bind_param('iisssiis', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt, $room);
       $save_metadata->execute();
       $save_metadata->close();
     }

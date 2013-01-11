@@ -41,22 +41,18 @@ class LabFactory {
    */
   public function get_lab_based_on_ip($ip_address) {
 
-    $sql = 'SELECT lab , name FROM ip_addresses , labs WHERE ip_addresses.lab = labs.id AND address = ?';
+    $sql = 'SELECT lab, name FROM ip_addresses, labs WHERE ip_addresses.lab = labs.id AND address = ?';
 
     $lab_results = $this->db->prepare($sql);
 
-    $lab_results->bind_param('s'
-      , $ip_address);
+    $lab_results->bind_param('s', $ip_address);
     $lab_results->execute();
-    $lab_results->bind_result($lab_id
-      , $room_name);
-
+    $lab_results->bind_result($lab_id, $room_name);
     if ($lab_results->num_rows < 0) {
       $paper_results->close();
 
       return FALSE;
     }
-
     $lab_results->fetch();
 
     $lab_object = new Lab();
