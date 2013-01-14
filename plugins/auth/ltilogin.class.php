@@ -51,8 +51,9 @@ class ltilogin_auth extends outline_authentication {
     }
 
 
-    $this->lti = new UoN_LTI($this->db);
+    $this->lti = UoN_LTI::get_instance();
 
+    $this->lti->init_lti0($this->db);
     $this->savetodebug('Starting LTI');
     $this->lti->init_lti();
 
@@ -67,7 +68,7 @@ class ltilogin_auth extends outline_authentication {
 
   function auth($authobj) {
 
-    if (!$this->lti->valid) {
+    if ($this->lti->valid !== TRUE) {
       $this->savetodebug('Not valid LTI Launch: ' .  $this->lti->message);
       $this->set_fail();
 
