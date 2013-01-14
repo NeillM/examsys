@@ -596,140 +596,140 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '66.7%');
   }
 
-  // public function testCompletePaperIncorrect() {
-  //   do_student_login($this, 'teststudent13', 'hii.420R');
+  public function testCompletePaperIncorrect() {
+    do_student_login($this, 'teststudent14', 'mon~61Qt');
 
-  //   $this->open("/user_index.php?id=61357920091102");
-  //   $this->click("id=start");
-  //   $this->waitForPopUp("paper", "30000");
-  //   $this->selectWindow("name=paper");
+    $this->open("/user_index.php?id=61357920091102");
+    $this->click("id=start");
+    $this->waitForPopUp("paper", "30000");
+    $this->selectWindow("name=paper");
 
-  //   // Calculate correct answers and input them
-  //   $qn_text = $this->getText('id=calc1_q');
-  //   $matches = array();
-  //   preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1];
-  //   $answer = pow($A, 2) * pi();
-  //   $answer = round($answer, 2);
-  //   $this->type("id=q1", $answer + 2);
-  //   $qn_text = $this->getText('id=calc2_q');
-  //   preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1][0];
-  //   $B = $matches[1][1];
-  //   $answer = sqrt(pow($A, 2) + pow($B, 2));
-  //   $answer = round($answer, 1);
-  //   $this->type("id=q2", $answer - 2);
-  //   $qn_text = $this->getText('id=calc3_q');
-  //   $matches = array();
-  //   preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1];
-  //   $answer = pow($A, 2) * pi();
-  //   $answer = round($answer, 2);
-  //   $this->type("id=q3", $answer + 2);
-  //   $this->click("id=next");
-  //   $this->waitForPageToLoad("30000");
+    // Calculate correct answers and input them
+    $qn_text = $this->getText('id=calc1_q');
+    $matches = array();
+    preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1];
+    $answer = pow($A, 2) * pi();
+    $answer = round($answer, 2);
+    $this->type("id=q1", $answer + 2);
+    $qn_text = $this->getText('id=calc2_q');
+    preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1][0];
+    $B = $matches[1][1];
+    $answer = sqrt(pow($A, 2) + pow($B, 2));
+    $answer = round($answer, 1);
+    $this->type("id=q2", $answer - 2);
+    $qn_text = $this->getText('id=calc3_q');
+    $matches = array();
+    preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1];
+    $answer = pow($A, 2) * pi();
+    $answer = round($answer, 2);
+    $this->type("id=q3", $answer + 2);
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
 
-  //   // Calculate correct answers and input them
-  //   $qn_text = $this->getText('id=calc4_q');
-  //   preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1][0];
-  //   $B = $matches[1][1];
-  //   $answer = sqrt(pow($A, 2) + pow($B, 2));
-  //   $answer = round($answer, 1);
-  //   $this->type("id=q1", $answer - 2);
-  //   $qn_text = $this->getText('id=calc5_q');
-  //   $matches = array();
-  //   preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1];
-  //   $answer = pow($A, 2) * pi();
-  //   $answer = round($answer, 2);
-  //   $this->type("id=q2", $answer + 2);
-  //   $qn_text = $this->getText('id=calc6_q');
-  //   preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1][0];
-  //   $B = $matches[1][1];
-  //   $answer = sqrt(pow($A, 2) + pow($B, 2));
-  //   $answer = round($answer, 1);
-  //   $this->type("id=q3", $answer - 2);
-  //   $this->click("id=next");
-  //   $this->waitForPageToLoad("30000");
+    // Calculate correct answers and input them
+    $qn_text = $this->getText('id=calc4_q');
+    preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1][0];
+    $B = $matches[1][1];
+    $answer = sqrt(pow($A, 2) + pow($B, 2));
+    $answer = round($answer, 1);
+    $this->type("id=q1", $answer - 2);
+    $qn_text = $this->getText('id=calc5_q');
+    $matches = array();
+    preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1];
+    $answer = pow($A, 2) * pi();
+    $answer = round($answer, 2);
+    $this->type("id=q2", $answer + 2);
+    $qn_text = $this->getText('id=calc6_q');
+    preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1][0];
+    $B = $matches[1][1];
+    $answer = sqrt(pow($A, 2) + pow($B, 2));
+    $answer = round($answer, 1);
+    $this->type("id=q3", $answer - 2);
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
 
-  //   // Calculate correct answers and input them
-  //   $qn_text = $this->getText('id=calc7_q');
-  //   $matches = array();
-  //   preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1];
-  //   $answer = pow($A, 2) * pi();
-  //   $answer = round($answer, 2);
-  //   $this->type("id=q1", $answer + 2);
-  //   $qn_text = $this->getText('id=calc8_q');
-  //   preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1][0];
-  //   $B = $matches[1][1];
-  //   $answer = sqrt(pow($A, 2) + pow($B, 2));
-  //   $answer = round($answer, 1);
-  //   $this->type("id=q2", $answer - 2);
-  //   $qn_text = $this->getText('id=calc9_q');
-  //   $matches = array();
-  //   preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1];
-  //   $answer = pow($A, 2) * pi();
-  //   $answer = round($answer, 2);
-  //   $answer = $answer * 1.06;
-  //   $this->type("id=q3", $answer);
-  //   $this->click("id=next");
-  //   $this->waitForPageToLoad("30000");
+    // Calculate correct answers and input them
+    $qn_text = $this->getText('id=calc7_q');
+    $matches = array();
+    preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1];
+    $answer = pow($A, 2) * pi();
+    $answer = round($answer, 2);
+    $this->type("id=q1", $answer + 2);
+    $qn_text = $this->getText('id=calc8_q');
+    preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1][0];
+    $B = $matches[1][1];
+    $answer = sqrt(pow($A, 2) + pow($B, 2));
+    $answer = round($answer, 1);
+    $this->type("id=q2", $answer - 2);
+    $qn_text = $this->getText('id=calc9_q');
+    $matches = array();
+    preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1];
+    $answer = pow($A, 2) * pi();
+    $answer = round($answer, 2);
+    $answer = $answer * 1.06;
+    $this->type("id=q3", $answer);
+    $this->click("id=next");
+    $this->waitForPageToLoad("30000");
 
-  //   // Calculate correct answers and input them
-  //   $qn_text = $this->getText('id=calc10_q');
-  //   preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1][0];
-  //   $B = $matches[1][1];
-  //   $answer = sqrt(pow($A, 2) + pow($B, 2));
-  //   $answer = round($answer, 1);
-  //   $answer = $answer * 1.09;
-  //   $this->type("id=q1", $answer);
-  //   $qn_text = $this->getText('id=calc11_q');
-  //   $matches = array();
-  //   preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1];
-  //   $answer = pow($A, 2) * pi();
-  //   $answer = round($answer, 2);
-  //   $answer = $answer * 0.94;
-  //   $this->type("id=q2", $answer);
-  //   $qn_text = $this->getText('id=calc12_q');
-  //   preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
-  //   $A = $matches[1][0];
-  //   $B = $matches[1][1];
-  //   $answer = sqrt(pow($A, 2) + pow($B, 2));
-  //   $answer = round($answer, 1);
-  //   $answer = $answer * 0.92;
-  //   $this->type("id=q3", $answer);
-  //   $this->click("id=finish");
-  //   $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
-  //   $this->waitForPageToLoad("30000");
-  //   $this->assertLocation($this->page_root . '/paper/finish.php?id=61357920091102');
+    // Calculate correct answers and input them
+    $qn_text = $this->getText('id=calc10_q');
+    preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1][0];
+    $B = $matches[1][1];
+    $answer = sqrt(pow($A, 2) + pow($B, 2));
+    $answer = round($answer, 1);
+    $answer = $answer * 1.09;
+    $this->type("id=q1", $answer);
+    $qn_text = $this->getText('id=calc11_q');
+    $matches = array();
+    preg_match('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1];
+    $answer = pow($A, 2) * pi();
+    $answer = round($answer, 2);
+    $answer = $answer * 0.94;
+    $this->type("id=q2", $answer);
+    $qn_text = $this->getText('id=calc12_q');
+    preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
+    $A = $matches[1][0];
+    $B = $matches[1][1];
+    $answer = sqrt(pow($A, 2) + pow($B, 2));
+    $answer = round($answer, 1);
+    $answer = $answer * 0.91;
+    $this->type("id=q3", $answer);
+    $this->click("id=finish");
+    $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
+    $this->waitForPageToLoad("30000");
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=61357920091102');
 
 
-  //   // Individual Question Marks
-  //   $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '1 out of 1');
-  //   $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '2 out of 2');
-  //   $this->assertElementContainsText('//table[2]/tbody/tr[7]/td[2]/p[4]/span', '1 out of 1');
-  //   $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '2 out of 2');
-  //   $this->assertElementContainsText('//table[3]/tbody/tr[4]/td[2]/p[4]/span', '0.5 out of 1');
-  //   $this->assertElementContainsText('//table[3]/tbody/tr[6]/td[2]/p/span', '1 out of 2');
-  //   $this->assertElementContainsText('//table[4]/tbody/tr[2]/td[2]/p[4]/span', '0.5 out of 1');
-  //   $this->assertElementContainsText('//table[4]/tbody/tr[4]/td[2]/p/span', '1 out of 2');
-  //   $this->assertElementContainsText('//table[4]/tbody/tr[7]/td[2]/p[4]/span', '0.5 out of 1');
-  //   $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/p/span', '1 out of 2');
-  //   $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p[4]/span', '0.5 out of 1');
-  //   $this->assertElementContainsText('//table[5]/tbody/tr[6]/td[2]/p/span', '1 out of 2');
+    // Individual Question Marks
+    $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '0 out of 1');
+    $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[2]/tbody/tr[7]/td[2]/p[4]/span', '-0.5 out of 1');
+    $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '-1 out of 2');
+    $this->assertElementContainsText('//table[3]/tbody/tr[4]/td[2]/p[4]/span', '0 out of 1');
+    $this->assertElementContainsText('//table[3]/tbody/tr[6]/td[2]/p/span', '0 out of 2');
+    $this->assertElementContainsText('//table[4]/tbody/tr[2]/td[2]/p[4]/span', '-0.5 out of 1');
+    $this->assertElementContainsText('//table[4]/tbody/tr[4]/td[2]/p/span', '-1 out of 2');
+    $this->assertElementContainsText('//table[4]/tbody/tr[7]/td[2]/p[4]/span', '0 out of 1');
+    $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/p/span', ' out of 2');
+    $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p[4]/span', '-0.5 out of 1');
+    $this->assertElementContainsText('//table[5]/tbody/tr[6]/td[2]/p/span', '-1 out of 2');
 
-  //   // Overall Marks
-  //   $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '12 out of 18');
-  //   $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-  //   $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '66.7%');
-  // }
+    // Overall Marks
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-4.5 out of 18');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-25.0%');
+  }
 
   // public function testCompletePaperIncorrect() {
   //   do_student_login($this, 'teststudent13', 'hii.420R');
