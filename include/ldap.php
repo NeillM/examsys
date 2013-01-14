@@ -16,7 +16,7 @@ function ldap_lookup($u, $p, &$data, $lookup_info=0) {
 function ldap_auth($u, $p, &$data, $lookup_info=0) {
   global $string;
 
-  $configObj = Config::Instance();
+  $configObj = Config::get_instance();
 
   if ($u == '') {
     $data['error'] = $string['noldapusernamesupplied'];

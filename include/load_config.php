@@ -20,7 +20,7 @@ $root                  = str_replace( '/include', '/', str_replace('\\', '/', di
 
 require_once $root . 'classes/configobject.class.php';
 
-$configObject          = Config::Instance();
+$configObject          = Config::get_instance();
 
 $cfg_web_root          = $configObject->get('cfg_web_root');
 $cfg_editor_javascript = $configObject->get('cfg_editor_javascript');

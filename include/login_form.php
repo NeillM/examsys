@@ -18,9 +18,25 @@
 
   <br />
   <br />
-  
+  <?php
+  if(isset($displaystdformobj->messages)) {
+    foreach($displaystdformobj->messages as $object) {
+      echo <<<END
+$object->pretext
+<div class="msg">$object->content</div>
+$object->posttext
+END;
+    }
+  }
+
+  if(!isset($displaystdformobj) or $displaystdformobj->replace!==true) {
+
+    echo <<<HTML
   <div class="msg">The page you are trying to access requires authentication. Please sign in using your username and password:</div>
-    
+HTML;
+
+  }
+?>
   <div style="margin-left:65px">
   <table>
   <tr><td>Username</td><td><input type="text" name="ROGO_USER" /></td></tr>

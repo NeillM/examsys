@@ -30,7 +30,7 @@
   
   function marks_from_file($fileName) {
     global $mysqli;
-    $configObject=Config::Instance();
+    $configObject=Config::get_instance();
     $configObject->get('cfg_tmpdir');
   global $userObject;
     // Get properties of the paper.

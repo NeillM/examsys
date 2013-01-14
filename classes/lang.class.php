@@ -51,7 +51,7 @@ Class LangUtils {
   static function loadlangfile($file) {
     $cfg_web_root = $configObj->get('cfg_web_root');
     $language = LangUtils::getLang($cfg_web_root);
-    $configObj = Config::Instance();
+    $configObj = Config::get_instance();
 
     $lang_path = " {$cfg_web_root}lang/$language/" . $file;
 

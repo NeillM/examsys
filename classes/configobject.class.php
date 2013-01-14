@@ -26,26 +26,28 @@
  *
  * Designed to hold the config options in a class for easier access.
  */
-class Config {
+class Config extends RogoStaticSingleton {
   /**
    * @var array
    */
   public $data;
-  private static $inst;
+  protected static $inst;
+  protected static $class_name='Config';
 
   /**
    *
    */
-
-  public static function Instance()
+/*
+  public static function get_instance()
   {
     if (!is_object(self::$inst)) {
       self::$inst = new Config();
     }
     return self::$inst;
   }
+*/
 
-  private function __construct() {
+  protected function __construct() {
     include __DIR__ . '/../config/config.inc.php';
     $this->data = get_defined_vars();
 

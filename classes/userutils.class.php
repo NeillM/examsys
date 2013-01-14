@@ -27,7 +27,7 @@
 Class UserUtils {
 
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db) {
-    $configObj = Config::Instance();
+    $configObj = Config::get_instance();
 
     if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
       $initial = explode(' ', $forname);

@@ -37,7 +37,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
 
   $paperID = $property_object->get_property_id();
 
-  $configObject = Config::Instance();
+  $configObject = Config::get_instance();
 
   // Get any student notes;
   $notes_array = array();

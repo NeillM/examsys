@@ -46,7 +46,7 @@ Class UserNotices extends RogoStaticSingleton {
    *
    */
   public function display_notice($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
-    $configObject = Config::Instance();
+    $configObject = Config::get_instance();
     $rp = $configObject->get('cfg_root_path');
     
     if ($output_header == true) {

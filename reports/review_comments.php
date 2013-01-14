@@ -96,7 +96,7 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
 }
 
 function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language) {
-  $configObject = Config::Instance();
+  $configObject = Config::get_instance();
 
   $cfg_root_path = $configObject->get('cfg_root_path');
 
