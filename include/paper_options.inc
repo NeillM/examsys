@@ -28,7 +28,7 @@ require_once $cfg_web_root . 'include/sidebar_menu.inc';
 require_once $cfg_web_root . 'include/sidebar_functions.inc';
 require_once $cfg_web_root . 'classes/paperutils.class.php';
 
-global $userObject;
+$userObject = UserObject::get_instance();
 
 $paperID = $_GET['paperID'];
 

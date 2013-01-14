@@ -9,7 +9,7 @@
 
 global $string;
 
-global $notice;
+$notice = UserNotices::get_instance();
 $mysqli =& $this->db;
 $configObject =& $this->configObj;
 

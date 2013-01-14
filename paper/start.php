@@ -41,7 +41,7 @@ require '../classes/log_extra_time.class.php';
 require '../classes/log_lab_end_time.class.php';
 require '../classes/summativetimer.class.php';
 
-global $userObject;
+$userObject = UserObject::get_instance();
 
 check_var('id', 'GET', true, false, false);
 

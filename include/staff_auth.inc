@@ -29,7 +29,8 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
-global $userObject;
+
+$userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
   $notice->access_denied($mysqli, $string, 'You are attempting to access a <strong>Staff Only</strong> page.', true);

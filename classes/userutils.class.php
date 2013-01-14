@@ -253,7 +253,8 @@ Class UserUtils {
    *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
-    global $userObject;
+    
+    $userObject = UserObject::get_instance();
 
     if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
       //don't add a user to a module multiple times

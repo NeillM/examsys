@@ -32,7 +32,7 @@ require_once '../config/index.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
 
-global $userObject;
+$userObject = UserObject::get_instance();
 
 // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
 if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {

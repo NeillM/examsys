@@ -122,7 +122,7 @@ class Authentication {
   }
 
   function load_config() {
-    global $notice;
+    $notice = UserNotices::get_instance();
 
     $this->config = $this->configObj->getbyref('authentication');
 

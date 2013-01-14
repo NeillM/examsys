@@ -177,6 +177,14 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
       $room = $lab_obj->get_name();  
       
       $save_metadata = $db->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, NULL, ?)");
+      if ($db->error) {
+          try {
+            throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+          } catch (Exception $e) {
+            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+            echo nl2br($e->getTraceAsString());
+        }
+      }
       $save_metadata->bind_param('iisssiis', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt, $room);
       $save_metadata->execute();
       $save_metadata->close();

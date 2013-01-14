@@ -23,6 +23,7 @@
  */
 
 require_once $cfg_web_root . 'classes/dbutils.class.php';
+require_once $cfg_web_root . 'classes/configobject.class.php';
 
 set_error_handler("customErrorHandler");
 
@@ -88,10 +89,11 @@ function exceptionHandler($exception) {
 
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
-  global $debug_pagestart, $dbclass, $notice;
-  global $userObject; // TODO fix this fudge
+  global $debug_pagestart, $dbclass;
 
-  global $configObject;
+  $notice = UserNotices::get_instance();
+  $configObject = Config::get_instance();
+  $userObject = UserObject::get_instance();
 
   if (isset($debug_pagestart)) {
     //we are in a debug session do not log errors to db just display them

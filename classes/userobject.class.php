@@ -41,13 +41,17 @@
  */
 
 require_once $cfg_web_root . 'classes/schoolutils.class.php';
+require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
 
-class UserObject {
+class UserObject extends RogoStaticSingleton {
 
   // include old variables as private ones in this class
   /**
    * @var
    */
+  protected static $inst = NULL;
+  protected static $class_name = 'UserObject';
+  protected static $dont_construct = true;
   private $password, $userID, $userroles, $title, $initials, $first_names, $surname, $username, $email, $grade, $year, $special_needs, $special_needs_percentage, $record_no, $split_username;
   private $demomode = FALSE;
   private $roles, $staffModules, $studentModules, $db, $configObj;
@@ -64,9 +68,13 @@ class UserObject {
    * @param $configObject a Rogo config object populated from config.inc
    * @return none
    */
-  function __construct($configObject, &$db) {
+  function __construct($configObject, $db) {
+    if(is_object(self::$inst)) {
+      throw new Exception("Highlander:: there can be only one UserObject"); 
+    }
     $this->db = & $db;
     $this->configObj = & $configObject;
+    self::$inst = $this;
   }
 
   /**

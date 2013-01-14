@@ -27,9 +27,16 @@
 require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
 
 Class UserNotices extends RogoStaticSingleton {
-  
   public static $inst = NULL;
-  public static $class_name = 'UserNotices';
+  public static $class_name = 'user_notices';
+
+  /**
+  * constructor
+  */
+  private function __construct() {}
+}
+
+Class user_notices extends RogoStaticSingleton {
 
   /**
   * constructor

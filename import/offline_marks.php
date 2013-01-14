@@ -32,7 +32,7 @@
     global $mysqli;
     $configObject=Config::get_instance();
     $configObject->get('cfg_tmpdir');
-  global $userObject;
+    $userObject = UserObject::get_instance();
     // Get properties of the paper.
     $result = $mysqli->prepare("SELECT property_id, calendar_year, start_date FROM properties WHERE property_id=?");
     $result->bind_param('i', $_GET['paperID']);
