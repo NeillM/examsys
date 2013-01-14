@@ -99,7 +99,7 @@ class Authentication {
       $settings = $auth[1];
       $name = $auth[2];
       $this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
-      require_once $this->configObj->get('cfg_web_root') . 'classes/auth/' . $authtype . '.class.php';
+      require_once $this->configObj->get('cfg_web_root') . 'plugins/auth/' . $authtype . '.class.php';
       $this->returndata[$number] = new authtypereturn();
       $this->authinfo[$number] = array($name => $authtype);
       $this->authObj[$number] = new $authtype1($this, $settings, $number, $name, $this->db, $this->returndata, $this->form);

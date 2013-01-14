@@ -61,7 +61,7 @@ class ltilogin_auth extends outline_authentication {
   function register_callback_routines() {
     $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
 //    $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
-//    $this->calling_object->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
+    $this->calling_object->register_callback(array($this, 'displaystdform'), 'displaystdform', $this->number, $this->name);
   }
 
 
@@ -91,6 +91,11 @@ class ltilogin_auth extends outline_authentication {
       return TRUE;
     }
 
+
+    //set session to be needing user lookup
+    $_SESSION['authenticationobj']['ltilogin']['needsuserlookup']=true;
+    return false;
+
     $this->calling_object->display_debug();
 
     var_dump($returned);
@@ -107,5 +112,14 @@ class ltilogin_auth extends outline_authentication {
     }
   }
 
+  function displaystdform(&$displaystdformobj) {
+    $message= new stdClass();
+    $message->pretext='';
+    $message->posttext='';
+
+    $message->content='Please Login to authenticate the LTI Connection.'; //TODO need to convert this for language.
+    $displaystdformobj->messages[]=$message;
+    $displaystdformobj->replace=true;
+  }
 
 }
