@@ -22,19 +22,19 @@
 * @package
 */
 
-  require '../include/admin_auth.inc';
-  require '../include/errors.inc';
+require '../include/admin_auth.inc';
+require '../include/errors.inc';
 
-  check_var('gridID', 'GET', true, false);
-  
-  $result = $mysqli->prepare("SELECT name FROM ebel_grid_templates WHERE id=?");
-  $result->bind_param('i',  $_GET['gridID']);
-  $result->execute();
-  $result->bind_result($grid_name);
-  $result->fetch();
-  $result->close();
+check_var('gridID', 'GET', true, false, false);
 
-  $mysqli->close();
+$result = $mysqli->prepare("SELECT name FROM ebel_grid_templates WHERE id = ?");
+$result->bind_param('i', $_GET['gridID']);
+$result->execute();
+$result->bind_result($grid_name);
+$result->fetch();
+$result->close();
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

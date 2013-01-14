@@ -29,7 +29,7 @@ require_once './classes/userutils.class.php';
 require_once './classes/moduleutils.class.php';
 require_once './classes/smsutils.class.php';
 
-check_var('moduleid', 'GET', true, false);
+check_var('moduleid', 'GET', true, false, false);
 $session = date_utils::get_current_academic_year();
 
 //dose the user have an account?

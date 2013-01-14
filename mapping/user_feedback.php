@@ -23,13 +23,14 @@
 */
 
   require '../include/staff_student_auth.inc';
-  require '../include/demo_replace.inc';
-  require '../include/mapping.inc';
-  require '../include/errors.inc';
-  require '../include/feedback.inc';
+  require_once '../include/demo_replace.inc';
+  require_once '../include/mapping.inc';
+  require_once '../include/errors.inc';
+  require_once '../include/feedback.inc';
   require_once '../include/sort.inc';
+  require_once '../include/calculate_marks.inc';
 
-  check_var('id', 'GET', true, false);
+  check_var('id', 'GET', true, false, false);
 
   if ($userObject->has_role('Demo')) {
     $demo = true;
@@ -171,17 +172,18 @@
   }
 
   if ($paper_type == '4') {
-    $result = $mysqli->prepare("SELECT log4.q_id, rating as mark,score_method FROM log$paper_type LEFT JOIN questions ON log4.q_id = questions.q_id WHERE  log4.q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper=?) AND userID=? AND q_paper=? $startedSQL ORDER BY  log4.q_id, started");
+    $sql = "SELECT q_id, rating, NULL AS totalpos FROM log4 WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND userID = ? AND q_paper = ? $startedSQL ORDER BY q_id, started";
   } else {
-    $result = $mysqli->prepare("SELECT q_id, mark, totalpos FROM log$paper_type WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper=?) AND userID=? AND q_paper=? $startedSQL ORDER BY q_id, started");
+    $sql = "SELECT q_id, mark, totalpos FROM log$paper_type WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND userID = ? AND q_paper = ? $startedSQL ORDER BY q_id, started";
   }
+  $result = $mysqli->prepare($sql);
   $result->bind_param('iii', $paperID, $userID, $paperID);
   $result->execute();
   $result->bind_result($q_id, $mark, $totalpos);
   $total_student_mark = 0;
   while ($result->fetch()) {
     if (is_string($totalpos)) {
-      $question_data[$q_id]['totalpos'] = count(explode('|',$totalpos)) - 2;
+      $question_data[$q_id]['totalpos'] = count(explode('|', $totalpos)) - 2;
     } else {
       $question_data[$q_id]['totalpos'] = $totalpos;
     }
@@ -190,6 +192,18 @@
     $qid_list .= $q_id . ',';
   }
   $result->close();
+  
+  if ($paper_type == '4') {   // Get the maximum marks for OSCE station questions.
+    $result = $mysqli->prepare("SELECT q_id, q_type, display_method, score_method FROM questions, papers WHERE papers.question = questions.q_id AND paper = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($q_id, $q_type, $display_method, $score_method);
+    $total_student_mark = 0;
+    while ($result->fetch()) {
+      $question_marks = 1;
+      $question_data[$q_id]['totalpos'] = qMarks($q_type, '', $question_marks, '', '', $display_method, $score_method);
+    }
+  }
 
   $objectives = array();
   $qid_list = substr($qid_list,0,-1);

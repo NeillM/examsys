@@ -27,15 +27,11 @@ require '../include/errors.inc';
 require '../include/load_config.php';
 require '../classes/log_start_time.class.php';
 
-check_var( 'paperID', 'POST', true, false);
-check_var( 'userID', 'POST', true, false);
+$paperID   = check_var('paperID', 'POST', true, false, true);
+$studentID = check_var('userID', 'POST', true, false, true);
 
-$paperID   = $_POST[ 'paperID' ];
-$studentID = $_POST[ 'userID' ];
-
-$log_start_time = new LogStartTime( $studentID, $paperID, $mysqli );
+$log_start_time = new LogStartTime($studentID, $paperID, $mysqli);
 $log_start_time->delete();
-
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -44,6 +40,7 @@ $log_start_time->delete();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get( 'cfg_page_charset' ); ?>" />
   <title><?php echo $string['timerreset']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <script language="javascript">
     function closeWindow() {
       self.close();
@@ -51,7 +48,7 @@ $log_start_time->delete();
   </script>
 </head>
 
-<body onload="closeWindow();" style="margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:90%; text-align:justifed">
+<body onload="closeWindow();">
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>

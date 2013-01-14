@@ -24,7 +24,7 @@
 require '../include/staff_student_auth.inc';
 require '../include/errors.inc';
 
-check_var('paperID', 'GET', true, false);
+check_var('paperID', 'GET', true, false, false);
 ?>
 <table cellpadding="0" cellspacing="3" border="0" style="width:100%">
 <?php

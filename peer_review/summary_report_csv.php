@@ -25,7 +25,7 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
-check_var('paperID', 'GET', true, false);
+check_var('paperID', 'GET', true, false, false);
 
 require 'summary_report.inc';
 

@@ -22,26 +22,30 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  $startdate = $_GET['startdate'];
-  $enddate = $_GET['enddate'];
-  $paperID = $_GET['paperID'];
+require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/folderutils.class.php';
+require_once '../classes/moduleutils.class.php';
 
-  // Get the module ID and calendar year of the OSCE station.
-  $result = $mysqli->prepare("SELECT title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE id=? AND users.id=sid.userID");
-  $result->bind_param('s', $_GET['userID']);
-  $result->execute();
-  $result->bind_result($title, $surname, $first_names, $grade, $year, $student_id);
-  $result->fetch();
-  $result->close();
+$paperID   = check_var('paperID', 'GET', true, false, true);
+$startdate = check_var('startdate', 'GET', true, false, true);
+$enddate   = check_var('enddate', 'GET', true, false, true);
 
-  // Get properties of the paper.
-  $result = $mysqli->prepare("SELECT paper_title, bgcolor, fgcolor, labelcolor, themecolor FROM properties WHERE property_id=?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($paper, $bgcolor, $fgcolor, $labelcolor, $themecolor);
-  $result->fetch();
-  $result->close();
+// Get the module ID and calendar year of the OSCE station.
+$result = $mysqli->prepare("SELECT title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE id = ? AND users.id = sid.userID");
+$result->bind_param('s', $_GET['userID']);
+$result->execute();
+$result->bind_result($title, $surname, $first_names, $grade, $year, $student_id);
+$result->fetch();
+$result->close();
+
+// Get properties of the paper.
+$result = $mysqli->prepare("SELECT paper_title, bgcolor, fgcolor, labelcolor, themecolor FROM properties WHERE property_id = ?");
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->bind_result($paper, $bgcolor, $fgcolor, $labelcolor, $themecolor);
+$result->fetch();
+$result->close();
 ?>
 <html>
   <head>
@@ -79,21 +83,11 @@
     $report_title = 'Frequency Analysis';
   }
   
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-  if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
   
@@ -107,13 +101,13 @@
   $old_userID = '';
   $frequencies = array();
   $user_no = 0;
-  $result = $mysqli->prepare("SELECT q_id, rating, userID FROM log4 WHERE q_paper=? AND started >= ? AND started <= ? ORDER BY userID");
+  $result = $mysqli->prepare("SELECT q_id, rating, userID FROM log4 WHERE q_paper = ? AND started >= ? AND started <= ? ORDER BY userID");
   $result->bind_param('iss', $_GET['paperID'], $startdate, $enddate);
   $result->execute();
   $result->bind_result($q_id, $rating, $userObject->get_user_ID());
   while ($result->fetch()) {
     if ($userObject->get_user_ID() != $old_userID) $user_no++;
-    if (!isset($frequencies[$q_id])) $frequencies[$q_id] = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
+    if (!isset($frequencies[$q_id])) $frequencies[$q_id] = array(0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0);
     if (isset($frequencies[$q_id][$rating])) {
       $frequencies[$q_id][$rating]++;
     } else {
@@ -129,9 +123,9 @@
   } else {
     // Get the questions.
     $question_no = 1;
-    $sub_totals = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
-    $cell_colors = array('#FFCBCB','#FFE3B3','#C0FFC0');
-    $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
+    $sub_totals = array(0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0);
+    $cell_colors = array('#FFCBCB', '#FFE3B3', '#C0FFC0');
+    $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos");
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
     $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);

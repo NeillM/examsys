@@ -30,11 +30,11 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../classes/logger.class.php';
 
-check_var('q_id', 'GET', true, false);
-check_var('paperID', 'GET', true, false);
+check_var('q_id', 'GET', true, false, false);
+check_var('paperID', 'GET', true, false, false);
 
 // Read whole question from database.
-$result = $mysqli->prepare("SELECT option_text FROM options WHERE o_id=?");
+$result = $mysqli->prepare("SELECT option_text FROM options WHERE o_id = ?");
 $result->bind_param('i', $_GET['q_id']);
 $result->execute();
 $result->bind_result($option_text);
@@ -42,7 +42,7 @@ $result->fetch();
 $result->close();
   
 // Read user properties from questions.
-$result = $mysqli->prepare("SELECT score_method, marks_correct, marks_incorrect FROM questions, options WHERE questions.q_id=options.o_id AND q_id=?");
+$result = $mysqli->prepare("SELECT score_method, marks_correct, marks_incorrect FROM questions, options WHERE questions.q_id = options.o_id AND q_id = ?");
 $result->bind_param('i', $_GET['q_id']);
 $result->execute();
 $result->bind_result($score_method, $marks_correct, $marks_incorrect);
@@ -51,7 +51,7 @@ $result->close();
   
 // Read user answers from log.
 $log_answers = array();
-$result = $mysqli->prepare("SELECT id, user_answer FROM log2 WHERE q_id=? AND q_paper=? AND log2.started>=? AND log2.started<=?");
+$result = $mysqli->prepare("SELECT id, user_answer FROM log2 WHERE q_id = ? AND q_paper = ? AND log2.started >= ? AND log2.started <= ?");
 $result->bind_param('iiss', $_GET['q_id'], $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
 $result->execute();
 $result->bind_result($id, $user_answer);
@@ -97,7 +97,7 @@ if (isset($_POST['submit'])) {
   }
   
   // Save the new option text back to the Questions table.
-  $result = $mysqli->prepare("UPDATE options SET option_text=? WHERE o_id=?");
+  $result = $mysqli->prepare("UPDATE options SET option_text = ? WHERE o_id = ?");
   $result->bind_param('si', $new_option_text, $_GET['q_id']);
   $result->execute();  
   $result->close();

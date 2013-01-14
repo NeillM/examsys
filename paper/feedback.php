@@ -35,7 +35,7 @@ require '../include/media.inc';
 require '../classes/paperutils.class.php';
 
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 getSpecialSettings($userObject->get_user_ID(), $mysqli);
   

@@ -25,16 +25,16 @@
 require '../include/admin_auth.inc';
 require '../include/errors.inc';
   
-check_var('paperID', 'POST', true, false);
+check_var('paperID', 'POST', true, false, false);
 
 // Remove the record from scheduling.
-$result = $mysqli->prepare("DELETE FROM scheduling WHERE paperID=?");
+$result = $mysqli->prepare("DELETE FROM scheduling WHERE paperID = ?");
 $result->bind_param('i', $_POST['paperID']);
 $result->execute();  
 $result->close();
 
 // Set start/end dates and the type to 0 (i.e. formative).
-$result = $mysqli->prepare("UPDATE properties SET start_date=NOW(), end_date=NOW(), paper_type='0' WHERE property_id=?");
+$result = $mysqli->prepare("UPDATE properties SET start_date = NOW(), end_date = NOW(), paper_type = '0' WHERE property_id = ?");
 $result->bind_param('i', $_POST['paperID']);
 $result->execute();  
 $result->close();

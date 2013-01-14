@@ -25,9 +25,9 @@
 require '../include/admin_auth.inc';
 require '../include/errors.inc';
   
-check_var('gridID', 'POST', true, false);
+check_var('gridID', 'POST', true, false, false);
 
-$result = $mysqli->prepare("DELETE FROM ebel_grid_templates WHERE id=?");
+$result = $mysqli->prepare("DELETE FROM ebel_grid_templates WHERE id = ?");
 $result->bind_param('i', $_POST['gridID']);
 $result->execute();  
 $result->close();

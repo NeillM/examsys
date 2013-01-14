@@ -25,7 +25,7 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 // Get the module ID and calendar year of the OSCE station.
 $result = $mysqli->prepare("SELECT property_id, paper_title, moduleID, calendar_year FROM properties WHERE crypt_name=?");

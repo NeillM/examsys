@@ -25,10 +25,10 @@
 require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff delete pages.
 require '../../include/errors.inc';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 // Is the current page real or a pointer.
-$result = $mysqli->prepare("SELECT type, body FROM staff_help WHERE id=?");
+$result = $mysqli->prepare("SELECT type, body FROM staff_help WHERE id = ?");
 $result->bind_param('i', $_GET['id']);
 $result->execute();
 $result->bind_result($type, $body);
@@ -37,13 +37,13 @@ $result->close();
 
 if ($type == 'page') {
   // Search for any pointers to the current page.
-  $result = $mysqli->prepare("SELECT id, body FROM staff_help WHERE type='pointer' AND id != ? AND body=?");
+  $result = $mysqli->prepare("SELECT id, body FROM staff_help WHERE type = 'pointer' AND id != ? AND body = ?");
   $result->bind_param('ii', $_GET['id'], $_GET['id']);
   $result->execute();
   $result->store_result();
   $result->bind_result($page_id, $body);
   while ($result->fetch()) {
-    $deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted=NOW() WHERE id=?");
+    $deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted = NOW() WHERE id = ?");
     $deleteQuery->bind_param('i',  $page_id);
     $deleteQuery->execute();
     $deleteQuery->close();
@@ -51,7 +51,7 @@ if ($type == 'page') {
   $result->close();
 }
 
-$deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted=NOW() WHERE id=?");
+$deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted=NOW() WHERE id = ?");
 $deleteQuery->bind_param('i',  $_GET['id']);
 $deleteQuery->execute();
 $deleteQuery->close();

@@ -27,7 +27,7 @@
   require '../classes/questioninfo.class.php';
   require_once '../classes/questionutils.class.php';
   
-  check_var('q_id', 'GET', true, false);
+  check_var('q_id', 'GET', true, false, false);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

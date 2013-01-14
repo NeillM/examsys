@@ -27,7 +27,7 @@ require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
 
-check_var('paperID', 'GET', true, false);
+check_var('paperID', 'GET', true, false, false);
 
 // Get some properties of the paper.
 $result = $mysqli->prepare("SELECT property_id, paper_title, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, labs, crypt_name, display_question_mark FROM properties WHERE property_id = ? LIMIT 1");

@@ -25,9 +25,9 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('questionID', 'GET', true, false);
-check_var('pID', 'GET', true, false);
-check_var('paperID', 'GET', true, false);
+check_var('questionID', 'GET', true, false, false);
+check_var('pID', 'GET', true, false, false);
+check_var('paperID', 'GET', true, false, false);
 
 $mysqli->close();
 ?>

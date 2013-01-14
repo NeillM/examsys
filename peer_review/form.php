@@ -27,7 +27,7 @@ require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 function display_question($qID, $details, $member_userID, &$row_no, $columns, $marking, $saved_results) {
   if ($details['q_type'] == 'likert') {

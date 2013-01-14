@@ -35,14 +35,14 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/questionutils.class.php';
 
-check_var('paperID', 'REQUEST', true, false);
+check_var('paperID', 'REQUEST', true, false, false);
 
 if (!isset($staff_modules)){
   $staff_modules = get_staff_modules($userObject->get_user_ID(), $mysqli, $userObject);
 }
 
 function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) {
-  if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
+  if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
     $disabled = ' disabled';
@@ -56,7 +56,7 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) 
 
   $current_labs = explode(',',$labs);
 
-  $result = $db->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
+  $result = $db->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id = ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
   $result->execute();
   $result->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
   $lab_no = 0;
@@ -105,7 +105,7 @@ function modulo($n,$b) {
 
 if (isset($_POST['Submit'])) {
   // Check that the new paper name is not already used by any other paper (i.e. unique).
-  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ? LIMIT 1");
   $result->bind_param('s', $_POST['paper_title']);
   $result->execute();
   $result->bind_result($paper_title);

@@ -25,10 +25,10 @@
   require '../include/admin_auth.inc';
   require '../include/errors.inc';
 
-  check_var('labID', 'GET', true, false);
+  check_var('labID', 'GET', true, false, false);
   
-  $result = $mysqli->prepare("SELECT name FROM labs WHERE id=?");
-  $result->bind_param('i',  $_GET['labID']);
+  $result = $mysqli->prepare("SELECT name FROM labs WHERE id = ?");
+  $result->bind_param('i', $_GET['labID']);
   $result->execute();
   $result->bind_result($lab_name);
   $result->fetch();

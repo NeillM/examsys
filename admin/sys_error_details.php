@@ -27,7 +27,7 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('errorID', 'GET', true, false);
+check_var('errorID', 'GET', true, false, false);
 
 $result = $mysqli->prepare("SELECT sys_errors.id, auth_user, title, initials, surname, DATE_FORMAT(occurred,'%d/%m/%y&nbsp;%H:%i:%s'), userID, errtype, errstr, errfile, errline, php_self, query_string, request_method, DATE_FORMAT(fixed,'%d/%m/%y&nbsp;%H:%i:%s'), paperID, post_data, variables, backtrace FROM sys_errors LEFT JOIN users ON sys_errors.userID=users.id WHERE sys_errors.id=?");
 $result->bind_param('i', $_GET['errorID']);
@@ -38,7 +38,7 @@ $result->fetch();
 $result->close();
 
 if (isset($_POST['submit'])) {
-  $result = $mysqli->prepare("UPDATE sys_errors SET fixed=NOW() WHERE errstr=? AND errfile=? AND errline=?");
+  $result = $mysqli->prepare("UPDATE sys_errors SET fixed = NOW() WHERE errstr = ? AND errfile = ? AND errline = ?");
   $result->bind_param('ssi', $errstr, $errfile, $errline);
   $result->execute();
   $result->close();
@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
   echo "<html>\n<head><meta http-equiv=\"content-type\" content=\"text/html;charset={{$configObject->get('cfg_page_charset')}}\" /><title>Error Details</title></head>\n<body onload=\"window.opener.location='sys_error_list.php'; window.close();\"></body>\n<html>\n";
   exit;
 } else {
-  $result = $mysqli->prepare("SELECT id FROM sys_errors WHERE errstr=? AND errfile=? AND errline=?");
+  $result = $mysqli->prepare("SELECT id FROM sys_errors WHERE errstr = ? AND errfile = ? AND errline = ?");
   $result->bind_param('ssi', $errstr, $errfile, $errline);
   $result->execute();
   $result->store_result();

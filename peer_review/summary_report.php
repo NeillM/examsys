@@ -30,9 +30,9 @@ require_once 'summary_report.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
 
-check_var('paperID', 'GET', true, false);
-check_var('startdate', 'GET', true, false);
-check_var('enddate', 'GET', true, false);
+check_var('paperID', 'GET', true, false, false);
+check_var('startdate', 'GET', true, false, false);
+check_var('enddate', 'GET', true, false, false);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

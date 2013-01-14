@@ -43,7 +43,7 @@ require '../classes/summativetimer.class.php';
 
 global $userObject;
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 function randomQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_data, $used_questions, $db) {
   $selected_q_id = '';

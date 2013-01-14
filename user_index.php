@@ -41,12 +41,13 @@ require_once './classes/log_extra_time.class.php';
 require_once './classes/log_lab_end_time.class.php';
 require_once './classes/summativetimer.class.php';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 function display_duration($normal, $extra_time_mins, $special_needs_percentage) {
   $mins = $normal;
   if ($extra_time_mins != NULL) $mins .= ' + ' . $extra_time_mins;
   if ($special_needs_percentage != NULL) $mins .= ' + ' . ($normal/100)*$special_needs_percentage;
+  
   return $mins;
 }
 

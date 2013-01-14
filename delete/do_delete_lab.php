@@ -25,14 +25,14 @@
 require '../include/admin_auth.inc';
 require '../include/errors.inc';
   
-check_var('labID', 'POST', true, false);
+check_var('labID', 'POST', true, false, false);
 
-$result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab=?");
+$result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab = ?");
 $result->bind_param('i', $_POST['labID']);
 $result->execute();  
 $result->close();
 
-$result = $mysqli->prepare("DELETE FROM labs WHERE id=?");
+$result = $mysqli->prepare("DELETE FROM labs WHERE id = ?");
 $result->bind_param('i', $_POST['labID']);
 $result->execute();  
 $result->close();

@@ -25,18 +25,16 @@
   require '../include/sysadmin_auth.inc';
   require '../include/errors.inc';
 
-  check_var('refID', 'POST', true, false);
+  $tmp_refID = check_var('refID', 'POST', true, false, true);
 
-  $tmp_refID = $_POST['refID'];
-  
   // Update deleted to NOW in reference_material
-  $result = $mysqli->prepare("UPDATE reference_material SET deleted=NOW() WHERE id=?");
+  $result = $mysqli->prepare("UPDATE reference_material SET deleted = NOW() WHERE id = ?");
   $result->bind_param('i', $tmp_refID);
   $result->execute();  
   $result->close();
   
   // Delete any links to the reference material in papers
-  $result = $mysqli->prepare("DELETE FROM reference_papers WHERE refID=?");
+  $result = $mysqli->prepare("DELETE FROM reference_papers WHERE refID = ?");
   $result->bind_param('i', $tmp_refID);
   $result->execute();  
   $result->close();

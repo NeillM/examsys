@@ -27,7 +27,7 @@ require_once '../include/load_config.php';
 require_once '../classes/lang.class.php';
 require_once '../include/errors.inc';
 
-check_var('paperID', 'GET', true, false);
+check_var('paperID', 'GET', true, false, false);
 
 require_once '../include/media.inc';
 require_once '../include/sct_review.inc';

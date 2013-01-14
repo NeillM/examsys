@@ -22,18 +22,19 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/errors.inc';
+require '../include/sysadmin_auth.inc';
+require '../include/errors.inc';
 
-  check_var('announcementID', 'POST', true, false);
+check_var('announcementID', 'POST', true, false, false);
 
-  $tmp_announcementID = $_POST['announcementID'];
-  
-  $result = $mysqli->prepare("UPDATE announcements SET deleted=NOW() WHERE id=?");
-  $result->bind_param('i', $tmp_announcementID);
-  $result->execute();  
-  $result->close();
-  $mysqli->close();
+$tmp_announcementID = $_POST['announcementID'];
+
+$result = $mysqli->prepare("UPDATE announcements SET deleted = NOW() WHERE id = ?");
+$result->bind_param('i', $tmp_announcementID);
+$result->execute();  
+$result->close();
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

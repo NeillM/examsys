@@ -25,7 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
   
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 function ebelDropdown($dropdownID, $default) {
   $html = "<select name=\"$dropdownID\">\n";

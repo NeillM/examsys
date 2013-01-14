@@ -30,7 +30,7 @@ require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/logger.class.php';
 
-check_var('q_id', 'GET', true, false);
+check_var('q_id', 'GET', true, false, false);
 
 if (!isset($_POST['submit'])) {
 ?>

@@ -26,10 +26,10 @@ require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
 require_once '../LTI/ims-lti/UoN_LTI.php';
+
+check_var('LTIkeysID', 'POST', true, false, false);
+
 $lti = new UoN_LTI($mysqli);
-
-check_var('LTIkeysID', 'POST', true, false);
-
 $lti->delete_lti_key($_POST['LTIkeysID']);
 
 ?>

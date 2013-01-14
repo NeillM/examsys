@@ -36,10 +36,10 @@ require_once '../include/paper_security.inc';
 
 require_once '../classes/paperutils.class.php';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid = ?")) {
-  $stmt->bind_param('i',$userObject->get_user_ID());
+  $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);

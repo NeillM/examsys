@@ -30,9 +30,7 @@ require '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
 
-check_var('paperID', 'GET', true, false);
-
-$paperID = $_GET['paperID'];
+$paperID = check_var('paperID', 'GET', true, false, true);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

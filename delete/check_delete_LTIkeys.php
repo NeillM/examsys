@@ -25,7 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('LTIkeysID', 'GET', true, false);
+check_var('LTIkeysID', 'GET', true, false, false);
 
 $mysqli->close();
 ?>

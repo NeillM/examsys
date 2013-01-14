@@ -25,12 +25,12 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('q_id', 'POST', true, false);
+check_var('q_id', 'POST', true, false, false);
 
 $tmp_q_ids = explode(',', $_POST['q_id']);
 
 for ($i=1; $i<count($tmp_q_ids); $i++) {
-  $result = $mysqli->prepare("UPDATE questions SET deleted=NOW() WHERE q_id=?");
+  $result = $mysqli->prepare("UPDATE questions SET deleted=NOW() WHERE q_id = ?");
   $result->bind_param('i', $tmp_q_ids[$i]);
   $result->execute();  
   $result->close();

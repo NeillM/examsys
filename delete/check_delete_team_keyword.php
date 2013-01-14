@@ -22,21 +22,21 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/errors.inc';
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
 
-  check_var('keywordID', 'GET', true, false);
-  
-  $keyword_names = array();
-  $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id IN (" . substr($_GET['keywordID'], 1) . ")");
-  $result->execute();
-  $result->bind_result($keyword);
-  while ($result->fetch()) {
-    $keyword_names[] = $keyword;
-  }
-  $result->close();
+check_var('keywordID', 'GET', true, false, false);
 
-  $mysqli->close();
+$keyword_names = array();
+$result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id IN (" . substr($_GET['keywordID'], 1) . ")");
+$result->execute();
+$result->bind_result($keyword);
+while ($result->fetch()) {
+  $keyword_names[] = $keyword;
+}
+$result->close();
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

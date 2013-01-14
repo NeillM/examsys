@@ -27,7 +27,7 @@ require '../include/errors.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/paperutils.class.php';
 
-check_var('q_id', 'GET', true, false);
+check_var('q_id', 'GET', true, false, false);
 
 if (!isset($_POST['submit'])) {
 ?>

@@ -22,12 +22,12 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/errors.inc';
-  
-  check_var('schoolID', 'GET', true, false);
+require '../include/sysadmin_auth.inc';
+require '../include/errors.inc';
 
-  $mysqli->close();
+check_var('schoolID', 'GET', true, false, false);
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

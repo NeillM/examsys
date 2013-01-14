@@ -26,19 +26,19 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require './osce.inc';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 if (isset($_POST['submit'])) {
   $started = DATE('YmdHis');
   $total_score = 0;
 
   // Delete any Log4 previous submissions for this student.
-  $result = $mysqli->prepare("DELETE FROM log4 WHERE q_paper=? AND userID=?");
+  $result = $mysqli->prepare("DELETE FROM log4 WHERE q_paper = ? AND userID = ?");
   $result->bind_param('ii', $_POST['paperID'], $_POST['userID']);
   $result->execute();
 
   // Delete any Log4_overall record for this student.
-  $result = $mysqli->prepare("DELETE FROM log4_overall WHERE q_paper=? AND userID=?");
+  $result = $mysqli->prepare("DELETE FROM log4_overall WHERE q_paper = ? AND userID = ?");
   $result->bind_param('ii', $_POST['paperID'], $_POST['userID']);
   $result->execute();
 

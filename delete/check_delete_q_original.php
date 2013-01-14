@@ -25,7 +25,7 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('q_id', 'GET', true, false);
+check_var('q_id', 'GET', true, false, false);
 
 $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline');
 
@@ -49,9 +49,9 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 
 <td>
 <?php
-  $qIDs = substr($_GET['q_id'],1);
+  $qIDs = substr($_GET['q_id'], 1);
 
-  $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper, paper_type FROM (papers, properties) WHERE papers.paper=properties.property_id AND properties.deleted IS NULL AND question IN ($qIDs)");
+  $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper, paper_type FROM (papers, properties) WHERE papers.paper = properties.property_id AND properties.deleted IS NULL AND question IN ($qIDs)");
   $result->execute();  
   $result->store_result();
   $result->bind_result($paper_title, $paper, $paper_type);

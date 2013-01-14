@@ -26,11 +26,8 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/moduleutils.class.php';
 
-check_var('module', 'GET', true, false);
+check_var('module', 'GET', true, false, false);
 
-//if (in_array($_GET['module'], $staff_modules) === false and !$userObject->has_role('SysAdmin')) {
-//  exit;
-//}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onclick="hideSessCopyMenu(event);">

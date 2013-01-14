@@ -90,7 +90,7 @@
   $error = array();
   if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
     // Copy the properties (properties table)
-    $new_paper_id = copyProperties($userObject->get_user_ID(), $mysqli, $calendar_year, $new_calendar_year, $moduleIDs);
+    $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
 
     // Copy the question pointers (papers table)
     $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper = ?");
@@ -118,7 +118,7 @@
     }
   } else {    // Copy the paper and the questions.
     // Copy the properties (properties table)
-    $new_paper_id = copyProperties($userObject->get_user_ID(), $mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject);
+    $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
 
     // Copy the question and option data (questions and options tables)
     $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper=? ORDER BY display_pos");
@@ -131,7 +131,7 @@
     $q_no = 0;
     while ($result->fetch()) {
       $line = 0;
-      $qData = $mysqli->prepare("SELECT * FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+      $qData = $mysqli->prepare("SELECT * FROM questions, options WHERE q_id = ? AND questions.q_id = options.o_id ORDER BY id_num");
       $qData->bind_param('i', $question);
       $qData->execute();
       $qData->store_result();
@@ -391,12 +391,12 @@
   }
   $mysqli->close();
 
-  function copyProperties($userID, $mysqlidb, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj) {
-    global $configObject;
+  function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj, $configObject) {
 
-    $moduleIDs = Paper_utils::get_modules($_POST['paperID'],$mysqlidb);
+    $userID = $userObj->get_user_ID();
+    $moduleIDs = Paper_utils::get_modules($_POST['paperID'], $db);
 
-    $result = $mysqlidb->prepare("SELECT * FROM properties WHERE property_id=? LIMIT 1");
+    $result = $db->prepare("SELECT * FROM properties WHERE property_id = ? LIMIT 1");
     $result->bind_param('i', $_POST['paperID']);
     $result->execute();
     $result->store_result();
@@ -432,14 +432,14 @@
 
     $new_calendar_year = checkSession($calendar_year);
 
-    $addPaper = $mysqlidb->prepare("INSERT INTO properties VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)");
+    $addPaper = $db->prepare("INSERT INTO properties VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)");
     $addPaper->bind_param('ssssssssssssisiiisssisidissssssssssis', $_POST['new_paper'], $tmp_start_date, $tmp_end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $userID, $folder, $labs, $rubric, $calculator, $externals, $tmp_exam_duration, $tmp_random_mark, $tmp_total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $new_calendar_year, $internal_reviewers, $tmp_external_review_deadline, $tmp_internal_review_deadline, $sound_demo, $latex_needed, $password);
     $addPaper->execute();
-    $new_paper_id = $mysqlidb->insert_id;
+    $new_paper_id = $db->insert_id;
     $addPaper->close();
 
     //set the modules on the new paper
-    Paper_utils::update_modules($moduleIDs, $new_paper_id, $mysqlidb, $userObj);
+    Paper_utils::update_modules($moduleIDs, $new_paper_id, $db, $userObj);
 
     if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
       if (isset($_POST['barriers_needed'])) {
@@ -448,14 +448,14 @@
         $barriers_needed = 0;
       }
 
-      $result = $mysqlidb->prepare("INSERT INTO scheduling VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+      $result = $db->prepare("INSERT INTO scheduling VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
       $result->bind_param('isissis', $new_paper_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
       $result->execute();
       $result->close();
     }
 
     // Query the database to get the creation date and then set crypt_name.
-    $result2 = $mysqlidb->prepare("SELECT property_id, UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id=?");
+    $result2 = $db->prepare("SELECT property_id, UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id=?");
     $result2->bind_param('i', $new_paper_id);
     $result2->execute();
     $result2->store_result();
@@ -465,7 +465,7 @@
 
     $hash = $property_id . $created . $paper_ownerID;
 
-    $update = $mysqlidb->prepare("UPDATE properties SET crypt_name=? WHERE property_id=?");
+    $update = $db->prepare("UPDATE properties SET crypt_name=? WHERE property_id=?");
     $update->bind_param('si', $hash, $property_id);
     $update->execute();
     $update->close();

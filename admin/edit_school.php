@@ -24,12 +24,13 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
-check_var('schoolid', 'GET', true, false);
+
+check_var('schoolid', 'GET', true, false, false);
 
 $school = $string['prompt'];
 $faculty = '';
 
-$result = $mysqli->prepare("SELECT school, facultyID FROM schools WHERE id=?");
+$result = $mysqli->prepare("SELECT school, facultyID FROM schools WHERE id = ?");
 $result->bind_param('i', $_GET['schoolid']);
 $result->execute();
 $result->bind_result($school, $curr_faculty);
@@ -48,7 +49,7 @@ if (isset($_POST['submit'])) {
     $curr_faculty = $faculty;
   } else {
     if ($changed) {
-      $result = $mysqli->prepare("UPDATE schools SET facultyID=?, school=? WHERE id=?");
+      $result = $mysqli->prepare("UPDATE schools SET facultyID = ?, school = ? WHERE id = ?");
       $result->bind_param('isi', $faculty, $school_tmp, $_GET['schoolid']);
       $result->execute();
       $result->close();

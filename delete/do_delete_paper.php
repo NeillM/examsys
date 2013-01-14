@@ -25,12 +25,11 @@
   require '../include/staff_auth.inc';
   require '../include/errors.inc';
   
-  check_var('paperID', 'POST', true, false);
+  $tmp_paperID = check_var('paperID', 'POST', true, false, true);
 
   // Set the deleted field to now and appened the date onto the paper title.
   // This will allow someone to make a new paper with the same name as that being deleted.
-  $tmp_paperID = $_POST['paperID'];
-  $result = $mysqli->prepare("UPDATE properties SET deleted=NOW(), paper_title=CONCAT(paper_title,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE property_id=?");
+  $result = $mysqli->prepare("UPDATE properties SET deleted=NOW(), paper_title=CONCAT(paper_title,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE property_id = ?");
   $result->bind_param('i', $tmp_paperID);
   $result->execute();  
   $result->close();

@@ -25,18 +25,18 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
   
-check_var('keywordID', 'POST', true, false);
+check_var('keywordID', 'POST', true, false, false);
 
 $keyword_list = explode(',', substr($_POST['keywordID'], 1));
 foreach ($keyword_list as $individualID) {
   // Delete the keyword
-  $result = $mysqli->prepare("DELETE FROM keywords_user WHERE id=?");
+  $result = $mysqli->prepare("DELETE FROM keywords_user WHERE id = ?");
   $result->bind_param('i', $individualID);
   $result->execute();  
   $result->close();
 
   // Remove the deleted keyword from questions
-  $result = $mysqli->prepare("DELETE FROM keywords_question WHERE keywordID=?");
+  $result = $mysqli->prepare("DELETE FROM keywords_question WHERE keywordID = ?");
   $result->bind_param('i', $individualID);
   $result->execute();  
   $result->close();

@@ -27,7 +27,7 @@ require '../include/errors.inc';
 require_once 'ims-lti/UoN_LTI.php';
 
 $lti = new UoN_LTI($mysqli);
-check_var('LTIkeysid', 'GET', true, false);
+check_var('LTIkeysid', 'GET', true, false, false);
 
 if (isset($_POST['submit'])) {
   $ltiname = trim($_POST['ltiname']);

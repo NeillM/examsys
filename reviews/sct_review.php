@@ -33,9 +33,9 @@
   $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sct_user, $cfg_db_sct_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
 
   // Check for key parameters
-  check_var('paperID', 'POST', true, false);
-  check_var('reviewer_name', 'POST', true, false);
-  check_var('reviewer_email', 'POST', true, false);
+  check_var('paperID', 'POST', true, false, false);
+  check_var('reviewer_name', 'POST', true, false, false);
+  check_var('reviewer_email', 'POST', true, false, false);
 
   function display_question($question, &$question_no, $answers, $string) {
     $question_no++;

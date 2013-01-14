@@ -38,9 +38,9 @@ require '../classes/log_lab_end_time.class.php';
 
 $displayDebug = false; //ajax call so debug info messes up the output
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
-$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), exam_duration as duration, calendar_year, password FROM properties WHERE crypt_name=? LIMIT 1");
+$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), exam_duration as duration, calendar_year, password FROM properties WHERE crypt_name = ? LIMIT 1");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $exam_duration, $calendar_year, $password);
@@ -72,27 +72,17 @@ if ($userObject->has_role('Student')) {
 
   $summative_exam_session_started = false;
 
-  if( $exam_duration != null and (int) $paper_type == 2 ){
-
+  if ($exam_duration != null and (int) $paper_type == 2){
     $current_ip_address = NetworkUtils::get_ipaddress();
 
     $lab_factory        = new LabFactory( $mysqli );
     $lab_object         = $lab_factory->get_lab_based_on_ip( $current_ip_address );
-
     $property_object    = new PropertyObject();
-
     $property_object->set_property_id( $property_id );
-
     $property           = new Property( $property_object, $mysqli );
-
     $property_object    = $property->get_property();
-
-    $log_lab_end_time   = new LogLabEndTime( $lab_object
-                                            , $property_object
-                                            , $mysqli );
-
+    $log_lab_end_time   = new LogLabEndTime($lab_object, $property_object, $mysqli );
     $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
-
   }
 
   if ( time() > $end_date and ( $paper_type == '1' or ( $paper_type == '2' and $summative_exam_session_started == false) ) ) {

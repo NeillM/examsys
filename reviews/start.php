@@ -29,7 +29,7 @@ require '../include/errors.inc';
 require '../include/media.inc';
 require '../config/start.inc';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 //session_start();
 
 // Extract the get variables.

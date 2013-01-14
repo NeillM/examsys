@@ -293,7 +293,7 @@ function emergencyNumbers($support_numbers) {
 
 
 if (isset($_POST['start_exam_form'])) {
-  check_var('paper_id', 'POST', TRUE, FALSE);
+  check_var('paper_id', 'POST', true, false, false);
 }
 
 $current_ip_address = NetworkUtils::get_ipaddress();

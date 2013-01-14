@@ -25,11 +25,9 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('schoolID', 'POST', true, false);
+$tmp_schoolID = check_var('schoolID', 'POST', true, false, true);
 
-$tmp_schoolID = $_POST['schoolID'];
-
-$result = $mysqli->prepare("UPDATE schools SET deleted=NOW() WHERE id=?");
+$result = $mysqli->prepare("UPDATE schools SET deleted = NOW() WHERE id = ?");
 $result->bind_param('i', $tmp_schoolID);
 $result->execute();  
 $result->close();

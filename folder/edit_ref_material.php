@@ -26,7 +26,7 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/searchutils.class.php';
 
-check_var('refID', 'GET', true, false);
+check_var('refID', 'GET', true, false, false);
 
 if (isset($_POST['submit'])) {
   // Write the reference material

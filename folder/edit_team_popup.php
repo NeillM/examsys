@@ -27,8 +27,7 @@ require_once '../include/errors.inc';
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
-check_var('module', 'GET', true, false);
-$moduleID = $_GET['module'];
+$moduleID = check_var('module', 'GET', true, false, true);
 $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
 
 if (isset($_POST['submit'])) {

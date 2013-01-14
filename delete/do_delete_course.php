@@ -22,18 +22,19 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/errors.inc';
+require '../include/sysadmin_auth.inc';
+require '../include/errors.inc';
 
-  check_var('courseID', 'POST', true, false);
+check_var('courseID', 'POST', true, false, false);
 
-  $tmp_courseID = $_POST['courseID'];
-  
-  $result = $mysqli->prepare("UPDATE courses SET deleted=NOW() WHERE id=?");
-  $result->bind_param('i', $tmp_courseID);
-  $result->execute();  
-  $result->close();
-  $mysqli->close();
+$tmp_courseID = $_POST['courseID'];
+
+$result = $mysqli->prepare("UPDATE courses SET deleted = NOW() WHERE id = ?");
+$result->bind_param('i', $tmp_courseID);
+$result->execute();  
+$result->close();
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

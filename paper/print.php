@@ -29,7 +29,7 @@ require '../include/media.inc';
 require '../config/index.inc';
 require_once '../include/errors.inc';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions;

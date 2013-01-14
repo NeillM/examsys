@@ -24,34 +24,32 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+require_once '../classes/logger.class.php';
 
-check_var('questionID', 'POST', true, false);
-check_var('pID', 'POST', true, false);
-check_var('paperID', 'POST', true, false);
+check_var('questionID', 'POST', true, false, false);
+check_var('pID', 'POST', true, false, false);
+check_var('paperID', 'POST', true, false, false);
 
 $tmp_pIDs = explode(',', $_POST['pID']);  
 $tmp_questionIDs = explode(',', $_POST['questionID']);
 $tmp_paperID = $_POST['paperID'];
 
 for ($i=1; $i<count($tmp_pIDs); $i++) {
-  if ($result = $mysqli->prepare("DELETE FROM papers WHERE p_id=?")) {
+  if ($result = $mysqli->prepare("DELETE FROM papers WHERE p_id = ?")) {
     $result->bind_param('i', $tmp_pIDs[$i]);
     $result->execute();
     $result->close();
 
     // Create a track changes record to say new question added.
-    $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Alter Paper', ?, ?, ?, '', NOW(), 'Delete Question')");
-    $trackChange->bind_param('iis', $tmp_paperID, $userObject->get_user_ID(), $tmp_questionIDs[$i]);
-    $trackChange->execute();
-    $trackChange->close();
-
+    $logger = new Logger($mysqli);
+    $logger->track_change('Alter Paper', $tmp_paperID, $userObject->get_user_ID(), $tmp_questionIDs[$i], '', 'Delete Question');
   } else {
-    display_error('Papers Delete Error',$mysqli->error);
+    display_error('Papers Delete Error', $mysqli->error);
   }
 }
 
 if ($_POST['paperID'] != '') {
-  if ($result = $mysqli->prepare("UPDATE properties SET random_mark=NULL, total_mark=NULL WHERE property_id=?")) {
+  if ($result = $mysqli->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?")) {
     $result->bind_param('i', $tmp_paperID);
     $result->execute();
     $result->close();

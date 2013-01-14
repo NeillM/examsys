@@ -33,17 +33,15 @@ require $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
  * @param bool $display_support_email - if true display the support email address (if it is set)
  */
 function display_error($error_title, $error_description, $headers = true, $stop_execution = true, $display_support_email = true) {
-  global $mysqli, $support_email, $string;
-  global $configObject;
-  
+  global $mysqli, $support_email, $string, $notice, $configObject;
+    
   if ($headers == false) {
     echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>" . $error_title . "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/notice.css\" />\n</head>\n<body>\n";
   }
   if ($display_support_email and $support_email != '') {
     $error_description .= '<br /><br /><span style="color:#808080">' . $string['errormsg'] . ' <a href="mailto:' . $support_email . '" style="color:blue">' . $support_email . '</a></span>';
   }
-  
-  UserNotices::display_notice($error_title, $error_description, $configObject->get('cfg_root_path') . '/artwork/bomb.png', '#C00000');
+  $notice->display_notice($error_title, $error_description, $configObject->get('cfg_root_path') . '/artwork/bomb.png', '#C00000');
 
   if ($headers == false) {
     echo "</body>\n</html>\n";
@@ -89,11 +87,11 @@ function uploadError($errCode) {
  * Check that a variable exists of not.
  * @param string $var_name - name of the variable to check
  * @param string $method - $_GET or $_POST
- * @param bool $mandatory - if true then exit if the variable does not exist
+ * @param bool $mandatory - if true then exit if the  does not exist
  * @param bool $headers - if true then output HTML header code
- * @param string $type - currently unused
+ * @param bool $return_var - if true return the value of the tested variable back
  */
-function check_var($var_name, $method, $mandatory, $headers, $type = '') {
+function check_var($var_name, $method, $mandatory, $headers, $return_var) {
   global $string;
   
   if ($mandatory) {
@@ -101,15 +99,25 @@ function check_var($var_name, $method, $mandatory, $headers, $type = '') {
       if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
         display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
       }
+      if ($return_var) {
+        return $_GET[$var_name];
+      }
     } elseif ($method == 'POST') {
       if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
         display_error($string['fatalerrormsg0'], $string['fatalerrormsg2'], $headers);
+      }
+      if ($return_var) {
+        return $_POST[$var_name];
       }
     } else {
       if (!isset($_REQUEST[$var_name]) or $_REQUEST[$var_name] === '' ) {
         display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
       }
+      if ($return_var) {
+        return $_REQUEST[$var_name];
+      }
     }
   }
+  
 }
 ?>

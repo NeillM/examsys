@@ -27,10 +27,10 @@ require '../include/errors.inc';
 
 require '../classes/paperutils.class.php';
 
-check_var('paperID', 'GET', true, false);
+check_var('paperID', 'GET', true, false, false);
 
 $paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);
-$module_id_list = implode(',',array_keys($paper_modules));
+$module_id_list = implode(',', array_keys($paper_modules));
 
 // Get data about the paper which needs scheduling
 $results = $mysqli->prepare("SELECT property_id, paper_title, calendar_year, period, barriers_needed, cohort_size, notes, sittings, campus, title, first_names, surname, email, exam_duration FROM (properties, scheduling, users) WHERE property_id=? AND properties.property_id=scheduling.paperID AND properties.paper_ownerID=users.id");

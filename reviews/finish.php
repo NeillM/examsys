@@ -26,7 +26,7 @@ require '../include/staff_auth.inc';
 require '../include/reviews.inc';
 require '../include/errors.inc';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
   $stmt->bind_param('i',$userObject->get_user_ID());

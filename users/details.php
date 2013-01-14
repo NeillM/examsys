@@ -34,7 +34,7 @@ require_once '../classes/schoolutils.class.php';
 require_once '../classes/networkutils.class.php';
 require_once '../classes/dateutils.class.php';
 
-check_var('userID', 'GET', true, false);
+check_var('userID', 'GET', true, false, false);
 
 if ($userObject->has_role('Demo')) {
   $demo = true;

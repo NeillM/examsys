@@ -25,9 +25,9 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('folderID', 'POST', true, false);
+check_var('folderID', 'POST', true, false, false);
 
-$result = $mysqli->prepare("SELECT name FROM folders WHERE id=?");
+$result = $mysqli->prepare("SELECT name FROM folders WHERE id = ?");
 $result->bind_param('i', $_POST['folderID']);
 $result->execute();
 $result->bind_result($name);
@@ -47,7 +47,7 @@ if (count($directories) > 1) {
 }
 
 if ($parent != '') {
-  $result = $mysqli->prepare("SELECT id FROM folders WHERE name=? AND ownerID=?");
+  $result = $mysqli->prepare("SELECT id FROM folders WHERE name = ? AND ownerID = ?");
   $result->bind_param('si', $parent, $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($parentID);
@@ -56,10 +56,10 @@ if ($parent != '') {
 }
 
 if ($userObject->has_role('SysAdmin')) {
-  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id=?");
+  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ?");
   $result->bind_param('i', $_POST['folderID']);
 } else {
-  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id=? AND ownerID=?");
+  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ? AND ownerID = ?");
   $result->bind_param('ii', $_POST['folderID'],$userObject->get_user_ID());
 }
 
@@ -67,7 +67,7 @@ $result->execute();
 $result->close();
 
 // Remove papers from the deleted folder
-$result = $mysqli->prepare("UPDATE properties SET folder='' WHERE folder=?");
+$result = $mysqli->prepare("UPDATE properties SET folder = '' WHERE folder = ?");
 $result->bind_param('i', $_POST['folderID']);
 $result->execute();
 $result->close();

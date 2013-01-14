@@ -25,13 +25,13 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('moduleid', 'GET', true, false);
+check_var('moduleid', 'GET', true, false, false);
 
 $unique_moduleid = true;
 if (isset($_POST['submit']) and $_POST['modulecode'] != $_POST['old_modulecode']) {
   // Check for unique moduleid
   $tmp_modulecode = trim($_POST['modulecode']);
-  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
+  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid = ?");
   $result->bind_param('s', $tmp_modulecode);
   $result->execute();
   $result->store_result();

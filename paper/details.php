@@ -35,8 +35,7 @@ require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
-check_var('paperID', 'GET', true, false);
-$paperID = $_GET['paperID'];
+$paperID = check_var('paperID', 'GET', true, false, true);
 
 // Unlock code - emergency use only!
 if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role('SysAdmin')) {

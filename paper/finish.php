@@ -36,7 +36,7 @@ require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/logmetadata.class.php';
 
-check_var('id', 'GET', true, false);
+check_var('id', 'GET', true, false, false);
 
 $userID = $userObject->get_user_ID();
 

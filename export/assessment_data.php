@@ -28,9 +28,9 @@ require_once '../include/errors.inc';
 require_once '../classes/stringutils.class.php';
 require_once '../include/sort.inc';
 
-check_var('paperID', 'GET', true, false);
-check_var('startdate', 'GET', true, false);
-check_var('enddate', 'GET', true, false);
+check_var('paperID', 'GET', true, false, false);
+check_var('startdate', 'GET', true, false, false);
+check_var('enddate', 'GET', true, false, false);
 
 $displayDebug = false; //disable debud output in this script as it effects the output
 
@@ -41,7 +41,7 @@ if ($userObject->has_role('Demo')) {
 }
 
 function get_random_question_details($question, $rand_id, $mysqli) {
-  $result = $mysqli->prepare("SELECT q_id, q_type, correct, option_text, score_method FROM (questions, options) WHERE questions.q_id=options.o_id AND questions.q_id=? ORDER BY id_num");
+  $result = $mysqli->prepare("SELECT q_id, q_type, correct, option_text, score_method FROM (questions, options) WHERE questions.q_id = options.o_id AND questions.q_id = ? ORDER BY id_num");
   $result->bind_param('i', $rand_id);
   $result->execute();
   $result->store_result();
@@ -71,7 +71,7 @@ function get_random_question_details($question, $rand_id, $mysqli) {
   return $question;
 }
 
-function add_random_column_standard($i, $sec, $subsec=''){
+function add_random_column_standard($i, $sec, $subsec = ''){
   $csv .= ':user';
   $csv .= ',Q' . ($i+1) . chr($sec+64) . $subsec . ':correct';
 }

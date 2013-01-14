@@ -30,14 +30,13 @@ require_once '../include/errors.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
-check_var('module', 'GET', true, false);
+$idMod = check_var('module', 'GET', true, false, true);
 set_time_limit(0);
 ob_start();
 
 
 // Folder security checks
 $folder = '';
-$idMod = $_GET['module'];
 
 // Get the moduleid
 $module = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);

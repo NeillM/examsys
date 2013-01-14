@@ -22,14 +22,14 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/errors.inc';
-  require '../include/load_config.php';
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+require '../include/load_config.php';
 
-  check_var('paperID', 'GET', true, false);
-  check_var('userID', 'GET', true, false);
+check_var('paperID', 'GET', true, false, false);
+check_var('userID', 'GET', true, false, false);
 
-  $mysqli->close();
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -37,10 +37,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get( 'cfg_page_charset' ); ?>" />
   <title><?php echo $string['confirmreset']; ?></title>
-
-  <style type="text/css">
-  body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:90%; text-align:justifed}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
 </head>
 
 <body>
