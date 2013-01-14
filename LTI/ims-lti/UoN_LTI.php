@@ -14,13 +14,41 @@ require_once 'lti_util.php';
  */
 class UoN_LTI extends BLTI {
 
+  // following 2 static variables & 2 static functions are from rogostaticsingleton but cant extend that as already extending BLTI class
+
+  static $inst;
+  static $class_name='UoN_LTI';
+  /**
+   * Create and return the Global instance of parent::$class_name for use in
+   * the Local scope.
+   */
+  public static function get_instance()
+  {
+    if (!is_object(static::$inst)) {
+      static::$inst = new static::$class_name;
+    }
+    return static::$inst;
+  }
+  /**
+   * sets the Mock instance to return. ONLY used for unit testing
+   *
+   */
+  public static function set_mock_instance($obj)
+  {
+    static::$inst = $obj;
+  }
   private $db;
   /**
    * @var array|bool
    */
   private $parm = array('dbtype' => 'mysqli', 'table_prefix' => '');
 
-  function __construct($db, $parm = false) {
+
+
+  function __construct() {
+  }
+
+  function init_lti0($db, $parm = NULL) {
     $this->db = $db;
     if (is_array($parm) or is_string($parm)) $this->parm = $parm;
   }
@@ -71,6 +99,7 @@ class UoN_LTI extends BLTI {
     // Insure we have a valid launch
     if (empty($_REQUEST["oauth_consumer_key"])) {
       $this->message = "Missing oauth_consumer_key in request";
+      unset($_SESSION['_lti_context']);
       return;
     }
     $oauth_consumer_key = $_REQUEST["oauth_consumer_key"];
@@ -83,6 +112,7 @@ class UoN_LTI extends BLTI {
       $secret = $this->parm;
     } else if (!is_array($this->parm)) {
       $this->message = "Constructor requires a secret or database information.";
+      unset($_SESSION['_lti_context']);
       return;
     } else {
       if ($this->parm['dbtype'] == 'mysql') {
@@ -94,6 +124,7 @@ class UoN_LTI extends BLTI {
         $num_rows = mysql_num_rows($result);
         if ($num_rows != 1) {
           $this->message = "Your consumer is not authorized oauth_consumer_key=" . $oauth_consumer_key;
+          unset($_SESSION['_lti_context']);
           return;
         } else {
           while ($row = mysql_fetch_assoc($result)) {
@@ -105,6 +136,7 @@ class UoN_LTI extends BLTI {
           }
           if (!is_string($secret)) {
             $this->message = "Could not retrieve secret oauth_consumer_key=" . $oauth_consumer_key;
+            unset($_SESSION['_lti_context']);
             return;
           }
         }
@@ -137,6 +169,8 @@ class UoN_LTI extends BLTI {
         $stmt->close();
         if (!is_string($secret)) {
           $this->message = "Could not retrieve secret oauth_consumer_key=" . $oauth_consumer_key;
+          unset($_SESSION['_lti_context']);
+
           return;
         }
       }
@@ -159,6 +193,7 @@ class UoN_LTI extends BLTI {
       $this->valid = true;
     } catch (Exception $e) {
       $this->message = $e->getMessage();
+      unset($_SESSION['_lti_context']);
       return;
     }
 
