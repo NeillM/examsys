@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
@@ -21,11 +21,11 @@
   <?php
   if(isset($displaystdformobj->messages)) {
     foreach($displaystdformobj->messages as $object) {
-      echo <<<END
+      echo <<<HTML
 $object->pretext
 <div class="msg">$object->content</div>
 $object->posttext
-END;
+HTML;
     }
   }
 
@@ -47,19 +47,69 @@ HTML;
 <?php
     if(isset($displaystdformobj->buttons)) {
       foreach($displaystdformobj->buttons as $object) {
-        echo <<<END
+        echo <<<HTML
 $object->pretext
 <input type="$object->type" name="$object->name" value="$object->value" style="$object->style" />
 $object->posttext
-END;
+HTML;
       }
     }
     //<input type="submit" name="cancel" value=" Cancel " />
 ?>
   </div>
 
+  <?php
+  if(isset($displaystdformobj->postbuttonmessages)) {
+    foreach($displaystdformobj->postbuttonmessages as $object) {
+      $cssclass='msg';
+      if(isset($object->cssclass)) {
+        $cssclass=$object->cssclass;
+      }
+      echo <<<HTML
+$object->pretext
+<div class="$cssclass">$object->content</div>
+$object->posttext
+HTML;
+    }
+  }
+  ?>
+
 </div>
 </form>
+
+<?php
+if(isset($displaystdformobj->postformmessages)) {
+
+  $cssareaclass='mainbox';
+  if(isset($displaystdformobj->postformmessages[0]->cssareaclass)) {
+    $cssclass=$object->cssclass;
+  }
+  if(!isset($displaystdformobj->postformmessages[0]->rawhtml)) {
+    echo <<<HTML
+<div class="$cssmainclass">
+HTML;
+    foreach($displaystdformobj->postformmessages as $object) {
+      $cssclass='msg';
+      if(isset($object->cssclass)) {
+        $cssclass=$object->cssclass;
+      }
+      echo <<<HTML
+$object->pretext
+<div class="$cssclass">$object->content</div>
+$object->posttext
+HTML;
+    }
+    echo <<<HTML
+</div>
+HTML;
+
+  } else {
+    echo $displaystdformobj->postformmessages[0]->rawhtml;
+  }
+
+}
+?>
+
 
 </body>
 </html>
