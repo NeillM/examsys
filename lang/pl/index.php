@@ -16,7 +16,7 @@
 
 $string['cannotfindexams'] = 'Rogō nie odnalazło żadnego egzaminu';
 $string['exams'] = 'Egzaminy';
-$string['staffmangscreens'] = 'stron zarządzania dla kadry';
+$string['staffmangscreens'] = 'Strony zarządzania dla kadry';
 $string['note1'] = '<strong>Uwaga:</strong> To jest ekran egzaminów końcowych dla studentów, czy potrzebujesz';
 $string['unknownIp'] = '(nieznany adres)';
 $string['mostLikely'] = 'Przyczyną jest prawdopodobnie niespełnienie wymogów bezpieczeństwa:';
