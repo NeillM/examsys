@@ -34,7 +34,7 @@
 function usercheck($db, $lti) {
   global $string, $DISABLEDuserID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_db_database, $cfg_use_ldap, $fp_link, $cfg_encrypt_salt;
 
-  global $configObject;
+  $configObject = Config::get_instance();
   
   $lti_i = lti_integration::load();
   if (!isset($_SESSION['lti']['track'])) $_SESSION['lti']['track'] = '';

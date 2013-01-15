@@ -30,7 +30,7 @@ Class NetworkUtils {
    * @return mixed client ip address
 	 */
   static function get_ipaddress() {
-    global $configObject;
+    $configObject = Config::get_instance();
   
     if ($configObject->get('cfg_client_lookup') == 'name') {
       $tmp_client_ipaddress = gethostbyaddr($_SERVER['REMOTE_ADDR']);

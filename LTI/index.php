@@ -44,7 +44,8 @@ require_once '../classes/facultyutils.class.php';
 $choicetype='radio';
 
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false, $type='') {
-  global $configObject, $icons;
+  $configObject = Config::get_instance();
+  global $icons;
 
   $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, moduleID FROM properties WHERE (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
   $results2 = $mysqli->prepare($query_string);

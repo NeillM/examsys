@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-global $configObject;
+$configObject = Config::get_instance();
 require_once $configObject->get('cfg_web_root') . 'classes/userutils.class.php';
 
 class lti_integration {
@@ -24,7 +24,7 @@ class lti_integration {
 
     // Load the appropriate  lti integration class (if new one found load that else use this)
 
-    global $configObject;
+    $configObject = Config::get_instance();
     if (file_exists($configObject->get('cfg_web_root') . 'config/integration/lti_integration.class.php')) {
       require_once $configObject->get('cfg_web_root') . 'config/integration/lti_integration.class.php';
       return new lti_integration_extended();

@@ -23,7 +23,7 @@
 */
 
 function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
-  global $configObject;
+  $configObject = Config::get_instance();
   
   $configObject->get('cfg_long_date_time');
   $reviews = array();

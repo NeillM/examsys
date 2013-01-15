@@ -93,7 +93,7 @@ function db_change_user($db,$userObj) {
 //  global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $configObject->get('cfg_install_type'), $cfg_db_database, $string;
   $getback=array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd','cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
 
-  global $configObject;
+  $configObject = Config::get_instance();
   $arr=$configObject->get($getback);
   foreach($arr as $k=>$v) {
     ${$k}=$v;
@@ -133,7 +133,7 @@ function db_auth($u, $p, $db, $changeuser = true, $userObj) {
 
 
   global $db_errors, $string;
-global $configObject;
+$configObject = Config::get_instance();
 
   if ($u == '') {
     return 0;

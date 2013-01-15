@@ -100,7 +100,7 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db) {
  * @return array list of module URLs.
  */
 function get_staff_module_links($staff_modules, $db) {
-  global $configObject;
+  $configObject = Config::get_instance();
   
   $modules_array = array();
 
@@ -128,7 +128,7 @@ function get_staff_module_links($staff_modules, $db) {
  * @return array list of keywords URLs.
  */
 function get_keywords($teams, $userID, $db) {
-  global $configObject;
+  $configObject = Config::get_instance();
 
   $keywords_array = array();
   $keyword_no = 0;
