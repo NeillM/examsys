@@ -57,7 +57,7 @@ class impersonation_auth extends outline_authentication {
 
   function checkwhattodo(&$preauthobj) {
     $this->savetodebug('Starting up impersination checking');
-    $this->savetodebug('Check sess var:' . var_export($_SESSION, TRUE));
+//    $this->savetodebug('Check sess var:' . var_export($_SESSION, TRUE));
 
     $continue = FALSE;
     if (isset($this->form['std']->username)) {

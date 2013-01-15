@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 /**
  *
  * The lti login authentication function.
@@ -61,7 +60,7 @@ class ltilogin_auth extends outline_authentication {
 
   function register_callback_routines() {
     $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
-//    $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
+    $this->calling_object->register_callback(array($this, 'registeruserwithlti'), 'postauthsuccess', $this->number, $this->name);
     $this->calling_object->register_callback(array($this, 'displaystdform'), 'displaystdform', $this->number, $this->name);
   }
 
@@ -69,7 +68,7 @@ class ltilogin_auth extends outline_authentication {
   function auth($authobj) {
 
     if ($this->lti->valid !== TRUE) {
-      $this->savetodebug('Not valid LTI Launch: ' .  $this->lti->message);
+      $this->savetodebug('Not valid LTI Launch: ' . $this->lti->message);
       $this->set_fail();
 
       return FALSE;
@@ -84,9 +83,9 @@ class ltilogin_auth extends outline_authentication {
       $this->retdata->success = TRUE;
       $this->retdata->form = 'std';
       $this->rogoid = $returned[0];
-      $this->retdata->rogoid = &$this->rogoid;
+      $this->retdata->rogoid = & $this->rogoid;
       $this->retdata->url = '';
-      $authobj->retdata = &$this->retdata;
+      $authobj->retdata = & $this->retdata;
       $this->savetodebug('LTI lookup successful');
 
       return TRUE;
@@ -94,8 +93,9 @@ class ltilogin_auth extends outline_authentication {
 
 
     //set session to be needing user lookup
-    $_SESSION['authenticationobj']['ltilogin']['needsuserlookup']=true;
-    return false;
+    $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = TRUE;
+
+    return FALSE;
 
     $this->calling_object->display_debug();
 
@@ -107,20 +107,33 @@ class ltilogin_auth extends outline_authentication {
     // lti valid but no user id associated with it.
     // need to authenticate the user but ignore lti & already logged in etc
 
-    if(!isset($_SESSION['authenticationObj']['ltilogin']['lookupstage'])) {
+    if (!isset($_SESSION['authenticationObj']['ltilogin']['lookupstage'])) {
       //display message
       //      UserNotices::display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
     }
   }
 
-  function displaystdform(&$displaystdformobj) {
-    $message= new stdClass();
-    $message->pretext='';
-    $message->posttext='';
+  function registeruserwithlti(&$postauthsuccessobj) {
+    if (!isset($_SESSION['authenticationobj']['ltilogin']['needsuserlookup']) or $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] === FALSE) {
+      return;
+    }
+    $this->savetodebug('storing rogo userid against lti user');
+    $rogoid = $this->calling_object->get_userid();
+    $this->lti->add_lti_user($rogoid);
+    $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = FALSE;
+  }
 
-    $message->content='Please Login to authenticate the LTI Connection.'; //TODO need to convert this for language.
-    $displaystdformobj->messages[]=$message;
-    $displaystdformobj->replace=true;
+  function displaystdform(&$displaystdformobj) {
+    if (isset($_SESSION['authenticationobj']['ltilogin']['needsuserlookup']) and  $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] === TRUE) {
+
+      $message = new stdClass();
+      $message->pretext = '';
+      $message->posttext = '';
+
+      $message->content = 'Please Login to authenticate the LTI Connection.'; //TODO need to convert this for language.
+      $displaystdformobj->messages[] = $message;
+      $displaystdformobj->replace = TRUE;
+    }
   }
 
 }

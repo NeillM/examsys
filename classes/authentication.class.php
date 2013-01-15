@@ -137,6 +137,7 @@ class Authentication {
   function register_callback($callback, $section, $number, $name, $insert = FALSE) {
     if (!in_array($section, array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'displayerrform', 'getauthobj', 'sessionstore')) or !is_callable($callback)) {
       //attempting to register callback to invalid section
+      //maybe log name of function as well?
       $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
       return FALSE;
     }
@@ -225,7 +226,7 @@ class Authentication {
         if ($returned !== FALSE) {
           $this->success = TRUE;
           $this->userid = $this->authObj[$objid]->rogoid;
-          $this->debug[] = 'Rogo ID is:: ' . $this->userid . " from object $objid";
+          $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " from object $objid:" .$this->callbackregisterdata['auth'][$number][$objid] . ' *******';
           //         $this->debug[]=var_dump($this->authObj[$objid],TRUE);
           $this->successfullauthmodule[] = $objid;
 
@@ -271,7 +272,7 @@ class Authentication {
             $this->display_error_form();
 
             if ($postauthfailobj->exit === TRUE) {
-         //     var_dump($this->debug);
+              var_dump($this->debug);
               exit();
             }
           }
