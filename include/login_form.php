@@ -31,7 +31,7 @@ HTML;
         }
       }
 
-      if (!isset($displaystdformobj) or (isset($displaystdformobj->replace) and $displaystdformobj->replace !== true)) {
+      if (!(isset($displaystdformobj->replace) and $displaystdformobj->replace === true)) {
 
         echo <<<HTML
   <div class="msg">The page you are trying to access requires authentication. Please sign in using your username and password:</div>
