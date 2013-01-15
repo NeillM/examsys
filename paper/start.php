@@ -429,7 +429,8 @@ if (isset($_POST['sessionid'])) {
 }
 
 require '../config/start.inc';
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n";
+//niko echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n";
+echo "<!DOCTYPE html>\n<html>\n<head>\n";
 if ($paper_type == '3') {
   echo "<title>" . $string['survey'] . "</title>\n";
 } else {
@@ -489,6 +490,7 @@ if ($css != '') {
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
 <script type="text/javascript" src="../js/flash_include.js"></script>
+<script type="text/javascript" src="../js/q_labelling.js"></script>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
 <script language="javascript">
   window.history.go(1);

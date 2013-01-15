@@ -35,5 +35,5 @@ function addLoadEvent(func, num, flashId, image, config, answer, extra, colour) 
 
 function flashInfo(infoArray) {
   flashTarget = (typeof flashTarget === 'undefined' || flashTarget == '') ? 'q' : flashTarget;
-  document.getElementById(flashTarget+infoArray[0]).value = infoArray[1];
+  //document.getElementById(flashTarget+infoArray[0]).value = infoArray[1];
 }

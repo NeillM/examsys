@@ -1048,6 +1048,16 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
   ?>
     <div align="center">
+    <!-- ======================== new HTML5 part ================= -->
+    <hr>
+    		<textarea id="niko" name="niko" cols="125" rows="15"></textarea>
+        <canvas id="canvas" width="800" height="480"></canvas>
+        <script language="JavaScript" type="text/javascript">
+        //var num = message.substring(5,message.length);
+        setUpLabelling(1, 'message', '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>', '<?php echo $display_option['marks_correct'] . '~' . $display_option['marks_incorrect'] . '~' . $question['score_method']; ?>','#FFC0C0');
+		</script>
+    <hr>
+    <!-- ==================================================== -->
     <script language="javascript">
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
@@ -1065,9 +1075,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           </div>
         <?php
         if (!isset($user_answers[$current_screen][$q_id]) OR $user_answers[$current_screen][$q_id] == '') {
-          echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"0$" . $marks . ";\" />\n";
+          echo "<input size=100 type=\"text\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"0$" . $marks . ";\" />\n";
         } else {
-          echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"" . $user_answers[$current_screen][$q_id] . "\" />\n";
+          echo "<input size=100 type=\"text\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"" . $user_answers[$current_screen][$q_id] . "\" />\n";
         }
         break;
       case 'flash':
