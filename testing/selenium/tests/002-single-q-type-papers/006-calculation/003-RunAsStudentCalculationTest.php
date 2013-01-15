@@ -309,7 +309,6 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->assertLocation($this->page_root . '/paper/finish.php?id=61357920091102');
 
-
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '1 out of 1');
     $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '2 out of 2');
@@ -441,7 +440,6 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
     $this->assertLocation($this->page_root . '/paper/finish.php?id=61357920091102');
-
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '1 out of 1');
@@ -577,7 +575,6 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->assertLocation($this->page_root . '/paper/finish.php?id=61357920091102');
 
-
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '1 out of 1');
     $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '2 out of 2');
@@ -712,7 +709,6 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->assertLocation($this->page_root . '/paper/finish.php?id=61357920091102');
 
-
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '0 out of 1');
     $this->assertElementContainsText('//table[2]/tbody/tr[4]/td[2]/p/span', '0 out of 2');
@@ -845,7 +841,6 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
     $this->assertLocation($this->page_root . '/paper/finish.php?id=61357920091102');
-
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '1 out of 1');
