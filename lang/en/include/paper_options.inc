@@ -98,6 +98,7 @@ $string['frequencyanalysis'] = 'Frequency &amp; Discrimination (U-L) Analysis';
 $string['learningobjectiveanalysis'] = 'Learning Objective Analysis';
 $string['exportresponsescsvnum'] = 'Export responses as CSV file (raw)';
 $string['exportresponsescsvtext'] = 'Export responses as CSV file (text)';
+$string['exportbooleancsv'] = 'Export boolean responses as CSV file';
 $string['exportmarkscsv'] = 'Export marks as CSV file';
 $string['individualportfoliosheets'] = 'Individual Portfolio Sheets';
 $string['exportratingscsv'] = 'Export ratings as CSV file';
