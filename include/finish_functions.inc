@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -73,12 +73,12 @@ function display_std($std_value, $inline=1) {
       $html .= '>&nbsp;' . $std_value . '%&nbsp;</span>';
     } elseif ($std_value != '') {
       $std_value = str_replace('exclude_','',$std_value);
-    
+
       $titles = array('EE'=>'Easy/Essential','EI'=>'Easy/Important','EN'=>'Easy/Nice to know','ME'=>'Medium/Essential','MI'=>'Medium/Important','MN'=>'Medium/Nice to know','HE'=>'Hard/Essential','HI'=>'Hard/Important','HN'=>'Hard/Nice to know');
       $html .= ' title="' . $titles[$std_value] . '">&nbsp;' . $std_value . '&nbsp;</span>';
     }
   }
-  
+
   return $html;
 }
 
@@ -155,14 +155,14 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
       //echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>' . $tmp_string . '</p><br />';
       if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
       echo '</blockquote>';
-      
+
       echo '<div class="studentview">' . $string['studentviewend'] . '</div>';
       echo '<div class="staffview"><div style="padding-left:15px">' . $string['staffviewbelow'] . '</div></div>';
     }
   }
   $q_no = 0;
   $old_q_id = 0;
-  
+
   // Get standards setting data
   if (substr($marking,0,1) == '2') {
     $standards_setting = array();
@@ -185,7 +185,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   $total_random_mark = 0;
   $total_marks = 0;
   $user_mark = 0;
-  
+
   if (isset($preview_q_id)) {
     $answer_data = $mysqlidb->prepare("SELECT 1, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper=? AND questions.q_id=options.o_id AND questions.q_id=? ORDER BY screen, display_pos, id_num");
     $answer_data->bind_param('ii', $paperID, $preview_q_id);
@@ -244,7 +244,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     $paper[$q_no]['o_media_width'][] = $o_media_width;
     $paper[$q_no]['o_media_height'][] = $o_media_height;
     $paper[$q_no]['correct'][] = $correct;
-    
+
     if (isset($standards_setting[$q_id])) {
       $paper[$q_no]['std'] = explode(',',$standards_setting[$q_id]);
     } else {
@@ -269,7 +269,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   }
   $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_excluded, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
   $total_random_mark += qRandomMarks($old_q_type, $tmp_excluded, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-  
+
   // Parse for random questions.
   for ($i=1; $i<=$q_no; $i++) {
     if ($paper[$i]['q_type'] == 'random' or $paper[$i]['q_type'] == 'keyword_based') {
@@ -294,11 +294,11 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $answer_data = $mysqlidb->prepare("SELECT q_id FROM log$log_type WHERE q_paper=? AND started=? AND userID=? AND screen=? AND q_id IN ($possible_questions) ORDER BY id");
         $answer_data->bind_param('isii', $paperID, $sessionid, $temp_userID, $paper[$i]['screen']);
         $answer_data->execute();
-        $answer_data->bind_result($selected_q_id); 
+        $answer_data->bind_result($selected_q_id);
         $answer_data->fetch();
         $answer_data->close();
       }
-      
+
       // Look up selected question and overwrite data.
       if ($selected_q_id > 0) {
         $stems = 0;
@@ -335,7 +335,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             $paper[$i]['o_media_width'] = array();
             $paper[$i]['o_media_height'] = array();
             $paper[$i]['correct'] = array();
-          }    
+          }
           $paper[$i]['option_text'][] = $option_text;
           $paper[$i]['feedback_right'][] = $feedback_right;
           $paper[$i]['feedback_wrong'][] = $feedback_wrong;
@@ -398,7 +398,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   } else {
     display_error($string['useranswererror'], $mysqlidb->error);
   }
-  
+
   ?>
     <br />
     <div align="center">
@@ -422,17 +422,17 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   // Process the array for display.
   $old_screen = 1;
   $display_no = 0;
-     
+
   echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
   for ($question=1; $question<=$q_no; $question++) {
     $display_no++;
-    
+
     init_feedback($strong_on, $strong_off);
 
     if ($old_screen < $paper[$question]['screen']) {
       $q_type = $paper[$question]['q_type'];
       echo '</table><br />';
-      
+
       echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $paper[$question]['screen'] . '</span></div>';
       echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
       if ($q_type != 'info') {
@@ -455,7 +455,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     } else {
       $tmp_exclude = '0000000000000000000000000000000000000000';      // No exclusions found, enable all options.
     }
-    
+
     // Backwards compatibility - make up a default order if there is none.
     if (!isset($paper[$question]['option_order']) or $paper[$question]['option_order'] == '') {
       for ($i=0; $i<$no_options; $i++) {
@@ -465,9 +465,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $paper[$question]['option_order'] .= ',' . $i;
         }
       }
-      
+
     }
-    
+
     $option_order = explode(',',$paper[$question]['option_order']);
     $question_no = $display_no;
 
@@ -477,12 +477,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $tmp_user_answer = $paper[$question]['user_answer'];
           $answer_parts = explode(';', $tmp_user_answer);
           $tmp_user_answer = substr($answer_parts[1], 0, -2);
-          
+
           $percents = explode(',', $answer_parts[0]);
         } else {
           $tmp_user_answer = '';
         }
-        
+
         if ($tmp_user_answer == '') {
           reset_feedback($hide_if_unanswered);
         }
@@ -549,17 +549,17 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         } else {
           $tmp_answer = array('','','','','','','','');
         }
-        
+
         if ($tmp_answer[0] == '') {
           reset_feedback($hide_if_unanswered);
         }
-        
+
         $saved_response = $tmp_answer[0];
         $part_id = 1;
-        
+
         $tmp_leadin = $paper[$question]['leadin'];
         $tmp_fback = $paper[$question]['correct_fback'];
-        
+
         $variable_array = explode(',',$tmp_answer[2]);
         $var_no = 1;
         foreach($variable_array as $individual_variable) {
@@ -597,12 +597,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           }
           $var_no++;
         }
-        
+
         if ($paper[$question]['scenario'] != '') echo "<p>" . $paper[$question]['scenario'] . "</p>\n";
         if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
-        
+
         echo_content($tmp_leadin);
-        
+
         $score_array = explode(',', $paper[$question]['display_method']);
 
         $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
@@ -628,15 +628,15 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         }
 
         $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-                  
+
         if ($tmp_answer[0] == '') {
           echo "<td>" . display_response($tmp_display_students_response, 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $score_array[3];
         } else {
           echo '<td>';
           if ($tmp_exclude == '1')  echo '<span class="exclude">';
-          
+
           $difference = round(abs($saved_response_clean - $tmp_answer[1]), 12);
-          
+
           if ($saved_response_clean == $tmp_answer[1]) {
             $paper[$question]['mark'] = $paper[$question]['marks_correct'];
           } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
@@ -649,7 +649,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           if (substr($tmp_exclude,$part_id,1) == '1') {
             $paper[$question]['mark'] = 0;
           }
-               
+
           if ($paper[$question]['mark'] == $paper[$question]['marks_correct']) {
             echo display_response($tmp_display_students_response, 'tick');
           } elseif ($tolerance_partial > 0 and $paper[$question]['mark'] == $paper[$question]['marks_partial'] and $paper[$question]['marks_partial'] > 0) {
@@ -671,7 +671,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         } else {
           echo ' ';
         }
-                  
+
         if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_correct'] and $tolerance_full > 0) {
           echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[1];
           if (StringUtils::ends_with($score_array[1], '%')) echo " (" . (round($tmp_answer[1], $decimals) - $tolerance_full) . " - " . (round($tmp_answer[1], $decimals) + $tolerance_full) . ")";
@@ -680,7 +680,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[2];
           if (StringUtils::ends_with($score_array[2], '%')) echo " (" . (round($tmp_answer[1], $decimals) - $tolerance_partial) . " - " . (round($tmp_answer[1], $decimals) + $tolerance_partial) . ")";
         }
-        
+
         if ($tmp_exclude == '1')  echo '</span>';
         echo "</td></tr>\n</table>\n";
         if ($tmp_fback != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\" style=\"margin-left:17px\">&nbsp;$tmp_fback</div>\n";
@@ -699,13 +699,13 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         if ($answered  == false) {
           reset_feedback($hide_if_unanswered);
         }
-      
+
         $paper[$question]['mark'] = 0;
         if (!empty($paper[$question]['scenario'])) echo_content($paper[$question]['scenario']);
         if (!empty($paper[$question]['q_media'])) echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
         echo_content($paper[$question]['leadin']);
         echo '<table cellpadding="0" cellspacing="1" border="0">';
-        
+
         $abstain = false;
         $no_correct = 0;
         $no_incorrect = 0;
@@ -723,7 +723,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $abstain = true;
         }
         echo "</tr>\n";
-        
+
         for ($part_id=0; $part_id<$no_options; $part_id++) {
           $tmp_part_id = $option_order[$part_id];
           if ($tmp_display_correct_answer == '1') {
@@ -733,7 +733,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           } else {
             echo '<tr><td></td>';
           }
-    
+
           $correct_icon = '';
           if (isset($paper[$question]['user_answer']) and substr($paper[$question]['user_answer'], $tmp_part_id, 1) != 'u' and substr($paper[$question]['user_answer'], $tmp_part_id, 1) != 'a') {
             if ($paper[$question]['correct'][$tmp_part_id] == substr($paper[$question]['user_answer'], $tmp_part_id, 1)) {
@@ -750,7 +750,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               }
             }
           }
-          
+
           // Radio buttons
           if (!isset($paper[$question]['user_answer']) or substr($paper[$question]['user_answer'], $tmp_part_id, 1)=='u' or substr($paper[$question]['user_answer'], $tmp_part_id, 1)=='') {
             echo "<td>&nbsp;&nbsp;<input type=\"radio\" name=\"q" . $question . "_" . $tmp_part_id ."\" /></td><td>&nbsp;&nbsp;<input type=\"radio\" name=\"q" . $question . "_" . $tmp_part_id ."\" /></td>";
@@ -764,7 +764,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           } elseif (isset($paper[$question]['user_answer']) and substr($paper[$question]['user_answer'], $tmp_part_id, 1)=='a') {
             echo "<td>&nbsp;&nbsp;<input type=\"radio\" name=\"q" . $question . "_" . $tmp_part_id ."\" /></td><td>&nbsp;&nbsp;<input type=\"radio\" name=\"q" . $question . "_" . $tmp_part_id ."\" /></td><td>&nbsp;&nbsp;<input type=\"radio\" name=\"q" . $question . "_" . $tmp_part_id ."\" checked /></td>";
           }
-          
+
           echo '<td>';
           if ($tmp_display_correct_answer == '1') {
             if ($paper[$question]['correct'][$tmp_part_id] == 't') {
@@ -774,7 +774,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             }
           }
           echo '</td>';
-          
+
           // Option data
           if ($paper[$question]['o_media'][$tmp_part_id] == '') {
             echo "<td";
@@ -810,7 +810,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           }
         }
 
-        
+
         if ($paper[$question]['score_method'] == 'Mark per Question') {
           if ($no_correct == 0 and $no_incorrect == 0) {
             $paper[$question]['mark'] = 0;
@@ -839,7 +839,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         if (!isset($paper[$question]['user_answer']) or (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 0)) {
           reset_feedback($hide_if_unanswered);
         }
-           
+
         if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
         if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'], '') . "</p>\n";
         echo_content($paper[$question]['leadin']);
@@ -852,9 +852,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               if ($tmp_display_correct_answer == '1') {
                 echo '<td>';
                 if(isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
-                echo '</td>';          
+                echo '</td>';
               } else {
-                echo '<td></td>';          
+                echo '<td></td>';
               }
               echo '<td>' . display_response($tmp_display_students_response, 'tick') . '</td>';
               echo "<td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" checked /></td><td style=\"width:99%\">";
@@ -873,9 +873,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               if ($tmp_display_correct_answer == '1') {
                 echo '<td>';
                   if(isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
-                echo '</td>';          
+                echo '</td>';
               } else {
-                echo '<td></td>';          
+                echo '<td></td>';
               }
               echo "<td></td><td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" /></td><td style=\"width:99%\">";
               if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
@@ -891,7 +891,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               echo '</td></tr>';
             }
           } else {
-            echo '<td></td>';          
+            echo '<td></td>';
             if (isset($paper[$question]['user_answer']) and $tmp_part_id+1 == $paper[$question]['user_answer']) {
               echo '<td>' . display_response($tmp_display_students_response, 'cross') . '</td>';
               echo "<td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" checked /></td><td style=\"width:99%\">";
@@ -900,7 +900,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
                 echo $paper[$question]['option_text'][$tmp_part_id];
                 if (substr($tmp_exclude,0,1) == '1') echo '</span>';
                 echo '<br />';
-              } 
+              }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
                 echo '<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" border="0" />';
               }
@@ -945,14 +945,14 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           }
         }
         echo "</table>\n";
-        
+
         break;
       case 'mrq':
         $std_part = 0;
         if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
         if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'], '') . "</p>\n";
         echo_content($paper[$question]['leadin']);
-        
+
         // Check to see if the user has answered any options.
         $answered = false;
         if (isset($paper[$question]['user_answer'])) {
@@ -1026,7 +1026,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               } else {
                 echo '<tr><td></td>';
               }
-            
+
               echo '<td></td>';
               echo "<td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_" . $tmp_part_id . "\" value=\"y\" />&nbsp;</td><td valign=\"top\">";
               $std_part++;
@@ -1077,7 +1077,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $paper[$question]['mark'] = 0;
         echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td colspan=\"3\" style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['clinicalvignette'] . "</td></tr>\n<tr><td colspan=\"2\">" . $paper[$question]['scenario'] . "</td></tr>\n";
         if ($paper[$question]['q_media'] != '') echo "<tr><td colspan=\"3\"><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p></td></tr>\n";
-    
+
         $sct_parts = explode('~',$paper[$question]['leadin']);
         echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
         $sct_titles = array(1=>$string['hypothesis'],2=>$string['investigation'],3=>$string['prescription'],4=>$string['intervention'],5=>$string['treatment']);
@@ -1085,7 +1085,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$paper[$question]['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
         echo "<tr><td style=\"width:49%;\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%;\">" . $sct_parts[1] . "</td></tr>\n";
         echo '</table>';
-    
+
         echo "\n<br /><p><strong>" . $string['thenthis'] . " " . mb_strtolower($sct_titles[$paper[$question]['display_method']], 'UTF-8') . " " . $string['is'] . ":</strong></p>\n";
 
         $max = -1;
@@ -1105,7 +1105,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             $correct_answer[$part_id] = $part_id;
           }
         }
-        
+
         if (!isset($paper[$question]['user_answer']) OR $paper[$question]['user_answer'] == 0) {
           reset_feedback($hide_if_unanswered);
         }
@@ -1118,11 +1118,11 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         echo "<td></td></tr>\n";
         for ($part_id=0; $part_id<$no_options; $part_id++) {
           $tmp_part_id = $option_order[$part_id];
-          
+
           if (isset($correct_answer[$tmp_part_id])) {
             $strong_on = '';
             $strong_off = '';
-            
+
             if (($tmp_display_correct_answer == '1' and $hide_if_unanswered == '0') or ($hide_if_unanswered == '1' and isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] != '0' and $tmp_display_correct_answer == '1')){
               $strong_on = '<strong>';
               $strong_off = '</strong>';
@@ -1134,14 +1134,14 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             $strong_on = '';
             $strong_off = '';
           }
-          
+
           if (isset($paper[$question]['user_answer']) and $tmp_part_id+1 == $paper[$question]['user_answer']) {
             if ($tmp_display_correct_answer == '1') {
               echo '<td>';
               if (isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
-              echo '</td>';          
+              echo '</td>';
             } else {
-              echo '<td></td>';          
+              echo '<td></td>';
             }
             if ($paper[$question]['correct'][$tmp_part_id] == $max) {
               echo '<td>' . display_response($tmp_display_students_response, 'tick') . '</td>';
@@ -1170,9 +1170,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             if ($tmp_display_correct_answer == '1') {
               echo '<td>';
               if(isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
-              echo '</td>';          
+              echo '</td>';
             } else {
-              echo '<td></td>';          
+              echo '<td></td>';
             }
             echo "<td></td><td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" /></td>";
             if ($tmp_display_correct_answer == 1) {
@@ -1188,7 +1188,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             if (substr($tmp_exclude,0,1) == '1') echo '</span>';
             echo '</td></tr>';
           }
-          
+
           if ($paper[$question]['feedback_right'][$tmp_part_id] != '' and $tmp_display_feedback == '1') {
             echo "<tr><td colspan=\"4\"></td><td class=\"fback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
           }
@@ -1202,7 +1202,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           }
         }
         echo "</table>\n";
-        
+
         break;
       case 'true_false':
         if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'u') {
@@ -1218,10 +1218,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
 
         $true_checked = '';
         $false_checked = '';
-        
+
         if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 't') $true_checked = ' checked="checked"';
         if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'f') $false_checked = ' checked="checked"';
-        
+
         echo '<table cellpadding="2" cellspacing="0" border="0"><tr>';
         echo '<td>';
         if ($paper[$question]['display_method'] == 'dropdown') {
@@ -1336,7 +1336,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         }
         if (substr($tmp_exclude,0,1) == '1') {
           $paper[$question]['mark'] = 0;
-          $paper[$question]['totalpos'] = 0;        
+          $paper[$question]['totalpos'] = 0;
         }
 
         break;
@@ -1344,7 +1344,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $paper[$question]['mark'] = 0;
         $paper[$question]['totalpos'] = 0;
         $all_correct = true;
-        
+
         $correct_no = 0;
         for ($i=0; $i<count($paper[$question]['correct']); $i++) {
           if ($paper[$question]['correct'][$i] != 0) $correct_no++;
@@ -1375,7 +1375,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         } else {
           $rank_answers = array_fill(0, 20, 'u');
         }
-        
+
         // Check to see if the user has answered any options.
         $answered = false;
         for ($i=0; $i<count($rank_answers); $i++) {
@@ -1387,7 +1387,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         if ($answered  == false) {
           reset_feedback($hide_if_unanswered);
         }
-        
+
         echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\">\n";
         for ($i=1; $i<=$no_options; $i++) {
           $tmp_part_id = $option_order[$i-1]+1;
@@ -1476,18 +1476,18 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           }
           echo "</tr>\n";
         }
-      
+
         if ($paper[$question]['score_method'] == 'Bonus Mark') {
           $img_name = 'cross';
           if ($paper[$question]['mark'] == ($paper[$question]['totalpos'] - $paper[$question]['marks_correct']) and $all_correct) {
             $paper[$question]['mark'] += $paper[$question]['marks_correct'];
             $img_name = 'tick';
           }
-            
+
           echo '<tr><td colspan="5">&nbsp;</td></tr>';
-          
+
           $html = '<tr><td>';
-          
+
           if (isset($paper[$question]['std'][$no_options])) {
             $html .= display_std($paper[$question]['std'][$no_options]);
           }
@@ -1501,10 +1501,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $html .= '</td>';
           $html .= '<td colspan="3">' . $string['overallcorrectorder'] . '</td>';
           $html .= '</tr>';
-          
+
           echo $html;
         }
-        
+
         if ($answered == false) {
           echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
         }
@@ -1518,7 +1518,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           }
           $paper[$question]['totalpos'] = $paper[$question]['marks_correct'];
         }
-        
+
         if ($tmp_exclude{0} == '1') {
           $paper[$question]['mark'] = 0;
           $paper[$question]['totalpos'] = 0;
@@ -1555,7 +1555,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $matching_media_height = explode('|', $paper[$question]['q_media_height']);
         $matching_media_correct_fback = explode('|', $paper[$question]['correct_fback']);
         $matching_media_incorrect_fback = explode('|', $paper[$question]['incorrect_fback']);
-        
+
         $text_scenarios = 0;
         for ($part_id=0; $part_id<10; $part_id++) {
           if (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id])) != '') $text_scenarios++;
@@ -1565,7 +1565,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
         }
         $total_scenarios = max($text_scenarios, $media_scenarios);
-        
+
         if ($matching_media[0] != '') {
           echo "<p align=\"center\">" . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '') . "</p>\n";
         }
@@ -1612,8 +1612,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               }
               echo display_response($tmp_display_students_response, 'tick') . '&nbsp;';
             } else {
-              if (substr($tmp_exclude,$section,1) == '0' and $user_answers[$i] != '' and $user_answers[$i] != 'u') {
-                $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+              if (substr($tmp_exclude,$section,1) == '0') {
+                if ($user_answers[$i] != '' and $user_answers[$i] != 'u') {
+                  $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                }
                 $all_correct = false;
               }
               if ($user_answers[$i] != '' and $user_answers[$i] != 'u') echo display_response($tmp_display_students_response, 'cross') . '&nbsp;';
@@ -1645,15 +1647,15 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               echo '&nbsp;&nbsp;<strong>' . $paper[$question]['option_text'][$correct_answers[$i]-1] . '</strong>';
             }
             echo "</td>\n";
-          } else {                              // Multiple answer Extended Matching     
-            for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {              
+          } else {                              // Multiple answer Extended Matching
+            for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {
               $matching_option = 0;
               foreach ($separate_answers as $single_answer) {
                 if ($single_answer == $option_order[$tmp_option_no-1]+1) {
                   $matching_option = 1;
                 }
               }
-      
+
               if ($matching_option == 1) {
                 $std_part++;
                 $matching_user_option = 0;
@@ -1664,10 +1666,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
                   }
                 }
                 $option_answered += $matching_user_option;
-      
+
                 echo '<tr>';
                 if ($tmp_display_correct_answer == '1') {
-                  echo '<td>'; 
+                  echo '<td>';
                   if(isset($paper[$question]['std'][$std_part-1])) echo display_std($paper[$question]['std'][$std_part-1]);
                   echo '</td>';
                 } else {
@@ -1707,13 +1709,13 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               $tmp_option_no++;
             }
           }
-        
+
           $section = $std_part;
           echo '</table>';
           echo '<br />';
           if (isset($matching_media_correct_fback[$i]) and $matching_media_correct_fback[$i] != '' and $tmp_display_feedback == '1') {
             echo '<div class="fback">' . $matching_media_correct_fback[$i] . '</div>';
-          }            
+          }
           echo '</li>';
           $i++;
         }
@@ -1725,7 +1727,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
           //$paper[$question]['mark'] = 0;
         } elseif ($paper[$question]['score_method'] == 'Mark per Question') {
-          $paper[$question]['mark'] = ($all_correct) ? $paper[$question]['marks_correct'] :$paper[$question]['marks_incorrect']; 
+          $paper[$question]['mark'] = ($all_correct) ? $paper[$question]['marks_correct'] : $paper[$question]['marks_incorrect'];
         }
         break;
       case 'matrix':
@@ -1802,7 +1804,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             $part_id++;
             $row_no++;
           }
-        }    
+        }
         echo '</table>';
 
         if ($answered == 0) {
@@ -1813,7 +1815,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         if ($tmp_display_feedback == '1' and trim($paper[$question]['correct_fback']) != '') {
           echo "<p class=\"fback\">" . $paper[$question]['correct_fback'] . "</p>\n";
         }
-        
+
         if ($paper[$question]['score_method'] == 'Mark per Question') {
           if ($paper[$question]['mark'] == $paper[$question]['marks_correct'] * $row_no) {
             $paper[$question]['mark'] = $paper[$question]['marks_correct'];
@@ -1875,14 +1877,14 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         } else {
           if ($paper[$question]['q_media'] != '') {
             echo '<br /><p align="center">' . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
-          }            
+          }
           echo_content($paper[$question]['leadin']);
         }
         break;
       case 'blank':
         $paper[$question]['mark'] = 0;
         $have_answer = false;
-        
+
         if ($paper[$question]['scenario'] != '') {
           echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') {
@@ -1907,7 +1909,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $no_blanks = count($blank_details);
         echo '<p>' . $blank_details[0];
         $blank_count = 1;
-        
+
         while ($blank_count < $no_blanks) {
           if (!isset($user_choices[$blank_count]) or $user_choices[$blank_count] == 'u') {
             reset_feedback($hide_if_unanswered);
@@ -2007,7 +2009,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         if ($tmp_display_feedback == '1' and $paper[$question]['correct_fback'] != '') {
           echo '<div class="fback">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
         }
-        
+
         if ($paper[$question]['score_method'] == 'Mark per Question' and $have_answer) {
           $paper[$question]['mark'] = ($paper[$question]['mark'] == ($no_blanks - 1) * $paper[$question]['marks_correct']) ? $paper[$question]['marks_correct'] :  $paper[$question]['marks_incorrect'];
         }
@@ -2053,16 +2055,16 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           }
           $paper[$question]['totalpos'] = $paper[$question]['marks_correct'];
         }
-        
+
         if ($paper[$question]['scenario'] != '') {
           echo_content($paper[$question]['scenario']);
         }
-        
+
         $extra = $tmp_display_students_response . ',' . $tmp_display_correct_answer . ',' . $tmp_exclude;
-        
+
         $tmp_correct = str_replace("'", "\'", trim($paper[$question]['correct'][0]));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct); 
+        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 ?>
   <div>
   <script language="JavaScript">
@@ -2086,20 +2088,20 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           if (isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
           echo '<br />';
         }
-        
+
         if (!isset($paper[$question]['user_answer'])){
           echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
         } elseif ($paper[$question]['user_answer'] == 'u') {
-          echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";         
+          echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
         }
-        
+
         if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
           echo '<div class="fback">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
         }
         break;
       case 'labelling':
         $correct_labels = array();
-      
+
         $tmp_first_split = explode(';', $paper[$question]['correct'][0]);
         $tmp_second_split = explode('$', $tmp_first_split[11]);
         $label_count = 0;
@@ -2124,11 +2126,11 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             $i++;
           }
         }
-        
+
         $paper[$question]['mark'] = 0;
         $all_correct = true;
         $correct_no = 0;
-        
+
         $tmp_labels = 0;
         $max_col1 = 0;
         $max_col2 = 0;
@@ -2184,7 +2186,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
           }
         }
-      
+
         if ($paper[$question]['scenario'] != '') {
           echo_content($paper[$question]['scenario']);
         }
@@ -2242,9 +2244,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   } else {
     $tmp_feedback .= '0';
   }
-  
+
   $extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
-?> 
+?>
   function swfLoaded<?php echo $question_no; ?>(message) {
 
 
@@ -2309,10 +2311,10 @@ echo '</script>';
         $paper[$question]['totalpos'] = 0;
         break;
     }
-    
+
     // Display any objectives mapped
     echo display_mapped_objectives($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $question, $q_type, $string, $mysqlidb);
-    
+
     // Write out the marks for the question
     echo display_question_mark($tmp_display_question_mark, $paper, $q_type, $question, $string);
     
