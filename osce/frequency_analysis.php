@@ -83,7 +83,7 @@ $result->close();
     $report_title = 'Frequency Analysis';
   }
   
-  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {

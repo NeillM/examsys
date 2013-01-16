@@ -208,12 +208,15 @@
   $objectives = array();
   $qid_list = substr($qid_list,0,-1);
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
-  
+
   unset($objByModule['none_of_the_above']);
+
+  
+
   if (count($objByModule) > 0) {
     foreach ($objByModule as $module => $mappings) {
       foreach ($mappings as $id => $mappingData) {
-        if( $mappingData['session']['class_code'] != '') {
+        if ($mappingData['session']['class_code'] != '') {
           $sessiontitle = $mappingData['session']['class_code'];
         } else {
           $sessiontitle = $mappingData['session']['title'];
@@ -236,12 +239,21 @@
             $objectives[$id]['mark_sum'] = $question_data[$q_id]['mark'];
           }
           $objectives[$id]['session']['sessiontitle'] = $sessiontitle;
-
+          
+          
+          if (isset($objectives[$id]['chort_totalpos_sum'])) {
+            $objectives[$id]['chort_totalpos_sum'] += $chort_question_data[$q_id]['totalpos'];
+          } else {
+            $objectives[$id]['chort_totalpos_sum'] = $chort_question_data[$q_id]['totalpos'];
+          }
+          if (isset($objectives[$id]['chort_mark_sum'])) {
+            $objectives[$id]['chort_mark_sum'] += $chort_question_data[$q_id]['mark'];
+          } else {
+            $objectives[$id]['chort_mark_sum'] = $chort_question_data[$q_id]['mark'];
+          }
         }
         $objectives[$id]['ratio'] = $objectives[$id]['mark_sum']/$objectives[$id]['totalpos_sum'];
-        $objectives[$id]['chort_totalpos_sum'] = $chort_question_data[$q_id]['totalpos'];
-        $objectives[$id]['chort_mark_sum'] = $chort_question_data[$q_id]['mark'];
-        $objectives[$id]['chort_ratio'] = $chort_question_data[$q_id]['mark'] / $chort_question_data[$q_id]['totalpos'];
+        $objectives[$id]['chort_ratio'] = $objectives[$id]['chort_mark_sum'] / $objectives[$id]['chort_totalpos_sum'];
       }
     }
     $objectives = array_csort($objectives, 'ratio', 'desc');
@@ -267,9 +279,9 @@
   echo "<tr><td style=\"border-top: 1px solid #D6E5F5\">&nbsp;</td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td colspan=\"3\" style=\"border-top: 1px solid #D6E5F5; color:#1E3287\">&nbsp;<nobr>" . $string['yourmark'] . "&nbsp;</nobr></td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287\">&nbsp;" . $string['relative'] . "&nbsp;</td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287\"><nobr>&nbsp;" . $string['qno'] . "&nbsp;</nobr></td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287; text-align:center\">" . $string['objective'] . "</td></tr>";
   foreach($objectives as $id => $obj_data) {
     $session_string = '';
-    if ($obj_data['ratio'] > 0.799) {
+    if ($obj_data['ratio'] >= 0.8) {
      $img_src = '../artwork/ok_comment.png';
-    } elseif ($obj_data['ratio'] > 0.499) {
+    } elseif ($obj_data['ratio'] >= 0.5) {
      $img_src = '../artwork/minor_comment.png';
     } else {
      $img_src = '../artwork/major_comment.png';

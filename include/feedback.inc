@@ -113,14 +113,13 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
   $question_data = array();
   if ($student_list != '') {
     if ($paper_type == '4') {
-      $sql = "SELECT q_id, SUM(rating) AS mark, SUM(1) AS totalpos FROM log$paper_type WHERE userID IN ($student_list) $excluded AND q_paper=$paperID GROUP BY q_id ORDER BY q_id";
+      $sql = "SELECT COUNT(userID) AS user_count, q_id, SUM(rating) AS mark, SUM(1) AS totalpos FROM log4 WHERE userID IN ($student_list) $excluded AND q_paper=$paperID GROUP BY q_id ORDER BY q_id";
     } else {
-      $sql = "SELECT q_id, SUM(mark) AS mark, SUM(totalpos) AS totalpos FROM log$paper_type WHERE userID IN ($student_list) $excluded AND q_paper=$paperID GROUP BY q_id ORDER BY q_id";
+      $sql = "SELECT COUNT(userID) AS user_count, q_id, SUM(mark) AS mark, SUM(totalpos) AS totalpos FROM log$paper_type WHERE userID IN ($student_list) $excluded AND q_paper=$paperID GROUP BY q_id ORDER BY q_id";
     }
-  
     $result = $mysqli->prepare($sql);
     $result->execute();
-    $result->bind_result($q_id, $mark, $totalpos);
+    $result->bind_result($user_count, $q_id, $mark, $totalpos);
     while ($result->fetch()) {
       $question_data[$q_id]['totalpos'] = $totalpos;
       $question_data[$q_id]['mark'] = $mark;    
@@ -128,6 +127,19 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     }
     $result->close();
   }
+  
+  
+  if ($paper_type == '4') {   // Get the maximum marks for OSCE station questions.
+    $result = $mysqli->prepare("SELECT q_id, q_type, display_method, score_method FROM questions, papers WHERE papers.question = questions.q_id AND paper = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($q_id, $q_type, $display_method, $score_method);
+    $total_student_mark = 0;
+    while ($result->fetch()) {
+      $question_data[$q_id]['totalpos'] = qMarks($q_type, '', 1, '', '', $display_method, $score_method) * $user_count;
+    }
+  }  
+  
   return $question_data;
 }
 
