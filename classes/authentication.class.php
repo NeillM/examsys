@@ -515,13 +515,21 @@ $data->callbacks[$value][]=$dat;
       //basic view
 
       $return_data = '';
+      $error=false;
       foreach ($data->plugins as $number => $item) {
+        if(count($item->error) >0) {
+          $error=true;
+        }
         if ($number != 0) {
           $return_data .= ',  <b>' . $number . '</b> ' . $item->name . ' <i>(' . $item->classname . ')</i>';
         }
 
       }
       $return_data = substr($return_data, 3);
+      if($error) {
+        $return_data = '<div style="background-color: #cc0000;">' . $return_data . '</div>';
+      }
+
     } else {
       //advanced view
 
