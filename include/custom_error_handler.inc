@@ -33,9 +33,9 @@ register_shutdown_function("shutdownHandler");
 
 function shutdownHandler() {
   global $php_errormsg;
-  $isError=false;
-  if($error=error_get_last()) {
-    customErrorHandler(E_ERROR,$error['message'],$error['file'],$error['line'],array());
+  $isError = FALSE;
+  if ($error = error_get_last()) {
+    customErrorHandler(E_ERROR, $error['message'], $error['file'], $error['line'], array());
   }
 
 }
@@ -84,7 +84,7 @@ function exceptionHandler($exception) {
 
   // log or echo as you please
   error_log($msg);
-  trigger_error($msg,E_USER_WARNING);
+  trigger_error($msg, E_USER_WARNING);
 }
 
 
@@ -97,7 +97,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
   if (isset($debug_pagestart)) {
     //we are in a debug session do not log errors to db just display them
-    return false;
+    return FALSE;
   }
 
   switch ($errno) {
@@ -120,17 +120,17 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
   // Errors we do not want to log.
   if ($error_type == 'Warning') {
-    if (strpos($errstr, 'The device is not ready.') !== false) {
-      return true;
-    } elseif (strpos($errstr, 'Access is denied.') !== false) {
-      return true;
-    } elseif (strpos($errstr, 'ldap_bind()') !== false) {
-      return true;
-    } elseif (strpos($errstr, 'ldap_search()') !== false) {
-      return true;
-    } elseif (strpos($errstr, 'simplexml_load_string()') !== false) {
+    if (strpos($errstr, 'The device is not ready.') !== FALSE) {
+      return TRUE;
+    } elseif (strpos($errstr, 'Access is denied.') !== FALSE) {
+      return TRUE;
+    } elseif (strpos($errstr, 'ldap_bind()') !== FALSE) {
+      return TRUE;
+    } elseif (strpos($errstr, 'ldap_search()') !== FALSE) {
+      return TRUE;
+    } elseif (strpos($errstr, 'simplexml_load_string()') !== FALSE) {
       //QTI imports with invalid XML cause lots of warnings in the error logs. Filter them out.
-      return false;
+      return FALSE;
     }
   }
 
@@ -163,11 +163,11 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     }
 
     $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
-    $userid=0;
-    $username='PRE LOGIN';
-    if(isset($GLOBALS['userObject'])) {
-      $userid=$GLOBALS['userObject']->get_user_ID();
-      $username=$userObject->get_username();
+    $userid = 0;
+    $username = 'PRE LOGIN';
+    if (isset($GLOBALS['userObject'])) {
+      $userid = $GLOBALS['userObject']->get_user_ID();
+      $username = $userObject->get_username();
     }
 
     $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
@@ -177,7 +177,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
   }
 
-  return false;
+  return FALSE;
 }
 
 function error_disp($message, $level = E_USER_WARNING) {
@@ -194,16 +194,18 @@ function DebugBackTraceDisplay($obj) {
     if ($called['function'] == 'customErrorHandler') {
       $str .= '<br />#' . $key . ' CustomeErrorHandler';
     } else {
-      if(!isset($called['line'])) {
-        $called['line']='Unknown line';
+      if (!isset($called['line'])) {
+        $called['line'] = 'Unknown line';
       }
-      if(!isset($called['file'])) {}
-      $called['file']='Unknown file';
+      if (!isset($called['file'])) {
+        $called['file'] = 'Unknown file';
+      }
       $str = $str . '<br />#' . $key . ' ' . $called['function'] . ' called at [' . $called['file'] . ':' . $called['line'] . ']';
     }
   }
   $str = $str . '<br />';
   $str = substr($str, 6);
+
   return $str;
 }
 
