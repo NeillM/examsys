@@ -143,12 +143,15 @@ require_once '../classes/dateutils.class.php';
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
 <?php
-if ($configObject->get('cfg_use_ldap') == true) {
-  echo "<tr><td>" . $string['authentication'] . "</td><td>LDAP</td></tr>\n";
-} else {
-  echo "<tr><td>" . $string['authentication'] . "</td><td>Internal</td></tr>\n";
-}
+
+  $authinfo=$authentication->version_info(true,false);
+
+  echo <<<HTML
+<tr><td>{$string['authentication']}</td><td><a href="./detailed_authentication_info.php">$authinfo</a></td></tr>
+HTML;
+
 ?>
+
 <tr><td>Session</td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 

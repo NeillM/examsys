@@ -15,8 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
-
 /**
  *
  * Authentication routine which permits staff and student access to a page.
@@ -45,9 +43,19 @@ class Authentication {
 
   public $authinfo;
 
-  function __construct(&$configObj, $db) {
-    $this->db = $db;
+  public $session;
+  public $request;
+
+  public $impliments_api_auth_version = 1;
+
+  public $callbacktypes= array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'displayerrform', 'getauthobj', 'sessionstore');
+
+  function __construct(&$configObj, & $db, &$request, &$session) {
+    $this->db = & $db;
     $this->configObj = & $configObj;
+
+    $this->request = & $request;
+    $this->session = & $session;
 
     $this->load_config();
 
@@ -71,20 +79,21 @@ class Authentication {
       $this->debug[] = 'Standard form data found - Storing in object ' . var_export($this->form, TRUE);
 
     }
-    //make sure session is started
-    $this->debug[] = 'DEBUG1:' . session_id();
-    if (session_id() == '') {
-      $this->debug[] = 'SESSION NOT FOUND';
-      session_name('RogoAuthentication');
-      $return = session_start();
-      if ($return === FALSE) {
-        $this->debug[] = 'session failed to initialise';
+    /*
+        //make sure session is started
+        $this->debug[] = 'DEBUG1:' . session_id();
+        if (session_id() == '') {
+          $this->debug[] = 'SESSION NOT FOUND';
+          session_name('RogoAuthentication');
+          $return = session_start();
+          if ($return === FALSE) {
+            $this->debug[] = 'session failed to initialise';
 
-        return;
-        //session start failure
-      }
-    }
-
+            return;
+            //session start failure
+          }
+        }
+    */
     if (!isset($_SESSION['authenticationObj']['attempt'])) {
       $_SESSION['authenticationObj']['attempt'] = 0;
       $this->debug[] = 'Creating SESSION attempt data';
@@ -99,15 +108,41 @@ class Authentication {
       $settings = $auth[1];
       $name = $auth[2];
       $this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
-      require_once $this->configObj->get('cfg_web_root') . 'plugins/auth/' . $authtype . '.class.php';
       $this->returndata[$number] = new authtypereturn();
       $this->authinfo[$number] = array($name => $authtype);
-      $this->authObj[$number] = new $authtype1($this, $settings, $number, $name, $this->db, $this->returndata, $this->form);
-      $this->append_auth_object_debug($number);
-      $this->debug[] = "Running Registering callback routines for #$number";
-      $this->authObj[$number]->register_callback_routines();
-      $this->append_auth_object_debug($number);
 
+      $object = new stdClass();
+      $object->db =& $this->db;
+      $object->calling_object =& $this;
+      $object->returndata =& $this->returndata;
+      $object->form =& $this->form;
+      $object->settings = $settings;
+
+      if (!isset($settings['mockclass'])) {
+        require_once $this->configObj->get('cfg_web_root') . 'plugins/auth/' . $authtype . '.class.php';
+        $this->authObj[$number] = new $authtype1($number, $name, $this->impliments_api_auth_version);
+      } else {
+        $this->authObj[$number] = & $settings['mockclass'];
+        $this->authObj->mock($number, $name, $this->impliments_api_auth_version, $object);
+      }
+//      $this->append_auth_object_debug($number);
+      $error = $this->authObj[$number]->apicheck();
+
+      //   $this->append_auth_object_debug($number);
+      if ($error !== FALSE) {
+        $this->debug[] = '********* Unloading module #' . $number . ':' . $name . ' as it implements an old a version of the api.  The returned error #: ' . $error . ' *********';
+ //       unset($this->authObj[$number]);
+      } else {
+        $this->authObj[$number]->init($object);
+
+        $this->debug[] = "Running Registering callback routines for #$number";
+
+        $callbacks = $this->authObj[$number]->register_callback_routines();
+        foreach ($callbacks as $callbackitem) {
+          $this->register_callback($callbackitem[0], $callbackitem[1], $callbackitem[2], $callbackitem[3], $callbackitem[4]);
+        }
+        $this->append_auth_object_debug($number);
+      }
     }
     $initobj = new stdClass();
     if (isset($this->callbackregister['init'])) {
@@ -135,10 +170,11 @@ class Authentication {
   }
 
   function register_callback($callback, $section, $number, $name, $insert = FALSE) {
-    if (!in_array($section, array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'displayerrform', 'getauthobj', 'sessionstore')) or !is_callable($callback)) {
+    if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
       //attempting to register callback to invalid section
       //maybe log name of function as well?
       $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
+      $this->authObj[$number]->set_error("Failed to register callback for section ($section) with function ($callback[1])");
       return FALSE;
     }
     $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
@@ -226,7 +262,7 @@ class Authentication {
         if ($returned !== FALSE) {
           $this->success = TRUE;
           $this->userid = $this->authObj[$objid]->rogoid;
-          $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " from object $objid:" .$this->callbackregisterdata['auth'][$number][$objid] . ' *******';
+          $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
           //         $this->debug[]=var_dump($this->authObj[$objid],TRUE);
           $this->successfullauthmodule[] = $objid;
 
@@ -282,7 +318,7 @@ class Authentication {
             $this->display_std_form();
 
             if ($postauthfailobj->exit === TRUE) {
-            //  var_dump($this->debug);
+              //  var_dump($this->debug);
               exit();
             }
           }
@@ -290,7 +326,7 @@ class Authentication {
           if (isset($postauthfailobj->url)) {
             header("Location: {$postauthfailobj->url}");
             if ($postauthfailobj->exit === TRUE) {
-             // var_dump($this->debug);
+              // var_dump($this->debug);
               exit();
             }
           }
@@ -302,6 +338,19 @@ class Authentication {
         }
       }
       //failed but no callbacks or callbacks finished
+      $notice = UserNotices::get_instance();
+      $notice->display_notice('Authentication Issue', 'The authentication plugins couldnt log you in and, they the plugins didnt provide any further form or redirect.   Press F5 to refresh if this is still unsuccessful please contact support:  <a href="mailto:' . $this->configObj->get('support_email') . '">' . $this->configObj->get('support_email') . '</a>.', '/artwork/user_info_48.png', $title_color = '#C00000', TRUE, FALSE);
+      echo <<<HTML
+<p>Please Include the following debug in your email:</p>
+<div style="margin-left:100px;  ">
+HTML;
+
+      $this->display_debug();
+      echo <<<HTML
+</div>
+HTML;
+
+      exit();
     }
 
     if ($this->success !== TRUE) {
@@ -400,6 +449,21 @@ class Authentication {
         $getauthobj->userObj = new UserObject($this->configObj, $this->db);
       }
 
+      if ($this->get_userid() < 1) {
+        $notice = UserNotices::get_instance();
+        $notice->display_notice('Authentication Issue', 'You are not logged in.   Press F5 to refresh if this is still unsuccessful please contact support:  <a href="mailto:' . $this->configObj->get('support_email') . '">' . $this->configObj->get('support_email') . '</a>.', '/artwork/user_info_48.png', $title_color = '#C00000', TRUE, FALSE);
+        echo <<<HTML
+<p>Please Include the following debug in your email:</p>
+<div style="margin-left:100px;  ">
+HTML;
+
+        $this->display_debug();
+        echo <<<HTML
+</div>
+HTML;
+
+        exit();
+      }
       $getauthobj->userObj->load($this->get_userid());
     }
     //$uID = $this->get_userID();
@@ -415,6 +479,56 @@ class Authentication {
     }
 
     return $getauthobj->userObj;
+  }
+
+
+  function version_info($formatted = FALSE, $advanced = FALSE) {
+    $data=new stdClass();
+    $data->plugins = array();
+    foreach ($this->authObj as $authobj) {
+      $data->plugins[] = $authobj->get_info();
+    }
+$data->callbacks=array();
+    foreach($this->callbacktypes as $value) {
+
+      if(isset($this->callbackregister[$value])){
+        foreach($this->callbackregister[$value] as $order=>$callitem) {
+          $dat=new stdClass();
+        $dat->functionname=$callitem[1];
+          $callbackdat=$this->callbackregisterdata[$value][$order];
+        $dat->plugindescname=current($callbackdat);
+          $dat->pluginconfigid=key($callbackdat);
+$data->callbacks[$value][]=$dat;
+        }
+
+      } else {
+        $data->callbacks[$value]=array();
+      }
+
+    }
+
+
+    if ($formatted == FALSE) {
+      return $data;
+    }
+    if ($advanced == FALSE) {
+      //basic view
+
+      $return_data = '';
+      foreach ($data->plugins as $number => $item) {
+        if ($number != 0) {
+          $return_data .= ',  <b>' . $number . '</b> ' . $item->name . ' <i>(' . $item->classname . ')</i>';
+        }
+
+      }
+      $return_data = substr($return_data, 3);
+    } else {
+      //advanced view
+
+
+    }
+
+    return $return_data;
   }
 
 

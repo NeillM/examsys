@@ -31,9 +31,13 @@ require_once 'outline_authentication.class.php';
 
 class guestlogin_auth extends outline_authentication {
 
+  public $impliments_api_auth_version = 1;
+  public $version = 0.9;
+
   function register_callback_routines() {
     $this->register_callback(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
     $this->register_callback(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+    return $this->callbackarray;
   }
 
   function errordisp(&$displayerrformobj) {

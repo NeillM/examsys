@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 /**
  *
  */
@@ -28,20 +27,25 @@ class impersonation_auth extends outline_authentication {
   private $demo = FALSE;
   private $newuserid;
 
+  public $impliments_api_auth_version = 1;
+  public $version = 0.9;
+
   function register_callback_routines() {
     $this->register_callback(array($this, 'checkwhattodo'), 'preauth', $this->number, $this->name);
     $this->register_callback(array($this, 'changewhoiam'), 'getauthobj', $this->number, $this->name);
     $this->register_callback(array($this, 'storedata'), 'sessionstore', $this->number, $this->name);
+
+    return $this->callbackarray;
   }
 
   function changewhoiam(&$getauthobj) {
-    if (!is_null($_SESSION['authenticationObj']['impersonation']['newuserid'])) {
+    if (isset($_SESSION['authenticationObj']['impersonation']['newuserid']) and !is_null($_SESSION['authenticationObj']['impersonation']['newuserid'])) {
       if (!$getauthobj->userObj->has_role('SysAdmin')) {
         $this->savetodebug('Cannot change user as not a SysAdmin');
       }
       $getauthobj->userObj->impersonate($_SESSION['authenticationObj']['impersonation']['newuserid']);
     }
-    if ($_SESSION['authenticationObj']['impersonation']['demo'] === TRUE) {
+    if (isset($_SESSION['authenticationObj']['impersonation']['demo']) and $_SESSION['authenticationObj']['impersonation']['demo'] === TRUE) {
       $this->savetodebug('Changing user status to DEMO');
       $getauthobj->userObj->set_demo();
     }

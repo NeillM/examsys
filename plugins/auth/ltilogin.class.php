@@ -32,24 +32,13 @@ require_once 'outline_authentication.class.php';
 class ltilogin_auth extends outline_authentication {
 
 
-  private $lti;
+  public $impliments_api_auth_version = 1;
+  public $version = 0.9;
 
-  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, &$form) {
+  protected $lti;
 
-    parent::__construct($calling_object, $settings, $number, $name, $db, $returndata, $form);
-    if (session_id() == '') {
-      $this->savetodebug('SESSION NOT FOUND');
-      session_name('RogoAuthentication');
-      $return = session_start();
-      if ($return === FALSE) {
-        $this->savetodebug('session failed to initialise');
-
-        return;
-        //session start failure
-      }
-    }
-
-
+function init($object) {
+    parent::init($object);
     $this->lti = UoN_LTI::get_instance();
 
     $this->lti->init_lti0($this->db);
@@ -60,8 +49,10 @@ class ltilogin_auth extends outline_authentication {
 
   function register_callback_routines() {
     $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $this->calling_object->register_callback(array($this, 'registeruserwithlti'), 'postauthsuccess', $this->number, $this->name);
-    $this->calling_object->register_callback(array($this, 'displaystdform'), 'displaystdform', $this->number, $this->name);
+    $this->register_callback(array($this, 'registeruserwithlti'), 'postauthsuccess', $this->number, $this->name);
+    $this->register_callback(array($this, 'displaystdform'), 'displaystdform', $this->number, $this->name);
+
+    return $this->callbackarray;
   }
 
 

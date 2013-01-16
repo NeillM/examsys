@@ -153,14 +153,17 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   ini_set('xdebug.var_display_max_data', -1);
   ini_set('xdebug.var_display_max_depth', -1);
 
-  $authentication = new authentication($configObject, $mysqli);
+
+  session_name('RogoAuthentication');
+  $return = session_start();
+  $authentication = new authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
 
   //var_dump($_SESSION);
 
   $authentication->do_authentication();
 
   $getauthobj = new stdClass();
-
+/*
   if (!isset($userObject)) {
     global $userObject;
     $getauthobj->userObj = new UserObject($configObject, $mysqli);
@@ -168,8 +171,10 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   } else {
     $getauthobj->userObj = &$userObject;
   }
-
+*/
   $authentication->get_auth_obj($getauthobj);
+
+  $userObject=UserObject::get_instance();
 
 //  $uID = $authentication->get_userID();
 

@@ -31,10 +31,14 @@ include_once $configObj->get('cfg_web_root') . 'lang/en/include/common.inc';
 
 class ldap_auth extends outline_authentication {
 
+  public $impliments_api_auth_version = 1;
+  public $version = 0.9;
+
   function register_callback_routines() {
     $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
     $this->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
     $this->register_callback(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+    return $this->callbackarray;
   }
 
   function errordisp(&$displayerrformobj) {

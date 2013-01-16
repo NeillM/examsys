@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 class outline_authentication {
 
   protected $name;
@@ -26,8 +25,16 @@ class outline_authentication {
   protected $settings;
   protected $db;
   protected $calling_object;
+  protected $session;
+  protected $request;
+
+  protected $error = NULL;
   public $rogoid = FALSE;
 
+
+  protected $authapiversion;
+  protected $callbackarray;
+  protected $impliments_api_auth_version = 0;
 
   /**
    * @param $calling_object object its called from
@@ -38,18 +45,46 @@ class outline_authentication {
    * @param $returndata object where data is stored
    * @param $form object a class with form data in
    */
-  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form) {
-    $this->db = new mysqli();
-    $this->db = $db;
-    $this->calling_object = $calling_object;
-    $this->returndata = & $returndata;
-    $this->number = $number;
-    $this->retdata = $returndata[$number];
-    $this->form = $form;
-    $this->settings = $settings;
+  function __construct($number, $name, $authapiversion) {
+    $this->authapiversion = $authapiversion;
     $this->name = $name;
+    $this->number = $number;
   }
 
+  function apicheck() {
+
+    if ($this->authapiversion != $this->impliments_api_auth_version) {
+      $this->savetodebug('This auth object is implementing an different version of the api than this plugin does');
+      $this->error = 'Wrong API';
+
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
+  function set_error($msg) {
+    if(strlen($this->error) >0) {
+      $this->error .= '<br>';
+    }
+    $this->error .= $msg;
+  }
+
+  function init($object) {
+    $this->db = new mysqli();
+    $this->db = & $object->db;
+    $this->calling_object = & $object->calling_object;
+    $this->returndata = & $object->returndata;
+    $this->retdata = & $this->returndata[$this->number];
+    $this->form = & $object->form;
+    $this->settings = & $object->settings;
+  }
+
+
+//fake function used in mocking but if things go wrong have an outline here
+  function mock($callingobject, $settings, $number, $name, $db, $returndata, $form) {
+    return FALSE;
+  }
 
   /**
    * set failure settings
@@ -70,6 +105,7 @@ class outline_authentication {
 
   /**
    * @param $section string the section to get the callback from
+   *
    * @return mixed
    */
   function get_callback($section) {
@@ -78,6 +114,7 @@ class outline_authentication {
 
   /**
    * @param $objid int the objectid
+   *
    * @return mixed
    */
   function get_module_debug($objid) {
@@ -86,6 +123,7 @@ class outline_authentication {
 
   /**
    * @param $objid int the objectid
+   *
    * @return mixed
    */
   function get_module_authinfo($objid) {
@@ -98,10 +136,12 @@ class outline_authentication {
    * @param $number string the number this object is
    * @param $name string the name this object is
    * @param $insert bool to insert rather than append
+   *
    * @return bool
    */
   function register_callback($callback, $section, $number, $name, $insert = FALSE) {
-    return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
+    //return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
+    $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
   }
 
   /**
@@ -109,10 +149,12 @@ class outline_authentication {
    */
   function register_callback_routines() {
     //this is blank so that classes that dont register anything dont break
+    return array();
   }
 
   /**
    * @param $setting string the setting to return or false if it doesnt exist
+   *
    * @return mixed
    */
   function get_settings($setting) {
@@ -123,6 +165,26 @@ class outline_authentication {
     return $this->settings[$setting];
   }
 
+  function get_info() {
+    $data = new stdClass();
+    $data->name = $this->name;
+    $data->number = $this->number;
+    $data->classname = get_class($this);
+    $data->classname = substr($data->classname, 0, strpos($data->classname, '_auth'));
+    $data->version = $this->version;
+    $data->settings = $this->settings;
+    $data->api_implimented = $this->impliments_api_auth_version;
+    $data->error = $this->error;
+    if (isset($this->callbackarray)) {
+      foreach ($this->callbackarray as $callback) {
+        $funcname = $callback[0][1];
+        $where = $callback[1];
+        $data->callbackfunctions[] = array($funcname, $where);
+      }
+    }
+
+    return $data;
+  }
 }
 
 

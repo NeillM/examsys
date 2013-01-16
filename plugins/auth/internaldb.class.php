@@ -29,6 +29,8 @@ require_once 'outline_authentication.class.php';
 
 class internaldb_auth extends outline_authentication {
 
+  public $impliments_api_auth_version = 1;
+  public $version = 0.9;
 
   private $updatable = FALSE;
 
@@ -51,6 +53,7 @@ class internaldb_auth extends outline_authentication {
     $this->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
     $this->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
     $this->register_callback(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
+    return $this->callbackarray;
   }
 
   function set_fail() {

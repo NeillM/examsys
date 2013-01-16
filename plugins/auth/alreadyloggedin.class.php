@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 /**
  *
  * The already logged in authentication class
@@ -29,28 +28,15 @@ require_once 'outline_authentication.class.php';
 
 class alreadyloggedin_auth extends outline_authentication {
 
-
-  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, &$form) {
-
-    parent::__construct($calling_object, $settings, $number, $name, $db, $returndata, $form);
-    if (session_id() == '') {
-      $this->savetodebug('SESSION NOT FOUND');
-      session_name('RogoAuthentication');
-      $return = session_start();
-      if ($return === FALSE) {
-        $this->savetodebug('session failed to initialise');
-
-        return;
-        //session start failure
-      }
-    }
-
-  }
+  public $impliments_api_auth_version = 1;
+  public $version = 0.9;
 
   function register_callback_routines() {
     $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
     $this->register_callback(array($this, 'store_user'), 'sessionstore', $this->number, $this->name);
     $this->register_callback(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
+
+    return $this->callbackarray;
   }
 
   function auth($authobj) {
@@ -70,7 +56,7 @@ class alreadyloggedin_auth extends outline_authentication {
         $this->retdata->rogoid = $_SESSION['authenticationObj']['loggedin']['userid'];
         $this->rogoid = $_SESSION['authenticationObj']['loggedin']['userid'];
 
-        $authobj->rogoid = &$this->retdata->rogoid;
+        $authobj->rogoid = & $this->retdata->rogoid;
 
         return TRUE;
       }
