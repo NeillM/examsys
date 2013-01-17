@@ -421,7 +421,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $answer = round($answer, 1);
     // Store answer and tolerance for comparison later
     $t_vals = array('10' => array($answer, .05, 1));
-    $answer = $answer * 1.05;
+    $answer = $this->get_answer_with_tolerance($answer, 5);
     $this->type("id=q1", $answer);
     $qn_text = $this->getText('id=calc11_q');
     $matches = array();
@@ -438,7 +438,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $answer = round($answer, 1);
     // Store tolerance min/max for comparison later
     $t_vals['12'] = array($answer, .05, 1);
-    $answer = $answer * 0.95;
+    $answer = $this->get_answer_with_tolerance($answer, 5, false);
     $this->type("id=q3", $answer);
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
@@ -557,7 +557,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $answer = round($answer, 2);
     // Store answer and tolerance for comparison later
     $t_vals = array('9' => array($answer, .05, 2));
-    $answer = $answer * 1.05;
+    $answer = $this->get_answer_with_tolerance($answer, 5);
     $this->type("id=q3", $answer);
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
@@ -571,7 +571,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $answer = round($answer, 1);
     // Store answer and tolerance for comparison later
     $t_vals['10'] = array($answer, .08, 1);
-    $answer = $answer * 1.08;
+    $answer = $this->get_answer_with_tolerance($answer, 8);
     $this->type("id=q1", $answer);
     $qn_text = $this->getText('id=calc11_q');
     $matches = array();
@@ -581,7 +581,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $answer = round($answer, 2);
     // Store answer and tolerance for comparison later
     $t_vals['11'] = array($answer, .05, 2);
-    $answer = $answer * 0.95;
+    $answer = $this->get_answer_with_tolerance($answer, 5, false);
     $this->type("id=q2", $answer);
     $qn_text = $this->getText('id=calc12_q');
     preg_match_all('/\|\|([0-9\.]*?)\|\|/', $qn_text, $matches);
@@ -591,7 +591,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $answer = round($answer, 1);
     // Store answer and tolerance for comparison later
     $t_vals['12'] = array($answer, .08, 1);
-    $answer = $answer * 0.92;
+    $answer = $this->get_answer_with_tolerance($answer, 8, false);
     $this->type("id=q3", $answer);
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
@@ -845,7 +845,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $A = $matches[1];
     $answer = pow($A, 2) * pi();
     $answer = round($answer, 2);
-    $answer = $answer * 1.06;
+    $answer = $this->get_answer_with_tolerance($answer, 6);
     $this->type("id=q3", $answer);
     $this->click("id=next");
     $this->waitForPageToLoad("30000");
@@ -859,7 +859,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $answer = round($answer, 1);
     // Store answer and tolerance for comparison later
     $t_vals = array('10' => array($answer, .08, 1));
-    $answer = $answer * 1.08;
+    $answer = $this->get_answer_with_tolerance($answer, 8);
     $this->type("id=q1", $answer);
     $qn_text = $this->getText('id=calc11_q');
     $matches = array();
@@ -876,7 +876,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $answer = round($answer, 1);
     // Store tolerance min/max for comparison later
     $t_vals['12'] = array($answer, .08, 1);
-    $answer = $answer * 0.92;
+    $answer = $this->get_answer_with_tolerance($answer, 8, false);
     $this->type("id=q3", $answer);
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
@@ -913,6 +913,36 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[5]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '50.0%');
   }
 
+  public function testClassTotals() {
+    do_staff_login($this);
+
+    $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20230215120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+
+    $this->assertElementContainsText('//tr[@id="res7"]/td[5]', '0');
+    $this->assertElementContainsText('//tr[@id="res7"]/td[6]', '0%');
+    $this->assertElementContainsText('//tr[@id="res7"]/td[7]', 'Fail');
+
+    $this->assertElementContainsText('//tr[@id="res8"]/td[5]', '18');
+    $this->assertElementContainsText('//tr[@id="res8"]/td[6]', '100%');
+    $this->assertElementContainsText('//tr[@id="res8"]/td[7]', 'Distinction');
+
+    $this->assertElementContainsText('//tr[@id="res9"]/td[5]', '18');
+    $this->assertElementContainsText('//tr[@id="res9"]/td[6]', '100%');
+    $this->assertElementContainsText('//tr[@id="res9"]/td[7]', 'Distinction');
+
+    $this->assertElementContainsText('//tr[@id="res10"]/td[5]', '12');
+    $this->assertElementContainsText('//tr[@id="res10"]/td[6]', '67%');
+    $this->assertElementContainsText('//tr[@id="res10"]/td[7]', 'Pass');
+
+    $this->assertElementContainsText('//tr[@id="res11"]/td[5]', '-4.5');
+    $this->assertElementContainsText('//tr[@id="res11"]/td[6]', '-25%');
+    $this->assertElementContainsText('//tr[@id="res11"]/td[7]', 'Fail');
+
+    $this->assertElementContainsText('//tr[@id="res12"]/td[5]', '9');
+    $this->assertElementContainsText('//tr[@id="res12"]/td[6]', '50%');
+    $this->assertElementContainsText('//tr[@id="res12"]/td[7]', 'Pass');
+  }
+
   private function check_decimals($subject, $count, $increment) {
     $var_parts = explode('.', $subject);
     if (isset($var_parts[1])) {
@@ -929,6 +959,20 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     } else {
       $this->assertTrue(false, 'Incorrect decimals');
     }
+  }
+
+  /**
+   * Get modified version of answer with tolerance added or subtracted
+   * @param  float   $answer    Answer as calculated
+   * @param  int     $tolerance Tolerance percentage (as integer)
+   * @param  boolean $add       Add or subtract tolerance from answer
+   * @return float              Answer modified by tolerance percentage
+   */
+  private function get_answer_with_tolerance($answer, $tolerance, $add=true) {
+    $tolerance_val = $answer * ($tolerance/100);
+
+    $answer = ($add) ? $answer + $tolerance_val : $answer - $tolerance_val;
+    return $answer;
   }
 
   private function make_perc_tolerance_text($units, $answer, $tolerance, $decimals) {
