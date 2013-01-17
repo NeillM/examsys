@@ -610,12 +610,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $tolerance_full = $score_array[1];
         if (StringUtils::ends_with($tolerance_full, '%')) {
           $tolerance_perc = rtrim($tolerance_full, '%');
-          $tolerance_full = $tmp_answer[1] * ($tolerance_perc/100);
+          $tolerance_full = round($tmp_answer[1] * ($tolerance_perc/100), 12);
         }
         $tolerance_partial = $score_array[2];
         if (StringUtils::ends_with($tolerance_partial, '%')) {
           $tolerance_perc = rtrim($tolerance_partial, '%');
-          $tolerance_partial = $tmp_answer[1] * ($tolerance_perc/100);
+          $tolerance_partial = round($tmp_answer[1] * ($tolerance_perc/100), 12);
         }
 
         echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";

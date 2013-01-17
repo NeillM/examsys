@@ -387,12 +387,12 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         $tolerance_full = $score_array[1];
         if (StringUtils::ends_with($tolerance_full, '%')) {
           $tolerance_perc = rtrim($tolerance_full, '%');
-          $tolerance_full = $answer * ($tolerance_perc/100);
+          $tolerance_full = round($answer * ($tolerance_perc/100), 12);
         }
         $tolerance_partial = $score_array[2];
         if (StringUtils::ends_with($tolerance_partial, '%')) {
           $tolerance_perc = rtrim($tolerance_partial, '%');
-          $tolerance_partial = $answer * ($tolerance_perc/100);
+          $tolerance_partial = round($answer * ($tolerance_perc/100), 12);
         }
 
         if ($saved_response_clean != '') {
