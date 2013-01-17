@@ -1643,5 +1643,32 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
     $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '4.2%');
   }
+
+  public function testClassTotals() {
+    do_staff_login($this);
+
+    $this->open("/reports/class_totals.php?paperID=4&startdate=20130101000000&enddate=20230208110000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+
+    // Individuals
+    $this->assertElementContainsText('//tr[@id="res6"]/td[5]', '0');
+    $this->assertElementContainsText('//tr[@id="res6"]/td[6]', '0%');
+    $this->assertElementContainsText('//tr[@id="res6"]/td[7]', 'Fail');
+
+    $this->assertElementContainsText('//tr[@id="res7"]/td[5]', '168');
+    $this->assertElementContainsText('//tr[@id="res7"]/td[6]', '100%');
+    $this->assertElementContainsText('//tr[@id="res7"]/td[7]', 'Distinction');
+
+    $this->assertElementContainsText('//tr[@id="res8"]/td[5]', '-54');
+    $this->assertElementContainsText('//tr[@id="res8"]/td[6]', '-32%');
+    $this->assertElementContainsText('//tr[@id="res8"]/td[7]', 'Fail');
+
+    $this->assertElementContainsText('//tr[@id="res9"]/td[5]', '50.5');
+    $this->assertElementContainsText('//tr[@id="res9"]/td[6]', '30%');
+    $this->assertElementContainsText('//tr[@id="res9"]/td[7]', 'Fail');
+
+    $this->assertElementContainsText('//tr[@id="res10"]/td[5]', '7');
+    $this->assertElementContainsText('//tr[@id="res10"]/td[6]', '4%');
+    $this->assertElementContainsText('//tr[@id="res10"]/td[7]', 'Fail');
+  }
 }
 ?>
