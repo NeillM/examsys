@@ -29,73 +29,6 @@
 require '../include/sysadmin_auth.inc';
 require './database_common.inc';
 
-function get_table_structure($db_name, $table_name, $db) {
-  $details = array();
-
-  $result = $db->prepare("DESCRIBE $db_name.$table_name");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($field, $type, $null, $key, $default, $extra);
-  while ($result->fetch()) {
-    $details[] = array($field, $type, $null, $key, $default, $extra);
-  }
-  $result->close();
-  
-  return $details;
-}
-
-function compare_tables($db_master, $db_test, $table_name, $masterdb, $testdb) {
-  $master_details = get_table_structure($db_master, $table_name, $masterdb);
-  $master_field_no = count($master_details);
-    
-  $test_details = get_table_structure($db_test, $table_name, $testdb);
-  $test_field_no = count($test_details);
-  
-  if ($test_field_no == 0) {
-    $class = 'dkred';
-    echo "<table class=\"nonexist\" cellpadding=\"1\" cellspacing=\"0\" border=\"1\">";
-  } else {
-    $class = 'grey';
-    echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"1\">";
-  }
-  echo "<tr><td class=\"$class\">Field</td><td class=\"$class\">Type</td><td class=\"$class\">Null</td><td class=\"$class\">Key</td><td class=\"$class\">Default</td><td class=\"$class\">Extra</td></tr>\n";
-  
-  for ($i=0; $i<$master_field_no; $i++) {
-    echo "<tr>";
-    $master_line = $master_details[$i];
-    if (isset($test_details[$i])) {
-      $test_line = $test_details[$i];
-      for ($col=0; $col<6; $col++) {
-        $text = format_text($master_line[$col]);
-        if ($master_line[$col] === $test_line[$col]) {
-          echo "<td>$text</td>";
-        } else {
-          echo "<td class=\"err\">$text</td>";
-        }
-      }
-    } else {
-      for ($col=0; $col<6; $col++) {
-        $text = format_text($master_line[$col]);
-        echo "<td class=\"err\">$text</td>";
-      }
-    }
-    echo "</tr>";
-  }
-  
-  // Display extra fields in test table.
-  if (count($test_details) > count($master_details)) {
-    for ($i=$master_field_no; $i<$test_field_no; $i++) {
-      $test_line = $test_details[$i];
-      for ($col=0; $col<6; $col++) {
-        $text = format_text($test_line[$col]);
-        echo "<td class=\"err\">$text</td>";
-      }
-    }
-  }
-  
-  echo "</table>\n<br />\n";
-}
-
 function get_indexes($db_name, $table_name, $db) {
   $details = array();
 
@@ -175,14 +108,14 @@ function compare_indexes($db_master, $db_test, $table_name, $masterdb, $testdb) 
 ?>
 <html>
 <head>
-<title>DB Table Test</title>
+<title>DB Index Test</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
   <style>
-  body {font-size:80%; margin:5px}
+  body {font-size:80%; margin:5px;}
   h1 {font-size:140%}
   table {margin-left:40px; border-collapse:collapse}
   td {border:1px solid #C0C0C0; padding:2px}
@@ -202,8 +135,8 @@ if (isset($_POST['submit'])) {
 
   foreach ($table_list as $table) {
     echo "<h1>$table</h1>\n";
-  
-    compare_tables($_POST['master_dbname'], $_POST['test_dbname'], $table, $master_mysqli, $test_mysqli);
+    
+    compare_indexes($_POST['master_dbname'], $_POST['test_dbname'], $table, $master_mysqli, $test_mysqli);
   }
 } else {
   echo display_form();
