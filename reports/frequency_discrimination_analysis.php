@@ -27,12 +27,17 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/media.inc';
-require '../include/errors.inc';
-require '../include/sort.inc';
+require_once '../include/media.inc';
+require_once '../include/errors.inc';
+require_once '../include/sort.inc';
+require_once '../include/errors.inc';
 
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
+
+check_var('paperID', 'GET', true, false, false);
+check_var('startdate', 'GET', true, false, false);
+check_var('enddate', 'GET', true, false, false);
 
 set_time_limit(0);
 check_var('paperID', 'GET', true, false, false);

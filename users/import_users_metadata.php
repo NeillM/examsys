@@ -38,12 +38,13 @@ ob_start();
 // Folder security checks
 $folder = '';
 
-// Get the moduleid
-$module = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
-
-if ($module === false) {
-  display_error($string['modulenotfound'], $string['modulenotfoundmsg'], false, true);
+$module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
+  
+if ($module_details == false) {
+  $notice->display_notice($string['modulenotfound'], $string['modulenotfoundmsg'], '/artwork/module_not_found.png', '#C00000', true, true);
+  exit;
 }
+$module = $module_details['moduleid'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

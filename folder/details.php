@@ -29,6 +29,7 @@ require_once '../include/icon_display.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
+
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/paperutils.class.php';
@@ -51,9 +52,6 @@ $folder_type = '';
 $file_no = 0;
 $parent_list = array();
 $add_member = false;
-if (isset($_GET['module'])) {
-  $module = $_GET['module'];
-}
 
 // Folder security checks
 if (isset($_GET['folder'])) {
@@ -62,9 +60,8 @@ if (isset($_GET['folder'])) {
   $folder = '';
 }
 if ($folder != '') {
-  $tmp_folder = $_GET['folder'];
   $result = $mysqli->prepare("SELECT ownerID, name FROM folders WHERE id = ?");
-  $result->bind_param('i', $tmp_folder);
+  $result->bind_param('i', $folder);
   $result->execute();
   $result->store_result();
   $result->bind_result($folder_ownerID, $orig_folder_name);
@@ -96,6 +93,13 @@ if ($folder != '') {
 
 if (isset($_GET['module']) and $_GET['module'] != '') {
   $module = $_GET['module'];
+  
+  $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
+    
+  if ($module_details == false) {
+    $notice->display_notice($string['modulenotfound'], $string['modulenotfoundmsg'], '/artwork/module_not_found.png', '#C00000', true, true);
+    exit;
+  }
 } else {
   $module = '';
 }
@@ -122,13 +126,7 @@ if (isset($_POST['submit'])) {
   $folder_details->close();
 
   if ($duplicate_name == 0) {
-    if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL, ?, ?, NOW(), 'yellow', NULL)")) {
-      $folder_query->bind_param('is', $userObject->get_user_ID(), $new_folder_name);
-      $folder_query->execute();
-      $folder_query->close();
-    } else {
-      display_error("New Folder Error",$mysqli->error);
-    }
+    create_folder($new_folder_name, $userObject, $db);
   }
 }
 

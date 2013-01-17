@@ -58,8 +58,6 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 <?php
   } else {
   
-    $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
-  
     if ($module != '') {   
     ?>
       <div class="submenuheading"><?php echo $string['module']; ?></div>
