@@ -111,7 +111,7 @@ foreach ($authinfo->plugins as $number => $item) {
 <div style="font-size:200%; float:left; font-weight:bold; text-align: left; " >&nbsp;$item->name</div>
 
 <div style="clear:both">
-<table border=1">
+<table border=1 cellpadding=3>
 <tr><td>Type:</td><td>$item->classname</td></tr>
 <tr><td>Config Item #:</td><td>$item->number</td></tr>
 $extra1
@@ -162,7 +162,7 @@ foreach ($authinfo->callbacks as $callbacksection => $callbackitem) {
 <div style="font-size:200%; float:left; font-weight:bold; text-align: left; " >&nbsp;$callbacksection</div>
 
 <div style="clear:both">
-<table border=1">
+<table border=1  cellpadding=3>
 HTML;
   if (count($callbackitem) == 0) {
     echo <<<HTML
