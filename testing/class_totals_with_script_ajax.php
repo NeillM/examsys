@@ -56,6 +56,10 @@ if (isset($_POST['period']) and $_POST['period'] != '') {
   $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 5 YEAR)';
 }
 
+if(!isset($protocol)) {
+  $protocol='https://';
+}
+
 if (isset($_POST['server']) and $_POST['server'] != '') {
   $server = $_POST['server'];
 } else {
@@ -65,8 +69,9 @@ if (isset($_POST['server']) and $_POST['server'] != '') {
 function getData($url) {
   $ch = curl_init($url);
 
-  curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-  curl_setopt($ch, CURLOPT_USERPWD, $_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
+  //curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+  //curl_setopt($ch, CURLOPT_USERPWD, $_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, "ROGO_USER=" . $_POST['username'] . "&ROGO_PW=" . $_POST['passwd'] . "&rogo-login-form-std=SignIn");
   curl_setopt($ch, CURLOPT_TIMEOUT, 10);
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -78,7 +83,10 @@ function getData($url) {
 
   $output = curl_exec($ch);
   curl_close($ch);
-  
+  if(strpos($output,'<title>Log In</title>') !== false) {
+    //V4.4 needing authentication
+    $output=null;
+  }
   return $output;
 }
 
@@ -91,6 +99,9 @@ function tidyLine($line) {
 }
 
 function parseRawMarks($data) {
+  if($data==NULL) {
+    return false;
+  }
   $marks = array();
   $line = 0;
   $data_line = explode('<tr', $data);
@@ -117,6 +128,9 @@ function parseRawMarks($data) {
 }
 
 function parseScript($data) {
+  if($data==NULL) {
+    return false;
+  }
   $data_line = explode('<tr', $data);
   
   foreach ($data_line as $row) {
@@ -166,11 +180,20 @@ foreach ($papers as $paper) {
   $insert->close();
 
   $errors = '';
+  if($marks_set === false) {
+    $marks_set=array();
+    $errors= '<ul><li>Couldnt access class_totals</li>';
+  }
   foreach ($marks_set as $mark) {
     $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&previous=" . str_replace(' ', '%20', $mark['started']) . "&userid=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
     $output = getData($url);
     $script_mark = parseScript($output);
-    
+    if($script_mark === false) {
+      if ($errors == '') {
+        $errors = '<ul>';
+      }
+      $errors .= '<li>Couldnt access finish</li>';
+    }
     if ($script_mark != $mark['mark']) {
       $result->bind_param('i', $mark['userID']);
       $result->execute();

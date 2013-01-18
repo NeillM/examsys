@@ -71,12 +71,17 @@ $result->close();
     $(function () {
       $('#results').hide();
       $('#start').click(function () {
+          alert('test');
         var period = $('#period').val();
         var paper = $('#paper').val();
+        var passwd = $('#passwd').val();
+        var username = $('#username').val();
         $.post('class_totals_with_script_ajax.php',
                 {
                   period:period,
-                  paper:paper
+                  paper:paper,
+                  username:username,
+                  passwd:passwd
                 });
         $('#results').show();
         $('#form').hide();
@@ -91,6 +96,7 @@ $result->close();
 </head>
 <body>
 <h1>Class Totals Internal Analysis</h1>
+
 
 <div id="form">
   <dl class="form">
@@ -118,8 +124,12 @@ endforeach;
 ?>
       </select>
     </dd>
+<dt>Username:</dt><input type='text' id='username'>
+    <br>
+    <dt>Password:</dt><input type='password' id='passwd'>
+    <br>
   </dl>
-  <button id="start">Start Analysis</button>
+    <button id="start">Start Analysis</button>
 </div>
 <div id="results">
   <p>Analysis started.</p>
