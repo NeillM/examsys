@@ -130,7 +130,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
     }
     if ($q_type == 'random' or $q_type == 'keyword_based') {
       $selected_q_id[] = (isset($_POST['q' . $tmp_question_no . '_randomID'])) ? $_POST['q' . $tmp_question_no . '_randomID'] : 0;
-      
+
       if ($random_on == false and count($selected_q_id) > 0) {
         foreach ($selected_q_id as &$used_qid) {
 	        // Look up database.
@@ -171,11 +171,11 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
     if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'],$db) === false) {
       // Write log_metadata first on screen 1 only
       $tmp_ip_address = NetworkUtils::get_ipaddress();
-      
+
       $labf = new LabFactory($db);
       $lab_obj = $labf->get_lab_based_on_ip($tmp_ip_address);
-      $room = $lab_obj->get_name();  
-      
+      $room = $lab_obj->get_name();
+
       $save_metadata = $db->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, NULL, ?)");
       if ($db->error) {
           try {
@@ -382,28 +382,32 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
           $answer = '';
         }
 
-        $difference = round(abs($saved_response_clean - $answer), 12);
+        if ($answer != '' and is_nan($answer)) {    // Can't possible get Q correct if answer is not a number
+          $mark = $marks_incorrect;
+        } else {
+          if ($saved_response_clean != '') {
+            $difference = round(abs($saved_response_clean - $answer), 12);
 
-        $tolerance_full = $score_array[1];
-        if (StringUtils::ends_with($tolerance_full, '%')) {
-          $tolerance_perc = rtrim($tolerance_full, '%');
-          $tolerance_full = round($answer * ($tolerance_perc/100), 12);
-        }
-        $tolerance_partial = $score_array[2];
-        if (StringUtils::ends_with($tolerance_partial, '%')) {
-          $tolerance_perc = rtrim($tolerance_partial, '%');
-          $tolerance_partial = round($answer * ($tolerance_perc/100), 12);
-        }
+            $tolerance_full = $score_array[1];
+            if (StringUtils::ends_with($tolerance_full, '%')) {
+              $tolerance_perc = rtrim($tolerance_full, '%');
+              $tolerance_full = round($answer * ($tolerance_perc/100), 12);
+            }
+            $tolerance_partial = $score_array[2];
+            if (StringUtils::ends_with($tolerance_partial, '%')) {
+              $tolerance_perc = rtrim($tolerance_partial, '%');
+              $tolerance_partial = round($answer * ($tolerance_perc/100), 12);
+            }
 
-        if ($saved_response_clean != '') {
-          if ($saved_response_clean == '' . $answer) {    // Want to treat $answer as a string here
-            $mark = $marks_correct;
-          } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
-            $mark = $marks_correct;
-          } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
-            $mark = $marks_partial;
-          } else {
-            $mark = $marks_incorrect;
+            if ($saved_response_clean == '' . $answer) {    // Want to treat $answer as a string here
+              $mark = $marks_correct;
+            } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
+              $mark = $marks_correct;
+            } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
+              $mark = $marks_partial;
+            } else {
+              $mark = $marks_incorrect;
+            }
           }
         }
 
@@ -771,7 +775,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
           } else {
             if (isset($_POST[$qid]) and $_POST[$qid] != 'u') {
               $have_answer = true;
-              $mark += (str_replace('&nbsp;',' ',trim($_POST[$qid])) == str_replace('&nbsp;',' ',($answer_list[0]))) ? $individual_q_mark : $marks_incorrect;
+              $mark += (str_replace('&nbsp;', ' ', trim($_POST[$qid])) == str_replace('&nbsp;', ' ', trim($answer_list[0]))) ? $individual_q_mark : $marks_incorrect;
             }
           }
         }
