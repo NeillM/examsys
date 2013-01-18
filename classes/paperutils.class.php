@@ -24,8 +24,19 @@
  * @package
  */
 
+require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
 
-Class Paper_utils {
+Class Paper_utils extends RogoStaticSingleton {
+  public static $inst = NULL;
+  public static $class_name = 'PaperUtils';
+
+  /**
+  * constructor
+  */
+  private function __construct() {}
+}
+
+Class PaperUtils {
 
   /**
   * Add a question onto a paper
@@ -36,7 +47,7 @@ Class Paper_utils {
   * @param $display_pos the display position of the new question
   * @param $db Database connection
   */
-  static function add_question($paperID, $questionID, $screen_no, $display_pos, $db) {
+  public function add_question($paperID, $questionID, $screen_no, $display_pos, $db) {
     $result = $db->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
     $result->bind_param('iiii', $paperID, $questionID, $screen_no, $display_pos);
     $result->execute();
@@ -50,7 +61,7 @@ Class Paper_utils {
   * @param $db Database connection
   * @return integer 
   */
-  static function get_ownerID($paperID, $db) {
+  public function get_ownerID($paperID, $db) {
     $modules = array();
     $result = $db->prepare("SELECT paper_ownerID FROM properties WHERE property_id = ? LIMIT 1");
     $result->bind_param('i', $paperID);
@@ -62,7 +73,7 @@ Class Paper_utils {
     return $paper_ownerID;
   }
   
-  static function get_textual_feedback($paperID, $db, $direction = 'ASC') {
+  public function get_textual_feedback($paperID, $db, $direction = 'ASC') {
     $textual_feedback = array();
     $i = 1;
     
@@ -87,7 +98,7 @@ Class Paper_utils {
   * @param $db Database connection
   * @return array 
   */
-  static function get_modules($paperID, $db) {
+  public function get_modules($paperID, $db) {
     $modules = array();
     $result = $db->prepare("SELECT idMod, moduleid FROM (modules, properties_modules) WHERE idMod = id AND property_id = ?");
     $result->bind_param('i', $paperID);
@@ -108,7 +119,7 @@ Class Paper_utils {
   * @param $db Database connection
   * @return array 
   */
-  static function get_metadata($paperID, $db) {
+  public function get_metadata($paperID, $db) {
     $metadata = array();
   
     $result = $db->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ?");
@@ -130,7 +141,7 @@ Class Paper_utils {
   * @param $paperID the id of the paper or property_id
   * @return void 
   */
-  static function update_modules($paper_modules, $paperID, $db, $userObject) {
+  public function update_modules($paper_modules, $paperID, $db, $userObject) {
     global $REPLACEMEuserIDold, $DISABLEDuserroles, $DISABLEDstaff_modules; //these will come form the users object later
 
     $staff_modules = $userObject->get_staff_modules();
@@ -160,7 +171,7 @@ Class Paper_utils {
   * @param $paperID the id of the paper or property_id
   * @return void 
   */
-  static function add_modules($paper_modules, $paperID, $db) {
+  public function add_modules($paper_modules, $paperID, $db) {
     $editProperties = $db->prepare("INSERT INTO properties_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod = idMod");
     foreach ($paper_modules as $idMod => $ModuleID) {
       $editProperties->bind_param('ii', $paperID, $idMod);
@@ -175,7 +186,7 @@ Class Paper_utils {
   * @param $paperID the id of the paper or property_id
   * @return void 
   */
-  static function remove_modules($paper_modules, $paperID, $db) {
+  public function remove_modules($paper_modules, $paperID, $db) {
     $remove = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? and idMod = ?");
     foreach ($paper_modules as $idMod => $ModuleID) {
       $remove->bind_param('ii', $paperID, $idMod);
@@ -184,7 +195,7 @@ Class Paper_utils {
     $remove->close();
   }
 
-  static function get_title($paperID, $db) {
+  public function get_title($paperID, $db) {
     $result = $db->prepare("SELECT paper_title FROM properties WHERE property_id = ? LIMIT 1");
     $result->bind_param('i', $paperID);
     $result->execute();
@@ -199,7 +210,7 @@ Class Paper_utils {
     return $paper_title;
   }
   
-  static function is_paper_title_unique($title, $db) {
+  public function is_paper_title_unique($title, $db) {
     $unique = true;
     $result = $db->prepare("SELECT property_id FROM properties WHERE paper_title = ? LIMIT 1");
     $result->bind_param('s', $title);
@@ -222,7 +233,7 @@ Class Paper_utils {
   * @param $paperID the id of the paper or property_id
   * @return void 
   */
-  static function delete_paper($paperID, $db) {
+  public function delete_paper($paperID, $db) {
     //delete the paper
     $update = $db->prepare("UPDATE properties SET deleted=NOW(), paper_ownerID=-1 WHERE property_id=?");
     $update->bind_param('i', $paperID);
