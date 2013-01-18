@@ -6,11 +6,11 @@ function make_db_connections() {
 
   $master_username = $_POST['master_username'];
   $master_password = $_POST['master_password'];
-  $master_mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $master_username, $master_password, $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+  $master_mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $master_username, $master_password, $_POST['master_dbname'], $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
   $test_username = $_POST['test_username'];
   $test_password = $_POST['test_password'];
-  $test_mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $test_username, $test_password, $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+  $test_mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $test_username, $test_password, $_POST['test_dbname'], $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 }
 
