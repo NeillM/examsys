@@ -296,13 +296,15 @@ if ($userObject->has_role('Student')) {
   check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
 }
 
+//are we in a staff test and preview mode?
+$is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
+
+
 /*
  * BP Determine the student's end_date timestamp for a summative exam that has been 'Started'.
  * This is also used further down to make sure that the timer does not close the window if the exam session hasn't been 'started' by an invigilator
  * If a summative exam session has been started  then record late answers in log_late
  */
-
-
 $summative_exam_session_started = false;
 
 if ($exam_duration != null and (int) $paper_type == 2){
@@ -347,8 +349,8 @@ if ($exam_duration != null and (int) $paper_type == 2){
 
 }
 
-//check for submissions after the enddate and set them to save in log_late
-if ( time() > $end_date_timestamp and ($paper_type == '1' or ( $paper_type == '2' and $summative_exam_session_started == false ) )) { //Mode is used for staff preview.
+//check for submissions after the enddate and set them to save in log_late if we are not in preview_mode or a summative exam session has not been started
+if ( $is_preview_mode === false and time() > $end_date_timestamp and ($paper_type == '1' or ( $paper_type == '2' and $summative_exam_session_started === false ) )) {
   $paper_type = '_late';
 }
 
@@ -947,10 +949,8 @@ if ($css != '') {
   // BP If the duration is set then show timer
 
   $method = 'StartClock()';
-
+  
   if ($exam_duration != null) {
-
-    $is_preview_mode = ( isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
 
     // Summative type. Time is only active in live.
     if ($paper_type == 2 and $is_preview_mode === false) {
@@ -976,10 +976,10 @@ if ($css != '') {
       $timer          = new Timer( $log_start_time, $exam_duration );
       $start_datetime = $timer->get_start_datetime();
 
-      $is_preview_first_visit = ( $current_screen == 1 and $screen_pre_submitted == 0 and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
+      $is_preview_first_visit = ( $is_preview_mode === true and $current_screen == 1 and $screen_pre_submitted == 0 );
 
       // Reset if in preview mode so staff are not locked out
-      if( $start_datetime and $userObject->has_role( 'Staff' ) and $is_preview_first_visit ){
+      if( $start_datetime and $is_preview_first_visit ){
         $timer->reset();
         $timer->start();
       }
