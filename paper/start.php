@@ -347,7 +347,6 @@ if ($exam_duration != null and (int) $paper_type == 2){
 
 }
 
-
 //check for submissions after the enddate and set them to save in log_late
 if ( time() > $end_date_timestamp and ($paper_type == '1' or ( $paper_type == '2' and $summative_exam_session_started == false ) )) { //Mode is used for staff preview.
   $paper_type = '_late';
@@ -636,6 +635,7 @@ if ($css != '') {
   var usingAjax = false;
   var submitType = '';
   var autoSaveRef = '';
+  var last_saved_user_awnsers = null; //holds the data of the last successful auto save
   $(document).ready(function () {
       //we have javascript replace the form submit buttons to enable ajax saving
       usingAjax = true;
@@ -655,7 +655,8 @@ if ($css != '') {
       //setup autosave
       startAutoSave();
   });
-
+  
+  //normal user submit by clicking on next, prevous, finish or jump screen
   var userSubmit = function (event) {
     submitType = 'userSubmit';
     stopAutoSave();
@@ -666,7 +667,7 @@ if ($css != '') {
       $('#saveError').fadeOut('slow');
       $('#savemsg').html("<img src=\"../artwork/busy.gif\" width=\"20\" height=\"20\" alt=\"Wait\" />")
 
-      //log which method the users submited the page via
+      //log which method the users submitted the page via
       if (!!event) {
         if(event.target.id != 'finish') {
           $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
@@ -676,20 +677,38 @@ if ($css != '') {
     }
   }
 
+  //called when a user has run out of time by UpdateTimerWithRemainingTime in start.js
+  var forceSave = function() {
+    stopAutoSave();
+    submitType = 'forcedSubmit';
+    $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
+    ajaxSave();
+  }
+
+  //called on auto save time out
+  var autoSave = function() {
+    submitType = 'autoSave';
+    //only save if the screen has changed
+    if(typeof(tinyMCE) != "undefined"){
+      tinyMCE.triggerSave();
+    }
+    var formData = $('#qForm').serialize();
+
+    //only auto save if the data has changed
+    if(last_saved_user_awnsers !== formData) {
+      $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
+      ajaxSave();
+    } 
+    //reset the timer in-case this is a long screen
+    startAutoSave();
+  }
+
   var startAutoSave = function () {
     autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get('cfg_autosave_frequency') + rand(-5,5)) * 1000); ?>);
   }
 
   var stopAutoSave = function() {
     clearTimeout(autoSaveRef);
-  }
-
-  var autoSave = function() {
-    submitType = 'autoSave';
-    $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
-    ajaxSave();
-    //reset the timer incase this is a long screen
-    startAutoSave();
   }
 
   var ajaxSave = function () {
@@ -735,12 +754,12 @@ if ($css != '') {
               success = false;
               return;
           },
-          success: function (data, jqXHR, textStatus) {
+          success: function (ret_data, jqXHR, textStatus) {
               submitPending = false;
-              //$('#mymsg').text(data);  // Remove when working.
-              //alert( data + ' ' + randomPageID);
-              if (data == randomPageID) {
+              if (ret_data == randomPageID) {
                   success = true;
+                  //cache the form data to look for changes on next auto save
+                  last_saved_user_awnsers = this.data;
                   saveSuccess();
                   return;
               }
@@ -756,6 +775,8 @@ if ($css != '') {
     if (submitType == 'userSubmit') {
       $('#qForm').submit();
       return true;
+    } else if(submitType == 'forcedSubmit') {
+      $('#qForm').submit();
     } else {
       $('#savemsg').html("<?php echo $string['auto_ok']; ?>");
       //clear auto save message
@@ -927,21 +948,23 @@ if ($css != '') {
 
   $method = 'StartClock()';
 
-  if( $exam_duration != null ){
+  if ($exam_duration != null) {
 
     $is_preview_mode = ( isset( $_GET['mode'] ) and $_GET['mode'] == 'preview' );
 
     // Summative type. Time is only active in live.
-    if( (int) $paper_type == 2 and $is_preview_mode === false ){
+    if ($paper_type == 2 and $is_preview_mode === false) {
 
       $summative_timer    = new SummativeTimer( $log_extra_time );
 
       $remaining_time     = $summative_timer->calculate_remaining_time_secs();
 
+      //var_dump($log_extra_time, $summative_timer, $remaining_time);
+
       $method             = 'StartTimer(' . $remaining_time . ', true)';
 
       // Do not close the window if the invigilator has not clicked on the 'Start' button
-      if( $summative_exam_session_started === false ){
+      if ($summative_exam_session_started === false) {
         $method          = 'StartTimer(' . $remaining_time . ', false)';
       }
 
@@ -1098,7 +1121,7 @@ if ($css != '') {
   }
 
   ?>
-  <input id="theTime" name="theTime" type="text" class="thetime" size="8" />
+  <span id="theTime" type="text" class="thetime"></span>
   </span>
   <?php
   echo '</td><td align="right">';

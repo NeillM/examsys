@@ -30,12 +30,11 @@ function UpdateClock( hours, minutes, seconds) {
   }
   seconds = ( ( seconds < 10 ) ? ":0" : ":" ) + seconds;
 
-  document.getElementById('theTime').value = "" + hours + minutes + seconds;
+  $('#theTime').html("" + hours + minutes + seconds);
 }
 
 
 //BP Performs countdown. Saves if counter has reached 0
-
 function UpdateTimerWithRemainingTime( remaining_time, close ) {
   
   minutes = Math.floor( remaining_time / 60 );
@@ -46,15 +45,14 @@ function UpdateTimerWithRemainingTime( remaining_time, close ) {
   
   if( remaining_time == 0 && close == true){
     KillClock();
-    autoSave();
     alert( 'Your time has expired and your answers have been saved' );
-    this.window.close();
+    forceSave();
     return;
   }
   if( remaining_time > 0 ){
     remaining_time = remaining_time -1;
   }
-  clockID        = setTimeout( "UpdateTimerWithRemainingTime( " + remaining_time + ", " + close + " )", 1000 );
+  clockID = setTimeout( "UpdateTimerWithRemainingTime( " + remaining_time + ", " + close + " )", 1000 );
 }
 
 function UpdateClockWithCurrentTime() {
