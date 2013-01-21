@@ -95,7 +95,6 @@ $output = "MEE.Data.images = {\n";
 foreach($images as $img)
 {
 	//imagealphablending( $img['im'], true );
-  echo $img['name'].'<br>';
 	imagecopy($resim, $img['im'], $img['left'], $img['top'], 0, 0, $img['width'], $img['height']);
 	$output .= "\t'{$img['name']}': { left: {$img['left']}, top: {$img['top']}, width: {$img['width']}, height: {$img['height']} },\n";
 }
