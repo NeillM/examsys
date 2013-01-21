@@ -387,7 +387,7 @@ if (isset($_POST['sessionid'])) {
   $sessionid = $_POST['sessionid'];
 } else {
   $current_screen = 1;
-  if (($original_paper_type == '1' or $original_paper_type == '2' or $original_paper_type == '3') and !isset($_GET['mode'])) {  //Mode is used for staff preview.
+  if (($original_paper_type == '1' or $original_paper_type == '2' or $original_paper_type == '3') and !isset($_GET['mode'])) {  //$_GET['mode'] is used for staff preview.
     $stmt = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started, MAX(screen) AS screen FROM log$paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
     $stmt->bind_param('ii', $property_id, $userObject->get_user_ID());
     $stmt->execute();
@@ -950,7 +950,7 @@ if ($css != '') {
 
   if ($exam_duration != null) {
 
-    $is_preview_mode = ( isset( $_GET['mode'] ) and $_GET['mode'] == 'preview' );
+    $is_preview_mode = ( isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
 
     // Summative type. Time is only active in live.
     if ($paper_type == 2 and $is_preview_mode === false) {
@@ -958,8 +958,6 @@ if ($css != '') {
       $summative_timer    = new SummativeTimer( $log_extra_time );
 
       $remaining_time     = $summative_timer->calculate_remaining_time_secs();
-
-      //var_dump($log_extra_time, $summative_timer, $remaining_time);
 
       $method             = 'StartTimer(' . $remaining_time . ', true)';
 
@@ -970,7 +968,7 @@ if ($css != '') {
 
     // All other paper types
 
-    }else{
+    } else {
 
       $studentID      = $userObject->get_user_ID();
 
@@ -978,7 +976,7 @@ if ($css != '') {
       $timer          = new Timer( $log_start_time, $exam_duration );
       $start_datetime = $timer->get_start_datetime();
 
-      $is_preview_first_visit = ( $current_screen == 1 and $screen_pre_submitted == 0 and isset( $_GET['mode'] ) and $_GET['mode'] == 'preview' );
+      $is_preview_first_visit = ( $current_screen == 1 and $screen_pre_submitted == 0 and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
 
       // Reset if in preview mode so staff are not locked out
       if( $start_datetime and $userObject->has_role( 'Staff' ) and $is_preview_first_visit ){
@@ -1093,6 +1091,9 @@ if ($css != '') {
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
   echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
   echo "<input type=\"hidden\" id=\"randomPageID\" name=\"randomPageID\" value=\"\" />\n";
+  if(isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview') {
+    echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
+  }
   if ($current_screen > $no_screens) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
     if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
@@ -1107,8 +1108,6 @@ if ($css != '') {
     printf($string['pleasecomplete'], $current_screen);
     echo "</div>\n<br >\n";
   }
-
-  //echo '<div id="mymsg">Hi</div>';  // Remove when working.
 
   echo '<div id="saveError"><img alt="Warning" src="/artwork/no_save.png" /> <div><strong>' .  $string['savefailed'] . '</strong><br />' . $string['tryagain'] . '</div></div>';
 

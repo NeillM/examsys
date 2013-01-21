@@ -49,7 +49,7 @@ class SummativeTimer {
    */
   public function calculate_remaining_time_secs() {
 
-    $session_end_timestamp     = $this->get_extra_end_date_timestamp();
+    $session_end_timestamp = $this->get_extra_end_date_timestamp();
 
     if( $session_end_timestamp === false){
       $session_end_datetime = $this->get_session_end_datetime();
@@ -59,13 +59,12 @@ class SummativeTimer {
       $session_end_timestamp = $session_end_datetime->getTimestamp();
     }
 
-    $now_datetime         = new DateTime;
-    $now_timestamp        = $now_datetime->getTimestamp();
+    $now_timestamp = time();
 
-    $remaining_time_secs  = $session_end_timestamp - $now_timestamp;
+    $remaining_time_secs = $session_end_timestamp - $now_timestamp;
 
-    $special_needs_secs   = $this->calculate_special_needs_secs();
-    $remaining_time_secs  = $remaining_time_secs + $special_needs_secs;
+    $special_needs_secs = $this->calculate_special_needs_secs();
+    $remaining_time_secs = $remaining_time_secs + $special_needs_secs;
 
     if( $remaining_time_secs < 1 ){
       $remaining_time_secs = 0;

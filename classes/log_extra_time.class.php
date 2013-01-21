@@ -29,20 +29,17 @@ class LogExtraTime {
   /*
    * @var LogLabEndTime $log_lab_end_time
   */
-
   private $log_lab_end_time;
 
   /*
    * @var UserObject $student_object
   */
-
   private $student_object;
 
 
   /*
    * @var mysqli $db
    */
-
   private $db;
   private $msg;
 
@@ -117,7 +114,6 @@ class LogExtraTime {
     $stmt->close();
 
     // If no record exists then fall back to the default
-
     if ($num_results < 1 or $end_date === NULL) {
       return FALSE;
     }
