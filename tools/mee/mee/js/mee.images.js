@@ -108,5 +108,5 @@ MEE.Data.images = {
 	'tbicons/matrix5.png': { left: 288, top: 332, width: 96, height: 96 },
 	'tbicons/matrix4.png': { left: 384, top: 332, width: 96, height: 96 },
 	'tbicons/matrix3.png': { left: 480, top: 332, width: 96, height: 96 },
-	'tbicons/matrix3.png': { left: 480, top: 332, width: 96, height: 96 },
+	'toolbar/sizes/temp.png': { left: 576, top: 332, width: 100, height: 100 },
 'zzz': 'zzz' };
