@@ -103,10 +103,9 @@ MEE.Data.images = {
 	'tbicons/matrix1.png': { left: 535, top: 236, width: 96, height: 96 },
 	'toolbar/sizes/96x96-click.png': { left: 631, top: 236, width: 96, height: 96 },
 	'toolbar/sizes/96x96-over.png': { left: 0, top: 332, width: 96, height: 96 },
-	'tbicons/matrix6.png': { left: 96, top: 332, width: 96, height: 96 },
-	'tbicons/matrix2.png': { left: 192, top: 332, width: 96, height: 96 },
+	'tbicons/matrix2.png': { left: 96, top: 332, width: 96, height: 96 },
+	'tbicons/matrix3.png': { left: 192, top: 332, width: 96, height: 96 },
 	'tbicons/matrix5.png': { left: 288, top: 332, width: 96, height: 96 },
 	'tbicons/matrix4.png': { left: 384, top: 332, width: 96, height: 96 },
-	'tbicons/matrix3.png': { left: 480, top: 332, width: 96, height: 96 },
-	'toolbar/sizes/temp.png': { left: 576, top: 332, width: 100, height: 100 },
+	'tbicons/matrix6.png': { left: 480, top: 332, width: 96, height: 96 },
 'zzz': 'zzz' };
