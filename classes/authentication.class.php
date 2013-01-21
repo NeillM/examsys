@@ -96,8 +96,8 @@ class Authentication {
           }
         }
     */
-    if (!isset($_SESSION['authenticationObj']['attempt'])) {
-      $_SESSION['authenticationObj']['attempt'] = 0;
+    if (!isset($this->session['authenticationObj']['attempt'])) {
+      $this->session['authenticationObj']['attempt'] = 0;
       $this->debug[] = 'Creating SESSION attempt data';
     }
 
@@ -237,7 +237,7 @@ class Authentication {
     }
 
     $this->debug[] = 'Display error form & reset attempt count';
-    $_SESSION['authenticationObj']['attempt'] = 0;
+    $this->session['authenticationObj']['attempt'] = 0;
     if (file_exists($override)) {
       require $override;
     } else {
@@ -300,7 +300,7 @@ class Authentication {
       //failed
       if (!isset($this->postauthfailobj)) {
         $this->postauthfailobj = new postauthfailreturn();
-        $_SESSION['authenticationObj']['attempt']++;
+        $this->session['authenticationObj']['attempt']++;
         if (isset($this->callbackregister['postauthfail'])) {
           foreach ($this->callbackregister['postauthfail'] as $number => $callback) {
             call_user_func_array($callback, array(&$this->postauthfailobj));
@@ -368,6 +368,7 @@ HTML;
 
         exit();
       }
+    }
 
       if ($this->success !== TRUE) {
         $this->debug[] = 'Success is not TRUE or FALSE';
@@ -424,12 +425,12 @@ HTML;
     }
 
     function store_data_in_session() {
-      /*   if (!isset($_SESSION['authenticationObj']['loggedin']['password'])) {
-           $_SESSION['authenticationObj']['loggedin']['password'] = $this->get_password();
+      /*   if (!isset($this->session['authenticationObj']['loggedin']['password'])) {
+           $this->session['authenticationObj']['loggedin']['password'] = $this->get_password();
          }*/
-      $_SESSION['authenticationObj']['loggedin']['userid'] = $this->get_userid();
-      $_SESSION['authenticationObj']['loggedin']['time'] = time();
-      $_SESSION['authenticationObj']['attempt'] = 0;
+      $this->session['authenticationObj']['loggedin']['userid'] = $this->get_userid();
+      $this->session['authenticationObj']['loggedin']['time'] = time();
+      $this->session['authenticationObj']['attempt'] = 0;
     }
 
 
@@ -590,7 +591,7 @@ class postauthfailreturn extends stdClass {
   public $exit;
 
   function __construct() {
-    $this->attempt = $_SESSION['authenticationObj']['attempt'];
+    $this->attempt = $this->session['authenticationObj']['attempt'];
     $this->stop = FALSE;
     $this->exit = FALSE;
   }
