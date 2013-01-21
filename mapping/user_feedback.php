@@ -211,8 +211,6 @@
 
   unset($objByModule['none_of_the_above']);
 
-  
-
   if (count($objByModule) > 0) {
     foreach ($objByModule as $module => $mappings) {
       foreach ($mappings as $id => $mappingData) {
