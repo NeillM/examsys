@@ -94,7 +94,7 @@ class ldap_auth extends outline_authentication {
     if (ldap_bind($ldap, $ldap_bind_rdn, $ldap_bind_password)) {
       $this->savetodebug('Sucessfull initial bind to ldap server');
       if (!($search = @ldap_search($ldap, $ldap_search_dn, $ldap_user_prefix . $this->form['std']->username))) {
-        $this->retdata->debug[] = $string['ldapservernosearch'];
+        $this->savetodebug($string['ldapservernosearch']);
         $this->set_fail();
 
         return FALSE;

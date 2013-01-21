@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 /**
  *
  * The internaldb authentication function.
@@ -34,25 +33,12 @@ class internaldb_auth extends outline_authentication {
 
   private $updatable = FALSE;
 
-/*
-  function __construct($calling_object, $settings, $number, $name, $db, &$returndata, $form) {
-    $this->db = new mysqli();
-    $this->db = $db;
-    $this->calling_object = $calling_object;
-    $this->returndata = $returndata;
-    $this->number = $number;
-    $this->retdata = $returndata[$number];
-    $this->form = $form;
-    $this->settings = $settings;
-    $this->name = $name;
-  }
-*/
-
   function register_callback_routines() {
     $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
     $this->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
     $this->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
     $this->register_callback(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
+
     return $this->callbackarray;
   }
 
@@ -205,7 +191,7 @@ class internaldb_auth extends outline_authentication {
   function update_password($postauthsuccessobj = '') {
     $this->savetodebug('Called update_password');
     if ($this->updatable === TRUE and (!isset($this->settings['donotupdatepassword']) or (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== TRUE))) {
-      $this->retdata->debug[] = 'Updating Password';
+      $this->savetodebug('Updating Password');
       extract($this->settings);
       $encpw_details = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
       $stmt = $this->db->prepare("UPDATE $table SET $passwd_col = ? WHERE $username_col = ?");

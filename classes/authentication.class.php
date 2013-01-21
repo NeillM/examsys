@@ -333,7 +333,7 @@ class Authentication {
 /*                foreach ($this->debug as $val) {
                   echo $val . "\n";
                 }*/
-                var_dump($this->request);
+                //var_dump($this->request);
                 //var_dump($this->debug);
                 exit();
               }

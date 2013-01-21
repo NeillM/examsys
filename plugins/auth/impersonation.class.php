@@ -26,6 +26,7 @@ class impersonation_auth extends outline_authentication {
   private $active = FALSE;
   private $demo = FALSE;
   private $newuserid;
+  private $lookupuserobj;
 
   public $impliments_api_auth_version = 1;
   public $version = 0.9;
@@ -39,13 +40,13 @@ class impersonation_auth extends outline_authentication {
   }
 
   function changewhoiam(&$getauthobj) {
-    if (isset($_SESSION['authenticationObj']['impersonation']['newuserid']) and !is_null($_SESSION['authenticationObj']['impersonation']['newuserid'])) {
+    if (isset($this->session['authenticationObj']['impersonation']['newuserid']) and !is_null($this->session['authenticationObj']['impersonation']['newuserid'])) {
       if (!$getauthobj->userObj->has_role('SysAdmin')) {
         $this->savetodebug('Cannot change user as not a SysAdmin');
       }
-      $getauthobj->userObj->impersonate($_SESSION['authenticationObj']['impersonation']['newuserid']);
+      $getauthobj->userObj->impersonate($this->session['authenticationObj']['impersonation']['newuserid']);
     }
-    if (isset($_SESSION['authenticationObj']['impersonation']['demo']) and $_SESSION['authenticationObj']['impersonation']['demo'] === TRUE) {
+    if (isset($this->session['authenticationObj']['impersonation']['demo']) and $this->session['authenticationObj']['impersonation']['demo'] === TRUE) {
       $this->savetodebug('Changing user status to DEMO');
       $getauthobj->userObj->set_demo();
     }
@@ -55,13 +56,13 @@ class impersonation_auth extends outline_authentication {
 
   function storedata(&$sessionstoreobj) {
     $this->savetodebug('session store');
-    $_SESSION['authenticationObj']['impersonation']['newuserid'] = $this->newuserid;
-    $_SESSION['authenticationObj']['impersonation']['demo'] = $this->demo;
+    $this->session['authenticationObj']['impersonation']['newuserid'] = $this->newuserid;
+    $this->session['authenticationObj']['impersonation']['demo'] = $this->demo;
   }
 
   function checkwhattodo(&$preauthobj) {
     $this->savetodebug('Starting up impersination checking');
-//    $this->savetodebug('Check sess var:' . var_export($_SESSION, TRUE));
+//    $this->savetodebug('Check sess var:' . var_export($this->session, TRUE));
 
     $continue = FALSE;
     if (isset($this->form['std']->username)) {
@@ -76,10 +77,10 @@ class impersonation_auth extends outline_authentication {
     }
 
     if ($continue !== TRUE) {
-      if (isset($_SESSION['authenticationObj']['impersonation']['newuserid']) or isset($_SESSION['authenticationObj']['impersonation']['demo'])) {
+      if (isset($this->session['authenticationObj']['impersonation']['newuserid']) or isset($this->session['authenticationObj']['impersonation']['demo'])) {
         $this->savetodebug('Found store data in session for impersonation');
-        $this->newuserid = $_SESSION['authenticationObj']['impersonation']['newuserid'];
-        $this->demo = $_SESSION['authenticationObj']['impersonation']['demo'];
+        $this->newuserid = $this->session['authenticationObj']['impersonation']['newuserid'];
+        $this->demo = $this->session['authenticationObj']['impersonation']['demo'];
       }
 
       return;
@@ -93,17 +94,18 @@ class impersonation_auth extends outline_authentication {
 
       return;
     }
-
-    $lookupuserobj = new stdClass();
-    $lookupuserobj->username = $usernameparts[1];
-    $lookupuserobj->found = FALSE;
+if(!isset($this->lookupuserobj)) {
+    $this->lookupuserobj = new stdClass();
+    $this->lookupuserobj->username = $usernameparts[1];
+    $this->lookupuserobj->found = FALSE;
+}
     list($callbacklist, $callbackregisterdatalist) = $this->get_callback('lookupuser'); //  if (isset($this->calling_object->callbackregister['lookupuser'])) {
 
     if (is_array(($callbacklist))) {
       //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
       foreach ($callbacklist as $number => $callback) {
 
-        call_user_func_array($callback, array($lookupuserobj));
+        call_user_func_array($callback, array($this->lookupuserobj));
         $objid = key($callbackregisterdatalist[$number]);
         $new_messages = $this->get_module_debug($objid);
         foreach ($new_messages as $key => $value) {
@@ -114,10 +116,10 @@ class impersonation_auth extends outline_authentication {
       }
     }
 
-    if ($lookupuserobj->found === TRUE) {
+    if ($this->lookupuserobj->found === TRUE) {
       $this->active = TRUE;
       //assuming first lookup is the one we want
-      $this->newuserid = $lookupuserobj->results[0]->userid;
+      $this->newuserid = $this->lookupuserobj->results[0]->userid;
     }
 
     if ($this->active === TRUE) {

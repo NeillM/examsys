@@ -78,6 +78,9 @@ class outline_authentication {
     $this->retdata = & $this->returndata[$this->number];
     $this->form = & $object->form;
     $this->settings = & $object->settings;
+    $this->session = &$object->calling_object->session;
+    $this->request = &$object->calling_object->request;
+
   }
 
 
