@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 /**
  *
  * Handles Guest account access in rogo
@@ -35,21 +34,24 @@ class guestlogin_auth extends outline_authentication {
   public $version = 0.9;
 
   function register_callback_routines() {
-    $this->register_callback(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
-    $this->register_callback(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
-    return $this->callbackarray;
+    $callbackarray[] = array(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+
+    return $callbackarray;
   }
 
-  function errordisp(&$displayerrformobj) {
+  function errordisp($displayerrformobj) {
     global $string;
     if ($_SERVER['PHP_SELF'] == '/index.php') {
       $this->savetodebug('adding temp account notice to error screen');
       $message2 = $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a>";
       $displayerrformobj->li[] = $message2;
     }
+
+    return $displayerrformobj;
   }
 
-  function loginbutton(&$displaystdformobj) {
+  function loginbutton($displaystdformobj) {
     $this->savetodebug('Button Check');
     //$displaybutton = false;
     // detect if we should display login button
@@ -106,6 +108,7 @@ class guestlogin_auth extends outline_authentication {
       $displaystdformobj->buttons[] = $newbutton;
     }
 
+    return $displaystdformobj;
   }
 
 }

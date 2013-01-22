@@ -48,21 +48,20 @@ function init($object) {
   }
 
   function register_callback_routines() {
-    $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $this->register_callback(array($this, 'registeruserwithlti'), 'postauthsuccess', $this->number, $this->name);
-    $this->register_callback(array($this, 'displaystdform'), 'displaystdform', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'registeruserwithlti'), 'postauthsuccess', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'displaystdform'), 'displaystdform', $this->number, $this->name);
 
-    return $this->callbackarray;
+    return $callbackarray;
   }
 
 
   function auth($authobj) {
-
     if ($this->lti->valid !== TRUE) {
       $this->savetodebug('Not valid LTI Launch: ' . $this->lti->message);
-      $this->set_fail();
+      $authobj->fail();
 
-      return FALSE;
+      return $authobj;
     }
 
     $this->savetodebug('Starting to lookup user');
@@ -79,32 +78,23 @@ function init($object) {
       $authobj->retdata = & $this->retdata;
       $this->savetodebug('LTI lookup successful');
 
-      return TRUE;
+      $authobj->success($this->number,$this->rogoid);
+      return $authobj;
     }
 
 
     //set session to be needing user lookup
     $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = TRUE;
 
-    return FALSE;
-
-    $this->calling_object->display_debug();
-
-    var_dump($returned);
-
-    var_dump($this);
-    exit();
-
     // lti valid but no user id associated with it.
     // need to authenticate the user but ignore lti & already logged in etc
 
-    if (!isset($_SESSION['authenticationObj']['ltilogin']['lookupstage'])) {
-      //display message
-      //      UserNotices::display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
-    }
+    return $authobj;
+
+
   }
 
-  function registeruserwithlti(&$postauthsuccessobj) {
+  function registeruserwithlti($postauthsuccessobj) {
     if (!isset($_SESSION['authenticationobj']['ltilogin']['needsuserlookup']) or $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] === FALSE) {
       return;
     }
@@ -112,6 +102,8 @@ function init($object) {
     $rogoid = $this->calling_object->get_userid();
     $this->lti->add_lti_user($rogoid);
     $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = FALSE;
+
+    return $postauthsuccessobj;
   }
 
   function displaystdform(&$displaystdformobj) {
@@ -125,6 +117,7 @@ function init($object) {
       $displaystdformobj->messages[] = $message;
       $displaystdformobj->replace = TRUE;
     }
+    return $displaystdformobj;
   }
 
 }

@@ -34,50 +34,49 @@ class alreadyloggedin_auth extends outline_authentication {
   public $version = 0.9;
 
   function register_callback_routines() {
-    $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $this->register_callback(array($this, 'store_user'), 'sessionstore', $this->number, $this->name);
-    $this->register_callback(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'store_user'), 'sessionstore', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
 
-    return $this->callbackarray;
+    return $callbackarray;
   }
 
   function auth($authobj) {
+    $this->retdata=&$authobj;
     $this->savetodebug('Authing');
     $this->savetodebug(str_replace("\n", '', trim(rtrim(var_export($this->session, TRUE)))));
     if (isset($this->session['authenticationObj']['loggedin']['userid']) and $this->session['authenticationObj']['loggedin']['userid'] > 0 and $this->session['authenticationObj']['loggedin']['userid'] != '' and $this->session['authenticationObj']['loggedin']['userid'] != 'null' and is_int($this->session['authenticationObj']['loggedin']['userid'])) {
       $this->savetodebug('userid found in session');
       if (isset($this->settings['timeout']) and $this->settings['timeout'] != 0 and (($this->session['authenticationObj']['loggedin']['time'] + $this->settings['timeout']) > time())) {
         $this->savetodebug('Timeout is set and run out');
-        $this->retdata->success = FALSE;
-        $this->retdata->rogoid = 0;
-
-        return FALSE;
+        $this->retdata->fail($this->number);
+        return $authobj;
       } else {
         $this->savetodebug('Successfully authenticated');
+        $this->retdata->success($this->number,$this->session['authenticationObj']['loggedin']['userid']);
         $this->retdata->success = TRUE;
-        $this->retdata->rogoid = $this->session['authenticationObj']['loggedin']['userid'];
+
         $this->rogoid = $this->session['authenticationObj']['loggedin']['userid'];
 
-        $authobj->rogoid = & $this->retdata->rogoid;
 
-        return TRUE;
+        return $authobj;
       }
 
     }
 
     $this->savetodebug('No valid userid found in session');
-    $this->retdata->success = FALSE;
-    $this->retdata->rogoid = 0;
+    $this->retdata->fail($this->number);
 
-    return FALSE;
+    return $authobj;
 
   }
 
-  function store_user(&$sessionstoreobj) {
+  function store_user($sessionstoreobj) {
     $this->savetodebug('session store');
     $this->session['authenticationObj']['loggedin']['userid'] = $this->calling_object->get_userid();
     $this->session['authenticationObj']['loggedin']['time'] = time();
     $this->session['authenticationObj']['attempt'] = 0;
+    return $sessionstoreobj;
   }
 
   function update_time($postauthsuccessobj = '') {
@@ -96,7 +95,7 @@ class alreadyloggedin_auth extends outline_authentication {
 
         call_user_func_array($callback, array(&$this->lookupuserobj));
         $objid = key($callbackregisterdatalist[$number]);
-        $new_messages = $this->get_module_debug($objid);
+        $new_messages = $this->get_new_debug_messages($objid);
         foreach ($new_messages as $key => $value) {
           $info1 = $this->get_module_authinfo($objid);
           $info = key($info1) . ':' . current($info1);
@@ -104,6 +103,7 @@ class alreadyloggedin_auth extends outline_authentication {
         }
       }
     }
+    return $postauthsuccessobj;
   }
 
 }

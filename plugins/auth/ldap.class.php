@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 /**
  *
  * The ldap authentication function.
@@ -35,19 +34,21 @@ class ldap_auth extends outline_authentication {
   public $version = 0.9;
 
   function register_callback_routines() {
-    $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $this->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
-    $this->register_callback(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
-    return $this->callbackarray;
+    $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+
+    return $callbackarray;
   }
 
-  function errordisp(&$displayerrformobj) {
+  function errordisp($displayerrformobj) {
     global $string;
     $this->savetodebug('adding ldap notice to error screen');
-    $displayerrformobj->li[]=$string['tsonldap'];
+    $displayerrformobj->li[] = $string['tsonldap'];
+    return $displayerrformobj;
   }
 
-  function failauth(&$postauthfailreturn) {
+  function failauth($postauthfailreturn) {
     $this->savetodebug('Fail function passed ' . var_export($postauthfailreturn, TRUE));
 
     //   $this->retdata->debug[]='info:' . var_export($this->settings,TRUE);
@@ -69,12 +70,13 @@ class ldap_auth extends outline_authentication {
     }
     $this->savetodebug('post run ' . var_export($postauthfailreturn, TRUE));
 
-    return;
+    return $postauthfailreturn;
 
   }
 
 
   function auth($authobj) {
+    $this->retdata =& $authobj;
     global $string;
     $this->savetodebug('Authing');
     extract($this->settings);
@@ -83,8 +85,8 @@ class ldap_auth extends outline_authentication {
       //return not sucessfull do not try
       $this->savetodebug('Check 1 blank entries');
 
-      $this->set_fail();
-      $this->retdata->message = 'Not valid entry for username or password';
+      $authobj->fail($this->number);
+      $authobj->message = 'Not valid entry for username or password';
 
       return FALSE;
     }
@@ -95,9 +97,9 @@ class ldap_auth extends outline_authentication {
       $this->savetodebug('Sucessfull initial bind to ldap server');
       if (!($search = @ldap_search($ldap, $ldap_search_dn, $ldap_user_prefix . $this->form['std']->username))) {
         $this->savetodebug($string['ldapservernosearch']);
-        $this->set_fail();
+        $authobj->fail();
 
-        return FALSE;
+        return $authobj;
       } else {
 
         $info = ldap_get_entries($ldap, $search);
@@ -107,18 +109,20 @@ class ldap_auth extends outline_authentication {
                   return $info;
                 }
         */
+        $this->savetodebug('on initial bind: '. var_dump($info,TRUE));
         if ($info['count'] == 1) {
           $this->savetodebug('Found user in ldap');
           $dn = $info[0]['dn'];
         } else {
           $this->savetodebug('<strong>' . $string['noldapaccount'] . '</strong>');
-          $this->set_fail();
+          $authobj->fail();
 
-          return FALSE;
+          return $authobj;
         }
       }
 
       if (@ldap_bind($ldap, $dn, utf8_encode($this->form['std']->password))) {
+
         $this->savetodebug('Successfully bound to ldap as the user with their password');
         ldap_unbind($ldap);
         /*
@@ -139,41 +143,50 @@ class ldap_auth extends outline_authentication {
         $result->fetch();
 
         $this->savetodebug('uname:' . $uname . ' id:' . $id);
-        if ($result->num_rows() !== 1) {
+        if ($result->num_rows() > 1) {
           // not unique match
           $this->savetodebug('Check 2 record number not = 1 no user or multiple user found in lookup');
 
-          $this->set_fail();
-          $this->retdata->message = 'Incorrect number of records returned';
+          $authobj->fail($this->number);
+          $authobj->message = 'Incorrect number of records returned';
 
-          return FALSE;
+          return $authobj;
 
         }
+
+        if ($result->num_rows() == 0) {
+          //lookup ok but no association to rogo
+
+          $data = new stdClass();
+
+          $authobj->missinglookup($this->number, $data);
+
+          return $authobj;
+        }
+
+
         $this->savetodebug('Successfully authenticated on this module username=' . $this->form['std']->username . ' id:' . $id);
 
         //sucessfull internaldb authentication
-        $this->retdata->success = TRUE;
-        $this->retdata->form = 'std';
-        $this->retdata->rogoid = $id;
-        $this->rogoid = $id;
-        $this->retdata->url = '';
-        $authobj->retdata = $this->retdata;
+        $authobj->success($this->number, $id);
 
-        return TRUE;
+        return $authobj;
       } else {
         $this->savetodebug($string['incorrectpassword']);
-        $this->set_fail();
+        $authobj->fail($this->number);
 
-        return FALSE;
+        return $authobj;
       }
     } else {
       $this->savetodebug('Couldnt Bind to ldap server');
-      $this->set_fail();
+      $authobj->fail($this->number);
 
-      return FALSE;
+      $this->error = TRUE;
+
+      return $authobj;
     }
 
-
+    return $authobj;
   }
 
 }

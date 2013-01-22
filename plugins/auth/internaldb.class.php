@@ -34,22 +34,15 @@ class internaldb_auth extends outline_authentication {
   private $updatable = FALSE;
 
   function register_callback_routines() {
-    $this->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $this->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
-    $this->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
-    $this->register_callback(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
+    $callbackarray[]=array(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
 
-    return $this->callbackarray;
+    return $callbackarray;
   }
 
-  function set_fail() {
-    $this->retdata->success = FALSE;
-    $this->retdata->form = 'std';
-    $this->retdata->rogoid = 0;
-    $this->retdata->url = '';
-  }
-
-  function failauth(&$postauthfailreturn) {
+  function failauth($postauthfailreturn) {
     $this->savetodebug('Fail function run'); // . var_export($postauthfailreturn, TRUE);
 
     //   $this->retdata->debug[]='info:' . var_export($this->settings,TRUE);
@@ -71,7 +64,7 @@ class internaldb_auth extends outline_authentication {
     }
 
 
-    return;
+    return $postauthfailreturn;
 
   }
 
@@ -108,9 +101,11 @@ class internaldb_auth extends outline_authentication {
 
     $lookupuserobj->found = TRUE;
 
+    return $lookupuserobj;
   }
 
   function auth($authobj) {
+    $this->retdata =& $authobj;
     $this->savetodebug('Authing');
     /*
         foreach ($this->settings as $key => $value) {
@@ -123,10 +118,10 @@ class internaldb_auth extends outline_authentication {
       //return not sucessfull do not try
       $this->savetodebug('Check 1 blank entries');
 
-      $this->set_fail();
+      $this->retdata->fail($this->number);
       $this->retdata->message = 'Not valid entry for username or password';
 
-      return FALSE;
+      return $authobj;
     }
 
     $sql = "SELECT $username_col as username, $passwd_col as passwd, $id_col as id FROM $table WHERE $username_col=?";
@@ -142,10 +137,10 @@ class internaldb_auth extends outline_authentication {
       // return not sucessfull either no user or multiple matches
       $this->savetodebug('Check 2 record number not = 1 no user or multiple user found');
 
-      $this->set_fail();
+      $this->retdata->fail($this->number);
       $this->retdata->message = 'Incorrect number of records returned';
 
-      return FALSE;
+      return $authobj;
 
     }
     $result->fetch();
@@ -172,20 +167,15 @@ class internaldb_auth extends outline_authentication {
       $this->savetodebug('Successfully authenticated on this module');
 
       //sucessfull internaldb authentication
-      $this->retdata->success = TRUE;
-      $this->retdata->form = 'std';
-      $this->retdata->rogoid = $id;
-      $this->rogoid = $id;
-      $this->retdata->url = '';
-      $authobj->retdata = $this->retdata;
+      $this->retdata->success($this->number, $id);
       $this->retdata->message = 'Internal DB Correctly Authenticated';
 
-      return TRUE;
+      return $authobj;
     }
     $this->savetodebug('Password not matching');
-    $this->set_fail();
+    $authobj->fail();
 
-    return FALSE;
+    return $authobj;
   }
 
   function update_password($postauthsuccessobj = '') {
@@ -201,13 +191,7 @@ class internaldb_auth extends outline_authentication {
     } elseif ((isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] === TRUE)) {
       $this->savetodebug('Not updating password due to settings flag');
     }
-  }
-
-  function form() {
-    $retdata = new stdClass();
-    $retdata->form = 'std';
-
-    return $retdata;
+    return $postauthsuccessobj;
   }
 
 }

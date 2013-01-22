@@ -28,6 +28,9 @@ class outline_authentication {
   protected $session;
   protected $request;
 
+  public $debug = array();
+  public $debugpointer = 0;
+
   protected $error = NULL;
   public $rogoid = FALSE;
 
@@ -64,7 +67,7 @@ class outline_authentication {
   }
 
   function set_error($msg) {
-    if(strlen($this->error) >0) {
+    if (strlen($this->error) > 0) {
       $this->error .= '<br>';
     }
     $this->error .= $msg;
@@ -74,12 +77,12 @@ class outline_authentication {
     $this->db = new mysqli();
     $this->db = & $object->db;
     $this->calling_object = & $object->calling_object;
-    $this->returndata = & $object->returndata;
-    $this->retdata = & $this->returndata[$this->number];
+//    $this->returndata = & $object->returndata;
+//    $this->retdata = & $this->returndata[$this->number];
     $this->form = & $object->form;
     $this->settings = & $object->settings;
-    $this->session = &$object->calling_object->session;
-    $this->request = &$object->calling_object->request;
+    $this->session = & $object->calling_object->session;
+    $this->request = & $object->calling_object->request;
 
   }
 
@@ -89,21 +92,14 @@ class outline_authentication {
     return FALSE;
   }
 
-  /**
-   * set failure settings
-   */
-  function set_fail() {
-    $this->retdata->success = FALSE;
-    $this->retdata->form = 'std';
-    $this->retdata->rogoid = 0;
-    $this->retdata->url = '';
-  }
+
+
 
   /**
    * @param $debugmessage string the debug message to store
    */
   function savetodebug($debugmessage) {
-    $this->retdata->debug[] = $debugmessage;
+    $this->debug[] = $debugmessage;
   }
 
   /**
@@ -120,8 +116,20 @@ class outline_authentication {
    *
    * @return mixed
    */
-  function get_module_debug($objid) {
-    return $this->returndata[$objid]->get_new_debug_messages();
+  /*  function get_new_debug_messages($objid) {
+      return $this->returndata[$objid]->get_new_debug_messages();
+    }*/
+  function get_new_debug_messages($number = NULL) {
+    if (is_null($number)) {
+      $returnarray = array();
+      while (isset($this->debug[$this->debugpointer])) {
+        $returnarray[$this->debugpointer] = $this->debug[$this->debugpointer++];
+      }
+
+      return $returnarray;
+    } else {
+      return $this->calling_object->authPluginObj[$number]->get_new_debug_messages();
+    }
   }
 
   /**
