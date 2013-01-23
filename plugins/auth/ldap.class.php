@@ -88,7 +88,7 @@ class ldap_auth extends outline_authentication {
       $authobj->fail($this->number);
       $authobj->message = 'Not valid entry for username or password';
 
-      return FALSE;
+      return $authobj;
     }
     $ldap = ldap_connect($ldap_server);
     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -97,7 +97,7 @@ class ldap_auth extends outline_authentication {
       $this->savetodebug('Sucessfull initial bind to ldap server');
       if (!($search = @ldap_search($ldap, $ldap_search_dn, $ldap_user_prefix . $this->form['std']->username))) {
         $this->savetodebug($string['ldapservernosearch']);
-        $authobj->fail();
+        $authobj->fail($this->number);
 
         return $authobj;
       } else {
@@ -109,13 +109,14 @@ class ldap_auth extends outline_authentication {
                   return $info;
                 }
         */
-        $this->savetodebug('on initial bind: '. var_dump($info,TRUE));
+        $this->savetodebug('on initial bind: '. var_export($info,TRUE));
+        var_dump($info);
         if ($info['count'] == 1) {
           $this->savetodebug('Found user in ldap');
           $dn = $info[0]['dn'];
         } else {
           $this->savetodebug('<strong>' . $string['noldapaccount'] . '</strong>');
-          $authobj->fail();
+          $authobj->fail($this->number);
 
           return $authobj;
         }

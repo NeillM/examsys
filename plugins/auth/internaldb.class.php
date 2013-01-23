@@ -173,7 +173,7 @@ class internaldb_auth extends outline_authentication {
       return $authobj;
     }
     $this->savetodebug('Password not matching');
-    $authobj->fail();
+    $authobj->fail($this->number);
 
     return $authobj;
   }

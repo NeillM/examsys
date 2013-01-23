@@ -59,7 +59,7 @@ function init($object) {
   function auth($authobj) {
     if ($this->lti->valid !== TRUE) {
       $this->savetodebug('Not valid LTI Launch: ' . $this->lti->message);
-      $authobj->fail();
+      $authobj->fail($this->number);
 
       return $authobj;
     }
@@ -106,7 +106,7 @@ function init($object) {
     return $postauthsuccessobj;
   }
 
-  function displaystdform(&$displaystdformobj) {
+  function displaystdform($displaystdformobj) {
     if (isset($_SESSION['authenticationobj']['ltilogin']['needsuserlookup']) and  $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] === TRUE) {
 
       $message = new stdClass();
