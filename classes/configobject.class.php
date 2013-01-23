@@ -49,7 +49,10 @@ class Config extends RogoStaticSingleton {
 */
 
   protected function __construct() {
-    include __DIR__ . '/../config/config.inc.php';
+    $conf_file = __DIR__ . '/../config/config.inc.php';
+    if (file_exists($conf_file)) {
+      include $conf_file;
+    }
     $this->data = get_defined_vars();
   }
 
@@ -70,10 +73,10 @@ class Config extends RogoStaticSingleton {
       if (isset($this->data[$var])) {
         return $this->data[$var];
       }
-    } elseif(is_array($var)) {
-      $dat=array();
-      foreach($var as $key) {
-        if(isset($this->data[$key])) {
+    } elseif (is_array($var)) {
+      $dat = array();
+      foreach ($var as $key) {
+        if (isset($this->data[$key])) {
           $dat[$key]=$this->data[$key];
         }
       }

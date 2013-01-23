@@ -4777,10 +4777,10 @@ QUERY;
   $result->store_result();
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $adjust = $mysqli->prepare("CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int, constraint pk_properties_module primary key (property_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset");
+    $adjust = $mysqli->prepare("CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int(11) unsigned, constraint pk_properties_module primary key (property_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset");
     $adjust->execute();
     $adjust->close();
-    echo "<li>CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int, constraint pk_properties_module primary key (property_id, idMod))</li>\n";
+    echo "<li>CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int(11) unsigned, constraint pk_properties_module primary key (property_id, idMod))</li>\n";
     ob_flush();
     flush();
     $res = $mysqli->prepare("SELECT id, moduleid FROM modules");
@@ -4819,10 +4819,10 @@ QUERY;
     echo "<li>ALTER TABLE properties DROP moduleid</li>\n";
 
     //deal with questions q_group
-    $adjust = $mysqli->prepare("CREATE TABLE questions_modules (q_id int(4) unsigned, idMod int, constraint pk_questions_module primary key (q_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1");
+    $adjust = $mysqli->prepare("CREATE TABLE questions_modules (q_id int(4) unsigned, idMod int(11) unsigned, constraint pk_questions_module primary key (q_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1");
     $adjust->execute();
     $adjust->close();
-    echo "<li>CREATE TABLE questions_modules (q_id int(4) unsigned, idMod int, constraint pk_questions_module primary key (q_id, idMod))</li>\n";
+    echo "<li>CREATE TABLE questions_modules (q_id int(4) unsigned, idMod int(11) unsigned, constraint pk_questions_module primary key (q_id, idMod))</li>\n";
     ob_flush();
     flush();
 
@@ -4853,10 +4853,10 @@ QUERY;
     echo "<li>ALTER TABLE questions DROP q_group</li>\n";
 
     //'folders' => 'team_name' is not 1 to 1 so need a folders_modules_staff joining table
-    $adjust = $mysqli->prepare("CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int, constraint pk_properties_module primary key (folders_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1");
+    $adjust = $mysqli->prepare("CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int(11) unsigned, constraint pk_properties_module primary key (folders_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1");
     $adjust->execute();
     $adjust->close();
-    echo "<li>CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int, constraint pk_properties_module primary key (folders_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1</li>\n";
+    echo "<li>CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int(11) unsigned, constraint pk_properties_module primary key (folders_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1</li>\n";
     ob_flush();
     flush();
     unset($res);
@@ -4908,8 +4908,8 @@ QUERY;
     $tables['reference_modules'] = 'moduleID'; //this just needs renaming
     $tables['users_metadata'] = 'moduleID'; //this just needs renaming
     foreach ($tables as $table => $col) {
-      echo "<li>ALTER TABLE $table CHANGE $col idMod INTEGER DEFAULT NULL </li>";
-      $mysqli->query("ALTER TABLE $table CHANGE $col idMod INTEGER DEFAULT NULL");
+      echo "<li>ALTER TABLE $table CHANGE $col idMod INT(11) unsigned DEFAULT NULL </li>";
+      $mysqli->query("ALTER TABLE $table CHANGE $col idMod INT(11) unsigned DEFAULT NULL");
     }
     //rename teams and student_modues
     echo '<li>RENAME TABLE teams TO modules_staff, student_modues TO modules_student</li>';
@@ -4918,8 +4918,6 @@ QUERY;
     flush();
 
     $mysqli->query("ALTER TABLE sessions ADD PRIMARY KEY(identifier, idMod, calendar_year)");
-
-    //TODO Indexes and GRANTS
   }
   $result->close();
 
@@ -4939,9 +4937,7 @@ QUERY;
   }
   $result->close();
 
-
   //cczsa11 07/11/2012 -- Add new fields to sys_error table.
-
   $data_type = '';
   $findsql = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sys_errors' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='variables'");
   $findsql->execute();
@@ -4953,7 +4949,7 @@ QUERY;
     $adjust = $mysqli->prepare($sql);
     if ($mysqli->error) {
       try {
-        throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $sql", $mysqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> $sql", $mysqli->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
@@ -5030,14 +5026,10 @@ QUERY;
 
   // 30/11/2012
   // Adding a new table log_start_time
-
-
   $updater_utils = new UpdaterUtils($mysqli, $cfg_db_database);
-
   $does_table_exist = $updater_utils->does_table_exist('log_start_time');
 
   if ($does_table_exist === FALSE) {
-
     $sql = 'CREATE TABLE
                  log_start_time(   id           int            PRIMARY KEY NOT NULL AUTO_INCREMENT
                                  , userID       int            unsigned NOT NULL
@@ -5046,33 +5038,23 @@ QUERY;
                                  , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
                              ) ENGINE=InnoDB DEFAULT CHARSET=' . $cfg_db_charset . ' PACK_KEYS=1 AUTO_INCREMENT=1;';
 
-
     $result = $mysqli->query($sql);
 
     if ($result !== TRUE) {
       printf("Error: %s\n", $mysqli->error);
     }
-
-
     echo '<li>CREATE TABLE log_start_time ( id, userID, paperID, start_time )</li>';
   }
 
-
-  $does_column_exist = $updater_utils->does_column_exist('log_metadata'
-    , 'completed');
+  $does_column_exist = $updater_utils->does_column_exist('log_metadata', 'completed');
   if ($does_column_exist === FALSE) {
-
     $sql = "ALTER TABLE log_metadata ADD completed DATETIME NULL";
-
     $result = $mysqli->query($sql);
-
     if ($result !== TRUE) {
       printf("Error: %s\n", $mysqli->error);
     }
-
     echo '<li>' . $sql . '</li>' . ".\n";
   }
-
 
   $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.log_start_time TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
   $mysqli->query($sql);
@@ -5084,7 +5066,6 @@ QUERY;
   $mysqli->query('FLUSH PRIVILEGES');
 
   //cczsa1 13/12/2012 - Convert authentication in config file to  new format
-
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
   $addauth = TRUE;
@@ -5125,9 +5106,7 @@ QUERY;
     }
   }
 
-
   //2012/12/14 cczsa1 add permission for db user to access properties & ip_addresses tables for guestlogin authentication module.
-
   $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.properties TO \'' . $cfg_db_username . '\'@\'' . $cfg_db_host . '\'';
   $mysqli->query($sql);
   echo '<li>' . $sql . '</li>' . "\n";
@@ -5135,9 +5114,7 @@ QUERY;
   $mysqli->query($sql);
   echo '<li>' . $sql . '</li>' . "\n";
 
-
   //2012/12/14 bparish - Add new table to support a timer for summative exams
-
   $does_table_exist = $updater_utils->does_table_exist('log_lab_end_time');
 
   if ($does_table_exist === FALSE) {
@@ -5168,7 +5145,6 @@ QUERY;
     echo '<li>' . $sql . '</li>' . "\n";
 
     $mysqli->query('FLUSH PRIVILEGES');
-
   }
 
   //18/12/2012 brzsw - Add new table to support a timer for summative exams
@@ -5391,6 +5367,74 @@ QUERY;
     $result2->close();
    
   }
+
+  // 21/01/2013
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='password_tokens' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='user_id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'int(11) unsigned') {
+    $adjust = $mysqli->prepare("ALTER TABLE password_tokens CHANGE COLUMN user_id user_id int(11) unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE password_tokens CHANGE COLUMN user_id user_id int(11) unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 21/01/2013
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='ownerID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'int(11) unsigned') {
+    $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN ownerID ownerID int(11) unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE questions CHANGE COLUMN ownerID ownerID int(11) unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 21/01/2013
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='scheduling' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='paperID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'mediumint(8) unsigned') {
+    $adjust = $mysqli->prepare("ALTER TABLE scheduling CHANGE COLUMN paperID paperID mediumint(8) unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE scheduling CHANGE COLUMN paperID paperID mediumint(8) unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 21/01/2013
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sys_errors' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'int(11) unsigned') {
+    $adjust = $mysqli->prepare("ALTER TABLE sys_errors CHANGE COLUMN userID userID int(11) unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE sys_errors CHANGE COLUMN userID userID int(11) unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

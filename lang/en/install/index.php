@@ -36,8 +36,15 @@ $string['tdformatsare'] = 'Time and date formats are in %s style';
 $string['date'] = 'Date';
 $string['datetime'] = 'Date/Time';
 $string['currenttimezone'] = 'Current Timezone';
-$string['ldapconfiguration'] = 'Rogō LDAP configuration';
+$string['authentication'] = 'Authentication';
+
+$string['allowlti'] = 'Allow via LTI';
+$string['allowintdb'] = 'Internal database';
+$string['allowguest'] = 'Guest log in (for summative exams)';
+$string['allowimpersonation'] = 'User impersonation (SysAdmin only)';
 $string['useldap'] = 'Use LDAP';
+
+
 $string['ldapserver'] = 'LDAP server';
 $string['searchdn'] = 'Search dn';
 $string['bindusername'] = 'bind username';
