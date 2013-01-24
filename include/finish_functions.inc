@@ -560,7 +560,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $tmp_leadin = $paper[$question]['leadin'];
         $tmp_fback = $paper[$question]['correct_fback'];
 
-        $variable_array = explode(',',$tmp_answer[2]);
+        var_dump($tmp_answer);
+        if (isset($tmp_answer[2])) {
+          $variable_array = explode(',', $tmp_answer[2]);
+        } else {
+          $variable_array = array();
+        }
         $var_no = 1;
         foreach($variable_array as $individual_variable) {
           switch ($var_no) {
@@ -635,19 +640,24 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           echo '<td>';
           if ($tmp_exclude == '1')  echo '<span class="exclude">';
 
-          $difference = round(abs($saved_response_clean - $tmp_answer[1]), 12);
 
-          if ($saved_response_clean == $tmp_answer[1]) {
-            $paper[$question]['mark'] = $paper[$question]['marks_correct'];
-          } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
-            $paper[$question]['mark'] = $paper[$question]['marks_correct'];
-          } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
-            $paper[$question]['mark'] = $paper[$question]['marks_partial'];
+          if (isset($tmp_answer[1])) {
+            $difference = round(abs($saved_response_clean - $tmp_answer[1]), 12);
+          
+            if ($saved_response_clean == $tmp_answer[1]) {
+              $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
+              $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
+              $paper[$question]['mark'] = $paper[$question]['marks_partial'];
+            } else {
+              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
+            }
+            if (substr($tmp_exclude,$part_id,1) == '1') {
+              $paper[$question]['mark'] = 0;
+            }
           } else {
             $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
-          }
-          if (substr($tmp_exclude,$part_id,1) == '1') {
-            $paper[$question]['mark'] = 0;
           }
 
           if ($paper[$question]['mark'] == $paper[$question]['marks_correct']) {
@@ -660,7 +670,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           echo '<input type="text" style="text-align:right" name="q' . $question . '" size="10" value="' . $tmp_answer[0] . '" />' . $score_array[3];
         }
         if ($tmp_display_correct_answer == '1') {
-          if (is_numeric($tmp_answer[1])) {
+          if (!isset($tmp_answer[1])) {
+            echo ' <strong>(<span style="color:#C00000">error!</span>)</strong>';
+          } elseif (is_numeric($tmp_answer[1])) {
             $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
             echo ' <strong>(' . number_format($tmp_answer[1], $decimals, '.', '');
             if ($score_array[3] != '') echo ' ' . $score_array[3];
@@ -672,13 +684,15 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           echo ' ';
         }
 
-        if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_correct'] and $tolerance_full > 0) {
-          echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[1];
-          if (StringUtils::ends_with($score_array[1], '%')) echo " (" . (round($tmp_answer[1], $decimals) - $tolerance_full) . " - " . (round($tmp_answer[1], $decimals) + $tolerance_full) . ")";
-        }
-        if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_partial'] and $tolerance_partial > 0) {
-          echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[2];
-          if (StringUtils::ends_with($score_array[2], '%')) echo " (" . (round($tmp_answer[1], $decimals) - $tolerance_partial) . " - " . (round($tmp_answer[1], $decimals) + $tolerance_partial) . ")";
+        if (isset($tmp_answer[1])) {
+          if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_correct'] and $tolerance_full > 0) {
+            echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[1];
+            if (StringUtils::ends_with($score_array[1], '%')) echo " (" . (round($tmp_answer[1], $decimals) - $tolerance_full) . " - " . (round($tmp_answer[1], $decimals) + $tolerance_full) . ")";
+          }
+          if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_partial'] and $tolerance_partial > 0) {
+            echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[2];
+            if (StringUtils::ends_with($score_array[2], '%')) echo " (" . (round($tmp_answer[1], $decimals) - $tolerance_partial) . " - " . (round($tmp_answer[1], $decimals) + $tolerance_partial) . ")";
+          }
         }
 
         if ($tmp_exclude == '1')  echo '</span>';
