@@ -2348,7 +2348,9 @@ function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $
         if (isset($objByModule[$thisModuleid])) {
           foreach ($objByModule[$thisModuleid] as $id => $mappingData) {
             $html .= "<li>" . $mappingData['content'];
-            if ($mappingData['session']['source_url'] != '') echo "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" border=\"0\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
+            if ($mappingData['session']['source_url'] != '') {
+              $html .= "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" border=\"0\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
+            }
             $html .= "</li>\n";
           }
         }
