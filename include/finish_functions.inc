@@ -560,7 +560,6 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $tmp_leadin = $paper[$question]['leadin'];
         $tmp_fback = $paper[$question]['correct_fback'];
 
-        var_dump($tmp_answer);
         if (isset($tmp_answer[2])) {
           $variable_array = explode(',', $tmp_answer[2]);
         } else {
