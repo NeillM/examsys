@@ -29,7 +29,7 @@ CREATE TABLE `student_help` (
   `body_plain` text,
   `type` enum('page','pointer') DEFAULT NULL,
   `checkout_time` datetime DEFAULT NULL,
-  `checkout_authorID` mediumint(8) unsigned DEFAULT NULL,
+  `checkout_authorID` int(10) unsigned DEFAULT NULL,
   `deleted` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   FULLTEXT KEY `title` (`title`,`body_plain`)
