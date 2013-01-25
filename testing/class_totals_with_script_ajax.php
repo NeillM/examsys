@@ -167,7 +167,7 @@ $result->execute();
 
 $result = $mysqli->prepare("SELECT surname, first_names, username FROM users WHERE id=? LIMIT 1");
 foreach ($papers as $paper) {
-  $url = $server . "/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc&studentsonly=1";
+  $url = $server . "/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=1&folder=&percent=100&absent=0&direction=asc&studentsonly=1";
   
   $output = getData($url);
   $marks_set = parseRawMarks($output);
@@ -180,7 +180,7 @@ foreach ($papers as $paper) {
   $insert->close();
 
   $errors = '';
-  if($marks_set === false) {
+  if ($marks_set === false) {
     $marks_set=array();
     $errors= '<ul><li>Couldnt access class_totals</li>';
   }

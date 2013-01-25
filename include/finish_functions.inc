@@ -561,7 +561,11 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $tmp_fback = $paper[$question]['correct_fback'];
 
         if (isset($tmp_answer[2])) {
-          $variable_array = explode(',', $tmp_answer[2]);
+          if ($tmp_answer[2] == '') {
+            $variable_array = array('error', 'error', 'error', 'error', 'error', 'error', 'error', 'error', 'error');
+          } else {
+            $variable_array = explode(',', $tmp_answer[2]);
+          }
         } else {
           $variable_array = array();
         }

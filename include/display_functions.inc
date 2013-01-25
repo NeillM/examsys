@@ -207,7 +207,7 @@ function calcPreParse($inputVal, $user_answers, $tmp_vars) {
         }
       }
     }
-    if($pre_var_val == '') return 'ERROR';
+    if ($pre_var_val == '') return 'ERROR';
     $inputVal = str_replace('var' . substr($inputVal,3,1) . $find_qid, $pre_var_val, $inputVal);
   }
   eval("\$inputVal = $inputVal;");
@@ -1133,7 +1133,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $search = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J');
     $replace = array($A, $B, $C, $D, $E, $F, $G, $H, $I, $J);
     $question['leadin'] = str_ireplace($search, $replace, $question['leadin']);
-    if(strpos($question['leadin'],'class="mee"') !== false) {
+    if (strpos($question['leadin'],'class="mee"') !== false) {
       $question['leadin'] = str_replace('ERROR', $string['unanswered'] , $question['leadin']);
     } else {
       $question['leadin'] = str_replace('ERROR', '<span style="color:red; font-weight:bold">' . $string['unanswered'] . '</span>', $question['leadin']);
@@ -1147,7 +1147,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } else {
         if ((isset($tmp_user_answers[0]) and $tmp_user_answers[0] != '') or $screen_pre_submitted == 0) {
           $ans = '';
-          if(isset($tmp_user_answers[0])){
+          if (isset($tmp_user_answers[0])){
             $ans = $tmp_user_answers[0];
           }
           echo "<div><input type=\"text\" style=\"text-align:right\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $ans . "\" class=\"calc-answer\" />" . $score_array[3] .  "</div>\n";

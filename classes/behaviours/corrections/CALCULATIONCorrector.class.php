@@ -84,55 +84,69 @@ class CALCULATIONCorrector extends Corrector {
           $answer_equation = $first->get_correct();
 
           // Remark the student's answers in 'log{$paper_type}'.
-          $result = $this->_mysqli->prepare("SELECT user_answer, id FROM log{$paper_type} WHERE q_id=? AND q_paper=?");
+          $result = $this->_mysqli->prepare("SELECT user_answer, id FROM log{$paper_type} WHERE q_id = ? AND q_paper = ?");
           $result->bind_param('ii', $this->_question->id, $paper_id);
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
+
           while ($result->fetch()) {
+            $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
+            
             // Split up the user answer into its constituent parts.
-            $answer_parts = explode('|',$user_answer);
-            $variable_array = explode(',',$answer_parts[2]);
+            $answer_parts = explode('|', $user_answer);
+            $variable_array = explode(',', $answer_parts[2]);
             $saved_response = $answer_parts[0];
-            $var_no = 1;
-            foreach($variable_array as $individual_variable) {
-              $var = chr(64 + $var_no);
-              $$var = $individual_variable;
-              $var_no++;
-            }
-            $mark = 0;
-
-            eval ("\$answer = $answer_equation;");
-            $answer = round($answer, $decimals);
-
-            $tolerance_full = $this->_question->get_tolerance_full();
-            if (StringUtils::ends_with($tolerance_full, '%')) {
-              $tolerance_perc = rtrim($tolerance_full, '%');
-              $tolerance_full = round($answer * ($tolerance_perc/100), 12);
-            }
-            $tolerance_partial = $this->_question->get_tolerance_partial();
-            if (StringUtils::ends_with($tolerance_partial, '%')) {
-              $tolerance_perc = rtrim($tolerance_partial, '%');
-              $tolerance_partial = round($answer * ($tolerance_perc/100), 12);
-            }
-
-            $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-            $difference = round(abs($saved_response_clean - $answer), 12);
-
-            if ($saved_response_clean != '') {
-              if ($saved_response_clean == $answer) {
-                $mark = $mark_correct;
-              } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
-                $mark = $mark_correct;
-              } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
-                $mark = $mark_partial;
-              } else {
-                $mark = $mark_incorrect;
+            $var_no = 1;           
+            
+            if (isset($answer_parts[2]) and $answer_parts[2] != '') {
+              foreach ($variable_array as $individual_variable) {
+                $var = chr(64 + $var_no);
+                $$var = $individual_variable;
+                $var_no++;
               }
-            }
-            $saved_response .= '|' . $answer . '|' . $answer_parts[2];
+              $mark = 0;
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, user_answer=? WHERE id=? AND q_paper=?");
+              eval ("\$answer = $answer_equation;");
+              $answer = round($answer, $decimals);
+
+              if ($answer != '' and is_nan($answer)) {    // Can't possible get Q correct if answer is not a number
+                $mark = $mark_incorrect;
+                $saved_response = $user_answer;
+              } else {
+                $tolerance_full = $this->_question->get_tolerance_full();
+                if (StringUtils::ends_with($tolerance_full, '%')) {
+                  $tolerance_perc = rtrim($tolerance_full, '%');
+                  $tolerance_full = round($answer * ($tolerance_perc/100), 12);
+                }
+                $tolerance_partial = $this->_question->get_tolerance_partial();
+                if (StringUtils::ends_with($tolerance_partial, '%')) {
+                  $tolerance_perc = rtrim($tolerance_partial, '%');
+                  $tolerance_partial = round($answer * ($tolerance_perc/100), 12);
+                }
+
+                $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
+                $difference = round(abs($saved_response_clean - $answer), 12);
+
+                if ($saved_response_clean != '') {
+                  if ($saved_response_clean == '' . $answer) {    // Want to treat $answer as a string here
+                    $mark = $mark_correct;
+                  } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
+                    $mark = $mark_correct;
+                  } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
+                    $mark = $mark_partial;
+                  } else {
+                    $mark = $mark_incorrect;
+                  }
+                }
+                $saved_response .= '|' . $answer . '|' . $answer_parts[2];
+              }
+            } else {
+              $saved_response = $user_answer;
+              $mark = $mark_incorrect;
+            }
+
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, user_answer = ? WHERE id = ? AND q_paper = ?");
             $updateLog->bind_param('dsii', $mark, $saved_response, $id, $paper_id);
             $updateLog->execute();
             $updateLog->close();

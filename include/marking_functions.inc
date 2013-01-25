@@ -168,7 +168,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
     $save_answers->bind_param('dsisi', $mark, $saved_response, $tmp_duration, $dismiss, $q_log_id);
   } else {
     // Set up new insert query ready.
-    if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'],$db) === false) {
+    if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'], $db) === false) {
       // Write log_metadata first on screen 1 only
       $tmp_ip_address = NetworkUtils::get_ipaddress();
 
@@ -179,9 +179,9 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
       $save_metadata = $db->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, NULL, ?)");
       if ($db->error) {
           try {
-            throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+            throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
           } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
             echo nl2br($e->getTraceAsString());
         }
       }
