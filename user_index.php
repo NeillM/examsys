@@ -24,22 +24,20 @@
 * @package
 */
 
-require './include/staff_student_auth.inc';
-require './include/errors.inc';
-require './include/paper_security.inc';
+require_once './include/staff_student_auth.inc';
+require_once './include/errors.inc';
+require_once './include/paper_security.inc';
 
 require_once './classes/paperutils.class.php';
 require_once './classes/moduleutils.class.php';
-require_once './classes/log_start_time.class.php';
 require_once './classes/logmetadata.class.php';
 require_once './classes/timer.class.php';
 require_once './classes/lab_factory.class.php';
 require_once './classes/lab.class.php';
-require_once './classes/propertyobject.class.php';
-require_once './classes/property.class.php';
 require_once './classes/log_extra_time.class.php';
 require_once './classes/log_lab_end_time.class.php';
 require_once './classes/summativetimer.class.php';
+require_once './classes/paperproperties.class.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -96,28 +94,50 @@ $total_random_mark = 0;
 $total_marks = 0;
 
 //get paper info
-$sql = 'SELECT DISTINCT property_id, paper_title, random_mark, total_mark, bidirectional, screen, paper_type, UNIX_TIMESTAMP(start_date) AS start_date, start_date AS display_start_date, UNIX_TIMESTAMP(end_date) AS end_date, end_date AS display_end_date, timezone, fullscreen, marking, labs, rubric, exam_duration, calendar_year, sound_demo, password FROM (properties, papers) WHERE properties.crypt_name = ? AND properties.property_id = papers.paper ORDER BY screen DESC LIMIT 1';
-$paper_info = $mysqli->prepare($sql);
-$paper_info->bind_param('s', $_GET['id']);
-$paper_info->execute();
-$paper_info->bind_result($property_id, $paper_title, $total_random_mark, $total_marks, $navigation, $paper_screens, $test_type, $paper_start, $display_start_date, $paper_end, $display_end_date, $timezone, $fullscreen, $marking, $labs, $rubric, $exam_duration, $calendar_year, $sound_demo, $password );
-$paper_info->store_result();
-$paper_info->fetch();
-
-if ($paper_info->num_rows == 0) {
-  $notice->display_notice($string['papernotfound'], sprintf($string['requestedpaper']), '../artwork/paper_not_found.png', $title_color = '#C00000', true, true);
-  exit;
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
+  //this will exit php
 }
-$paper_info->free_result();
-$paper_info->close();
+
+//get lab info
+$current_ip_address = NetworkUtils::get_ipaddress();
+$lab_factory = new LabFactory($mysqli);
+if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+    $lab_name = $lab_object->get_name();
+    $lab_id = $lab_object->get_id();
+}
+
+
+$property_id          = $propertyObj->get_property_id();
+$paper_title          = $propertyObj->get_paper_title(); 
+$total_random_mark    = $propertyObj->get_random_mark(); 
+$total_marks          = $propertyObj->get_total_mark(); 
+$navigation           = $propertyObj->get_bidirectional(); 
+
+$paper_screens        = Paper_utils::get_numder_of_screens($property_id, $mysqli);
+
+$test_type            = $propertyObj->get_paper_type(); 
+$paper_start          = $propertyObj->get_start_date(); 
+$paper_end            = $propertyObj->get_end_date(); 
+$timezone             = $propertyObj->get_timezone();
+$fullscreen           = $propertyObj->get_fullscreen(); 
+$marking              = $propertyObj->get_marking(); 
+$labs                 = $propertyObj->get_labs(); 
+$rubric               = $propertyObj->get_rubric(); 
+$exam_duration        = $propertyObj->get_exam_duration(); 
+$exam_duration_sec    = $exam_duration * 60;
+$calendar_year        = $propertyObj->get_calendar_year(); 
+$sound_demo           = $propertyObj->get_sound_demo(); 
+$password             = $propertyObj->get_password();
 
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
 // Adjust for timezones.
 $UK_time = new DateTimeZone("Europe/London");
 $target_timezone = new DateTimeZone($timezone);
-$display_start_date = new dateTime($display_start_date, $UK_time);
-$display_end_date = new dateTime($display_end_date, $UK_time);
+$display_start_date = DateTime::createFromFormat('U', $paper_start, $UK_time);
+$display_end_date = DateTime::createFromFormat('U', $paper_end, $UK_time);
 
 $display_start_date->setTimezone($target_timezone);
 $display_end_date->setTimezone($target_timezone);
@@ -135,7 +155,7 @@ if ($userObject->has_role('Student')) {
   check_paper_password($password, $string, true);
 
   //Check this PC is registered for this exam
-  $low_bandwidth = check_labs($test_type, $labs, $password, $string, $mysqli);
+  $low_bandwidth = check_labs($test_type, $labs, $current_ip_address, $password, $string, $mysqli);
 
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 }
@@ -149,30 +169,32 @@ $remaining_seconds = '';
  */
 $extra_time = null;
 
+$log_metadata      = new LogMetadata($userObject, $propertyObj->get_property_id(), $mysqli);
+// $log_metadata->get_record will return true if this user has stared this exam. false otherwise
+$exam_started = $log_metadata->get_record();
+
 if ($exam_duration !== null) {
   $display_remaining_time = true;
 
   if ((int)$test_type == 2) {
-    $current_ip_address = NetworkUtils::get_ipaddress();
-    $lab_factory        = new LabFactory( $mysqli );
-    $lab_object         = $lab_factory->get_lab_based_on_ip($current_ip_address);
-    $property_object    = new PropertyObject();
-    $property_object->set_property_id($property_id);
-    $property           = new Property($property_object, $mysqli);
-    $property_object    = $property->get_property();
     $usobj['user_ID']   = $userObject->get_user_ID();
     $usobj['special_needs_percentage'] = $userObject->get_special_needs_percentage();
     $student_object     = $usobj;
-    $log_lab_end_time   = new LogLabEndTime($lab_object, $property_object, $mysqli);
+    $log_lab_end_time   = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
     $log_extra_time     = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
     $extra_time_secs    = $log_extra_time->get_extra_time_secs();
     $extra_time_mins    = $extra_time_secs / 60;
     $summative_timer    = new SummativeTimer( $log_extra_time );
     $remaining_time     = $summative_timer->calculate_remaining_time_secs();
+    if($remaining_time > ($exam_duration_sec + $extra_time_secs) ) {
+      // sanity check if we have longer remaining then the users duration set the time remaining
+      // to the users duration (happens in summative exams if we have not started time)
+      $remaining_time = $exam_duration_sec + $extra_time_secs;
+    }
+
   } else {
     $studentID         = $userObject->get_user_ID();
-    $log_start_time    = new LogStartTime($studentID, $property_id, $mysqli);
-    $timer             = new Timer($log_start_time, $exam_duration);
+    $timer             = new Timer($log_metadata, $exam_duration);
     $remaining_time    = $timer->calculate_remaining_time();
   }
 
