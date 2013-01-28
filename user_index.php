@@ -177,9 +177,8 @@ if ($exam_duration !== null) {
   $display_remaining_time = true;
 
   if ((int)$test_type == 2) {
-    $usobj['user_ID']   = $userObject->get_user_ID();
-    $usobj['special_needs_percentage'] = $userObject->get_special_needs_percentage();
-    $student_object     = $usobj;
+    $student_object['user_ID']   = $userObject->get_user_ID();
+    $student_object['special_needs_percentage'] = $userObject->get_special_needs_percentage();
     $log_lab_end_time   = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
     $log_extra_time     = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
     $extra_time_secs    = $log_extra_time->get_extra_time_secs();
@@ -187,10 +186,11 @@ if ($exam_duration !== null) {
     $summative_timer    = new SummativeTimer( $log_extra_time );
     $remaining_time     = $summative_timer->calculate_remaining_time_secs();
     if($remaining_time > ($exam_duration_sec + $extra_time_secs) ) {
-      // sanity check if we have longer remaining then the users duration set the time remaining
-      // to the users duration (happens in summative exams if we have not started time)
+      // sanity check if we have longer remaining then the exam duration set the time remaining
+      // to the exam duration (happens in summative exams if we have not started yet)
       $remaining_time = $exam_duration_sec + $extra_time_secs;
     }
+    var_dump($log_lab_end_time,$log_extra_time,$summative_timer,$remaining_time,$exam_duration_sec, $extra_time_secs);
 
   } else {
     $studentID         = $userObject->get_user_ID();
