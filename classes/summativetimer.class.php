@@ -64,8 +64,9 @@ class SummativeTimer {
       //use the paper start time and duration to caculate end time
       $paper_start_time = $this->get_paper_exam_start_time();
       $paper_duration_sec = $this->get_paper_exam_duration() * 60;
-
+      var_dump($paper_start_time,$paper_duration_sec);
       $paper_start_time->add(new DateInterval('PT' . $paper_duration_sec . 'S'));
+      var_dump($paper_start_time);
       $session_end_datetime = $paper_start_time;
     }
 
