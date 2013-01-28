@@ -190,7 +190,6 @@ if ($exam_duration !== null) {
       // to the exam duration (happens in summative exams if we have not started yet)
       $remaining_time = $exam_duration_sec + $extra_time_secs;
     }
-    var_dump($log_lab_end_time,$log_extra_time,$summative_timer,$remaining_time,$exam_duration_sec, $extra_time_secs);
 
   } else {
     $studentID         = $userObject->get_user_ID();
