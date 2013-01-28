@@ -75,13 +75,14 @@ class LogLabEndTime {
     $stmt->store_result();
     $bindResult = $stmt->bind_result($end_timestamp);
 
-    $stmt->fetch();
-    $stmt->close();
-
     // No result
-    if ($end_timestamp === NULL) {
+    if ($stmt->num_rows <= 0) {
+      $stmt->close();
       return FALSE;
     }
+
+    $stmt->fetch();
+    $stmt->close();
 
     $end_datetime = new DateTime();
 
