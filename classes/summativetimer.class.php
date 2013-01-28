@@ -57,7 +57,6 @@ class SummativeTimer {
     if( $session_end_timestamp === false){
       //has the lab got an end time set?
       $session_end_datetime = $this->get_session_end_datetime();
-      var_dump('ONE',$session_end_datetime);
     }
 
     if( $session_end_timestamp === false AND $session_end_datetime === false ){
@@ -65,15 +64,12 @@ class SummativeTimer {
       //use the paper start time and duration to caculate end time
       $paper_start_time = $this->get_paper_exam_start_time();
       $paper_duration_sec = $this->get_paper_exam_duration() * 60;
-      var_dump('TWO',$paper_start_time,$paper_duration_sec);
       $paper_start_time->add(new DateInterval('PT' . $paper_duration_sec . 'S'));
-      var_dump('THREE',$paper_start_time);
       $session_end_datetime = $paper_start_time;
     }
 
     if($session_end_datetime !== false) {
       $session_end_timestamp = $session_end_datetime->getTimestamp();
-      var_dump('FOUR',$paper_start_time);
     }
 
     $now_timestamp = time();
