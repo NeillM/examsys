@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -38,23 +38,23 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
   $scenario = str_replace('&nbsp;',' ',$scenario);
   $leadin = str_replace('&nbsp;',' ',$leadin);
   $old_likert_scale = str_replace('&nbsp;',' ',$old_likert_scale);
-  
+
   // Convert ampersands
   $theme = strip_tags(str_replace('&','&amp;',$theme));
   $scenario = strip_tags(str_replace('&','&amp;',$scenario));
   $leadin = trim(strip_tags(str_replace('&','&amp;',$leadin)));
   $old_likert_scale = trim(strip_tags(str_replace('&','&amp;',$old_likert_scale)));
-  
+
   $theme = strip_tags(str_replace('&amp;amp;','&amp;',$theme));
   $scenario = strip_tags(str_replace('&amp;amp;','&amp;',$scenario));
   $leadin = strip_tags(str_replace('&amp;amp;','&amp;',$leadin));
   $old_likert_scale = trim(strip_tags(str_replace('&amp;amp;','&amp;',$old_likert_scale)));
-  
+
   //remove nasty non-utf8 chars
   $theme = wordToUtf8($theme);
   $scenario = wordToUtf8($scenario);
   $leadin = wordToUtf8($leadin);
-  
+
   if ($theme != '') {
     if ($table_on == 1) echo '</w:tbl>';
     echo '<w:p><w:pPr><w:pStyle w:val="Heading2"/></w:pPr><w:r><w:t>' . $theme . '</w:t></w:r></w:p><w:p/>';
@@ -121,7 +121,7 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
           echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>No</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Question</w:t></w:r></w:p></w:tc>';
           if ($na == 'true') echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>N/A</w:t></w:r></w:p></w:tc>';
           for ($point=0; $point<$new_size; $point++) {
-            echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>' . str_replace('<br />', '</w:t></w:r><w:r><w:br/></w:r><w:r><w:rPr><w:b/></w:rPr><w:t>', strip_tags($current_properties[$point],'<br>,<br />')) . '</w:t></w:r></w:p></w:tc>';
+            echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>' . str_replace(array('<br>', '<br />'), '</w:t></w:r><w:r><w:br/></w:r><w:r><w:rPr><w:b/></w:rPr><w:t>', strip_tags($current_properties[$point],'<br>,<br />')) . '</w:t></w:r></w:p></w:tc>';
           }
           echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Unanswered</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Mean</w:t></w:r></w:p></w:tc></w:tr>';
           $table_on = 1;
@@ -168,7 +168,7 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
             echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           } else {
             echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['y'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['y']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-          }            
+          }
         }
         if ($old_display_method == 'other') {
           echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . count($log[$screen][$q_id][1]['other']) . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round((count($log[$screen][$q_id][1]['other'])/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>Other:</w:t></w:r></w:p>';
@@ -219,14 +219,14 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
           echo '<w:gridCol w:w="1500"/>';
         }
         echo '</w:tblGrid>';
-        
+
         // Write out the header row of the table
         echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc>';
         foreach ($options as $option) {
           echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:r><w:t>' . $option . '</w:t></w:r></w:p></w:tc>';
         }
         echo '</w:tr>';
-        
+
         // Write out the contents of the table
         $row_data = explode('|',$scenario);
         $option_no = count($options);
@@ -530,7 +530,7 @@ if ($hits > 0) {
     $scenario = str_replace('&nbsp;',' ',$scenario);
     $leadin = str_replace('&nbsp;',' ',$leadin);
     $option_text = str_replace('&nbsp;',' ',$option_text);
-  
+
     // Replace & characters.
     $theme = str_replace('&','&amp;',$theme);
     $scenario = str_replace('&','&amp;',$scenario);
@@ -648,7 +648,7 @@ function wordToUtf8($str) {
   "\\xe2\\x80\\xa6",        // ellipsis
   "\\xe2\\x80\\x93",        // long dash
   "\\xe2\\x80\\x94",        // long dash
-  "\x96",                    // long dash 
+  "\x96",                    // long dash
   "\x91",                    // single quote
   "\x92",                    // single quote
   "\\xe2\\x80\\x98",        // single quote opening
@@ -671,7 +671,7 @@ function wordToUtf8($str) {
       '"',
       '*'
       );
-      
+
       return str_replace($wordChr,$utf8Chr,$str);
 
 }
