@@ -1,23 +1,37 @@
 <?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ *  Class to load/save and manipulate paper properties
  *
- * Data container for a Property (Paper) entity
- *
- * @author Ben Parish
+ * @author Anthony Brown (re-factored from Ben Parishs code)
  * @version 1.0
- * @copyright Copyright (c) 2013 string University of Nottingham
+ * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
 
-
-
-class PropertyObject {
+class PaperProperties {
+  
+  private $db;
 
   private $property_id;
   private $paper_title;
   private $start_date;
   private $end_date;
-  private $time_zone;
+  private $timezone;
   private $paper_type;
   private $paper_prologue;
   private $paper_postscript;
@@ -56,10 +70,212 @@ class PropertyObject {
   private $retired;
   private $crypt_name;
 
-  public function __construct( ) {
-
+  public function __construct($db) {
+  	$this->db = $db;
   }
 
+  /*
+  * static helper function to load the paper properties by property_id
+  *	return @PaperProperties
+  */
+  static function get_paper_properties_by_id($p_id,$db) {
+  	$paper_property = new PaperProperties($db);
+  	$paper_property->set_property_id($p_id);
+  	if($paper_property->load() !== false) {
+  		return $paper_property;
+  	} else {
+  		return false;
+  	}
+  }
+
+  /*
+  * static helper function to load the paper properties by crypt_name
+  *	return @PaperProperties
+  */
+  static function get_paper_properties_by_crypt_name($crypt_name,$db) {
+  	$paper_property = new PaperProperties($db);
+  	$paper_property->set_crypt_name($crypt_name);
+  	if($paper_property->load() !== false) {
+  		return $paper_property;
+  	} else {
+  		return false;
+  	}
+  }
+
+  
+  /*
+  * static helper function to load the paper properties by lab id
+  * used in the invigilator screens. previously called (get_invigilator_properties)
+  *	return @array of PaperProperties
+  */
+  static function get_paper_properties_by_lab($lab_object,$db) {
+
+    $sql = "SELECT 
+    			properties.property_id, 
+    			paper_title, 
+    			UNIX_TIMESTAMP(start_date) as start_date,
+                UNIX_TIMESTAMP(end_date) as end_date, 
+    			exam_duration, 
+    			calendar_year, 
+    			password, 
+    			timezone 
+    		FROM 
+    			properties 
+    		WHERE 
+    			paper_type = '2' AND 
+    			labs LIKE ? AND 
+    			start_date < DATE_ADD( NOW(), interval 30 minute ) AND 
+    			end_date > NOW() AND 
+    			deleted IS NULL";
+
+    $paper_results = $db->prepare($sql);
+    $lab_like = '%' . $lab_object->get_id() . '%'; //TODO this is how the old code work !! concatenated field not sure if this always works if a room is on many labs
+    $paper_results->bind_param('s',$lab_like );
+    $paper_results->execute();
+    $paper_results->store_result();
+    $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone);
+
+    if ($paper_results->num_rows <= 0) {
+      $paper_results->close();
+      return false;
+    }
+
+    $properties = array();
+    while ($paper_results->fetch()) {
+      $property_object = new PaperProperties($db);
+      $property_object->set_property_id($property_id);
+      $property_object->set_paper_title($paper_title);
+      $property_object->set_start_date($start_date);
+      $property_object->set_end_date($end_date);
+      $property_object->set_exam_duration($exam_duration);
+      $property_object->set_calendar_year($calendar_year);
+      $property_object->set_calendar_year($calendar_year);
+      $property_object->set_timezone($timezone);
+ 	  $properties[] = $property_object;
+    }
+
+    $paper_results->close();
+    return $properties;
+  }
+
+  public function load() {
+    $property_id = $this->get_property_id();
+    $crypt_name = $this->get_crypt_name();
+    $sql = 'SELECT
+                  property_id,
+                  paper_title,
+                  UNIX_TIMESTAMP(start_date) as start_date,
+                  UNIX_TIMESTAMP(end_date) as end_date,
+                  timezone,
+                  paper_type,
+                  paper_prologue,
+                  paper_postscript,
+                  bgcolor,
+                  fgcolor,
+                  themecolor,
+                  labelcolor,
+                  fullscreen,
+                  marking,
+                  bidirectional,
+                  pass_mark,
+                  distinction_mark,
+                  paper_ownerID,
+                  folder,
+                  labs,
+                  rubric,
+                  calculator,
+                  externals,
+                  exam_duration,
+                  deleted,
+                  created,
+                  random_mark,
+                  total_mark,
+                  display_correct_answer,
+                  display_question_mark,
+                  display_students_response,
+                  display_feedback,
+                  hide_if_unanswered,
+                  calendar_year,
+                  internal_reviewers,
+                  external_review_deadline,
+                  internal_review_deadline,
+                  sound_demo,
+                  latex_needed,
+                  password,
+                  retired,
+                  crypt_name
+              FROM
+                  properties ';
+
+    if(isset($property_id)) {
+      $sql .= 'WHERE property_id = ?';
+      $paper_results = $this->db->prepare($sql);
+      $property_id = $this->get_property_id();
+      $paper_results->bind_param('s', $property_id);
+    } else if (isset($crypt_name)) {
+      $sql .= 'WHERE crypt_name = ?';
+      $paper_results = $this->db->prepare($sql);
+      $property_id = $this->get_property_id();
+      $paper_results->bind_param('s', $crypt_name);
+    } else {
+      throw new Excption("property_id or crypt_name must be set to load the properties record from the DB.");
+    }
+
+    $paper_results->execute();
+    $paper_results->store_result();
+    if ( $paper_results->num_rows < 0 ) {
+      $paper_results->close();
+      return false;
+    }
+
+    $paper_results->bind_result(  $this->property_id,
+                                  $this->paper_title,
+                                  $this->start_date,
+                                  $this->end_date,
+                                  $this->timezone,
+                                  $this->paper_type,
+                                  $this->paper_prologue,
+                                  $this->paper_postscript,
+                                  $this->bgcolor,
+                                  $this->fgcolor,
+                                  $this->themecolor,
+                                  $this->labelcolor,
+                                  $this->fullscreen,
+                                  $this->marking,
+                                  $this->bidirectional,
+                                  $this->pass_mark,
+                                  $this->distinction_mark,
+                                  $this->paper_ownerID,
+                                  $this->folder,
+                                  $this->labs,
+                                  $this->rubric,
+                                  $this->calculator,
+                                  $this->externals,
+                                  $this->exam_duration,
+                                  $this->deleted,
+                                  $this->created,
+                                  $this->random_mark,
+                                  $this->total_mark,
+                                  $this->display_correct_answer,
+                                  $this->display_question_mark,
+                                  $this->display_students_response,
+                                  $this->display_feedback,
+                                  $this->hide_if_unanswered,
+                                  $this->calendar_year,
+                                  $this->internal_reviewers,
+                                  $this->external_review_deadline,
+                                  $this->internal_review_deadline,
+                                  $this->sound_demo,
+                                  $this->latex_needed,
+                                  $this->password,
+                                  $this->retired,
+                                  $this->crypt_name 
+                                );
+    $paper_results->fetch();
+    $paper_results->close();
+
+  }
+  
   /**
    * @return string $property_id
    */
@@ -119,15 +335,15 @@ class PropertyObject {
   /**
    * @return string $time_zone
    */
-  public function get_time_zone( ) {
-      return $this->time_zone;
+  public function get_timezone( ) {
+      return $this->timezone;
   }
 
   /**
    * @param string $time_zone
    */
-  public function set_time_zone( $time_zone ) {
-      $this->time_zone = $time_zone;
+  public function set_timezone( $timezone ) {
+      $this->timezone = $timezone;
   }
 
   /**
@@ -387,6 +603,13 @@ class PropertyObject {
    */
   public function get_exam_duration( ) {
       return $this->exam_duration;
+  }
+
+  /**
+   * @return int $exam_duration in seconds
+   */
+  public function get_exam_duration_sec( ) {
+      return $this->exam_duration * 60;
   }
 
   /**

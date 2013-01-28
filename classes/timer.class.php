@@ -37,9 +37,8 @@ class Timer {
    * @param LogStartTime $log_start_time
    * @param int $exam_duration
    */
-  public function __construct( LogStartTime $log_start_time
-                             ,              $exam_duration ) {
-    $this->log_start_time = $log_start_time;
+  public function __construct( $log_metadata, $exam_duration ) {
+    $this->log_start_time = $log_metadata;
     $this->exam_duration  = $exam_duration;
   }
 
@@ -60,6 +59,7 @@ class Timer {
 
   public function reset(){
     $this->log_start_time->delete();
+    $this->start_datetime = null;
   }
 
   /*

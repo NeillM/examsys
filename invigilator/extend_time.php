@@ -23,8 +23,7 @@
  */
 
 require '../include/invigilator_auth.inc';
-require '../classes/propertyobject.class.php';
-require '../classes/property.class.php';
+require '../classes/paperproperties.class.php';
 require '../classes/lab_factory.class.php';
 require '../classes/lab.class.php';
 require '../classes/log_extra_time.class.php';
@@ -70,15 +69,9 @@ $current_ip_address = NetworkUtils::get_ipaddress();
 $lab_factory = new LabFactory($mysqli);
 $lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address);
 
-$property_object = new PropertyObject();
+$propertyObj = PaperProperties::get_paper_properties_by_id($paper_id, $mysqli);
 
-$property_object->set_property_id($paper_id);
-
-$property = new Property($property_object, $mysqli);
-
-$property_object = $property->get_property();
-
-$log_lab_end_time = new LogLabEndTime($lab_object, $property_object, $mysqli);
+$log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);
 
 $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
 

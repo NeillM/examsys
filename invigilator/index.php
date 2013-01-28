@@ -21,15 +21,17 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-
-require '../include/invigilator_auth.inc';
-require '../include/errors.inc';
-require '../classes/propertyobject.class.php';
-require '../classes/log_lab_end_time.class.php';
-require '../classes/properties.class.php';
-require '../classes/lab_factory.class.php';
-require '../classes/lab.class.php';
-require '../classes/log_extra_time.class.php';
+$displayDebug = false;
+require_once '../include/invigilator_auth.inc';
+require_once '../classes/usernotices.class.php';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/log_lab_end_time.class.php';
+require_once '../classes/lab_factory.class.php';
+require_once '../classes/lab.class.php';
+require_once '../classes/log_extra_time.class.php';
+require_once '../classes/logmetadata.class.php';
+$displayDebug = false;
 
 function get_students($modules, $property_object, $log_lab_end_time) {
 
@@ -124,7 +126,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
         $student_object['surname'] = $surname;
         $student_object['first_names'] = $first_names;
         $student_object['title'] = $title;
-        process_student_list($log_lab_end_time          , $student_object          , $property_object          , $configObject          , $extra_time_percentage          , $notes_array          , $string          , $mysqli);
+        process_student_list($log_lab_end_time, $student_object, $property_object, $configObject, $extra_time_percentage, $notes_array, $string, $mysqli);
       }
 
       $results->close();
@@ -217,7 +219,7 @@ function process_student_list($log_lab_end_time, $student_object, $property_obje
   }
 
   $ft=clone $student_end_datetime;
-  $ft->setTimezone(new DateTimeZone($property_object->get_time_zone()));
+  $ft->setTimezone(new DateTimeZone($property_object->get_timezone()));
   $formatted_end_time = $ft->format('d/m/Y H:i:s');
 //$formatted_end_time = var_export($student_end_datetime, TRUE) . '::' . var_export($paper_end_datetime, TRUE) . '##' . $student_end_datetime->format('d/m/Y H:i:s');
   // Get student description
@@ -304,13 +306,16 @@ $lab_object = $lab->get_lab_based_on_ip($current_ip_address);
 $lab_id = $lab_object->get_id();
 $room_name = $lab_object->get_name();
 
-$properties_list = new SplObjectStorage();
+$properties_list = array();
 
 if ($room_name != '') {
-
-  $properties_object = new Properties($mysqli);
-  $properties_list = $properties_object->get_invigilator_properties($lab_object);
-
+  $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object,$mysqli);
+  if (count($properties_list) == 0) {  
+    // No properties found
+    $notice = UserNotices::get_instance();
+    $notice->access_denied($mysqli, $string, $string['error_paper'] = 'error', $output_header = false);
+    //this will exit php
+  }
 }
 
 ?>
@@ -593,7 +598,7 @@ if ($language != 'en') {
                    id="theTime"/>
           <?php
           // BP Only display this if there is the one exam
-          if ($properties_list->count() < 2) {
+          if (count($properties_list) < 2) {
             ?>
               <input type="text"
                      style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold"
@@ -612,9 +617,9 @@ if ($language != 'en') {
 <br/>
 <?php
 
-if ($properties_list->count() > 0) {
+if (count($properties_list) > 0) {
 
-  $col_width = round(100 / ($properties_list->count() + 1));
+  $col_width = round(100 / (count($properties_list) + 1));
   ?>
     <table cellpadding="2" cellspacing="0" border="0" style="font-size:95%">
     <tr>
@@ -632,7 +637,7 @@ if ($properties_list->count() > 0) {
     $start_date = $property_object->get_start_date();
     $calendar_year = $property_object->get_calendar_year();
 
-    $log_lab_end_time = new LogLabEndTime($lab_object      , $property_object      , $mysqli);
+    $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $property_object, $mysqli);
 
     // Has 'Start' button been submitted
 
@@ -669,7 +674,7 @@ if ($properties_list->count() > 0) {
 
     }
 
-    $disptimezone=new datetimezone($property_object->get_time_zone());
+    $disptimezone=new datetimezone($property_object->get_timezone());
     $start_datetime = new DateTime($start_date);
     $start_datetime->setTimezone($disptimezone);
 
@@ -687,7 +692,7 @@ if ($properties_list->count() > 0) {
     $end_time_h=$end_datetime->format('H');
     $end_time_m=$end_datetime->format('i');
 
-    if ($properties_list->count() < 2) {
+    if (count($properties_list) < 2) {
       ?>
 
         <script language="JavaScript" type="text/javascript">

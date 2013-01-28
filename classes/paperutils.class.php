@@ -241,4 +241,26 @@ Class PaperUtils {
     $update->close();
   }
 
+  /**
+  * caculates the number of screens on a paper
+  * return @int max 
+  */
+  public function get_numder_of_screens($paperID, $db) {
+    $no_screens = 0;
+    $result = $db->prepare("SELECT max(screen) FROM papers WHERE paper = ? group by paper LIMIT 1");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->store_result();
+    if($result->num_rows <= 0) {
+      $result->close();
+      return 0;
+    } else {
+      $result->bind_result($no_screens);
+      $result->fetch();
+      $result->close();
+      return $no_screens;
+    }
+
+  }
+
 }

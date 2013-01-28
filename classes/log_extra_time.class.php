@@ -93,7 +93,7 @@ class LogExtraTime {
   */
   public function get_end_date_datetime() {
 
-    $query = 'SELECT end_date FROM log_extra_time WHERE labID   = ? AND userID  = ? AND paperID = ?';
+    $query = 'SELECT end_date FROM log_extra_time WHERE labID = ? AND userID = ? AND paperID = ?';
 
     $stmt = $this->db->prepare($query);
 
@@ -165,7 +165,7 @@ class LogExtraTime {
 
     $end_datetime = $this->get_session_end_datetime();
 
-    if ($end_datetime == FALSE) {
+    if ($end_datetime == false) {
       $end_datetime = $this->get_default_session_end_datetime();
     }
 
@@ -177,10 +177,6 @@ class LogExtraTime {
 
     $paper_end_timestamp = $this->get_paper_end_timestamp();
 
-    if ($extended_end_date_timestamp > $paper_end_timestamp) {
-      $extended_end_date_timestamp = $paper_end_timestamp;
-    }
-
     return $extended_end_date_timestamp;
   }
 
@@ -191,6 +187,9 @@ class LogExtraTime {
     return $this->log_lab_end_time->get_paper_exam_duration();
   }
 
+  public function get_paper_exam_start_time() {
+    return $this->log_lab_end_time->get_paper_start_datetime();
+  }
   /*
    * @return int
    */

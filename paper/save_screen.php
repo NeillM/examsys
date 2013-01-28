@@ -28,74 +28,81 @@ require_once '../include/marking_functions.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
-require '../classes/logmetadata.class.php';
-require '../classes/lab_factory.class.php';
-require '../classes/lab.class.php';
-require '../classes/propertyobject.class.php';
-require '../classes/property.class.php';
-require '../classes/log_extra_time.class.php';
-require '../classes/log_lab_end_time.class.php';
+require_once '../classes/logmetadata.class.php';
+require_once '../classes/lab_factory.class.php';
+require_once '../classes/lab.class.php';
+require_once '../classes/log_extra_time.class.php';
+require_once '../classes/log_lab_end_time.class.php';
+require_once '../classes/paperproperties.class.php';
+
 
 $displayDebug = false; //ajax call so debug info messes up the output
 
 check_var('id', 'GET', true, false, false);
 
-$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), exam_duration as duration, calendar_year, password FROM properties WHERE crypt_name = ? LIMIT 1");
-$stmt->bind_param('s', $_GET['id']);
-$stmt->execute();
-$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $exam_duration, $calendar_year, $password);
-$stmt->fetch();
-$stmt->close();
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
+  //this will exit php
+}
 
-$attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
-$original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
+$original_paper_type = $propertyObj->get_paper_type(); //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 
-$modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
+$attempt = 1;                 //default attempt to 1 overwritten if the student is resit candidate by (check_modules)
+$low_bandwidth = 0;           //default to off overwritten by (check_labs) if lab has low_bandwidth set
+$lab_name = NULL;             //default overwritten by (check_labs)
+$lab_id = NULL;
+$current_ip_address = NULL;   //default overwritten by (check_labs)
+
+$current_ip_address = NetworkUtils::get_ipaddress();
+$lab_factory = new LabFactory($mysqli);
+if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+    $lab_name = $lab_object->get_name();
+    $lab_id = $lab_object->get_id();
+}
 
 if ($userObject->has_role('Student')) {
 
+  //get the module Ids for this paper 
+  $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
+
   // Check for additional password on the paper
-  check_paper_password($password, $string);
+  check_paper_password($propertyObj->get_password(), $string);
 
   // Check time security
-  check_datetime($start_date, $end_date);
+  check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date());
 
   //Check room security
-  $low_bandwidth = check_labs($paper_type, $labs, $password, $string, $mysqli);
+  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(), 
+                                $propertyObj->get_labs(), 
+                                $current_ip_address,
+                                $propertyObj->get_password(), 
+                                $string, 
+                                $mysqli
+                              );
 
-  //get modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
+  // check modules if the user is a student and the paper is not formative
+  $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $mysqli);
 
   // Check for any metadata security restrictions
-  check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
-
+  check_metadata($propertyObj->get_property_id(), $userObject, $modIDs, $string, $mysqli);
 
   $summative_exam_session_started = false;
 
-  if ($exam_duration != null and (int) $paper_type == 2){
-    $current_ip_address = NetworkUtils::get_ipaddress();
+}
 
-    $lab_factory        = new LabFactory( $mysqli );
-    $lab_object         = $lab_factory->get_lab_based_on_ip( $current_ip_address );
-    $property_object    = new PropertyObject();
-    $property_object->set_property_id( $property_id );
-    $property           = new Property( $property_object, $mysqli );
-    $property_object    = $property->get_property();
-    $log_lab_end_time   = new LogLabEndTime($lab_object, $property_object, $mysqli );
-    $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
-  }
+if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
+  $log_lab_end_time   = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli );
+  $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
+}
 
-  if ( time() > $end_date and ( $paper_type == '1' or ( $paper_type == '2' and $summative_exam_session_started == false) ) ) {
-    $paper_type = '_late';
-  }
-
-  $log_metadata = new LogMetadata( $userObject, $property_id, $mysqli );
-
+if ( time() > $propertyObj->get_end_date() and ( $propertyObj->get_paper_type() == '1' or ( $propertyObj->get_paper_type() == '2' and $summative_exam_session_started == false) ) ) {
+  $paper_type = '_late';
 }
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
 
 //TODO we need to add some error checking in here. maybe wrap this whole function in a transaction ??
-$ret = record_marks($property_id, $mysqli, $userObject->get_user_ID(), $paper_type, $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $preview_q_id);
+$ret = record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $preview_q_id);
 echo $_POST['randomPageID'];
 ?>

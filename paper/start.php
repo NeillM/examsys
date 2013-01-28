@@ -25,21 +25,18 @@
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
-require '../include/staff_student_auth.inc';
-require '../include/paper_security.inc';
-require '../include/display_functions.inc';
-require '../include/media.inc';
+require_once '../include/staff_student_auth.inc';
+require_once '../include/paper_security.inc';
+require_once '../include/display_functions.inc';
+require_once '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
-require '../classes/log_start_time.class.php';
-require '../classes/timer.class.php';
-require '../classes/lab_factory.class.php';
-require '../classes/lab.class.php';
-require '../classes/propertyobject.class.php';
-require '../classes/property.class.php';
-require '../classes/log_extra_time.class.php';
-require '../classes/log_lab_end_time.class.php';
-require '../classes/summativetimer.class.php';
+require_once '../classes/timer.class.php';
+require_once '../classes/log_extra_time.class.php';
+require_once '../classes/log_lab_end_time.class.php';
+require_once '../classes/summativetimer.class.php';
+require_once '../classes/logmetadata.class.php';
+require_once '../classes/paperproperties.class.php';
 
 $userObject = UserObject::get_instance();
 
@@ -220,32 +217,43 @@ function keywordQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_
 
 if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 
-if ($userObject->is_special_needs()) {
-  $stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userid = ?");
-  $stmt->bind_param('i', $userObject->get_user_ID());
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
-  $stmt->fetch();
-  $stmt->close();
+//get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
+  //this will exit php
 }
 
 // Get how many screens make up the question paper.
 $screen_data = array();
-
 if (isset($_GET['q_id'])) {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, 1, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
-  $stmt->bind_param('si', $_GET['id'], $_GET['q_id']);
+  $stmt = $mysqli->prepare("SELECT 1,  q_type, question 
+                            FROM 
+                              (papers, questions) 
+                            WHERE 
+                              papers.paper = ? AND 
+                              papers.question=questions.q_id AND 
+                              questions.q_id=? 
+                              ORDER BY 
+                                screen
+                            ");
+  $stmt->bind_param('ii', $propertyObj->get_property_id(), $_GET['q_id']);
 } else {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
-  $stmt->bind_param('s', $_GET['id']);
+  $stmt = $mysqli->prepare("SELECT 
+                              screen, q_type, question 
+                            FROM 
+                              (papers, questions) 
+                            WHERE 
+                              papers.paper = ? AND
+                              papers.question=questions.q_id 
+                            ORDER BY 
+                              screen, display_pos");
+  $stmt->bind_param('i', $propertyObj->get_property_id());
 }
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date_timestamp, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $exam_duration, $calendar_year, $latex_needed, $password, $q_type, $q_id);
-if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
-  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
-}
+$stmt->bind_result($screen, $q_type, $q_id);
+
 while ($stmt->fetch()) {
   $no_screens = $screen;
   if ($q_type != 'info') {
@@ -255,111 +263,226 @@ while ($stmt->fetch()) {
 $stmt->free_result();
 $stmt->close();
 
-$original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
+//store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
+$original_paper_type = $propertyObj->get_paper_type(); 
+
+/*
+*  DEFAULT colour scheme
+*/
+$bgcolor = $propertyObj->get_bgcolor();
+$fgcolor = $propertyObj->get_fgcolor();
+$textsize = 90;
+$marks_color = '#808080';
+$themecolor = $propertyObj->get_themecolor();
+$labelcolor = $propertyObj->get_labelcolor();
+$font = 'Arial';
+$unanswered_color = '#FFC0C0';
 
 // If set overwrite the default colours with the current users' special settings
-$bgcolor = $userObject->get_bgcolor();
-$fgcolor = $userObject->get_fgcolor();
-$textsize = $userObject->get_textsize();
-$marks_color = $userObject->get_marks_color();
-$themecolor = $userObject->get_themecolor();
-$labelcolor = $userObject->get_labelcolor();
-$font = $userObject->get_font();
-$unanswered_color = $userObject->get_unanswered_color();
+if($userObject->is_special_needs()) {
+  $bgcolor = $userObject->get_bgcolor();
+  $fgcolor = $userObject->get_fgcolor();
+  $textsize = $userObject->get_textsize();
+  $marks_color = $userObject->get_marks_color();
+  $themecolor = $userObject->get_themecolor();
+  $labelcolor = $userObject->get_labelcolor();
+  $font = $userObject->get_font();
+  $unanswered_color = $userObject->get_unanswered_color();
+}
 
-if ($bgcolor == 'NULL') $bgcolor = $paper_bgcolor;
-if ($fgcolor == 'NULL') $fgcolor = $paper_fgcolor;
-if ($textsize == 'NULL') $textsize = 90;
-if ($marks_color == 'NULL') $marks_color = '#808080';
-if ($themecolor == 'NULL') $themecolor = $paper_themecolor;
-if ($labelcolor == 'NULL') $labelcolor = $paper_labelcolor;
-if ($font == 'NULL') $font = 'Arial';
-if ($unanswered_color == 'NULL') $unanswered_color = '#FFC0C0';
-$attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
+$attempt = 1;                 //default attempt to 1 overwritten if the student is resit candidate by (check_modules)
+$low_bandwidth = 0;           //default to off overwritten by (check_labs) if lab has low_bandwidth set
+$lab_name = NULL;             //default overwritten by (check_labs)
+$lab_id = NULL;
+$current_ip_address = NULL;   //default overwritten by (check_labs)
 
-$modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
+//get lab info
+$current_ip_address = NetworkUtils::get_ipaddress();
+$lab_factory = new LabFactory($mysqli);
+if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+    $lab_name = $lab_object->get_name();
+    $lab_id = $lab_object->get_id();
+}
 
 if ($userObject->has_role('Student')) {
+
+  //get the module Ids for this paper 
+  $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
+
   // Check for additional password on the paper
-  check_paper_password($password, $string);
+  check_paper_password($propertyObj->get_password(), $string);
 
   // Check time security
-  check_datetime($start_date, $end_date_timestamp);
+  check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date());
 
   //Check room security
-  $low_bandwidth = check_labs($paper_type, $labs, $password, $string, $mysqli);
+  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(), 
+                                $propertyObj->get_labs(), 
+                                $current_ip_address,
+                                $propertyObj->get_password(), 
+                                $string, 
+                                $mysqli
+                              );
 
-  // get modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
+  // check modules if the user is a student and the paper is not formative
+  $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $mysqli);
 
   // Check for any metadata security restrictions
-  check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
+  check_metadata($propertyObj->get_property_id(), $userObject, $modIDs, $string, $mysqli);
+}
+
+if($current_ip_address === NULL) {
+  //set the ip if we need to ie if check_labs has not run 
+  $current_ip_address = NetworkUtils::get_ipaddress();
 }
 
 //are we in a staff test and preview mode?
 $is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
 
+//are we in a staff test and preview mode and on the first screen?
+$is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
+
+//are we in a staff single question testmode
+$is_question_preview_mode = ( isset($_GET['q_id']) );
 
 /*
- * BP Determine the student's end_date timestamp for a summative exam that has been 'Started'.
- * This is also used further down to make sure that the timer does not close the window if the exam session hasn't been 'started' by an invigilator
- * If a summative exam session has been started  then record late answers in log_late
- */
-$summative_exam_session_started = false;
+* Set the default state
+*/
+$log_metadata = null;
+$sessionid = false;
+$current_screen = 1;
+$is_fire_alarm = ( isset($_POST['fire_alarm']) and $_POST['fire_alarm'] == '1' );
+$summative_exam_session_started = false; //lab timing stated by invigilators 
 
-if ($exam_duration != null and (int) $paper_type == 2){
+/*
+* Extract the posted variables.
+*/
+if (isset($_POST['sessionid'])) {
+  if ($_POST['button_pressed'] == 'next') {
+    $current_screen = $_POST['current_screen'];
+  } elseif ($_POST['button_pressed'] == 'prevous') {
+    $current_screen = $_POST['current_screen'] - 2;
+  } elseif ($_POST['button_pressed'] == 'jump_screen') {
+    $current_screen = $_POST['jump_screen'];
+  } elseif ($_POST['fire_alarm'] == 1) {
+    $current_screen = $_POST['current_screen'];
+  }
+}
 
-  $current_ip_address = NetworkUtils::get_ipaddress();
+//lookup previous sessionid from log_metadata.started property_id
+$log_metadata = new LogMetadata($userObject, $propertyObj->get_property_id(), $mysqli);
 
-  $lab_factory = new LabFactory( $mysqli );
-  $lab_object = $lab_factory->get_lab_based_on_ip( $current_ip_address );
+if ($is_preview_mode_first_launch == true) {
 
-  $property_object = new PropertyObject();
+  //in preview mode always start a new session if we have relaunched the window
+  $log_metadata->create_new_record($current_ip_address, $attempt, $lab_name);
 
-  $property_object->set_property_id( $property_id );
+} else if ($log_metadata->get_record() == false) { //load the data and check for no records
 
-  $property = new Property( $property_object
-                                    , $mysqli );
+  //we have no log_metadata record so make one
+  $log_metadata->create_new_record($current_ip_address, $attempt, $lab_name);
 
-  $property_object = $property->get_property();
+}
 
-  $log_lab_end_time = new LogLabEndTime( $lab_object, $property_object, $mysqli );
+$sessionid = $log_metadata->get_session_id();
 
+/*
+* BP Determine the student's end_date timestamp for a summative exam that has been 'Started'.
+* This is also used further down to make sure that the timer does not close the window if the exam session hasn't been 'started' by an invigilator
+* If a summative exam session has been started  then record late answers in log_late
+*/
+if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
+
+  //has this labe had an end time set?
+  $log_lab_end_time = new LogLabEndTime( $lab_id, $propertyObj, $mysqli );
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
-
-  $usobj['user_ID']   = $userObject->get_user_ID();
-  $usobj['special_needs_percentage'] = $userObject->get_special_needs_percentage();
-  $student_object     = $usobj;
-
-  $log_extra_time = new LogExtraTime( $log_lab_end_time, $student_object, $mysqli );
-
-
-  $student_end_datetime = $log_extra_time->get_end_date_datetime();
-
-  if ($student_end_datetime === false) {
-    $student_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
-  }
-
-
-  if ($student_end_datetime === false) {
-    $student_end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
-  }
-
-  $end_date_timestamp = $student_end_datetime->getTimestamp();
-
+  
 }
 
-//check for submissions after the enddate and set them to save in log_late if we are not in preview_mode or a summative exam session has not been started
-if ( $is_preview_mode === false and time() > $end_date_timestamp and ($paper_type == '1' or ( $paper_type == '2' and $summative_exam_session_started === false ) )) {
-  $paper_type = '_late';
+//check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
+if (  $is_preview_mode === false   and 
+      time() > $propertyObj->get_end_date() and 
+      ($propertyObj->get_paper_type() == '1' or ( $propertyObj->get_paper_type() == '2' and $summative_exam_session_started === false ) )
+    ) {
+  $propertyObj->set_paper_type('_late');
 }
 
-// Get any Reference Material
+
+/*
+* Save any posted answers 
+*  
+* N.B if Ajax saving is enabled: After a successful Ajax save the form is posted as the user moves to the next screen 
+*                                with dont_record set to true so this is not executed
+*/
+if ($is_question_preview_mode == false) {
+  if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
+    record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles);
+  }
+} 
+
+/*
+* Load up any previously submitted user answers from the appropriate log table(s)
+*
+* N.B If the user has gone passed the end of the exam (possible in some cases if security is relaxed)
+*     records could exist in 2 logs the original paper type log and log_late
+*
+*/
+$user_answers = array();
+$previous_duration = 0;
+$screen_pre_submitted = 0;
+if ($sessionid !== false or $is_fire_alarm == true) {
+  // Get users previous answers from the log.
+  if ($propertyObj->get_paper_type() == '_late') {
+    //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
+    $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
+    $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $propertyObj->get_property_id());
+    $log_data->execute();
+    $log_data->store_result();
+    $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
+    $user_answers = array();
+    $used_questions[$log_q_id] = $log_q_id;
+    while ($log_data->fetch()) {
+      $user_answers[$log_screen][$log_q_id] = $log_user_answer;
+      $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
+      $user_order[$log_screen][$log_q_id] = $option_order;
+      if ($log_screen == $current_screen) {
+        $previous_duration = $log_duration;
+        $screen_pre_submitted = 1;
+      }
+    }
+    $log_data->close();
+  }
+  //get user answers from whichever log is pointed to by log$paper_type
+  $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE userID=? AND started=? and q_paper=? ORDER BY id");
+  $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $propertyObj->get_property_id());
+  $log_data->execute();
+  $log_data->store_result();
+  $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
+  if ($log_data->num_rows > 0) {
+    while ($log_data->fetch()) {
+      $user_answers[$log_screen][$log_q_id] = $log_user_answer;
+      $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
+      $user_order[$log_screen][$log_q_id] = $option_order;
+      $used_questions[$log_q_id] = $log_q_id;
+      if ($log_screen == $current_screen) {
+        $previous_duration = $log_duration;
+        $screen_pre_submitted = 1;
+      }
+    }
+  }
+  $log_data->close();
+}
+
+/*
+* 
+* Get any Reference Material
+*
+*/
 $reference_materials = array();
 $ref_no = 0;
 $max_ref_width = 0;
 $stmt = $mysqli->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id=reference_papers.refID AND paperID=?");
-$stmt->bind_param('i', $property_id);
+$stmt->bind_param('i', $propertyObj->get_property_id());
 $stmt->execute();
 $stmt->bind_result($reference_title, $reference_material, $reference_width);
 while ($stmt->fetch()) {
@@ -373,71 +496,15 @@ while ($stmt->fetch()) {
 }
 $stmt->close();
 
-// Extract the posted variables.
-$restart = 0;
-$sessionid = '';
-if (isset($_POST['sessionid'])) {
-  if ($_POST['button_pressed'] == 'next') {
-    $current_screen = $_POST['current_screen'];
-  } elseif ($_POST['button_pressed'] == 'prevous') {
-    $current_screen = $_POST['current_screen'] - 2;
-  } elseif ($_POST['button_pressed'] == 'jump_screen') {
-    $current_screen = $_POST['jump_screen'];
-  } elseif ($_POST['fire_alarm'] == 1) {
-    $current_screen = $_POST['current_screen'];
-  }
-  $sessionid = $_POST['sessionid'];
-} else {
-  $current_screen = 1;
-  if (($original_paper_type == '1' or $original_paper_type == '2' or $original_paper_type == '3') and !isset($_GET['mode'])) {  //$_GET['mode'] is used for staff preview.
-    $stmt = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started, MAX(screen) AS screen FROM log$paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
-    $stmt->bind_param('ii', $property_id, $userObject->get_user_ID());
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($sessionid, $current_screen);
-    if ($stmt->num_rows == 1) {
-      $row = $stmt->fetch();
-      $stmt->free_result();
-      $restart = 1;
-      if ($original_paper_type == '3') {
-        $current_screen = 1;
-      }
-    } else if($paper_type == '_late') {
-      //look in the original log for previous session (only happens if we are after the endDate of the paper and are restarting with no records in log_late)
-      $stmt2 = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started, MAX(screen) AS screen FROM log$original_paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
-      $stmt2->bind_param('ii', $property_id, $userObject->get_user_ID());
-      $stmt2->execute();
-      $stmt2->store_result();
-      $stmt2->bind_result($sessionid, $current_screen);
-      if ($stmt2->num_rows == 1) {
-        $row = $stmt2->fetch();
-        $stmt2->free_result();
-        $restart = 1;
-        if ($original_paper_type == '3') {
-          $current_screen = 1;
-        }
-      }
-      $stmt2->close();
-    }
-    $stmt->close();
-    if ($sessionid == '') {
-      //no previous session found start a new session
-      $sessionid = date("YmdHis", time());
-    }
-  } else {
-    $sessionid = date("YmdHis", time());
-  }
-}
-
 require '../config/start.inc';
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n";
-if ($paper_type == '3') {
+if ($propertyObj->get_paper_type() == '3') {
   echo "<title>" . $string['survey'] . "</title>\n";
 } else {
   echo "<title>" . $string['assessment'] . "</title>\n";
 }
 
-$url_mod = (isset($_GET['q_id'])) ? '&amp;q_id=' . $_GET['q_id'] : '';
+$url_mod = ($is_question_preview_mode) ? '&amp;q_id=' . $_GET['q_id'] : '';
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -486,7 +553,7 @@ if ($css != '') {
 }
 ?>
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<?php if ($latex_needed == 1) {?>
+<?php if ($propertyObj->get_latex_needed() == 1) {?>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
 <script type="text/javascript" src="../js/flash_include.js"></script>
@@ -576,13 +643,13 @@ if ($css != '') {
 
   var submitted = false;
 <?php
-  if (isset($_GET['q_id'])) {
+  if ($is_question_preview_mode === true) {
 ?>
   var confirmSubmit = function() {
     return true;
   }
 <?php
-  } elseif ($bidirectional == '0') {
+  } elseif ($propertyObj->get_bidirectional() == 0) {
 ?>
   var confirmSubmit = function() {
     if (submitted == true) {
@@ -808,60 +875,11 @@ if ($css != '') {
 </head>
 <?php
 
-  $show_ref_material = false;
-
-  if (!isset($_GET['q_id'])) {
-    if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
-      record_marks($property_id, $mysqli, $userObject->get_user_ID(), $paper_type, $grade, $year, $attempt, $userroles);
-    }
-  }
-
-  $user_answers = array();
-  $previous_duration = 0;
-  $screen_pre_submitted = 0;
-  if (isset($_POST['sessionid']) or (isset($_POST['fire_alarm']) and $_POST['fire_alarm'] == '1') or $restart == 1) {
-    // Get users previous answers for the current screen.
-    if ($paper_type == '_late') {
-      //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
-      $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
-      $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $property_id);
-      $log_data->execute();
-      $log_data->store_result();
-      $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-      $user_answers = array();
-      $used_questions[$log_q_id] = $log_q_id;
-      while ($log_data->fetch()) {
-        $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-        $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-        $user_order[$log_screen][$log_q_id] = $option_order;
-        if ($log_screen == $current_screen) {
-          $previous_duration = $log_duration;
-          $screen_pre_submitted = 1;
-        }
-      }
-      $log_data->close();
-    }
-    //get user answers from whichever log is pointed to by log$paper_type
-    $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$paper_type WHERE userID=? AND started=? and q_paper=? ORDER BY id");
-    $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $property_id);
-    $log_data->execute();
-    $log_data->store_result();
-    $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-    if ($log_data->num_rows > 0) {
-      while ($log_data->fetch()) {
-        $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-        $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-        $user_order[$log_screen][$log_q_id] = $option_order;
-        $used_questions[$log_q_id] = $log_q_id;
-        if ($log_screen == $current_screen) {
-          $previous_duration = $log_duration;
-          $screen_pre_submitted = 1;
-        }
-      }
-    }
-    $log_data->close();
-  }
-
+  /*
+  * 
+  * Build the paper structure
+  *
+  */
   $old_leadin = '';
   $old_q_type = '';
   $old_q_id = 0;
@@ -870,18 +888,82 @@ if ($css != '') {
   $marks = 0;
   $old_theme = '';
   $previous_q_type = '';
-
-  if (isset($_GET['q_id'])) {
-    $question_data = $mysqli->prepare("SELECT 1, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND q_id=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
-    $question_data->bind_param('ii', $property_id, $_GET['q_id']);
+  if ($is_question_preview_mode) {
+    $question_data = $mysqli->prepare("SELECT 
+                                          1,
+                                          q_type, 
+                                          q_id, 
+                                          score_method, 
+                                          display_method, 
+                                          marks_correct, 
+                                          marks_incorrect, 
+                                          marks_partial, 
+                                          theme, 
+                                          scenario, 
+                                          leadin, 
+                                          correct,
+                                          REPLACE(option_text,'\t','') AS option_text, 
+                                          q_media, 
+                                          q_media_width, 
+                                          q_media_height, 
+                                          o_media, 
+                                          o_media_width, 
+                                          o_media_height, 
+                                          notes, 
+                                          display_pos, 
+                                          q_option_order 
+                                      FROM 
+                                          papers, questions, options 
+                                      WHERE 
+                                        paper=? AND 
+                                        q_id=? AND 
+                                        papers.question=questions.q_id AND 
+                                        questions.q_id = options.o_id  
+                                      ORDER BY 
+                                      display_pos, 
+                                      id_num");
+    $question_data->bind_param('ii', $propertyObj->get_property_id(), $_GET['q_id']);
   } else {
-    $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
-    $question_data->bind_param('i', $property_id);
+    $question_data = $mysqli->prepare("SELECT 
+                                            screen,
+                                            q_type, 
+                                            q_id, 
+                                            score_method, 
+                                            display_method, 
+                                            marks_correct, 
+                                            marks_incorrect, 
+                                            marks_partial, 
+                                            theme, 
+                                            scenario, 
+                                            leadin, 
+                                            correct, 
+                                            REPLACE(option_text,'\t','') AS option_text, 
+                                            q_media, 
+                                            q_media_width, 
+                                            q_media_height, 
+                                            o_media, 
+                                            o_media_width, 
+                                            o_media_height, 
+                                            notes, 
+                                            display_pos, 
+                                            q_option_order 
+                                        FROM 
+                                            papers, questions, options 
+                                        WHERE 
+                                          paper=? AND 
+                                          papers.question=questions.q_id AND 
+                                          questions.q_id = options.o_id  
+                                        ORDER BY 
+                                        display_pos, 
+                                        id_num");
+    $tmp_pid = $propertyObj->get_property_id();
+    $question_data->bind_param('i', $tmp_pid);
   }
   $question_data->execute();
   $question_data->store_result();
   $question_data->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
   $num_rows = $question_data->num_rows;
+
   $q_no = 0;
   $assigned_number = 0;
   $no_on_screen = 0;
@@ -922,18 +1004,17 @@ if ($css != '') {
   }
   $question_data->close();
 
-  //look for braching and random questions and overwrite as needed
+  //look for random questions and overwrite as needed
   $questions_array = array();
   $hidden_html = '';
   foreach ($tmp_questions_array as $question) {
     if ($question['q_type'] == 'random') {
-      $question = randomQOverwrite($question, $paper_type, $user_answers, $screen_data, $used_questions, $mysqli);
+      $question = randomQOverwrite($question, $propertyObj->get_paper_type(), $user_answers, $screen_data, $used_questions, $mysqli);
       if ($current_screen == $question['screen']) {
         $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
       }
     } elseif ($question['q_type'] == 'keyword_based') {
-      $question = keywordQOverwrite($question, $paper_type, $user_answers, $screen_data, $used_questions, $mysqli, $string);
-      //var_dump($current_screen, $question['screen'], $question['q_id']);
+      $question = keywordQOverwrite($question, $propertyObj->get_paper_type(), $user_answers, $screen_data, $used_questions, $mysqli, $string);
       if ($current_screen == $question['screen'] and $question['q_id'] != -1) {
         $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
       }
@@ -944,56 +1025,43 @@ if ($css != '') {
 
   $unanswered = false;
 
-  $incomplete_screens = get_unanswered_screens($no_screens, $screen_data, $user_answers, $questions_array, $property_id, $mysqli);
+  $incomplete_screens = get_unanswered_screens($no_screens, $screen_data, $user_answers, $questions_array, $propertyObj->get_property_id(), $mysqli);
 
   // BP If the duration is set then show timer
 
   $method = 'StartClock()';
-  
-  if ($exam_duration != null) {
 
+  if ($propertyObj->get_exam_duration() != null) {
     // Summative type. Time is only active in live.
-    if ($paper_type == 2 and $is_preview_mode === false) {
-
+    if ($propertyObj->get_paper_type() == '2' and $is_preview_mode === false) {
+      
+      //has the student been allotted extra time by an invigilator
+      $student_object['user_ID'] = $userObject->get_user_ID();
+      $student_object['special_needs_percentage'] = $userObject->get_special_needs_percentage();
+      $log_extra_time = new LogExtraTime( $log_lab_end_time, $student_object, $mysqli );
+      
       $summative_timer    = new SummativeTimer( $log_extra_time );
-
       $remaining_time     = $summative_timer->calculate_remaining_time_secs();
-
       $method             = 'StartTimer(' . $remaining_time . ', true)';
 
       // Do not close the window if the invigilator has not clicked on the 'Start' button
-      if ($summative_exam_session_started === false) {
+      if ($summative_exam_session_started == false) {
         $method          = 'StartTimer(' . $remaining_time . ', false)';
       }
 
-    // All other paper types
-
     } else {
 
-      $studentID      = $userObject->get_user_ID();
-
-      $log_start_time = new LogStartTime( $studentID, $property_id, $mysqli );
-      $timer          = new Timer( $log_start_time, $exam_duration );
+      $timer          = new Timer( $log_metadata, $propertyObj->get_exam_duration() );
       $start_datetime = $timer->get_start_datetime();
-
-      $is_preview_first_visit = ( $is_preview_mode === true and $current_screen == 1 and $screen_pre_submitted == 0 );
-
-      // Reset if in preview mode so staff are not locked out
-      if( $start_datetime and $is_preview_first_visit ){
-        $timer->reset();
-        $timer->start();
-      }
 
       if( $start_datetime === false ){
         $timer->start();
       }
 
       $remaining_time = $timer->calculate_remaining_time();
-
       $method          = 'StartTimer(' . $remaining_time . ', true)';
     }
   }
-
 
   if ($userObject->has_role('Student')) {
     echo '<body oncontextmenu="return false;"onload="' . $method . ';" onclose="KillClock();">';
@@ -1012,10 +1080,10 @@ if ($css != '') {
   ?>
     <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <?php
-  if (!isset($_GET['q_id'])) {
+  if (!$is_question_preview_mode) {
     echo "<tr><td valign=\"top\">\n";
     echo $top_table_html;
-    echo '<tr><td><div class="paper">' . $paper_title . '</div>';
+    echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div>';
     $question_offset = 0;
     if ($no_screens > 1) {
       for ($i=1; $i<=$no_screens; $i++) {
@@ -1070,12 +1138,13 @@ if ($css != '') {
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   //display the questions
+  $calculator = $propertyObj->get_calculator(); //GLABAL NEEDS FIXING
   foreach($questions_array as &$question) {
     if ($question['screen'] == $current_screen) {
       if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span class=\"unans\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
-      if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
+      if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $propertyObj->get_paper_prologue() . '</td></tr>';
       if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-      display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
+      display_question($question, $propertyObj->get_paper_type(), $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
       $previous_q_type = $question['q_type'];
       $q_displayed++;
     }
@@ -1099,10 +1168,10 @@ if ($css != '') {
     if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
     if (!isset($_GET['q_id'])) {
       echo $string['finishnote'];
-      if ($bidirectional == 1) echo "<br />" . $string['gobackpink'];
+      if ($propertyObj->get_bidirectional() == 1) echo "<br />" . $string['gobackpink'];
     }
     echo "</div>\n<br />\n";
-  } elseif ($bidirectional == 0) {
+  } elseif ($propertyObj->get_bidirectional() == 0) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
     if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
     printf($string['pleasecomplete'], $current_screen);
@@ -1115,7 +1184,7 @@ if ($css != '') {
   ?>
   <span>
   <?php
-  if ($exam_duration != null) {
+  if ($propertyObj->get_exam_duration() != null) {
     echo $string['timeremaining'] . ':';
   }
 
@@ -1126,7 +1195,7 @@ if ($css != '') {
   echo '</td><td align="right">';
 
   echo '<span id="savemsg"></span>';
-  if ($bidirectional == 1 and $no_screens > 1) {
+  if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
     if ($current_screen > 2) echo "<input input id=\"prevous\" type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous';\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
     if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
       echo "<select name=\"jump_screen\" onchange=\"jumpScreen()\">";

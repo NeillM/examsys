@@ -35,6 +35,8 @@ require_once '../include/finish_functions.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/logmetadata.class.php';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/log_lab_end_time.class.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -49,70 +51,113 @@ $labelcolor       = $userObject->get_labelcolor();
 $font             = $userObject->get_font();
 $unanswered_color = $userObject->get_unanswered_color();
 
-if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
-  $paper_properties->bind_param('s', $_GET['id']);
-  $paper_properties->execute();
-  $paper_properties->store_result();
-  $paper_properties->bind_result($paperID, $labs, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
-  while ($paper_properties->fetch()) {
-    // If set overwrite the default colours with the current users' special settings
-    if ($bgcolor == 'NULL')     $bgcolor = $paper_bgcolor;
-    if ($fgcolor == 'NULL')     $fgcolor = $paper_fgcolor;
-    if ($textsize == 'NULL')    $textsize = 90;
-    if ($marks_color == 'NULL') $marks_color = '#808080';
-    if ($themecolor == 'NULL')  $themecolor = $paper_themecolor;
-    if ($labelcolor == 'NULL')  $labelcolor = $paper_labelcolor;
-    if ($font == 'NULL')        $font = 'Arial';
-    $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
-
-    $log_type = $paper_type;
-    $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
-    $low_bandwidth = 0;
-
-    if ($userObject->has_role('Staff') and isset($_GET['userid']) and $_GET['userid'] != $userObject->get_user_ID()) {
-      // Turn on all feedback if staff and a student exam script is being reviewed.
-      $display_correct_answer     = 1;
-      $display_question_mark      = 1;
-      $display_students_response  = 1;
-      $display_feedback           = 1;
-      $hide_if_unanswered         = 0;
-    }
-
-    $moduleID = Paper_utils::get_modules($paperID, $mysqli);
-    $modIDs = array_keys($moduleID);
-
-    if ($userObject->has_role('Student')) {
-      if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
-
-      // Check for additional password on the paper
-      check_paper_password($password, $string);
-
-      // Check time security
-      check_datetime($start_date, $end_date);
-
-      //Check room security
-      $low_bandwidth = check_labs($paper_type, $labs, $password, $string, $mysqli);
-
-      // get modules if the user is a student and the paper is not formative
-      $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
-
-      // Check for any metadata security restrictions
-      check_metadata($paperID, $userObject, $modIDs, $string, $mysqli);
-
-      if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
-        $paper_type = '_late';
-      }
-    }
-
-    $log_metadata = new LogMetadata( $userObject, $paperID, $mysqli );
-    $log_metadata->set_completed_to_now();
-
-    if (isset($_GET['type'])) $log_type = $_GET['type'];
-  }
-  $paper_properties->close();
-} else {
-  display_error("Properties Query Error", $mysqli->error);
+//get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
+  //this will exit php
 }
+
+$paperID = $propertyObj->get_property_id(); 
+$labs = $propertyObj->get_labs(); 
+$calendar_year = $propertyObj->get_calendar_year(); 
+$display_correct_answer = $propertyObj->get_display_correct_answer(); 
+$display_question_mark = $propertyObj->get_display_question_mark(); 
+$display_students_response = $propertyObj->get_display_students_response();
+$display_feedback = $propertyObj->get_display_feedback();
+$hide_if_unanswered = $propertyObj->get_hide_if_unanswered(); 
+$paper_title = $propertyObj->get_paper_title(); 
+$paper_type = $propertyObj->get_paper_type(); 
+$start_date = $propertyObj->get_start_date(); 
+$end_date = $propertyObj->get_end_date(); 
+$paper_bgcolor = $propertyObj->get_bgcolor();
+$paper_fgcolor = $propertyObj->get_fgcolor(); 
+$paper_themecolor = $propertyObj->get_themecolor(); 
+$paper_labelcolor = $propertyObj->get_labelcolor(); 
+$marking = $propertyObj->get_marking(); 
+$paper_postscript = $propertyObj->get_paper_postscript();
+$pass_mark = $propertyObj->get_pass_mark();
+$latex_needed = $propertyObj->get_latex_needed();
+$password = $propertyObj->get_password();
+
+
+$attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
+
+$log_type = $paper_type;
+$original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
+$low_bandwidth = 0;
+
+$moduleID = Paper_utils::get_modules($paperID, $mysqli);
+$modIDs = array_keys($moduleID);
+
+//get lab info
+$current_ip_address = NetworkUtils::get_ipaddress();
+$lab_factory = new LabFactory($mysqli);
+if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+    $lab_name = $lab_object->get_name();
+    $lab_id = $lab_object->get_id();
+}
+
+$summative_exam_session_started = false; 
+if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
+  //has this labe had an end time set?
+  $log_lab_end_time = new LogLabEndTime( $lab_id, $propertyObj, $mysqli );
+  $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
+}
+
+if ($userObject->has_role('Student')) {
+  if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
+
+  // Check for additional password on the paper
+  check_paper_password($password, $string);
+
+  // Check time security
+  check_datetime($start_date, $end_date);
+
+  //Check room security
+  $low_bandwidth = check_labs($paper_type, $labs, $current_ip_address, $password, $string, $mysqli);
+
+  // get modules if the user is a student and the paper is not formative
+  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
+
+  // Check for any metadata security restrictions
+  check_metadata($paperID, $userObject, $modIDs, $string, $mysqli);
+
+  if (time() > $end_date and ($paper_type == '1' or ($paper_type == '2' and $summative_exam_session_started === false)) ) {
+    $paper_type = '_late';
+  }
+}
+
+//are we in a staff test and preview mode?
+$is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
+$is_summative_preview_mode = ($is_preview_mode and $propertyObj->get_paper_type() == '2')
+
+//are we in a staff test and preview mode and on the first screen?
+$is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
+
+//are we in a staff single question testmode
+$is_question_preview_mode = ( isset($_GET['q_id']) );
+
+$is_exam_review_mode        = ( $userObject->has_role('Staff') and isset($_GET['userid']) and $_GET['userid'] != $userObject->get_user_ID() );
+
+if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_mode) {
+  // Turn on all feedback if staff and a student exam script is being reviewed.
+  $display_correct_answer     = 1;
+  $display_question_mark      = 1;
+  $display_students_response  = 1;
+  $display_feedback           = 1;
+  $hide_if_unanswered         = 0;
+  $is_exam_review_mode        = true;
+}
+
+if(!$is_exam_review_mode and !$is_question_preview_mode) {
+  //only update log metadata if we are ending an exam 
+  $log_metadata = new LogMetadata( $userObject, $paperID, $mysqli );
+  $log_metadata->set_completed_to_now();
+}
+
+if (isset($_GET['type'])) $log_type = $_GET['type'];
+
 require '../config/finish.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

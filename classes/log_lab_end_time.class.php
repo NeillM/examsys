@@ -26,32 +26,30 @@
 class LogLabEndTime {
 
   /*
-   * @var Lab $lab_object
+   * @var Lab $lab_id
   */
-  private $lab_object;
+  private $lab_id;
 
   private $msg;
 
   /*
    * @var PropertyObject $property_object
   */
-
   private $property_object;
 
   /*
    * @var mysqli $db
    */
-
   private $db;
 
   /*
-   * @param Lab $lab_object
+   * @param Lab $lab_id
    * @param PropertyObject $property_object
    * @param mysqli $db
    */
-  public function __construct($lab_object, $property_object, $db) {
+  public function __construct($lab_id, $property_object, $db) {
 
-    $this->lab_object = $lab_object;
+    $this->lab_id = $lab_id;
     $this->property_object = $property_object;
     $this->db = $db;
   }
@@ -69,17 +67,12 @@ class LogLabEndTime {
 
     //$query = 'SELECT MAX( end_time ) as end_timestamp FROM log_lab_end_time WHERE labID   = ? AND paperID = ? AND end_time > ?';
     $query = 'SELECT end_time as end_timestamp FROM log_lab_end_time WHERE labID   = ? AND paperID = ? AND end_time > ? ORDER BY id DESC LIMIT 1';
-
     $stmt = $this->db->prepare($query);
-
     $lab_id = $this->get_lab_id();
     $paper_id = $this->get_paper_id();
-
     $stmt->bind_param('iii', $lab_id, $paper_id, $start_timestamp);
-
     $stmt->execute();
     $stmt->store_result();
-
     $bindResult = $stmt->bind_result($end_timestamp);
 
     $stmt->fetch();
@@ -137,28 +130,26 @@ class LogLabEndTime {
     $query = 'INSERT INTO log_lab_end_time ( labID, invigilatorID, paperID, end_time ) VALUES ( ?, ?, ?, ? )';
 
     $stmt = $this->db->prepare($query);
-if(is_null($time)) {
-    $start_time_datetime = new DateTime();
+    if(is_null($time)) {
+        $start_time_datetime = new DateTime();
 
-    $end_datetime = $this->calculate_end_datetime($start_time_datetime);
-} else {
-  $dispzone=new DateTimeZone($this->property_object->get_time_zone());
-  $end_datetime = new DateTime("now",$dispzone);
+        $end_datetime = $this->calculate_end_datetime($start_time_datetime);
+    } else {
+      $dispzone=new DateTimeZone($this->property_object->get_timezone());
+      $end_datetime = new DateTime("now",$dispzone);
 
-  $end_datetime->setTime(0,0,0);
-  $dateinterval = new DateInterval($time);
+      $end_datetime->setTime(0,0,0);
+      $dateinterval = new DateInterval($time);
 
-  $end_datetime->add($dateinterval);
+      $end_datetime->add($dateinterval);
 
 
-  $curtz1=new DateTime();
-  $curtz=$curtz1->getTimezone();
-  $end_datetime->setTimezone($curtz);
-}
+      $curtz1=new DateTime();
+      $curtz=$curtz1->getTimezone();
+      $end_datetime->setTimezone($curtz);
+    }
     $end_time = $end_datetime->getTimestamp();
-$tz=$this->property_object->get_time_zone();
-
- //   print $tz . '##' . $time . '::'. $end_time . '@@' . var_export($end_datetime,TRUE);
+    $tz=$this->property_object->get_timezone();
 
     $lab_id = $this->get_lab_id();
     $paper_id = $this->get_paper_id();
@@ -169,7 +160,7 @@ $tz=$this->property_object->get_time_zone();
     $stmt->close();
 
     $listofrecordstoupodate=$this->listrecordswithextratime();
-    $log_lab_end_time = new LogLabEndTime($this->lab_object, $this->property_object, $this->db);
+    $log_lab_end_time = new LogLabEndTime($this->lab_id, $this->property_object, $this->db);
     foreach($listofrecordstoupodate as $uid) {
       $stuobj['user_ID']=$uid;
 
@@ -216,15 +207,19 @@ $tz=$this->property_object->get_time_zone();
 
     $exam_duration_mins = $this->get_paper_exam_duration();
     $exam_duration_secs = $exam_duration_mins * 60;
-
-    // Add extra time
-
-    $date_interval = new DateInterval('PT' . $exam_duration_secs . 'S');
-
-    $start_datetime->add($date_interval);
-
+    $paper_type = $this->get_paper_exam_paper_type();
     $paper_end_datetime = $this->get_paper_end_datetime();
 
+    if($paper_type == 2) {
+      //default end time for summative exams is the end time set in paper properties 
+      return $paper_end_datetime;
+    }
+
+    // Add extra time
+    $date_interval = new DateInterval('PT' . $exam_duration_secs . 'S');
+    $start_datetime->add($date_interval);
+
+    
     if ($start_datetime > $paper_end_datetime) {
       $this->msg = 'The extended exam end time exceeds the paper\'s end time.';
 
@@ -241,9 +236,10 @@ $tz=$this->property_object->get_time_zone();
    * @return DateTime
   */
   public function calculate_default_session_end_datetime() {
-    $start_datetime = $this->get_paper_start_datetime();
-
-    return $this->calculate_end_datetime($start_datetime);
+    $start_datetime = $this->property_object->get_start_date();
+    $duration = $this->property_object->get_exam_duration() * 60;
+    $end_timestamp = $start_datetime + $duration;
+    return DateTime::createFromFormat('U', $end_timestamp);
   }
 
   /*
@@ -257,7 +253,7 @@ $tz=$this->property_object->get_time_zone();
    * @return int
    */
   public function get_lab_id() {
-    return $this->lab_object->get_id();
+    return $this->lab_id;
   }
 
   /*
@@ -268,12 +264,18 @@ $tz=$this->property_object->get_time_zone();
   }
 
   /*
+   * @return int
+   */
+  public function get_paper_exam_paper_type() {
+    return $this->property_object->get_paper_type();
+  }
+
+  /*
    * @return DateTime
   */
   public function get_paper_start_datetime() {
     $start_date = $this->property_object->get_start_date();
-
-    return new DateTime($start_date);
+    return DateTime::createFromFormat('U', $start_date);
   }
 
   /*
@@ -282,7 +284,7 @@ $tz=$this->property_object->get_time_zone();
   public function get_paper_end_datetime() {
     $end_date = $this->property_object->get_end_date();
 
-    return new DateTime($end_date);
+    return DateTime::createFromFormat('U', $end_date);
   }
 
   /*

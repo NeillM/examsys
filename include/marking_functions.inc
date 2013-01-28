@@ -66,27 +66,6 @@ function get_log_ids($u_id, $p_id, $paper_log_type, $sreen_no, $sessionid, $db) 
 }
 
 /**
- * This is function returns the log_metadata id associated with a users/paper/session
- *
- * @param int $u_id rogo user id
- * @param int $p_id rogo paper id
- * @param string $sessionid the id of the session of interest
- * @param MySQLi $db an open database connection
- * @return mixed int id if a record is found false otherwise
- *
- */
-function get_log_metadata_record_id($u_id, $p_id, $sessionid, $db) {
-  $log_check = $db->prepare("SELECT id FROM log_metadata WHERE userID=? AND paperID=? AND started=?");
-  $log_check->bind_param('iis', $u_id, $p_id, $sessionid);
-  $log_check->execute();
-  $log_check->bind_result($tmp_id);
-  if($log_check->fetch()) {
-    return $tmp_id;
-  }
-  return false;
-}
-
-/**
  * This is function record_marks, is used to mark the users answer, and record it in the database for all question types.
  *
  * @param mixed $paper_id
@@ -167,28 +146,6 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
     $save_answers = $db->prepare("UPDATE log$paper_type SET mark=?, user_answer=?, duration=?, updated=NOW(), dismiss=? WHERE id=?");
     $save_answers->bind_param('dsisi', $mark, $saved_response, $tmp_duration, $dismiss, $q_log_id);
   } else {
-    // Set up new insert query ready.
-    if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'], $db) === false) {
-      // Write log_metadata first on screen 1 only
-      $tmp_ip_address = NetworkUtils::get_ipaddress();
-
-      $labf = new LabFactory($db);
-      $lab_obj = $labf->get_lab_based_on_ip($tmp_ip_address);
-      $room = $lab_obj->get_name();
-
-      $save_metadata = $db->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, NULL, ?)");
-      if ($db->error) {
-          try {
-            throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
-          } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-            echo nl2br($e->getTraceAsString());
-        }
-      }
-      $save_metadata->bind_param('iisssiis', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt, $room);
-      $save_metadata->execute();
-      $save_metadata->close();
-    }
     $save_answers = $db->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)");
     $save_answers->bind_param('isiidisiiss', $userid, $_POST['sessionid'], $paper_id, $log_id, $mark, $totalpos, $saved_response, $screen_no, $tmp_duration, $dismiss, $option_order);
   }

@@ -26,14 +26,17 @@ require_once $cfg_web_root . '/classes/usernotices.class.php';
 require_once $cfg_web_root . '/classes/networkutils.class.php';
 require_once $cfg_web_root . '/classes/moduleutils.class.php';
 require_once $cfg_web_root . '/classes/paperutils.class.php';
+require_once $cfg_web_root . '/classes/lab_factory.class.php';
+require_once $cfg_web_root . '/classes/lab.class.php';
 
-function check_labs($paper_type, $labs, $pword, $string, $db) {
+function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
   $low_bandwidth = 0;
-  $address = NetworkUtils::get_ipaddress();
+  $lab_name = NULL;
+  $lab_id = NULL;
   $notice = UserNotices::get_instance();
-  
-  if ($labs != '') {
-    $stmt = $db->prepare("SELECT low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
+
+  if ($lab_needed != '') {
+    $stmt = $db->prepare("SELECT low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($lab_needed)");
     $stmt->bind_param('s', $address);
     $stmt->execute();
     $stmt->bind_result($low_bandwidth);
