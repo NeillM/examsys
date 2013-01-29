@@ -114,7 +114,7 @@ function compare_permissions($db_master, $db_test, $masterdb, $testdb, $dbuserna
   .grey {background-color:#EAEAEA; font-weight:bold}
   .nonexist {background-color:#FFC0C0}
   .dkred {background-color:#C00000; color:white; font-weight:bold}
-  .err {color:#C00000}
+  .err {color:red; font-weight:bold}
   </style>
 </head>
 
