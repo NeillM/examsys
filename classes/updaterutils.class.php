@@ -24,8 +24,6 @@
 * @package
 */
 
-
-
 Class UpdaterUtils {
 
   /*
@@ -35,26 +33,14 @@ Class UpdaterUtils {
 
   private $db_name;
 
-  public function __construct( mysqli $mysqli
-                              ,       $db_name ){
+  public function __construct($mysqli, $db_name) {
     $this->mysqli  = $mysqli;
     $this->db_name = $db_name;
-
   }
 
-  public function does_table_exist( $table_name ){
-
-    $sql = 'SELECT
-              table_name
-            FROM
-              information_schema.tables
-            WHERE
-              table_schema = ?
-            AND
-              table_name   = ?';
-
-    $result  = $this->mysqli->prepare( $sql );
-    $result->bind_param( 'ss', $this->db_name, $table_name );
+  public function does_table_exist($table_name) {
+    $result  = $this->mysqli->prepare('SELECT table_name FROM information_schema.tables WHERE table_schema = ? AND table_name = ?');
+    $result->bind_param('ss', $this->db_name, $table_name);
     $result->execute();
     $result->store_result();
     $num_rows =  $result->num_rows;
@@ -67,136 +53,119 @@ Class UpdaterUtils {
 
     return true;
   }
-
-  public function does_column_type_value_exist( $table_name
-                                              , $column_name
-                                              , $column_type_value ){
-
-    $sql     = 'SELECT
-                  column_type
-                FROM
-                  information_schema.columns
-                WHERE
-                  table_schema  = ?
-                AND
-                  table_name    = ?
-                AND
-                  column_name   = ?
-                AND
-                  column_type   = ?';
-
-    $result  = $this->mysqli->prepare( $sql );
-    $result->bind_param('ssss', $this->db_name, $table_name, $column_name, $column_type_value );
+  
+  public function does_column_type_value_exist($table_name, $column_name, $column_type_value) {
+    $result  = $this->mysqli->prepare('SELECT column_type FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ? AND column_type = ?');
+    $result->bind_param('ssss', $this->db_name, $table_name, $column_name, $column_type_value);
     $result->execute();
     $result->store_result();
     $num_rows =  $result->num_rows;
 
     $result->close();
 
-    if( $num_rows < 1 ){
+    if ($num_rows < 1) {
       return false;
     }
 
     return true;
   }
 
-
-  public function does_column_exist( $table_name
-                                   , $column_name ){
-
-    $sql     = 'SELECT
-                  column_name
-                FROM
-                  information_schema.columns
-                WHERE
-                  table_schema  = ?
-                AND
-                  table_name    = ?
-                AND
-                  column_name   = ?';
-
-    $result  = $this->mysqli->prepare( $sql );
-    $result->bind_param('sss', $this->db_name, $table_name, $column_name );
+  public function does_column_exist($table_name, $column_name) {
+    $result = $this->mysqli->prepare('SELECT column_name FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?');
+    $result->bind_param('sss', $this->db_name, $table_name, $column_name);
     $result->execute();
     $result->store_result();
     $num_rows =  $result->num_rows;
 
     $result->close();
 
-    if( $num_rows < 1 ){
+    if ($num_rows < 1) {
       return false;
     }
 
     return true;
   }
-
-  public function does_index_exist( $table_name, $index_name ){
-
-    $sql     = 'SELECT
-                  constraint_name
-                FROM
-                 information_schema.key_column_usage
-                WHERE
-                  table_schema  = ?
-                AND
-                  table_name    = ?
-                AND
-                  constraint_name   = ?';
-
-    $result  = $this->mysqli->prepare( $sql );
-    $result->bind_param('sss', $this->db_name, $table_name, $index_name );
+  
+  public function does_index_exist($table_name, $index_name) {
+    $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ?");
+    $result->bind_param('s', $index_name);
     $result->execute();
     $result->store_result();
     $num_rows =  $result->num_rows;
 
     $result->close();
 
-    if( $num_rows < 1 ){
+    if ($num_rows < 1) {
       return false;
     }
 
     return true;
   }
 
-
-  public function does_tables_priv_exist( $user, $table, $privileges ){
-
+  public function does_tables_priv_exist($user, $table, $privileges) {
     $this->mysqli->select_db('mysql');
 
-    $privileges = str_replace( ' ', '', $privileges );
+    $privileges = str_replace(' ', '', $privileges);
+    $privileges = ucwords($privileges);
 
-    $privileges = ucwords( $privileges );
-
-    $sql     = 'SELECT
-                  *
-                FROM
-                 tables_priv
-                WHERE
-                  db          = ?
-                AND
-                  user        = ?
-                AND
-                  table_name  = ?
-                AND
-                  table_priv  = ?';
-
-    $result  = $this->mysqli->prepare( $sql );
-
-    $result->bind_param('ssss', $this->db_name, $user, $table, $privileges );
+    $result = $this->mysqli->prepare('SELECT * FROM tables_priv WHERE db = ? AND user = ? AND table_name = ? AND table_priv = ?');
+    $result->bind_param('ssss', $this->db_name, $user, $table, $privileges);
     $result->execute();
     $result->store_result();
     $num_rows =  $result->num_rows;
 
     $result->close();
 
-    $this->mysqli->select_db( $this->db_name );
+    $this->mysqli->select_db($this->db_name);
 
-    if( $num_rows < 1 ){
+    if ($num_rows < 1) {
       return false;
     }
 
     return true;
+  }
+  
+  public function has_grant($user, $grant, $table, $host) {
+    $found_grant = '';
+    
+    $result = $this->mysqli->prepare("SHOW GRANTS FOR '$user'@'$host'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($existing_grant);
+    while ($result->fetch()) {
+      if (stripos($existing_grant, ".'$table' TO") !== false) {
+        $found_grant = $existing_grant;
+      }
+    }
+    $result->close();
+    
+    if ($existing_grant != '') {
+      $parts = explode(' ON ', $existing_grant);
+      $existing_grant = $parts[0];
+      $existing_grant = str_replace('GRANT ', '', $existing_grant);
+    }
 
+    if ($existing_grant == $grant) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  public function execute_query($sql, $update_display) {
+    $adjust = $this->mysqli->prepare($sql);
+    if ($this->mysqli->errno == 0) {
+      $adjust->execute();
+      $adjust->close(); 
+      
+      if ($update_display) {
+        echo "<li>$sql</li>\n";
+        ob_flush();
+        flush();
+      }
+    } else {
+      echo '<li class="error">ERROR: ' . $sql . '</li>';
+    }
   }
 
 }
