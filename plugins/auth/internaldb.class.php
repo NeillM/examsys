@@ -124,7 +124,7 @@ class internaldb_auth extends outline_authentication {
       return $authobj;
     }
 
-    $sql = "SELECT $username_col as username, $passwd_col as passwd, $id_col as id FROM $table WHERE $username_col=?";
+    $sql = "SELECT $username_col as username, $passwd_col as passwd, $id_col as id FROM $table WHERE $username_col=? $sql_extra";
     $result = $this->db->prepare($sql);
     $result->bind_param('s', $this->form['std']->username);
     $result->execute();

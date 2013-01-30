@@ -29,7 +29,9 @@ define('ROGO_AUTH_OBJ_FAILED', 0);
 define('ROGO_AUTH_OBJ_SUCCESS', 1);
 define('ROGO_AUTH_OBJ_LOOKUPONLY', 2);
 
-class Authentication {
+require_once __DIR__ . '/rogostaticsingleton.class.php';
+
+class Authentication extends RogoStaticSingleton {
 
   private $userid;
   private $password;
@@ -57,6 +59,30 @@ class Authentication {
 
   public $initobj, $lookupuserobj, $preauthobj, $authobj, $postauthobj, $postauthsuccesobj, $postauthfailobj, $displaystdformobj, $displayerrformobj, $getauthobj, $sessionstoreobj;
 
+
+  static function get_instance($config = NULL, $db = NULL) {
+    //some objects are global and need parameters these are constructed using
+    //a stranded constructor and need parameters passing. if they have not been
+    //built and get_instance is call it should return null
+    if (isset(static::$dont_construct) and static::$dont_construct == TRUE) {
+      if (is_object(static::$inst)) {
+        return static::$inst;
+      } else {
+        return NULL;
+      }
+    }
+
+    //normal behaviour create on demand
+    if (!is_object(static::$inst) and $config != NULL and $db != NULL) {
+      static::$inst = new static::$class_name($config, $db);
+    }
+    if ($config == NULL or $db == NULL) {
+      return NULL;
+    }
+
+    return static::$inst;
+  }
+
   function __construct(&$configObj, & $db, &$request, &$session) {
     $this->db = & $db;
     $this->configObj = & $configObj;
@@ -79,10 +105,10 @@ class Authentication {
 
     // get form data here?
     $this->form['std'] = new stdClass();
-    if (isset($_REQUEST['rogo-login-form-std'])) {
+    if (isset($this->request['rogo-login-form-std'])) {
 
-      $this->form['std']->username = $_REQUEST['ROGO_USER'];
-      $this->form['std']->password = $_REQUEST['ROGO_PW'];
+      $this->form['std']->username = $this->request['ROGO_USER'];
+      $this->form['std']->password = $this->request['ROGO_PW'];
       $this->debug[] = 'Standard form data found - Storing in object ' . var_export($this->form, TRUE);
 
     }
@@ -121,7 +147,6 @@ class Authentication {
       $object = new stdClass();
       $object->db =& $this->db;
       $object->calling_object =& $this;
-      $object->returndata =& $this->returndata;
       $object->form =& $this->form;
       $object->settings = $settings;
 
@@ -174,11 +199,19 @@ class Authentication {
     $this->config = $this->configObj->getbyref('authentication');
 
     if (!isset($this->config)) {
-      $notice->display_notice('No Authentication configured', 'No Authentication configured has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
+      $notice->display_notice('No Authentication configured', 'No Authentication configuration has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
       exit();
     }
 
     $this->debug[] = 'Loaded Config for authentication';
+  }
+
+  function register_callback_section($section) {
+    foreach ($section as $addition) {
+      if (!in_array($addition, $this->callbacktypes)) {
+        $this->callbacktypes[] = $addition;
+      }
+    }
   }
 
   function register_callback($callback, $section, $number, $name, $insert = FALSE) {
@@ -286,6 +319,8 @@ class Authentication {
           //         $this->debug[]=var_dump($this->authObj[$objid],TRUE);
           $this->successfullauthmodule[] = $objid;
 
+        } elseif ($authobj->returned === ROGO_AUTH_OBJ_LOOKUPONLY) {
+
         }
 
 
@@ -296,7 +331,7 @@ class Authentication {
     }
 
     $postauthobj = new stdClass();
-    $postauthobj->authobj=$authobj;
+    $postauthobj->authobj = $authobj;
     if (isset($this->callbackregister['postauth'])) {
       foreach ($this->callbackregister['postauth'] as $number => $callback) {
         $postauthobj = call_user_func_array($callback, array($postauthobj));
@@ -309,8 +344,8 @@ class Authentication {
       //failed
 
       $postauthfailobj = new postauthfailreturn();
-      $postauthfailobj->authobj=$authobj;
-      $postauthfailobj->postauthobj=$postauthobj;
+      $postauthfailobj->authobj = $authobj;
+      $postauthfailobj->postauthobj = $postauthobj;
 
       $this->session['authenticationObj']['attempt']++;
       if (isset($this->callbackregister['postauthfail'])) {
@@ -392,8 +427,8 @@ HTML;
     // the auth has succeeded as above will stop it if its not true
 
     $postauthsuccessobj = new stdClass();
-    $postauthsuccessobj->authobj=$authobj;
-    $postauthsuccessobj->postauthobj=$postauthobj;
+    $postauthsuccessobj->authobj = $authobj;
+    $postauthsuccessobj->postauthobj = $postauthobj;
     $postauthsuccessobj->userid =& $this->userid;
 
 

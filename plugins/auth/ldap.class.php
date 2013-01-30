@@ -132,7 +132,7 @@ class ldap_auth extends outline_authentication {
                }
        */
         $this->savetodebug('Now looking up userid in table from username');
-        $sql = "SELECT $username_col as username, $id_col as id FROM $table WHERE $username_col=?";
+        $sql = "SELECT $username_col as username, $id_col as id FROM $table WHERE $username_col=? $sql_extra";
         $result = $this->db->prepare($sql);
 
         $result->bind_param('s', $this->form['std']->username);
@@ -158,9 +158,11 @@ class ldap_auth extends outline_authentication {
         if ($result->num_rows() == 0) {
           //lookup ok but no association to rogo
 
+          $this->savetodebug('LDAP Record found but no local account');
           $data = new stdClass();
+          $data->{$this->settings['search_field']}=$this->form['std']->username;
 
-          $authobj->missinglookup($this->number, $data);
+          $authobj->lookupmissing($this->number, $data);
 
           return $authobj;
         }
@@ -182,7 +184,7 @@ class ldap_auth extends outline_authentication {
       $this->savetodebug('Couldnt Bind to ldap server');
       $authobj->fail($this->number);
 
-      $this->error = TRUE;
+      $this->set_error('Couldnt bind to ldap server');
 
       return $authobj;
     }

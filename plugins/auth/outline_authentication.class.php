@@ -58,7 +58,7 @@ class outline_authentication {
 
     if ($this->authapiversion != $this->impliments_api_auth_version) {
       $this->savetodebug('This auth object is implementing an different version of the api than this plugin does');
-      $this->error = 'Wrong API';
+      $this->set_error('Wrong API');
 
       return TRUE;
     }
@@ -91,8 +91,6 @@ class outline_authentication {
   function mock($callingobject, $settings, $number, $name, $db, $returndata, $form) {
     return FALSE;
   }
-
-
 
 
   /**
@@ -141,6 +139,12 @@ class outline_authentication {
     return $this->calling_object->authinfo[$objid];
   }
 
+
+  function register_callback_sections() {
+    //this is blank so that classes that dont register anything dont break
+    return array();
+  }
+
   /**
    * @param $callback callback routine
    * @param $section string section to register callback in
@@ -154,6 +158,7 @@ class outline_authentication {
     //return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
     $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
   }
+
 
   /**
    *
