@@ -37,8 +37,15 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/log_lab_end_time.class.php';
+require_once '../include/demo_replace.inc';
 
 check_var('id', 'GET', true, false, false);
+
+if (strpos($userroles,'Demo') !== false) {
+  $demo = true;
+} else {
+  $demo = false;
+}
 
 $userID = $userObject->get_user_ID();
 
@@ -263,7 +270,11 @@ require '../config/finish.inc';
     echo '<tr><td><div class="paper">' . $paper_title . '</div>';
     if ($paper_type < 2 or $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
-      if (isset($_GET['userid'])) echo " for $tmp_title $tmp_surname, $tmp_initials ($tmp_student_id)";
+      $tmp_student_name = $tmp_title . ' ' . demo_replace($tmp_surname, $demo) . ', ' . demo_replace($tmp_initials, $demo);
+      $tmp_student_id = demo_replace_number($tmp_student_id, $demo);
+      if (isset($_GET['userid'])) {
+        echo " for $tmp_student_name ($tmp_student_id)";
+      }
       echo '</span>';
     }
     echo '</td>';
