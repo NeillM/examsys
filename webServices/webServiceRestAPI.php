@@ -37,6 +37,7 @@ require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc';   // I
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 require_once $cfg_web_root . 'classes/networkutils.class.php';
 require_once $cfg_web_root . 'classes/dateutils.class.php';
+require_once $cfg_web_root . 'classes/userobject.class.php';
 
 if (substr_count($_GET['url'], '/') > 0) {
   list($action, $parms) = explode('/',$_GET['url'],2);
@@ -207,7 +208,7 @@ Class webServiceRestAPI extends restAPI {
 
 
   public function getModulePaperList($team) {
-    global $protocol, $configObject->get('cfg_root_path');
+    global $protocol;
     $moduleSQL='';
     $moduleSQL .= " (moduleID LIKE ? OR  moduleID LIKE ? OR  moduleID LIKE ? or  moduleID LIKE ?)";
     $typeSQL = " paper_type!='2'";
@@ -300,8 +301,8 @@ Class webServiceRestAPI extends restAPI {
   }
 
   public function getOwnerPaperList($username, $types) {
-    global $protocol, $configObject->get('cfg_root_path');
-        
+    global $protocol;
+
     $tmp_userID = $this->get_user_ID($username, true);
     if ($tmp_userID == '') {
       return '';
@@ -375,11 +376,12 @@ Class webServiceRestAPI extends restAPI {
 
   public function createAccount() {
     global $userroles;
-    
-    if ($userObject->has_role('SysAdmin')) {
+
+    $userObject=UserObject::get_instance();
+    if (!$userObject->has_role('SysAdmin')) {
       return 'accessdenied';
     }
-    
+
     $xml = new SimpleXMLElement($_POST['data']);
     $fields = array('username', 'password', 'firstnames', 'title', 'surname', 'email', 'course', 'gender', 'yearofstudy', 'roles');
     
