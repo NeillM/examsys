@@ -357,7 +357,7 @@ class Authentication extends RogoStaticSingleton {
           if (isset($this->postauthfailobj->callback)) {
             $postauthfailobj = call_user_func_array($this->postauthfailobj->callback, $postauthfailobj);
             if ($postauthfailobj->exit === TRUE) {
-              var_dump($this->debug);
+             // var_dump($this->debug);
               exit();
             }
           }
@@ -367,7 +367,7 @@ class Authentication extends RogoStaticSingleton {
             $this->display_error_form();
 
             if ($postauthfailobj->exit === TRUE) {
-              var_dump($this->debug);
+            //  var_dump($this->debug);
               exit();
             }
           }
@@ -382,6 +382,7 @@ class Authentication extends RogoStaticSingleton {
                               }*/
               //var_dump($this->request);
               //var_dump($this->debug);
+              //$this->display_debug();
               exit();
             }
           }
