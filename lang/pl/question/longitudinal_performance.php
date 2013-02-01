@@ -20,6 +20,6 @@ $string['calendaryear'] = 'Rok kalendarzowy';
 $string['questionno'] = 'Numer pytania';
 $string['datetaken'] = 'Data egazminu';
 $string['cohort'] = 'Grupa';
-$string['p'] = 'P';
-$string['d'] = 'D';
+$string['p'] = 'P'; //cognate
+$string['d'] = 'D'; //cognate
 ?>
