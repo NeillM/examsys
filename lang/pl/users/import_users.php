@@ -30,7 +30,7 @@ $string['finished'] = 'Zakończono';
 
 $string['emailmsg1'] = 'Utwórz nowe konto użytkownika';
 $string['emailmsg2'] = '';
-$string['emailmsg3'] = 'Utworzone zostało nowe konto w Rogō - systemie elektronicznego ankietowania i egzaminowania. Szczegóły Twego osobistego dostępu są identyczne jak szczegóły logowania do Twojego konta uniwersyteckiego.';
+$string['emailmsg3'] = 'Utworzone zostało nowe konto w Rogō - systemie elektronicznego ankietowania i egzaminowania. Szczegóły Twego osobistego uwierzytelniania są identyczne jak szczegóły logowania do Twojego konta uniwersyteckiego.';
 $string['emailmsg4'] = 'Uwaga:';
 $string['emailmsg5'] = 'Nigdy nie ujawniaj nikomu swego loginu i hasła.';
 $string['emailmsg6'] = 'Oszukiwanie na egzaminie końcowym jest wykroczeniem akademickim i nie będzie tolerowane.';

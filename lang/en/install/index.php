@@ -44,7 +44,6 @@ $string['allowguest'] = 'Guest log in (for summative exams)';
 $string['allowimpersonation'] = 'User impersonation (SysAdmin only)';
 $string['useldap'] = 'Use LDAP';
 
-
 $string['ldapserver'] = 'LDAP server';
 $string['searchdn'] = 'Search dn';
 $string['bindusername'] = 'bind username';
