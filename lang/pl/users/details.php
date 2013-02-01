@@ -1,5 +1,5 @@
 <?php
-r// This file is part of Rogo
+// This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@ r// This file is part of Rogo
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-equire '../lang/' . $language . '/include/user_search_options.inc';
+require '../lang/' . $language . '/include/user_search_options.inc';
 require '../lang/' . $language . '/include/titles.inc';
  
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
