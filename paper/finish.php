@@ -41,7 +41,7 @@ require_once '../include/demo_replace.inc';
 
 check_var('id', 'GET', true, false, false);
 
-if (strpos($userroles,'Demo') !== false) {
+if ($userObject->has_role('Demo')) {
   $demo = true;
 } else {
   $demo = false;
@@ -65,23 +65,23 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
   //this will exit php
 }
 
-$paperID = $propertyObj->get_property_id(); 
-$labs = $propertyObj->get_labs(); 
-$calendar_year = $propertyObj->get_calendar_year(); 
-$display_correct_answer = $propertyObj->get_display_correct_answer(); 
-$display_question_mark = $propertyObj->get_display_question_mark(); 
+$paperID = $propertyObj->get_property_id();
+$labs = $propertyObj->get_labs();
+$calendar_year = $propertyObj->get_calendar_year();
+$display_correct_answer = $propertyObj->get_display_correct_answer();
+$display_question_mark = $propertyObj->get_display_question_mark();
 $display_students_response = $propertyObj->get_display_students_response();
 $display_feedback = $propertyObj->get_display_feedback();
-$hide_if_unanswered = $propertyObj->get_hide_if_unanswered(); 
-$paper_title = $propertyObj->get_paper_title(); 
-$paper_type = $propertyObj->get_paper_type(); 
-$start_date = $propertyObj->get_start_date(); 
-$end_date = $propertyObj->get_end_date(); 
+$hide_if_unanswered = $propertyObj->get_hide_if_unanswered();
+$paper_title = $propertyObj->get_paper_title();
+$paper_type = $propertyObj->get_paper_type();
+$start_date = $propertyObj->get_start_date();
+$end_date = $propertyObj->get_end_date();
 $paper_bgcolor = $propertyObj->get_bgcolor();
-$paper_fgcolor = $propertyObj->get_fgcolor(); 
-$paper_themecolor = $propertyObj->get_themecolor(); 
-$paper_labelcolor = $propertyObj->get_labelcolor(); 
-$marking = $propertyObj->get_marking(); 
+$paper_fgcolor = $propertyObj->get_fgcolor();
+$paper_themecolor = $propertyObj->get_themecolor();
+$paper_labelcolor = $propertyObj->get_labelcolor();
+$marking = $propertyObj->get_marking();
 $paper_postscript = $propertyObj->get_paper_postscript();
 $pass_mark = $propertyObj->get_pass_mark();
 $latex_needed = $propertyObj->get_latex_needed();
@@ -105,7 +105,7 @@ if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
     $lab_id = $lab_object->get_id();
 }
 
-$summative_exam_session_started = false; 
+$summative_exam_session_started = false;
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
   //has this labe had an end time set?
   $log_lab_end_time = new LogLabEndTime( $lab_id, $propertyObj, $mysqli );
@@ -137,7 +137,7 @@ if ($userObject->has_role('Student')) {
 
 //are we in a staff test and preview mode?
 $is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
-$is_summative_preview_mode = ($is_preview_mode and $propertyObj->get_paper_type() == '2')
+$is_summative_preview_mode = ($is_preview_mode and $propertyObj->get_paper_type() == '2');
 
 //are we in a staff test and preview mode and on the first screen?
 $is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
@@ -158,7 +158,7 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
 }
 
 if(!$is_exam_review_mode and !$is_question_preview_mode) {
-  //only update log metadata if we are ending an exam 
+  //only update log metadata if we are ending an exam
   $log_metadata = new LogMetadata( $userObject, $paperID, $mysqli );
   $log_metadata->set_completed_to_now();
 }
