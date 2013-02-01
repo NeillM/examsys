@@ -70,7 +70,7 @@ require_once $cfg_web_root . 'classes/userobject.class.php';
 require_once $cfg_web_root . 'classes/authentication.class.php';
 
 // Check to see if the update script has been run.
-if ($configObject->get('rogo_version') != '4.4') {
+if ($configObject->get('rogo_version') != '5.0') {
   $notice->display_notice('Update Required', 'System needs configuring before use. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";
   exit;
