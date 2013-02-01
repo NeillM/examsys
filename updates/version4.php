@@ -23,14 +23,13 @@
  */
 
 require_once '../include/load_config.php';
-
 require_once '../classes/installutils.class.php';
 require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
 require_once '../classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
-$version = '4.4';
+$version = '5.0';
 
 set_time_limit(0);
 
@@ -80,127 +79,46 @@ function gen_random_salt() {
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-      <title>Rogo <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
+    <title>Rogo <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
 
-      <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-      <link rel="stylesheet" type="text/css" href="../css/header.css"/>
-      <style type="text/css">
-          body {
-              font-size: 90%
-          }
+    <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/header.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/updater.css"/>
 
-          h1 {
-              font-size: 140%;
-              color: #1F497D
-          }
-
-          h2 {
-              font-size: 120%;
-              color: #1F497D
-          }
-
-          .error {
-              color: red;
-              font-weight: bold
-          }
-
-          .warning {
-              float: none;
-              color: red;
-              padding-left: .5em;
-              vertical-align: top
-          }
-
-          label {
-              float: left;
-              width: 150px;
-              padding-left: 0em;
-              text-align: left
-          }
-
-          p {
-              clear: both
-          }
-
-          .submit {
-              text-align: center;
-              padding-top: 2em
-          }
-
-          table {
-              border: none
-          }
-
-          .h {
-              margin-top: 1.5em;
-              margin-bottom: 0.5em;
-              width: 100%;
-              color: #1E3287
-          }
-
-          .h hr {
-              border: 0px;
-              height: 1px;
-              color: #E5E5E5;
-              background-color: #E5E5E5;
-              width: 100%
-          }
-
-          td.line {
-              width: 98%
-          }
-
-          input[type=text], input[type=password] {
-              width: 140px
-          }
-
-          form {
-              padding: 1em
-          }
-
-          form div {
-              padding-left: 2em
-          }
-      </style>
-      <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-      <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   </head>
   <body>
   <table class="header">
-      <tr>
-          <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
-              <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0"
-                   style="float:left; padding-right:8px"/>
+    <tr>
+      <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
+          <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px"/>
 
-              <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogo</div>
-              <div style="color:#1F497D; font-size:9pt">Update Utility
-                  (<?php echo $configObject->get('rogo_version') . ' to ' . $version; ?>)
-              </div>
-          </th>
-          <th style="text-align:right; padding-right:10px">
-              <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0"/>
-          </th>
-      </tr>
-      <tr>
-          <th colspan="2" class="bevel"></th>
-      </tr>
+          <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogo</div>
+          <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $configObject->get('rogo_version') . ' to ' . $version; ?>)</div>
+      </th>
+      <th style="text-align:right; padding-right:10px"><img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" /></th>
+    </tr>
+    <tr>
+      <th colspan="2" class="bevel"></th>
+    </tr>
   </table>
 <?php
 if (!isset($_POST['update'])) {
   ?>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#installForm").validate();
-    });
+  $(document).ready(function () {
+   $("#installForm").validate();
+  });
 
-    $(document).ready(function () {
-        $('#useLdap').change(function () {
-            $('#ldapOptions').toggle();
-        });
+  $(document).ready(function () {
+    $('#useLdap').change(function () {
+      $('#ldapOptions').toggle();
     });
+  });
 </script>
   <?php
   if (!InstallUtils::configFileIsWriteable()) {
@@ -226,12 +144,8 @@ if (!isset($_POST['update'])) {
       <div><?php echo $string['msg2']; ?></div>
       <br/>
 
-      <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value=""
-                                                                                             name="mysql_admin_user"
-                                                                                             class="required"
-                                                                                             minlength="2"/></div>
-      <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value=""
-                                                                                             name="mysql_admin_pass"/>
+      <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2"/></div>
+      <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass"/>
       </div>
 
       <table class="h">
@@ -240,20 +154,12 @@ if (!isset($_POST['update'])) {
                   <nobr><?php echo $string['onlinehelpsystems']; ?></nobr>
               </td>
               <td class="line">
-                  <hr/>
+                  <hr />
               </td>
           </tr>
       </table>
-      <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox"
-                                                                                                   value=""
-                                                                                                   name="update_staff_help"
-                                                                                                   checked="checked"/>
-      </div>
-      <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox"
-                                                                                                       value=""
-                                                                                                       name="update_student_help"
-                                                                                                       checked="checked"/>
-      </div>
+      <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox" value="" name="update_staff_help" checked="checked" /></div>
+      <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox" value="" name="update_student_help" checked="checked" /></div>
 
       <div class="submit"><input type="submit" name="update" value="<?php echo $string['startupdate']; ?>"/></div>
   </form>
@@ -281,6 +187,7 @@ if (!isset($_POST['update'])) {
   }
   $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
 
+  
   // Avoid repeated method calls
   $cfg_db_database = $configObject->get('cfg_db_database');
   $cfg_db_student_user = $configObject->get('cfg_db_student_user');
@@ -288,12 +195,13 @@ if (!isset($_POST['update'])) {
   $cfg_db_host = $configObject->get('cfg_db_host');
   $cfg_db_username = $configObject->get('cfg_db_username');
   $cfg_db_external_user = $configObject->get('cfg_db_external_user');
+  $cfg_db_inv_username = $configObject->get('cfg_db_inv_user');
   $cfg_use_ldap = $configObject->get('cfg_use_ldap');
   
   error_reporting(-1);
+  ob_start();
 
   echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>\n<ol>";
-  ob_start();
 
   // 15/06/2011
   // Add index to improve performance for standards setting index page
@@ -762,8 +670,7 @@ if (!isset($_POST['update'])) {
     $q_data->store_result();
     $q_data->bind_result($q_id);
     while ($q_data->fetch()) {
-      $updater_utils->execute_query("UPDATE options SET marks_incorrect=-0.5 WHERE o_id=$q_id", false);
-      
+      $updater_utils->execute_query("UPDATE options SET marks_incorrect=-0.5 WHERE o_id=$q_id", false);   
       $updater_utils->execute_query("UPDATE questions SET display_method='TF_NegativeAbstain' WHERE q_id=$q_id", false);
     }
     $q_data->close();
@@ -912,13 +819,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 01/09/2011 - Remove the time/date question type
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='q_type'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  $result->close();
-  if ($column_type == "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','timedate','info','extmatch','random','sct','keyword_based')") {
+  if (!$updater_utils->does_column_type_value_exist('questions', 'q_type', "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')")) {
     $sql = "ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')";
     $updater_utils->execute_query($sql, true);
   }
@@ -1104,8 +1005,6 @@ if (!isset($_POST['update'])) {
       $hash = $property_id . $created . $paper_ownerID;
       $updater_utils->execute_query("UPDATE properties SET crypt_name='$hash' WHERE property_id=$property_id", false);
     }
-    $update->close();
-
     $result2->close();
   }
 
@@ -1143,32 +1042,20 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
+  // 02/11/2011 - Set the modules who do not have negative marking.
   if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== FALSE) {
-    // 02/11/2011 - Set the modules who do not have negative marking.
     $updater_utils->execute_query("UPDATE modules SET neg_marking=0 WHERE vle_api='NLE'", false);
   }
 
   // 09/11/2011
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='labs' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='campus'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($column_type == "enum('University Park','Jubilee','King''s Meadow','Derby','Malaysia','Ningbo','Sutton Bonington','Other')") {
+  if (!$updater_utils->does_column_type_value_exist('labs', 'campus', 'varchar(255)')) {
     $updater_utils->execute_query("ALTER TABLE labs CHANGE COLUMN campus campus varchar(255)", true);
   }
-  $result->close();
 
   // 09/11/2011
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sms_imports' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='import_type'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($column_type == "enum('manual','SATURN UK','SATURN Malaysia','SATURN China','ARC')") {
+  if (!$updater_utils->does_column_type_value_exist('sms_imports', 'import_type', 'varchar(255)')) {
     $updater_utils->execute_query("ALTER TABLE sms_imports CHANGE COLUMN import_type import_type varchar(255)", true);
   }
-  $result->close();
 
   // 07/12/2011
   if (!$updater_utils->does_column_exist('log6', 'id')) {
@@ -1197,14 +1084,7 @@ if (!isset($_POST['update'])) {
 
   // 13/01/2012 - Add deleted column to Degrees table
   if (!$updater_utils->does_column_exist('degrees', 'deleted')) {
-    $result2 = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees' AND TABLE_SCHEMA='$cfg_db_database'"); // Check to see if Degrees exists, more recently renamed Courses.
-    $result2->execute();
-    $result2->store_result();
-    $result2->bind_result($table_name);
-    $result2->fetch();
-    if ($result2->num_rows() > 0) {
-      $updater_utils->execute_query("ALTER TABLE degrees ADD COLUMN deleted datetime", true);
-    }
+    $updater_utils->execute_query("ALTER TABLE degrees ADD COLUMN deleted datetime", true);
   }
 
   // 13/01/2012 - Add new character set to configuration file.
@@ -1456,12 +1336,8 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   $result->close();
   if ($column_type == "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')") {
-    $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false')");
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false')</li>\n";
-    ob_flush();
-    flush();
+    $sql = "ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false')";
+    $updater_utils->execute_query($sql, true);
   }
 
   // 06/02/2012 - Change schools from text to integers in courses table
@@ -1604,12 +1480,7 @@ if (!isset($_POST['update'])) {
   $result->bind_result($rows);
   $result->fetch();
   if ($rows > 0) {
-    $adjust = $mysqli->prepare("UPDATE properties SET calculator=1 WHERE (calculator = 2 OR calculator = -1)");
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>UPDATE properties SET calculator=1 WHERE (calculator = 2 OR calculator = -1)</li>\n";
-    ob_flush();
-    flush();
+    $updater_utils->execute_query("UPDATE properties SET calculator=1 WHERE (calculator = 2 OR calculator = -1)", true);
   }
   $result->close();
 
@@ -2104,9 +1975,6 @@ if (!isset($_POST['update'])) {
     flush();
   }
 
-  @ob_flush();
-  @flush();
-
 
   // 25/04/2012 - Remove define lines not used.
   $new_cfg_str = array();
@@ -2204,12 +2072,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 15/05/2012 -  Add LTI Tables
-  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() == 0) {
+  if (!$updater_utils->does_table_exist('lti_keys')) {
     // Table to hold Reference material
     $sql = "CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_user` (  `oauth_consumer_key` varchar(200) NOT NULL,  `user_id` varchar(200) NOT NULL,  `rogo_id` int(11) NOT NULL,  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`user_id`),  KEY `rogo_id` (`rogo_id`)) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
@@ -2276,13 +2139,8 @@ if (!isset($_POST['update'])) {
     flush();
   }
 
-  // 22/05/2012 -  Chnage LTI Tables
-  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() == 0) {
+  // 22/05/2012 -  Change LTI Tables
+  if (!$updater_utils->does_column_exist('lti_keys', 'deleted')) {
     $sql = "ALTER TABLE `lti_keys` CHANGE `created_at` `deleted` DATETIME NULL , CHANGE `updated_at` `updated_at` DATETIME NOT NULL";
     $updater_utils->execute_query($sql, true);
 
@@ -2296,13 +2154,8 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query($sql, true);
   }
 
-  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_context' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() == 0) {
-    $sql = "CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_context` (`oauth_consumer_key` VARCHAR(255) NOT NULL ,`lti_context_id` VARCHAR(255) NOT NULL ,`c_internal_id` VARCHAR(255) NOT NULL ,`updated_on` DATETIME NOT NULL, PRIMARY KEY (`oauth_consumer_key`,`lti_context_id`), KEY `c_internal_id` (`c_internal_id`)) ENGINE=InnoDB";
+  if (!$updater_utils->does_table_exist('lti_context')) {
+    $sql = "CREATE TABLE " . $cfg_db_database . ".`lti_context` (`oauth_consumer_key` VARCHAR(255) NOT NULL ,`lti_context_id` VARCHAR(255) NOT NULL ,`c_internal_id` VARCHAR(255) NOT NULL ,`updated_on` DATETIME NOT NULL, PRIMARY KEY (`oauth_consumer_key`,`lti_context_id`), KEY `c_internal_id` (`c_internal_id`)) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
 
     $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_context TO '" . $cfg_db_sysadmin_user . "'@'" . $cfg_db_host . "'";
@@ -2316,19 +2169,11 @@ if (!isset($_POST['update'])) {
   }
 
   // 22/05/2012 - Addition of grey personal folder
-  $column_type = '';
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='folders' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='color'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($column_type == "enum('yellow','red','green','blue')") {
+  if (!$updater_utils->does_column_type_value_exist('folders', 'color', "enum('yellow','red','green','blue','grey')")) {
     $updater_utils->execute_query("ALTER TABLE folders CHANGE COLUMN color color enum('yellow','red','green','blue','grey')", true);
   }
-  $result->close();
 
   // 28/05/2012 - Add new autosave timeout.
-
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
   //remove refrances to old vars
@@ -2543,17 +2388,9 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 31/07/2012 - Add deleted column to users
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='user_deleted'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() == 0) {
-    // Add new deleted column
+  if (!$updater_utils->does_column_exist('users', 'user_deleted')) {
     $updater_utils->execute_query("ALTER TABLE users ADD COLUMN user_deleted datetime", true);
   }
-  $result->close();
-
 
   // 03/08/2012 - Add session change over date.
   $new_cfg_str = array();
@@ -2635,91 +2472,43 @@ if (!isset($_POST['update'])) {
   }
 
   // 28/08/2012 - Add 'area' question type
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='q_type'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  $result->close();
-  if ($column_type == "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false')") {
+  if (!$updater_utils->does_column_type_value_exist('questions', 'q_type', "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area')")) {
     $sql = "ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area')";
     $updater_utils->execute_query($sql, true);
   }
 
   // 04/09/2012 - add new index to schools
-  $result = $mysqli->prepare("SHOW INDEX FROM schools WHERE Key_name = 'idx_facultyID'");
-  $result->execute();
-  $result->store_result();
-  $result->fetch();
-  if ($result->num_rows() == 0) {
+  if (!$updater_utils->does_index_exist('schools', 'idx_facultyID')) {
     $updater_utils->execute_query("CREATE INDEX `idx_facultyID` ON `schools` (`facultyID`)", true);
   }
-  $result->close();
-
 
   // cczsa1 2012/09/05 update table structure to match new lti (somehow this has dissapeared from this file somewhere in the past)
-  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_user' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='oauth_consumer_key'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() > 0) {
-    $updater_utils->execute_query("UPDATE `lti_user` set oauth_consumer_key=CONCAT(oauth_consumer_key,':',user_id)", true);
-    
+  if ($updater_utils->does_column_exist('lti_user', 'oauth_consumer_key')) {
+    $updater_utils->execute_query("UPDATE `lti_user` SET oauth_consumer_key=CONCAT(oauth_consumer_key,':',user_id)", true);
     $updater_utils->execute_query("ALTER TABLE `lti_user` DROP COLUMN user_id", true);
-        
     $updater_utils->execute_query("ALTER TABLE `lti_user` CHANGE `oauth_consumer_key` `lti_user_key` varchar(255)", true);
-        
-    $updater_utils->execute_query("ALTER TABLE `lti_user` CHANGE `rogo_id` `lti_user_equ` varchar(255) NOT NULL", true);
-        
+    $updater_utils->execute_query("ALTER TABLE `lti_user` CHANGE `lti_user_equ` `lti_user_equ` varchar(255) NOT NULL", true);
     $updater_utils->execute_query("ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` datetime NOT NULL", true);
   }
-  
-  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_context' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() > 0) {
+
+  if ($updater_utils->does_column_exist('lti_context', 'oauth_consumer_key')) {
     $sql = "UPDATE `lti_context` SET `oaurth_consumer_key`=CONCAT(`oauth_consumer_key`,':',`lti_context_id`)";
     $updater_utils->execute_query($sql, true);
-    
     $updater_utils->execute_query("ALTER TABLE `lti_context` DROP `lti_context_id`", true);
-
     $updater_utils->execute_query("ALTER TABLE `lti_context` CHANGE `oauth_consumer_key` `lti_context_key` VARCHAR(255) NOT NULL", true);
   }
 
-  $result->close();
-  @ob_flush();
-  @flush();
-
-  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_resource' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() > 0) {
+  if ($updater_utils->does_column_exist('lti_resource', 'oauth_consumer_key')) {
     $updater_utils->execute_query("UPDATE `lti_resource` SET `lti_resource_id`=CONCAT(`oauth_consumer_key`,':',`lti_resource_id`)", true);
-
     $updater_utils->execute_query("ALTER TABLE `lti_resource` DROP `oauth_consumer_key`", true);
-
     $updater_utils->execute_query("ALTER TABLE `lti_resource` CHANGE `lti_resource_id` `lti_resource_key` VARCHAR(255) NOT NULL", true);
-
     $updater_utils->execute_query("ALTER TABLE `lti_resource` CHANGE `itype` `internal_type` VARCHAR(255) NOT NULL", true);
-
     $updater_utils->execute_query("ALTER TABLE `lti_resource` CHANGE `updated` `updated_on` DATETIME", true);
   }
-  $result->close();
 
-  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND COLUMN_NAME='updated_at' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() > 0) {
+  if ($updater_utils->does_column_exist('lti_keys', 'updated_at')) {
     $updater_utils->execute_query("ALTER TABLE `lti_keys` CHANGE `updated_at` `updated_on` DATETIME", true);
   }
-  $result->close();
 
   // 03/09/2012 Permissions fix for staff users
   if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'log5', $cfg_db_host)) {
@@ -2767,41 +2556,17 @@ if (!isset($_POST['update'])) {
 
 
   // 17/09/2012 cczsa1 update to make database consistant with new install
-  $findsql = "SELECT column_type from information_schema.COLUMNS where TABLE_NAME='student_modules'  and TABLE_SCHEMA='" . $cfg_db_database . "' and column_type=\"enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15')\"";
-  $result = $mysqli->prepare($findsql);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() > 0) {
+  if (!$updater_utils->does_column_type_value_exist('student_modules', 'calendar_year', "enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')") {
     $updater_utils->execute_query("ALTER TABLE `student_modules` CHANGE `calendar_year` `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL", true);
   }
-  $result->close();
 
-  $findsql = "SELECT column_type from information_schema.COLUMNS where TABLE_NAME='users_metadata'  and TABLE_SCHEMA='" . $cfg_db_database . "'  and column_name='userID' and column_type like 'int%unsigned'";
-  $result = $mysqli->prepare($findsql);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() == 0) {
-    $updater_utils->execute_query("ALTER TABLE `users_metadata` CHANGE `userID` `userID` int unsigned default NULL", true);
+  if (!$updater_utils->does_column_type_value_exist('users_metadata', 'userID', 'int(10) unsigned') {
+    $updater_utils->execute_query("ALTER TABLE `users_metadata` CHANGE `userID` `userID` int(10) unsigned default NULL", true);
   }
-  $result->close();
 
-  $findsql = "SELECT column_type from information_schema.COLUMNS where TABLE_NAME='textbox_remark'  and TABLE_SCHEMA='" . $cfg_db_database . "'  and column_name='paperID' and column_type like 'mediumint%unsigned'";
-  $result = $mysqli->prepare($findsql);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() == 0) {
-    $updater_utils->execute_query("ALTER TABLE `textbox_remark` CHANGE `paperID` `paperID` mediumint unsigned DEFAULT NULL", true);
+  if (!$updater_utils->does_column_type_value_exist('textbox_remark', 'paperID', 'mediumint(8) unsigned') {
+    $updater_utils->execute_query("ALTER TABLE `textbox_remark` CHANGE `paperID` `paperID` mediumint(8) unsigned DEFAULT NULL", true);
   }
-  $result->close();
-
-  @ob_flush();
-  @flush();
 
   //remove references to old vars
   $cfg_new = array();
@@ -2900,14 +2665,9 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 19/09/2012 - remove ID field from users_metadata
-  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='users_metadata' AND COLUMN_NAME='id' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->fetch();
-  if ($result->num_rows() == 1) {
+  if ($updater_utils->does_column_exist('users_metadata', 'id'))
     $updater_utils->execute_query("ALTER TABLE users_metadata DROP COLUMN id", true);
   }
-  $result->close();
 
   // 19/09/2012 - add new index to users_metadata
   if (!$updater_utils->does_column_exist('users_metadata', 'idx_users_metadata')) {
@@ -2964,61 +2724,97 @@ QUERY;
   if (!$updater_utils->does_column_type_value_exist('textbox_marking', 'paperID', 'mediumint(8) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE textbox_marking CHANGE COLUMN paperID paperID mediumint(8) unsigned", true);
   }
+  
 
   //27/09/2012 - remove concatenated moduleID form properties and crate the properties_module linking table
   if (!$updater_utils->does_table_exist('properties_modules')) {
-    $sql = "CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int(11) unsigned, constraint pk_properties_module primary key (property_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";
+    $sql = "CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int(11) unsigned) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";  // Without primary key for speed
     $updater_utils->execute_query($sql, true);
     
+    $modules = array();
     $res = $mysqli->prepare("SELECT id, moduleid FROM modules");
     $res->execute();
     $res->bind_result($id, $moduleid);
-    $modules = array();
     while ($res->fetch()) {
+      $moduleid = strtolower($moduleid);
       $modules[$moduleid] = $id;
     }
     $res->close();
     unset($res);
+
     $res = $mysqli->prepare("SELECT property_id, moduleID FROM properties");
     $res->execute();
     $res->store_result();
     $res->bind_result($property_id, $moduleID);
     $insert_res = $mysqli->prepare("INSERT INTO properties_modules VALUES (?, ?)");
+    echo "<li>Populating properties_modules";
+    $i = 0;
     while ($res->fetch()) {
       $paper_modules = explode(',', $moduleID);
+      $paper_modules = array_unique($paper_modules);
       foreach ($paper_modules as $m) {
-        $insert_res->bind_param('ii', $property_id, $modules[$m]);
-        $insert_res->execute();
+        $m = strtolower($m);
+        if (isset($modules[$m])) {
+          $tmp_idMod = $modules[$m];
+          $insert_res->bind_param('ii', $property_id, $tmp_idMod);
+          $insert_res->execute();
+        } else {
+          if ($m != '') echo "ERROR: $m";
+        }
       }
+      if ($i % 200 == 0) echo ".\n";
+      $i++;
+      ob_flush();
+      flush();
     }
     $insert_res->close();
     $res->close();
+    
+    $sql = "ALTER TABLE properties_modules ADD PRIMARY KEY(property_id, idMod)";  // Add primary key on
+    $updater_utils->execute_query($sql, true);
 
     $updater_utils->execute_query("ALTER TABLE properties DROP moduleid", true);
 
     //deal with questions q_group
-    $sql = "CREATE TABLE questions_modules (q_id int(4) unsigned, idMod int(11) unsigned, constraint pk_questions_module primary key (q_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";
+    $sql = "CREATE TABLE questions_modules (q_id int(4) unsigned, idMod int(11) unsigned) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";  // Without primary key for speed
     $updater_utils->execute_query($sql, true);
 
-    $res = $mysqli->prepare("SELECT q_id, q_group FROM questions");
+    $res = $mysqli->prepare("SELECT q_id, REPLACE(q_group, ';', ',') AS q_group FROM questions");
     $res->execute();
     $res->store_result();
     $res->bind_result($q_id, $moduleID);
-    $insert_res = $mysqli->prepare("INSERT INTO questions_modules VALUES (?,?)");
+    $insert_res = $mysqli->prepare("INSERT INTO questions_modules VALUES (?, ?)");
+    echo "<li>Populating questions_modules";
+    $i = 0;
     while ($res->fetch()) {
       $questions_modules = explode(',', $moduleID);
+      $questions_modules = array_unique($questions_modules);
       foreach ($questions_modules as $m) {
-        $insert_res->bind_param('ii', $q_id, $modules[$m]);
-        $insert_res->execute();
+        $m = strtolower($m);
+        if (isset($modules[$m])) {
+          $tmp_idMod = $modules[$m];
+          $insert_res->bind_param('ii', $q_id, $tmp_idMod);
+          $insert_res->execute();
+        } else {
+          if ($m != '') echo "ERROR: $m";
+        }
       }
+      if ($i % 200 == 0) echo ".\n";
+      $i++;
+      ob_flush();
+      flush();
     }
     $insert_res->close();
     $res->close();
+    echo "</li>\n";
+
+    $sql = "ALTER TABLE questions_modules ADD PRIMARY KEY(q_id, idMod)";  // Add primary key on
+    $updater_utils->execute_query($sql, true);
 
     $updater_utils->execute_query("ALTER TABLE questions DROP q_group", true);
 
     //'folders' => 'team_name' is not 1 to 1 so need a folders_modules_staff joining table
-    $sql = "CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int(11) unsigned, constraint pk_properties_module primary key (folders_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";
+    $sql = "CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int(11) unsigned) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";  // Without primary key for speed
     $updater_utils->execute_query($sql, true);
     
     unset($res);
@@ -3027,26 +2823,44 @@ QUERY;
     $res->store_result();
     $res->bind_result($folder_id, $team_name);
     $insert_res = $mysqli->prepare("INSERT INTO folders_modules_staff VALUES (?, ?)");
+    echo "<li>Populating folders_modules_staff";
+    $i = 0;
     while ($res->fetch()) {
       $folder_modules = explode(',', $moduleID);
+      $folder_modules = array_unique($folder_modules);
       foreach ($folder_modules as $m) {
-        $insert_res->bind_param('ii', $folder_id, $modules[$m]);
-        $insert_res->execute();
+        $m = strtolower($m);
+        if (isset($modules[$m])) {
+          $tmp_idMod = $modules[$m];
+          $insert_res->bind_param('ii', $folder_id, $tmp_idMod);
+          $insert_res->execute();
+        } else {
+          if ($m != '') echo "ERROR: $m";
+        }
       }
+      if ($i % 200 == 0) echo ".\n";
+      $i++;
+      ob_flush();
+      flush();
     }
     $insert_res->close();
     $res->close();
+
+    $sql = "ALTER TABLE folders_modules_staff ADD PRIMARY KEY(folders_id, idMod)";  // Add primary key on
+    $updater_utils->execute_query($sql, true);
 
     $updater_utils->execute_query("ALTER TABLE folders DROP team_name", true);
     
     //translate moduleID to idMod in all tables
     $updater_utils->execute_query("ALTER TABLE sessions DROP PRIMARY KEY", false);
+    
     $tables = array('objectives ' => 'moduleID', 'relationships' => 'module_id', 'sessions' => 'moduleID', 'sms_imports' => 'moduleid', 'student_modules' => 'moduleid', 'teams' => 'name');
     foreach ($tables as $table => $col) {
       foreach ($modules as $code => $id) {
-        $updater_utils->execute_query("UPDATE $table SET $col = $id WHERE $col = '$code'", false);
+        $updater_utils->execute_query("UPDATE $table SET $col = '$id' WHERE $col = '$code'", false);
       }
     }
+    
     //rename and rename and retype the columns
     $tables['reference_modules'] = 'moduleID'; //this just needs renaming
     $tables['users_metadata'] = 'moduleID'; //this just needs renaming
@@ -3131,19 +2945,6 @@ QUERY;
   //brzsw 04/01/2013 - Add new grants for external examiners
   if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'modules', $cfg_db_host)) {
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
-    $updater_utils->execute_query($sql, true);
-  }
-
-  // 30/11/2012
-  // Adding a new table log_start_time
-  if (!$updater_utils->does_table_exist('log_start_time')) {
-    $sql = 'CREATE TABLE
-                 log_start_time(   id           int            PRIMARY KEY NOT NULL AUTO_INCREMENT
-                                 , userID       int            unsigned NOT NULL
-                                 , paperID      mediumint      unsigned NOT NULL
-                                 , start_time   datetime       NOT NULL
-                                 , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
-                             ) ENGINE=InnoDB DEFAULT CHARSET=' . $cfg_db_charset . ' PACK_KEYS=1 AUTO_INCREMENT=1;';
     $updater_utils->execute_query($sql, true);
   }
 
@@ -3236,7 +3037,7 @@ QUERY;
   }
 
   // 19/12/2012 - Enlarge the size of the address field.
-  if (!$updater_utils->does_column_type_value_exist('ip_addresses', 'address', char(60))) {
+  if (!$updater_utils->does_column_type_value_exist('ip_addresses', 'address', 'char(60)')) {
     $updater_utils->execute_query("ALTER TABLE ip_addresses CHANGE COLUMN address address char(60)", true);
   }
 
@@ -3388,7 +3189,7 @@ QUERY;
       if (isset($lab_lookup[$ipaddress])) {
         $labs_name = $lab_lookup[$ipaddress];
         
-        $updater_utils->execute_query("UPDATE log_metadata SET lab_name = \"" . $labs_name . "\" WHERE ipaddress = '$ipaddress'", true);
+        $updater_utils->execute_query("UPDATE log_metadata SET lab_name = \"" . $labs_name . "\" WHERE ipaddress = '$ipaddress'", false);
       }      
     }
     $result2->close();
@@ -3398,20 +3199,6 @@ QUERY;
   if (!$updater_utils->does_column_type_value_exist('password_tokens', 'user_id', 'int(11) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE password_tokens CHANGE COLUMN user_id user_id int(11) unsigned", true);
   }
-
-  // 21/01/2013
-  /*
-  $data_type = '';
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='ownerID'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($data_type);
-  $result->fetch();
-  if ($data_type != 'int(11) unsigned') {
-    $updater_utils->execute_query("ALTER TABLE questions CHANGE COLUMN ownerID ownerID int(11) unsigned", true);
-  }
-  $result->close();
-  */
 
   // 21/01/2013
   if (!$updater_utils->does_column_type_value_exist('scheduling', 'paperID', 'mediumint(8) unsigned')) {
