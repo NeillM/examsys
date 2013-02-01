@@ -187,7 +187,7 @@ if (!isset($_POST['update'])) {
   }
   $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
 
-  
+
   // Avoid repeated method calls
   $cfg_db_database = $configObject->get('cfg_db_database');
   $cfg_db_student_user = $configObject->get('cfg_db_student_user');
@@ -197,7 +197,7 @@ if (!isset($_POST['update'])) {
   $cfg_db_external_user = $configObject->get('cfg_db_external_user');
   $cfg_db_inv_username = $configObject->get('cfg_db_inv_user');
   $cfg_use_ldap = $configObject->get('cfg_use_ldap');
-  
+
   error_reporting(-1);
   ob_start();
 
@@ -261,7 +261,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_column_exist('modules', 'schoolid')) {
     // Add new integer column
     $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN schoolid int", true);
-    
+
     // Look up existing school names
     $schools = array();
     $sch_data = $mysqli->prepare("SELECT id, school FROM schools");
@@ -597,7 +597,7 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE questions ADD COLUMN score_method enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark')", true);
     $updater_utils->execute_query("UPDATE questions SET score_method = 'Mark per Option' WHERE q_type != 'Calculation'", false);
     $updater_utils->execute_query("UPDATE questions SET score_method = 'Mark per Question' WHERE q_type = 'Calculation'", false);
-    
+
     // Update the BonusMark setting
     $q_data = $mysqli->prepare("SELECT q_id FROM questions WHERE display_method = 'BonusMark'");
     $q_data->execute();
@@ -647,7 +647,7 @@ if (!isset($_POST['update'])) {
       $updater_utils->execute_query("UPDATE questions SET display_method='', score_method='Allow partial Marks' WHERE q_id=$q_id", false);
     }
     $q_data->close();
-    
+
     $updater_utils->execute_query('ALTER TABLE options CHANGE COLUMN marks marks_correct float', true);
     $updater_utils->execute_query('ALTER TABLE options ADD COLUMN marks_incorrect float', true);
     $updater_utils->execute_query('ALTER TABLE options ADD COLUMN marks_partial float', true);
@@ -670,7 +670,7 @@ if (!isset($_POST['update'])) {
     $q_data->store_result();
     $q_data->bind_result($q_id);
     while ($q_data->fetch()) {
-      $updater_utils->execute_query("UPDATE options SET marks_incorrect=-0.5 WHERE o_id=$q_id", false);   
+      $updater_utils->execute_query("UPDATE options SET marks_incorrect=-0.5 WHERE o_id=$q_id", false);
       $updater_utils->execute_query("UPDATE questions SET display_method='TF_NegativeAbstain' WHERE q_id=$q_id", false);
     }
     $q_data->close();
@@ -792,7 +792,7 @@ if (!isset($_POST['update'])) {
 
   // 20/09/2011 - set marks for fill-in-the-blank question tyoe
   $updater_utils->execute_query("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND (marks_correct IS NULL OR marks_correct=0)", false);
-  
+
   // 15/09/2011 Update calculation questions so that they have two tolerances, one for full marks the other for partial
   $result = $mysqli->prepare("SELECT q_id, display_method FROM questions WHERE q_type='calculation'");
   $result->execute();
@@ -962,7 +962,7 @@ if (!isset($_POST['update'])) {
     foreach ($priv_SQL as $sql) {
       $updater_utils->execute_query($sql, false);
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
     //
     //  update the config file!!
@@ -992,7 +992,7 @@ if (!isset($_POST['update'])) {
   // 12/10/2011 - Add encrypted name for a paper.
   if (!$updater_utils->does_column_exist('properties', 'crypt_name')) {
     $updater_utils->execute_query("ALTER TABLE properties ADD COLUMN crypt_name varchar(32)", true);
-    
+
     if (!$updater_utils->does_index_exist('properties', 'crypt_name_idx')) {
       $updater_utils->execute_query("ALTER TABLE properties ADD INDEX crypt_name_idx (crypt_name)", false);
     }
@@ -1017,7 +1017,7 @@ if (!isset($_POST['update'])) {
   // 24/10/2011
   if (!$updater_utils->does_column_type_value_exist('log4_overall', 'year', 'tinyint(4)')) {
     $updater_utils->execute_query("ALTER TABLE log4_overall ADD COLUMN yearofstudy tinyint", true);
-    
+
     $convert_years = array('year1' => 1, 'year2' => 2, 'year3' => 3, 'year4' => 4, 'year5' => 5, 'year6' => 6, 'cp1' => 3, 'cp2' => 4, 'cp3' => 5, 'f1' => 5, 'graduate' => 6);
     foreach ($convert_years as $old_year => $new_year) {
       $updater_utils->execute_query("UPDATE log4_overall SET yearofstudy=$new_year WHERE year='$old_year'", false);
@@ -1472,7 +1472,7 @@ if (!isset($_POST['update'])) {
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sessions TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
-  
+
   // 12/03/2012 - Fix any uses of old calculator or new basic calculator as we are not shipping that yet
   $result = $mysqli->prepare("SELECT COUNT(property_id) FROM properties WHERE (calculator = 2 OR calculator = -1)");
   $result->execute();
@@ -1488,7 +1488,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_index_exist('users', 'idx_roles')) {
     $updater_utils->execute_query("CREATE INDEX idx_roles ON users (roles)", true);
   }
-  
+
   if (!$updater_utils->does_index_exist('standards_setting', 'idx_std_set')) {
     $updater_utils->execute_query("CREATE INDEX idx_std_set ON standards_setting (std_set)", true);
     $updater_utils->execute_query("CREATE INDEX idx_setterID ON standards_setting (setterID)", true);
@@ -1505,7 +1505,7 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("CREATE INDEX idx_log2_screen ON log2 (screen)", true);
     $updater_utils->execute_query("CREATE INDEX idx_log3_screen ON log3 (screen)", true);
   }
-  
+
   if (!$updater_utils->does_index_exist('courses', 'idx_courses_name')) {
     $updater_utils->execute_query("CREATE INDEX idx_courses_name ON courses (name)", true);
   }
@@ -1817,7 +1817,7 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if (strpos($data_type, '2019/20') === FALSE) {
     $updater_utils->execute_query("ALTER TABLE objectives CHANGE COLUMN calendar_year calendar_year enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
-    
+
   }
   $result->close();
 
@@ -1906,9 +1906,9 @@ if (!isset($_POST['update'])) {
   if (!$col_exists) {
     // Table to hold Reference material
     $updater_utils->execute_query("CREATE TABLE state (userID int unsigned, state_name varchar(255), content varchar(255), page varchar(255))", true);
-    
+
     $updater_utils->execute_query("ALTER TABLE state ADD UNIQUE idx_user_state (userID, state_name, page)", true);
-    
+
     $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
 
@@ -2228,7 +2228,7 @@ if (!isset($_POST['update'])) {
     // Table to hold Reference material
     $sql = "CREATE TABLE scheduling (id int not null primary key auto_increment, paperID int, period varchar(255), barriers_needed tinyint, cohort_size varchar(20), notes text, sittings tinyint, campus varchar(255))";
     $updater_utils->execute_query($sql, true);
-    
+
     $updater_utils->execute_query("ALTER TABLE scheduling ADD UNIQUE idx_paperID (paperID)", true);
 
     $sql = "GRANT SELECT, INSERT, DELETE ON " . $cfg_db_database . ".scheduling TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
@@ -2271,7 +2271,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_table_exist('performance_main')) {
     $sql = "CREATE TABLE performance_main (id int not null primary key auto_increment, q_id int unsigned, paperID int unsigned, percentage tinyint, cohort_size int unsigned, taken date)";
     $updater_utils->execute_query($sql, true);
-    
+
     $updater_utils->execute_query("ALTER TABLE performance_main ADD INDEX idx_q_id (q_id)", true);
 
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_main TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
@@ -2297,17 +2297,17 @@ if (!isset($_POST['update'])) {
   }
 
   // Delete permission might be missing on papers and state (28/06/2012)
-  
+
   if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'papers', $cfg_db_host)) {
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
-  
+
   if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'state', $cfg_db_host)) {
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".state TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
-  
+
   if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'state', $cfg_db_host)) {
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".state TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
@@ -2539,10 +2539,10 @@ if (!isset($_POST['update'])) {
 
   // 06/09/2012 - Delete the blank 'parent' books from the staff help
   $updater_utils->execute_query("DELETE FROM staff_help WHERE body = ''", false);
-  
+
   // 06/09/2012 - Delete the blank 'parent' books from the student help
   $updater_utils->execute_query("DELETE FROM student_help WHERE body = ''", false);
-  
+
 
   $new_cfg_str = array();
   $new_cfg_str[] = "\r\n";
@@ -2556,15 +2556,15 @@ if (!isset($_POST['update'])) {
 
 
   // 17/09/2012 cczsa1 update to make database consistant with new install
-  if (!$updater_utils->does_column_type_value_exist('student_modules', 'calendar_year', "enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')") {
+  if (!$updater_utils->does_column_type_value_exist('student_modules', 'calendar_year', "enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')")) {
     $updater_utils->execute_query("ALTER TABLE `student_modules` CHANGE `calendar_year` `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL", true);
   }
 
-  if (!$updater_utils->does_column_type_value_exist('users_metadata', 'userID', 'int(10) unsigned') {
+  if (!$updater_utils->does_column_type_value_exist('users_metadata', 'userID', 'int(10) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE `users_metadata` CHANGE `userID` `userID` int(10) unsigned default NULL", true);
   }
 
-  if (!$updater_utils->does_column_type_value_exist('textbox_remark', 'paperID', 'mediumint(8) unsigned') {
+  if (!$updater_utils->does_column_type_value_exist('textbox_remark', 'paperID', 'mediumint(8) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE `textbox_remark` CHANGE `paperID` `paperID` mediumint(8) unsigned DEFAULT NULL", true);
   }
 
@@ -2665,7 +2665,7 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 19/09/2012 - remove ID field from users_metadata
-  if ($updater_utils->does_column_exist('users_metadata', 'id'))
+  if ($updater_utils->does_column_exist('users_metadata', 'id')) {
     $updater_utils->execute_query("ALTER TABLE users_metadata DROP COLUMN id", true);
   }
 
@@ -2724,13 +2724,13 @@ QUERY;
   if (!$updater_utils->does_column_type_value_exist('textbox_marking', 'paperID', 'mediumint(8) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE textbox_marking CHANGE COLUMN paperID paperID mediumint(8) unsigned", true);
   }
-  
+
 
   //27/09/2012 - remove concatenated moduleID form properties and crate the properties_module linking table
   if (!$updater_utils->does_table_exist('properties_modules')) {
     $sql = "CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int(11) unsigned) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";  // Without primary key for speed
     $updater_utils->execute_query($sql, true);
-    
+
     $modules = array();
     $res = $mysqli->prepare("SELECT id, moduleid FROM modules");
     $res->execute();
@@ -2769,7 +2769,7 @@ QUERY;
     }
     $insert_res->close();
     $res->close();
-    
+
     $sql = "ALTER TABLE properties_modules ADD PRIMARY KEY(property_id, idMod)";  // Add primary key on
     $updater_utils->execute_query($sql, true);
 
@@ -2816,7 +2816,7 @@ QUERY;
     //'folders' => 'team_name' is not 1 to 1 so need a folders_modules_staff joining table
     $sql = "CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int(11) unsigned) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";  // Without primary key for speed
     $updater_utils->execute_query($sql, true);
-    
+
     unset($res);
     $res = $mysqli->prepare("SELECT id, team_name FROM folders");
     $res->execute();
@@ -2850,17 +2850,17 @@ QUERY;
     $updater_utils->execute_query($sql, true);
 
     $updater_utils->execute_query("ALTER TABLE folders DROP team_name", true);
-    
+
     //translate moduleID to idMod in all tables
     $updater_utils->execute_query("ALTER TABLE sessions DROP PRIMARY KEY", false);
-    
+
     $tables = array('objectives ' => 'moduleID', 'relationships' => 'module_id', 'sessions' => 'moduleID', 'sms_imports' => 'moduleid', 'student_modules' => 'moduleid', 'teams' => 'name');
     foreach ($tables as $table => $col) {
       foreach ($modules as $code => $id) {
         $updater_utils->execute_query("UPDATE $table SET $col = '$id' WHERE $col = '$code'", false);
       }
     }
-    
+
     //rename and rename and retype the columns
     $tables['reference_modules'] = 'moduleID'; //this just needs renaming
     $tables['users_metadata'] = 'moduleID'; //this just needs renaming
@@ -2923,7 +2923,7 @@ QUERY;
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".schools TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
-  
+
   //BP 22/11/2012 - Add new grants for invigilator users needing select from properties_modules
   if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'properties_modules', $cfg_db_host)) {
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
@@ -2935,13 +2935,13 @@ QUERY;
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
-  
+
   //brzsw 02/01/2013 - Add new grants for staff users needing change properties_modules
   if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'properties_modules', $cfg_db_host)) {
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
-  
+
   //brzsw 04/01/2013 - Add new grants for external examiners
   if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'modules', $cfg_db_host)) {
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
@@ -3000,7 +3000,7 @@ QUERY;
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.properties TO \'' . $cfg_db_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-  
+
   if (!$updater_utils->has_grant($cfg_db_username, 'SELECT', 'ip_addresses', $cfg_db_host)) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.ip_addresses TO \'' . $cfg_db_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
@@ -3030,7 +3030,7 @@ QUERY;
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
-  
+
   if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'keywords_question', $cfg_db_host)) {
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".keywords_question TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
@@ -3151,7 +3151,7 @@ QUERY;
       $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.paper_feedback TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
       $updater_utils->execute_query($sql, false);
     }
-    
+
     if (!$updater_utils->has_grant($cfg_db_student_user, 'SELECT', 'paper_feedback', $cfg_db_host)) {
       $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.paper_feedback TO \'' . $cfg_db_student_user . '\'@\''. $cfg_db_host . "'";
       $updater_utils->execute_query($sql, false);
@@ -3161,7 +3161,7 @@ QUERY;
   // 11/01/2013 - Create new 'lab_name' field in log_metadata table.
   if (!$updater_utils->does_column_type_value_exist('log_metadata', 'lab_name', 'varchar(255)')) {
     $updater_utils->execute_query("ALTER TABLE log_metadata ADD COLUMN lab_name varchar(255)", true);
-    
+
     // Populate existing records.
     $lab_lookup = array();
     $result2 = $mysqli->prepare("SELECT address, name FROM (ip_addresses, labs) WHERE ip_addresses.lab = labs.id");
@@ -3172,14 +3172,14 @@ QUERY;
       $lab_lookup[$address] = $lab_name;
     }
     $result2->close();
-    
+
     if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== FALSE) {  // Backwards compatibility at UoN
       $sql = "UPDATE log_metadata SET lab_name = 'Pope - A24' WHERE ipaddress IN ('128.243.137.9','128.243.137.10','128.243.137.161','128.243.137.23','128.243.137.24','128.243.137.25','128.243.137.26','128.243.137.28','128.243.137.29','128.243.137.32','128.243.137.34','128.243.137.81','128.243.137.131','128.243.137.143','128.243.137.144','128.243.137.146','128.243.137.148','128.243.137.149','128.243.137.151','128.243.137.153','128.243.137.154','128.243.137.156','128.243.137.157','128.243.137.158','128.243.137.160','128.243.137.159','128.243.137.155','128.243.137.152','128.243.137.16','128.243.137.147','128.243.137.145','128.243.137.142','128.243.137.141','128.243.137.76','128.243.137.33','128.243.137.31','128.243.137.30','128.243.137.27','128.243.137.18','128.243.137.11')";
-      $updater_utils->execute_query($sql, false);      
+      $updater_utils->execute_query($sql, false);
       $sql = "UPDATE log_metadata SET lab_name = 'Pope - A15' WHERE ipaddress IN ('128.243.137.5','128.243.137.13','128.243.137.14','128.243.137.15','128.243.137.17','128.243.137.19','128.243.137.21','128.243.137.22','128.243.137.63','128.243.137.67','128.243.137.86','128.243.137.88','128.243.137.96','128.243.137.97','128.243.137.104','128.243.137.107','128.243.137.108','128.243.137.110','128.243.137.111','128.243.137.112','128.243.137.114','128.243.137.115','128.243.137.117','128.243.137.118','128.243.137.119','128.243.137.120','128.243.137.123','128.243.137.124','128.243.137.125','128.243.137.126','128.243.137.129','128.243.137.130','128.243.137.133','128.243.137.135','128.243.137.140','128.243.137.150','128.243.137.163','128.243.137.165','128.243.137.166','128.243.137.167','128.243.137.168','128.243.137.169','128.243.137.170','128.243.137.171','128.243.137.172','128.243.137.173','128.243.137.174','128.243.137.175','128.243.137.176','128.243.137.178','128.243.137.179','128.243.137.177','128.243.137.180','128.243.137.186','128.243.137.190','128.243.137.194','128.243.137.202','128.243.137.205','128.243.137.207','128.243.137.208','128.243.137.209')";
       $updater_utils->execute_query($sql, false);
     }
-    
+
     // Look up log2 records and populate.
     $result2 = $mysqli->prepare("SELECT DISTINCT ipaddress FROM log_metadata");
     $result2->execute();
@@ -3188,9 +3188,9 @@ QUERY;
     while ($result2->fetch()) {
       if (isset($lab_lookup[$ipaddress])) {
         $labs_name = $lab_lookup[$ipaddress];
-        
+
         $updater_utils->execute_query("UPDATE log_metadata SET lab_name = \"" . $labs_name . "\" WHERE ipaddress = '$ipaddress'", false);
-      }      
+      }
     }
     $result2->close();
   }
@@ -3209,7 +3209,7 @@ QUERY;
   if (!$updater_utils->does_column_type_value_exist('sys_errors', 'userID', 'int(11) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE sys_errors CHANGE COLUMN userID userID int(11) unsigned", true);
   }
-  
+
   //brzsw 25/01/2013 - Remove grants no longer needed (tables have been renamed).
   $sql_cmd = array();
   $sql_cmd[] = "REVOKE ALL PRIVILEGES ON student_modules FROM '" . $cfg_db_database . "_stu'@'" . $cfg_db_host . "'";
@@ -3220,12 +3220,12 @@ QUERY;
   foreach($sql_cmd as $sql) {
     $updater_utils->execute_query($sql, true);
   }
-  
+
   //brzsw 25/01/2013 - Add missing indexes.
   if (!$updater_utils->does_index_exist('log4', 'q_paper')) {
     $updater_utils->execute_query("ALTER TABLE log4 ADD INDEX q_paper (q_paper)", true);
   }
-  
+
   if (!$updater_utils->does_index_exist('log4', 'username')) {
     $updater_utils->execute_query("ALTER TABLE log4 ADD INDEX username (userID)", true);
   }
@@ -3237,7 +3237,7 @@ QUERY;
   if (!$updater_utils->does_index_exist('log4_overall', 'q_paper')) {
     $updater_utils->execute_query("ALTER TABLE log4_overall ADD INDEX q_paper (q_paper)", true);
   }
-  
+
   if (!$updater_utils->does_index_exist('log4_overall', 'username')) {
     $updater_utils->execute_query("ALTER TABLE log4_overall ADD INDEX username (userID)", true);
   }
@@ -3249,7 +3249,7 @@ QUERY;
   if (!$updater_utils->does_index_exist('log5', 'q_paper')) {
     $updater_utils->execute_query("ALTER TABLE log5 ADD INDEX q_paper (q_paper)", true);
   }
-  
+
   if (!$updater_utils->does_index_exist('log5', 'username')) {
     $updater_utils->execute_query("ALTER TABLE log5 ADD INDEX username (userID)", true);
   }
@@ -3275,7 +3275,7 @@ QUERY;
   $updater_utils->execute_query('FLUSH PRIVILEGES', true);
   $updater_utils->execute_query('TRUNCATE sys_errors', true);
   echo "</ol>\n";
-  
+
   $mysqli->close();
   echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
