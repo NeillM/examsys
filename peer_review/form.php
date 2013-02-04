@@ -26,8 +26,13 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
+
 
 check_var('id', 'GET', true, false, false);
+
+$userObject = UserObject::get_instance();
+
 
 function display_question($qID, $details, $member_userID, &$row_no, $columns, $marking, $saved_results) {
   if ($details['q_type'] == 'likert') {
@@ -57,41 +62,54 @@ function display_question($qID, $details, $member_userID, &$row_no, $columns, $m
   $row_no++;
 }
 
-// Get some properties of the paper.
-$result = $mysqli->prepare("SELECT property_id, paper_title, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, display_question_mark as review, labs, password FROM properties WHERE crypt_name = ? LIMIT 1");
-$result->bind_param('s', $_GET['id']);
-$result->execute();
-$result->bind_result($property_id, $paper_title, $start_date, $end_date, $calendar_year, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $type, $paper_prologue, $marking, $display_photos, $review, $labs, $password);
-$result->fetch();
-$result->close();
+//get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
+  //this will exit php
+}
+
+$property_id = $propertyObj->get_property_id();
+$calendar_year = $propertyObj->get_calendar_year();
+$paper_title = $propertyObj->get_paper_title();
+$paper_type = $propertyObj->get_paper_type();
+$start_date = $propertyObj->get_start_date();
+$end_date = $propertyObj->get_end_date();
+$marking = $propertyObj->get_marking();
+$password = $propertyObj->get_password();
+$paper_prologue  = $propertyObj->get_paper_prologue ();
+
+/*
+ * TODO remove nasty oveloaded database feilds 
+ */
+$display_photos = $propertyObj->get_display_correct_answer();
+$review = $propertyObj->get_display_question_mark();
+$type  = $propertyObj->get_rubric();
+
+/*
+* Set the default colour scheme for this paper and allow current users' special settings to override
+* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
+*/
+$bgcolor = $paper_fgcolor = $textsize = $marks_color = $paper_themecolor = $labelcolor = $font = $unanswered_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $paper_themecolor, $labelcolor, $font, $unanswered_color);
 
 $modules = Paper_utils::get_modules($property_id, $mysqli);
 
 if ($calendar_year == '') {
   display_error('Error', 'No Academic Session is set.', false, true);
 }
+
 if ($type == '') {   // What metadata field to use.
   display_error('Error', 'No field in the metadata set for groups.', false, true);
 }
 
-// Get special settings for the Student.
-if ($userObject->is_special_needs()) {
-  $stmt = $mysqli->prepare("SELECT background, foreground, textsize, themecolor, labelcolor, font FROM special_needs WHERE userid = ?");
-  $stmt->bind_param('i',$userObject->get_user_ID());
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($bgcolor, $fgcolor, $textsize, $themecolor, $labelcolor, $font);
-  $stmt->fetch();
-  $stmt->close();
+//get lab info
+$current_ip_address = NetworkUtils::get_ipaddress();
+$lab_factory = new LabFactory($mysqli);
+if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+    $lab_name = $lab_object->get_name();
+    $lab_id = $lab_object->get_id();
 }
-
-// If set overwrite the default colours with the current users' special settings
-if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
-if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
-if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
 
 if ($userObject->has_role('Student')) {
   // Check time security
@@ -99,7 +117,13 @@ if ($userObject->has_role('Student')) {
   
   // Check room security
   $paper_type = '6';
-  $low_bandwidth = check_labs($paper_type, $labs, '', $string, $mysqli);
+  $low_bandwidth = check_labs(  $paper_type, 
+                                $propertyObj->get_labs(), 
+                                $current_ip_address,
+                                $propertyObj->get_password(), 
+                                $string, 
+                                $mysqli
+                              );
 
   // Check for additional password on the paper
   check_paper_password($password, $string, true);

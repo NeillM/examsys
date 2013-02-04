@@ -224,9 +224,21 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
   //this will exit php
 }
 
+/*
+ * 
+ * Setup som feature related flags
+ * 
+ */
+//are we in a staff test and preview mode?
+$is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
+//are we in a staff test and preview mode and on the first screen?
+$is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
+//are we in a staff single question testmode
+$is_question_preview_mode = ( isset($_GET['q_id']) );
+
 // Get how many screens make up the question paper.
 $screen_data = array();
-if (isset($_GET['q_id'])) {
+if ($is_question_preview_mode) {
   $stmt = $mysqli->prepare("SELECT 1,  q_type, question 
                             FROM 
                               (papers, questions) 
@@ -267,28 +279,12 @@ $stmt->close();
 $original_paper_type = $propertyObj->get_paper_type(); 
 
 /*
-*  DEFAULT colour scheme
+* Set the default colour scheme for this paper and allow current users' special settings to override
+* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
 */
-$bgcolor = $propertyObj->get_bgcolor();
-$fgcolor = $propertyObj->get_fgcolor();
-$textsize = 90;
-$marks_color = '#808080';
-$themecolor = $propertyObj->get_themecolor();
-$labelcolor = $propertyObj->get_labelcolor();
-$font = 'Arial';
-$unanswered_color = '#FFC0C0';
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
-// If set overwrite the default colours with the current users' special settings
-if($userObject->is_special_needs()) {
-  $bgcolor = $userObject->get_bgcolor();
-  $fgcolor = $userObject->get_fgcolor();
-  $textsize = $userObject->get_textsize();
-  $marks_color = $userObject->get_marks_color();
-  $themecolor = $userObject->get_themecolor();
-  $labelcolor = $userObject->get_labelcolor();
-  $font = $userObject->get_font();
-  $unanswered_color = $userObject->get_unanswered_color();
-}
 
 $attempt = 1;                 //default attempt to 1 overwritten if the student is resit candidate by (check_modules)
 $low_bandwidth = 0;           //default to off overwritten by (check_labs) if lab has low_bandwidth set
@@ -296,13 +292,8 @@ $lab_name = NULL;             //default overwritten by (check_labs)
 $lab_id = NULL;
 $current_ip_address = NULL;   //default overwritten by (check_labs)
 
-//get lab info
+
 $current_ip_address = NetworkUtils::get_ipaddress();
-$lab_factory = new LabFactory($mysqli);
-if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
-    $lab_name = $lab_object->get_name();
-    $lab_id = $lab_object->get_id();
-}
 
 if ($userObject->has_role('Student')) {
 
@@ -331,19 +322,12 @@ if ($userObject->has_role('Student')) {
   check_metadata($propertyObj->get_property_id(), $userObject, $modIDs, $string, $mysqli);
 }
 
-if($current_ip_address === NULL) {
-  //set the ip if we need to ie if check_labs has not run 
-  $current_ip_address = NetworkUtils::get_ipaddress();
+//get lab info used in log metadata
+$lab_factory = new LabFactory($mysqli);
+if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+    $lab_name = $lab_object->get_name();
+    $lab_id = $lab_object->get_id();
 }
-
-//are we in a staff test and preview mode?
-$is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
-
-//are we in a staff test and preview mode and on the first screen?
-$is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
-
-//are we in a staff single question testmode
-$is_question_preview_mode = ( isset($_GET['q_id']) );
 
 /*
 * Set the default state

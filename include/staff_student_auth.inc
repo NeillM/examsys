@@ -156,7 +156,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 
   session_name('RogoAuthentication');
   $return = session_start();
-  $authentication = new authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
+  $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
 
   //var_dump($_SESSION);
 

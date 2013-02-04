@@ -33,57 +33,106 @@ require '../include/staff_student_auth.inc';
 require_once '../include/marking_functions.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
-
 require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/logmetadata.class.php';
+
 
 check_var('id', 'GET', true, false, false);
 
-if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid = ?")) {
-  $stmt->bind_param('i', $userObject->get_user_ID());
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
-  $stmt->fetch();
+$userObject = UserObject::get_instance();
+
+//get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
+  //this will exit php
 }
-$stmt->close();
 
-$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, password FROM properties WHERE crypt_name = ? LIMIT 1");
-$stmt->bind_param('s', $_GET['id']);
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $calendar_year, $password);
-while ($stmt->fetch()) {
-  $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions 
-  $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
-  $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
-  
-  if ($userObject->has_role('Student')) {
-  
-    // Check for additional password on the paper
-    check_paper_password($password, $string);
-    
-    // Check time security
-    check_datetime($start_date, $end_date);
+$property_id = $propertyObj->get_property_id();
+$paper_type = $propertyObj->get_paper_type(); 
+$labs = $propertyObj->get_labs(); 
+$start_date = $propertyObj->get_start_date(); 
+$end_date = $propertyObj->get_end_date(); 
+$calendar_year = $propertyObj->get_calendar_year(); 
+$password = $propertyObj->get_password();
 
-    //Check room security
-    $low_bandwidth = check_labs($paper_type, $labs, $password, $string, $mysqli);
-      
-    //get modules if the user is a student and the paper is not formative
-    $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
+/*
+ * 
+ * Setup som feature related flags
+ * 
+ */
+//are we in a staff test and preview mode?
+$is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
+//are we in a staff test and preview mode and on the first screen?
+$is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
+//are we in a staff single question testmode
+$is_question_preview_mode = ( isset($_GET['q_id']) );
 
-    // Check for any metadata security restrictions
-    check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
+/*
+* Set the default colour scheme for this paper and allow current users' special settings to override
+* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
+*/
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
-    if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
-      $paper_type = '_late';
-    }
+
+$original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions 
+$attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
+$modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
+
+$current_ip_address = NetworkUtils::get_ipaddress();
+
+if ($userObject->has_role('Student')) {
+
+  // Check for additional password on the paper
+  check_paper_password($password, $string);
+
+  // Check time security
+  check_datetime($start_date, $end_date);
+
+  //Check room security
+  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(), 
+                                $propertyObj->get_labs(), 
+                                $current_ip_address,
+                                $propertyObj->get_password(), 
+                                $string, 
+                                $mysqli
+                              );
+
+  //get modules if the user is a student and the paper is not formative
+  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
+
+  // Check for any metadata security restrictions
+  check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
+}
+
+//get lab info used in log metadata
+$lab_factory = new LabFactory($mysqli);
+if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+    $lab_name = $lab_object->get_name();
+    $lab_id = $lab_object->get_id();
+}
+
+if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
+  $paper_type = '_late';
+}
+
+//lookup previous sessionid from log_metadata.started property_id
+$log_metadata = new LogMetadata($userObject, $propertyObj->get_property_id(), $mysqli);
+$sessionid = $log_metadata->get_session_id();
+
+/*
+* Save any posted answers 
+*  
+* N.B if Ajax saving is enabled: After a successful Ajax save the form is posted as the user moves to the next screen 
+*                                with dont_record set to true so this is not executed
+*/
+if ($is_question_preview_mode == false) {
+  if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
+    record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles);
   }
-}
-$stmt->free_result();
-$stmt->close();
-if (!isset($_GET['dont_record']) or $_GET['dont_record'] != true) {
-  record_marks($property_id, $mysqli, $userObject->get_user_ID(), $paper_type, $grade, $year, $attempt, $userroles);
-}
+} 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

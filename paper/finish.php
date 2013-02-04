@@ -49,14 +49,6 @@ if ($userObject->has_role('Demo')) {
 
 $userID = $userObject->get_user_ID();
 
-$bgcolor          = $userObject->get_bgcolor();
-$fgcolor          = $userObject->get_fgcolor();
-$textsize         = $userObject->get_textsize();
-$marks_color      = $userObject->get_marks_color();
-$themecolor       = $userObject->get_themecolor();
-$labelcolor       = $userObject->get_labelcolor();
-$font             = $userObject->get_font();
-$unanswered_color = $userObject->get_unanswered_color();
 
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
@@ -64,6 +56,13 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
   $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
   //this will exit php
 }
+
+/*
+* Set the default colour scheme for this paper and allow current users' special settings to override
+* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
+*/
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
 $paperID = $propertyObj->get_property_id();
 $labs = $propertyObj->get_labs();
@@ -77,10 +76,6 @@ $paper_title = $propertyObj->get_paper_title();
 $paper_type = $propertyObj->get_paper_type();
 $start_date = $propertyObj->get_start_date();
 $end_date = $propertyObj->get_end_date();
-$paper_bgcolor = $propertyObj->get_bgcolor();
-$paper_fgcolor = $propertyObj->get_fgcolor();
-$paper_themecolor = $propertyObj->get_themecolor();
-$paper_labelcolor = $propertyObj->get_labelcolor();
 $marking = $propertyObj->get_marking();
 $paper_postscript = $propertyObj->get_paper_postscript();
 $pass_mark = $propertyObj->get_pass_mark();
@@ -255,6 +250,10 @@ require '../config/finish.inc';
     $result->close();
   } else {
     $temp_userID = $userObject->get_user_ID();
+    $tmp_title = $userObject->get_title();
+    $tmp_initials = $userObject->get_initials();
+    $tmp_surname = $userObject->get_surname();
+    $tmp_student_id = $userObject->get_user_ID();
   }
   $old_q_id = 0;
   $old_screen = 0;
