@@ -1083,7 +1083,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 13/01/2012 - Add deleted column to Degrees table
-  if (!$updater_utils->does_table_exist('degrees') {
+  if ($updater_utils->does_table_exist('degrees')) {
     if (!$updater_utils->does_column_exist('degrees', 'deleted')) {
       $updater_utils->execute_query("ALTER TABLE degrees ADD COLUMN deleted datetime", true);
     }
