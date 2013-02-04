@@ -108,8 +108,8 @@ class ldap_auth extends outline_authentication {
                   return $info;
                 }
         */
-        $this->savetodebug('on initial bind: '. var_export($info,TRUE));
-        var_dump($info);
+        //$this->savetodebug('on initial bind: '. var_export($info,TRUE));
+        //var_dump($info);
         if ($info['count'] == 1) {
           $this->savetodebug('Found user in ldap');
           $dn = $info[0]['dn'];
