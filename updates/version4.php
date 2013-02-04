@@ -2885,8 +2885,8 @@ QUERY;
   }
 
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
-  if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'papers_modules', $cfg_db_host)) {
-    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+  if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'properties_modules', $cfg_db_host)) {
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
 
@@ -3206,6 +3206,7 @@ QUERY;
     $updater_utils->execute_query("ALTER TABLE sys_errors CHANGE COLUMN userID userID int(11) unsigned", true);
   }
 
+  /*
   //brzsw 25/01/2013 - Remove grants no longer needed (tables have been renamed).
   $sql_cmd = array();
   $sql_cmd[] = "REVOKE ALL PRIVILEGES ON student_modules FROM '" . $cfg_db_database . "_stu'@'" . $cfg_db_host . "'";
@@ -3216,6 +3217,7 @@ QUERY;
   foreach($sql_cmd as $sql) {
     $updater_utils->execute_query($sql, true);
   }
+  */
 
   //brzsw 25/01/2013 - Add missing indexes.
   if (!$updater_utils->does_index_exist('log4', 'q_paper')) {
