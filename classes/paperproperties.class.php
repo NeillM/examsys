@@ -276,6 +276,38 @@ class PaperProperties {
 
   }
   
+  /*
+   * Set the default colour scheme for this paper and allow current users' special settings to override
+   * 
+   * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
+   * 
+   */
+  public function set_paper_colour_scheme($userObject, &$bgcolor, &$fgcolor, &$textsize, &$marks_color, &$themecolor, &$labelcolor, &$font, &$unanswered_color) {
+    /*
+    *  DEFAULT colour scheme
+    */
+    $bgcolor = $this->get_bgcolor();
+    $fgcolor = $this->get_fgcolor();
+    $textsize = 90;
+    $marks_color = '#808080';
+    $themecolor = $this->get_themecolor();
+    $labelcolor = $this->get_labelcolor();
+    $font = 'Arial';
+    $unanswered_color = '#FFC0C0';
+
+    // If set overwrite the default colours with the current users' special settings
+    if($userObject->is_special_needs()) {
+      $bgcolor = $userObject->get_bgcolor();
+      $fgcolor = $userObject->get_fgcolor();
+      $textsize = $userObject->get_textsize();
+      $marks_color = $userObject->get_marks_color();
+      $themecolor = $userObject->get_themecolor();
+      $labelcolor = $userObject->get_labelcolor();
+      $font = $userObject->get_font();
+      $unanswered_color = $userObject->get_unanswered_color();
+    }
+  }
+  
   /**
    * @return string $property_id
    */
