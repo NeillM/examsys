@@ -40,17 +40,20 @@ class ldap_lookup extends outline_lookup {
   }
 
   function userlookup($lookupobj) {
-
+    $overrideallset = FALSE;
+    $overrideset = FALSE;
     $this->savetodebug('The LDAP userlookup function has been called');
     // if the lookup doesnt have these set and the default for the module configuration exist use them
     if (!isset($lookupobj->settings->override) and isset($this->settings['override'])) {
       foreach ($this->settings['override'] as $key => $value) {
         $lookupobj->settings->override[$key] = $this->settings['override'][$key];
       }
+      $overrideset = TRUE;
       $this->savetodebug('Overriding settingsas none supplied');
     }
     if (!isset($lookupobj->settings->overrideall) and isset($this->settings['overrideall'])) {
       $lookupobj->settings->overrideall = $this->settings['overrideall'];
+      $overrideallset = TRUE;
     }
 
     extract($this->settings);
@@ -154,6 +157,12 @@ class ldap_lookup extends outline_lookup {
       //end of searchorder loop
     }
 
+    if($overrideallset==true) {
+      unset($lookupobj->settings->overrideall);
+    }
+    if($overrideset==true) {
+      unset($lookupobj->settings->override);
+    }
 
     return $lookupobj;
 
@@ -174,11 +183,11 @@ class ldap_lookup extends outline_lookup {
     foreach ($ldap_attributes as $key => $value) {
       $keyorig = $key;
       if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) {
-        $key = mb_strtolower($key);  //think this actually needs to change the datablock without changing the original datablock
+        $key = mb_strtolower($key); //think this actually needs to change the datablock without changing the original datablock
       }
       $reverse_attribute = $value;
       if (isset($datablock[$key][0]) and (((isset($lookupobj->lookupdata->$reverse_attribute)) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == TRUE) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == TRUE) or (isset($lookupobj->settings->override[$reverse_attribute]) and $lookupobj->settings->override[$reverse_attribute] == TRUE)))) or (!isset($lookupobj->lookupdata->$reverse_attribute)))) {
-        // store data to lookup if ldap_attribute listed and ( not set or if set and ( overrideall or override value or override inverse ldap set))
+        // store data to lookup if ldap_attribute listed and ( not set or if set and ( overrideall or override value or override inverse ldap se+t))
 
         $lookupobj->lookupdata->$reverse_attribute = $datablock[$key][0];
         $this->savetodebug("saving value for $reverse_attribute using ldap_attribute: $key");
@@ -186,9 +195,9 @@ class ldap_lookup extends outline_lookup {
       }
     }
 
-
+    $datablockstore = array();
     foreach ($datablock as $key => $value) {
-      $datablockstore = array();
+
       if (!is_int($key)) {
         //
 
