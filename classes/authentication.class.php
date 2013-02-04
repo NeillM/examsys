@@ -29,10 +29,11 @@ define('ROGO_AUTH_OBJ_FAILED', 0);
 define('ROGO_AUTH_OBJ_SUCCESS', 1);
 define('ROGO_AUTH_OBJ_LOOKUPONLY', 2);
 
-require_once __DIR__ . '/rogostaticsingleton.class.php';
-
-class Authentication extends RogoStaticSingleton {
-
+/*
+ * Rogos main authentication stack and plugin system
+ */
+class Authentication {
+  
   private $userid;
   private $password;
   private $db, $configObj;
@@ -54,48 +55,62 @@ class Authentication extends RogoStaticSingleton {
   public $request;
 
   public $impliments_api_auth_version = 1;
-
+                                
   public $callbacktypes = array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'displayerrform', 'getauthobj', 'sessionstore');
 
   public $initobj, $lookupuserobj, $preauthobj, $authobj, $postauthobj, $postauthsuccesobj, $postauthfailobj, $displaystdformobj, $displayerrformobj, $getauthobj, $sessionstoreobj;
 
 
-  static function get_instance($config = NULL, $db = NULL) {
-    //some objects are global and need parameters these are constructed using
-    //a stranded constructor and need parameters passing. if they have not been
-    //built and get_instance is call it should return null
-    if (isset(static::$dont_construct) and static::$dont_construct == TRUE) {
-      if (is_object(static::$inst)) {
-        return static::$inst;
-      } else {
-        return NULL;
-      }
-    }
-
-    //normal behaviour create on demand
-    if (!is_object(static::$inst) and $config != NULL and $db != NULL) {
-      static::$inst = new static::$class_name($config, $db);
-    }
-    if ($config == NULL or $db == NULL) {
-      return NULL;
-    }
-
-    return static::$inst;
-  }
-
-  function __construct(&$configObj, & $db, &$request, &$session) {
+  function __construct(&$configObj, &$db, &$request, &$session) {
+    
     $this->db = & $db;
     $this->configObj = & $configObj;
 
     $this->request = & $request;
     $this->session = & $session;
+    
+    $this->debug = array();
 
-    $this->load_config();
+    if($this->load_config()) {
+      //if the config is ok setup the auth stack
+      $this->setup();
+    }
+  }
+  
+  /*
+   * verify the config file contains vlaid authentication settings
+   * 
+   * @return bool
+   */
+  private function load_config() {
+    $config_ok = true;
+    
+    $notice = UserNotices::get_instance();
 
+    $this->config = $this->configObj->getbyref('authentication');
+
+    if (!isset($this->config)) {
+      $notice->display_notice_and_exit(
+                              'No Authentication configured', 
+                              'No Authentication configuration has been set in the config file. Please contact your local system administrator.', 
+                              '../artwork/software_64.png', 
+                              $title_color = '#C00000');
+      $config_ok = false;
+    }
+
+    $this->debug[] = 'Loaded Config for authentication';
+    return $config_ok;
+  }
+  
+  /*
+   *  Parse the config and register the relivant callbacks in the auth plugins
+   */
+  private function setup() {
     $notfound = TRUE;
     foreach ($this->config as $opt) {
       if ($opt[0] === 'alreadyloggedin') {
         $notfound = FALSE;
+        break;
       }
     }
 
@@ -112,35 +127,19 @@ class Authentication extends RogoStaticSingleton {
       $this->debug[] = 'Standard form data found - Storing in object ' . var_export($this->form, TRUE);
 
     }
-    /*
-        //make sure session is started
-        $this->debug[] = 'DEBUG1:' . session_id();
-        if (session_id() == '') {
-          $this->debug[] = 'SESSION NOT FOUND';
-          session_name('RogoAuthentication');
-          $return = session_start();
-          if ($return === FALSE) {
-            $this->debug[] = 'session failed to initialise';
-
-            return;
-            //session start failure
-          }
-        }
-    */
+    
     if (!isset($this->session['authenticationObj']['attempt'])) {
       $this->session['authenticationObj']['attempt'] = 0;
       $this->debug[] = 'Creating SESSION attempt data';
     }
 
-
     foreach ($this->config as $number => $auth) {
-
-
       $authtype = $auth[0];
       $authtype1 = $authtype . '_auth';
       $settings = $auth[1];
       $name = $auth[2];
-      $this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
+      //TODO this knackers unit testing ERROR Nesting level too deep -  recursive dependency?
+      //$this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
       $this->returndata[$number] = new authtypereturn();
       $this->authinfo[$number] = array($name => $authtype);
 
@@ -155,15 +154,11 @@ class Authentication extends RogoStaticSingleton {
         $this->authPluginObj[$number] = new $authtype1($number, $name, $this->impliments_api_auth_version);
       } else {
         $this->authPluginObj[$number] = & $settings['mockclass'];
-        //     $this->authPluginObj->mock($number, $name, $this->impliments_api_auth_version);
       }
-//      $this->append_auth_object_debug($number);
-      $error = $this->authPluginObj[$number]->apicheck();
 
-      //   $this->append_auth_object_debug($number);
-      if ($error !== FALSE) {
-        $this->debug[] = '********* Disabled module #' . $number . ':' . $name . ' as it implements an old a version of the api.  The returned error #: ' . $error . ' *********';
-        //       unset($this->authPluginObj[$number]);
+      $res = $this->authPluginObj[$number]->apicheck();
+      if ($res === FALSE) {
+        $this->debug[] = '********* Disabled module #' . $number . ':' . $name . ' as it implements an old a version of the api. *********';
       } else {
         $this->authPluginObj[$number]->init($object);
 
@@ -189,21 +184,6 @@ class Authentication extends RogoStaticSingleton {
         $this->append_auth_object_debug($objid);
       }
     }
-
-
-  }
-
-  function load_config() {
-    $notice = UserNotices::get_instance();
-
-    $this->config = $this->configObj->getbyref('authentication');
-
-    if (!isset($this->config)) {
-      $notice->display_notice('No Authentication configured', 'No Authentication configuration has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
-      exit();
-    }
-
-    $this->debug[] = 'Loaded Config for authentication';
   }
 
   function register_callback_section($section) {
@@ -240,9 +220,10 @@ class Authentication extends RogoStaticSingleton {
     return array(&$this->callbackregister[$section], &$this->callbackregisterdata[$section]);
   }
 
-
+  /*
+   * Disply the standard Rogo login form
+   */
   function display_std_form() {
-
 
     $displaystdformobj = new stdClass();
 
@@ -263,7 +244,7 @@ class Authentication extends RogoStaticSingleton {
     }
   }
 
-  function display_error_form() {
+  function display_error_form($display = TRUE) {
     $override = $this->configObj->get('cfg_web_root') . '/config/login_error_form.php';
 
     $displayerrformobj = new stdClass();
@@ -279,10 +260,12 @@ class Authentication extends RogoStaticSingleton {
 
     $this->debug[] = 'Display error form & reset attempt count';
     $this->session['authenticationObj']['attempt'] = 0;
-    if (file_exists($override)) {
-      require $override;
-    } else {
-      require $this->configObj->get('cfg_web_root') . '/include/login_error_form.php';
+    if($display) {
+      if (file_exists($override)) {
+        require $override;
+      } else {
+        require $this->configObj->get('cfg_web_root') . '/include/login_error_form.php';
+      }
     }
   }
 
@@ -303,8 +286,7 @@ class Authentication extends RogoStaticSingleton {
         $this->append_auth_object_debug($objid);
       }
     }
-
-
+    
     $authobj = new authobjreturn();
 
     if (isset($this->callbackregister['auth'])) {
@@ -316,13 +298,11 @@ class Authentication extends RogoStaticSingleton {
           $this->success = TRUE;
           $this->userid = $authobj->rogoid;
           $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
-          //         $this->debug[]=var_dump($this->authObj[$objid],TRUE);
           $this->successfullauthmodule[] = $objid;
 
         } elseif ($authobj->returned === ROGO_AUTH_OBJ_LOOKUPONLY) {
 
         }
-
 
         if (($this->success and (($this->authPluginObj[$objid]->get_settings('dont_break_on_success') === FALSE) or (($this->authPluginObj[$objid]->get_settings('dont_break_on_success') !== FALSE) and !$this->authPluginObj[$objid]->get_settings('dont_break_on_success'))))) {
           break;
@@ -342,11 +322,10 @@ class Authentication extends RogoStaticSingleton {
 
     if ($this->success === FALSE) {
       //failed
-
       $postauthfailobj = new postauthfailreturn();
       $postauthfailobj->authobj = $authobj;
       $postauthfailobj->postauthobj = $postauthobj;
-
+      
       $this->session['authenticationObj']['attempt']++;
       if (isset($this->callbackregister['postauthfail'])) {
         foreach ($this->callbackregister['postauthfail'] as $number => $callback) {
@@ -354,44 +333,39 @@ class Authentication extends RogoStaticSingleton {
           $objid = key($this->callbackregisterdata['postauthfail'][$number]);
           $this->append_auth_object_debug($objid);
           $this->debug[] = 'parameters after running ' . var_export($this->postauthfailobj, TRUE);
-          if (isset($this->postauthfailobj->callback)) {
-            $postauthfailobj = call_user_func_array($this->postauthfailobj->callback, $postauthfailobj);
+          if (isset($postauthfailobj->callback)) {
+            $postauthfailobj = call_user_func_array($postauthfailobj->callback, array($postauthfailobj));
             if ($postauthfailobj->exit === TRUE) {
-             // var_dump($this->debug);
-              exit();
+              $notice = UserNotices::get_instance();
+              $notice->exit_php();
+              return FALSE; //just incase and needed for testing
             }
           }
 
           if ($postauthfailobj->form == 'err') {
-
             $this->display_error_form();
-
             if ($postauthfailobj->exit === TRUE) {
-            //  var_dump($this->debug);
-              exit();
+              $notice = UserNotices::get_instance();
+              $notice->exit_php();
+              return FALSE; //just incase and needed for testing
             }
           }
 
           if ($postauthfailobj->form == 'std') {
-
             $this->display_std_form();
-
             if ($postauthfailobj->exit === TRUE) {
-              /*                foreach ($this->debug as $val) {
-                                echo $val . "\n";
-                              }*/
-              //var_dump($this->request);
-              //var_dump($this->debug);
-              //$this->display_debug();
-              exit();
+              $notice = UserNotices::get_instance();
+              $notice->exit_php();
+              return FALSE; //just incase and needed for testing
             }
           }
 
           if (isset($postauthfailobj->url)) {
             header("Location: {$postauthfailobj->url}");
             if ($postauthfailobj->exit === TRUE) {
-              // var_dump($this->debug);
-              exit();
+              $notice = UserNotices::get_instance();
+              $notice->exit_php();
+              return FALSE; //just incase and needed for testing
             }
           }
 
@@ -403,35 +377,29 @@ class Authentication extends RogoStaticSingleton {
 
         //failed but no callbacks or callbacks finished
         $notice = UserNotices::get_instance();
-        $notice->display_notice('Authentication Issue', 'The authentication plugins couldnt log you in and, they the plugins didnt provide any further form or redirect.   Press F5 to refresh if this is still unsuccessful please contact support:  <a href="mailto:' . $this->configObj->get('support_email') . '">' . $this->configObj->get('support_email') . '</a>.', '/artwork/user_info_48.png', $title_color = '#C00000', TRUE, FALSE);
-        echo <<<HTML
-<p>Please Include the following debug in your email:</p>
-<div style="margin-left:100px;  ">
-HTML;
-
-        $this->display_debug();
-        echo <<<HTML
-</div>
-HTML;
-
-        exit();
+        $notice->display_notice_and_exit(
+                                          'Authentication Issue', 
+                                          "The authentication plugins couldnt log you in and, they the plugins didnt provide any further form or redirect.   
+                                            Press F5 to refresh if this is still unsuccessful please contact support:  <a href=\"mailto:" . $this->configObj->get('support_email') . "\">" . $this->configObj->get('support_email') . "</a>." .
+                                            "<p>Please Include the following debug in your email:</p><div style=\"margin-left:100px;\">" . $this->debug_to_string() . "</div>" , 
+                                            '/artwork/user_info_48.png', 
+                                          '#C00000', 
+                                          TRUE, 
+                                          TRUE);
       }
     }
 
     if ($this->success !== TRUE) {
       $this->debug[] = 'Success is not TRUE or FALSE';
-
       //something went very wrong;
       return FALSE;
-
-    }
+    } 
+    
     // the auth has succeeded as above will stop it if its not true
-
     $postauthsuccessobj = new stdClass();
     $postauthsuccessobj->authobj = $authobj;
     $postauthsuccessobj->postauthobj = $postauthobj;
     $postauthsuccessobj->userid =& $this->userid;
-
 
     if (isset($this->callbackregister['postauthsuccess'])) {
       foreach ($this->callbackregister['postauthsuccess'] as $number => $callback) {
@@ -442,41 +410,11 @@ HTML;
       }
     }
 
-
     // need to save some data for allready logged in authentication
     $this->store_data_in_session();
-
-    /*
-        // old bitz
-          $returned = $this->authPluginObj[$number]->auth();
-
-          foreach ($this->returndata[$number]->debug as $value) {
-            $this->debug[] = "authObj[$number]::" . $value;
-
-          }
-
-          if ($returned !== FALSE) {
-            $this->success = TRUE;
-          }
-          $this->debug[]='loop debug: ' . var_export(!isset($settings['dont_break_on_success']),TRUE) . ' ' . var_export($settings['dont_break_on_success'],true) .' ' . var_export($returned,TRUE);
-
-          if ((!isset($settings['dont_break_on_success']) and $settings['dont_break_on_success'] !== TRUE ) and $returned !== FALSE) {
-    $this->debug[]='Breaking out of loop ' . var_export(isset($settings['dont_break_on_success']),TRUE) . ' ' . var_export($settings['dont_break_on_sucess'],true) .' ' . var_export($returned,TRUE);
-            $this->debug[]=var_export($settings,TRUE);
-            $this->debug[]=var_export($auth,TRUE);
-            break;
-          }
-        }
-        $this->debug[]='end do auth loop';
-        var_dump($this->returndata);
-        print "done dump";*/
-
   }
 
   function store_data_in_session() {
-    /*   if (!isset($this->session['authenticationObj']['loggedin']['password'])) {
-         $this->session['authenticationObj']['loggedin']['password'] = $this->get_password();
-       }*/
     $this->session['authenticationObj']['loggedin']['userid'] = $this->get_userid();
     $this->session['authenticationObj']['loggedin']['time'] = time();
     $this->session['authenticationObj']['attempt'] = 0;
@@ -503,6 +441,10 @@ HTML;
   function display_debug() {
     var_dump($this->debug);
   }
+  
+  function debug_to_string() {
+    implode('<br />', $this->debug);
+  }
 
   function get_auth_obj(&$getauth) {
     if (!is_object($getauth)) {
@@ -518,18 +460,15 @@ HTML;
 
       if ($this->get_userid() < 1) {
         $notice = UserNotices::get_instance();
-        $notice->display_notice('Authentication Issue', 'You are not logged in.   Press F5 to refresh if this is still unsuccessful please contact support:  <a href="mailto:' . $this->configObj->get('support_email') . '">' . $this->configObj->get('support_email') . '</a>.', '/artwork/user_info_48.png', $title_color = '#C00000', TRUE, FALSE);
-        echo <<<HTML
-<p>Please Include the following debug in your email:</p>
-<div style="margin-left:100px;  ">
-HTML;
-
-        $this->display_debug();
-        echo <<<HTML
-</div>
-HTML;
-
-        exit();
+        $notice->display_notice_and_exit(
+                                          'Authentication Issue', 
+                                          "You are not logged in.   Press F5 to refresh if this is still unsuccessful please contact support: <a href=\"mailto:" . $this->configObj->get('support_email') . "\">" . $this->configObj->get('support_email') . "</a>." .
+                                            "<p>Please Include the following debug in your email:</p><div style=\"margin-left:100px;\">" . $this->debug_to_string() . "</div>" , 
+                                            '/artwork/user_info_48.png', 
+                                          '#C00000', 
+                                          TRUE, 
+                                          TRUE);
+        
       }
       $getauthobj->userObj->load($this->get_userid());
     }
@@ -600,7 +539,6 @@ HTML;
     } else {
       //advanced view
 
-
     }
 
     return $return_data;
@@ -621,10 +559,12 @@ class authtypereturn {
     $this->message = '';
   }
 
-
 }
 
-
+/*
+ * authobjreturn is the object passed to the auth plugins auth callback
+ * and holds the current state of the auth
+ */
 class authobjreturn {
   public $returned;
   public $returneds;
@@ -633,8 +573,7 @@ class authobjreturn {
   public $data;
   public $datas;
   public $statuses;
-
-
+  
   function __construct() {
     $this->returned = ROGO_AUTH_OBJ_FAILED;
     $this->returneds = array();
@@ -645,7 +584,10 @@ class authobjreturn {
     $this->datas = array();
 
   }
-
+  
+  /*
+   * set the authobjreturn objet to fail state
+   */
   function fail($number) {
     $this->returned = ROGO_AUTH_OBJ_FAILED;
     $this->returneds[] = $this->returned;
@@ -653,7 +595,10 @@ class authobjreturn {
     $this->rogoid = 0;
 
   }
-
+  
+  /*
+   * set the authobjreturn objet to success state
+   */
   function success($number, $rogoid) {
     $this->rogoid = $rogoid;
     $this->rogoids[] = $this->rogoid;
@@ -671,7 +616,6 @@ class authobjreturn {
     $this->data = $data;
     $this->datas[] = $this->data;
   }
-
 
 }
 

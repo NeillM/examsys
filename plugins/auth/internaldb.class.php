@@ -43,11 +43,9 @@ class internaldb_auth extends outline_authentication {
   }
 
   function failauth($postauthfailreturn) {
-    $this->savetodebug('Fail function run'); // . var_export($postauthfailreturn, TRUE);
+    $this->savetodebug('Fail function run'); 
 
-    //   $this->retdata->debug[]='info:' . var_export($this->settings,TRUE);
-
-//default behaviour is to display username/password form
+    //default behaviour is to display username/password form
     $postauthfailreturn->form = 'std';
     $postauthfailreturn->exit = TRUE;
 

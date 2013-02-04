@@ -53,17 +53,21 @@ class outline_authentication {
     $this->name = $name;
     $this->number = $number;
   }
-
+  
+  /*
+   * Check the API version of the stack and the plugin are compatible
+   * returns true if it is compatible false otherwise  
+   */
   function apicheck() {
 
     if ($this->authapiversion != $this->impliments_api_auth_version) {
       $this->savetodebug('This auth object is implementing an different version of the api than this plugin does');
       $this->set_error('Wrong API');
 
-      return TRUE;
+      return FALSE;
     }
 
-    return FALSE;
+    return TRUE;
   }
 
   function set_error($msg) {

@@ -73,7 +73,33 @@ Class user_notices extends RogoStaticSingleton {
       echo "\n</body>\n</html>";
     }
   }
-
+  
+  /**
+   * This function will output a message to the user and exit php; 
+   *
+   * @param string $title string title to display
+   * @param string $msg string the message
+   * @param string $icon name of the icon image file
+   * @param string $title_color color of the tile text
+   *
+   */
+  public function display_notice_and_exit($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
+    $this->display_notice($title, $msg, $icon, $title_color, $output_header, $output_footer);
+    exit;
+  }
+  
+  /**
+   * This function will exit php without notice; 
+   *
+   * @param string $title string title to display
+   * @param string $msg string the message
+   * @param string $icon name of the icon image file
+   * @param string $title_color color of the tile text
+   *
+   */
+  public function exit_php() {
+    
+  }
   /**
    * This function will output an access denied warning and terminate script 
    * execution
