@@ -153,11 +153,9 @@ Class UpdaterUtils {
   }
   
   public function execute_query($sql, $update_display) {
-    $adjust = $this->mysqli->prepare($sql);
-    if ($this->mysqli->errno == 0) {
-      $adjust->execute();
-      $adjust->close(); 
-      
+    $this->mysqli->query($sql);
+    
+    if ($this->mysqli->errno == 0) {      
       if ($update_display) {
         echo "<li>$sql</li>\n";
         ob_flush();
