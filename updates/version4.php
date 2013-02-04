@@ -818,11 +818,13 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'", false);
   }
 
+  /*
   // 01/09/2011 - Remove the time/date question type
   if (!$updater_utils->does_column_type_value_exist('questions', 'q_type', "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')")) {
     $sql = "ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')";
     $updater_utils->execute_query($sql, true);
   }
+  */
 
   //26/09/2011
   $check = $mysqli->prepare("SELECT leadin FROM questions WHERE leadin LIKE '%[tex]%[/tex]%'");
@@ -1330,6 +1332,7 @@ if (!isset($_POST['update'])) {
     flush();
   }
 
+  /*
   // 26/01/2012 - Add true/false question type
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='q_type'");
   $result->execute();
@@ -1341,6 +1344,7 @@ if (!isset($_POST['update'])) {
     $sql = "ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false')";
     $updater_utils->execute_query($sql, true);
   }
+  */
 
   // 06/02/2012 - Change schools from text to integers in courses table
   if (!$updater_utils->does_column_exist('courses', 'schoolid')) {
@@ -1465,8 +1469,8 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query($sql, true);
   }
 
-  if (!$updater_utils->has_grant($cfg_db_username, 'SELECT, UPDATE, INSERT, DELETE', 'password_tokens', $cfg_db_host)) {
-    $sql = "GRANT SELECT, UPDATE, INSERT, DELETE ON " . $cfg_db_database . ".password_tokens TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+  if (!$updater_utils->has_grant($cfg_db_username, 'SELECT, INSERT, UPDATE, DELETE', 'password_tokens', $cfg_db_host)) {
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".password_tokens TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
 
@@ -1572,7 +1576,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 05/04/2012 - Enlarge the size of the integer for memberID in teams table.
-  if (!$updater_utils->does_table_exist('teams')) {
+  if ($updater_utils->does_table_exist('teams')) {
     if (!$updater_utils->does_column_type_value_exist('teams', 'memberID', 'int(10) unsigned')) {
       $updater_utils->execute_query("ALTER TABLE teams CHANGE COLUMN memberID memberID int(10) unsigned", true);
     }
@@ -1700,7 +1704,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 05/04/2012 - Enlarge the size of the integer for userID in student_modules table.
-  if (!$updater_utils->does_table_exist('student_modules')) {
+  if ($updater_utils->does_table_exist('student_modules')) {
     if (!$updater_utils->does_column_type_value_exist('student_modules', 'userID', 'int(10) unsigned')) {
       $updater_utils->execute_query("ALTER TABLE student_modules CHANGE COLUMN userID userID int(10) unsigned", true);
     }
@@ -1757,7 +1761,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 05/04/2012 - Enlarge the size of the integer for paperID in reference_papers table.
-  if (!$updater_utils->does_column_type_value_exist('reference_papers', 'paper_id', 'mediumint(8) unsigned')) {
+  if (!$updater_utils->does_column_type_value_exist('reference_papers', 'paperID', 'mediumint(8) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE reference_papers CHANGE COLUMN paperID paperID mediumint(8) unsigned", true);
   }
 
@@ -2115,7 +2119,6 @@ if (!isset($_POST['update'])) {
 
   // 16/05/2012 - Add encryption salt to config file.
   $new_cfg_str = array();
-  //$new_cfg_str[] =  "  \$cfg_encrypt_salt = 'K8m2hzflkgjzdfgj';\n";
   $new_cfg_str[] = "  \$cfg_encrypt_salt       = '" . gen_random_salt() . "';    // Do not alter if not on LDAP.\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = FALSE;
@@ -2333,7 +2336,7 @@ if (!isset($_POST['update'])) {
   }
 
   //update student_modules.moduleid to a char(25)
-  if (!$updater_utils->does_table_exist('student_modules')) {
+  if ($updater_utils->does_table_exist('student_modules')) {
     if (!$updater_utils->does_column_type_value_exist('student_modules', 'moduleid', 'char(25)')) {
       $updater_utils->execute_query("ALTER TABLE student_modules CHANGE moduleid moduleid char(25)", true);
     }
@@ -2553,8 +2556,10 @@ if (!isset($_POST['update'])) {
 
 
   // 17/09/2012 cczsa1 update to make database consistant with new install
-  if (!$updater_utils->does_column_type_value_exist('student_modules', 'calendar_year', "enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')")) {
-    $updater_utils->execute_query("ALTER TABLE `student_modules` CHANGE `calendar_year` `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL", true);
+  if ($updater_utils->does_table_exist('student_modules')) {
+    if (!$updater_utils->does_column_type_value_exist('student_modules', 'calendar_year', "enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')")) {
+      $updater_utils->execute_query("ALTER TABLE student_modules CHANGE calendar_year calendar_year enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL", true);
+    }
   }
 
   if (!$updater_utils->does_column_type_value_exist('users_metadata', 'userID', 'int(10) unsigned')) {
@@ -2713,7 +2718,7 @@ QUERY;
   }
 
   // 25/09/2012 - Enlarge the size of the integer for student_userID in textbox_marking table.
-  if (!$updater_utils->does_column_type_value_exist('textbox_marking', 'paperID', 'int(10) unsigned')) {
+  if (!$updater_utils->does_column_type_value_exist('textbox_marking', 'student_userID', 'int(10) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE textbox_marking CHANGE COLUMN student_userID student_userID int(10) unsigned", true);
   }
 
@@ -3267,6 +3272,38 @@ QUERY;
   if (!$updater_utils->does_index_exist('lti_user', 'rogo_id')) {
     $updater_utils->execute_query("ALTER TABLE lti_user ADD INDEX lti_user_equ (lti_user_equ)", true);
   }
+
+  // 04/02/2013 - Remove debugging output
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $top_cfg = array();
+  $found = false;
+  $target_line = 0;
+  foreach ($cfg as $line) {
+    if (stripos($line, 'if (isset($_SERVER[\'PHP_AUTH_USER\']) ') !== false) {
+      $found = true;
+      break;
+    } else {
+      $top_cfg[] = $line;
+    }
+    $target_line++;
+  }
+  
+  if ($found) {
+    $target_line--;
+    $top_cfg[] = "  //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';\n";
+    $top_cfg[] = "  \$dbclass = 'mysqli';\n?>\n";
+    //array_splice($top_cfg, $target_line, 0, $new_cfg_str);
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $top_cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    ob_flush();
+    flush();
+  }
+  
   // End of updates -----------------------------------------------------------------
 
   // Final housekeeping activities - put all updates above this line

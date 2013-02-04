@@ -133,19 +133,19 @@ Class UpdaterUtils {
     $result->store_result();
     $result->bind_result($existing_grant);
     while ($result->fetch()) {
-      if (stripos($existing_grant, ".'$table' TO") !== false) {
+      if (stripos($existing_grant, ".`$table` TO") !== false) {
         $found_grant = $existing_grant;
       }
     }
     $result->close();
     
-    if ($existing_grant != '') {
-      $parts = explode(' ON ', $existing_grant);
-      $existing_grant = $parts[0];
-      $existing_grant = str_replace('GRANT ', '', $existing_grant);
+    if ($found_grant != '') {
+      $parts = explode(' ON ', $found_grant);
+      $found_grant = $parts[0];
+      $found_grant = str_replace('GRANT ', '', $found_grant);
     }
 
-    if ($existing_grant == $grant) {
+    if ($found_grant == $grant) {
       return true;
     } else {
       return false;
