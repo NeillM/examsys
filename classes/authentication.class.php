@@ -476,12 +476,12 @@ class Authentication {
 
 
     if (isset($this->callbackregister['getauthobj'])) {
-      foreach ($this->callbackregister['getauthobj'] as $number => $callback) {
-        $this->debug[] = 'run getauthobj callback ' . get_class($callback[0]) . ':' . $callback[1];
-        $getauthobj = call_user_func_array($callback, array($getauthobj));
-        $objid = key($this->callbackregisterdata['getauthobj'][$number]);
-        $this->append_auth_object_debug($objid);
-      }
+        foreach ($this->callbackregister['getauthobj'] as $number => $callback) {
+          $this->debug[] = 'run getauthobj callback ' . get_class($callback[0]) . ':' . $callback[1];
+          $getauthobj = call_user_func_array($callback, array($getauthobj));
+          $objid = key($this->callbackregisterdata['getauthobj'][$number]);
+          $this->append_auth_object_debug($objid);
+        }
     }
 
     return $getauthobj->userObj;
