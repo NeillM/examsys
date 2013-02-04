@@ -30,7 +30,7 @@ require_once 'outline_lookup.class.php';
 include_once $configObj->get('cfg_web_root') . 'lang/en/include/common.inc';
 
 
-class UoNSaturn_lookup extends outline_lookup {
+class XML_lookup extends outline_lookup {
   public $impliments_api_lookup_version = 1;
   public $version = 0.9;
 
