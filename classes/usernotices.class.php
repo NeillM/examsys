@@ -98,7 +98,7 @@ Class user_notices extends RogoStaticSingleton {
    *
    */
   public function exit_php() {
-    
+    exit;
   }
   /**
    * This function will output an access denied warning and terminate script 
