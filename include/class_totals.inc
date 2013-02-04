@@ -360,7 +360,6 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   $master_array[$user_number]['paper_type']       = $tmp['paper_type'];
   $master_array[$user_number]['room']             = $tmp['room'];
   $master_array[$user_number]['visible']          = 1;    // Default to visible unless switched off below.
-  $master_array[$user_number]['timer_started']    = $tmp['timer_started'];
 
   // Add metadata
   if (!empty($met_array)) {
@@ -1005,17 +1004,12 @@ if ($paper_type == '0') {
                           , mark
                           , status
                           , attempt
-                          , log_start_time.id
               FROM
                   log0, log_metadata, questions, users
               LEFT JOIN
                   sid
               ON
                   users.id = sid.userID
-              LEFT OUTER JOIN
-                    log_start_time
-              ON
-                     users.id = log_start_time.userID
               WHERE
                   log0.q_paper = log_metadata.paperID
               AND
@@ -1063,17 +1057,12 @@ if ($paper_type == '0') {
                     , mark
                     , status
                     , attempt
-                    , log_start_time.id
                   FROM
                     (log1, log_metadata, questions, users )
                   LEFT JOIN
                         sid
                   ON
                         users.id = sid.userID
-                  LEFT OUTER JOIN
-                        log_start_time
-                  ON
-                         users.id = log_start_time.userID
                   WHERE
                         log1.q_paper = log_metadata.paperID
                   AND
@@ -1102,17 +1091,17 @@ if ($paper_type == '0') {
   $log_query = $mysqli->prepare( $sql );
   $log_query->bind_param('isssisss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '2') {
-  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, log2.started, user_answer, DATE_FORMAT(log2.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log2.userID, mark, status, attempt, log_start_time.id FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID LEFT OUTER JOIN log_start_time ON users.id = log_start_time.userID WHERE log2.q_paper=log_metadata.paperID AND log2.userID=log_metadata.userID AND log2.started=log_metadata.started AND log2.q_id=questions.q_id AND q_paper=? AND users.id=log2.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log2.started, INTERVAL 2 MINUTE)>=? AND log2.started<=? ORDER BY userID, log2.started, screen");
+  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, log2.started, user_answer, DATE_FORMAT(log2.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log2.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log2.q_paper=log_metadata.paperID AND log2.userID=log_metadata.userID AND log2.started=log_metadata.started AND log2.q_id=questions.q_id AND q_paper=? AND users.id=log2.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log2.started, INTERVAL 2 MINUTE)>=? AND log2.started<=? ORDER BY userID, log2.started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '5') {
-  $log_query =   $mysqli->prepare("SELECT DISTINCT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, log5.started, NULL AS user_answer, DATE_FORMAT(log5.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log5.userID, mark, status, 1 AS attempt, log_start_time.id FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID LEFT OUTER JOIN log_start_time ON users.id = log_start_time.userID WHERE log5.q_paper=log_metadata.paperID AND log5.userID=log_metadata.userID AND log5.started=log_metadata.started AND log5.q_id=questions.q_id AND q_paper=? AND users.id=log5.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log5.started, INTERVAL 2 MINUTE)>=? AND log5.started<=? ORDER BY userID, log5.started, screen");
+  $log_query =   $mysqli->prepare("SELECT DISTINCT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, log5.started, NULL AS user_answer, DATE_FORMAT(log5.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log5.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log5.q_paper=log_metadata.paperID AND log5.userID=log_metadata.userID AND log5.started=log_metadata.started AND log5.q_id=questions.q_id AND q_paper=? AND users.id=log5.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log5.started, INTERVAL 2 MINUTE)>=? AND log5.started<=? ORDER BY userID, log5.started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } else {
-  $log_query = $mysqli->prepare("SELECT DISTINCT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, log$paper_type.started, user_answer, DATE_FORMAT(log$paper_type.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log$paper_type.userID, mark, status, attempt, log_start_time.id FROM (log$paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID LEFT OUTER JOIN log_start_time ON users.id = log_start_time.userID WHERE log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND grade LIKE ? $roles_sql AND log$paper_type.started>=? AND log$paper_type.started<=? ORDER BY userID, started, screen");
+  $log_query = $mysqli->prepare("SELECT DISTINCT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, log$paper_type.started, user_answer, DATE_FORMAT(log$paper_type.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log$paper_type.userID, mark, status, attempt FROM (log$paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND grade LIKE ? $roles_sql AND log$paper_type.started>=? AND log$paper_type.started<=? ORDER BY userID, started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 }
 $log_query->execute();
-$log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $gender, $ipaddress, $lab_name, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt, $log_start_time_id );
+$log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $gender, $ipaddress, $lab_name, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt);
 
 $user_no    = 0;
 $display_no = 0;
@@ -1126,16 +1115,16 @@ $tmp_array    = array();
 $user_results = array();
 $median       = array();
 $sortby   = 'name';
-$ordering = 'asc';
+
 if (isset($_GET['percent'])) {
   $percent = $_GET['percent'];
 } else {
   $percent = 100;
 }
-if (isset($_GET['direction'])) {
-  $direction = $_GET['direction'];
+if (isset($_GET['ordering'])) {
+  $ordering = $_GET['ordering'];
 } else {
-  $direction = 100;
+  //$ordering = 'asc';
 }
 if (isset($_GET['absent'])) {
   $absent = $_GET['absent'];
@@ -1194,11 +1183,6 @@ while ($log_query->fetch() !== null) {
     $tmp_array['xmean_adjusted']  = 0;
     $tmp_array['duration']        = $user_duration;
     $tmp_array['paper_type']      = $paper_type;
-    $tmp_array['timer_started']   = false;
-    if ($log_start_time_id != null) {
-      $tmp_array['timer_started'] = true;
-    }
-
   }
   getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID);
 
@@ -1226,7 +1210,6 @@ if (!empty($tmp_array)) {
     if ($percent < 100) {
       // Sort by mark order.
       $sortby = 'mark';
-      $ordering = $direction;
       $user_results = array_csort($user_results, $sortby, $ordering);
       $cohort_size = round(($user_no/100)*$percent);
       // Set visible/invisible flag where necessary.
@@ -1278,7 +1261,6 @@ if (!empty($tmp_array)) {
           $user_results[$user_no]['room'] = '';
           $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
           $user_results[$user_no]['roles'] = 'Student';
-          $user_results[$user_no]['timer_started'] = false;
           $user_no++;
         }
       }
@@ -1315,11 +1297,6 @@ if (!empty($tmp_array)) {
     } else {
       $percent = 100;
     }
-    if (isset($_GET['direction'])) {
-      $direction = $_GET['direction'];
-    } else {
-      $direction = 'asc';
-    }
     if (isset($_GET['absent'])) {
       $absent = $_GET['absent'];
     } else {
@@ -1328,6 +1305,7 @@ if (!empty($tmp_array)) {
 
     $tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
     if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
+    if ($tmp_sort == 'classification') $tmp_sort = 'mark';
     $user_results = array_csort($user_results, $tmp_sort, $ordering);
   }
 }

@@ -16,9 +16,9 @@
 
 /**
 *
-* @author Simon Wilkinson, Nikodem Miranowicz
+* @author Nikodem Miranowicz, Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
+* @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
 
@@ -61,11 +61,10 @@ $exclude = '';
 // Get order of the class.
 $student_list = '';
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT log0.userID, sum(mark) AS total_mark FROM log0,log_metadata WHERE log0.userID = log_metadata.userID AND log0.q_paper = log_metadata.paperID AND log0.started = log_metadata.started AND q_paper=? AND log_metadata.started>=? AND log_metadata.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' GROUP BY userID, q_paper, log_metadata.started) UNION ALL (SELECT log1.userID, sum(mark) AS total_mark FROM log1,log_metadata WHERE log1.userID = log_metadata.userID AND log1.q_paper = log_metadata.paperID AND log1.started = log_metadata.started AND q_paper=? AND log_metadata.started>=? AND log_metadata.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' GROUP BY log_metadata.userID, q_paper, log_metadata.started) ORDER BY total_mark " . $_GET['direction']);
+  $result = $mysqli->prepare("(SELECT log0.userID, sum(mark) AS total_mark FROM log0,log_metadata WHERE log0.userID = log_metadata.userID AND log0.q_paper = log_metadata.paperID AND log0.started = log_metadata.started AND q_paper=? AND log_metadata.started>=? AND log_metadata.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' GROUP BY userID, q_paper, log_metadata.started) UNION ALL (SELECT log1.userID, sum(mark) AS total_mark FROM log1,log_metadata WHERE log1.userID = log_metadata.userID AND log1.q_paper = log_metadata.paperID AND log1.started = log_metadata.started AND q_paper=? AND log_metadata.started>=? AND log_metadata.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' GROUP BY log_metadata.userID, q_paper, log_metadata.started) ORDER BY total_mark");
   $result->bind_param('ississ', $_GET['paperID'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
 } else {
-  $result = $mysqli->prepare("SELECT log$paper_type.userID, sum(mark) AS total_mark FROM log$paper_type,log_metadata WHERE log$paper_type.userID = log_metadata.userID AND log$paper_type.q_paper = log_metadata.paperID AND log$paper_type.started = log_metadata.started AND  q_paper=? AND DATE_ADD(log_metadata.started, INTERVAL 2 MINUTE)>=? AND log_metadata.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' GROUP BY userID, q_paper, log_metadata.started ORDER BY total_mark " . $_GET['direction']);
-  printf("Error: %s.\n", $mysqli->error);
+  $result = $mysqli->prepare("SELECT log$paper_type.userID, sum(mark) AS total_mark FROM log$paper_type, log_metadata WHERE log$paper_type.userID = log_metadata.userID AND log$paper_type.q_paper = log_metadata.paperID AND log$paper_type.started = log_metadata.started AND  q_paper=? AND DATE_ADD(log_metadata.started, INTERVAL 2 MINUTE)>=? AND log_metadata.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' GROUP BY userID, q_paper, log_metadata.started ORDER BY total_mark");
   $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
 }
 $result->execute();
@@ -167,6 +166,7 @@ foreach ($user_results as $individual) {
           $skip_random = true;
         }
       }
+      
       if (!$skip_random) {
 
         if ($question['q_type'] == 'extmatch' and $question['score_method'] == 'Mark per Option') {
@@ -175,19 +175,16 @@ foreach ($user_results as $individual) {
           foreach ($paper_answers as $subparts1) {
             if ($subparts1!='') {
               $num_ix = 0;
-              //echo ':'.$subparts1.';';
               $subparts2 = explode('$', $subparts1);
               
               if (count($subparts2)>1) {
                 foreach ($subparts2 as $subpart) {
                   $csv .= ',Q' . $q_no .  $numerals[$sub_parts] . chr(++$num_ix + 64); 
                 }
+              } else {
+                $csv .= ',Q' . $q_no . $numerals[$sub_parts];
               }
-              else
-              {
-              $csv .= ',Q' . $q_no . $numerals[$sub_parts];
-              }
-            ++$sub_parts;
+              $sub_parts++;
             }              
           }
         } elseif ($question['q_type'] == 'matrix' and $question['score_method'] == 'Mark per Option') {
@@ -198,9 +195,13 @@ foreach ($user_results as $individual) {
 
             if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
-        } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank' or $question['q_type']=='mrq' or $question['q_type']=='rank') and $question['score_method'] == 'Mark per Option') {
+        } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank' or $question['q_type']=='rank') and $question['score_method'] == 'Mark per Option') {
           for ($a=0; $a<count($question['correct']); $a++) {
             if (substr($tmp_exclude, $a, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
+          }
+        } elseif ($question['q_type']=='mrq' and $question['score_method'] == 'Mark per Option') {
+          for ($a=0; $a<count($question['correct']); $a++) {
+            if (substr($tmp_exclude, $a, 1) == '0' and $question['correct'][$a] == 'y') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
           for ($a=0; $a <(count($question['correct_labels']) + substr_count($tmp_exclude, '1')); $a++) {
@@ -214,7 +215,6 @@ foreach ($user_results as $individual) {
         } else {
           if (!array_key_exists($q_id, $excluded)) $csv .= ',Q' . $q_no;
         }
-        //$csv .= $question['q_type'];
         $q_no++;
       }
     }
@@ -257,7 +257,7 @@ foreach ($user_results as $individual) {
           $skip_random = true;
         }
       }
-      //$csv .= ',="';
+
       if (!$skip_random) {
         if (isset($individual['mark_array'][$q_id])) {
           if (is_array($individual['mark_array'][$q_id])) {
@@ -267,71 +267,65 @@ foreach ($user_results as $individual) {
                 // ----- parts (extmatch)-----
                 
                 $parts_test_fail = true;           
-                if ($question['q_type']=='extmatch') {
-                  $extmatch_parts = explode('|',$question['correct'][0]);
-                  if (strpos($extmatch_parts[$mi],'$')!==false) {
+                if ($question['q_type'] == 'extmatch') {
+                  $extmatch_parts = explode('|', $question['correct'][0]);
+                  if (strpos($extmatch_parts[$mi], '$')!==false) {
                     $parts_test_fail = false;
                  
                     $answer = '';
                     foreach ($log_array[$row_written] as $kb => $vb) {
                       if (is_array($vb)) {
                         foreach ($vb as $kc => $vc) {
-                          if ($q_id==$kc) $answer = preg_replace('/,/','',$vc);
-                    }}}        
+                          if ($q_id==$kc) $answer = preg_replace('/,/', '', $vc);
+                        }
+                      }
+                    }        
 
-                    $answer_parts = explode('|',$answer);
+                    $answer_parts = explode('|', $answer);
                     
-                    $extmatch_parts_correct = explode('$',$extmatch_parts[$mi]);
-                    $answer_subparts = explode('$',$answer_parts[$mi]);
-                    
-                    //$csv .= "<br>".$mi .'>'. $tmp_mark .'<'. $extmatch_parts[$mi].'... ';
+                    $extmatch_parts_correct = explode('$', $extmatch_parts[$mi]);
+                    $answer_subparts = explode('$', $answer_parts[$mi]);
                     
                     foreach ($extmatch_parts_correct as $qi => $question_part) {
-                      //$csv .= '+' ;
-                      if (in_array($question_part,$answer_subparts)) 
+                      if (in_array($question_part,$answer_subparts)) {
                         $csv .= ',1';
-                      else
-                        $csv .= ',0' ;
+                      } else {
+                        $csv .= ',0';
+                      }
                     }                      
                   }
                 }
                 
-                // ----  
               
-              if ($parts_test_fail) $csv .= ','.(($tmp_mark>0)?1:0);  
+              if ($parts_test_fail) $csv .= ',' . (($tmp_mark > 0) ? 1:0);  
             }
           } else {
-            if ($question['q_type']=='mrq' or $question['q_type']=='rank') {
+            if ($question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
               $answer = '';
               foreach ($log_array[$row_written] as $kb => $vb) {
                 if (is_array($vb)) {
                   foreach ($vb as $kc => $vc) {
-                    if ($q_id==$kc) $answer = preg_replace('/,/','',$vc);
-              }}}
+                    if ($q_id == $kc) $answer = preg_replace('/,/', '', $vc);
+                  }
+                }
+              }
               
               $answer .= '                                   ';                  
               foreach ($question['correct'] as $qi => $question_part) {
-                //$csv .= '+' ;
-                if ($question_part!='n') 
-                  $csv .= ','. (($question_part==$answer[$qi])?1:0);
-                else
-                  $csv .= ',' ;
+                if ($question_part != 'n') {
+                  $csv .= ',' . (($question_part == $answer[$qi]) ? 1:0);
+                }
               }            
-            }
-            else {
-              $csv .= ',' .(($individual['mark_array'][$q_id]>0)?1:0);
+            } else {
+              $csv .= ',' . (($individual['mark_array'][$q_id] > 0) ? 1:0);
             }
           }
         } else {
           if (($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') and $question['score_method'] == 'Mark per Option') {
             $sub_parts = 0;
-            //var_dump($paper_buffer);
-            //var_dump($question);
 
-            $paper_answers = explode("|",$question['correct'][0]);
+            $paper_answers = explode("|", $question['correct'][0]);
             for ($a=0; $a<count($paper_answers); $a++) {
-              //$sub_parts += substr_count($paper_answers[$a],'$');
-
               if ($paper_answers[$a] != '' and substr($tmp_exclude,$a+$sub_parts,1) == '0') $csv .= '0'; 
             }
           } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank') and $question['score_method'] == 'Mark per Option') {
@@ -351,8 +345,6 @@ foreach ($user_results as $individual) {
             if (!array_key_exists($q_id,$excluded)) $csv .= ',0';
           }
         }
-        //$csv .= '='.$q_id.'-'.$question['q_type'].'; ';
-        //$csv .= '<br>';
       }
     }
     $csv .= "\n";

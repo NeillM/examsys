@@ -34,7 +34,7 @@
   ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
-  <head><title>Note</title>
+  <head><title><?php echo $string['note']; ?></title>
   <?php
     if ($_POST['calling'] == 'class_totals') {
   ?>
@@ -53,7 +53,7 @@
       window.opener.location = "details.php?userID=<?php echo $_POST['tmp_userID']; ?>&tab=notes";
       window.close();
     }
-  </script></head>
+  </script></head>v
   <body onload="closeWindow();">
   <?php
     }
@@ -74,11 +74,30 @@
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {background-color:#FFFFCC; font-size:90%;padding-right:4px}
+    html {
+      font-size:90%;
+      margin:4px;
+      background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
+      background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
+    }
+    textarea {
+      border:1px solid #C0C0C0;
+      background-color: transparent;
+      width:98%;
+      height:290px;
+    }
   </style>
+  
+ <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+ <script language="JavaScript">
+   $(document).ready(function() {
+     $("#note").focus();
+   });
+ </script>
 </head>
 
-<body onload="document.myform.note.focus();">
+<body>
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform">
 <?php
   if (isset($_GET['paperID'])) {
@@ -91,7 +110,7 @@
     $result->fetch();
     $result->close();
     
-    echo $string['studentname'] . " $tmp_title $tmp_surname, $tmp_initials ($tmp_student_id)</br />\n";
+    echo "<strong>$tmp_title $tmp_surname, $tmp_initials ($tmp_student_id)</strong></br />\n";
   } else {
     echo $string['papername'] . " <select name=\"paper\">\n<option value=\"\"></option>\n";
     $result = $mysqli->prepare("SELECT DISTINCT property_id, paper_title FROM properties WHERE paper_type='2' AND deleted IS NULL ORDER BY paper_title");
@@ -104,8 +123,8 @@
     $result->close();
   }
   
-  echo "<br />" . $string['note'] . ":<br />\n";
-  echo "<textarea name=\"note\" cols=\"60\" rows=\"12\" style=\"width:100%; height:300px; background-color:#FFFFCC; width:100%\"></textarea><br />\n";
+  echo "<br />" . $string['note'] . "<br />\n";
+  echo "<div style=\"text-align:center\"><textarea name=\"note\" id=\"note\"></textarea></div>\n";
 ?>
 <br />
 <div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
