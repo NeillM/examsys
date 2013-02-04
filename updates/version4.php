@@ -282,7 +282,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 04/07/2011 - Drop 'Faculty' column from users.
-  if (!$updater_utils->does_column_exist('users', 'faculty')) {
+  if ($updater_utils->does_column_exist('users', 'faculty')) {
     $updater_utils->execute_query("ALTER TABLE users DROP COLUMN faculty", true);
   }
 
@@ -1083,8 +1083,10 @@ if (!isset($_POST['update'])) {
   }
 
   // 13/01/2012 - Add deleted column to Degrees table
-  if (!$updater_utils->does_column_exist('degrees', 'deleted')) {
-    $updater_utils->execute_query("ALTER TABLE degrees ADD COLUMN deleted datetime", true);
+  if (!$updater_utils->does_table_exist('degrees') {
+    if (!$updater_utils->does_column_exist('degrees', 'deleted')) {
+      $updater_utils->execute_query("ALTER TABLE degrees ADD COLUMN deleted datetime", true);
+    }
   }
 
   // 13/01/2012 - Add new character set to configuration file.
@@ -1116,7 +1118,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 16/01/2012 - Rename Degrees table to Courses table
-  if (!$updater_utils->does_table_exist('degrees')) {
+  if ($updater_utils->does_table_exist('degrees')) {
     $updater_utils->execute_query("RENAME TABLE degrees TO courses", true);
     $updater_utils->execute_query("ALTER TABLE courses CHANGE COLUMN degree name varchar(255)", true);
   }
@@ -1570,8 +1572,10 @@ if (!isset($_POST['update'])) {
   }
 
   // 05/04/2012 - Enlarge the size of the integer for memberID in teams table.
-  if (!$updater_utils->does_column_type_value_exist('teams', 'memberID', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE teams CHANGE COLUMN memberID memberID int(10) unsigned", true);
+  if (!$updater_utils->does_table_exist('teams')) {
+    if (!$updater_utils->does_column_type_value_exist('teams', 'memberID', 'int(10) unsigned')) {
+      $updater_utils->execute_query("ALTER TABLE teams CHANGE COLUMN memberID memberID int(10) unsigned", true);
+    }
   }
 
   // 05/04/2012 - Enlarge the size of the integer for userID in log0 table.
@@ -1696,8 +1700,10 @@ if (!isset($_POST['update'])) {
   }
 
   // 05/04/2012 - Enlarge the size of the integer for userID in student_modules table.
-  if (!$updater_utils->does_column_type_value_exist('student_modules', 'userID', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE student_modules CHANGE COLUMN userID userID int(10) unsigned", true);
+  if (!$updater_utils->does_table_exist('student_modules')) {
+    if (!$updater_utils->does_column_type_value_exist('student_modules', 'userID', 'int(10) unsigned')) {
+      $updater_utils->execute_query("ALTER TABLE student_modules CHANGE COLUMN userID userID int(10) unsigned", true);
+    }
   }
 
   // 05/04/2012 - Enlarge the size of the integer for userID in student_notes table.
@@ -1784,7 +1790,7 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-  // 05/04/2012 - Enlarge the size of the enum for calendar_year in student_modules table.
+  // 05/04/2012 - Enlarge the size of the enum for calendar_year in sessions table.
   $data_type = '';
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sessions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='calendar_year'");
   $result->execute();
@@ -2327,14 +2333,11 @@ if (!isset($_POST['update'])) {
   }
 
   //update student_modules.moduleid to a char(25)
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='student_modules' AND TABLE_SCHEMA='touchstone' and COLUMN_NAME = 'moduleid' and COLUMN_TYPE = 'char(15)' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
-  $result->execute();
-  $result->store_result();
-  $result->fetch();
-  if ($result->num_rows() == 1) {
-    $updater_utils->execute_query("ALTER TABLE student_modules CHANGE moduleid moduleid char(25)", true);
+  if (!$updater_utils->does_table_exist('student_modules')) {
+    if (!$updater_utils->does_column_type_value_exist('student_modules', 'moduleid', 'char(25)')) {
+      $updater_utils->execute_query("ALTER TABLE student_modules CHANGE moduleid moduleid char(25)", true);
+    }
   }
-  $result->close();
 
   // 05/07/2012 - Add VLE API reference to relationships table (for historical references) and update for modules using NLE
   $result_col = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='relationships' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='vle_api'");
@@ -2366,16 +2369,10 @@ if (!isset($_POST['update'])) {
   }
   $result_col->close();
 
-  // 18/07/2012
-  // Add index to improve performance for finding question copying in the Information dialog box.
-  $result = $mysqli->prepare("SHOW INDEX FROM track_changes");
-  $result->execute();
-  $result->store_result();
-  $result->fetch();
-  if ($result->num_rows() == 1) {
+  // 18/07/2012 - Add index to improve performance for finding question copying in the Information dialog box.
+  if (!$updater_utils->does_index_exist('track_changes', 'type')) {
     $updater_utils->execute_query("ALTER TABLE track_changes ADD INDEX(type)", true);
   }
-  $result->close();
 
   // 27/07/2012 - Remove invalid entries from track changes
   $result = $mysqli->prepare("SELECT typeID FROM track_changes WHERE typeID < 1 LIMIT 1");
@@ -2670,7 +2667,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 19/09/2012 - add new index to users_metadata
-  if (!$updater_utils->does_column_exist('users_metadata', 'idx_users_metadata')) {
+  if (!$updater_utils->does_index_exist('users_metadata', 'idx_users_metadata')) {
     $updater_utils->execute_query("ALTER TABLE users_metadata ADD UNIQUE idx_users_metadata (userID, moduleID, type, calendar_year)", true);
   }
 
@@ -2724,7 +2721,6 @@ QUERY;
   if (!$updater_utils->does_column_type_value_exist('textbox_marking', 'paperID', 'mediumint(8) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE textbox_marking CHANGE COLUMN paperID paperID mediumint(8) unsigned", true);
   }
-
 
   //27/09/2012 - remove concatenated moduleID form properties and crate the properties_module linking table
   if (!$updater_utils->does_table_exist('properties_modules')) {
