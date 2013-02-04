@@ -49,15 +49,30 @@ function exceptionHandler($exception) {
 
   // alter your trace as you please, here
   $trace = $exception->getTrace();
+
+  /*
   foreach ($trace as $key => $stackPoint) {
     // I'm converting arguments to their type
     // (prevents passwords from ever getting logged as anything other than 'string')
     $trace[$key]['args'] = array_map('gettype', $trace[$key]['args']);
   }
-
+*/
   // build your tracelines
   $result = array();
   foreach ($trace as $key => $stackPoint) {
+
+    if(!isset($stackPoint['file'])) {
+      $stackPoint['file']='UNKNOWN';
+    }
+    if(!isset($stackPoint['line'])) {
+      $stackPoint['line']='UNKNOWN';
+    }
+    if(!isset($stackPoint['function'])) {
+      $stackPoint['function']='UNKNOWN';
+    }
+    if(!isset($stackPoint['args'])) {
+      $stackPoint['args']='UNKNOWN';
+    }
     $result[] = sprintf(
       $traceline,
       $key,
@@ -91,8 +106,10 @@ function exceptionHandler($exception) {
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   global $debug_pagestart, $dbclass;
 
-  $notice = UserNotices::get_instance();
+  $tessesetgsdgs='dgdsgdsgdsg';
+
   $configObject = Config::get_instance();
+  $notice = UserNotices::get_instance();
   $userObject = UserObject::get_instance();
 
   if (isset($debug_pagestart)) {
@@ -136,7 +153,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
   if ($error_type != 'Notice') { // Record errors that are not notices.
 
-    $variables = base64_encode(serialize($context));
+ //   $variables = base64_encode(serialize($context));
 
     $backtrace = DebugBackTraceDisplay(debug_backtrace());
 
