@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+
 /**
- * Created by JetBrains PhpStorm.
- * User: cczsa1
- * Date: 28/01/13
- * Time: 11:47
- * To change this template use File | Settings | File Templates.
+ *
+ * The ldap lookup handler class
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
  */
 
 

@@ -15,6 +15,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
+/**
+ *
+ * The outline lookup class
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
+
 class outline_lookup {
 
   protected $name;

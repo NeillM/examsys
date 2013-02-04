@@ -32,18 +32,37 @@ class ldap_auth extends outline_authentication {
   public $impliments_api_auth_version = 1;
   public $version = 0.9;
 
+  private $createnewuserassociation = FALSE;
+
   function register_callback_routines() {
-    $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'createnewuserassociation'), 'postauthsuccess', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
     return $callbackarray;
+  }
+
+  function createnewuserassociation($postauthsuccessobj) {
+    if ($this->createnewuserassociation !== TRUE) {
+      return $postauthsuccessobj;
+    }
+
+    $sql = "INSERT into $table set $username_col=?, $id_col=?";
+    $result = $this->db->prepare($sql);
+
+    $result->bind_param('s', $this->form['std']->username, $postauthsuccessobj->userid);
+
+    $result->execute();
+
+    return $postauthsuccessobj;
   }
 
   function errordisp($displayerrformobj) {
     global $string;
     $this->savetodebug('adding ldap notice to error screen');
     $displayerrformobj->li[] = $string['tsonldap'];
+
     return $displayerrformobj;
   }
 
@@ -159,7 +178,9 @@ class ldap_auth extends outline_authentication {
 
           $this->savetodebug('LDAP Record found but no local account');
           $data = new stdClass();
-          $data->{$this->settings['search_field']}=$this->form['std']->username;
+          $data->{$this->settings['search_field']} = $this->form['std']->username;
+
+          $this->createnewuserassociation = TRUE;
 
           $authobj->lookupmissing($this->number, $data);
 

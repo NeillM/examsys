@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+
 /**
- * Created by JetBrains PhpStorm.
- * User: cczsa1
- * Date: 30/01/13
- * Time: 14:49
- * To change this template use File | Settings | File Templates.
+ *
+ * The xml lookup class
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
  */
 
 require_once 'outline_lookup.class.php';

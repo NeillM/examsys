@@ -15,84 +15,99 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 
 Class CourseUtils {
 
   /**
    * Check for already existing and then add new course data into the database.
+   *
    * @param integer $schoolid ID of the school the course belongs to
    * @param string $name code of the course e.g. B140
    * @param string $description a title for the course e.g. Neuroscience BSc
    * @param object $db database connection
+   *
    * @return bool depending on insert success
    */
   static function add_course($schoolid, $name, $description, $db) {
-    
-    if (CourseUtils::course_exists($name, $db) === true) {
-      return false;
+
+    if (CourseUtils::course_exists($name, $db) === TRUE) {
+      return TRUE;
     }
-    
+    if ($name == '') {
+      return FALSE;
+    }
+
+    if (!is_int($schoolid)) {
+      //school name given not school id so convert
+      $schoolid = SchoolUtils::get_school_id_by_name($schoolid, $db);
+    }
+
     $result = $db->prepare("INSERT INTO courses VALUES (NULL, ?, ?, NULL, ?)");
     $result->bind_param('ssi', $name, $description, $schoolid);
-    $result->execute();  
+    $result->execute();
     $result->close();
-    
+
     if ($db->errno != 0) {
-      return false;
+      return FALSE;
     }
-    
-    return true;
+
+    return TRUE;
   }
 
   /**
    * Deletes an existing course.
+   *
    * @param string $name code of the course e.g. B140
    * @param object $db database connection
+   *
    * @return bool depending on  success
    */
   static function delete_course($name, $db) {
-    
+
     $result = $db->prepare("DELETE FROM courses WHERE name = ? limit 1");
     $result->bind_param('s', $name);
-    $result->execute();  
+    $result->execute();
     $result->close();
-    
+
     if ($db->errno != 0) {
-      return false;
+      return FALSE;
     }
-    
-    return true;
+
+    return TRUE;
   }
-  
+
   /**
    * Check to see if a course already exists.
+   *
    * @param string $name name of the course to check
    * @param object $db database connection
+   *
    * @return bool false=course does not exists, true=course exist
    */
   static function course_exists($name, $db) {
     // Check for unique course
-    $unique_courseid = false;
-    
+    $unique_courseid = FALSE;
+
     $result = $db->prepare("SELECT id FROM courses WHERE name=?");
     $result->bind_param('s', $name);
     $result->execute();
     $result->store_result();
     if ($result->num_rows > 0) {
-      $unique_courseid = true;
+      $unique_courseid = TRUE;
     }
     $result->free_result();
     $result->close();
-    
+
     return $unique_courseid;
   }
-  
+
 }
+
 ?>

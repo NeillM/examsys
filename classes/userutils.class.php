@@ -26,16 +26,38 @@
 
 Class UserUtils {
 
-  static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db) {
+  static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = NULL, $password = '') {
+    $courseok = CourseUtils::add_course($school, $course, $coursedesc, $db);
+
+    if ($courseok !== TRUE) {
+      return FALSE;
+    }
+
+    //TODO I do not think this should be a hardcoded list
+
+    if (!in_array($role, array('Staff', 'Student', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner'))) {
+      // not a valid role
+      return FALSE;
+    }
+
+    $userid = self::create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials);
+
+    return $userid;
+  }
+
+  static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = NULL) {
     $configObj = Config::get_instance();
 
-    if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
-      $initial = explode(' ', $forname);
-      $initials = '';
-      foreach ($initial as $name) {
-        $initials .= substr($name, 0, 1);
+    if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === FALSE) {
+      if (is_null($initials)) {
+        $initial = explode(' ', $forname);
+        $initials = '';
+        foreach ($initial as $name) {
+          $initials .= substr($name, 0, 1);
+        }
+        $initials = strtoupper($initials);
       }
-      $initials = strtoupper($initials);
+
       $surname = self::my_ucwords(trim($surname));
       $title = self::my_ucwords(trim($title));
 
@@ -48,6 +70,7 @@ Class UserUtils {
       if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
         $gender = NULL;
       }
+
 
       //add new users
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?, NULL)");
@@ -75,7 +98,7 @@ Class UserUtils {
       return $tmp_userID;
     }
 
-    return false;
+    return FALSE;
   }
 
   /**
@@ -83,6 +106,7 @@ Class UserUtils {
    *
    * @param string $username username
    * @param object $db mysqli database connection
+   *
    * @return mixed user ID if exists, otherwise false
    *
    */
@@ -93,7 +117,7 @@ Class UserUtils {
     $stmt->store_result();
     $stmt->bind_result($tmp_userID);
     $stmt->fetch();
-    $exists = ($stmt->num_rows == 0) ? false : $tmp_userID;
+    $exists = ($stmt->num_rows == 0) ? FALSE : $tmp_userID;
     $stmt->close();
 
     return $exists;
@@ -104,6 +128,7 @@ Class UserUtils {
    *
    * @param string $sid Student ID
    * @param object $db mysqli database connection
+   *
    * @return mixed user ID if exists, otherwise false
    *
    */
@@ -114,18 +139,19 @@ Class UserUtils {
     $stmt->store_result();
     $stmt->bind_result($tmp_userID);
     $stmt->fetch();
-    $exists = ($stmt->num_rows == 0) ? false : $tmp_userID;
+    $exists = ($stmt->num_rows == 0) ? FALSE : $tmp_userID;
     $stmt->close();
 
     return $exists;
   }
-  
+
   /**
    * Check if a user has a particular role.
    *
    * @param integer $tmp_userID UserID of the user to be checked
    * @param string $test_role the role to be checked
    * @param object $db mysqli database connection
+   *
    * @return bool whether role was found or not
    *
    */
@@ -136,15 +162,15 @@ Class UserUtils {
     $stmt->bind_result($roles);
     $stmt->fetch();
     $stmt->close();
-    
+
     $roles_list = explode(',', $roles);
-    $match = false;
+    $match = FALSE;
     foreach ($roles_list as $individual_role) {
       if ($individual_role == $test_role) {
-        $match = true;
+        $match = TRUE;
       }
     }
-    
+
     return $match;
   }
 
@@ -157,14 +183,14 @@ Class UserUtils {
    *
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
-  
+
     if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
       $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NULL, 'System')");
       $stmt->bind_param('si', $idMod, $tmp_userID);
       $stmt->execute();
       $stmt->close();
     }
-    
+
   }
 
   /**
@@ -193,7 +219,7 @@ Class UserUtils {
     $result->bind_param('i', $tmp_userID);
     $result->execute();
     $result->close();
-    
+
     if (isset($GLOBALS['userObject'])) {
       $GLOBALS['userObject']->load_staff_modules();
     }
@@ -204,6 +230,7 @@ Class UserUtils {
    *
    * @param integer $modID The ID of the team to query
    * @param object $db mysqli database connection
+   *
    * @return array list of UserIDs for member of the team
    *
    */
@@ -226,6 +253,7 @@ Class UserUtils {
    *
    * @param string $team_name The name of the team to query
    * @param object $db mysqli database connection
+   *
    * @return array list of UserIDs for member of the team
    *
    */
@@ -249,28 +277,30 @@ Class UserUtils {
    * @param int $userID ID of the student to be enroled.
    * @param int $idMod Module ID for the enrolement.
    * @param object $db $mysqli database connection.
+   *
    * @return bool return true if successful.
    *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
-    
+
     $userObject = UserObject::get_instance();
 
     if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
       //don't add a user to a module multiple times
-      return true;
+      return TRUE;
     } else {
       $result = $db->prepare("INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, ?)");
       $result->bind_param('iisii', $tmp_userID, $idMod, $session, $attempt, $auto_update);
       $result->execute();
       $result->close();
       if ($db->errno != 0) {
-        return false;
+        return FALSE;
       }
       if ($tmp_userID === $userObject->get_user_ID()) {
         $userObject->load_student_modules();
       }
-      return true;
+
+      return TRUE;
 
     }
   }
@@ -282,6 +312,7 @@ Class UserUtils {
    * @param int $idMod Module ID for the enrolement.
    * @param string $session The academic year.
    * @param object $db $mysqli database connection.
+   *
    * @return bool return true if successful.
    *
    */
@@ -293,7 +324,7 @@ Class UserUtils {
     $result->bind_result($tmp_userID);
     $exists = ($result->num_rows > 0);
     $result->close();
-    
+
     return $exists;
   }
 
@@ -313,16 +344,18 @@ Class UserUtils {
       $next = strtoupper($next);
       $word = substr_replace($word, $next, 2, 1);
     }
+
     return $word;
   }
 
   static function my_ucwords($s) {
     $s = preg_replace_callback("/(\b[\w|']+\b)/s", array('UserUtils', 'fixcase_callback'), $s);
+
     return $s;
   }
 
   static function staff_on_team($module, $db, $tmp_userID = -99) {
-    trigger_error('the staff_on_team function is now available in userObject for the current user',E_USER_WARNING);
+    trigger_error('the staff_on_team function is now available in userObject for the current user', E_USER_WARNING);
 
     global $REPLACEMEuserIDold;
     if ($tmp_userID == -99 and isset($GLOBALS['userObject'])) {
@@ -341,13 +374,12 @@ Class UserUtils {
       $teams[$team_name] = $team_name;
     }
     $result->close();
-    $module=strtoupper($module);
+    $module = strtoupper($module);
     if (isset($teams[$module])) {
-      return true;
+      return TRUE;
 
-    }
-    else {
-      return false;
+    } else {
+      return FALSE;
     }
   }
 }

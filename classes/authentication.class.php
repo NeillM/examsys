@@ -33,7 +33,7 @@ define('ROGO_AUTH_OBJ_LOOKUPONLY', 2);
  * Rogos main authentication stack and plugin system
  */
 class Authentication {
-  
+
   private $userid;
   private $password;
   private $db, $configObj;
@@ -55,53 +55,54 @@ class Authentication {
   public $request;
 
   public $impliments_api_auth_version = 1;
-                                
+
   public $callbacktypes = array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'displayerrform', 'getauthobj', 'sessionstore');
 
   public $initobj, $lookupuserobj, $preauthobj, $authobj, $postauthobj, $postauthsuccesobj, $postauthfailobj, $displaystdformobj, $displayerrformobj, $getauthobj, $sessionstoreobj;
 
 
   function __construct(&$configObj, &$db, &$request, &$session) {
-    
+
     $this->db = & $db;
     $this->configObj = & $configObj;
 
     $this->request = & $request;
     $this->session = & $session;
-    
+
     $this->debug = array();
 
-    if($this->load_config()) {
+    if ($this->load_config()) {
       //if the config is ok setup the auth stack
       $this->setup();
     }
   }
-  
+
   /*
    * verify the config file contains vlaid authentication settings
    * 
    * @return bool
    */
   private function load_config() {
-    $config_ok = true;
-    
+    $config_ok = TRUE;
+
     $notice = UserNotices::get_instance();
 
     $this->config = $this->configObj->getbyref('authentication');
 
     if (!isset($this->config)) {
       $notice->display_notice_and_exit(
-                              'No Authentication configured', 
-                              'No Authentication configuration has been set in the config file. Please contact your local system administrator.', 
-                              '../artwork/software_64.png', 
-                              $title_color = '#C00000');
-      $config_ok = false;
+        'No Authentication configured',
+        'No Authentication configuration has been set in the config file. Please contact your local system administrator.',
+        '../artwork/software_64.png',
+        $title_color = '#C00000');
+      $config_ok = FALSE;
     }
 
     $this->debug[] = 'Loaded Config for authentication';
+
     return $config_ok;
   }
-  
+
   /*
    *  Parse the config and register the relivant callbacks in the auth plugins
    */
@@ -127,7 +128,7 @@ class Authentication {
       $this->debug[] = 'Standard form data found - Storing in object ' . var_export($this->form, TRUE);
 
     }
-    
+
     if (!isset($this->session['authenticationObj']['attempt'])) {
       $this->session['authenticationObj']['attempt'] = 0;
       $this->debug[] = 'Creating SESSION attempt data';
@@ -260,7 +261,7 @@ class Authentication {
 
     $this->debug[] = 'Display error form & reset attempt count';
     $this->session['authenticationObj']['attempt'] = 0;
-    if($display) {
+    if ($display) {
       if (file_exists($override)) {
         require $override;
       } else {
@@ -286,7 +287,7 @@ class Authentication {
         $this->append_auth_object_debug($objid);
       }
     }
-    
+
     $authobj = new authobjreturn();
 
     if (isset($this->callbackregister['auth'])) {
@@ -301,6 +302,38 @@ class Authentication {
           $this->successfullauthmodule[] = $objid;
 
         } elseif ($authobj->returned === ROGO_AUTH_OBJ_LOOKUPONLY) {
+          $this->debug[] = '* User authenticated but no matching rogo id found, attempting to lookup the user with info supplied from module *';
+
+          //lookupuser
+          $lookup = Lookup::get_instance($this->configObj, $this->db);
+
+          //$authobj->data contains lookup info;
+          $data->lookupdata = clone $authobj->data;
+          $info = $lookup->userlookup($data);
+
+          //minimum fields to create an new user username
+          $createuser = TRUE;
+          $authentication_fields_required_to_create_user = $this->configObj->get('authentication_fields_required_to_create_user');
+          if (!is_null($authentication_fields_required_to_create_user)) {
+            foreach ($authentication_fields_required_to_create_user as $value) {
+              if (!isset($info->lookupdata->$value)) {
+                $createuser = FALSE;
+                $this->debug[] = 'Not creating user as the ' . $value . ' field is missing';
+              }
+            }
+          }
+
+          if ($createuser == TRUE) {
+            $this->debug[] = 'Going to try and create new user';
+            $newuserid = UserUtils::create_extended_user($info->lookupdata->username, $info->lookupdata->title, $info->lookupdata->firstname, $info->lookupdata->surname, $info->lookupdata->email, $info->lookupdata->coursecode, $info->lookupdata->gender, $info->lookupdata->yearofstudy, $info->lookupdata->role, $info->lookupdata->studentID, $this->db, $info->lookupdata->school, $info->lookupdata->coursetitle, $info->lookupdata->initials, $this->form['std']->password);
+            if ($newuserid !== FALSE) {
+              //new account created
+              $authobj->success($objid, $newuserid);
+              $this->success = TRUE;
+              $this->userid = $authobj->rogoid;
+              $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
+            }
+          }
 
         }
 
@@ -325,7 +358,7 @@ class Authentication {
       $postauthfailobj = new postauthfailreturn();
       $postauthfailobj->authobj = $authobj;
       $postauthfailobj->postauthobj = $postauthobj;
-      
+
       $this->session['authenticationObj']['attempt']++;
       if (isset($this->callbackregister['postauthfail'])) {
         foreach ($this->callbackregister['postauthfail'] as $number => $callback) {
@@ -338,6 +371,7 @@ class Authentication {
             if ($postauthfailobj->exit === TRUE) {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
+
               return FALSE; //just incase and needed for testing
             }
           }
@@ -347,6 +381,7 @@ class Authentication {
             if ($postauthfailobj->exit === TRUE) {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
+
               return FALSE; //just incase and needed for testing
             }
           }
@@ -356,6 +391,7 @@ class Authentication {
             if ($postauthfailobj->exit === TRUE) {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
+
               return FALSE; //just incase and needed for testing
             }
           }
@@ -365,6 +401,7 @@ class Authentication {
             if ($postauthfailobj->exit === TRUE) {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
+
               return FALSE; //just incase and needed for testing
             }
           }
@@ -378,23 +415,24 @@ class Authentication {
         //failed but no callbacks or callbacks finished
         $notice = UserNotices::get_instance();
         $notice->display_notice_and_exit(
-                                          'Authentication Issue', 
-                                          "The authentication plugins couldnt log you in and, they the plugins didnt provide any further form or redirect.   
+          'Authentication Issue',
+          "The authentication plugins couldnt log you in and, they the plugins didnt provide any further form or redirect.
                                             Press F5 to refresh if this is still unsuccessful please contact support:  <a href=\"mailto:" . $this->configObj->get('support_email') . "\">" . $this->configObj->get('support_email') . "</a>." .
-                                            "<p>Please Include the following debug in your email:</p><div style=\"margin-left:100px;\">" . $this->debug_to_string() . "</div>" , 
-                                            '/artwork/user_info_48.png', 
-                                          '#C00000', 
-                                          TRUE, 
-                                          TRUE);
+            "<p>Please Include the following debug in your email:</p><div style=\"margin-left:100px;\">" . $this->debug_to_string() . "</div>",
+          '/artwork/user_info_48.png',
+          '#C00000',
+          TRUE,
+          TRUE);
       }
     }
 
     if ($this->success !== TRUE) {
       $this->debug[] = 'Success is not TRUE or FALSE';
+
       //something went very wrong;
       return FALSE;
-    } 
-    
+    }
+
     // the auth has succeeded as above will stop it if its not true
     $postauthsuccessobj = new stdClass();
     $postauthsuccessobj->authobj = $authobj;
@@ -441,7 +479,7 @@ class Authentication {
   function display_debug() {
     var_dump($this->debug);
   }
-  
+
   function debug_to_string() {
     implode('<br />', $this->debug);
   }
@@ -461,14 +499,14 @@ class Authentication {
       if ($this->get_userid() < 1) {
         $notice = UserNotices::get_instance();
         $notice->display_notice_and_exit(
-                                          'Authentication Issue', 
-                                          "You are not logged in.   Press F5 to refresh if this is still unsuccessful please contact support: <a href=\"mailto:" . $this->configObj->get('support_email') . "\">" . $this->configObj->get('support_email') . "</a>." .
-                                            "<p>Please Include the following debug in your email:</p><div style=\"margin-left:100px;\">" . $this->debug_to_string() . "</div>" , 
-                                            '/artwork/user_info_48.png', 
-                                          '#C00000', 
-                                          TRUE, 
-                                          TRUE);
-        
+          'Authentication Issue',
+          "You are not logged in.   Press F5 to refresh if this is still unsuccessful please contact support: <a href=\"mailto:" . $this->configObj->get('support_email') . "\">" . $this->configObj->get('support_email') . "</a>." .
+            "<p>Please Include the following debug in your email:</p><div style=\"margin-left:100px;\">" . $this->debug_to_string() . "</div>",
+          '/artwork/user_info_48.png',
+          '#C00000',
+          TRUE,
+          TRUE);
+
       }
       $getauthobj->userObj->load($this->get_userid());
     }
@@ -476,12 +514,12 @@ class Authentication {
 
 
     if (isset($this->callbackregister['getauthobj'])) {
-        foreach ($this->callbackregister['getauthobj'] as $number => $callback) {
-          $this->debug[] = 'run getauthobj callback ' . get_class($callback[0]) . ':' . $callback[1];
-          $getauthobj = call_user_func_array($callback, array($getauthobj));
-          $objid = key($this->callbackregisterdata['getauthobj'][$number]);
-          $this->append_auth_object_debug($objid);
-        }
+      foreach ($this->callbackregister['getauthobj'] as $number => $callback) {
+        $this->debug[] = 'run getauthobj callback ' . get_class($callback[0]) . ':' . $callback[1];
+        $getauthobj = call_user_func_array($callback, array($getauthobj));
+        $objid = key($this->callbackregisterdata['getauthobj'][$number]);
+        $this->append_auth_object_debug($objid);
+      }
     }
 
     return $getauthobj->userObj;
@@ -573,7 +611,7 @@ class authobjreturn {
   public $data;
   public $datas;
   public $statuses;
-  
+
   function __construct() {
     $this->returned = ROGO_AUTH_OBJ_FAILED;
     $this->returneds = array();
@@ -584,7 +622,7 @@ class authobjreturn {
     $this->datas = array();
 
   }
-  
+
   /*
    * set the authobjreturn objet to fail state
    */
@@ -595,7 +633,7 @@ class authobjreturn {
     $this->rogoid = 0;
 
   }
-  
+
   /*
    * set the authobjreturn objet to success state
    */
