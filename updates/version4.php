@@ -2182,45 +2182,6 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE folders CHANGE COLUMN color color enum('yellow','red','green','blue','grey')", true);
   }
 
-  // 28/05/2012 - Add new autosave timeout.
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
-
-  //remove refrances to old vars
-  $cfg_new = array();
-  $found = FALSE;
-  foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_autosave_timeout') !== FALSE) {
-      $found = TRUE;
-    }
-    $cfg_new[] = $line;
-  }
-
-  if (!$found) {
-    $new_cfg_str = array("\$cfg_autosave_timeout = 180;\n");
-    $index = 0;
-    foreach ($cfg as $line) {
-      if (strpos($line, '$cfg_hour_warning') !== FALSE) {
-        $found = TRUE;
-        break;
-      }
-      $index++;
-    }
-
-    if (!$found) $index = $index; //put at end of file
-
-    //add the new config chunk
-    array_splice($cfg_new, $index + 1, 0, $new_cfg_str);
-
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old10.php');
-    }
-
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
-      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
-    }
-    echo "<li>Added  new autosave timeout to configuration file.</li>\n";
-  }
-
   // 28/05/2012 - Add permission for external examiners to view student help.
   if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'student_help', $cfg_db_host)) {
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
@@ -3269,7 +3230,7 @@ QUERY;
     $updater_utils->execute_query("ALTER TABLE lti_keys ADD INDEX oauth_consumer_key (oauth_consumer_key)", true);
   }
 
-  if (!$updater_utils->does_index_exist('lti_user', 'rogo_id')) {
+  if (!$updater_utils->does_index_exist('lti_user', 'lti_user_equ')) {
     $updater_utils->execute_query("ALTER TABLE lti_user ADD INDEX lti_user_equ (lti_user_equ)", true);
   }
 
@@ -3287,7 +3248,7 @@ QUERY;
     }
     $target_line++;
   }
-  
+
   if ($found) {
     $target_line--;
     $top_cfg[] = "  //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';\n";
@@ -3303,7 +3264,7 @@ QUERY;
     ob_flush();
     flush();
   }
-  
+
   // End of updates -----------------------------------------------------------------
 
   // Final housekeeping activities - put all updates above this line
