@@ -29,7 +29,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Negative marking');
     $this->assertTextPresent('Note: Calculation 3 notes for students');
     $this->assertTextPresent('Calculation 3, no tolerance, no units, 2 decimals, increment A - 0.02, 1 mark, -0.5 marks incorrect');
-    $this->assertCssCount('css=input[type="text"]', 4);    // Include timer box
+    $this->assertCssCount('css=input[type="text"]', 3);
     $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark)');
     $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks)');
     $this->assertElementContainsText('//*[@id="q3_mk"]', '(1 mark, negative marking)');
@@ -65,7 +65,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Calculation 5 scenario');
     $this->assertTextPresent('Calculation 5, tolerance partial 1, no units, 2 decimals, increment A - 0.02, 1 mark correct, 0.5 marks partial');
     $this->assertTextPresent('Calculation 6, tolerance full 1, tolerance partial 1.5, units = cm, 1 decimal, 2 marks correct, 1 mark partial, increment A - 0.1, increment B - 0.2');
-    $this->assertCssCount('css=input[type="text"]', 4);    // Include timer box
+    $this->assertCssCount('css=input[type="text"]', 3);
     $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks, negative marking)');
     $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark)');
     $this->assertElementContainsText('//*[@id="q3_mk"]', '(2 marks)');
@@ -107,7 +107,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Note: Calculation 9 notes for students');
     $this->assertTextPresent('Calculation 9 scenario');
     $this->assertTextPresent('Calculation 9, tolerance partial 5%, no units, 2 decimals, increment A - 0.02, 1 mark correct, 0.5 marks partial');
-    $this->assertCssCount('css=input[type="text"]', 4);    // Include timer box
+    $this->assertCssCount('css=input[type="text"]', 3);
     $this->assertElementContainsText('//*[@id="q1_mk"]', '(1 mark, negative marking)');
     $this->assertElementContainsText('//*[@id="q2_mk"]', '(2 marks, negative marking)');
     $this->assertElementContainsText('//*[@id="q3_mk"]', '(1 mark)');
@@ -143,7 +143,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Calculation 11 scenario');
     $this->assertTextPresent('Calculation 11, tolerance partial 5%, no units, 2 decimals, increment A - 0.02, 1 mark, 0.5 marks partial, -0.5 marks incorrect');
     $this->assertTextPresent('Calculation 12, tolerance full 5%, tolerance partial 8%, units = cm, 1 decimal, 2 marks correct, 1 mark partial, -1 mark incorrect, increment A - 0.1, increment B - 0.2');
-    $this->assertCssCount('css=input[type="text"]', 4);    // Include timer box
+    $this->assertCssCount('css=input[type="text"]', 3);
     $this->assertElementContainsText('//*[@id="q1_mk"]', '(2 marks)');
     $this->assertElementContainsText('//*[@id="q2_mk"]', '(1 mark, negative marking)');
     $this->assertElementContainsText('//*[@id="q3_mk"]', '(2 marks, negative marking)');

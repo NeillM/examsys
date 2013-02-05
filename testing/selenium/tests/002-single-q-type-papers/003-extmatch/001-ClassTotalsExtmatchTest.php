@@ -17,7 +17,7 @@ class ClassTotalsExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testResults() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=3&startdate=20130102000000&enddate=20130217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->open("/reports/class_totals.php?paperID=3&startdate=20130102000000&enddate=20530217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
 
     // Individuals
     $this->assertElementContainsText('//tr[@id="res1"]/td[5]', '0');

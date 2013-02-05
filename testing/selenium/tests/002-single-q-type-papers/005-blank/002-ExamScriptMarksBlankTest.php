@@ -17,8 +17,8 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testUnanswered() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20130110170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 12:19:53',104,'0','n','n','0',event);hideTimerReset();\"]");
+    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530110170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->click("//span[@onclick=\"popMenu('2013-01-10 12:19:53',104,'0','n','n','0',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -42,8 +42,8 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testAllCorrect() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20130210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 13:18:16',105,'0','n','n','100',event);hideTimerReset();\"]");
+    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->click("//span[@onclick=\"popMenu('2013-01-10 13:18:16',105,'0','n','n','100',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -67,8 +67,8 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testAllIncorrect() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20130210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 13:57:35',106,'0','n','n','-31',event);hideTimerReset();\"]");
+    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->click("//span[@onclick=\"popMenu('2013-01-10 13:57:35',106,'0','n','n','-31',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -92,8 +92,8 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testMixed1() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20130210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 15:05:39',107,'0','n','n','12',event);hideTimerReset();\"]");
+    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->click("//span[@onclick=\"popMenu('2013-01-10 15:05:39',107,'0','n','n','12',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -117,8 +117,8 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testMixed2() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20130210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 15:14:20',108,'0','n','n','0',event);hideTimerReset();\"]");
+    $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->click("//span[@onclick=\"popMenu('2013-01-10 15:14:20',108,'0','n','n','0',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
