@@ -231,21 +231,18 @@ if (isset($_POST['Submit'])) {
     if ($internal_review_deadline == '') $internal_review_deadline = NULL;
 
     $paper_modules = array();
+    $first_module_id = '';
+    
     for ($i=0; $i<$_POST['module_no']; $i++) {
       if (isset($_POST['module' . $i])) {
         if (count($paper_modules) == 0) {
           $paper_modules[$_POST['module' . $i]] = $_POST['module' . $i];
           $first_module_idMod = $_POST['module' . $i];
-          //$first_module_id = module_utils::get_moduleID($_POST['module' . $i], $mysqli);
           $first_module_id = $_POST['module' . $i];
         } else {
           $paper_modules[$_POST['module' . $i]] = $_POST['module' . $i];
         }
       }
-    }
-
-    if (isset($_POST['cal_mod']) and $_POST['cal_mod'] != '') {    // If set override the module ID with what the dialog box was called with.
-      $first_module_id = $_POST['cal_mod'];
     }
 
     $lab_string = '';
@@ -1636,7 +1633,6 @@ if ($paper_type != '4' and $paper_type != '5') {
 <input type="hidden" name="noadd" value="<?php if (isset($_GET['noadd'])) echo $_GET['noadd']; ?>" />
 <input type="hidden" name="old_paper_type" value="<?php echo $paper_type; ?>" />
 <input type="hidden" name="caller" value="<?php echo $_GET['caller']; ?>" />
-<input type="hidden" name="cal_mod" value="<?php echo $_GET['module']; ?>" />
 </form>
 <?php
   }
