@@ -2222,7 +2222,8 @@ CREATE TABLE `track_changes` (
   `changed` datetime DEFAULT NULL,
   `part` text,
   PRIMARY KEY (`id`),
-  KEY `typeID` (`typeID`)
+  KEY `typeID` (`typeID`),
+  KEY `type` (`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1021 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2310,4 +2311,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-02-05 10:14:04
+-- Dump completed on 2013-02-05 10:53:01
