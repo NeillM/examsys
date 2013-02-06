@@ -30,7 +30,7 @@ require_once 'outline_lookup.class.php';
 include_once $configObject->get('cfg_web_root') . 'lang/en/include/common.inc';
 
 
-class UoNSaturnTranslation_lookup extends outline_authentication {
+class UoNSaturnTranslation_lookup extends outline_lookup {
 
   public $impliments_api_lookup_version = 1;
   public $version = 0.9;
@@ -42,7 +42,7 @@ class UoNSaturnTranslation_lookup extends outline_authentication {
     return $callbackarray;
   }
 
-  function usertranslatelookup($userlookupobj) {
+  function usertranslatelookup ($userlookupobj) {
 
     if ($this->orsearchlist($userlookupobj->lookupdata->role, array('Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'))) {
       $userlookupobj->role = 'Student';
