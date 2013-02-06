@@ -43,6 +43,9 @@ require_once $path . '/classes/dateutils.class.php';
 require_once $path . '/classes/dbutils.class.php';
 require_once $path . '/classes/userutils.class.php';
 require_once $path . '/include/auth.inc';
+require_once $path . '/classes/smsutiles.class.php';
+
+$sms_connection = SmsUtils::GetSmsUtils();
 
 error_reporting(E_ALL);
 ini_set('display_errors',1);
@@ -61,7 +64,7 @@ $module_data->bind_result($idMod, $module, $sms);
 while ($module_data->fetch()) {
   print "Procesing: $module($idMod) using $sms\r\n";
 
-  update_module_enrolement($module, $sms, $mysqli, $session);  
+  $sms_connection->update_module_enrolement($module, $sms, $mysqli, $session);  
 }
 $module_data->close();
 
