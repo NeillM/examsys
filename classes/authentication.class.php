@@ -388,6 +388,9 @@ class Authentication {
 
           if ($postauthfailobj->form == 'err') {
             $this->display_error_form();
+            if(!is_null($this->configObj->get('display_auth_debug')) and $this->configObj->get('display_auth_debug')==true ) {
+              $this->display_debug();
+            }
             if ($postauthfailobj->exit === TRUE) {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
@@ -398,6 +401,9 @@ class Authentication {
 
           if ($postauthfailobj->form == 'std') {
             $this->display_std_form($string);
+            if(!is_null($this->configObj->get('display_auth_debug')) and $this->configObj->get('display_auth_debug')==true ) {
+              $this->display_debug();
+            }
             if ($postauthfailobj->exit === TRUE) {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
