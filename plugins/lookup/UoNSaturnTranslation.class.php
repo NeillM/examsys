@@ -48,12 +48,10 @@ class UoNSaturnTranslation_lookup extends outline_authentication {
       $userlookupobj->role = 'Student';
     }
 
-    if ($this->orsearchlist($userlookupobj->lookupdata->role, array('S'))) {
+    if ($this->orsearchlist($userlookupobj->lookupdata->role, array('S')) or isset($userlookupobj->lookupdata->staffID) {
       $userlookupobj->role = 'Staff';
-    }
-
-    if (isset($userlookupobj->lookupdata->staffID)) {
-      $userlookupobj->lookupdata->role = 'Staff';
+      $userlookupobj->coursecode = 'University Staff';
+      $userlookupobj->yearofstudy = 1;
     }
 
     if (isset($userlookupobj->lookupdata->sttudentID)) {
