@@ -25,6 +25,8 @@
  * @package
  */
 
+require_once $cfg_web_root . '/classes/lookup.class.php';
+
 define('ROGO_AUTH_OBJ_FAILED', 0);
 define('ROGO_AUTH_OBJ_SUCCESS', 1);
 define('ROGO_AUTH_OBJ_LOOKUPONLY', 2);
