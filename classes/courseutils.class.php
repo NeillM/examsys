@@ -96,6 +96,18 @@ Class CourseUtils {
     $unique_courseid = FALSE;
 
     $result = $db->prepare("SELECT id FROM courses WHERE name=?");
+    if ($db->error) {
+      try {
+        $a = $db->error;
+        $b = $db->errno;
+        throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
+      }
+      catch (Exception $e) {
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+        echo nl2br($e->getTraceAsString());
+      }
+    }
+
     $result->bind_param('s', $name);
     $result->execute();
     $result->store_result();
