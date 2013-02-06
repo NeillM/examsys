@@ -46,6 +46,9 @@ require_once $path . '/classes/dbutils.class.php';
 require_once $path . '/classes/userutils.class.php';
 require_once $path . '/include/auth.inc';
 
+error_reporting(E_ALL);
+ini_set('display_errors',1);
+
 $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
 
 // Calculate what the current academic session is.
