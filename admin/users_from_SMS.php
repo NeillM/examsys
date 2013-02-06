@@ -58,7 +58,8 @@ $module_data = $mysqli->prepare("SELECT moduleid, sms FROM modules WHERE sms != 
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($module, $sms);
-while ($module_data->fetch()) {
+while ($module_data->fetch()) {i
+print "Procesing: $module using $sms\r\n";
   $enrolements = 0;
   $deletions = 0;
   $enrolement_details = '';
