@@ -54,7 +54,7 @@ class ldap_auth extends outline_authentication {
     $sql = "INSERT into $table set $username_col=?, $id_col=?";
     $result = $this->db->prepare($sql);
 
-    $result->bind_param('s', $this->form['std']->username, $postauthsuccessobj->userid);
+    $result->bind_param('si', $this->form['std']->username, $postauthsuccessobj->userid);
 
     $result->execute();
 

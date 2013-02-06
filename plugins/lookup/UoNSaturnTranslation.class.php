@@ -54,7 +54,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
     if ($this->orsearchlist($userlookupobj->lookupdata->role, array('S')) or isset($userlookupobj->lookupdata->staffID)) {
       $this->savetodebug('Detected staff, correcting role and filling in fields');
       $userlookupobj->lookupdata->role = 'Staff';
-      $userlookupobj->lookupdata->coursecode = 'University Staff';
+      $userlookupobj->lookupdata->coursecode = 'University Lecturer';
       $userlookupobj->lookupdata->yearofstudy = 1;
     }
 
@@ -66,6 +66,23 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
     if (isset($userlookupobj->lookupdata->attendstatus) and strpos($userlookupobj->lookupdata->attendstatus, 'Suspended') !== FALSE) {
       $this->savetodebug('status is suspended diasbling');
       $userlookupobj->lookupdata->disabled = TRUE;
+    }
+
+    if ($userlookupobj->lookupdata->gender == 'M') {
+      $userlookupobj->lookupdata->gender = 'Male';
+    }
+    if ($userlookupobj->lookupdata->gender == 'F') {
+      $userlookupobj->lookupdata->gender = 'Female';
+    }
+
+
+    if (!isset($userlookupobj->lookupdata->gender)) {
+      if (stripos($userlookupobj->lookupdata->title, 'Mr') !== FALSE) {
+        $userlookupobj->lookupdata->gender = 'Male';
+      }
+      if (stripos($userlookupobj->lookupdata->title, 'Ms') !== FALSE or stripos($userlookupobj->lookupdata->title, 'Miss') !== FALSE or stripos($userlookupobj->lookupdata->title, 'Mrs') !== FALSE) {
+        $userlookupobj->lookupdata->gender = 'Female';
+      }
     }
 
     return $userlookupobj;
