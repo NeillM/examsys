@@ -110,9 +110,6 @@ require_once '../include/staff_auth.inc';
       folder_utils::create_folder($new_folder_name, $userObject, $mysqli);
     }
   }
-
-  // Update the last log in date in users.
-  $userObject->record_login();
 ?>
 <script language="JavaScript">
   function startPaper(paperID, fullsc) {
@@ -130,7 +127,7 @@ require_once '../include/staff_auth.inc';
   <tr>
     <th style="padding-left:16px; padding-top:5px">
 
-    <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
+    <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px" />
     <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogō</div>
     <div style="color:#1F497D; font-size:9pt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
 
@@ -181,10 +178,9 @@ require_once '../include/staff_auth.inc';
 
   // -- Display any papers for review ---------------------------------
   $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND internal_review_deadline >= NOW() AND properties.property_id=papers.paper AND internal_reviewers LIKE ? GROUP BY paper");
-  $db = $mysqli;
-  if ($db->error) {
+  if ($mysqli->error) {
     try {
-      throw new Exception("MySQL error $db->error <br> Query:<br> $query", $db->errno);
+      throw new Exception("MySQL error $mysqli->error <br> Query:<br> $query", $mysqli->errno);
     }
     catch (Exception $e) {
       echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -193,10 +189,9 @@ require_once '../include/staff_auth.inc';
   }
   $tmp = '%' . $userObject->get_user_ID() . '%';
   $result->bind_param('s', $tmp);
-  $db = $mysqli;
-  if ($db->error) {
+  if ($mysqli->error) {
     try {
-      throw new Exception("MySQL error $db->error <br> Query:<br> $query", $db->errno);
+      throw new Exception("MySQL error $mysqli->error <br> Query:<br> $query", $mysqli->errno);
     }
     catch (Exception $e) {
       echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";

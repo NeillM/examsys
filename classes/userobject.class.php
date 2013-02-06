@@ -613,14 +613,6 @@ class UserObject extends RogoStaticSingleton {
     // not implimented
     trigger_error('remove_staff_from_module not yet implimented', E_USER_WARNING);
   }
-  
-  function record_login() {
-    // Update the last log in date in users.
-    $stmt = $this->db->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
-    $stmt->bind_param('i', $this->get_user_ID());
-    $stmt->execute();
-    $stmt->close();
-  }
 
   function store_original_user() {
     $data = new stdClass();
