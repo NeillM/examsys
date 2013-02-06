@@ -262,7 +262,7 @@ Class UserUtils {
    */
   static function get_staff_modules_list_by_name($team_name, $db) {
     $team_members = array();
-    $result = $db->prepare("SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod=modules.id AND moduleid=?");
+    $result = $db->prepare("SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND moduleid = ?");
     $result->bind_param('s', $team_name);
     $result->execute();
     $result->bind_result($memberID);
@@ -304,7 +304,6 @@ Class UserUtils {
       }
 
       return TRUE;
-
     }
   }
 
