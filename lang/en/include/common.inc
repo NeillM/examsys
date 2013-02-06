@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['signinmsg'] = 'The page you are trying to access requires authentication. Please sign in using your username and password:';  // Niko
+$string['username'] = 'Username';  // Niko
+$string['password'] = 'Password';  // Niko
+$string['signin'] = 'Sign In';  // Niko
+$string['logout'] = 'Log Out';  // Niko
 $string['home'] = 'Home';
 $string['help'] = 'Help';
 $string['line'] = 'Line';
@@ -52,6 +57,6 @@ $string['ltifirstlogindesc'] = 'Rogō e-assessment system needs to confirm your 
 $string['ltinotconfigured'] = 'The link you have followed has not yet been configured.';
 $string['LTIFAILURE'] = 'LTI Failure';
 $string['expiredtimestamp'] = 'Timestamp has now expired. Please go back and relaunch the link (do not hit refresh in the browser).';
-$string['UserMissing']='Associated User Missing';
+$string['UserMissing'] = 'Associated User Missing';
 $string['UserMissingDesc'] = 'Somehow the associated user is missing from the rogo user system this is a serious error and you need to contact support';
 ?>

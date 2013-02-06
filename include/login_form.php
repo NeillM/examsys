@@ -1,19 +1,36 @@
+<?php
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+
+?>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $this->configObj->get('cfg_page_charset') ?>" />
 
-    <title>Log In</title>
+  <title><?php echo $string['signin']; ?></title>
 
-    <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/login_form.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/login_form.css"/>
 </head>
 
 <body>
 <form method="post">
     <div class="mainbox">
 
-        <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0"
-             style="float:left; padding-right:8px"/>
+        <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px" />
 
         <div style="color:#1F497D;font-size:28pt; font-weight:bold">Rogo</div>
         <div style="color:#1F497D;font-size:9pt">e-Assessment Management System</div>
@@ -32,26 +49,23 @@ HTML;
       }
 
       if (!(isset($this->displaystdformobj->replace) and $this->displaystdformobj->replace === true)) {
-
-        echo <<<HTML
-  <div class="msg">The page you are trying to access requires authentication. Please sign in using your username and password:</div>
-HTML;
-
+        echo "<div class=\"msg\">{$string['signinmsg']}</div>\n";
       }
       ?>
         <div style="margin-left:65px">
             <table>
                 <tr>
-                    <td>Username</td>
-                    <td><input type="text" name="ROGO_USER"/></td>
+                    <td><?php echo $string['username']; ?></td>
+                    <td><input type="text" name="ROGO_USER" /></td>
                 </tr>
                 <tr>
-                    <td>Password</td>
-                    <td><input type="password" name="ROGO_PW"/></td>
+                    <td><?php echo $string['password']; ?></td>
+                    <td><input type="password" name="ROGO_PW" /></td>
                 </tr>
             </table>
             <br/>
-            <input type="submit" name="rogo-login-form-std" value=" Sign In " style="width:160px"/>
+            </div>
+            <div style="text-align:center"><input type="submit" name="rogo-login-form-std" value="<?php echo $string['signin']; ?>" style="width:150px" />
           <?php
           if (isset($this->displaystdformobj->buttons)) {
             foreach ($this->displaystdformobj->buttons as $object) {
@@ -62,9 +76,8 @@ $object->posttext
 HTML;
             }
           }
-          //<input type="submit" name="cancel" value=" Cancel " />
           ?>
-        </div>
+          </div>
 
       <?php
       if (isset($this->displaystdformobj->postbuttonmessages)) {
@@ -117,7 +130,5 @@ HTML;
 
 }
 ?>
-
-
 </body>
 </html>

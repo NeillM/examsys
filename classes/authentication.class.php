@@ -226,8 +226,7 @@ class Authentication {
   /*
    * Disply the standard Rogo login form
    */
-  function display_std_form() {
-
+  function display_std_form($string) {
     $displaystdformobj = new stdClass();
 
     if (isset($this->callbackregister['displaystdform'])) {
@@ -275,7 +274,7 @@ class Authentication {
   /**
    * @return bool if authentication was successful
    */
-  function do_authentication() {
+  function do_authentication($string) {
     $this->success = FALSE;
     $this->debug[] = 'Starting authentication';
 
@@ -398,7 +397,7 @@ class Authentication {
           }
 
           if ($postauthfailobj->form == 'std') {
-            $this->display_std_form();
+            $this->display_std_form($string);
             if ($postauthfailobj->exit === TRUE) {
               $notice = UserNotices::get_instance();
               $notice->exit_php();

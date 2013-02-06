@@ -152,15 +152,12 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   ini_set('xdebug.var_display_max_childrren', -1);
   ini_set('xdebug.var_display_max_data', -1);
   ini_set('xdebug.var_display_max_depth', -1);
-
-
+  
   session_name('RogoAuthentication');
   $return = session_start();
   $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
 
-  //var_dump($_SESSION);
-
-  $authentication->do_authentication();
+  $authentication->do_authentication($string);
 
   $getauthobj = new stdClass();
 /*
