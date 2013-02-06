@@ -329,6 +329,7 @@ class Authentication {
 
           if ($createuser == TRUE) {
             $this->debug[] = 'Going to try and create new user';
+            $this->debug[] = 'Data is: ' . var_export($info->lookupdata, TRUE);
             $arraycheck = array('username', 'title', 'firstname', 'surname', 'email', 'coursecode', 'gender', 'yearofstudy', 'role', 'studentID', 'school', 'coursetitle', 'initials');
             foreach ($arraycheck as $itemcheck) {
               if (!isset($info->lookupdata->$itemcheck)) {
@@ -388,7 +389,7 @@ class Authentication {
 
           if ($postauthfailobj->form == 'err') {
             $this->display_error_form();
-            if(!is_null($this->configObj->get('display_auth_debug')) and $this->configObj->get('display_auth_debug')==true ) {
+            if (!is_null($this->configObj->get('display_auth_debug')) and $this->configObj->get('display_auth_debug') == TRUE) {
               $this->display_debug();
             }
             if ($postauthfailobj->exit === TRUE) {
@@ -401,7 +402,7 @@ class Authentication {
 
           if ($postauthfailobj->form == 'std') {
             $this->display_std_form($string);
-            if(!is_null($this->configObj->get('display_auth_debug')) and $this->configObj->get('display_auth_debug')==true ) {
+            if (!is_null($this->configObj->get('display_auth_debug')) and $this->configObj->get('display_auth_debug') == TRUE) {
               $this->display_debug();
             }
             if ($postauthfailobj->exit === TRUE) {
