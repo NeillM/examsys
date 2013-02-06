@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['signinmsg'] = 'The page you are trying to access requires authentication. Please sign in using your username and password:';  // Niko
-$string['username'] = 'Username';  // Niko
-$string['password'] = 'Password';  // Niko
-$string['signin'] = 'Sign In';  // Niko
-$string['logout'] = 'Log Out';  // Niko
+$string['signinmsg'] = 'The page you are trying to access requires authentication. Please sign in using your username and password:';
+$string['username'] = 'Username';
+$string['password'] = 'Password';
+$string['signin'] = 'Sign In';
+$string['logout'] = 'Log Out';
 $string['home'] = 'Home';
 $string['help'] = 'Help';
 $string['line'] = 'Line';
