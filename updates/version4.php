@@ -3265,6 +3265,17 @@ QUERY;
     flush();
   }
 
+
+  //06/02/2013 - cczsa1 - add permission for initial db user to access courses table
+
+  if (!$updater_utils->has_grant($cfg_db_username, 'SELECT,INSERT', 'courses', $cfg_db_host)) {
+    $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.courses TO \'' . $cfg_db_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
+
+
+
+
   // End of updates -----------------------------------------------------------------
 
   // Final housekeeping activities - put all updates above this line

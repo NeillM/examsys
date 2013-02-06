@@ -25,7 +25,7 @@
  * @package
  */
 
-require_once $configObj->get('cfg_web_root') . 'LTI/ims-lti/UoN_LTI.php';
+require_once $configObject->get('cfg_web_root') . 'LTI/ims-lti/UoN_LTI.php';
 require_once 'outline_authentication.class.php';
 
 
