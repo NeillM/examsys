@@ -68,6 +68,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
       $userlookupobj->lookupdata->disabled = TRUE;
     }
 
+    var_dump($userlookupobj);
     return $userlookupobj;
   }
 
