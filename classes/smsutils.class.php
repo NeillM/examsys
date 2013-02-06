@@ -29,7 +29,10 @@ require_once ($configObject->get('cfg_web_root') . '/include/load_config.php');
 Abstract Class SmsUtils {
 
   static function GetSmsUtils() {
-    global $cfg_sms_api, $configObject;
+    global $configObject;
+    
+    $cfg_sms_api = $configObject->get('cfg_sms_api');
+    
     if (isset($cfg_sms_api) and $cfg_sms_api != '') {
       require_once ($cfg_web_root . "/apis/" . $cfg_sms_api . ".class.php");
 

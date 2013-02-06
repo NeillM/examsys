@@ -210,16 +210,9 @@ Class UON_SATURN extends SmsUtils {
     $replaced_module = str_replace('_UNNC', '', $replaced_module);
     //------------------------------------
 
-
-    /*
-      print "Getting:  $replaced_module\r\n<br>";
-      @ob_flush();
-      @flush();
-    */
-
     // Get the currently enrolled students in Rogo for the module.
     $current_users = array();
-    $student_data = $mysqli->prepare("SELECT student_modules.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (student_modules, users) LEFT JOIN sid ON users.id=sid.userID WHERE student_modules.userID=users.id AND calendar_year=? AND moduleid=? AND auto_update=1");
+    $student_data = $mysqli->prepare("SELECT modules_student.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (modules_student, users) LEFT JOIN sid ON users.id=sid.userID WHERE modules_student.userID=users.id AND calendar_year=? AND moduleid=? AND auto_update=1");
     $student_data->bind_param('ss', $session, $module);
     $student_data->execute();
     $student_data->store_result();
@@ -239,12 +232,6 @@ Class UON_SATURN extends SmsUtils {
       $current_users[$username]['student_id'] = $student_id;
     }
     $student_data->close();
-
-    /*
-      print "<br><pre>";
-      print_r($current_users);
-      print "</pre><br>";
-    */
 
     // Look up SMS
     $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
@@ -273,8 +260,6 @@ Class UON_SATURN extends SmsUtils {
           $un_parts = explode('@', $sms->Email);
           $lookup_username = $un_parts[0];
         }
-
-        //      print "SMS:$lookup_username :: \r\n";
 
         if ($lookup_username != '') {
           if (isset($current_users[$lookup_username]['delete'])) {
@@ -387,7 +372,7 @@ Class UON_SATURN extends SmsUtils {
       // Check for any extra students in Rogo but not in SATURN for module
       foreach ($current_users as $username => $individual_user) {
         if ($individual_user['delete'] == 1 and $individual_user['auto_update'] == 1) {
-          $result = $mysqli->prepare("DELETE FROM student_modules WHERE id=?"); // Delete using primary key of 'student_modules'
+          $result = $mysqli->prepare("DELETE FROM modules_student WHERE id = ?"); // Delete using primary key of 'modules_student'
           $result->bind_param('i', $individual_user['smID']);
           $result->execute();
           $result->close();
@@ -415,18 +400,10 @@ Class UON_SATURN extends SmsUtils {
       $result->execute();
       $result->close();
 
-
-//      print "$module, $sms_api, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type\r\n<br>";
       @ob_flush();
       @flush();
-
-
     }
-
-
   }
-
-
 }
 
 ?>
