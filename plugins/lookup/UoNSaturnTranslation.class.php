@@ -27,7 +27,7 @@
 
 require_once 'outline_lookup.class.php';
 
-include_once $configObj->get('cfg_web_root') . 'lang/en/include/common.inc';
+include_once $configObject->get('cfg_web_root') . 'lang/en/include/common.inc';
 
 
 class UoNSaturnTranslation_lookup extends outline_authentication {
