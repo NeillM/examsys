@@ -396,7 +396,7 @@ Class UON_SATURN extends SmsUtils {
       }
 
       $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?)");
-      $result->bind_param('sisiss', $module, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
+      $result->bind_param('sisiss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
       $result->execute();
       $result->close();
 
