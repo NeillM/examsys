@@ -330,6 +330,12 @@ class Authentication {
 
           if ($createuser == TRUE) {
             $this->debug[] = 'Going to try and create new user';
+            $arraycheck = array('username', 'title', 'firstname', 'surname', 'email', 'coursecode', 'gender', 'yearofstudy', 'role', 'studentID', 'school', 'coursetitle', 'initials');
+            foreach ($arraycheck as $itemcheck) {
+              if (!isset($info->lookupdata->$itemcheck)) {
+                $info->lookupdata->$itemcheck = '';
+              }
+            }
             $newuserid = UserUtils::create_extended_user($info->lookupdata->username, $info->lookupdata->title, $info->lookupdata->firstname, $info->lookupdata->surname, $info->lookupdata->email, $info->lookupdata->coursecode, $info->lookupdata->gender, $info->lookupdata->yearofstudy, $info->lookupdata->role, $info->lookupdata->studentID, $this->db, $info->lookupdata->school, $info->lookupdata->coursetitle, $info->lookupdata->initials, $this->form['std']->password);
             if ($newuserid !== FALSE) {
               //new account created
