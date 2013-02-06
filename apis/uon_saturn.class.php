@@ -213,7 +213,7 @@ Class UON_SATURN extends SmsUtils {
     // Get the currently enrolled students in Rogo for the module.
     $current_users = array();
     $student_data = $mysqli->prepare("SELECT modules_student.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (modules_student, users) LEFT JOIN sid ON users.id = sid.userID WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? AND auto_update = 1");
-    $student_data->bind_param('ss', $session, $module);
+    $student_data->bind_param('si', $session, $idMod);
     $student_data->execute();
     $student_data->store_result();
     $student_data->bind_result($sm_id, $uid, $username, $grade, $title, $surname, $first_names, $initials, $roles, $year, $auto_update, $student_id);
@@ -266,7 +266,7 @@ Class UON_SATURN extends SmsUtils {
             $current_users[$lookup_username]['delete'] = 0; // Mark as being legitimate
           } else {
             // Student missing from Rogo module
-            $student_data = $mysqli->prepare("SELECT id, yearofstudy, initials, grade, title, surname, first_names, roles, COALESCE(sid.student_id,'SID_ERROR') FROM users LEFT JOIN sid ON users.id=sid.userID WHERE username=? LIMIT 1"); // Do they have a Rogo user record?
+            $student_data = $mysqli->prepare("SELECT id, yearofstudy, initials, grade, title, surname, first_names, roles, COALESCE(sid.student_id,'SID_ERROR') FROM users LEFT JOIN sid ON users.id = sid.userID WHERE username = ? LIMIT 1"); // Do they have a Rogo user record?
             $student_data->bind_param('s', $lookup_username);
             $student_data->execute();
             $student_data->store_result();
@@ -307,7 +307,7 @@ Class UON_SATURN extends SmsUtils {
             }
             // Add student onto the module
             $auto_update = 1; //set auto_update to student module association
-            $success = UserUtils::add_student_to_module($tmp_userID, $module, 1, $session, $mysqli, $auto_update);
+            $success = UserUtils::add_student_to_module($tmp_userID, $idMod, 1, $session, $mysqli, $auto_update);
 
             if ($success) {
               $enrolements++;
