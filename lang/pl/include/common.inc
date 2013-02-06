@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['signinmsg'] = 'The page you are trying to access requires authentication. Please sign in using your username and password:';  // Niko
-$string['username'] = 'Username';  // Niko
-$string['password'] = 'Password';  // Niko
-$string['signin'] = 'Sign In';  // Niko
-$string['logout'] = 'Log Out';  // Niko
+$string['signinmsg'] = 'Strona, którą chcesz zobaczyć wymaga uwierzytelnienia. Zaloguj się używając swojej nazwy użytkownika i hasła:';  
+$string['username'] = 'Nazwa użytkownika';  
+$string['password'] = 'Hasło'; 
+$string['signin'] = 'Zaloguj się'; 
+$string['logout'] = 'Wyloguj się'; 
 $string['home'] = 'Strona główna';
 $string['help'] = 'Pomoc';
 $string['line'] = 'Linia';
