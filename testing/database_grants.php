@@ -41,7 +41,7 @@ function get_table_name_from_grant($grant) {
 function get_grants($db_name, $user, $db, $replace_name = '') {
   $details = array();
 
-  $result = $db->prepare("SHOW GRANTS FOR '" . $db_name . "_" . $user . "'@'127.0.0.1'");
+  $result = $db->prepare("SHOW GRANTS FOR '" . $db_name . $user . "'@'127.0.0.1'");
   $result->execute();
   $result->store_result();
   $result->bind_result($grant);
@@ -123,10 +123,10 @@ function compare_permissions($db_master, $db_test, $masterdb, $testdb, $dbuserna
 if (isset($_POST['submit'])) {
   make_db_connections();
   
-  $users = array('stu', 'staff', 'ext', 'sys', 'sct', 'inv');
+  $users = array('user', '_stu', '_staff', '_ext', '_sys', '_sct', '_inv');
   
   foreach ($users as $user) {
-    echo "<h1>$user</h1>\n";
+    echo "<h1>" . $_POST['master_dbname'] . $user . "</h1>\n";
     
     compare_permissions($_POST['master_dbname'], $_POST['test_dbname'], $master_mysqli, $test_mysqli, $user);
   }
