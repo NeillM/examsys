@@ -187,7 +187,7 @@ Class UON_SATURN extends SmsUtils {
     $dat = $this->getModuleEnrolements($modulecode);
   }
 
-  function update_module_enrolement($module, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET') {
+  function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET') {
 
     // run module enrolement for select code
     if ($mysqli == 'NOTSET') {
@@ -212,7 +212,7 @@ Class UON_SATURN extends SmsUtils {
 
     // Get the currently enrolled students in Rogo for the module.
     $current_users = array();
-    $student_data = $mysqli->prepare("SELECT modules_student.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (modules_student, users) LEFT JOIN sid ON users.id=sid.userID WHERE modules_student.userID=users.id AND calendar_year=? AND moduleid=? AND auto_update=1");
+    $student_data = $mysqli->prepare("SELECT modules_student.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (modules_student, users) LEFT JOIN sid ON users.id = sid.userID WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? AND auto_update = 1");
     $student_data->bind_param('ss', $session, $module);
     $student_data->execute();
     $student_data->store_result();

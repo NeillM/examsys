@@ -64,7 +64,7 @@ $module_data->bind_result($idMod, $module, $sms);
 while ($module_data->fetch()) {
   print "Procesing: $module($idMod) using $sms\r\n";
 
-  $sms_connection->update_module_enrolement($module, $sms, $mysqli, $session);  
+  $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
 }
 $module_data->close();
 

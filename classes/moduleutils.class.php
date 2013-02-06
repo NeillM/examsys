@@ -52,7 +52,7 @@ Class module {
   */
   public function __construct() {}
 
-  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db,$sms_import = 0) {
+  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0) {
 
     if ($moduleid == '' or $fullname == '' or $schoolID == '' or module_utils::module_exists($moduleid, $db) !== false) {
       return false;
@@ -69,18 +69,20 @@ Class module {
     if ($stdset == true) $checklist .= ',stdset';
     if ($mapping == true) $checklist .= ',mapping';
     $tmp_checklist = substr($checklist, 1);
+    
     $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    echo $db->error;
     $result->bind_param('ssisssiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
       return false;
     }
+    
+    $idMod = $db->insert_id;
 
     if ($sms_import == 1 and $sms_api != '') {
       $SMS = SmsUtils::GetSmsUtils();
-      $SMS->update_module_enrolement($moduleid, $sms_api, $db);
+      $SMS->update_module_enrolement($moduleid, $idMod, $sms_api, $db);
     }
 
     return true;
