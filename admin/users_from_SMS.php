@@ -29,10 +29,10 @@ if (PHP_SAPI != 'cli') {
   die("Please run this test from CLI!\n");
 }
 
-/*
+
 error_reporting(E_ALL);
-ini_set(display_errors,"ON");
-*/
+ini_set('display_errors',1);
+
 
 set_time_limit(0);
 
