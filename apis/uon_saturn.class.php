@@ -24,7 +24,7 @@
  * @package
  */
 
-require_once $cfg_web_root . '/classes/dateutils.class.php';
+require_once $configObject->get('cfg_web_root') . '/classes/dateutils.class.php';
 
 Class UON_SATURN extends SmsUtils {
 
