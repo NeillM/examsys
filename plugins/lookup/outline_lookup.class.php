@@ -24,6 +24,7 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
+$configObject=Config::get_instance();
 
 class outline_lookup {
 
