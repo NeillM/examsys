@@ -302,14 +302,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
   $result->close();
   echo "</select></td></tr>\n";
-  
-  //get the paper modules (also rubric for use if peer review paper)
-  $result = $mysqli->prepare("SELECT rubric FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($rubric);
-  $result->fetch();
-  $result->close();
+
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
   
   //module drop down

@@ -104,15 +104,35 @@ Class QuestionUtils {
   }
 
   /**
+   * returns an array of question IDs/module IDs 
+   * @param array $q_ids list of questions to check
+   * @param resource $db
+   * @return array of modules keyed on q_id
+   */
+  static function multi_get_modules($q_ids, $db) {
+    $modules = array();
+    
+    $stmt = $db->prepare("SELECT q_id, idMod FROM questions_modules WHERE q_id IN (" . implode(',', $q_ids) . ")");
+    $stmt->execute();
+    $stmt->bind_result($q_id, $idMod);
+    while($res = $stmt->fetch()) {
+      $modules[$q_id] = $idMod;
+    }
+    $stmt->close();
+    
+    return $modules;
+  }
+
+  /**
    * returns an array of modules/teams that the question is on 
-   * @param intager $q_id the id of the questions
+   * @param integer $q_id the id of the questions
    * @param resource $db
    * @return array of modules keyed on idMod
    */
   static function get_modules($q_id, $db) {
     $modules = array();
     
-    $stmt = $db->prepare("SELECT idMod, moduleID FROM questions_modules, modules WHERE q_id=? and questions_modules.idMod = modules.id");
+    $stmt = $db->prepare("SELECT idMod, moduleID FROM questions_modules, modules WHERE q_id=? AND questions_modules.idMod = modules.id");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
     $stmt->bind_result($idMod, $moduleID);

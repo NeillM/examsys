@@ -30,8 +30,6 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 
 $userObject = UserObject::get_instance();
 
-$paperID = $_GET['paperID'];
-
 $modules_array = array();
 
 $my_folders_array = get_folders($staff_modules, $userObject->get_user_ID(), $mysqli);
@@ -39,41 +37,9 @@ $full_modules_array = get_modules($staff_modules, $my_folders_array, $modules_ar
 $staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
 $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysqli);
 
-if (!isset($paper_title) or $paper_title == '') {
-  $max_screen = 0;
-
-  $stmt = $mysqli->prepare("SELECT paper_title, folder, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, MAX(screen) AS screen, fullscreen, MAX(display_pos) AS display_pos, paper_type, externals, internal_reviewers, labs, calendar_year, exam_duration, crypt_name, display_question_mark FROM properties LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? GROUP BY paper_title");
-  $stmt->bind_param('i', $paperID);
-  $stmt->execute();
-  $stmt->bind_result($paper_title, $tmp_folder, $paper_ownerID, $start_date, $end_date, $created, $max_screen, $fullscreen, $max_display_pos, $paper_type, $externals, $internal_reviewers, $labs, $session, $exam_duration, $crypt_name, $display_question_mark);
-  while ($stmt->fetch()) {
-    if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
-      $active_date = 1;
-    } else {
-      $active_date = 0;
-    }
-    if (date("YmdHis", time()) >= $start_date and $paper_type == '2') {
-      $summative_lock = 1;
-    } else {
-      $summative_lock = 0;
-    }
-  }
-  $stmt->close();
-}
-
-if (isset($_GET['module']) and $_GET['module'] != '') {
-  $module = $_GET['module'];
-} else {
-  $module = '';
-}
-if (isset($_GET['folder']) and $_GET['folder'] != '') {
-  $folder = $_GET['folder'];
-} else {
-  $folder = '';
-}
 $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-$moduleid_in = "'" . implode("','",$moduleIDs) . "'";
-$stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE moduleid IN ($moduleid_in)");
+$moduleIDs = array_keys($moduleIDs);
+$stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE id IN (" . implode(',', $moduleIDs) . ")");
 $stmt->execute();
 $stmt->bind_result($tmp_checklist);
 $check[] = array();
@@ -83,17 +49,7 @@ while ($stmt->fetch()) {
     $check[$c] = $c;
   }
 }
-$checklist = implode(',',array_keys($check));
-$stmt->close();
-
-$question_list = array();
-$stmt = $mysqli->prepare("SELECT question FROM (papers, questions) WHERE papers.question=questions.q_id AND q_type != 'info' AND paper=?");
-$stmt->bind_param('i', $_GET['paperID']);
-$stmt->execute();
-$stmt->bind_result($questionID);
-while ($stmt->fetch()) {
-  $question_list[$questionID] = 0;
-}
+$checklist = implode(',', array_keys($check));
 $stmt->close();
 ?>
 
@@ -312,17 +268,9 @@ $stmt->close();
 <input type="hidden" name="screenNo" value="" />
 <input type="hidden" name="scrOfY" id="scrOfY" value="0" />
 <input type="hidden" name="current_pos" id="current_pos" value="" />
-<?php
-$stmt = $mysqli->prepare("SELECT COUNT(p_id) FROM papers WHERE paper=?");
-$stmt->bind_param('i', $_GET['paperID']);
-$stmt->execute();
-$stmt->bind_result($p_id_count);
-$stmt->fetch();
-$stmt->close();
-
-?>
 <div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
- <?php
+<?php
+  $p_id_count = count($q_mod_check);
   echo "<table class=\"sidebar_tbl\" id=\"menu1\">\n";
   if ($paper_type == '5') {      // Offline
     echo "<tr><td style=\"width:20px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_play_grey.png\" width=\"16\" height=\"16\" alt=\"" . $string['testpreview'] . "\" /></td><td class=\"greymenuitem\" style=\"width:166px\">" . $string['testpreview'] . "</td></tr>\n";
@@ -433,7 +381,7 @@ $stmt->close();
 <![endif]-->
 
 <?php
-if ($summative_lock == 1) {
+if ($summative_lock == true) {
 ?>
 <ul id="break_controls" class="menu_list">
 <?php
@@ -518,7 +466,7 @@ if ($paper_type == '2') {
   }
 
   // Internal Peer review
-  if (strpos($checklist,'peer') !== false) {
+  if (strpos($checklist, 'peer') !== false) {
     if ($internal_reviewers == '') {
       echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['peerreviewed'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
     } else {
@@ -528,7 +476,7 @@ if ($paper_type == '2') {
         $internal_array[$tmp_internal] = 0;
       }
 
-      $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper=? AND review_type='internal' GROUP BY reviewer, reviewed");
+      $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal' GROUP BY reviewer, reviewed");
       $stmt->bind_param('i', $_GET['paperID']);
       $stmt->execute();
       $stmt->bind_result($review_records, $reviewer);
@@ -554,7 +502,7 @@ if ($paper_type == '2') {
   }
 
   // External examiners
-  if (strpos($checklist,'external') !== false) {
+  if (strpos($checklist, 'external') !== false) {
     if ($externals == '') {
       echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td>" . $string['externalreviews'] . "</td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
     } else {
@@ -565,7 +513,7 @@ if ($paper_type == '2') {
       }
 
       $reviews_complete = 0;
-      $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper=? AND review_type='external' GROUP BY reviewer, reviewed");
+      $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'external' GROUP BY reviewer, reviewed");
       $stmt->bind_param('i', $_GET['paperID']);
       $stmt->execute();
       $stmt->bind_result($review_records, $reviewer);
@@ -592,8 +540,8 @@ if ($paper_type == '2') {
   // Standards Set
   $standard_set = 0;
   $standards_set = 0;
-  if (strpos($checklist,'stdset') !== false) {
-    $stmt = $mysqli->prepare("SELECT COUNT(id), setterID FROM standards_setting WHERE paperID=? GROUP BY setterID");
+  if (strpos($checklist, 'stdset') !== false) {
+    $stmt = $mysqli->prepare("SELECT COUNT(id), setterID FROM standards_setting WHERE paperID = ? GROUP BY setterID");
     $stmt->bind_param('i', $_GET['paperID']);
     $stmt->execute();
     $stmt->bind_result($set_set_records, $setterID);
@@ -621,13 +569,13 @@ if ($paper_type == '2') {
   }
 
   // Mapped
-  if (strpos($checklist,'mapping') !== false) {
+  if (strpos($checklist, 'mapping') !== false) {
     $mappings_complete = 0;
-    $stmt = $mysqli->prepare("SELECT DISTINCT question_id FROM relationships WHERE paper_id=?");
+    $stmt = $mysqli->prepare("SELECT DISTINCT question_id FROM relationships WHERE paper_id = ?");
     $stmt->bind_param('i', $_GET['paperID']);
     $stmt->execute();
     $stmt->bind_result($questionID);
-    while ($row = $stmt->fetch()) {
+    while ($stmt->fetch()) {
       if (isset($question_list[$questionID]) and $question_list[$questionID] === 0) {
         $mappings_complete++;
       }
@@ -658,7 +606,7 @@ if ($paper_type == '2') {
   makeMenu($keywords_array);
   makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php',$string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php',$string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['studentcohort']=>$configObject->get('cfg_root_path') . '/users/search.php?paperID=' . $_GET['paperID']));
   
-  if ($summative_lock == 1) {
+  if ($summative_lock == true) {
     $params = "&scrOfY=' + document.getElementById('scrOfY').value + '";
   } else {
     $params = "&scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=" . $module. "&calling=paper";
@@ -670,7 +618,7 @@ if ($paper_type == '2') {
     makeMenu(array($string['info']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info$params",$string['keyword_based']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based$params",$string['random']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random$params","-"=>"-",$string['area']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=area$params",$string['calculation']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=calculation$params",$string['dichotomous']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=dichotomous$params",$string['extmatch']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=extmatch$params",$string['blank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=blank$params",$string['hotspot']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=hotspot$params",$string['labelling']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=labelling$params",$string['likert']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",$string['matrix']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=matrix$params",$string['mcq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq$params",$string['mrq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mrq$params",$string['rank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank$params",$string['sct']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct$params",$string['textbox']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox$params",$string['true_false']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false$params"));
   }
   
-  if ($summative_lock == 1) {
+  if ($summative_lock == true) {
     makeMenu(array($string['export12']=>"{$configObject->get('cfg_root_path')}/qti/export.php?dest=qti12&paperID=$paperID&module=$module"));
   } else {
     makeMenu(array($string['import']=>"{$configObject->get('cfg_root_path')}/qti/import.php?paperID=$paperID&module=$module",$string['export12']=>"{$configObject->get('cfg_root_path')}/qti/export.php?dest=qti12&paperID=$paperID"));
