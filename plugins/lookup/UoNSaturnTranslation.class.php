@@ -44,21 +44,27 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
 
   function usertranslatelookup ($userlookupobj) {
 
+    $this->savetodebug('Running user translate lookup in UoN Saturn Translate');
+
     if ($this->orsearchlist($userlookupobj->lookupdata->role, array('Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'))) {
+      $this->savetodebug('Detected Student, correcting role');
       $userlookupobj->role = 'Student';
     }
 
     if ($this->orsearchlist($userlookupobj->lookupdata->role, array('S')) or isset($userlookupobj->lookupdata->staffID)) {
+      $this->savetodebug('Detected staff, correcting role and filling in fields');
       $userlookupobj->role = 'Staff';
       $userlookupobj->coursecode = 'University Staff';
       $userlookupobj->yearofstudy = 1;
     }
 
     if (isset($userlookupobj->lookupdata->sttudentID)) {
+      $this->savetodebug('Detected Possible Student, correcting role for safety');
       $userlookupobj->lookupdata->role = 'Student';
     }
 
     if (strpos($userlookupobj->lookupdata->attendstatus, 'Suspended') !== FALSE) {
+      $this->savetodebug('status is suspended diasbling');
       $userlookupobj->lookupdata->disabled = TRUE;
     }
 
