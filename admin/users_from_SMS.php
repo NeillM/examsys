@@ -79,6 +79,17 @@ print "Procesing: $module using $sms\r\n";
   // Get the currently enrolled students in Rogo for the module.
   $current_users = array();
   $student_data = $mysqli->prepare("SELECT student_modules.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (student_modules, users) LEFT JOIN sid ON users.id=sid.userID WHERE student_modules.userID=users.id AND calendar_year=? AND moduleid=? AND auto_update=1");
+  if ($mysqli->error) {
+    try {
+      $a = $mysqli->error;
+      $b = $mysqli->errno;
+      throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
+    }
+    catch (Exception $e) {
+      echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+      echo nl2br($e->getTraceAsString());
+    }
+  }
   $student_data->bind_param('ss', $session, $module);
   $student_data->execute();
   $student_data->store_result();
