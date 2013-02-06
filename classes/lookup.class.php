@@ -44,7 +44,7 @@ class Lookup extends RogoStaticSingleton {
 
   public $impliments_api_lookup_version = 1;
 
-  public $callbacktypes = array('init', 'preuserlookup', 'userlookup', 'userlookup', 'postuserlookup', 'translateuserlookup');
+  public $callbacktypes = array('init', 'preuserlookup', 'userlookup', 'userlookup', 'postuserlookup', 'usertranslatelookup');
 
   public $initobj, $lookupuserobj, $preauthobj, $userlookupobj, $postauthobj, $postauthsuccesobj, $postauthfailobj, $displaystdformobj, $displayerrformobj, $getauthobj, $sessionstoreobj;
 
