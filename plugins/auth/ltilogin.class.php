@@ -37,7 +37,7 @@ class ltilogin_auth extends outline_authentication {
 
   protected $lti;
 
-function init($object) {
+  function init($object) {
     parent::init($object);
     $this->lti = UoN_LTI::get_instance();
 
@@ -48,9 +48,9 @@ function init($object) {
   }
 
   function register_callback_routines() {
-    $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'registeruserwithlti'), 'postauthsuccess', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'displaystdform'), 'displaystdform', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'registeruserwithlti'), 'postauthsuccess', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'displaystdform'), 'displaystdform', $this->number, $this->name);
 
     return $callbackarray;
   }
@@ -78,13 +78,73 @@ function init($object) {
       $authobj->retdata = & $this->retdata;
       $this->savetodebug('LTI lookup successful');
 
-      $authobj->success($this->number,$this->rogoid);
+      $authobj->success($this->number, $this->rogoid);
+
       return $authobj;
     }
 
 
-    //set session to be needing user lookup
-    $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = TRUE;
+    if ((!isset($authobj->manualsignup) or (isset($this->settings['lti_lookup_set_authobj_manualsignup_override']) and $this->settings['lti_lookup_set_authobj_manualsignup_override'] == TRUE)) and (isset($this->settings['lti_lookup_set_authobj_manualsignup']) and $this->settings['lti_lookup_set_authobj_manualsignup'] == TRUE)) {
+      $authobj->manualsignup = TRUE;
+      $this->savetodebug('Setting the manualsignup to true on authobj');
+
+    }
+
+    if (isset($this->settings['lti_lookup_failasmissing']) and $this->settings['lti_lookup_failasmissing'] == TRUE) {
+      $data = new stdClass();
+      $this->savetodebug('Returning status as missing info');
+
+      $ltinamefield = 'fullname';
+      $ltiemailfield = 'email';
+      $ltiidfield = 'ltiid';
+      $lticonsumerkeyfield = 'lticonsumerkey';
+      $ltiinstructorfield = 'ltiinstructor';
+      $ltifromltifield = 'ltienabled';
+      if (isset($this->settings['lti_lookup_name_field'])) {
+        $ltinamefield = $this->settings['lti_lookup_name_field'];
+      }
+      if (isset($this->settings['lti_lookup_email_field'])) {
+        $ltiemailfield = $this->settings['lti_lookup_email_field'];
+      }
+      if (isset($this->settings['lti_lookup_ltiid_field'])) {
+        $ltiidfield = $this->settings['lti_lookup_ltiid_field'];
+      }
+      if (isset($this->settings['lti_lookup_lticonsumerkey_field'])) {
+        $lticonsumerkeyfield = $this->settings['lti_lookup_lticonsumerkey_field'];
+      }
+      if (isset($this->settings['lti_lookup_ltiinstructor_field'])) {
+        $ltiinstructorfield = $this->settings['lti_lookup_ltiinstructor_field'];
+      }
+      if (isset($this->settings['lti_lookup_disabledcreateuser'])) {
+        $data = $this->settings['lti_lookup_disabledcreateuser'];
+      }
+      if (isset($this->settings['lti_lookup_fromlti_field'])) {
+        $ltifromltifield = $this->settings['lti_lookup_fromlti_field'];
+      }
+
+      $this->savetodebug('setting return fields  ' . "ltinamefield:$ltinamefield ltiemailfield:$ltiemailfield ltiidfield:$ltiidfield lticonsumerkeyfield:$lticonsumerkeyfield ltiinstructorfield:$ltiinstructorfield");
+
+      if (isset($this->settings['lti_lookup_set_session_needsuserlookup']) and $this->settings['lti_lookup_set_session_needsuserlookup'] == TRUE) {
+        $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = TRUE;
+      }
+
+      $data->$ltifromltifield = TRUE;
+      $data->$ltinamefield = $this->lti->getUserName();
+      $data->$ltiemailfield = $this->lti->getUserEmail();
+      $data->$ltiidfield = $this->lti->getUserKey();
+      $data->$lticonsumerkeyfield = $this->lti->getConsumerKey();
+      $data->$ltiinstructorfield = $this->lti->isInstructor();
+
+
+      $authobj->lookupmissing($this->number, $data);
+
+      return $authobj;
+    }
+
+    if (isset($this->settings['lti_lookup_skipusesignup']) and $this->settings['lti_lookup_skipusesignup'] == TRUE) {
+      //set session to be needing user lookup later
+      $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = TRUE;
+    }
 
     // lti valid but no user id associated with it.
     // need to authenticate the user but ignore lti & already logged in etc
@@ -117,6 +177,7 @@ function init($object) {
       $displaystdformobj->messages[] = $message;
       $displaystdformobj->replace = TRUE;
     }
+
     return $displaystdformobj;
   }
 

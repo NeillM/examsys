@@ -322,6 +322,9 @@ class Authentication {
               }
             }
           }
+          if (isset($info->lookupdata->disabled) and $info->lookupdata->disabled = TRUE) {
+            $createuser = FALSE;
+          }
 
           if ($createuser == TRUE) {
             $this->debug[] = 'Going to try and create new user';

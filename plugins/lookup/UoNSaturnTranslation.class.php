@@ -60,6 +60,10 @@ class UoNSaturnTranslation_lookup extends outline_authentication {
       $userlookupobj->lookupdata->role = 'Student';
     }
 
+    if (strpos($userlookupobj->lookupdata->attendstatus, 'Suspended') !== FALSE) {
+      $userlookupobj->lookupdata->disabled = TRUE;
+    }
+
     return $userlookupobj;
   }
 
