@@ -258,6 +258,14 @@ class Lookup extends RogoStaticSingleton {
     var_dump($this->debug);
   }
 
+  function debug_to_string() {
+    return implode('<br />', $this->debug);
+  }
+
+  function debug_as_array() {
+    return $this->debug;
+  }
+
   function version_info($formatted = FALSE, $advanced = FALSE) {
     $data = new stdClass();
     $data->plugins = array();

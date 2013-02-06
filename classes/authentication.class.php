@@ -312,6 +312,11 @@ class Authentication {
           $data->lookupdata = clone $authobj->data;
           $info = $lookup->userlookup($data);
 
+          $lookupdebug=$lookup->debug_as_array();
+          foreach($lookupdebug as $line) {
+            $this->debug[]='Lookup Debug: '.$line;
+          }
+
           //minimum fields to create an new user username
           $createuser = TRUE;
           $authentication_fields_required_to_create_user = $this->configObj->get('authentication_fields_required_to_create_user');
@@ -498,7 +503,7 @@ class Authentication {
   }
 
   function debug_to_string() {
-    implode('<br />', $this->debug);
+    return implode('<br />', $this->debug);
   }
 
   function get_auth_obj(&$getauth) {
