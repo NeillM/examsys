@@ -320,21 +320,15 @@ Class UON_SATURN extends SmsUtils {
 
             $student_data->close();
           }
-
+          
           // Check to see if any details of the user account need updating.
-          switch ($sms->ReasonForLeaving) {
-            case 'Successfully completed course':
-              $new_roles = 'graduate';
-              break;
-            case 'Not Applicable':
-              $new_roles = 'Student';
-              break;
-            case 'W/D (other)':
-            case 'W/D (financial reasons)':
-              $new_roles = 'left';
-              break;
+          if (strtoupper(substr($sms->ReasonForLeaving,0,3)) == 'W/D') {
+            $new_roles = 'left';
+          } elseif ($sms->ReasonForLeaving == 'Successfully completed course') {
+            $new_roles = 'graduate';
+          } else {
+            $new_roles = 'Student';
           }
-
 
           $names = explode(' ', $sms->Forename);
           $tmp_initials = '';
@@ -344,7 +338,7 @@ Class UON_SATURN extends SmsUtils {
             }
           }
           if ($current_users[$lookup_username]['year'] != $sms->YearofStudy or $tmp_initials != $current_users[$lookup_username]['initials'] or $current_users[$lookup_username]['grade'] != $sms->CourseCode or $current_users[$lookup_username]['title'] != $sms->Title or $current_users[$lookup_username]['surname'] != $sms->Surname  or $current_users[$lookup_username]['first_names'] != $sms->Forename or $current_users[$lookup_username]['roles'] != $new_roles) {
-            $result = $mysqli->prepare("UPDATE users SET yearofstudy=?, roles=?, grade=?, title=?, surname=?, first_names=?, initials=? WHERE username=?");
+            $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ? WHERE username = ?");
             $result->bind_param('isssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $lookup_username);
             $result->execute();
             $result->close();

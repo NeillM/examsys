@@ -29,9 +29,6 @@
 //  die("Please run this test from CLI!\n");
 //}
 
-error_reporting(E_ALL);
-ini_set('display_errors',1);
-
 set_time_limit(0);
 
 $path = str_replace('/admin', '', str_replace('\\', '/', dirname(__FILE__)));
@@ -48,8 +45,8 @@ require_once $path . '/classes/smsutils.class.php';
 
 $sms_connection = SmsUtils::GetSmsUtils();
 
-error_reporting(E_ALL);
-ini_set('display_errors',1);
+//error_reporting(E_ALL);
+//ini_set('display_errors',1);
 
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_sysadmin_user'), $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
@@ -65,8 +62,6 @@ $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms);
 while ($module_data->fetch()) {
-  print "Procesing: $module($idMod) using $sms\r\n";
-
   $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
 }
 $module_data->close();
