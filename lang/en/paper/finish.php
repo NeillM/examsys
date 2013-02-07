@@ -65,4 +65,5 @@ $string['withinshape'] = 'Within shape';
 $string['outsideshape'] = 'Outside shape';
 $string['useranswererror'] = 'User Answer Error';
 $string['errorkeywordunique'] = 'ERROR: unable to find unique question for supplied keywords';
+$string['errorrandomnotfound'] = 'ERROR: No random question selected. Perhaps this screen was skipped';
 ?>

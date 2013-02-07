@@ -300,7 +300,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
       }
 
       // Look up selected question and overwrite data.
-      if ($selected_q_id > 0) {
+      if (isset($selected_q_id) and $selected_q_id > 0) {
         $stems = 0;
         $question_data = $mysqlidb->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, status FROM (questions, options) WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
         $question_data->bind_param('i', $selected_q_id);
@@ -359,7 +359,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $question_data->close();
       } else {
         $paper[$i]['q_type'] = 'random_failed';
-        $paper[$i]['leadin'] = "<span style=\"color: #f00;\">{$string['errorkeywordunique']}</span>";
+        $paper[$i]['leadin'] = "<span style=\"color: #f00;\">{$string['errorrandomnotfound']}</span>";
       }
       if(isset($excluded[$old_q_id])) {
         $tmp_excluded = $excluded[$old_q_id];
@@ -646,7 +646,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
 
           if (isset($tmp_answer[1])) {
             $difference = round(abs($saved_response_clean - $tmp_answer[1]), 12);
-          
+
             if ($saved_response_clean == $tmp_answer[1]) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
             } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
@@ -2330,7 +2330,7 @@ echo '</script>';
 
     // Write out the marks for the question
     echo display_question_mark($tmp_display_question_mark, $paper, $q_type, $question, $string);
-    
+
     if ($paper[$question]['status'] != 'Experimental') {
       $total_marks += $paper[$question]['totalpos'];
       if (isset($paper[$question]['mark'])) $user_mark += round($paper[$question]['mark'], 2);
@@ -2343,7 +2343,7 @@ echo '</script>';
 
   // Marks summary
   echo display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $mysqlidb);
-  
+
   if ($paper_postscript != '') echo "<br />\n<blockquote>$paper_postscript</blockquote>\n";
   echo $bottom_html;
   if ($_SERVER['PHP_SELF'] == '/paper/finish.php') {
@@ -2356,7 +2356,7 @@ echo '</script>';
 
 function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $question, $q_type, $string, $db) {
   $html = '';
-  
+
   if ($q_type != 'info' and $q_type != 'likert' and !isset($_GET['disable_mappings'])) {
     $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $q_id, $db);
     if (count($objByModule) > 0) {
@@ -2375,7 +2375,7 @@ function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $
       $html .= "</ul>\n";
     }
   }
-  
+
   return $html;
 }
 
@@ -2387,7 +2387,7 @@ function display_question_mark($tmp_display_question_mark, &$paper, $q_type, $qu
       if ($paper[$question]['status'] == 'Experimental') {
         $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0 - Experimental Question&nbsp;</span></p>';
       } elseif ($paper[$question]['totalpos'] == 0) {
-        $paper[$question]['mark'] = 0; 
+        $paper[$question]['mark'] = 0;
         $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0&nbsp;</span></p>';
       } else {
         $html .= '<p class="mkpad"><span class="usermk">' . round($paper[$question]['mark'],2) . ' ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
@@ -2400,15 +2400,15 @@ function display_question_mark($tmp_display_question_mark, &$paper, $q_type, $qu
       $html .= '<p class="mkpad"><span class="usermk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
     }
   }
-  
+
   return $html;
 }
 
 function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $db) {
   global $lti;
-  
+
   $html = '';
-          
+
   if ($total_marks > 0 and $paper_type != 3) {
     $html .= '<br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" class="box">';
     $html .= '<tr><td><table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
@@ -2451,9 +2451,9 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
       }
       $html .= "$percent%</td></tr>\n";
     }
-    
+
     $textual_feedback = Paper_utils::get_textual_feedback($paperID, $db, 'ASC');
-    
+
     $msg = '';
     for ($i=1; $i<=10; $i++) {
       if (isset($textual_feedback[$i])) {
@@ -2465,7 +2465,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
     if ($msg != '') {
       $html .= "<tr><td>Feedback</td><td colspan=\"2\">$msg</td></tr>\n";
     }
-    
+
     $html .= '</table>';
     $html .= "</td></tr>\n</table></div>\n";
   }
