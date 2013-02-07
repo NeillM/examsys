@@ -160,10 +160,10 @@ class ldap_lookup extends outline_lookup {
       //end of searchorder loop
     }
 
-    if($overrideallset==true) {
+    if ($overrideallset == TRUE) {
       unset($lookupobj->settings->overrideall);
     }
-    if($overrideset==true) {
+    if ($overrideset == TRUE) {
       unset($lookupobj->settings->override);
     }
 

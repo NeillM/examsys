@@ -104,7 +104,7 @@ class guestlogin_auth extends outline_authentication {
       $this->savetodebug('Adding New Button');
       $newbutton = new displaystdformobjbutton();
       $newbutton->type = 'submit';
-      $newbutton->value = ' '. $string['guestbutton'] . ' ';
+      $newbutton->value = ' ' . $string['guestbutton'] . ' ';
       $newbutton->name = 'guestlogin';
       $displaystdformobj->buttons[] = $newbutton;
     }

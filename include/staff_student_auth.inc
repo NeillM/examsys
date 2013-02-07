@@ -96,8 +96,7 @@ if (!(preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_
   exit;
 }
 
-  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
-
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 
 /*
@@ -108,22 +107,22 @@ if (!(preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_
   ini_set('xdebug.var_display_max_data', -1);
   ini_set('xdebug.var_display_max_depth', -1);
   */
-  session_name('RogoAuthentication');
-  $return = session_start();
-  $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
+session_name('RogoAuthentication');
+$return = session_start();
+$authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
 
-  $authentication->do_authentication($string);
+$authentication->do_authentication($string);
 
-  $getauthobj = new stdClass();
+$getauthobj = new stdClass();
 
-  $authentication->get_auth_obj($getauthobj);
+$authentication->get_auth_obj($getauthobj);
 
-  $userObject=UserObject::get_instance();
+$userObject = UserObject::get_instance();
 
 
-  $userObject->db_user_change();
+$userObject->db_user_change();
 
-  $included_files = get_included_files();
+$included_files = get_included_files();
 
 
 

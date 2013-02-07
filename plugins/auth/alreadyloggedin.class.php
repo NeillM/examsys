@@ -34,15 +34,15 @@ class alreadyloggedin_auth extends outline_authentication {
   public $version = 0.9;
 
   function register_callback_routines() {
-    $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'store_user'), 'sessionstore', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'store_user'), 'sessionstore', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
 
     return $callbackarray;
   }
 
   function auth($authobj) {
-    $this->retdata=&$authobj;
+    $this->retdata =& $authobj;
     $this->savetodebug('Authing');
     $this->savetodebug(str_replace("\n", '', trim(rtrim(var_export($this->session, TRUE)))));
     if (isset($this->session['authenticationObj']['loggedin']['userid']) and $this->session['authenticationObj']['loggedin']['userid'] > 0 and $this->session['authenticationObj']['loggedin']['userid'] != '' and $this->session['authenticationObj']['loggedin']['userid'] != 'null' and is_int($this->session['authenticationObj']['loggedin']['userid'])) {
@@ -50,10 +50,11 @@ class alreadyloggedin_auth extends outline_authentication {
       if (isset($this->settings['timeout']) and $this->settings['timeout'] != 0 and (($this->session['authenticationObj']['loggedin']['time'] + $this->settings['timeout']) > time())) {
         $this->savetodebug('Timeout is set and run out');
         $this->retdata->fail($this->number);
+
         return $authobj;
       } else {
         $this->savetodebug('Successfully authenticated');
-        $this->retdata->success($this->number,$this->session['authenticationObj']['loggedin']['userid']);
+        $this->retdata->success($this->number, $this->session['authenticationObj']['loggedin']['userid']);
         $this->retdata->success = TRUE;
 
         $this->rogoid = $this->session['authenticationObj']['loggedin']['userid'];
@@ -76,6 +77,7 @@ class alreadyloggedin_auth extends outline_authentication {
     $this->session['authenticationObj']['loggedin']['userid'] = $this->calling_object->get_userid();
     $this->session['authenticationObj']['loggedin']['time'] = time();
     $this->session['authenticationObj']['attempt'] = 0;
+
     return $sessionstoreobj;
   }
 
@@ -83,7 +85,7 @@ class alreadyloggedin_auth extends outline_authentication {
     $this->savetodebug('Updated stored time in session');
     $this->session['authenticationObj']['loggedin']['time'] = time();
 
-    if(!isset($this->lookupuserobj)) {
+    if (!isset($this->lookupuserobj)) {
       $this->lookupuserobj = new stdClass();
     }
 
@@ -103,6 +105,7 @@ class alreadyloggedin_auth extends outline_authentication {
         }
       }
     }
+
     return $postauthsuccessobj;
   }
 

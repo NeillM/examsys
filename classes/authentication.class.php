@@ -511,7 +511,7 @@ class Authentication {
 
       if ($this->get_userid() < 1) {
         $notice = UserNotices::get_instance();
-        $notice->display_notice_and_exit($string['Authentication_notloggedin1'], sprintf($string['Authentication_notloggedin2'],$this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()), '/artwork/user_info_48.png', '#C00000', TRUE, TRUE);
+        $notice->display_notice_and_exit($string['Authentication_notloggedin1'], sprintf($string['Authentication_notloggedin2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()), '/artwork/user_info_48.png', '#C00000', TRUE, TRUE);
 
       }
       $getauthobj->userObj->load($this->get_userid());

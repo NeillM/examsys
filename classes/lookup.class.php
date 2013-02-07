@@ -25,7 +25,7 @@
  * @package
  */
 
-$configObject=Config::get_instance();
+$configObject = Config::get_instance();
 
 class Lookup extends RogoStaticSingleton {
   public static $inst = NULL;
