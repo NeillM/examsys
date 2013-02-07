@@ -105,28 +105,28 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 <tr>
 
 <?php  
-  $now_time = date("YmdHis");
-  if ($start_date > $now_time) {
-    $target_start_date = $created;
+  $now_time = date("U");
+  if ($properties->get_start_date() > $now_time) {
+    $target_start_date = $properties->get_created();
   } else {
-    $target_start_date = $start_date;
+    $target_start_date = $properties->get_start_date();
   }
-  if ($end_date > $now_time) {
+  if ($properties->get_end_date() > $now_time) {
     $target_end_date = $now_time;
   } else {
-    $target_end_date = $end_date;
+    $target_end_date = $properties->get_end_date();
   }
 
-  $start_year = substr($target_start_date,0,4);
-  $start_month = substr($target_start_date,4,2);
-  $start_day = substr($target_start_date,6,2);
-  $start_time = substr($target_start_date,8,2) . '0000';
+  $start_year = date("Y", $target_start_date);
+  $start_month = date("m", $target_start_date);
+  $start_day = date("d", $target_start_date);
+  $start_time = date("H", $target_start_date) . '0000';
 
-  $end_year = substr($target_end_date,0,4);
-  $end_month = substr($target_end_date,4,2);
-  $end_day = substr($target_end_date,6,2);
-  $end_hour = substr($target_end_date,8,2);
-  $end_minute = substr($target_end_date,10,2);
+  $end_year = date("Y", $target_end_date);
+  $end_month = date("m", $target_end_date);
+  $end_day = date("d", $target_end_date);
+  $end_hour = date("G", $target_end_date);
+  $end_minute = date("i", $target_end_date);
   if ($end_hour < 23) {
     $end_hour++;
     if ($end_hour < 10) $end_hour = '0' . $end_hour;
@@ -306,7 +306,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
   
   //module drop down
-  if ($paper_type != '3') {
+  if ($properties->get_paper_type() != '3') {
     echo "<tr><td>" . $string['module'] . "</td><td><select name=\"repmodule\" style=\"width:150px\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
     foreach ($moduleIDs as $mod) {
@@ -334,7 +334,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   
   echo "<tr><td colspan=\"2\"><label for=\"absent\">" . $string['incabsentcandidates'] . "</label>&nbsp;<input type=\"checkbox\" name=\"absent\" id=\"absent\" value=\"1\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for=\"studentsonly\">" . $string['studentsonly'] . "</label>&nbsp;<input type=\"checkbox\" name=\"studentsonly\" id=\"studentsonly\" value=\"1\" checked=\"checked\" /></td></tr>\n";
 
-  if ($paper_type == '3') {
+  if ($properties->get_paper_type() == '3') {
     echo "<tr><td>" . $string['year'] . "</td><td><select name=\"repyear\">\n";
     $years = array('%'=>$string['anyyear'],'1'=>$string['year'].' 1','2'=>$string['year'].' 2','3'=>$string['year'].' 3','4'=>$string['year'].' 4','5'=>$string['year'].' 5');
     foreach ($years as $key => $value) {
@@ -362,7 +362,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     echo "<tr><td colspan=\"2\"><hr style=\"height:1px; color:#C0C0C0; background-color:#C0C0C0; border:0px\" /></td></tr>\n";
   }
   foreach ($metadata as $meta_type=>$value_array) {
-    if ($paper_type != '6' or $rubric == $meta_type) {
+    if ($properties->get_paper_type() != '6' or $properties->get_rubric() == $meta_type) {
       echo "<tr><td>$meta_type</td><td><select name=\"meta$meta_no\" id=\"meta$meta_no\">";
       echo "<option value=\"$meta_type=%\">&lt;". $string['all']."&gt;</option>";
       foreach ($value_array as $meta_value) {
@@ -377,7 +377,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 
   echo "<table style=\"width:100%; padding-bottom:5px\"><tr><td style=\"vertical-align:top; width:42%\">\n";
   
-  if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
+  if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
     // display Assessment stats options
 
     echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['reviews'] . "</div>\n";
@@ -398,7 +398,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
     echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
     
-    if ($paper_type != '5') {
+    if ($properties->get_paper_type() != '5') {
       $result = $mysqli->prepare("SELECT COUNT(q_id) AS textbox_no FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id AND q_type='textbox'");
       $result->bind_param('i', $_GET['paperID']);
       $result->execute();
@@ -417,13 +417,13 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     echo "</td><td style=\"vertical-align:top\">";
     echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['itemanalysis'] . "</div>\n";
 
-    if ($paper_type != '5') {
+    if ($properties->get_paper_type() != '5') {
       echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/frequency_discrimination_analysis.php?',event)\">" . $string['frequencyanalysis'] . "</a></div>\n";
     }
 
     echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/cohort_obj_perform.php?',event)\">" . $string['learningobjectiveanalysis'] . "</a></div>\n";
     echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['exports'] . "</div>\n";
-    if ($paper_type != '5') {
+    if ($properties->get_paper_type() != '5') {
       echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../export/assessment_data.php?',event)\">" . $string['exportresponsescsvnum'] . "</a></div>\n";
       echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../export/assessment_data.php?mode=text&',event)\">" . $string['exportresponsescsvtext'] . "</a></div>\n";
     }
@@ -431,7 +431,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../export/assessment_marks.php?',event)\">" . $string['exportmarkscsv'] . "</a></div>\n";
   }
   
-  switch ($paper_type) {
+  switch ($properties->get_paper_type()) {
     case '3':     // Stats menu
       echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['quantitativereports'] . "</div>\n";
       echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/quantitative.php?',event)\">" . $string['xhtml'] . "</a></div>\n";

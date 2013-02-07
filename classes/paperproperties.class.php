@@ -198,7 +198,7 @@ class PaperProperties {
                   externals,
                   exam_duration,
                   deleted,
-                  created,
+                  UNIX_TIMESTAMP(created),
                   random_mark,
                   total_mark,
                   display_correct_answer,
