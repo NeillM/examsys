@@ -34,12 +34,24 @@ class guestlogin_auth extends outline_authentication {
   public $version = 0.9;
 
   function register_callback_routines() {
+
     $callbackarray[] = array(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'gotoguestaccount'), 'preauth', $this->number, $this->name);
     $callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
     return $callbackarray;
   }
 
+  function gotoguestaccount($preauthobj) {
+    if(isset($this->request['guestlogin'])) {
+      header("Location: guest_account.php");
+      exit();
+
+    }
+
+    return $preauthobj;
+
+  }
   function errordisp($displayerrformobj) {
     global $string;
     if ($_SERVER['PHP_SELF'] == '/index.php') {

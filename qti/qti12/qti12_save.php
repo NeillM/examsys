@@ -37,6 +37,8 @@ class IE_qti12_Save extends IE_Main {
     echo "<h4>{$string['generaldebuginfo']}</h4>";
 
     global $REPLACEMEuserIDold;
+    $userObj=UserObject::get_instance();
+    $userID=$userObj->get_user_ID();
     $data->ownerID = $userID;
 
     $this->data =& $data;

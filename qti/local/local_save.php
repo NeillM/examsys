@@ -23,10 +23,8 @@
  */
 
 
-function xml2array ( $xmlObject, $out = array () )
-{
-  foreach ( (array) $xmlObject as $index => $node )
-    $out[$index] = ( is_object ( $node ) ) ? xml2array ( $node ) : $node;
+function xml2array($xmlObject, $out = array()) {
+  foreach ((array)$xmlObject as $index => $node) $out[$index] = (is_object($node)) ? xml2array($node) : $node;
 
   return $out;
 }
@@ -56,11 +54,14 @@ class IE_Local_Save extends IE_Main {
 
     if (count($data->questions) == 0) {
       $this->AddError($string['noquestions']);
+
       return;
     }
 
     $paperid = $params->paper;
 
+    $userObj = UserObject::get_instance();
+    $userID = $userObj->get_user_ID();
     $db = new Database();
     $db->SetTable('properties');
     $db->AddField('*');
@@ -68,7 +69,7 @@ class IE_Local_Save extends IE_Main {
     $db->AddWhere('property_id', $paperid, 'i');
     $paper_row = $db->GetSingleRow();
 
-    $q_group = $paper_row['moduleID'];
+//    $q_group = $paper_row['moduleID'];
     $ownerid = $userID;
 
     $data->ownerID = $userID;
@@ -89,20 +90,31 @@ class IE_Local_Save extends IE_Main {
       $nextid = $curpos['display_pos'] + 1;
     }
 
-    // Get the actual ID of the module
-    $this->db->SetTable('modules');
-    $this->db->AddField('id');
-    // Temp fix - if more than one team just get the first. Avoids error but doesn't fix the problem completely
-    if (strpos($q_group, ',') !== false) {
-      $q_group = strstr($q_group, ',', true);
-    }
-    $this->db->AddWhere('moduleid', $q_group, 's');
-    $module_row = $this->db->GetSingleRow();
-
+    /*    // Get the actual ID of the module
+        $this->db->SetTable('modules');
+        $this->db->AddField('id');
+        // Temp fix - if more than one team just get the first. Avoids error but doesn't fix the problem completely
+        if (strpos($q_group, ',') !== FALSE) {
+          $q_group = strstr($q_group, ',', TRUE);
+        }
+        $this->db->AddWhere('moduleid', $q_group, 's');
+        $module_row = $this->db->GetSingleRow();
+    */
     $module_id = -1;
 
-    if (count($module_row) > 0) {
-      $module_id = $module_row['id'];
+    $paperutils = Paper_utils::get_instance();
+    global $mysqli;
+    $module_id1 = $paperutils->get_modules($paper_row['property_id'], $mysqli);
+
+    if ($module_id1 !== FALSE) {
+      $module_id = $module_id1;
+    }
+
+    $modutils = module_utils::get_instance();
+    $q_group = $modutils->get_moduleid_from_id($module_id, $mysqli);
+
+    if ($module_id !== FALSE) {
+
 
       // Get a list of the team and user's keywords
       $user_keywords = $this->GetExistingKeywords($module_id, $userID);
@@ -125,41 +137,27 @@ class IE_Local_Save extends IE_Main {
       $this->q_row['status'] = $question->status;
 
       $this->q_row['theme'] = $question->theme;
-      $this->q_row['notes'] = $question->notes ;
-      $this->q_row['leadin'] = $question->leadin ;
+      $this->q_row['notes'] = $question->notes;
+      $this->q_row['leadin'] = $question->leadin;
 
-      $this->q_row['bloom'] = $question->bloom ;
+      $this->q_row['bloom'] = $question->bloom;
 
-      $this->q_row['q_media'] = $question->media ;
-      $this->q_row['q_media_width'] = $question->media_width ;
-      $this->q_row['q_media_height'] = $question->media_height ;
+      $this->q_row['q_media'] = $question->media;
+      $this->q_row['q_media_width'] = $question->media_width;
+      $this->q_row['q_media_height'] = $question->media_height;
 
-      $this->q_row['deleted'] = null;
-      $this->q_row['locked'] = null;
-      $this->q_row['std'] = null;
+      $this->q_row['deleted'] = NULL;
+      $this->q_row['locked'] = NULL;
+      $this->q_row['std'] = NULL;
 
       $this->q_row['q_option_order'] = $question->q_option_order;
 
-      $oiii=print_r($question,TRUE);
-      $t=8;
-      if ($question->type == "blank") $this->SaveBlank($question);
-      elseif ($question->type == "calculation") $this->SaveCalculation($question);
-      elseif ($question->type == "dichotomous") $this->SaveDichotomous($question);
-      elseif ($question->type == "extmatch") $this->SaveExtMatch($question);
-      elseif ($question->type == "flash") $this->SaveFlash($question);
-      elseif ($question->type == "hotspot") $this->SaveHotspot($question);
-      elseif ($question->type == "info") $this->SaveInfo($question);
-      elseif ($question->type == "labelling") $this->SaveLabelling($question);
-      elseif ($question->type == "likert") $this->SaveLikert($question);
-      elseif ($question->type == "matrix") $this->SaveMatrix($question);
-      elseif ($question->type == "mcq") $this->SaveMcq($question);
-      elseif ($question->type == "true_false") $this->SaveTrueFalse($question);
-      elseif ($question->type == "mrq") $this->SaveMrq($question);
-      elseif ($question->type == "rank") $this->SaveRank($question);
-      elseif ($question->type == "textbox") $this->SaveTextbox($question);
-      elseif ($question->type == "timedate") $this->SaveTimeDate($question);
-      else {
-        $this->AddError("Question type ".$question->type." not yet supported", $question->load_id);
+      $oiii = print_r($question, TRUE);
+      $t = 8;
+      if ($question->type == "blank") {
+        $this->SaveBlank($question);
+      } elseif ($question->type == "calculation") $this->SaveCalculation($question); elseif ($question->type == "dichotomous") $this->SaveDichotomous($question); elseif ($question->type == "extmatch") $this->SaveExtMatch($question); elseif ($question->type == "flash") $this->SaveFlash($question); elseif ($question->type == "hotspot") $this->SaveHotspot($question); elseif ($question->type == "info") $this->SaveInfo($question); elseif ($question->type == "labelling") $this->SaveLabelling($question); elseif ($question->type == "likert") $this->SaveLikert($question); elseif ($question->type == "matrix") $this->SaveMatrix($question); elseif ($question->type == "mcq") $this->SaveMcq($question); elseif ($question->type == "true_false") $this->SaveTrueFalse($question); elseif ($question->type == "mrq") $this->SaveMrq($question); elseif ($question->type == "rank") $this->SaveRank($question); elseif ($question->type == "textbox") $this->SaveTextbox($question); elseif ($question->type == "timedate") $this->SaveTimeDate($question); else {
+        $this->AddError("Question type " . $question->type . " not yet supported", $question->load_id);
         continue;
       }
 
@@ -184,7 +182,7 @@ class IE_Local_Save extends IE_Main {
       $question->save_id = $this->q_row['q_id'];
 
       $new_keywords = array();
-      if ($module_id != - 1) {
+      if ($module_id != -1) {
         $new_keywords = $this->SaveKeywords($this->q_row['q_id'], $question->keywords, $module_id, $user_keywords);
       }
 
@@ -197,23 +195,23 @@ class IE_Local_Save extends IE_Main {
 
       // store additional metadata
       if ($question->load_id != '') {
-        $meta_row = array('id' => null, 'questionID' => $question->save_id, 'type' => 'QTI Ident', 'value' => $question->load_id);
+        $meta_row = array('id' => NULL, 'questionID' => $question->save_id, 'type' => 'QTI Ident', 'value' => $question->load_id);
       }
       $this->db->InsertRow("questions_metadata", "id", $meta_row);
 
       echo "<h4>{$string['questiontables']}</h4>";
       echo "<div>{$string['questionsrow']}</div>";
-      print_p($this->q_row, false);
+      print_p($this->q_row, FALSE);
       echo "<div>{$string['optionsrows']}</div>";
-      print_p($this->o_rows, false, 100);
+      print_p($this->o_rows, FALSE, 100);
       echo "<div>{$string['newkeywords']}</div>";
-      print_p($new_keywords, false);
+      print_p($new_keywords, FALSE);
 
       $track = array();
       $track['type'] = $string['qtiimport'];
       $track['typeID'] = $this->q_row['q_id'];
       $track['editor'] = $userID;
-      $track['new'] = "{$string['imported1_2']} ".$params->original_filename;
+      $track['new'] = "{$string['imported1_2']} " . $params->original_filename;
       $track['part'] = "all";
       $track['changed'] = date("Y-m-d H:i:s");
 
@@ -256,9 +254,9 @@ class IE_Local_Save extends IE_Main {
   }
 
   function SaveBlank($question) {
-    $this->q_row['correct_fback'] = $question->feedback ;
-    $this->q_row['display_method'] = $question->displaymode ;
-    $this->q_row['score_method'] = 'Mark per Option' ;
+    $this->q_row['correct_fback'] = $question->feedback;
+    $this->q_row['display_method'] = $question->displaymode;
+    $this->q_row['score_method'] = 'Mark per Option';
 
     $q_text = "";
     foreach ($question->question as $part) {
@@ -299,19 +297,19 @@ class IE_Local_Save extends IE_Main {
   function SaveCalculation($question) {
     $this->q_row['scenario'] = $question->scenario;
     $this->q_row['correct_fback'] = $question->feedback;
-                                                           //fullmarks tolorance = 0
-    $this->q_row['display_method'] = $question->decimals.",0,".$question->tolerance.",".$question->units;
+    //fullmarks tolorance = 0
+    $this->q_row['display_method'] = $question->decimals . ",0," . $question->tolerance . "," . $question->units;
     $this->q_row['score_method'] = $question->score_method;
-    
+
     foreach ($question->variables as $varid => $variable) {
       $o_row = $this->db->GetBlankTableRow("options");
 
-      $o_row['option_text'] = $variable->min.",".$variable->max.",".$variable->inc.",".$variable->dec;
+      $o_row['option_text'] = $variable->min . "," . $variable->max . "," . $variable->inc . "," . $variable->dec;
       $o_row['correct'] = $question->formula;
       $o_row['marks_correct'] = $question->marks_correct;
       $o_row['marks_incorrect'] = $question->marks_incorrect;
       $o_row['marks_partial'] = $question->marks_partial;
-      
+
       // NO IDEA WHY MEDIA IS IN THE OPTIONS TABLE AS WELL AS THE QUESTION!! NOT IN ALL OPTIONS JUST SOME!
       $o_row['o_media'] = $question->media;
       $o_row['o_media_width'] = $question->media_width;
@@ -329,7 +327,7 @@ class IE_Local_Save extends IE_Main {
       $o_row['marks_correct'] = 1;
       $o_row['marks_incorrect'] = 0;
       $o_row['marks_partial'] = 0;
-      
+
       // NO IDEA WHY MEDIA IS IN THE OPTIONS TABLE AS WELL AS THE QUESTION!! NOT IN ALL OPTIONS JUST SOME!
       $o_row['o_media'] = $question->media;
       $o_row['o_media_width'] = $question->media_width;
@@ -340,9 +338,9 @@ class IE_Local_Save extends IE_Main {
   }
 
   function SaveDichotomous($question) {
-    $this->q_row['scenario'] = $question->scenario ;
-    $this->q_row['correct_fback'] = $question->feedback ;
-    $this->q_row['score_method'] = $question->score_method ;
+    $this->q_row['scenario'] = $question->scenario;
+    $this->q_row['correct_fback'] = $question->feedback;
+    $this->q_row['score_method'] = $question->score_method;
     $this->q_row['display_method'] = $question->display_method;
 
     foreach ($question->options as $option) {
@@ -357,9 +355,9 @@ class IE_Local_Save extends IE_Main {
       $o_row['marks_correct'] = $option->marks_correct;
       $o_row['marks_incorrect'] = $option->marks_incorrect;
       $o_row['marks_partial'] = 0;
-      $o_row['o_media'] = $option->media ;
-      $o_row['o_media_width'] = $option->media_width ;
-      $o_row['o_media_height'] = $option->media_height ;
+      $o_row['o_media'] = $option->media;
+      $o_row['o_media_width'] = $option->media_width;
+      $o_row['o_media_height'] = $option->media_height;
 
       $this->o_rows[] = $o_row;
     }
@@ -370,20 +368,20 @@ class IE_Local_Save extends IE_Main {
     $feedback = "";
     $answer_text = "";
 
-    $media = $question->media."|";
-    $media_width = $question->media_width."|";
-    $media_height = $question->media_height."|";
+    $media = $question->media . "|";
+    $media_width = $question->media_width . "|";
+    $media_height = $question->media_height . "|";
 
     $count = 0;
 
     foreach ($question->scenarios as $scenario) {
-      $scenario_text .= $scenario->stem."|";
-      $feedback .= $scenario->feedback."|";
-      $answer_text .= implode("$", $scenario->correctans)."|";
+      $scenario_text .= $scenario->stem . "|";
+      $feedback .= $scenario->feedback . "|";
+      $answer_text .= implode("$", $scenario->correctans) . "|";
 
-      $media .= $scenario->media."|";
-      $media_width .= $scenario->media_width."|";
-      $media_height .= $scenario->media_height."|";
+      $media .= $scenario->media . "|";
+      $media_width .= $scenario->media_width . "|";
+      $media_height .= $scenario->media_height . "|";
       $count++;
     }
 
@@ -436,18 +434,18 @@ class IE_Local_Save extends IE_Main {
 
   function SaveHotspot($question) {
     $this->q_row['scenario'] = $question->scenario;
-    $this->q_row['correct_fback'] = $question->feedback ;
-    $this->q_row['score_method'] = $question->score_method ;
+    $this->q_row['correct_fback'] = $question->feedback;
+    $this->q_row['score_method'] = $question->score_method;
 
     $hs_text = "";
     foreach ($question->hotspots as $id => $hotspot) {
-      $hs_text .= $hotspot->type.";";
+      $hs_text .= $hotspot->type . ";";
       $coords = array();
       foreach ($hotspot->coords as $coord) {
         $coords[] = dechex($coord);
       }
-      $hs_text .= implode(",", $coords).";";
-      $hs_text .= $id.";";
+      $hs_text .= implode(",", $coords) . ";";
+      $hs_text .= $id . ";";
     }
 
     $o_row = $this->db->GetBlankTableRow("options");
@@ -511,44 +509,44 @@ class IE_Local_Save extends IE_Main {
     $this->q_row['correct_fback'] = $question->feedback;
     $this->q_row['score_method'] = 'Mark per Option';
 
-    $lt = $line_thicknesses[(string) $question->line_thickness];
+    $lt = $line_thicknesses[(string)$question->line_thickness];
     if ($lt == "") $lt = 1;
-    $data = $question->line_color.";".$lt.";".$question->box_color.";".$question->font_size.";".$question->font_color.";".$question->width.";".$question->height.";".$question->label_type.";";
+    $data = $question->line_color . ";" . $lt . ";" . $question->box_color . ";" . $question->font_size . ";" . $question->font_color . ";" . $question->width . ";" . $question->height . ";" . $question->label_type . ";";
 
     $count = 0;
     if (isset($question->labels)) {
       foreach ($question->labels as $id => $label) {
         //print_p($label);
-        if ($label->left == - 1 || $label->top == - 1) {
+        if ($label->left == -1 || $label->top == -1) {
           $base[$id] .= $label->tag;
         } else {
-          $base[$id] = $id."$0$".($label->left + 220)."$".($label->top + 25)."$".$label->tag;
+          $base[$id] = $id . "$0$" . ($label->left + 220) . "$" . ($label->top + 25) . "$" . $label->tag;
         }
       }
     }
 
     //print_p($base);
-    $data .= implode("|", $base)."|;";
+    $data .= implode("|", $base) . "|;";
 
     foreach ($question->arrows as $id => $arrow) {
       $id++;
-      $data .= $id."$".$arrow->type."$".implode("$", $arrow->coords).";";
+      $data .= $id . "$" . $arrow->type . "$" . implode("$", $arrow->coords) . ";";
     }
 
     $o_row = $this->db->GetBlankTableRow("options");
     $o_row['correct'] = $data;
     if ($question->raw_option) $o_row['correct'] = $question->raw_option;
-    
+
     $o_row['marks_correct'] = $question->marks_correct;
     $o_row['marks_incorrect'] = $question->marks_incorrect;
     $o_row['marks_partial'] = $question->marks_partial;
-      
+
     $this->o_rows[] = $o_row;
 
   }
 
   function SaveLikert($question) {
-    $this->q_row['scenario'] = $question->scenario ;
+    $this->q_row['scenario'] = $question->scenario;
     $this->q_row['score_method'] = 'Mark per Option';
     $this->q_row['display_method'] = implode("|", $question->scale);
     if ($question->hasna) {
@@ -562,8 +560,8 @@ class IE_Local_Save extends IE_Main {
     $scenario_text = "";
     $answer_text = "";
     foreach ($question->scenarios as $scenario) {
-      $scenario_text .= $scenario->scenario."|";
-      $answer_text .= $scenario->answer."|";
+      $scenario_text .= $scenario->scenario . "|";
+      $answer_text .= $scenario->answer . "|";
     }
 
     $scenario_text = substr($scenario_text, 0, strlen($scenario_text) - 1);
@@ -585,9 +583,9 @@ class IE_Local_Save extends IE_Main {
   }
 
   function SaveMcq($question) {
-    $this->q_row['scenario'] = $question->scenario ;
+    $this->q_row['scenario'] = $question->scenario;
     $this->q_row['correct_fback'] = (!empty($question->feedback)) ? $question->feedback : '';
-    $this->q_row['q_option_order'] = $question->presentation ;
+    $this->q_row['q_option_order'] = $question->presentation;
     $this->q_row['score_method'] = 'Mark per Question';
     $this->q_row['display_method'] = 'vertical';
 
@@ -615,15 +613,15 @@ class IE_Local_Save extends IE_Main {
 
 
   function SaveTrueFalse($question) {
-    $this->q_row['scenario'] = $question->scenario ;
+    $this->q_row['scenario'] = $question->scenario;
     $this->q_row['correct_fback'] = (!empty($question->feedback)) ? $question->feedback : '';
-    $this->q_row['q_option_order'] = $question->presentation ;
+    $this->q_row['q_option_order'] = $question->presentation;
     $this->q_row['score_method'] = 'Mark per Question';
     $this->q_row['display_method'] = 'vertical';
     $this->q_row['q_option_order'] = 'display order';
 
-    $this->q_row['correct_fback'] =$question->fb_correct;
-    $this->q_row['incorrect_fback'] =$question->fb_incorrect;
+    $this->q_row['correct_fback'] = $question->fb_correct;
+    $this->q_row['incorrect_fback'] = $question->fb_incorrect;
 
     foreach ($question->options as $option) {
       $o_row = $this->db->GetBlankTableRow("options");
@@ -651,9 +649,9 @@ class IE_Local_Save extends IE_Main {
 
 
   function SaveMrq($question) {
-    $this->q_row['scenario'] = $question->scenario ;
-    $this->q_row['correct_fback'] = $question->feedback ;
-    $this->q_row['q_option_order'] = $question->score_method ;
+    $this->q_row['scenario'] = $question->scenario;
+    $this->q_row['correct_fback'] = $question->feedback;
+    $this->q_row['q_option_order'] = $question->score_method;
     $this->q_row['score_method'] = 'Mark per Option';
 
     foreach ($question->options as $option) {
@@ -669,19 +667,19 @@ class IE_Local_Save extends IE_Main {
       }
       $o_row['feedback_right'] = $option->fb_correct;
       $o_row['feedback_wrong'] = $option->fb_incorrect;
-      $o_row['o_media'] = $option->media ;
-      $o_row['o_media_width'] = $option->media_width ;
-      $o_row['o_media_height'] = $option->media_height ;
+      $o_row['o_media'] = $option->media;
+      $o_row['o_media_width'] = $option->media_width;
+      $o_row['o_media_height'] = $option->media_height;
 
       $this->o_rows[] = $o_row;
     }
   }
 
   function SaveRank($question) {
-    $this->q_row['scenario'] = $question->scenario ;
-    $this->q_row['correct_fback'] = $question->fb_correct ;
-    $this->q_row['incorrect_fback'] = $question->fb_incorrect ;
-    $this->q_row['score_method'] = $question->score_method ;
+    $this->q_row['scenario'] = $question->scenario;
+    $this->q_row['correct_fback'] = $question->fb_correct;
+    $this->q_row['incorrect_fback'] = $question->fb_incorrect;
+    $this->q_row['score_method'] = $question->score_method;
 
     foreach ($question->options as $option) {
       $o_row = $this->db->GetBlankTableRow("options");
@@ -695,12 +693,12 @@ class IE_Local_Save extends IE_Main {
       $this->o_rows[] = $o_row;
     }
     //$this->AddError("Question type " . $question->type . " not yet supported",$question->load_id);
-    }
+  }
 
   function SaveTextBox($question) {
-    $this->q_row['scenario'] = $question->scenario ;
-    $this->q_row['correct_fback'] = $question->feedback ;
-    $this->q_row['display_method'] = $question->columns."x".$question->rows;
+    $this->q_row['scenario'] = $question->scenario;
+    $this->q_row['correct_fback'] = $question->feedback;
+    $this->q_row['display_method'] = $question->columns . "x" . $question->rows;
     $this->q_row['score_method'] = 'Mark per Option';
 
     $o_row = $this->db->GetBlankTableRow("options");
@@ -751,6 +749,7 @@ class IE_Local_Save extends IE_Main {
   /**
    * Save the keywords for a question in a user's personal keywords
    * if they don't already exist
+   *
    * @param int $q_id
    * @param array $q_keywords
    * @param int $userID
@@ -776,7 +775,7 @@ class IE_Local_Save extends IE_Main {
       }
 
       // Add keyword to the keyword question link table
-      if ($kw_id != - 1) {
+      if ($kw_id != -1) {
         $kq_row = array('q_id' => $q_id, 'keywordID' => $kw_id);
         $this->db->InsertRow('keywords_question', '', $kq_row);
       }

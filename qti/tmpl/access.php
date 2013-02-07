@@ -21,6 +21,8 @@
  * @copyright Copyright (c) 2011 The University of Nottingham
  * @package
  */
+$userObj=UserObject::get_instance();
+$userID=$userObj->get_user_ID();
 ?>
 <?php echo("<?xml version='1.0' standalone='no'?>\n") ?>
 <export>
