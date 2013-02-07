@@ -1586,9 +1586,9 @@ SQL;
   }
 
   // Make sure that current reviewers always appear on the list
-  $current_internals = explode(',',$internal_reviewers);
+  $current_internals = explode(',', $internal_reviewers);
   $current_internals_sql = '';
-  if (count($current_internals) > 0) {
+  if ($internal_reviewers != '') {
     $current_internals_sql = <<< SQL
 UNION SELECT DISTINCT id, title, initials, surname, first_names
 FROM users
@@ -1599,7 +1599,7 @@ SQL;
   $query = <<< SQL
 SELECT DISTINCT users.id, title, initials, surname, first_names
 FROM users, modules_staff, modules
-WHERE users.id=modules_staff.memberID AND modules.id=modules_staff.idMod {$school_sql}
+WHERE users.id = modules_staff.memberID AND modules.id = modules_staff.idMod {$school_sql}
 {$admin_school_sql}
 {$current_internals_sql}
 ORDER BY surname, initials
