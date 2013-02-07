@@ -30,7 +30,7 @@ require_once './classes/lang.class.php';
 require_once './include/auth.inc';
 require_once './classes/networkutils.class.php';
 
-$mysqli = new mysqli($cfg_db_host, $cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
+$mysqli = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_student_user'), $configObject->get('cfg_db_student_passwd'), $configObject->get('cfg_db_database'));
 
 // Check that the ip_address of the current user is within the exam lab.
 $paper_match = false;
@@ -84,14 +84,18 @@ if (isset($_POST['submit'])) {
   $stmt->execute();
   $stmt->close();
   
+  echo '<form method="post" action="' . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/index.php">';
+  echo '<input type="hidden" name="ROGO_USER" value="' . $_POST['username'] . '" />';
+  echo '<input type="hidden" name="ROGO_PW" value="' . $_POST['password'] . '" />';
   echo '<div align="center"><table cellpadding="0" cellspacing="0" style="text-align:left; width:450px; border:1px #C8C8C8 solid">';
   echo '<tr><td class="topbar" style="padding-left:6px; width:60px"><img src="./artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px">' . $string['allocatedaccount'] . '</td></tr>';
+  echo '<tr><td colspan="2" style="padding:8px">' . $string['msg'] . '</td></tr>';
   echo '<tr><td colspan="2"><table style="width:100%; text-align:left"><tr><td style="padding:6px">' . $string['username'] . '</td><td><tt>' . $_POST['username'] . '</tt></td></tr>';
   echo '<tr><td style="padding:6px">' . $string['password'] . '</td><td><tt>' . $_POST['password'] . '</tt></td></tr>';
   echo '<tr><td colspan="2"><td>&nbsp;</td></tr>';
-  echo '<tr><td style="text-align:center"><td><input type="button" name="login" value="' . $string['login'] . '" style="width:120px" onclick="window.location=\'' . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/index.php\';" /></td></tr>';
+  echo '<tr><td style="text-align:center"><td><input type="submit" name="rogo-login-form-std" value="' . $string['login'] . '" style="width:120px" /></td></tr>';
   echo '<tr><td><td>&nbsp;</td></tr>';
-  echo '</table></td></tr></table></div>';
+  echo '</table></td></tr></table></div></form>';
 } else {
   $used_accounts = array();
   
@@ -120,9 +124,9 @@ if (isset($_POST['submit'])) {
   
   // Reset password on the chosen guest account.
   $color = array('blue', 'green', 'orange', 'gold', 'silver', 'purple', 'white', 'black', 'yellow');
-  $random_password = $color[rand(0,4)] . rand(10,99);
-  $tmp_password = encpw($cfg_encrypt_salt, $free_account, $random_password);
-  $stmt = $mysqli->prepare("UPDATE users SET password=? WHERE username=?");
+  $random_password = $color[rand(0, 4)] . rand(10, 99);
+  $tmp_password = encpw($configObject->get('cfg_encrypt_salt'), $free_account, $random_password);
+  $stmt = $mysqli->prepare("UPDATE users SET password = ? WHERE username = ?");
   $stmt->bind_param('ss', $tmp_password, $free_account);
   $stmt->execute();
   $stmt->close();

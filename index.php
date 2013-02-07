@@ -30,31 +30,11 @@ require_once './include/staff_student_auth.inc';
 require_once './classes/networkutils.class.php';
 require_once './classes/paperutils.class.php';
 
-
-
 // Redirect External Exminers and Invigilators to their own areas.
   if ($userObject->has_role('External Examiner')) {
     header("location: reviews/");
   } elseif ($userObject->has_role('Invigilator')) {
     header("location: invigilator/");
-  }
-
-  function displayIcon($paper_type) {
-    switch ($paper_type) {
-      case 0:
-        $html = "<img src=\"./artwork/formative.png\" width=\"48\" height=\"48\" alt=\"Type: Formative\" border=\"0\" />";
-        break;
-      case 1:
-        $html = "<img src=\"./artwork/progress.png\" width=\"48\" height=\"48\" alt=\"Type: Progress\" border=\"0\" />";
-        break;
-      case 2:
-        $html = "<img src=\"./artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Type: Summative\" border=\"0\" />";
-        break;
-      case 3:
-        $html = "<img src=\"./artwork/survey.png\" width=\"48\" height=\"48\" alt=\"Type: Survey\" border=\"0\" />";
-        break;
-    }
-    return $html;
   }
 
   function display_duration($duration, $string) {
@@ -68,7 +48,7 @@ require_once './classes/paperutils.class.php';
   }
 
   function display_warning($text) {
-    return '<img class="warning-img" width="16" height="16" alt="' . $text . '" title="' . $text . '" src="artwork/small_yellow_warning_icon.gif"/>';
+    return '<img class="warning-img" width="16" height="16" alt="' . $text . '" title="' . $text . '" src="artwork/small_yellow_warning_icon.gif" />';
   }
 
   function get_labs($mysqli, $lablist) {
@@ -378,20 +358,30 @@ require_once './classes/paperutils.class.php';
     <title><?php echo $string['exams']; ?></title>
     
     <link rel="stylesheet" type="text/css" href="./css/body.css" />
+    <style type="text/css">
+    .heading {
+      font-weight:bold;
+      font-size:180%;
+      padding:10px;
+      background: -moz-linear-gradient(top, #EAEAEA, #C0C0C0);
+      background: -webkit-linear-gradient(top, #EAEAEA, #C0C0C0);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EAEAEA', endColorstr='#C0C0C0');
+    }
+    </style>
   </head>
   <body>
 <?php
     if ($paper_no > 1) {
-      echo "<h1>" . $string['multipleExams'] . "</h1>\n";
-      echo "<p><em>" . $string['selectOne'] . "</em></p>\n";
+      echo "<div class=\"heading\">" . $string['multipleExams'] . "</div>\n";
+      echo "<p>&nbsp;" . $string['selectOne'] . "</p>\n";
     }
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
     for ($i=0; $i<$paper_no; $i++) {
       if ($paper_display[$i]['password'] == '') {
-        echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
+        echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . Paper_utils::displayIcon($paper_display[$i]['paper_type'], '', '', '', '', '') . "</a></td>\n";
         echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
       } else {
-        echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
+        echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . Paper_utils::displayIcon($paper_display[$i]['paper_type'], '', '', '', '', '') . "</a></td>\n";
         echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
         echo ' <img src="./artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">' . $string['passwordRequired'] . '</span>';
       }

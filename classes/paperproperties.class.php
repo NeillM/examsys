@@ -224,10 +224,10 @@ class PaperProperties {
       $property_id = $this->get_property_id();
       $paper_results->bind_param('i', $property_id);
     } elseif (isset($crypt_name)) {
-      $sql .= 'WHERE crypt_name = ?';
+      $sql .= ' WHERE crypt_name = ?';
       $paper_results = $this->db->prepare($sql);
       $property_id = $this->get_property_id();
-      $paper_results->bind_param('i', $crypt_name);
+      $paper_results->bind_param('s', $crypt_name);
     } else {
       throw new Excption("property_id or crypt_name must be set to load the properties record from the DB.");
     }

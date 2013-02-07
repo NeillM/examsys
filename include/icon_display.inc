@@ -24,46 +24,6 @@
 
 require_once '../classes/paperutils.class.php';
 
-function displayIcon($paper_type, $title, $initials, $surname, $locked,  $retired) {
-  global $string;
-  $paper_type = strval($paper_type);
-  
-  if ($retired != '') {
-    $retired = '_retired';
-  }
-  
-  switch ($paper_type) {
-    case '0':
-      $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative self-assessment'] ."&#013;" . $string['author'] . ": $title $initials $surname\" />";
-      break;
-    case '1':
-      $html = "<img src=\"../artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['progress test'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
-      break;
-    case '2':
-      $html = "<img src=\"../artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['summative exam'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
-      break;
-    case '3':
-      $html = "<img src=\"../artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['survey'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
-      break;
-    case '4':
-      $html = "<img src=\"../artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['osce station'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
-      break;
-    case '5':
-      $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['offline paper'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
-      break;
-    case '6':
-      $html = "<img src=\"../artwork/peer_review" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": Peer Review&#013;" . $string['author'] . ": $title $initials $surname\" />";
-      break;
-    case 'objectives':
-      $html = "<img src=\"../artwork/feedback_release_icon.png\" width=\"48\" height=\"48\" alt=\"Objectives Feedback\" />";
-      break;
-    case 'questions':
-      $html = "<img src=\"../artwork/question_release_icon.png\" width=\"48\" height=\"48\" alt=\"Questions Feedback\" />";
-      break;
-  }
-  return $html;
-}
-
 function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObj) { //todo TAKES USEROBJECT AND PARATMETR FROM FIX
   global $folder, $module, $mysqli, $string;
   
@@ -88,7 +48,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     $title_class = 'greylink';
   }
   if ($paper_ownerID == $userObj->get_user_ID() or $userObj->has_role(array('Admin', 'SysAdmin')) or ($icon_type != '2' and $icon_type != '4')) {
-    echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . displayIcon($icon_type, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
+    echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon($icon_type, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
     echo "<td><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\" class=\"$title_class\">" . $paper_title . '</a>';
     if ($password != '') {
       echo ' <img src="../artwork/key.png" width="16" height="16" alt="Key" />';
@@ -104,7 +64,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     }
   
     if ($access == true) {
-      echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
+      echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
       echo "<td><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\" class=\"blacklink\">" . $paper_title . '</a><br />';
     } else {
       if ($icon_type == '2') {
@@ -134,7 +94,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
   if (count($paper_modules) == 0) {
     echo ', <span style="color:red">No modules set</span>';
   } else {
-    if (isset($_GET['module']) and $_GET['module'] == '') echo ', ' . implode(',',$paper_modules);
+    if (isset($_GET['module']) and $_GET['module'] == '') echo ', ' . implode(',', $paper_modules);
   }
   echo '<br />';
   if ($display_start_date == '') {

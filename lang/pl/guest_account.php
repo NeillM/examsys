@@ -29,4 +29,6 @@ $string['surname'] = 'Nazwisko';
 $string['studentid'] = 'Numer legitymacji';
 $string['denied_msg'] = 'Ta strona jest dostępna tylko z komputerów uniwersyteckich znajdujących się w pomieszczeniu egzaminacyjnym.';
 $string['cannotfindexams'] = 'Rogō nie odnalazło żadnego egzaminu';
+$string['msg'] = 'Please write down the log in details below in case you have to restart your computer half way through the exam.';  // Niko
+
 ?>

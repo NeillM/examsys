@@ -260,5 +260,52 @@ Class PaperUtils {
       $result->close();
       return $no_screens;
     }
-  }  
+  }
+  
+  public function displayIcon($paper_type, $title, $initials, $surname, $locked,  $retired) {
+    global $string;
+    $paper_type = strval($paper_type);
+    
+    if ($retired != '') {
+      $retired = '_retired';
+    }
+    
+    if (isset($surname)) {
+      $alt = "&#013;Author: $title $initials $surname";
+    } else {
+      $alt = '';
+    }
+    
+    switch ($paper_type) {
+      case '0':
+        $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        break;
+      case '1':
+        $html = "<img src=\"../artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        break;
+      case '2':
+        $html = "<img src=\"../artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        break;
+      case '3':
+        $html = "<img src=\"../artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        break;
+      case '4':
+        $html = "<img src=\"../artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        break;
+      case '5':
+        $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        break;
+      case '6':
+        $html = "<img src=\"../artwork/peer_review" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        break;
+      case 'objectives':
+        $html = "<img src=\"../artwork/feedback_release_icon.png\" width=\"48\" height=\"48\" alt=\"Objectives Feedback\" />";
+        break;
+      case 'questions':
+        $html = "<img src=\"../artwork/question_release_icon.png\" width=\"48\" height=\"48\" alt=\"Questions Feedback\" />";
+        break;
+    }
+    return $html;
+  }
+  
 }
