@@ -90,69 +90,24 @@ if ($configObject->get('protocol') == 'https://' and $_SERVER['SERVER_PORT'] != 
   echo "\n</body>\n</html>\n";
   exit;
 }
-if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version)) {
+if (!(preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version))) {
+  $notice->display_notice('Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', '../artwork/browser.png', $title_color = '#C00000');
+  echo "\n</body>\n</html>\n";
+  exit;
+}
+
   $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
-  /*  session_start();
-    $lti = new UoN_LTI($mysqli);
-
-    $lti->init_lti();
-    if ($lti->valid) {
-      //LTI Correct
-
-      $check = usercheck($mysqli, $lti);
-
-      if ($check > 0) {
-        $datareturned = db_userlookup($check[0], $mysqli, true);
-
-        if ($datareturned === false) {
-          $notice->display_notice($string['UserMissing'], $string['UserMissingDesc'], '/artwork/access_denied.png', '#C00000');
-          exit();
-        }
-
-        $userObject->old_load($datareturned);
-        //list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = $datareturned;
 
 
-        db_change_user($mysqli,$userObject);
-      } else {
-        $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n<li>" . $string['pressf5'] . "</li>";
-        if ($db_errors != '') {
-          $message .= "<li>$db_errors</li>\n";
-        }
-        if ($_SERVER['PHP_SELF'] == '/index.php') {
-          $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>\n</ul>";
-        }
-        $message .= $fp_link;
-        $notice->access_denied($mysqli, $string, $message, true);
-      }
-    }
-
-
-    if (isset($lti->message) and $lti->message != 'Could not find context in session' and $lti->message != false) {
-      // DO WE WANT THIS??
-      $tempvar = $lti->message;
-      if (strpos($tempvar, 'Expired timestamp') !== false) {
-        $tempvar = 'expiredtimestamp';
-      }
-      if (!isset($string[$lti->message])) {
-        $string[$lti->message] = $lti->message;
-      }
-      $notice->display_notice($string['LTIFAILURE'], $string[$tempvar], '/artwork/access_denied.png', '#C00000');
-      $mysqli->close();
-      exit;
-    }
-
-  */
-
-
+/*
   error_reporting(E_ALL);
 
   ini_set("display_errors", 1);
   ini_set('xdebug.var_display_max_childrren', -1);
   ini_set('xdebug.var_display_max_data', -1);
   ini_set('xdebug.var_display_max_depth', -1);
-  
+  */
   session_name('RogoAuthentication');
   $return = session_start();
   $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
@@ -160,132 +115,17 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   $authentication->do_authentication($string);
 
   $getauthobj = new stdClass();
-/*
-  if (!isset($userObject)) {
-    global $userObject;
-    $getauthobj->userObj = new UserObject($configObject, $mysqli);
-    $userObject = & $getauthobj->userObj;
-  } else {
-    $getauthobj->userObj = &$userObject;
-  }
-*/
+
   $authentication->get_auth_obj($getauthobj);
 
   $userObject=UserObject::get_instance();
 
-//  $uID = $authentication->get_userID();
 
-//  $authentication->display_debug();
- // print "\n<br>After Auth<br>\n";
-
-  //var_dump($userObject);
-  //var_dump($_SESSION);
- // var_dump($uID);
- // exit();
-
-
-  // at this point I have an auth object with a userid
-
-//  $uID=$userObject->get_user_ID();
-//  $userObject->load($uID);
   $userObject->db_user_change();
 
-  /*
-    var_dump($userObject);
-   $authentication->display_debug();
-  exit();
-
-  */
-
-
-  /*  if (!$lti->valid) {
-      if (!isset($_SERVER['PHP_AUTH_USER']) and !($lti->valid)) {
-
-        //replace with function for standard login failure
-
-        $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
-        if ($configObject->get('cfg_use_ldap') == true) $message .= "<li>" . $string['tsonldap'] . "</li>\n";
-        $message .= '<li>' . $string['pressf5'] . '</li>';
-        if ($_SERVER['PHP_SELF'] == '/index.php') {
-          $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
-        }
-        $message .= "</ul>";
-        if ($configObject->get('cfg_use_ldap') != true) $message .= $fp_link;
-        $notice->access_denied($mysqli, $string, $message, true);
-      } else {
-        //
-        //  MAIN AUTHENTICATION ROUTINES
-        //
-        if (($dbret = db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli, true, $userObject)) <= 0) {
-          //try LDAP
-          if ($configObject->get('cfg_use_ldap') == true and ($db_errors != '<strong>' . $string['notsaccount'] . '</strong>' or $dbret == -2)) {
-            $ldap_user_data = array();
-            if (ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true) {
-              //Ad Account OK
-              $encpw_details = encpw($configObject->get('cfg_encrypt_salt'), $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-              $stmt = $mysqli->prepare("UPDATE users SET password = ? WHERE username = ?");
-              $stmt->bind_param('ss', $encpw_details, $_SERVER['PHP_AUTH_USER']);
-              $stmt->execute();
-              if ($stmt->affected_rows == 0) {
-                //user has no Rogo account but valid LDAP
-                $stmt->close();
-
-                $message = $string['notsaccount'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>Please contact <a href=\"mailto:$support_email\">$support_email</a> if you believe you should have access.</li>\n";
-                if ($_SERVER['PHP_SELF'] == '/index.php') {
-                  $message .= $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
-                }
-                $message .= "</ul>";
-
-                $notice->access_denied($mysqli, $string, $message, true);
-              }
-              $stmt->close();
-              db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli, true, $userObject);
-            } else {
-              //Ad Account NOT OK
-              $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
-              if ($configObject->get('cfg_use_ldap') == true) {
-                $message .= "<li>" . $string['tsonldap'] . "</li>\n";
-              }
-              $message .= '<li>' . $string['pressf5'] . '</li>';
-              if ($_SERVER['PHP_SELF'] == '/index.php') {
-                $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
-              }
-              $message .= "<li>" . $ldap_user_data['error'] . "</li></ul>";
-              if (!array_reduce($configObject->get('cfg_institutional_domains'), 'NetworkUtils::check_email_domain')) {
-                $message .= $fp_link;
-              }
-              $notice->access_denied($message, true);
-            }
-          } else {
-            // Internal DB authentication failed.
-            if ($configObject->get('cfg_use_ldap') == true and  ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true and strpos($_SERVER['PHP_SELF'], 'self_enrol.php') !== FALSE) {
-              //we have a valid LDAP account - we are in the self enrol script allow execution to continue
-              //continue
-              $result = $mysqli->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database); // Swap to staff user for appropriate database permissions
-            } else {
-              $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n<li>" . $string['pressf5'] . "</li>";
-              if ($db_errors != '') {
-                $message .= "<li>$db_errors</li>\n";
-              }
-              if ($_SERVER['PHP_SELF'] == '/index.php') {
-                $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>\n</ul>";
-              }
-              $message .= $fp_link;
-              $notice->access_denied($mysqli, $string, $message, true);
-            }
-          }
-        }
-      }
-    }*/
-} else {
-  $notice->display_notice('Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', '../artwork/browser.png', $title_color = '#C00000');
-  echo "\n</body>\n</html>\n";
-  exit;
-}
+  $included_files = get_included_files();
 
 
 
-//fgdfgdfgf();
-//var_dump($rt->get('cfg_db_external_user'));
 
 ?>
