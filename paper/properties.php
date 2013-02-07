@@ -1569,11 +1569,30 @@ if ($paper_type != '4' and $paper_type != '5') {
   <?php
   echo "<tr><td><div style=\"width:345px; height:450px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
 
+  $school_sql = '';
+  $admin_school_sql = '';
   $schools = getSchools($staff_modules, $mysqli);
-  $school_sql = (count($schools) > 0) ? 'AND schoolid IN (' . implode(',', $schools) . ')' : '';
+
+  if (count($schools) > 0) {
+    $schools_list = implode(',', $schools);
+    $school_sql = "AND schoolid IN ($schools_list)";
+    $admin_school_sql = <<< SQL
+UNION SELECT DISTINCT users.id, title, initials, surname, first_names
+FROM users, admin_access
+WHERE users.id=admin_access.userID AND admin_access.schools_id IN ($schools_list)
+SQL;
+  }
   $current_internals = explode(',',$internal_reviewers);
 
-  $internal_details = $mysqli->prepare("SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE users.id=modules_staff.memberID and modules.id=modules_staff.idMod $school_sql ORDER BY surname, initials");
+  $query = <<< SQL
+SELECT DISTINCT users.id, title, initials, surname, first_names
+FROM users, modules_staff, modules
+WHERE users.id=modules_staff.memberID AND modules.id=modules_staff.idMod {$school_sql}
+{$admin_school_sql}
+ORDER BY surname, initials
+SQL;
+
+  $internal_details = $mysqli->prepare($query);
   $internal_details->execute();
   $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
   $internal_no = 0;
