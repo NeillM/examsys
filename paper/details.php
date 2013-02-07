@@ -33,6 +33,7 @@ require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
 require_once '../classes/moduleutils.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
@@ -58,12 +59,16 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
   $summative_lock = false;
 }
 
-$result = $mysqli->prepare("SELECT paper_ownerID, paper_title, pass_mark, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, pass_mark, users.title, users.initials, users.surname, folder, random_mark, total_mark, marking, DATE_FORMAT(start_date,'%H') as start_hour, paper_type, deleted, retired, latex_needed, rubric, crypt_name, externals, internal_reviewers, labs, calendar_year, exam_duration, display_question_mark, fullscreen FROM (properties, users) WHERE property_id = ? AND paper_ownerID = users.id LIMIT 1");
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->bind_result($paper_ownerID, $paper_title, $pass_mark, $start_date, $display_start_date, $end_date, $created, $pass_mark, $title, $initials, $surname, $tmp_folder, $old_random_mark, $old_total_mark, $marking, $tmp_start_hour, $paper_type, $deleted, $retired, $latex_needed, $rubric, $crypt_name, $externals, $internal_reviewers, $labs, $session, $exam_duration, $display_question_mark, $fullscreen);
-$result->fetch();
-$result->close();
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+if (!$properties) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+  exit();
+}
+
+//var_dump($properties);
+//exit;
+//$properties = Paper_utils::get_all_properties($paperID, $mysqli, $configObject);
 
 function check_duplicates($q_screens) {
   global $string;
@@ -301,11 +306,6 @@ $result->bind_result($max_screen, $max_display_pos);
 $result->fetch();
 $result->close();
 
-if (!isset($paper_title)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
-  exit();
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onscroll="scrollXY();" onclick="hideMenus(); hideAssStatsMenu(event);">
@@ -456,21 +456,16 @@ if (!isset($paper_title)) {
   }
 </script>
 <?php
-  $paper_owner = $title  . ' ' . $initials . ', ' . $surname;
+  //$paper_owner = $properties['paper_owner_title']  . ' ' . $properties['paper_owner_initials'] . ', ' . $properties['paper_owner_surname'];
+  $paper_owner = 'Dr S, Wilkinson';
 
-  if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
+  if (date("U", time()) >= $properties->get_start_date() and date("U", time()) <= $properties->get_end_date()) {
     $active_date = 1;
   } else {
     $active_date = 0;
   }
   
-  if (date("YmdHis", time()) >= $start_date and $paper_type == '2' and $start_date !== null) {
-    $summative_lock = true;
-  } else {
-    $summative_lock = false;
-  }
-
-  if (!$summative_lock) {
+  if (!$properties->get_summative_lock()) {
 ?>
   <script type="text/javascript" src="../js/jquery.paperdetails.js"></script>
 <?php
@@ -480,7 +475,7 @@ if (!isset($paper_title)) {
 <body onscroll="scrollXY();"<?php if (isset($_GET['scrOfY'])) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ');"'; ?> onselectstart="return false">
 
 <?php
-  if ($deleted != '') {
+  if ($properties->get_deleted() != '') {
   ?>
     <div id="left-sidebar" class="sidebar">
     </div>
@@ -488,13 +483,13 @@ if (!isset($paper_title)) {
   <?php
     echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/full_bin.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 class=\"midblue_header\" style=\"margin-left:70px;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
-    $deleted_parts = explode('[deleted', $paper_title);
+    $deleted_parts = explode('[deleted', $properties->get_paper_title());
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:70px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-top:10px; margin-left:70px\">" . sprintf($string['deleted_msg1'], $deleted_parts[0]) . "</p>\n\n<ul style=\"margin-left:80px\">\n";
-    if ($paper_ownerID == $userObject->get_user_ID()) {
+    if ($properties->get_paper_ownerid() == $userObject->get_user_ID()) {
       echo "<li>" . $string['deleted_msg2'] . "</li>\n";
     } else {
       $result = $mysqli->prepare("SELECT title, surname, email FROM users WHERE id=?");
-      $result->bind_param('i', $paper_ownerID);
+      $result->bind_param('i', $properties->get_paper_ownerid());
       $result->execute();
       $result->bind_result($tmp_title, $tmp_surname, $tmp_email);
       $result->fetch();
@@ -607,8 +602,8 @@ if (!isset($paper_title)) {
       if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
-      if ($row_no2 > 0 and $paper_type < 3) {
-        checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
+      if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
+        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
       }
       $old_correct = array();
       $old_option_text = array();
@@ -643,7 +638,7 @@ if (!isset($paper_title)) {
         $temp_array[$row_no]['random'] = randomDetails($q_id);
       }
 
-      if ($summative_lock and $locked == '') {
+      if ($properties->get_summative_lock() and $locked == '') {
         QuestionUtils::lock_question($q_id, $mysqli);
       }
 
@@ -699,14 +694,14 @@ if (!isset($paper_title)) {
     if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
-    if ($paper_type < 3) checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
+    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
 
     // If we had random questions on paper need to check if they need LaTeX
     if ($latex == 0 and count($rnd_q_ids) > 0) {
       $latex = check_latex_random($rnd_q_ids, $mysqli);
     }
     
-    if ((round($total_random_mark,10) != round($old_random_mark,10) or $total_marks != $old_total_mark or $latex != $latex_needed) and $paper_type != '3') {   // Calculate random and total marks
+    if ((round($total_random_mark,10) != round($properties->get_random_mark(), 10) or $total_marks != $properties->get_total_mark() or $latex != $properties->get_latex_needed()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
       $result = $mysqli->prepare("UPDATE properties SET random_mark = ?, total_mark = ?, latex_needed = ? WHERE property_id = ?");
       $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $_GET['paperID']);
       $result->execute();
@@ -765,12 +760,12 @@ if (!isset($paper_title)) {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
   }
   echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';
-  if ($retired != '') {
+  if ($properties->get_retired() != '') {
     echo ' class="retired"';
   }
-  echo '>' . $paper_title . '</div>';
+  echo '>' . $properties->get_paper_title() . '</div>';
   echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
-  if ($retired == '') {
+  if ($properties->get_retired() == '') {
     echo "<tr>\n";
   } else {
     echo "<tr class=\"retired\">\n";
@@ -779,13 +774,13 @@ if (!isset($paper_title)) {
     $paper_owner = 'Mr J, Bloggs';
   }
   echo "<th colspan=\"3\" style=\"font-size:90%;padding-left:10px\"><strong>" . $string['start'] . ":</strong> ";
-  if ($display_start_date == '') {
+  if ($properties->get_start_date() == '') {
     echo '<span style="color:#808080">&lt;unscheduled&gt;</span>';
   } else {
-    echo $display_start_date;
+    echo $properties->get_display_start_date();
   }
   echo "</th><th colspan=\"3\" style=\"text-align:right;font-size:90%\"><strong>" . $string['owner'] . ":</strong> $paper_owner&nbsp;</th></tr>\n";
-  if ($retired == '') {
+  if ($properties->get_retired() == '') {
     echo '<tr class="details-head">';
   } else {
     echo '<tr class="details-head retired">';
@@ -801,7 +796,7 @@ if (!isset($paper_title)) {
     <tr><th colspan="6" class="bevel"></th></tr>
   <?php
 
-  if ($summative_lock) {
+  if ($properties->get_summative_lock()) {
     echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" style=\"position:relative; top:2px\" />&nbsp;&nbsp;</div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td><td style=\"text-align:right\"><div class=\"yellowwarn\">";
     if ($userObject->has_role(array('SysAdmin'))) {
       $record_no = 0;
@@ -819,16 +814,16 @@ if (!isset($paper_title)) {
       }
     }
     echo "&nbsp;</div></td></tr>\n";
-  } elseif ($paper_type == '2' and $start_date !== null) {
-    $tmp_hour = $tmp_start_hour;
-    if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
-    if (substr($display_start_date,6,4) > (date("Y")+1)) {
+  } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
+    $tmp_hour = date("G", $properties->get_start_date());
+    //if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
+    if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
       echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
-      printf($string['farfuturewarning'], $display_start_date);
+      printf($string['farfuturewarning'], date($configObject->get('cfg_loge_date_time'), $properties->get_start_date()));
       echo "</td></tr>\n";
-    } elseif ( $tmp_hour < $configObject->get( 'cfg_hour_warning' ) ) {
+    } elseif ($tmp_hour < $configObject->get('cfg_hour_warning')) {
       echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
-      printf($string['earlywarning'], $configObject->get( 'cfg_hour_warning' ) );
+      printf($string['earlywarning'], $configObject->get('cfg_hour_warning'));
       echo "</td></tr>\n";
     }
   }
@@ -877,7 +872,7 @@ if (!isset($paper_title)) {
     $higlight_class = '';
     if ($temp_array[$x]['status'] == 'Experimental' or $temp_array[$x]['status'] == 'Retired') {
       $higlight_class = ' experimental';
-    } elseif ($temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $paper_type != '3' and $paper_type != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
+    } elseif ($temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
       $higlight_class = ' excluded';
     }
 
@@ -909,7 +904,7 @@ if (!isset($paper_title)) {
       $next_screen = $temp_array[$x + 1]['screen'];
     }
 
-    if ($summative_lock) {
+    if ($properties->get_summative_lock()) {
       echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     } else {
       echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
@@ -959,9 +954,9 @@ if (!isset($paper_title)) {
     }
 
     echo $string[$temp_array[$x]['q_type']] . '</td>';
-    if ($paper_type == '3' or $paper_type == '6') {
+    if ($properties->get_paper_type() == '3' or $properties->get_paper_type() == '6') {
       echo '<td style="text-align:right; vertical-align:top; color:#C0C0C0">' . $string['na'] . '</td>';
-    } elseif ($paper_type == '4') {
+    } elseif ($properties->get_paper_type() == '4') {
       $temp_array[$x]['score_method'] = str_replace('|',',',$temp_array[$x]['score_method']);
       $temp_array[$x]['score_method'] = str_replace(',false','',$temp_array[$x]['score_method']);
       echo '<td style="text-align:right; vertical-align:top">' . $temp_array[$x]['marks'] . '</td>';
@@ -1001,28 +996,28 @@ if (!isset($paper_title)) {
   }
 
   if ($total_marks != 0) {
-    if ($row_no > 0 and $paper_type != '3' and $paper_type != '4') {
+    if ($row_no > 0 and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4') {
       echo "<tr><td colspan=\"4\"></td><td id=\"marks_total\" style=\"border-top:1px solid black; padding-right:4px\" align=\"right\">";
       if ($marks_incorrect_error == true) {
         echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['variablenomarks'] . '" border="0" />';
       } else {
         echo $total_marks;
       }
-      echo "</td><td><nobr>&nbsp;&nbsp;" . $string['passmark'] . ":&nbsp;$pass_mark%&nbsp;</nobr></td></tr>\n";
-      echo "<tr><td colspan=\"4\"></td><td style=\"color:#808080; text-align:right\">" . round($total_random_mark,2) . "&nbsp;</td><td style=\"color:#808080\">(" . round(((round($total_random_mark,2) / $total_marks) * 100), 0) . "%) " . $string['randommark'] . "</td></tr>\n";
+      echo "</td><td><nobr>&nbsp;&nbsp;" . $string['passmark'] . ":&nbsp;" . $properties->get_pass_mark() . "%&nbsp;</nobr></td></tr>\n";
+      echo "<tr><td colspan=\"4\"></td><td style=\"color:#808080; text-align:right\">" . round($total_random_mark, 2) . "&nbsp;</td><td style=\"color:#808080\">(" . round(((round($total_random_mark, 2) / $total_marks) * 100), 0) . "%) " . $string['randommark'] . "</td></tr>\n";
     }
   }
 
-  if ($paper_type != '3') {
+  if ($properties->get_paper_type() != '3') {
     check_duplicates($q_screen);
   }
 
   // Final paper warnings.
-  if ($paper_type == '2') {
-    if ($summative_lock) {
-      $warning_types = array('Incomplete','Beta');
+  if ($properties->get_paper_type() == '2') {
+    if ($properties->get_summative_lock()) {
+      $warning_types = array('Incomplete', 'Beta');
     } else {
-      $warning_types = array('Incomplete','Beta','Retired');
+      $warning_types = array('Incomplete', 'Beta', 'Retired');
     }
     foreach ($warning_types as $warning_type) {
       if (isset($paper_warnings[$warning_type]) and count($paper_warnings[$warning_type]) > 0) {
@@ -1035,8 +1030,8 @@ if (!isset($paper_title)) {
     }
   }
 
-  if ($marking == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
-    $editPaper = $mysqli->prepare("UPDATE properties SET marking=0 WHERE property_id=?");
+  if ($properties->get_marking() == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
+    $editPaper = $mysqli->prepare("UPDATE properties SET marking = 0 WHERE property_id = ?");
     $editPaper->bind_param('i', $paperID);
     $editPaper->execute();
     $editPaper->close();

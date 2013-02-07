@@ -260,7 +260,5 @@ Class PaperUtils {
       $result->close();
       return $no_screens;
     }
-
-  }
-
+  }  
 }
