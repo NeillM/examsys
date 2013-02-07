@@ -81,7 +81,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>
 <td style="text-align:right"><?php echo $string['copyname']; ?></td>
-<td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $paper_title; ?>" size="65" />
+<td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title(); ?>" size="65" />
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $module; ?>" />
 <input type="hidden" name="folder" value="<?php echo $folder; ?>" />
@@ -92,7 +92,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <td style="text-align:right">Type:</td>
 <td colspan="4"><select name="paper_type" id="paper_type" onchange="changeButton()">
 <?php
-  switch ($paper_type) {
+  switch ($properties->get_paper_type()) {
     case 0:
     case 1:
     case 2:
@@ -112,7 +112,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
       break;
   }
   foreach ($types as $type_no=>$type_text) {
-    if ($paper_type == $type_no) {
+    if ($properties->get_paper_type() == $type_no) {
       echo "<option value=\"$type_no\" selected>$type_text</option>\n";
     } else {
       echo "<option value=\"$type_no\">$type_text</option>\n";

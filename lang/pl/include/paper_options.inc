@@ -119,6 +119,7 @@ $string['anyyear'] = 'Każdy rok';
 $string['copyname'] = 'Nazwa kopii:';
 $string['paperonly'] = 'Tylko arkusze';
 $string['paperandquestions'] = 'Arkusze i pytania';
+$string['next'] = 'Next &gt;&gt;';  // Niko
 $string['reorderinfo'] = 'Możesz teraz zmienić porządek pytań i przemieścić podzielniki ekranowe przeciągając je w nowe położenia';
 $string['insertscreenbreak'] = 'Wstaw podzielnik ekranu';//Insert screen break';
 $string['addscreenbreak'] = 'Wstaw podzielnik ekranu';  

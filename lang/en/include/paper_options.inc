@@ -119,6 +119,7 @@ $string['anyyear'] = 'Any Year';
 $string['copyname'] = 'Copy Name:';
 $string['paperonly'] = 'Paper Only';
 $string['paperandquestions'] = 'Paper and Questions';
+$string['next'] = 'Next &gt;&gt;';
 $string['reorderinfo'] = 'You can now reorder questions and screen breaks by dragging them to their new position';
 $string['insertscreenbreak'] = 'Insert screen break';
 $string['deletescreenbreak'] = 'Delete screen break';
