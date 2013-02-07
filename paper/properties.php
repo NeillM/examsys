@@ -232,7 +232,7 @@ if (isset($_POST['Submit'])) {
 
     $paper_modules = array();
     $first_module_id = '';
-    
+
     for ($i=0; $i<$_POST['module_no']; $i++) {
       if (isset($_POST['module' . $i])) {
         if (count($paper_modules) == 0) {
@@ -360,7 +360,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
     }
-    
+
     if ($paper_type != '2') {
       // Update textual feedback
       $textual_feedback = array();
@@ -368,14 +368,14 @@ if (isset($_POST['Submit'])) {
       $editProperties->bind_param('i', $_POST['paperID']);
       $editProperties->execute();
       $editProperties->close();
-      
+
       for ($i=1; $i<10; $i++) {
         $editProperties = $mysqli->prepare("INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)");
         if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
           $editProperties->bind_param('iis', $_POST['paperID'], $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
           $editProperties->execute();
         }
-        $editProperties->close();      
+        $editProperties->close();
       }
     }
 
@@ -1345,9 +1345,9 @@ if ($paper_type != '4' and $paper_type != '5') {
 <table id="feedback" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
   <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/feedback_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;Feedback</td></tr>
 
-  <?php  
+  <?php
      echo "<tr><td colspan=\"2\" valign=\"top\">";
-     
+
      if (in_array($paper_type, array('0', '1', '2', '5'))) {
        // Objectives-based Feedback
        $idfeedback_release = '';
@@ -1403,7 +1403,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<br />&nbsp;</div>";
 
      echo "</td></tr>\n";
-     
+
      if ($paper_type != '2') {
        echo "<tr><td colspan=\"2\"style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;Textual Feedback</td></tr>\n";
        echo "<tr><td style=\"text-align:center\">Above</td><td style=\"text-align:center\">Message</td></tr>\n";
@@ -1421,7 +1421,7 @@ if ($paper_type != '4' and $paper_type != '5') {
          echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"2\" style=\"width:620px\">$msg</textarea></td></tr>\n";
        }
      }
-     ?> 
+     ?>
 </table>
 
 <table id="reviewers" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
@@ -1574,9 +1574,7 @@ if ($paper_type != '4' and $paper_type != '5') {
   $current_internals = explode(',',$internal_reviewers);
 
   $internal_details = $mysqli->prepare("SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE users.id=modules_staff.memberID and modules.id=modules_staff.idMod $school_sql ORDER BY surname, initials");
-  echo $mysqli->error;
   $internal_details->execute();
-  echo $mysqli->error;
   $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
   $internal_no = 0;
   while ($internal_details->fetch()) {
