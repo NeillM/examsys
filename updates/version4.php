@@ -3273,8 +3273,23 @@ QUERY;
     $updater_utils->execute_query($sql, true);
   }
 
-
-
+  // 07/02/2013 - Delete entries in admin_access where the user doesn't have Admin role
+  $admin_list = array();
+  $result = $mysqli->prepare("SELECT DISTINCT id FROM users u INNER JOIN admin_access a ON u.id=a.userID WHERE u.roles!='Staff,Admin'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($tmp_user);
+  while ($result->fetch()) {
+    $admin_list[] = $tmp_user;
+  }
+  if (count($admin_list) > 0) {
+    $deletion_list = implode(',', $admin_list);
+    $sql = "DELETE FROM admin_access WHERE userID IN ($deletion_list)";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    echo "<li>$sql</li>";
+  }
+  $result->close();
 
   // End of updates -----------------------------------------------------------------
 
