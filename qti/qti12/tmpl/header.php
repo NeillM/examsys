@@ -16,6 +16,8 @@ $deb32434=1;
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+$configObject=Config::get_instance();
+$cfg_web_root=$configObject->get('cfg_web_root');
 ?>
 	<item title="<?php echo(StripForTitle($title)) ?>" ident="<?php echo $question->load_id ?>">
 		<itemmetadata>

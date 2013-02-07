@@ -752,10 +752,11 @@ class ST_QTI12_Material // <material>
     global $import_directory;
     global $q_warnings;
     global $q_errors;
-    global $configObject
-    global $file;
+        global $file;
     global $wct;
     global $load_params;
+$configObject=Config::get_instance();
+    $cfg_web_root=$configObject->get('cfg_web_root');
 
     if (stripos(" ".$image, "notes_icon.gif") > 0) {
       return;

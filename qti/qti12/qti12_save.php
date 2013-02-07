@@ -128,8 +128,8 @@ class IE_qti12_Save extends IE_Main {
   }
 
   function MakeQuestionHeader(&$question, $scenario = true, $image = true) {
-    global $configObject
-
+    $configObject=Config::get_instance();
+$cfg_web_root=$configObject->get('cfg_web_root');
     $output = "";
 
     if (trim($question->theme)) $output .= "
