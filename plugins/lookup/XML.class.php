@@ -212,7 +212,7 @@ class XML_lookup extends outline_lookup {
         //end of searchorder loop
       }
 
-      //TODO ABOVE IS BROKE AS STRAIGHT FROM LDAP
+      //TODO ABOVE IS SUSPECT AS STRAIGHT FROM LDAP
 
       //need to lookup up the xpath info
       //above block is for creating xpath filter for xml

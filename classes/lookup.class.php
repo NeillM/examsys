@@ -147,7 +147,7 @@ class Lookup extends RogoStaticSingleton {
     $this->config = $this->configObj->getbyref('lookup');
 
     if (!isset($this->config)) {
-      $notice->display_notice('No lookup configured', 'No lookup configuration has been set in the config file. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
+      $notice->display_notice($string['NoLookupConfigured'], $string['NoLookupConfiguredmessage'], '../artwork/software_64.png', $title_color = '#C00000');
       exit();
     }
 

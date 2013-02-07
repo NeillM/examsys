@@ -52,6 +52,7 @@ class guestlogin_auth extends outline_authentication {
   }
 
   function loginbutton($displaystdformobj) {
+    global $string;
     $this->savetodebug('Button Check');
     //$displaybutton = false;
     // detect if we should display login button
@@ -103,7 +104,7 @@ class guestlogin_auth extends outline_authentication {
       $this->savetodebug('Adding New Button');
       $newbutton = new displaystdformobjbutton();
       $newbutton->type = 'submit';
-      $newbutton->value = ' Guest Login ';
+      $newbutton->value = ' '. $string['guestbutton'] . ' ';
       $newbutton->name = 'guestlogin';
       $displaystdformobj->buttons[] = $newbutton;
     }

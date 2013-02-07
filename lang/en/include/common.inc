@@ -59,4 +59,20 @@ $string['LTIFAILURE'] = 'LTI Failure';
 $string['expiredtimestamp'] = 'Timestamp has now expired. Please go back and relaunch the link (do not hit refresh in the browser).';
 $string['UserMissing'] = 'Associated User Missing';
 $string['UserMissingDesc'] = 'Somehow the associated user is missing from the rogo user system this is a serious error and you need to contact support';
+
+$string['NoAuthenticationConfigured']='No Authentication configured';
+$string['NoAuthenticationConfiguredmessage']='No Authentication configuration has been set in the config file. Please contact your local system administrator.';
+$string['Authentication_callback_failure1']='Failed to register callback for section ';
+$string['Authentication_callback_failure2']=' with function';
+$string['Authentication_issue1'] ='Authentication Issue';
+$string['Authentication_issue2'] ='The authentication plugins couldnt log you in and, they the plugins didnt provide any further form or redirect.Press F5 to refresh if this is still unsuccessful please contact support:  <a href="mailto:%s">%s</a>.<p>Please Include the following debug in your email:</p><div style="margin-left:100px;">%s</div>';
+$string['Authentication_notloggedin1'] ='Authentication Issue';
+$string['Authentication_notloggedin2'] ='You are not logged in.   Press F5 to refresh if this is still unsuccessful please contact support: <a href="mailto:%s">%s</a><p>Please Include the following debug in your email:</p><div style="margin-left:100px;">%s</div>';
+$string['NoLookupConfigured']='No lookup configured';
+$string['NoLookupConfiguredmessage']='No lookup configuration has been set in the config file. Please contact your local system administrator.';
+$string['guestbutton'] = 'Guest Login';
+$string['authentication_lti_authmessage']='Please Login to authenticate the LTI Connection.';
+
+
+
 ?>

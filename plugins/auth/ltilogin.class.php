@@ -173,7 +173,7 @@ class ltilogin_auth extends outline_authentication {
       $message->pretext = '';
       $message->posttext = '';
 
-      $message->content = 'Please Login to authenticate the LTI Connection.'; //TODO need to convert this for language.
+      $message->content = $string['authentication_lti_authmessage'];
       $displaystdformobj->messages[] = $message;
       $displaystdformobj->replace = TRUE;
     }

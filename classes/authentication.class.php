@@ -92,11 +92,8 @@ class Authentication {
     $this->config = $this->configObj->getbyref('authentication');
 
     if (!isset($this->config)) {
-      $notice->display_notice_and_exit(
-        'No Authentication configured',
-        'No Authentication configuration has been set in the config file. Please contact your local system administrator.',
-        '../artwork/software_64.png',
-        $title_color = '#C00000');
+      global $string;
+      $notice->display_notice_and_exit($string['NoAuthenticationConfigured'], $string['NoAuthenticationConfiguredmessage'], '../artwork/software_64.png', $title_color = '#C00000');
       $config_ok = FALSE;
     }
 
@@ -141,6 +138,7 @@ class Authentication {
       $authtype1 = $authtype . '_auth';
       $settings = $auth[1];
       $name = $auth[2];
+
       //TODO this knackers unit testing ERROR Nesting level too deep -  recursive dependency?
       //$this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
       $this->returndata[$number] = new authtypereturn();
@@ -202,7 +200,7 @@ class Authentication {
       //attempting to register callback to invalid section
       //maybe log name of function as well?
       $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
-      $this->authPluginObj[$number]->set_error("Failed to register callback for section ($section) with function ($callback[1])");
+      $this->authPluginObj[$number]->set_error($string['Authentication_callback_failure1'] . "($section)" . $string['Authentication_callback_failure2'] . " ($callbac k[1])");
 
       return FALSE;
     }
@@ -312,9 +310,9 @@ class Authentication {
           $data->lookupdata = clone $authobj->data;
           $info = $lookup->userlookup($data);
 
-          $lookupdebug=$lookup->debug_as_array();
-          foreach($lookupdebug as $line) {
-            $this->debug[]='Lookup Debug: '.$line;
+          $lookupdebug = $lookup->debug_as_array();
+          foreach ($lookupdebug as $line) {
+            $this->debug[] = 'Lookup Debug: ' . $line;
           }
 
           //minimum fields to create an new user username
@@ -334,7 +332,7 @@ class Authentication {
 
           if ($createuser == TRUE) {
             $this->debug[] = 'Going to try and create new user';
-            $this->debug[] = 'Data is: ' . var_export($info->lookupdata, TRUE);
+            // $this->debug[] = 'Data is: ' . var_export($info->lookupdata, TRUE);
             $arraycheck = array('username', 'title', 'firstname', 'surname', 'email', 'coursecode', 'gender', 'yearofstudy', 'role', 'studentID', 'school', 'coursetitle', 'initials');
             foreach ($arraycheck as $itemcheck) {
               if (!isset($info->lookupdata->$itemcheck)) {
@@ -436,15 +434,7 @@ class Authentication {
 
         //failed but no callbacks or callbacks finished
         $notice = UserNotices::get_instance();
-        $notice->display_notice_and_exit(
-          'Authentication Issue',
-          "The authentication plugins couldnt log you in and, they the plugins didnt provide any further form or redirect.
-                                            Press F5 to refresh if this is still unsuccessful please contact support:  <a href=\"mailto:" . $this->configObj->get('support_email') . "\">" . $this->configObj->get('support_email') . "</a>." .
-            "<p>Please Include the following debug in your email:</p><div style=\"margin-left:100px;\">" . $this->debug_to_string() . "</div>",
-          '/artwork/user_info_48.png',
-          '#C00000',
-          TRUE,
-          TRUE);
+        $notice->display_notice_and_exit($string['Authentication_issue1'], sprintf($string['Authentication_issue2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()), '/artwork/user_info_48.png', '#C00000', TRUE, TRUE);
       }
     }
 
@@ -507,6 +497,7 @@ class Authentication {
   }
 
   function get_auth_obj(&$getauth) {
+    global $string;
     if (!is_object($getauth)) {
       $getauthobj->userid = $getauth;
       $getauthobj->userObj = new UserObject($this->configObj, $this->db);
@@ -520,14 +511,7 @@ class Authentication {
 
       if ($this->get_userid() < 1) {
         $notice = UserNotices::get_instance();
-        $notice->display_notice_and_exit(
-          'Authentication Issue',
-          "You are not logged in.   Press F5 to refresh if this is still unsuccessful please contact support: <a href=\"mailto:" . $this->configObj->get('support_email') . "\">" . $this->configObj->get('support_email') . "</a>." .
-            "<p>Please Include the following debug in your email:</p><div style=\"margin-left:100px;\">" . $this->debug_to_string() . "</div>",
-          '/artwork/user_info_48.png',
-          '#C00000',
-          TRUE,
-          TRUE);
+        $notice->display_notice_and_exit($string['Authentication_notloggedin1'], sprintf($string['Authentication_notloggedin2'],$this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()), '/artwork/user_info_48.png', '#C00000', TRUE, TRUE);
 
       }
       $getauthobj->userObj->load($this->get_userid());
