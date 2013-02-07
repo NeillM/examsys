@@ -1569,6 +1569,8 @@ if ($paper_type != '4' and $paper_type != '5') {
   <?php
   echo "<tr><td><div style=\"width:345px; height:450px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
 
+  // Get all users for teams within the schools of the current user
+  // Also get all admin users for those schools
   $school_sql = '';
   $admin_school_sql = '';
   $schools = getSchools($staff_modules, $mysqli);
@@ -1582,13 +1584,24 @@ FROM users, admin_access
 WHERE users.id=admin_access.userID AND admin_access.schools_id IN ($schools_list)
 SQL;
   }
+
+  // Make sure that current reviewers always appear on the list
   $current_internals = explode(',',$internal_reviewers);
+  $current_internals_sql = '';
+  if (count($current_internals) > 0) {
+    $current_internals_sql = <<< SQL
+UNION SELECT DISTINCT id, title, initials, surname, first_names
+FROM users
+WHERE id IN ($internal_reviewers)
+SQL;
+  }
 
   $query = <<< SQL
 SELECT DISTINCT users.id, title, initials, surname, first_names
 FROM users, modules_staff, modules
 WHERE users.id=modules_staff.memberID AND modules.id=modules_staff.idMod {$school_sql}
 {$admin_school_sql}
+{$current_internals_sql}
 ORDER BY surname, initials
 SQL;
 
