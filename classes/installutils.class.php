@@ -477,6 +477,7 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".sid TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_modules TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".schools TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".courses TO '" . self::$cfg_db_username . "'@'" . self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_metadata_security TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, UPDATE, INSERT, DELETE ON " . $dbname . ".password_tokens TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
@@ -824,10 +825,10 @@ Class InstallUtils {
                                 '',
                                 '',
                                 0,
-                                false,
-                                false,
-                                false,
-                                true,
+                                FALSE,
+                                FALSE,
+                                FALSE,
+                                TRUE,
                                 NULL,
                                 NULL,
                                 self::$db
@@ -840,10 +841,10 @@ Class InstallUtils {
                                 '',
                                 '',
                                 0,
-                                true,
-                                true,
-                                true,
-                                true,
+                                TRUE,
+                                TRUE,
+                                TRUE,
+                                TRUE,
                                 NULL,
                                 NULL,
                                 self::$db
