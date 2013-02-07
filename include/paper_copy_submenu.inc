@@ -133,9 +133,9 @@ if ($configObject->get('cfg_summative_mgmt')) {
 </tr>
 <tr>
 <td style="width:110px" align="center">&nbsp;</td>
-<td style="width:170px" align="center"><img src="../artwork/copy_paper_only.gif" width="120" height="130" border="0" /></td>
+<td style="width:170px" align="center"><img src="../artwork/copy_paper_only.png" width="120" height="130" /></td>
 <td>&nbsp;&nbsp;&nbsp;</td>
-<td style="width:170px" align="center"><img src="../artwork/copy_paper_questions.gif" width="120" height="130" border="0" /></td>
+<td style="width:170px" align="center"><img src="../artwork/copy_paper_questions.png" width="120" height="130" /></td>
 <td style="width:110px" align="center">&nbsp;</td>
 </tr>
 <tr><td colspan="5">&nbsp;</td></tr>
