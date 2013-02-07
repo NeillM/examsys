@@ -43,17 +43,7 @@ $paperID = check_var('paperID', 'GET', true, false, true);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    h1 {font-size:160%; font-weight:bold; color:#316AC5; margin-left:15px; padding-top:10px}
-    .q_no {text-align:right; vertical-align:top; cursor:pointer}
-    .divider {font-size:90%; font-weight:bold; padding-left:30px}
-    .mapping {font-size:90%;color:#FF6300;font-weight:normal}
-    a.q_excluded {color:red; font-weight:normal; text-decoration:line-through}
-    a.q_ok {color:#FF6300; font-weight:normal}
-    .unmapped {color:#C0C0C0}
-    ul {margin-top:0px; margin-bottom:0px}
-    li {padding-left:8px}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
   
   <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
@@ -146,7 +136,7 @@ $paperID = check_var('paperID', 'GET', true, false, true);
   </table>
   </th><th style="width:100%; text-align:right">&nbsp;</th>
   </tr>
-  <tr><td colspan="4" style="background-color:#1E3C7B">&nbsp;</td></tr>
+  <tr><td colspan="2" style="background-color:#1E3C7B">&nbsp;</td></tr>
   <?php
   $questionID_list = substr($questionID_list,0,-1);
   $total_random_mark = 0;
@@ -174,21 +164,21 @@ $paperID = check_var('paperID', 'GET', true, false, true);
       }
     ?>
     <tr>
-    <td colspan="5" style="padding:0px">
+    <td style="padding:0px">
     <?php
     $ul_start = false;
-    $moduleIDs = Paper_utils::get_modules($paperID,$mysqli);
+    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
     $objsBySession = getObjectives($moduleIDs, $session, $paperID, $questionID_list, $mysqli);
     unset($objsBySession['none_of_the_above']);
     foreach($objsBySession as $module => $sessions ) {
       if (count($objsBySession) > 1) {
-        echo "<tr><td colspan=\"3\"><h1>$module " . $string['objectives'] . "</h1></td></tr>";
+        echo "<tr><td><h1>$module " . $string['objectives'] . "</h1></td></tr>";
       }
       foreach($sessions as $identifier => $sessionData) {
         if ($ul_start) {
           echo '</ul>';
         }
-        echo "<tr><td colspan=\"4\" style=\"padding-left:4px\"><table border=\"0\" style=\"padding-top:6px; padding-bottom:2px; width:100%; color:#1E3287\"><tr><td><nobr>";
+        echo "<tr><td colspan=\"2\" style=\"padding-left:4px\"><table border=\"0\" style=\"padding-top:6px; padding-bottom:2px; width:100%; color:#1E3287\"><tr><td><nobr>";
         if ($sessionData['class_code'] != '') {
           echo $sessionData['class_code'] . ': ';
         }
@@ -196,13 +186,13 @@ $paperID = check_var('paperID', 'GET', true, false, true);
         
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
         if (isset($sessionData["objectives"]) and is_array($sessionData["objectives"])) {
-          echo '<tr><td colspan="4"><ul>';
+          echo '<tr><td colspan="2"><ul>';
           foreach ($sessionData["objectives"] as $id => $objectives) {
             if (is_array($objectives['mapped'])) {
               echo '<li class="mapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . ' <span class="mapping">';
               $i = 0;
               foreach ($objectives['mapped'] as $q_id) {
-                if (array_key_exists($q_id,$excluded)) {
+                if (array_key_exists($q_id, $excluded)) {
                   $class = 'q_excluded';
                 } else {
                   $class = 'q_ok';

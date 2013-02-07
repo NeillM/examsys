@@ -41,12 +41,7 @@ $paperID = $_GET['paperID'];
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .q_no {text-align:right; vertical-align:top; cursor:pointer; width:40px}
-    .divider {font-size:90%; font-weight:bold}
-    .mapping {font-size:90%;color:#FF6300;font-weight:normal}
-    .mapping_exclueded {color:red;font-weight:normal;text-decoration:line-through;}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
   
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script language="JavaScript">
@@ -98,7 +93,7 @@ $paperID = $_GET['paperID'];
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $parts);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $excluded[$q_id] = $parts;
   }
   $result->close();
@@ -266,7 +261,7 @@ $paperID = $_GET['paperID'];
         if (isset($objByModule['none_of_the_above']['mapped']) and $objByModule['none_of_the_above']['mapped'] == 1) {
           echo "<ul class=\"$class\" style=\"list-style-type:none; margin-left:10px; padding:0px\">\n<li style=\"padding-left:10px; color:red; background-image:url(../artwork/small_warning_16.png); background-repeat:no-repeat\"><strong>" . $string['warning'] . ":</strong> " . $string['questiononnotmap'] . "</li></ul>\n";
         } else {
-          echo "<ul class=\"$class\" style=\"list-style-type:disc; margin-left:20px; margin-top:5px\">\n";
+          echo "<ul class=\"$class\" style=\"list-style-type:disc; margin-top:5px\">\n";
           foreach ($objByModule as $module => $mappings) {
             foreach ($mappings as $id => $mappingData) {
               if( $mappingData['session']['class_code'] != '') {

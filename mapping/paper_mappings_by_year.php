@@ -111,23 +111,8 @@ function getPaper($paperID) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .q_no {text-align:right; vertical-align:top; cursor:pointer}
-    .q_prev {color:#FF6300 !important}
-    .divider {font-weight:normal; color:#1E3287; padding-left:6px}
-    .mapping {font-size:90%; color:#FF6300; font-weight:normal}
-    .mapping_exclueded {color:red;font-weight:normal;text-decoration:line-through}
-    .unmapped {color:#C0C0C0}
-    a {text-decoration: none}
-    .m_s {background-image:url('../artwork/red_hash_background.png'); background-repeat:repeat}
-    .o_s {background-color:#EBF1DD}
-    .nm_s {background-color:white}
-    td.m_s {border:1px solid #c0c0c0}
-    td.o_s {border:1px solid #c0c0c0}
-    td.nm_s {border:1px solid #c0c0c0}
-    td.obj {border:1px solid #c0c0c0}
-    table {border-collapse:collapse}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
+
   <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
