@@ -68,10 +68,10 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
       $userlookupobj->lookupdata->disabled = TRUE;
     }
 
-    if ($userlookupobj->lookupdata->gender == 'M') {
+    if (isset($userlookupobj->lookupdata->gender) and $userlookupobj->lookupdata->gender == 'M') {
       $userlookupobj->lookupdata->gender = 'Male';
     }
-    if ($userlookupobj->lookupdata->gender == 'F') {
+    if (isset($userlookupobj->lookupdata->gender) and $userlookupobj->lookupdata->gender == 'F') {
       $userlookupobj->lookupdata->gender = 'Female';
     }
 
