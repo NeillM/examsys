@@ -46,9 +46,20 @@ $choicetype='radio';
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false, $type='') {
   $configObject = Config::get_instance();
   global $icons;
-
-  $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, moduleID FROM properties WHERE (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
+$moduleidorig=$moduleid;
+  $moduleid=module::get_idMod($moduleid,$mysqli);
+  $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, idMod FROM properties,properties_modules WHERE idMod=? and properties.property_id=properties_modules.property_id  AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
   $results2 = $mysqli->prepare($query_string);
+  if ($mysqli->error) {
+    try {
+      throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+    } catch (Exception $e) {
+      echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+      echo nl2br($e->getTraceAsString());
+      exit();
+    }
+  }
+  $results2->bind_param('i',$moduleid);
   $results2->execute();
   $results2->bind_result($crypt_name, $paper_type, $paper_title, $retired, $moduleID);
   $results2->store_result();
@@ -57,7 +68,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
     @flush();
     $rt = $results2->num_rows();
     if (!$flat) {
-      echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\" onclick=\"showHide($block_id)\"  /><a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">&nbsp;$moduleid: $paper_title ($rt)</a></div>\n";
+      echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\" onclick=\"showHide($block_id)\"  /><a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">&nbsp;$moduleidorig: $paper_title ($rt)</a></div>\n";
       if ($explode === true) {
         echo "<div id=\"block$block_id\">";
       } else {
@@ -103,6 +114,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
   return (array($block_id, $plk));
 }
 
+$lti=UoN_LTI::get_instance();
 
 if (!$lti->valid) {
   $tempvar = $lti->message;
@@ -256,7 +268,7 @@ if (!$lti->isInstructor()) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset={$configObject->get('cfg_page_charset')}" />
   
-  <title>Rogō $configObject->get('cfg_install_type')</title>
+  <title>Rogō {$configObject->get('cfg_install_type')}</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />

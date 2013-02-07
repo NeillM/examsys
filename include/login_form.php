@@ -38,8 +38,8 @@
         <br/>
         <br/>
       <?php
-      if (isset($this->displaystdformobj->messages)) {
-        foreach ($this->displaystdformobj->messages as $object) {
+      if (isset($displaystdformobj->messages)) {
+        foreach ($displaystdformobj->messages as $object) {
           echo <<<HTML
 $object->pretext
 <div class="msg">$object->content</div>
@@ -48,7 +48,7 @@ HTML;
         }
       }
 
-      if (!(isset($this->displaystdformobj->replace) and $this->displaystdformobj->replace === true)) {
+      if (!(isset($displaystdformobj->replace) and $displaystdformobj->replace === true)) {
         echo "<div class=\"msg\">{$string['signinmsg']}</div>\n";
       }
       ?>
@@ -67,8 +67,8 @@ HTML;
             </div>
             <div style="text-align:center"><input type="submit" name="rogo-login-form-std" value="<?php echo $string['signin']; ?>" style="width:150px" />
           <?php
-          if (isset($this->displaystdformobj->buttons)) {
-            foreach ($this->displaystdformobj->buttons as $object) {
+          if (isset($displaystdformobj->buttons)) {
+            foreach ($displaystdformobj->buttons as $object) {
               echo <<<HTML
 $object->pretext
 <input type="$object->type" name="$object->name" value="$object->value" style="$object->style" />
@@ -80,8 +80,8 @@ HTML;
           </div>
 
       <?php
-      if (isset($this->displaystdformobj->postbuttonmessages)) {
-        foreach ($this->displaystdformobj->postbuttonmessages as $object) {
+      if (isset($displaystdformobj->postbuttonmessages)) {
+        foreach ($displaystdformobj->postbuttonmessages as $object) {
           $cssclass = 'msg';
           if (isset($object->cssclass)) {
             $cssclass = $object->cssclass;
@@ -99,17 +99,17 @@ HTML;
 </form>
 
 <?php
-if (isset($this->displaystdformobj->postformmessages)) {
+if (isset($displaystdformobj->postformmessages)) {
 
   $cssareaclass = 'mainbox';
-  if (isset($this->displaystdformobj->postformmessages[0]->cssareaclass)) {
+  if (isset($displaystdformobj->postformmessages[0]->cssareaclass)) {
     $cssclass = $object->cssclass;
   }
-  if (!isset($this->displaystdformobj->postformmessages[0]->rawhtml)) {
+  if (!isset($displaystdformobj->postformmessages[0]->rawhtml)) {
     echo <<<HTML
 <div class="$cssmainclass">
 HTML;
-    foreach ($this->displaystdformobj->postformmessages as $object) {
+    foreach ($displaystdformobj->postformmessages as $object) {
       $cssclass = 'msg';
       if (isset($object->cssclass)) {
         $cssclass = $object->cssclass;
@@ -125,7 +125,7 @@ HTML;
 HTML;
 
   } else {
-    echo $this->displaystdformobj->postformmessages[0]->rawhtml;
+    echo $displaystdformobj->postformmessages[0]->rawhtml;
   }
 
 }

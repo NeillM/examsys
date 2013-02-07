@@ -142,8 +142,10 @@ class ltilogin_auth extends outline_authentication {
     }
 
     if (isset($this->settings['lti_lookup_skipusesignup']) and $this->settings['lti_lookup_skipusesignup'] == TRUE) {
+      $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = FALSE;
+    } else {
       //set session to be needing user lookup later
-      $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = TRUE;
+      $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = TRUE;
     }
 
     // lti valid but no user id associated with it.
@@ -167,7 +169,8 @@ class ltilogin_auth extends outline_authentication {
   }
 
   function displaystdform($displaystdformobj) {
-    if (isset($_SESSION['authenticationobj']['ltilogin']['needsuserlookup']) and  $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] === TRUE) {
+    global $string;
+    if (isset($this->session['authenticationobj']['ltilogin']['needsuserlookup']) and  $this->session['authenticationobj']['ltilogin']['needsuserlookup'] === TRUE) {
 
       $message = new stdClass();
       $message->pretext = '';
