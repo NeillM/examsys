@@ -140,6 +140,14 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $result->close();
   }
 
+  // Remove from admin access if role changed from Admin
+  if ($tmp_roles != $_POST['prev_roles'] and $_POST['prev_roles'] == 'Staff,Admin') {
+    $result = $mysqli->prepare("DELETE FROM admin_access WHERE userID = ?");
+    $result->bind_param('i', $_POST['old_userID']);
+    $result->execute();
+    $result->close();
+  }
+
   $username = $_POST['username'];
   //Update 'sid' table;
   $result = $mysqli->prepare("DELETE FROM sid WHERE userID = ?");
@@ -476,7 +484,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         }
       }
     }
-    echo "</optgroup>\n</select></td></tr>\n";
+    echo "</optgroup>\n</select>\n";
+    echo "<input type=\"hidden\" name=\"prev_roles\" value=\"$tmp_roles\" /></td></tr>\n";
 
     if ($userObject->has_role('SysAdmin')) {
       echo "<tr><td>&nbsp;" . $string['username'] . "&nbsp;</td><td><input type=\"text\" size=\"15\" name=\"username\" value=\"$username\" /></td><td>&nbsp;" . $string['password'] . "</td><td colspan=\"2\">";
