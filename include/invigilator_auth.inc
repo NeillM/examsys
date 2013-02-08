@@ -26,8 +26,7 @@
 
 require_once 'staff_student_auth.inc';
 
-//if (strpos($userroles,'Admin') === false AND strpos($userroles,'Invigilator') === false) {
-if (!$userObject->has_role(array('Admin', 'Invigilator'))) {
+if (!$userObject->has_role(array('SysAdmin', 'Admin', 'Invigilator'))) {
   $notice->access_denied($mysqli, $string, 'You are attempting to access a <strong>Invigilator Only</strong> page.', false, true);
 } 
 ?>
