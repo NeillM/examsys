@@ -60,16 +60,16 @@ $string['expiredtimestamp'] = 'Datownik tego połączenia jest już przeterminow
 $string['UserMissing'] = 'Brak stowarzyszonego użytkownika ';
 $string['UserMissingDesc'] = 'Z jakiegoś powodu w systemie Rogo brak jest stowarzyszonego użytkownika. To jest poważny błąd dlatego powinieneś skontaktować się z administratorem systemu';
 
-$string['NoAuthenticationConfigured'] = 'No Authentication configured'; //TODO Niko
-$string['NoAuthenticationConfiguredmessage'] = 'No Authentication configuration has been set in the config file. Please contact your local system administrator.'; //TODO Niko
-$string['Authentication_callback_failure1'] = 'Failed to register callback for section '; //TODO Niko
-$string['Authentication_callback_failure2'] = ' with function'; //TODO Niko
-$string['Authentication_issue1'] = 'Authentication Issue'; //TODO Niko
-$string['Authentication_issue2'] = 'The authentication plugins couldnt log you in and, they the plugins didnt provide any further form or redirect.Press F5 to refresh if this is still unsuccessful please contact support:  <a href="mailto:%s">%s</a>.<p>Please Include the following debug in your email:</p><div style="margin-left:100px;">%s</div>'; //TODO Niko
-$string['Authentication_notloggedin1'] = 'Authentication Issue'; //TODO Niko
-$string['Authentication_notloggedin2'] = 'You are not logged in.   Press F5 to refresh if this is still unsuccessful please contact support: <a href="mailto:%s">%s</a><p>Please Include the following debug in your email:</p><div style="margin-left:100px;">%s</div>'; //TODO Niko
-$string['NoLookupConfigured'] = 'No lookup configured';
-$string['NoLookupConfiguredmessage'] = 'No lookup configuration has been set in the config file. Please contact your local system administrator.'; //TODO Niko
-$string['guestbutton'] = 'Guest Login'; //TODO Niko
-$string['authenticatio_lti_authmessage'] = 'Please Login to authenticate the LTI Connection.'; //TODO Niko
+$string['NoAuthenticationConfigured'] = 'Nie skonfigurowano uwierzytelniania';
+$string['NoAuthenticationConfiguredmessage'] = 'Konfiguracja uwierzytelniania nie została wpisana do pliku konfiguracyjnego. Skontaktuj się z administratorem systemu.';
+$string['Authentication_callback_failure1'] = 'Nie udało sie zarejestrować wywołania zwrotnego dla sekcji ';
+$string['Authentication_callback_failure2'] = ' z funkcją'; 
+$string['Authentication_issue1'] = 'Problemy z uwierzytelnieniem'; 
+$string['Authentication_issue2'] = 'Plugin uwierzytelniania nie zdołał Ciebie zalogować i nie zaoferował żadnego formularza ani przekierowania. Naciśnij F5 aby odświerzyć, a gdy to nie przyniesie poprawy skontaktuj się z administratorem:  <a href="mailto:%s">%s</a>.<p>Załącz do swojego e-maila następujące dane techniczne:</p><div style="margin-left:100px;">%s</div>'; 
+$string['Authentication_notloggedin1'] = 'Problemy z uwierzytelnieniem';
+$string['Authentication_notloggedin2'] = 'Nie zostałeś zalogowany. Naciśnij F5 aby odświerzyć, a gdy to nie przyniesie poprawy skontaktuj się z administratorem: <a href="mailto:%s">%s</a><p>Załącz do swojego e-maila następujące dane techniczne:</p><div style="margin-left:100px;">%s</div>';
+$string['NoLookupConfigured'] = 'Nie skonfigurowano odnośnika';
+$string['NoLookupConfiguredmessage'] = 'Konfiguracja odnośnika nie została wpisana do pliku konfiguracyjnego. Skontaktuj się z administratorem systemu.';
+$string['guestbutton'] = 'Logowanie gościnne'; 
+$string['authentication_lti_authmessage'] = 'Zaloguj się, aby uwierzytelnić połączenie LTI.'; 
 ?>
