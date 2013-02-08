@@ -41,15 +41,15 @@ require_once '../classes/schoolutils.class.php';
 require_once '../classes/facultyutils.class.php';
 
 
-$choicetype='radio';
+$choicetype = 'radio';
 
-function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false, $type='') {
+function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = FALSE, $explode = FALSE, $type = '') {
   global $icons;
-  
+
   $configObject = Config::get_instance();
-  
-$moduleidorig=$moduleid;
-  $moduleid=module::get_idMod($moduleid,$mysqli);
+
+  $moduleidorig = $moduleid;
+  $moduleid = module::get_idMod($moduleid, $mysqli);
   $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, idMod FROM properties,properties_modules WHERE idMod=? and properties.property_id=properties_modules.property_id  AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
   $results2 = $mysqli->prepare($query_string);
   if ($mysqli->error) {
@@ -61,7 +61,7 @@ $moduleidorig=$moduleid;
       exit();
     }
   }
-  $results2->bind_param('i',$moduleid);
+  $results2->bind_param('i', $moduleid);
   $results2->execute();
   $results2->bind_result($crypt_name, $paper_type, $paper_title, $retired, $moduleID);
   $results2->store_result();
@@ -71,7 +71,7 @@ $moduleidorig=$moduleid;
     $rt = $results2->num_rows();
     if (!$flat) {
       echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\" onclick=\"showHide($block_id)\"  /><a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">&nbsp;$moduleidorig: $paper_title ($rt)</a></div>\n";
-      if ($explode === true) {
+      if ($explode === TRUE) {
         echo "<div id=\"block$block_id\">";
       } else {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -79,7 +79,7 @@ $moduleidorig=$moduleid;
     } else {
       echo '<div>';
     }
-    $type='radio';
+    $type = 'radio';
     while ($results2->fetch()) {
       if ($type == 'radio') {
         $extra = "<input type=\"radio\" name=\"paperlinkID\" id=\"paperlinkID-$plk\" value=\"$plk\"><label for=\"paperlinkID-$plk\">";
@@ -89,7 +89,7 @@ $moduleidorig=$moduleid;
         $extra1 = "</a>";
       }
       echo "<div style=\"padding-left:52px\">$extra<img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" />&nbsp;";
-      if (strpos($paper_title, '[deleted') !== false) {
+      if (strpos($paper_title, '[deleted') !== FALSE) {
         echo ' style="color:#808080"';
       }
       echo  $paper_title . "$extra1</div>\n";
@@ -103,10 +103,11 @@ $moduleidorig=$moduleid;
     // no papers
   }
   $results2->close();
+
   return (array($block_id, $plk));
 }
 
-$lti=UoN_LTI::get_instance();
+$lti = UoN_LTI::get_instance();
 
 if (!$lti->valid) {
   $tempvar = $lti->message;
@@ -118,7 +119,6 @@ if (!$lti->valid) {
   $mysqli->close();
   exit;
 }
-
 
 
 if (!isset($lti_i)) {
@@ -139,7 +139,7 @@ $returned = $lti->lookup_lti_resource();
 
 if (!$lti->isInstructor()) {
   //student
-  if ($returned === false) {
+  if ($returned === FALSE) {
     // no data selected for this
     UserNotices::display_notice($string['warning'], $string['ltinotconfigured'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', $title_color = '#C00000');
     echo "\n</body>\n</html>\n";
@@ -154,7 +154,7 @@ if (!$lti->isInstructor()) {
     foreach ($data as $v) {
       $returned_check = module_utils::get_full_details_by_ID($v[1], $mysqli);
 
-      if (!UserUtils::is_user_on_module($userObject->get_user_ID(), $v[1], $session, $mysqli) and $returned_check !== false and $lti_i::allow_module_self_reg($v)) {
+      if (!UserUtils::is_user_on_module($userObject->get_user_ID(), $v[1], $session, $mysqli) and $returned_check !== FALSE and $lti_i::allow_module_self_reg($v)) {
         list($fullname, $school, $active, $selfenroll) = $returned_check;
         if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1 and !UserUtils::is_user_on_module($userObject->get_user_ID(), $v[1], $session, $mysqli)) {
           // Insert new module enrollment
@@ -172,7 +172,7 @@ if (!$lti->isInstructor()) {
 } else {
   //staff
 
-  if ($returned !== false) {
+  if ($returned !== FALSE) {
     // goto link
 
     $returned2 = $lti->lookup_lti_context();
@@ -203,7 +203,7 @@ if (!$lti->isInstructor()) {
     $returned2 = $lti->lookup_lti_context();
 
 
-    if ($returned2 === false) {
+    if ($returned2 === FALSE) {
 
       //no context
       $data = $lti_i::module_code_translate($lti->getCourseName(), $lti->get_context_title());
@@ -303,28 +303,28 @@ END;
 
     //if there is a context and therefore a course already selected display that
     $modinfo = '';
-    $exit=0;
+    $exit = 0;
 
     foreach ($data as $v) {
       $modinfo = $modinfo . ', ' . $v[1];
-      if($v[1]=='') {
-        $exit=1;
+      if ($v[1] == '') {
+        $exit = 1;
       }
     }
     $modinfo = substr($modinfo, 2);
 
     echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papersoncurrentmodule'] . ' ' . $modinfo . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-    if($choicetype == 'radio') {
-    echo '<form method="POST">';
+    if ($choicetype == 'radio') {
+      echo '<form method="POST">';
     }
     foreach ($data as $v) {
       $moduleid = $v[1];
 
-      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true, $choicetype);
+      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, TRUE, $choicetype);
     }
-    if($choicetype == 'radio') {
-      $strng=$string['SELECT'];
-    print <<<END
+    if ($choicetype == 'radio') {
+      $strng = $string['SELECT'];
+      print <<<END
 			<div>
 <input type="submit" name="submit" value="$strng"></form>
 			</div></form>
@@ -333,9 +333,9 @@ END;
 
     }
     echo '<br />';
-    if($exit==1) {
-      $plk=0;
-      $modinfo="Undefined Module. Please contact Support.";
+    if ($exit == 1) {
+      $plk = 0;
+      $modinfo = "Undefined Module. Please contact Support.";
     }
 
     if ($plk == 0) {
@@ -344,7 +344,7 @@ END;
       unset($_SESSION['lti']);
       UserNotices::display_notice($string['NoPapers'], $string['NoPapersDesc'], '/artwork/access_denied.png', '#C00000');
 
-      echo '<p>Module(s): ' . $modinfo .'</p>';
+      echo '<p>Module(s): ' . $modinfo . '</p>';
 
     }
 
