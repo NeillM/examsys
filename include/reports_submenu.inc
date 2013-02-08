@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 <?php
   $module_list = explode(',', $module);
 
-  if ($paper_type == '3') {
+  if ($properties->get_paper_type() == '3') {
 ?>
   function go(url, evt) {
     document.getElementById('stats_menu').style.display='none';
@@ -41,7 +41,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     return false;
   }
 <?php
-  } elseif ($paper_type == '6') {
+  } elseif ($properties->get_paper_type() == '6') {
 ?>
   function go(url, evt) {
     var extra_data = '';
