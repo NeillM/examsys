@@ -193,6 +193,18 @@ if ($old_q_type == 'random') {
   $paper_buffer[$question_no]['rand_ids'] = $old_random_qids;
 }
 $question_no++;
+if ($old_q_type == 'blank') {
+  $old_correct = '';
+  $split1 = explode('[blank', $old_option_text);
+  for ($i=1; $i<count($split1); $i++) {
+    $split2 = explode(',', substr($split1[$i],1,strpos($split1[$i],'[/blank]')-1));
+    $old_correct .= ',' . $split2[0];
+  }
+  $paper_buffer[$question_no-1]['correct'] = $old_correct;
+}
+if ($q_type != 'extmatch' and $q_type != 'matrix') {
+  $old_correct = ',' . $correct;
+}
 
 header('Pragma: public');
 header('Content-type: application/octet-stream');
@@ -207,18 +219,6 @@ $result->fetch();
 $result->close();
 
 $exclude = '';
-//if ($_GET['complete'] == 1) {
-//  $result = $mysqli->prepare("SELECT userID, COUNT(id) AS answer_no FROM log WHERE q_paper=? AND started>=? AND started<=? GROUP BY userID");
-//  $result->bind_param('iss',$_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
-//  $result->execute();
-//  $result->bind_result($tmp_userID, $answer_no);
-//  while ($result->fetch()) {
-//    if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
-//      $exclude .= ' AND log.userID != ' . $tmp_userID;
-//    }
-//  }
-//  $result->close();
-//}
 
 $csv = '';
 
