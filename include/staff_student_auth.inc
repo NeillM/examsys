@@ -43,7 +43,6 @@ function handle_early_errors($errno, $errstr, $errfile, $errline) {
 
 //set_error_handler("handle_early_errors");
 
-
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once $root . 'include/auth.inc';
 try {
@@ -55,7 +54,6 @@ try {
 }
 
 require_once $cfg_web_root . 'classes/configobject.class.php';
-
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
@@ -64,9 +62,7 @@ require_once $cfg_web_root . 'classes/networkutils.class.php';
 require_once $cfg_web_root . 'LTI/ims-lti/UoN_LTI.php';
 require_once $cfg_web_root . 'include/lti_func.php';
 require_once $cfg_web_root . 'classes/lti_integration.class.php';
-
 require_once $cfg_web_root . 'classes/userobject.class.php';
-
 require_once $cfg_web_root . 'classes/authentication.class.php';
 
 // Check to see if the update script has been run.
@@ -123,8 +119,5 @@ $userObject = UserObject::get_instance();
 $userObject->db_user_change();
 
 $included_files = get_included_files();
-
-
-
 
 ?>

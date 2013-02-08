@@ -571,11 +571,11 @@ class Authentication {
           $error = TRUE;
         }
         if ($number != 0) {
-          $return_data .= ',  <b>' . $number . '</b> ' . $item->name . ' <i>(' . $item->classname . ')</i>';
+          $return_data .= $number . '. ' . $item->name . ' <i>(' . $item->classname . ')</i><br />';
         }
 
       }
-      $return_data = substr($return_data, 3);
+
       if ($error) {
         $return_data = '<div style="background-color: #cc0000;">' . $return_data . '</div>';
       }

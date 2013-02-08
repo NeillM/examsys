@@ -144,10 +144,10 @@ require_once '../classes/dateutils.class.php';
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
 <?php
 
-  $authinfo=$authentication->version_info(true,false);
+  $authinfo = $authentication->version_info(true, false);
 
   echo <<<HTML
-<tr><td>{$string['authentication']}</td><td><a href="./detailed_authentication_info.php">$authinfo</a></td></tr>
+<tr><td>{$string['authentication']}</td><td>$authinfo <a href="./detailed_authentication_info.php">{$string['More details']}</a></td></tr>
 HTML;
 
 ?>

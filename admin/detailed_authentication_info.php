@@ -26,195 +26,71 @@ require_once '../include/sysadmin_auth.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../classes/networkutils.class.php';
 require_once '../classes/dateutils.class.php';
-echo <<<HTML
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html;charset={$configObject->get('cfg_page_charset')}" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-    <title>{$string['detailed_authentication_information']}</title>
+  <title><?php echo $string['detailed_authentication_information']; ?></title>
 
-    <link rel="stylesheet" type="text/css" href="../css/body.css" />
-    <link rel="stylesheet" type="text/css" href="../css/header.css" />
-    <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-    <style type="text/css">
-        .sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
-        a {color:#215DC6}
-        a.heading {color:#215DC6; font-weight:bold}
-        a.heading:hover {color:#428EFF; font-weight:bold}
-    </style>
-
-    <script type="text/javascript" src="../js/staff_help.js"></script>
-
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    .sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
+  </style>
+  
+  <script type="text/javascript" src="../js/staff_help.js"></script>
 </head>
 
 <body>
-HTML;
+<?php
 include '../include/admin_options.inc';
-echo <<<HTML
-
+?>
 <div id="content" class="content">
-
 <table class="header">
 <tr>
-<th><div class="breadcrumb"><a href="../staff/index.php">{$string['home']}</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php">{$string['administrativetools']}</a></div><div style="font-size:200%; margin-left:10px; font-weight:bold">{$string['detailed_authentication_information']}</div></th>
-<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(240); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="{$string['help']}" border="0" /></a></th>
+<th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./system_info.php">System Information</a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><nobr>Authentication Information</nobr></div></th>
+<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(240); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
-<tr><th colspan="2" class="bevel"></th></tr>
+<tr><th colspan="5" class="bevel"></th></tr>
 </table>
-<br />
-<div>
-  <div style="font-size: 225%">Authentication Plugins:</div>
-HTML;
+<?php
 $authinfo = $authentication->version_info();
 
-$settinginfo = '';
-foreach ($authinfo->plugins as $number => $item) {
+$plugin_no = count($authinfo->plugins);
+
+echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin:10px\">\n";
+echo "<tr><td class=\"sechead\">No</td><td class=\"sechead\">Name</td><td class=\"sechead\">Class</td><td class=\"sechead\">Version</td><td class=\"sechead\" style=\"text-align:center\">Settings</td></tr>";
+for ($i=1; $i<$plugin_no; $i++) {
+  
   $settinginfo = '';
-  if (count($item->settings) > 0 ) {
-    $settinginfo .='<tr><th>Name</th><th>Value</th><tr>';
-    foreach ($item->settings as $key => $name) {
-      $settinginfo .= '<tr><td>' . $key . '</td><td>' . $name . '</td></tr>' . "\n";
-    }
+  foreach ($authinfo->plugins[$i]->settings as $setting => $value) {
+    if ($settinginfo != '') $settinginfo .= ', ';
+    $settinginfo .= $setting . '=' . $value;
   }
-  $callbackinfo = '<tr><th>Section</th><th>Function</th></tr>';
-
-  foreach ($authentication->callbacktypes as $types) {
-
-    $callbackinfo .= "<tr><td>$types</td><td><table>";
-    $default = '';
-    if (isset($item->callbackfunctions)) {
-      foreach ($item->callbackfunctions as $numb => $callbk) {
-        if ($callbk[1] == $types) {
-          $default = '<tr><td>' . $callbk[0] . '</td></tr>';
-        }
-      }
-    }
-    $callbackinfo .= "\n" . $default . '</table></td></tr>' . "\n";
-  }
-
-  $extra = '';
-  $extra1 = '';
-  if (!is_null($item->error)) {
-    $extra = ' background-color: #cc0000;';
-    $extra1 = "<tr style=\"background-color: #FFFFFF;\"><td>ERROR</td><td>$item->error</td></tr>";
-  }
-
-  //<tr><td>Order #:</td><td>$number</td></tr>
-
-  echo <<<HTML
-
-<div style="float:left; margin: 5px; $extra">
-
-
-<div style="font-size:200%; float:left; font-weight:bold; text-align: left; " >&nbsp;$item->name</div>
-
-<div style="clear:both">
-<table border=1 cellpadding=3>
-<tr><td>Type:</td><td>$item->classname</td></tr>
-<tr><td>Config Item #:</td><td>$item->number</td></tr>
-$extra1
-<tr><td>Plugin Version:</td><td>$item->version</td></tr>
-<tr><td>API Implemented:</td><td>$item->api_implimented</td></tr>
-
-<tr>
-<td>Settings:</td>
-<td>
-<table>
-$settinginfo
-</table>
-</td>
-</tr>
-
-
-
-</table>
-</div>
-</div>
-HTML;
-
-  /*
-   <tr>
-<td>Callbacks Registered</td>
-<td>
-<table>
-$callbackinfo
-</table>
-</td>
-</tr>
-   */
-
+  
+  echo "<tr><td>" . $authinfo->plugins[$i]->number . ".</td><td><nobr>" . $authinfo->plugins[$i]->name . "</nobr></td><td>" . $authinfo->plugins[$i]->classname . "</td><td>" . $authinfo->plugins[$i]->version . "</td><td>$settinginfo</td></tr>\n";
 }
+echo "</table>\n";
 
-echo <<<HTML
-</div>
- <div style="font-size: 225%; clear:both; ">Registered Callback Functions:</div>
-HTML;
+echo "<br />\n";
 
-foreach ($authinfo->callbacks as $callbacksection => $callbackitem) {
-
-  echo <<<HTML
-
-<div style="float:left; margin: 5px; ">
-
-
-<div style="font-size:200%; float:left; font-weight:bold; text-align: left; " >&nbsp;$callbacksection</div>
-
-<div style="clear:both">
-<table border=1  cellpadding=3>
-HTML;
-  if (count($callbackitem) == 0) {
-    echo <<<HTML
-<tr><td>NONE Registered</td></tr>
-HTML;
-  } else {
-    echo <<<HTML
-    <tr><th>Order</th><th>Plugin<br>Name</th><th>Function<br>Name</th></tr>
-HTML;
-    foreach ($callbackitem as $orderno => $item) {
-      echo <<<HTML
-<tr><td>$orderno</td><td>($item->pluginconfigid) $item->plugindescname</td><td>$item->functionname</td></tr>
-HTML;
-    }
-
-
+echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin:10px\">\n";
+echo "<tr><td class=\"sechead\">Name</td><td class=\"sechead\">Function</td><td class=\"sechead\">Description</td><td class=\"sechead\">ID</td></tr>";
+foreach ($authinfo->callbacks as $callback_name => $callback_details) {
+  foreach ($callback_details as $callback) {
+    echo "<tr><td>" . $callback_name . "</td><td>" . $callback->functionname . "</td><td>" . $callback->plugindescname . "</td><td>" . $callback->pluginconfigid . "</td></tr>\n";
   }
-
-  echo <<<HTML
-</table></div>
-</div>
-
-HTML;
-
 }
+echo "</table>\n";
 
-
-$authconfig = var_export($configObject->get('authentication'), TRUE);
-$authconfig = htmlentities($authconfig);
-$authconfig = str_replace("\n", "<br>", $authconfig);
-
-
-echo <<<HTML
-<div style="clear:both; float:none;" >
-
-  <div style="font-size: 225%">Authentication Debug from current Login:</div>
-
-HTML;
-$authentication->display_debug();
-echo <<<HTML
+?>
+</table>
 </div>
-</div>
-HTML;
 
-echo <<<HTML
-<div style="clear:both; float:none;" >
-
-  <div style="font-size: 225%">Authentication Section of config file:</div>
-
-HTML;
-var_dump($configObject->get('authentication'));
-echo <<<HTML
-</div>
-</div>
-HTML;
+</body>
+</html>
