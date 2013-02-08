@@ -75,6 +75,9 @@ require '../include/paper_options.inc';
 <?php
 echo "<table class=\"header\">\n";
 echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
+  $modutils=module_utils::get_instance();
+
+  $module=$modutils->get_moduleid_from_id($module,$mysqli);
 if ($module != '') {
   echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
 } elseif ($folder != '') {

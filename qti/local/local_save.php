@@ -127,7 +127,7 @@ class IE_Local_Save extends IE_Main {
 
       // stuff from parameters
       $this->q_row['ownerID'] = $ownerid;
-      $this->q_row['q_group'] = $q_group;
+   //   $this->q_row['q_group'] = $q_group;
 
       // general stuff that needs to be done for every qtype
       $this->q_row['creation_date'] = date("Y-m-d H:i:s");
@@ -180,6 +180,11 @@ class IE_Local_Save extends IE_Main {
       // store question row
       $this->db->InsertRow("questions", "q_id", $this->q_row);
       $question->save_id = $this->q_row['q_id'];
+
+      $this->qm_row =$this->db->GetBlankTableRow("questions_modules");
+      $this->qm_row['q_id'] = $this->q_row['q_id'];
+      $this->qm_row['idMod']=$module_id;
+      $this->db->InsertRow("questions_modules", "temp", $this->qm_row);
 
       $new_keywords = array();
       if ($module_id != -1) {

@@ -43,7 +43,7 @@ class guestlogin_auth extends outline_authentication {
   }
 
   function gotoguestaccount($preauthobj) {
-    if(isset($this->request['guestlogin'])) {
+    if (isset($this->request['guestlogin'])) {
       header("Location: guest_account.php");
       exit();
 
@@ -52,6 +52,7 @@ class guestlogin_auth extends outline_authentication {
     return $preauthobj;
 
   }
+
   function errordisp($displayerrformobj) {
     global $string;
     if ($_SERVER['PHP_SELF'] == '/index.php') {

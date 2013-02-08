@@ -427,6 +427,15 @@ class Database {
     $query .= implode(",", $qmarks);
     $query .= ")";
     $stmt = $mysqli->prepare($query);
+    if ($mysqli->error) {
+      try {
+        throw new Exception("MySQL $query error $mysqli->error <br> Query:<br> ", $mysqli->errno );
+      } catch (Exception $e) {
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+        echo nl2br($e->getTraceAsString());
+        exit();
+      }
+    }
     $params[0] = $stmt;
     call_user_func_array('mysqli_stmt_bind_param', $params);
     $stmt->execute();
