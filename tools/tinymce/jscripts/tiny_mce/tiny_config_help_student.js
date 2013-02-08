@@ -22,13 +22,11 @@
         var text = o.content;
 
         if (text != '') {
-          text = text.replace(/^<div>&nbsp;<\/div>/, '');
-          text = text.replace(/^<p>&nbsp;<\/p>/, '');
-          text = text.replace(/^<div><\/div>/, '');
-          text = text.replace(/^<p><\/p>/, '');
-          text = text.replace(/^<br \/>/, '');
-          text = text.replace(/^<br \/>/, '');
-          text = text.replace(/^<br \/>/, '');
+          text = text.replace(/^(<div>&nbsp;<\/div>\s*)+/, '');
+          text = text.replace(/^(<p>&nbsp;<\/p>\s*)+/, '');
+          text = text.replace(/^(<div><\/div>\s*)+/, '');
+          text = text.replace(/^(<p><\/p>\s*)+/, '');
+          text = text.replace(/^(<br \/>\s*)+/, '');
           text = text.replace(/^\s*/, '');
         }
         o.content = text;
