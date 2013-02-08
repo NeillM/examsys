@@ -45,13 +45,13 @@ function handle_early_errors($errno, $errstr, $errfile, $errline) {
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once $root . 'include/auth.inc';
-try {
-  include_once $root . 'include/load_config.php';
-} catch (Exception $e) {
-  $notice->display_notice('Install Required', 'Rogō needs installing before use. The Installer is avalable <a href="./install/index.php">here</a>.', '../artwork/software_64.png', $title_color = '#C00000');
+include_once $root . 'include/load_config.php';
+if (!file_exists($root . 'config/config.inc.php')) {
+  $notice->display_notice('Install Required', 'Rog&#333; needs installing before use. The Installer is avalable <a href="./install/index.php">here</a>.', '../artwork/software_64.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";
   exit;
 }
+
 
 require_once $cfg_web_root . 'classes/configobject.class.php';
 require_once $cfg_web_root . 'classes/lang.class.php';
