@@ -65,7 +65,7 @@ require_once 'detail_parts/details_leadin.php';
 <?php
 if ($media['filename'] != ''):
   $img_str = '';
-  if (strtolower($mode) == 'edit') {
+  if (strtolower($mode) == strtolower($string['edit'])) {
     $flash_path = '../add/label_add.swf';
   } else {
     $flash_path = '../add/label_add.swf';
