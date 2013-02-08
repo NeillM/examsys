@@ -34,10 +34,7 @@ Class UserUtils {
     if ($courseok !== TRUE or $username == '' or $surname == '' or $email == '') {
       return FALSE;
     }
-
-
-    //TODO I do not think this should be a hardcoded list
-
+    
     if (!in_array($role, array('Staff', 'Student', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner'))) {
       // not a valid role
       return FALSE;
@@ -73,7 +70,6 @@ Class UserUtils {
       if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
         $gender = NULL;
       }
-
 
       //add new users
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?, NULL)");
@@ -218,14 +214,30 @@ Class UserUtils {
    *
    */
   static function clear_staff_modules_by_userID($tmp_userID, $db) {
+    $userObject = UserObject::get_instance();
+  
     $result = $db->prepare("DELETE FROM modules_staff WHERE memberID = ?");
     $result->bind_param('i', $tmp_userID);
     $result->execute();
     $result->close();
 
-    if (isset($GLOBALS['userObject'])) {
-      $GLOBALS['userObject']->load_staff_modules();
+    if ($userObject->get_user_ID() == $tmp_userID) {
+      $userObject->load_staff_modules();     // Re-cache modules if the user is the currently logged in person.
     }
+  }
+  
+  /**
+   * Clear a user (admin) from all admin schools.
+   *
+   * @param integer $tmp_userID UserID of the member of staff to remove
+   * @param object $db mysqli database connection
+   *
+   */
+  static function clear_admin_access($tmp_userID, $db) {
+    $result = $db->prepare("DELETE FROM admin_access WHERE userID = ?");
+    $result->bind_param('i', $tmp_userID);
+    $result->execute();
+    $result->close();
   }
 
   /**
@@ -356,34 +368,6 @@ Class UserUtils {
     return $s;
   }
 
-  static function staff_on_team($module, $db, $tmp_userID = -99) {
-    trigger_error('the staff_on_team function is now available in userObject for the current user', E_USER_WARNING);
-
-    global $REPLACEMEuserIDold;
-    if ($tmp_userID == -99 and isset($GLOBALS['userObject'])) {
-      $tmp_userID = $GLOBALS['userObject']->get_user_ID();
-    }
-
-    $teams = array();
-
-    $result = $db->prepare("SELECT name FROM teams WHERE memberID=? AND name IS NOT NULL ORDER BY name");
-    echo $db->error;
-    $result->bind_param('i', $tmp_userID);
-    $result->execute();
-    $result->bind_result($team_name);
-    while ($result->fetch()) {
-      $team_name = strtoupper($team_name);
-      $teams[$team_name] = $team_name;
-    }
-    $result->close();
-    $module = strtoupper($module);
-    if (isset($teams[$module])) {
-      return TRUE;
-
-    } else {
-      return FALSE;
-    }
-  }
 }
 
 ?>

@@ -33,6 +33,7 @@ require_once '../include/sort.inc';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/networkutils.class.php';
 require_once '../classes/dateutils.class.php';
+require_once '../classes/userutils.class.php';
 
 check_var('userID', 'GET', true, false, false);
 
@@ -133,19 +134,13 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $result->close();
 
   //Remove from teams if 'left'.
-  if ($grade == 'left') {
-    $result = $mysqli->prepare("DELETE FROM modules_staff WHERE memberID = ?");
-    $result->bind_param('i', $_POST['old_userID']);
-    $result->execute();
-    $result->close();
+  if ($tmp_roles == 'left') {
+    UserUtils::clear_staff_modules_by_userID($_POST['old_userID'], $mysqli);
   }
 
   // Remove from admin access if role changed from Admin
   if ($tmp_roles != $_POST['prev_roles'] and $_POST['prev_roles'] == 'Staff,Admin') {
-    $result = $mysqli->prepare("DELETE FROM admin_access WHERE userID = ?");
-    $result->bind_param('i', $_POST['old_userID']);
-    $result->execute();
-    $result->close();
+    UserUtils::clear_admin_access($_POST['old_userID'], $mysqli);
   }
 
   $username = $_POST['username'];
@@ -154,6 +149,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $result->bind_param('i', $_POST['old_userID']);
   $result->execute();
   $result->close();
+  
   if (isset($_POST['sid']) and $_POST['sid'] != '' and $_POST['sid'] != $string['unknown']) {
     $result = $mysqli->prepare("INSERT INTO sid VALUES (?, ?)");
     $result->bind_param('si', $_POST['sid'], $_POST['old_userID']);
@@ -161,10 +157,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $result->close();
   }
 } elseif (isset($_POST['updateadmin'])) {
-  $result = $mysqli->prepare("DELETE FROM admin_access WHERE userID = ?");
-  $result->bind_param('i', $_GET['userID']);
-  $result->execute();
-  $result->close();
+  UserUtils::clear_admin_access($_GET['userID'], $mysqli);
 
   for ($i=0; $i<$_POST['admin_school_no']; $i++) {
     if (isset($_POST["sch$i"])) {
@@ -201,7 +194,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $result->execute();
     $result->close();
 
-    $result = $mysqli->prepare("UPDATE users SET special_needs = 1 WHERE id=?");
+    $result = $mysqli->prepare("UPDATE users SET special_needs = 1 WHERE id = ?");
     $result->bind_param('i', $_GET['userID']);
     $result->execute();
     $result->close();
@@ -233,8 +226,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
   <script language="javascript">
     function reviewPaper(started, userid, surname, papername, log_type) {
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
+      var winwidth = screen.width - 80;
+      var winheight = screen.height - 80;
       window.open("../paper/finish.php?id="+papername+"&previous="+started+"&userid="+userid+"&surname="+surname+"&log_type="+log_type+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
 
@@ -374,7 +367,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     }
     echo "</select>&nbsp;<input type=\"text\" name=\"first_names\" size=\"20\" value=\"$tmp_first_names\" />&nbsp;<input type=\"text\" size=\"15\" name=\"surname\" value=\"$tmp_surname\" /></td><td style=\"text-align:right\"><input type=\"submit\" name=\"update\" value=\"" . $string['update'] . "\" /></td></td></tr>\n";
     echo "<tr><td>&nbsp;" . $string['email'] . "</td><td><input type=\"text\" size=\"35\" name=\"email\" value=\"$email\" /></td>\n";
-    if (stripos($tmp_roles,'Student') !== false or stripos($tmp_roles,'Graduate') !== false) {
+    if (stripos($tmp_roles, 'Student') !== false or stripos($tmp_roles, 'Graduate') !== false) {
       if ($student_id == '') $student_id = $string['unknown'];
       echo "<td>&nbsp;" . $string['studentid'] . "</td><td colspan=\"2\"><input type=\"text\" size=\"15\" name=\"sid\" value=\"$student_id\" /></td></tr>\n";
     } else {

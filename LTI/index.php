@@ -44,8 +44,10 @@ require_once '../classes/facultyutils.class.php';
 $choicetype='radio';
 
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false, $type='') {
-  $configObject = Config::get_instance();
   global $icons;
+  
+  $configObject = Config::get_instance();
+  
 $moduleidorig=$moduleid;
   $moduleid=module::get_idMod($moduleid,$mysqli);
   $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, idMod FROM properties,properties_modules WHERE idMod=? and properties.property_id=properties_modules.property_id  AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
@@ -91,16 +93,6 @@ $moduleidorig=$moduleid;
         echo ' style="color:#808080"';
       }
       echo  $paper_title . "$extra1</div>\n";
-
-
-      /*
-      echo "<div style=\"padding-left:52px\"><a href=\"?paperlinkID=" . $plk . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
-      if (strpos($paper_title, '[deleted') !== false) {
-        echo ' style="color:#808080"';
-      }
-      echo "href=\"?paperlinkID=" . $plk . "\">" . $paper_title . "</a></div>\n";
-       */
-
 
       $_SESSION['postlookup'][$plk] = array($crypt_name, $moduleid);
       $plk++;
@@ -187,9 +179,9 @@ if (!$lti->isInstructor()) {
     $mod = $returned2[0];
     $data = $lti_i::module_code_translate($mod);
     foreach ($data as $v) {
-      if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
+      if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v)) {
         UserUtils::add_staff_to_team($userObject->get_user_ID(), $v[1], $mysqli);
-      } elseif (!UserUtils::staff_on_team($v[1], $mysqli) and !$lti_i::allow_staff_module_register($v)) {
+      } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
         $error[] = '<img src="' . $configObject->get('cfg_root_path') . '../artwork/exclamation_64.png' . '"><h1>' . $string['NotAddedToModuleTitle'] . '</h1>' . $string['NotAddedToModule'] . $v[1] . '<br />';
       }
     }
@@ -244,9 +236,9 @@ if (!$lti->isInstructor()) {
           UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png');
           exit();
         }
-        if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
+        if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v)) {
           UserUtils::add_staff_to_team($userObject->get_user_ID(), $v[1], $mysqli);
-        } elseif (!UserUtils::staff_on_team($v[1], $mysqli) and !$lti_i::allow_staff_module_register($v)) {
+        } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
           UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png');
           exit();
 
