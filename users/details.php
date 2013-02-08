@@ -134,7 +134,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $result->close();
 
   //Remove from teams if 'left'.
-  if ($tmp_roles == 'left') {
+  if (strtolower($tmp_roles) == 'left') {
     UserUtils::clear_staff_modules_by_userID($_POST['old_userID'], $mysqli);
   }
 
