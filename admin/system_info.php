@@ -133,6 +133,8 @@ require_once '../classes/dateutils.class.php';
     }
   }
   echo "</table>\n<br />\n";
+  
+  $authinfo = $authentication->version_info(true, false);
 ?>
 </td>
 <td style="width:50px">&nbsp;</td>
@@ -142,16 +144,7 @@ require_once '../classes/dateutils.class.php';
 <tr><td><?php echo $string['version']; ?></td><td><?php echo $configObject->get('rogo_version'); ?></td></tr>
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
-<?php
-
-  $authinfo = $authentication->version_info(true, false);
-
-  echo <<<HTML
-<tr><td>{$string['authentication']}</td><td>$authinfo <a href="./detailed_authentication_info.php">{$string['More details']}</a></td></tr>
-HTML;
-
-?>
-
+<tr><td><?php echo $string['authentication']; ?></td><td><?php echo $authinfo; ?> <a href="./detailed_authentication_info.php"><?php echo $string['More details']; ?></a></td></tr>
 <tr><td>Session</td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 
