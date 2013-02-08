@@ -598,19 +598,22 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
         $figures = explode(',',$display_option['option_text']);
 
-        $min = calcPreParse($figures[0],$user_answers,$vars);
-        $max = (isset($figures[1]) and $figures[1] != '') ? calcPreParse($figures[1],$user_answers,$vars) : $min;
+        // Var must have a minimum value set to be valid
+        if ($figures[0] != '') {
+          $min = calcPreParse($figures[0],$user_answers,$vars);
+          $max = (isset($figures[1]) and $figures[1] != '') ? calcPreParse($figures[1],$user_answers,$vars) : $min;
 
-        if (!isset($user_answers[$current_screen][$q_id])) {
-          //its a normal range and user has not seen the question genarate value
-          $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
-        } else {
-          //user has seen this question before use values already presented to the student
-          $variables = explode(',', $tmp_user_answers[2]);
-          if (substr($figures[0],0,3) == 'ans' or substr($figures[1],0,3) == 'ans' or substr($figures[0],0,3) == 'var' or substr($figures[1],0,3) == 'var') {
+          if (!isset($user_answers[$current_screen][$q_id])) {
+            //its a normal range and user has not seen the question genarate value
             $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
           } else {
-            $$var = $variables[$part_id-1];
+            //user has seen this question before use values already presented to the student
+            $variables = explode(',', $tmp_user_answers[2]);
+            if (substr($figures[0],0,3) == 'ans' or substr($figures[1],0,3) == 'ans' or substr($figures[0],0,3) == 'var' or substr($figures[1],0,3) == 'var') {
+              $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
+            } else {
+              $$var = $variables[$part_id-1];
+            }
           }
         }
 
