@@ -61,11 +61,11 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color) 
     $tab_array[] = 'Teams';
   }
 
-  if (stripos($user_roles,'Admin') !== false and stripos($user_roles,'SysAdmin') === false) {
+  if (stripos($user_roles,'Admin') !== false and stripos($user_roles, 'SysAdmin') === false) {
     $tab_array[] = 'Admin';
   }
 
-  if (stripos($user_roles,'Student') !== false or stripos($user_roles,'Graduate') !== false) {
+  if (stripos($user_roles,'Student') !== false or stripos($user_roles, 'Graduate') !== false) {
     $tab_array[] = 'Modules';
     $tab_array[] = 'Notes';
     $tab_array[] = 'Accessibility';
@@ -111,7 +111,7 @@ function formatsec($seconds) {
 
 if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('Admin', 'SysAdmin'))) {
   $initials = '';
-  $first_names_array = explode(' ',$_POST['first_names']);
+  $first_names_array = explode(' ', $_POST['first_names']);
   foreach ($first_names_array as $individual_name) {
     $initials .= trim(substr($individual_name,0,1));
   }
