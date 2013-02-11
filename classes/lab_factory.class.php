@@ -49,7 +49,7 @@ class LabFactory {
     $lab_results->execute();
     $lab_results->bind_result($lab_id, $room_name);
     if ($lab_results->num_rows < 0) {
-      $paper_results->close();
+      $lab_results->close();
 
       return FALSE;
     }
