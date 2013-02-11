@@ -166,9 +166,10 @@ function outputLoadTimes() {
     return;
   }
 
-  if (!$mysqli->closed) {
+  if (is_callable(array($mysqli,'cacheSqlProfile')) and !$mysqli->closed) {
     $mysqli->cacheSqlProfile();
-  }
+  } 
+  
   echo  '<div style="cursor:pointer; position:absolute; left:55%; top:0; z-index: 9999; font-size:90%; padding:0px; background-color:#ffffff; width:43%">';
   $start = explode(' ',$debug_pagestart);
   $end = explode(' ', microtime());
