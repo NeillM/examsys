@@ -67,6 +67,7 @@ class guestlogin_auth extends outline_authentication {
   function loginbutton($displaystdformobj) {
     global $string;
     $this->savetodebug('Button Check');
+    $labs_list = '';
     //$displaybutton = false;
     // detect if we should display login button
     $paper_match = FALSE;
@@ -103,7 +104,6 @@ class guestlogin_auth extends outline_authentication {
       $sub_results->execute();
       $sub_results->store_result();
       $sub_results->bind_result($address);
-      $labs_list = '';
       while ($sub_results->fetch()) {
         $labs_list = $labs_list . ' ' . $address;
         if (NetworkUtils::get_ipaddress() == $address) $ip_match = TRUE;
