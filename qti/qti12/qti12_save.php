@@ -403,7 +403,7 @@ $cfg_web_root=$configObject->get('cfg_web_root');
 
     foreach ($question->options as $option) {
       if ($option->media) {
-        $this->data->files[] = new ST_File($option->media, $option->media, $option->params->dir, 'image');
+        $this->data->files[] = new ST_File($option->media, $option->media, $this->params->dir, 'image');
       }
     }
   }
@@ -424,7 +424,7 @@ $cfg_web_root=$configObject->get('cfg_web_root');
 
     foreach ($question->options as $option) {
       if ($option->media) {
-        $this->data->files[] = new ST_File($option->media, $option->media, $option->params->dir, 'image');
+        $this->data->files[] = new ST_File($option->media, $option->media, $this->params->dir, 'image');
       }
     }
   }
@@ -487,7 +487,7 @@ $cfg_web_root=$configObject->get('cfg_web_root');
 
     foreach ($question->options as $option) {
       if ($option->media) {
-        $this->data->files[] = new ST_File($option->media, $option->media, $option->params->dir, 'image');
+        $this->data->files[] = new ST_File($option->media, $option->media, $this->params->dir, 'image');
       }
     }
   }
