@@ -185,7 +185,11 @@ class ldap_auth extends outline_authentication {
 
           $this->createnewuserassociation = TRUE;
 
-          $authobj->lookupmissing($this->number, $data);
+          if (isset($this->settings['disable_ldapmissing']) and $this->settings['disable_ldapmissing'] == TRUE) {
+            $authobj->fail($this->number);
+          } else {
+            $authobj->lookupmissing($this->number, $data);
+          }
 
           return $authobj;
         }
