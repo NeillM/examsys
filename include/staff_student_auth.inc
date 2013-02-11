@@ -53,7 +53,6 @@ if (!file_exists($root . 'config/config.inc.php')) {
   exit;
 }
 
-
 require_once $cfg_web_root . 'classes/configobject.class.php';
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
@@ -61,7 +60,6 @@ require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 require_once $cfg_web_root . 'classes/networkutils.class.php';
 require_once $cfg_web_root . 'LTI/ims-lti/UoN_LTI.php';
-require_once $cfg_web_root . 'include/lti_func.php';
 require_once $cfg_web_root . 'classes/lti_integration.class.php';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 require_once $cfg_web_root . 'classes/authentication.class.php';
@@ -73,11 +71,6 @@ if ($configObject->get('rogo_version') != '5.0') {
   exit;
 }
 
-/*
-ini_set('display_errors', 1);
-ini_set('log_errors', 1);
-ini_set('xdebug.remote_autostart', 1);
-*/
 
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_root_path')}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
 
@@ -95,15 +88,6 @@ if (!(preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_
 
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
-
-/*
-  error_reporting(E_ALL);
-
-  ini_set("display_errors", 1);
-  ini_set('xdebug.var_display_max_childrren', -1);
-  ini_set('xdebug.var_display_max_data', -1);
-  ini_set('xdebug.var_display_max_depth', -1);
-  */
 session_name('RogoAuthentication');
 $return = session_start();
 $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);

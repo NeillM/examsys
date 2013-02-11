@@ -63,7 +63,8 @@ if (UserUtils::username_exists($_SERVER['PHP_AUTH_USER'], $mysqli) === false ) {
         $user_data['StudentID'],
         $mysqli
       );
-      db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli);
+      //THIS HAS BEN REMOVED NEEDS TO USE NEW AUTH STACK
+      //db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli);
     } else {
       //no account information found
       display_error($string['noaccountfound'], '', false, true);
