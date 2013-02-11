@@ -3290,6 +3290,25 @@ QUERY;
     echo "<li>$sql</li>";
   }
   $result->close();
+  
+  //brzab3 I am missing update on 'temp_users' for _stu needed for guest acount creation
+  if (!$updater_utils->has_grant($cfg_db_student_user, 'UPDATE', 'temp_users', $cfg_db_host)) {
+    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.temp_users TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
+  
+  //brzab3 I am missing select on 'papers' for _inv needed for adding extra time 
+  if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'papers', $cfg_db_host)) {
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.papers TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
+  
+  //brzab3 I am missing select on 'questions' for _inv needed for adding extra time 
+  if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'questions', $cfg_db_host)) {
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.questions TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
+  
 
   // End of updates -----------------------------------------------------------------
 
