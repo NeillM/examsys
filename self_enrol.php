@@ -32,46 +32,6 @@ require_once './classes/smsutils.class.php';
 check_var('moduleid', 'GET', true, false, false);
 $session = date_utils::get_current_academic_year();
 
-//dose the user have an account?
-if (UserUtils::username_exists($_SERVER['PHP_AUTH_USER'], $mysqli) === false ) {
-  //the user has no Rogo Account but has an LDAP acount so lets make one !
-
-  //taken from lti integration
-
-  if (!isset($lti_i)) {
-    $lti_i = lti_integration::load();
-  }
-
-  if ($lti_i->description !=='Default') {
-    $returned = $lti_i::user_add($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-  } else {
-    $SMS = SMSutils::GetSmsUtils();
-    $user_data = $SMS->getUserData($_SERVER['PHP_AUTH_USER']);
-    if ($user_data !== false) {
-      //valid acount found create user
-      UserUtils::create_user(
-        $_SERVER['PHP_AUTH_USER'],
-        $_SERVER['PHP_AUTH_PW'],
-        $user_data['Title'],
-        $user_data['Forename'],
-        $user_data['Surname'],
-        $user_data['Email'],
-        $user_data['CourseCode'],
-        $user_data['Gender'],
-        $user_data['YearofStudy'],
-        'Student',
-        $user_data['StudentID'],
-        $mysqli
-      );
-      //THIS HAS BEN REMOVED NEEDS TO USE NEW AUTH STACK
-      //db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli);
-    } else {
-      //no account information found
-      display_error($string['noaccountfound'], '', false, true);
-    }
-  }
-}
-
 $modID = module_utils::get_idMod($_GET['moduleid'], $mysqli);  // Translate module code into ID
 
 $mod_details = module_utils::get_full_details_by_ID($modID, $mysqli);
