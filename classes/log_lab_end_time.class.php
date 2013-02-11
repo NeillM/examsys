@@ -41,6 +41,8 @@ class LogLabEndTime {
    * @var mysqli $db
    */
   private $db;
+  
+  private $end_datetime_cached = FALSE;
 
   /*
    * @param Lab $lab_id
@@ -58,37 +60,38 @@ class LogLabEndTime {
    * @return DateTime
    */
   public function get_session_end_date_datetime() {
+    
+    if ($this->end_datetime_cached == FALSE) {
+      $this->msg = '';
 
-    $this->msg = '';
+      $start_datetime = $this->get_paper_start_datetime();
 
-    $start_datetime = $this->get_paper_start_datetime();
+      $start_timestamp = $start_datetime->getTimestamp();
 
-    $start_timestamp = $start_datetime->getTimestamp();
+      $query = 'SELECT end_time as end_timestamp FROM log_lab_end_time WHERE labID = ? AND paperID = ? AND end_time > ? ORDER BY id DESC LIMIT 1';
+      $stmt = $this->db->prepare($query);
+      $lab_id = $this->get_lab_id();
+      $paper_id = $this->get_paper_id();
+      $stmt->bind_param('iii', $lab_id, $paper_id, $start_timestamp);
+      $stmt->execute();
+      $stmt->store_result();
+      $bindResult = $stmt->bind_result($end_timestamp);
 
-    //$query = 'SELECT MAX( end_time ) as end_timestamp FROM log_lab_end_time WHERE labID   = ? AND paperID = ? AND end_time > ?';
-    $query = 'SELECT end_time as end_timestamp FROM log_lab_end_time WHERE labID   = ? AND paperID = ? AND end_time > ? ORDER BY id DESC LIMIT 1';
-    $stmt = $this->db->prepare($query);
-    $lab_id = $this->get_lab_id();
-    $paper_id = $this->get_paper_id();
-    $stmt->bind_param('iii', $lab_id, $paper_id, $start_timestamp);
-    $stmt->execute();
-    $stmt->store_result();
-    $bindResult = $stmt->bind_result($end_timestamp);
+      // No result
+      if ($stmt->num_rows <= 0) {
+        $stmt->close();
+        return FALSE;
+      }
 
-    // No result
-    if ($stmt->num_rows <= 0) {
+      $stmt->fetch();
       $stmt->close();
-      return FALSE;
+
+      $this->end_datetime_cached = new DateTime();
+
+      $this->end_datetime_cached->setTimestamp($end_timestamp);
     }
-
-    $stmt->fetch();
-    $stmt->close();
-
-    $end_datetime = new DateTime();
-
-    $end_datetime->setTimestamp($end_timestamp);
-
-    return $end_datetime;
+    
+     return clone $this->end_datetime_cached;
 
   }
 

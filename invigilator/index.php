@@ -21,7 +21,6 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-$displayDebug = false;
 require_once '../include/invigilator_auth.inc';
 require_once '../classes/usernotices.class.php';
 require_once '../include/errors.inc';
@@ -31,7 +30,6 @@ require_once '../classes/lab_factory.class.php';
 require_once '../classes/lab.class.php';
 require_once '../classes/log_extra_time.class.php';
 require_once '../classes/logmetadata.class.php';
-$displayDebug = false;
 
 function get_students($modules, $property_object, $log_lab_end_time) {
 
@@ -40,6 +38,9 @@ function get_students($modules, $property_object, $log_lab_end_time) {
   $paperID = $property_object->get_property_id();
 
   $configObject = Config::get_instance();
+  
+  //create a caching LogExtraTime gets all the results in one hit 
+  $log_extra_time = new LogExtraTime($log_lab_end_time, array(), $mysqli, TRUE);
 
   // Get any student notes;
   $notes_array = array();
@@ -75,61 +76,45 @@ function get_students($modules, $property_object, $log_lab_end_time) {
         </tr>
 
       <?php
+      
+      //Get all students who should are able to access this paper
       $sql = "SELECT DISTINCT extra_time, modules_student.userID, surname, first_names, title FROM modules_student, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE idMod IN ( " . $modules . ") AND calendar_year = ? AND modules_student.userID = users.id ORDER BY surname, initials";
       $results = $mysqli->prepare($sql);
       $session = $property_object->get_calendar_year();
-
       $results->bind_param('s', $session);
       $results->execute();
       $results->store_result();
       $results->bind_result($extra_time_percentage, $student_id, $surname, $first_names, $title);
-
-      //  $student_object = new UserObject( $configObject
-      //                                  , $mysqli );
       $student_object = array();
 
       while ($results->fetch()) {
-        /*
-              $student_object->set_user_ID( $student_id );
-              $student_object->set_surname( $surname );
-              $student_object->set_first_names( $first_names );
-              $student_object->set_title( $title );
-        */
-        $student_object['user_ID'] = $student_id;
-        $student_object['surname'] = $surname;
-        $student_object['first_names'] = $first_names;
-        $student_object['title'] = $title;
-
-        process_student_list($log_lab_end_time, $student_object, $property_object, $configObject, $extra_time_percentage, $notes_array, $string, $mysqli);
-
-
+        $student_object[$student_id]['user_ID'] = $student_id;
+        $student_object[$student_id]['surname'] = $surname;
+        $student_object[$student_id]['first_names'] = $first_names;
+        $student_object[$student_id]['title'] = $title;
+        $student_object[$student_id]['extra_time_percentage'] = $extra_time_percentage;
       }
-
       $results->close();
-
+      
+      //merge in all students who whve submitted records to log 2 for this paper
       $sql = 'SELECT DISTINCT extra_time, log2.userID, surname, first_names, title FROM log2, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE log2.q_paper = ? AND log2.userID = users.id AND users.username LIKE "user%" ORDER BY surname, initials';
-
       $results = $mysqli->prepare($sql);
       $results->bind_param('i', $paperID);
       $results->execute();
       $results->store_result();
       $results->bind_result($extra_time_percentage, $student_id, $surname, $first_names, $title);
-
       while ($results->fetch()) {
-        /*
-              $student_object->set_user_ID( $student_id );
-              $student_object->set_surname( $surname );
-              $student_object->set_first_names( $first_names );
-              $student_object->set_title( $title );
-        */
-        $student_object['user_ID'] = $student_id;
-        $student_object['surname'] = $surname;
-        $student_object['first_names'] = $first_names;
-        $student_object['title'] = $title;
-        process_student_list($log_lab_end_time, $student_object, $property_object, $configObject, $extra_time_percentage, $notes_array, $string, $mysqli);
+        $student_object[$student_id]['user_ID'] = $student_id;
+        $student_object[$student_id]['surname'] = $surname;
+        $student_object[$student_id]['first_names'] = $first_names;
+        $student_object[$student_id]['title'] = $title;
+        $student_object[$student_id]['extra_time_percentage'] = $extra_time_percentage;
       }
-
       $results->close();
+      
+      foreach( $student_object as $student_id => $student_obj) {
+          process_student_list($log_lab_end_time, $log_extra_time, $student_obj, $property_object, $configObject, $notes_array, $string, $mysqli);
+      }
 
       ?>
     </table>
@@ -147,14 +132,10 @@ function get_students($modules, $property_object, $log_lab_end_time) {
 * @param string         $string
 * @param mysqli         $mysqli
  */
-function process_student_list($log_lab_end_time, $student_object, $property_object, $configObject, $extra_time_percentage, $notes_array, $string, $mysqli) {
+function process_student_list($log_lab_end_time, $log_extra_time, $student_object, $property_object, $configObject, $notes_array, $string, $mysqli) {
 
   // Determine when the current exam session will end
-  if ($student_object['surname'] == 'Gray') {
-    $temmmm = 1;
-
-
-  }
+  
   $lab_session_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
 
   if ($lab_session_end_datetime == FALSE) {
@@ -179,14 +160,15 @@ function process_student_list($log_lab_end_time, $student_object, $property_obje
 
   // Determine when the student's exam session will end
 
-  $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
+  //set userID log_extra_time as we are in cached mode
+  $log_extra_time->set_student_object($student_object);
 
   /* @var $student_extra_end_datetime DateTime */
-  $student_end_datetime = $log_extra_time->get_end_date_datetime();
+  //$student_end_datetime = $log_extra_time->get_end_date_datetime();
 
-  if ($student_end_datetime === FALSE) {
-    $student_end_datetime = $lab_session_end_datetime;//$log_lab_end_time->get_session_end_date_datetime();
-  }
+  //if ($student_end_datetime === FALSE) {
+    $student_end_datetime = $lab_session_end_datetime;
+  //}
 
   // Calculate whether student's extended 'end time' is before the current session's start time
   // Currently unused but could be altered to exit if student's extra end time is before session's start time
@@ -202,13 +184,13 @@ function process_student_list($log_lab_end_time, $student_object, $property_obje
   $extra_time_secs = $log_extra_time->get_extra_time_secs();
   $extra_time_mins = round($extra_time_secs / 60);
 
-  $special_needs_extra_time_mins = ($exam_duration_mins / 100) * $extra_time_percentage;
+  $special_needs_extra_time_mins = ($exam_duration_mins / 100) * $student_object['extra_time_percentage'];
   $special_needs_extra_time_secs = (int)($special_needs_extra_time_mins * 60);
   $total_extra_time = $extra_time_secs + $special_needs_extra_time_secs;
 
-  $special_needs_interval = new DateInterval('PT' . $special_needs_extra_time_secs . 'S');
+  $total_extra_time_interval = new DateInterval('PT' . $total_extra_time . 'S');
 
-  $student_end_datetime = $student_end_datetime->add($special_needs_interval);
+  $student_end_datetime = $student_end_datetime->add($total_extra_time_interval);
 
   // Check it does not exceed the paper's end time
 
@@ -675,7 +657,8 @@ if (count($properties_list) > 0) {
     }
 
     $disptimezone=new datetimezone($property_object->get_timezone());
-    $start_datetime = new DateTime($start_date);
+    $start_datetime = DateTime::createFromFormat('U',$start_date);
+    
     $start_datetime->setTimezone($disptimezone);
 
     $start_date = $start_datetime->format('d/m/Y H:i:s');
