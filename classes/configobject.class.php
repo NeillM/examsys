@@ -60,11 +60,11 @@ class Config extends RogoStaticSingleton {
     return $this->data;
   }
 
-  function set($var,$value) {
+  function set($var, $value) {
     $this->data[$var]=$value;
   }
 
-  function append($var,$value) {
+  function append($var, $value) {
     $this->data[$var]=$this->data[$var] . $value;
   }
 

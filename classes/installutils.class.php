@@ -312,6 +312,9 @@ Class InstallUtils {
     }
     $cfg_encrypt_salt = $salt;
 
+    $configObj = Config::get_instance();
+    $configObj->set('cfg_encrypt_salt', $cfg_encrypt_salt);
+
     self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset);
 
     //LOAD help if requested
