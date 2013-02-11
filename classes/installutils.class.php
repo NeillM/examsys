@@ -78,13 +78,13 @@ Class InstallUtils {
   public static $cfg_ldap_bind_rdn;
   public static $cfg_ldap_bind_password;
   public static $cfg_ldap_user_prefix;
-  
+
   public static $cfg_auth_ldap = 'false';
   public static $cfg_auth_lti = 'true';
   public static $cfg_auth_internal = 'true';
   public static $cfg_auth_guest = 'true';
   public static $cfg_auth_impersonation = 'true';
- 
+
   public static $cfg_support_email;
   public static $emergency_support_numbers;
 
@@ -214,7 +214,7 @@ Class InstallUtils {
 
   static function processForm() {
     global $string, $cfg_encrypt_salt;
-    
+
     self::$cfg_company = $_POST['company_name'];
     //check admin database user name and password and create the connection
     self::$cfg_db_host = $_POST['mysql_db_host'];
@@ -234,7 +234,7 @@ Class InstallUtils {
     self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
     self::$cfg_timezone = $_POST['cfg_timezone'];
     self::$cfg_tmpdir = $_POST['tmpdir'];
-    
+
     //Authentication
     if (isset($_POST['useLti'])) {
       self::$cfg_auth_lti = true;
@@ -261,7 +261,7 @@ Class InstallUtils {
     } else {
       self::$cfg_auth_ldap = false;
     }
-    
+
     //LDAP
     self::$cfg_ldap_server = $_POST['ldap_server'];
     self::$cfg_ldap_search_dn = $_POST['ldap_search_dn'];
@@ -730,8 +730,8 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".paper_notes TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties_modules TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".papers TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".student_notes TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".sid TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
@@ -765,7 +765,7 @@ Class InstallUtils {
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotpermission']));
       }
     }
-    
+
     //create sysadmin user
     UserUtils::create_user( $_POST['SysAdmin_username'],
                             $_POST['SysAdmin_password'],
@@ -1280,13 +1280,13 @@ CONFIG;
     $config = str_replace('{cfg_ldap_bind_rdn}', self::$cfg_ldap_bind_rdn, $config);
     $config = str_replace('{cfg_ldap_bind_password}', self::$cfg_ldap_bind_password, $config);
     $config = str_replace('{cfg_ldap_user_prefix}', self::$cfg_ldap_user_prefix, $config);
-    
+
     if (self::$cfg_auth_ldap) {
       $config = str_replace('{cfg_auth_ldap}', 'true', $config);
     } else {
       $config = str_replace('{cfg_auth_ldap}', 'false', $config);
     }
-    
+
     $authentication_arrays = array();
     if (self::$cfg_auth_lti) {
       $authentication_arrays[] = "array('ltilogin', array(), 'LTI Auth')";
@@ -1303,9 +1303,9 @@ CONFIG;
     if (self::$cfg_auth_ldap) {
       $authentication_arrays[] = "array('ldap', array('table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix), 'LDAP')";
     }
-    
+
     $config = str_replace('{cfg_authentication_arrays}', implode(",\n  ", $authentication_arrays), $config);
-        
+
     $salt = $cfg_encrypt_salt; //=$salt;
 
     $config = str_replace('{cfg_encrypt_salt}', $salt, $config);
