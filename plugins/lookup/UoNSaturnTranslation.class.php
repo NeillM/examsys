@@ -61,19 +61,19 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
 
   function usertranslate($datapart) {
 
-    if ($this->orsearchlist($datapart->role, array('Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'))) {
+    if (isset($this->orsearchlist($datapart->role) and $this->orsearchlist($datapart->role, array('Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'))) {
       $this->savetodebug('Detected Student, correcting role');
       $datapart->role = 'Student';
     }
 
-    if ($this->orsearchlist($datapart->role, array('S')) or isset($datapart->staffID)) {
+    if (isset($this->orsearchlist($datapart->role) and $this->orsearchlist($datapart->role, array('S')) or isset($datapart->staffID)) {
       $this->savetodebug('Detected staff, correcting role and filling in fields');
       $datapart->role = 'Staff';
       $datapart->coursecode = 'University Lecturer';
       $datapart->yearofstudy = 1;
     }
 
-    if (isset($datapart->sttudentID)) {
+    if (isset($datapart->studentID)) {
       $this->savetodebug('Detected Possible Student, correcting role for safety');
       $datapart->lookupdata->role = 'Student';
     }
