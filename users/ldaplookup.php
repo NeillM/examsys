@@ -199,7 +199,7 @@ if (isset($_POST['submit'])) {
       }
       echo "</table>\n";
     }
-  }
+  
 } else {
   ?>
 <body>
