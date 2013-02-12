@@ -232,11 +232,11 @@ $paperID = $propertyObj->get_property_id();
  *
  */
 //are we in a staff test and preview mode?
-$is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
+$is_preview_mode = ($userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview');
 //are we in a staff test and preview mode and on the first screen?
-$is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
+$is_preview_mode_first_launch = ($is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview');
 //are we in a staff single question testmode
-$is_question_preview_mode = ( isset($_GET['q_id']) );
+$is_question_preview_mode = (isset($_GET['q_id']));
 
 // Get how many screens make up the question paper.
 $screen_data = array();
