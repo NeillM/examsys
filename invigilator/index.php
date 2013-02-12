@@ -578,11 +578,7 @@ if (count($properties_list) > 0) {
     <tr>
     <?php
 
-//     $student_object = new UserObject( $configObject, $mysqli );
-
   foreach ($properties_list as $property_object) {
-
-    /* @var $property_object PropertyObject */
 
     $title = $property_object->get_paper_title();
     $property_id = $property_object->get_property_id();
