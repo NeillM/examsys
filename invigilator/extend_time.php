@@ -46,23 +46,19 @@ if (isset($_POST['paperID'])) {
 }
 
 
-//$student_object = new UserObject( $configObject, $mysqli );
-
-$student_object = array();
-
-//$student_object->load($student_id);
-$student_object['user_ID']=$student_id;
+$student = array();
+$student['user_ID']=$student_id;
 
 $stmt = $mysqli->prepare('SELECT title, initials, surname FROM users WHERE user_deleted IS NULL AND id = ?');
 $stmt->bind_param('i', $userID);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($student_object['title'], $student_object['initials'], $student_object['surname']);
+$stmt->bind_result($student['title'], $student['initials'], $student['surname']);
 $stmt->fetch();
 
-$title = $student_object['title'];
-$initials = $student_object['initials'];
-$surname = $student_object['surname'];
+$title = $student['title'];
+$initials = $student['initials'];
+$surname = $student['surname'];
 
 $current_ip_address = NetworkUtils::get_ipaddress();
 
@@ -73,7 +69,7 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paper_id, $mysqli);
 
 $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);
 
-$log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
+$log_extra_time = new LogExtraTime($log_lab_end_time, $student, $mysqli);
 
 $onload = '';
 

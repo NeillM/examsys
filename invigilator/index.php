@@ -725,15 +725,12 @@ if (count($properties_list) > 0) {
               &nbsp;
               <input id="end_exam_button" name="end_exam_form" type="submit" value="End At"/>
               Hour:<select name="hour">
-                  <?php for($hr=0;$hr<24;$hr++) { $selected=''; if($hr==$end_time_h) { $selected='selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . $hr . '</option>'; } ?>
+                  <?php for($hr=0; $hr<24; $hr++) { $selected = ''; if($hr == $end_time_h) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . $hr . '</option>'; } ?>
               </select>
               &nbsp;
               Minute:<select name="minute">
-            <?php for($hr=0;$hr<60;$hr++) { $selected=''; if($hr==$end_time_m) { $selected='selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . $hr . '</option>'; } ?>
+            <?php for($hr=0; $hr<60; $hr++) { $selected = ''; if($hr == $end_time_m) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . $hr . '</option>'; } ?>
           </select>
-
-
-
           </form>
         <?php
 
