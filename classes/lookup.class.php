@@ -165,7 +165,7 @@ class Lookup extends RogoStaticSingleton {
       }
     }
 
-    if(!isset($data->lookupdata)) {
+    if (!isset($data->lookupdata)) {
       return new stdClass();
     }
     $preuserlookupobj = new stdClass();
@@ -211,6 +211,13 @@ class Lookup extends RogoStaticSingleton {
       }
     }
     $userlookupobj = $postuserlookupobj->lookupobj;
+
+    if (!isset($userlookupobj->lookupdatas)) {
+      $userlookupobj->failed = TRUE;
+
+    } else {
+      $userlookupobj->failed = FALSE;
+    }
 
     return $userlookupobj;
   }

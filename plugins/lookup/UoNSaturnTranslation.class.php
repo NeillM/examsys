@@ -47,14 +47,15 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
     $this->savetodebug('Running user translate lookup in UoN Saturn Translate');
 
     // this is on the search data (also used for 1 record lookup)
-    $userlookupobj->lookupdata=$this->usertranslate($userlookupobj->lookupdata);
+    $userlookupobj->lookupdata = $this->usertranslate($userlookupobj->lookupdata);
 
 
     //this is for multiple blocks
-    foreach ($userlookupobj->lookupdatas as $key => $value) {
-      $userlookupobj->lookupdatas[$key]=$this->usertranslate($userlookupobj->lookupdatas[$key]);
+    if (isset($userlookupobj->lookupdatas)) {
+      foreach ($userlookupobj->lookupdatas as $key => $value) {
+        $userlookupobj->lookupdatas[$key] = $this->usertranslate($userlookupobj->lookupdatas[$key]);
+      }
     }
-
 
     return $userlookupobj;
   }
@@ -91,7 +92,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
     }
 
 
-    if (!isset($datapart->gender)) {
+    if (isset($datapart->title) and !isset($datapart->gender)) {
       if (stripos($datapart->title, 'Mr') !== FALSE) {
         $datapart->gender = 'Male';
       }
