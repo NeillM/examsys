@@ -38,8 +38,8 @@ function get_students($modules, $property_object, $log_lab_end_time) {
   $paperID = $property_object->get_property_id();
 
   $configObject = Config::get_instance();
-  
-  //create a caching LogExtraTime gets all the results in one hit 
+
+  //create a caching LogExtraTime gets all the results in one hit
   $log_extra_time = new LogExtraTime($log_lab_end_time, array(), $mysqli, TRUE);
 
   // Get any student notes;
@@ -76,7 +76,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
         </tr>
 
       <?php
-      
+
       //Get all students who should are able to access this paper
       $sql = "SELECT DISTINCT extra_time, modules_student.userID, surname, first_names, title FROM modules_student, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE idMod IN ( " . $modules . ") AND calendar_year = ? AND modules_student.userID = users.id ORDER BY surname, initials";
       $results = $mysqli->prepare($sql);
@@ -95,7 +95,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
         $student_object[$student_id]['extra_time_percentage'] = $extra_time_percentage;
       }
       $results->close();
-      
+
       //merge in all students who whve submitted records to log 2 for this paper
       $sql = 'SELECT DISTINCT extra_time, log2.userID, surname, first_names, title FROM log2, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE log2.q_paper = ? AND log2.userID = users.id AND users.username LIKE "user%" ORDER BY surname, initials';
       $results = $mysqli->prepare($sql);
@@ -111,7 +111,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
         $student_object[$student_id]['extra_time_percentage'] = $extra_time_percentage;
       }
       $results->close();
-      
+
       foreach( $student_object as $student_id => $student_obj) {
           process_student_list($log_lab_end_time, $log_extra_time, $student_obj, $property_object, $configObject, $notes_array, $string, $mysqli);
       }
@@ -135,7 +135,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
 function process_student_list($log_lab_end_time, $log_extra_time, $student_object, $property_object, $configObject, $notes_array, $string, $mysqli) {
 
   // Determine when the current exam session will end
-  
+
   $lab_session_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
 
   if ($lab_session_end_datetime == FALSE) {
@@ -291,11 +291,11 @@ $room_name = $lab_object->get_name();
 $properties_list = array();
 
 if ($room_name != '') {
-  $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object,$mysqli);
-  if (count($properties_list) == 0) {  
+  $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
+  if (count($properties_list) == 0) {
     // No properties found
     $notice = UserNotices::get_instance();
-    $notice->access_denied($mysqli, $string, $string['error_paper'] = 'error', $output_header = false);
+    $notice->display_notice_and_exit($string['nopapersfound'], '', '../artwork/red_warning_48.png');
     //this will exit php
   }
 }
@@ -658,7 +658,7 @@ if (count($properties_list) > 0) {
 
     $disptimezone=new datetimezone($property_object->get_timezone());
     $start_datetime = DateTime::createFromFormat('U',$start_date);
-    
+
     $start_datetime->setTimezone($disptimezone);
 
     $start_date = $start_datetime->format('d/m/Y H:i:s');
