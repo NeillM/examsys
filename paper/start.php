@@ -227,9 +227,9 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
 $paperID = $propertyObj->get_property_id();
 
 /*
- * 
+ *
  * Setup som feature related flags
- * 
+ *
  */
 //are we in a staff test and preview mode?
 $is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
@@ -241,26 +241,26 @@ $is_question_preview_mode = ( isset($_GET['q_id']) );
 // Get how many screens make up the question paper.
 $screen_data = array();
 if ($is_question_preview_mode) {
-  $stmt = $mysqli->prepare("SELECT 1,  q_type, question 
-                            FROM 
-                              (papers, questions) 
-                            WHERE 
-                              papers.paper = ? AND 
-                              papers.question=questions.q_id AND 
-                              questions.q_id=? 
-                              ORDER BY 
+  $stmt = $mysqli->prepare("SELECT 1,  q_type, question
+                            FROM
+                              (papers, questions)
+                            WHERE
+                              papers.paper = ? AND
+                              papers.question=questions.q_id AND
+                              questions.q_id=?
+                              ORDER BY
                                 screen
                             ");
   $stmt->bind_param('ii', $paperID, $_GET['q_id']);
 } else {
-  $stmt = $mysqli->prepare("SELECT 
-                              screen, q_type, question 
-                            FROM 
-                              (papers, questions) 
-                            WHERE 
+  $stmt = $mysqli->prepare("SELECT
+                              screen, q_type, question
+                            FROM
+                              (papers, questions)
+                            WHERE
                               papers.paper = ? AND
-                              papers.question=questions.q_id 
-                            ORDER BY 
+                              papers.question=questions.q_id
+                            ORDER BY
                               screen, display_pos");
   $stmt->bind_param('i', $paperID);
 }
@@ -278,7 +278,7 @@ $stmt->free_result();
 $stmt->close();
 
 //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
-$original_paper_type = $propertyObj->get_paper_type(); 
+$original_paper_type = $propertyObj->get_paper_type();
 
 /*
 * Set the default colour scheme for this paper and allow current users' special settings to override
@@ -299,7 +299,7 @@ $current_ip_address = NetworkUtils::get_ipaddress();
 
 if ($userObject->has_role('Student')) {
 
-  //get the module Ids for this paper 
+  //get the module Ids for this paper
   $modIDs = array_keys(Paper_utils::get_modules($paperID, $mysqli));
 
   // Check for additional password on the paper
@@ -309,11 +309,11 @@ if ($userObject->has_role('Student')) {
   check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date());
 
   //Check room security
-  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(), 
-                                $propertyObj->get_labs(), 
+  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
+                                $propertyObj->get_labs(),
                                 $current_ip_address,
-                                $propertyObj->get_password(), 
-                                $string, 
+                                $propertyObj->get_password(),
+                                $string,
                                 $mysqli
                               );
 
@@ -338,7 +338,7 @@ $log_metadata = null;
 $sessionid = false;
 $current_screen = 1;
 $is_fire_alarm = ( isset($_POST['fire_alarm']) and $_POST['fire_alarm'] == '1' );
-$summative_exam_session_started = false; //lab timing stated by invigilators 
+$summative_exam_session_started = false; //lab timing stated by invigilators
 
 /*
 * Extract the posted variables.
@@ -379,15 +379,15 @@ $sessionid = $log_metadata->get_session_id();
 */
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
 
-  //has this labe had an end time set?
-  $log_lab_end_time = new LogLabEndTime( $lab_id, $propertyObj, $mysqli );
+  //has this lab had an end time set?
+  $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
-  
+
 }
 
 //check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
-if (  $is_preview_mode === false   and 
-      time() > $propertyObj->get_end_date() and 
+if (  $is_preview_mode === false   and
+      time() > $propertyObj->get_end_date() and
       ($propertyObj->get_paper_type() == '1' or ( $propertyObj->get_paper_type() == '2' and $summative_exam_session_started === false ) )
     ) {
   $propertyObj->set_paper_type('_late');
@@ -395,16 +395,16 @@ if (  $is_preview_mode === false   and
 
 
 /*
-* Save any posted answers 
-*  
-* N.B if Ajax saving is enabled: After a successful Ajax save the form is posted as the user moves to the next screen 
+* Save any posted answers
+*
+* N.B if Ajax saving is enabled: After a successful Ajax save the form is posted as the user moves to the next screen
 *                                with dont_record set to true so this is not executed
 */
 if ($is_question_preview_mode == false) {
   if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
     record_marks($paperID, $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles);
   }
-} 
+}
 
 /*
 * Load up any previously submitted user answers from the appropriate log table(s)
@@ -460,7 +460,7 @@ if ($sessionid !== false or $is_fire_alarm == true) {
 }
 
 /*
-* 
+*
 * Get any Reference Material
 *
 */
@@ -710,7 +710,7 @@ if ($css != '') {
       //setup autosave
       startAutoSave();
   });
-  
+
   //normal user submit by clicking on next, prevous, finish or jump screen
   var userSubmit = function (event) {
     submitType = 'userSubmit';
@@ -753,7 +753,7 @@ if ($css != '') {
     if(last_saved_user_awnsers !== formData) {
       $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
       ajaxSave();
-    } 
+    }
     //reset the timer in-case this is a long screen
     startAutoSave();
   }
@@ -862,7 +862,7 @@ if ($css != '') {
 <?php
 
   /*
-  * 
+  *
   * Build the paper structure
   *
   */
@@ -875,72 +875,72 @@ if ($css != '') {
   $old_theme = '';
   $previous_q_type = '';
   if ($is_question_preview_mode) {
-    $question_data = $mysqli->prepare("SELECT 
+    $question_data = $mysqli->prepare("SELECT
                                           1,
-                                          q_type, 
-                                          q_id, 
-                                          score_method, 
-                                          display_method, 
-                                          marks_correct, 
-                                          marks_incorrect, 
-                                          marks_partial, 
-                                          theme, 
-                                          scenario, 
-                                          leadin, 
+                                          q_type,
+                                          q_id,
+                                          score_method,
+                                          display_method,
+                                          marks_correct,
+                                          marks_incorrect,
+                                          marks_partial,
+                                          theme,
+                                          scenario,
+                                          leadin,
                                           correct,
-                                          REPLACE(option_text,'\t','') AS option_text, 
-                                          q_media, 
-                                          q_media_width, 
-                                          q_media_height, 
-                                          o_media, 
-                                          o_media_width, 
-                                          o_media_height, 
-                                          notes, 
-                                          display_pos, 
-                                          q_option_order 
-                                      FROM 
-                                          papers, questions, options 
-                                      WHERE 
-                                        paper=? AND 
-                                        q_id=? AND 
-                                        papers.question=questions.q_id AND 
-                                        questions.q_id = options.o_id  
-                                      ORDER BY 
-                                      display_pos, 
+                                          REPLACE(option_text,'\t','') AS option_text,
+                                          q_media,
+                                          q_media_width,
+                                          q_media_height,
+                                          o_media,
+                                          o_media_width,
+                                          o_media_height,
+                                          notes,
+                                          display_pos,
+                                          q_option_order
+                                      FROM
+                                          papers, questions, options
+                                      WHERE
+                                        paper=? AND
+                                        q_id=? AND
+                                        papers.question=questions.q_id AND
+                                        questions.q_id = options.o_id
+                                      ORDER BY
+                                      display_pos,
                                       id_num");
     $question_data->bind_param('ii', $paperID, $_GET['q_id']);
   } else {
-    $question_data = $mysqli->prepare("SELECT 
+    $question_data = $mysqli->prepare("SELECT
                                             screen,
-                                            q_type, 
-                                            q_id, 
-                                            score_method, 
-                                            display_method, 
-                                            marks_correct, 
-                                            marks_incorrect, 
-                                            marks_partial, 
-                                            theme, 
-                                            scenario, 
-                                            leadin, 
-                                            correct, 
-                                            REPLACE(option_text,'\t','') AS option_text, 
-                                            q_media, 
-                                            q_media_width, 
-                                            q_media_height, 
-                                            o_media, 
-                                            o_media_width, 
-                                            o_media_height, 
-                                            notes, 
-                                            display_pos, 
-                                            q_option_order 
-                                        FROM 
-                                            papers, questions, options 
-                                        WHERE 
-                                          paper=? AND 
-                                          papers.question=questions.q_id AND 
-                                          questions.q_id = options.o_id  
-                                        ORDER BY 
-                                        display_pos, 
+                                            q_type,
+                                            q_id,
+                                            score_method,
+                                            display_method,
+                                            marks_correct,
+                                            marks_incorrect,
+                                            marks_partial,
+                                            theme,
+                                            scenario,
+                                            leadin,
+                                            correct,
+                                            REPLACE(option_text,'\t','') AS option_text,
+                                            q_media,
+                                            q_media_width,
+                                            q_media_height,
+                                            o_media,
+                                            o_media_width,
+                                            o_media_height,
+                                            notes,
+                                            display_pos,
+                                            q_option_order
+                                        FROM
+                                            papers, questions, options
+                                        WHERE
+                                          paper=? AND
+                                          papers.question=questions.q_id AND
+                                          questions.q_id = options.o_id
+                                        ORDER BY
+                                        display_pos,
                                         id_num");
     $tmp_pid = $paperID;
     $question_data->bind_param('i', $tmp_pid);
@@ -1020,12 +1020,12 @@ if ($css != '') {
   if ($propertyObj->get_exam_duration() != null) {
     // Summative type. Time is only active in live.
     if ($propertyObj->get_paper_type() == '2' and $is_preview_mode === false) {
-      
+
       //has the student been allotted extra time by an invigilator
       $student_object['user_ID'] = $userObject->get_user_ID();
       $student_object['special_needs_percentage'] = $userObject->get_special_needs_percentage();
       $log_extra_time = new LogExtraTime( $log_lab_end_time, $student_object, $mysqli );
-      
+
       $summative_timer    = new SummativeTimer( $log_extra_time );
       $remaining_time     = $summative_timer->calculate_remaining_time_secs();
       $method             = 'StartTimer(' . $remaining_time . ', true)';

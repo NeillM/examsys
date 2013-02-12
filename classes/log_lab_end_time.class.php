@@ -25,28 +25,28 @@
 
 class LogLabEndTime {
 
-  /*
+  /**
    * @var Lab $lab_id
-  */
+   */
   private $lab_id;
 
   private $msg;
 
-  /*
-   * @var PropertyObject $property_object
-  */
+  /**
+   * @var PropertyObject $property_object Object holdong the properties for the paper
+   */
   private $property_object;
 
-  /*
+  /**
    * @var mysqli $db
    */
   private $db;
-  
+
   private $end_datetime_cached = FALSE;
 
-  /*
+  /**
    * @param Lab $lab_id
-   * @param PropertyObject $property_object
+   * @param PropertyObject $property_object Object holdong the properties for the paper
    * @param mysqli $db
    */
   public function __construct($lab_id, $property_object, $db) {
@@ -56,11 +56,13 @@ class LogLabEndTime {
     $this->db = $db;
   }
 
-  /* Gets the exam session's current end time stored when the invigilator clicked 'Start'
+  /**
+   * Gets the exam session's current end time stored when the invigilator clicked 'Start'
+   *
    * @return DateTime
    */
   public function get_session_end_date_datetime() {
-    
+
     if ($this->end_datetime_cached == FALSE) {
       $this->msg = '';
 
@@ -90,21 +92,20 @@ class LogLabEndTime {
 
       $this->end_datetime_cached->setTimestamp($end_timestamp);
     }
-    
+
      return clone $this->end_datetime_cached;
 
   }
 
-  /*
+  /**
    * Called when the invigilator clicks the 'Start' button and extends the exam session's end time
    * @return DateTime
-  */
-
-  function listrecordswithextratime() {
+   */
+  function list_records_with_extra_time() {
 
     $data=array();
 
-    $query = 'SELECT userID FROM log_extra_time WHERE labID   = ? AND paperID = ?';
+    $query = 'SELECT userID FROM log_extra_time WHERE labID=? AND paperID=?';
 
     $stmt = $this->db->prepare($query);
 
@@ -118,8 +119,6 @@ class LogLabEndTime {
 
     $bindResult = $stmt->bind_result($uid);
 
-    $num_results = $stmt->num_rows;
-
     while($stmt->fetch()) {
       $data[]=$uid;
     }
@@ -127,11 +126,17 @@ class LogLabEndTime {
     return $data;
   }
 
-  public function save($invigilator_id,$time = NULL) {
+  /**
+   * Calculate the end time for a paper and record it in the database
+   * @param  integer  $invigilator_id ID of the invigilator setting the end time for the paper
+   * @param  integer  $time           Number of minutes by which to extend the time
+   * @return DateTime                 DateTime object representing new end time
+   */
+  public function save($invigilator_id, $time = NULL) {
 
     $this->msg = '';
 
-    $query = 'INSERT INTO log_lab_end_time ( labID, invigilatorID, paperID, end_time ) VALUES ( ?, ?, ?, ? )';
+    $query = 'INSERT INTO log_lab_end_time (labID, invigilatorID, paperID, end_time) VALUES (?, ?, ?, ?)';
 
     $stmt = $this->db->prepare($query);
     if(is_null($time)) {
@@ -139,10 +144,10 @@ class LogLabEndTime {
 
         $end_datetime = $this->calculate_end_datetime($start_time_datetime);
     } else {
-      $dispzone=new DateTimeZone($this->property_object->get_timezone());
-      $end_datetime = new DateTime("now",$dispzone);
+      $dispzone = new DateTimeZone($this->property_object->get_timezone());
+      $end_datetime = new DateTime("now", $dispzone);
 
-      $end_datetime->setTime(0,0,0);
+      $end_datetime->setTime(0, 0, 0);
       $dateinterval = new DateInterval($time);
 
       $end_datetime->add($dateinterval);
@@ -153,7 +158,7 @@ class LogLabEndTime {
       $end_datetime->setTimezone($curtz);
     }
     $end_time = $end_datetime->getTimestamp();
-    $tz=$this->property_object->get_timezone();
+    $tz = $this->property_object->get_timezone();
 
     $lab_id = $this->get_lab_id();
     $paper_id = $this->get_paper_id();
@@ -163,11 +168,10 @@ class LogLabEndTime {
     $stmt->execute();
     $stmt->close();
 
-    $listofrecordstoupodate=$this->listrecordswithextratime();
+    $records_to_update = $this->list_records_with_extra_time();
     $log_lab_end_time = new LogLabEndTime($this->lab_id, $this->property_object, $this->db);
-    foreach($listofrecordstoupodate as $uid) {
+    foreach($records_to_update as $uid) {
       $stuobj['user_ID']=$uid;
-
 
       $ext_timeobj=new LogExtraTime($this,$stuobj,$this->db);
       $ext_time=(int)$ext_timeobj->get_extra_time_secs()/60; // give time in minutes that it needs next
@@ -176,15 +180,13 @@ class LogLabEndTime {
     }
 
     return $end_datetime;
-
   }
-
 
   public function delete() {
 
     $this->msg = '';
 
-    $query = 'DELETE FROM log_lab_end_time WHERE labID   = ? AND paperID = ?';
+    $query = 'DELETE FROM log_lab_end_time WHERE labID = ? AND paperID = ?';
 
     $stmt = $this->db->prepare($query);
 
@@ -194,18 +196,16 @@ class LogLabEndTime {
 
     $stmt->execute();
     $stmt->close();
-
   }
-
 
   public function get_message() {
     return $this->msg;
   }
 
-
-  /*
+  /**
    * Takes current time and adds the exam duration to it to get the end time for the current session
-   * @param DateTime $start_datetime
+   * @param  DateTime $start_datetime   Start time of current session
+   * @return DateTime                   End time of the current session
    */
   private function calculate_end_datetime(DateTime $start_datetime) {
 
@@ -215,7 +215,7 @@ class LogLabEndTime {
     $paper_end_datetime = $this->get_paper_end_datetime();
 
     if($paper_type == 2) {
-      //default end time for summative exams is the end time set in paper properties 
+      //default end time for summative exams is the end time set in paper properties
       return $paper_end_datetime;
     }
 
@@ -223,7 +223,7 @@ class LogLabEndTime {
     $date_interval = new DateInterval('PT' . $exam_duration_secs . 'S');
     $start_datetime->add($date_interval);
 
-    
+
     if ($start_datetime > $paper_end_datetime) {
       $this->msg = 'The extended exam end time exceeds the paper\'s end time.';
 
@@ -231,14 +231,13 @@ class LogLabEndTime {
     }
 
     return $start_datetime;
-
   }
 
-  /*
+  /**
    * This is called if there is no record in log_lab_end_time
    * It then defaults to using paper's start time and then adds the exam duration to get the end time
    * @return DateTime
-  */
+   */
   public function calculate_default_session_end_datetime() {
     $start_datetime = $this->property_object->get_start_date();
     $duration = $this->property_object->get_exam_duration() * 60;
@@ -246,53 +245,53 @@ class LogLabEndTime {
     return DateTime::createFromFormat('U', $end_timestamp);
   }
 
-  /*
+  /**
    * @return int
    */
   public function get_paper_id() {
     return $this->property_object->get_property_id();
   }
 
-  /*
+  /**
    * @return int
    */
   public function get_lab_id() {
     return $this->lab_id;
   }
 
-  /*
+  /**
    * @return int
    */
   public function get_paper_exam_duration() {
     return $this->property_object->get_exam_duration();
   }
 
-  /*
+  /**
    * @return int
    */
   public function get_paper_exam_paper_type() {
     return $this->property_object->get_paper_type();
   }
 
-  /*
+  /**
    * @return DateTime
-  */
+   */
   public function get_paper_start_datetime() {
     $start_date = $this->property_object->get_start_date();
     return DateTime::createFromFormat('U', $start_date);
   }
 
-  /*
+  /**
    * @return DateTime
-  */
+   */
   public function get_paper_end_datetime() {
     $end_date = $this->property_object->get_end_date();
 
     return DateTime::createFromFormat('U', $end_date);
   }
 
-  /*
-   * return int
+  /**
+   * @return int
    */
   public function get_paper_end_timestamp() {
     $paper_end_datetime = $this->get_paper_end_datetime();
@@ -302,7 +301,6 @@ class LogLabEndTime {
 
     return $paper_end_datetime->getTimestamp();
   }
-
 }
 
 

@@ -25,24 +25,22 @@
 
 class LogExtraTime {
 
-
-  /*
+  /**
    * @var LogLabEndTime $log_lab_end_time
-  */
+   */
   private $log_lab_end_time;
 
-  /*
+  /**
    * @var UserObject $student_object
-  */
+   */
   private $student_object;
 
-
-  /*
+  /**
    * @var mysqli $db
    */
   private $db;
   private $msg;
-  
+
   private $log_extra_time_cache;
   private $use_cache = FALSE;
 
@@ -51,22 +49,24 @@ class LogExtraTime {
    * @return array    $student_object
    * @return mysqli        $db
    */
-
   public function __construct(LogLabEndTime $log_lab_end_time, $student_object, mysqli $db, $cached = FALSE) {
 
     $this->log_lab_end_time = $log_lab_end_time;
     $this->student_object = $student_object;
     $this->db = $db;
-    
+
     if ($cached) {
-      $this->populate_cache(); 
+      $this->populate_cache();
       $this->use_cache = TRUE;
     }
 
   }
-  
+
+  /**
+   * Retrieve and store all records in the extra time log for the paper to avoid large number of queries
+   */
   private function populate_cache() {
-    
+
     $paper_id = $this->get_paper_id();
 
     $query = 'SELECT extra_time, end_date, userID, labID FROM log_extra_time WHERE paperID = ?';
@@ -76,25 +76,23 @@ class LogExtraTime {
     $stmt->store_result();
 
     $bindResult = $stmt->bind_result($extra_time_secs, $end_date, $userID, $labID);
-    
+
     while ( $stmt->fetch() ) {
       $this->log_extra_time_cache[$userID][$labID]['extra_time_secs'] =  $extra_time_secs;
       $this->log_extra_time_cache[$userID][$labID]['end_date'] =  $end_date;
     }
     $stmt->close();
-    
   }
 
-  /*
+  /**
    * @return int
    */
-
   public function get_extra_time_secs() {
-    
+
     $lab_id = $this->get_lab_id();
     $student_id = $this->get_student_id();
     $paper_id = $this->get_paper_id();
-    
+
     if ($this->use_cache) {
       $extra_time_secs = FALSE;
       if(isset($this->log_extra_time_cache[$student_id][$lab_id]['extra_time_secs'])) {
@@ -102,8 +100,8 @@ class LogExtraTime {
       } else {
         return FALSE;
       }
-    } 
-    
+    }
+
     $query = 'SELECT extra_time FROM log_extra_time WHERE labID = ? AND userID = ? AND paperID = ?';
     $stmt = $this->db->prepare($query);
     $stmt->bind_param('iii', $lab_id, $student_id, $paper_id);
@@ -120,19 +118,19 @@ class LogExtraTime {
 
     $stmt->fetch();
     $stmt->close();
-    
+
     return $extra_time_secs;
 
   }
 
-  /*
+  /**
    * @return DateTime
-  */
+   */
   public function get_end_date_datetime() {
     $lab_id = $this->get_lab_id();
     $student_id = $this->get_student_id();
     $paper_id = $this->get_paper_id();
-    
+
     if ($this->use_cache) {
       if(isset($this->log_extra_time_cache[$student_id][$lab_id]['extra_time_secs'])) {
         $end_date = $this->log_extra_time_cache[$student_id][$lab_id]['extra_time_secs'];
@@ -142,10 +140,10 @@ class LogExtraTime {
       } else {
         return FALSE;
       }
-    } 
-      
+    }
+
     $query = 'SELECT end_date FROM log_extra_time WHERE labID = ? AND userID = ? AND paperID = ?';
-    
+
     $stmt = $this->db->prepare($query);
     $stmt->bind_param('iii', $lab_id, $student_id, $paper_id);
     $stmt->execute();
@@ -162,8 +160,8 @@ class LogExtraTime {
     if ($num_results < 1 or $end_date === NULL) {
       return FALSE;
     }
-    
-    
+
+
     $end_datetime = new DateTime();
     $end_datetime->setTimestamp($end_date);
 
@@ -171,7 +169,7 @@ class LogExtraTime {
 
   }
 
-  /*
+  /**
    * @param int $invigilator_id
    * @param int $extra_time_minutes
    */
@@ -202,7 +200,7 @@ class LogExtraTime {
 
   }
 
-  /*
+  /**
    * @param int
    * @return int
    */
@@ -225,7 +223,7 @@ class LogExtraTime {
     return $extended_end_date_timestamp;
   }
 
-  /*
+  /**
    * @return int
    */
   public function get_paper_exam_duration() {
@@ -235,51 +233,52 @@ class LogExtraTime {
   public function get_paper_exam_start_time() {
     return $this->log_lab_end_time->get_paper_start_datetime();
   }
-  /*
+
+  /**
    * @return int
    */
   private function get_paper_id() {
     return $this->log_lab_end_time->get_paper_id();
   }
 
-  /*
+  /**
    * @return int
-  */
+   */
   private function get_lab_id() {
     return $this->log_lab_end_time->get_lab_id();
   }
 
-  /*
+  /**
    * @return int
-  */
+   */
   private function get_student_id() {
     return $this->student_object['user_ID'];
   }
 
-  /*
+  /**
    * @return int
-  */
+   */
   private function get_user_id() {
     return $this->student_object['get_user_ID'];
   }
-  
-  /*
+
+  /**
    * used in cached mode to change the student of intrest
    */
   public function set_student_object($student_object) {
     $this->student_object = $student_object;
   }
 
-  /*
+  /**
    * @return int
-  */
+   */
   public function get_students_special_needs_percentage() {
     return $this->student_object['special_needs_percentage'];
   }
 
-  /*
+  /**
    * @return int
-  */
+   */
   private function get_end_date_timestamp() {
     $end_date_datetime = $this->get_end_date_datetime();
     if ($end_date_datetime === FALSE) {
@@ -289,26 +288,24 @@ class LogExtraTime {
     return $end_date_datetime->getTimestamp();
   }
 
-  /*
+  /**
    * @return int
-  */
+   */
   private function get_paper_end_timestamp() {
     return $this->log_lab_end_time->get_paper_end_timestamp();
   }
 
-  /*
+  /**
    * @return int
-  */
+   */
   public function get_session_end_datetime() {
     return $this->log_lab_end_time->get_session_end_date_datetime();
   }
 
-  /*
+  /**
    * @return int
-  */
+   */
   public function get_default_session_end_datetime() {
     return $this->log_lab_end_time->calculate_default_session_end_datetime();
   }
-
-
 }

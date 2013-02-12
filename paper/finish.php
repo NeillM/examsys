@@ -102,7 +102,7 @@ if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
 
 $summative_exam_session_started = false;
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
-  //has this labe had an end time set?
+  //has this lab had an end time set?
   $log_lab_end_time = new LogLabEndTime( $lab_id, $propertyObj, $mysqli );
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }

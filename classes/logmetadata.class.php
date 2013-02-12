@@ -36,16 +36,22 @@ class LogMetadata {
   private $completed;
   private $lab_name;
 
-  /*
+  /**
    * @var mysqli $db
    */
   private $db;
 
-  /*
+  /**
    * @var userObject $userObject
-  */
+   */
   private $userObject;
 
+  /**
+   * Create new object to represent the Log Metadata table
+   * @param userObject $userObject Object describing a user
+   * @param integer    $paper_id   ID of the current paper
+   * @param mysqli     $db         Database connection
+   */
   public function __construct( userObject $userObject, $paper_id, mysqli $db ) {
     $this->userObject = $userObject;
     $this->id             = null;
@@ -83,7 +89,7 @@ class LogMetadata {
                 userID  = ?
               AND
                 paperID = ?
-              ORDER BY 
+              ORDER BY
                 id DESC
               LIMIT 1';
 
@@ -97,13 +103,13 @@ class LogMetadata {
       return false;
     }
 
-    $bindResult = $stmt->bind_result( $this->id, 
-                                      $this->session_id, 
-                                      $this->ipadress, 
+    $bindResult = $stmt->bind_result( $this->id,
+                                      $this->session_id,
+                                      $this->ipadress,
                                       $this->student_grade,
                                       $this->year,
-                                      $this->attempt, 
-                                      $this->completed, 
+                                      $this->attempt,
+                                      $this->completed,
                                       $this->lab_name );
 
     $stmt->fetch();
@@ -112,15 +118,14 @@ class LogMetadata {
 
     return true;
   }
-  
-  /*
-  * create a new log_metadata record
-  *
-  * @return bool
-  */
+
+  /**
+   * Create a new log_metadata record
+   * @return bool
+   */
   public function create_new_record($ipadress, $attempt, $lab_name) {
-    $this->ipadress = $ipadress; 
-    $this->attempt = $attempt; 
+    $this->ipadress = $ipadress;
+    $this->attempt = $attempt;
     $this->lab_name = $lab_name;
     $this->populate_start_date_time();
     $this->save();
@@ -135,7 +140,9 @@ class LogMetadata {
     return $this->start_datetime;
   }
 
-
+  /**
+   * Set time at which the paper was completed for the current user
+   */
   public function set_completed_to_now() {
 
     $query = 'UPDATE
@@ -152,9 +159,11 @@ class LogMetadata {
     $result->bind_param('ii', $this->userObject->get_user_ID(), $this->paper_id );
     $result->execute();
     $result->close();
-
   }
 
+  /**
+   * Remove indication that the paper has been completed for the current user
+   */
   public function set_completed_to_null() {
 
     $query =  'UPDATE
@@ -174,23 +183,25 @@ class LogMetadata {
 
   }
 
-  public function  is_users_paper_completed(){
+  /**
+   * Indicate if the current user has completed the paper
+   * @return boolean Has the current user completed the paper
+   */
+  public function  is_users_paper_completed() {
 
     if(is_null($this->completed)) {
       return false;
     } else {
       return true;
     }
-
   }
 
   /*
   * PRIVATE FUNCTIONS
   */
 
-  /*
-   * insert or update the log_metadata record
-   *
+  /**
+   * Insert or update the log_metadata record
    * @return bool
    */
   private function save() {
@@ -201,7 +212,7 @@ class LogMetadata {
     if ($this->id != null) {
       //update
       $query  =   'UPDATE
-                    log_metadata  ( 
+                    log_metadata  (
                                     ipaddress,
                                     attempt,
                                     completed,
@@ -238,7 +249,7 @@ class LogMetadata {
       $stmt->bind_param( 'iississ',
                          $this->student_id,
                          $this->paper_id,
-                         $this->session_id, 
+                         $this->session_id,
                          $this->ipadress,
                          $this->attempt,
                          $this->completed,
@@ -251,25 +262,21 @@ class LogMetadata {
     return true;
   }
 
-  /*
+  /**
    * sets up the start_datetime Date object from started
    * or sets it to now if started is not set
    */
   private function populate_start_date_time() {
-    
+
     if ($this->session_id != NULL) {
       $this->start_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $this->session_id );
       $this->start_datetime->format( 'Y-m-d H:i:s' );
-    } else { 
+    } else {
       $this->start_datetime = new DateTime;
       $this->session_id = $this->start_datetime->format('YmdHis');
       $this->start_datetime->format( 'Y-m-d H:i:s' );
     }
 
   }
-
-
-
 }
-
 ?>
