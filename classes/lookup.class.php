@@ -164,6 +164,10 @@ class Lookup extends RogoStaticSingleton {
         $data->searchorder = array('username', 'studentID', 'staffID', 'email', array('surname', 'firstname'));
       }
     }
+
+    if(!isset($data->lookupdata)) {
+      return new stdClass();
+    }
     $preuserlookupobj = new stdClass();
     $preuserlookupobj->lookupdata = $data->lookupdata;
     $preuserlookupobj->searchorder = $data->searchorder;

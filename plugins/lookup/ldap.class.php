@@ -117,8 +117,7 @@ class ldap_lookup extends outline_lookup {
       $this->savetodebug("Using search filter: $filter");
       if (!($search = @ldap_search($ldap, $ldap_search_dn, $filter))) {
 
-        $this->savetodebug('Unknown problem with the ldap search');
-        print "problem";
+        $this->savetodebug('Unknown problem with the ldap search ldap_search_dn:' . $ldap_search_dn . ' filter: ' . $filter);
       } else {
         $info = ldap_get_entries($ldap, $search);
         if ($info['count'] > 0) {
@@ -183,6 +182,7 @@ class ldap_lookup extends outline_lookup {
       $prepend = $this->settings['storeprepend'];
       $this->savetodebug("Setting prepend to $prepend");
     }
+    $lookupdatas=new stdClass();
     foreach ($ldap_attributes as $key => $value) {
       $keyorig = $key;
       if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) {
@@ -196,14 +196,16 @@ class ldap_lookup extends outline_lookup {
         $this->savetodebug("saving value for $reverse_attribute using ldap_attribute: $key");
 
       }
+      if(isset($datablock[$key][0]) and !isset($lookupdatas->$reverse_attribute)) {
+        $lookupdatas->$reverse_attribute=$datablock[$key][0];
+      }
     }
+    $lookupobj->lookupdatas[] = $lookupdatas;
 
     $datablockstore = array();
     foreach ($datablock as $key => $value) {
 
       if (!is_int($key)) {
-        //
-
 
         if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) {
           $key = mb_strtolower($key);

@@ -74,11 +74,13 @@ class XML_lookup extends outline_lookup {
     // if the lookup doesnt have these set and the default for the module configuration exist use them
     if (!isset($lookupobj->settings->override)) {
       if (isset($this->settings['userlookup']['override'])) {
+        $overrideset = TRUE;
         foreach ($this->settings['userlookup']['override'] as $key => $value) {
           $lookupobj->settings->override[$key] = $value;
         }
         $this->savetodebug('Overriding settings from userlookup as none supplied');
       } elseif (isset($this->settings['override'])) {
+        $overrideset = TRUE;
         foreach ($this->settings['override'] as $key => $value) {
           $lookupobj->settings->override[$key] = $this->settings['override'][$value];
         }
@@ -87,9 +89,11 @@ class XML_lookup extends outline_lookup {
     }
     if (!isset($lookupobj->settings->overrideall)) {
       if (isset($this->settings['userlookup']['overrideall'])) {
+        $overrideallset = TRUE;
         $lookupobj->settings->overrideall = $this->settings['userlookup']['overrideall'];
         $this->savetodebug('Overriding all settings from userlookup as none supplied');
       } elseif (isset($this->settings['overrideall'])) {
+        $overrideallset = TRUE;
         $lookupobj->settings->overrideall = $this->settings['overrideall'];
         $this->savetodebug('Overriding all settings  from xml plugin as none supplied');
       }
@@ -153,6 +157,14 @@ class XML_lookup extends outline_lookup {
     $this->savetodebug('XML is: ' . var_export($xml, TRUE));
 
     $lookupobj = $this->xmlsearch($xml, $lookupobj, 'userlookup');
+
+    if ($overrideallset == TRUE) {
+      unset($lookupobj->settings->overrideall);
+    }
+    if ($overrideset == TRUE) {
+      unset($lookupobj->settings->override);
+    }
+
 
     return $lookupobj;
   }
@@ -296,7 +308,11 @@ class XML_lookup extends outline_lookup {
         $this->savetodebug("saving value for $reverse_attribute using ldap_attribute: $key");
 
       }
+      if (isset($datablock[$key][0]) and !isset($lookupdatas->$reverse_attribute)) {
+        $lookupdatas->$reverse_attribute = $datablock[$key][0];
+      }
     }
+    $lookupobj->lookupdatas[] = $lookupdatas;
 
     $datablockstore = array();
     foreach ($datablock as $key => $value) {
