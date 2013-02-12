@@ -170,9 +170,9 @@ Class module {
       return $ids;
     } else {
       $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ?");
-      if ($mysqli->error) {
+      if ($db->error) {
         try {
-          throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $mysqli->errno);
+          throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
           echo nl2br($e->getTraceAsString());
