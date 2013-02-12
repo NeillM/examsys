@@ -116,7 +116,15 @@ $configObj=Config::get_instance();
     $authentication = new Authentication($configObj, $mysqli, $_REQUEST, $_SESSION);
 
     $authentication->do_authentication($string);
+    $getauthobj = new stdClass();
 
+    $authentication->get_auth_obj($getauthobj);
+
+    $userObject = UserObject::get_instance();
+
+
+    $userObject->db_user_change();
+var_dump($userObject);
     /*
     if ($output_header == true) {
       echo '<div>';
