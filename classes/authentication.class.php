@@ -499,24 +499,17 @@ class Authentication {
   function get_auth_obj(&$getauth) {
     global $string;
     if (!is_object($getauth)) {
-      print "##0kjjjj####";
+
       $getauthobj->userid = $getauth;
-      print "##1kjjjj###";
       $getauthobj->userObj = new UserObject($this->configObj, $this->db);
-      print "##2kjjjj###";
       $getauthobj->userObj->load($getauth);
-      print "##3kjjjj###";
     } else {
-      print "##4kjjjj###";
       $getauthobj = & $getauth;
-      print "##5kjjjj###";
       if (!isset($getauthobj->userObj)) {
-        print "##6kjjjj###";
 
         //serious error
         $getauthobj->userObj = new UserObject($this->configObj, $this->db);
       }
-      print "##7kjjjj###";
       if ($this->get_userid() < 1) {
         $notice = UserNotices::get_instance();
         $notice->display_notice_and_exit($string['Authentication_notloggedin1'], sprintf($string['Authentication_notloggedin2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()), '/artwork/user_info_48.png', '#C00000', TRUE, TRUE);
@@ -526,7 +519,6 @@ class Authentication {
     }
     //$uID = $this->get_userID();
 
-    print "##8kjjjj###";
     if (isset($this->callbackregister['getauthobj'])) {
       foreach ($this->callbackregister['getauthobj'] as $number => $callback) {
         $this->debug[] = 'run getauthobj callback ' . get_class($callback[0]) . ':' . $callback[1];
