@@ -623,7 +623,7 @@ if (count($properties_list) > 0) {
 
     }
 
-    $disptimezone=new datetimezone($property_object->get_timezone());
+    $disptimezone = new datetimezone($property_object->get_timezone());
     $start_datetime = DateTime::createFromFormat('U', $start_date);
 
     $start_datetime->setTimezone($disptimezone);
