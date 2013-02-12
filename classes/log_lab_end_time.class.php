@@ -129,7 +129,7 @@ class LogLabEndTime {
   /**
    * Calculate the end time for a paper and record it in the database
    * @param  integer  $invigilator_id ID of the invigilator setting the end time for the paper
-   * @param  integer  $time           Number of minutes by which to extend the time
+   * @param  string   $time           Time at which to end the exam as an interval from midnight in interval_spec format
    * @return DateTime                 DateTime object representing new end time
    */
   public function save($invigilator_id, $time = NULL) {
