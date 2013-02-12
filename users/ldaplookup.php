@@ -85,9 +85,11 @@ if (isset($_POST['submit'])) {
   $data->lookupdata = new stdClass();
   if($_REQUEST['username']!='') {
     $data->lookupdata->username = $_REQUEST['username'];
+    $data->searchorder =array('username');
   }
   if($_REQUEST['surname']!='') {
     $data->lookupdata->surname = $_REQUEST['surname'];
+    $data->searchorder =array('surname');
   }
 
 
