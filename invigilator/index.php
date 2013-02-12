@@ -292,7 +292,7 @@ $properties_list = array();
 
 if ($room_name != '') {
   $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
-  if (count($properties_list) == 0) {
+  if ($properties_list === false) {
     // No properties found
     $notice = UserNotices::get_instance();
     $notice->display_notice_and_exit($string['nopapersfound'], '', '../artwork/red_warning_48.png');
