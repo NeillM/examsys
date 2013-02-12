@@ -170,6 +170,13 @@ Class module {
       return $ids;
     } else {
       $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ?");
+      if ($mysqli->error) {
+        try {
+          throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $mysqli->errno);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+        }
       $result->bind_param('s', $module_id);
       $result->execute();
       $result->store_result();
