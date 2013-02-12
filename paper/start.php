@@ -220,7 +220,7 @@ if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
+  $notice->access_denied($mysqli, $string, $string['error_paper']);
   //this will exit php
 }
 
