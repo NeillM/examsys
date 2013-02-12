@@ -83,13 +83,13 @@ if (isset($_POST['submit'])) {
   $lookup = Lookup::get_instance($configObject, $mysqli);
   $data = new stdClass();
   $data->lookupdata = new stdClass();
-  if($_REQUEST['username']!='') {
+  if ($_REQUEST['username'] != '') {
     $data->lookupdata->username = $_REQUEST['username'];
-    $data->searchorder =array('username');
+    $data->searchorder = array('username');
   }
-  if($_REQUEST['surname']!='') {
+  if ($_REQUEST['surname'] != '') {
     $data->lookupdata->surname = $_REQUEST['surname'];
-    $data->searchorder =array('surname');
+    $data->searchorder = array('surname');
   }
 
 
@@ -101,7 +101,7 @@ if (isset($_POST['submit'])) {
   $lookup->display_debug();
 
 
-  if (isset($output->datastore)) {
+  if (isset($output->failure)) {
 
     if (!isset($info[0])) {
       ?>
@@ -143,45 +143,44 @@ if (isset($_POST['submit'])) {
       $user_data = array();
       $user = 0;
       echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%; background-color:white\">\n";
-      foreach ($info as $person => $details) {
+      foreach ($output->lookupdatas as $object) {
 
-        if ($details['sn'][0] != '') {
-          if (isset($details['title'][0])) {
-            $user_data[$user]['title'] = $details['title'][0];
-          } else {
-            $user_data[$user]['title'] = '';
-          }
-          if (isset($details['givenname'][0])) {
-            $user_data[$user]['first_names'] = $details['givenname'][0];
-          } else {
-            $user_data[$user]['first_names'] = '';
-          }
-          if (isset($details['sn'][0])) {
-            $user_data[$user]['surname'] = $details['sn'][0];
-          } else {
-            $user_data[$user]['surname'] = '';
-          }
-          if (isset($details['samaccountname'][0])) {
-            $user_data[$user]['username'] = $details['samaccountname'][0];
-          } else {
-            $user_data[$user]['username'] = '';
-          }
-          if (isset($details['mail'][0])) {
-            $user_data[$user]['email'] = $details['mail'][0];
-          } else {
-            $user_data[$user]['email'] = '';
-          }
+        if (isset($object->title) {
+          $user_data[$user]['title'] = $object->title;
+        } else {
+          $user_data[$user]['title'] = '';
+        }
+        if (isset($object->title) {
+          $user_data[$user]['first_names'] = $object->title;
+        } else {
+          $user_data[$user]['first_names'] = '';
+        }
+        if (isset($object->title) {
+          $user_data[$user]['surname'] = $object->surname;
+        } else {
+          $user_data[$user]['surname'] = '';
+        }
+        if (isset($object->title) {
+          $user_data[$user]['username'] = $object->username;
+        } else {
+          $user_data[$user]['username'] = '';
+        }
+        if (isset($object->title) {
+          $user_data[$user]['email'] = $object->email;
+        } else {
+          $user_data[$user]['email'] = '';
+        }
+        if (isset($object->title) {
+          $user_data[$user]['role'] = $object->role;
+        } else {
+          $user_data[$user]['role'] = '';
+        }
+        if (isset($object->title) {
+          $user_data[$user]['school'] = $object->school;
+        } else {
+          $user_data[$user]['school'] = '';
+        }
 
-          if (isset($details['edupersonentitlement'][0])) {
-            $user_data[$user]['role'] = $details['edupersonentitlement'][0];
-          } else {
-            $user_data[$user]['role'] = '';
-          }
-          if (isset($details['ou'][0])) {
-            $user_data[$user]['school'] = $details['ou'][0];
-          } else {
-            $user_data[$user]['school'] = '';
-          }
           $user++;
         }
       }
