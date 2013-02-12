@@ -112,7 +112,8 @@ Class user_notices extends RogoStaticSingleton {
     
     $this->display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
 
-    $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
+
+    $authentication = new Authentication(Config::get_instance(), $mysqli, $_REQUEST, $_SESSION);
 
     $authentication->do_authentication($string);
 
