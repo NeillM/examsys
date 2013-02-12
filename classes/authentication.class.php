@@ -512,6 +512,7 @@ class Authentication {
       print "##5kjjjj###";
       if (!isset($getauthobj->userObj)) {
         print "##6kjjjj###";
+        var_dump()
         //serious error
         $getauthobj->userObj = new UserObject($this->configObj, $this->db);
       }

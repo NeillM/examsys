@@ -47,7 +47,9 @@ class Config extends RogoStaticSingleton {
     return self::$inst;
   }
 */
-
+function __toString() {
+  return "ConfigObject!";
+}
   protected function __construct() {
     $conf_file = __DIR__ . '/../config/config.inc.php';
     if (file_exists($conf_file)) {
