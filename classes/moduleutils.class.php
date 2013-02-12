@@ -177,6 +177,7 @@ Class module {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
           echo nl2br($e->getTraceAsString());
         }
+      }
       $result->bind_param('s', $module_id);
       $result->execute();
       $result->store_result();
