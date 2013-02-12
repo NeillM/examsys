@@ -617,14 +617,14 @@ if (count($properties_list) > 0) {
 
       if ($paper_id == (int)$property_id) {
         $invigilator_id = $userObject->get_user_ID();
-        $time='PT' . $_POST['hour'] . 'H' . $_POST['minute'] . 'M';
-        $end_datetime = $log_lab_end_time->save($invigilator_id,$time);
+        $time = 'PT' . $_POST['hour'] . 'H' . $_POST['minute'] . 'M';
+        $end_datetime = $log_lab_end_time->save($invigilator_id, $time);
       }
 
     }
 
     $disptimezone=new datetimezone($property_object->get_timezone());
-    $start_datetime = DateTime::createFromFormat('U',$start_date);
+    $start_datetime = DateTime::createFromFormat('U', $start_date);
 
     $start_datetime->setTimezone($disptimezone);
 
