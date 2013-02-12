@@ -145,37 +145,37 @@ if (isset($_POST['submit'])) {
       echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%; background-color:white\">\n";
       foreach ($output->lookupdatas as $object) {
 
-        if (isset($object->title) {
+        if (isset($object->title)) {
           $user_data[$user]['title'] = $object->title;
         } else {
           $user_data[$user]['title'] = '';
         }
-        if (isset($object->title) {
+        if (isset($object->title)) {
           $user_data[$user]['first_names'] = $object->title;
         } else {
           $user_data[$user]['first_names'] = '';
         }
-        if (isset($object->title) {
+        if (isset($object->surname)) {
           $user_data[$user]['surname'] = $object->surname;
         } else {
           $user_data[$user]['surname'] = '';
         }
-        if (isset($object->title) {
+        if (isset($object->username)) {
           $user_data[$user]['username'] = $object->username;
         } else {
           $user_data[$user]['username'] = '';
         }
-        if (isset($object->title) {
+        if (isset($object->email)) {
           $user_data[$user]['email'] = $object->email;
         } else {
           $user_data[$user]['email'] = '';
         }
-        if (isset($object->title) {
+        if (isset($object->role)) {
           $user_data[$user]['role'] = $object->role;
         } else {
           $user_data[$user]['role'] = '';
         }
-        if (isset($object->title) {
+        if (isset($object->school)) {
           $user_data[$user]['school'] = $object->school;
         } else {
           $user_data[$user]['school'] = '';
