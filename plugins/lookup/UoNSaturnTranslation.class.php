@@ -46,46 +46,61 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
 
     $this->savetodebug('Running user translate lookup in UoN Saturn Translate');
 
-    if ($this->orsearchlist($userlookupobj->lookupdata->role, array('Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'))) {
-      $this->savetodebug('Detected Student, correcting role');
-      $userlookupobj->lookupdata->role = 'Student';
-    }
-
-    if ($this->orsearchlist($userlookupobj->lookupdata->role, array('S')) or isset($userlookupobj->lookupdata->staffID)) {
-      $this->savetodebug('Detected staff, correcting role and filling in fields');
-      $userlookupobj->lookupdata->role = 'Staff';
-      $userlookupobj->lookupdata->coursecode = 'University Lecturer';
-      $userlookupobj->lookupdata->yearofstudy = 1;
-    }
-
-    if (isset($userlookupobj->lookupdata->sttudentID)) {
-      $this->savetodebug('Detected Possible Student, correcting role for safety');
-      $userlookupobj->lookupdata->lookupdata->role = 'Student';
-    }
-
-    if (isset($userlookupobj->lookupdata->attendstatus) and strpos($userlookupobj->lookupdata->attendstatus, 'Suspended') !== FALSE) {
-      $this->savetodebug('status is suspended diasbling');
-      $userlookupobj->lookupdata->disabled = TRUE;
-    }
-
-    if (isset($userlookupobj->lookupdata->gender) and $userlookupobj->lookupdata->gender == 'M') {
-      $userlookupobj->lookupdata->gender = 'Male';
-    }
-    if (isset($userlookupobj->lookupdata->gender) and $userlookupobj->lookupdata->gender == 'F') {
-      $userlookupobj->lookupdata->gender = 'Female';
-    }
+    // this is on the search data (also used for 1 record lookup)
+    $userlookupobj->lookupdata=$this->usertranslate($userlookupobj->lookupdata);
 
 
-    if (!isset($userlookupobj->lookupdata->gender)) {
-      if (stripos($userlookupobj->lookupdata->title, 'Mr') !== FALSE) {
-        $userlookupobj->lookupdata->gender = 'Male';
-      }
-      if (stripos($userlookupobj->lookupdata->title, 'Ms') !== FALSE or stripos($userlookupobj->lookupdata->title, 'Miss') !== FALSE or stripos($userlookupobj->lookupdata->title, 'Mrs') !== FALSE) {
-        $userlookupobj->lookupdata->gender = 'Female';
-      }
+    //this is for multiple blocks
+    foreach ($userlookupobj->lookupdatas as $key => $value) {
+      $userlookupobj->lookupdatas[$key]=$this->usertranslate($userlookupobj->lookupdatas[$key]);
     }
+
 
     return $userlookupobj;
+  }
+
+  function usertranslate($datapart) {
+
+    if ($this->orsearchlist($datapart->role, array('Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'))) {
+      $this->savetodebug('Detected Student, correcting role');
+      $datapart->role = 'Student';
+    }
+
+    if ($this->orsearchlist($datapart->role, array('S')) or isset($datapart->staffID)) {
+      $this->savetodebug('Detected staff, correcting role and filling in fields');
+      $datapart->role = 'Staff';
+      $datapart->coursecode = 'University Lecturer';
+      $datapart->yearofstudy = 1;
+    }
+
+    if (isset($datapart->sttudentID)) {
+      $this->savetodebug('Detected Possible Student, correcting role for safety');
+      $datapart->lookupdata->role = 'Student';
+    }
+
+    if (isset($datapart->attendstatus) and strpos($datapart->attendstatus, 'Suspended') !== FALSE) {
+      $this->savetodebug('status is suspended diasbling');
+      $datapart->disabled = TRUE;
+    }
+
+    if (isset($datapart->gender) and $datapart->gender == 'M') {
+      $datapart->gender = 'Male';
+    }
+    if (isset($datapart->gender) and $datapart->gender == 'F') {
+      $datapart->gender = 'Female';
+    }
+
+
+    if (!isset($datapart->gender)) {
+      if (stripos($datapart->title, 'Mr') !== FALSE) {
+        $datapart->gender = 'Male';
+      }
+      if (stripos($datapart->title, 'Ms') !== FALSE or stripos($datapart->title, 'Miss') !== FALSE or stripos($datapart->title, 'Mrs') !== FALSE) {
+        $datapart->gender = 'Female';
+      }
+    }
+
+    return $datapart;
   }
 
   function orsearchlist($field, $text) {

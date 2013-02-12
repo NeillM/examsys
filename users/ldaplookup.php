@@ -26,6 +26,7 @@
 
 require '../include/admin_auth.inc';
 require '../include/sort.inc';
+require_once '../classes/lookup.class.php';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -74,18 +75,23 @@ require '../include/sort.inc';
 </head>
 <?php
   if (isset($_POST['submit'])) {
-    $ldap = ldap_connect( $cfg_ldap_server );
-    ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-    ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-    
-    if (ldap_bind($ldap, $cfg_ldap_bind_rdn, $cfg_ldap_bind_password)) {
-      if ($_POST['username'] != '') {
-        $search=@ldap_search($ldap, $cfg_ldap_search_dn, 'cn=' . trim($_POST['username']));
-      } else {
-        $search=@ldap_search($ldap, $cfg_ldap_search_dn, 'sn=' . trim($_POST['surname']));
-      }
-      $info = ldap_get_entries($ldap, $search);
-      
+
+    $lookup=Lookup::get_instance($configObject,$mysqli);
+    $data=new stdClass();
+
+    $data->lookupdata->username=$_REQUEST['username'];
+    $output=$lookup->userlookup($data);
+
+    var_dump($output);
+
+
+    $lookup->display_debug();
+
+
+
+
+    if (isset($output->datastore)) {
+
       if (!isset($info[0])) {
 ?>
 <body>
