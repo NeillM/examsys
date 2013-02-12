@@ -116,13 +116,16 @@ $configObj=Config::get_instance();
     $authentication = new Authentication($configObj, $mysqli, $_REQUEST, $_SESSION);
 
     $authentication->do_authentication($string);
+
+    print "hjjhj";
     $getauthobj = new stdClass();
 
     $authentication->get_auth_obj($getauthobj);
 
+    print "jkjkj";
     $userObject = UserObject::get_instance();
 
-
+    var_dump($userObject);
     $userObject->db_user_change();
 var_dump($userObject);
     /*
