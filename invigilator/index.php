@@ -639,8 +639,8 @@ if (count($properties_list) > 0) {
     $paper_end_datetime->setTimezone($disptimezone);
     $paper_end_date = $paper_end_datetime->format('d/m/Y H:i:s');
 
-    $end_time_h=$end_datetime->format('H');
-    $end_time_m=$end_datetime->format('i');
+    $end_time_h = $end_datetime->format('H');
+    $end_time_m = $end_datetime->format('i');
 
     if (count($properties_list) < 2) {
       ?>

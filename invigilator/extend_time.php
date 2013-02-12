@@ -66,9 +66,7 @@ $lab_factory = new LabFactory($mysqli);
 $lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address);
 
 $propertyObj = PaperProperties::get_paper_properties_by_id($paper_id, $mysqli);
-
 $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);
-
 $log_extra_time = new LogExtraTime($log_lab_end_time, $student, $mysqli);
 
 $onload = '';
