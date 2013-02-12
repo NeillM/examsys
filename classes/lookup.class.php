@@ -214,9 +214,10 @@ class Lookup extends RogoStaticSingleton {
 
     if (!isset($userlookupobj->lookupdatas)) {
       $userlookupobj->failed = TRUE;
-
+      $userlookupobj->success = FALSE;
     } else {
       $userlookupobj->failed = FALSE;
+      $userlookupobj->success = TRUE;
     }
 
     return $userlookupobj;

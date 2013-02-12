@@ -76,7 +76,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
 
     if (isset($datapart->studentID)) {
       $this->savetodebug('Detected Possible Student, correcting role for safety');
-      $datapart->lookupdata->role = 'Student';
+      $datapart->role = 'Student';
     }
 
     if (isset($datapart->attendstatus) and strpos($datapart->attendstatus, 'Suspended') !== FALSE) {
