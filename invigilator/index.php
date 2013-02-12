@@ -320,6 +320,25 @@ if ($room_name != '') {
     .cohortlist {
         border: 1px solid #95AEC8
     }
+    #menudiv ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #menudiv li {
+      padding: 3px 0 3px 32px;
+      border: 1px solid #fff;
+    }
+    #menudiv li:hover {
+      background-color: #FFE7A2;
+      border: 1px solid #FFBD69;
+    }
+    .menu-time {
+      background: #fff url('../artwork/clock_16.png') no-repeat 6px 4px;
+    }
+    .menu-note {
+      background: #fff url('../artwork/notes_icon.gif') no-repeat 6px 4px;
+    }
 </style>
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript">
@@ -364,42 +383,9 @@ if ($room_name != '') {
         document.getElementById('menudiv').style.top = top_pos + 'px';
 
         document.getElementById('menudiv').style.display = "";
-        document.getElementById('item1b').style.backgroundColor = '#FFFFFF';
-        document.getElementById('item2b').style.backgroundColor = '#FFFFFF';
 
         isMenu = true;
         return false;
-    }
-
-
-    function menuRowOn(rowID) {
-        // Left menu column
-        document.getElementById('item' + rowID + 'a').style.backgroundColor = '#FFE7A2';
-        document.getElementById('item' + rowID + 'a').style.borderTop = '1px solid #FFBD69';
-        document.getElementById('item' + rowID + 'a').style.borderBottom = '1px solid #FFBD69';
-        document.getElementById('item' + rowID + 'a').style.borderLeft = '1px solid #FFBD69';
-
-        // Right menu column
-        document.getElementById('item' + rowID + 'b').style.backgroundColor = '#FFE7A2';
-        document.getElementById('item' + rowID + 'b').style.borderTop = '1px solid #FFBD69';
-        document.getElementById('item' + rowID + 'b').style.borderBottom = '1px solid #FFBD69';
-        document.getElementById('item' + rowID + 'b').style.borderRight = '1px solid #FFBD69';
-        document.getElementById('item' + rowID + 'b').style.borderLeft = '1px solid #FFE7A2';
-    }
-
-    function menuRowOff(rowID) {
-        // Left menu column
-        document.getElementById('item' + rowID + 'a').style.backgroundColor = '#F1F5FB';
-        document.getElementById('item' + rowID + 'a').style.borderTop = '1px solid #F1F5FB';
-        document.getElementById('item' + rowID + 'a').style.borderBottom = '1px solid #F1F5FB';
-        document.getElementById('item' + rowID + 'a').style.borderLeft = '1px solid #F1F5FB';
-
-        // Right menu column
-        document.getElementById('item' + rowID + 'b').style.backgroundColor = '#FFFFFF';
-        document.getElementById('item' + rowID + 'b').style.borderTop = '1px solid #FFFFFF';
-        document.getElementById('item' + rowID + 'b').style.borderBottom = '1px solid #FFFFFF';
-        document.getElementById('item' + rowID + 'b').style.borderRight = '1px solid #FFFFFF';
-        document.getElementById('item' + rowID + 'b').style.borderLeft = '1px solid #FFFFFF';
     }
 
     function getScrollX() {
@@ -509,11 +495,19 @@ if ($room_name != '') {
 
     document.onmousedown = mouseSelect;
 
+    // Register the events we need
+    $(function () {
+      $('.menu-time').click(extendTime);
+      $('.menu-note').click(newStudentNote);
+      StartClock();
+      resizeLists();
+      $(window).unload(KillClock);
+    });
 </script>
 
 </head>
 
-<body onload="StartClock(); resizeLists();" onunload="KillClock()">
+<body>
 
 <?php
 $popup_width = 180;
@@ -528,33 +522,10 @@ if ($language != 'en') {
     <table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
         <tr>
             <td>
-                <table cellspacing="0" cellpadding="1" border="0"
-                       style="font-size:90%; background-color:white; width:100%">
-                    <tr>
-                        <td id="item1a"
-                            style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"
-                            onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();">
-                            <img src="../artwork/clock_16.png" width="16" height="16" alt="" border="0"/>
-                        </td>
-                        <td id="item1b"
-                            style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default"
-                            onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="extendTime();">
-                          <?php echo $string['extendtime']; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td id="item2a"
-                            style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"
-                            onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();">
-                            <img src="../artwork/notes_icon.gif" width="16" height="16" alt="" border="0"/>
-                        </td>
-                        <td id="item2b"
-                            style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default"
-                            onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="newStudentNote();">
-                          <?php echo $string['addnote']; ?>
-                        </td>
-                    </tr>
-                </table>
+                <ul>
+                  <li class="menu-time"><?php echo $string['extendtime']; ?></li>
+                  <li class="menu-note"><?php echo $string['addnote']; ?></li>
+                </ul>
             </td>
         </tr>
     </table>
