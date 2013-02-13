@@ -42,6 +42,7 @@
 
 require_once $cfg_web_root . 'classes/schoolutils.class.php';
 require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
+require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 class UserObject extends RogoStaticSingleton {
 
@@ -51,7 +52,7 @@ class UserObject extends RogoStaticSingleton {
    */
   protected static $inst = NULL;
   protected static $class_name = 'UserObject';
-  protected static $dont_construct = true;
+  protected static $dont_construct = TRUE;
   private $password, $userID, $userroles, $title, $initials, $first_names, $surname, $username, $email, $grade, $year, $special_needs, $special_needs_percentage, $record_no, $split_username;
   private $demomode = FALSE;
   private $roles, $staffModules, $studentModules, $db, $configObj;
@@ -66,11 +67,12 @@ class UserObject extends RogoStaticSingleton {
    *
    * @param $db is a mysqli link to db
    * @param $configObject a Rogo config object populated from config.inc
+   *
    * @return none
    */
   function __construct($configObject, $db) {
-    if(is_object(self::$inst)) {
-      throw new Exception("Highlander:: there can be only one UserObject"); 
+    if (is_object(self::$inst)) {
+      throw new Exception("Highlander:: there can be only one UserObject");
     }
     $this->db = & $db;
     $this->configObj = & $configObject;
@@ -81,6 +83,7 @@ class UserObject extends RogoStaticSingleton {
    * TEMP Function loads old style data in - a temp translation function
    *
    * @param $array array of data in old format
+   *
    * @return array
    */
   /*
@@ -112,6 +115,7 @@ class UserObject extends RogoStaticSingleton {
    * TEMP Function exports user roles in old style
    *
    * @param $array array of data in old format
+   *
    * @return list of roles
    */
   function old_getuserroles() {
@@ -122,63 +126,72 @@ class UserObject extends RogoStaticSingleton {
     if (!isset($this->background)) {
       return 'NULL';
     }
+
     return $this->background;
   }
-  
+
   function get_fgcolor() {
     if (!isset($this->foreground)) {
       return 'NULL';
     }
+
     return $this->foreground;
   }
-  
+
   function get_textsize() {
     if ($this->textsize == 0) {
       return 'NULL';
     }
+
     return $this->textsize;
   }
-  
+
   function get_marks_color() {
     if (!isset($this->marks_color)) {
       return 'NULL';
     }
+
     return $this->marks_color;
   }
-  
+
   function get_themecolor() {
     if (!isset($this->themecolor)) {
       return 'NULL';
     }
+
     return $this->themecolor;
   }
-  
+
   function get_labelcolor() {
     if (!isset($this->labelcolor)) {
       return 'NULL';
     }
+
     return $this->labelcolor;
   }
-  
+
   function get_font() {
     if (!isset($this->font)) {
       return 'NULL';
     }
+
     return $this->font;
   }
-  
+
   function get_unanswered_color() {
     if (!isset($this->unanswered_color)) {
       return 'NULL';
     }
+
     return $this->unanswered_color;
   }
-  
+
   /**
    * checks if user has role(s) specified
    *
    * @param $roles either a string or an array of strings
    * @param $exclusive if this should only have this role
+   *
    * @return true if has role(s)
    */
   function has_role($roles, $exclusive = 0) {
@@ -246,6 +259,7 @@ class UserObject extends RogoStaticSingleton {
 
   /**
    * @param string userID
+   *
    * @return UserObject
    */
   function set_user_ID($user_id) {
@@ -272,24 +286,25 @@ class UserObject extends RogoStaticSingleton {
 
     return $this->staffModules;
   }
-  
+
   function has_metadata($modIDs, $security_type, $security_value) {
-    $has_data = true;
-  
+    $has_data = TRUE;
+
     $result = $this->db->prepare("SELECT users_metadata.userID FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (" . implode(',', $modIDs) . ") AND userID = ? AND type = ? AND value = ?");
     $result->bind_param('iss', $this->get_user_ID(), $security_type, $security_value);
     $result->execute();
     $result->store_result();
     if ($result->num_rows == 0) {
-      $has_data = false;
+      $has_data = FALSE;
     }
     $result->close();
-  
+
     return $has_data;
   }
 
   /**
    * @param string $moduleID an array of modules keyed on idMod
+   *
    * @return bool true if staff member is on a module
    */
   function is_staff_user_on_module($moduleID) {
@@ -524,6 +539,7 @@ class UserObject extends RogoStaticSingleton {
    *
    * @param $moduleID an integer or string of a module
    * @param $calendar_year the calendar year being looked for
+   *
    * @return bool true if student member is on a module
    */
   function is_student_user_on_module($moduleID, $calendar_year) {
@@ -572,6 +588,7 @@ class UserObject extends RogoStaticSingleton {
    * @param $attempt
    * @param $session session of module
    * @param int $auto_update if system add
+   *
    * @return bool return true if successful.
    */
   function add_student_to_module($idMod, $attempt, $session, $auto_update = 0) {
@@ -646,7 +663,7 @@ class UserObject extends RogoStaticSingleton {
     if ($record_no == 0) {
       return FALSE;
     }
-    
+
     if ($this->special_needs == 1) {
       $stmt = $this->db->prepare('SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userID = ?');
       $stmt->bind_param('i', $userID);
@@ -679,24 +696,22 @@ class UserObject extends RogoStaticSingleton {
     //select the aproprate database user
     if ($this->has_role('SysAdmin')) {
       $result = $this->db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
+    } elseif ($this->has_role(array('Staff', 'Admin'))) { // Process staff first to get higher priority than students
+      $result = $this->db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
+    } elseif ($this->has_role('Student')) {
+      $result = $this->db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
+    } elseif ($this->has_role('External Examiner')) {
+      $result = $this->db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
+    } elseif ($this->has_role('Invigilator')) {
+      $result = $this->db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
     } else {
-      if ($this->has_role(array('Staff', 'Admin'))) { // Process staff first to get higher priority than students
-        $result = $this->db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
-      } else {
-        if ($this->has_role('Student')) {
-          $result = $this->db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
-        } else {
-          if ($this->has_role('External Examiner')) {
-            $result = $this->db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
-          } else {
-            if ($this->has_role('Invigilator')) {
-              $result = $this->db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
-            } else {
-              $result = FALSE;
-            }
-          }
-        }
-      }
+      $result = FALSE;
+      // new security routine
+
+     $notice=UserNotices::get_instance();
+      $notice->access_denied($this->db,$string,sprintf($string['denied_role'],implode(',',array_keys($this->roles))),false,false);
     }
+
+
   }
 }

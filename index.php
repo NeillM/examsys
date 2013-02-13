@@ -86,7 +86,6 @@ require_once './classes/paperutils.class.php';
 
   $paper_no = 0;
   $paper_display = array();
-  
   $paper_query = $mysqli->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, calendar_year, password FROM (papers, properties) WHERE papers.paper=properties.property_id AND (labs != '' OR password != '') AND (paper_type='1' OR paper_type='2') AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() GROUP BY paper");
   $paper_query->execute();
   $paper_query->store_result();
