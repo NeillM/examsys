@@ -75,7 +75,7 @@ if (isset($_POST['submit'])) {
   }
   
   // Redirect back to the class list to get the next student.
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $_GET['id']);
+  header("location: " . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $_GET['id']);
 } else {
   // Get the module ID and calendar year of the OSCE station.
   if (isset($_GET['username']) and $_GET['username'] == 'test') {
@@ -251,7 +251,7 @@ if (isset($_POST['submit'])) {
   </head>
 
   <body>
-  <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>&username=<?php echo $_GET['username']; ?>" name="osceform">
+  <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" name="osceform">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
   if (file_exists($cfg_web_root . 'users/photos/' . $username . '.jpg')) {

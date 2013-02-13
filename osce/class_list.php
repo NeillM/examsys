@@ -24,28 +24,43 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
 
 check_var('id', 'GET', true, false, false);
 
 // Get the module ID and calendar year of the OSCE station.
-$result = $mysqli->prepare("SELECT property_id, paper_title, moduleID, calendar_year FROM properties WHERE crypt_name=?");
+$result = $mysqli->prepare("SELECT property_id, paper_title, calendar_year FROM properties WHERE crypt_name = ?");
 $result->bind_param('s', $_GET['id']);
 $result->execute();
-$result->bind_result($paperID, $paper_title, $moduleID, $calendar_year);
+$result->bind_result($paperID, $paper_title, $calendar_year);
 $result->fetch();
 $result->close();
+
+$modules = Paper_utils::get_modules($paperID, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="user-scalable=no">
+  <?php
+  if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+    echo "  <meta name=\"viewport\" content=\"user-scalable=no\">\n";
+  } else {
+    echo "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
+  }
+  ?>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title>OSCE: Class List</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-size:110%}
+  <?php
+    if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+      echo "body {font-size:110%}\n";
+    } else {
+      echo "body {font-size:90%}\n";
+    }
+  ?>
     table {font-size:100%; width:100%; line-height:150%}
     tr {border:1px solid #C0C0C0}
     a {color:black}
@@ -71,8 +86,6 @@ $result->close();
       window.location.href = "form.php?id=<?php echo $_GET['id']; ?>&userID=" + userID;
     }
   </script>
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <meta name="apple-mobile-web-app-capable" content="yes" />
   </head>
 
   <body>
@@ -89,7 +102,7 @@ $result->close();
   
   <table cellpadding="6" cellspacing="0" border="0" style="width:100%">
 <?php
-  if (trim($moduleID) == '') {
+  if (count($modules) == 0) {
     echo "<tr><td style=\"color:#C00000\"><strong>Error:</strong> No module selected so no students could be found.</td></tr>";
   } elseif (trim($calendar_year) == '') {
     echo "<tr><td style=\"color:#C00000\"><strong>Error:</strong> No academic year set so no students could be found.</td></tr>";
@@ -98,8 +111,8 @@ $result->close();
     $student_no = 0;
     $old_letter = '';
     
-    $result = $mysqli->prepare("SELECT users.id, surname, first_names, title, student_id, started FROM (student_modules, users, sid) LEFT JOIN log4_overall ON users.id=log4_overall.userID AND q_paper=? WHERE student_modules.userID=users.id AND users.id=sid.userID AND moduleid=? AND calendar_year=? ORDER BY surname, initials");
-    $result->bind_param('iss', $paperID, $moduleID, $calendar_year);
+    $result = $mysqli->prepare("SELECT users.id, surname, first_names, title, student_id, started FROM (modules_student, users, sid) LEFT JOIN log4_overall ON users.id=log4_overall.userID AND q_paper=? WHERE modules_student.userID=users.id AND users.id=sid.userID AND modules_student.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year=? ORDER BY surname, initials");
+    $result->bind_param('is', $paperID, $calendar_year);
     $result->execute();
     $result->bind_result($tmp_userID, $surname, $first_names, $title, $student_id, $started);
     while ($result->fetch()) {

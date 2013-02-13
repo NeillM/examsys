@@ -38,7 +38,7 @@ while ($result->fetch()) {
 $result->close();
 
 if ($paper_no == 1) {
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[0]['id']);
+  header("location: " . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[0]['id']);
 } elseif ($paper_no == 0) {
   echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={{$configObject->get('cfg_page_charset')}}\" />\n\t<title>" . $string['exams'] . "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/body.css\" />\n<style type=\"text/css\">\nbody {font-size:90%; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style>\n</head>\n<body>\n";
   echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"../artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
