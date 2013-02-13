@@ -143,9 +143,9 @@ if (isset($_POST['submit'])) {
   <style type="text/css">
   <?php
     if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
-      echo "body {background-color:$bgcolor; color:$fgcolor; font-size:110%}\n";
+      echo "body {background-color:$bgcolor; color:$fgcolor; font-size:100%}\n";
     } else {
-      echo "body {background-color:$bgcolor; color:$fgcolor}\n";
+      echo "body {background-color:$bgcolor; color:$fgcolor; font-size:90%}\n";
     }
     ?>
     .t {color:<?php echo $themecolor; ?>}
