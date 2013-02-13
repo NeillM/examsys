@@ -26,18 +26,18 @@
 
 class LabFactory {
 
-  /*
+  /**
    * @var mysqli $db
    */
-
   private $db;
 
   public function __construct(mysqli $db) {
     $this->db = $db;
   }
 
-  /*
-   * @param int $ip_address
+  /**
+   * @param  integer  $ip_address IP address of a machine in the required lab
+   * @return Lab                  Lab object for specified IP address or FALSE if not found
    */
   public function get_lab_based_on_ip($ip_address) {
 
