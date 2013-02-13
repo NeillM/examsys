@@ -644,6 +644,9 @@ class UserObject extends RogoStaticSingleton {
   function impersonate($userid) {
     if ($this->has_role('SysAdmin')) {
       $this->store_original_user();
+      unset($this->roles);
+      unset($this->staffModules);
+      unset($this->studentModules);
       $this->load($userid);
       $this->configObj->append('cfg_install_type', " as $this->title $this->surname");
     }
