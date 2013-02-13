@@ -3290,25 +3290,67 @@ QUERY;
     echo "<li>$sql</li>";
   }
   $result->close();
-  
+
   //brzab3 I am missing update on 'temp_users' for _stu needed for guest acount creation
   if (!$updater_utils->has_grant($cfg_db_student_user, 'UPDATE', 'temp_users', $cfg_db_host)) {
     $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.temp_users TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-  
-  //brzab3 I am missing select on 'papers' for _inv needed for adding extra time 
+
+  //brzab3 I am missing select on 'papers' for _inv needed for adding extra time
   if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'papers', $cfg_db_host)) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.papers TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-  
-  //brzab3 I am missing select on 'questions' for _inv needed for adding extra time 
+
+  //brzab3 I am missing select on 'questions' for _inv needed for adding extra time
   if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'questions', $cfg_db_host)) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.questions TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-  
+
+
+  // 13/02/2013 - Add PHP date formats to configuration file
+  $new_cfg_str = array();
+  $new_cfg_str[] = "  \$cfg_long_date_php = 'd/m/Y';\r\n";
+  $new_cfg_str[] = "  \$cfg_short_date_php = 'd/m/y';\r\n";
+  $new_cfg_str[] = "  \$cfg_long_time_php = 'H:i:s';\r\n";
+  $new_cfg_str[] = "  \$cfg_short_time_php = 'H:i';\r\n";
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg_new = array();
+  $found = false;
+  $target_line = count($cfg);
+
+  foreach ($cfg as $curline => $line) {
+
+    if (strpos($line,'cfg_long_date_php') !== false) {
+      $found = true;
+    }
+    if (strpos($line, 'cfg_long_date_time') !== FALSE) {
+      $target_line = count($cfg_new) + 1;
+    }
+    $cfg_new[] = $line;
+  }
+
+  if (!$found) {
+    //add the new config chunk
+    array_splice($cfg_new, $target_line, 0, $new_cfg_str);
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old14.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Add PHP date format config variables</li>\n";
+  }
+
+
+
+
+
 
   // End of updates -----------------------------------------------------------------
 

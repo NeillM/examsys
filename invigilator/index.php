@@ -202,7 +202,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
 
   $ft=clone $student_end_datetime;
   $ft->setTimezone(new DateTimeZone($property_object->get_timezone()));
-  $formatted_end_time = $ft->format('d/m/Y H:i:s');
+  $formatted_end_time = $ft->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'));
 //$formatted_end_time = var_export($student_end_datetime, TRUE) . '::' . var_export($paper_end_datetime, TRUE) . '##' . $student_end_datetime->format('d/m/Y H:i:s');
   // Get student description
 
@@ -316,7 +316,25 @@ if ($room_name != '') {
     body {
         color: #000040
     }
-
+    fieldset {
+      border: none;
+      padding: 0;
+    }
+    .exam-button {
+      width: 100%;
+      height: 34px;
+      font-size: 120%;
+      font-weight: bold;
+    }
+    #start_exam_button {
+      background-color: #1CD40C;
+      color: #fff;
+    }
+    #end_exam_button {
+      background-color: #FF9F24;
+      color: #fff;
+      margin-bottom: 6px;
+    }
     .cohortlist {
         border: 1px solid #95AEC8
     }
@@ -338,6 +356,9 @@ if ($room_name != '') {
     }
     .menu-note {
       background: #fff url('../artwork/notes_icon.gif') no-repeat 6px 4px;
+    }
+    .tight {
+      margin: 4px 0 2px 0;
     }
 </style>
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -482,7 +503,7 @@ if ($room_name != '') {
             //IE 4 compatible
             myHeight = document.body.clientHeight;
         }
-        myHeight = myHeight - 180;
+        myHeight = myHeight - 280;
 
         var mysheet = document.styleSheets[0];
         var totalrules = mysheet.cssRules ? mysheet.cssRules.length : mysheet.rules.length
@@ -579,6 +600,7 @@ if (count($properties_list) > 0) {
     <?php
 
   foreach ($properties_list as $property_object) {
+    $exam_started = false;
 
     $title = $property_object->get_paper_title();
     $property_id = $property_object->get_property_id();
@@ -594,6 +616,8 @@ if (count($properties_list) > 0) {
 
     if ($end_datetime == FALSE) {
       $end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
+    } else {
+      $exam_started = true;
     }
 
     if (isset($_POST['start_exam_form'])) {
@@ -605,8 +629,8 @@ if (count($properties_list) > 0) {
       if ($paper_id == (int)$property_id) {
         $invigilator_id = $userObject->get_user_ID();
         $end_datetime = $log_lab_end_time->save($invigilator_id);
+        $exam_started = true;
       }
-
     }
 
     if(isset($_POST['end_exam_form'])) {
@@ -620,7 +644,6 @@ if (count($properties_list) > 0) {
         $time = 'PT' . $_POST['hour'] . 'H' . $_POST['minute'] . 'M';
         $end_datetime = $log_lab_end_time->save($invigilator_id, $time);
       }
-
     }
 
     $disptimezone = new datetimezone($property_object->get_timezone());
@@ -628,16 +651,16 @@ if (count($properties_list) > 0) {
 
     $start_datetime->setTimezone($disptimezone);
 
-    $start_date = $start_datetime->format('d/m/Y H:i:s');
+    $start_date = $start_datetime->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'));
 
     $end_datetime->setTimezone($disptimezone);
 
-    $end_date = $end_datetime->format('d/m/Y H:i:s');
-    $end_time = $end_datetime->format('H:i:s');
+    $end_date = $end_datetime->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'));
+    $end_time = $end_datetime->format($configObject->get('cfg_long_time_php'));
 
-    $paper_end_datetime = $log_lab_end_time->get_paper_end_datetime();
-    $paper_end_datetime->setTimezone($disptimezone);
-    $paper_end_date = $paper_end_datetime->format('d/m/Y H:i:s');
+    // $paper_end_datetime = $log_lab_end_time->get_paper_end_datetime();
+    // $paper_end_datetime->setTimezone($disptimezone);
+    // $paper_end_date = $paper_end_datetime->format('d/m/Y H:i:s');
 
     $end_time_h = $end_datetime->format('H');
     $end_time_m = $end_datetime->format('i');
@@ -660,7 +683,7 @@ if (count($properties_list) > 0) {
 
           <div style="margin-left:52px; display:block">
               <strong><?php echo $title ?></strong>
-              <table>
+              <table style="width: 100%">
 
                   <tr>
                       <td>
@@ -669,26 +692,54 @@ if (count($properties_list) > 0) {
                       <td>
                         <?php echo $start_date ?>
                       </td>
+                      <td><strong><?php echo $string['timedexam'] ?></strong></td>
                   </tr>
 
                   <tr>
                       <td>
-                        <?php echo $string['session_end']; ?>:
+                        <?php echo $string['end']; ?>:
                       </td>
                       <td>
                         <?php echo $end_date;   ?>
                       </td>
+                      <td rowspan="2" style="width: 45%; vertical-align: top">
+                        <form id="start_exam_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+                          <input name="paper_id" type="hidden" value="<?php echo $property_id; ?>"/>
+                          <?php
+                            if ($exam_started) {
+                          ?>
+                            <fieldset id="set_end">
+                              <input id="end_exam_button" name="end_exam_form" type="submit" value="End At" class="exam-button" /><br />
+                              <?php echo $string['time'] ?>:<select id="hour" name="hour">
+                                  <?php for($hr=0; $hr<24; $hr++) { $selected = ''; if($hr == $end_time_h) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . str_pad($hr, 2, '0', STR_PAD_LEFT) . '</option>'; } ?>
+                              </select>
+                              :
+                              <select id="minute" name="minute">
+                                <?php for($hr=0; $hr<60; $hr++) { $selected = ''; if($hr == $end_time_m) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . str_pad($hr, 2, '0', STR_PAD_LEFT) . '</option>'; } ?>
+                              </select>
+                            </fieldset>
+                          <?php
+                            } else {
+                          ?>
+                            <fieldset id="start_exam">
+                              <input id="start_exam_button" name="start_exam_form" type="submit" value="Start" class="exam-button" />
+                            </fieldset>
+                          <?php
+                            }
+                          ?>
+                        </form>
+                      </td>
                   </tr>
 
-                  <tr>
+<!--                   <tr>
                       <td>
-                        <?php echo $string['end'];   ?>:
+                        <?php //echo $string['end'];   ?>:
                       </td>
                       <td>
-                        <?php echo $paper_end_date;   ?>
+                        <?php //echo $paper_end_date;   ?>
                       </td>
                   </tr>
-
+ -->
                   <tr>
                       <td>
                         <?php echo $string['duration']; ?>:
@@ -699,11 +750,10 @@ if (count($properties_list) > 0) {
                   </tr>
 
               </table>
-              <br/>
 
-              <a href="" onclick="newPaperNote(<?php echo $property_id; ?>); return false;" style="color:blue">
+              <p class="tight"><a href="" onclick="newPaperNote(<?php echo $property_id; ?>); return false;" style="color:blue">
                 <?php echo $string['papernote']; ?>
-              </a>
+              </a></p>
 
             <?php
 
@@ -719,19 +769,6 @@ if (count($properties_list) > 0) {
           <hr style="border:0px; height:1px" noshade="noshade" size="1"/>
 
 
-          <form id="start_exam_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-              <input id="start_exam_button" name="start_exam_form" type="submit" value="Start"/>
-              <input name="paper_id" type="hidden" value="<?php echo $property_id; ?>"/>
-              &nbsp;
-              <input id="end_exam_button" name="end_exam_form" type="submit" value="End At"/>
-              Hour:<select name="hour">
-                  <?php for($hr=0; $hr<24; $hr++) { $selected = ''; if($hr == $end_time_h) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . $hr . '</option>'; } ?>
-              </select>
-              &nbsp;
-              Minute:<select name="minute">
-            <?php for($hr=0; $hr<60; $hr++) { $selected = ''; if($hr == $end_time_m) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . $hr . '</option>'; } ?>
-          </select>
-          </form>
         <?php
 
         $sql = 'SELECT idMod as moduleID FROM properties_modules WHERE property_id = ?';

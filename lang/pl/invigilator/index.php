@@ -27,8 +27,8 @@ $string['extendtime']       = 'Przedłuż czas:';
 $string['addnote']          = 'Dodaj notatkę';
 $string['currenttime']      = 'Aktualny czas:';
 $string['start']     		= 'Start'; //cognate
-$string['end']      		= 'Koniec:'; 
-$string['session_end'] 		= 'Koniec sesji'; 
+$string['end']      		= 'Koniec:';
+$string['session_end'] 		= 'Koniec sesji';
 $string['duration']  		= 'Czas trwania:';
 $string['mins'] = 'min.';
 $string['papernote'] = 'Uwagi dot. arkusza';
@@ -58,4 +58,6 @@ $string['checklist'] = '<div><strong>Lista zadań</strong></div>
     <li>Zbierz pozostałe czyste kartki</li>
     <li>Upewnij się, że wylogowano się, że <strong>wszystkich</strong> komputerów</li>
     </ol>'; //??
+$string['time'] = 'Time';   // Niko
+$string['timedexam'] = 'Timed Exam:';   // Niko
 ?>

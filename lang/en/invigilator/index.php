@@ -58,5 +58,6 @@ $string['checklist'] = '<div><strong>Tasklist</strong></div>
     <li>Collect and dispose of blank paper</li>
     <li>Ensure <strong>all</strong> workstations are logged out</li>
     </ol>';
-
+$string['time'] = 'Time';
+$string['timedexam'] = 'Timed Exam:';
 ?>
