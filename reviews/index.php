@@ -24,6 +24,8 @@
 
   require '../include/staff_auth.inc';
   require '../config/index.inc';  // Get the logo
+  require_once '../classes/paperutils.class.php';
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -42,13 +44,17 @@
 
   <script type="text/javascript" src="../js/student_help.js"></script>
   <script language="JavaScript">
-    function startPaper(paperID, fullsc) {
+    function startPaper(paperID, fullsc, paper_type) {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      if (fullsc == 0) {
-        window.open("start.php?id="+paperID+"","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (paper_type == 4) {
+        window.open("../osce/form.php?id="+paperID+"&username=test","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       } else {
-        window.open("start.php?id="+paperID+"","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        if (fullsc == 0) {
+          window.open("start.php?id="+paperID+"","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        } else {
+          window.open("start.php?id="+paperID+"","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        }
       }
     }
   </script>
@@ -76,7 +82,7 @@
 <p style="margin-left:15px; font-weight:bold"><?php echo $string['yourpapersforreview']; ?></p>
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
 <?php
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,' {$configObject->get('cfg_short_date')}') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id=papers.paper AND externals LIKE ? GROUP BY paper ORDER BY paper_title");
+  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,' {$configObject->get('cfg_short_date')}') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id = papers.paper AND externals LIKE ? GROUP BY paper ORDER BY paper_title");
   $tVar= '%'. $userObject->get_user_ID() . '%';
   $result->bind_param('s', $tVar);
   $result->execute();
@@ -84,7 +90,8 @@
   $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $display_deadline, $crypt_name);
   while ($result->fetch()) {
     $reviewed = '';
-    $log_results = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'{$configObject->get('cfg_long_date_time')}') AS started FROM review_comments WHERE reviewer=? and q_paper=?");
+    if ($fullscreen == '') $fullscreen = 0;
+    $log_results = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'{$configObject->get('cfg_long_date_time')}') AS started FROM review_comments WHERE reviewer = ? and q_paper = ?");
     $log_results->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $log_results->execute();
     $log_results->store_result();
@@ -92,8 +99,8 @@
     $log_results->fetch();
     $log_results->close();
     $restartdate = '';
-    echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('$crypt_name',$fullscreen); return false;\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" border=\"0\" /></a></td>\n";
-    echo "  <td><a href=\"#\" onclick=\"startPaper('$crypt_name',$fullscreen); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
+    echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('$crypt_name', $fullscreen, $paper_type); return false;\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
+    echo "  <td><a href=\"#\" onclick=\"startPaper('$crypt_name', $fullscreen, $paper_type); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
     if (date("Ymd") > $external_review_deadline) {
       printf($string['expired'], $configObject->get('cfg_company'));
     } else {

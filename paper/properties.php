@@ -47,6 +47,11 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) 
     $r2class = 'r2disabled';
     $disabled = ' disabled';
     $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
+  } elseif ($paper_type == '4') {
+    $r1class = 'r1disabled';
+    $r2class = 'r2disabled';
+    $disabled = ' disabled';
+    $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
   } else {
     $r1class = 'r1';
     $r2class = 'r2';
@@ -1101,8 +1106,12 @@ if ($paper_type != '4' and $paper_type != '5') {
       echo ">";
       echo $value . "</option>\n";
     }
-    echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"$password\" /></td></tr>\n";
-
+    if ($paper_type == '4') {
+      echo "</select></td><td></td><td><input type=\"hidden\" size=\"20\" name=\"password\" value=\"$password\" /></td></tr>\n";
+    } else {
+      echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"$password\" /></td></tr>\n";
+    }
+    
     echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";
     foreach ($timezone_array as $individual_zone => $display_zone) {
       if ($timezone == $individual_zone) {

@@ -29,49 +29,51 @@ require './osce.inc';
 check_var('id', 'GET', true, false, false);
 
 if (isset($_POST['submit'])) {
-  $started = DATE('YmdHis');
-  $total_score = 0;
+  if ($_POST['userID'] != '') {
+    $started = DATE('YmdHis');
+    $total_score = 0;
 
-  // Delete any Log4 previous submissions for this student.
-  $result = $mysqli->prepare("DELETE FROM log4 WHERE q_paper = ? AND userID = ?");
-  $result->bind_param('ii', $_POST['paperID'], $_POST['userID']);
-  $result->execute();
+    // Delete any Log4 previous submissions for this student.
+    $result = $mysqli->prepare("DELETE FROM log4 WHERE q_paper = ? AND userID = ?");
+    $result->bind_param('ii', $_POST['paperID'], $_POST['userID']);
+    $result->execute();
 
-  // Delete any Log4_overall record for this student.
-  $result = $mysqli->prepare("DELETE FROM log4_overall WHERE q_paper = ? AND userID = ?");
-  $result->bind_param('ii', $_POST['paperID'], $_POST['userID']);
-  $result->execute();
+    // Delete any Log4_overall record for this student.
+    $result = $mysqli->prepare("DELETE FROM log4_overall WHERE q_paper = ? AND userID = ?");
+    $result->bind_param('ii', $_POST['paperID'], $_POST['userID']);
+    $result->execute();
 
-  // Write individual ratings into Log4.
-  for ($question = 1; $question <= $_POST['q_no']; $question++) {
-    $tmp_val = ($_POST['q' . $question . '_val'] - 1);
-    if (isset( $_POST[$_POST['q' . $question . '_id'] . '_parts'] )) {
-      $q_parts = $_POST[$_POST['q' . $question . '_id'] . '_parts'];
-    } else {
-      $q_parts = '';
+    // Write individual ratings into Log4.
+    for ($question = 1; $question <= $_POST['q_no']; $question++) {
+      $tmp_val = ($_POST['q' . $question . '_val'] - 1);
+      if (isset( $_POST[$_POST['q' . $question . '_id'] . '_parts'] )) {
+        $q_parts = $_POST[$_POST['q' . $question . '_id'] . '_parts'];
+      } else {
+        $q_parts = '';
+      }
+      $result = $mysqli->prepare("INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?, ?, ?)");
+      $result->bind_param('isssss', $_POST['userID'], $started, $_POST['paperID'], $_POST['q' . $question . '_id'], $tmp_val, $q_parts);
+      $result->execute();
+      $result->close();
+      $total_score += ($_POST['q' . $question . '_val'] - 1);
     }
-    $result = $mysqli->prepare("INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('isssss', $_POST['userID'], $started, $_POST['paperID'], $_POST['q' . $question . '_id'], $tmp_val, $q_parts);
+
+    // Write summary information into Log4_overall.
+    if ($_POST['marking'] == '5') {
+      if ($total_score < 12) {
+        $overall_val = '1';
+      } else {
+        $overall_val = '2';
+      }
+    } else {
+      $overall_val = $_POST['overall_val'];
+    }
+    $result = $mysqli->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'electronic', ?)");
+    $result->bind_param('isssissii', $_POST['userID'], $started, $_POST['paperID'], $overall_val, $total_score, $_POST['fback'], $_POST['grade'], $userID, $_POST['year']);
     $result->execute();
     $result->close();
-    $total_score += ($_POST['q' . $question . '_val'] - 1);
   }
-
-  // Write summary information into Log4_overall.
-  if ($_POST['marking'] == '5') {
-    if ($total_score < 12) {
-      $overall_val = '1';
-    } else {
-      $overall_val = '2';
-    }
-  } else {
-    $overall_val = $_POST['overall_val'];
-  }
-  $result = $mysqli->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'electronic', ?)");
-  $result->bind_param('isssissii', $_POST['userID'], $started, $_POST['paperID'], $overall_val, $total_score, $_POST['fback'], $_POST['grade'], $userID, $_POST['year']);
-  $result->execute();
-  $result->close();
-
+  
   // Redirect back to the class list to get the next student.
   header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $_GET['id']);
 } else {
@@ -86,7 +88,7 @@ if (isset($_POST['submit'])) {
     $year = '1';
     $test = true;
   } else {
-    $result = $mysqli->prepare("SELECT username, title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE users.id=? AND users.id=sid.userID");
+    $result = $mysqli->prepare("SELECT username, title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE users.id = ? AND users.id = sid.userID");
     $result->bind_param('s', $_GET['userID']);
     $result->execute();
     $result->bind_result($username, $title, $surname, $first_names, $grade, $year, $student_id);
@@ -114,7 +116,7 @@ if (isset($_POST['submit'])) {
     }
   }
   
-  $result = $mysqli->prepare("SELECT COUNT(question) FROM papers WHERE paper=?");
+  $result = $mysqli->prepare("SELECT COUNT(question) FROM papers WHERE paper = ?");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($number_of_questions);
@@ -200,20 +202,20 @@ if (isset($_POST['submit'])) {
       <?php
       switch ($marking) {
         case '3':
-          $labels = array('Clear Fail','Borderline','Clear Pass');
-          $colors = array('#D99594','#FABF8F','#C2D69B');
+          $labels = array('Clear Fail', 'Borderline', 'Clear Pass');
+          $colors = array('#D99594', '#FABF8F', '#C2D69B');
           break;
         case '4':
-          $labels = array('Fail','Borderline Fail','Borderline pass','Pass','Good Pass');
-          $colors = array('#D99694','#E5B9B7','#FFC169','#D7E3BC','#C2D69B');
+          $labels = array('Fail', 'Borderline Fail', 'Borderline pass', 'Pass', 'Good Pass');
+          $colors = array('#D99694', '#E5B9B7', '#FFC169', '#D7E3BC', '#C2D69B');
           break;
         case '5':
-          $labels = array('Unsatisfactory','Competent');
-          $colors = array('#D99594','#C2D69B');
+          $labels = array('Unsatisfactory', 'Competent');
+          $colors = array('#D99594', '#C2D69B');
           break;
         case '6':
-          $labels = array('Clear FAIL','BORDERLINE','Clear PASS','Honours PASS');
-          $colors = array('#D99694','#E5B9B7','#D7E3BC','#C2D69B');
+          $labels = array('Clear FAIL', 'BORDERLINE', 'Clear PASS', 'Honours PASS');
+          $colors = array('#D99694', '#E5B9B7', '#D7E3BC', '#C2D69B');
           break;
       }
       for ($i=0; $i<count($colors); $i++) {
@@ -237,7 +239,7 @@ if (isset($_POST['submit'])) {
   </head>
 
   <body>
-  <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" name="osceform">
+  <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>&username=<?php echo $_GET['username']; ?>" name="osceform">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
   if (file_exists($cfg_web_root . 'users/photos/' . $username . '.jpg')) {
@@ -250,7 +252,7 @@ if (isset($_POST['submit'])) {
   if ($test == false) {
     // Query Log4 just in case form has already been submitted for this user.
     $stored_results = array();
-    $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE q_paper=? AND userID=?");
+    $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE q_paper = ? AND userID = ?");
     $result->bind_param('ii', $paperID, $_GET['userID']);
     $result->execute();
     $result->bind_result($q_id, $rating, $q_parts);
@@ -260,7 +262,7 @@ if (isset($_POST['submit'])) {
     }
     $result->close();
 
-    $result = $mysqli->prepare("SELECT feedback, overall_rating FROM log4_overall WHERE q_paper=? AND userID=?");
+    $result = $mysqli->prepare("SELECT feedback, overall_rating FROM log4_overall WHERE q_paper = ? AND userID = ?");
     $result->bind_param('ii', $paperID, $_GET['userID']);
     $result->execute();
     $result->bind_result($feedback, $overall_rating);
@@ -271,7 +273,7 @@ if (isset($_POST['submit'])) {
   // Get the questions.
   $question_no = 1;
   $cell_colors = array('#D99594','#FABF8F','#C2D69B');
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
+  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question=questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
@@ -332,7 +334,18 @@ if (isset($_POST['submit'])) {
   <textarea name="fback" id="fback" style="border:1px solid #C0C0C0; width:100%" cols="60" rows="4"><?php if (isset($feedback)) echo $feedback; ?></textarea>
   </blockquote>
   <br />
-  <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled /><input type="hidden" name="paperID" value="<?php echo $paperID; ?>" /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($_GET['userID'])) echo $_GET['userID']; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+  <?php
+    // For external examiners just close the window without saving.
+    if ($userObject->has_role('External Examiner')) {
+  ?>
+    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="paperID" value="<?php echo $paperID; ?>" /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($_GET['userID'])) echo $_GET['userID']; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+  <?php
+    } else {
+  ?>
+    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled /><input type="hidden" name="paperID" value="<?php echo $paperID; ?>" /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($_GET['userID'])) echo $_GET['userID']; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+  <?php
+  }
+  ?>
   </form>
 <?php
   $mysqli->close();

@@ -48,11 +48,12 @@ $external_allowed_pages = array(
                               '/help/staff/display_page.php'=>1,
                               '/reviews/index.php'=>1,
                               '/reviews/start.php'=>1,
-                              '/reviews/finish.php'=>1
+                              '/reviews/finish.php'=>1,
+                              '/osce/form.php'=>1
                             );
 if ($userObject->has_role('External Examiner')) {
   if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reviews/");
+    header("location: " . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reviews/");
   }
 }
 
