@@ -168,14 +168,17 @@ class LogLabEndTime {
     $stmt->execute();
     $stmt->close();
 
+    // Update cached end time
+    $this->end_datetime_cached = $end_datetime;
+
     $records_to_update = $this->list_records_with_extra_time();
     $log_lab_end_time = new LogLabEndTime($this->lab_id, $this->property_object, $this->db);
     foreach($records_to_update as $uid) {
-      $stuobj['user_ID']=$uid;
+      $stuobj['user_ID'] = $uid;
 
-      $ext_timeobj=new LogExtraTime($this,$stuobj,$this->db);
-      $ext_time=(int)$ext_timeobj->get_extra_time_secs()/60; // give time in minutes that it needs next
-      $ext_timeobj->save($invigilator_id,$ext_time);
+      $ext_timeobj = new LogExtraTime($this, $stuobj, $this->db);
+      $ext_time = (int)$ext_timeobj->get_extra_time_secs()/60; // give time in minutes that it needs next
+      $ext_timeobj->save($invigilator_id, $ext_time);
       unset($ext_timeobj);
     }
 
