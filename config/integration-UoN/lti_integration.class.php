@@ -1,31 +1,14 @@
 <?php
-// This file is part of Rogō
-//
-// Rogō is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Rogō is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- *
- * The lti integration functions for University of Nottingham.
- *
- * @author Simon Atack
- * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
- * @package
+ * Created by JetBrains PhpStorm.
+ * User: cczsa1
+ * Date: 31/07/12
+ * Time: 12:00
+ * To change this template use File | Settings | File Templates.
  */
 
-require_once $configObj->get('cfg_web_root') . 'classes/userutils.class.php';
-require_once $configObj->get('cfg_web_root') . 'classes/smsutils.class.php';
+require_once $configObject->get('cfg_web_root') . 'classes/userutils.class.php';
+require_once $configObject->get('cfg_web_root') . 'classes/smsutils.class.php';
 
 class lti_integration_extended extends lti_integration {
 
@@ -76,20 +59,7 @@ class lti_integration_extended extends lti_integration {
       $user_data = $SMS->getUserData($username);
       if (count($user_data) > 0) {
         //valid acount found create user
-        UserUtils::createUser(
-          $username,
-          $password,
-          $user_data['Title'],
-          $user_data['Forename'],
-          $user_data['Surname'],
-          $user_data['Email'],
-          $user_data['CourseCode'],
-          $user_data['Gender'],
-          $user_data['YearofStudy'],
-          'Student',
-          $user_data['StudentID'],
-          $mysqli
-        );
+        UserUtils::createUser($username, $password, $user_data['Title'], $user_data['Forename'], $user_data['Surname'], $user_data['Email'], $user_data['CourseCode'], $user_data['Gender'], $user_data['YearofStudy'], 'Student', $user_data['StudentID'], $mysqli);
       } else {
         //error looking up student
         display_error($string['noaccountfound'], '', FALSE, TRUE);
@@ -158,7 +128,7 @@ class lti_integration_extended extends lti_integration {
   }
 
   static function module_code_translate($c_internal_id, $course_title = ' ') {
-    var_dump(array($c_internal_id, $course_title));
+
     if (stripos($c_internal_id, ' ') !== FALSE) {
       self::invalid_module_code($c_internal_id, array(), 'initial blank check');
     }
@@ -228,15 +198,18 @@ class lti_integration_extended extends lti_integration {
 
       if (substr($v[5], 0, 8) == 'MISSING:' and $v[0] == 'SMS') {
         $sms = SmsUtils::GetSmsUtils();
-        $sms->set_module($v[2]);
-        $returned = $sms->get_module_info($v[1]);
-        if ($returned !== FALSE) {
-          $data[$k][5] = $returned[1];
-          $data[$k][3] = $returned[2];
-        } else {
+        if ($sms === FALSE) {
           $data[$k][5] = "SATURN " . $data[$k][5];
+        } else {
+          $sms->set_module($v[2]);
+          $returned = $sms->get_module_info($v[1]);
+          if ($returned !== FALSE) {
+            $data[$k][5] = $returned[1];
+            $data[$k][3] = $returned[2];
+          } else {
+            $data[$k][5] = "SATURN " . $data[$k][5];
+          }
         }
-
 
       }
 
@@ -279,7 +252,8 @@ class lti_integration_extended extends lti_integration {
   }
 
   function invalid_module_code($c_internal_id, $data, $location = '') {
-    UserNotices::display_notice("Module code error", 'There is a problem with the module code as the translation code has resulted in an error.  Please contact Learning Team Support <a href="mailto:learning-team-support@nottingham.ac.uk">learning-team-support@nottingham.ac.uk</a>  Please include this debug info below:', '/artwork/access_denied.png', '#C00000');
+$notices=UserNotices::get_instance();
+    $notices->display_notice("Module code error", 'There is a problem with the module code as the translation code has resulted in an error.  Please contact Learning Team Support <a href="mailto:learning-team-support@nottingham.ac.uk">learning-team-support@nottingham.ac.uk</a>  Please include this debug info below:', '/artwork/access_denied.png', '#C00000');
 
     echo '<p>Incoming Module Code: ' . $c_internal_id . '</p>';
     echo '<p><pre>';

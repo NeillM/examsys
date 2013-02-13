@@ -180,7 +180,7 @@ if (!$lti->isInstructor()) {
     $data = $lti_i::module_code_translate($mod);
     foreach ($data as $v) {
       if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v)) {
-        UserUtils::add_staff_to_team($userObject->get_user_ID(), $v[1], $mysqli);
+        UserUtils::add_staff_to_module($userObject->get_user_ID(), $v[1], $mysqli);
       } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
         $error[] = '<img src="' . $configObject->get('cfg_root_path') . '../artwork/exclamation_64.png' . '"><h1>' . $string['NotAddedToModuleTitle'] . '</h1>' . $string['NotAddedToModule'] . $v[1] . '<br />';
       }
@@ -237,7 +237,7 @@ if (!$lti->isInstructor()) {
           exit();
         }
         if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v)) {
-          UserUtils::add_staff_to_team($userObject->get_user_ID(), $v[1], $mysqli);
+          UserUtils::add_staff_to_module($userObject->get_user_ID(), $v[1], $mysqli);
         } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
           UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png');
           exit();
