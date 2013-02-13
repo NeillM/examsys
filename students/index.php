@@ -28,6 +28,7 @@ require '../include/staff_student_auth.inc';
 require '../include/icon_display.inc';
 require '../config/index.inc';
 require '../classes/dateutils.class.php';
+require_once '../classes/paperutils.class.php';
 
 // Redirect External Examiners if they are straying
 if ($userObject->has_role('External Examiner')) {
@@ -170,7 +171,7 @@ QUERY;
   }
 }
 
-
+$paper_utils = Paper_utils::get_instance();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -292,7 +293,7 @@ if (!$userObject->has_role('Student')) {
 			  	<table cellpadding="0" cellspacing="0" border="0">
 			  		<tr>
 			  			<td style="width:60px" align="center">
-								<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank"><?php echo(displayIcon($paper['type'], $paper['title'], '', '', '', '')); ?></a>
+								<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank"><?php echo($paper_utils->displayIcon($paper['type'], $paper['title'], '', '', '', '')); ?></a>
 							</td>
 	    				<td>
 	    					<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a>
