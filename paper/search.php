@@ -75,7 +75,7 @@ if (isset($_POST['module']) and $_POST['module'] != '') {
   $params .= 'i';
 } else {
   if (!$userObject->has_role('SysAdmin')) {
-    $moduleid = "AND idMod IN ('" . implode("','",array_keys($staff_modules)) . "')";
+    $moduleid = 'AND idMod IN (' . implode(',', array_keys($staff_modules)) . ')';
   }
 }
 if (isset($_POST['day']) and $_POST['day'] != '') {
