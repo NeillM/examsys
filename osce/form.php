@@ -126,7 +126,13 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
   <head>
-  <meta name="viewport" content="user-scalable=no">
+  <?php
+  if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+    echo "  <meta name=\"viewport\" content=\"user-scalable=no\">\n";
+  } else {
+    echo "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
+  }
+  ?>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   
@@ -135,7 +141,13 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/osce.css" />
   <style type="text/css">
-    body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+  <?php
+    if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+      echo "body {background-color:$bgcolor; color:$fgcolor; font-size:110%}\n";
+    } else {
+      echo "body {background-color:$bgcolor; color:$fgcolor}\n";
+    }
+    ?>
     .t {color:<?php echo $themecolor; ?>}
   </style>
   
