@@ -71,10 +71,15 @@
     }
     evt.cancelBubble = true;
   }
-  function setColor(color) {
+  
+  function setColor(color, page) {
     document.getElementById(textBox).value = color;
     document.getElementById('span_' + textBox).style.backgroundColor = color;
     document.getElementById('picker').style.display = 'none';
+    
+    if (page == '/users/details.php') {
+      updateAccessDemo();
+    }
   }
   
   function hidePicker() {
@@ -107,7 +112,7 @@
   echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";
   foreach ($row[1] as $colour) {
-    echo "<td style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour')\"></td><td style=\"width:5px\"></td>";
+    echo "<td style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour', '" . $_SERVER['SCRIPT_NAME'] . "')\"></td><td style=\"width:5px\"></td>";
   }
   echo "</tr>\n";
   echo "<tr style=\"height:8px\"><td colspan=\"21\"></td></tr>";
@@ -125,7 +130,7 @@
     }
     echo "<tr style=\"height:12px\">\n<td style=\"width:5px\"></td>";
     foreach ($row[$row_no] as $colour) {
-      echo "<td style=\"" . $border_top . $border_bottom. "border-left: 1px solid #C5C5C5; border-right: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour')\"></td><td style=\"width:5px\"></td>";
+      echo "<td style=\"" . $border_top . $border_bottom. "border-left: 1px solid #C5C5C5; border-right: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour', '" . $_SERVER['SCRIPT_NAME'] . "')\"></td><td style=\"width:5px\"></td>";
     }
     echo "</tr>\n";
   }
@@ -135,7 +140,7 @@
   
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";
   foreach ($row[7] as $colour) {
-    echo "<td style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour')\"></td><td style=\"width:5px\"></td>";
+    echo "<td style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour', '" . $_SERVER['SCRIPT_NAME'] . "')\"></td><td style=\"width:5px\"></td>";
   }
   echo "</tr>\n";
   echo "<tr style=\"height:4px\"><td colspan=\"21\" style=\"border-bottom: 1px solid #C5C5C5\"></td></tr>";

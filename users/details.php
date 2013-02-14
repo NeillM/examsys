@@ -224,6 +224,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     .sch_check {text-align:right; width:40px; padding-right:6px}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="javascript">
     function reviewPaper(started, userid, surname, papername, log_type) {
       var winwidth = screen.width - 80;
@@ -284,6 +285,63 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         editwin.focus();
       }
     }
+    
+    function updateAccessDemo() {
+
+      var e = document.getElementById("textsize");
+      var textsize = e.options[e.selectedIndex].text;
+      if (textsize == '<default>') {
+        textsize = '100%';
+      }
+      document.getElementById('demo_paper_background').style.fontSize = textsize;
+    
+      e = document.getElementById("font");
+      var font = e.options[e.selectedIndex].text;
+      if (font == '<default>') {
+        font = 'Arial';
+      }
+      document.getElementById('demo_paper_background').style.fontFamily = font;
+    
+      if (document.getElementById("bg_radio_on").checked) {
+        document.getElementById('demo_paper_background').style.backgroundColor = document.getElementById('span_background').style.backgroundColor;
+      } else {
+        document.getElementById('demo_paper_background').style.backgroundColor = '#FFFFFF';
+      }
+      
+      if (document.getElementById("fg_radio_on").checked) {
+        document.getElementById('demo_paper_background').style.color = document.getElementById('span_foreground').style.backgroundColor;
+      } else {
+        document.getElementById('demo_paper_background').style.color = '#000000';
+      }
+            
+      if (document.getElementById("theme_radio_on").checked) {
+        document.getElementById('demo_theme').style.color = document.getElementById('span_themecolor').style.backgroundColor;
+      } else {
+        document.getElementById('demo_theme').style.color = '#316AC5';
+      }
+      
+      if (document.getElementById("labels_radio_on").checked) {
+        document.getElementById('demo_true_label').style.color = document.getElementById('span_labelcolor').style.backgroundColor;
+        document.getElementById('demo_false_label').style.color = document.getElementById('span_labelcolor').style.backgroundColor;
+      } else {
+        document.getElementById('demo_true_label').style.color = '#C00000';
+        document.getElementById('demo_false_label').style.color = '#C00000';
+      }
+      
+      if (document.getElementById("unanswered_radio_on").checked) {
+        document.getElementById('demo_unanswered').style.backgroundColor = document.getElementById('span_unansweredcolor').style.backgroundColor;
+      } else {
+        document.getElementById('demo_unanswered').style.backgroundColor = '#FFC0C0';
+      }
+      
+      if (document.getElementById("marks_radio_on").checked) {
+        document.getElementById('demo_marks').style.color = document.getElementById('span_marks_color').style.backgroundColor;
+      } else {
+        document.getElementById('demo_marks').style.color = '#808080';
+      }
+    }
+    
+    $(document).ready(updateAccessDemo);
   </script>
 </head>
 
@@ -293,7 +351,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   require '../tools/colour_picker/colour_picker.inc';
   require '../include/user_search_options.inc';
 
-  $needs_result = $mysqli->prepare("SELECT special_id FROM special_needs WHERE userID=?");
+  $needs_result = $mysqli->prepare("SELECT special_id FROM special_needs WHERE userID = ?");
   $needs_result->bind_param('i', $_GET['userID']);
   $needs_result->execute();
   $needs_result->bind_result($special_id);
@@ -371,32 +429,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       if ($student_id == '') $student_id = $string['unknown'];
       echo "<td>&nbsp;" . $string['studentid'] . "</td><td colspan=\"2\"><input type=\"text\" size=\"15\" name=\"sid\" value=\"$student_id\" /></td></tr>\n";
     } else {
-      if ($configObject->get('cfg_use_ldap') == true and strpos($grade,'University') !== false) {
-        // Try and get the telephone number from LDAP.
-        $ldap = ldap_connect($configObject->get('cfg_ldap_server'));
-        ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-        if (ldap_bind($ldap, $configObject->get('cfg_ldap_bind_rdn'), $configObject->get('cfg_ldap_bind_password'))) {
-          if (!($search=@ldap_search($ldap, $configObject->get('cfg_ldap_search_dn'), 'cn=' . $username))) {
-            echo "<td>&nbsp;" . $string['telephone'] . "</td><td>" . $string['ldapunavailable'] .  "</td></tr>\n";
-            return false;
-          } else {
-            $info = ldap_get_entries($ldap, $search);
-            if (!isset($info[0]['telephonenumber'][0])) {
-              echo "<td>&nbsp;" . $string['telephone'] . "</td><td style=\"color:#808080\" colspan=\"2\">" . $string['unknown'] . "</td></tr>\n";
-            } else {
-              echo "<td>&nbsp;" . $string['telephone'] . "</td><td colspan=\"2\">" . $info[0]['telephonenumber'][0] . "</td></tr>\n";
-            }
-          }
-          ldap_unbind($ldap);
-        }
-      } elseif (strpos($grade,'NHS ') !== false) {
-        echo "<td>&nbsp;" . $string['telephone'] . "</td><td style=\"color:#808080\" colspan=\"2\">" . $string['unknown'] . "</td></tr>\n";
-      } else {
-        echo "<td colspan=\"3\"></td></tr>\n";
-      }
+      echo "<td colspan=\"3\"></td></tr>\n";
     }
-    if (stripos($tmp_roles,'Student') !== false or stripos($tmp_roles,'graduate') !== false or stripos($tmp_roles,'left') !== false or stripos($tmp_roles,'suspended') !== false) {
+    if (stripos($tmp_roles, 'Student') !== false or stripos($tmp_roles,'graduate') !== false or stripos($tmp_roles,'left') !== false or stripos($tmp_roles,'suspended') !== false) {
       // Student editing
       echo "<tr><td>&nbsp;" . $string['course'] . "</td><td><select name=\"grade\" style=\"width:300px\">";
       $found = 0;
@@ -508,8 +543,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     echo "</select></td><td>&nbsp;" . $string['databaseid'] . "</td><td colspan=\"2\">" . $_GET['userID'] . "</td></tr>\n";
     echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
   } else {
-    if (stripos($tmp_roles,'Student') !== false) {
-      $student_photo =  $cfg_web_root ."users/photos/$username.jpg";
+    if (stripos($tmp_roles, 'Student') !== false) {
+      $student_photo = $cfg_web_root . 'users/photos/$username.jpg';
       $row_no = 10;
       if (file_exists($student_photo)) {
         echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td width=\"110\">&nbsp;Name</td><td>$tmp_title $tmp_initials $tmp_surname</td></tr>\n";
@@ -522,10 +557,10 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     }
     if (stripos($tmp_roles,'Student') !== false) {
       if ($student_id == '') $student_id = $string['unknown'];
-      echo "<tr><td>&nbsp;Student ID</td><td>$student_id</td></tr>\n";
+      echo "<tr><td>&nbsp;" . $string['studentid'] . "</td><td>$student_id</td></tr>\n";
     }
-    echo "<tr><td>&nbsp;Email</td><td><a href=\"mailto:$email\">$email</a></td></tr>\n";
-    if (stripos($tmp_roles,'Student') !== false) {
+    echo "<tr><td>&nbsp;" . $string['email'] . "</td><td><a href=\"mailto:$email\">$email</a></td></tr>\n";
+    if (stripos($tmp_roles, 'Student') !== false) {
       echo "<tr><td>&nbsp;" . $string['yearofstudy'] . "</td><td>{$string['year']} $tmp_year</td></tr>\n";
       echo "<tr><td>&nbsp;" . $string['course'] . "</td><td>$grade - $description</td></tr>\n";
     }
@@ -847,9 +882,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=accessibility\" method=\"post\">";
   echo drawTabs('Accessibility', 1, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
-  echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"text-align:left\">";
+  echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"padding-top:20px; text-align:left\">";
 
-  $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userID=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userID = ? LIMIT 1");
   $result->bind_param('i', $tmp_id);
   $result->execute();
   $result->store_result();
@@ -894,11 +929,31 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 ?>
 </select>
 </td>
+<td rowspan="11" style="width:40px">&nbsp;</td>
+<td rowspan="11" style="font-size:110%">
+<div id="demo_paper_background" style="width:450px; height:300px; border:1px solid #EAEAEA; box-shadow: 3px 3px 4px #808080; padding:15px; float:right">
+
+<span id="demo_theme" style="font-size:150%; font-weight:bold; color:#316AC5">Cities</span>
+
+<p>1. &nbsp;Which of the following are European cities?</p>
+
+<table cellspacing="0" cellpadding="2" border="0" style="margin-left:30px; width:200px">
+<tr><td style="text-align:center; color:#C00000" id="demo_true_label">True</td><td style="text-align:center; color:#C00000" id="demo_false_label">False</td><td></td>
+<tr><td style="text-align:center"><input type="radio" name="q1" value="t" checked="checked" /></td><td style="text-align:center"><input type="radio" name="q1" value="f" /></td><td>London</td></tr>
+<tr><td style="text-align:center"><input type="radio" name="q2" value="t" /></td><td style="text-align:center"><input type="radio" name="q2" value="f" checked="checked" /></td><td>New York</td></tr>
+<tr id="demo_unanswered" style="background-color:#FFC0C0"><td style="text-align:center"><input type="radio" name="q3" value="t" /></td><td style="text-align:center"><input type="radio" name="q3" value="f" /></td><td>Paris</td></tr>
+</table>
+<br />
+<span id="demo_marks" style="font-size:90%; color:#808080">(3 marks)</span>
+
+</div>
+
+</td>
 </tr>
 <tr>
 <td><?php echo $string['fontsize']; ?></td>
 <td colspan="2">
-<select name="textsize">
+<select name="textsize" id="textsize" onchange="updateAccessDemo()">
 <option value="null"><?php echo $string['angledefault']; ?></option>
 <?php
   $fontsizes = array(90, 100, 110, 120, 130, 140, 150, 175, 200, 300, 400);
@@ -916,7 +971,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <tr>
 <td><?php echo $string['typeface']; ?></td>
 <td colspan="2">
-<select name="font">
+<select name="font" id="font" onchange="updateAccessDemo()">
 <option value="null"><?php echo $string['angledefault']; ?></option>
 <?php
   $fontfamily = array('Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana');
@@ -933,8 +988,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 </tr>
 <tr>
 <td><?php echo $string['background']; ?></td>
-<td><input type="radio" name="bg_radio" value="0"<?php if ($background == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="bg_radio" id="bg_radio_on" value="1"<?php if ($background != '') echo ' checked'; ?> />
+<td><input type="radio" onchange="updateAccessDemo()" name="bg_radio" value="0"<?php if ($background == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input type="radio" onchange="updateAccessDemo()" name="bg_radio" id="bg_radio_on" value="1"<?php if ($background != '') echo ' checked'; ?> />
 <?php
   if ($background == '') {
     echo "<div onclick=\"showPicker('background',event); document.getElementById('bg_radio_on').checked=true;\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
@@ -946,8 +1001,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 </tr>
 <tr>
 <td><?php echo $string['foreground']; ?></td>
-<td><input type="radio" name="fg_radio" value="0"<?php if ($foreground == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="fg_radio" id="fg_radio_on" value="1"<?php if ($foreground != '') echo ' checked'; ?> />
+<td><input type="radio" onchange="updateAccessDemo()" name="fg_radio" value="0"<?php if ($foreground == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input type="radio" onchange="updateAccessDemo()" name="fg_radio" id="fg_radio_on" value="1"<?php if ($foreground != '') echo ' checked'; ?> />
 <?php
   if ($foreground == '') {
     echo "<div onclick=\"showPicker('foreground',event); document.getElementById('fg_radio_on').checked=true;\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
@@ -959,8 +1014,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 </tr>
 <tr>
 <td><?php echo $string['markscolour']; ?></td>
-<td><input type="radio" name="marks_radio" value="0"<?php if ($marks_color == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="marks_radio" id="marks_radio_on" value="1"<?php if ($marks_color != '') echo ' checked'; ?> />
+<td><input type="radio" onchange="updateAccessDemo()" name="marks_radio" value="0"<?php if ($marks_color == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input type="radio" onchange="updateAccessDemo()" name="marks_radio" id="marks_radio_on" value="1"<?php if ($marks_color != '') echo ' checked'; ?> />
 <?php
   if ($marks_color == '') {
     echo "<div onclick=\"showPicker('marks_color',event); document.getElementById('marks_radio_on').checked=true;\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
@@ -972,8 +1027,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 </tr>
 <tr>
 <td><?php echo $string['themecolour']; ?></td>
-<td><input type="radio" name="theme_radio" value="0"<?php if ($themecolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="theme_radio" id="theme_radio_on" value="1"<?php if ($themecolor != '') echo ' checked'; ?> />
+<td><input type="radio" onchange="updateAccessDemo()" name="theme_radio" value="0"<?php if ($themecolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input type="radio" onchange="updateAccessDemo()" name="theme_radio" id="theme_radio_on" value="1"<?php if ($themecolor != '') echo ' checked'; ?> />
 <?php
   if ($themecolor == '') {
     echo "<div onclick=\"showPicker('themecolor',event); document.getElementById('theme_radio_on').checked=true;\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
@@ -985,8 +1040,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 </tr>
 <tr>
 <td><?php echo $string['labelscolour']; ?></td>
-<td><input type="radio" name="labels_radio" value="0"<?php if ($labelcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="labels_radio" id="labels_radio_on" value="1"<?php if ($labelcolor != '') echo ' checked'; ?> />
+<td><input type="radio" onchange="updateAccessDemo()" name="labels_radio" value="0"<?php if ($labelcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input type="radio" onchange="updateAccessDemo()" name="labels_radio" id="labels_radio_on" value="1"<?php if ($labelcolor != '') echo ' checked'; ?> />
 <?php
   if ($labelcolor == '') {
     echo "<div onclick=\"showPicker('labelcolor',event); document.getElementById('labels_radio_on').checked=true;\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
@@ -998,8 +1053,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 </tr>
 <tr>
 <td>Unanswered</td>
-<td><input type="radio" name="unanswered_radio" value="0"<?php if ($unansweredcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="unanswered_radio" id="unanswered_radio_on" value="1"<?php if ($unansweredcolor != '') echo ' checked'; ?> />
+<td><input type="radio" onchange="updateAccessDemo()" name="unanswered_radio" value="0"<?php if ($unansweredcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input type="radio" onchange="updateAccessDemo()" name="unanswered_radio" id="unanswered_radio_on" value="1"<?php if ($unansweredcolor != '') echo ' checked'; ?> />
 <?php
   if ($unansweredcolor == '') {
     echo "<div onclick=\"showPicker('unansweredcolor',event); document.getElementById('unanswered_radio_on').checked=true;\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
@@ -1012,6 +1067,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <tr><td colspan="3">&nbsp;</td></tr>
 <tr><td colspan="3" align="center"><input type="submit" name="updateaccess" value="<?php echo $string['save']; ?>" style="width:100px" /></td></tr>
 </table>
+
 
 </td>
 </tr>
