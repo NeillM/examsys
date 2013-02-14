@@ -34,6 +34,7 @@ require_once '../lang/' . $language . '/include/timezones.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/questionutils.class.php';
+require_once '../classes/logger.class.php';
 
 check_var('paperID', 'REQUEST', true, false, false);
 
@@ -109,6 +110,8 @@ function modulo($n,$b) {
 }
 
 if (isset($_POST['Submit'])) {
+  $logger = new Logger($mysqli);
+
   // Check that the new paper name is not already used by any other paper (i.e. unique).
   $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ? LIMIT 1");
   $result->bind_param('s', $_POST['paper_title']);
@@ -331,7 +334,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
 
-      Paper_utils::update_modules($paper_modules,$paperID,$mysqli,$userObject);
+      Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
     } else {
 
       $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
@@ -339,31 +342,43 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
 
-      Paper_utils::update_modules($paper_modules,$paperID,$mysqli,$userObject);
+      Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
     }
 
     // Release objectives-based feedback
-    $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
-    $editProperties->bind_param('i', $_POST['paperID']);
-    $editProperties->execute();
-    $editProperties->close();
-    if (isset($_POST['objectives_report']) and $_POST['objectives_report'] == 1) {
+    if (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] != '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '0') {
+      $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
+      $editProperties->bind_param('i', $_POST['paperID']);
+      $editProperties->execute();
+      $editProperties->close();
+      
+      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), 'Objectives-based Feedback', '', '');
+    }
+    if (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] == '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '1') {
       $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'objectives')");
       $editProperties->bind_param('i', $_POST['paperID']);
       $editProperties->execute();
       $editProperties->close();
+
+      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), '', 'Objectives-based Feedback', '');
     }
 
     // Release question-based feedback
-    $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
-    $editProperties->bind_param('i', $_POST['paperID']);
-    $editProperties->execute();
-    $editProperties->close();
-    if (isset($_POST['questions_report']) and $_POST['questions_report'] == 1) {
-      $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
+    if (isset($_POST['old_questions_report']) and $_POST['old_questions_report'] != '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '0') {
+      $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
       $editProperties->bind_param('i', $_POST['paperID']);
       $editProperties->execute();
       $editProperties->close();
+      
+      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), 'Question-based Feedback', '', '');
+    }
+    if (isset($_POST['old_questions_report']) and $_POST['old_questions_report'] == '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '1') {
+      $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
+      $editProperties->bind_param('i', $_POST['paperID']);
+      $editProperties->execute();
+      $editProperties->close();    
+      
+      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), '', 'Question-based Feedback', '');
     }
 
     if ($paper_type != '2') {
@@ -1356,41 +1371,51 @@ if ($paper_type != '4' and $paper_type != '5') {
 
   <?php
      echo "<tr><td colspan=\"2\" valign=\"top\">";
+     
+     echo "<table cellspacing=\"0\" cellpadding=\"6\" border=\"0\" style=\"margin:15px\">\n";
 
      if (in_array($paper_type, array('0', '1', '2', '5'))) {
+       echo '<tr><td><img src="../artwork/feedback_release_icon.png" width="48" height="48" />';
        // Objectives-based Feedback
        $idfeedback_release = '';
-       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='objectives'");
+       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
        $feedback_details->bind_result($idfeedback_release);
        $feedback_details->fetch();
+       echo "<td><input type=\"hidden\" name=\"old_objectives_report\" value=\"$idfeedback_release\" />";
        if ($idfeedback_release == '') {
-         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" />";
+         echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" />On</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" checked=\"checked\" />Off</td>";
        } else {
-         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" checked />";
+         echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" checked=\"checked\" />On</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" />Off</td>";
        }
        $feedback_details->close();
 
-       echo $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name</a></div>\n";
+       echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name</a></td></tr>\n";
+       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      }
      if (in_array($paper_type, array('1', '2', '5'))) {
+       echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
        // Question-based Feedback
        $idfeedback_release = '';
-       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='questions'");
+       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
        $feedback_details->bind_result($idfeedback_release);
        $feedback_details->fetch();
+       echo "<td><input type=\"hidden\" name=\"old_questions_report\" value=\"$idfeedback_release\" />";
        if ($idfeedback_release == '') {
-         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" />";
+         echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" />On</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" checked=\"checked\" />Off</td>";
        } else {
-         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" checked />";
+         echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" checked=\"checked\" />On</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" />Off</td>";
        }
        $feedback_details->close();
 
-       echo $string['questionfeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name</a></div>\n";
+       echo "<td>" . $string['questionfeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name</a></td></tr>\n";
      }
+     
+     echo "</table>\n";
+     
      if ($paper_type == '0') {
        echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
      } else {
