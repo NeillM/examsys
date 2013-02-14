@@ -58,6 +58,6 @@ $string['checklist'] = '<div><strong>Lista zadań</strong></div>
     <li>Zbierz pozostałe czyste kartki</li>
     <li>Upewnij się, że wylogowano się, że <strong>wszystkich</strong> komputerów</li>
     </ol>'; //??
-$string['time'] = 'Time';   // Niko
-$string['timedexam'] = 'Timed Exam:';   // Niko
+$string['time'] = 'Czas';  
+$string['timedexam'] = 'Egzamin odmierzany czasowo:';
 ?>
