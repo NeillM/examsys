@@ -200,7 +200,7 @@ class Authentication {
       //attempting to register callback to invalid section
       //maybe log name of function as well?
       $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
-      $this->authPluginObj[$number]->set_error($string['Authentication_callback_failure1'] . "($section)" . $string['Authentication_callback_failure2'] . " ($callbac k[1])");
+      $this->authPluginObj[$number]->set_error($string['Authentication_callback_failure1'] . "($section)" . $string['Authentication_callback_failure2'] . " ($callback[1])");
 
       return FALSE;
     }
@@ -326,7 +326,11 @@ class Authentication {
               }
             }
           }
-          if (isset($info->lookupdata->disabled) and $info->lookupdata->disabled = TRUE) {
+          if (isset($info->lookupdata->disabled) and $info->lookupdata->disabled == TRUE) {
+            $createuser = FALSE;
+          }
+
+          if (isset($info->lookupdata->multiple) and $info->lookupdata->multiple == TRUE) {
             $createuser = FALSE;
           }
 
