@@ -52,7 +52,7 @@ class ldap_lookup extends outline_lookup {
         $lookupobj->settings->override[$key] = $this->settings['override'][$key];
       }
       $overrideset = TRUE;
-      $this->savetodebug('Overriding settingsas none supplied');
+      $this->savetodebug('Overriding settings as none supplied');
     }
     if (!isset($lookupobj->settings->overrideall) and isset($this->settings['overrideall'])) {
       $lookupobj->settings->overrideall = $this->settings['overrideall'];
@@ -123,6 +123,9 @@ class ldap_lookup extends outline_lookup {
         if ($info['count'] > 0) {
           $searchsuccess = TRUE;
           $count = $info['count'];
+          if ($count > 1) {
+            $lookupobj->multiple = TRUE;
+          }
           $this->savetodebug("Found $count records");
           if (isset($lookupobj->settings->firstentry) and $lookupobj->settings->firstentry == TRUE) {
             //only
@@ -182,7 +185,7 @@ class ldap_lookup extends outline_lookup {
       $prepend = $this->settings['storeprepend'];
       $this->savetodebug("Setting prepend to $prepend");
     }
-    $lookupdatas=new stdClass();
+    $lookupdatas = new stdClass();
     foreach ($ldap_attributes as $key => $value) {
       $keyorig = $key;
       if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) {
@@ -196,8 +199,8 @@ class ldap_lookup extends outline_lookup {
         $this->savetodebug("saving value for $reverse_attribute using ldap_attribute: $key");
 
       }
-      if(isset($datablock[$key][0]) and !isset($lookupdatas->$reverse_attribute)) {
-        $lookupdatas->$reverse_attribute=$datablock[$key][0];
+      if (isset($datablock[$key][0]) and !isset($lookupdatas->$reverse_attribute)) {
+        $lookupdatas->$reverse_attribute = $datablock[$key][0];
       }
     }
     $lookupobj->lookupdatas[] = $lookupdatas;

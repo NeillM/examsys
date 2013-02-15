@@ -254,7 +254,7 @@ foreach ($titles as $tmp_title) {
   }
 ?>" size="12" /></td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['yearofstudy']; ?></span></td><td>
-<select name="new_year">
+<select id="new_yos" name="new_year">
 <?php
   for ($tmp_year=1; $tmp_year<=6; $tmp_year++) {
     if ($tmp_year == 1) {
@@ -310,7 +310,7 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 </select>
 </td>
 </tr>
-<tr><td align="right"><span class="field"><?php echo $string['studentid']; ?></span></td><td><input type="text" size="15" name="new_sid" /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['studentid']; ?></span></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /></td></tr>
 <tr><td align="right">&nbsp;</td><td style="color:#808080"><?php echo $string['onlyifstudent']; ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" />&nbsp;<?php echo $string['sendwelcomeemail']; ?></td></tr>

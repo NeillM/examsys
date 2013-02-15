@@ -28,6 +28,82 @@ require '../include/admin_auth.inc';
 require '../include/sort.inc';
 require_once '../classes/lookup.class.php';
 
+
+if(isset($_REQUEST['LOOKUP'])) {
+  if(isset( $_SESSION['ldaplookupdata'][$_REQUEST['LOOKUP']])) {
+  //  var_dump( $_SESSION['ldaplookupdata'][$_REQUEST['LOOKUP']]);
+    $lookup = Lookup::get_instance($configObject, $mysqli);
+    $data = new stdClass();
+    $data->lookupdata = $_SESSION['ldaplookupdata'][$_REQUEST['LOOKUP']];
+
+
+ //   $data->settings = new stdClass();
+//  $data->settings->recursive = TRUE;
+
+    $output = $lookup->userlookup($data);
+
+    var_dump($output);
+    ?>
+
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+
+    <title>LDAP Lookup</title>
+
+    <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/header.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/screen.css"/>
+    <style type="text/css">
+        body {
+            background-color: #F1F5FB;
+            font-size: 90%
+        }
+    </style>
+    <script type="text/javascript">
+        function setSelectedIndex(s, v) {
+            for (var i = 0; i < s.options.length; i++) {
+                if (s.options[i].value.toLowerCase() == v.toLowerCase()) {
+                    s.options[i].selected = true;
+                    return;
+                }
+            }
+        }
+
+        function writeDetails(user_title, first_names, surname, username, email,yearofstudy,gender,course,studentid) {
+            window.opener.document.getElementById('new_surname').value = surname;
+            window.opener.document.getElementById('new_first_names').value = first_names;
+            window.opener.document.getElementById('new_username').value = username;
+            window.opener.document.getElementById('new_email').value = email;
+            window.opener.document.getElementById('new_grade').value = course;
+            window.opener.document.getElementById('new_gender').value = gender;
+            window.opener.document.getElementById('new_yos').value = yearofstudy;
+            window.opener.document.getElementById('new_studentid').value = studentid;
+
+            window.close();
+        }
+    </script>
+</head>
+    <?php
+  if(!isset($output->lookupdata->yearofstudy)) { $output->lookupdata->yearofstudy='';  }
+  if(!isset($output->lookupdata->studentID)) { $output->lookupdata->studentID='';  }
+  if(!isset($output->lookupdata->coursecode)) { $output->lookupdata->coursecode='';  }
+  if(!isset($output->lookupdata->gender)) { $output->lookupdata->gender='';  }
+
+    ?>
+
+    <body onload="writeDetails('<?php echo $output->lookupdata->title; ?>','<?php echo $output->lookupdata->firstname; ?>','<?php echo $output->lookupdata->surname ?>','<?php echo $output->lookupdata->username; ?>','<?php echo $output->lookupdata->email; ?>','<?php echo $output->lookupdata->yearofstudy; ?>','<?php echo $output->lookupdata->gender; ?>','<?php echo $output->lookupdata->coursecode; ?>','<?php echo $output->lookupdata->studentID; ?>');">
+    CLOSING WINDOW
+    </body>
+    <?php
+
+
+  }
+  unset($_SESSION['ldaplookupdata']);
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -92,18 +168,26 @@ if (isset($_POST['submit'])) {
     $data->searchorder = array('surname');
   }
 
+  $data->settings = new stdClass();
+//  $data->settings->recursive = TRUE;
 
   $output = $lookup->userlookup($data);
+  ini_set('display_errors', 1);
+  ini_set('log_errors', 1);
+  ini_set('xdebug.remote_autostart', 1);
+  ini_set("display_errors", 1);
+  ini_set('xdebug.var_display_max_childrren', -1);
+  ini_set('xdebug.var_display_max_data', -1);
+  ini_set('xdebug.var_display_max_depth', -1);
+ // var_dump($output);
 
-  var_dump($output);
+
+  //$lookup->display_debug();
 
 
-  $lookup->display_debug();
+  if (isset($output->success)) {
 
-
-  if (isset($output->failure)) {
-
-    if (!isset($info[0])) {
+    if (!isset($output->lookupdatas)) {
       ?>
     <body>
     <form method="post" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -143,15 +227,16 @@ if (isset($_POST['submit'])) {
       $user_data = array();
       $user = 0;
       echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%; background-color:white\">\n";
-      foreach ($output->lookupdatas as $object) {
+      echo "<tr style=\"cursor:pointer\"><th \">title</th><th \">first_names</th><th \">surname</th><th \">username</th><th \">email</th><th \">role</th></tr>\n";
+      foreach ($output->lookupdatas as $key => $object) {
 
         if (isset($object->title)) {
           $user_data[$user]['title'] = $object->title;
         } else {
           $user_data[$user]['title'] = '';
         }
-        if (isset($object->title)) {
-          $user_data[$user]['first_names'] = $object->title;
+        if (isset($object->firstname)) {
+          $user_data[$user]['first_names'] = $object->firstname;
         } else {
           $user_data[$user]['first_names'] = '';
         }
@@ -180,30 +265,39 @@ if (isset($_POST['submit'])) {
         } else {
           $user_data[$user]['school'] = '';
         }
-
-          $user++;
-        }
+        $user_data[$user]['key'] = $key;
+        $user_data[$user]['object'] = $object;
+        $user++;
       }
-
-      if ($user > 1) $user_data = array_csort($user_data, 'first_names', 'asc');
-
-      for ($i = 0; $i < $user; $i++) {
-        $title = $user_data[$i]['title'];
-        $first_names = $user_data[$i]['first_names'];
-        $surname = $user_data[$i]['surname'];
-        $username = $user_data[$i]['username'];
-        $email = $user_data[$i]['email'];
-        $school = $user_data[$i]['school'];
-        $role = $user_data[$i]['role'];
-        echo "<tr style=\"cursor:pointer\"><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$title</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$first_names</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$surname</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$username</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$email</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$role</td></tr>\n";
-      }
-      echo "</table>\n";
     }
-  
-} else {
-  ?>
+
+    if ($user > 1) $user_data = array_csort($user_data, 'first_names', 'asc');
+unset($_SESSION['ldaplookupdata']);
+    for ($i = 0; $i < $user; $i++) {
+      $title = $user_data[$i]['title'];
+      $first_names = $user_data[$i]['first_names'];
+      $surname = $user_data[$i]['surname'];
+      $username = $user_data[$i]['username'];
+      $email = $user_data[$i]['email'];
+      $school = $user_data[$i]['school'];
+      $role = $user_data[$i]['role'];
+      $key = $user_data[$i]['key'];
+      $object = $user_data[$i]['object'];
+
+      //echo "<tr style=\"cursor:pointer\"><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$title</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$first_names</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$surname</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$username</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$email</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$role</td></tr>\n";
+      $_SESSION['ldaplookup'][$i] = $key;
+      $_SESSION['ldaplookupdata'][$key]=$object;
+      echo "<tr style=\"cursor:pointer\"><td><a href='?LOOKUP=$key'>$title</a></td><td><a href='?LOOKUP=$key'>$first_names</a></td><td><a href='?LOOKUP=$key'>$surname</a></td><td><a href='?LOOKUP=$key'>$username</a></td><td><a href='?LOOKUP=$key'>$email</a></td><td><a href='?LOOKUP=$key'>$role</a></td></tr>\n";
+    }
+    echo "</table>\n";
+  }
+  exit();
+}
+
+?>
 <body>
 <br/>
+
 <form method="post" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <div style="text-align:center">
         <table style="text-align:left">
@@ -229,8 +323,8 @@ if (isset($_POST['submit'])) {
     </div>
 </form>
 
-  <?php
-}
+<?php
+
 ?>
 
 </body>

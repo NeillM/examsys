@@ -201,6 +201,32 @@ class Lookup extends RogoStaticSingleton {
       }
     }
 
+    if (isset($data->settings->recursive) and $data->settings->recursive == TRUE) {
+      $userlookupobj->lookupdatasrec = array();
+      foreach ($userlookupobj->lookupdatas as $key => $lkdsvalue) {
+        $block = new stdClass();
+        $block->lookupdata =& $userlookupobj->lookupdatas[$key];
+        if (isset($data->settings->recursive_searchorder)) {
+          $block->searchorder = $data->settings->recursive_searchorder;
+        }
+        if (isset($data->settings->recursive_overrideall)) {
+          $block->overrideall = $data->settings->recursive_overrideall;
+        }
+        if (isset($data->settings->recursive_override)) {
+          $block->override = $data->settings->recursive_override;
+        }
+        $userlookupobj->lookupdatasrec[$key] = clone $block;
+        $this->debug[] = 'Now running recursively on data search results';
+
+        $userlookupobj->lookupdatasrec[$key] = $this->userlookup($userlookupobj->lookupdatasrec[$key]);
+
+        if (isset($data->settings->recursive_max) and $key > $data->settings->recursive_max) {
+          $this->debug[] = 'max recursive number for search exceeded ' . $key > $data->settings->recursive_max . ' Total # records: ' . count($userlookupobj->lookupdatas);
+          break;
+        }
+      }
+    }
+
     $postuserlookupobj = new stdClass();
     $postuserlookupobj->lookupobj = $userlookupobj;
     if (isset($this->callbackregister['postuserlookup'])) {
@@ -218,6 +244,11 @@ class Lookup extends RogoStaticSingleton {
     } else {
       $userlookupobj->failed = FALSE;
       $userlookupobj->success = TRUE;
+    }
+
+
+    if (isset($userlookupobj->multiple) and $userlookupobj->multiple == TRUE) {
+       $userlookupobj->lookupdata->unreliable = TRUE;
     }
 
     return $userlookupobj;

@@ -243,7 +243,9 @@ class XML_lookup extends outline_lookup {
     $count = count($xmlsearched);
     if ($count > 0) {
       //check items in the record
-
+      if ($count > 1) {
+        $lookupobj->multiple = TRUE;
+      }
       $attributes = $this->get_setting('xmlfields', 'userlookup');
 
       $this->savetodebug("Found $count records");
