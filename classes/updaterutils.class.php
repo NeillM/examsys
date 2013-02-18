@@ -128,13 +128,11 @@ Class UpdaterUtils {
   public function has_grant($user, $grant, $table, $host) {
     $found_grant = '';
     
-    $result = $this->mysqli->prepare("SHOW GRANTS FOR '$user'@'$host'");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($existing_grant);
-    while ($result->fetch()) {
-      if (stripos($existing_grant, ".`$table` TO") !== false) {
-        $found_grant = $existing_grant;
+    $result = $this->mysqli->query("SHOW GRANTS FOR '$user'@'$host'");
+    
+    while ($existing_grant = $result->fetch_array()) {
+      if (stripos($existing_grant[0], ".`$table` TO") !== false) {
+        $found_grant = $existing_grant[0];
       }
     }
     $result->close();
