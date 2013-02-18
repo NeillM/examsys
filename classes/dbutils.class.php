@@ -39,6 +39,8 @@ Class DBUtils {
    * @return object
    */
   static function get_mysqli_link($host, $user, $passwd, $database, $charset, $notice, $dbclass = 'mysqli', $port = 3306) {
+    var_dump(get_defined_vars());
+
     @$mysqli = new $dbclass($host, $user, $passwd, $database, $port);
     if ($mysqli->connect_error == '') {
       $mysqli->set_charset($charset);
