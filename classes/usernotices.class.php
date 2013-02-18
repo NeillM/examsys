@@ -109,45 +109,7 @@ Class user_notices extends RogoStaticSingleton {
    *
    */
   public function access_denied($mysqli, $string, $message, $output_header = false, $output_footer = true) {
-    echo "hi";
     $this->display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
-
-    exit();
-$configObj=Config::get_instance();
-    $authentication = new Authentication($configObj, $mysqli, $_REQUEST, $_SESSION);
-
-    $authentication->do_authentication($string);
-
-    print "hjjhj";
-    $getauthobj = new stdClass();
-
-    $authentication->get_auth_obj($getauthobj);
-
-    print "jkjkj";
-    $userObject = UserObject::get_instance();
-
-    var_dump($userObject);
-    $userObject->db_user_change();
-var_dump($userObject);
-    /*
-    if ($output_header == true) {
-      echo '<div>';
-      echo '<form method="POST">';
-      echo '<p>Username:<input type="text" size="20" name="PHP_USER"><br /></p>';
-      echo '<p>Password:<input type="password" size="20" name="PHP_PW"><br /></p>';
-      echo '<p><input type="submit" name="submit-UserPW" value="Login"><br /></p>';
-      echo '</form>';
-      echo '</div>';
-    }
-
-    if ($output_footer == true) {
-      echo "\n</body>\n</html>";
-      if (is_object($mysqli)) {
-        $mysqli->close();
-      }
-    }
-    exit();
-*/
   }
 
 }
