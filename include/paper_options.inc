@@ -133,15 +133,6 @@ $stmt->close();
     if (this.event) this.event.returnValue = false;
     return false;
   }
-
-  function lockedPaperProperties() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/properties_locked.php?paperID=<?php echo $paperID; ?>","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
-    }
-    if (this.event) this.event.returnValue = false;
-    return false;
-  }
   
   function getLastID(IDs) {
     var id_list = IDs.split(",");
@@ -305,16 +296,14 @@ $stmt->close();
   if ($properties->get_summative_lock() == 1) {
     if ($userObject->has_role('SysAdmin')) {
       echo "<tr><td><a href=\"\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "'); return false;\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-      echo "<tr><td><a href=\"\" onclick=\"return paperProperties();\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return paperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
     } else {
       echo "<tr><td><a href=\"\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "'); return false;\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-      echo "<tr><td><a href=\"\" onclick=\"return lockedPaperProperties();\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return lockedPaperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
     }
   } else {
     $max_screen = ($properties->get_max_screen() != '') ? $properties->get_max_screen() : 0;
     echo "<tr><td><a href=\"\" onclick=\"addQuestions(" . ($properties->get_max_display_pos() + 1) . ", $max_screen); return false;\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"addQuestions(" . ($properties->get_max_display_pos() + 1) . ",$max_screen); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-    echo "<tr><td><a href=\"\" onclick=\"return paperProperties();\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return paperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
   }
+  echo "<tr><td><a href=\"\" onclick=\"return paperProperties();\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return paperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
   if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5' or $properties->get_paper_type() == '6') {
     if ($properties->get_item_no() == 0) {
       echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></td><td class=\"greymenuitem\"><span id=\"reports\">" . $string['reports'] . "</span></td></tr>\n";

@@ -73,14 +73,14 @@ function exceptionHandler($exception) {
     if(!isset($stackPoint['args'])) {
       $stackPoint['args']='UNKNOWN';
     }
-    $result[] = sprintf(
+    /*$result[] = sprintf(
       $traceline,
       $key,
       $stackPoint['file'],
       $stackPoint['line'],
       $stackPoint['function'],
       implode(', ', $stackPoint['args'])
-    );
+    );*/
   }
   // trace always ends with {main}
   $result[] = '#' . ++$key . ' {main}';

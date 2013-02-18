@@ -109,7 +109,7 @@ Class user_notices extends RogoStaticSingleton {
    *
    */
   public function access_denied($mysqli, $string, $message, $output_header = false, $output_footer = true) {
-    
+    echo "hi";
     $this->display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
 
     exit();

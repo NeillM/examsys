@@ -218,7 +218,7 @@ function keywordQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_
 if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
   $notice->access_denied($mysqli, $string, $string['error_paper']);
   //this will exit php
@@ -241,7 +241,7 @@ $is_question_preview_mode = (isset($_GET['q_id']));
 // Get how many screens make up the question paper.
 $screen_data = array();
 if ($is_question_preview_mode) {
-  $stmt = $mysqli->prepare("SELECT 1,  q_type, question
+  $stmt = $mysqli->prepare("SELECT 1, q_type, question
                             FROM
                               (papers, questions)
                             WHERE
@@ -326,9 +326,9 @@ if ($userObject->has_role('Student')) {
 
 //get lab info used in log metadata
 $lab_factory = new LabFactory($mysqli);
-if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
-    $lab_name = $lab_object->get_name();
-    $lab_id = $lab_object->get_id();
+if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+  $lab_name = $lab_object->get_name();
+  $lab_id = $lab_object->get_id();
 }
 
 /*
@@ -377,8 +377,7 @@ $sessionid = $log_metadata->get_session_id();
 * This is also used further down to make sure that the timer does not close the window if the exam session hasn't been 'started' by an invigilator
 * If a summative exam session has been started  then record late answers in log_late
 */
-if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
-
+if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
   //has this lab had an end time set?
   $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
@@ -386,13 +385,9 @@ if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type()
 }
 
 //check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
-if (  $is_preview_mode === false   and
-      time() > $propertyObj->get_end_date() and
-      ($propertyObj->get_paper_type() == '1' or ( $propertyObj->get_paper_type() == '2' and $summative_exam_session_started === false ) )
-    ) {
+if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($propertyObj->get_paper_type() == '1' or ($propertyObj->get_paper_type() == '2' and $summative_exam_session_started === false))) {
   $propertyObj->set_paper_type('_late');
 }
-
 
 /*
 * Save any posted answers

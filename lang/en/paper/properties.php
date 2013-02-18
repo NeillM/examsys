@@ -43,8 +43,6 @@ $string['name'] = 'Name';
 $string['type'] = 'Type';
 $string['folder'] = 'Folder';
 $string['feedback'] = 'Feedback';
-$string['objectivesreport'] = 'Objectives-based Feedback';
-$string['questionfeedback'] = 'Question-based Feedback';
 $string['displayoptions'] = 'Display Options';
 $string['display'] = 'Display';
 $string['windowed'] = 'Windowed';
@@ -116,4 +114,19 @@ $string['postscriptheading'] = "Text displayed after the student clicks 'Finish'
 $string['referencematerial'] = 'Reference Material';
 $string['referenceheading'] = 'Control which reference materials are available to the paper.';
 $string['nomaterials'] = 'There are no reference materials available for the module(s) assigned to this paper.<br /><br />Reference material can be added by clicking the \'Reference Material\' option from a module screen (<a href="" style="color:blue" onclick="launchHelp(296); return false;">see help</a>).';
+
+// Feedback tab
+$string['feedback'] = 'Feedback';
+$string['on'] = 'On';
+$string['off'] = 'Off';
+$string['objectivesreport'] = 'Objectives-based Feedback';
+$string['questionfeedback'] = 'Question-based Feedback';
+
+// Changes tab
+$string['changesheading'] = 'List of changes to the current paper.';
+$string['part'] = 'Part';
+$string['old'] = 'Old';
+$string['new'] = 'New';
+$string['date'] = 'Date';
+$string['author'] = 'Author';
 ?>

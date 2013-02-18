@@ -142,16 +142,13 @@ Class PaperUtils {
   * @return void 
   */
   public function update_modules($paper_modules, $paperID, $db, $userObject) {
-    global $REPLACEMEuserIDold, $DISABLEDuserroles, $DISABLEDstaff_modules; //these will come form the users object later
-
     $staff_modules = $userObject->get_staff_modules();
     if (count($staff_modules) < 0) {
       $user_modules = get_staff_modules($userObject->get_user_ID(), $db, $userObject->get_user_ID());
     }
 
     if (count($staff_modules) > 0) {
-      if ($userObject->has_role('SysAdmin')) {
-        //sysadmin 
+      if ($userObject->has_role('SysAdmin')) { 
         $user_can_delete = ''; //no restrictions
       } else {
         $user_can_delete = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; //users can only remove modules if they are on the team
@@ -162,6 +159,7 @@ Class PaperUtils {
       $editProperties->execute();
       $editProperties->close();
     }
+    
     Paper_utils::add_modules($paper_modules, $paperID, $db);
   }
 

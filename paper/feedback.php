@@ -26,81 +26,83 @@
 */
 
 require '../include/staff_student_auth.inc';
-require '../include/calculate_marks.inc';
-require '../include/errors.inc';
-require '../include/mapping.inc';
-require '../include/finish_functions.inc';
-require '../include/paper_security.inc';
-require '../include/media.inc';
-require '../classes/paperutils.class.php';
-
+require_once '../include/calculate_marks.inc';
+require_once '../include/errors.inc';
+require_once '../include/mapping.inc';
+require_once '../include/finish_functions.inc';
+require_once '../include/paper_security.inc';
+require_once '../include/media.inc';
+require_once '../classes/paperutils.class.php';
+require_once '../classes/logmetadata.class.php';
+require_once '../classes/paperproperties.class.php';
 
 check_var('id', 'GET', true, false, false);
 
-getSpecialSettings($userObject->get_user_ID(), $mysqli);
-  
-if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
-  $paper_properties->bind_param('s', $_GET['id']);
-  $paper_properties->execute();
-  $paper_properties->store_result();
-  $paper_properties->bind_result($paperID, $labs, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
-  while ($paper_properties->fetch()) {
-    // If set overwrite the default colours with the current users' special settings
-    if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-    if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-    if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
-    if (!isset($marks_color) or $marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
-    if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-    if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
-    if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
-    
-    $log_type = $paper_type;
-    $low_bandwidth = 0;
-    $sessionid = '';
-    
-    if ($userObject->has_role('Student')) {
-      // Check for additional password on the paper
-      check_paper_password($password, $string);
-    
-      $display_correct_answer = 1;
-      $display_question_mark = 1;
-      $display_students_response = 1;
-      $display_feedback = 1;
-
-      // Check if paper can be released date wise
-      $stmt = $mysqli->prepare("SELECT UNIX_TIMESTAMP(date) FROM feedback_release WHERE paper_id=? AND type='questions'");
-      $stmt->bind_param('i', $paperID);
-      $stmt->execute();
-      $stmt->bind_result($access_date);
-      $stmt->store_result();
-      $stmt->fetch();
-      if ($stmt->num_rows == 0) {
-        $notice->access_denied($mysqli, $string, $string['nofeedback'], false);
-      }
-      $stmt->close();
-      
-      // Check to see if the student has sat the paper
-      $stmt = $mysqli->prepare("SELECT started FROM log$paper_type WHERE q_paper=? AND userID=?");
-      $stmt->bind_param('ii', $paperID, $userObject->get_user_ID());
-      $stmt->execute();
-      $stmt->bind_result($sessionid);
-      $stmt->store_result();
-      $stmt->fetch();
-      if ($stmt->num_rows == 0) {
-        $notice->access_denied($mysqli, $string, $string['nottaken'], false);
-      }
-      $stmt->close();
-      
-    }
-    if (isset($_GET['type'])) $log_type = $_GET['type'];
-  }
-  $paper_properties->close();
-} else {
-  display_error("Properties Query Error", $mysqli->error);
+//get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $notice->access_denied($mysqli, $string, $string['error_paper']);
+  //this will exit php
 }
+
+$paperID    = $propertyObj->get_property_id();
+$paper_type = $propertyObj->get_paper_type();
+if (isset($_GET['type'])) {
+  $log_type = $_GET['type'];
+} else {
+  $log_type = $propertyObj->get_paper_type();
+}
+
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
+
+//lookup previous sessionid from log_metadata.started property_id
+$log_metadata = new LogMetadata($userObject, $paperID, $mysqli);
+$sessionid = $log_metadata->get_session_id();
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
+
+// Check if paper can be released date wise
+$stmt = $mysqli->prepare("SELECT UNIX_TIMESTAMP(date) FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
+$stmt->bind_param('i', $paperID);
+$stmt->execute();
+$stmt->bind_result($access_date);
+$stmt->store_result();
+$stmt->fetch();
+if ($stmt->num_rows == 0) {
+  $notice->access_denied($mysqli, $string, $string['nofeedback'], false);
+}
+$stmt->close();
+
+// Get a sessionID for the current paper/user
+$stmt = $mysqli->prepare("SELECT started FROM log$paper_type WHERE q_paper = ? AND userID = ?");
+$stmt->bind_param('ii', $paperID, $userObject->get_user_ID());
+$stmt->execute();
+$stmt->bind_result($sessionid);
+$stmt->store_result();
+$stmt->fetch();
+if ($stmt->num_rows == 0) {
+  $notice->access_denied($mysqli, $string, $string['nottaken'], false);
+}
+$stmt->close();
+
+if ($userObject->has_role('Student')) {
+  // Check for additional password on the paper
+  check_paper_password($propertyObj->get_password(), $string, true);
+  
+  $display_correct_answer     = 1;
+  $display_question_mark      = 1;
+  $display_students_response  = 1;
+  $display_feedback           = 1;
+} else {
+  $display_correct_answer     = $propertyObj->get_display_correct_answer();
+  $display_question_mark      = $propertyObj->get_display_question_mark();
+  $display_students_response  = $propertyObj->get_display_students_response();
+  $display_feedback           = $propertyObj->get_display_feedback();
+}
+
+$pass_mark = $propertyObj->get_pass_mark();
 
 require '../config/finish.inc';
 ?>
@@ -147,7 +149,7 @@ require '../config/finish.inc';
     echo "<style type=\"text/css\">\n$css\n</style>\n";
   }
   
-  if ($latex_needed == 1) {
+  if ($propertyObj->get_latex_needed() == 1) {
     echo "<script type=\"text/javascript\" src=\"../js/jquery-1.6.1.min.js\"></script>";
     echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>";
   }
@@ -172,11 +174,11 @@ require '../config/finish.inc';
   $old_screen = 0;
   
   echo $top_table_html;
-  echo '<tr><td><div class="paper">' . $paper_title . '</div></td>';
+  echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div></td>';
   echo $logo_html;
   echo '</table>';
-
-  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $mysqli, $preview_q_id);
+  
+  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $mysqli, $preview_q_id);
 
   echo "</body>\n</html>";
   $mysqli->close();

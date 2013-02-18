@@ -52,8 +52,8 @@ Class Logger {
 
     if ($object_id > 0) {
 
-      if (is_array($orig_val)) $orig_val = implode(',',$orig_val);
-      if (is_array($new_val)) $new_val = implode(',',$new_val);
+      if (is_array($orig_val)) $orig_val = implode(',', $orig_val);
+      if (is_array($new_val)) $new_val = implode(',', $new_val);
 
       $query = <<< QUERY
 INSERT INTO track_changes(type, typeID, editor, old, new, changed, part)
@@ -90,5 +90,20 @@ QUERY;
     return $success;
   }
   
+  public function get_changes($type, $typeID) {
+    $change_data = array();
+    
+    $query = 'SELECT title, initials, surname, old, new, part, UNIX_TIMESTAMP(changed) AS changed FROM track_changes, users WHERE track_changes.editor = users.id AND type = ? AND typeID = ? ORDER BY changed desc';
+    $result = $this->_mysqli->prepare($query);
+    $result->bind_param('si', $type, $typeID);
+    $result->execute();
+    $result->bind_result($title, $initials, $surname, $old, $new, $part, $changed);
+    while ($result->fetch()) {
+      $change_data[] = array('title'=>$title, 'initials'=>$initials, 'surname'=>$surname, 'old'=>$old, 'new'=>$new, 'part'=>$part, 'date'=>$changed);
+    }
+    $result->close();
+
+    return $change_data;
+  }
   
 }

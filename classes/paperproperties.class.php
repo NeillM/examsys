@@ -229,7 +229,7 @@ class PaperProperties {
       $property_id = $this->get_property_id();
       $paper_results->bind_param('s', $crypt_name);
     } else {
-      throw new Excption("property_id or crypt_name must be set to load the properties record from the DB.");
+      throw new Exception("property_id or crypt_name must be set to load the properties record from the DB.");
     }
 
     $paper_results->execute();
@@ -286,13 +286,9 @@ class PaperProperties {
                                 );
     $paper_results->fetch();
     $paper_results->close();
-
-    $this->load_summative_lock();
-    
-    $this->load_question_no();
   }
   
-  public function load_summative_lock() {
+  private function load_summative_lock() {
     if ($this->start_date !== null and date("U", time()) >= $this->start_date and $this->paper_type == '2') { 
       $this->summative_lock = true; 
     } else { 
@@ -300,7 +296,7 @@ class PaperProperties {
     }
   }
   
-  public function load_question_no() {
+  private function load_question_no() {
     $item_no = 0;
     $question_no = 0;
     $max_screen = 0;
@@ -325,27 +321,67 @@ class PaperProperties {
     $this->max_display_pos = $max_display_pos;
   }
   
+  private function load_changes() {
+    $paper_results = $this->db->prepare("SELECT q_type, screen, display_pos FROM papers, questions WHERE papers.question = questions.q_id AND paper = ?");
+    $property_id = $this->get_property_id();
+    $paper_results->bind_param('i', $property_id);
+    $paper_results->execute();
+    $paper_results->bind_result($q_type, $screen, $display_pos);
+    while ($paper_results->fetch()) {
+      $item_no++;
+      if ($q_type != 'info') $question_no++;
+      if ($screen > $max_screen) $max_screen = $screen;
+      if ($display_pos > $max_display_pos) $max_display_pos = $display_pos;
+    }
+    $paper_results->close();
+    
+    $this->item_no = $item_no;
+    $this->question_no = $question_no;
+    $this->max_screen = $max_screen;
+    $this->max_display_pos = $max_display_pos;
+  }
+  
   public function get_summative_lock() {
+    if (!isset($this->summative_lock)) {
+      $this->load_summative_lock();
+    }
+  
     return $this->summative_lock;
   }
  
   public function get_item_no() {
+    if (!isset($this->item_no)) {
+      $this->load_question_no();
+    }
+  
     return $this->item_no;
   }
  
   public function get_question_no() {
+    if (!isset($this->question_no)) {
+      $this->load_question_no();
+    }
+    
     return $this->question_no;
   }
  
   public function get_max_screen() {
+    if (!isset($this->max_screen)) {
+      $this->load_question_no();
+    }
+
     return $this->max_screen;
   }
  
   public function get_max_display_pos() {
+    if (!isset($this->max_display_pos)) {
+      $this->load_question_no();
+    }
+
     return $this->max_display_pos;
   }
  
-  /*
+  /**
    * Set the default colour scheme for this paper and allow current users' special settings to override
    * 
    * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
@@ -365,7 +401,7 @@ class PaperProperties {
     $unanswered_color = '#FFC0C0';
 
     // If set overwrite the default colours with the current users' special settings
-    if($userObject->is_special_needs()) {
+    if ($userObject->is_special_needs()) {
       $bgcolor = $userObject->get_bgcolor();
       $fgcolor = $userObject->get_fgcolor();
       $textsize = $userObject->get_textsize();

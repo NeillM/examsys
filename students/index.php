@@ -52,7 +52,7 @@ $sessions_with_papers = array();
 
 if ($userObject->has_role('Student')) {
   // Check if our student is in a lab
-  $lab_info = $mysqli->prepare("SELECT lab FROM ip_addresses WHERE address=? LIMIT 1");
+  $lab_info = $mysqli->prepare("SELECT lab FROM ip_addresses WHERE address = ? LIMIT 1");
   $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
   $lab_info->execute();
   $lab_info->bind_result($lab);
@@ -72,9 +72,9 @@ if ($userObject->has_role('Student')) {
     $stmt->bind_result($idMod, $moduleID, $module_name, $module_year);
     while ($stmt->fetch()) {
       $modules[$i]['idMod'] = $idMod;
-      $modules[$i]['id'] = $moduleID;
-      $modules[$i]['name'] = $module_name;
-      $modules[$i]['year'] = $module_year;
+      $modules[$i]['id']    = $moduleID;
+      $modules[$i]['name']  = $module_name;
+      $modules[$i]['year']  = $module_year;
       $i++;
     }
   }
@@ -85,8 +85,8 @@ if ($userObject->has_role('Student')) {
   $papers_query = <<< QUERY
   SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM (properties p, properties_modules pm)
   INNER JOIN papers pa ON p.property_id = pa.paper
-  WHERE p.paper_type IN ('0','1','3','6')
-  AND p.property_id=pm.property_id
+  WHERE p.paper_type IN ('0', '1', '3', '6')
+  AND p.property_id = pm.property_id
   AND idMod = ?
   AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
   AND p.start_date < NOW() AND p.end_date > NOW()
@@ -138,7 +138,7 @@ QUERY;
 
   // Get any objectives-based feedback released.
   $feedback_query = <<< QUERY
-  SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, p.start_date FROM (feedback_release f, properties p, properties_modules pm)
+  SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, p.start_date, p.password FROM (feedback_release f, properties p, properties_modules pm)
   WHERE f.paper_id = p.property_id
   AND p.property_id = pm.property_id
   AND idMod = ?
@@ -153,11 +153,11 @@ QUERY;
     if ($stmt = $mysqli->prepare($feedback_query)) {
       $stmt->bind_param('is', $modules[$i]['idMod'], $modules[$i]['year']);
       $stmt->execute();
-      $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type, $start_date);
+      $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type, $start_date, $password);
       $stmt->store_result();
       while ($stmt->fetch()) {
         if (in_array($paper_id, $papers_taken)) {
-          $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name);
+          $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name, 'password' => $password);
           $papers++;
 
           if (!in_array($modules[$i]['year'], $sessions_with_papers)) {

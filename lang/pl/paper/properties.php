@@ -43,8 +43,6 @@ $string['name'] = 'Nazwa';
 $string['type'] = 'Typ';
 $string['folder'] = 'Folder'; //cognate
 $string['feedback'] = 'Odzew';
-$string['objectivesreport'] = 'Odzew dot. celów';
-$string['questionfeedback'] = 'Odzew dot. pytań';
 $string['displayoptions'] = 'Opcje prezentacji';
 $string['display'] = 'Prezentacja';
 $string['windowed'] = 'w oknie';
@@ -116,4 +114,19 @@ $string['postscriptheading'] = "Tekst wyświetlany po tym jak student kliknie 'Z
 $string['referencematerial'] = 'Materiał pomocniczy';  
 $string['referenceheading'] = 'Kontrola, które materiały pomocnicze są dostępne dla arkusza.'; 
 $string['nomaterials'] = 'Do tego arkusza nie przypisano żadnych materiałów pomocniczych dostępnych w tym module.<br /><br />Materiały pomocnicze mogą być dodane przez kliknięcie na opcję  \'Materiał pomocniczy\' na ekranie  modułu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">zobacz pomoc</a>).';
+
+// Feedback tab
+$string['feedback'] = 'Feedback';  //Niko
+$string['on'] = 'On';  //Niko
+$string['off'] = 'Off';  //Niko
+$string['objectivesreport'] = 'Odzew dot. celów';
+$string['questionfeedback'] = 'Odzew dot. pytań';
+
+// Changes tab
+$string['changesheading'] = 'List of changes to the current paper.';  // Niko
+$string['part'] = 'Part';
+$string['old'] = 'Old';
+$string['new'] = 'New';
+$string['date'] = 'Date';
+$string['author'] = 'Author';
 ?>

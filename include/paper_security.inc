@@ -65,9 +65,10 @@ function check_paper_password($password, $string, $show_form = false) {
         if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $password) {
           @setcookie('paperpwd', $_POST['paperpwd']);
         } else {
-          echo render_password_form($string);
           $notice = UserNotices::get_instance();
-          $notice->access_denied($mysqli, $string, $string['passwordrequired'],false);
+          $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/access_denied.png', '#C00000', true, true);
+          echo render_password_form($string);
+          exit;
         }
       } else {
         $notice = UserNotices::get_instance();
@@ -151,8 +152,7 @@ function render_password_form($string) {
   }
 
   $html = "<form action=\"$url\" method=\"post\">";
-  $html .= "<p style=\"margin-left:60px\">";
-  $html .= "      <label for=\"paperpwd\">{$string['enterpw']}</label><br />";
+  $html .= "<p style=\"margin-left:70px\">";
   $html .= "      <input type=\"password\" name=\"paperpwd\" id=\"paperpwd\" /><br />";
   $html .= "      <input type=\"submit\" value=\"{$string['pwcontinue']}\" />";
   $html .= "    </p>";

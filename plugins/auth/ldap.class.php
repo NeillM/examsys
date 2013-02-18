@@ -63,6 +63,7 @@ class ldap_auth extends outline_authentication {
 
   function errordisp($displayerrformobj) {
     global $string;
+    
     $this->savetodebug('adding ldap notice to error screen');
     $displayerrformobj->li[] = $string['tsonldap'];
 
@@ -72,9 +73,7 @@ class ldap_auth extends outline_authentication {
   function failauth($postauthfailreturn) {
     $this->savetodebug('Fail function passed ' . var_export($postauthfailreturn, TRUE));
 
-    //   $this->retdata->debug[]='info:' . var_export($this->settings,TRUE);
-
-//default behaviour is to display username/password form
+    //default behaviour is to display username/password form
     $postauthfailreturn->form = 'std';
     $postauthfailreturn->exit = TRUE;
 
@@ -97,8 +96,9 @@ class ldap_auth extends outline_authentication {
 
 
   function auth($authobj) {
-    $this->retdata =& $authobj;
     global $string;
+    
+    $this->retdata =& $authobj;
     $this->savetodebug('Authing');
     extract($this->settings);
 
@@ -122,16 +122,8 @@ class ldap_auth extends outline_authentication {
 
         return $authobj;
       } else {
-
         $info = ldap_get_entries($ldap, $search);
-        /*
-                if($lookup_info === 1 and $info['count'] > 0) {
-                  $this->set_fail();
-                  return $info;
-                }
-        */
-        //$this->savetodebug('on initial bind: '. var_export($info,TRUE));
-        //var_dump($info);
+
         if ($info['count'] == 1) {
           $this->savetodebug('Found user in ldap');
           $dn = $info[0]['dn'];
@@ -147,13 +139,9 @@ class ldap_auth extends outline_authentication {
 
         $this->savetodebug('Successfully bound to ldap as the user with their password');
         ldap_unbind($ldap);
-        /*
-               if($lookup_info === 2) {
-                 return $info;
-               }
-       */
+        
         $this->savetodebug('Now looking up userid in table from username');
-        $sql = "SELECT $username_col as username, $id_col as id FROM $table WHERE $username_col=? $sql_extra";
+        $sql = "SELECT $username_col as username, $id_col as id FROM $table WHERE $username_col = ? $sql_extra";
         $result = $this->db->prepare($sql);
 
         $result->bind_param('s', $this->form['std']->username);
