@@ -15,36 +15,40 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* Utility class for database related functionality
-* 
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for database related functionality
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 Class DBUtils {
   /**
    * Get a mysqli database connection and set the character set
+   *
    * @static
+   *
    * @param string $host Host machine for database connection
    * @param string $user Database username
    * @param string $passwd Password for database user
    * @param string $database Initial schema to use
    * @param string $dbclass Optional class to use, e.g. debugging extension to mysqli
+   *
    * @return object
    */
-	static function get_mysqli_link($host, $user, $passwd, $database, $charset, $notice, $dbclass='mysqli')	{
-    @$mysqli = new $dbclass($host, $user, $passwd, $database);
+  static function get_mysqli_link($host, $user, $passwd, $database, $charset, $notice, $dbclass = 'mysqli', $port = 3306) {
+    @$mysqli = new $dbclass($host, $user, $passwd, $database, $port);
     if ($mysqli->connect_error == '') {
       $mysqli->set_charset($charset);
     } else {
       $notice->display_notice('Database Error', "Unable to connect to database using $dbclass.", '/artwork/db_no_connect.png', '#FF7600');
       exit;
     }
+
     return $mysqli;
-	}
+  }
 }
 
 ?>

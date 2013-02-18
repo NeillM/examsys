@@ -85,8 +85,10 @@ if (!(preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_
   echo "\n</body>\n</html>\n";
   exit;
 }
-
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+if (is_null($configObject->get('cfg_db_port'))) {
+  $configObject->set('cfg_db_port', 3306);
+}
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
 session_name('RogoAuthentication');
 $return = session_start();
