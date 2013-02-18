@@ -156,10 +156,12 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
  //   $variables = base64_encode(serialize($context));
 
     $backtrace = DebugBackTraceDisplay(debug_backtrace());
-
+    if (is_null($configObject->get('cfg_db_port'))) {
+      $configObject->set('cfg_db_port', 3306);
+    }
     // Query may fail if we try to insert while another statement is open.
     // Since we don't have a handle on the original statement, create another DB link
-    $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+    $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
     $paperID = NULL;
     if (isset($_GET['paperID'])) {
