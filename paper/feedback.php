@@ -59,6 +59,9 @@ $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize
 //lookup previous sessionid from log_metadata.started property_id
 $log_metadata = new LogMetadata($userObject, $paperID, $mysqli);
 $sessionid = $log_metadata->get_session_id();
+if ($sessionid === null) {
+  $notice->access_denied($mysqli, $string, $string['nottaken'], false);
+}
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
@@ -72,18 +75,6 @@ $stmt->store_result();
 $stmt->fetch();
 if ($stmt->num_rows == 0) {
   $notice->access_denied($mysqli, $string, $string['nofeedback'], false);
-}
-$stmt->close();
-
-// Get a sessionID for the current paper/user
-$stmt = $mysqli->prepare("SELECT started FROM log$paper_type WHERE q_paper = ? AND userID = ?");
-$stmt->bind_param('ii', $paperID, $userObject->get_user_ID());
-$stmt->execute();
-$stmt->bind_result($sessionid);
-$stmt->store_result();
-$stmt->fetch();
-if ($stmt->num_rows == 0) {
-  $notice->access_denied($mysqli, $string, $string['nottaken'], false);
 }
 $stmt->close();
 
