@@ -116,19 +116,19 @@ $string['referenceheading'] = 'Kontrola, które materiały pomocnicze są dostę
 $string['nomaterials'] = 'Do tego arkusza nie przypisano żadnych materiałów pomocniczych dostępnych w tym module.<br /><br />Materiały pomocnicze mogą być dodane przez kliknięcie na opcję  \'Materiał pomocniczy\' na ekranie  modułu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">zobacz pomoc</a>).';
 
 // Feedback tab
-$string['feedback'] = 'Feedback';  //Niko
-$string['on'] = 'On';  //Niko
-$string['off'] = 'Off';  //Niko
+$string['feedback'] = 'Odzew';  
+$string['on'] = 'Wł.';
+$string['off'] = 'Wył.';
 $string['objectivesreport'] = 'Odzew dot. celów';
 $string['questionfeedback'] = 'Odzew dot. pytań';
 
 // Changes tab
-$string['changesheading'] = 'List of changes to the current paper.';  // Niko
-$string['part'] = 'Part';
-$string['old'] = 'Old';
-$string['new'] = 'New';
-$string['date'] = 'Date';
-$string['author'] = 'Author';
-$string['startdate'] = 'Start Date';
-$string['enddate'] = 'End Date';
+$string['changesheading'] = 'Lista zmian dokonanych w aktualnym arkuszu.'; 
+$string['part'] = 'Część';
+$string['old'] = 'Poprzednio';
+$string['new'] = 'Teraz';
+$string['date'] = 'Data';
+$string['author'] = 'Autor';
+$string['startdate'] = 'Data rozpoczęcia';
+$string['enddate'] = 'Data zakończenia';
 ?>
