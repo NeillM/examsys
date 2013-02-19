@@ -137,7 +137,7 @@ class PaperProperties {
 
     $paper_results = $db->prepare($sql);
     $lab_like = '%' . $lab_object->get_id() . '%'; //TODO this is how the old code work !! concatenated field not sure if this always works if a room is on many labs
-    $paper_results->bind_param('s',$lab_like );
+    $paper_results->bind_param('s', $lab_like);
     $paper_results->execute();
     $paper_results->store_result();
     $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone);
@@ -208,8 +208,8 @@ class PaperProperties {
                   hide_if_unanswered,
                   calendar_year,
                   internal_reviewers,
-                  external_review_deadline,
-                  internal_review_deadline,
+                  UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline,
+                  UNIX_TIMESTAMP(internal_review_deadline) AS internal_review_deadline,
                   sound_demo,
                   latex_needed,
                   password,

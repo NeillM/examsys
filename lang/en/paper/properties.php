@@ -82,7 +82,7 @@ $string['securityheading'] = 'Control the access rights over which students can 
 $string['session'] = 'Session';
 $string['password'] = 'Password';
 $string['timezone'] = 'Time Zone';
-$string['modules'] = 'Module(s)';
+$string['modules'] = 'Modules';
 $string['duration'] = 'Duration';
 $string['mins'] = 'mins';
 $string['availablefrom'] = 'Available from';
@@ -130,4 +130,6 @@ $string['date'] = 'Date';
 $string['author'] = 'Author';
 $string['startdate'] = 'Start Date';
 $string['enddate'] = 'End Date';
+$string['externalreviewdeadline'] = 'External Review Deadline';
+$string['internalreviewdeadline'] = 'Internal Review Deadline';
 ?>

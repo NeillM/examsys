@@ -204,9 +204,25 @@ Class module {
       return false;
     }
     $result->close();
+    
     return $module_id;
   }
 
+  public function get_module_list_by_id($db) {
+    $modules = array();
+    
+    $result = $db->prepare("SELECT id, moduleid, fullname FROM modules");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id, $moduleid, $fullname);
+    while ($result->fetch()) {
+      $modules[$id]['code'] = $moduleid;      
+      $modules[$id]['name'] = $fullname;      
+    }
+    $result->close();
+    
+    return $modules;
+  }
 }
 
 ?>

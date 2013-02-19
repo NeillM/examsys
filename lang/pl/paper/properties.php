@@ -130,4 +130,6 @@ $string['date'] = 'Data';
 $string['author'] = 'Autor';
 $string['startdate'] = 'Data rozpoczęcia';
 $string['enddate'] = 'Data zakończenia';
+$string['externalreviewdeadline'] = 'External Review Deadline';  // Niko
+$string['internalreviewdeadline'] = 'Internal Review Deadline';  // Niko
 ?>
