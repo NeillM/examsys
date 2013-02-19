@@ -116,7 +116,6 @@ $string['referenceheading'] = 'Kontrola, które materiały pomocnicze są dostę
 $string['nomaterials'] = 'Do tego arkusza nie przypisano żadnych materiałów pomocniczych dostępnych w tym module.<br /><br />Materiały pomocnicze mogą być dodane przez kliknięcie na opcję  \'Materiał pomocniczy\' na ekranie  modułu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">zobacz pomoc</a>).';
 
 // Feedback tab
-$string['feedback'] = 'Odzew';  
 $string['on'] = 'Wł.';
 $string['off'] = 'Wył.';
 $string['objectivesreport'] = 'Odzew dot. celów';
