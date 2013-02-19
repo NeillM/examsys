@@ -129,4 +129,6 @@ $string['old'] = 'Old';
 $string['new'] = 'New';
 $string['date'] = 'Date';
 $string['author'] = 'Author';
+$string['startdate'] = 'Start Date';
+$string['enddate'] = 'End Date';
 ?>

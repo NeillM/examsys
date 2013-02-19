@@ -418,20 +418,22 @@ if (isset($_POST['Submit'])) {
     }
     
     // Track changes
-    if ($paper_title != $_POST['old_paper_title'])                $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_paper_title'], $paper_title, 'Title');
-    if ($fullscreen != $_POST['old_fullscreen'])                  $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), translate_fullscreen($_POST['old_fullscreen']), translate_fullscreen($fullscreen), 'Display');
-    if ($tmp_start_date != $_POST['old_start_date'])              $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_start_date'], $tmp_start_date, 'Start Date');
-    if ($tmp_end_date != $_POST['old_end_date'])                  $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_end_date'], $tmp_end_date, 'End Date');
-    if ($calendar_year != $_POST['old_calendar_year'])            $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_calendar_year'], $calendar_year, 'Session');
-    if ($timezone != $_POST['old_timezone'])                      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_timezone'], $timezone, 'Time zone');
-    if ($password != $_POST['old_password'])                      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_password'], $password, 'Password');
-    if ($exam_duration != $_POST['old_exam_duration'])            $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_exam_duration'], $exam_duration, 'Duration');
-    if ($tmp_rubric != $_POST['old_rubric'])                      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_rubric'], $tmp_rubric, 'Rubric');
-    if ($tmp_prologue != $_POST['old_paper_prologue'])            $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_paper_prologue'], $tmp_prologue, 'Prologue');
-    if ($tmp_postscript != $_POST['old_paper_postscript'])        $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_paper_postscript'], $tmp_postscript, 'Postscript');
-    if ($tmp_pass_mark != $_POST['old_pass_mark'])                $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_pass_mark'], $tmp_pass_mark, 'Pass Mark');
-    if ($tmp_distinction_mark != $_POST['old_distinction_mark'])  $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_distinction_mark'], $tmp_distinction_mark, 'Distinction');
+    $tmp_start_date = $start_date->format('U');
+    $tmp_end_date = $end_date->format('U');
     
+    if ($paper_title != $_POST['old_paper_title'])                $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_paper_title'], $paper_title, 'name');
+    if ($fullscreen != $_POST['old_fullscreen'])                  $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), translate_fullscreen($_POST['old_fullscreen']), translate_fullscreen($fullscreen), 'display');
+    if ($tmp_start_date != $_POST['old_start_date'])              $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_start_date'], $tmp_start_date, 'startdate');
+    if ($tmp_end_date != $_POST['old_end_date'])                  $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_end_date'], $tmp_end_date, 'enddate');
+    if ($calendar_year != $_POST['old_calendar_year'])            $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_calendar_year'], $calendar_year, 'session');
+    if ($timezone != $_POST['old_timezone'])                      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_timezone'], $timezone, 'timezone');
+    if ($password != $_POST['old_password'])                      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_password'], $password, 'password');
+    if ($exam_duration != $_POST['old_exam_duration'])            $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_exam_duration'], $exam_duration, 'duration');
+    if ($tmp_rubric != $_POST['old_rubric'])                      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_rubric'], $tmp_rubric, 'rubric');
+    if ($tmp_prologue != $_POST['old_paper_prologue'])            $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_paper_prologue'], $tmp_prologue, 'prologue');
+    if ($tmp_postscript != $_POST['old_paper_postscript'])        $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_paper_postscript'], $tmp_postscript, 'postscript');
+    if ($tmp_pass_mark != $_POST['old_pass_mark'])                $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_pass_mark'], $tmp_pass_mark, 'passmark');
+    if ($tmp_distinction_mark != $_POST['old_distinction_mark'])  $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $_POST['old_distinction_mark'], $tmp_distinction_mark, 'distinction');
     
     if ($properties->get_paper_type() != '2') {
       // Update textual feedback
@@ -604,7 +606,7 @@ if (isset($_POST['Submit'])) {
   if ($properties->get_end_date() != '') {
     $end_date = DateTime::createFromFormat('U', $properties->get_end_date(), $local_time);
     $end_date->setTimezone($target_timezone);
-    $end_date = $end_date->format("Y/m/d H:i:s");
+    //$end_date = $end_date->format("Y/m/d H:i:s");
   }
 
   if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
@@ -1197,14 +1199,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     $split_day = $start_date->format('d');
     $split_hour = $start_date->format('H');
     $split_minute = $start_date->format('i');
-    //$split_year = substr($start_date,0,4);
-    //$split_month = substr($start_date,5,2);
-    //$split_day = substr($start_date,8,2);
-    //$split_hour = substr($start_date,11,2);
-    //$split_minute = substr($start_date,14,2);
 
     // Available from Day
-    echo "<input type=\"hidden\" name=\"old_start_date\" value=\"" . $start_date->format('Y/m/d H:i') . "\" /><select name=\"fday\" id=\"fday\" onchange=\"dateCopy('fday')\"$sum_disabled>\n";
+    echo "<input type=\"hidden\" name=\"old_start_date\" value=\"" . $start_date->format('U') . "\" /><select name=\"fday\" id=\"fday\" onchange=\"dateCopy('fday')\"$sum_disabled>\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1277,16 +1274,16 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "</select>\n</td>\n";
 
     // Split the end date
-    $split_year = substr($end_date,0,4);
-    $split_month = substr($end_date,5,2);
-    $split_day = substr($end_date,8,2);
-    $split_hour = substr($end_date,11,2);
-    $split_minute = substr($end_date,14,2);
+    $split_year = $end_date->format('Y');
+    $split_month = $end_date->format('m');
+    $split_day = $end_date->format('d');
+    $split_hour = $end_date->format('H');
+    $split_minute = $end_date->format('i');
 
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
 
      // Available from Day
-    echo "<input type=\"hidden\" name=\"old_end_date\" value=\"$end_date\" /><select name=\"tday\" id=\"tday\" onchange=\"dateCopy('tday')\"$sum_disabled>\n";
+    echo "<input type=\"hidden\" name=\"old_end_date\" value=\"" . $end_date->format('U') . "\" /><select name=\"tday\" id=\"tday\" onchange=\"dateCopy('tday')\"$sum_disabled>\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }
@@ -1412,7 +1409,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 <table id="rubric" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
   <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/rubric_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['rubricheading']; ?></td></tr>
-  <tr><td><?php echo wysiwyg_editor('oEdit4', 'rubric_text', $properties->get_rubric(), 722, 520); ?><textarea name="old_rubric" style="display:none"><?php echo $properties->get_rubric(); ?> </textarea></td></tr>
+  <tr><td><?php echo wysiwyg_editor('oEdit4', 'rubric_text', $properties->get_rubric(), 722, 520); ?><textarea name="old_rubric" style="display:none"><?php echo $properties->get_rubric(); ?></textarea></td></tr>
 </table>
 
 <table id="feedback" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
@@ -1746,8 +1743,18 @@ SQL;
 echo "<tr><th>" . $string['part'] . "</th><th>" . $string['old'] . "</th><th>" . $string['new'] . "</th><th>" . $string['date'] . "</th><th>" . $string['author'] . "</th></tr>";
 $changes = $logger->get_changes('Alter Paper', $paperID);
 $rows = count($changes);
-for ($i=0; $i<$rows; $i++) {  
-  echo "<tr><td>" . $changes[$i]['part'] . "</td><td>" . $changes[$i]['old'] . "</td><td>" . $changes[$i]['new'] . "</td><td>" . date($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $changes[$i]['date']) . "</td><td>" . $changes[$i]['title'] . " " . $changes[$i]['surname'] . "</td><tr>\n";
+for ($i=0; $i<$rows; $i++) {
+  $part = $changes[$i]['part'];
+  
+  $old = $changes[$i]['old'];
+  $new = $changes[$i]['new'];
+  if ($part == 'startdate' or $part == 'enddate') {
+    $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
+    $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
+  }
+  
+  if (isset($string[$part])) $part = $string[$part];
+  echo "<tr><td>$part</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $changes[$i]['date']) . "</td><td>" . $changes[$i]['title'] . " " . $changes[$i]['surname'] . "</td><tr>\n";
 }
 ?>
 </table>
