@@ -49,26 +49,18 @@ class SummativeTimer {
    */
   public function calculate_remaining_time_secs() {
 
-    $session_end_datetime = false;
+    //has the lab got an end time set?
+    $session_end_datetime = $this->get_session_end_datetime();
+
+    if($session_end_datetime === false) {
+      // Invigilator hasn't pressed Start - we aren't timing the exam
+      return false;
+    }
 
     //has the student been given extra time?
     $session_end_timestamp = $this->get_extra_end_date_timestamp();
 
-    if( $session_end_timestamp === false){
-      //has the lab got an end time set?
-      $session_end_datetime = $this->get_session_end_datetime();
-    }
-
-    if( $session_end_timestamp === false AND $session_end_datetime === false ){
-      //if we are here student has no extra time set and the lad has no end time set 
-      //use the paper start time and duration to caculate end time
-      $paper_start_time = $this->get_paper_exam_start_time();
-      $paper_duration_sec = $this->get_paper_exam_duration() * 60;
-      $paper_start_time->add(new DateInterval('PT' . $paper_duration_sec . 'S'));
-      $session_end_datetime = $paper_start_time;
-    }
-
-    if($session_end_datetime !== false) {
+    if($session_end_timestamp === false) {
       $session_end_timestamp = $session_end_datetime->getTimestamp();
     }
 

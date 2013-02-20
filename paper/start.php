@@ -1011,6 +1011,7 @@ if ($css != '') {
   // BP If the duration is set then show timer
 
   $method = 'StartClock()';
+  $timer_label = '';
 
   if ($propertyObj->get_exam_duration() != null) {
     // Summative type. Time is only active in live.
@@ -1019,28 +1020,28 @@ if ($css != '') {
       //has the student been allotted extra time by an invigilator
       $student_object['user_ID'] = $userObject->get_user_ID();
       $student_object['special_needs_percentage'] = $userObject->get_special_needs_percentage();
-      $log_extra_time = new LogExtraTime( $log_lab_end_time, $student_object, $mysqli );
+      $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
 
-      $summative_timer    = new SummativeTimer( $log_extra_time );
-      $remaining_time     = $summative_timer->calculate_remaining_time_secs();
-      $method             = 'StartTimer(' . $remaining_time . ', true)';
-
-      // Do not close the window if the invigilator has not clicked on the 'Start' button
-      if ($summative_exam_session_started == false) {
-        $method          = 'StartTimer(' . $remaining_time . ', false)';
+      // Do not time the exam if the invigilator has not clicked on the 'Start' button
+      if ($summative_exam_session_started !== false) {
+        $summative_timer    = new SummativeTimer($log_extra_time);
+        $remaining_time     = $summative_timer->calculate_remaining_time_secs();
+        $method             = 'StartTimer(' . $remaining_time . ', true)';
+        $timer_label        = $string['timeremaining'] . ':';
       }
 
     } else {
 
-      $timer          = new Timer( $log_metadata, $propertyObj->get_exam_duration() );
+      $timer          = new Timer($log_metadata, $propertyObj->get_exam_duration());
       $start_datetime = $timer->get_start_datetime();
 
-      if( $start_datetime === false ){
+      if ($start_datetime === false) {
         $timer->start();
       }
 
       $remaining_time = $timer->calculate_remaining_time();
-      $method          = 'StartTimer(' . $remaining_time . ', true)';
+      $method         = 'StartTimer(' . $remaining_time . ', true)';
+      $timer_label    = $string['timeremaining'] . ':';
     }
   }
 
@@ -1166,7 +1167,7 @@ if ($css != '') {
   <span>
   <?php
   if ($propertyObj->get_exam_duration() != null) {
-    echo $string['timeremaining'] . ':';
+    echo $timer_label;
   }
 
   ?>

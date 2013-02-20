@@ -325,6 +325,7 @@ if ($room_name != '') {
       height: 34px;
       font-size: 120%;
       font-weight: bold;
+      border: none;
     }
     #start_exam_button {
       background-color: #1CD40C;
@@ -646,7 +647,7 @@ if (count($properties_list) > 0) {
       }
     }
 
-    $disptimezone = new datetimezone($property_object->get_timezone());
+    $disptimezone = new DateTimeZone($property_object->get_timezone());
     $start_datetime = DateTime::createFromFormat('U', $start_date);
 
     $start_datetime->setTimezone($disptimezone);
@@ -657,10 +658,6 @@ if (count($properties_list) > 0) {
 
     $end_date = $end_datetime->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'));
     $end_time = $end_datetime->format($configObject->get('cfg_long_time_php'));
-
-    // $paper_end_datetime = $log_lab_end_time->get_paper_end_datetime();
-    // $paper_end_datetime->setTimezone($disptimezone);
-    // $paper_end_date = $paper_end_datetime->format('d/m/Y H:i:s');
 
     $end_time_h = $end_datetime->format('H');
     $end_time_m = $end_datetime->format('i');
