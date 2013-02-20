@@ -54,9 +54,21 @@ if (!isset($staff_modules)){
   $staff_modules = get_staff_modules($userObject->get_user_ID(), $mysqli, $userObject);
 }
 
-function format_modules($string, $modules) {
+function format_color($color) {
+  return '<div style="background-color:' . $color . '; border:1px solid #C0C0C0; width:50px; height:15px"></div>';
+}
+
+function format_referencematerial($ID, $refID) {
+  if ($ID == '') return '';
+  
+  return $refID[$ID];
+}
+
+function format_modules($text, $modules) {
+  if ($text == '') return '';
+
   $formatted_string = '';
-  $parts = explode(',', $string);
+  $parts = explode(',', $text);
   foreach ($parts as $part) {
     if ($formatted_string == '') {
       $formatted_string = $modules[$part]['code'];
@@ -66,6 +78,48 @@ function format_modules($string, $modules) {
   }
   
   return $formatted_string;
+}
+
+function format_user($text, $user_list) {
+  if ($text == '') return '';
+
+  $formatted_string = '';
+  $parts = explode(',', $text);
+  foreach ($parts as $part) {
+    if ($formatted_string == '') {
+      $formatted_string = $user_list[$part];
+    } else {
+      $formatted_string .= ', ' . $user_list[$part];
+    }
+  }
+  
+  return $formatted_string;
+}
+
+function format_method($method, $string) {
+  if ($method == '0') {
+    return $string['noadjustment'];
+  } elseif ($method == '1') {
+    return $string['calculatrrandommark'];
+  } elseif ($method{0} == '2') {
+    return $string['stdset'];
+  } elseif ($method == '3') {
+    return $string['overallclass2'];
+  } elseif ($method == '4') {
+    return $string['overallclass3'];
+  } elseif ($method == '5') {
+    return $string['overallclass1'];
+  } elseif ($method == '6') {
+    return $string['overallclass4'];
+  }
+}
+
+function format_on_off($data, $string) {
+  if ($data == 0) {
+    return $string['off'];
+  } else {
+    return $string['on'];
+  }
 }
 
 function is_leap($year) {
@@ -159,6 +213,7 @@ if (isset($_POST['Submit'])) {
   $old_paper_prologue = $properties->get_paper_prologue();
   $old_paper_postscript = $properties->get_paper_postscript();
   $old_rubric = $properties->get_rubric();
+  $old_marking = $properties->get_marking();
   $old_pass_mark = $properties->get_pass_mark();
   $old_distinction_mark = $properties->get_distinction_mark();
   $old_sound_demo = $properties->get_sound_demo();
@@ -400,11 +455,10 @@ if (isset($_POST['Submit'])) {
     $themecolor = $_POST['themecolor'];
     $labelcolor = $_POST['labelcolor'];
     $folderID = $_POST['folderID'];
-    $paperID = $_POST['paperID'];
 
     if ($locked) {
       $editProperties = $mysqli->prepare("UPDATE properties SET marking=?, pass_mark=?, distinction_mark=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=? WHERE property_id=?");
-      $editProperties->bind_param('siiiiiii', $tmp_marking, $tmp_pass_mark, $tmp_distinction_mark, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $_POST['paperID']);
+      $editProperties->bind_param('siiiiiii', $tmp_marking, $tmp_pass_mark, $tmp_distinction_mark, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $paperID);
       $editProperties->execute();
       $editProperties->close();
     } elseif ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
@@ -427,86 +481,86 @@ if (isset($_POST['Submit'])) {
     // Release objectives-based feedback
     if (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] != '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '0') {
       $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
-      $editProperties->bind_param('i', $_POST['paperID']);
+      $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
       $editProperties->close();
       
-      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), 'Objectives-based Feedback', '', 'Delete objectives feedback report');
+      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), 'Objectives-based Feedback', '', 'feedback');
     }
     if (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] == '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '1') {
       $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'objectives')");
-      $editProperties->bind_param('i', $_POST['paperID']);
+      $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
       $editProperties->close();
 
-      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), '', 'Objectives-based Feedback', 'Add objectives feedback report');
+      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), '', 'Objectives-based Feedback', 'feedback');
     }
 
     // Release question-based feedback
     if (isset($_POST['old_questions_report']) and $_POST['old_questions_report'] != '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '0') {
       $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
-      $editProperties->bind_param('i', $_POST['paperID']);
+      $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
       $editProperties->close();
       
-      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), 'Question-based Feedback', '', 'Delete question feedback report');
+      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), 'Question-based Feedback', '', 'feedback');
     }
     if (isset($_POST['old_questions_report']) and $_POST['old_questions_report'] == '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '1') {
       $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
-      $editProperties->bind_param('i', $_POST['paperID']);
+      $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
       $editProperties->close();    
       
-      $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), '', 'Question-based Feedback', 'Add question feedback report');
+      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), '', 'Question-based Feedback', 'feedback');
     }
     
     // Track changes
     $tmp_start_date = $start_date->format('U');
     $tmp_end_date = $end_date->format('U');
     
-    if ($paper_title != $old_paper_title)                           $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_paper_title, $paper_title, 'name');
-    if ($fullscreen != $old_fullscreen)                             $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
-    if ($bidirectional != $old_bidirectional)                       $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
-    if ($tmp_start_date != $old_start_date)                         $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_start_date, $tmp_start_date, 'startdate');
-    if ($tmp_end_date != $old_end_date)                             $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_end_date, $tmp_end_date, 'enddate');
-    if ($calendar_year != $old_calendar_year)                       $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_calendar_year, $calendar_year, 'session');
-    if ($timezone != $old_timezone)                                 $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_timezone, $timezone, 'timezone');
-    if ($password != $old_password)                                 $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_password, $password, 'password');
-    if ($exam_duration != $old_exam_duration)                       $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_exam_duration, $exam_duration, 'duration');
-    if ($tmp_rubric != $old_rubric)                                 $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_rubric, $tmp_rubric, 'rubric');
-    if ($tmp_prologue != $old_paper_prologue)                       $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_paper_prologue, $tmp_prologue, 'prologue');
-    if ($tmp_postscript != $old_paper_postscript)                   $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_paper_postscript, $tmp_postscript, 'postscript');
-    if ($tmp_pass_mark != $old_pass_mark)                           $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_pass_mark, $tmp_pass_mark, 'passmark');
-    if ($tmp_distinction_mark != $old_distinction_mark)             $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_distinction_mark, $tmp_distinction_mark, 'distinction');
-    if ($tmp_sound_demo != $old_sound_demo)                         $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_sound_demo, $tmp_sound_demo, 'demosoundclip');
-    if ($tmp_calculator != $old_calculator)                         $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
-    if ($lab_string != $old_labs)                                   $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
-    if ($bgcolor != $old_bgcolor)                                   $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_bgcolor, $bgcolor, 'background');
-    if ($fgcolor != $old_fgcolor)                                   $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_fgcolor, $fgcolor, 'foreground');
-    if ($themecolor != $old_themecolor)                             $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_themecolor, $themecolor, 'theme');
-    if ($labelcolor != $old_labelcolor)                             $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_labelcolor, $labelcolor, 'labelsnotes');
+    if ($paper_title != $old_paper_title)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_title, $paper_title, 'name');
+    if ($fullscreen != $old_fullscreen)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
+    if ($bidirectional != $old_bidirectional)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
+    if ($tmp_start_date != $old_start_date)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_start_date, $tmp_start_date, 'startdate');
+    if ($tmp_end_date != $old_end_date)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_end_date, $tmp_end_date, 'enddate');
+    if ($calendar_year != $old_calendar_year)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calendar_year, $calendar_year, 'session');
+    if ($timezone != $old_timezone)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_timezone, $timezone, 'timezone');
+    if ($password != $old_password)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_password, $password, 'password');
+    if ($exam_duration != $old_exam_duration)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_exam_duration, $exam_duration, 'duration');
+    if ($tmp_rubric != $old_rubric)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_rubric, $tmp_rubric, 'rubric');
+    if ($tmp_prologue != $old_paper_prologue)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_prologue, $tmp_prologue, 'prologue');
+    if ($tmp_postscript != $old_paper_postscript)                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_postscript, $tmp_postscript, 'postscript');
+    if ($tmp_pass_mark != $old_pass_mark)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_pass_mark, $tmp_pass_mark, 'passmark');
+    if ($tmp_distinction_mark != $old_distinction_mark)             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_distinction_mark, $tmp_distinction_mark, 'distinction');
+    if ($tmp_sound_demo != $old_sound_demo)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_sound_demo, $tmp_sound_demo, 'demosoundclip');
+    if ($tmp_calculator != $old_calculator)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
+    if ($lab_string != $old_labs)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
+    if ($bgcolor != $old_bgcolor)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bgcolor, $bgcolor, 'background');
+    if ($fgcolor != $old_fgcolor)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fgcolor, $fgcolor, 'foreground');
+    if ($themecolor != $old_themecolor)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_themecolor, $themecolor, 'theme');
+    if ($labelcolor != $old_labelcolor)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labelcolor, $labelcolor, 'labelsnotes');
     $new_modules = array_keys($paper_modules);
     sort($new_modules, SORT_NUMERIC);
     $new_modules = implode(',', $new_modules);
-    if ($new_modules != $old_modules)                               $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
-    if ($external_string != $old_externals)                         $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_externals, $external_string, 'externals');
-    if ($internal_string != $old_internal_reviewers)                $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_internal_reviewers, $internal_string, 'internals');
-    if ($external_review_deadline != $old_external_review_deadline) $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_external_review_deadline, $external_review_deadline, 'externalreviewdeadline');
-    if ($internal_review_deadline != $old_internal_review_deadline) $logger->track_change('Alter paper', $_POST['paperID'], $userObject->get_user_ID(), $old_internal_review_deadline, $internal_review_deadline, 'internalreviewdeadline');
+    if ($new_modules != $old_modules)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
+    if ($external_string != $old_externals)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_externals, $external_string, 'externals');
+    if ($internal_string != $old_internal_reviewers)                $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_internal_reviewers, $internal_string, 'internals');
+    if ($external_review_deadline != $old_external_review_deadline) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_external_review_deadline, $external_review_deadline, 'externalreviewdeadline');
+    if ($internal_review_deadline != $old_internal_review_deadline) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_internal_review_deadline, $internal_review_deadline, 'internalreviewdeadline');
+    if ($tmp_marking != $old_marking)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_marking, $tmp_marking, 'method');
 
-   
     if ($properties->get_paper_type() != '2') {
       // Update textual feedback
       $textual_feedback = array();
       $editProperties = $mysqli->prepare("DELETE FROM paper_feedback WHERE paperID = ?");
-      $editProperties->bind_param('i', $_POST['paperID']);
+      $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
       $editProperties->close();
 
       for ($i=1; $i<10; $i++) {
         $editProperties = $mysqli->prepare("INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)");
         if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
-          $editProperties->bind_param('iis', $_POST['paperID'], $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
+          $editProperties->bind_param('iis', $paperID, $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
           $editProperties->execute();
         }
         $editProperties->close();
@@ -525,6 +579,22 @@ if (isset($_POST['Submit'])) {
     $result->close();
 
     // Set any metadata security
+    $old_meta = '';
+    $result = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ? ORDER BY name");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($name, $value);
+    while ($result->fetch()) {
+      if ($old_meta == '') {
+        $old_meta = $name . ':' . $value;
+      } else {
+        $old_meta .= ', ' . $name . ':' . $value;
+      }
+    }
+    $result->close();
+    
+    $new_meta = '';
     for ($i=0; $i<$_POST['meta_dropdown_no']; $i++) {
       $meta_type = $_POST['meta_type' . $i];
       $meta_value = $_POST['meta_value' . $i];
@@ -539,8 +609,15 @@ if (isset($_POST['Submit'])) {
         $editProperties->bind_param('iss', $paperID, $meta_type, $meta_value);
         $editProperties->execute();
         $editProperties->close();
+
+        if ($new_meta == '') {
+          $new_meta = $meta_type . ':' . $meta_value;
+        } else {
+          $new_meta .= ', ' . $meta_type . ':' . $meta_value;
+        }
       }
     }
+    if ($old_meta != $new_meta) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_meta, $new_meta, 'restricttometadata');
 
     // Get existing Reference Materials
     $existing_refs = array();
@@ -569,6 +646,8 @@ if (isset($_POST['Submit'])) {
         $editProperties->bind_param('ii', $paperID, $new_ref);
         $editProperties->execute();
         $editProperties->close();
+        
+        $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), '', $new_ref, 'referencematerial');
       }
     }
     foreach ($existing_refs as $existing_ref) {
@@ -576,6 +655,8 @@ if (isset($_POST['Submit'])) {
       $editProperties->bind_param('ii', $paperID, $existing_ref);
       $editProperties->execute();
       $editProperties->close();
+      
+      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $existing_ref, '', 'referencematerial');
     }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -597,20 +678,20 @@ if (isset($_POST['Submit'])) {
         <?php
           } elseif ($_POST['noadd'] == 'y') {
         ?>
-            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module_id; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>";
+            window.opener.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>";
             window.opener.close();
             window.close();
         <?php
           } else {
         ?>
-            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module_id; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>";
+            window.opener.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>";
             window.close();
         <?php
           }
         ?>
       }
       function updateParent() {
-        window.opener.parent.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module_id; ?>";
+        window.opener.parent.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>";
         window.close();
       }
     </script></head>
@@ -660,13 +741,11 @@ if (isset($_POST['Submit'])) {
   if ($properties->get_start_date() != '') {
     $start_date = DateTime::createFromFormat('U', $properties->get_start_date(), $local_time);
     $start_date->setTimezone($target_timezone);
-    //$start_date = $start_date->format("Y/m/d H:i:s");
   }
   
   if ($properties->get_end_date() != '') {
     $end_date = DateTime::createFromFormat('U', $properties->get_end_date(), $local_time);
     $end_date->setTimezone($target_timezone);
-    //$end_date = $end_date->format("Y/m/d H:i:s");
   }
 
   if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
@@ -1476,7 +1555,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 </table>
 
 <table id="feedback" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
-  <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/feedback_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;Feedback</td></tr>
+  <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/feedback_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['feedbackheading']; ?></td></tr>
 
   <?php
      echo "<tr><td colspan=\"2\" valign=\"top\">";
@@ -1520,7 +1599,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        }
        $feedback_details->close();
 
-       echo "<td>" . $string['questionfeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
+       echo "<td>" . $string['questionfeedback'] . "<br />";
+       if ($properties->get_paper_type() == '2') echo '<span style="color:#C00000">' . $string['feedbackwarning'] . '</span></br />';
+       echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
      }
      
      echo "</table>\n";
@@ -1724,7 +1805,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 ?>
 </td></tr>
   <?php
-  echo "<tr><td><div style=\"width:345px; height:450px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+  echo "<tr><td><div style=\"width:345px; height:473px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
 
   // Get all users for teams within the schools of the current user
   // Also get all admin users for those schools
@@ -1781,7 +1862,7 @@ SQL;
   $internal_details->close();
   echo "<input type=\"hidden\" id=\"internal_no\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
-  echo "<td><div style=\"width:345px; height:450px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+  echo "<td><div style=\"width:345px; height:473px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_externals = explode(',', $properties->get_externals());
   $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles='External Examiner' AND grade != 'left' ORDER BY surname, initials");
   $external_details->execute();
@@ -1819,6 +1900,24 @@ SQL;
 <?php
 $modules = module_utils::get_module_list_by_id($mysqli);
 
+$user_list = array();
+$results = $mysqli->prepare("SELECT id, title, surname FROM users WHERE roles != 'student'");
+$results->execute();
+$results->bind_result($id, $title, $surname);
+while ($results->fetch()) {
+  $user_list[$id] = $title . ' ' . $surname;
+}
+$results->close();
+
+$reference_material = array();
+$results = $mysqli->prepare("SELECT id, title FROM reference_material");
+$results->execute();
+$results->bind_result($id, $title);
+while ($results->fetch()) {
+  $reference_material[$id] = $title;
+}
+$results->close();
+
 echo "<tr><th>" . $string['part'] . "</th><th>" . $string['old'] . "</th><th>" . $string['new'] . "</th><th>" . $string['date'] . "</th><th>" . $string['author'] . "</th></tr>";
 $changes = $logger->get_changes('Alter Paper', $paperID);
 $rows = count($changes);
@@ -1836,10 +1935,25 @@ for ($i=0; $i<$rows; $i++) {
   } elseif ($part == 'modules') {
     $old = format_modules($old, $modules);
     $new = format_modules($new, $modules);
+  } elseif ($part == 'method') {
+    $old = format_method($old, $string);
+    $new = format_method($new, $string);
+  } elseif ($part == 'displaycalculator') {
+    $old = format_on_off($old, $string);
+    $new = format_on_off($new, $string);
+  } elseif ($part == 'externals' or $part == 'internals') {
+    $old = format_user($old, $user_list);
+    $new = format_user($new, $user_list);
+  } elseif ($part == 'background' or $part == 'foreground' or $part == 'theme' or $part == 'labelsnotes') {
+    $old = format_color($old);
+    $new = format_color($new);
+  } elseif ($part == 'referencematerial') {
+    $old = format_referencematerial($old, $reference_material);
+    $new = format_referencematerial($new, $reference_material);
   }
   
   if (isset($string[$part])) $part = $string[$part];
-  echo "<tr><td>$part</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $changes[$i]['date']) . "</td><td>" . $changes[$i]['title'] . " " . $changes[$i]['surname'] . "</td><tr>\n";
+  echo "<tr><td>" . ucfirst($part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $changes[$i]['date']) . "</td><td>" . $changes[$i]['title'] . " " . $changes[$i]['surname'] . "</td><tr>\n";
 }
 ?>
 </table>

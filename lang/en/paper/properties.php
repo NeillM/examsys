@@ -116,6 +116,8 @@ $string['referenceheading'] = 'Control which reference materials are available t
 $string['nomaterials'] = 'There are no reference materials available for the module(s) assigned to this paper.<br /><br />Reference material can be added by clicking the \'Reference Material\' option from a module screen (<a href="" style="color:blue" onclick="launchHelp(296); return false;">see help</a>).';
 
 // Feedback tab
+$string['feedbackheading'] = 'Feedback available to students';
+$string['feedbackwarning'] = '<strong>Note:</strong> This will release questions including the correct answers and marks to students.';
 $string['on'] = 'On';
 $string['off'] = 'Off';
 $string['objectivesreport'] = 'Objectives-based Feedback';
@@ -130,6 +132,7 @@ $string['date'] = 'Date';
 $string['author'] = 'Author';
 $string['startdate'] = 'Start Date';
 $string['enddate'] = 'End Date';
+$string['retired'] = 'Retired';
 $string['externalreviewdeadline'] = 'External Review Deadline';
 $string['internalreviewdeadline'] = 'Internal Review Deadline';
 ?>

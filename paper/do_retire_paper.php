@@ -22,34 +22,42 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/errors.inc';
-  
-  check_var('paperID', 'POST', true, false, false);
+require '../include/staff_auth.inc';
+require_once  '../include/errors.inc';
+require_once '../classes/logger.class.php';
 
-  if (isset($_POST['questions'])) {
-    // Look up and retire the questions
-    $result = $mysqli->prepare("SELECT question FROM papers WHERE paper = ?");
-    $result->bind_param('i', $_POST['paperID']);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($question_id);
-    while ($result->fetch()) {
-      $stmt = $mysqli->prepare("UPDATE questions SET status='Retired' WHERE q_id = ?");
-      $stmt->bind_param('i', $question_id);
-      $stmt->execute();
-      $stmt->close();
-    }
-    $result->close();   
+$paperID = check_var('paperID', 'POST', true, false, true);
+
+$logger = new Logger($mysqli);
+
+if (isset($_POST['questions'])) {
+  // Look up and retire the questions
+  $result = $mysqli->prepare("SELECT question FROM papers WHERE paper = ?");
+  $result->bind_param('i', $paperID);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($question_id);
+  while ($result->fetch()) {
+    $stmt = $mysqli->prepare("UPDATE questions SET status='Retired' WHERE q_id = ?");
+    $stmt->bind_param('i', $question_id);
+    $stmt->execute();
+    $stmt->close();
+    
+    $logger->track_change('Retire question', $question_id, $userObject->get_user_ID(), '', '', 'retired');
   }
-  
-  // Retire the paper itself
-  $result = $mysqli->prepare("UPDATE properties SET retired=NOW() WHERE property_id = ?");
-  $result->bind_param('i', $_POST['paperID']);
-  $result->execute();  
-  $result->close();
+  $result->close();   
+}
 
-  $mysqli->close();
+// Retire the paper itself
+$result = $mysqli->prepare("UPDATE properties SET retired=NOW() WHERE property_id = ?");
+$result->bind_param('i', $paperID);
+$result->execute();  
+$result->close();
+
+$logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), '', '', 'retired');
+
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
