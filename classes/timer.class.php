@@ -24,7 +24,7 @@
 
 class Timer {
 
-  /*
+  /**
    * @var LogStartTime $log_start_time
    */
 
@@ -33,7 +33,7 @@ class Timer {
   private $exam_duration;
   private $start_datetime;
 
-  /*
+  /**
    * @param LogStartTime $log_start_time
    * @param int $exam_duration
    */
@@ -42,14 +42,14 @@ class Timer {
     $this->exam_duration  = $exam_duration;
   }
 
-  /*
+  /**
    * @return DateTime
    */
   public function start(){
     return $this->log_start_time->insert();
   }
 
-  /*
+  /**
    * @return bool
    */
   public function is_started(){
@@ -62,7 +62,7 @@ class Timer {
     $this->start_datetime = null;
   }
 
-  /*
+  /**
    * @retun int
    */
   public function calculate_remaining_time() {
@@ -91,7 +91,7 @@ class Timer {
 
   }
 
-  /*
+  /**
    * @return DateTime
    */
   public  function get_start_datetime(){
