@@ -606,7 +606,7 @@ if (count($properties_list) > 0) {
     $title = $property_object->get_paper_title();
     $property_id = $property_object->get_property_id();
     $exam_duration = $property_object->get_exam_duration();
-    $start_date = $property_object->get_start_date();
+    $start_date = $property_object->get_display_start_date();
     $calendar_year = $property_object->get_calendar_year();
 
     $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $property_object, $mysqli);
@@ -648,12 +648,6 @@ if (count($properties_list) > 0) {
     }
 
     $disptimezone = new DateTimeZone($property_object->get_timezone());
-    $start_datetime = DateTime::createFromFormat('U', $start_date);
-
-    $start_datetime->setTimezone($disptimezone);
-
-    $start_date = $start_datetime->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'));
-
     $end_datetime->setTimezone($disptimezone);
 
     $end_date = $end_datetime->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'));

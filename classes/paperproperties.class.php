@@ -24,8 +24,9 @@
  */
 
 class PaperProperties {
-  
+
   private $db;
+  private $configObject;
 
   private $property_id;
   private $paper_title;
@@ -76,9 +77,12 @@ class PaperProperties {
   private $question_no;
   private $max_screen;
   private $max_display_pos;
-  
+
+  private $_date_timezone = null;
+
   public function __construct($db) {
   	$this->db = $db;
+    $this->configObject = Config::get_instance();
   }
 
   /*
@@ -109,7 +113,7 @@ class PaperProperties {
   	}
   }
 
-  
+
   /*
   * static helper function to load the paper properties by lab id
   * used in the invigilator screens. previously called (get_invigilator_properties)
@@ -117,22 +121,22 @@ class PaperProperties {
   */
   static function get_paper_properties_by_lab($lab_object, $db) {
 
-    $sql = "SELECT 
-    			properties.property_id, 
-    			paper_title, 
+    $sql = "SELECT
+    			properties.property_id,
+    			paper_title,
     			UNIX_TIMESTAMP(start_date) as start_date,
-                UNIX_TIMESTAMP(end_date) as end_date, 
-    			exam_duration, 
-    			calendar_year, 
-    			password, 
-    			timezone 
-    		FROM 
-    			properties 
-    		WHERE 
-    			paper_type = '2' AND 
-    			labs LIKE ? AND 
-    			start_date < DATE_ADD( NOW(), interval 30 minute ) AND 
-    			end_date > NOW() AND 
+                UNIX_TIMESTAMP(end_date) as end_date,
+    			exam_duration,
+    			calendar_year,
+    			password,
+    			timezone
+    		FROM
+    			properties
+    		WHERE
+    			paper_type = '2' AND
+    			labs LIKE ? AND
+    			start_date < DATE_ADD( NOW(), interval 30 minute ) AND
+    			end_date > NOW() AND
     			deleted IS NULL";
 
     $paper_results = $db->prepare($sql);
@@ -158,6 +162,8 @@ class PaperProperties {
       $property_object->set_calendar_year($calendar_year);
       $property_object->set_calendar_year($calendar_year);
       $property_object->set_timezone($timezone);
+      $property_object->set_display_start_date();
+      $property_object->set_display_end_date();
       $properties[] = $property_object;
     }
 
@@ -166,17 +172,13 @@ class PaperProperties {
   }
 
   public function load() {
-    $configObject = Config::get_instance();
-  
     $property_id = $this->get_property_id();
     $crypt_name = $this->get_crypt_name();
     $sql = "SELECT
                   property_id,
                   paper_title,
                   UNIX_TIMESTAMP(start_date) AS start_date,
-                  DATE_FORMAT(start_date, '{$configObject->get('cfg_long_date_time')}') AS display_start_date,
                   UNIX_TIMESTAMP(end_date) AS end_date,
-                  DATE_FORMAT(end_date, '{$configObject->get('cfg_long_date_time')}') AS display_end_date,
                   timezone,
                   paper_type,
                   paper_prologue,
@@ -242,9 +244,7 @@ class PaperProperties {
     $paper_results->bind_result(  $this->property_id,
                                   $this->paper_title,
                                   $this->start_date,
-                                  $this->display_start_date,
                                   $this->end_date,
-                                  $this->display_end_date,
                                   $this->timezone,
                                   $this->paper_type,
                                   $this->paper_prologue,
@@ -282,26 +282,29 @@ class PaperProperties {
                                   $this->latex_needed,
                                   $this->password,
                                   $this->retired,
-                                  $this->crypt_name 
+                                  $this->crypt_name
                                 );
     $paper_results->fetch();
     $paper_results->close();
+
+    $this->set_display_start_date();
+    $this->set_display_end_date();
   }
-  
+
   private function load_summative_lock() {
-    if ($this->start_date !== null and date("U", time()) >= $this->start_date and $this->paper_type == '2') { 
-      $this->summative_lock = true; 
-    } else { 
-      $this->summative_lock = false; 
+    if ($this->start_date !== null and date("U", time()) >= $this->start_date and $this->paper_type == '2') {
+      $this->summative_lock = true;
+    } else {
+      $this->summative_lock = false;
     }
   }
-  
+
   private function load_question_no() {
     $item_no = 0;
     $question_no = 0;
     $max_screen = 0;
     $max_display_pos = 0;
-  
+
     $paper_results = $this->db->prepare("SELECT q_type, screen, display_pos FROM papers, questions WHERE papers.question = questions.q_id AND paper = ?");
     $property_id = $this->get_property_id();
     $paper_results->bind_param('i', $property_id);
@@ -314,13 +317,13 @@ class PaperProperties {
       if ($display_pos > $max_display_pos) $max_display_pos = $display_pos;
     }
     $paper_results->close();
-    
+
     $this->item_no = $item_no;
     $this->question_no = $question_no;
     $this->max_screen = $max_screen;
     $this->max_display_pos = $max_display_pos;
   }
-  
+
   private function load_changes() {
     $paper_results = $this->db->prepare("SELECT q_type, screen, display_pos FROM papers, questions WHERE papers.question = questions.q_id AND paper = ?");
     $property_id = $this->get_property_id();
@@ -334,37 +337,37 @@ class PaperProperties {
       if ($display_pos > $max_display_pos) $max_display_pos = $display_pos;
     }
     $paper_results->close();
-    
+
     $this->item_no = $item_no;
     $this->question_no = $question_no;
     $this->max_screen = $max_screen;
     $this->max_display_pos = $max_display_pos;
   }
-  
+
   public function get_summative_lock() {
     if (!isset($this->summative_lock)) {
       $this->load_summative_lock();
     }
-  
+
     return $this->summative_lock;
   }
- 
+
   public function get_item_no() {
     if (!isset($this->item_no)) {
       $this->load_question_no();
     }
-  
+
     return $this->item_no;
   }
- 
+
   public function get_question_no() {
     if (!isset($this->question_no)) {
       $this->load_question_no();
     }
-    
+
     return $this->question_no;
   }
- 
+
   public function get_max_screen() {
     if (!isset($this->max_screen)) {
       $this->load_question_no();
@@ -372,7 +375,7 @@ class PaperProperties {
 
     return $this->max_screen;
   }
- 
+
   public function get_max_display_pos() {
     if (!isset($this->max_display_pos)) {
       $this->load_question_no();
@@ -380,12 +383,12 @@ class PaperProperties {
 
     return $this->max_display_pos;
   }
- 
+
   /**
    * Set the default colour scheme for this paper and allow current users' special settings to override
-   * 
+   *
    * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
-   * 
+   *
    */
   public function set_paper_colour_scheme($userObject, &$bgcolor, &$fgcolor, &$textsize, &$marks_color, &$themecolor, &$labelcolor, &$font, &$unanswered_color) {
     /*
@@ -412,7 +415,7 @@ class PaperProperties {
       $unanswered_color = $userObject->get_unanswered_color();
     }
   }
-  
+
   /**
    * @return string $property_id
    */
@@ -459,14 +462,20 @@ class PaperProperties {
    * @return string $display_start_date
    */
   public function get_display_start_date() {
-      return $this->display_start_date;
+    return $this->display_start_date;
   }
 
   /**
    * @param string $display_start_date
    */
-  public function set_display_start_date($display_start_date) {
+  public function set_display_start_date($display_start_date = '') {
+    if ($display_start_date == '') {
+      $start_datetime = DateTime::createFromFormat('U', $this->start_date);
+      $start_datetime->setTimezone($this->get_date_time_zone());
+      $this->display_start_date = $start_datetime->format($this->configObject->get('cfg_long_date_php') . ' ' . $this->configObject->get('cfg_long_time_php'));
+    } else {
       $this->display_start_date = $display_start_date;
+    }
   }
 
   /**
@@ -493,8 +502,14 @@ class PaperProperties {
   /**
    * @param string $end_date
    */
-  public function set_display_end_date($display_end_date) {
+  public function set_display_end_date($display_end_date = '') {
+    if ($display_end_date == '') {
+      $end_datetime = DateTime::createFromFormat('U', $this->end_date);
+      $end_datetime->setTimezone($this->get_date_time_zone());
+      $this->display_end_date = $end_datetime->format($this->configObject->get('cfg_long_date_php') . ' ' . $this->configObject->get('cfg_long_time_php'));
+    } else {
       $this->display_end_date = $display_end_date;
+    }
   }
 
   /**
@@ -1036,4 +1051,10 @@ class PaperProperties {
       $this->crypt_name = $crypt_name;
   }
 
+  private function get_date_time_zone() {
+    if ($this->_date_timezone === null) {
+      $this->_date_timezone = new DateTimeZone($this->timezone);
+    }
+    return $this->_date_timezone;
+  }
 }
