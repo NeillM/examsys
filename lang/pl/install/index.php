@@ -44,6 +44,10 @@ $string['allowguest'] = 'Logowanie przez konto gościa (dla egzaminów sumatywny
 $string['allowimpersonation'] = 'podszywanie się pod użytkownika (tylko SysAdmin)';
 $string['useldap'] = 'Zastosuj LDAP:';
 
+$string['lookup'] = 'Lookup Data Sources'; //TODO Niko
+$string['allowlookupXML'] = 'use XML (Will need customising in config file)'; //TODO Niko
+$string['rdbbasename'] = 'Basepart of username'; //TODO Niko
+
 $string['ldapserver'] = 'Serwer LDAP:';
 $string['searchdn'] = 'Wyszukaj dn:';
 $string['bindusername'] = 'użytkownik:';

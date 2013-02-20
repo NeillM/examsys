@@ -44,6 +44,10 @@ $string['allowguest'] = 'Guest log in (for summative exams)';
 $string['allowimpersonation'] = 'User impersonation (SysAdmin only)';
 $string['useldap'] = 'Use LDAP';
 
+$string['lookup'] = 'Lookup Data Sources';
+$string['allowlookupXML'] = 'use XML (Will need customising in config file)';
+$string['rdbbasename'] = 'Basepart of username';
+
 $string['ldapserver'] = 'LDAP server';
 $string['searchdn'] = 'Search dn';
 $string['bindusername'] = 'bind username';

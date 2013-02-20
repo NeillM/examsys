@@ -53,6 +53,7 @@ Class InstallUtils {
   public static $cfg_db_charset;
   public static $cfg_page_charset;
 
+  public static $cfg_db_basename;
   public static $cfg_db_student_user;
   public static $cfg_db_student_passwd;
   public static $cfg_db_staff_user;
@@ -85,6 +86,15 @@ Class InstallUtils {
   public static $cfg_auth_guest = 'true';
   public static $cfg_auth_impersonation = 'true';
 
+  public static $cfg_lookup_ldap_server;
+  public static $cfg_lookup_ldap_search_dn;
+  public static $cfg_lookup_ldap_bind_rdn;
+  public static $cfg_lookup_ldap_bind_password;
+  public static $cfg_lookup_ldap_user_prefix;
+
+  public static $cfg_uselookupLdap = 'false';
+  public static $cfg_uselookupXML = 'false';
+
   public static $cfg_support_email;
   public static $emergency_support_numbers;
 
@@ -101,6 +111,12 @@ Class InstallUtils {
       $(document).ready(function() {
         $('#useLdap').change(function() {
             $('#ldapOptions').toggle();
+          });
+      });
+
+      $(document).ready(function() {
+        $('#uselookupLdap').change(function() {
+            $('#ldaplookupOptions').toggle();
           });
       });
     </script>
@@ -136,9 +152,8 @@ Class InstallUtils {
         <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /></div>
         <div><label for="mysql_db_charset"><?php echo $string['databasecharset']; ?></label> <select id="mysql_db_charset" name="mysql_db_charset"><option value="utf8">UTF-8</option><option value="latin1">latin1</option></select></div>
 
-      <table class="h"><tr><td><nobr><?php echo $string['databaseuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="mysql_database_username"><?php echo $string['rdbusername']; ?></label> <input type="text" value="" id="mysql_database_username" name="mysql_database_username" class="required" minlength="3"/></div>
-        <div><label for="mysql_database_passwd"><?php echo $string['rdbpassword']; ?></label> <input type="password" value="" id="mysql_database_passwd" name="mysql_database_passwd" class="required" minlength="8" /></div>
+        <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" /></div>
+
 
       <table class="h"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><?php echo sprintf($string['tdformatsare'],'<a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format" target="_blank">MySQL DATE_FORMAT</a>'); ?></div>
@@ -160,7 +175,7 @@ Class InstallUtils {
         <table class="h"><tr><td><nobr><?php echo $string['authentication']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="useLti"><?php echo $string['allowlti']; ?></label><input id="useLti" name="useLti" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow authentication from successful LTI launch" /></div><br />
         <div><label for="useInternal"><?php echo $string['allowintdb']; ?></label><input id="useInternal" name="useInternal" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow authentication from internal Rogo user database" /></div><br />
-        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br />
+        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br /><br />
         <div><label for="useImpersonation"><?php echo $string['allowimpersonation']; ?></label><input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow SysAdmin users to impersonate other users" /></div><br clear="all" /><br />
         <div><label for="useLdap"><?php echo $string['useldap']; ?></label><input id="useLdap" name="useLdap" type="checkbox" /></div>
         <div id="ldapOptions" style="display:none;">
@@ -172,7 +187,23 @@ Class InstallUtils {
           <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="<?php echo $string['userprefixtip'] ?>" /></div>
         </div>
 
-      <table class="h"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+
+        <table class="h"><tr><td><nobr><?php echo $string['lookup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+
+
+        <div><label for="uselookupLdap"><?php echo $string['useldap']; ?></label><input id="uselookupLdap" name="uselookupLdap" type="checkbox" /></div>
+        <div id="ldaplookupOptions" style="display:none;">
+            <br/>
+            <div><label for="ldap_lookup_server"><?php echo $string['ldapserver']; ?></label> <input type="text" value="" id="ldap_lookup_server" name="ldap_lookup_server" /></div>
+            <div><label for="ldap_lookup_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_lookup_search_dn" name="ldap_lookup_search_dn" /></div>
+            <div><label for="ldap_lookup_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_lookup_bind_rdn" name="ldap_lookup_bind_rdn" /></div>
+            <div><label for="ldap_lookup_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_lookup_bind_password" name="ldap_lookup_bind_password" /></div>
+            <div><label for="ldap_lookup_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="<?php echo $string['userprefixtip'] ?>" /></div>
+        </div><br clear="all" />
+        <div><label for="uselookupXML"><?php echo $string['allowlookupXML']; ?></label><input id="uselookupXML" name="uselookupXML" type="checkbox" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br clear="all" /><br />
+
+
+        <table class="h"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><?php echo $string['initialsysadmin']; ?></div>
         <br />
         <div><label for="SysAdmin_title"><?php echo $string['title']; ?></label>
@@ -225,8 +256,7 @@ Class InstallUtils {
     self::$db_admin_username = $_POST['mysql_admin_user'];
     self::$db_admin_passwd = $_POST['mysql_admin_pass'];
 
-    self::$cfg_db_username = $_POST['mysql_database_username'];
-    self::$cfg_db_password = $_POST['mysql_database_passwd'];
+    self::$cfg_db_basename = $_POST['mysql_baseusername'];
 
     self::$cfg_SysAdmin_username = $_POST['SysAdmin_username'];
 
@@ -237,30 +267,31 @@ Class InstallUtils {
 
     //Authentication
     if (isset($_POST['useLti'])) {
-      self::$cfg_auth_lti = true;
+      self::$cfg_auth_lti = TRUE;
     } else {
-      self::$cfg_auth_lti = false;
+      self::$cfg_auth_lti = FALSE;
     }
     if (isset($_POST['useInternal'])) {
-      self::$cfg_auth_internal = true;
+      self::$cfg_auth_internal = TRUE;
     } else {
-      self::$cfg_auth_internal = false;
+      self::$cfg_auth_internal = FALSE;
     }
     if (isset($_POST['useGuest'])) {
-      self::$cfg_auth_guest = true;
+      self::$cfg_auth_guest = TRUE;
     } else {
-      self::$cfg_auth_guest = false;
+      self::$cfg_auth_guest = FALSE;
     }
     if (isset($_POST['useImpersonation'])) {
-      self::$cfg_auth_impersonation = true;
+      self::$cfg_auth_impersonation = TRUE;
     } else {
-      self::$cfg_auth_impersonation = false;
+      self::$cfg_auth_impersonation = FALSE;
     }
     if (isset($_POST['useLdap'])) {
-      self::$cfg_auth_ldap = true;
+      self::$cfg_auth_ldap = TRUE;
     } else {
-      self::$cfg_auth_ldap = false;
+      self::$cfg_auth_ldap = FALSE;
     }
+
 
     //LDAP
     self::$cfg_ldap_server = $_POST['ldap_server'];
@@ -268,11 +299,18 @@ Class InstallUtils {
     self::$cfg_ldap_bind_rdn = $_POST['ldap_bind_rdn'];
     self::$cfg_ldap_bind_password = $_POST['ldap_bind_password'];
     if (self::$cfg_ldap_server != '') {
-      self::$cfg_auth_ldap = true;
+      self::$cfg_auth_ldap = TRUE;
     } else {
-      self::$cfg_auth_ldap = false;
+      self::$cfg_auth_ldap = FALSE;
     }
     self::$cfg_ldap_user_prefix = $_POST['ldap_user_prefix'];
+
+    //LDAP for lookup
+    self::$cfg_lookup_ldap_server = $_POST['ldap_lookup_server'];
+    self::$cfg_lookup_ldap_search_dn = $_POST['ldap_lookup_search_dn'];
+    self::$cfg_lookup_ldap_bind_rdn = $_POST['ldap_lookup_bind_rdn'];
+    self::$cfg_lookup_ldap_bind_password = $_POST['ldap_lookup_bind_password'];
+    self::$cfg_lookup_ldap_user_prefix = $_POST['ldap_lookup_user_prefix'];
 
     //ASSISTANCE
     self::$cfg_support_email = $_POST['support_email'];
@@ -454,19 +492,23 @@ Class InstallUtils {
         self::displayError(array('012' => $string['displayerror3'] . self::$db->error . "<br /> $sql"));
       }
     }
+    self::$cfg_db_username = self::$cfg_db_basename . '_auth';
+    self::$cfg_db_password = gen_password() . gen_password();
 
-    self::$cfg_db_student_user = self::$cfg_db_name . '_stu';
+    self::$cfg_db_student_user = self::$cfg_db_basename . '_stu';
     self::$cfg_db_student_passwd = gen_password() . gen_password();
-    self::$cfg_db_staff_user = self::$cfg_db_name . '_staff';
+    self::$cfg_db_staff_user = self::$cfg_db_basename . '_staff';
     self::$cfg_db_staff_passwd = gen_password() . gen_password();
-    self::$cfg_db_external_user = self::$cfg_db_name . '_ext';
+    self::$cfg_db_external_user = self::$cfg_db_basename . '_ext';
     self::$cfg_db_external_passwd  = gen_password() . gen_password();
-    self::$cfg_db_sysadmin_user = self::$cfg_db_name . '_sys';
+    self::$cfg_db_sysadmin_user = self::$cfg_db_basename . '_sys';
     self::$cfg_db_sysadmin_passwd = gen_password() . gen_password();
-    self::$cfg_db_sct_user = self::$cfg_db_name . '_sct';
+    self::$cfg_db_sct_user = self::$cfg_db_basename . '_sct';
     self::$cfg_db_sct_passwd = gen_password() . gen_password();
-    self::$cfg_db_inv_user = self::$cfg_db_name . '_inv';
+    self::$cfg_db_inv_user = self::$cfg_db_basename . '_inv';
     self::$cfg_db_inv_passwd = gen_password() . gen_password();
+
+
 
     $priv_SQL = array();
     //create 'database user authentication user' and grant permissions
@@ -884,9 +926,9 @@ Class InstallUtils {
     $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     if (is_writable($rogo_path . '/config/config.inc.php')) {
-      return true;
+      return TRUE;
     } else {
-      return false;
+      return FALSE;
     }
   }
 
@@ -982,9 +1024,9 @@ Class InstallUtils {
     global $string;
 	if ($_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
       self::displayError(array(100=> $string['errors12']));
-      return false;
+      return FALSE;
     }
-    return true;
+    return TRUE;
   }
 
   /**
@@ -1177,18 +1219,16 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_lti_allow_staff_module_register = false; // allows rogo to register staff onto the module team if set to true and from lti launch and staff in vle
 \$cfg_lti_allow_module_create = false;  // allows rogo to create module if it doesnt exist
 
-//LDAP
-  \$cfg_ldap_server        = '{cfg_ldap_server}';
-  \$cfg_ldap_search_dn     = '{cfg_ldap_search_dn}';
-  \$cfg_ldap_bind_rdn      = '{cfg_ldap_bind_rdn}';
-  \$cfg_ldap_bind_password = '{cfg_ldap_bind_password}';
-  \$cfg_ldap_user_prefix   = '{cfg_ldap_user_prefix}';
-  \$cfg_use_ldap           = {cfg_auth_ldap};
-  \$cfg_encrypt_salt       = '{cfg_encrypt_salt}';    // Do not alter if not on LDAP.
+
 
 //Authentication settings
 \$authentication = array(
   {cfg_authentication_arrays}
+);
+
+//Lookup settings
+\$lookup = array(
+  {cfg_lookup_arrays}
 );
 
 // Institutional email domains
@@ -1275,17 +1315,7 @@ CONFIG;
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
 
-    $config = str_replace('{cfg_ldap_server}', self::$cfg_ldap_server, $config);
-    $config = str_replace('{cfg_ldap_search_dn}', self::$cfg_ldap_search_dn, $config);
-    $config = str_replace('{cfg_ldap_bind_rdn}', self::$cfg_ldap_bind_rdn, $config);
-    $config = str_replace('{cfg_ldap_bind_password}', self::$cfg_ldap_bind_password, $config);
-    $config = str_replace('{cfg_ldap_user_prefix}', self::$cfg_ldap_user_prefix, $config);
 
-    if (self::$cfg_auth_ldap) {
-      $config = str_replace('{cfg_auth_ldap}', 'true', $config);
-    } else {
-      $config = str_replace('{cfg_auth_ldap}', 'false', $config);
-    }
 
     $authentication_arrays = array();
     if (self::$cfg_auth_lti) {
@@ -1298,17 +1328,40 @@ CONFIG;
       $authentication_arrays[] = "array('impersonation', array('separator' => '_'), 'Impersonation')";
     }
     if (self::$cfg_auth_internal) {
-      $authentication_arrays[] = "array('internaldb', array('table' => 'users', 'username_col' => 'username', 'passwd_col' => 'password', 'id_col' => 'id', 'encrypt' => 'SHA-512', 'encrypt_salt' => \$cfg_encrypt_salt), 'Internal Database')";
+      $authentication_arrays[] = "array('internaldb', array('table' => 'users', 'username_col' => 'username', 'passwd_col' => 'password', 'id_col' => 'id', 'encrypt' => 'SHA-512', 'encrypt_salt' => '{cfg_encrypt_salt}'), 'Internal Database')";
     }
     if (self::$cfg_auth_ldap) {
-      $authentication_arrays[] = "array('ldap', array('table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix), 'LDAP')";
+      $authentication_arrays[] = "array('ldap', array('table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => '{cfg_ldap_server}', 'ldap_search_dn' => '{cfg_ldap_search_dn}', 'ldap_bind_rdn' => '{cfg_ldap_bind_rdn}', 'ldap_bind_password' => '{cfg_ldap_bind_password}', 'ldap_user_prefix' => '{cfg_ldap_user_prefix}'), 'LDAP')";
     }
 
     $config = str_replace('{cfg_authentication_arrays}', implode(",\n  ", $authentication_arrays), $config);
 
+    $lookup_arrays= array();
+    if(self::$cfg_uselookupLdap) {
+$lookup_arrays[]=  "array('ldap', array('ldap_server' => '{cfg_lookup_ldap_server}', 'ldap_search_dn' => '{cfg_lookup_ldap_search_dn}', 'ldap_bind_rdn' => '{cfg_lookup_ldap_bind_rdn}', 'ldap_bind_password' => '{cfg_lookup_ldap_bind_password}', 'ldap_user_prefix' => '{cfg_lookup_ldap_user_prefix}', 'ldap_attributes' => array('sAMAccountName' => 'username', 'sn' => 'surname', 'title' => 'title', 'givenName' => 'firstname', 'department' => 'school', 'mail' => 'email',  'cn' => 'username',  'employeeType' => 'role',  'initials' => 'initials'), 'lowercasecompare' => TRUE, 'storeprepend' => 'ldap_'), 'LDAP')";
+    }
+    if(self::$cfg_uselookupXML) {
+ $lookup_arrays[]= "array('XML', array('baseurl' => 'http://exports/', 'userlookup' => array( 'url' => '/student.ashx?campus=uk', 'mandatoryurlfields' => array('username'), 'urlfields' => array('username' => 'username'), 'xmlfields' => array('StudentID' => 'studentID', 'Title' => 'title', 'Forename' => 'firstname', 'Surname' => 'surname', 'Email' => 'email', 'Gender' => 'gender', 'YearofStudy' => 'yearofstudy', 'School' => 'school', 'Degree' => 'degree', 'CourseCode' => 'coursecode', 'CourseTitle' => 'coursetitle', 'AttendStatus' => 'attendstatus'), 'oneitemreturned' => TRUE, 'override' => array('firstname' => TRUE), 'storeprepend' => 'sms_userlookup_')), 'XML')";
+    }
+
+    $config = str_replace('{cfg_lookup_arrays}', implode(",\n  ", $lookup_arrays), $config);
+
     $salt = $cfg_encrypt_salt; //=$salt;
 
     $config = str_replace('{cfg_encrypt_salt}', $salt, $config);
+
+    $config = str_replace('{cfg_ldap_server}', self::$cfg_ldap_server, $config);
+    $config = str_replace('{cfg_ldap_search_dn}', self::$cfg_ldap_search_dn, $config);
+    $config = str_replace('{cfg_ldap_bind_rdn}', self::$cfg_ldap_bind_rdn, $config);
+    $config = str_replace('{cfg_ldap_bind_password}', self::$cfg_ldap_bind_password, $config);
+    $config = str_replace('{cfg_ldap_user_prefix}', self::$cfg_ldap_user_prefix, $config);
+
+
+    $config = str_replace('{cfg_lookup_ldap_server}', self::$cfg_lookup_ldap_server, $config);
+    $config = str_replace('{cfg_lookup_ldap_search_dn}', self::$cfg_lookup_ldap_search_dn, $config);
+    $config = str_replace('{cfg_lookup_ldap_bind_rdn}', self::$cfg_lookup_ldap_bind_rdn, $config);
+    $config = str_replace('{cfg_lookup_ldap_bind_password}', self::$cfg_lookup_ldap_bind_password, $config);
+    $config = str_replace('{cfg_lookup_ldap_user_prefix}', self::$cfg_lookup_ldap_user_prefix, $config);
 
     $config = str_replace('{SERVER_NAME}', $_SERVER['HTTP_HOST'], $config);
 
@@ -1316,7 +1369,7 @@ CONFIG;
       rename(self::$rogo_path . '/config/config.inc.php', self::$rogo_path . '/config/config.inc.old.php');
     }
 
-    if (file_put_contents(self::$rogo_path . '/config/config.inc.php', $config) === false) {
+    if (file_put_contents(self::$rogo_path . '/config/config.inc.php', $config) === FALSE) {
       self::displayError(array(300=>'Could not write config file!'));
     }
   }
