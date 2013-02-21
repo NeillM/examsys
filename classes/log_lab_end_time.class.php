@@ -307,10 +307,10 @@ class LogLabEndTime {
   }
 
   /**
-   * Get the timestamp of when the paper was started or paper default start time if not already started
-   * @return int Timestamp of when the exam was started for this lab
+   * Get the date/time of when the paper was started or paper default start time if not already started
+   * @return DateTime When the exam was started for this lab
    */
-  public function get_start_timestamp() {
+  public function get_started_timestamp() {
     if ($this->start_timestamp === false) {
       return $this->property_object->get_start_date();
     } else {

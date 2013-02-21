@@ -275,6 +275,11 @@ function emergencyNumbers($support_numbers) {
   echo "</table>\n";
 }
 
+function get_timestamp_from_time($hours, $minutes, $timezone) {
+  $tmp_datetime = new DateTime(date('Y-m-d') . $hours . ':' . $minutes . ':00', $timezone);
+  return $tmp_datetime->getTimestamp();
+}
+
 
 if (isset($_POST['start_exam_form'])) {
   check_var('paper_id', 'POST', true, false, false);
@@ -360,6 +365,14 @@ if ($room_name != '') {
     }
     .tight {
       margin: 4px 0 2px 0;
+    }
+    .notice {
+      border: 1px solid #C00000;
+      padding: 0 6px;
+      margin-bottom: 6px;
+    }
+    .notice h1 {
+      font-size: 140%;
     }
 </style>
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -609,9 +622,9 @@ if (count($properties_list) > 0) {
     $start_date = $property_object->get_display_start_date();
     $calendar_year = $property_object->get_calendar_year();
 
-    $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $property_object, $mysqli);
-
     // Has 'Start' button been submitted
+
+    $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $property_object, $mysqli);
 
     $end_datetime = $log_lab_end_time->get_session_end_date_datetime();
 
@@ -619,7 +632,11 @@ if (count($properties_list) > 0) {
       $end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
     } else {
       $exam_started = true;
+      $started_timestamp = $log_lab_end_time->get_started_timestamp();
+      $start_date = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'), $started_timestamp);
     }
+
+    $disptimezone = new DateTimeZone($property_object->get_timezone());
 
     if (isset($_POST['start_exam_form'])) {
 
@@ -631,9 +648,12 @@ if (count($properties_list) > 0) {
         $invigilator_id = $userObject->get_user_ID();
         $end_datetime = $log_lab_end_time->save($invigilator_id);
         $exam_started = true;
+        $start_date = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'));
       }
     }
-
+?>
+      <td style="vertical-align:top; width:<?php echo $col_width; ?>%">
+<?php
     if(isset($_POST['end_exam_form'])) {
 
       $paper_id = (int)$_POST['paper_id'];
@@ -641,13 +661,21 @@ if (count($properties_list) > 0) {
       // Does the submitted paperID correspond it to the currently iterated paper?
 
       if ($paper_id == (int)$property_id) {
-        $invigilator_id = $userObject->get_user_ID();
-        $time = 'PT' . $_POST['hour'] . 'H' . $_POST['minute'] . 'M';
-        $end_datetime = $log_lab_end_time->save($invigilator_id, $time);
+        $end_timestamp = get_timestamp_from_time($_POST['hour'], $_POST['minute'], $disptimezone);
+        $exam_duration_s = $exam_duration * 60;
+
+        if (($end_timestamp - $started_timestamp) > $exam_duration_s) {
+          // End time is past start time + duration so is OK
+          $invigilator_id = $userObject->get_user_ID();
+          $time = 'PT' . $_POST['hour'] . 'H' . $_POST['minute'] . 'M';
+          $end_datetime = $log_lab_end_time->save($invigilator_id, $time);
+        } else {
+          $notice = UserNotices::get_instance();
+          $notice->display_notice($string['timeerror'], sprintf($string['timeerrormsg'], $exam_duration), '../artwork/red_warning_48.png', '#C00000', false, false);
+        }
       }
     }
 
-    $disptimezone = new DateTimeZone($property_object->get_timezone());
     $end_datetime->setTimezone($disptimezone);
 
     $end_date = $end_datetime->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'));
@@ -667,7 +695,6 @@ if (count($properties_list) > 0) {
     }
 
     ?>
-      <td style="vertical-align:top; width:<?php echo $col_width; ?>%">
           <div style="display:inline">
               <img src="../artwork/summative.png" align="left" width="48" height="48" alt="paper icon" border="0"/>
           </div>

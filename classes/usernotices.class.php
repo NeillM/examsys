@@ -66,9 +66,11 @@ Class user_notices extends RogoStaticSingleton {
       echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/notice.css\" />\n";
       echo "</head>\n<body>\n";
     }
+    echo '<div class="notice">';
     echo "<div style=\"float:left; padding-left:10px;width:60px\"><img src=\"$rp" . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
     echo "<div><h1 style=\"color:$title_color\">$title</h1>\n";
     echo "<hr />\n<p>$msg</p></div>";
+    echo '</div>';
 
     if ($output_footer == true) {
       echo "\n</body>\n</html>";

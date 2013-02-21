@@ -60,4 +60,6 @@ $string['checklist'] = '<div><strong>Tasklist</strong></div>
     </ol>';
 $string['time'] = 'Time';
 $string['timedexam'] = 'Timed Exam:';
+$string['timeerror'] = 'Time Error';
+$string['timeerrormsg'] = 'Exam must be at least %d minutes in length';
 ?>
