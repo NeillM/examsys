@@ -3173,7 +3173,7 @@ QUERY;
   }
 
   /*
-  //brzsw 25/01/2013 - Remove grants no longer needed (tables have been renamed).
+  // 25/01/2013 (brzsw) - Remove grants no longer needed (tables have been renamed).
   $sql_cmd = array();
   $sql_cmd[] = "REVOKE ALL PRIVILEGES ON student_modules FROM '" . $cfg_db_database . "_stu'@'" . $cfg_db_host . "'";
   $sql_cmd[] = "REVOKE ALL PRIVILEGES ON teams FROM '" . $cfg_db_database . "_staff'@'" . $cfg_db_host . "'";
@@ -3185,7 +3185,7 @@ QUERY;
   }
   */
 
-  //brzsw 25/01/2013 - Add missing indexes.
+  // 25/01/2013 (brzsw) - Add missing indexes.
   if (!$updater_utils->does_index_exist('log4', 'q_paper')) {
     $updater_utils->execute_query("ALTER TABLE log4 ADD INDEX q_paper (q_paper)", true);
   }
@@ -3266,8 +3266,7 @@ QUERY;
   }
 
 
-  //06/02/2013 - cczsa1 - add permission for initial db user to access courses table
-
+  // 06/02/2013 (cczsa1) - add permission for initial db user to access courses table
   if (!$updater_utils->has_grant($cfg_db_username, 'SELECT,INSERT', 'courses', $cfg_db_host)) {
     $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.courses TO \'' . $cfg_db_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
@@ -3310,7 +3309,7 @@ QUERY;
   }
 
 
-  // 13/02/2013 - Add PHP date formats to configuration file
+  // 13/02/2013 (nazrji) - Add PHP date formats to configuration file
   $new_cfg_str = array();
   $new_cfg_str[] = "  \$cfg_long_date_php = 'd/m/Y';\r\n";
   $new_cfg_str[] = "  \$cfg_short_date_php = 'd/m/y';\r\n";
@@ -3347,8 +3346,41 @@ QUERY;
     echo "<li>Add PHP date format config variables</li>\n";
   }
 
+  // 20/02/2013 (brzsw) - Add new access_log table
+  if (!$updater_utils->does_table_exist('access_log')) {
+    $updater_utils->execute_query("CREATE TABLE access_log (id int not null primary key auto_increment, userID int(11) unsigned, type varchar(255), accessed DATETIME, ipaddress char(60), page varchar(255)) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
+    
+    $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.access_log TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+    
+    $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.access_log TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+    
+    $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.access_log TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+    
+    $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.access_log TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
 
-  // 21/02/2013 - Add start time to log_lab_end_time
+  // 20/02/2013 (brzsw) - Add new denied_log table
+  if (!$updater_utils->does_table_exist('denied_log')) {
+    $updater_utils->execute_query("CREATE TABLE denied_log (id int not null primary key auto_increment, userID int(11) unsigned, tried DATETIME, ipaddress char(60), page varchar(255), title varchar(255), msg text) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
+    
+    $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+    
+    $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+    
+    $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+    
+    $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
+  
+  // 21/02/2013 (nazrji) - Add start time to log_lab_end_time
   if (!$updater_utils->does_column_type_value_exist('log_lab_end_time', 'start_time', 'int(10) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE log_lab_end_time ADD COLUMN start_time int(10) unsigned AFTER invigilatorID", true);
   }
@@ -3357,7 +3389,6 @@ QUERY;
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */
-
 
     // End of updates -----------------------------------------------------------------
 

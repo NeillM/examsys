@@ -22,100 +22,105 @@
 * @package
 */
 
-  require '../include/staff_student_auth.inc';
-  require_once '../include/demo_replace.inc';
-  require_once '../include/mapping.inc';
-  require_once '../include/errors.inc';
-  require_once '../include/feedback.inc';
-  require_once '../include/sort.inc';
-  require_once '../include/calculate_marks.inc';
+require '../include/staff_student_auth.inc';
+require_once '../include/demo_replace.inc';
+require_once '../include/mapping.inc';
+require_once '../include/errors.inc';
+require_once '../include/feedback.inc';
+require_once '../include/sort.inc';
+require_once '../include/calculate_marks.inc';
+require_once '../classes/logger.class.php';
 
-  check_var('id', 'GET', true, false, false);
+check_var('id', 'GET', true, false, false);
 
-  if ($userObject->has_role('Demo')) {
-    $demo = true;
+if ($userObject->has_role('Demo')) {
+  $demo = true;
+} else {
+  $demo = false;
+}
+
+$showReflection = true;
+$userID = $userObject->get_user_ID();
+
+if ($userObject->has_role(array('Staff', 'SysAdmin'))) {
+  if (isset($_GET['userID']) and $_GET['userID'] != '') {
+    $userID = $_GET['userID'];
   } else {
-    $demo = false;
+    display_error($string['idmissing'], $string['idmissing_msg'], false, true, false);
   }
+}
 
-  $showReflection = true;
-  $userID = $userObject->get_user_ID();
 
-  if ($userObject->has_role(array('Staff','SysAdmin'))) {
-    if (isset($_GET['userID']) and $_GET['userID'] != '') {
-      $userID = $_GET['userID'];
-    } else {
-      display_error($string['idmissing'], $string['idmissing_msg'], false, true, false);
-    }
-  }
-
-  //check the feedback has been released !!!
-  if ($userObject->has_role('Student')) {
-    $result = $mysqli->prepare("SELECT property_id, date FROM feedback_release, properties WHERE properties.property_id=feedback_release.paper_id AND crypt_name = ? AND date < NOW()");
-    $result->bind_param('s', $_GET['id']);
-    $result->execute();
-    $result->bind_result($paperID, $date);
-    $result->fetch();
-    $result->close();
-    if ($date == '') {
-      header("HTTP/1.0 404 Not Found");
-      exit;
-    }
-  } else {
-    $result = $mysqli->prepare("SELECT property_id FROM properties WHERE crypt_name = ?");
-    $result->bind_param('s', $_GET['id']);
-    $result->execute();
-    $result->bind_result($paperID);
-    $result->fetch();
-    $result->close();
-  }
-
-  if (!isset($_GET['ordering'])) {
-    $ordering = 'screen';
-    $direction = 'asc';
-  }
-
-  // Get some paper properties
-  $paper_title = $paper_type = $moduleID = $session = $pass_mark = $random_mark = $total_mark = $marking = $exam_duration = $start_date = $end_date = '';
-  getPaperProperties($mysqli, $paperID);
-  //check the paper is valid
-  if ($paper_title == '') {
+//check the feedback has been released !!!
+if ($userObject->has_role('Student')) {
+  $result = $mysqli->prepare("SELECT property_id, date FROM feedback_release, properties WHERE properties.property_id=feedback_release.paper_id AND crypt_name = ? AND date < NOW()");
+  $result->bind_param('s', $_GET['id']);
+  $result->execute();
+  $result->bind_result($paperID, $date);
+  $result->fetch();
+  $result->close();
+  if ($date == '') {
     header("HTTP/1.0 404 Not Found");
     exit;
   }
-
-  $moduleID = Paper_utils::get_modules($paperID, $mysqli);
-
-  //check the user sat the paper!
-  if ($paper_type == '5') {
-    $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log5 WHERE q_paper=? AND userID=? LIMIT 1");
-  } elseif ($paper_type == '4') {
-    $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log4 WHERE q_paper=? AND userID=? LIMIT 1");
-  } else {
-    $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log$paper_type WHERE q_paper=? AND userID=? ORDER BY screen DESC LIMIT 1");
-  }
-  $result->bind_param('ii', $paperID, $userID);
+} else {
+  $result = $mysqli->prepare("SELECT property_id FROM properties WHERE crypt_name = ?");
+  $result->bind_param('s', $_GET['id']);
   $result->execute();
-  $result->bind_result($started, $updated);
-  $result->store_result();
-  $result->fetch();
-  if ($result->num_rows == 0) {
-    header("HTTP/1.0 404 Not Found");
-    exit;
-  }
-  $result->close();
-
-  $start_seconds = (substr($started,0,2) * 60 * 60) + (substr($started,3,2) * 60) + substr($started,6,2);
-  $updated = (substr($updated,0,2) * 60 * 60) + (substr($updated,3,2) * 60) + substr($updated,6,2);
-  $time_spent = $updated - $start_seconds;
-
-  $result = $mysqli->prepare("SELECT username, title, initials, surname FROM users WHERE id=?");
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->bind_result($tmp_username, $title, $initials, $surname);
+  $result->bind_result($paperID);
   $result->fetch();
   $result->close();
-  $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_replace($surname, $demo);
+}
+
+$logger = new Logger($mysqli);
+$logger->record_access($userID, 'Objectives-based feedback report', $paperID);  
+
+if (!isset($_GET['ordering'])) {
+  $ordering = 'screen';
+  $direction = 'asc';
+}
+
+// Get some paper properties
+$paper_title = $paper_type = $moduleID = $session = $pass_mark = $random_mark = $total_mark = $marking = $exam_duration = $start_date = $end_date = '';
+getPaperProperties($mysqli, $paperID);
+//check the paper is valid
+if ($paper_title == '') {
+  header("HTTP/1.0 404 Not Found");
+  exit;
+}
+
+$moduleID = Paper_utils::get_modules($paperID, $mysqli);
+
+//check the user sat the paper!
+if ($paper_type == '5') {
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log5 WHERE q_paper=? AND userID=? LIMIT 1");
+} elseif ($paper_type == '4') {
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log4 WHERE q_paper=? AND userID=? LIMIT 1");
+} else {
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log$paper_type WHERE q_paper=? AND userID=? ORDER BY screen DESC LIMIT 1");
+}
+$result->bind_param('ii', $paperID, $userID);
+$result->execute();
+$result->bind_result($started, $updated);
+$result->store_result();
+$result->fetch();
+if ($result->num_rows == 0) {
+  header("HTTP/1.0 404 Not Found");
+  exit;
+}
+$result->close();
+
+$start_seconds = (substr($started,0,2) * 60 * 60) + (substr($started,3,2) * 60) + substr($started,6,2);
+$updated = (substr($updated,0,2) * 60 * 60) + (substr($updated,3,2) * 60) + substr($updated,6,2);
+$time_spent = $updated - $start_seconds;
+
+$result = $mysqli->prepare("SELECT username, title, initials, surname FROM users WHERE id=?");
+$result->bind_param('i', $userID);
+$result->execute();
+$result->bind_result($tmp_username, $title, $initials, $surname);
+$result->fetch();
+$result->close();
+$student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_replace($surname, $demo);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

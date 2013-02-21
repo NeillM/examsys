@@ -35,6 +35,7 @@ require_once '../include/media.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/logger.class.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -52,6 +53,9 @@ if (isset($_GET['type'])) {
 } else {
   $log_type = $propertyObj->get_paper_type();
 }
+
+$logger = new Logger($mysqli);
+$logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', $paperID);  
 
 $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);

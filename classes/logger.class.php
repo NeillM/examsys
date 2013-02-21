@@ -25,6 +25,7 @@
 */
 
 require_once 'exceptions.inc.php';
+require_once $cfg_web_root . 'classes/networkutils.class.php';
 
 Class Logger {
   private $_mysqli;
@@ -104,6 +105,26 @@ QUERY;
     $result->close();
 
     return $change_data;
+  }
+  
+  public function record_access_denied($user_id, $title, $msg) {
+    $current_ip_address = NetworkUtils::get_ipaddress();
+
+    $page = $_SERVER['SCRIPT_FILENAME'] . '?'. $_SERVER['QUERY_STRING'];
+
+    $result = $this->_mysqli->prepare('INSERT INTO denied_log VALUES(NULL, ?, NOW(), ?, ?, ?, ?)');
+    $result->bind_param('issss', $user_id, $current_ip_address, $page, $title, $msg);
+    $result->execute();
+    $result->close();
+  }
+  
+  public function record_access($user_id, $type, $page) {
+    $current_ip_address = NetworkUtils::get_ipaddress();
+
+    $result = $this->_mysqli->prepare('INSERT INTO access_log VALUES(NULL, ?, ?, NOW(), ?, ?)');
+    $result->bind_param('isss', $user_id, $type, $current_ip_address, $page);
+    $result->execute();
+    $result->close();
   }
   
 }

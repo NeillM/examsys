@@ -172,6 +172,17 @@ Class UserUtils {
 
     return $match;
   }
+  
+  static function get_user_details($tmp_userID, $db) {
+    $stmt = $db->prepare("SELECT title, surname, initials, first_names, email, roles FROM users WHERE id = ? LIMIT 1");
+    $stmt->bind_param('i', $tmp_userID);
+    $stmt->execute();
+    $stmt->bind_result($title, $surname, $initials, $first_names, $email, $roles);
+    $stmt->fetch();
+    $stmt->close();
+    
+    return array('title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles);
+  }
 
   /**
    * Add a member of staff onto a team.
@@ -331,8 +342,18 @@ Class UserUtils {
    *
    */
   static function is_user_on_module($tmp_userID, $idMod, $session, $db) {
-    $result = $db->prepare("SELECT userID FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
-    $result->bind_param('iss', $tmp_userID, $idMod, $session);
+    if (is_array($idMod)) {
+      $idMod = implode(',', $idMod);
+    }
+
+    if ($session == '') {
+      $result = $db->prepare("SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod)");
+      $result->bind_param('i', $tmp_userID);
+    } else {
+      $result = $db->prepare("SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod) AND calendar_year = ?");
+      $result->bind_param('is', $tmp_userID, $session);
+    }
+    
     $result->execute();
     $result->store_result();
     $result->bind_result($tmp_userID);

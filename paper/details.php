@@ -456,8 +456,8 @@ $result->close();
   }
 </script>
 <?php
-  //$paper_owner = $properties['paper_owner_title']  . ' ' . $properties['paper_owner_initials'] . ', ' . $properties['paper_owner_surname'];
-  $paper_owner = 'Dr S, Wilkinson';
+  $user_details = UserUtils::get_user_details($properties->get_paper_ownerid(), $mysqli);
+  $paper_owner = $user_details['title']  . ' ' . $user_details['initials'] . ', ' . $user_details['surname'];
 
   if (date("U", time()) >= $properties->get_start_date() and date("U", time()) <= $properties->get_end_date()) {
     $active_date = 1;
@@ -735,7 +735,7 @@ $result->close();
     $module = '';
   } else {
     $paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);  // Get the modules from paper properties
-    $module = array_slice($paper_modules,0,1);
+    $module = array_slice(array_keys($paper_modules), 0, 1);
     $module = $module[0];
     $folder = '';
   }
@@ -750,14 +750,12 @@ $result->close();
   //blank row to preserve table layout when using table-layout: fixed - needed to increase ie8 latex rendering speed
   echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
 
-  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
+  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
   if ($module != '') {
     $module_code = module_utils::get_moduleid_from_id($module, $mysqli);
-    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
   } elseif ($folder != '') {
-    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  } else {
-    echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   }
   echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';
   if ($properties->get_retired() != '') {

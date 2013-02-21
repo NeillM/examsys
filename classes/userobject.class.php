@@ -357,7 +357,7 @@ class UserObject extends RogoStaticSingleton {
     $result = $this->db->prepare("SELECT idMod, moduleID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
     if ($this->db->error) {
       try {
-        throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
         echo nl2br($e->getTraceAsString());

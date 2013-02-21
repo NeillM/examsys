@@ -25,6 +25,7 @@
 */
 
 require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
+require_once $cfg_web_root . 'classes/logger.class.php';
 
 Class UserNotices extends RogoStaticSingleton {
   public static $inst = NULL;
@@ -109,7 +110,13 @@ Class user_notices extends RogoStaticSingleton {
    *
    */
   public function access_denied($mysqli, $string, $message, $output_header = false, $output_footer = true) {
-    $this->display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
+    $user = UserObject::get_instance();
+    if ($user !== NULL and $user->get_user_ID() > 0) {
+      $logger = new Logger($mysqli);
+      $logger->record_access_denied($user->get_user_ID(), $string['accessdenied'], $message);      
+    }
+
+    $this->display_notice_and_exit($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');    
   }
 
 }

@@ -698,14 +698,14 @@ class PaperProperties {
    * @return int $paper_ownerid
    */
   public function get_paper_ownerid() {
-      return $this->paper_ownerid;
+      return $this->paper_ownerID;
   }
 
   /**
    * @param int $paper_ownerid
    */
   public function set_paper_ownerid($paper_ownerid) {
-      $this->paper_ownerid = $paper_ownerid;
+      $this->paper_ownerID = $paper_ownerid;
   }
 
   /**
