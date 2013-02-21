@@ -3505,12 +3505,7 @@ $cfg=$cfg_new2;
 
 
 $cfg=$cfg_new3;
-  print implode('<br>', $cfg);
-  exit();
 
-
-  print implode('<br>', $cfg_new2);
-   exit();
 
   if (file_exists($cfg_web_root . 'config/config.inc.php')) {
     rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.preauthchange2.php');
