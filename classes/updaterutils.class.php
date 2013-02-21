@@ -129,6 +129,7 @@ Class UpdaterUtils {
     $found_grant = '';
     
     $result = $this->mysqli->query("SHOW GRANTS FOR '$user'@'$host'");
+    echo $this->mysqli->error;
     
     while ($existing_grant = $result->fetch_array()) {
       if (stripos($existing_grant[0], ".`$table` TO") !== false) {
