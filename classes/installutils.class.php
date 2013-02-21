@@ -1227,7 +1227,7 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_lti_allow_staff_module_register = false; // allows rogo to register staff onto the module team if set to true and from lti launch and staff in vle
 \$cfg_lti_allow_module_create = false;  // allows rogo to create module if it doesnt exist
 
-\$authentication_fields_required_to_create_user=array('username', 'title', 'firstname', 'surname', 'email', 'role');
+\$authentication_fields_required_to_create_user = array('username', 'title', 'firstname', 'surname', 'email', 'role');
 
 //Authentication settings
 \$authentication = array(

@@ -3392,7 +3392,136 @@ QUERY;
   if (!$updater_utils->does_index_exist('modules_student', 'idx_mod_calyear')) {
     $updater_utils->execute_query("ALTER TABLE modules_student ADD INDEX idx_mod_calyear (calendar_year, idMod)", true);
   }
-  
+
+
+
+// 20-02-2013 -- cczsa1 remove ldap references from config
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+
+  unset($cfg_new);
+unset($cfg_new2);
+//  $cfg = file($cfg_web_root . 'config/config.inc.php');
+ $cfg_new2=$cfg;//_new2;
+  $addauthfld = true;
+  foreach ($cfg as $k => $v) {
+    $found = strpos($v, '$authentication_fields_required_to_create_user = array(');
+    if ($found !== false) {
+      $addauthfld = false;
+    }
+    $found = strpos($v, '$cfg_lti_allow_module_create');
+    if ($found !== false) {
+      $insloc = $k + 1;
+    }
+  }
+  $array_new=array();
+  if ($addauthfld == true) {
+    $extra1 = '';
+    $array_new[] = "\n";
+    $array_new[] = "\$authentication_fields_required_to_create_user = array('username', 'title', 'firstname', 'surname', 'email', 'role')\n";
+
+    array_splice($cfg_new2, $insloc, 0, $array_new);
+
+  }
+
+
+  unset($cfg);
+  $cfg=$cfg_new2;
+  $addlk = true;
+  foreach ($cfg as $k => $v) {
+    $found = strpos($v, '$lookup = array(');
+    if ($found !== false) {
+      $addlk = false;
+    }
+    $found = strpos($v, '$authentication_fields_required_to_create_user = array(');
+    if ($found !== false) {
+      $insloc = $k + 1;
+    }
+  }
+
+  $array_new=array();
+  if ($addlk == true) {
+    $extra1 = '';
+    $array_new[] = "\n";
+    $array_new[] = "\$lookup = array(\n";
+
+    if (isset($authentication)) {
+      foreach ($authentication as $item) {
+        if ($item[0] == 'ldap') {
+          $cfg_use_ldap = true;
+        }
+      }
+    }
+        if ($cfg_use_ldap === true) {
+          $extra1 = ',';
+
+          $array_new[] = "  array('ldap', array('ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix, 'ldap_attributes' => array('sAMAccountName' => 'username', 'sn' => 'surname', 'title' => 'title', 'givenName' => 'firstname', 'department' => 'school', 'UoNPrimaryEmailAlias' => 'email', 'UoNemailAlias' => 'email', 'mail' => 'email', 'UonStuID' => 'studentID', 'UoNStaffID' => 'staffID', 'cn' => 'username', 'UoNPosition' => 'role', 'employeeType' => 'role', 'UoNUPSStatus' => 'role', 'initials' => 'initials'), 'lowercasecompare' => TRUE, 'storeprepend' => 'ldap_'), 'LDAP')\n";
+        }
+
+
+
+    $array_new[] = ");\n";
+
+    $array_new[]= "//array('XML', array('baseurl' => 'http://exports/', 'userlookup' => array( 'url' => '/student.ashx?campus=uk', 'mandatoryurlfields' => array('username'), 'urlfields' => array('username' => 'username'), 'xmlfields' => array('StudentID' => 'studentID', 'Title' => 'title', 'Forename' => 'firstname', 'Surname' => 'surname', 'Email' => 'email', 'Gender' => 'gender', 'YearofStudy' => 'yearofstudy', 'School' => 'school', 'Degree' => 'degree', 'CourseCode' => 'coursecode', 'CourseTitle' => 'coursetitle', 'AttendStatus' => 'attendstatus'), 'oneitemreturned' => true, 'override' => array('firstname' => true), 'storeprepend' => 'sms_userlookup_')), 'XML')";
+    array_splice($cfg_new2, $insloc, 0, $array_new);
+
+  }
+
+  unset($cfg_new);
+  unset($cfg);
+
+$cfg=$cfg_new2;
+  $remove_array = array('$cfg_ldap_server', '$cfg_ldap_search_dn', '$cfg_ldap_bind_rdn', '$cfg_ldap_bind_password', '$cfg_ldap_user_prefix', '$cfg_use_ldap', '$cfg_encrypt_salt','//LDAP');
+  $cfg_new=array();
+  foreach ($cfg as $line) {
+    $remove = false;
+    foreach ($remove_array as $needle) {
+      if (stripos(trim($line), $needle) === 0) {
+
+        $remove = true;
+        break 1;
+      }
+    }
+    if (!$remove) {
+      $cfg_new[] = $line;
+    } else {
+      $settings_keep[] = $line;
+      eval($line);
+    }
+  }
+
+  foreach ($remove_array as $item) {
+    $item1 = substr($item, 1);
+    if(stripos($item,'//LDAP') ===false ) {
+      $arrayexchange[$item] = '\'' . $$item1 . '\'';
+      if ($$item1 === true) {
+        $arrayexchange[$item] = 'TRUE';
+      }
+    }
+  }
+
+  foreach ($cfg_new as $line) {
+    $cfg_new3[] = str_replace(array_keys($arrayexchange), array_values($arrayexchange), $line);
+  }
+
+
+$cfg=$cfg_new3;
+  print implode('<br>', $cfg);
+  exit();
+
+
+  print implode('<br>', $cfg_new2);
+   exit();
+
+  if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+    rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.preauthchange2.php');
+  }
+
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+  } else {
+    echo"<li>Changed config file to new lookup method and adjusted info for authentication method</li>";
+  }
+
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
