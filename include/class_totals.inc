@@ -1326,7 +1326,7 @@ if (!empty($tmp_array)) {
   }
 }
 
-if (substr($marking,0,1) == '2') {
+if (substr($marking, 0, 1) == '2') {
   get_ss_pass($ss_pass, $ss_hon);
 
   for ($i=0; $i<$user_no; $i++) {

@@ -172,9 +172,9 @@ Class module {
       $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ?");
       if ($db->error) {
         try {
-          throw new Exception("MySQL error $db->error <br> Query:<br> $query", $db->errno);
+          throw new Exception("MySQL error $db->error <br> Query:<br /> $query", $db->errno);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
         }
       }
