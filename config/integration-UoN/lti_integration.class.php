@@ -26,9 +26,9 @@ class lti_integration_extended extends lti_integration {
     $data = array();
 
     $returned = ldap_lookup($username, $password, $data, 1);
-    if ($returned === FALSE) {
+    if ($returned === false) {
       // no ldap user found
-      return FALSE;
+      return false;
     }
 
     $title = $returned[0]['title'][0];
@@ -62,7 +62,7 @@ class lti_integration_extended extends lti_integration {
         UserUtils::createUser($username, $password, $user_data['Title'], $user_data['Forename'], $user_data['Surname'], $user_data['Email'], $user_data['CourseCode'], $user_data['Gender'], $user_data['YearofStudy'], 'Student', $user_data['StudentID'], $mysqli);
       } else {
         //error looking up student
-        display_error($string['noaccountfound'], '', FALSE, TRUE);
+        display_error($string['noaccountfound'], '', false, true);
       }
     }
 
@@ -76,26 +76,26 @@ class lti_integration_extended extends lti_integration {
     $timediff = $time2 - $time1;
     if ($timediff > (60 * 60 * 24 * 7 * 15)) {
       //if ($timediff > (60 * 60 * 1)) {
-      return TRUE;
+      return true;
     }
 
-    return FALSE;
+    return false;
   }
 
   static function allow_staff_edit_link() {
-    return FALSE;
+    return false;
   }
 
   static function allow_module_self_reg($data) {
-    return TRUE;
+    return true;
   }
 
   static function allow_staff_module_register($data) {
-    return TRUE;
+    return true;
   }
 
   static function allow_module_create($data) {
-    return TRUE;
+    return true;
   }
 
   static function sms_api($data) {
@@ -129,7 +129,7 @@ class lti_integration_extended extends lti_integration {
 
   static function module_code_translate($c_internal_id, $course_title = ' ') {
 
-    if (stripos($c_internal_id, ' ') !== FALSE) {
+    if (stripos($c_internal_id, ' ') !== false) {
       self::invalid_module_code($c_internal_id, array(), 'initial blank check');
     }
 
@@ -143,7 +143,7 @@ class lti_integration_extended extends lti_integration {
     $length = strlen($exploded[0]);
     $fin = strlen($course_title);
 
-    if (strpos($course_title, '(') !== FALSE) $fin = strpos($course_title, '(') - 1;
+    if (strpos($course_title, '(') !== false) $fin = strpos($course_title, '(') - 1;
     $course_title = substr($course_title, 0, $fin);
     if ($length < 6) {
       //not saturn code
@@ -198,12 +198,12 @@ class lti_integration_extended extends lti_integration {
 
       if (substr($v[5], 0, 8) == 'MISSING:' and $v[0] == 'SMS') {
         $sms = SmsUtils::GetSmsUtils();
-        if ($sms === FALSE) {
+        if ($sms === false) {
           $data[$k][5] = "SATURN " . $data[$k][5];
         } else {
           $sms->set_module($v[2]);
           $returned = $sms->get_module_info($v[1]);
-          if ($returned !== FALSE) {
+          if ($returned !== false) {
             $data[$k][5] = $returned[1];
             $data[$k][3] = $returned[2];
           } else {

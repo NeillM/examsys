@@ -48,14 +48,14 @@ class XML_lookup extends outline_lookup {
   }
 
   function userlookup($lookupobj) {
-    $searchsuccess = FALSE;
-    $usefile = FALSE;
+    $searchsuccess = false;
+    $usefile = false;
 
 
     $this->savetodebug('The UoNSaturn userlookup function has been called');
 
 
-//    $this->savetodebug('Received data:' . var_export($lookupobj, TRUE));
+//    $this->savetodebug('Received data:' . var_export($lookupobj, true));
 
 
     if (isset($this->settings['userlookup']['mandatoryurlfields'])) {
@@ -74,13 +74,13 @@ class XML_lookup extends outline_lookup {
     // if the lookup doesnt have these set and the default for the module configuration exist use them
     if (!isset($lookupobj->settings->override)) {
       if (isset($this->settings['userlookup']['override'])) {
-        $overrideset = TRUE;
+        $overrideset = true;
         foreach ($this->settings['userlookup']['override'] as $key => $value) {
           $lookupobj->settings->override[$key] = $value;
         }
         $this->savetodebug('Overriding settings from userlookup as none supplied');
       } elseif (isset($this->settings['override'])) {
-        $overrideset = TRUE;
+        $overrideset = true;
         foreach ($this->settings['override'] as $key => $value) {
           $lookupobj->settings->override[$key] = $this->settings['override'][$value];
         }
@@ -89,11 +89,11 @@ class XML_lookup extends outline_lookup {
     }
     if (!isset($lookupobj->settings->overrideall)) {
       if (isset($this->settings['userlookup']['overrideall'])) {
-        $overrideallset = TRUE;
+        $overrideallset = true;
         $lookupobj->settings->overrideall = $this->settings['userlookup']['overrideall'];
         $this->savetodebug('Overriding all settings from userlookup as none supplied');
       } elseif (isset($this->settings['overrideall'])) {
-        $overrideallset = TRUE;
+        $overrideallset = true;
         $lookupobj->settings->overrideall = $this->settings['overrideall'];
         $this->savetodebug('Overriding all settings  from xml plugin as none supplied');
       }
@@ -118,12 +118,12 @@ class XML_lookup extends outline_lookup {
 
     //setting options for curl retrieval eg username/password or form submission
 
-    $usefile = TRUE;
+    $usefile = true;
 
-    if ($usefile == TRUE) {
+    if ($usefile == true) {
       $returned_data = @file_get_contents($url);
-      $xml = FALSE;
-      if ($returned_data !== FALSE) {
+      $xml = false;
+      if ($returned_data !== false) {
         try {
           $xml = new SimpleXMLElement($returned_data);
         } catch (Exception $e) {
@@ -131,7 +131,7 @@ class XML_lookup extends outline_lookup {
         }
       }
     }
-    if ($xml == FALSE) {
+    if ($xml == false) {
       $this->savetodebug('No valid XML received');
 
       return $lookupobj;
@@ -154,14 +154,14 @@ class XML_lookup extends outline_lookup {
       }
     }
 
-    $this->savetodebug('XML is: ' . var_export($xml, TRUE));
+    $this->savetodebug('XML is: ' . var_export($xml, true));
 
     $lookupobj = $this->xmlsearch($xml, $lookupobj, 'userlookup');
 
-    if ($overrideallset == TRUE) {
+    if ($overrideallset == true) {
       unset($lookupobj->settings->overrideall);
     }
-    if ($overrideset == TRUE) {
+    if ($overrideset == true) {
       unset($lookupobj->settings->override);
     }
 
@@ -170,13 +170,13 @@ class XML_lookup extends outline_lookup {
   }
 
   function xmlsearch($xml, $lookupobj, $section) {
-    $searchsuccess = FALSE;
-    $oneitemreturned = FALSE;
+    $searchsuccess = false;
+    $oneitemreturned = false;
     $oneitemreturned = $this->get_setting('oneitemreturned', $section);
 
-    if ($oneitemreturned !== TRUE) {
+    if ($oneitemreturned !== true) {
 
-      $searchsuccess = FALSE;
+      $searchsuccess = false;
       foreach ($lookupobj->searchorder as $keyno => $orderitem) {
         $filter = '';
 
@@ -218,7 +218,7 @@ class XML_lookup extends outline_lookup {
           } //else skip as cant search for this as we dont have corresponding attribute
         }
 
-        if ($searchsuccess == TRUE) {
+        if ($searchsuccess == true) {
           break;
         }
         //end of searchorder loop
@@ -236,7 +236,7 @@ class XML_lookup extends outline_lookup {
     $this->savetodebug("Using search filter: $filter");
     $xmlsearched = $xml->xpath($filter);
 
-    $this->savetodebug('XML IS NOW: ' . var_export($xmlsearched, TRUE));
+    $this->savetodebug('XML IS NOW: ' . var_export($xmlsearched, true));
 
     //have just the number of simplexmlobjects we are interested in.
 
@@ -244,18 +244,18 @@ class XML_lookup extends outline_lookup {
     if ($count > 0) {
       //check items in the record
       if ($count > 1) {
-        $lookupobj->multiple = TRUE;
+        $lookupobj->multiple = true;
       }
       $attributes = $this->get_setting('xmlfields', 'userlookup');
 
       $this->savetodebug("Found $count records");
-      if (isset($lookupobj->settings->firstentry) and $lookupobj->settings->firstentry == TRUE) {
+      if (isset($lookupobj->settings->firstentry) and $lookupobj->settings->firstentry == true) {
         //only
         $this->savetodebug('Saving First Entry Only');
         $datablock = $xmlsearched[0];
         $lookupobj = $this->store_in_data($datablock, $attributes, $lookupobj, 'userlookup');
 
-      } elseif (isset($lookupobj->settings->lastentry) and $lookupobj->settings->lastentry == TRUE) {
+      } elseif (isset($lookupobj->settings->lastentry) and $lookupobj->settings->lastentry == true) {
         //
         $this->savetodebug('Saving Last Entry Only');
         $datablock = $xmlsearched[$count - 1];
@@ -283,7 +283,7 @@ class XML_lookup extends outline_lookup {
 
   function store_in_data($datablock, $attributes, $lookupobj, $section) {
     $prepend = '';
-    if ((isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) or (isset($this->settings[$section]['lowercasecompare']) and $this->settings[$section]['lowercasecompare'] == TRUE)) {
+    if ((isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) or (isset($this->settings[$section]['lowercasecompare']) and $this->settings[$section]['lowercasecompare'] == true)) {
       $this->savetodebug('Setting ldap_attributes to lowercase');
       foreach ($attributes as $key => $value) {
         $attributes[mb_strtolower($key)] = $value;
@@ -299,11 +299,11 @@ class XML_lookup extends outline_lookup {
     }
     foreach ($attributes as $key => $value) {
       $keyorig = $key;
-      if ((isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) or (isset($this->settings[$section]['lowercasecompare']) and $this->settings[$section]['lowercasecompare'] == TRUE)) {
+      if ((isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) or (isset($this->settings[$section]['lowercasecompare']) and $this->settings[$section]['lowercasecompare'] == true)) {
         $key = mb_strtolower($key); //think this actually needs to change the datablock without changing the original datablock
       }
       $reverse_attribute = $value;
-      if (isset($datablock->$key) and (((isset($lookupobj->lookupdata->$reverse_attribute)) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == TRUE) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == TRUE) or (isset($lookupobj->settings->override[$reverse_attribute]) and $lookupobj->settings->override[$reverse_attribute] == TRUE)))) or (!isset($lookupobj->lookupdata->$reverse_attribute)))) {
+      if (isset($datablock->$key) and (((isset($lookupobj->lookupdata->$reverse_attribute)) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == true) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true) or (isset($lookupobj->settings->override[$reverse_attribute]) and $lookupobj->settings->override[$reverse_attribute] == true)))) or (!isset($lookupobj->lookupdata->$reverse_attribute)))) {
         // store data to lookup if ldap_attribute listed and ( not set or if set and ( overrideall or override value or override inverse ldap se+t))
 
         $lookupobj->lookupdata->$reverse_attribute = (string)$datablock->$key;
@@ -323,7 +323,7 @@ class XML_lookup extends outline_lookup {
         //
 
 
-        if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) {
+        if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
           $key = mb_strtolower($key);
         }
 
@@ -332,7 +332,7 @@ class XML_lookup extends outline_lookup {
         }
 
 
-        if (((isset($lookupobj->datablockstore[$prepend . $key])) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == TRUE) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == TRUE)))) or (!isset($lookupobj->datablockstore[$prepend . $key]))) {
+        if (((isset($lookupobj->datablockstore[$prepend . $key])) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == true) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true)))) or (!isset($lookupobj->datablockstore[$prepend . $key]))) {
           // store data to datablock store if not set or if set and ( overrideall or override value set)
           $lookupobj->datablockstore[$prepend . $key] = (string)$value;
         }

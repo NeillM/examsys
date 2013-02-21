@@ -43,20 +43,20 @@ class ldap_lookup extends outline_lookup {
   }
 
   function userlookup($lookupobj) {
-    $overrideallset = FALSE;
-    $overrideset = FALSE;
+    $overrideallset = false;
+    $overrideset = false;
     $this->savetodebug('The LDAP userlookup function has been called');
     // if the lookup doesnt have these set and the default for the module configuration exist use them
     if (!isset($lookupobj->settings->override) and isset($this->settings['override'])) {
       foreach ($this->settings['override'] as $key => $value) {
         $lookupobj->settings->override[$key] = $this->settings['override'][$key];
       }
-      $overrideset = TRUE;
+      $overrideset = true;
       $this->savetodebug('Overriding settings as none supplied');
     }
     if (!isset($lookupobj->settings->overrideall) and isset($this->settings['overrideall'])) {
       $lookupobj->settings->overrideall = $this->settings['overrideall'];
-      $overrideallset = TRUE;
+      $overrideallset = true;
     }
 
     extract($this->settings);
@@ -72,7 +72,7 @@ class ldap_lookup extends outline_lookup {
       return $lookupobj;
     }
 
-    $searchsuccess = FALSE;
+    $searchsuccess = false;
     foreach ($lookupobj->searchorder as $keyno => $orderitem) {
       $filter = '';
 
@@ -121,19 +121,19 @@ class ldap_lookup extends outline_lookup {
       } else {
         $info = ldap_get_entries($ldap, $search);
         if ($info['count'] > 0) {
-          $searchsuccess = TRUE;
+          $searchsuccess = true;
           $count = $info['count'];
           if ($count > 1) {
-            $lookupobj->multiple = TRUE;
+            $lookupobj->multiple = true;
           }
           $this->savetodebug("Found $count records");
-          if (isset($lookupobj->settings->firstentry) and $lookupobj->settings->firstentry == TRUE) {
+          if (isset($lookupobj->settings->firstentry) and $lookupobj->settings->firstentry == true) {
             //only
             $this->savetodebug('Saving First Entry Only');
             $datablock = $info[0];
             $lookupobj = $this->store_in_data($datablock, $ldap_attributes, $lookupobj);
 
-          } elseif (isset($lookupobj->settings->lastentry) and $lookupobj->settings->lastentry == TRUE) {
+          } elseif (isset($lookupobj->settings->lastentry) and $lookupobj->settings->lastentry == true) {
             //
             $this->savetodebug('Saving Last Entry Only');
             $datablock = $info[$count - 1];
@@ -156,16 +156,16 @@ class ldap_lookup extends outline_lookup {
       }
 
 
-      if ($searchsuccess == TRUE) {
+      if ($searchsuccess == true) {
         break;
       }
       //end of searchorder loop
     }
 
-    if ($overrideallset == TRUE) {
+    if ($overrideallset == true) {
       unset($lookupobj->settings->overrideall);
     }
-    if ($overrideset == TRUE) {
+    if ($overrideset == true) {
       unset($lookupobj->settings->override);
     }
 
@@ -175,7 +175,7 @@ class ldap_lookup extends outline_lookup {
 
   function store_in_data($datablock, $ldap_attributes, $lookupobj) {
     $prepend = '';
-    if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) {
+    if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
       $this->savetodebug('Setting ldap_attributes to lowercase');
       foreach ($ldap_attributes as $key => $value) {
         $ldap_attributes[mb_strtolower($key)] = $value;
@@ -188,11 +188,11 @@ class ldap_lookup extends outline_lookup {
     $lookupdatas = new stdClass();
     foreach ($ldap_attributes as $key => $value) {
       $keyorig = $key;
-      if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) {
+      if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
         $key = mb_strtolower($key); //think this actually needs to change the datablock without changing the original datablock
       }
       $reverse_attribute = $value;
-      if (isset($datablock[$key][0]) and (((isset($lookupobj->lookupdata->$reverse_attribute)) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == TRUE) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == TRUE) or (isset($lookupobj->settings->override[$reverse_attribute]) and $lookupobj->settings->override[$reverse_attribute] == TRUE)))) or (!isset($lookupobj->lookupdata->$reverse_attribute)))) {
+      if (isset($datablock[$key][0]) and (((isset($lookupobj->lookupdata->$reverse_attribute)) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == true) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true) or (isset($lookupobj->settings->override[$reverse_attribute]) and $lookupobj->settings->override[$reverse_attribute] == true)))) or (!isset($lookupobj->lookupdata->$reverse_attribute)))) {
         // store data to lookup if ldap_attribute listed and ( not set or if set and ( overrideall or override value or override inverse ldap se+t))
 
         $lookupobj->lookupdata->$reverse_attribute = $datablock[$key][0];
@@ -210,7 +210,7 @@ class ldap_lookup extends outline_lookup {
 
       if (!is_int($key)) {
 
-        if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == TRUE) {
+        if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
           $key = mb_strtolower($key);
         }
 
@@ -219,7 +219,7 @@ class ldap_lookup extends outline_lookup {
         }
 
 
-        if (((isset($lookupobj->datablockstore[$prepend . $key])) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == TRUE) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == TRUE)))) or (!isset($lookupobj->datablockstore[$prepend . $key]))) {
+        if (((isset($lookupobj->datablockstore[$prepend . $key])) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == true) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true)))) or (!isset($lookupobj->datablockstore[$prepend . $key]))) {
           // store data to datablock store if not set or if set and ( overrideall or override value set)
           $lookupobj->datablockstore[$prepend . $key] = $value;
         }

@@ -49,7 +49,7 @@ class IE_qti_Load extends IE_Main {
       echo "Extracting zip<br />";
       $zip = new ZipArchive;
       $res = $zip->open($filename);
-      if ($res === TRUE) {
+      if ($res === true) {
         $zip->extractTo($params->base_dir.$params->dir."/");
         for ($i = 0; $i < $zip->numFiles ; $i++) {
           $stat = $zip->statIndex($i);

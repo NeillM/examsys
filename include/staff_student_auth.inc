@@ -35,10 +35,10 @@ function handle_early_errors($errno, $errstr, $errfile, $errline) {
     //turn a missing config file working into an exception so we can catch it
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 //set_error_handler("handle_early_errors");

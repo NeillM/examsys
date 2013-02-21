@@ -41,7 +41,7 @@ class outline_lookup {
   public $debugpointer = 0;
 
   protected $error = NULL;
-  public $rogoid = FALSE;
+  public $rogoid = false;
 
 
   protected $lookupapiversion;
@@ -69,10 +69,10 @@ class outline_lookup {
       $this->savetodebug('This lookup object is implementing an different version of the api than this plugin does');
       $this->set_error('Wrong API');
 
-      return TRUE;
+      return true;
     }
 
-    return FALSE;
+    return false;
   }
 
   function set_error($msg) {
@@ -98,7 +98,7 @@ class outline_lookup {
 
 //fake function used in mocking but if things go wrong have an outline here
   function mock($callingobject, $settings, $number, $name, $db, $returndata, $form) {
-    return FALSE;
+    return false;
   }
 
 
@@ -163,7 +163,7 @@ class outline_lookup {
    *
    * @return bool
    */
-  function register_callback($callback, $section, $number, $name, $insert = FALSE) {
+  function register_callback($callback, $section, $number, $name, $insert = false) {
     //return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
     $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
   }
@@ -184,7 +184,7 @@ class outline_lookup {
    */
   function get_settings($setting) {
     if (!isset($this->settings[$setting])) {
-      return FALSE;
+      return false;
     }
 
     return $this->settings[$setting];

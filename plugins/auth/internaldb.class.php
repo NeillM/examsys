@@ -31,7 +31,7 @@ class internaldb_auth extends outline_authentication {
   public $impliments_api_auth_version = 1;
   public $version = 0.9;
 
-  private $updatable = FALSE;
+  private $updatable = false;
 
   function register_callback_routines() {
     $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
@@ -43,22 +43,22 @@ class internaldb_auth extends outline_authentication {
   }
 
   function failauth($postauthfailreturn) {
-    $this->savetodebug('Fail function run'); 
+    $this->savetodebug('Fail function run');
 
     //default behaviour is to display username/password form
     $postauthfailreturn->form = 'std';
-    $postauthfailreturn->exit = TRUE;
+    $postauthfailreturn->exit = true;
 
     if ((isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt >= $this->settings['displayfailuremessagenumber']) or (!isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt > 3)) {
       $this->savetodebug('Requisite number of fail attempts so display error form');
       $postauthfailreturn->form = 'err';
-      $postauthfailreturn->exit = TRUE;
+      $postauthfailreturn->exit = true;
     }
 
     if (isset($this->settings['continueonfail'])) {
       $this->savetodebug('Setting to carry on despite setting things');
-      $postauthfailreturn->exit = FALSE;
-      $postauthfailreturn->stop = FALSE;
+      $postauthfailreturn->exit = false;
+      $postauthfailreturn->stop = false;
     }
 
 
@@ -85,7 +85,7 @@ class internaldb_auth extends outline_authentication {
           // return not sucessfull either no user or multiple matches
           $this->retdata->debug[] = 'Lookup user record number not = 1 no user or multiple user found';
 
-          return FALSE;
+          return false;
 
         }
         */
@@ -94,10 +94,10 @@ class internaldb_auth extends outline_authentication {
       $datastore->userid = $id;
       $datastore->uname = $uname;
       $lookupuserobj->results[] = $datastore;
-      $this->savetodebug(var_export($datastore, TRUE));
+      $this->savetodebug(var_export($datastore, true));
     }
 
-    $lookupuserobj->found = TRUE;
+    $lookupuserobj->found = true;
 
     return $lookupuserobj;
   }
@@ -150,13 +150,13 @@ class internaldb_auth extends outline_authentication {
       $old_encrypt_type = 'SHA-512';
     }
 
-    $this->updatable = TRUE;
+    $this->updatable = true;
     $encrypt_password = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password, $old_encrypt_type);
 
     $this->savetodebug('encrypted password strings ' . $encrypt_password . ':::' . $pass);
 
     if ($encrypt_password == $pass) {
-      $this->updatable = FALSE;
+      $this->updatable = false;
       if ($old_encrypt_type == 'MD5') { // Re-encrypt MD5 passwords using SHA-512.
         $this->savetodebug('Re Encrypting PW');
         $this->update_password();
@@ -178,7 +178,7 @@ class internaldb_auth extends outline_authentication {
 
   function update_password($postauthsuccessobj = '') {
     $this->savetodebug('Called update_password');
-    if ($this->updatable === TRUE and (!isset($this->settings['donotupdatepassword']) or (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== TRUE))) {
+    if ($this->updatable === true and (!isset($this->settings['donotupdatepassword']) or (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== true))) {
       $this->savetodebug('Updating Password');
       extract($this->settings);
       $encpw_details = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
@@ -186,7 +186,7 @@ class internaldb_auth extends outline_authentication {
       $stmt->bind_param('ss', $encpw_details, $this->form['std']->username);
       $stmt->execute();
       $stmt->close();
-    } elseif ((isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] === TRUE)) {
+    } elseif ((isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] === true)) {
       $this->savetodebug('Not updating password due to settings flag');
     }
     return $postauthsuccessobj;

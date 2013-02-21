@@ -37,11 +37,11 @@ Class CourseUtils {
    */
   static function add_course($schoolid, $name, $description, $db) {
 
-    if (CourseUtils::course_exists($name, $db) === TRUE) {
-      return TRUE;
+    if (CourseUtils::course_exists($name, $db) === true) {
+      return true;
     }
     if ($name == '') {
-      return FALSE;
+      return false;
     }
 
     if (!is_int($schoolid)) {
@@ -55,10 +55,10 @@ Class CourseUtils {
     $result->close();
 
     if ($db->errno != 0) {
-      return FALSE;
+      return false;
     }
 
-    return TRUE;
+    return true;
   }
 
   /**
@@ -77,10 +77,10 @@ Class CourseUtils {
     $result->close();
 
     if ($db->errno != 0) {
-      return FALSE;
+      return false;
     }
 
-    return TRUE;
+    return true;
   }
 
   /**
@@ -93,7 +93,7 @@ Class CourseUtils {
    */
   static function course_exists($name, $db) {
     // Check for unique course
-    $unique_courseid = FALSE;
+    $unique_courseid = false;
 
     $result = $db->prepare("SELECT id FROM courses WHERE name=?");
     if ($db->error) {
@@ -112,7 +112,7 @@ Class CourseUtils {
     $result->execute();
     $result->store_result();
     if ($result->num_rows > 0) {
-      $unique_courseid = TRUE;
+      $unique_courseid = true;
     }
     $result->free_result();
     $result->close();

@@ -52,7 +52,7 @@ class Lookup extends RogoStaticSingleton {
     //some objects are global and need parameters these are constructed using
     //a stranded constructor and need parameters passing. if they have not been
     //built and get_instance is call it should return null
-    if (isset(static::$dont_construct) and static::$dont_construct == TRUE) {
+    if (isset(static::$dont_construct) and static::$dont_construct == true) {
       if (is_object(static::$inst)) {
         return static::$inst;
       } else {
@@ -86,7 +86,7 @@ class Lookup extends RogoStaticSingleton {
       $lookuptype1 = $lookuptype . '_lookup';
       $settings = $lookup[1];
       $name = $lookup[2];
-      $this->debug[] = "Loading lookup #$number with Type:$lookuptype Settings:" . str_replace("\n", "\n", var_export($settings, TRUE));
+      $this->debug[] = "Loading lookup #$number with Type:$lookuptype Settings:" . str_replace("\n", "\n", var_export($settings, true));
 
       $this->lookupinfo[$number] = array($name => $lookuptype);
 
@@ -106,7 +106,7 @@ class Lookup extends RogoStaticSingleton {
       $error = $this->lookupPluginObj[$number]->apicheck();
 
       //   $this->append_auth_object_debug($number);
-      if ($error !== FALSE) {
+      if ($error !== false) {
         $this->debug[] = '********* Disabled module #' . $number . ':' . $name . ' as it implements an old a version of the api.  The returned error #: ' . $error . ' *********';
         //       unset($this->authPluginObj[$number]);
       } else {
@@ -120,7 +120,7 @@ class Lookup extends RogoStaticSingleton {
         $callbacks = $this->lookupPluginObj[$number]->register_callback_routines();
         foreach ($callbacks as $callbackitem) {
           if (!isset($callbackitem[4])) {
-            $callbackitem[4] = FALSE;
+            $callbackitem[4] = false;
           }
           $this->register_callback($callbackitem[0], $callbackitem[1], $callbackitem[2], $callbackitem[3], $callbackitem[4]);
         }
@@ -201,7 +201,7 @@ class Lookup extends RogoStaticSingleton {
       }
     }
 
-    if (isset($data->settings->recursive) and $data->settings->recursive == TRUE) {
+    if (isset($data->settings->recursive) and $data->settings->recursive == true) {
       $userlookupobj->lookupdatasrec = array();
       foreach ($userlookupobj->lookupdatas as $key => $lkdsvalue) {
         $block = new stdClass();
@@ -239,16 +239,16 @@ class Lookup extends RogoStaticSingleton {
     $userlookupobj = $postuserlookupobj->lookupobj;
 
     if (!isset($userlookupobj->lookupdatas)) {
-      $userlookupobj->failed = TRUE;
-      $userlookupobj->success = FALSE;
+      $userlookupobj->failed = true;
+      $userlookupobj->success = false;
     } else {
-      $userlookupobj->failed = FALSE;
-      $userlookupobj->success = TRUE;
+      $userlookupobj->failed = false;
+      $userlookupobj->success = true;
     }
 
 
-    if (isset($userlookupobj->multiple) and $userlookupobj->multiple == TRUE) {
-       $userlookupobj->lookupdata->unreliable = TRUE;
+    if (isset($userlookupobj->multiple) and $userlookupobj->multiple == true) {
+       $userlookupobj->lookupdata->unreliable = true;
     }
 
     return $userlookupobj;
@@ -262,17 +262,17 @@ class Lookup extends RogoStaticSingleton {
     }
   }
 
-  function register_callback($callback, $section, $number, $name, $insert = FALSE) {
+  function register_callback($callback, $section, $number, $name, $insert = false) {
     if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
       //attempting to register callback to invalid section
       //maybe log name of function as well?
-      $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
+      $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
       $this->lookupPluginObj[$number]->set_error("Failed to register callback for section ($section) with function ($callback[1])");
 
-      return FALSE;
+      return false;
     }
-    $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,TRUE);
-    if ($insert == TRUE) {
+    $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
+    if ($insert == true) {
       array_unshift($this->callbackregister[$section], $callback);
       array_unshift($this->callbackregisterdata[$section], array($number => $name));
     } else {
@@ -281,7 +281,7 @@ class Lookup extends RogoStaticSingleton {
 
     }
 
-    return TRUE;
+    return true;
   }
 
   function get_callback($section) {
@@ -309,7 +309,7 @@ class Lookup extends RogoStaticSingleton {
     return $this->debug;
   }
 
-  function version_info($formatted = FALSE, $advanced = FALSE) {
+  function version_info($formatted = false, $advanced = false) {
     $data = new stdClass();
     $data->plugins = array();
     foreach ($this->lookupPluginObj as $lookupobj) {
@@ -335,17 +335,17 @@ class Lookup extends RogoStaticSingleton {
     }
 
 
-    if ($formatted == FALSE) {
+    if ($formatted == false) {
       return $data;
     }
-    if ($advanced == FALSE) {
+    if ($advanced == false) {
       //basic view
 
       $return_data = '';
-      $error = FALSE;
+      $error = false;
       foreach ($data->plugins as $number => $item) {
         if (count($item->error) > 0) {
-          $error = TRUE;
+          $error = true;
         }
         if ($number != 0) {
           $return_data .= ',  <b>' . $number . '</b> ' . $item->name . ' <i>(' . $item->classname . ')</i>';

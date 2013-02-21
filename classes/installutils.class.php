@@ -267,29 +267,29 @@ Class InstallUtils {
 
     //Authentication
     if (isset($_POST['useLti'])) {
-      self::$cfg_auth_lti = TRUE;
+      self::$cfg_auth_lti = true;
     } else {
-      self::$cfg_auth_lti = FALSE;
+      self::$cfg_auth_lti = false;
     }
     if (isset($_POST['useInternal'])) {
-      self::$cfg_auth_internal = TRUE;
+      self::$cfg_auth_internal = true;
     } else {
-      self::$cfg_auth_internal = FALSE;
+      self::$cfg_auth_internal = false;
     }
     if (isset($_POST['useGuest'])) {
-      self::$cfg_auth_guest = TRUE;
+      self::$cfg_auth_guest = true;
     } else {
-      self::$cfg_auth_guest = FALSE;
+      self::$cfg_auth_guest = false;
     }
     if (isset($_POST['useImpersonation'])) {
-      self::$cfg_auth_impersonation = TRUE;
+      self::$cfg_auth_impersonation = true;
     } else {
-      self::$cfg_auth_impersonation = FALSE;
+      self::$cfg_auth_impersonation = false;
     }
     if (isset($_POST['useLdap'])) {
-      self::$cfg_auth_ldap = TRUE;
+      self::$cfg_auth_ldap = true;
     } else {
-      self::$cfg_auth_ldap = FALSE;
+      self::$cfg_auth_ldap = false;
     }
 
 
@@ -299,9 +299,9 @@ Class InstallUtils {
     self::$cfg_ldap_bind_rdn = $_POST['ldap_bind_rdn'];
     self::$cfg_ldap_bind_password = $_POST['ldap_bind_password'];
     if (self::$cfg_ldap_server != '') {
-      self::$cfg_auth_ldap = TRUE;
+      self::$cfg_auth_ldap = true;
     } else {
-      self::$cfg_auth_ldap = FALSE;
+      self::$cfg_auth_ldap = false;
     }
     self::$cfg_ldap_user_prefix = $_POST['ldap_user_prefix'];
 
@@ -877,10 +877,10 @@ Class InstallUtils {
                                 '',
                                 '',
                                 0,
-                                FALSE,
-                                FALSE,
-                                FALSE,
-                                TRUE,
+                                false,
+                                false,
+                                false,
+                                true,
                                 NULL,
                                 NULL,
                                 self::$db
@@ -893,10 +893,10 @@ Class InstallUtils {
                                 '',
                                 '',
                                 0,
-                                TRUE,
-                                TRUE,
-                                TRUE,
-                                TRUE,
+                                true,
+                                true,
+                                true,
+                                true,
                                 NULL,
                                 NULL,
                                 self::$db
@@ -934,9 +934,9 @@ Class InstallUtils {
     $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     if (is_writable($rogo_path . '/config/config.inc.php')) {
-      return TRUE;
+      return true;
     } else {
-      return FALSE;
+      return false;
     }
   }
 
@@ -1032,9 +1032,9 @@ Class InstallUtils {
     global $string;
 	if ($_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
       self::displayError(array(100=> $string['errors12']));
-      return FALSE;
+      return false;
     }
-    return TRUE;
+    return true;
   }
 
   /**
@@ -1346,10 +1346,10 @@ CONFIG;
 
     $lookup_arrays= array();
     if(self::$cfg_uselookupLdap) {
-$lookup_arrays[]=  "array('ldap', array('ldap_server' => '{cfg_lookup_ldap_server}', 'ldap_search_dn' => '{cfg_lookup_ldap_search_dn}', 'ldap_bind_rdn' => '{cfg_lookup_ldap_bind_rdn}', 'ldap_bind_password' => '{cfg_lookup_ldap_bind_password}', 'ldap_user_prefix' => '{cfg_lookup_ldap_user_prefix}', 'ldap_attributes' => array('sAMAccountName' => 'username', 'sn' => 'surname', 'title' => 'title', 'givenName' => 'firstname', 'department' => 'school', 'mail' => 'email',  'cn' => 'username',  'employeeType' => 'role',  'initials' => 'initials'), 'lowercasecompare' => TRUE, 'storeprepend' => 'ldap_'), 'LDAP')";
+$lookup_arrays[]=  "array('ldap', array('ldap_server' => '{cfg_lookup_ldap_server}', 'ldap_search_dn' => '{cfg_lookup_ldap_search_dn}', 'ldap_bind_rdn' => '{cfg_lookup_ldap_bind_rdn}', 'ldap_bind_password' => '{cfg_lookup_ldap_bind_password}', 'ldap_user_prefix' => '{cfg_lookup_ldap_user_prefix}', 'ldap_attributes' => array('sAMAccountName' => 'username', 'sn' => 'surname', 'title' => 'title', 'givenName' => 'firstname', 'department' => 'school', 'mail' => 'email',  'cn' => 'username',  'employeeType' => 'role',  'initials' => 'initials'), 'lowercasecompare' => true, 'storeprepend' => 'ldap_'), 'LDAP')";
     }
     if(self::$cfg_uselookupXML) {
- $lookup_arrays[]= "array('XML', array('baseurl' => 'http://exports/', 'userlookup' => array( 'url' => '/student.ashx?campus=uk', 'mandatoryurlfields' => array('username'), 'urlfields' => array('username' => 'username'), 'xmlfields' => array('StudentID' => 'studentID', 'Title' => 'title', 'Forename' => 'firstname', 'Surname' => 'surname', 'Email' => 'email', 'Gender' => 'gender', 'YearofStudy' => 'yearofstudy', 'School' => 'school', 'Degree' => 'degree', 'CourseCode' => 'coursecode', 'CourseTitle' => 'coursetitle', 'AttendStatus' => 'attendstatus'), 'oneitemreturned' => TRUE, 'override' => array('firstname' => TRUE), 'storeprepend' => 'sms_userlookup_')), 'XML')";
+ $lookup_arrays[]= "array('XML', array('baseurl' => 'http://exports/', 'userlookup' => array( 'url' => '/student.ashx?campus=uk', 'mandatoryurlfields' => array('username'), 'urlfields' => array('username' => 'username'), 'xmlfields' => array('StudentID' => 'studentID', 'Title' => 'title', 'Forename' => 'firstname', 'Surname' => 'surname', 'Email' => 'email', 'Gender' => 'gender', 'YearofStudy' => 'yearofstudy', 'School' => 'school', 'Degree' => 'degree', 'CourseCode' => 'coursecode', 'CourseTitle' => 'coursetitle', 'AttendStatus' => 'attendstatus'), 'oneitemreturned' => true, 'override' => array('firstname' => true), 'storeprepend' => 'sms_userlookup_')), 'XML')";
     }
 
     $config = str_replace('{cfg_lookup_arrays}', implode(",\n  ", $lookup_arrays), $config);
@@ -1377,7 +1377,7 @@ $lookup_arrays[]=  "array('ldap', array('ldap_server' => '{cfg_lookup_ldap_serve
       rename(self::$rogo_path . '/config/config.inc.php', self::$rogo_path . '/config/config.inc.old.php');
     }
 
-    if (file_put_contents(self::$rogo_path . '/config/config.inc.php', $config) === FALSE) {
+    if (file_put_contents(self::$rogo_path . '/config/config.inc.php', $config) === false) {
       self::displayError(array(300=>'Could not write config file!'));
     }
   }

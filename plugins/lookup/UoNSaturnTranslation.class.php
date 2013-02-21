@@ -79,9 +79,9 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
       $datapart->role = 'Student';
     }
 
-    if (isset($datapart->attendstatus) and strpos($datapart->attendstatus, 'Suspended') !== FALSE) {
+    if (isset($datapart->attendstatus) and strpos($datapart->attendstatus, 'Suspended') !== false) {
       $this->savetodebug('status is suspended diasbling');
-      $datapart->disabled = TRUE;
+      $datapart->disabled = true;
     }
 
     if (isset($datapart->gender) and $datapart->gender == 'M') {
@@ -93,10 +93,10 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
 
 
     if (isset($datapart->title) and !isset($datapart->gender)) {
-      if (stripos($datapart->title, 'Mr') !== FALSE) {
+      if (stripos($datapart->title, 'Mr') !== false) {
         $datapart->gender = 'Male';
       }
-      if (stripos($datapart->title, 'Ms') !== FALSE or stripos($datapart->title, 'Miss') !== FALSE or stripos($datapart->title, 'Mrs') !== FALSE) {
+      if (stripos($datapart->title, 'Ms') !== false or stripos($datapart->title, 'Miss') !== false or stripos($datapart->title, 'Mrs') !== false) {
         $datapart->gender = 'Female';
       }
     }
@@ -105,10 +105,10 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
   }
 
   function orsearchlist($field, $text) {
-    $found = FALSE;
+    $found = false;
     foreach ($text as $value) {
       if ($field == $value) {
-        $found = TRUE;
+        $found = true;
       }
     }
 

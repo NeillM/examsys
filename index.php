@@ -71,10 +71,10 @@ function display_labs($labs, $computer_lab, $string) {
     $html = display_warning($string['nolabswarning']);
   } else {
     $html = ', <span class="labs">';
-    $first = TRUE;
+    $first = true;
     foreach ($labs as $lab) {
       if ($first) {
-        $first = FALSE;
+        $first = false;
       } else {
         $html .= ',';
       }
@@ -94,18 +94,18 @@ $paper_query->store_result();
 $paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $calendar_year, $password);
 while ($paper_query->fetch()) {
   if ($labs != '') {
-    $machineOK = FALSE;
+    $machineOK = false;
     $labs = str_replace(",", " OR lab=", $labs);
     $lab_info = $mysqli->query("SELECT address FROM ip_addresses WHERE address='" . NetworkUtils::get_ipaddress() . "' AND (lab=$labs)");
-    if ($lab_info->num_rows > 0) $machineOK = TRUE;
+    if ($lab_info->num_rows > 0) $machineOK = true;
     $lab_info->close();
   } else {
-    $machineOK = TRUE;
+    $machineOK = true;
   }
   if (strpos($userObject->get_username(), 'user') !== 0) {
     $moduleIDs = Paper_utils::get_modules($property_id, $mysqli);
     if (count($moduleIDs) > 0) {
-      $moduleOK = FALSE;
+      $moduleOK = false;
       if ($calendar_year != '') {
         $cal_sql = "AND calendar_year = '" . $calendar_year . "'";
       } else {
@@ -118,15 +118,15 @@ while ($paper_query->fetch()) {
       $moduleInfo->store_result();
       $moduleInfo->bind_result($tmp_userID);
       $moduleInfo->fetch();
-      if ($moduleInfo->num_rows() > 0) $moduleOK = TRUE;
+      if ($moduleInfo->num_rows() > 0) $moduleOK = true;
       $moduleInfo->close();
     } else {
-      $moduleOK = TRUE;
+      $moduleOK = true;
     }
   } else {
-    $moduleOK = TRUE;
+    $moduleOK = true;
   }
-  if ($machineOK == TRUE and $moduleOK == TRUE) {
+  if ($machineOK == true and $moduleOK == true) {
     $paper_display[$paper_no]['paper_title'] = $paper_title;
     $paper_display[$paper_no]['crypt_name'] = $crypt_name;
     $paper_display[$paper_no]['paper_type'] = $paper_type;

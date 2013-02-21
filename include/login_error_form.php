@@ -24,8 +24,8 @@ if (isset($displayerrformobj->li)) {
 $message .= '<li>' . $string['pressf5'] . '</li>';
 
 $message .= "</ul>";
-if ($configObject->get('cfg_use_ldap') != TRUE) $message .= $fp_link;
-$notice->display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000', $title_color = 'black', $output_header = TRUE, $output_footer = TRUE);
+if ($configObject->get('cfg_use_ldap') != true) $message .= $fp_link;
+$notice->display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000', $title_color = 'black', $output_header = true, $output_footer = true);
 
 if (isset($displayerrformobj->messages)) {
   foreach ($displayerrformobj->messages as $message1) {

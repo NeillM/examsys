@@ -42,8 +42,8 @@ class LogLabEndTime {
    */
   private $db;
 
-  private $end_datetime_cached = FALSE;
-  private $start_timestamp = FALSE;
+  private $end_datetime_cached = false;
+  private $start_timestamp = false;
 
   /**
    * @param Lab $lab_id
@@ -64,7 +64,7 @@ class LogLabEndTime {
    */
   public function get_session_end_date_datetime() {
 
-    if ($this->end_datetime_cached == FALSE) {
+    if ($this->end_datetime_cached == false) {
       $this->msg = '';
 
       $start_datetime = $this->get_paper_start_datetime();
@@ -83,7 +83,7 @@ class LogLabEndTime {
       // No result
       if ($stmt->num_rows <= 0) {
         $stmt->close();
-        return FALSE;
+        return false;
       }
 
       $stmt->fetch();
@@ -146,7 +146,7 @@ class LogLabEndTime {
       $end_datetime = $this->calculate_end_datetime($start_time_datetime);
       $start_date = time();
     } else {
-      if ($this->start_timestamp === FALSE) {
+      if ($this->start_timestamp === false) {
         $this->start_timestamp = $start_date = time();
       } else {
         $start_date = $this->start_timestamp;
@@ -299,8 +299,8 @@ class LogLabEndTime {
    */
   public function get_paper_end_timestamp() {
     $paper_end_datetime = $this->get_paper_end_datetime();
-    if ($paper_end_datetime === FALSE) {
-      return FALSE;
+    if ($paper_end_datetime === false) {
+      return false;
     }
 
     return $paper_end_datetime->getTimestamp();

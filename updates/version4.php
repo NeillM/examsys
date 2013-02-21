@@ -513,10 +513,10 @@ if (!isset($_POST['update'])) {
     $cfg_new = array();
     $remove_array = array('Local database', 'cfg_db_username', 'cfg_db_passwd', 'cfg_db_database', 'cfg_db_host');
     foreach ($cfg as $line) {
-      $remove = FALSE;
+      $remove = false;
       foreach ($remove_array as $needle) {
-        if (stripos($line, $needle) !== FALSE) {
-          $remove = TRUE;
+        if (stripos($line, $needle) !== false) {
+          $remove = true;
           break 1;
         }
       }
@@ -532,7 +532,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -545,10 +545,10 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "  \$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
   $new_cfg_str[] = "  \$cfg_timezone = 'Europe/London';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, 'Date formats in MySQL DATE_FORMAT') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'Date formats in MySQL DATE_FORMAT') !== false) {
+      $found = true;
     }
   }
 
@@ -558,7 +558,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old2.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<div>Added date and time formats to config file.</div>\n";
@@ -570,10 +570,10 @@ if (!isset($_POST['update'])) {
   $new_cfg_str = array();
   $new_cfg_str[] = "\$cfg_company = 'The University of Nottingham';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_company') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_company') !== false) {
+      $found = true;
     }
   }
 
@@ -583,7 +583,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added company name config file.</li>\n";
@@ -709,7 +709,7 @@ if (!isset($_POST['update'])) {
   if (!$col_exists = $updater_utils->does_column_exist('ebel_grid_templates', 'id')) {
     $updater_utils->execute_query("CREATE TABLE ebel_grid_templates (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, EE tinyint, EI tinyint, EN tinyint, ME tinyint, MI tinyint, MN tinyint, HE tinyint, HI tinyint, HN tinyint, EE2 tinyint, EI2 tinyint, EN2 tinyint, ME2 tinyint, MI2 tinyint, MN2 tinyint, HE2 tinyint, HI2 tinyint, HN2 tinyint, name varchar(255))", true);
 
-    if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== FALSE) {
+    if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== false) {
       $sql = array();
       $sql[] = "INSERT INTO `ebel_grid_templates` (id,EE,EI,EN,ME,MI,MN,HE,HI,HN,EE2,EI2,EN2,ME2,MI2,MN2,HE2,HI2,HN2,name) VALUES (1,65,60,55,60,55,50,55,50,45,0,0,0,0,0,0,0,0,0,'BMedSci')";
       $sql[] = "INSERT INTO `ebel_grid_templates` (id,EE,EI,EN,ME,MI,MN,HE,HI,HN,EE2,EI2,EN2,ME2,MI2,MN2,HE2,HI2,HN2,name) VALUES (2,80,60,55,55,50,35,45,35,30,0,0,0,0,0,0,0,0,0,'BMBS')";
@@ -731,7 +731,7 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   $result->close();
 
-  if (strpos($column_type, 'smallint') !== FALSE) {
+  if (strpos($column_type, 'smallint') !== false) {
     $updater_utils->execute_query("ALTER TABLE papers CHANGE COLUMN question question INT(4) UNSIGNED NOT NULL DEFAULT 0", true);
   }
 
@@ -929,7 +929,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -984,7 +984,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -1045,7 +1045,7 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 02/11/2011 - Set the modules who do not have negative marking.
-  if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== FALSE) {
+  if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== false) {
     $updater_utils->execute_query("UPDATE modules SET neg_marking=0 WHERE vle_api='NLE'", false);
   }
 
@@ -1097,10 +1097,10 @@ if (!isset($_POST['update'])) {
 
   //remove refrances to old vars
   $cfg_new = array();
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_db_charset') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_db_charset') !== false) {
+      $found = true;
     }
     $cfg_new[] = $line;
   }
@@ -1113,7 +1113,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added database charset.</li>\n";
@@ -1134,13 +1134,13 @@ if (!isset($_POST['update'])) {
   $cfg_new = array();
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   foreach ($cfg as $line) {
-    if (strpos($line, 'ts_version') !== FALSE) {
+    if (strpos($line, 'ts_version') !== false) {
       $cfg_new[] = "\$rogo_version = '$version';\n";
     } else {
       $cfg_new[] = $line;
     }
   }
-  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
 
@@ -1150,10 +1150,10 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "require \$root . '/include/path_functions.inc.php';\n\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, 'dirname(__FILE__)') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'dirname(__FILE__)') !== false) {
+      $found = true;
     }
   }
 
@@ -1163,7 +1163,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added root path functions to config file.</li>\n";
@@ -1177,18 +1177,18 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "\$cfg_root_path = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_root_path') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_root_path') !== false) {
+      $found = true;
     }
   }
 
   if (!$found) {
     $index = 0;
     foreach ($cfg as $line) {
-      if (strpos($line, 'cfg_web_root =') !== FALSE) {
-        $found = TRUE;
+      if (strpos($line, 'cfg_web_root =') !== false) {
+        $found = true;
         break;
       }
       $index++;
@@ -1206,7 +1206,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old5.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added URL root to config file.</li>\n";
@@ -1226,18 +1226,18 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "SCRIPT;\n\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, 'Root path for JS') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'Root path for JS') !== false) {
+      $found = true;
     }
   }
 
   if (!$found) {
     $index = 0;
     foreach ($cfg as $line) {
-      if (strpos($line, '//Editor') !== FALSE) {
-        $found = TRUE;
+      if (strpos($line, '//Editor') !== false) {
+        $found = true;
         break;
       }
       $index++;
@@ -1260,8 +1260,8 @@ if (!isset($_POST['update'])) {
 
     $index = 0;
     foreach ($cfg as $line) {
-      if (strpos($line, 'cfg_editor_javascript =') !== FALSE) {
-        $found = TRUE;
+      if (strpos($line, 'cfg_editor_javascript =') !== false) {
+        $found = true;
         break;
       }
       $index++;
@@ -1289,7 +1289,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old6.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added root path for JavaScript to config file.</li>\n";
@@ -1305,14 +1305,14 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "    break;\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   $last_break = 0;
   $index = 0;
   foreach ($cfg as $line) {
-    if (strpos($line, 'default:') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'default:') !== false) {
+      $found = true;
     }
-    if (strpos($line, 'break;') !== FALSE) {
+    if (strpos($line, 'break;') !== false) {
       $last_break = $index;
     }
     $index++;
@@ -1324,7 +1324,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old7.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added default install type to config file.</li>\n";
@@ -1378,14 +1378,14 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "  \$cfg_ldap_user_prefix   = 'sAMAccountName='; // Nottingham specific.  Please change.\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   $ldap_pass_location = 0;
   $index = 0;
   foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_ldap_user_prefix') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_ldap_user_prefix') !== false) {
+      $found = true;
     }
-    if (strpos($line, 'cfg_ldap_bind_password') !== FALSE) {
+    if (strpos($line, 'cfg_ldap_bind_password') !== false) {
       $ldap_pass_location = $index;
     }
     $index++;
@@ -1397,7 +1397,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old8.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added LDAP user search prefix to config file.\n";
@@ -1412,10 +1412,10 @@ if (!isset($_POST['update'])) {
 
   //remove refrances to old vars
   $cfg_new = array();
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_page_charset') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_page_charset') !== false) {
+      $found = true;
     }
     $cfg_new[] = $line;
   }
@@ -1423,8 +1423,8 @@ if (!isset($_POST['update'])) {
   if (!$found) {
     $index = 0;
     foreach ($cfg as $line) {
-      if (strpos($line, '$protocol') !== FALSE) {
-        $found = TRUE;
+      if (strpos($line, '$protocol') !== false) {
+        $found = true;
         break;
       }
       $index++;
@@ -1439,7 +1439,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old8.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added page charset to configuration file.</li>\n";
@@ -1777,7 +1777,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type, '2019/20') === FALSE) {
+  if (strpos($data_type, '2019/20') === false) {
     $updater_utils->execute_query("ALTER TABLE relationships CHANGE COLUMN calendar_year calendar_year enum('2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
   }
   $result->close();
@@ -1789,7 +1789,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type, '2019/20') === FALSE) {
+  if (strpos($data_type, '2019/20') === false) {
     $updater_utils->execute_query("ALTER TABLE sessions CHANGE COLUMN calendar_year calendar_year enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
   }
   $result->close();
@@ -1801,7 +1801,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type, '2019/20') === FALSE) {
+  if (strpos($data_type, '2019/20') === false) {
     $updater_utils->execute_query("ALTER TABLE sessions CHANGE COLUMN calendar_year calendar_year enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
   }
   $result->close();
@@ -1813,7 +1813,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type, '2019/20') === FALSE) {
+  if (strpos($data_type, '2019/20') === false) {
     $updater_utils->execute_query("ALTER TABLE properties CHANGE COLUMN calendar_year calendar_year enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
   }
   $result->close();
@@ -1825,7 +1825,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($data_type);
   $result->fetch();
-  if (strpos($data_type, '2019/20') === FALSE) {
+  if (strpos($data_type, '2019/20') === false) {
     $updater_utils->execute_query("ALTER TABLE objectives CHANGE COLUMN calendar_year calendar_year enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
 
   }
@@ -1933,14 +1933,14 @@ if (!isset($_POST['update'])) {
   $new_cfg_str = array();
   $new_cfg_str[] = "  date_default_timezone_set(\$cfg_timezone);\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   $target_line = 53;
   $cur_line = 0;
   foreach ($cfg as $line) {
-    if (strpos($line, 'date_default_timezone_set') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'date_default_timezone_set') !== false) {
+      $found = true;
     }
-    if (strpos($line, 'cfg_timezone') !== FALSE) {
+    if (strpos($line, 'cfg_timezone') !== false) {
       $target_line = $cur_line + 1;
     }
     $cur_line++;
@@ -1952,7 +1952,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add default timezone config file.</li>\n";
@@ -1964,10 +1964,10 @@ if (!isset($_POST['update'])) {
   $new_cfg_str = array();
   $new_cfg_str[] = "\$cfg_tmpdir = '/tmp/';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_tmpdir') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_tmpdir') !== false) {
+      $found = true;
     }
   }
 
@@ -1977,7 +1977,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add temp directory to config file.</li>\n";
@@ -1989,12 +1989,12 @@ if (!isset($_POST['update'])) {
   // 25/04/2012 - Remove define lines not used.
   $new_cfg_str = array();
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, "define('TOUCHSTONE'") === FALSE and strpos($line, "define('DIR_SEPARATOR'") === FALSE and strpos($line, "\$news") === FALSE) {
+    if (strpos($line, "define('TOUCHSTONE'") === false and strpos($line, "define('DIR_SEPARATOR'") === false and strpos($line, "\$news") === false) {
       $new_cfg_str[] = $line;
     } else {
-      $found = TRUE;
+      $found = true;
     }
   }
 
@@ -2005,7 +2005,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Removed unneccessary lines from configuration (defines and \$news).</li>\n";
@@ -2063,13 +2063,13 @@ if (!isset($_POST['update'])) {
   $cfg_new = array();
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   foreach ($cfg as $line) {
-    if (strpos($line, 'rogo_version') !== FALSE) {
+    if (strpos($line, 'rogo_version') !== false) {
       $cfg_new[] = "\$rogo_version = '$version';\n";
     } else {
       $cfg_new[] = $line;
     }
   }
-  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
   @ob_flush();
@@ -2121,14 +2121,14 @@ if (!isset($_POST['update'])) {
   $new_cfg_str = array();
   $new_cfg_str[] = "  \$cfg_encrypt_salt       = '" . gen_random_salt() . "';    // Do not alter if not on LDAP.\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   $cur_line = 0;
   $target_line = 66;
   foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_encrypt_salt') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_encrypt_salt') !== false) {
+      $found = true;
     }
-    if (strpos($line, 'cfg_use_ldap') !== FALSE) {
+    if (strpos($line, 'cfg_use_ldap') !== false) {
       $target_line = $cur_line + 1;
     }
     $cur_line++;
@@ -2140,7 +2140,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add \$cfg_encrypt_salt to config file.</li>\n";
@@ -2207,14 +2207,14 @@ if (!isset($_POST['update'])) {
     $new_cfg_str = array();
     $new_cfg_str[] = "\$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.";
     $cfg = file($cfg_web_root . 'config/config.inc.php');
-    $found = FALSE;
+    $found = false;
     $cur_line = 0;
     $target_line = 24;
     foreach ($cfg as $line) {
-      if (strpos($line, 'cfg_summative_mgmt') !== FALSE) {
-        $found = TRUE;
+      if (strpos($line, 'cfg_summative_mgmt') !== false) {
+        $found = true;
       }
-      if (strpos($line, 'cfg_tmpdir') !== FALSE) {
+      if (strpos($line, 'cfg_tmpdir') !== false) {
         $target_line = $cur_line + 1;
       }
       $cur_line++;
@@ -2226,7 +2226,7 @@ if (!isset($_POST['update'])) {
         rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
       }
 
-      if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+      if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
         echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
       }
       echo "<li>Add \$cfg_summative_mgmt = false.</li>\n";
@@ -2357,10 +2357,10 @@ if (!isset($_POST['update'])) {
   $new_cfg_str = array();
   $new_cfg_str[] = "\$cfg_academic_year_start = '07/01';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_academic_year_start') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_academic_year_start') !== false) {
+      $found = true;
     }
   }
 
@@ -2370,7 +2370,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added academic_year_start to config file.</li>\n";
@@ -2533,13 +2533,13 @@ if (!isset($_POST['update'])) {
 
   //remove references to old vars
   $cfg_new = array();
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $curline => $line) {
 
-    if (strpos($line, 'cfg_lti_allow_module_self_reg') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_lti_allow_module_self_reg') !== false) {
+      $found = true;
     }
-    if (strpos($line, 'cfg_sms_api') !== FALSE) {
+    if (strpos($line, 'cfg_sms_api') !== false) {
       $target_line = $curline + 1;
     }
     $cfg_new[] = $line;
@@ -2554,7 +2554,7 @@ if (!isset($_POST['update'])) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old12.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add lti config variables</li>\n";
@@ -2911,7 +2911,7 @@ QUERY;
   }
 
   $does_column_exist = $updater_utils->does_column_exist('log_metadata', 'completed');
-  if ($does_column_exist === FALSE) {
+  if ($does_column_exist === false) {
     $sql = "ALTER TABLE log_metadata ADD completed DATETIME NULL";
     $updater_utils->execute_query($sql, true);
   }
@@ -2919,27 +2919,27 @@ QUERY;
   //cczsa1 13/12/2012 - Convert authentication in config file to  new format
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
-  $addauth = TRUE;
+  $addauth = true;
   foreach ($cfg as $k => $v) {
     $found = strpos($v, '$authentication = array(');
-    if ($found !== FALSE) {
-      $addauth = FALSE;
+    if ($found !== false) {
+      $addauth = false;
     }
     $found = strpos($v, '$cfg_encrypt_salt');
-    if ($found !== FALSE) {
+    if ($found !== false) {
       $saltloc = $k + 1;
     }
   }
 
-  if ($addauth == TRUE) {
+  if ($addauth == true) {
     $extra1 = '';
     $array_new[] = "\n";
     $array_new[] = '$authentication = array(' . "\n";
-    if ($cfg_use_ldap === TRUE) {
+    if ($cfg_use_ldap === true) {
       $extra1 = ',';
     }
     $array_new[] = "array('internaldb', array('table' => 'users', 'username_col' => 'username', 'passwd_col' => 'password', 'id_col' => 'id', 'encrypt' => 'SHA-512', 'encrypt_salt' => \$cfg_encrypt_salt), 'Internal Database')$extra1\n";
-    if ($cfg_use_ldap === TRUE) {
+    if ($cfg_use_ldap === true) {
       $array_new[] = "array('ldap',array( 'table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix),'LDAP')\n";
     }
 
@@ -2950,7 +2950,7 @@ QUERY;
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.preauthchange.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     } else {
       echo"<li>Changed config file to new authentication method</li>";
@@ -3012,13 +3012,13 @@ QUERY;
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $cfg_new = array();
-  $found = FALSE;
+  $found = false;
   foreach ($cfg as $curline => $line) {
 
-    if (strpos($line, 'cfg_autosave_settimeout') !== FALSE) {
-      $found = TRUE;
+    if (strpos($line, 'cfg_autosave_settimeout') !== false) {
+      $found = true;
     }
-    if (strpos($line, 'cfg_autosave_timeout') !== FALSE or strpos($line, 'cfg_autosave_frequency') !== FALSE) {
+    if (strpos($line, 'cfg_autosave_timeout') !== false or strpos($line, 'cfg_autosave_frequency') !== false) {
       $target_line = $curline + 1;
     }
     $cfg_new[] = $line;
@@ -3032,7 +3032,7 @@ QUERY;
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old13.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add cfg_autosave_settimeout config variable</li>\n";
@@ -3042,11 +3042,11 @@ QUERY;
   $cfg_new = array();
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   foreach ($cfg as $curline => $line) {
-    if (strpos($line, 'cfg_autosave_timeout') === FALSE) {
+    if (strpos($line, 'cfg_autosave_timeout') === false) {
       $cfg_new[] = $line;
     }
   }
-  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === FALSE) {
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
 
@@ -3135,7 +3135,7 @@ QUERY;
     }
     $result2->close();
 
-    if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== FALSE) {  // Backwards compatibility at UoN
+    if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== false) {  // Backwards compatibility at UoN
       $sql = "UPDATE log_metadata SET lab_name = 'Pope - A24' WHERE ipaddress IN ('128.243.137.9','128.243.137.10','128.243.137.161','128.243.137.23','128.243.137.24','128.243.137.25','128.243.137.26','128.243.137.28','128.243.137.29','128.243.137.32','128.243.137.34','128.243.137.81','128.243.137.131','128.243.137.143','128.243.137.144','128.243.137.146','128.243.137.148','128.243.137.149','128.243.137.151','128.243.137.153','128.243.137.154','128.243.137.156','128.243.137.157','128.243.137.158','128.243.137.160','128.243.137.159','128.243.137.155','128.243.137.152','128.243.137.16','128.243.137.147','128.243.137.145','128.243.137.142','128.243.137.141','128.243.137.76','128.243.137.33','128.243.137.31','128.243.137.30','128.243.137.27','128.243.137.18','128.243.137.11')";
       $updater_utils->execute_query($sql, false);
       $sql = "UPDATE log_metadata SET lab_name = 'Pope - A15' WHERE ipaddress IN ('128.243.137.5','128.243.137.13','128.243.137.14','128.243.137.15','128.243.137.17','128.243.137.19','128.243.137.21','128.243.137.22','128.243.137.63','128.243.137.67','128.243.137.86','128.243.137.88','128.243.137.96','128.243.137.97','128.243.137.104','128.243.137.107','128.243.137.108','128.243.137.110','128.243.137.111','128.243.137.112','128.243.137.114','128.243.137.115','128.243.137.117','128.243.137.118','128.243.137.119','128.243.137.120','128.243.137.123','128.243.137.124','128.243.137.125','128.243.137.126','128.243.137.129','128.243.137.130','128.243.137.133','128.243.137.135','128.243.137.140','128.243.137.150','128.243.137.163','128.243.137.165','128.243.137.166','128.243.137.167','128.243.137.168','128.243.137.169','128.243.137.170','128.243.137.171','128.243.137.172','128.243.137.173','128.243.137.174','128.243.137.175','128.243.137.176','128.243.137.178','128.243.137.179','128.243.137.177','128.243.137.180','128.243.137.186','128.243.137.190','128.243.137.194','128.243.137.202','128.243.137.205','128.243.137.207','128.243.137.208','128.243.137.209')";
@@ -3326,7 +3326,7 @@ QUERY;
     if (strpos($line,'cfg_long_date_php') !== false) {
       $found = true;
     }
-    if (strpos($line, 'cfg_long_date_time') !== FALSE) {
+    if (strpos($line, 'cfg_long_date_time') !== false) {
       $target_line = count($cfg_new) + 1;
     }
     $cfg_new[] = $line;

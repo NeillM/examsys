@@ -183,7 +183,7 @@ $numb=0;
     $q_imp = $this->LoadQuestion($item);
     $type = $this->DetermineQType($q_imp);
 
-    $oiii = print_r($q_imp,TRUE);
+    $oiii = print_r($q_imp,true);
     $t = 8;
     $question = '';
     $marks = '';
@@ -253,7 +253,7 @@ $numb=0;
       }
     }
 
-    $oiii = print_r($question,TRUE);
+    $oiii = print_r($question,true);
     $t = 9;
     $t = 8;
 
@@ -384,7 +384,7 @@ $numb=0;
       if ($question->cardinality == "Multi") return "mrq";
 
       // either dichotomous, likert or mcq
-      // need to match options to one of our know lists	
+      // need to match options to one of our know lists
 
       $response_list = $this->GetResponseLabelList($question);
 
@@ -409,14 +409,14 @@ $numb=0;
     if ($question->counts['lid'] > 1) {
       // should be checking to see if each of the sets of answers are the same
       if (!$question->labelsets) {
-        // label sets are not the same	
+        // label sets are not the same
         $this->AddError($string['labelsetserror'], $question->load_id);
         return "blank";
       }
 
       // check cardinality
       // if single then ranking or matrix
-      
+
       if ($question->cardinality == "Single") {
         $response_list = $this->GetResponseLabelList($question);
 
@@ -424,11 +424,11 @@ $numb=0;
         // need to check values to see if dichotomous
         if (MatchArraySet($this->dich_values, $response_list, $this->abstainvalues)) return "dichotomous";
 
-        // need to check values to see if ranking	
+        // need to check values to see if ranking
         if ($this->IsRankingQuestion($response_list)) return "rank";
 
         if ($question->qmd_itemtype == "Pull-down list") return "extmatch";
-        
+
         if ($question->qmd_itemtype == "Extended Matching") return "extmatch";
 
         return "matrix";
@@ -602,7 +602,7 @@ $numb=0;
     } else {
       $this->AddError($string['blanktypeerror'], $source->load_id);
     }
-    
+
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
     $dest->marks_correct = $marks_correct;
     $dest->marks_incorrect = $marks_incorrect;
@@ -816,25 +816,25 @@ $numb=0;
 
     $response = reset($source->responses);
     $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
-    
+
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
     $dest->marks_correct = $marks_correct;
     $dest->marks_incorrect = $marks_incorrect;
     $dest->marks_partial = $marks_partial;
-    
+
     if($marks_partial > 0) {
       $dest->score_method = 'Allow partial Marks';
     } else {
       $dest->score_method = 'Mark per Question';
     }
-    
+
     // get positive marked outcomes
     $respconds = $this->GetRespConditions($source, 5);
     $lessthan = '';
     $morethan = '';
 
     foreach ($respconds as $respcond) {
-      foreach ($respcond->conditions as $cond) {        
+      foreach ($respcond->conditions as $cond) {
         if ($cond->type == "varequal") {
           $dest->formula = $cond->value;
           break;
@@ -911,9 +911,9 @@ $numb=0;
     // count up response conditions
     list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
     if ($negative > 0) $mark_negative = true;
-    
+
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
-    
+
     // set the display type
     if ($mark_tf) {
       if (!$mark_abstain) {
@@ -926,12 +926,12 @@ $numb=0;
         $dest->display_method = "YN_Positive";
       } else {
         $dest->display_method = "YN_NegativeAbstain";
-      } 
+      }
     }
-    
+
     //set the score method
     $dest->score_method = "Mark per Option";
-    
+
     if ($mark_abstain) {
       if (array_key_exists('MARKING', $source->params)) $dest->score_method = $source->params['MARKING'];
     }
@@ -942,7 +942,7 @@ $numb=0;
       $option->text = strip_tags($response->material->GetHTML(),"<div><span>");
       $option->response_id = $response->id;
       $option->iscorrect = 0;
-      
+
       $option->marks_correct = $marks_correct;
       $option->marks_incorrect = $marks_incorrect;
 
@@ -1083,12 +1083,12 @@ $numb=0;
           $correct[] = $condvar->value;
         }
       }
-      
+
       list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
       $dest->marks_correct = $marks_correct;
       $dest->marks_incorrect = $marks_incorrect;
       $dest->marks_partial = $marks_partial;
-    
+
       // work out correct answers for this stem
 
       $correct_mapped = array();
@@ -1143,7 +1143,7 @@ $numb=0;
     $dest->status = $source->qmd_status;
     $dest->type = "hotspot";
     $dest->score_method = 'Mark per Option';
-    
+
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
     $dest->marks_correct = $marks_correct;
     $dest->marks_incorrect = $marks_incorrect;
@@ -1215,12 +1215,12 @@ $numb=0;
     $dest->status = $source->qmd_status;
     $dest->type = "labelling";
     $dest->score_method = 'Mark per Option';
-    
+
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
     $dest->marks_correct = $marks_correct;
     $dest->marks_incorrect = $marks_incorrect;
     $dest->marks_partial = $marks_partial;
-    
+
     $response = reset($source->responses);
     $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
@@ -1367,12 +1367,12 @@ $numb=0;
 
     $response = reset($source->responses);
     $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
-    
+
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
     $dest->marks_correct = $marks_correct;
     $dest->marks_incorrect = $marks_incorrect;
     $dest->marks_partial = $marks_partial;
-    
+
     $optionmapping = array();
 
     // build option list
@@ -1435,7 +1435,7 @@ $numb=0;
     $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
- 
+
     $choiceno = 1;
     foreach ($response->labels as $label) {
       $choice = new STQ_Mcq_Option();
@@ -1447,7 +1447,7 @@ $numb=0;
         $choice->media_width = $label->material->media_width;
         $choice->media_height = $label->material->media_height;
       }
-      
+
       $choice->marks_correct = $marks_correct;
       $choice->marks_incorrect = $marks_incorrect;
 
@@ -1457,7 +1457,7 @@ $numb=0;
 
     // count up response conditions
     list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
-    
+
     if ($positive == 0) {
       $this->AddWarning($string['nocorrect'], $source->load_id);
     } else if ($positive > 1) {
@@ -1524,7 +1524,7 @@ $numb=0;
 
     // load presentation type from comments field if it was specified
     if (array_key_exists('DISPLAY', $source->params)) $dest->presentation = $source->params['DISPLAY'];
-    
+
     return $dest;
   }
 
@@ -1661,10 +1661,10 @@ $numb=0;
   function LoadMRQ(&$source) {
     global $string;
 
-    // count up response conditions    
+    // count up response conditions
     list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
- 
+
     $dest = new ST_Question_Mrq();
 
     $dest->load_id = $source->load_id;
@@ -1705,7 +1705,7 @@ $numb=0;
 
     // work out marking type, and which items are correct
     // allnegative / selectedpositive / allitemscorrect
-    // single positive answer		
+    // single positive answer
     if ($positive == 1) {
       $this->MRQ_GetCorrect_allitemscorrect($dest, $source);
     } else { // multiple positive answers, no negatives, so assume 1 mark per correct option
@@ -1851,7 +1851,7 @@ $numb=0;
     $dest->marks_correct = $marks_correct;
     $dest->marks_incorrect = $marks_incorrect;
     $dest->marks_partial = $marks_partial;
-    
+
     // build option list
     $optionmapping = array();
 
@@ -1908,7 +1908,7 @@ $numb=0;
     return $dest;
   }
 
-  // DONE	
+  // DONE
   function LoadTextbox(&$source) {
     global $string;
 
@@ -1944,7 +1944,7 @@ $numb=0;
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
     $dest->marks_correct = $marks_correct;
     $dest->marks_incorrect = $marks_incorrect;
-    
+
     // sort out feedback
     $fb = $this->GetAllFeedbacks($source);
     $dest->feedback = $this->GetFeedbackFromArray($source, $fb);
@@ -2013,7 +2013,7 @@ $numbb=1;
         }
 
       }
-  
+
       $loop=1;
     }
 
@@ -2056,7 +2056,7 @@ $numbb=1;
 
     return array($positive, $zero, $negative);
   }
-  
+
   // returns the Max and Min mark for a question
   //
   //  as an array (min,max)
@@ -2066,10 +2066,10 @@ $numbb=1;
     $part = 0;
     $min = 0;
 
-    foreach ($data->respconditions as & $respconditions) {      
+    foreach ($data->respconditions as & $respconditions) {
       if(isset($respconditions->conditions[0]) and ($respconditions->conditions[0]->type == 'vargte' or $respconditions->conditions[0]->type == 'varlte') ) {
         if ($respconditions->mark > $part) $part = $respconditions->mark;
-      } else {    
+      } else {
         if ($respconditions->mark > $max) $max = $respconditions->mark;
         else if ($respconditions->mark < $min) $min = $respconditions->mark;
       }
@@ -2085,7 +2085,7 @@ $numbb=1;
     if($max>20) $max=1;
     if($min>20) $min=1;
     if($part>20) $part=1;
-    return array($min,$part,$max);  
+    return array($min,$part,$max);
   }
 
   // return array of conditions based on mark

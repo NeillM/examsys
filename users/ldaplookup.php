@@ -38,7 +38,7 @@ if(isset($_REQUEST['LOOKUP'])) {
 
 
  //   $data->settings = new stdClass();
-//  $data->settings->recursive = TRUE;
+//  $data->settings->recursive = true;
 
     $output = $lookup->userlookup($data);
 
@@ -169,7 +169,7 @@ if (isset($_POST['submit'])) {
   }
 
   $data->settings = new stdClass();
-//  $data->settings->recursive = TRUE;
+//  $data->settings->recursive = true;
 
   $output = $lookup->userlookup($data);
   ini_set('display_errors', 1);

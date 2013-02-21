@@ -43,7 +43,7 @@ require_once '../classes/facultyutils.class.php';
 
 $choicetype = 'radio';
 
-function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = FALSE, $explode = FALSE, $type = '') {
+function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false, $type = '') {
   global $icons;
 
   $configObject = Config::get_instance();
@@ -71,7 +71,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = FALSE, $ex
     $rt = $results2->num_rows();
     if (!$flat) {
       echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\" onclick=\"showHide($block_id)\"  /><a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">&nbsp;$moduleidorig: $paper_title ($rt)</a></div>\n";
-      if ($explode === TRUE) {
+      if ($explode === true) {
         echo "<div id=\"block$block_id\">";
       } else {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -89,7 +89,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = FALSE, $ex
         $extra1 = "</a>";
       }
       echo "<div style=\"padding-left:52px\">$extra<img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" />&nbsp;";
-      if (strpos($paper_title, '[deleted') !== FALSE) {
+      if (strpos($paper_title, '[deleted') !== false) {
         echo ' style="color:#808080"';
       }
       echo  $paper_title . "$extra1</div>\n";
@@ -139,7 +139,7 @@ $returned = $lti->lookup_lti_resource();
 
 if (!$lti->isInstructor()) {
   //student
-  if ($returned === FALSE) {
+  if ($returned === false) {
     // no data selected for this
     UserNotices::display_notice($string['warning'], $string['ltinotconfigured'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', $title_color = '#C00000');
     echo "\n</body>\n</html>\n";
@@ -154,7 +154,7 @@ if (!$lti->isInstructor()) {
     foreach ($data as $v) {
       $returned_check = module_utils::get_full_details_by_ID($v[1], $mysqli);
 
-      if (!UserUtils::is_user_on_module($userObject->get_user_ID(), $v[1], $session, $mysqli) and $returned_check !== FALSE and $lti_i::allow_module_self_reg($v)) {
+      if (!UserUtils::is_user_on_module($userObject->get_user_ID(), $v[1], $session, $mysqli) and $returned_check !== false and $lti_i::allow_module_self_reg($v)) {
         list($fullname, $school, $active, $selfenroll) = $returned_check;
         if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1 and !UserUtils::is_user_on_module($userObject->get_user_ID(), $v[1], $session, $mysqli)) {
           // Insert new module enrollment
@@ -172,7 +172,7 @@ if (!$lti->isInstructor()) {
 } else {
   //staff
 
-  if ($returned !== FALSE) {
+  if ($returned !== false) {
     // goto link
 
     $returned2 = $lti->lookup_lti_context();
@@ -203,7 +203,7 @@ if (!$lti->isInstructor()) {
     $returned2 = $lti->lookup_lti_context();
 
 
-    if ($returned2 === FALSE) {
+    if ($returned2 === false) {
 
       //no context
       $data = $lti_i::module_code_translate($lti->getCourseName(), $lti->get_context_title());
@@ -259,9 +259,9 @@ if (!$lti->isInstructor()) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset={$configObject->get('cfg_page_charset')}" />
-  
+
   <title>Rogō {$configObject->get('cfg_install_type')}</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -320,7 +320,7 @@ END;
     foreach ($data as $v) {
       $moduleid = $v[1];
 
-      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, TRUE, $choicetype);
+      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true, $choicetype);
     }
     if ($choicetype == 'radio') {
       $strng = $string['SELECT'];

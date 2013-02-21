@@ -42,14 +42,14 @@ class LogExtraTime {
   private $msg;
 
   private $log_extra_time_cache;
-  private $use_cache = FALSE;
+  private $use_cache = false;
 
   /**
    * @return LogLabEndTime $log_lab_end_time
    * @return array    $student_object
    * @return mysqli        $db
    */
-  public function __construct(LogLabEndTime $log_lab_end_time, $student_object, mysqli $db, $cached = FALSE) {
+  public function __construct(LogLabEndTime $log_lab_end_time, $student_object, mysqli $db, $cached = false) {
 
     $this->log_lab_end_time = $log_lab_end_time;
     $this->student_object = $student_object;
@@ -57,7 +57,7 @@ class LogExtraTime {
 
     if ($cached) {
       $this->populate_cache();
-      $this->use_cache = TRUE;
+      $this->use_cache = true;
     }
 
   }
@@ -94,11 +94,11 @@ class LogExtraTime {
     $paper_id = $this->get_paper_id();
 
     if ($this->use_cache) {
-      $extra_time_secs = FALSE;
+      $extra_time_secs = false;
       if(isset($this->log_extra_time_cache[$student_id][$lab_id]['extra_time_secs'])) {
         return $this->log_extra_time_cache[$student_id][$lab_id]['extra_time_secs'];
       } else {
-        return FALSE;
+        return false;
       }
     }
 
@@ -111,7 +111,7 @@ class LogExtraTime {
     if ($stmt->num_rows < 1) {
       $stmt->close();
 
-      return FALSE;
+      return false;
     }
 
     $bindResult = $stmt->bind_result($extra_time_secs);
@@ -138,7 +138,7 @@ class LogExtraTime {
         $end_datetime->setTimestamp($end_date);
         return $end_datetime;
       } else {
-        return FALSE;
+        return false;
       }
     }
 
@@ -158,7 +158,7 @@ class LogExtraTime {
 
     // If no record exists then fall back to the default
     if ($num_results < 1 or $end_date === NULL) {
-      return FALSE;
+      return false;
     }
 
 
@@ -281,8 +281,8 @@ class LogExtraTime {
    */
   private function get_end_date_timestamp() {
     $end_date_datetime = $this->get_end_date_datetime();
-    if ($end_date_datetime === FALSE) {
-      return FALSE;
+    if ($end_date_datetime === false) {
+      return false;
     }
 
     return $end_date_datetime->getTimestamp();

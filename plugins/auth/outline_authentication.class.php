@@ -33,7 +33,7 @@ class outline_authentication {
   public $debugpointer = 0;
 
   protected $error = NULL;
-  public $rogoid = FALSE;
+  public $rogoid = false;
 
 
   protected $authapiversion;
@@ -54,10 +54,10 @@ class outline_authentication {
     $this->name = $name;
     $this->number = $number;
   }
-  
+
   /*
    * Check the API version of the stack and the plugin are compatible
-   * returns true if it is compatible false otherwise  
+   * returns true if it is compatible false otherwise
    */
   function apicheck() {
 
@@ -65,10 +65,10 @@ class outline_authentication {
       $this->savetodebug('This auth object is implementing an different version of the api than this plugin does');
       $this->set_error('Wrong API');
 
-      return FALSE;
+      return false;
     }
 
-    return TRUE;
+    return true;
   }
 
   function set_error($msg) {
@@ -94,7 +94,7 @@ class outline_authentication {
 
 //fake function used in mocking but if things go wrong have an outline here
   function mock($callingobject, $settings, $number, $name, $db, $returndata, $form) {
-    return FALSE;
+    return false;
   }
 
 
@@ -159,7 +159,7 @@ class outline_authentication {
    *
    * @return bool
    */
-  function register_callback($callback, $section, $number, $name, $insert = FALSE) {
+  function register_callback($callback, $section, $number, $name, $insert = false) {
     //return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
     $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
   }
@@ -180,7 +180,7 @@ class outline_authentication {
    */
   function get_settings($setting) {
     if (!isset($this->settings[$setting])) {
-      return FALSE;
+      return false;
     }
 
     return $this->settings[$setting];

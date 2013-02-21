@@ -31,13 +31,13 @@ Class UserUtils {
   static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = NULL, $password = '') {
     $courseok = CourseUtils::add_course($school, $course, $coursedesc, $db);
 
-    if ($courseok !== TRUE or $username == '' or $surname == '' or $email == '') {
-      return FALSE;
+    if ($courseok !== true or $username == '' or $surname == '' or $email == '') {
+      return false;
     }
-    
+
     if (!in_array($role, array('Staff', 'Student', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner'))) {
       // not a valid role
-      return FALSE;
+      return false;
     }
 
     $userid = self::create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials);
@@ -48,7 +48,7 @@ Class UserUtils {
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = NULL) {
     $configObj = Config::get_instance();
 
-    if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === FALSE) {
+    if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
       if (is_null($initials)) {
         $initial = explode(' ', $forname);
         $initials = '';
@@ -97,7 +97,7 @@ Class UserUtils {
       return $tmp_userID;
     }
 
-    return FALSE;
+    return false;
   }
 
   /**
@@ -116,7 +116,7 @@ Class UserUtils {
     $stmt->store_result();
     $stmt->bind_result($tmp_userID);
     $stmt->fetch();
-    $exists = ($stmt->num_rows == 0) ? FALSE : $tmp_userID;
+    $exists = ($stmt->num_rows == 0) ? false : $tmp_userID;
     $stmt->close();
 
     return $exists;
@@ -138,7 +138,7 @@ Class UserUtils {
     $stmt->store_result();
     $stmt->bind_result($tmp_userID);
     $stmt->fetch();
-    $exists = ($stmt->num_rows == 0) ? FALSE : $tmp_userID;
+    $exists = ($stmt->num_rows == 0) ? false : $tmp_userID;
     $stmt->close();
 
     return $exists;
@@ -163,10 +163,10 @@ Class UserUtils {
     $stmt->close();
 
     $roles_list = explode(',', $roles);
-    $match = FALSE;
+    $match = false;
     foreach ($roles_list as $individual_role) {
       if ($individual_role == $test_role) {
-        $match = TRUE;
+        $match = true;
       }
     }
 
@@ -226,7 +226,7 @@ Class UserUtils {
    */
   static function clear_staff_modules_by_userID($tmp_userID, $db) {
     $userObject = UserObject::get_instance();
-  
+
     $result = $db->prepare("DELETE FROM modules_staff WHERE memberID = ?");
     $result->bind_param('i', $tmp_userID);
     $result->execute();
@@ -236,7 +236,7 @@ Class UserUtils {
       $userObject->load_staff_modules();     // Re-cache modules if the user is the currently logged in person.
     }
   }
-  
+
   /**
    * Clear a user (admin) from all admin schools.
    *
@@ -313,20 +313,20 @@ Class UserUtils {
 
     if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
       //don't add a user to a module multiple times
-      return TRUE;
+      return true;
     } else {
       $result = $db->prepare("INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, ?)");
       $result->bind_param('iisii', $tmp_userID, $idMod, $session, $attempt, $auto_update);
       $result->execute();
       $result->close();
       if ($db->errno != 0) {
-        return FALSE;
+        return false;
       }
       if ($tmp_userID === $userObject->get_user_ID()) {
         $userObject->load_student_modules();
       }
 
-      return TRUE;
+      return true;
     }
   }
 

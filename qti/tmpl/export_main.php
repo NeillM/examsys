@@ -27,9 +27,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['exporttoqti'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -78,7 +78,7 @@ if (count($result['save']['data']->files) > 1) {
 
   $zip = new ZipArchive;
   $res = $zip->open($base_dir.$dir.'/export.zip', ZipArchive::CREATE);
-  if ($res === TRUE) {
+  if ($res === true) {
     foreach ($tozip as $file) {
       if (file_exists($base_dir.$dir.'/'.$file->filename)) {
         $zip->addFile($base_dir.$dir.'/'.$file->filename, $file->filename);
@@ -111,11 +111,11 @@ echo "</table>";
 ?>
 
 <br />
-<table border="0" cellpadding="0" cellspacing="0" width="500" class="dialog_border" style="text-align:left"> 
-	<tr> 
-		<td class="dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px"><?php echo $string['exporttoqti']; ?></td> 
-	</tr> 
-	<tr> 
+<table border="0" cellpadding="0" cellspacing="0" width="500" class="dialog_border" style="text-align:left">
+	<tr>
+		<td class="dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px"><?php echo $string['exporttoqti']; ?></td>
+	</tr>
+	<tr>
 		<td class="dialog_body" colspan="2">
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php printf($string['exportsready'], $qti_ver) ?></div>
 			<?php foreach ($files as $file) : ?>

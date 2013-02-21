@@ -52,9 +52,9 @@ class UserObject extends RogoStaticSingleton {
    */
   protected static $inst = NULL;
   protected static $class_name = 'UserObject';
-  protected static $dont_construct = TRUE;
+  protected static $dont_construct = true;
   private $password, $userID, $userroles, $title, $initials, $first_names, $surname, $username, $email, $grade, $year, $special_needs, $special_needs_percentage, $record_no, $split_username;
-  private $demomode = FALSE;
+  private $demomode = false;
   private $roles, $staffModules, $studentModules, $db, $configObj;
 
   // Special needs variables
@@ -90,22 +90,22 @@ class UserObject extends RogoStaticSingleton {
   function old_load($array) {
     list($this->password, $this->userID, $this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs, $this->record_no, $this->split_username) = $array;
 
-    if (strpos($this->userroles, 'SysAdmin') !== FALSE) {
+    if (strpos($this->userroles, 'SysAdmin') !== false) {
       $this->roles['SysAdmin'] = 1;
     }
-    if (strpos($this->userroles, 'Admin') !== FALSE and strpos($this->userroles, 'SysAdmin') === FALSE) {
+    if (strpos($this->userroles, 'Admin') !== false and strpos($this->userroles, 'SysAdmin') === false) {
       $this->roles['Admin'] = 1;
     }
-    if (strpos($this->userroles, 'Staff') !== FALSE or strpos($this->userroles, 'Admin') !== FALSE) { // Process staff first to get higher priority than students --no need
+    if (strpos($this->userroles, 'Staff') !== false or strpos($this->userroles, 'Admin') !== false) { // Process staff first to get higher priority than students --no need
       $this->roles['Staff'] = 1;
     }
-    if (strpos($this->userroles, 'Student') !== FALSE) {
+    if (strpos($this->userroles, 'Student') !== false) {
       $this->roles['Student'] = 1;
     }
-    if (strpos($this->userroles, 'External Examiner') !== FALSE) {
+    if (strpos($this->userroles, 'External Examiner') !== false) {
       $this->roles['ExternalExaminer'] = 1;
     }
-    if (strpos($this->userroles, 'Invigilator') !== FALSE) {
+    if (strpos($this->userroles, 'Invigilator') !== false) {
       $this->roles['Invigilator'] = 1;
     }
   }
@@ -198,7 +198,7 @@ class UserObject extends RogoStaticSingleton {
     if (is_string($roles)) {
       if ($exclusive == 0  or ($exclusive == 1 and count($this->roles) == 1)) {
         if (isset($this->roles[$roles])) {
-          return TRUE;
+          return true;
         }
       }
     } else {
@@ -206,26 +206,26 @@ class UserObject extends RogoStaticSingleton {
       if ($exclusive == 0 or ($exclusive == 1 and count($this->roles) == count($roles))) {
         foreach ($roles as $role) {
           if (isset($this->roles[$role])) {
-            return TRUE;
+            return true;
           }
         }
       }
     }
 
-    return FALSE;
+    return false;
   }
 
 
   function is_demo() {
     if ($this->demomode or $this->has_role('Demo')) {
-      return TRUE;
+      return true;
     }
 
-    return FALSE;
+    return false;
   }
 
   function set_demo() {
-    $this->demomode = TRUE;
+    $this->demomode = true;
     $this->configObj->append('cfg_install_type', " (DEMO mode)");
     $this->roles['Demo'] = 1;
   }
@@ -277,7 +277,7 @@ class UserObject extends RogoStaticSingleton {
 
     if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       //this is not a staff user so it cant be on any modules
-      return FALSE;
+      return false;
     }
 
     if (count($this->staffModules) < 1) {
@@ -288,14 +288,14 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function has_metadata($modIDs, $security_type, $security_value) {
-    $has_data = TRUE;
+    $has_data = true;
 
     $result = $this->db->prepare("SELECT users_metadata.userID FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (" . implode(',', $modIDs) . ") AND userID = ? AND type = ? AND value = ?");
     $result->bind_param('iss', $this->get_user_ID(), $security_type, $security_value);
     $result->execute();
     $result->store_result();
     if ($result->num_rows == 0) {
-      $has_data = FALSE;
+      $has_data = false;
     }
     $result->close();
 
@@ -311,7 +311,7 @@ class UserObject extends RogoStaticSingleton {
 
     if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       //this is not a staff user so it cant be on any modules
-      return FALSE;
+      return false;
     }
 
     if (count($this->staffModules) < 1) {
@@ -325,25 +325,25 @@ class UserObject extends RogoStaticSingleton {
         }
         foreach ($moduleID as $idMod => $full_moduleID) {
           if (isset($this->staffModules[$idMod])) {
-            return TRUE;
+            return true;
           }
         }
         break;
       case 'string':
         if (in_array($moduleID, $this->staffModules)) {
-          return TRUE;
+          return true;
         }
         break;
       case 'integer':
         if (isset($this->staffModules[$moduleID])) {
-          return TRUE;
+          return true;
         }
         break;
       default:
-        return FALSE;
+        return false;
     }
 
-    return FALSE;
+    return false;
   }
 
   /**
@@ -381,10 +381,10 @@ class UserObject extends RogoStaticSingleton {
    */
   function is_special_needs() {
     if ($this->special_needs != 0) {
-      return TRUE;
+      return true;
     }
 
-    return FALSE;
+    return false;
   }
 
   /**
@@ -546,7 +546,7 @@ class UserObject extends RogoStaticSingleton {
 
     if (!$this->has_role('Student')) {
       //this is not a staff user so it cant be on any modules
-      return FALSE;
+      return false;
     }
 
     if (count($this->studentModules) < 1) {
@@ -560,25 +560,25 @@ class UserObject extends RogoStaticSingleton {
         }
         foreach ($moduleID as $idMod => $full_moduleID) {
           if (isset($this->studentModules[$calendar_year][$idMod])) {
-            return TRUE;
+            return true;
           }
         }
         break;
       case 'string':
         if (in_array($moduleID, $this->studentModules[$calendar_year])) {
-          return TRUE;
+          return true;
         }
         break;
       case 'integer':
         if (isset($this->studentModules[$calendar_year][$moduleID])) {
-          return TRUE;
+          return true;
         }
         break;
       default:
-        return FALSE;
+        return false;
     }
 
-    return FALSE;
+    return false;
   }
 
   /**
@@ -594,12 +594,12 @@ class UserObject extends RogoStaticSingleton {
   function add_student_to_module($idMod, $attempt, $session, $auto_update = 0) {
     // need to check its a self reg module
 
-    if (module_utils::get_full_details_by_ID($idMod, $this->db) === FALSE) {
-      return FALSE;
+    if (module_utils::get_full_details_by_ID($idMod, $this->db) === false) {
+      return false;
     }
     if (UserUtils::is_user_on_module($this, $idMod, $session, $this->db)) {
       //don't add a user to a module multiple times
-      return TRUE;
+      return true;
     }
     $return = UserUtils::add_student_to_module($this->get_user_ID(), $idMod, $attempt, $session, $auto_update);
 
@@ -664,7 +664,7 @@ class UserObject extends RogoStaticSingleton {
     $record_no = $stmt->num_rows();
     $stmt->close();
     if ($record_no == 0) {
-      return FALSE;
+      return false;
     }
 
     if ($this->special_needs == 1) {
@@ -708,7 +708,7 @@ class UserObject extends RogoStaticSingleton {
     } elseif ($this->has_role('Invigilator')) {
       $result = $this->db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
     } else {
-      $result = FALSE;
+      $result = false;
       // new security routine
 
      $notice=UserNotices::get_instance();

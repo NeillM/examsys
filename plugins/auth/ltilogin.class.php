@@ -57,7 +57,7 @@ class ltilogin_auth extends outline_authentication {
 
 
   function auth($authobj) {
-    if ($this->lti->valid !== TRUE) {
+    if ($this->lti->valid !== true) {
       $this->savetodebug('Not valid LTI Launch: ' . $this->lti->message);
       $authobj->fail($this->number);
 
@@ -67,10 +67,10 @@ class ltilogin_auth extends outline_authentication {
     $this->savetodebug('Starting to lookup user');
     $returned = $this->lti->lookup_lti_user();
 
-    $this->savetodebug('Data returned from lti lookup was: ' . var_export($returned, TRUE));
+    $this->savetodebug('Data returned from lti lookup was: ' . var_export($returned, true));
 
-    if ($returned !== FALSE) {
-      $this->retdata->success = TRUE;
+    if ($returned !== false) {
+      $this->retdata->success = true;
       $this->retdata->form = 'std';
       $this->rogoid = $returned[0];
       $this->retdata->rogoid = & $this->rogoid;
@@ -84,13 +84,13 @@ class ltilogin_auth extends outline_authentication {
     }
 
 
-    if ((!isset($authobj->manualsignup) or (isset($this->settings['lti_lookup_set_authobj_manualsignup_override']) and $this->settings['lti_lookup_set_authobj_manualsignup_override'] == TRUE)) and (isset($this->settings['lti_lookup_set_authobj_manualsignup']) and $this->settings['lti_lookup_set_authobj_manualsignup'] == TRUE)) {
-      $authobj->manualsignup = TRUE;
+    if ((!isset($authobj->manualsignup) or (isset($this->settings['lti_lookup_set_authobj_manualsignup_override']) and $this->settings['lti_lookup_set_authobj_manualsignup_override'] == true)) and (isset($this->settings['lti_lookup_set_authobj_manualsignup']) and $this->settings['lti_lookup_set_authobj_manualsignup'] == true)) {
+      $authobj->manualsignup = true;
       $this->savetodebug('Setting the manualsignup to true on authobj');
 
     }
 
-    if (isset($this->settings['lti_lookup_failasmissing']) and $this->settings['lti_lookup_failasmissing'] == TRUE) {
+    if (isset($this->settings['lti_lookup_failasmissing']) and $this->settings['lti_lookup_failasmissing'] == true) {
       $data = new stdClass();
       $this->savetodebug('Returning status as missing info');
 
@@ -124,11 +124,11 @@ class ltilogin_auth extends outline_authentication {
 
       $this->savetodebug('setting return fields  ' . "ltinamefield:$ltinamefield ltiemailfield:$ltiemailfield ltiidfield:$ltiidfield lticonsumerkeyfield:$lticonsumerkeyfield ltiinstructorfield:$ltiinstructorfield");
 
-      if (isset($this->settings['lti_lookup_set_session_needsuserlookup']) and $this->settings['lti_lookup_set_session_needsuserlookup'] == TRUE) {
-        $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = TRUE;
+      if (isset($this->settings['lti_lookup_set_session_needsuserlookup']) and $this->settings['lti_lookup_set_session_needsuserlookup'] == true) {
+        $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = true;
       }
 
-      $data->$ltifromltifield = TRUE;
+      $data->$ltifromltifield = true;
       $data->$ltinamefield = $this->lti->getUserName();
       $data->$ltiemailfield = $this->lti->getUserEmail();
       $data->$ltiidfield = $this->lti->getUserKey();
@@ -141,11 +141,11 @@ class ltilogin_auth extends outline_authentication {
       return $authobj;
     }
 
-    if (isset($this->settings['lti_lookup_skipusesignup']) and $this->settings['lti_lookup_skipusesignup'] == TRUE) {
-      $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = FALSE;
+    if (isset($this->settings['lti_lookup_skipusesignup']) and $this->settings['lti_lookup_skipusesignup'] == true) {
+      $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = false;
     } else {
       //set session to be needing user lookup later
-      $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = TRUE;
+      $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = true;
     }
 
     // lti valid but no user id associated with it.
@@ -157,20 +157,20 @@ class ltilogin_auth extends outline_authentication {
   }
 
   function registeruserwithlti($postauthsuccessobj) {
-    if (!isset($_SESSION['authenticationobj']['ltilogin']['needsuserlookup']) or $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] === FALSE) {
+    if (!isset($_SESSION['authenticationobj']['ltilogin']['needsuserlookup']) or $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] === false) {
       return;
     }
     $this->savetodebug('storing rogo userid against lti user');
     $rogoid = $this->calling_object->get_userid();
     $this->lti->add_lti_user($rogoid);
-    $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = FALSE;
+    $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = false;
 
     return $postauthsuccessobj;
   }
 
   function displaystdform($displaystdformobj) {
     global $string;
-    if (isset($this->session['authenticationobj']['ltilogin']['needsuserlookup']) and  $this->session['authenticationobj']['ltilogin']['needsuserlookup'] === TRUE) {
+    if (isset($this->session['authenticationobj']['ltilogin']['needsuserlookup']) and  $this->session['authenticationobj']['ltilogin']['needsuserlookup'] === true) {
 
       $message = new stdClass();
       $message->pretext = '';
@@ -178,7 +178,7 @@ class ltilogin_auth extends outline_authentication {
 
       $message->content = $string['authentication_lti_authmessage'];
       $displaystdformobj->messages[] = $message;
-      $displaystdformobj->replace = TRUE;
+      $displaystdformobj->replace = true;
     }
 
     return $displaystdformobj;

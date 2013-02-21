@@ -35,7 +35,7 @@ include_once $cfg_web_root . 'tools/getid3/getid3.php';
  * @param mixed $imageid
  *
  */
-function display_media($filename, $width, $height, $border_color, $imageid=-1, $locked=FALSE) {
+function display_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false) {
 
   $configObject = Config::get_instance();
 
@@ -69,7 +69,7 @@ OBJEMBED;
 
   } elseif ($fn_parts['extension'] == 'mp3') {     //Embed MP3 using a Flash plugin
 
-    if (strpos($_SERVER['PHP_SELF'],'/edit/') !== FALSE or strpos($_SERVER['PHP_SELF'],'/add/') !== FALSE) {  // Display filename if add or edit script
+    if (strpos($_SERVER['PHP_SELF'],'/edit/') !== false or strpos($_SERVER['PHP_SELF'],'/add/') !== false) {  // Display filename if add or edit script
       $html .= $filename . '&nbsp;';
     }
 
@@ -139,19 +139,19 @@ function uploadFile($fileID) {
     return '';
   }
 
-  $bad_file = TRUE;   // Default safe.
+  $bad_file = true;   // Default safe.
 
   $unique_name = unique_filename($_FILES[$fileID]['name']);
 
   $permitted = array('.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.avi', '.swf', '.flv', '.mpg', '.mpeg', '.mov', '.pdb', '.mp3', '.mid', '.wav', '.ram');
   foreach ($permitted as $extension) {
     if (preg_match("/$extension\$/i", $unique_name)) {
-      $bad_file = FALSE;
+      $bad_file = false;
     }
   }
 
   if ( $bad_file or $unique_name == 'none' or $unique_name == '') {
-    return FALSE;
+    return false;
   }
 
   $configObject = Config::get_instance();
@@ -159,7 +159,7 @@ function uploadFile($fileID) {
 
   if (!move_uploaded_file($_FILES[$fileID]['tmp_name'], $cfg_web_root . "media/$unique_name")) {
     echo uploadError($_FILES[$fileID]['error']);
-    return FALSE;
+    return false;
   }
 
   chmod( $cfg_web_root . "media/$unique_name", 0664);
@@ -171,9 +171,9 @@ function uploadFile($fileID) {
     case 'application/vnd.ms-powerpoint':
     case 'application/vnd.ms-excel':
       if (!isset($file_info['fileformat'])) {
-        $bad_file = TRUE;
+        $bad_file = true;
       } elseif ($file_info['fileformat'] != 'msoffice') {
-        $bad_file = TRUE;
+        $bad_file = true;
       }
       $file_width = '100%';
       $file_height = '350';
@@ -188,9 +188,9 @@ function uploadFile($fileID) {
       break;
     case 'application/pdf':
       if (!isset($file_info['fileformat'])) {
-        $bad_file = TRUE;
+        $bad_file = true;
       } elseif ($file_info['fileformat'] != 'pdf') {
-        $bad_file = TRUE;
+        $bad_file = true;
       }
       $file_width = '100%';
       $file_height = '350';
@@ -206,7 +206,7 @@ function uploadFile($fileID) {
       $file_width = $identifier_size[0];
       $file_height = $identifier_size[1];
       if ($file_width == 0 or $file_height == 0) {
-        $bad_file = TRUE;
+        $bad_file = true;
       }
       break;
     case 'application/x-shockwave-flash':
@@ -215,7 +215,7 @@ function uploadFile($fileID) {
       $file_width = $identifier_size[0];
       $file_height = $identifier_size[1];
       if ($file_width == 0 or $file_height == 0) {
-        $bad_file = TRUE;
+        $bad_file = true;
       }
       break;
     case 'video/mpeg':
@@ -226,7 +226,7 @@ function uploadFile($fileID) {
       $file_width = $file_info['video']['resolution_x'];
       $file_height = $file_info['video']['resolution_y'];
       if ($file_width == 0 or $file_height == 0) {
-        $bad_file = TRUE;
+        $bad_file = true;
       }
       break;
     case 'audio/wav':
@@ -236,9 +236,9 @@ function uploadFile($fileID) {
     case 'audio/mpeg3':
     case 'audio/x-mpeg-3':
       if (!isset($file_info['playtime_seconds'])) {
-        $bad_file = TRUE;
+        $bad_file = true;
       } elseif ($file_info['playtime_seconds'] == 0) {
-        $bad_file = TRUE;
+        $bad_file = true;
       }
       break;
     default:
@@ -253,7 +253,7 @@ function uploadFile($fileID) {
           $file_width = $file_info['video']['resolution_x'];
           $file_height = $file_info['video']['resolution_y'];
           if ($file_width == 0 or $file_height == 0) {
-            $bad_file = TRUE;
+            $bad_file = true;
           }
           break;
         case 'wav':
@@ -261,9 +261,9 @@ function uploadFile($fileID) {
         case 'ram':
         case 'mp3':
           if (!isset($file_info['playtime_seconds'])) {
-            $bad_file = TRUE;
+            $bad_file = true;
           } elseif ($file_info['playtime_seconds'] == 0) {
-            $bad_file = TRUE;
+            $bad_file = true;
           }
           break;
         case 'docx':
@@ -287,7 +287,7 @@ function uploadFile($fileID) {
     return array('filename'=>'', 'width'=>0, 'height'=>0, 'rejected_file'=>$unique_name);
   }
 
-  return array('filename'=>$unique_name, 'width'=>$file_width, 'height'=>$file_height, 'rejected_file'=>FALSE);
+  return array('filename'=>$unique_name, 'width'=>$file_width, 'height'=>$file_height, 'rejected_file'=>false);
 
 }
 
@@ -298,7 +298,7 @@ function deleteMedia( $filename ) {
   $file         = $cfg_web_root . 'media/' . $filename;
 
   if ( $filename == '' or !file_exists( $file ) ) {
-     return FALSE;
+     return false;
   }
 
 
@@ -306,6 +306,6 @@ function deleteMedia( $filename ) {
     //display_error("Failed to delete " . $filename, '', false, true);
   }
 
-  return TRUE;
+  return true;
 }
 ?>

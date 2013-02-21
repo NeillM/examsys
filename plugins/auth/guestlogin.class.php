@@ -70,8 +70,8 @@ class guestlogin_auth extends outline_authentication {
     $labs_list = '';
     //$displaybutton = false;
     // detect if we should display login button
-    $paper_match = FALSE;
-    $ip_match = FALSE;
+    $paper_match = false;
+    $ip_match = false;
     $query = "SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type IN ('1','2') AND labs != ''";
     $results = $this->db->prepare($query);
     if ($this->db->error) {
@@ -88,7 +88,7 @@ class guestlogin_auth extends outline_authentication {
     $results->store_result();
     $results->bind_result($labs);
     while ($results->fetch()) {
-      $paper_match = TRUE;
+      $paper_match = true;
       $query = "SELECT address FROM ip_addresses WHERE lab IN ($labs)";
       $sub_results = $this->db->prepare($query);
       if ($this->db->error) {
@@ -106,14 +106,14 @@ class guestlogin_auth extends outline_authentication {
       $sub_results->bind_result($address);
       while ($sub_results->fetch()) {
         $labs_list = $labs_list . ' ' . $address;
-        if (NetworkUtils::get_ipaddress() == $address) $ip_match = TRUE;
+        if (NetworkUtils::get_ipaddress() == $address) $ip_match = true;
       }
       $sub_results->close();
     }
     $results->close();
 
-    $this->savetodebug('Status paper_match:' . var_export($paper_match, TRUE) . ' ip_match:' . var_export($ip_match, TRUE) . ' ip address:' . var_export(NetworkUtils::get_ipaddress(), TRUE) . ' <br> ' . $labs . ' ' . $labs_list);
-    if ($paper_match === TRUE and $ip_match === TRUE) { //($displaybutton === TRUE) {
+    $this->savetodebug('Status paper_match:' . var_export($paper_match, true) . ' ip_match:' . var_export($ip_match, true) . ' ip address:' . var_export(NetworkUtils::get_ipaddress(), true) . ' <br> ' . $labs . ' ' . $labs_list);
+    if ($paper_match === true and $ip_match === true) { //($displaybutton === true) {
       $this->savetodebug('Adding New Button');
       $newbutton = new displaystdformobjbutton();
       $newbutton->type = 'submit';

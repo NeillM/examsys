@@ -33,7 +33,7 @@ register_shutdown_function("shutdownHandler");
 
 function shutdownHandler() {
   global $php_errormsg;
-  $isError = FALSE;
+  $isError = false;
   if ($error = error_get_last()) {
     customErrorHandler(E_ERROR, $error['message'], $error['file'], $error['line'], array());
   }
@@ -114,7 +114,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
   if (isset($debug_pagestart)) {
     //we are in a debug session do not log errors to db just display them
-    return FALSE;
+    return false;
   }
 
   switch ($errno) {
@@ -137,17 +137,17 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
   // Errors we do not want to log.
   if ($error_type == 'Warning') {
-    if (strpos($errstr, 'The device is not ready.') !== FALSE) {
-      return TRUE;
-    } elseif (strpos($errstr, 'Access is denied.') !== FALSE) {
-      return TRUE;
-    } elseif (strpos($errstr, 'ldap_bind()') !== FALSE) {
-      return TRUE;
-    } elseif (strpos($errstr, 'ldap_search()') !== FALSE) {
-      return TRUE;
-    } elseif (strpos($errstr, 'simplexml_load_string()') !== FALSE) {
+    if (strpos($errstr, 'The device is not ready.') !== false) {
+      return true;
+    } elseif (strpos($errstr, 'Access is denied.') !== false) {
+      return true;
+    } elseif (strpos($errstr, 'ldap_bind()') !== false) {
+      return true;
+    } elseif (strpos($errstr, 'ldap_search()') !== false) {
+      return true;
+    } elseif (strpos($errstr, 'simplexml_load_string()') !== false) {
       //QTI imports with invalid XML cause lots of warnings in the error logs. Filter them out.
-      return FALSE;
+      return false;
     }
   }
 
@@ -196,7 +196,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
   }
 
-  return FALSE;
+  return false;
 }
 
 function error_disp($message, $level = E_USER_WARNING) {

@@ -32,7 +32,7 @@ class ldap_auth extends outline_authentication {
   public $impliments_api_auth_version = 1;
   public $version = 0.9;
 
-  private $createnewuserassociation = FALSE;
+  private $createnewuserassociation = false;
 
   function register_callback_routines() {
     $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
@@ -44,7 +44,7 @@ class ldap_auth extends outline_authentication {
   }
 
   function createnewuserassociation($postauthsuccessobj) {
-    if ($this->createnewuserassociation !== TRUE) {
+    if ($this->createnewuserassociation !== true) {
       return $postauthsuccessobj;
     }
 
@@ -63,7 +63,7 @@ class ldap_auth extends outline_authentication {
 
   function errordisp($displayerrformobj) {
     global $string;
-    
+
     $this->savetodebug('adding ldap notice to error screen');
     $displayerrformobj->li[] = $string['tsonldap'];
 
@@ -71,24 +71,24 @@ class ldap_auth extends outline_authentication {
   }
 
   function failauth($postauthfailreturn) {
-    $this->savetodebug('Fail function passed ' . var_export($postauthfailreturn, TRUE));
+    $this->savetodebug('Fail function passed ' . var_export($postauthfailreturn, true));
 
     //default behaviour is to display username/password form
     $postauthfailreturn->form = 'std';
-    $postauthfailreturn->exit = TRUE;
+    $postauthfailreturn->exit = true;
 
     if ((isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt >= $this->settings['displayfailuremessagenumber']) or (!isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt > 3)) {
       $this->savetodebug('Requisite number of fail attempts so display error form');
       $postauthfailreturn->form = 'err';
-      $postauthfailreturn->exit = TRUE;
+      $postauthfailreturn->exit = true;
     }
 
     if (isset($this->settings['continueonfail'])) {
       $this->savetodebug('Setting to carry on despite setting things');
-      $postauthfailreturn->exit = FALSE;
-      $postauthfailreturn->stop = FALSE;
+      $postauthfailreturn->exit = false;
+      $postauthfailreturn->stop = false;
     }
-    $this->savetodebug('post run ' . var_export($postauthfailreturn, TRUE));
+    $this->savetodebug('post run ' . var_export($postauthfailreturn, true));
 
     return $postauthfailreturn;
 
@@ -97,7 +97,7 @@ class ldap_auth extends outline_authentication {
 
   function auth($authobj) {
     global $string;
-    
+
     $this->retdata =& $authobj;
     $this->savetodebug('Authing');
     extract($this->settings);
@@ -139,7 +139,7 @@ class ldap_auth extends outline_authentication {
 
         $this->savetodebug('Successfully bound to ldap as the user with their password');
         ldap_unbind($ldap);
-        
+
         $this->savetodebug('Now looking up userid in table from username');
         $sql = "SELECT $username_col as username, $id_col as id FROM $table WHERE $username_col = ? $sql_extra";
         $result = $this->db->prepare($sql);
@@ -171,9 +171,9 @@ class ldap_auth extends outline_authentication {
           $data = new stdClass();
           $data->{$this->settings['search_field']} = $this->form['std']->username;
 
-          $this->createnewuserassociation = TRUE;
+          $this->createnewuserassociation = true;
 
-          if (isset($this->settings['disable_ldapmissing']) and $this->settings['disable_ldapmissing'] == TRUE) {
+          if (isset($this->settings['disable_ldapmissing']) and $this->settings['disable_ldapmissing'] == true) {
             $authobj->fail($this->number);
           } else {
             $authobj->lookupmissing($this->number, $data);

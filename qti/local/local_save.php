@@ -94,8 +94,8 @@ class IE_Local_Save extends IE_Main {
         $this->db->SetTable('modules');
         $this->db->AddField('id');
         // Temp fix - if more than one team just get the first. Avoids error but doesn't fix the problem completely
-        if (strpos($q_group, ',') !== FALSE) {
-          $q_group = strstr($q_group, ',', TRUE);
+        if (strpos($q_group, ',') !== false) {
+          $q_group = strstr($q_group, ',', true);
         }
         $this->db->AddWhere('moduleid', $q_group, 's');
         $module_row = $this->db->GetSingleRow();
@@ -106,14 +106,14 @@ class IE_Local_Save extends IE_Main {
     global $mysqli;
     $module_id1 = $paperutils->get_modules($paper_row['property_id'], $mysqli);
 
-    if ($module_id1 !== FALSE) {
+    if ($module_id1 !== false) {
       $module_id = $module_id1;
     }
 
     $modutils = module_utils::get_instance();
     $q_group = $modutils->get_moduleid_from_id($module_id, $mysqli);
 
-    if ($module_id !== FALSE) {
+    if ($module_id !== false) {
 
 
       // Get a list of the team and user's keywords
@@ -152,7 +152,7 @@ class IE_Local_Save extends IE_Main {
 
       $this->q_row['q_option_order'] = $question->q_option_order;
 
-      $oiii = print_r($question, TRUE);
+      $oiii = print_r($question, true);
       $t = 8;
       if ($question->type == "blank") {
         $this->SaveBlank($question);
@@ -206,11 +206,11 @@ class IE_Local_Save extends IE_Main {
 
       echo "<h4>{$string['questiontables']}</h4>";
       echo "<div>{$string['questionsrow']}</div>";
-      print_p($this->q_row, FALSE);
+      print_p($this->q_row, false);
       echo "<div>{$string['optionsrows']}</div>";
-      print_p($this->o_rows, FALSE, 100);
+      print_p($this->o_rows, false, 100);
       echo "<div>{$string['newkeywords']}</div>";
-      print_p($new_keywords, FALSE);
+      print_p($new_keywords, false);
 
       $track = array();
       $track['type'] = $string['qtiimport'];

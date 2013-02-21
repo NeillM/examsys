@@ -40,7 +40,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
   $configObject = Config::get_instance();
 
   //create a caching LogExtraTime gets all the results in one hit
-  $log_extra_time = new LogExtraTime($log_lab_end_time, array(), $mysqli, TRUE);
+  $log_extra_time = new LogExtraTime($log_lab_end_time, array(), $mysqli, true);
 
   // Get any student notes;
   $notes_array = array();
@@ -51,7 +51,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
   $notes_results->bind_result($note_id, $tmp_userID);
 
   while ($notes_results->fetch()) {
-    $notes_array[$tmp_userID] = TRUE;
+    $notes_array[$tmp_userID] = true;
   }
 
   $notes_results->close();
@@ -138,7 +138,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
 
   $lab_session_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
 
-  if ($lab_session_end_datetime == FALSE) {
+  if ($lab_session_end_datetime == false) {
     $lab_session_end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
   }
 
@@ -150,7 +150,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
     throw new ErrorException('Exam duration is mandatory in summative exams');
   }
 
-  if (is_int($exam_duration_mins) === FALSE) {
+  if (is_int($exam_duration_mins) === false) {
     throw new ErrorException('$exam_duration_mins ' . $exam_duration_mins . ' must be an integer');
   }
 
@@ -166,7 +166,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
   /* @var $student_extra_end_datetime DateTime */
   //$student_end_datetime = $log_extra_time->get_end_date_datetime();
 
-  //if ($student_end_datetime === FALSE) {
+  //if ($student_end_datetime === false) {
     $student_end_datetime = $lab_session_end_datetime;
   //}
 
@@ -203,7 +203,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
   $ft=clone $student_end_datetime;
   $ft->setTimezone(new DateTimeZone($property_object->get_timezone()));
   $formatted_end_time = $ft->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'));
-//$formatted_end_time = var_export($student_end_datetime, TRUE) . '::' . var_export($paper_end_datetime, TRUE) . '##' . $student_end_datetime->format('d/m/Y H:i:s');
+//$formatted_end_time = var_export($student_end_datetime, true) . '::' . var_export($paper_end_datetime, true) . '##' . $student_end_datetime->format('d/m/Y H:i:s');
   // Get student description
 
   $tmp_userID = $student_object['user_ID'];
@@ -223,7 +223,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
 <tr class="<?php echo $class; ?>">
     <td style="cursor:hand" onclick="popMenu( '<?php echo $tmp_userID; ?>', '<?php echo $paperID; ?>', event);"/>
   <?php
-  if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == TRUE) {
+  if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == true) {
     ?>
       <img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" border="0"/>
     <?php
@@ -615,7 +615,7 @@ if (count($properties_list) > 0) {
 
     $end_datetime = $log_lab_end_time->get_session_end_date_datetime();
 
-    if ($end_datetime == FALSE) {
+    if ($end_datetime == false) {
       $end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
     } else {
       $exam_started = true;

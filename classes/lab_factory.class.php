@@ -37,7 +37,7 @@ class LabFactory {
 
   /**
    * @param  integer  $ip_address IP address of a machine in the required lab
-   * @return Lab                  Lab object for specified IP address or FALSE if not found
+   * @return Lab                  Lab object for specified IP address or false if not found
    */
   public function get_lab_based_on_ip($ip_address) {
 
@@ -51,7 +51,7 @@ class LabFactory {
     if ($lab_results->num_rows < 0) {
       $lab_results->close();
 
-      return FALSE;
+      return false;
     }
     $lab_results->fetch();
 
