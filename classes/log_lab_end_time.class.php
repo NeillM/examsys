@@ -43,6 +43,7 @@ class LogLabEndTime {
   private $db;
 
   private $end_datetime_cached = FALSE;
+  private $start_timestamp = FALSE;
 
   /**
    * @param Lab $lab_id
@@ -70,14 +71,14 @@ class LogLabEndTime {
 
       $start_timestamp = $start_datetime->getTimestamp();
 
-      $query = 'SELECT end_time as end_timestamp FROM log_lab_end_time WHERE labID = ? AND paperID = ? AND end_time > ? ORDER BY id DESC LIMIT 1';
+      $query = 'SELECT start_time AS start_timestamp, end_time AS end_timestamp FROM log_lab_end_time WHERE labID = ? AND paperID = ? AND end_time > ? ORDER BY id DESC LIMIT 1';
       $stmt = $this->db->prepare($query);
       $lab_id = $this->get_lab_id();
       $paper_id = $this->get_paper_id();
       $stmt->bind_param('iii', $lab_id, $paper_id, $start_timestamp);
       $stmt->execute();
       $stmt->store_result();
-      $bindResult = $stmt->bind_result($end_timestamp);
+      $bindResult = $stmt->bind_result($this->start_timestamp, $end_timestamp);
 
       // No result
       if ($stmt->num_rows <= 0) {
@@ -136,14 +137,21 @@ class LogLabEndTime {
 
     $this->msg = '';
 
-    $query = 'INSERT INTO log_lab_end_time (labID, invigilatorID, paperID, end_time) VALUES (?, ?, ?, ?)';
+    $query = 'INSERT INTO log_lab_end_time (labID, invigilatorID, paperID, start_time, end_time) VALUES (?, ?, ?, ?, ?)';
 
     $stmt = $this->db->prepare($query);
     if(is_null($time)) {
-        $start_time_datetime = new DateTime();
+      $start_time_datetime = new DateTime();
 
-        $end_datetime = $this->calculate_end_datetime($start_time_datetime);
+      $end_datetime = $this->calculate_end_datetime($start_time_datetime);
+      $start_date = time();
     } else {
+      if ($this->start_timestamp === FALSE) {
+        $this->start_timestamp = $start_date = time();
+      } else {
+        $start_date = $this->start_timestamp;
+      }
+
       $dispzone = new DateTimeZone($this->property_object->get_timezone());
       $end_datetime = new DateTime("now", $dispzone);
 
@@ -152,9 +160,8 @@ class LogLabEndTime {
 
       $end_datetime->add($dateinterval);
 
-
-      $curtz1=new DateTime();
-      $curtz=$curtz1->getTimezone();
+      $curtz1 = new DateTime();
+      $curtz = $curtz1->getTimezone();
       $end_datetime->setTimezone($curtz);
     }
     $end_time = $end_datetime->getTimestamp();
@@ -163,7 +170,7 @@ class LogLabEndTime {
     $lab_id = $this->get_lab_id();
     $paper_id = $this->get_paper_id();
 
-    $stmt->bind_param('iiii', $lab_id, $invigilator_id, $paper_id, $end_time);
+    $stmt->bind_param('iiiii', $lab_id, $invigilator_id, $paper_id, $start_date, $end_time);
 
     $stmt->execute();
     $stmt->close();

@@ -3348,11 +3348,18 @@ QUERY;
   }
 
 
+  // 21/02/2013 - Add start time to log_lab_end_time
+  if (!$updater_utils->does_column_type_value_exist('log_lab_end_time', 'start_time', 'int(10) unsigned')) {
+    $updater_utils->execute_query("ALTER TABLE log_lab_end_time ADD COLUMN start_time int(10) unsigned AFTER invigilatorID", true);
+  }
 
 
+  /*
+   *****   NOW UPDATE THE INSTALLER SCRIPT   *****
+   */
 
 
-  // End of updates -----------------------------------------------------------------
+    // End of updates -----------------------------------------------------------------
 
   // Final housekeeping activities - put all updates above this line
   $updater_utils->execute_query('FLUSH PRIVILEGES', true);

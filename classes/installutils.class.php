@@ -1761,6 +1761,7 @@ QUERY;
           `labID` smallint(5) unsigned NOT NULL,
           `paperID` mediumint(8) unsigned NOT NULL,
           `invigilatorID` int(10) unsigned NOT NULL,
+          `start_time` int(10) unsigned NOT NULL,
           `end_time` int(10) unsigned NOT NULL,
           PRIMARY KEY (`id`),
           UNIQUE KEY `key_lab_paper_invig_time` (`labID`,`paperID`,`invigilatorID`,`end_time`)
