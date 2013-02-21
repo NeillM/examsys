@@ -3417,7 +3417,7 @@ unset($cfg_new2);
   if ($addauthfld == true) {
     $extra1 = '';
     $array_new[] = "\n";
-    $array_new[] = "\$authentication_fields_required_to_create_user = array('username', 'title', 'firstname', 'surname', 'email', 'role')\n";
+    $array_new[] = "\$authentication_fields_required_to_create_user = array('username', 'title', 'firstname', 'surname', 'email', 'role');\n";
 
     array_splice($cfg_new2, $insloc, 0, $array_new);
 
