@@ -3379,12 +3379,20 @@ QUERY;
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-  
+
   // 21/02/2013 (nazrji) - Add start time to log_lab_end_time
   if (!$updater_utils->does_column_type_value_exist('log_lab_end_time', 'start_time', 'int(10) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE log_lab_end_time ADD COLUMN start_time int(10) unsigned AFTER invigilatorID", true);
   }
 
+  // 21/02/2012 (brzsw) - Add some missing indexes to modules_student  
+  if (!$updater_utils->does_index_exist('modules_student', 'idx_userID')) {
+    $updater_utils->execute_query("ALTER TABLE modules_student ADD INDEX idx_userID (userID)", true);
+  }
+  if (!$updater_utils->does_index_exist('modules_student', 'idx_mod_calyear')) {
+    $updater_utils->execute_query("ALTER TABLE modules_student ADD INDEX idx_mod_calyear (calendar_year, idMod)", true);
+  }
+  
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****

@@ -115,7 +115,7 @@ Class user_notices extends RogoStaticSingleton {
     $user = UserObject::get_instance();
     if ($user !== NULL and $user->get_user_ID() > 0) {
       $logger = new Logger($mysqli);
-      $logger->record_access_denied($user->get_user_ID(), $string['accessdenied'], $message);      
+      $logger->record_access_denied($user->get_user_ID(), $string['accessdenied'], $message);  // Record attempt in access denied log.
     }
 
     $this->display_notice_and_exit($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');    

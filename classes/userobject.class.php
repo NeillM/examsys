@@ -288,7 +288,8 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function has_metadata($modIDs, $security_type, $security_value) {
-    $has_data = true;
+    if (count($modIDs) == 0) return false;
+    $has_data = TRUE;
 
     $result = $this->db->prepare("SELECT users_metadata.userID FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (" . implode(',', $modIDs) . ") AND userID = ? AND type = ? AND value = ?");
     $result->bind_param('iss', $this->get_user_ID(), $security_type, $security_value);

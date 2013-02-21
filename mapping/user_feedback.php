@@ -72,9 +72,6 @@ if ($userObject->has_role('Student')) {
   $result->close();
 }
 
-$logger = new Logger($mysqli);
-$logger->record_access($userID, 'Objectives-based feedback report', $paperID);  
-
 if (!isset($_GET['ordering'])) {
   $ordering = 'screen';
   $direction = 'asc';
@@ -88,6 +85,9 @@ if ($paper_title == '') {
   header("HTTP/1.0 404 Not Found");
   exit;
 }
+
+$logger = new Logger($mysqli);
+$logger->record_access($userID, 'Objectives-based feedback report', $paperID);  
 
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
