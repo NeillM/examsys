@@ -621,6 +621,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $log_viewable = UserUtils::is_user_on_module($_GET['userID'], $idMod, '', $mysqli);
   }
   
+  $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
+
   if (stripos('External Examiner', $tmp_roles) !== false) {      // Get the papers the External is down to review.
     $external_array = array();
 
@@ -667,7 +669,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
           $paper[$results_no]['crypt_name'] = $old_crypt_name;
           $paper[$results_no]['q_paper'] = $old_paper_title;
           $paper[$results_no]['id'] = $old_q_paper;
-          $paper[$results_no]['paper_type'] = $old_paper_type;
+          $paper[$results_no]['type'] = $old_paper_type;
+          $paper[$results_no]['paper_type'] = $paper_types[$old_paper_type];
           $paper[$results_no]['started'] = $old_started;
           $paper[$results_no]['display_started'] = $old_display_started;
           $paper[$results_no]['duration'] = $old_duration;
@@ -695,7 +698,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       $paper[$results_no]['crypt_name'] = $old_crypt_name;
       $paper[$results_no]['q_paper'] = $old_paper_title;
       $paper[$results_no]['id'] = $old_q_paper;
-      $paper[$results_no]['paper_type'] = $old_paper_type;
+      $paper[$results_no]['type'] = $old_paper_type;
+      $paper[$results_no]['paper_type'] = $paper_types[$old_paper_type];
       $paper[$results_no]['started'] = $old_started;
       $paper[$results_no]['display_started'] = $old_display_started;
       $paper[$results_no]['duration'] = $old_duration;
@@ -712,8 +716,27 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       $paper[$results_no]['crypt_name'] = $crypt_name;
       $paper[$results_no]['q_paper'] = $paper_title;
       $paper[$results_no]['id'] = $page;
+      $paper[$results_no]['type'] = $type;
       $paper[$results_no]['paper_type'] = $type;
       $paper[$results_no]['started'] = $accessed;
+      $paper[$results_no]['display_started'] = $display_started;
+      $paper[$results_no]['duration'] = 'N/A';
+      $paper[$results_no]['ipaddress'] = $ipaddress;
+      $results_no++;
+    }
+    $stmt->close();
+
+    // Add in any access denied warnings
+    $stmt = $mysqli->prepare("SELECT page, ipaddress, tried, DATE_FORMAT(tried,'{$configObject->get('cfg_long_date_time')}') AS display_started, title FROM denied_log WHERE userID = ?");
+    $stmt->bind_param('i', $_GET['userID']);
+    $stmt->execute();
+    $stmt->bind_result($page, $ipaddress, $tried, $display_started, $title);
+    while ($stmt->fetch()) {
+      $paper[$results_no]['crypt_name'] = '';
+      $paper[$results_no]['q_paper'] = '/' . $page;
+      $paper[$results_no]['type'] = $title;
+      $paper[$results_no]['paper_type'] = $string[$title];
+      $paper[$results_no]['started'] = $tried;
       $paper[$results_no]['display_started'] = $display_started;
       $paper[$results_no]['duration'] = 'N/A';
       $paper[$results_no]['ipaddress'] = $ipaddress;
@@ -729,15 +752,15 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       if (strpos($paper[$i]['q_paper'],'[deleted') !== false ) {
         $paper[$i]['q_paper'] = '<span style="color:#808080; text-decoration:line-through">' . $paper[$i]['q_paper'] . '</span>';
       }
-      switch ($paper[$i]['paper_type']) {
+      switch ($paper[$i]['type']) {
         case '0':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['formative'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '1':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['progresstest'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '2':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
           if ($paper[$i]['started'] == '') echo ' style="color:red"';
           echo ">" . $paper[$i]['q_paper'] . "</a></td><td";
           if ($paper[$i]['started'] == '') echo ' style="color:red"';
@@ -747,19 +770,22 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
           echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/survey_16.gif\" width=\"16\" height=\"16\" alt=\"Survey data is anonymous, no entry.\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['survey'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '4':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewOSCE('" . $paper[$i]['started'] . "','$username','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/osce_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['oscestation'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewOSCE('" . $paper[$i]['started'] . "','$username','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/osce_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
         case '5':
           echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/offline_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;" . $paper[$i]['q_paper'] . "</td><td>" . $string['offlinepaper'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
         case '6':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/peer_review_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['peerreview'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/peer_review_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
         case 'Objectives-based feedback report':
           echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/objectives_feedback_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>Objectives Feedback report</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case 'Question-based feedback report':
           echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/questions_feedback_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>Questions Feedback report</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          break;
+        case 'accessdenied':
+          echo "<tr style=\"height:17px; color:#C00000\"><td style=\"text-align:right\"><img src=\"../artwork/access_denied_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;" . $paper[$i]['q_paper'] . "</td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
       }
     }

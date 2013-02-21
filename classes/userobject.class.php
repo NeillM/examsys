@@ -696,7 +696,6 @@ class UserObject extends RogoStaticSingleton {
       ${$k} = $v;
     }
 
-    //$userroles = $this->old_getuserroles();
     //select the aproprate database user
     if ($this->has_role('SysAdmin')) {
       $result = $this->db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
@@ -712,7 +711,7 @@ class UserObject extends RogoStaticSingleton {
       $result = false;
       // new security routine
 
-     $notice=UserNotices::get_instance();
+      $notice=UserNotices::get_instance();
       $notice->access_denied($this->db,$string,sprintf($string['denied_role'],implode(',',array_keys($this->roles))),false,false);
     }
 

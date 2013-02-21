@@ -109,8 +109,12 @@ QUERY;
   
   public function record_access_denied($user_id, $title, $msg) {
     $current_ip_address = NetworkUtils::get_ipaddress();
+    
+    $configObject = Config::get_instance();
 
-    $page = $_SERVER['SCRIPT_FILENAME'] . '?'. $_SERVER['QUERY_STRING'];
+    $path = str_replace($configObject->get('cfg_web_root'), '', $_SERVER['SCRIPT_FILENAME']);
+    
+    $page = $path . '?'. $_SERVER['QUERY_STRING'];
 
     $result = $this->_mysqli->prepare('INSERT INTO denied_log VALUES(NULL, ?, NOW(), ?, ?, ?, ?)');
     $result->bind_param('issss', $user_id, $current_ip_address, $page, $title, $msg);

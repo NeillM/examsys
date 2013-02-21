@@ -33,6 +33,8 @@ require_once '../classes/logger.class.php';
 
 check_var('id', 'GET', true, false, false);
 
+$logger = new Logger($mysqli);
+
 if ($userObject->has_role('Demo')) {
   $demo = true;
 } else {
@@ -60,6 +62,7 @@ if ($userObject->has_role('Student')) {
   $result->fetch();
   $result->close();
   if ($date == '') {
+    $logger->record_access_denied($userID, 'accessdenied', 'Objective-based feedback is not currently available for this paper.');  // Record attempt in access denied log.
     header("HTTP/1.0 404 Not Found");
     exit;
   }
@@ -82,11 +85,11 @@ $paper_title = $paper_type = $moduleID = $session = $pass_mark = $random_mark = 
 getPaperProperties($mysqli, $paperID);
 //check the paper is valid
 if ($paper_title == '') {
+  $logger->record_access_denied($userID, 'accessdenied', 'Paper not found.');  // Record attempt in access denied log.
   header("HTTP/1.0 404 Not Found");
   exit;
 }
 
-$logger = new Logger($mysqli);
 $logger->record_access($userID, 'Objectives-based feedback report', $paperID);  
 
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
