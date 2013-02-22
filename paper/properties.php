@@ -122,6 +122,22 @@ function format_on_off($data, $string) {
   }
 }
 
+function format_display($data, $string) {
+  if ($data == 0) {
+    return $string['windowed'];
+  } else {
+    return $string['fullscreen'];
+  }
+}
+
+function format_navigation($data, $string) {
+  if ($data == 0) {
+    return $string['unidirectional'];
+  } else {
+    return $string['bidirectional'];
+  }
+}
+
 function is_leap($year) {
   if ((modulo($year, 4) == 0 and modulo($year, 100) != 0) or modulo($year, 400) == 0) {
     return true;
@@ -1938,7 +1954,7 @@ for ($i=0; $i<$rows; $i++) {
   } elseif ($part == 'method') {
     $old = format_method($old, $string);
     $new = format_method($new, $string);
-  } elseif ($part == 'displaycalculator') {
+  } elseif ($part == 'displaycalculator' or $part == 'demosoundclip') {
     $old = format_on_off($old, $string);
     $new = format_on_off($new, $string);
   } elseif ($part == 'externals' or $part == 'internals') {
@@ -1950,6 +1966,12 @@ for ($i=0; $i<$rows; $i++) {
   } elseif ($part == 'referencematerial') {
     $old = format_referencematerial($old, $reference_material);
     $new = format_referencematerial($new, $reference_material);
+  } elseif ($part == 'display') {
+    $old = format_display($old, $string);
+    $new = format_display($new, $string);
+  } elseif ($part == 'navigation') {
+    $old = format_navigation($old, $string);
+    $new = format_navigation($new, $string);
   }
   
   if (isset($string[$part])) $part = $string[$part];
