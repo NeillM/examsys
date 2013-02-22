@@ -97,7 +97,7 @@ if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type()
 }
 
 if ( time() > $propertyObj->get_end_date() and ( $propertyObj->get_paper_type() == '1' or ( $propertyObj->get_paper_type() == '2' and $summative_exam_session_started == false) ) ) {
-  $paper_type = '_late';
+  $propertyObj->set_paper_type('_late');
 }
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;

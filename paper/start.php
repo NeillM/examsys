@@ -42,7 +42,7 @@ $userObject = UserObject::get_instance();
 
 check_var('id', 'GET', true, false, false);
 
-function randomQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_data, $used_questions, $db) {
+function randomQOverwrite($random_q_data, $user_answers, &$screen_data, $used_questions, $db) {
   $selected_q_id = '';
   $current_screen = $random_q_data['screen'];
   $q_no = $random_q_data['no_on_screen'];
@@ -118,7 +118,7 @@ function randomQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_d
   return $question;
 }
 
-function keywordQOverwrite($random_q_data, $paper_type, $user_answers, &$screen_data, $used_questions, $db, $string) {
+function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_questions, $db, $string) {
   $selected_q_id = '';
   $unique = true;
   $current_screen = $random_q_data['screen'];
@@ -786,8 +786,6 @@ if ($css != '') {
               success = false;
           },
           fail: function() {
-              submitPending = false;
-              success = false;
               saveFail();
           },
           error: function(xhr, textStatus, errorThrown) {
@@ -800,8 +798,6 @@ if ($css != '') {
                 }
               }
               saveFail();
-              submitPending = false;
-              success = false;
               return;
           },
           success: function (ret_data, jqXHR, textStatus) {
@@ -838,6 +834,9 @@ if ($css != '') {
     $('#saveError').fadeIn('fast');
     $('#savemsg').html("");
     document.body.style.cursor = 'default';
+    submitted = false;
+    submitPending = false;
+    success = false;
     return false;
   }
 
@@ -990,12 +989,12 @@ if ($css != '') {
   $hidden_html = '';
   foreach ($tmp_questions_array as $question) {
     if ($question['q_type'] == 'random') {
-      $question = randomQOverwrite($question, $propertyObj->get_paper_type(), $user_answers, $screen_data, $used_questions, $mysqli);
+      $question = randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $mysqli);
       if ($current_screen == $question['screen']) {
         $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
       }
     } elseif ($question['q_type'] == 'keyword_based') {
-      $question = keywordQOverwrite($question, $propertyObj->get_paper_type(), $user_answers, $screen_data, $used_questions, $mysqli, $string);
+      $question = keywordQOverwrite($question, $user_answers, $screen_data, $used_questions, $mysqli, $string);
       if ($current_screen == $question['screen'] and $question['q_id'] != -1) {
         $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
       }
@@ -1015,7 +1014,7 @@ if ($css != '') {
 
   if ($propertyObj->get_exam_duration() != null) {
     // Summative type. Time is only active in live.
-    if ($propertyObj->get_paper_type() == '2' and $is_preview_mode === false) {
+    if (($propertyObj->get_paper_type() == '2' or $original_paper_type == 2) and $is_preview_mode === false) {
 
       //has the student been allotted extra time by an invigilator
       $student_object['user_ID'] = $userObject->get_user_ID();
