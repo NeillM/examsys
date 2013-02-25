@@ -91,13 +91,15 @@ if ($userObject->has_role('Student')) {
 
 }
 
+$is_preview = (isset($_POST['mode']) and $_POST['mode'] == 'preview');
+
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
   $log_lab_end_time   = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli );
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
-if ( time() > $propertyObj->get_end_date() and ( $propertyObj->get_paper_type() == '1' or ( $propertyObj->get_paper_type() == '2' and $paper_scheduled and $summative_exam_session_started == false) ) ) {
+if (!$is_preview and time() > $propertyObj->get_end_date() and ( $propertyObj->get_paper_type() == '1' or ( $propertyObj->get_paper_type() == '2' and $paper_scheduled and $summative_exam_session_started == false))) {
   $propertyObj->set_paper_type('_late');
 }
 
