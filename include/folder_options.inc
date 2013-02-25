@@ -123,7 +123,7 @@ if ($folder != '') {
   makeMenu($staff_modules_array);
   makeMenu($keywords_array);
   if (isset($_GET['module'])) {
-    makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php', $string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php', $string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['sudentson'] . $_GET['module'] . ' (' . date_utils::get_current_academic_year() . ')'=>$configObject->get('cfg_root_path') . '/users/search.php?submit=Search&team=' . $_GET['module'] . '&calendar_year=' . date_utils::get_current_academic_year() . '&students=on&search_username=&student_id='));
+    makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php', $string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php', $string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['sudentson'] . $module_details['moduleid'] . ' (' . date_utils::get_current_academic_year() . ')'=>$configObject->get('cfg_root_path') . '/users/search.php?submit=Search&team=' . $_GET['module'] . '&calendar_year=' . date_utils::get_current_academic_year() . '&students=on&search_username=&student_id='));
   } else {
     makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php', $string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php', $string['people']=>$configObject->get('cfg_root_path') . '/users/search.php'));
   }
