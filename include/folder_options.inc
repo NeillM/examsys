@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -57,8 +57,8 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 
 <?php
   } else {
-  
-    if ($module != '') {   
+
+    if ($module != '') {
     ?>
       <div class="submenuheading"><?php echo $string['module']; ?></div>
       <table class="sidebar_tbl">
@@ -75,7 +75,7 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
     echo '<tr><td class="ico"><a href="../users/load_users_metadata.php?module=' . $_GET['module'] . '"><img src="' . $configObject->get('cfg_root_path') . '/artwork/import_16.gif" width="16" height="16" alt="Import Metadata" /></a></td><td class="menuitem"><a href="../users/import_users_metadata.php?module=' . $_GET['module'] . '">' . $string['importstudentmetadata'] . '</a></td></tr>';
   ?>
   </table>
-  
+
   <br />
 
 <?php
@@ -123,7 +123,7 @@ if ($folder != '') {
   makeMenu($staff_modules_array);
   makeMenu($keywords_array);
   if (isset($_GET['module'])) {
-    makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php', $string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php', $string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', 'Students on ' . $_GET['module'] . ' (' . date_utils::get_current_academic_year() . ')'=>$configObject->get('cfg_root_path') . '/users/search.php?submit=Search&team=' . $_GET['module'] . '&calendar_year=' . date_utils::get_current_academic_year() . '&students=on&search_username=&student_id='));
+    makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php', $string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php', $string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['sudentson'] . $_GET['module'] . ' (' . date_utils::get_current_academic_year() . ')'=>$configObject->get('cfg_root_path') . '/users/search.php?submit=Search&team=' . $_GET['module'] . '&calendar_year=' . date_utils::get_current_academic_year() . '&students=on&search_username=&student_id='));
   } else {
     makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php', $string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php', $string['people']=>$configObject->get('cfg_root_path') . '/users/search.php'));
   }

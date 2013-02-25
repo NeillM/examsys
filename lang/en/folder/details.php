@@ -52,4 +52,5 @@ $string['create'] = 'Create';
 $string['newfolder'] = 'New Folder';
 $string['modulenotfound'] = 'Module not Found';
 $string['modulenotfoundmsg'] = "Unable to find specified module.";
+$string['sudentson'] = 'Students on ';
 ?>

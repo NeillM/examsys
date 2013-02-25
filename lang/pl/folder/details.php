@@ -51,5 +51,6 @@ $string['author'] = 'Autor';
 $string['create'] = 'Utwórz';
 $string['newfolder'] = 'Nowy Folder';
 $string['modulenotfound'] = 'Nie odnaleziony modułu';
-$string['modulenotfoundmsg'] = "Nie można odnaleźć wskazanego modułu ."; 
+$string['modulenotfoundmsg'] = "Nie można odnaleźć wskazanego modułu .";
+$string['sudentson'] = 'Students on '; // Niko
 ?>
