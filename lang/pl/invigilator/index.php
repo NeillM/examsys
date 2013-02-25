@@ -60,6 +60,6 @@ $string['checklist'] = '<div><strong>Lista zadań</strong></div>
     </ol>'; //??
 $string['time'] = 'Czas';
 $string['timedexam'] = 'Egzamin odmierzany czasowo:';
-$string['timeerror'] = 'Time Error'; // Niko
-$string['timeerrormsg'] = 'Exam must be at least %d minutes in length'; //Niko
+$string['timeerror'] = 'Błąd czasu'; 
+$string['timeerrormsg'] = 'Egzamin musi trwać co najmniej %d minut'; 
 ?>

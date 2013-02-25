@@ -20,7 +20,7 @@ $string['entermoduleidentifier'] = 'Wprowadź identyfikator modułu.';
 $string['entermoduletitle'] = 'Wprowadź tytuł modułu.';
 $string['selectschool'] = 'Wybierz katedrę dla modułu.'; 
 $string['moduleidinuse'] = 'Identyfikator modułu %s jest już używany. Wprowadź inny identyfikator.';
-$string['nolookup'] = '&lt;brak&gt;';
+$string['nolookup'] = '&lt;brak odnośnika&gt;';
 $string['nle'] = 'Networked Learning Environment (NLE)'; //cognate
 $string['uoncm'] = 'Odwzorowanie programu nauczania  (UoNCM)';
 ?>

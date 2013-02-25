@@ -116,8 +116,8 @@ $string['referenceheading'] = 'Kontrola, które materiały pomocnicze są dostę
 $string['nomaterials'] = 'Do tego arkusza nie przypisano żadnych materiałów pomocniczych dostępnych w tym module.<br /><br />Materiały pomocnicze mogą być dodane przez kliknięcie na opcję  \'Materiał pomocniczy\' na ekranie  modułu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">zobacz pomoc</a>).';
 
 // Feedback tab
-$string['feedbackheading'] = 'Feedback available to students';  // Niko
-$string['feedbackwarning'] = '<strong>Note:</strong> This will release questions including the correct answers and marks to students.';  // Niko
+$string['feedbackheading'] = 'Odzew dostępny dla studentów'; 
+$string['feedbackwarning'] = '<strong>Uwaga:</strong> To uwolni pytania włączając w to poprawne odpowiedzi i oceny dla studentów.'; 
 $string['on'] = 'Wł.';
 $string['off'] = 'Wył.';
 $string['objectivesreport'] = 'Odzew dot. celów';
@@ -132,7 +132,7 @@ $string['date'] = 'Data';
 $string['author'] = 'Autor';
 $string['startdate'] = 'Data rozpoczęcia';
 $string['enddate'] = 'Data zakończenia';
-$string['retired'] = 'Retired';  // Niko
-$string['externalreviewdeadline'] = 'External Review Deadline';  // Niko
-$string['internalreviewdeadline'] = 'Internal Review Deadline';  // Niko
+$string['retired'] = 'Wycofany'; 
+$string['externalreviewdeadline'] = 'Termin finalizacji zewnętrznej recenzji';
+$string['internalreviewdeadline'] = 'Termin finalizacji wewnętrznej recenzji';  
 ?>

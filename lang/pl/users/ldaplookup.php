@@ -16,6 +16,6 @@
 
 $string['username'] = 'Nazwa użytkownika';
 $string['surname'] = 'Nazwisko';
-$string['lookup'] = 'Szukaj';
+$string['lookup'] = 'Odnośnik';
 $string['nousersalert'] = 'Nie znaleziono użytkowników przez LDAP.';
 ?>

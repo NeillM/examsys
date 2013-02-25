@@ -38,6 +38,6 @@ $string['bulkmoduleimport'] = 'Skomasowany import modułów';
 $string['editmodule'] = 'Edytuj moduł';
 $string['modulefolder'] = 'Folder modułu';
 $string['studentcohort'] = 'Grupa studentów';
-$string['nolookup'] = '&lt;brak&gt;';
+$string['nolookup'] = '&lt;brak odnośnika&gt;';
 $string['ebelgrid'] = 'Szablon siatki metody Ebel';
 ?>

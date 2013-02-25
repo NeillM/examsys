@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Administrative Tools';  // Niko, whole file please
-$string['accessdeniedwarnings'] = 'Access Denied Warnings';
-$string['date'] = 'Date';
-$string['user'] = 'User';
+$string['administrativetools'] = 'Narzędzia administracyjne';  
+$string['accessdeniedwarnings'] = 'Ostrzeżenia braku dostępu';
+$string['date'] = 'Data';
+$string['user'] = 'Użytkownik';
 $string['url'] = 'URL';
-$string['message'] = 'Message';
+$string['message'] = 'Wiadomość';
 ?>
