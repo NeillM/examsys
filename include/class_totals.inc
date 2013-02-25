@@ -945,7 +945,7 @@ if ($_GET['absent'] == 1) {
 // Get all the users on the module(s) the paper is on.
 
 $user_modules = array();
-if (isset($_GET['repmodule'])) {
+if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
   $tmp_moduleID_in = module_utils::get_idMod($_GET['repmodule'], $mysqli);
 } else {
   $tmp_moduleID_in = $moduleID_in;
