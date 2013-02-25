@@ -42,7 +42,7 @@ check_var('id', 'GET', true, false, false);
 
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
+  $notice->access_denied($mysqli, $string, $string['error_paper'], false);
   //this will exit php
 }
 
@@ -56,9 +56,9 @@ $current_ip_address = NULL;   //default overwritten by (check_labs)
 
 $current_ip_address = NetworkUtils::get_ipaddress();
 $lab_factory = new LabFactory($mysqli);
-if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
-    $lab_name = $lab_object->get_name();
-    $lab_id = $lab_object->get_id();
+if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+  $lab_name = $lab_object->get_name();
+  $lab_id = $lab_object->get_id();
 }
 
 if ($userObject->has_role('Student')) {
@@ -105,7 +105,12 @@ if (!$is_preview and time() > $propertyObj->get_end_date() and ( $propertyObj->g
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
 
+$log_metadata = new LogMetadata($userObject, $propertyObj->get_property_id(), $mysqli);
+if ($log_metadata->get_record() === false) {
+  $notice->access_denied($mysqli, $string, $string['error_paper'], false);
+}
+$metadataid = $log_metadata->get_metadata_id();
 //TODO we need to add some error checking in here. maybe wrap this whole function in a transaction ??
-$ret = record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $preview_q_id);
+$ret = record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $metadataid, $preview_q_id);
 echo $_POST['randomPageID'];
 ?>

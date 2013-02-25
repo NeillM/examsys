@@ -75,14 +75,7 @@ class LogMetadata {
   public function get_record() {
 
     $query = 'SELECT
-                id,
-                started,
-                ipaddress,
-                student_grade,
-                year,
-                attempt,
-                completed,
-                lab_name
+                id, started, ipaddress, student_grade, year, attempt, completed, lab_name
               FROM
                 log_metadata
               WHERE
@@ -129,11 +122,16 @@ class LogMetadata {
     $this->lab_name = $lab_name;
     $this->populate_start_date_time();
     $this->save();
+    
     return true;
   }
 
   public function get_session_id() {
     return $this->session_id;
+  }
+
+  public function get_metadata_id() {
+    return $this->id;
   }
 
   public function get_start_datetime() {
@@ -144,19 +142,8 @@ class LogMetadata {
    * Set time at which the paper was completed for the current user
    */
   public function set_completed_to_now() {
-
-    $query = 'UPDATE
-                 log_metadata
-               SET
-                 completed = NOW()
-               WHERE
-                 userID = ?
-               AND
-                paperID = ?';
-
-    $result     = $this->db->prepare( $query );
-
-    $result->bind_param('ii', $this->userObject->get_user_ID(), $this->paper_id );
+    $result = $this->db->prepare('UPDATE log_metadata SET completed = NOW() WHERE userID = ? AND paperID = ?');
+    $result->bind_param('ii', $this->userObject->get_user_ID(), $this->paper_id);
     $result->execute();
     $result->close();
   }
@@ -165,22 +152,10 @@ class LogMetadata {
    * Remove indication that the paper has been completed for the current user
    */
   public function set_completed_to_null() {
-
-    $query =  'UPDATE
-                 log_metadata
-               SET
-                 completed = NULL
-               WHERE
-                 userID = ?
-               AND
-                paperID = ?';
-
-    $result     = $this->db->prepare( $query );
-
-    $result->bind_param('ii', $this->userObject->get_user_ID(), $this->paper_id );
+    $result = $this->db->prepare('UPDATE log_metadata SET completed = NULL WHERE userID = ? AND paperID = ?');
+    $result->bind_param('ii', $this->userObject->get_user_ID(), $this->paper_id);
     $result->execute();
     $result->close();
-
   }
 
   /**
@@ -188,8 +163,7 @@ class LogMetadata {
    * @return boolean Has the current user completed the paper
    */
   public function  is_users_paper_completed() {
-
-    if(is_null($this->completed)) {
+    if (is_null($this->completed)) {
       return false;
     } else {
       return true;
@@ -211,54 +185,22 @@ class LogMetadata {
 
     if ($this->id != null) {
       //update
-      $query  =   'UPDATE
-                    log_metadata  (
-                                    ipaddress,
-                                    attempt,
-                                    completed,
-                                    lab_name
-                                  )
-                   VALUES
-                      ( ?,?,?,?)';
-
+      $query = 'UPDATE log_metadata (ipaddress, attempt, completed, lab_name) VALUES (?, ?, ?, ?)';
       $stmt = $this->db->prepare($query);
-
-      $stmt->bind_param( 'siss',
-                         $this->ipadress,
-                         $this->attempt,
-                         $this->completed,
-                         $this->lab_name
-                         );
+      $stmt->bind_param('siss', $this->ipadress, $this->attempt, $this->completed, $this->lab_name);
+      $stmt->execute();
+      $stmt->close();
     } else {
       //insert
-      $query  =   'INSERT INTO
-                    log_metadata  ( id,
-                                    userID,
-                                    paperID,
-                                    started,
-                                    ipaddress,
-                                    attempt,
-                                    completed,
-                                    lab_name
-                                  )
-                   VALUES
-                      ( NULL,?,?,?,?,?,?,? )';
-
+      $query = 'INSERT INTO log_metadata (id, userID, paperID, started, ipaddress, attempt, completed, lab_name) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)';
       $stmt = $this->db->prepare($query);
-
-      $stmt->bind_param( 'iississ',
-                         $this->student_id,
-                         $this->paper_id,
-                         $this->session_id,
-                         $this->ipadress,
-                         $this->attempt,
-                         $this->completed,
-                         $this->lab_name
-                         );
+      $stmt->bind_param('iississ', $this->student_id, $this->paper_id, $this->session_id, $this->ipadress, $this->attempt, $this->completed, $this->lab_name);
+      $stmt->execute();
+      $stmt->close();
+      
+      $this->id = $this->db->insert_id;
     }
 
-    $stmt->execute();
-    $stmt->close();
     return true;
   }
 
@@ -267,16 +209,15 @@ class LogMetadata {
    * or sets it to now if started is not set
    */
   private function populate_start_date_time() {
-
     if ($this->session_id != NULL) {
       $this->start_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $this->session_id );
-      $this->start_datetime->format( 'Y-m-d H:i:s' );
+      $this->start_datetime->format('Y-m-d H:i:s');
     } else {
       $this->start_datetime = new DateTime;
       $this->session_id = $this->start_datetime->format('YmdHis');
-      $this->start_datetime->format( 'Y-m-d H:i:s' );
+      $this->start_datetime->format('Y-m-d H:i:s');
     }
-
   }
+
 }
 ?>

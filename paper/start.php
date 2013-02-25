@@ -363,14 +363,13 @@ if ($is_preview_mode_first_launch == true) {
   //in preview mode always start a new session if we have relaunched the window
   $log_metadata->create_new_record($current_ip_address, $attempt, $lab_name);
 
-} else if ($log_metadata->get_record() == false) { //load the data and check for no records
-
+} elseif ($log_metadata->get_record() == false) { //load the data and check for no records
   //we have no log_metadata record so make one
   $log_metadata->create_new_record($current_ip_address, $attempt, $lab_name);
-
 }
 
 $sessionid = $log_metadata->get_session_id();
+$metadataid = $log_metadata->get_metadata_id();
 
 /*
 * BP Determine the student's end_date timestamp for a summative exam that has been 'Started'.
@@ -397,7 +396,7 @@ if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($p
 */
 if ($is_question_preview_mode == false) {
   if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
-    record_marks($paperID, $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles);
+    record_marks($paperID, $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles, $metadataid);
   }
 }
 
@@ -415,8 +414,8 @@ if ($sessionid !== false or $is_fire_alarm == true) {
   // Get users previous answers from the log.
   if ($propertyObj->get_paper_type() == '_late') {
     //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
-    $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
-    $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $paperID);
+    $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE metadataID = ?");
+    $log_data->bind_param('i', $metadataid);
     $log_data->execute();
     $log_data->store_result();
     $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
@@ -434,8 +433,8 @@ if ($sessionid !== false or $is_fire_alarm == true) {
     $log_data->close();
   }
   //get user answers from whichever log is pointed to by log$paper_type
-  $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE userID=? AND started=? and q_paper=? ORDER BY id");
-  $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $paperID);
+  $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
+  $log_data->bind_param('i', $metadataid);
   $log_data->execute();
   $log_data->store_result();
   $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
@@ -462,7 +461,7 @@ if ($sessionid !== false or $is_fire_alarm == true) {
 $reference_materials = array();
 $ref_no = 0;
 $max_ref_width = 0;
-$stmt = $mysqli->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id=reference_papers.refID AND paperID=?");
+$stmt = $mysqli->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?");
 $stmt->bind_param('i', $paperID);
 $stmt->execute();
 $stmt->bind_result($reference_title, $reference_material, $reference_width);

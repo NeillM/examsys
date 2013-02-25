@@ -153,11 +153,13 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
   $is_exam_review_mode        = true;
 }
 
-if(!$is_exam_review_mode and !$is_question_preview_mode) {
+$log_metadata = new LogMetadata($userObject, $paperID, $mysqli);
+if (!$is_exam_review_mode and !$is_question_preview_mode) {
   //only update log metadata if we are ending an exam
-  $log_metadata = new LogMetadata( $userObject, $paperID, $mysqli );
   $log_metadata->set_completed_to_now();
 }
+$log_metadata->get_record();
+$metadataid = $log_metadata->get_metadata_id();
 
 if (isset($_GET['type'])) $log_type = $_GET['type'];
 
@@ -294,7 +296,7 @@ require '../config/finish.inc';
   }
 
   if ($show_feedback) {
-    display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $mysqli, $preview_q_id);
+    display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $metadataid, $mysqli, $preview_q_id);
   } else {
     echo '<blockquote>';
     if ($language == 'en') {

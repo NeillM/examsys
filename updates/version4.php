@@ -3389,6 +3389,7 @@ QUERY;
     $updater_utils->execute_query($sql, true);
   }
 
+
   // 21/02/2013 (nazrji) - Add start time to log_lab_end_time
   if (!$updater_utils->does_column_type_value_exist('log_lab_end_time', 'start_time', 'int(10) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE log_lab_end_time ADD COLUMN start_time int(10) unsigned AFTER invigilatorID", true);
@@ -3534,6 +3535,50 @@ QUERY;
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     } else {
       echo"<li>Changed config file to new lookup method and adjusted info for authentication method</li>";
+    }
+  }
+  
+  // 22/02/2013 (brzsw) - Add deleted file to modules table.
+  if (!$updater_utils->does_column_type_value_exist('modules', 'mod_deleted', 'datetime')) {
+    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN mod_deleted datetime", true);
+  }
+
+  // 25/02/2013 (brzsw) - Add new metadataID field into the log tables.
+  $tableNos = array(0, 1, 2, 3, 5);
+  foreach ($tableNos as $tableNo) {
+    if (!$updater_utils->does_column_type_value_exist('log' . $tableNo, 'metadataID', 'int(11)')) {
+      $updater_utils->execute_query("ALTER TABLE log$tableNo ADD COLUMN metadataID int(11)", true);
+      
+      $mysqli->autocommit(false);
+      $result = $mysqli->prepare("SELECT DISTINCT m.id, l.userID, l.q_paper, l.started FROM log$tableNo l, log_metadata m WHERE l.userID = m.userID AND l.q_paper = m.paperID AND l.started = m.started");
+      $result->execute();
+      $result->store_result();
+      $result->bind_result($id, $userID, $paperID, $started);
+      while ($result->fetch()) {
+        if ($paperID > 0) {
+          $updater_utils->execute_query("UPDATE log$tableNo SET metadataID = $id WHERE userID = $userID AND q_paper = $paperID AND started = '$started'", false);
+        } 
+      }
+      $result->close();
+      $mysqli->commit();
+      $mysqli->autocommit(true);
+
+
+      // Remove the indexes for speed.
+      $updater_utils->execute_query("DROP INDEX q_paper ON log$tableNo", false);
+      $updater_utils->execute_query("DROP INDEX username ON log$tableNo", false);
+      $updater_utils->execute_query("DROP INDEX started ON log$tableNo", false);
+
+      // Drop columns we no longer need.
+      $updater_utils->execute_query("ALTER TABLE log$tableNo DROP COLUMN q_paper", true);
+      $updater_utils->execute_query("ALTER TABLE log$tableNo DROP COLUMN userID", true);
+      $updater_utils->execute_query("ALTER TABLE log$tableNo DROP COLUMN started", true);
+    }
+  }
+  
+  foreach ($tableNos as $tableNo) {
+    if (!$updater_utils->does_index_exist('log' . $tableNo, 'idx_metadataid')) {
+      $updater_utils->execute_query("ALTER TABLE log$tableNo ADD INDEX idx_metadataid (metadataID)", true);
     }
   }
 

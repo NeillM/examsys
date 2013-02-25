@@ -131,7 +131,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
   return $value;
 }
 
-function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $mysqlidb, $preview_q_id=null) {
+function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $metadataid, $mysqlidb, $preview_q_id = null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $strong_on, $strong_off;
   $configObject=Config::get_instance();
   $strong_on = '';
@@ -148,7 +148,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   }
   $exclude_query->close();
 
-  if ($paper_type == '2' and ($userObj->has_role(array('Staff','SysAdmin')))) {
+  if ($paper_type == '2' and ($userObj->has_role(array('Staff', 'SysAdmin')))) {
     if (!isset($_GET['userid'])) {
       $tmp_string = sprintf($string['thankyoumsg'], $paper_title);
       echo '<blockquote><p style="font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p><p>' . $tmp_string . '</p>';
@@ -166,7 +166,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   // Get standards setting data
   if (substr($marking,0,1) == '2') {
     $standards_setting = array();
-    $tmp_parts = explode(',',$marking);
+    $tmp_parts = explode(',', $marking);
     $std_data = $mysqlidb->prepare("SELECT questionID, rating FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
     $std_data->bind_param('iis', $paperID, $tmp_parts[1], $tmp_parts[2]);
     $std_data->execute();
@@ -291,8 +291,8 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         }
 
         $possible_questions = implode(',', $possible_array);
-        $answer_data = $mysqlidb->prepare("SELECT q_id FROM log$log_type WHERE q_paper=? AND started=? AND userID=? AND screen=? AND q_id IN ($possible_questions) ORDER BY id");
-        $answer_data->bind_param('isii', $paperID, $sessionid, $temp_userID, $paper[$i]['screen']);
+        $answer_data = $mysqlidb->prepare("SELECT q_id FROM log$log_type WHERE metadataID = ? AND screen = ? AND q_id IN ($possible_questions) ORDER BY id");
+        $answer_data->bind_param('ii', $metadataid, $paper[$i]['screen']);
         $answer_data->execute();
         $answer_data->bind_result($selected_q_id);
         $answer_data->fetch();
@@ -374,12 +374,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   // Add the user's log data into the above array.
   $tmp_q_id = 1;
   if ($paper_type == '5') {
-    $answer_data = $mysqlidb->prepare("SELECT 1 AS screen, q_id, NULL AS user_answer, mark, NULL AS option_order FROM log5 WHERE q_paper=? AND started=? AND userID=? ORDER BY id");
+    $answer_data = $mysqlidb->prepare("SELECT 1 AS screen, q_id, NULL AS user_answer, mark, NULL AS option_order FROM log5 WHERE metadataID = ? ORDER BY id");
   } else {
-    $answer_data = $mysqlidb->prepare("SELECT screen, q_id, user_answer, mark, option_order FROM log$log_type WHERE q_paper=? AND started=? AND userID=? ORDER BY screen, id");
+    $answer_data = $mysqlidb->prepare("SELECT screen, q_id, user_answer, mark, option_order FROM log$log_type WHERE metadataID = ? ORDER BY screen, id");
   }
   if ($answer_data) {
-    $answer_data->bind_param('isi', $paperID, $sessionid, $temp_userID);
+    $answer_data->bind_param('i', $metadataid);
     $answer_data->execute();
     $answer_data->store_result();
     $answer_data->bind_result($screen, $q_id, $user_answer, $mark, $option_order);
