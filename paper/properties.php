@@ -531,9 +531,13 @@ if (isset($_POST['Submit'])) {
     }
     
     // Track changes
-    $tmp_start_date = $start_date->format('U');
-    $tmp_end_date = $end_date->format('U');
-    
+    if (isset($start_date)) {
+      $tmp_start_date = $start_date->format('U');
+    }
+    if (isset($end_date)) {
+      $tmp_end_date = $end_date->format('U');
+    }
+
     if ($paper_title != $old_paper_title)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_title, $paper_title, 'name');
     if ($fullscreen != $old_fullscreen)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
     if ($bidirectional != $old_bidirectional)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
@@ -757,11 +761,15 @@ if (isset($_POST['Submit'])) {
   if ($properties->get_start_date() != '') {
     $start_date = DateTime::createFromFormat('U', $properties->get_start_date(), $local_time);
     $start_date->setTimezone($target_timezone);
+  } else {
+    $start_date = '';
   }
   
   if ($properties->get_end_date() != '') {
     $end_date = DateTime::createFromFormat('U', $properties->get_end_date(), $local_time);
     $end_date->setTimezone($target_timezone);
+  } else {
+    $end_date = '';
   }
 
   if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
@@ -1351,12 +1359,16 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "</select> " . $string['mins'] . "</td></tr>\n";
     echo "<tr><td align=\"right\" valign=\"top\">" . $string['availablefrom'] . "</td><td>";
 
-    // Split the start date
-    $split_year = $start_date->format('Y');
-    $split_month = $start_date->format('m');
-    $split_day = $start_date->format('d');
-    $split_hour = $start_date->format('H');
-    $split_minute = $start_date->format('i');
+    // Split the start date if available
+    if (isset($start_date) and $start_date != '') {
+      $split_year = $start_date->format('Y');
+      $split_month = $start_date->format('m');
+      $split_day = $start_date->format('d');
+      $split_hour = $start_date->format('H');
+      $split_minute = $start_date->format('i');
+    } else {
+      $split_year = $split_month = $split_day = $split_hour = $split_minute = '';
+    }
 
     // Available from Day
     echo "<select name=\"fday\" id=\"fday\" onchange=\"dateCopy('fday')\"$sum_disabled>\n";
@@ -1431,12 +1443,16 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</select>\n</td>\n";
 
-    // Split the end date
-    $split_year = $end_date->format('Y');
-    $split_month = $end_date->format('m');
-    $split_day = $end_date->format('d');
-    $split_hour = $end_date->format('H');
-    $split_minute = $end_date->format('i');
+    // Split the end date if available
+    if (isset($end_date) and $end_date != '') {
+      $split_year = $end_date->format('Y');
+      $split_month = $end_date->format('m');
+      $split_day = $end_date->format('d');
+      $split_hour = $end_date->format('H');
+      $split_minute = $end_date->format('i');
+    } else {
+      $split_year = $split_month = $split_day = $split_hour = $split_minute = '';
+    }
 
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
 
