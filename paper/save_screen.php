@@ -110,7 +110,12 @@ if ($log_metadata->get_record() === false) {
   $notice->access_denied($mysqli, $string, $string['error_paper'], false);
 }
 $metadataid = $log_metadata->get_metadata_id();
-//TODO we need to add some error checking in here. maybe wrap this whole function in a transaction ??
+
 $ret = record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $metadataid, $preview_q_id);
-echo $_POST['randomPageID'];
+if($ret === true) {
+  //everthing worked ;-) 
+  echo $_POST['randomPageID'];
+} else {
+  echo "ERROR";
+}
 ?>
