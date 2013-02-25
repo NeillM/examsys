@@ -355,12 +355,12 @@ class UserObject extends RogoStaticSingleton {
   function load_staff_modules() {
     $this->staffModules = array();
 
-    $result = $this->db->prepare("SELECT idMod, moduleID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
+    $result = $this->db->prepare("SELECT idMod, moduleID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID");
     if ($this->db->error) {
       try {
-        throw new Exception("MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br> Query:<br /> $query", $msqli->errno);
       } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
       }
     }
@@ -485,16 +485,16 @@ class UserObject extends RogoStaticSingleton {
 
     if ($staff_modules_sql != '' or $this->has_role(array('SysAdmin', 'Admin'))) {
       if ($this->has_role('SysAdmin')) {
-        $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID";
+        $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND mod_deleted IS NULL ORDER BY school, moduleID";
       } elseif ($this->has_role('Admin')) {
         $schoolIDs = implode(',', SchoolUtils::get_admin_schools($this->userID, $this->db));
         if ($schoolIDs != '') {
-          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND schoolid IN ($schoolIDs) ORDER BY school, moduleID";
+          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND schoolid IN ($schoolIDs) AND mod_deleted IS NULL ORDER BY school, moduleID";
         } elseif ($staff_modules_sql != '') {
-          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id IN ($staff_modules_sql) ORDER BY school, moduleID";
+          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id IN ($staff_modules_sql) AND mod_deleted IS NULL ORDER BY school, moduleID";
         }
       } else {
-        $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id IN ($staff_modules_sql) ORDER BY school, moduleID";
+        $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id IN ($staff_modules_sql) AND mod_deleted IS NULL ORDER BY school, moduleID";
       }
 
       if (isset($sql)) {
@@ -522,7 +522,7 @@ class UserObject extends RogoStaticSingleton {
     $this->studentModules = array();
 
     // studentmodule year -> module ->decode
-    $result = $this->db->prepare("SELECT idMod,moduleID,calendar_year FROM modules_student,modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
+    $result = $this->db->prepare("SELECT idMod,moduleID,calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
     $result->bind_param('i', $this->get_user_ID());
     $result->execute();
 

@@ -66,7 +66,7 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db) {
   if (count($teams) > 0) {
     $team_sql = implode(",", array_keys($teams));
     
-    $result = $db->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules WHERE id IN($team_sql) ORDER BY moduleID");
+    $result = $db->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules WHERE id IN ($team_sql) AND mod_deleted IS NULL ORDER BY moduleID");
     $result->execute();
     $result->bind_result($modID, $tmp_moduleid, $tmp_fullname);
     while ($result->fetch()) {

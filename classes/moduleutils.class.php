@@ -70,7 +70,7 @@ Class module {
     if ($mapping == true) $checklist .= ',mapping';
     $tmp_checklist = substr($checklist, 1);
     
-    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)");
     $result->bind_param('ssisssiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template);
     $result->execute();
     $result->close();
@@ -91,12 +91,12 @@ Class module {
   public function module_exists($moduleid, $db) {
     // Check for unique moduleID
     $unique_moduleid = true;
-    $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
+    $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
     if ($db->error) {
       try {
-        throw new Exception("MySQL error $db->error <br> Query:<br> ", $db->errno);
+        throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
       } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
       }
     }
@@ -116,7 +116,7 @@ Class module {
 
   public function get_full_details_by_ID($modID, $db) {
     // returns false if not self enrol else returns needed data;
-    $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id = ?");
+    $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ? AND mod_deleted IS NULL");
     $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
@@ -134,7 +134,7 @@ Class module {
   public function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
 
-    $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ?");
+    $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ? AND mod_deleted IS NULL");
     $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
@@ -156,7 +156,7 @@ Class module {
       $sql = implode("','", $module_id);
       $sql = str_replace("',' ", "','", $sql);
 
-      $result = $db->prepare("SELECT id FROM modules WHERE moduleid IN ('$sql')");
+      $result = $db->prepare("SELECT id FROM modules WHERE moduleid IN ('$sql') AND mod_deleted IS NULL");
       $result->execute();
       $result->store_result();
       $result->bind_result($id);
@@ -169,7 +169,7 @@ Class module {
       }
       return $ids;
     } else {
-      $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ?");
+      $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
       if ($db->error) {
         try {
           throw new Exception("MySQL error $db->error <br> Query:<br /> $query", $db->errno);
@@ -193,7 +193,7 @@ Class module {
   }
 
   public function get_moduleID($idMod, $db) {
-    $result = $db->prepare("SELECT moduleID FROM modules WHERE id = ?");
+    $result = $db->prepare("SELECT moduleID FROM modules WHERE id = ? AND mod_deleted IS NULL");
     $result->bind_param('s', $idMod);
     $result->execute();
     $result->store_result();
@@ -211,7 +211,7 @@ Class module {
   public function get_module_list_by_id($db) {
     $modules = array();
     
-    $result = $db->prepare("SELECT id, moduleid, fullname FROM modules");
+    $result = $db->prepare("SELECT id, moduleid, fullname FROM modules WHERE mod_deleted IS NULL");
     $result->execute();
     $result->store_result();
     $result->bind_result($id, $moduleid, $fullname);

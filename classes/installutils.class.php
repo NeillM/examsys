@@ -1900,6 +1900,7 @@ QUERY;
           `schoolid` int(11) default NULL,
           `neg_marking` tinyint(1) default NULL,
           `ebel_grid_template` int(11) default NULL,
+          `mod_deleted` datetime default NULL,
           PRIMARY KEY (`id`),
           KEY `guideid` (`moduleid`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1

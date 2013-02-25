@@ -36,6 +36,7 @@ $string['save'] = 'Zachowaj';
 $string['createmodule'] = 'Utwórz nowy moduł';
 $string['bulkmoduleimport'] = 'Skomasowany import modułów';
 $string['editmodule'] = 'Edytuj moduł';
+$string['deletemodule'] = 'Delete Module';  // Niko
 $string['modulefolder'] = 'Folder modułu';
 $string['studentcohort'] = 'Grupa studentów';
 $string['nolookup'] = '&lt;brak odnośnika&gt;';

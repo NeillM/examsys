@@ -36,6 +36,7 @@ $string['save'] = 'Save';
 $string['createmodule'] = 'Create new Module';
 $string['bulkmoduleimport'] = 'Bulk Module Import';
 $string['editmodule'] = 'Edit Module';
+$string['deletemodule'] = 'Delete Module';
 $string['modulefolder'] = 'Module Folder';
 $string['studentcohort'] = 'Student Cohort';
 $string['nolookup'] = '&lt;No lookup&gt;';

@@ -97,7 +97,7 @@ $module_no = 0;
 
 $modules = array();
 
-$result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules, schools WHERE modules.schoolid=schools.id");
+$result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules, schools WHERE modules.schoolid = schools.id AND mod_deleted IS NULL");
 $result->execute();
 $result->bind_result($id, $moduleid, $fullname, $school, $active);
 while ($result->fetch()) {

@@ -14,18 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['modules'] = 'Moduły';
-$string['administrativetools'] = 'Narzędzia administracyjne';
-$string['moduleid'] = 'Identyfikator modułu';
-$string['name'] = 'Nazwa';
-$string['school'] = 'Katedra';  
-$string['active'] = 'Aktywny';
-$string['yes'] = 'tak';
-$string['no'] = 'nie';
-$string['createmodule'] = 'Utwórz nowy moduł';
-$string['bulkmoduleimport'] = 'Skomasowany import modułów'; 
-$string['editmodule'] = 'Edytuj moduł';
-$string['deletemodule'] = 'Delete Module';  // Niko
-$string['modulefolder'] = 'Folder modułu';
-$string['studentcohort'] = 'Grupa studentów';
+$string['confirmcoursedelete'] = 'Confirm Module Delete';
+$string['recyclebin'] = 'Recycle Bin';
+$string['msg'] = 'Are you sure you wish to delete this module?';
+$string['delete'] = 'Delete';
 ?>
