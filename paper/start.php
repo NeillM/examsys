@@ -377,15 +377,15 @@ $sessionid = $log_metadata->get_session_id();
 * This is also used further down to make sure that the timer does not close the window if the exam session hasn't been 'started' by an invigilator
 * If a summative exam session has been started  then record late answers in log_late
 */
+$paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
   //has this lab had an end time set?
   $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
-
 }
 
 //check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
-if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($propertyObj->get_paper_type() == '1' or ($propertyObj->get_paper_type() == '2' and $summative_exam_session_started === false))) {
+if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($propertyObj->get_paper_type() == '1' or ($propertyObj->get_paper_type() == '2' and $paper_scheduled and $summative_exam_session_started === false))) {
   $propertyObj->set_paper_type('_late');
 }
 

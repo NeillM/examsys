@@ -101,6 +101,7 @@ if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
 }
 
 $summative_exam_session_started = false;
+$paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
   //has this lab had an end time set?
   $log_lab_end_time = new LogLabEndTime( $lab_id, $propertyObj, $mysqli );
@@ -125,7 +126,7 @@ if ($userObject->has_role('Student')) {
   // Check for any metadata security restrictions
   check_metadata($paperID, $userObject, $modIDs, $string, $mysqli);
 
-  if (time() > $end_date and ($paper_type == '1' or ($paper_type == '2' and $summative_exam_session_started === false)) ) {
+  if (time() > $end_date and ($paper_type == '1' or ($paper_type == '2' and $paper_scheduled and $summative_exam_session_started === false)) ) {
     $paper_type = '_late';
   }
 }

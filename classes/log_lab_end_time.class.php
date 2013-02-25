@@ -69,6 +69,10 @@ class LogLabEndTime {
 
       $start_datetime = $this->get_paper_start_datetime();
 
+      if ($start_datetime === false ) {   // Unscheduled summative paper?
+        return false;
+      }
+
       $start_timestamp = $start_datetime->getTimestamp();
 
       $query = 'SELECT start_time AS start_timestamp, end_time AS end_timestamp FROM log_lab_end_time WHERE labID = ? AND paperID = ? AND end_time > ? ORDER BY id DESC LIMIT 1';
