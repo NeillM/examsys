@@ -73,7 +73,7 @@ class Timer {
     // get existing start time or create a new one
     $start_datetime      = $this->get_start_datetime();
 
-    if( $start_datetime === false){
+    if($start_datetime === null or $start_datetime === false){
       return $exam_duration_secs;
     }
 

@@ -45,7 +45,7 @@ function display_duration($normal, $extra_time_mins, $special_needs_percentage) 
   $mins = $normal;
   if ($extra_time_mins != NULL) $mins .= ' + ' . $extra_time_mins;
   if ($special_needs_percentage != NULL) $mins .= ' + ' . ($normal/100)*$special_needs_percentage;
-  
+
   return $mins;
 }
 
@@ -110,25 +110,25 @@ if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
 
 
 $property_id          = $propertyObj->get_property_id();
-$paper_title          = $propertyObj->get_paper_title(); 
-$total_random_mark    = $propertyObj->get_random_mark(); 
-$total_marks          = $propertyObj->get_total_mark(); 
-$navigation           = $propertyObj->get_bidirectional(); 
+$paper_title          = $propertyObj->get_paper_title();
+$total_random_mark    = $propertyObj->get_random_mark();
+$total_marks          = $propertyObj->get_total_mark();
+$navigation           = $propertyObj->get_bidirectional();
 
 $paper_screens        = Paper_utils::get_numder_of_screens($property_id, $mysqli);
 
-$test_type            = $propertyObj->get_paper_type(); 
-$paper_start          = $propertyObj->get_start_date(); 
-$paper_end            = $propertyObj->get_end_date(); 
+$test_type            = $propertyObj->get_paper_type();
+$paper_start          = $propertyObj->get_start_date();
+$paper_end            = $propertyObj->get_end_date();
 $timezone             = $propertyObj->get_timezone();
-$fullscreen           = $propertyObj->get_fullscreen(); 
-$marking              = $propertyObj->get_marking(); 
-$labs                 = $propertyObj->get_labs(); 
-$rubric               = $propertyObj->get_rubric(); 
-$exam_duration        = $propertyObj->get_exam_duration(); 
+$fullscreen           = $propertyObj->get_fullscreen();
+$marking              = $propertyObj->get_marking();
+$labs                 = $propertyObj->get_labs();
+$rubric               = $propertyObj->get_rubric();
+$exam_duration        = $propertyObj->get_exam_duration();
 $exam_duration_sec    = $exam_duration * 60;
-$calendar_year        = $propertyObj->get_calendar_year(); 
-$sound_demo           = $propertyObj->get_sound_demo(); 
+$calendar_year        = $propertyObj->get_calendar_year();
+$sound_demo           = $propertyObj->get_sound_demo();
 $password             = $propertyObj->get_password();
 
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
@@ -202,9 +202,13 @@ if ($exam_duration !== null) {
       }
     }
   } else {
-    $studentID       = $userObject->get_user_ID();
-    $timer           = new Timer($log_metadata, $exam_duration);
-    $remaining_time  = $timer->calculate_remaining_time();
+    $studentID         = $userObject->get_user_ID();
+    if ($test_type == 1) {
+      $timer             = new Timer($log_metadata, $exam_duration);
+      $remaining_time    = $timer->calculate_remaining_time();
+    } else {
+      $remaining_time = $exam_duration * 60;
+    }
   }
 
   $remaining_minutes = (int) ($remaining_time / 60);
@@ -382,10 +386,10 @@ if ($textsize > 120) {
   $display_date = '';
 
   if ($test_type == 0) {
-    $log_info = $mysqli->prepare("SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 0 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log0 WHERE q_paper = ? AND userID = ? GROUP BY started DESC, screen UNION SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log1 WHERE q_paper = ? AND userID = ? GROUP BY started DESC, screen");
+    $log_info = $mysqli->prepare("SELECT l.screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, 0 AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.paperID = ? AND lm.userID = ? GROUP BY started DESC, l.screen UNION SELECT l.screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.paperID = ? AND lm.userID = ? GROUP BY started DESC, l.screen");
     $log_info->bind_param('iiii', $property_id, $userObject->get_user_ID(), $property_id, $userObject->get_user_ID());
   } else {
-    $log_info = $mysqli->prepare("SELECT MAX(screen) AS screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, ? AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log$test_type WHERE q_paper = ? AND userID = ? GROUP BY started DESC");
+    $log_info = $mysqli->prepare("SELECT MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, ? AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log$test_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
     $log_info->bind_param('iii', $test_type, $property_id, $userObject->get_user_ID());
   }
   $log_info->execute();

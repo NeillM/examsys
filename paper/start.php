@@ -232,7 +232,9 @@ $paperID = $propertyObj->get_property_id();
  *
  */
 //are we in a staff test and preview mode?
-$is_preview_mode = ($userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview');
+$is_preview_mode = ($userObject->has_role(array('Staff','SysAdmin')) and isset($_REQUEST['mode']) and $_REQUEST['mode'] == 'preview');
+// Are we on the first screen
+$is_first_launch = !isset($_POST['current_screen']);
 //are we in a staff test and preview mode and on the first screen?
 $is_preview_mode_first_launch = ($is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview');
 //are we in a staff single question testmode
@@ -279,6 +281,9 @@ $stmt->close();
 
 //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 $original_paper_type = $propertyObj->get_paper_type();
+
+// Is this a type of paper that allows only one attempt?
+$do_restart = ($is_first_launch and ($original_paper_type == 1 or $original_paper_type == 2));
 
 /*
 * Set the default colour scheme for this paper and allow current users' special settings to override
@@ -358,9 +363,9 @@ if (isset($_POST['sessionid'])) {
 //lookup previous sessionid from log_metadata.started property_id
 $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 
-if ($is_preview_mode_first_launch == true) {
+if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)) {
 
-  //in preview mode always start a new session if we have relaunched the window
+  //in preview mode or for non-restartable papers always start a new session if we have relaunched the window
   $log_metadata->create_new_record($current_ip_address, $attempt, $lab_name);
 
 } elseif ($log_metadata->get_record() == false) { //load the data and check for no records
@@ -425,6 +430,10 @@ if ($sessionid !== false or $is_fire_alarm == true) {
       $user_answers[$log_screen][$log_q_id] = $log_user_answer;
       $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
       $user_order[$log_screen][$log_q_id] = $option_order;
+      // Bump up the current screen if restarting
+      if ($do_restart and $log_screen > $current_screen) {
+        $current_screen = $log_screen;
+      }
       if ($log_screen == $current_screen) {
         $previous_duration = $log_duration;
         $screen_pre_submitted = 1;
@@ -444,6 +453,10 @@ if ($sessionid !== false or $is_fire_alarm == true) {
       $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
       $user_order[$log_screen][$log_q_id] = $option_order;
       $used_questions[$log_q_id] = $log_q_id;
+      // Bump up the current screen if restarting
+      if ($do_restart and $log_screen > $current_screen) {
+        $current_screen = $log_screen;
+      }
       if ($log_screen == $current_screen) {
         $previous_duration = $log_duration;
         $screen_pre_submitted = 1;
@@ -451,6 +464,12 @@ if ($sessionid !== false or $is_fire_alarm == true) {
     }
   }
   $log_data->close();
+}
+
+// If we're restarting, move to screen after the highest for which we have log records
+if ($do_restart and $screen_pre_submitted == 1 and $current_screen < $no_screens) {
+  $current_screen++;
+  $screen_pre_submitted = 0;
 }
 
 /*
