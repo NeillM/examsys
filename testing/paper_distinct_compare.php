@@ -26,7 +26,7 @@
 require '../classes/configobject.class.php';
 require '../classes/dbutils.class.php';
 $configObject = Config::get_instance();
-$notice=null;
+$notice = null;
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
 $sql = "select property_id,date_format(start_date,'%Y%m%d%H%i%S') as start_date, date_format(end_date,'%Y%m%d%H%i%S') as end_date, paper_title from properties where paper_type=2";
@@ -43,6 +43,8 @@ if ($mysqli->error) {
 }
 $result->store_result();
 $result->bind_result($propertyid, $start_date, $end_date, $papertitle);
+$records = $result->num_rows;
+echo "<h2>$records Rows Found</h2>";
 $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
 while ($result->fetch()) {
 
@@ -80,22 +82,24 @@ echo <<<HTML
 <table>
 <tr><th>PaperID</th><th>Paper Name</th><th>Count</th><th>Distinct Count</th><th>Error</th></tr>
 HTML;
-foreach ($data as $key => $value) {
-  $same = true;
-  if ($value[1] != $value[2]) {
-    $same = false;
+if (isset($data)) {
+  foreach ($data as $key => $value) {
+    $same = true;
+    if ($value[1] != $value[2]) {
+      $same = false;
 
-  }
-  if ($same == false) {
-    $extra = ' style="background-color:red" ';
-    $error = 'ERROR';
-  } else {
-    $extra = ' style="background-color:green" ';
-    $error = '';
-  }
-  echo <<<HTML
+    }
+    if ($same == false) {
+      $extra = ' style="background-color:red" ';
+      $error = 'ERROR';
+    } else {
+      $extra = ' style="background-color:green" ';
+      $error = '';
+    }
+    echo <<<HTML
 	<tr><td $extra>$key</td><td $extra>$value[0]</td><td>$value[1]</td><td>$value[2]</td><td $extra>$error</td></tr>
 HTML;
+  }
 }
 echo <<<HTML
 		</table></body></html>
