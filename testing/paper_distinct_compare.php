@@ -34,7 +34,7 @@ $configObject = Config::get_instance();
 $notice = null;
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
-$sql = "select property_id,date_format(start_date,'%Y%m%d%H%i%S') as start_date, date_format(end_date,'%Y%m%d%H%i%S') as end_date, paper_title from properties where paper_type='2' limit 3";
+$sql = "select property_id,date_format(start_date,'%Y%m%d%H%i%S') as start_date, date_format(end_date,'%Y%m%d%H%i%S') as end_date, paper_title from properties where paper_type='2'";
 
 $result = $mysqli->prepare($sql);
 if ($mysqli->error) {
@@ -87,6 +87,7 @@ while ($result->fetch()) {
   $log_query->store_result();
   $distinctCNT = $log_query->num_rows;
   $log_query->close();
+
   $log_query = $mysqli->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
   if ($mysqli->error) {
     try {
