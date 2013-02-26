@@ -1587,46 +1587,6 @@ if (!isset($_POST['update'])) {
     }
   }
 
-  // 05/04/2012 - Enlarge the size of the integer for userID in log0 table.
-  if (!$updater_utils->does_column_type_value_exist('log0', 'userID', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log0 CHANGE COLUMN userID userID int(10) unsigned", true);
-  }
-
-  // 05/04/2012 - Enlarge the size of the integer for q_paper in log0 table.
-  if (!$updater_utils->does_column_type_value_exist('log0', 'q_paper', 'mediumint(8) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log0 CHANGE COLUMN q_paper q_paper mediumint(8) unsigned", true);
-  }
-
-  // 05/04/2012 - Enlarge the size of the integer for userID in log1 table.
-  if (!$updater_utils->does_column_type_value_exist('log1', 'userID', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log1 CHANGE COLUMN userID userID int(10) unsigned", true);
-  }
-
-  // 05/04/2012 - Enlarge the size of the integer for q_paper in log1 table.
-  if (!$updater_utils->does_column_type_value_exist('log1', 'q_paper', 'mediumint(8) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log1 CHANGE COLUMN q_paper q_paper mediumint(8) unsigned", true);
-  }
-
-  // 05/04/2012 - Enlarge the size of the integer for userID in log2 table.
-  if (!$updater_utils->does_column_type_value_exist('log2', 'userID', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log2 CHANGE COLUMN userID userID int(10) unsigned", true);
-  }
-
-  // 05/04/2012 - Enlarge the size of the integer for q_paper in log2 table.
-  if (!$updater_utils->does_column_type_value_exist('log2', 'q_paper', 'mediumint(8) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log2 CHANGE COLUMN q_paper q_paper mediumint(8) unsigned", true);
-  }
-
-  // 05/04/2012 - Enlarge the size of the integer for userID in log3 table.
-  if (!$updater_utils->does_column_type_value_exist('log3', 'userID', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log3 CHANGE COLUMN userID userID int(10) unsigned", true);
-  }
-
-  // 05/04/2012 - Enlarge the size of the integer for q_paper in log3 table.
-  if (!$updater_utils->does_column_type_value_exist('log3', 'q_paper', 'mediumint(8) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log3 CHANGE COLUMN q_paper q_paper mediumint(8) unsigned", true);
-  }
-
   // 05/04/2012 - Enlarge the size of the integer for userID in log4 table.
   if (!$updater_utils->does_column_type_value_exist('log4', 'userID', 'int(10) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE log4 CHANGE COLUMN userID userID int(10) unsigned", true);
@@ -1645,16 +1605,6 @@ if (!isset($_POST['update'])) {
   // 05/04/2012 - Enlarge the size of the integer for q_paper in log4_overall table.
   if (!$updater_utils->does_column_type_value_exist('log4_overall', 'q_paper', 'mediumint(8) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE log4_overall CHANGE COLUMN q_paper q_paper mediumint(8) unsigned", true);
-  }
-
-  // 05/04/2012 - Enlarge the size of the integer for userID in log5 table.
-  if (!$updater_utils->does_column_type_value_exist('log5', 'userID', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log5 CHANGE COLUMN userID userID int(10) unsigned", true);
-  }
-
-  // 05/04/2012 - Enlarge the size of the integer for q_paper in log5 table.
-  if (!$updater_utils->does_column_type_value_exist('log5', 'q_paper', 'mediumint(8) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log5 CHANGE COLUMN q_paper q_paper mediumint(8) unsigned", true);
   }
 
   // 05/04/2012 - Enlarge the size of the integer for userID in log6 table.
@@ -3219,18 +3169,6 @@ QUERY;
     $updater_utils->execute_query("ALTER TABLE log4_overall ADD INDEX started (started)", true);
   }
 
-  if (!$updater_utils->does_index_exist('log5', 'q_paper')) {
-    $updater_utils->execute_query("ALTER TABLE log5 ADD INDEX q_paper (q_paper)", true);
-  }
-
-  if (!$updater_utils->does_index_exist('log5', 'username')) {
-    $updater_utils->execute_query("ALTER TABLE log5 ADD INDEX username (userID)", true);
-  }
-
-  if (!$updater_utils->does_index_exist('log5', 'started')) {
-    $updater_utils->execute_query("ALTER TABLE log5 ADD INDEX started (started)", true);
-  }
-
   if (!$updater_utils->does_index_exist('log6', 'started')) {
     $updater_utils->execute_query("ALTER TABLE log6 ADD INDEX started (started)", true);
   }
@@ -3276,7 +3214,7 @@ QUERY;
 
 
   // 06/02/2013 (cczsa1) - add permission for initial db user to access courses table
-  if (!$updater_utils->has_grant($cfg_db_username, 'SELECT,INSERT', 'courses', $cfg_db_host)) {
+  if (!$updater_utils->has_grant($cfg_db_username, 'SELECT, INSERT', 'courses', $cfg_db_host)) {
     $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.courses TO \'' . $cfg_db_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
@@ -3300,7 +3238,7 @@ QUERY;
   $result->close();
 
   //brzab3 I am missing update on 'temp_users' for _stu needed for guest acount creation
-  if (!$updater_utils->has_grant($cfg_db_student_user, 'UPDATE', 'temp_users', $cfg_db_host)) {
+  if (!$updater_utils->has_grant($cfg_db_student_user, 'SELECT, INSERT, UPDATE', 'temp_users', $cfg_db_host)) {
     $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.temp_users TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
@@ -3546,7 +3484,7 @@ QUERY;
   // 25/02/2013 (brzsw) - Add new metadataID field into the log tables.
   $tableNos = array(0, 1, 2, 3, 5);
   foreach ($tableNos as $tableNo) {
-    if (!$updater_utils->does_column_type_value_exist('log' . $tableNo, 'metadataID', 'int(11)')) {
+    if (!$updater_utils->does_column_exist('log' . $tableNo, 'metadataID')) {
       $updater_utils->execute_query("ALTER TABLE log$tableNo ADD COLUMN metadataID int(11)", true);
       
       $mysqli->autocommit(false);
