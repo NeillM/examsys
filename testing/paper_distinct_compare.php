@@ -22,7 +22,7 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package Rogō
  */
-$type=2;
+$type=1;
 require '../classes/configobject.class.php';
 require '../classes/dbutils.class.php';
 @apache_setenv('no-gzip', 1);
@@ -122,7 +122,7 @@ while ($result->fetch()) {
     $error = '';
   }
   echo <<<HTML
-	<tr><td $extra>$propertyid</td><td $extra>$value[1]</td><td>$value[0]</td><td>$value[2]</td><td $extra>$error</td><td>$value[3]</td><td>$value[4]</td></tr>
+	<tr><td $extra>$propertyid</td><td $extra>$value[0]</td><td>$value[1]</td><td>$value[2]</td><td $extra>$error</td><td>$value[3]</td><td>$value[4]</td></tr>
 HTML;
   @flush();
 
