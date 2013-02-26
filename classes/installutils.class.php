@@ -383,6 +383,7 @@ Class InstallUtils {
     //make sure we are using the right DB
     self::$db->select_db(self::$cfg_db_name);
 
+    self::$db->autocommit(false);
     if (file_exists($staff_help)) {
       $query = file_get_contents($staff_help);
       self::$db->query("TRUNCATE staff_help");
@@ -390,6 +391,7 @@ Class InstallUtils {
 
       self::$db->multi_query($query);
       if (self::$db->error) {
+       self::$db->rollback();
         try {
           throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
         } catch (Exception $e) {
@@ -405,6 +407,7 @@ Class InstallUtils {
       while (self::$db->more_results()) {
         self::$db->next_result();
         if (self::$db->error) {
+          self::$db->rollback();
           try {
             throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
           } catch (Exception $e) {
@@ -416,6 +419,7 @@ Class InstallUtils {
     } else {
       self::logWarning(array('502' => $string['logwarning2']));
     }
+    self::$db->commit();
 
     if (file_exists($student_help)) {
       $query = file_get_contents($student_help);
@@ -424,6 +428,7 @@ Class InstallUtils {
       self::$db->multi_query($query);
       if (self::$db->error) {
         try {
+          self::$db->rollback();
           throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -436,6 +441,7 @@ Class InstallUtils {
         while (self::$db->more_results()) {
           self::$db->next_result();
           if (self::$db->error) {
+            self::$db->rollback();
             try {
               throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
             } catch (Exception $e) {
@@ -448,6 +454,8 @@ Class InstallUtils {
     } else {
       self::logWarning(array('504' => $string['logwarning4']));
     }
+    self::$db->commit();
+    self::$db->autocommit(true);
   }
 
   /**
@@ -484,14 +492,19 @@ Class InstallUtils {
 
     //create tables
     $tables = new databaseTables($dbcharset);
+   self::$db->autocommit(false);
     while ($sql = $tables->next()) {
       $res = self::$db->query($sql);
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
+       self::$db->rollback();
         self::displayError(array('012' => $string['displayerror3'] . self::$db->error . "<br /> $sql"));
       }
     }
+   self::$db->commit();
+
+
     self::$cfg_db_username = self::$cfg_db_basename . '_auth';
     self::$cfg_db_password = gen_password() . gen_password();
 
@@ -536,14 +549,18 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users_metadata TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
+
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
+       self::$db->rollback();
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_username . $string['wnotpermission']));
       }
     }
+   self::$db->commit();
+
 
     $priv_SQL = array();
     //create 'database user student user' and grant permissions
@@ -604,15 +621,17 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
+
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
+       self::$db->rollback();
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotpermission']));
       }
     }
-
+   self::$db->commit();
     $priv_SQL = array();
     //create 'database user external user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
@@ -655,9 +674,11 @@ Class InstallUtils {
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
+       self::$db->rollback();
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotpermission']));
       }
     }
+   self::$db->commit();
 
     $priv_SQL = array();
     //create 'database user staff user' and grant permissions
@@ -735,9 +756,11 @@ Class InstallUtils {
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
+       self::$db->rollback();
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotpermission']));
       }
     }
+   self::$db->commit();
 
     $priv_SQL = array();
     //create 'database user SCT user' and grant permissions
@@ -758,9 +781,11 @@ Class InstallUtils {
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
+       self::$db->rollback();
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotpermission']));
       }
     }
+   self::$db->commit();
 
     $priv_SQL = array();
     //create 'database user Invigilator user' and grant permissions
@@ -793,9 +818,11 @@ Class InstallUtils {
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
+       self::$db->rollback();
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotpermission']));
       }
     }
+   self::$db->commit();
 
     $priv_SQL = array();
     //create 'database user sysadmin user' and grant permissions
@@ -811,10 +838,12 @@ Class InstallUtils {
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
+       self::$db->rollback();
 	    echo self::$db->error . "<br />";
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotpermission']));
       }
     }
+   self::$db->commit();
 
     //create sysadmin user
     UserUtils::create_user( $_POST['SysAdmin_username'],
@@ -830,6 +859,7 @@ Class InstallUtils {
                             '',
                             self::$db
                           );
+
 
     //create 100 guest accounts
     for ($i=1; $i<=100; $i++) {
@@ -847,6 +877,7 @@ Class InstallUtils {
                               self::$db
                             );
      }
+   self::$db->commit();
 
     //add unknown school & faculty
 
@@ -881,8 +912,8 @@ Class InstallUtils {
                                 false,
                                 false,
                                 true,
-                                NULL,
-                                NULL,
+                                null,
+                                null,
                                 self::$db
                              );
 
@@ -897,18 +928,19 @@ Class InstallUtils {
                                 true,
                                 true,
                                 true,
-                                NULL,
-                                NULL,
+                                null,
+                                null,
                                 self::$db
                              );
-
+   self::$db->commit();
     //FLUSH PRIVILEGES
     self::$db->query("FLUSH PRIVILEGES");
     if (self::$db->errno != 0) {
       self::logWarning(array('014'=> $string['logwarning20']));
     }
+    self::$db->commit();
+    self::$db->autocommit(false);
   }
-
   /**
   * Check that we do not have a config file and that we can write one
   *
@@ -1288,6 +1320,8 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
 //Global DEBUG OUTPUT
   //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';   // Uncomment for debugging output (after uncommenting, comment out line below)
   \$dbclass = 'mysqli';
+
+  //\$display_auth_debug = true; // set this to deisplay debug on failed authentication
   ?>
 CONFIG;
 
@@ -1448,7 +1482,7 @@ QUERY;
 QUERY;
 
     $this->tableList['denied_log'] = <<<QUERY
-      CREATE TABLE `access_log` (
+      CREATE TABLE `denied_log` (
         `id` int(11) NOT NULL auto_increment,
         `userID` int(11) unsigned default NULL,
         `tried` datetime default NULL,

@@ -48,6 +48,8 @@ $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root)
 require $cfg_web_root . 'classes/installutils.class.php';
 $version = '5.0';
 
+set_time_limit(0);
+
 //basic checks
 InstallUtils::displayHeader();
 //InstallUtils::checkHTTPS();
