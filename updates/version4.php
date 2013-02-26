@@ -198,6 +198,10 @@ if (!isset($_POST['update'])) {
   $cfg_db_inv_username = $configObject->get('cfg_db_inv_user');
   $cfg_use_ldap = $configObject->get('cfg_use_ldap');
 
+
+  $mysqli->autocommit(false);
+
+
   error_reporting(-1);
   ob_start();
 
@@ -223,6 +227,7 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE sys_errors ADD COLUMN query_string text", true);
     $updater_utils->execute_query("ALTER TABLE sys_errors ADD COLUMN request_method enum('GET', 'HEAD', 'POST', 'PUT', 'DELETE')", true);
   }
+  $mysqli->commit();
 
   // Get a list of reviews where group = 'Yes'
   $group_reviews = $mysqli->prepare("SELECT DISTINCT paperID FROM standards_setting WHERE group_review = 'Yes' AND paperID > 0");
@@ -250,6 +255,7 @@ if (!isset($_POST['update'])) {
     }
   }
   $group_reviews->close();
+  $mysqli->commit();
 
   // 29/06/2011
   if (!$updater_utils->does_column_exist('modules', 'selfenroll')) {
@@ -280,6 +286,7 @@ if (!isset($_POST['update'])) {
     // Drop the old textual column
     $updater_utils->execute_query("ALTER TABLE modules DROP COLUMN school", true);
   }
+  $mysqli->commit();
 
   // 04/07/2011 - Drop 'Faculty' column from users.
   if ($updater_utils->does_column_exist('users', 'faculty')) {
@@ -325,6 +332,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_column_exist('sys_errors', 'post_data')) {
     $updater_utils->execute_query("ALTER TABLE sys_errors ADD COLUMN post_data text", true);
   }
+  $mysqli->commit();
 
   //ADD new role based MySQL users
   $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_stu'");
@@ -484,6 +492,7 @@ if (!isset($_POST['update'])) {
     foreach ($priv_SQL as $sql) {
       $updater_utils->execute_query($sql, false);
     }
+    $mysqli->commit();
 
     ////////////////////////////////////////////////////////////////////////////
     //
@@ -675,6 +684,8 @@ if (!isset($_POST['update'])) {
     }
     $q_data->close();
   }
+  $mysqli->commit();
+
   $result->close();
 
   // 01/08/2011 - Change to database structure for more flexible marking
@@ -692,6 +703,8 @@ if (!isset($_POST['update'])) {
     $q_data->close();
 
     $updater_utils->execute_query("ALTER TABLE schools DROP COLUMN faculty", true);
+    $mysqli->commit();
+
   }
 
   // 10/08/2011 - Add new column for negative marking setting for modules.
@@ -704,6 +717,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_column_exist('modules', 'ebel_grid_template')) {
     $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN ebel_grid_template int", true);
   }
+  $mysqli->commit();
 
   // 15/08/2011 - Add new table to hold Ebel grid templates.
   if (!$col_exists = $updater_utils->does_column_exist('ebel_grid_templates', 'id')) {
@@ -722,6 +736,7 @@ if (!isset($_POST['update'])) {
       echo "<li>Populating ebel_grid_templates with Nottingham data.</li>";
     }
   }
+  $mysqli->commit();
 
   // 01/09/2011 - Fix 'question' foreign key field in 'papers' not being big enough to hold a question ID!
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='papers' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='question'");
@@ -789,6 +804,7 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("UPDATE questions SET q_type='dichotomous', display_method='TF_Positive', score_method='Mark per Option' WHERE q_id=$questionID", true);
   }
   $result->close();
+  $mysqli->commit();
 
   // 20/09/2011 - set marks for fill-in-the-blank question tyoe
   $updater_utils->execute_query("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND (marks_correct IS NULL OR marks_correct=0)", false);
@@ -817,6 +833,7 @@ if (!isset($_POST['update'])) {
   if ($check->num_rows() > 0) {
     $updater_utils->execute_query("UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'", false);
   }
+  $mysqli->commit();
 
   /*
   // 01/09/2011 - Remove the time/date question type
@@ -848,6 +865,7 @@ if (!isset($_POST['update'])) {
       $updater_utils->execute_query($q, false);
     }
   }
+  $mysqli->commit();
 
   // 30/09/2011 - Update to the format of Labelling questions
   $result = $mysqli->prepare("SELECT o.o_id, o.correct FROM options o INNER JOIN questions q ON o.o_id=q.q_id WHERE q.q_type='labelling' AND (o.correct NOT LIKE '%single;label%' AND o.correct NOT LIKE '%multiple;label%' AND o.correct NOT LIKE '%single;menu%')");
@@ -875,6 +893,8 @@ if (!isset($_POST['update'])) {
       $adjust->close();
     }
   }
+  $mysqli->commit();
+
   if ($result->num_rows > 0) echo "<li>Updated the format of Labelling questions</li>";
   $result->close();
 
@@ -913,6 +933,7 @@ if (!isset($_POST['update'])) {
     //
     //  update the config file!!
     //
+    $mysqli->commit();
 
     $new_cfg_str = array();
     $new_cfg_str[] = "// SCT db user\n";
@@ -964,6 +985,7 @@ if (!isset($_POST['update'])) {
     foreach ($priv_SQL as $sql) {
       $updater_utils->execute_query($sql, false);
     }
+    $mysqli->commit();
 
     ////////////////////////////////////////////////////////////////////////////
     //
@@ -998,6 +1020,7 @@ if (!isset($_POST['update'])) {
     if (!$updater_utils->does_index_exist('properties', 'crypt_name_idx')) {
       $updater_utils->execute_query("ALTER TABLE properties ADD INDEX crypt_name_idx (crypt_name)", false);
     }
+    $mysqli->commit();
 
     $result2 = $mysqli->prepare("SELECT property_id, UNIX_TIMESTAMP(created), paper_ownerID FROM properties");
     $result2->execute();
@@ -1009,12 +1032,14 @@ if (!isset($_POST['update'])) {
     }
     $result2->close();
   }
+  $mysqli->commit();
 
   // 18/10/2011 - Add type to feedback_release.
   if (!$updater_utils->does_column_exist('feedback_release', 'type')) {
     $updater_utils->execute_query("ALTER TABLE feedback_release ADD COLUMN type enum('objectives','questions')", true);
     $updater_utils->execute_query("UPDATE feedback_release SET type='objectives'", false);
   }
+  $mysqli->commit();
 
   // 24/10/2011
   if (!$updater_utils->does_column_type_value_exist('log4_overall', 'year', 'tinyint(4)')) {
@@ -1024,6 +1049,7 @@ if (!isset($_POST['update'])) {
     foreach ($convert_years as $old_year => $new_year) {
       $updater_utils->execute_query("UPDATE log4_overall SET yearofstudy=$new_year WHERE year='$old_year'", false);
     }
+    $mysqli->commit();
 
     $updater_utils->execute_query("ALTER TABLE log4_overall DROP COLUMN year", true);
     $updater_utils->execute_query("ALTER TABLE log4_overall CHANGE COLUMN yearofstudy year tinyint(4)", true);
@@ -1043,6 +1069,7 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("UPDATE questions SET score_method='Allow Partial Marks' WHERE q_type='calculation' AND score_method!='Allow Partial Marks'", true);
   }
   $result->close();
+  $mysqli->commit();
 
   // 02/11/2011 - Set the modules who do not have negative marking.
   if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== false) {
@@ -1073,6 +1100,7 @@ if (!isset($_POST['update'])) {
     $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
+  $mysqli->commit();
 
   // 08/09/2011 - Add auth_user column to sys_errors
   if (!$updater_utils->does_column_exist('sys_errors', 'auth_user')) {
@@ -1129,6 +1157,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_column_exist('schools', 'deleted')) {
     $updater_utils->execute_query("ALTER TABLE schools ADD COLUMN deleted datetime", true);
   }
+  $mysqli->commit();
 
   // 19/01/2012 - Update the version number
   $cfg_new = array();
@@ -1372,6 +1401,7 @@ if (!isset($_POST['update'])) {
     // Drop the old textual column
     $updater_utils->execute_query("ALTER TABLE courses DROP COLUMN school", true);
   }
+  $mysqli->commit();
 
   // 19/01/2012 - Add LDAP user search prefix to config file.
   $new_cfg_str = array();
@@ -1483,6 +1513,7 @@ if (!isset($_POST['update'])) {
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sessions TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
+  $mysqli->commit();
 
   // 12/03/2012 - Fix any uses of old calculator or new basic calculator as we are not shipping that yet
   $result = $mysqli->prepare("SELECT COUNT(property_id) FROM properties WHERE (calculator = 2 OR calculator = -1)");
@@ -1494,6 +1525,7 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("UPDATE properties SET calculator=1 WHERE (calculator = 2 OR calculator = -1)", true);
   }
   $result->close();
+  $mysqli->commit();
 
   // Adding missing indexes
   if (!$updater_utils->does_index_exist('users', 'idx_roles')) {
@@ -1520,6 +1552,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_index_exist('courses', 'idx_courses_name')) {
     $updater_utils->execute_query("CREATE INDEX idx_courses_name ON courses (name)", true);
   }
+  $mysqli->commit();
 
   // 19/03/2012 - Add 'reference_material' and 'paper_reference' tables
   if (!$updater_utils->does_table_exist('reference_material')) {
@@ -1559,6 +1592,8 @@ if (!isset($_POST['update'])) {
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
+  $mysqli->commit();
+  $mysqli->autocommit(true);
 
   // 05/04/2012 - Enlarge the size of the integer for property_id in properties table.
   if (!$updater_utils->does_column_type_value_exist('properties', 'property_id', 'mediumint(8) unsigned')) {
@@ -1969,6 +2004,7 @@ if (!isset($_POST['update'])) {
   }
 
 
+  $mysqli->autocommit(false);
   // 02/05/2012 - Update the online help files.
   if (isset($_POST['update_staff_help'])) {
     $updater_utils->execute_query("TRUNCATE student_help", true);
@@ -2013,6 +2049,7 @@ if (!isset($_POST['update'])) {
     }
     echo "<li>LOADED student_help: " . $ext . "</li>\n";
   }
+  $mysqli->commit();
 
   // 02/05/2012 - Update the version number
   $cfg_new = array();
@@ -2071,6 +2108,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_column_type_value_exist('users', 'password', 'char(90)')) {
     $updater_utils->execute_query("ALTER TABLE users CHANGE COLUMN password password char(90)", true);
   }
+  $mysqli->commit();
 
   // 16/05/2012 - Add encryption salt to config file.
   $new_cfg_str = array();
@@ -2135,6 +2173,7 @@ if (!isset($_POST['update'])) {
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".lti_context TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
+  $mysqli->commit();
 
   // 22/05/2012 - Addition of grey personal folder
   if (!$updater_utils->does_column_type_value_exist('folders', 'color', "enum('yellow','red','green','blue','grey')")) {
@@ -2194,6 +2233,7 @@ if (!isset($_POST['update'])) {
     }
   }
   $result->close();
+  $mysqli->commit();
 
 
   // 15/06/2012 - Add performance tables to store p and d values against questions in the bank.
@@ -2241,6 +2281,7 @@ if (!isset($_POST['update'])) {
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".state TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
+  $mysqli->commit();
 
   // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
@@ -2291,6 +2332,7 @@ if (!isset($_POST['update'])) {
     $result_mod->close();
   }
   $result_col->close();
+  $mysqli->commit();
 
   // 18/07/2012 - Add index to improve performance for finding question copying in the Information dialog box.
   if (!$updater_utils->does_index_exist('track_changes', 'type')) {
@@ -2401,6 +2443,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_index_exist('schools', 'idx_facultyID')) {
     $updater_utils->execute_query("CREATE INDEX `idx_facultyID` ON `schools` (`facultyID`)", true);
   }
+  $mysqli->commit();
 
   // cczsa1 2012/09/05 update table structure to match new lti (somehow this has dissapeared from this file somewhere in the past)
   if ($updater_utils->does_column_exist('lti_user', 'oauth_consumer_key')) {
@@ -2425,10 +2468,12 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE `lti_resource` CHANGE `itype` `internal_type` VARCHAR(255) NOT NULL", true);
     $updater_utils->execute_query("ALTER TABLE `lti_resource` CHANGE `updated` `updated_on` DATETIME", true);
   }
+  $mysqli->commit();
 
   if ($updater_utils->does_column_exist('lti_keys', 'updated_at')) {
     $updater_utils->execute_query("ALTER TABLE `lti_keys` CHANGE `updated_at` `updated_on` DATETIME", true);
   }
+  $mysqli->commit();
 
   // 03/09/2012 Permissions fix for staff users
   if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'log5', $cfg_db_host)) {
@@ -2463,6 +2508,7 @@ if (!isset($_POST['update'])) {
   // 06/09/2012 - Delete the blank 'parent' books from the student help
   $updater_utils->execute_query("DELETE FROM student_help WHERE body = ''", false);
 
+  $mysqli->commit();
 
   $new_cfg_str = array();
   $new_cfg_str[] = "\r\n";
@@ -2523,6 +2569,7 @@ if (!isset($_POST['update'])) {
     $sql = "GRANT INSERT ON " . $cfg_db_database . ".sms_imports TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $mysqli->query($sql);
   }
+  $mysqli->commit();
 
   // 14/09/2012 - Change the way borders are done on images in the Staff help system.
   $result = $mysqli->prepare("SELECT id, body FROM staff_help WHERE body LIKE '%border=%'");
@@ -2554,6 +2601,7 @@ if (!isset($_POST['update'])) {
     $update->close();
   }
   $result->close();
+  $mysqli->commit();
 
   // 14/09/2012 - Change the way borders are done on images in the Student help system.
   $result = $mysqli->prepare("SELECT id, body FROM student_help WHERE body LIKE '%border=%'");
@@ -2585,6 +2633,7 @@ if (!isset($_POST['update'])) {
     $update->close();
   }
   $result->close();
+  $mysqli->commit();
 
   // 19/09/2012 - remove ID field from users_metadata
   if ($updater_utils->does_column_exist('users_metadata', 'id')) {
@@ -2646,6 +2695,7 @@ QUERY;
   if (!$updater_utils->does_column_type_value_exist('textbox_marking', 'paperID', 'mediumint(8) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE textbox_marking CHANGE COLUMN paperID paperID mediumint(8) unsigned", true);
   }
+  $mysqli->commit();
 
   //27/09/2012 - remove concatenated moduleID form properties and crate the properties_module linking table
   if (!$updater_utils->does_table_exist('properties_modules')) {
@@ -2690,6 +2740,7 @@ QUERY;
     }
     $insert_res->close();
     $res->close();
+    $mysqli->commit();
 
     $sql = "ALTER TABLE properties_modules ADD PRIMARY KEY(property_id, idMod)";  // Add primary key on
     $updater_utils->execute_query($sql, true);
@@ -2766,6 +2817,7 @@ QUERY;
     }
     $insert_res->close();
     $res->close();
+    $mysqli->commit();
 
     $sql = "ALTER TABLE folders_modules_staff ADD PRIMARY KEY(folders_id, idMod)";  // Add primary key on
     $updater_utils->execute_query($sql, true);
@@ -2781,6 +2833,7 @@ QUERY;
         $updater_utils->execute_query("UPDATE $table SET $col = '$id' WHERE $col = '$code'", false);
       }
     }
+    $mysqli->commit();
 
     //rename and rename and retype the columns
     $tables['reference_modules'] = 'moduleID'; //this just needs renaming
@@ -2874,6 +2927,7 @@ QUERY;
     $sql = "ALTER TABLE log_metadata ADD completed DATETIME NULL";
     $updater_utils->execute_query($sql, true);
   }
+  $mysqli->commit();
 
   //cczsa1 13/12/2012 - Convert authentication in config file to  new format
   $cfg = file($cfg_web_root . 'config/config.inc.php');
@@ -3042,6 +3096,7 @@ QUERY;
     }
     echo "<li>Add cfg_client_lookup config variable</li>\n";
   }
+  $mysqli->commit();
 
   //2012/12/18 bparish - Add new table to enable a students time to be extended when taking summative exams
   if (!$updater_utils->does_table_exist('log_extra_time')) {
@@ -3078,6 +3133,7 @@ QUERY;
       $updater_utils->execute_query($sql, false);
     }
   }
+  $mysqli->commit();
 
   // 11/01/2013 - Create new 'lab_name' field in log_metadata table.
   if (!$updater_utils->does_column_type_value_exist('log_metadata', 'lab_name', 'varchar(255)')) {
@@ -3100,6 +3156,7 @@ QUERY;
       $sql = "UPDATE log_metadata SET lab_name = 'Pope - A15' WHERE ipaddress IN ('128.243.137.5','128.243.137.13','128.243.137.14','128.243.137.15','128.243.137.17','128.243.137.19','128.243.137.21','128.243.137.22','128.243.137.63','128.243.137.67','128.243.137.86','128.243.137.88','128.243.137.96','128.243.137.97','128.243.137.104','128.243.137.107','128.243.137.108','128.243.137.110','128.243.137.111','128.243.137.112','128.243.137.114','128.243.137.115','128.243.137.117','128.243.137.118','128.243.137.119','128.243.137.120','128.243.137.123','128.243.137.124','128.243.137.125','128.243.137.126','128.243.137.129','128.243.137.130','128.243.137.133','128.243.137.135','128.243.137.140','128.243.137.150','128.243.137.163','128.243.137.165','128.243.137.166','128.243.137.167','128.243.137.168','128.243.137.169','128.243.137.170','128.243.137.171','128.243.137.172','128.243.137.173','128.243.137.174','128.243.137.175','128.243.137.176','128.243.137.178','128.243.137.179','128.243.137.177','128.243.137.180','128.243.137.186','128.243.137.190','128.243.137.194','128.243.137.202','128.243.137.205','128.243.137.207','128.243.137.208','128.243.137.209')";
       $updater_utils->execute_query($sql, false);
     }
+    $mysqli->commit();
 
     // Look up log2 records and populate.
     $result2 = $mysqli->prepare("SELECT DISTINCT ipaddress FROM log_metadata");
@@ -3115,6 +3172,7 @@ QUERY;
     }
     $result2->close();
   }
+  $mysqli->commit();
 
   // 21/01/2013
   if (!$updater_utils->does_column_type_value_exist('password_tokens', 'user_id', 'int(11) unsigned')) {
@@ -3236,6 +3294,7 @@ QUERY;
     echo "<li>$sql</li>";
   }
   $result->close();
+  $mysqli->commit();
 
   //brzab3 I am missing update on 'temp_users' for _stu needed for guest acount creation
   if (!$updater_utils->has_grant($cfg_db_student_user, 'SELECT, INSERT, UPDATE', 'temp_users', $cfg_db_host)) {
@@ -3255,6 +3314,7 @@ QUERY;
     $updater_utils->execute_query($sql, true);
   }
 
+  $mysqli->commit();
 
   // 13/02/2013 (nazrji) - Add PHP date formats to configuration file
   $new_cfg_str = array();
