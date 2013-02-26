@@ -22,7 +22,7 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package Rogō
  */
-
+$type=2;
 require '../classes/configobject.class.php';
 require '../classes/dbutils.class.php';
 @apache_setenv('no-gzip', 1);
@@ -34,7 +34,7 @@ $configObject = Config::get_instance();
 $notice = null;
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
-$sql = "select property_id,date_format(start_date,'%Y%m%d%H%i%S') as start_date, date_format(end_date,'%Y%m%d%H%i%S') as end_date, paper_title from properties where paper_type='2'";
+$sql = "select property_id,date_format(start_date,'%Y%m%d%H%i%S') as start_date, date_format(end_date,'%Y%m%d%H%i%S') as end_date, paper_title from properties where paper_type='$type'";
 
 $result = $mysqli->prepare($sql);
 if ($mysqli->error) {
@@ -53,8 +53,6 @@ $result->bind_result($propertyid, $start_date, $end_date, $papertitle);
 $records = $result->num_rows;
 
 
-
-
 echo <<<HTML
 	<html>
 <body>
@@ -66,10 +64,12 @@ HTML;
 
 
 $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
+$errorcount = 0;
+
 while ($result->fetch()) {
 
   //	  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
-  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
+  $log_query = $mysqli->prepare("SELECT DISTINCT log$type.q_id, $type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$type, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log$type.metadataID = log_metadata.id AND log$type.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
   if ($mysqli->error) {
     try {
       throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
@@ -88,7 +88,7 @@ while ($result->fetch()) {
   $distinctCNT = $log_query->num_rows;
   $log_query->close();
 
-  $log_query = $mysqli->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
+  $log_query = $mysqli->prepare("SELECT log$type.q_id, $type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$type, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log$type.metadataID = log_metadata.id AND log$type.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
   if ($mysqli->error) {
     try {
       throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
@@ -107,7 +107,7 @@ while ($result->fetch()) {
   $NOTdistinctCNT = $log_query->num_rows;
   $log_query->close();
 
-  $value = array($papertitle, $distinctCNT, $NOTdistinctCNT,$start_date, $end_date);
+  $value = array($papertitle, $distinctCNT, $NOTdistinctCNT, $start_date, $end_date);
   $same = true;
   if ($value[1] != $value[2]) {
     $same = false;
@@ -116,12 +116,13 @@ while ($result->fetch()) {
   if ($same == false) {
     $extra = ' style="background-color:red" ';
     $error = 'ERROR';
+    $errorcount++;
   } else {
     $extra = ' style="background-color:green" ';
     $error = '';
   }
   echo <<<HTML
-	<tr><td $extra>$propertyid</td><td $extra>$value[0]</td><td>$value[1]</td><td>$value[2]</td><td $extra>$error</td><td>$value[3]</td><td>$value[4]</td></tr>
+	<tr><td $extra>$propertyid</td><td $extra>$value[1]</td><td>$value[0]</td><td>$value[2]</td><td $extra>$error</td><td>$value[3]</td><td>$value[4]</td></tr>
 HTML;
   @flush();
 
@@ -129,7 +130,9 @@ HTML;
 
 
 echo <<<HTML
-		</table></body></html>
+		</table>
+		<h3>There are a total of $errorcount Records that do not match for $type.</h3>
+		</body></html>
 HTML;
 
 
