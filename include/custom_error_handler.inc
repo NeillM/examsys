@@ -163,7 +163,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     // Since we don't have a handle on the original statement, create another DB link
     $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
-    $paperID = NULL;
+    $paperID = null;
     if (isset($_GET['paperID'])) {
       $paperID = $_GET['paperID'];
     } elseif (isset($_POST['paperID'])) {
@@ -173,10 +173,14 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     $post_data = '';
     if (isset($_POST)) {
       foreach ($_POST as $key => $value) {
-        if ($post_data == '') {
-          $post_data = "$key=$value";
+        if ($key != 'ROGO_PW') {
+          if ($post_data == '') {
+            $post_data = "$key=$value";
+          } else {
+            $post_data .= ", $key=$value";
+          }
         } else {
-          $post_data .= ", $key=$value";
+          $post_data .= ", $key=<HIDDEN>";
         }
       }
     }
