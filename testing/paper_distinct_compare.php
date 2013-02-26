@@ -41,10 +41,12 @@ if ($mysqli->error) {
     exit();
   }
 }
+$result->execute();
 $result->store_result();
 $result->bind_result($propertyid, $start_date, $end_date, $papertitle);
+
 $records = $result->num_rows;
-echo "<h2>$records Rows Found</h2>";
+
 $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
 while ($result->fetch()) {
 
@@ -79,6 +81,7 @@ echo <<<HTML
 	<html>
 <body>
 <h1>Initial selection: $sql</h1><br />
+<h2>$records Rows Found</h2>
 <table>
 <tr><th>PaperID</th><th>Paper Name</th><th>Count</th><th>Distinct Count</th><th>Error</th></tr>
 HTML;
