@@ -141,6 +141,9 @@ class ldap_auth extends outline_authentication {
         ldap_unbind($ldap);
 
         $this->savetodebug('Now looking up userid in table from username');
+        if(!isset($sql_extra)) {
+          $sql_extra='';
+        }
         $sql = "SELECT $username_col as username, $id_col as id FROM $table WHERE $username_col = ? $sql_extra";
         $result = $this->db->prepare($sql);
 
