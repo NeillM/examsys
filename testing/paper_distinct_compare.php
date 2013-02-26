@@ -22,7 +22,7 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package Rogō
  */
-$type=1;
+$type=3;
 require '../classes/configobject.class.php';
 require '../classes/dbutils.class.php';
 @apache_setenv('no-gzip', 1);
