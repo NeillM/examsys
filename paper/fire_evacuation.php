@@ -37,25 +37,24 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/logmetadata.class.php';
 
-
 check_var('id', 'GET', true, false, false);
 
 $userObject = UserObject::get_instance();
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
   $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
   //this will exit php
 }
 
-$property_id = $propertyObj->get_property_id();
-$paper_type = $propertyObj->get_paper_type(); 
-$labs = $propertyObj->get_labs(); 
-$start_date = $propertyObj->get_start_date(); 
-$end_date = $propertyObj->get_end_date(); 
-$calendar_year = $propertyObj->get_calendar_year(); 
-$password = $propertyObj->get_password();
+$property_id    = $propertyObj->get_property_id();
+$paper_type     = $propertyObj->get_paper_type(); 
+$labs           = $propertyObj->get_labs(); 
+$start_date     = $propertyObj->get_start_date(); 
+$end_date       = $propertyObj->get_end_date(); 
+$calendar_year  = $propertyObj->get_calendar_year(); 
+$password       = $propertyObj->get_password();
 
 /*
  * 
@@ -109,9 +108,9 @@ if ($userObject->has_role('Student')) {
 
 //get lab info used in log metadata
 $lab_factory = new LabFactory($mysqli);
-if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
-    $lab_name = $lab_object->get_name();
-    $lab_id = $lab_object->get_id();
+if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+  $lab_name = $lab_object->get_name();
+  $lab_id = $lab_object->get_id();
 }
 
 if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
@@ -119,7 +118,7 @@ if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
 }
 
 //lookup previous sessionid from log_metadata.started property_id
-$log_metadata = new LogMetadata($userObject, $propertyObj->get_property_id(), $mysqli);
+$log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 $sessionid = $log_metadata->get_session_id();
 
 /*

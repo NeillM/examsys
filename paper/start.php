@@ -356,7 +356,7 @@ if (isset($_POST['sessionid'])) {
 }
 
 //lookup previous sessionid from log_metadata.started property_id
-$log_metadata = new LogMetadata($userObject, $paperID, $mysqli);
+$log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 
 if ($is_preview_mode_first_launch == true) {
 

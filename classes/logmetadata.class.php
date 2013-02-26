@@ -52,18 +52,17 @@ class LogMetadata {
    * @param integer    $paper_id   ID of the current paper
    * @param mysqli     $db         Database connection
    */
-  public function __construct( userObject $userObject, $paper_id, mysqli $db ) {
-    $this->userObject = $userObject;
+  public function __construct($userID, $paper_id, $db) {
     $this->id             = null;
     $this->session_id     = null;
     $this->start_datetime = null;
     $this->ipaddress      = null;
-    $this->student_grade  = $this->userObject->get_grade();
-    $this->year           = $this->userObject->get_user_ID();
+    $this->student_grade  = null;
+    $this->year           = null;
     $this->attempt        = null;
     $this->completed      = null;
     $this->lab_name       = null;
-    $this->student_id     = $this->userObject->get_user_ID();
+    $this->userid     = $userID;
     $this->paper_id       = $paper_id;
     $this->db             = $db;
   }
@@ -88,7 +87,7 @@ class LogMetadata {
 
     $stmt = $this->db->prepare($query);
 
-    $stmt->bind_param( 'ii', $this->student_id, $this->paper_id );
+    $stmt->bind_param('ii', $this->userid, $this->paper_id);
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows < 1) {
@@ -143,7 +142,7 @@ class LogMetadata {
    */
   public function set_completed_to_now() {
     $result = $this->db->prepare('UPDATE log_metadata SET completed = NOW() WHERE userID = ? AND paperID = ?');
-    $result->bind_param('ii', $this->userObject->get_user_ID(), $this->paper_id);
+    $result->bind_param('ii', $this->userid, $this->paper_id);
     $result->execute();
     $result->close();
   }
@@ -153,7 +152,7 @@ class LogMetadata {
    */
   public function set_completed_to_null() {
     $result = $this->db->prepare('UPDATE log_metadata SET completed = NULL WHERE userID = ? AND paperID = ?');
-    $result->bind_param('ii', $this->userObject->get_user_ID(), $this->paper_id);
+    $result->bind_param('ii', $this->userid, $this->paper_id);
     $result->execute();
     $result->close();
   }
@@ -194,7 +193,7 @@ class LogMetadata {
       //insert
       $query = 'INSERT INTO log_metadata (id, userID, paperID, started, ipaddress, attempt, completed, lab_name) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)';
       $stmt = $this->db->prepare($query);
-      $stmt->bind_param('iississ', $this->student_id, $this->paper_id, $this->session_id, $this->ipadress, $this->attempt, $this->completed, $this->lab_name);
+      $stmt->bind_param('iississ', $this->userid, $this->paper_id, $this->session_id, $this->ipadress, $this->attempt, $this->completed, $this->lab_name);
       $stmt->execute();
       $stmt->close();
       

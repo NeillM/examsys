@@ -169,7 +169,7 @@ $remaining_seconds = '';
  */
 $extra_time = null;
 
-$log_metadata      = new LogMetadata($userObject, $propertyObj->get_property_id(), $mysqli);
+$log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 // $log_metadata->get_record will return true if this user has stared this exam. false otherwise
 $exam_started = $log_metadata->get_record();
 
@@ -202,9 +202,9 @@ if ($exam_duration !== null) {
       }
     }
   } else {
-    $studentID         = $userObject->get_user_ID();
-    $timer             = new Timer($log_metadata, $exam_duration);
-    $remaining_time    = $timer->calculate_remaining_time();
+    $studentID       = $userObject->get_user_ID();
+    $timer           = new Timer($log_metadata, $exam_duration);
+    $remaining_time  = $timer->calculate_remaining_time();
   }
 
   $remaining_minutes = (int) ($remaining_time / 60);

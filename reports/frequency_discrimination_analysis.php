@@ -1748,7 +1748,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   }
   $student_modules_sql = '';
   if ($users_on_modules != '' and isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
-    $student_modules_sql = " AND log$paper_type.userID IN ($users_on_modules)";
+    $student_modules_sql = " AND log_metadata.userID IN ($users_on_modules)";
   }
 
   if ($_GET['studentsonly'] == 1) {
@@ -1759,11 +1759,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   // Calculate top and bottom cohorts.
   $student_list = '';
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log0, users, log_metadata) WHERE log0.userID=log_metadata.userID AND log0.started=log_metadata.started AND log0.q_paper=log_metadata.paperID AND log0.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND grade LIKE ? AND log0.started>=? AND log0.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log0.started) UNION ALL (SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log1, users, log_metadata) WHERE log1.userID=log_metadata.userID AND log1.started=log_metadata.started AND log1.q_paper=log_metadata.paperID AND log1.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND log1.started>=? AND log1.started<=? " . str_replace('log0', 'log1', $student_modules_sql) . " GROUP BY username, q_paper, log1.started) ORDER BY total_mark ASC, username");
+    $result = $mysqli->prepare("(SELECT username, sum(mark) AS total_mark, started FROM (log0, users, log_metadata) WHERE log0.metadataID = log_metadata.id AND log_metadata.userID = users.id AND (users.roles='Student' OR users.roles='graduate') AND paperID = ? AND grade LIKE ? AND started >= ? AND started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, paperID, started) UNION ALL (SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log1, users, log_metadata) WHERE log1.metadataID = log_metadata.id AND log_metadata.userID = users.id AND (users.roles='Student' OR users.roles='graduate') AND paperID = ? AND started >= ? AND started <= ? " . str_replace('log0', 'log1', $student_modules_sql) . " GROUP BY username, started) ORDER BY total_mark ASC, username");
     $result->bind_param('isssiss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log$paper_type, users, log_metadata) WHERE log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID $roles_sql AND log$paper_type.userID=users.id AND q_paper=? AND grade LIKE ? AND DATE_ADD(log$paper_type.started, INTERVAL 2 MINUTE)>=? AND log$paper_type.started<=? $student_modules_sql GROUP BY username, q_paper, log$paper_type.started ORDER BY total_mark ASC, username");
-    $result->bind_param('isss',$paperID, $_GET['repcourse'], $startdate, $enddate);
+    $result = $mysqli->prepare("SELECT username, sum(mark) AS total_mark, started FROM (log$paper_type, users, log_metadata) WHERE log$paper_type.metadataID = log_metadata.id $roles_sql AND log_metadata.userID = users.id AND paperID = ? AND grade LIKE ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? $student_modules_sql GROUP BY username, started ORDER BY total_mark ASC, username");
+    $result->bind_param('isss', $paperID, $_GET['repcourse'], $startdate, $enddate);
   }
   $result->execute();
   $result->bind_result($username, $total_mark, $started);
@@ -1771,7 +1771,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
   $student_no = 0;
   $bottom_cohort = array();
-  $user_no = round(($result->num_rows/100)*$cohort_percent);
+  $user_no = round(($result->num_rows / 100) * $cohort_percent);
   $user_total = $result->num_rows;
   while ($result->fetch()) {
     if ($student_no < $user_no) {
@@ -1788,10 +1788,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $bottom_log_array = array();
   $top_log_array = array();
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT username, log0.userID, log0.q_id, user_answer, q_type, score_method, display_method, mark, totalpos, option_order, started FROM log0, questions, users WHERE log0.q_id=questions.q_id AND q_paper=? AND grade LIKE ? AND users.id=log0.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=? $student_modules_sql) UNION ALL (SELECT username, log1.userID, log1.q_id, user_answer, q_type, score_method, display_method, mark, totalpos, option_order, started FROM log1, questions,  users WHERE log1.q_id=questions.q_id AND q_paper=? AND users.id=log1.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=? " . str_replace('log0', 'log1', $student_modules_sql) . ")");
+    $result = $mysqli->prepare("(SELECT username, log_metadata.userID, log0.q_id, user_answer, q_type, score_method, display_method, mark, totalpos, option_order, started FROM log0, log_metadata, questions, users WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? $student_modules_sql) UNION ALL (SELECT username, log_metadata.userID, log1.q_id, user_answer, q_type, score_method, display_method, mark, totalpos, option_order, started FROM log1, log_metadata, questions,  users WHERE log1.metadataID = log_metadata.id AND log1.q_id=questions.q_id AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? " . str_replace('log0', 'log1', $student_modules_sql) . ")");
     $result->bind_param('isssiss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT username, log$paper_type.userID, log$paper_type.q_id, user_answer, q_type, score_method, display_method, mark, totalpos, option_order, started FROM log$paper_type, questions, users WHERE log$paper_type.q_id=questions.q_id AND q_paper=? AND grade LIKE ? AND users.id=log$paper_type.userID AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=? $student_modules_sql");
+    $result = $mysqli->prepare("SELECT username, log_metadata.userID, log$paper_type.q_id, user_answer, q_type, score_method, display_method, mark, totalpos, option_order, started FROM log$paper_type, log_metadata, questions, users WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? $student_modules_sql");
     $result->bind_param('isss', $paperID, $_GET['repcourse'], $startdate, $enddate);
   }
   $result->execute();
@@ -1851,7 +1851,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     if (isset($_GET['q_ids']) and $_GET['q_ids'] != '') {
       $qids_instring = ' AND q_id IN(' . $_GET['q_ids']. ')';
 	  }
-    $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, o_media, o_media_width, o_media_height, score_method, display_method, q_media, q_media_width, q_media_height, correct, std FROM (papers, questions, options) WHERE  papers.paper=? AND papers.question=questions.q_id AND questions.q_id = options.o_id $qids_instring ORDER BY screen, display_pos, id_num");
+    $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, o_media, o_media_width, o_media_height, score_method, display_method, q_media, q_media_width, q_media_height, correct, std FROM (papers, questions, options) WHERE  papers.paper = ? AND papers.question=questions.q_id AND questions.q_id = options.o_id $qids_instring ORDER BY screen, display_pos, id_num");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $o_media, $o_media_width, $o_media_height, $score_method, $display_method, $q_media, $q_media_width, $q_media_height, $correct, $std);

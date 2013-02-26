@@ -95,9 +95,9 @@ $modIDs = array_keys($moduleID);
 //get lab info
 $current_ip_address = NetworkUtils::get_ipaddress();
 $lab_factory = new LabFactory($mysqli);
-if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
-    $lab_name = $lab_object->get_name();
-    $lab_id = $lab_object->get_id();
+if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+  $lab_name = $lab_object->get_name();
+  $lab_id = $lab_object->get_id();
 }
 
 $summative_exam_session_started = false;
@@ -153,7 +153,11 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
   $is_exam_review_mode        = true;
 }
 
-$log_metadata = new LogMetadata($userObject, $paperID, $mysqli);
+if (isset($_GET['userid'])) {
+  $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
+} else {
+  $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
+}
 if (!$is_exam_review_mode and !$is_question_preview_mode) {
   //only update log metadata if we are ending an exam
   $log_metadata->set_completed_to_now();

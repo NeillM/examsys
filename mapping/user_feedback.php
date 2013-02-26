@@ -96,11 +96,11 @@ $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
 //check the user sat the paper!
 if ($paper_type == '5') {
-  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log5 WHERE q_paper=? AND userID=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log5, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND userID = ? LIMIT 1");
 } elseif ($paper_type == '4') {
   $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log4 WHERE q_paper=? AND userID=? LIMIT 1");
 } else {
-  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log$paper_type WHERE q_paper=? AND userID=? ORDER BY screen DESC LIMIT 1");
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND userID = ? ORDER BY screen DESC LIMIT 1");
 }
 $result->bind_param('ii', $paperID, $userID);
 $result->execute();
@@ -182,7 +182,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   if ($paper_type == '4') {
     $sql = "SELECT q_id, rating, NULL AS totalpos FROM log4 WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND userID = ? AND q_paper = ? $startedSQL ORDER BY q_id, started";
   } else {
-    $sql = "SELECT q_id, mark, totalpos FROM log$paper_type WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND userID = ? AND q_paper = ? $startedSQL ORDER BY q_id, started";
+    $sql = "SELECT q_id, mark, totalpos FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $startedSQL ORDER BY q_id, started";
   }
   $result = $mysqli->prepare($sql);
   $result->bind_param('iii', $paperID, $userID, $paperID);

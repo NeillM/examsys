@@ -61,7 +61,11 @@ $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $fo
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
 //lookup previous sessionid from log_metadata.started property_id
-$log_metadata = new LogMetadata($userObject, $paperID, $mysqli);
+if (isset($_GET['userid'])) {
+  $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
+} else {
+  $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
+}
 $sessionid = $log_metadata->get_session_id();
 if ($sessionid === null) {
   $notice->access_denied($mysqli, $string, $string['nottaken'], false);
