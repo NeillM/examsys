@@ -81,6 +81,7 @@ while ($result->fetch()) {
   $log_query->execute();
   $log_query->bind_result($count);
   $log_query->fetch();
+  $log_query->close();
   $NOTdistinctCNT = $count;
 
   $data[$propertyid] = array($papertitle, $distinctCNT, $NOTdistinctCNT);
