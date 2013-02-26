@@ -84,7 +84,7 @@ while ($result->fetch()) {
   $log_query->close();
   $NOTdistinctCNT = $count;
 
-  $data[$propertyid] = array($papertitle, $distinctCNT, $NOTdistinctCNT);
+  $data[$propertyid] = array($papertitle, $distinctCNT, $NOTdistinctCNT,$start_date, $end_date);
 
 }
 
@@ -94,7 +94,7 @@ echo <<<HTML
 <h1>Initial selection: $sql</h1><br />
 <h2>$records Rows Found</h2>
 <table>
-<tr><th>PaperID</th><th>Paper Name</th><th>Count</th><th>Distinct Count</th><th>Error</th></tr>
+<tr><th>PaperID</th><th>Paper Name</th><th>Count</th><th>Distinct Count</th><th>Error</th><th></th><th></th></tr>
 HTML;
 if (isset($data)) {
   foreach ($data as $key => $value) {
@@ -111,7 +111,7 @@ if (isset($data)) {
       $error = '';
     }
     echo <<<HTML
-	<tr><td $extra>$key</td><td $extra>$value[0]</td><td>$value[1]</td><td>$value[2]</td><td $extra>$error</td></tr>
+	<tr><td $extra>$key</td><td $extra>$value[0]</td><td>$value[1]</td><td>$value[2]</td><td $extra>$error</td><td>$start_date</td><td>$end_date</td></tr>
 HTML;
   }
 }
