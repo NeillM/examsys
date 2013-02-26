@@ -3542,7 +3542,7 @@ QUERY;
   }
 
   // 25/02/2013 (brzsw) - Add new metadataID field into the log tables.
-  $tableNos = array(0, 1, 2, 3, 5);
+  $tableNos = array('0', '1', '2', '3', '5', '_late');
   foreach ($tableNos as $tableNo) {
     if (!$updater_utils->does_column_exist('log' . $tableNo, 'metadataID')) {
       $updater_utils->execute_query("ALTER TABLE log$tableNo ADD COLUMN metadataID int(11)", true);

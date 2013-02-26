@@ -1653,9 +1653,6 @@ QUERY;
     $this->tableList['log0'] = <<<QUERY
         CREATE TABLE `log0` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned DEFAULT NULL,
-          `started` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-          `q_paper` mediumint(8) unsigned DEFAULT NULL,
           `q_id` int(4) NOT NULL DEFAULT '0',
           `mark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
@@ -1665,20 +1662,16 @@ QUERY;
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
           `option_order` varchar(255) DEFAULT NULL,
+          `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          KEY `q_paper` (`q_paper`),
-          KEY `username` (`userID`),
-          KEY `started` (`started`),
-          KEY `idx_log0_screen` (`screen`)
+          KEY `idx_log0_screen` (`screen`),
+          KEY `idx_metadataid` (`metadataID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['log1'] = <<<QUERY
         CREATE TABLE `log1` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned DEFAULT NULL,
-          `started` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-          `q_paper` mediumint(8) unsigned DEFAULT NULL,
           `q_id` int(4) NOT NULL DEFAULT '0',
           `mark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
@@ -1688,20 +1681,16 @@ QUERY;
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
           `option_order` varchar(255) DEFAULT NULL,
+          `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          KEY `q_paper` (`q_paper`),
-          KEY `username` (`userID`),
-          KEY `started` (`started`),
-          KEY `idx_log1_screen` (`screen`)
+          KEY `idx_log0_screen` (`screen`),
+          KEY `idx_metadataid` (`metadataID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['log2'] = <<<QUERY
         CREATE TABLE `log2` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned DEFAULT NULL,
-          `started` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-          `q_paper` mediumint(8) unsigned DEFAULT NULL,
           `q_id` int(4) NOT NULL DEFAULT '0',
           `mark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
@@ -1711,20 +1700,16 @@ QUERY;
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
           `option_order` varchar(255) DEFAULT NULL,
+          `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          KEY `q_paper` (`q_paper`),
-          KEY `username` (`userID`),
-          KEY `started` (`started`),
-          KEY `idx_log2_screen` (`screen`)
+          KEY `idx_log0_screen` (`screen`),
+          KEY `idx_metadataid` (`metadataID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['log3'] = <<<QUERY
         CREATE TABLE `log3` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned DEFAULT NULL,
-          `started` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-          `q_paper` mediumint(8) unsigned DEFAULT NULL,
           `q_id` int(4) NOT NULL DEFAULT '0',
           `mark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
@@ -1734,11 +1719,10 @@ QUERY;
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
           `option_order` varchar(255) DEFAULT NULL,
+          `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY (`id`),
-          KEY `q_paper` (`q_paper`),
-          KEY `username` (`userID`),
-          KEY `started` (`started`),
-          KEY `idx_log3_screen` (`screen`)
+          KEY `idx_log0_screen` (`screen`),
+          KEY `idx_metadataid` (`metadataID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1787,11 +1771,10 @@ QUERY;
           `q_id` int(11) DEFAULT NULL,
           `mark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
+          `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          KEY `q_paper` (`q_paper`),
-          KEY `username` (`userID`),
-          KEY `started` (`started`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
+          KEY `idx_metadataid` (`metadataID`)
+       ) ENGINE=InnoDB AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log6'] = <<<QUERY
@@ -1838,9 +1821,6 @@ QUERY;
     $this->tableList['log_late'] = <<<QUERY
         CREATE TABLE `log_late` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
-          `started` datetime NOT NULL default '0000-00-00 00:00:00',
-          `q_paper` int(10) unsigned DEFAULT NULL,
           `q_id` int(4) NOT NULL default '0',
           `mark` float default NULL,
           `totalpos` tinyint(4) default NULL,
@@ -1850,9 +1830,9 @@ QUERY;
           `updated` datetime default NULL,
           `dismiss` char(20) default NULL,
           `option_order` varchar(255) default NULL,
+          `metadataID` int(11) DEFAULT NULL,
           PRIMARY KEY (`id`),
-          KEY `q_paper` (`q_paper`),
-          KEY `username` (`userID`)
+          KEY `idx_metadataid` (`metadataID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1871,6 +1851,7 @@ QUERY;
           PRIMARY KEY  (`id`),
           KEY `userID` (`userID`,`paperID`,`started`),
           KEY `idx_log_metadata_student_grade` (`student_grade`),
+          KEY `idx_log_metadata_paperID` (`paperID`),
           KEY `idx_log_metadata_paperID` (`paperID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
