@@ -25,15 +25,15 @@
 
 require '../classes/configobject.class.php';
 require '../classes/dbutils.class.php';
-$configObject          = Config::get_instance();
+$configObject = Config::get_instance();
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
-$sql="select property_id,date_format(start_date,'%Y%m%d%H%i%S') as start_date, date_format(end_date,'%Y%m%d%H%i%S') as end_date, paper_title from properties where paper_type=2";
+$sql = "select property_id,date_format(start_date,'%Y%m%d%H%i%S') as start_date, date_format(end_date,'%Y%m%d%H%i%S') as end_date, paper_title from properties where paper_type=2";
 
-$result = $mysqli->prepare( $sql );
+$result = $mysqli->prepare($sql);
 
 $result->store_result();
-$result->bind_result($propertyid,$start_date,$end_date,$papertitle);
+$result->bind_result($propertyid, $start_date, $end_date, $papertitle);
 $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
 while ($result->fetch()) {
 
@@ -43,15 +43,15 @@ while ($result->fetch()) {
   $log_query->execute();
   $log_query->bind_result($count);
   $log_query->fetch();
-  $distinctCNT=$count;
+  $distinctCNT = $count;
   $log_query = $mysqli->prepare("SELECT  count(log2.q_id) FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
-  $log_query->bind_param('iss', $propertyid, ,$start_date, $end_date);
+  $log_query->bind_param('iss', $propertyid, $start_date, $end_date);
   $log_query->execute();
   $log_query->bind_result($count);
   $log_query->fetch();
-  $NOTdistinctCNT=$count;
+  $NOTdistinctCNT = $count;
 
-  $data[$propertyid]=array($papertitle,$distinctCNT,$NOTdistinctCNT);
+  $data[$propertyid] = array($papertitle, $distinctCNT, $NOTdistinctCNT);
 
 }
 
@@ -62,26 +62,24 @@ echo <<<HTML
 <table>
 <tr><th>PaperID</th><th>Paper Name</th><th>Count</th><th>Distinct Count</th><th>Error</th></tr>
 HTML;
-		foreach($data as $key=>$value) {
-		  $same=true;
-		  if($value[1]!=$value[2]) {
-		  $same=false;
+foreach ($data as $key => $value) {
+  $same = true;
+  if ($value[1] != $value[2]) {
+    $same = false;
 
-		  }
-		  if($same==false) {
-		  $extra= ' style="background-color:red" ';
-		  $error='ERROR';
-		  }
-		  else
-		  {
-		  $extra= ' style="background-color:green" ';
-		  $error='';
-		  }
-		  echo <<<HTML
+  }
+  if ($same == false) {
+    $extra = ' style="background-color:red" ';
+    $error = 'ERROR';
+  } else {
+    $extra = ' style="background-color:green" ';
+    $error = '';
+  }
+  echo <<<HTML
 	<tr><td $extra>$key</td><td $extra>$value[0]</td><td>$value[1]</td><td>$value[2]</td><td $extra>$error</td></tr>
 HTML;
-		}
-		echo <<<HTML
+}
+echo <<<HTML
 		</table></body></html>
 HTML;
 
