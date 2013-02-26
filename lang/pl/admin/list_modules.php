@@ -25,7 +25,7 @@ $string['no'] = 'nie';
 $string['createmodule'] = 'Utwórz nowy moduł';
 $string['bulkmoduleimport'] = 'Skomasowany import modułów'; 
 $string['editmodule'] = 'Edytuj moduł';
-$string['deletemodule'] = 'Delete Module';  // Niko
+$string['deletemodule'] = 'Usuń moduł';  
 $string['modulefolder'] = 'Folder modułu';
 $string['studentcohort'] = 'Grupa studentów';
 ?>

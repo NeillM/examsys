@@ -18,6 +18,6 @@ $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['accessdeniedwarnings'] = 'Ostrzeżenia braku dostępu';
 $string['date'] = 'Data';
 $string['user'] = 'Użytkownik';
-$string['url'] = 'URL';
+$string['url'] = 'URL'; //cognate
 $string['message'] = 'Wiadomość';
 ?>
