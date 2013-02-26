@@ -120,7 +120,7 @@ while ($result->fetch()) {
     $error = '';
   }
   echo <<<HTML
-	<tr><td $extra>$key</td><td $extra>$value[0]</td><td>$value[1]</td><td>$value[2]</td><td $extra>$error</td><td>$value[3]</td><td>$value[4]</td></tr>
+	<tr><td $extra>$propertyid</td><td $extra>$value[0]</td><td>$value[1]</td><td>$value[2]</td><td $extra>$error</td><td>$value[3]</td><td>$value[4]</td></tr>
 HTML;
   @flush();
 
