@@ -26,7 +26,7 @@ class LogMetadata {
 
   private $id;
   private $paper_id;
-  private $student_id;
+  private $userID;
   private $session_id; //started
   private $start_datetime; //date time object derived from started
   private $ipaddress;
@@ -62,7 +62,7 @@ class LogMetadata {
     $this->attempt        = null;
     $this->completed      = null;
     $this->lab_name       = null;
-    $this->userid     = $userID;
+    $this->userid         = $userID;
     $this->paper_id       = $paper_id;
     $this->db             = $db;
   }
@@ -71,23 +71,14 @@ class LogMetadata {
    * Gets last log metadata record for this userID on this paperID
    * @return DateTime
    */
-  public function get_record() {
-
-    $query = 'SELECT
-                id, started, ipaddress, student_grade, year, attempt, completed, lab_name
-              FROM
-                log_metadata
-              WHERE
-                userID  = ?
-              AND
-                paperID = ?
-              ORDER BY
-                id DESC
-              LIMIT 1';
-
-    $stmt = $this->db->prepare($query);
-
-    $stmt->bind_param('ii', $this->userid, $this->paper_id);
+  public function get_record($timedate = '') {
+    if ($timedate == '') {
+      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID  = ? AND paperID = ? ORDER BY id DESC LIMIT 1');
+      $stmt->bind_param('ii', $this->userid, $this->paper_id);
+    } else {
+      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID  = ? AND paperID = ? AND started = ? ORDER BY id DESC LIMIT 1');
+      $stmt->bind_param('iis', $this->userid, $this->paper_id, $timedate);
+    }
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows < 1) {

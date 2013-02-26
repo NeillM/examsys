@@ -31,20 +31,17 @@ require_once '../classes/lab.class.php';
 require_once '../classes/log_extra_time.class.php';
 require_once '../classes/logmetadata.class.php';
 
-function get_students($modules, $property_object, $log_lab_end_time) {
-
-  global $string, $mysqli;
-
+function get_students($modules, $property_object, $log_lab_end_time, $string, $db) {
   $paperID = $property_object->get_property_id();
 
   $configObject = Config::get_instance();
 
   //create a caching LogExtraTime gets all the results in one hit
-  $log_extra_time = new LogExtraTime($log_lab_end_time, array(), $mysqli, true);
+  $log_extra_time = new LogExtraTime($log_lab_end_time, array(), $db, true);
 
   // Get any student notes;
   $notes_array = array();
-  $notes_results = $mysqli->prepare("SELECT note_id, userID FROM student_notes WHERE paper_id=?");
+  $notes_results = $db->prepare("SELECT note_id, userID FROM student_notes WHERE paper_id=?");
   $notes_results->bind_param('i', $paperID);
   $notes_results->execute();
   $notes_results->store_result();
@@ -79,7 +76,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
 
       //Get all students who should are able to access this paper
       $sql = "SELECT DISTINCT extra_time, modules_student.userID, surname, first_names, title FROM modules_student, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE idMod IN ( " . $modules . ") AND calendar_year = ? AND modules_student.userID = users.id ORDER BY surname, initials";
-      $results = $mysqli->prepare($sql);
+      $results = $db->prepare($sql);
       $session = $property_object->get_calendar_year();
       $results->bind_param('s', $session);
       $results->execute();
@@ -98,7 +95,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
 
       //merge in all students who whve submitted records to log 2 for this paper
       $sql = 'SELECT DISTINCT extra_time, log2.userID, surname, first_names, title FROM log2, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE log2.q_paper = ? AND log2.userID = users.id AND users.username LIKE "user%" ORDER BY surname, initials';
-      $results = $mysqli->prepare($sql);
+      $results = $db->prepare($sql);
       $results->bind_param('i', $paperID);
       $results->execute();
       $results->store_result();
@@ -113,7 +110,7 @@ function get_students($modules, $property_object, $log_lab_end_time) {
       $results->close();
 
       foreach( $student_object as $student_id => $student_obj) {
-          process_student_list($log_lab_end_time, $log_extra_time, $student_obj, $property_object, $configObject, $notes_array, $string, $mysqli);
+          process_student_list($log_lab_end_time, $log_extra_time, $student_obj, $property_object, $configObject, $notes_array, $string, $db);
       }
 
       ?>
@@ -163,12 +160,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
   //set userID log_extra_time as we are in cached mode
   $log_extra_time->set_student_object($student_object);
 
-  /* @var $student_extra_end_datetime DateTime */
-  //$student_end_datetime = $log_extra_time->get_end_date_datetime();
-
-  //if ($student_end_datetime === false) {
-    $student_end_datetime = $lab_session_end_datetime;
-  //}
+  $student_end_datetime = $lab_session_end_datetime;
 
   // Calculate whether student's extended 'end time' is before the current session's start time
   // Currently unused but could be altered to exit if student's extra end time is before session's start time
@@ -200,12 +192,11 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
     $student_end_datetime = $paper_end_datetime;
   }
 
-  $ft=clone $student_end_datetime;
+  $ft = clone $student_end_datetime;
   $ft->setTimezone(new DateTimeZone($property_object->get_timezone()));
   $formatted_end_time = $ft->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'));
-//$formatted_end_time = var_export($student_end_datetime, true) . '::' . var_export($paper_end_datetime, true) . '##' . $student_end_datetime->format('d/m/Y H:i:s');
-  // Get student description
 
+  // Get student description
   $tmp_userID = $student_object['user_ID'];
   $surname = $student_object['surname'];
   $first_names = $student_object['first_names'];
@@ -585,7 +576,7 @@ if ($language != 'en') {
                    style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold"
                    id="theTime"/>
           <?php
-          // BP Only display this if there is the one exam
+          // Only display this if there is the one exam
           if (count($properties_list) < 2) {
             ?>
               <input type="text"
@@ -808,7 +799,7 @@ if (count($properties_list) > 0) {
 
         $modules = '\'' . $modules . '\'';
 
-        get_students($modules, $property_object, $log_lab_end_time);
+        get_students($modules, $property_object, $log_lab_end_time, $string, $mysqli);
         ?>
       </td>
     <?php

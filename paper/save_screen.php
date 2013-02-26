@@ -108,7 +108,7 @@ if (!$is_preview and time() > $propertyObj->get_end_date() and ( $propertyObj->g
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
 
-$log_metadata = new LogMetadata($userObject, $propertyObj->get_property_id(), $mysqli);
+$log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 if ($log_metadata->get_record() === false) {
   $notice->access_denied($mysqli, $string, $string['error_paper'], false);
 }

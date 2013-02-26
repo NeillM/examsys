@@ -153,6 +153,12 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
   $is_exam_review_mode        = true;
 }
 
+if (isset($_GET['previous'])) {
+  $previous = $_GET['previous'];
+} else {
+  $previous = '';
+}
+
 if (isset($_GET['userid'])) {
   $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
 } else {
@@ -162,7 +168,7 @@ if (!$is_exam_review_mode and !$is_question_preview_mode) {
   //only update log metadata if we are ending an exam
   $log_metadata->set_completed_to_now();
 }
-$log_metadata->get_record();
+$log_metadata->get_record($previous);
 $metadataid = $log_metadata->get_metadata_id();
 
 if (isset($_GET['type'])) $log_type = $_GET['type'];

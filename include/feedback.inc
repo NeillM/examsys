@@ -56,8 +56,8 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
   // Get order of the class.
   if ($paper_type == '0') {
     if ($users_on_modules != '') {
-      $student_modules_sql1 = " AND log0.userID IN ($users_on_modules)";
-      $student_modules_sql2 = " AND log1.userID IN ($users_on_modules)";
+      $student_modules_sql1 = " AND userID IN ($users_on_modules)";
+      $student_modules_sql2 = " AND userID IN ($users_on_modules)";
     } else {
       $student_modules_sql1 = '';
       $student_modules_sql2 = '';
@@ -102,7 +102,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     while ($result->fetch()) {
       $excluded[] = $q_id;
     }
-    $excluded = 'AND q_id NOT IN (' . implode(',',$excluded) . ') ';
+    $excluded = 'AND q_id NOT IN (' . implode(',', $excluded) . ') ';
   } else {
     $excluded = '';
   }
