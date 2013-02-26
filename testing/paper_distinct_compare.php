@@ -51,7 +51,7 @@ $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
 while ($result->fetch()) {
 
   //	  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
-  $log_query = $mysqli->prepare("SELECT DISTINCT count(log2.q_id) FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
+  $log_query = $mysqli->prepare("SELECT DISTINCT count(log2.q_id) as count FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
   if ($mysqli->error) {
     try {
       throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
@@ -65,8 +65,9 @@ while ($result->fetch()) {
   $log_query->execute();
   $log_query->bind_result($count);
   $log_query->fetch();
+  $log_query->close();
   $distinctCNT = $count;
-  $log_query = $mysqli->prepare("SELECT  count(log2.q_id) FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
+  $log_query = $mysqli->prepare("SELECT  count(log2.q_id) as count FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
   if ($mysqli->error) {
     try {
       throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
