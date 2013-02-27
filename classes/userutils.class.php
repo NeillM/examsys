@@ -110,7 +110,7 @@ Class UserUtils {
    *
    */
   static function username_exists($username, $db) {
-    $stmt = $db->prepare("SELECT id FROM users WHERE username = ?");
+    $stmt = $db->prepare("SELECT id FROM users WHERE username = ? AND user_deleted IS NULL");
     $stmt->bind_param('s', $username);
     $stmt->execute();
     $stmt->store_result();
@@ -155,7 +155,7 @@ Class UserUtils {
    *
    */
   static function has_user_role($tmp_userID, $test_role, $db) {
-    $stmt = $db->prepare("SELECT roles FROM users WHERE id = ? LIMIT 1");
+    $stmt = $db->prepare("SELECT roles FROM users WHERE id = ? AND user_deleted IS NULL LIMIT 1");
     $stmt->bind_param('i', $tmp_userID);
     $stmt->execute();
     $stmt->bind_result($roles);

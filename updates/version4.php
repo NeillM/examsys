@@ -204,6 +204,8 @@ if (!isset($_POST['update'])) {
 
   error_reporting(-1);
   ob_start();
+  
+  echo "<div>Starting at " . date("H:i:s") . "</div>";
 
   echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>\n<ol>";
 
@@ -246,6 +248,7 @@ if (!isset($_POST['update'])) {
       // Add to list of user IDs/dates <user_id>,<date>;<user_id>,<date>
       $group_list .= $setterID . ',' . str_replace(array(' ', '-', ':'), '', $std_set) . ';';
     }
+    $individual_reviews->free_result();
     $individual_reviews->close();
     $group_list = rtrim($group_list, ';');
 
@@ -254,6 +257,7 @@ if (!isset($_POST['update'])) {
       $updater_utils->execute_query("UPDATE standards_setting SET group_review = \"" . $group_list . "\" WHERE paperID = $paperID AND method = 'Modified Angoff' AND group_review = 'Yes'", true);
     }
   }
+  $group_reviews->free_result();
   $group_reviews->close();
   $mysqli->commit();
 
@@ -277,6 +281,7 @@ if (!isset($_POST['update'])) {
     while ($sch_data->fetch()) {
       $schools[$school_name] = $schoolid;
     }
+    $sch_data->free_result();
     $sch_data->close();
 
     // Populate the new field
@@ -547,6 +552,8 @@ if (!isset($_POST['update'])) {
     ///////////////////////  update the config file!! //////////////////////////////////////
 
   } // END Create DB user
+  $result->free_result();
+  $result->close();
 
   // 26/08/2011 - Add date and time formats to config file.
   $new_cfg_str[] = "// Date formats in MySQL DATE_FORMAT format\n";
@@ -615,6 +622,7 @@ if (!isset($_POST['update'])) {
     while ($q_data->fetch()) {
       $updater_utils->execute_query("UPDATE questions SET display_method='', score_method='Bonus Mark' WHERE q_id=$q_id", false);
     }
+    $q_data->free_result();
     $q_data->close();
 
     // Update the StrictOrder setting
@@ -625,6 +633,7 @@ if (!isset($_POST['update'])) {
     while ($q_data->fetch()) {
       $updater_utils->execute_query("UPDATE questions SET display_method='', score_method='Mark per Option' WHERE q_id=$q_id", false);
     }
+    $q_data->free_result();
     $q_data->close();
 
     // Update the AllItemsCorrect setting
@@ -635,6 +644,7 @@ if (!isset($_POST['update'])) {
     while ($q_data->fetch()) {
       $updater_utils->execute_query("UPDATE questions SET display_method='', score_method='Mark per Question' WHERE q_id=$q_id", false);
     }
+    $q_data->free_result();
     $q_data->close();
 
     // Update the SelectedPositive setting
@@ -645,6 +655,7 @@ if (!isset($_POST['update'])) {
     while ($q_data->fetch()) {
       $updater_utils->execute_query("UPDATE questions SET display_method='', score_method='Mark per Option' WHERE q_id=$q_id", false);
     }
+    $q_data->free_result();
     $q_data->close();
 
     // Update the OrderNeighbours setting
@@ -655,6 +666,7 @@ if (!isset($_POST['update'])) {
     while ($q_data->fetch()) {
       $updater_utils->execute_query("UPDATE questions SET display_method='', score_method='Allow partial Marks' WHERE q_id=$q_id", false);
     }
+    $q_data->free_result();
     $q_data->close();
 
     $updater_utils->execute_query('ALTER TABLE options CHANGE COLUMN marks marks_correct float', true);
@@ -671,6 +683,7 @@ if (!isset($_POST['update'])) {
     while ($q_data->fetch()) {
       $updater_utils->execute_query("UPDATE options SET marks_incorrect=-1 WHERE o_id=$q_id", false);
     }
+    $q_data->free_result();
     $q_data->close();
 
     // Update options for half-negative marking
@@ -682,6 +695,7 @@ if (!isset($_POST['update'])) {
       $updater_utils->execute_query("UPDATE options SET marks_incorrect=-0.5 WHERE o_id=$q_id", false);
       $updater_utils->execute_query("UPDATE questions SET display_method='TF_NegativeAbstain' WHERE q_id=$q_id", false);
     }
+    $q_data->free_result();
     $q_data->close();
   }
   $mysqli->commit();
@@ -700,6 +714,7 @@ if (!isset($_POST['update'])) {
     while ($q_data->fetch()) {
       $updater_utils->execute_query("UPDATE schools SET facultyID=$faculty_id WHERE faculty='$faculty_name'", false);
     }
+    $q_data->free_result();
     $q_data->close();
 
     $updater_utils->execute_query("ALTER TABLE schools DROP COLUMN faculty", true);
@@ -744,6 +759,7 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($column_type);
   $result->fetch();
+  $result->free_result();
   $result->close();
 
   if (strpos($column_type, 'smallint') !== false) {
@@ -767,6 +783,7 @@ if (!isset($_POST['update'])) {
     if ($check->num_rows() > 0) {
       $updater_utils->execute_query("UPDATE log0 SET user_answer=REPLACE(user_answer, 'y', 't') WHERE q_id=$questionID AND user_answer LIKE '%y%'", true);
     }
+    $check->free_result();
     $check->close();
 
     $check = $mysqli->prepare("SELECT * FROM log0 WHERE q_id=? AND user_answer LIKE '%n%'");
@@ -777,6 +794,7 @@ if (!isset($_POST['update'])) {
     if ($check->num_rows() > 0) {
       $updater_utils->execute_query("UPDATE log0 SET user_answer=REPLACE(user_answer, 'n', 'f') WHERE q_id=$questionID AND user_answer LIKE '%n%'", true);
     }
+    $check->free_result();
     $check->close();
 
     $check = $mysqli->prepare("SELECT * FROM log2 WHERE q_id=? AND user_answer LIKE '%y%'");
@@ -787,6 +805,7 @@ if (!isset($_POST['update'])) {
     if ($check->num_rows() > 0) {
       $updater_utils->execute_query("UPDATE log2 SET user_answer=REPLACE(user_answer, 'y', 't') WHERE q_id=$questionID AND user_answer LIKE '%y%'", true);
     }
+    $check->free_result();
     $check->close();
 
     $check = $mysqli->prepare("SELECT * FROM log2 WHERE q_id=? AND user_answer LIKE '%n%'");
@@ -797,12 +816,14 @@ if (!isset($_POST['update'])) {
     if ($check->num_rows() > 0) {
       $updater_utils->execute_query("UPDATE log2 SET user_answer=REPLACE(user_answer, 'n', 'f') WHERE q_id=$questionID AND user_answer LIKE '%n%'", true);
     }
+    $check->free_result();
     $check->close();
 
     $updater_utils->execute_query("UPDATE options SET correct='t', marks_correct=1, marks_incorrect=-1 WHERE o_id=$questionID AND correct='y'", true);
     $updater_utils->execute_query("UPDATE options SET correct='f', marks_correct=1, marks_incorrect=-1 WHERE o_id=$questionID AND correct='n'", true);
     $updater_utils->execute_query("UPDATE questions SET q_type='dichotomous', display_method='TF_Positive', score_method='Mark per Option' WHERE q_id=$questionID", true);
   }
+  $result->free_result();
   $result->close();
   $mysqli->commit();
 
@@ -823,6 +844,7 @@ if (!isset($_POST['update'])) {
       $updater_utils->execute_query("UPDATE questions SET display_method=\"" . $new_method . "\" WHERE q_id=$questionID", false);
     }
   }
+  $result->free_result();
   $result->close();
 
   // 22/09/2011 - remove timedate question type
@@ -834,6 +856,8 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'", false);
   }
   $mysqli->commit();
+  $check->free_result();
+  $check->close();
 
   /*
   // 01/09/2011 - Remove the time/date question type
@@ -866,6 +890,9 @@ if (!isset($_POST['update'])) {
     }
   }
   $mysqli->commit();
+  
+  $check->free_result();
+  $check->close();
 
   // 30/09/2011 - Update to the format of Labelling questions
   $result = $mysqli->prepare("SELECT o.o_id, o.correct FROM options o INNER JOIN questions q ON o.o_id=q.q_id WHERE q.q_type='labelling' AND (o.correct NOT LIKE '%single;label%' AND o.correct NOT LIKE '%multiple;label%' AND o.correct NOT LIKE '%single;menu%')");
@@ -896,6 +923,7 @@ if (!isset($_POST['update'])) {
   $mysqli->commit();
 
   if ($result->num_rows > 0) echo "<li>Updated the format of Labelling questions</li>";
+  $result->free_result();
   $result->close();
 
   //ADD new role based MySQL users - 10/10/2011
@@ -956,6 +984,8 @@ if (!isset($_POST['update'])) {
     ///////////////////////  update the config file!! //////////////////////////////////////
 
   } // END Create SCT user
+  $result->free_result();
+  $result->close();
 
   $cfg_db_inv_username = $cfg_db_database . '_inv';
 
@@ -1030,6 +1060,7 @@ if (!isset($_POST['update'])) {
       $hash = $property_id . $created . $paper_ownerID;
       $updater_utils->execute_query("UPDATE properties SET crypt_name='$hash' WHERE property_id=$property_id", false);
     }
+    $result2->free_result();
     $result2->close();
   }
   $mysqli->commit();
@@ -1068,6 +1099,7 @@ if (!isset($_POST['update'])) {
   if ($result->num_rows > 0) {
     $updater_utils->execute_query("UPDATE questions SET score_method='Allow Partial Marks' WHERE q_type='calculation' AND score_method!='Allow Partial Marks'", true);
   }
+  $result->free_result();
   $result->close();
   $mysqli->commit();
 
@@ -1389,6 +1421,7 @@ if (!isset($_POST['update'])) {
     while ($sch_data->fetch()) {
       $schools[$school_name] = $schoolid;
     }
+    $sch_data->free_result();
     $sch_data->close();
 
     // Populate the new field
@@ -1524,6 +1557,7 @@ if (!isset($_POST['update'])) {
   if ($rows > 0) {
     $updater_utils->execute_query("UPDATE properties SET calculator=1 WHERE (calculator = 2 OR calculator = -1)", true);
   }
+  $result->free_result();
   $result->close();
   $mysqli->commit();
 
@@ -1762,6 +1796,7 @@ if (!isset($_POST['update'])) {
   if (strpos($data_type, '2019/20') === false) {
     $updater_utils->execute_query("ALTER TABLE relationships CHANGE COLUMN calendar_year calendar_year enum('2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
   }
+  $result->free_result();
   $result->close();
 
   // 05/04/2012 - Enlarge the size of the enum for calendar_year in sessions table.
@@ -1786,6 +1821,7 @@ if (!isset($_POST['update'])) {
   if (strpos($data_type, '2019/20') === false) {
     $updater_utils->execute_query("ALTER TABLE sessions CHANGE COLUMN calendar_year calendar_year enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
   }
+  $result->free_result();
   $result->close();
 
   // 05/04/2012 - Enlarge the size of the enum for calendar_year in properties table.
@@ -1798,6 +1834,7 @@ if (!isset($_POST['update'])) {
   if (strpos($data_type, '2019/20') === false) {
     $updater_utils->execute_query("ALTER TABLE properties CHANGE COLUMN calendar_year calendar_year enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
   }
+  $result->free_result();
   $result->close();
 
   // 05/04/2012 - Enlarge the size of the enum for calendar_year in objectives table.
@@ -1811,6 +1848,7 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE objectives CHANGE COLUMN calendar_year calendar_year enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20')", true);
 
   }
+  $result->free_result();
   $result->close();
 
   // 05/04/2012 - Enlarge the size of the integer for userID in recent_papers table.
@@ -2224,6 +2262,7 @@ if (!isset($_POST['update'])) {
       flush();
     }
   }
+  $result->free_result();
   $result->close();
   $mysqli->commit();
 
@@ -2287,6 +2326,8 @@ if (!isset($_POST['update'])) {
     }
     $updater_utils->execute_query("ALTER TABLE $name ENGINE=InnoDB", true);
   }
+  $result->free_result();
+  $result->close();
 
   //update student_modules.moduleid to a char(25)
   if ($updater_utils->does_table_exist('student_modules')) {
@@ -2321,8 +2362,10 @@ if (!isset($_POST['update'])) {
     }
     echo "<li>Updated relationships table for $mod_count modules</li>\n";
 
+    $result_mod->free_result();
     $result_mod->close();
   }
+  $result_col->free_result();
   $result_col->close();
   $mysqli->commit();
 
@@ -2339,6 +2382,7 @@ if (!isset($_POST['update'])) {
   if ($result->num_rows() == 1) {
     $updater_utils->execute_query("DELETE FROM track_changes WHERE typeID < 1", true);
   }
+  $result->free_result();
   $result->close();
 
   // 31/07/2012 - Add deleted column to users
@@ -2381,6 +2425,7 @@ if (!isset($_POST['update'])) {
   $result->bind_result($facultyID);
   $result->fetch();
   $rows = $result->num_rows();
+  $result->free_result();
   $result->close();
   if ($rows == 0) {
     $facultyID = FacultyUtils::add_faculty('UNKNOWN Faculty', $mysqli);
@@ -2393,6 +2438,7 @@ if (!isset($_POST['update'])) {
   $result->bind_result($id1);
   $result->fetch();
   $rows = $result->num_rows();
+  $result->free_result();
   $result->close();
   if ($rows == 0) {
     $scoolID = SchoolUtils::add_school($facultyID, 'UNKNOWN School', $mysqli);
@@ -2592,6 +2638,7 @@ if (!isset($_POST['update'])) {
     $update->execute();
     $update->close();
   }
+  $result->free_result();
   $result->close();
   $mysqli->commit();
 
@@ -2624,6 +2671,7 @@ if (!isset($_POST['update'])) {
     $update->execute();
     $update->close();
   }
+  $result->free_result();
   $result->close();
   $mysqli->commit();
 
@@ -2731,6 +2779,7 @@ QUERY;
       flush();
     }
     $insert_res->close();
+    $res->free_result();
     $res->close();
     $mysqli->commit();
 
@@ -2769,6 +2818,7 @@ QUERY;
       flush();
     }
     $insert_res->close();
+    $res->free_result();
     $res->close();
     echo "</li>\n";
 
@@ -2778,7 +2828,7 @@ QUERY;
     $updater_utils->execute_query("ALTER TABLE questions DROP q_group", true);
 
     //'folders' => 'team_name' is not 1 to 1 so need a folders_modules_staff joining table
-    $sql = "CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int(11) unsigned) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";  // Without primary key for speed
+    $sql = "CREATE TABLE folders_modules_staff (folders_id int(10) unsigned, idMod int(11) unsigned) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=$cfg_db_charset";  // Without primary key for speed
     $updater_utils->execute_query($sql, true);
 
     unset($res);
@@ -2808,6 +2858,7 @@ QUERY;
       flush();
     }
     $insert_res->close();
+    $res->free_result();
     $res->close();
     $mysqli->commit();
 
@@ -2976,11 +3027,11 @@ QUERY;
   //2012/12/14 bparish - Add new table to support a timer for summative exams
   if (!$updater_utils->does_table_exist('log_lab_end_time')) {
     $sql = 'CREATE TABLE
-                 log_lab_end_time(   id            int unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
+                 log_lab_end_time(   id            int(10) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
                                    , labID         smallint unsigned NOT NULL
                                    , paperID       mediumint unsigned NOT NULL
-                                   , invigilatorID int unsigned NOT NULL
-                                   , end_time      int unsigned NOT NULL
+                                   , invigilatorID int(10) unsigned NOT NULL
+                                   , end_time      int(10) unsigned NOT NULL
                                    , CONSTRAINT    key_lab_paper_invig_time UNIQUE ( labID, paperID, invigilatorID, end_time )
                                  ) ENGINE=InnoDB DEFAULT CHARSET=' . $cfg_db_charset . ' PACK_KEYS=1 AUTO_INCREMENT=1;';
     $updater_utils->execute_query($sql, true);
@@ -3093,7 +3144,7 @@ QUERY;
   //2012/12/18 bparish - Add new table to enable a students time to be extended when taking summative exams
   if (!$updater_utils->does_table_exist('log_extra_time')) {
     $sql    = 'CREATE TABLE
-                     log_extra_time( id            int unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
+                     log_extra_time( id            int(10) unsigned PRIMARY KEY NOT NULL AUTO_INCREMENT
                                    , labID         smallint unsigned NOT NULL
                                    , paperID       mediumint unsigned NOT NULL
                                    , invigilatorID int unsigned NOT NULL
@@ -3113,7 +3164,7 @@ QUERY;
 
   // 09/01/2013 - Create new 'paper_feedback' table to hold feedback to be display after an assessment is completed.
   if (!$updater_utils->does_table_exist('paper_feedback')) {
-    $updater_utils->execute_query("CREATE TABLE paper_feedback (id int not null primary key auto_increment, paperID mediumint unsigned NOT NULL, boundary tinyint unsigned NOT NULL, msg text) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
+    $updater_utils->execute_query("CREATE TABLE paper_feedback (id int(11) unsigned not null primary key auto_increment, paperID mediumint unsigned NOT NULL, boundary tinyint unsigned NOT NULL, msg text) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
 
     if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'paper_feedback', $cfg_db_host)) {
       $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.paper_feedback TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
@@ -3140,6 +3191,7 @@ QUERY;
     while ($result2->fetch()) {
       $lab_lookup[$address] = $lab_name;
     }
+    $result2->free_result();
     $result2->close();
 
     if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== false) {  // Backwards compatibility at UoN
@@ -3162,6 +3214,7 @@ QUERY;
         $updater_utils->execute_query("UPDATE log_metadata SET lab_name = \"" . $labs_name . "\" WHERE ipaddress = '$ipaddress'", false);
       }
     }
+    $result2->free_result();
     $result2->close();
   }
   $mysqli->commit();
@@ -3285,6 +3338,7 @@ QUERY;
     $adjust->execute();
     echo "<li>$sql</li>";
   }
+  $result->free_result();
   $result->close();
   $mysqli->commit();
 
@@ -3347,7 +3401,7 @@ QUERY;
 
   // 20/02/2013 (brzsw) - Add new access_log table
   if (!$updater_utils->does_table_exist('access_log')) {
-    $updater_utils->execute_query("CREATE TABLE access_log (id int not null primary key auto_increment, userID int(11) unsigned, type varchar(255), accessed DATETIME, ipaddress char(60), page varchar(255)) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
+    $updater_utils->execute_query("CREATE TABLE access_log (id int(11) unsigned not null primary key auto_increment, userID int(11) unsigned, type varchar(255), accessed DATETIME, ipaddress char(60), page varchar(255)) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
     
     $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.access_log TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
@@ -3364,7 +3418,7 @@ QUERY;
 
   // 20/02/2013 (brzsw) - Add new denied_log table
   if (!$updater_utils->does_table_exist('denied_log')) {
-    $updater_utils->execute_query("CREATE TABLE denied_log (id int not null primary key auto_increment, userID int(11) unsigned, tried DATETIME, ipaddress char(60), page varchar(255), title varchar(255), msg text) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
+    $updater_utils->execute_query("CREATE TABLE denied_log (id int(11) unsigned not null primary key auto_increment, userID int(11) unsigned, tried DATETIME, ipaddress char(60), page varchar(255), title varchar(255), msg text) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
     
     $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
@@ -3537,7 +3591,7 @@ QUERY;
   $tableNos = array('0', '1', '2', '3', '5', '_late');
   foreach ($tableNos as $tableNo) {
     if (!$updater_utils->does_column_exist('log' . $tableNo, 'metadataID')) {
-      $updater_utils->execute_query("ALTER TABLE log$tableNo ADD COLUMN metadataID int(11)", true);
+      $updater_utils->execute_query("ALTER TABLE log$tableNo ADD COLUMN metadataID int(11) unsigned", true);
       
       $mysqli->autocommit(false);
       $result = $mysqli->prepare("SELECT DISTINCT m.id, l.userID, l.q_paper, l.started FROM log$tableNo l, log_metadata m WHERE l.userID = m.userID AND l.q_paper = m.paperID AND l.started = m.started");
@@ -3549,6 +3603,7 @@ QUERY;
           $updater_utils->execute_query("UPDATE log$tableNo SET metadataID = $id WHERE userID = $userID AND q_paper = $paperID AND started = '$started'", false);
         } 
       }
+      $result->free_result();
       $result->close();
       $mysqli->commit();
       $mysqli->autocommit(true);
@@ -3557,12 +3612,10 @@ QUERY;
       // Remove the indexes for speed.
       $updater_utils->execute_query("DROP INDEX q_paper ON log$tableNo", false);
       $updater_utils->execute_query("DROP INDEX username ON log$tableNo", false);
-      $updater_utils->execute_query("DROP INDEX started ON log$tableNo", false);
+      if ($tableNo != '_late') $updater_utils->execute_query("DROP INDEX started ON log$tableNo", false);
 
       // Drop columns we no longer need.
-      $updater_utils->execute_query("ALTER TABLE log$tableNo DROP COLUMN q_paper", true);
-      $updater_utils->execute_query("ALTER TABLE log$tableNo DROP COLUMN userID", true);
-      $updater_utils->execute_query("ALTER TABLE log$tableNo DROP COLUMN started", true);
+      $updater_utils->execute_query("ALTER TABLE log$tableNo DROP q_paper, DROP userID, DROP started", true);
     }
   }
   
@@ -3570,6 +3623,11 @@ QUERY;
     if (!$updater_utils->does_index_exist('log' . $tableNo, 'idx_metadataid')) {
       $updater_utils->execute_query("ALTER TABLE log$tableNo ADD INDEX idx_metadataid (metadataID)", true);
     }
+  }
+
+  // 27/02/2013 (brzsw) - Alter the primary key to an unsigned int.
+  if (!$updater_utils->does_column_type_value_exist('log_metadata', 'id', 'int(11) unsigned')) {
+    $updater_utils->execute_query("ALTER TABLE log_metadata CHANGE COLUMN id id int(11) unsigned not null auto_increment", true);
   }
 
   /*
@@ -3584,6 +3642,7 @@ QUERY;
   echo "</ol>\n";
 
   $mysqli->close();
+  echo "<div>Ended at " . date("H:i:s") . "</div>";
   echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
   echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" value=\" " . $string['home'] . " \" onclick=\"window.location('/staff/')\" /></div><blockquote>\n";

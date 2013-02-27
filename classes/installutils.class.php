@@ -1436,7 +1436,7 @@ QUERY;
 
     $this->tableList['admin_access'] = <<<QUERY
       CREATE TABLE `admin_access` (
-        `adminID` int(11) NOT NULL auto_increment,
+        `adminID` int(11) unsigned NOT NULL auto_increment,
         `userID` int(10) unsigned default NULL,
         `schools_id` int(11) default NULL,
         PRIMARY KEY (`adminID`)
@@ -1483,7 +1483,7 @@ QUERY;
 
     $this->tableList['denied_log'] = <<<QUERY
       CREATE TABLE `denied_log` (
-        `id` int(11) NOT NULL auto_increment,
+        `id` int(11) unsigned NOT NULL auto_increment,
         `userID` int(11) unsigned default NULL,
         `tried` datetime default NULL,
         `ipaddress` char(60) default NULL,
@@ -1830,7 +1830,7 @@ QUERY;
           `updated` datetime default NULL,
           `dismiss` char(20) default NULL,
           `option_order` varchar(255) default NULL,
-          `metadataID` int(11) DEFAULT NULL,
+          `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY (`id`),
           KEY `idx_metadataid` (`metadataID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
@@ -1838,7 +1838,7 @@ QUERY;
 
     $this->tableList['log_metadata'] = <<<QUERY
         CREATE TABLE `log_metadata` (
-          `id` int(11) NOT NULL auto_increment,
+          `id` int(11) unsigned NOT NULL auto_increment,
           `userID` int(10) unsigned default NULL,
           `paperID` mediumint(8) unsigned default NULL,
           `started` datetime default NULL,
@@ -1978,7 +1978,7 @@ QUERY;
 
     $this->tableList['paper_feedback'] = <<<QUERY
         CREATE TABLE `paper_feedback` (
-          `id` int(11) NOT NULL auto_increment,
+          `id` int(11) unsigned NOT NULL auto_increment,
           `paperID` mediumint(8) unsigned NOT NULL,
           `boundary` tinyint(3) unsigned NOT NULL,
           `msg` text,
