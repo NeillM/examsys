@@ -74,6 +74,7 @@ function gen_random_salt() {
   return $salt;
 }
 
+$old_version = $configObject->get('rogo_version');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -98,7 +99,7 @@ function gen_random_salt() {
           <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px"/>
 
           <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rog&#333;</div>
-          <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $configObject->get('rogo_version') . ' to ' . $version; ?>)</div>
+          <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $old_version . ' to ' . $version; ?>)</div>
       </th>
       <th style="text-align:right; padding-right:10px"><img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" /></th>
     </tr>
@@ -825,25 +826,27 @@ if (!isset($_POST['update'])) {
   $result->close();
   $mysqli->commit();
 
-  // 20/09/2011 - set marks for fill-in-the-blank question tyoe
-  $updater_utils->execute_query("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND (marks_correct IS NULL OR marks_correct=0)", false);
+  if (floatval($old_version) < 4.2) {
+    // 20/09/2011 - set marks for fill-in-the-blank question type
+    $updater_utils->execute_query("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND (marks_correct IS NULL OR marks_correct=0)", true);
+ 
+    // 15/09/2011 Update calculation questions so that they have two tolerances, one for full marks the other for partial
+    $result = $mysqli->prepare("SELECT q_id, display_method FROM questions WHERE q_type='calculation'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($questionID, $display_method);
+    while ($result->fetch()) {
+      $old_method_parts = explode(',', $display_method);
+      if (count($old_method_parts) == 3) {
+        $new_method_parts = array($old_method_parts[0], $old_method_parts[1], 0, $old_method_parts[2]);
+        $new_method = implode(',', $new_method_parts);
 
-  // 15/09/2011 Update calculation questions so that they have two tolerances, one for full marks the other for partial
-  $result = $mysqli->prepare("SELECT q_id, display_method FROM questions WHERE q_type='calculation'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($questionID, $display_method);
-  while ($result->fetch()) {
-    $old_method_parts = explode(',', $display_method);
-    if (count($old_method_parts) == 3) {
-      $new_method_parts = array($old_method_parts[0], $old_method_parts[1], 0, $old_method_parts[2]);
-      $new_method = implode(',', $new_method_parts);
-
-      $updater_utils->execute_query("UPDATE questions SET display_method=\"" . $new_method . "\" WHERE q_id=$questionID", false);
+        $updater_utils->execute_query("UPDATE questions SET display_method=\"" . $new_method . "\" WHERE q_id=$questionID", false);
+      }
     }
+    $result->free_result();
+    $result->close();
   }
-  $result->free_result();
-  $result->close();
 
   // 22/09/2011 - remove timedate question type
   $check = $mysqli->prepare("SELECT * FROM questions WHERE q_type='timedate'");
@@ -856,14 +859,6 @@ if (!isset($_POST['update'])) {
   $mysqli->commit();
   $check->free_result();
   $check->close();
-
-  /*
-  // 01/09/2011 - Remove the time/date question type
-  if (!$updater_utils->does_column_type_value_exist('questions', 'q_type', "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')")) {
-    $sql = "ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')";
-    $updater_utils->execute_query($sql, true);
-  }
-  */
 
   //26/09/2011
   $check = $mysqli->prepare("SELECT leadin FROM questions WHERE leadin LIKE '%[tex]%[/tex]%'");
@@ -892,33 +887,35 @@ if (!isset($_POST['update'])) {
   $check->free_result();
   $check->close();
 
-  // 30/09/2011 - Update to the format of Labelling questions
-  $result = $mysqli->prepare("SELECT o.o_id, o.correct FROM options o INNER JOIN questions q ON o.o_id=q.q_id WHERE q.q_type='labelling' AND (o.correct NOT LIKE '%single;label%' AND o.correct NOT LIKE '%multiple;label%' AND o.correct NOT LIKE '%single;menu%')");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($o_id, $correct);
-  while ($result->fetch()) {
-    $parts = explode(';', $correct);
-    if (count($parts) > 1) {
-      $new_correct = $parts[0] . ';' . $parts[1] . ';' . $parts[2] . ';' . $parts[3] . ';' . $parts[4] . ';' . $parts[5] . ';' . $parts[6] . ';0;0;';
-      if ($parts[7] == 'single') {
-        $new_correct .= 'single;label';
-      } elseif ($parts[7] == 'multiple') {
-        $new_correct .= 'multiple;label';
-      } else {
-        $new_correct .= 'single;menu';
-      }
-      for ($i = 8; $i < count($parts); $i++) {
-        $new_correct .= ';' . $parts[$i];
-      }
+  if (floatval($old_version) < 4.2) {
+    // 30/09/2011 - Update to the format of Labelling questions
+    $result = $mysqli->prepare("SELECT o.o_id, o.correct FROM options o INNER JOIN questions q ON o.o_id=q.q_id WHERE q.q_type='labelling' AND (o.correct NOT LIKE '%single;label%' AND o.correct NOT LIKE '%multiple;label%' AND o.correct NOT LIKE '%single;menu%')");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($o_id, $correct);
+    while ($result->fetch()) {
+      $parts = explode(';', $correct);
+      if (count($parts) > 1) {
+        $new_correct = $parts[0] . ';' . $parts[1] . ';' . $parts[2] . ';' . $parts[3] . ';' . $parts[4] . ';' . $parts[5] . ';' . $parts[6] . ';0;0;';
+        if ($parts[7] == 'single') {
+          $new_correct .= 'single;label';
+        } elseif ($parts[7] == 'multiple') {
+          $new_correct .= 'multiple;label';
+        } else {
+          $new_correct .= 'single;menu';
+        }
+        for ($i = 8; $i < count($parts); $i++) {
+          $new_correct .= ';' . $parts[$i];
+        }
 
-      $adjust = $mysqli->prepare("UPDATE options SET correct=? WHERE o_id=?");
-      $adjust->bind_param('si', $new_correct, $o_id);
-      $adjust->execute();
-      $adjust->close();
+        $adjust = $mysqli->prepare("UPDATE options SET correct=? WHERE o_id=?");
+        $adjust->bind_param('si', $new_correct, $o_id);
+        $adjust->execute();
+        $adjust->close();
+      }
     }
+    $mysqli->commit();
   }
-  $mysqli->commit();
 
   if ($result->num_rows > 0) echo "<li>Updated the format of Labelling questions</li>";
   $result->free_result();
@@ -3608,9 +3605,9 @@ QUERY;
 
 
       // Remove the indexes for speed.
-      $updater_utils->execute_query("DROP INDEX q_paper ON log$tableNo", false);
-      $updater_utils->execute_query("DROP INDEX username ON log$tableNo", false);
-      if ($tableNo != '_late') $updater_utils->execute_query("DROP INDEX started ON log$tableNo", false);
+      if ($tableNo != '5')$updater_utils->execute_query("DROP INDEX q_paper ON log$tableNo", false);
+      if ($tableNo != '5')$updater_utils->execute_query("DROP INDEX username ON log$tableNo", false);
+      if ($tableNo != '5' and $tableNo != '_late') $updater_utils->execute_query("DROP INDEX started ON log$tableNo", false);
 
       // Drop columns we no longer need.
       $updater_utils->execute_query("ALTER TABLE log$tableNo DROP q_paper, DROP userID, DROP started", true);
