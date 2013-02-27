@@ -700,8 +700,6 @@ if (!isset($_POST['update'])) {
   }
   $mysqli->commit();
 
-  $result->close();
-
   // 01/08/2011 - Change to database structure for more flexible marking
   if (!$updater_utils->does_column_exist('schools', 'facultyID')) {
     $updater_utils->execute_query("ALTER TABLE schools ADD COLUMN facultyID int", true);
