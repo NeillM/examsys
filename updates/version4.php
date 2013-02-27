@@ -1653,25 +1653,17 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE log6 CHANGE COLUMN paperID paperID mediumint(8) unsigned", true);
   }
 
-  // 05/04/2012 - Enlarge the size of the integer for userID in log_late table.
-  if (!$updater_utils->does_column_type_value_exist('log_late', 'userID', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log_late CHANGE COLUMN userID userID int(10) unsigned", true);
-  }
 
-  // 05/04/2012 - Enlarge the size of the integer for q_paper in log_late table.
-  if (!$updater_utils->does_column_type_value_exist('log_late', 'q_paper', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE log_late CHANGE COLUMN q_paper q_paper int(10) unsigned", true);
-  }
 
   // 05/04/2012 - Enlarge the size of the integer for q_paper in log_metadata table.
   if (!$updater_utils->does_column_type_value_exist('log_metadata', 'paperID', 'mediumint(8) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE log_metadata CHANGE COLUMN paperID paperID mediumint(8) unsigned", true);
   }
 
-  // 05/04/2012 - Enlarge the size of the integer for ownerID in questions table.
+/*  // 05/04/2012 - Enlarge the size of the integer for ownerID in questions table.
   if (!$updater_utils->does_column_type_value_exist('questions', 'ownerID', 'int(10) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE questions CHANGE COLUMN ownerID ownerID int(10) unsigned", true);
-  }
+  }*/
 
   // 05/04/2012 - Enlarge the size of the integer for paper_ownerID in properties table.
   if (!$updater_utils->does_column_type_value_exist('properties', 'paper_ownerID', 'int(10) unsigned')) {
@@ -1735,10 +1727,10 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE question_exclude CHANGE COLUMN userID userID int(10) unsigned", true);
   }
 
-  // 05/04/2012 - Enlarge the size of the integer for ownerID in questions table.
+/*  // 05/04/2012 - Enlarge the size of the integer for ownerID in questions table.
   if (!$updater_utils->does_column_type_value_exist('questions', 'ownerID', 'int(10) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE questions CHANGE COLUMN ownerID ownerID int(10) unsigned", true);
-  }
+  }*/
 
   // 05/04/2012 - Enlarge the size of the integer for checkout_authorID in questions table.
   if (!$updater_utils->does_column_type_value_exist('questions', 'checkout_authorID', 'int(10) unsigned')) {

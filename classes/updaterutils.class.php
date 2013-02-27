@@ -162,6 +162,16 @@ Class UpdaterUtils {
       }
     } else {
       echo '<li class="error">ERROR: ' . $sql . '</li>';
+      if ($this->mysqli->error) {
+        try {
+          $err=$this->mysqli->error;
+          $mess=$this->mysqli->errno;
+          throw new Exception("MySQL error $err", $mess);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+         // echo nl2br($e->getTraceAsString());
+        }
+      }
     }
   }
 

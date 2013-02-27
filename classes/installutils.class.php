@@ -2140,7 +2140,7 @@ QUERY;
           `incorrect_fback` text,
           `display_method` text,
           `notes` text,
-          `ownerID` int(10) unsigned default NULL,
+          `ownerID` int(10) default NULL,
           `q_media` text,
           `q_media_width` varchar(100) default NULL,
           `q_media_height` varchar(100) default NULL,
