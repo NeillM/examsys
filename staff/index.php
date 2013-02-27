@@ -235,7 +235,6 @@ require_once '../include/staff_auth.inc';
     $module_sql = " OR idMod IN (" . implode(",",array_keys($userObject->get_staff_modules())) . ")";
   }
 
-  echo "SELECT id, name, color FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE  (ownerID=1217 $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id";
   $result = $mysqli->prepare("SELECT id, name, color FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE  (ownerID=? $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
