@@ -846,19 +846,19 @@ if (!isset($_POST['update'])) {
     }
     $result->free_result();
     $result->close();
-  }
 
-  // 22/09/2011 - remove timedate question type
-  $check = $mysqli->prepare("SELECT * FROM questions WHERE q_type='timedate'");
-  $check->execute();
-  $check->store_result();
-  $check->fetch();
-  if ($check->num_rows() > 0) {
-    $updater_utils->execute_query("UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'", false);
+    // 22/09/2011 - remove timedate question type
+    $check = $mysqli->prepare("SELECT * FROM questions WHERE q_type='timedate'");
+    $check->execute();
+    $check->store_result();
+    $check->fetch();
+    if ($check->num_rows() > 0) {
+      $updater_utils->execute_query("UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'", false);
+    }
+    $mysqli->commit();
+    $check->free_result();
+    $check->close();
   }
-  $mysqli->commit();
-  $check->free_result();
-  $check->close();
 
   //26/09/2011
   $check = $mysqli->prepare("SELECT leadin FROM questions WHERE leadin LIKE '%[tex]%[/tex]%'");
@@ -915,11 +915,11 @@ if (!isset($_POST['update'])) {
       }
     }
     $mysqli->commit();
-  }
 
-  if ($result->num_rows > 0) echo "<li>Updated the format of Labelling questions</li>";
-  $result->free_result();
-  $result->close();
+    if ($result->num_rows > 0) echo "<li>Updated the format of Labelling questions</li>";
+    $result->free_result();
+    $result->close();
+  }
 
   //ADD new role based MySQL users - 10/10/2011
   $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_sct'");
@@ -1086,17 +1086,19 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE users CHANGE COLUMN title title varchar(30)", true);
   }
 
-  // 18/10/2011 - Add type to feedback_release.
-  $result = $mysqli->prepare("SELECT * FROM questions WHERE q_type='calculation' AND score_method!='Allow Partial Marks'");
-  $result->execute();
-  $result->store_result();
-  $result->fetch();
-  if ($result->num_rows > 0) {
-    $updater_utils->execute_query("UPDATE questions SET score_method='Allow Partial Marks' WHERE q_type='calculation' AND score_method!='Allow Partial Marks'", true);
+  if (floatval($old_version) < 4.2) {
+    // 18/10/2011 - Add type to feedback_release.
+    $result = $mysqli->prepare("SELECT * FROM questions WHERE q_type='calculation' AND score_method!='Allow Partial Marks'");
+    $result->execute();
+    $result->store_result();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+      $updater_utils->execute_query("UPDATE questions SET score_method='Allow Partial Marks' WHERE q_type='calculation' AND score_method!='Allow Partial Marks'", true);
+    }
+    $result->free_result();
+    $result->close();
+    $mysqli->commit();
   }
-  $result->free_result();
-  $result->close();
-  $mysqli->commit();
 
   // 02/11/2011 - Set the modules who do not have negative marking.
   if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== false) {
@@ -2827,7 +2829,7 @@ QUERY;
     $updater_utils->execute_query($sql, true);
 
     unset($res);
-    $res = $mysqli->prepare("SELECT id, team_name FROM folders");
+    $res = $mysqli->prepare("SELECT id, team_name FROM folders WHERE team_name != ''");
     $res->execute();
     $res->store_result();
     $res->bind_result($folder_id, $team_name);
@@ -2835,7 +2837,7 @@ QUERY;
     echo "<li>Populating folders_modules_staff";
     $i = 0;
     while ($res->fetch()) {
-      $folder_modules = explode(',', $moduleID);
+      $folder_modules = explode(',', $team_name);
       $folder_modules = array_unique($folder_modules);
       foreach ($folder_modules as $m) {
         $m = strtolower($m);
