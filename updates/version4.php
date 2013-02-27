@@ -82,7 +82,7 @@ function gen_random_salt() {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-    <title>Rogo <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
+    <title>Rog&#333; <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css"/>
     <link rel="stylesheet" type="text/css" href="../css/header.css"/>
@@ -97,7 +97,7 @@ function gen_random_salt() {
       <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
           <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px"/>
 
-          <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogo</div>
+          <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rog&#333;</div>
           <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $configObject->get('rogo_version') . ' to ' . $version; ?>)</div>
       </th>
       <th style="text-align:right; padding-right:10px"><img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" /></th>

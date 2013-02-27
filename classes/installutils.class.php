@@ -1,29 +1,26 @@
 <?php
-// This file is part of Rog?
+// This file is part of Rogō
 //
-// Rog? is free software: you can redistribute it and/or modify
+// Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Rog? is distributed in the hope that it will be useful,
+// Rogō is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rog?.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for installer related functionality
 *
 * @author Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
-
 require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'classes/userutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
@@ -1166,7 +1163,7 @@ Class InstallUtils {
     <tr>
       <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
       <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
-      <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogo</div>
+      <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rog&#333;</div>
       <div style="color:#1F497D; font-size:9pt">System Installation (<?php echo $version; ?>)</div>
       </th>
       <th style="text-align:right; padding-right:10px">

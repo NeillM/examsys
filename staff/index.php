@@ -128,7 +128,7 @@ require_once '../include/staff_auth.inc';
     <th style="padding-left:16px; padding-top:5px">
 
     <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px" />
-    <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogō</div>
+    <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rog&#333;</div>
     <div style="color:#1F497D; font-size:9pt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
 
     </th>
