@@ -368,7 +368,7 @@ if ($language != 'en') {
   // Check log_late for any records
   $late_ts = strtotime($enddate) + 7200;
   $late_end = date('Y-m-d H:i:s', $late_ts);
-  $result = $mysqli->prepare("SELECT DISTINCT userID, title, surname, first_names FROM log_late, users WHERE log_late.userID=users.id AND q_paper=? AND started>? AND started<? ORDER BY surname, initials");
+  $result = $mysqli->prepare("SELECT DISTINCT userID, title, surname, first_names FROM log_late, log_metadata, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND started >= ? AND started <= ? ORDER BY surname, initials");
   $result->bind_param('iss', $paperID, $startdate, $late_end);
   $result->execute();
   $result->bind_result($tmp_userID, $title, $surname, $first_names);

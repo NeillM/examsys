@@ -489,14 +489,21 @@ Class InstallUtils {
 
     //create tables
     $tables = new databaseTables($dbcharset);
-   self::$db->autocommit(false);
+    self::$db->autocommit(false);
     while ($sql = $tables->next()) {
       $res = self::$db->query($sql);
-        @ob_flush();
-        @flush();
+      @ob_flush();
+      @flush();
       if (self::$db->errno != 0) {
-       self::$db->rollback();
+        self::$db->rollback();
         self::displayError(array('012' => $string['displayerror3'] . self::$db->error . "<br /> $sql"));
+        try {
+          $err=self::$db->error;
+          $mess=self::$db->errno;
+          throw new Exception("MySQL error $err", $mess);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+        }
       }
     }
    self::$db->commit();
@@ -1421,7 +1428,7 @@ class databaseTables {
   function __construct($charset) {
     $this->tableList['access_log'] = <<<QUERY
       CREATE TABLE `access_log` (
-        `id` int(11) NOT NULL auto_increment,
+        `id` int(11) unsigned NOT NULL auto_increment,
         `userID` int(11) unsigned default NULL,
         `type` varchar(255) default NULL,
         `accessed` datetime default NULL,
@@ -1433,7 +1440,7 @@ QUERY;
 
     $this->tableList['admin_access'] = <<<QUERY
       CREATE TABLE `admin_access` (
-        `adminID` int(11) unsigned NOT NULL auto_increment,
+        `adminID` int(11) NOT NULL auto_increment,
         `userID` int(10) unsigned default NULL,
         `schools_id` int(11) default NULL,
         PRIMARY KEY (`adminID`)
@@ -1762,9 +1769,6 @@ QUERY;
     $this->tableList['log5'] = <<<QUERY
         CREATE TABLE `log5` (
           `id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned DEFAULT NULL,
-          `started` datetime DEFAULT NULL,
-          `q_paper` mediumint(8) unsigned DEFAULT NULL,
           `q_id` int(11) DEFAULT NULL,
           `mark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
@@ -1808,7 +1812,7 @@ QUERY;
           `labID` smallint(5) unsigned NOT NULL,
           `paperID` mediumint(8) unsigned NOT NULL,
           `invigilatorID` int(10) unsigned NOT NULL,
-          `start_time` int(10) unsigned NOT NULL,
+          `start_time` int(10) unsigned DEFAULT NULL,
           `end_time` int(10) unsigned NOT NULL,
           PRIMARY KEY (`id`),
           UNIQUE KEY `key_lab_paper_invig_time` (`labID`,`paperID`,`invigilatorID`,`end_time`)
@@ -1848,7 +1852,6 @@ QUERY;
           PRIMARY KEY  (`id`),
           KEY `userID` (`userID`,`paperID`,`started`),
           KEY `idx_log_metadata_student_grade` (`student_grade`),
-          KEY `idx_log_metadata_paperID` (`paperID`),
           KEY `idx_log_metadata_paperID` (`paperID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -1938,7 +1941,9 @@ QUERY;
           `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL,
           `attempt` tinyint(4) DEFAULT NULL,
           `auto_update` tinyint(4) DEFAULT NULL,
-          PRIMARY KEY (`id`)
+          PRIMARY KEY (`id`),
+          KEY `idx_userID` (`userID`),
+          KEY `idx_mod_calyear` (`calendar_year`,`idMod`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2137,7 +2142,7 @@ QUERY;
           `incorrect_fback` text,
           `display_method` text,
           `notes` text,
-          `ownerID` int(10) default NULL,
+          `ownerID` int(11) default NULL,
           `q_media` text,
           `q_media_width` varchar(100) default NULL,
           `q_media_height` varchar(100) default NULL,
@@ -2487,7 +2492,8 @@ QUERY;
           `changed` datetime default NULL,
           `part` text,
           PRIMARY KEY (`id`),
-          KEY `typeID` (`typeID`)
+          KEY `typeID` (`typeID`),
+          KEY `type` (`type`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 

@@ -1040,7 +1040,7 @@ if ($paper_type == '0') {
               AND
                   started <= ? )
             UNION ALL
-                ( SELECT
+                ( SELECT DISTINCT
                       log1.q_id
                     , 1 AS paper_type
                     , grade
