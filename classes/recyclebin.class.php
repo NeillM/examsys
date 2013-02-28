@@ -38,9 +38,9 @@ Class RecycleBin {
     if (count($staff_modules) == 0) {
       $staff_module_in = '';
     } else {
-      $staff_module_in = "OR idMod IN (" . implode(",",array_keys($staff_modules)) . ")";
+      $staff_module_in = "OR idMod IN (" . implode(",", array_keys($staff_modules)) . ")";
     }
-    $stmt = $db->prepare("SELECT properties.property_id FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? $staff_module_in) AND deleted IS NOT NULL LIMIT 1");
+    $stmt = $db->prepare("SELECT properties.property_id FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID = ? $staff_module_in) AND deleted IS NOT NULL LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->bind_result($no_deleted);
@@ -54,7 +54,7 @@ Class RecycleBin {
       $staff_module_sql = " OR idmod IN (" . implode(',', array_keys($staff_modules)) . ")";
     }
 
-    $stmt = $db->prepare("SELECT questions.q_id FROM questions,questions_modules WHERE questions.q_id = questions_modules.q_id AND (ownerID=? $staff_module_sql) AND deleted IS NOT NULL LIMIT 1");
+    $stmt = $db->prepare("SELECT questions.q_id FROM questions LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE (ownerID = ? $staff_module_sql) AND deleted IS NOT NULL LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->bind_result($no_deleted);
@@ -62,12 +62,7 @@ Class RecycleBin {
     $stmt->close();
     $recycle_bin_no += $no_deleted;
     
-    if (count($staff_modules) == 0) {
-      $staff_module_sql = '';
-    } else {
-      $staff_module_sql = "AND idMod IN ('" . implode("','", array_keys($staff_modules)) . "')";
-    }
-    $stmt = $db->prepare("SELECT id FROM folders,folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID=? $staff_module_sql) AND deleted IS NOT NULL LIMIT 1");
+    $stmt = $db->prepare("SELECT id FROM folders WHERE ownerID = ? AND deleted IS NOT NULL LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->bind_result($no_deleted);
