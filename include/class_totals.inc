@@ -992,55 +992,55 @@ if ($paper_type == '0') {
 
   $cfg_long_date_time = $configObject->get('cfg_long_date_time');
 
-  $sql = '(SELECT DISTINCT log0.q_id
-                          , 0 AS paper_type
-                          , grade
-                          , roles
-                          , screen
-                          , duration
-                          , started AS order_started
-                          , user_answer
-                          , DATE_FORMAT(started, "' . $cfg_long_date_time . '") AS display_started
-                          , year
-                          , title
-                          , surname
-                          , initials
-                          , first_names
-                          , gender
-                          , ipaddress
-                          , lab_name
-                          , username
-                          , users.id
-                          , student_id
-                          , user_answer
-                          , q_type
-                          , log_metadata.userID
-                          , mark
-                          , status
-                          , attempt
-              FROM
-                  log0, log_metadata, questions, users
-              LEFT JOIN
-                  sid
-              ON
-                  users.id = sid.userID
-              WHERE
-                  log_metadata.userID = users.id
-              AND
-                  log0.metadataID = log_metadata.id
-              AND
-                  log0.q_id    = questions.q_id
-              AND
-                  paperID = ?
-              AND
-                  grade LIKE ?
-              ' . $roles_sql . '
-              AND
-                  started >= ?
-              AND
-                  started <= ? )
+  $sql = '(SELECT log0.q_id
+                    , 0 AS paper_type
+                    , grade
+                    , roles
+                    , screen
+                    , duration
+                    , started AS order_started
+                    , user_answer
+                    , DATE_FORMAT(started, "' . $cfg_long_date_time . '") AS display_started
+                    , year
+                    , title
+                    , surname
+                    , initials
+                    , first_names
+                    , gender
+                    , ipaddress
+                    , lab_name
+                    , username
+                    , users.id
+                    , student_id
+                    , user_answer
+                    , q_type
+                    , log_metadata.userID
+                    , mark
+                    , status
+                    , attempt
+                  FROM
+                      log0, log_metadata, questions, users
+                  LEFT JOIN
+                      sid
+                  ON
+                      users.id = sid.userID
+                  WHERE
+                      log_metadata.userID = users.id
+                  AND
+                      log0.metadataID = log_metadata.id
+                  AND
+                      log0.q_id    = questions.q_id
+                  AND
+                      paperID = ?
+                  AND
+                      grade LIKE ?
+                  ' . $roles_sql . '
+                  AND
+                      started >= ?
+                  AND
+                      started <= ? )
             UNION ALL
-                ( SELECT DISTINCT
+                ( SELECT
                       log1.q_id
                     , 1 AS paper_type
                     , grade
@@ -1097,13 +1097,13 @@ if ($paper_type == '0') {
   $log_query = $mysqli->prepare( $sql );
   $log_query->bind_param('isssisss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '2') {
-  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
+  $log_query = $mysqli->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '5') {
-  $log_query =   $mysqli->prepare("SELECT DISTINCT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
+  $log_query =   $mysqli->prepare("SELECT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } else {
-  $log_query = $mysqli->prepare("SELECT DISTINCT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
+  $log_query = $mysqli->prepare("SELECT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 }
 $log_query->execute();
