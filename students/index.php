@@ -126,7 +126,7 @@ QUERY;
 
   // Get which papers a student has taken (for feedback purposes).
   $papers_taken = array();
-  $log_query = "SELECT DISTINCT q_paper FROM log2 WHERE userID=?";
+  $log_query = "SELECT DISTINCT paperID FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id AND userID = ?";
   $stmt = $mysqli->prepare($log_query);
   $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
