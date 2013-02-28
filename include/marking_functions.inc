@@ -43,7 +43,7 @@ function time_to_seconds($seconds) {
 /**
  * This is function returns an array of database id q_id mappings for a user on a paper
  * and locks the rows for update
- * 
+ *
  * @param int $u_id rogo user id
  * @param int $p_id rogo paper id
  * @param mixed $paper_log_type the current type of the paper 1,2,3,4,5,6 or _late
@@ -64,6 +64,59 @@ function get_log_ids_and_lock($paper_log_type, $screen_no, $metadataID, $db) {
   }
   $log_check->close();
   return $log_ids;
+}
+
+/**
+ * Save the user's answers to the database, inserting or updating as necessary
+ * @param  integer $paper_type    Type of paper
+ * @param  integer $metadataID    ID of user's record for this paper in metadata table
+ * @param  integer $screen_no     Number of current screen
+ * @param  array   $response_data User's reponses and associated data for current screen
+ * @param  mysqli  $db            Reference to DB connection
+ * @return boolean                Did the save operation succeed?
+ */
+function save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $db) {
+  $save_ok = true;
+
+  //turn off auto commit and start transaction. If php exits or we call rollback the inserts/updates will be rolledback
+  $db->autocommit(false);
+
+  $log_ids = get_log_ids_and_lock($paper_type, $screen_no, $metadataID, $db);
+
+  foreach ($response_data as $response) {
+    if (count($log_ids) > 0) {
+      $log_id = $log_ids[$response['q_id']];
+      // prepare to update old records
+      $save_answers = $db->prepare("UPDATE log$paper_type SET mark = ?, user_answer = ?, duration = ?, updated = NOW(), dismiss = ? WHERE id = ?");
+      $save_answers->bind_param('dsisi', $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss'], $log_id);
+    } else {
+      $save_answers = $db->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
+      $save_answers->bind_param('idisiissi', $response['q_id'], $response['mark'], $response['totalpos'], $response['saved_response'], $response['screen_no'], $response['tmp_duration'], $response['dismiss'], $response['option_order'], $metadataID);
+    }
+    $res = $save_answers->execute();     // Save to the database.
+    if ($res === false or $save_answers->affected_rows == 0) {
+      $save_ok = false;
+      break;
+    }
+  }
+
+  //
+  // did the all the save to log operations succeed?
+  //
+  if ($save_ok === false) {
+    //NO - rollback
+    $db->rollback();
+  } else {
+    //YES - commit the updates to the log tables
+    $db->commit();
+  }
+  //turn auto commit back on so future queries function as befor
+  $db->autocommit(true);
+
+  // Close still open database prepared queries
+  $save_answers->close();
+
+  return $save_ok;
 }
 
 /**
@@ -139,24 +192,6 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
     $old_display_pos = $display_pos;
   }
   $questions->close();
-  
-  //turn off auto commit and start transaction. If php exits or we call rollback the inserts/updates will be rolledback
-  $db->autocommit(false); 
-  
-  //this is set to false on error to trigger a rollback
-  $save_ok = true; 
-  
-  //get any log ids and lock them for update
-  $log_ids = get_log_ids_and_lock($paper_type, $screen_no, $metadataID, $db);
-
-  if (count($log_ids) > 0) {
-    // prepare to update old records
-    $save_answers = $db->prepare("UPDATE log$paper_type SET mark = ?, user_answer = ?, duration = ?, updated = NOW(), dismiss = ? WHERE id = ?");
-    $save_answers->bind_param('dsisi', $mark, $saved_response, $tmp_duration, $dismiss, $q_log_id);
-  } else {
-    $save_answers = $db->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
-    $save_answers->bind_param('idisiissi', $log_id, $mark, $totalpos, $saved_response, $screen_no, $tmp_duration, $dismiss, $option_order, $metadataID);
-  }
 
   // Use the new structure to look for posted responses.
   $old_type = '';
@@ -182,8 +217,11 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
   $old_display_pos = 0;
   $all_items_abstain = true;
   $dismiss = '';
+
+  // Record posted data for saving later
+  $response_data = array();
+
   foreach ($paper_array as &$row) {
-    $q_log_id         = 0;
     $q_id             = $row['q_id'];
     $scenario         = $row['scenario'];
     $q_type           = $row['q_type'];
@@ -216,16 +254,8 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         if ($tmp_duration < 0) $tmp_duration += 86400;
         $tmp_duration += $extra_duration;
 
-        if (isset($log_ids[$old_q_id])) {
-          $q_log_id = $log_ids[$old_q_id];
-        }
+        $response_data[] = array('q_id' => $log_id, 'mark' => $mark, 'totalpos' => $totalpos, 'saved_response' => $saved_response, 'screen_no' => $screen_no, 'tmp_duration' => $tmp_duration, 'dismiss' => $dismiss, 'option_order' => $option_order);
 
-        $res = $save_answers->execute();     // Save to the database.
-        if ($res === false or $save_answers->affected_rows == 0) {
-          $save_ok = false;
-          //stop processig
-          break;
-        }
         $saved_response = '';
         $dismiss = '';
       }
@@ -857,42 +887,21 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
   } else {
     $option_order = '';
   }
-  if ($question_no > 0 and $q_type != 'info' and $save_ok == true) {
+  if ($question_no > 0 and $q_type != 'info') {
     $tmp_duration = time_to_seconds($submit_time) - time_to_seconds($_POST['page_start']);
     if ($tmp_duration < 0) $tmp_duration += 86400;
     $tmp_duration += $extra_duration;
 
-    if (isset($log_ids[$old_q_id])) {
-      $q_log_id = $log_ids[$old_q_id];
-    }
-    
-    $res = $save_answers->execute();     // Save to the database.
-    if ($res === false or $save_answers->affected_rows == 0) {
-      $save_ok = false;
-    }
+    $response_data[] = array('q_id' => $log_id, 'mark' => $mark, 'totalpos' => $totalpos, 'saved_response' => $saved_response, 'screen_no' => $screen_no, 'tmp_duration' => $tmp_duration, 'dismiss' => $dismiss, 'option_order' => $option_order);
 
     $saved_response = '';
     $dismiss = '';
   }
-  
-  //
-  // did the all the save to log operations succeed? 
-  //
-  if ($save_ok === false) {
-    //NO - rollback
-    $db->rollback();
-  } else {
-    //YES - commit the updates to the log tables
-    $db->commit(); 
-  }
-  //turn auto commit back on so future queries function as befor
-  $db->autocommit(true);
-  
-  // Close still open database prepared queries
-  $save_answers->close();
-  
+
+  // Save the results to the database
+  $save_ok = save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $db);
   return $save_ok;
-  
+
 }
 
 /**
