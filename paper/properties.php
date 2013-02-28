@@ -245,6 +245,10 @@ if (isset($_POST['Submit'])) {
   $old_internal_reviewers = $properties->get_internal_reviewers();
   $old_external_review_deadline = $properties->get_external_review_deadline();
   $old_internal_review_deadline = $properties->get_internal_review_deadline();
+  
+  
+  var_dump($old_rubric, $_POST['rubric']);
+  exit;
 
   // Check that the new paper name is not already used by any other paper (i.e. unique).
   $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ? LIMIT 1");
