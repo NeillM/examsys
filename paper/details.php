@@ -482,14 +482,15 @@ $result->close();
     <div id="content" class="content"><br />
   <?php
     echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/full_bin.png\" width=\"48\" height=\"48\" /></div>\n";
-    echo "<h1 class=\"midblue_header\" style=\"margin-left:70px;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
+    echo "<h1 style=\"color:#C00000; margin-left:70px;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
     $deleted_parts = explode('[deleted', $properties->get_paper_title());
-    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:70px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-top:10px; margin-left:70px\">" . sprintf($string['deleted_msg1'], $deleted_parts[0]) . "</p>\n\n<ul style=\"margin-left:80px\">\n";
+    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:70px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-top:10px; margin-left:70px\">" . sprintf($string['deleted_msg1'], $deleted_parts[0]) . "</p>\n\n<br />\n<ul style=\"margin-left:80px\">\n";
     if ($properties->get_paper_ownerid() == $userObject->get_user_ID()) {
       echo "<li>" . $string['deleted_msg2'] . "</li>\n";
     } else {
+      $tmp_owner = $properties->get_paper_ownerid();
       $result = $mysqli->prepare("SELECT title, surname, email FROM users WHERE id=?");
-      $result->bind_param('i', $properties->get_paper_ownerid());
+      $result->bind_param('i', $tmp_owner);
       $result->execute();
       $result->bind_result($tmp_title, $tmp_surname, $tmp_email);
       $result->fetch();
