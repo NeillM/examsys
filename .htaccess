@@ -4,7 +4,7 @@ Options -Indexes
   Deny from all
 </Files>
 
-##
+###
 ## Down for maintenance code - uncomment during upgrades
 ##
 #Options -MultiViews +FollowSymLinks
