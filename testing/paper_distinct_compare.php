@@ -51,12 +51,10 @@ error_reporting(E_ALL);
 
 $getback = array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd', 'cfg_db_admin_user', 'cfg_db_admin_passwd', 'cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd', 'cfg_db_external_user', 'cfg_db_external_passwd', 'cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
 
-$arr = $this->configObj->get($getback);
+$arr = $configObject->get($getback);
 foreach ($arr as $k => $v) {
   ${$k} = $v;
 }
-
-
 
 $result = $mysqli->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
 if($result==false) {
