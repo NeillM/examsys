@@ -717,8 +717,16 @@ class UserObject extends RogoStaticSingleton {
     }
     if($result==false) {
       $notice=UserNotices::get_instance();
-      $notice->display_notice('CHANGE USER FAILED','THIS SHOUDLNT EVER APPEAR CONTACT SUPPORT','../artwork/software_64.png');
-
+      $notice->display_notice('CHANGE USER FAILED','THIS SHOULDN\'T EVER APPEAR CONTACT SUPPORT','../artwork/software_64.png');
+      if ($mysqli->error) {
+        try {
+          throw new Exception("MySQL error ".$this->db->error ."<br> ", $this->db->errno);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+          echo nl2br($e->getTraceAsString());
+          exit();
+        }
+      }
     }
 
 
