@@ -38,7 +38,7 @@ if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_col
 $stmt->close();
   
 $screen_data = array();
-$stmt = $mysqli->prepare("SELECT property_id, paper_title, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, DATE_FORMAT(external_review_deadline,\"%Y%m%d\") AS external_review_deadline, DATE_FORMAT(internal_review_deadline,\"%Y%m%d\") AS internal_review_deadline FROM properties WHERE crypt_name=?");
+$stmt = $mysqli->prepare("SELECT property_id, paper_title, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, UNIX_TIMESTAMP(internal_review_deadline) AS internal_review_deadline FROM properties WHERE crypt_name=?");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
@@ -55,8 +55,7 @@ if ($labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
 
 if ($userObject->has_role('External Examiner')) {
   $review_type = 'External';
-  $external_review_deadline = $external_review_deadline;
-} else { 
+} else {
   $review_type = 'Internal';
   $external_review_deadline = $internal_review_deadline; //this is to fix internal reviews did not know where else $external_review_deadline was used!!
 }
@@ -93,11 +92,15 @@ if ($userObject->has_role('External Examiner')) {
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; border-bottom:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
   echo '<tr><td><div class="paper">' . $paper_title . '</div></td><td align="center" class="raised_tbl" width="50"><img src="../artwork/uni_logo.png" width="160" height="67" alt="University Logo" border="0" /></td></tr>';
   echo '</table>';
-  
-  if ($_POST['old_screen'] != '' and date("Ymd") <= $external_review_deadline) {  
-    record_comments($property_id, $_POST['old_screen'], $mysqli, $_POST, $userObject->get_user_ID(), $review_type);
+
+  $configObject = Config::get_instance();
+  $start_of_day_ts = strtotime('midnight');
+
+
+  if ($_POST['old_screen'] != '' and $start_of_day_ts <= $external_review_deadline) {
+    record_comments($property_id, $_POST['old_screen'], $mysqli, $userObject->get_user_ID(), $review_type);
   } else {
-    echo "Deadline = $external_review_deadline";
+    echo "Deadline = " . date($configObject->get('cfg_long_date_php'), $external_review_deadline);
   }
   echo '<blockquote>';
   if ($language == 'en') {

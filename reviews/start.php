@@ -32,6 +32,8 @@ require '../config/start.inc';
 check_var('id', 'GET', true, false, false);
 //session_start();
 
+$start_of_day_ts = strtotime('midnight');
+
 // Extract the get variables.
 if (isset($_GET['no_screens'])) {
   $no_screens = $_GET['no_screens'];
@@ -105,7 +107,6 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 // Extract the posted variables.
-$restart = 0;
 $current_screen = 1;
 if (isset($_POST['sessionid'])) {
   if (isset($_POST['next'])) {
@@ -117,23 +118,7 @@ if (isset($_POST['sessionid'])) {
   }
   $sessionid = $_POST['sessionid'];
 } else {
-  if (($paper_type == '1' or $paper_type == '2' or $paper_type == '3') and !isset($_GET['mode'])) {  //Mode is used for staff preview.
-    $stmt = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started FROM log$paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
-    $stmt->bind_param('ii', $property_id, $userObject->get_user_ID());
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($sessionid);
-    if ($stmt->num_rows == 1) {
-      $row = $stmt->fetch();
-      $stmt->free_result();
-      $restart = 1;
-    } else {
-      $sessionid = date("YmdHis", time());
-    }
-    $stmt->close();
-  } else {
-    $sessionid = date("YmdHis", time());
-  }
+  $sessionid = date("YmdHis", time());
 }
 
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -301,8 +286,8 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">
   <?php
-  if (isset($_POST['old_screen']) and (($_POST['old_screen'] != '' and time() <= $review_deadline and time() <= $start_date) or $start_date == '')) {
-    record_comments($property_id, $_POST['old_screen'], $mysqli, $_POST, $userObject->get_user_ID(), $review_type);
+  if (isset($_POST['old_screen']) and (($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline and time() <= $start_date) or $start_date == '')) {
+    record_comments($property_id, $_POST['old_screen'], $mysqli, $userObject->get_user_ID(), $review_type);
   }
 
   echo $top_table_html;
@@ -351,7 +336,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo '</td>';
   echo $logo_html;
   
-  if ((time() > $review_deadline or time() > $start_date) and $start_date != '') {
+  if (($start_of_day_ts > $review_deadline or time() > $start_date) and $start_date != '') {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:50px; height:32px; text-align:right\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";
   }
   
@@ -421,7 +406,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     if ($question['q_type'] == 'random') randomQOverwrite2($question, $paper_type, $user_answers, $current_screen);
-    display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $question_offset);	
+    display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $question_offset, $start_of_day_ts);
     $previous_q_type = $question['q_type'];
     $q_displayed++;
   }

@@ -82,7 +82,9 @@
 <p style="margin-left:15px; font-weight:bold"><?php echo $string['yourpapersforreview']; ?></p>
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
 <?php
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,' {$configObject->get('cfg_short_date')}') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id = papers.paper AND externals LIKE ? GROUP BY paper ORDER BY paper_title");
+  $start_of_day_ts = strtotime('midnight');
+
+  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, DATE_FORMAT(external_review_deadline,' {$configObject->get('cfg_short_date')}') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id = papers.paper AND externals LIKE ? GROUP BY paper ORDER BY paper_title");
   $tVar= '%'. $userObject->get_user_ID() . '%';
   $result->bind_param('s', $tVar);
   $result->execute();
@@ -101,7 +103,7 @@
     $restartdate = '';
     echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('$crypt_name', $fullscreen, $paper_type); return false;\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
     echo "  <td><a href=\"#\" onclick=\"startPaper('$crypt_name', $fullscreen, $paper_type); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
-    if (date("Ymd") > $external_review_deadline) {
+    if ($start_of_day_ts > $external_review_deadline) {
       printf($string['expired'], $configObject->get('cfg_company'));
     } else {
       if ($display_deadline == '00/00/0000') {

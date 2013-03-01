@@ -31,7 +31,7 @@ function time_to_seconds($seconds) {
   return ($hr * 3600) + ($min * 60) + $sec;
 }
 
-function record_comments($paper_id, $screen_no, $dblink, $posted_vars, $userid, $review_type) {
+function record_comments($paper_id, $screen_no, $dblink, $userid, $review_type) {
   $question_no = 0;
   $old_q_id = NULL;
   $userid = trim($userid);
