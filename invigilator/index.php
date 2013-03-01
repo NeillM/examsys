@@ -321,7 +321,12 @@ if ($room_name != '') {
       height: 34px;
       font-size: 120%;
       font-weight: bold;
-      border: none;
+      /*border: none;*/
+      border-top: 2px solid #eee;
+      border-left: 2px solid #eee;
+      border-bottom: 2px solid #999;
+      border-right: 2px solid #999;
+      cursor: pointer;
     }
     #start_exam_button {
       background-color: #1CD40C;
