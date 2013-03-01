@@ -30,7 +30,7 @@ Class StateUtils {
       $page = $_SERVER['PHP_SELF'];
     }
     
-    $result = $db->prepare("SELECT state_name, content FROM state WHERE page=? AND userID=?");
+    $result = $db->prepare("SELECT state_name, content FROM state WHERE page = ? AND userID = ?");
     $result->bind_param('si', $page, $userID);
     $result->execute();
     $result->store_result();
@@ -52,6 +52,4 @@ Class StateUtils {
 }
 
 $stateutil = new StateUtils();
-//$state = $stateutil->getState($userID, $mysqli);
-
 ?>

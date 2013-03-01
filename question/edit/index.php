@@ -332,7 +332,7 @@ if ($critical_error == '') {
               $team_for_state = $module;
             } else {
               $q_teams = $question->get_teams();
-              $q_teams = array_keys($q_teams);
+              $q_teams = array_values($q_teams);
               if (is_array($q_teams) and count($q_teams) > 0) $team_for_state = $q_teams[0];
             }
             $state = $stateutil->setState($userObject->get_user_ID(), 'default_team', $team_for_state, '/question/edit/index.php', $mysqli);

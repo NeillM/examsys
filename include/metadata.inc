@@ -27,7 +27,7 @@
   require_once '../../classes/logger.class.php';
   
   function render_metadata($mysqlidb, $question, $bloom_on, $module, $disabled, &$string, $userObj) {
-    global $staff_modules, $DISABLEDuserID, $DISABLEDuserroles, $faculty;
+    global $staff_modules, $faculty;
 
     $current_status = ($question->get_status() == '') ? $string['normal'] : $question->get_status();
     
@@ -256,7 +256,7 @@ META;
   }
   
   function keyword_id_to_text($list, $mysqlidb) {
-    $keywordIDs = implode(',',$list);
+    $keywordIDs = implode(',', $list);
     
     $keyword_text = '';
     if ($keywordIDs != '') {
