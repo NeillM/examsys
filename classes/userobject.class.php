@@ -359,7 +359,7 @@ class UserObject extends RogoStaticSingleton {
     if ($this->db->error) {
       try {
         
-        throw new Exception("MySQL error " . $this->db->error . " <br> Query:<br /> $query", $this->db->errno);
+        throw new Exception("MySQL error " . $this->db->error , $this->db->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
