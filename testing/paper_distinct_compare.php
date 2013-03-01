@@ -46,7 +46,7 @@ set_time_limit(0);
 $configObject = Config::get_instance();
 $notice = null;
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
-print "DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));";
+print "DBUtils::get_mysqli_link(". $configObject->get('cfg_db_host') .", ".$configObject->get('cfg_db_staff_user').", ".$configObject->get('cfg_db_staff_passwd').", ".$configObject->get('cfg_db_database').", ".$configObject->get('cfg_db_charset').", $notice, ".$configObject->get('dbclass').", ".$configObject->get('cfg_db_port').");";
 error_reporting(E_ALL);
 foreach ($typelist as $type) {
   $paper_type = $type;
