@@ -3626,7 +3626,20 @@ QUERY;
   if (!$updater_utils->does_column_type_value_exist('log_metadata', 'id', 'int(11) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE log_metadata CHANGE COLUMN id id int(11) unsigned not null auto_increment", true);
   }
-
+  
+  // 28/02/2013 (brzsw) - Add new indexes.
+  if (!$updater_utils->does_index_exist('questions', 'idx_owner_deleted')) {
+    $updater_utils->execute_query("ALTER TABLE questions ADD INDEX idx_owner_deleted (ownerID, deleted)", true);
+  }  
+  if (!$updater_utils->does_index_exist('modules', 'idx_moduleid_deleted')) {
+    $updater_utils->execute_query("ALTER TABLE modules ADD INDEX idx_moduleid_deleted (moduleID, mod_deleted)", true);
+  }  
+  if (!$updater_utils->does_index_exist('properties', 'idx_owner_deleted')) {
+    $updater_utils->execute_query("ALTER TABLE properties ADD INDEX idx_owner_deleted (paper_ownerID, deleted)", true);
+  }
+  
+  
+  
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */
