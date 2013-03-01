@@ -89,6 +89,15 @@ function display_labs($labs, $computer_lab, $string) {
 $paper_no = 0;
 $paper_display = array();
 $paper_query = $mysqli->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, calendar_year, password FROM (papers, properties) WHERE papers.paper=properties.property_id AND (labs != '' OR password != '') AND (paper_type='1' OR paper_type='2') AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() GROUP BY paper");
+if ($mysqli->error) {
+  try {
+    throw new Exception("MySQL error $mysqli->error <br> ", $mysqli->errno);
+  } catch (Exception $e) {
+    echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+    echo nl2br($e->getTraceAsString());
+    exit();
+  }
+}
 $paper_query->execute();
 $paper_query->store_result();
 $paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $calendar_year, $password);
