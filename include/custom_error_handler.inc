@@ -106,7 +106,7 @@ function exceptionHandler($exception) {
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   global $debug_pagestart, $dbclass;
 
-  $tessesetgsdgs='dgdsgdsgdsg';
+
 
   $configObject = Config::get_instance();
   $notice = UserNotices::get_instance();
