@@ -93,7 +93,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $string, $d
       }
       $results->close();
 
-      //merge in all students who whve submitted records to log 2 for this paper
+      //merge in all students who have submitted records for this paper
       $sql = 'SELECT DISTINCT sn.extra_time, lm.userID, u.surname, u.first_names, u.title FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id LEFT JOIN special_needs sn ON u.id = sn.userID WHERE lm.paperID = ? AND u.username LIKE "user%" ORDER BY u.surname, u.initials';
       $results = $db->prepare($sql);
       $results->bind_param('i', $paperID);
