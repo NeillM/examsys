@@ -288,8 +288,8 @@ if ($critical_error == '') {
       $do_save = true;
     }
   } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {
-    $question->clear_checkout();
-    redirect($userObject,$mysqli);
+    //$question->clear_checkout();
+    redirect($userObject, $mysqli);
   }
 
   if ($do_save) {
@@ -332,6 +332,7 @@ if ($critical_error == '') {
               $team_for_state = $module;
             } else {
               $q_teams = $question->get_teams();
+              $q_teams = array_keys($q_teams);
               if (is_array($q_teams) and count($q_teams) > 0) $team_for_state = $q_teams[0];
             }
             $state = $stateutil->setState($userObject->get_user_ID(), 'default_team', $team_for_state, '/question/edit/index.php', $mysqli);
@@ -360,7 +361,7 @@ if ($critical_error == '') {
       }
     }
 
-    if (count($errors) == 0) redirect($userObject,$mysqli);
+    if (count($errors) == 0) redirect($userObject, $mysqli);
   }
 
   $q_type_display = '';
