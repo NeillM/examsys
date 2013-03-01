@@ -479,7 +479,7 @@ if ($properties->get_paper_type() == '2') {
     if ($properties->get_internal_reviewers() == '') {
       echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['peerreviewed'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
     } else {
-      $tmp_array = explode(',', $properties->get_internal_reviewers());
+      $tmp_array = $properties->get_internal_reviewers();
       $internal_array = array();
       foreach ($tmp_array as $tmp_internal) {
         $internal_array[$tmp_internal] = 0;
@@ -512,10 +512,10 @@ if ($properties->get_paper_type() == '2') {
 
   // External examiners
   if (strpos($checklist, 'external') !== false) {
-    if ($properties->get_externals() == '') {
+    if (count($properties->get_externals()) == 0) {
       echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td>" . $string['externalreviews'] . "</td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
     } else {
-      $tmp_array = explode(',', $properties->get_externals());
+      $tmp_array = $properties->get_externals();
       $external_array = array();
       foreach ($tmp_array as $tmp_external) {
         $external_array[$tmp_external] = 0;

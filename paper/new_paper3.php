@@ -90,7 +90,7 @@
   //add the modules to the paper
   Paper_utils::add_modules($modules, $property_id, $mysqli);
 
-  $stmt = $mysqli->prepare("SELECT UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id=?");
+  $stmt = $mysqli->prepare("SELECT UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id = ?");
   $stmt->bind_param('i', $property_id);
   $stmt->execute();
   $stmt->bind_result($created, $paper_ownerID);
@@ -100,7 +100,7 @@
   $hash = $property_id . $created . $paper_ownerID;   // Generate the encrypted name of the paper.
 
   if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
-    $result = $mysqli->prepare("UPDATE properties SET deleted=NULL, crypt_name=?, calendar_year=?, exam_duration=? WHERE property_id=? LIMIT 1");
+    $result = $mysqli->prepare("UPDATE properties SET deleted = NULL, crypt_name = ?, calendar_year = ?, exam_duration = ? WHERE property_id = ? LIMIT 1");
     $result->bind_param('ssii', $hash, $session, $_POST['duration'], $property_id);
     $result->execute();
     $result->close();
@@ -122,7 +122,7 @@
     $result->execute();
     $result->close();
   } else {
-    $result = $mysqli->prepare("UPDATE properties SET start_date=?, end_date=?, timezone=?, deleted=NULL, crypt_name=?, calendar_year=? WHERE property_id=? LIMIT 1");
+    $result = $mysqli->prepare("UPDATE properties SET start_date = ?, end_date = ?, timezone = ?, deleted = NULL, crypt_name = ?, calendar_year = ? WHERE property_id = ? LIMIT 1");
     $result->bind_param('sssssi', $tmp_start_date, $tmp_end_date, $timezone, $hash, $session, $property_id);
     $result->execute();
     $result->close();

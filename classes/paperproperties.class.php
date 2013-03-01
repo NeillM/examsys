@@ -197,7 +197,6 @@ class PaperProperties {
                   labs,
                   rubric,
                   calculator,
-                  externals,
                   exam_duration,
                   deleted,
                   UNIX_TIMESTAMP(created),
@@ -209,7 +208,6 @@ class PaperProperties {
                   display_feedback,
                   hide_if_unanswered,
                   calendar_year,
-                  internal_reviewers,
                   UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline,
                   UNIX_TIMESTAMP(internal_review_deadline) AS internal_review_deadline,
                   sound_demo,
@@ -263,7 +261,6 @@ class PaperProperties {
                                   $this->labs,
                                   $this->rubric,
                                   $this->calculator,
-                                  $this->externals,
                                   $this->exam_duration,
                                   $this->deleted,
                                   $this->created,
@@ -275,7 +272,6 @@ class PaperProperties {
                                   $this->display_feedback,
                                   $this->hide_if_unanswered,
                                   $this->calendar_year,
-                                  $this->internal_reviewers,
                                   $this->external_review_deadline,
                                   $this->internal_review_deadline,
                                   $this->sound_demo,
@@ -342,6 +338,38 @@ class PaperProperties {
     $this->question_no = $question_no;
     $this->max_screen = $max_screen;
     $this->max_display_pos = $max_display_pos;
+  }
+  
+  private function load_externals() {
+    $external_list = array();
+  
+    $result = $this->db->prepare("SELECT reviewerID FROM properties_reviewers WHERE paperID = ? AND type = 'external'");
+    $property_id = $this->get_property_id();
+    $result->bind_param('i', $property_id);
+    $result->execute();
+    $result->bind_result($reviewerID);
+    while ($result->fetch()) {
+      $external_list[] = $reviewerID;
+    }
+    $result->close();
+    
+    $this->externals = $external_list;
+  }
+
+  private function load_internals() {
+    $internal_list = array();
+  
+    $result = $this->db->prepare("SELECT reviewerID FROM properties_reviewers WHERE paperID = ? AND type = 'internal'");
+    $property_id = $this->get_property_id();
+    $result->bind_param('i', $property_id);
+    $result->execute();
+    $result->bind_result($reviewerID);
+    while ($result->fetch()) {
+      $internal_list[] = $reviewerID;
+    }
+    $result->close();
+    
+    $this->internal_reviewers = $internal_list;
   }
 
   public function get_summative_lock() {
@@ -774,287 +802,295 @@ class PaperProperties {
    * @return string $externals
    */
   public function get_externals() {
-      return $this->externals;
+    if (!isset($this->externals)) {
+      $this->load_externals();
+    }
+    
+    return $this->externals;
   }
 
   /**
    * @param string $externals
    */
   public function set_externals($externals) {
-      $this->externals = $externals;
+    $this->externals = $externals;
   }
 
   /**
    * @return int $exam_duration
    */
   public function get_exam_duration() {
-      return $this->exam_duration;
+    return $this->exam_duration;
   }
 
   /**
    * @return int $exam_duration in seconds
    */
   public function get_exam_duration_sec() {
-      return $this->exam_duration * 60;
+    return $this->exam_duration * 60;
   }
 
   /**
    * @param int $exam_duration
    */
   public function set_exam_duration($exam_duration) {
-      $this->exam_duration = $exam_duration;
+    $this->exam_duration = $exam_duration;
   }
 
   /**
    * @return string $deleted
    */
   public function get_deleted() {
-      return $this->deleted;
+    return $this->deleted;
   }
 
   /**
    * @param string $deleted
    */
   public function set_deleted($deleted) {
-      $this->deleted = $deleted;
+    $this->deleted = $deleted;
   }
 
   /**
    * @return string $created
    */
   public function get_created() {
-      return $this->created;
+    return $this->created;
   }
 
   /**
    * @param string $created
    */
   public function set_created($created) {
-      $this->created = $created;
+    $this->created = $created;
   }
 
   /**
    * @return float $random_mark
    */
   public function get_random_mark() {
-      return $this->random_mark;
+    return $this->random_mark;
   }
 
   /**
    * @param float $random_mark
    */
   public function set_random_mark($random_mark) {
-      $this->random_mark = $random_mark;
+    $this->random_mark = $random_mark;
   }
 
   /**
    * @return int $total_mark
    */
   public function get_total_mark() {
-      return $this->total_mark;
+    return $this->total_mark;
   }
 
   /**
    * @param int $total_mark
    */
   public function set_total_mark($total_mark) {
-      $this->total_mark = $total_mark;
+    $this->total_mark = $total_mark;
   }
 
   /**
    * @return string $display_correct_answer
    */
   public function get_display_correct_answer() {
-      return $this->display_correct_answer;
+    return $this->display_correct_answer;
   }
 
   /**
    * @param string $display_correct_answer
    */
   public function set_display_correct_answer($display_correct_answer) {
-      $this->display_correct_answer = $display_correct_answer;
+    $this->display_correct_answer = $display_correct_answer;
   }
 
   /**
    * @return string $display_question_mark
    */
   public function get_display_question_mark() {
-      return $this->display_question_mark;
+    return $this->display_question_mark;
   }
 
   /**
    * @param string $display_question_mark
    */
   public function set_display_question_mark($display_question_mark) {
-      $this->display_question_mark = $display_question_mark;
+    $this->display_question_mark = $display_question_mark;
   }
 
   /**
    * @return string $display_students_response
    */
   public function get_display_students_response() {
-      return $this->display_students_response;
+    return $this->display_students_response;
   }
 
   /**
    * @param string $display_students_response
    */
   public function set_display_students_response($display_students_response) {
-      $this->display_students_response = $display_students_response;
+    $this->display_students_response = $display_students_response;
   }
 
   /**
    * @return string $display_feedback
    */
   public function get_display_feedback() {
-      return $this->display_feedback;
+    return $this->display_feedback;
   }
 
   /**
    * @param string $display_feedback
    */
   public function set_display_feedback($display_feedback) {
-      $this->display_feedback = $display_feedback;
+    $this->display_feedback = $display_feedback;
   }
 
   /**
    * @return string $hide_if_unanswered
    */
   public function get_hide_if_unanswered() {
-      return $this->hide_if_unanswered;
+    return $this->hide_if_unanswered;
   }
 
   /**
    * @param string $hide_if_unanswered
    */
   public function set_hide_if_unanswered($hide_if_unanswered) {
-      $this->hide_if_unanswered = $hide_if_unanswered;
+    $this->hide_if_unanswered = $hide_if_unanswered;
   }
 
   /**
    * @return string $calendar_year
    */
   public function get_calendar_year() {
-      return $this->calendar_year;
+    return $this->calendar_year;
   }
 
   /**
    * @param string $calendar_year
    */
   public function set_calendar_year($calendar_year) {
-      $this->calendar_year = $calendar_year;
+    $this->calendar_year = $calendar_year;
   }
 
   /**
    * @return string $internal_reviewers
    */
   public function get_internal_reviewers() {
-      return $this->internal_reviewers;
+    if (!isset($this->internal_reviewers)) {
+      $this->load_internals();
+    }
+
+    return $this->internal_reviewers;
   }
 
   /**
    * @param string $internal_reviewers
    */
   public function set_internal_reviewers($internal_reviewers) {
-      $this->internal_reviewers = $internal_reviewers;
+    $this->internal_reviewers = $internal_reviewers;
   }
 
   /**
    * @return string $external_review_deadline
    */
   public function get_external_review_deadline() {
-      return $this->external_review_deadline;
+    return $this->external_review_deadline;
   }
 
   /**
    * @param string $external_review_deadline
    */
   public function set_external_review_deadline($external_review_deadline) {
-      $this->external_review_deadline = $external_review_deadline;
+    $this->external_review_deadline = $external_review_deadline;
   }
 
   /**
    * @return string $internal_review_deadline
    */
   public function get_internal_review_deadline() {
-      return $this->internal_review_deadline;
+    return $this->internal_review_deadline;
   }
 
   /**
    * @param string $internal_review_deadline
    */
   public function set_internal_review_deadline($internal_review_deadline) {
-      $this->internal_review_deadline = $internal_review_deadline;
+    $this->internal_review_deadline = $internal_review_deadline;
   }
 
   /**
    * @return string $sound_demo
    */
   public function get_sound_demo() {
-      return $this->sound_demo;
+    return $this->sound_demo;
   }
 
   /**
    * @param string $sound_demo
    */
   public function set_sound_demo($sound_demo) {
-      $this->sound_demo = $sound_demo;
+    $this->sound_demo = $sound_demo;
   }
 
   /**
    * @return int $latex_needed
    */
   public function get_latex_needed() {
-      return $this->latex_needed;
+    return $this->latex_needed;
   }
 
   /**
    * @param int $latex_needed
    */
   public function set_latex_needed($latex_needed) {
-      $this->latex_needed = $latex_needed;
+    $this->latex_needed = $latex_needed;
   }
 
   /**
    * @return string $password
    */
   public function get_password() {
-      return $this->password;
+    return $this->password;
   }
 
   /**
    * @param string $password
    */
   public function set_password($password) {
-      $this->password = $password;
+    $this->password = $password;
   }
 
   /**
    * @return string $retired
    */
   public function get_retired() {
-      return $this->retired;
+    return $this->retired;
   }
 
   /**
    * @param string $retired
    */
   public function set_retired($retired) {
-      $this->retired = $retired;
+    $this->retired = $retired;
   }
 
   /**
    * @return string $crypt_name
    */
   public function get_crypt_name() {
-      return $this->crypt_name;
+    return $this->crypt_name;
   }
 
   /**
    * @param string $crypt_name
    */
   public function set_crypt_name($crypt_name) {
-      $this->crypt_name = $crypt_name;
+    $this->crypt_name = $crypt_name;
   }
 
   private function get_date_time_zone() {

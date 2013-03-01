@@ -116,7 +116,7 @@ Class QuestionUtils {
     $stmt->execute();
     $stmt->bind_result($q_id, $idMod);
     while($res = $stmt->fetch()) {
-      $modules[$q_id] = $idMod;
+      $modules[$q_id][$idMod] = $idMod;
     }
     $stmt->close();
     
@@ -156,7 +156,7 @@ Class QuestionUtils {
       SELECT DISTINCT idMod 
       FROM papers, properties, properties_modules 
       WHERE properties.property_id = properties_modules.property_id 
-      AND properties.property_id=paper 
+      AND properties.property_id = paper 
       AND question = ? 
       AND deleted is NULL 
 SQL;
@@ -187,13 +187,11 @@ SQL;
   * @return void 
   */
   static function update_modules($modules, $q_id, $db, $userObj) {
-    global $REPLACEMEuserIDold, $DISABLEDuserroles, $staff_modules; //these will come form the users object later
-
-    if($userObj->has_role('SysAdmin')) {
+    if ($userObj->has_role('SysAdmin')) {
       //sysadmin 
       $user_can_delete = ''; //no restrictions
     } else {
-      $user_can_delete = "AND idMod IN (" . implode(',',array_keys($userObj->get_staff_modules())) . ")"; //users can only remove modules if they are on the team
+      $user_can_delete = "AND idMod IN (" . implode(',', array_keys($userObj->get_staff_modules())) . ")"; //users can only remove modules if they are on the team
     }
 
     $editProperties = $db->prepare("DELETE FROM questions_modules WHERE q_id = ? $user_can_delete");
@@ -211,14 +209,12 @@ SQL;
   * @return void 
   */
   static function add_modules($modules, $q_id, $db) {
-  
     $update = $db->prepare("INSERT INTO questions_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod = idMod");
     foreach ($modules as $idMod => $ModuleID) {
       $update->bind_param('ii', $q_id, $idMod);
       $update->execute();
     }
-    $update->close();
-  
+    $update->close();  
   }
 
   /**
@@ -228,14 +224,12 @@ SQL;
   * @return void 
   */
   static function add_keywords($keywords, $q_id, $db) {
-  
     $update = $db->prepare("INSERT INTO keywords_question VALUES (?, ?)");
     foreach ($keywords as $keywordID => $keyword) {
       $update->bind_param('ii', $q_id, $keywordID);
       $update->execute();
     }
     $update->close();
-  
   }
 
   /**
@@ -260,15 +254,14 @@ SQL;
   * @return void 
   */
   static function delete_question($q_id, $db) {
-    $delete = $db->prepare("UPDATE questions SET deleted=NOW() WHERE q_id=?");
+    $delete = $db->prepare("UPDATE questions SET deleted = NOW() WHERE q_id = ?");
     $delete->bind_param('i', $q_id);
     $delete->execute();
     $delete->close();
-    //TODO:: If we delete a question should we remove it from any staff_modules?
   }
 
   static function lock_question($q_id, $db) {
-    $lock = $db->prepare("UPDATE questions SET locked=NOW() WHERE q_id=? AND locked IS NULL");
+    $lock = $db->prepare("UPDATE questions SET locked = NOW() WHERE q_id = ? AND locked IS NULL");
     $lock->bind_param('i', $q_id);
     $lock->execute();
     $lock->close();

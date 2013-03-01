@@ -177,7 +177,7 @@ require_once '../include/staff_auth.inc';
   $result->close();
 
   // -- Display any papers for review ---------------------------------
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND internal_review_deadline >= CURDATE() AND properties.property_id=papers.paper AND internal_reviewers LIKE ? GROUP BY paper");
+  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, properties_reviewers, papers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND internal_review_deadline >= CURDATE() AND properties.property_id=papers.paper AND reviewerID = ? AND type = 'internal' ORDER BY paper");
   if ($mysqli->error) {
     try {
       throw new Exception("MySQL error $mysqli->error <br> Query:<br> $query", $mysqli->errno);
@@ -187,7 +187,7 @@ require_once '../include/staff_auth.inc';
       echo nl2br($e->getTraceAsString());
     }
   }
-  $tmp = '%' . $userObject->get_user_ID() . '%';
+  $tmp = $userObject->get_user_ID();
   $result->bind_param('s', $tmp);
   if ($mysqli->error) {
     try {
@@ -208,7 +208,7 @@ require_once '../include/staff_auth.inc';
   }
   while ($result->fetch()) {
     $reviewed = '';
-    $result2 = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'%d/%m/%Y %T') AS started FROM review_comments WHERE reviewer=? and q_paper=?");
+    $result2 = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'%d/%m/%Y %T') AS started FROM review_comments WHERE reviewer = ? AND q_paper = ?");
     $result2->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $result2->execute();
     $result2->bind_result($reviewed);
@@ -232,7 +232,7 @@ require_once '../include/staff_auth.inc';
   // -- Display personal folders --------------------------------------
   $module_sql = '';
   if (count($userObject->get_staff_modules()) > 0) {
-    $module_sql = " OR idMod IN (" . implode(",",array_keys($userObject->get_staff_modules())) . ")";
+    $module_sql = " OR idMod IN (" . implode(",", array_keys($userObject->get_staff_modules())) . ")";
   }
 
   $result = $mysqli->prepare("SELECT id, name, color FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE  (ownerID=? $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");

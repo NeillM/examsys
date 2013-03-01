@@ -185,17 +185,6 @@ if (isset($_POST['Submit'])) {
     $editProperties->close();
     
     Paper_utils::update_modules($paper_modules,$paperID,$mysqli,$userObject);
-    
-    // Set the questions team on this paper.
-    $result = $mysqli->prepare("SELECT q_id FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY display_pos");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($q_id);
-    while ($result->fetch()) {
-      QuestionUtils::update_modules_from_papers($q_id, $mysqli);
-    }
-    $result->close();
   ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>

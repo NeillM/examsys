@@ -139,6 +139,8 @@ Class PaperUtils {
   * updates the modules on a paper removes modules if the user has permission to do so and then adds in the new modules
   * @param $paper_modules an array of modules keyed on idMod
   * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
+  * @param $userObject currently authenticated user
   * @return void 
   */
   public function update_modules($paper_modules, $paperID, $db, $userObject) {
@@ -162,11 +164,44 @@ Class PaperUtils {
     
     Paper_utils::add_modules($paper_modules, $paperID, $db);
   }
+  
+  /**
+  * Add/delete internal and external reviewers to a paper
+  * @param $old_list an array of the old reviewers
+  * @param $new_list an array of the new reviewers
+  * @param $type 'internal' or 'external' review type
+  * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
+  * @return void 
+  */
+  public function update_reviewers($old_list, $new_list, $type, $paperID, $db) {
+    $old_list = array_flip($old_list);
+    $new_list = array_flip($new_list);
+
+    foreach ($old_list as $oldID=>$value) {
+      if (!isset($new_list[$oldID])) {
+        $editProperties = $db->prepare("DELETE FROM properties_reviewers WHERE paperID = ? AND reviewerID = ? AND type = ?");
+        $editProperties->bind_param('iis', $paperID, $oldID, $type);
+        $editProperties->execute();
+        $editProperties->close();
+      }
+    }
+    
+    foreach ($new_list as $newID => $value) {
+      if (!isset($old_list[$newID])) {
+        $editProperties = $db->prepare("INSERT INTO properties_reviewers VALUES(NULL, ?, ?, ?)");
+        $editProperties->bind_param('iis', $paperID, $newID, $type);
+        $editProperties->execute();
+        $editProperties->close();
+      }
+    }
+  }
 
   /**
   * Add modules to a paper ignoring duplicates
   * @param $paper_modules an array of modules keyed on idMod
   * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
   * @return void 
   */
   public function add_modules($paper_modules, $paperID, $db) {
@@ -182,6 +217,7 @@ Class PaperUtils {
   * remove modules from a paper 
   * @param $paper_modules an array of modules keyed on idMod
   * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
   * @return void 
   */
   public function remove_modules($paper_modules, $paperID, $db) {
@@ -193,6 +229,12 @@ Class PaperUtils {
     $remove->close();
   }
 
+  /**
+  * Return the paper title (name).
+  * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
+  * @return $paper_title the name of the paper
+  */
   public function get_title($paperID, $db) {
     $result = $db->prepare("SELECT paper_title FROM properties WHERE property_id = ? LIMIT 1");
     $result->bind_param('i', $paperID);
@@ -208,6 +250,12 @@ Class PaperUtils {
     return $paper_title;
   }
   
+  /**
+  * Determine if a paper title (name) is unique - in the database already.
+  * @param $title the title to be tested
+  * @param $db Database connection
+  * @return $unique true if the name does not already exist
+  */
   public function is_paper_title_unique($title, $db) {
     $unique = true;
     $result = $db->prepare("SELECT property_id FROM properties WHERE paper_title = ? LIMIT 1");
@@ -229,6 +277,7 @@ Class PaperUtils {
   /**
   * Delete a paper from rogo (N.B sets the deleted field we don't actuality delete the row form the papers table)
   * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
   * @return void 
   */
   public function delete_paper($paperID, $db) {
@@ -241,6 +290,8 @@ Class PaperUtils {
 
   /**
   * caculates the number of screens on a paper
+  * @param $paperID the id of the paper or property_id
+  * @param $db Database connection
   * return @int max 
   */
   public function get_numder_of_screens($paperID, $db) {

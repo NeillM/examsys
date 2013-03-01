@@ -3637,9 +3637,50 @@ QUERY;
   if (!$updater_utils->does_index_exist('properties', 'idx_owner_deleted')) {
     $updater_utils->execute_query("ALTER TABLE properties ADD INDEX idx_owner_deleted (paper_ownerID, deleted)", true);
   }
+
+  // 01/03/2013 (brzsw) - Split out reviewers table.
+  if (!$updater_utils->does_table_exist('properties_reviewers')) {
+    $updater_utils->execute_query("CREATE TABLE properties_reviewers (id int(11) unsigned not null primary key auto_increment, paperID mediumint(8) unsigned, reviewerID int(11) unsigned, type enum('internal','external')) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
+    
+    $mysqli->autocommit(false);
+    $result = $mysqli->prepare("SELECT property_id, externals, internal_reviewers FROM properties");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($property_id, $externals, $internal_reviewers);
+    while ($result->fetch()) {
+      if ($externals != '') {
+        $ext_list = explode(',', $externals);
+        foreach ($ext_list as $extID) {
+          if (is_numeric($extID)) $updater_utils->execute_query("INSERT INTO properties_reviewers VALUES(NULL, $property_id, $extID, 'external')", false);
+        }
+      }
+      if ($internal_reviewers != '') {
+        $int_list = explode(',', $internal_reviewers);
+        foreach ($int_list as $intID) {
+          if (is_numeric($intID)) $updater_utils->execute_query("INSERT INTO properties_reviewers VALUES(NULL, $property_id, $intID, 'internal')", false);
+        }
+      }
+    }
+    $result->free_result();
+    $result->close();
+    $mysqli->commit();
+    $mysqli->autocommit(true);
+    
+    $updater_utils->execute_query("ALTER TABLE properties_reviewers ADD INDEX idx_paperID (paperID)", true);
+    $updater_utils->execute_query("ALTER TABLE properties_reviewers ADD INDEX idx_type (type)", true);
+    
+    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.properties_reviewers TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
+    $updater_utils->execute_query($sql, true);
+
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.properties_reviewers TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+
+    // Drop the two columns now.
+    $updater_utils->execute_query("ALTER TABLE properties DROP externals, DROP internal_reviewers", true);
+  }
   
   
-  
+  // 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */

@@ -242,7 +242,7 @@ if (isset($_POST['Submit'])) {
   sort($old_modules, SORT_NUMERIC);
   $old_modules = implode(',', $old_modules);
   $old_externals = $properties->get_externals();
-  $old_internal_reviewers = $properties->get_internal_reviewers();
+  $old_internals = $properties->get_internal_reviewers();
   $old_external_review_deadline = $properties->get_external_review_deadline();
   $old_internal_review_deadline = $properties->get_internal_review_deadline();
 
@@ -397,25 +397,17 @@ if (isset($_POST['Submit'])) {
       }
     }
 
-    $external_string = '';
+    $new_externals = array();
     for ($i=0; $i<$_POST['examiner_no']; $i++) {
       if (isset($_POST["examiner$i"])) {
-        if ($external_string == '') {
-          $external_string = $_POST["examiner$i"];
-        } else {
-          $external_string .= ',' . $_POST["examiner$i"];
-        }
+        $new_externals[] = intval($_POST["examiner$i"]);
       }
     }
 
-    $internal_string = '';
+    $new_internals = array();
     for ($i=0; $i<$_POST['internal_no']; $i++) {
       if (isset($_POST["internal$i"])) {
-        if ($internal_string == '') {
-          $internal_string = $_POST["internal$i"];
-        } else {
-          $internal_string .= ',' . $_POST["internal$i"];
-        }
+        $new_internals[] = intval($_POST["internal$i"]);
       }
     }
 
@@ -478,20 +470,24 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
     } elseif ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
-      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, externals=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
-      $editProperties->bind_param('ssssssssssiississsssssssssi', $paper_title, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $external_string, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_deadline, $internal_deadline, $tmp_sound_demo, $password, $paperID);
+      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
+      $editProperties->bind_param('ssssssssssiississsssssssi', $paper_title, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $external_deadline, $internal_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
       $editProperties->close();
 
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
+      Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli);
+      Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli);
     } else {
 
-      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
-      $editProperties->bind_param('ssssssssssssssiisssisisssssssssssi', $paper_title, $paper_type, $tmp_start_date, $tmp_end_date, $timezone, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $external_string, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $calendar_year, $internal_string, $external_deadline, $internal_deadline, $tmp_sound_demo, $password, $paperID);
+      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
+      $editProperties->bind_param('ssssssssssssssiisssiissssssssssi', $paper_title, $paper_type, $tmp_start_date, $tmp_end_date, $timezone, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $calendar_year, $external_deadline, $internal_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
       $editProperties->close();
 
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
+      Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli);
+      Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli);
     }
 
     // Release objectives-based feedback
@@ -563,8 +559,8 @@ if (isset($_POST['Submit'])) {
     sort($new_modules, SORT_NUMERIC);
     $new_modules = implode(',', $new_modules);
     if ($new_modules != $old_modules)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
-    if ($external_string != $old_externals)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_externals, $external_string, 'externals');
-    if ($internal_string != $old_internal_reviewers)                $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_internal_reviewers, $internal_string, 'internals');
+    if (implode(',',$new_externals) != implode(',',$old_externals)) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
+    if (implode(',',$new_internals) != implode(',',$old_internals)) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
     if ($external_review_deadline != $old_external_review_deadline) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_external_review_deadline, $external_review_deadline, 'externalreviewdeadline');
     if ($internal_review_deadline != $old_internal_review_deadline) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_internal_review_deadline, $internal_review_deadline, 'internalreviewdeadline');
     if ($tmp_marking != $old_marking)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_marking, $tmp_marking, 'method');
@@ -586,17 +582,6 @@ if (isset($_POST['Submit'])) {
         $editProperties->close();
       }
     }
-
-    // Set the questions team on this paper.
-    $result = $mysqli->prepare("SELECT q_id FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY display_pos");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($q_id);
-    while ($result->fetch()) {
-      QuestionUtils::update_modules_from_papers($q_id, $mysqli);
-    }
-    $result->close();
 
     // Set any metadata security
     $old_meta = '';
@@ -1856,24 +1841,13 @@ SQL;
   }
 
   // Make sure that current reviewers always appear on the list
-  $current_internals = explode(',', $properties->get_internal_reviewers());
+  $current_internals = $properties->get_internal_reviewers();
   $current_internals_sql = '';
-  if ($properties->get_internal_reviewers() != '') {
-    $current_internals_sql = <<< SQL
-UNION SELECT DISTINCT id, title, initials, surname, first_names
-FROM users
-WHERE id IN ({$properties->get_internal_reviewers()})
-SQL;
+  if (count($properties->get_internal_reviewers()) > 0) {
+    $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', $current_internals) . ')';
   }
 
-  $query = <<< SQL
-SELECT DISTINCT users.id, title, initials, surname, first_names
-FROM users, modules_staff, modules
-WHERE users.id = modules_staff.memberID AND modules.id = modules_staff.idMod {$school_sql}
-{$admin_school_sql}
-{$current_internals_sql}
-ORDER BY surname, initials
-SQL;
+  $query = "SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE users.id = modules_staff.memberID AND modules.id = modules_staff.idMod $school_sql $admin_school_sql $current_internals_sql ORDER BY surname, initials";
 
   $internal_details = $mysqli->prepare($query);
   $internal_details->execute();
@@ -1895,7 +1869,7 @@ SQL;
   echo "<input type=\"hidden\" id=\"internal_no\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
   echo "<td><div style=\"width:345px; height:473px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
-  $current_externals = explode(',', $properties->get_externals());
+  $current_externals = $properties->get_externals();
   $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles='External Examiner' AND grade != 'left' ORDER BY surname, initials");
   $external_details->execute();
   $external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);

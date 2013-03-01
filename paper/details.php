@@ -668,10 +668,13 @@ $result->close();
   $q_mod_check = array_unique($q_mod_check);
   if (count($q_mod_check) > 0) {
     $q_mod_found = QuestionUtils::multi_get_modules($q_mod_check, $mysqli);
-    foreach($q_mod_check as $tmp_q_id) {
-      if (!isset($q_mod_found[$tmp_q_id])) {
-        $paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);
-        QuestionUtils::add_modules($paper_modules, $tmp_q_id, $mysqli);
+    $paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);
+    foreach ($q_mod_check as $tmp_q_id) {
+      foreach ($paper_modules as $p_mod_id => $mod) {
+        if (!isset($q_mod_found[$tmp_q_id][$p_mod_id])) {
+          QuestionUtils::add_modules($paper_modules, $tmp_q_id, $mysqli);
+          break;
+        }
       }
     }
   }

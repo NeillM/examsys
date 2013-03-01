@@ -66,7 +66,7 @@
 <tr>
 <td><div style="padding-left:15px">
   <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
-  <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogō</div>
+  <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rog&#333;</div>
   <div style="color:#1F497D; font-size:9pt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
 </div>
 </td>
@@ -84,23 +84,26 @@
 <?php
   $start_of_day_ts = strtotime('midnight');
 
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, DATE_FORMAT(external_review_deadline,' {$configObject->get('cfg_short_date')}') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id = papers.paper AND externals LIKE ? GROUP BY paper ORDER BY paper_title");
-  $tVar= '%'. $userObject->get_user_ID() . '%';
-  $result->bind_param('s', $tVar);
+  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, crypt_name FROM (properties, properties_reviewers, papers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() OR start_date IS NULL) AND properties.property_id = papers.paper AND reviewerID = ? GROUP BY paper ORDER BY paper_title");
+  echo $mysqli->error;
+  $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->store_result();
-  $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $display_deadline, $crypt_name);
+  $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $crypt_name);
   while ($result->fetch()) {
     $reviewed = '';
     if ($fullscreen == '') $fullscreen = 0;
-    $log_results = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'{$configObject->get('cfg_long_date_time')}') AS started FROM review_comments WHERE reviewer = ? and q_paper = ?");
+    $log_results = $mysqli->prepare("SELECT UNIX_TIMESTAMP(MAX(reviewed)) AS started FROM review_comments WHERE reviewer = ? and q_paper = ?");
     $log_results->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $log_results->execute();
     $log_results->store_result();
     $log_results->bind_result($reviewed);
     $log_results->fetch();
     $log_results->close();
+    
     $restartdate = '';
+    $display_deadline = date($configObject->get('cfg_long_date_php'), $external_review_deadline);
+    
     echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('$crypt_name', $fullscreen, $paper_type); return false;\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
     echo "  <td><a href=\"#\" onclick=\"startPaper('$crypt_name', $fullscreen, $paper_type); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
     if ($start_of_day_ts > $external_review_deadline) {
@@ -116,7 +119,7 @@
     if ($reviewed == '') {
       echo '<span style="color:white; background-color:#FF4040; padding-left:5px; padding-right:5px">' . $string['notreviewed'] . '</span>';
     } else {
-      echo '<span style="color:#808080">' . sprintf($string['reviewed'], $reviewed) . '</span>';
+      echo '<span style="color:#808080">' . sprintf($string['reviewed'], date($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $reviewed)) . '</span>';
     }
     echo "</td></tr>\n<tr><td colspan=\"2\" style=\"font-size:80%\">&nbsp;</td>\n</tr>\n";
   }

@@ -672,6 +672,7 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users TO '". self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties_reviewers TO '". self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
@@ -753,12 +754,13 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".users_metadata TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".properties_reviewers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
-        @ob_flush();
-        @flush();
+      @ob_flush();
+      @flush();
       if (self::$db->errno != 0) {
        self::$db->rollback();
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotpermission']));
@@ -789,7 +791,7 @@ Class InstallUtils {
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotpermission']));
       }
     }
-   self::$db->commit();
+    self::$db->commit();
 
     $priv_SQL = array();
     //create 'database user Invigilator user' and grant permissions
@@ -819,14 +821,14 @@ Class InstallUtils {
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
-        @ob_flush();
-        @flush();
+      @ob_flush();
+      @flush();
       if (self::$db->errno != 0) {
        self::$db->rollback();
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotpermission']));
       }
     }
-   self::$db->commit();
+    self::$db->commit();
 
     $priv_SQL = array();
     //create 'database user sysadmin user' and grant permissions
@@ -839,15 +841,15 @@ Class InstallUtils {
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
-        @ob_flush();
-        @flush();
+      @ob_flush();
+      @flush();
       if (self::$db->errno != 0) {
        self::$db->rollback();
 	    echo self::$db->error . "<br />";
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotpermission']));
       }
     }
-   self::$db->commit();
+    self::$db->commit();
 
     //create sysadmin user
     UserUtils::create_user( $_POST['SysAdmin_username'],
@@ -936,7 +938,8 @@ Class InstallUtils {
                                 null,
                                 self::$db
                              );
-   self::$db->commit();
+    self::$db->commit();
+    
     //FLUSH PRIVILEGES
     self::$db->query("FLUSH PRIVILEGES");
     if (self::$db->errno != 0) {
@@ -1917,7 +1920,8 @@ QUERY;
           `ebel_grid_template` int(11) default NULL,
           `mod_deleted` datetime default NULL,
           PRIMARY KEY (`id`),
-          KEY `guideid` (`moduleid`)
+          KEY `guideid` (`moduleid`),
+          KEY `idx_moduleid_deleted` (`moduleid`,`mod_deleted`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2082,7 +2086,6 @@ QUERY;
           `labs` text,
           `rubric` text,
           `calculator` tinyint(4) default NULL,
-          `externals` text,
           `exam_duration` smallint(6) default NULL,
           `deleted` datetime default NULL,
           `created` datetime default NULL,
@@ -2094,7 +2097,6 @@ QUERY;
           `display_feedback` enum('0','1') default NULL,
           `hide_if_unanswered` enum('0','1') default NULL,
           `calendar_year` enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
-          `internal_reviewers` text,
           `external_review_deadline` date default NULL,
           `internal_review_deadline` date default NULL,
           `sound_demo` enum('0','1') default NULL,
@@ -2106,7 +2108,8 @@ QUERY;
           KEY `paper_title` (`paper_title`),
           KEY `paper_owner` (`paper_ownerID`),
           KEY `question_type` (`paper_type`),
-          KEY `crypt_name_idx` (`crypt_name`)
+          KEY `crypt_name_idx` (`crypt_name`),
+          KEY `idx_owner_deleted` (`paper_ownerID`,`deleted`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2116,6 +2119,18 @@ QUERY;
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
           PRIMARY KEY (`property_id`,`idMod`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['properties_reviewers'] = <<<QUERY
+         CREATE TABLE `properties_reviewers` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+          `paperID` mediumint(8) unsigned DEFAULT NULL,
+          `reviewerID` int(11) unsigned DEFAULT NULL,
+          `type` enum('internal','external') DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `idx_paperID` (`paperID`),
+          KEY `idx_type` (`type`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['question_exclude'] = <<<QUERY
@@ -2159,7 +2174,8 @@ QUERY;
           `status` enum('Normal','Retired','Incomplete','Experimental','Beta') default NULL,
           `q_option_order` enum('display order','alphabetic','random') default NULL,
           `score_method` enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark') default NULL,
-          PRIMARY KEY (`q_id`)
+          PRIMARY KEY (`q_id`),
+          KEY `idx_owner_deleted` (`ownerID`,`deleted`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 

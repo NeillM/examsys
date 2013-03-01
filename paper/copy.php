@@ -432,11 +432,25 @@
 
     $new_calendar_year = checkSession($calendar_year);
 
-    $addPaper = $db->prepare("INSERT INTO properties VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)");
-    $addPaper->bind_param('ssssssssssssisiiisssisidissssssssssis', $_POST['new_paper'], $tmp_start_date, $tmp_end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $userID, $folder, $labs, $rubric, $calculator, $externals, $tmp_exam_duration, $tmp_random_mark, $tmp_total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $new_calendar_year, $internal_reviewers, $tmp_external_review_deadline, $tmp_internal_review_deadline, $sound_demo, $latex_needed, $password);
+    $addPaper = $db->prepare("INSERT INTO properties VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)");
+    $addPaper->bind_param('ssssssssssssisiiisssiidisssssssssis', $_POST['new_paper'], $tmp_start_date, $tmp_end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $userID, $folder, $labs, $rubric, $calculator, $tmp_exam_duration, $tmp_random_mark, $tmp_total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $new_calendar_year, $tmp_external_review_deadline, $tmp_internal_review_deadline, $sound_demo, $latex_needed, $password);
     $addPaper->execute();
     $new_paper_id = $db->insert_id;
     $addPaper->close();
+
+    // Get the old reviewers and populate the new paper with.
+    $result2 = $db->prepare("SELECT reviewerID, type FROM properties_reviewers WHERE paperID = ?");
+    $result2->bind_param('i', $_POST['paperID']);
+    $result2->execute();
+    $result2->store_result();
+    $result2->bind_result($reviewerID, $type);
+    while ($result2->fetch()) {
+      $stmt = $db->prepare("INSERT INTO properties_reviewers VALUES (NULL, ?, ?, ?)");
+      $stmt->bind_param('iis', $new_paper_id, $reviewerID, $type);
+      $stmt->execute();
+      $stmt->close();
+    }
+    $result2->close();
 
     //set the modules on the new paper
     Paper_utils::update_modules($moduleIDs, $new_paper_id, $db, $userObj);
@@ -455,7 +469,7 @@
     }
 
     // Query the database to get the creation date and then set crypt_name.
-    $result2 = $db->prepare("SELECT property_id, UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id=?");
+    $result2 = $db->prepare("SELECT property_id, UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id = ?");
     $result2->bind_param('i', $new_paper_id);
     $result2->execute();
     $result2->store_result();
@@ -465,7 +479,7 @@
 
     $hash = $property_id . $created . $paper_ownerID;
 
-    $update = $db->prepare("UPDATE properties SET crypt_name=? WHERE property_id=?");
+    $update = $db->prepare("UPDATE properties SET crypt_name = ? WHERE property_id = ?");
     $update->bind_param('si', $hash, $property_id);
     $update->execute();
     $update->close();
