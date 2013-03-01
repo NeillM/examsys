@@ -48,6 +48,29 @@ $notice = null;
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 print "DBUtils::get_mysqli_link(". $configObject->get('cfg_db_host') .", ".$configObject->get('cfg_db_staff_user').", ".$configObject->get('cfg_db_staff_passwd').", ".$configObject->get('cfg_db_database').", ".$configObject->get('cfg_db_charset').", $notice, ".$configObject->get('dbclass').", ".$configObject->get('cfg_db_port').");";
 error_reporting(E_ALL);
+
+$getback = array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd', 'cfg_db_admin_user', 'cfg_db_admin_passwd', 'cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd', 'cfg_db_external_user', 'cfg_db_external_passwd', 'cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
+
+$arr = $this->configObj->get($getback);
+foreach ($arr as $k => $v) {
+  ${$k} = $v;
+}
+
+
+
+$result = $mysqli->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
+if($result==false) {
+echo 'CHANGE USER FAILED'.'THIS SHOULDN\'T EVER APPEAR CONTACT SUPPORT'.'../artwork/software_64.png';
+  if ($mysqli->error) {
+    try {
+      throw new Exception("MySQL error ".$mysqli->error ."<br> ", $mysqli->errno);
+    } catch (Exception $e) {
+      echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+      echo nl2br($e->getTraceAsString());
+      exit();
+    }
+  }
+}
 foreach ($typelist as $type) {
   $paper_type = $type;
 
