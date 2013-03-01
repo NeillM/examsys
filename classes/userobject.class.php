@@ -715,6 +715,11 @@ class UserObject extends RogoStaticSingleton {
       $notice=UserNotices::get_instance();
       $notice->access_denied($this->db,$string,sprintf($string['denied_role'],implode(',',array_keys($this->roles))),false,false);
     }
+    if($result==false) {
+      $notice=UserNotices::get_instance();
+      $notice->display_notice('CHANGE USER FAILED','THIS SHOUDLNT EVER APPEAR CONTACT SUPPORT','../artwork/software_64.png');
+
+    }
 
 
   }
