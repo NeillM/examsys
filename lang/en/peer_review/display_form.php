@@ -14,13 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/include/not_found.inc';
+require_once '../lang/' . $language . '/include/not_found.inc';
 
-$string['reviewsummary'] = 'Review Summary'; 
-$string['name'] = 'Name';
-$string['studentid'] = 'Student ID';
-$string['reviewed'] = 'Reviewed';
-$string['reviews'] = 'Reviews';
-$string['overall'] = 'Overall';
-$string['q'] = 'Q';
+$string['student'] = 'Student:';
+$string['group'] = 'Group:';
+$string['close'] = 'Close';
 ?>

@@ -43,24 +43,13 @@ function padDecimals($number, $rounding) {
   return $integer . '.' . $decimals;
 }
 
-// Get some properties of the paper.
-$result = $mysqli->prepare("SELECT property_id, paper_title, calendar_year, rubric, marking, display_question_mark FROM properties WHERE property_id = ?");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->bind_result($property_id, $paper_title, $calendar_year, $type, $marking, $review_type);
-$result->fetch();
-$result->close();
-
-$modules_array = Paper_utils::get_modules($_GET['paperID'], $mysqli);
-
 // Get questions on the paper
 $questions = array();
-$result = $mysqli->prepare("SELECT q_type, question, leadin, display_method, option_text FROM (papers, questions, options) WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND paper=? ORDER BY display_pos, id_num");
-$result->bind_param('i', $property_id);
+$result = $mysqli->prepare("SELECT q_type, question, leadin, display_method, option_text FROM (papers, questions, options) WHERE papers.question = questions.q_id AND questions.q_id=options.o_id AND paper = ? ORDER BY display_pos, id_num");
+$result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($q_type, $questionID, $leadin, $display_method, $option_text);
 while ($result->fetch()) {
-  //$heading_no = substr_count($display_method, '|');
   $questions[$questionID]['leadin'] = $leadin;
   if ($q_type == 'likert') {
     $questions[$questionID]['scale'] = $display_method;
@@ -93,14 +82,14 @@ $user_data = array();
 $groups = array();
 
 if ($group == '%') {
-  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND idMod IN (" . implode(',', array_keys($modules_array)) . ") AND calendar_year=? AND type=? ORDER BY surname, initials");
+  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id = sid.userID WHERE users_metadata.userID = users.id AND idMod IN (" . implode(',', array_keys($modules_array)) . ") AND calendar_year = ? AND type = ? ORDER BY surname, initials");
   $result->bind_param('ss', $calendar_year, $type);
 } else {
-  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND idMod IN (" . implode(',', array_keys($modules_array)) . ") AND calendar_year=? AND type=? AND value=? ORDER BY surname, initials");
+  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id = sid.userID WHERE users_metadata.userID = users.id AND idMod IN (" . implode(',', array_keys($modules_array)) . ") AND calendar_year = ? AND type = ? AND value = ? ORDER BY surname, initials");
   $result->bind_param('sss', $calendar_year, $type, $group);
 }
 $result->execute();
-$result->bind_result($userID, $group, $surname, $first_names, $title, $student_id); //TODO userID here?
+$result->bind_result($userID, $group, $surname, $first_names, $title, $student_id);
 while ($result->fetch()) {
   $user_data[$userID]['group'] = $group;
   $user_data[$userID]['surname'] = $surname;
@@ -113,14 +102,15 @@ while ($result->fetch()) {
 }
 $result->close();
 
+
 $users = array_keys($user_data);
 $users = implode(',', $users);
 
 // Load results from Log6
 $reviewers = array();
 
-$result = $mysqli->prepare("SELECT reviewerID, peerID, q_id, rating FROM log6 WHERE reviewerID IN ($users) AND paperID=? AND started>? AND started<? ORDER BY started");
-$result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
+$result = $mysqli->prepare("SELECT reviewerID, peerID, q_id, rating FROM log6 WHERE reviewerID IN ($users) AND paperID = ? AND started > ? AND started < ? ORDER BY started");
+$result->bind_param('iss', $paperID, $startdate, $enddate);
 $result->execute();
 $result->bind_result($reviewerID, $peerID, $q_id, $rating);
 while ($result->fetch()) {
@@ -130,7 +120,6 @@ while ($result->fetch()) {
 $result->close();
 
 // Parse the data calculating means
-
 if ($review_type == '1') {
   parse_group_data($questions, $user_data);
 } else {
@@ -140,6 +129,7 @@ if ($review_type == '1') {
 
 function parse_group_data($questions, &$user_data) {
   global $reviewers;
+  
   foreach ($user_data as $studentID => $student) {
     $available_marks = 0;
     $student_marks = 0;
@@ -172,12 +162,14 @@ function parse_group_data($questions, &$user_data) {
         $user_data[$studentID]['have_review'] = $review_no;
       }
     }
-     $user_data[$studentID]['have_review'] = isset($reviewers[$student['userID']]);
+    $user_data[$studentID]['have_review'] = isset($reviewers[$student['userID']]);
   }
 }
 
 function parse_single_data($questions, &$user_data) {
   global $reviewers;
+
+  
   foreach ($user_data as $studentID => $student) {
     $available_marks = 0;
     $student_marks = 0;

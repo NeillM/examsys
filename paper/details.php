@@ -62,8 +62,7 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
 if (!$properties) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
-  exit();
+  $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
 }
 
 //var_dump($properties);

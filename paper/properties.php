@@ -448,7 +448,7 @@ if (isset($_POST['Submit'])) {
     }
 
     if ($properties->get_paper_type() == '6') {
-      $rubric = $_POST['type'];      // Reuse the 'rubric' field to store which field in the metadata to use for groups.
+      $tmp_rubric = $_POST['type'];      // Reuse the 'rubric' field to store which field in the metadata to use for groups.
     } else {
       $tmp_rubric = $_POST['rubric_text'];
       $tmp_rubric = clearMSOtags($tmp_rubric);

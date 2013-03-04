@@ -34,13 +34,13 @@ require_once '../include/errors.inc';
 
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
-check_var('paperID', 'GET', true, false, false);
-check_var('startdate', 'GET', true, false, false);
-check_var('enddate', 'GET', true, false, false);
+$paperID = check_var('paperID', 'GET', true, false, true);
+$startdate = check_var('startdate', 'GET', true, false, true);
+$enddate = check_var('enddate', 'GET', true, false, true);
 
 set_time_limit(0);
-check_var('paperID', 'GET', true, false, false);
 
 $stop_words = array('-'=>'-','a'=>'a','about'=>'about','above'=>'above','across'=>'across','after'=>'after','again'=>'again','against'=>'against','all'=>'all','almost'=>'almost','alone'=>'alone','along'=>'along','already'=>'already','also'=>'also','although'=>'although','always'=>'always','among'=>'among','an'=>'an','and'=>'and','another'=>'another','any'=>'any','anybody'=>'anybody','anyone'=>'anyone','anything'=>'anything','anywhere'=>'anywhere','are'=>'are','area'=>'area','areas'=>'areas','around'=>'around','as'=>'as','ask'=>'ask','asked'=>'asked','asking'=>'asking','asks'=>'asks','at'=>'at','away'=>'away','b'=>'b','back'=>'back','backed'=>'backed','backing'=>'backing','backs'=>'backs','be'=>'be','became'=>'became','because'=>'because','become'=>'become','becomes'=>'becomes','been'=>'been','before'=>'before','began'=>'began','behind'=>'behind','being'=>'being','beings'=>'beings','best'=>'best','better'=>'better','between'=>'between','big'=>'big','both'=>'both','but'=>'but','by'=>'by','c'=>'c','came'=>'came','can'=>'can','cannot'=>'cannot','case'=>'case','cases'=>'cases','certain'=>'certain','certainly'=>'certainly','clear'=>'clear','clearly'=>'clearly','come'=>'come','could'=>'could','d'=>'d','did'=>'did','differ'=>'differ','different'=>'different','differently'=>'differently','do'=>'do','does'=>'does','done'=>'done','down'=>'down','downed'=>'downed','downing'=>'downing','downs'=>'downs','during'=>'during','e'=>'e','each'=>'each','early'=>'early','either'=>'either','end'=>'end','ended'=>'ended','ending'=>'ending','ends'=>'ends','enough'=>'enough','even'=>'even','evenly'=>'evenly','ever'=>'ever','every'=>'every','everybody'=>'everybody','everyone'=>'everyone','everything'=>'everything','everywhere'=>'everywhere','f'=>'f','face'=>'face','faces'=>'faces','fact'=>'fact','facts'=>'facts','far'=>'far','felt'=>'felt','few'=>'few','find'=>'find','finds'=>'finds','first'=>'first','for'=>'for','four'=>'four','from'=>'from','full'=>'full','fully'=>'fully','further'=>'further','furthered'=>'furthered','furthering'=>'furthering','furthers'=>'furthers','g'=>'g','gave'=>'gave','general'=>'general','generally'=>'generally','get'=>'get','gets'=>'gets','give'=>'give','given'=>'given','gives'=>'gives','go'=>'go','going'=>'going','good'=>'good','goods'=>'goods','got'=>'got','great'=>'great','greater'=>'greater','greatest'=>'greatest','group'=>'group','grouped'=>'grouped','grouping'=>'grouping','groups'=>'groups','h'=>'h','had'=>'had','has'=>'has','have'=>'have','having'=>'having','he'=>'he','her'=>'her','here'=>'here','herself'=>'herself','high'=>'high','higher'=>'higher','highest'=>'highest','him'=>'him','himself'=>'himself','his'=>'his','how'=>'how','however'=>'however','i'=>'i','if'=>'if','important'=>'important','in'=>'in','interest'=>'interest','interested'=>'interested','interesting'=>'interesting','interests'=>'interests','into'=>'into','is'=>'is','it'=>'it','its'=>'its','itself'=>'itself','j'=>'j','just'=>'just','k'=>'k','keep'=>'keep','keeps'=>'keeps','kind'=>'kind','knew'=>'knew','know'=>'know','known'=>'known','knows'=>'knows','l'=>'l','large'=>'large','largely'=>'largely','last'=>'last','later'=>'later','latest'=>'latest','least'=>'least','less'=>'less','let'=>'let','lets'=>'lets','like'=>'like','likely'=>'likely','long'=>'long','longer'=>'longer','longest'=>'longest','m'=>'m','made'=>'made','make'=>'make','making'=>'making','man'=>'man','many'=>'many','may'=>'may','me'=>'me','member'=>'member','members'=>'members','men'=>'men','might'=>'might','more'=>'more','most'=>'most','mostly'=>'mostly','mr'=>'mr','mrs'=>'mrs','much'=>'much','must'=>'must','my'=>'my','myself'=>'myself','n'=>'n','necessary'=>'necessary','need'=>'need','needed'=>'needed','needing'=>'needing','needs'=>'needs','never'=>'never','new'=>'new','newer'=>'newer','newest'=>'newest','next'=>'next','no'=>'no','nobody'=>'nobody','non'=>'non','noone'=>'noone','not'=>'not','nothing'=>'nothing','now'=>'now','nowhere'=>'nowhere','number'=>'number','numbers'=>'numbers','of'=>'o','of'=>'of','off'=>'off','often'=>'often','old'=>'old','older'=>'older','oldest'=>'oldest','on'=>'on','once'=>'once','one'=>'one','only'=>'only','open'=>'open','opened'=>'opened','opening'=>'opening','opens'=>'opens','or'=>'or','order'=>'order','ordered'=>'ordered','ordering'=>'ordering','orders'=>'orders','other'=>'other','others'=>'others','our'=>'our','out'=>'out','over'=>'over','p'=>'p','part'=>'part','parted'=>'parted','parting'=>'parting','parts'=>'parts','per'=>'per','perhaps'=>'perhaps','place'=>'place','places'=>'places','point'=>'point','pointed'=>'pointed','pointing'=>'pointing','points'=>'points','possible'=>'possible','present'=>'present','presented'=>'presented','presenting'=>'presenting','presents'=>'presents','problem'=>'problem','problems'=>'problems','put'=>'put','puts'=>'puts','q'=>'q','quite'=>'quite','r'=>'r','rather'=>'rather','really'=>'really','right'=>'right','room'=>'room','rooms'=>'rooms','s'=>'s','said'=>'said','same'=>'same','saw'=>'saw','say'=>'say','says'=>'says','second'=>'second','seconds'=>'seconds','see'=>'see','seem'=>'seem','seemed'=>'seemed','seeming'=>'seeming','seems'=>'seems','sees'=>'sees','several'=>'several','shall'=>'shall','she'=>'she','should'=>'should','show'=>'show','showed'=>'showed','showing'=>'showing','shows'=>'shows','side'=>'side','sides'=>'sides','since'=>'since','small'=>'small','smaller'=>'smaller','smallest'=>'smallest','so'=>'so','some'=>'some','somebody'=>'somebody','someone'=>'someone','something'=>'something','somewhere'=>'somewhere','state'=>'state','states'=>'states','still'=>'still','such'=>'such','sure'=>'sure','t'=>'t','take'=>'take','taken'=>'taken','than'=>'than','that'=>'that','the'=>'the','their'=>'their','them'=>'them','then'=>'then','there'=>'there','therefore'=>'therefore','these'=>'these','they'=>'they','thing'=>'thing','things'=>'things','think'=>'think','thinks'=>'thinks','this'=>'this','those'=>'those','though'=>'though','thought'=>'thought','thoughts'=>'thoughts','three'=>'three','through'=>'through','thus'=>'thus','to'=>'to','today'=>'today','together'=>'together','too'=>'too','took'=>'took','toward'=>'toward','turn'=>'turn','turned'=>'turned','turning'=>'turning','turns'=>'turns','two'=>'two','u'=>'u','under'=>'under','until'=>'until','up'=>'up','upon'=>'upon','us'=>'us','use'=>'use','used'=>'used','uses'=>'uses','v'=>'v','very'=>'very','w'=>'w','want'=>'want','wanted'=>'wanted','wanting'=>'wanting','wants'=>'wants','was'=>'was','way'=>'way','ways'=>'ways','we'=>'we','well'=>'well','wells'=>'wells','went'=>'went','were'=>'were','what'=>'what','when'=>'when','where'=>'where','whether'=>'whether','which'=>'which','while'=>'while','who'=>'who','whole'=>'whole','whose'=>'whose','why'=>'why','will'=>'will','with'=>'with','within'=>'within','without'=>'without','work'=>'work','worked'=>'worked','working'=>'working','works'=>'works','would'=>'would','x'=>'x','y'=>'y','year'=>'year','years'=>'years','yet'=>'yet','you'=>'you','young'=>'young','younger'=>'younger','youngest'=>'youngest','your'=>'your','yours'=>'yours','z'=>'z');
 $pstats_array = array();
@@ -432,16 +432,13 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
   }
 }
 
-$paperID = $_GET['paperID'];
-$startdate = $_GET['startdate'];
-$enddate = $_GET['enddate'];
 $d_no = 0;
 $d_total = 0;
 
 if (isset($_POST['submit'])) {
   // Clear the database of any past exclusions from the current paper.
-  if ($result = $mysqli->prepare("DELETE FROM question_exclude WHERE q_paper=?")) {
-    $result->bind_param('i', $_GET['paperID']);
+  if ($result = $mysqli->prepare("DELETE FROM question_exclude WHERE q_paper = ?")) {
+    $result->bind_param('i', $paperID);
     $result->execute();
     $result->close();
   } else {
@@ -456,7 +453,7 @@ if (isset($_POST['submit'])) {
     if ($current_id != $old_q_id) {
       if (strpos($old_status, '1') !== false) {
         if ($result = $mysqli->prepare("INSERT INTO question_exclude VALUES (NULL, ?, ?, ?, {$userObject->get_user_ID()}, NOW(), '')")) {
-          $result->bind_param('iis', $_GET['paperID'], $old_q_id, $old_status);
+          $result->bind_param('iis', $paperID, $old_q_id, $old_status);
           $result->execute();
           $result->close();
         } else {
@@ -470,7 +467,7 @@ if (isset($_POST['submit'])) {
   }
   if (strpos($old_status, '1') !== false) {
     if ($result = $mysqli->prepare("INSERT INTO question_exclude VALUES (NULL, ?, ?, ?, {$userObject->get_user_ID()}, NOW(), '')")) {
-      $result->bind_param('iis', $_GET['paperID'], $old_q_id, $old_status);
+      $result->bind_param('iis', $paperID, $old_q_id, $old_status);
       $result->execute();
       $result->close();
     } else {
@@ -478,7 +475,7 @@ if (isset($_POST['submit'])) {
     }
   }
 
-  header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+  header("location: ../paper/details.php?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
 }
 
 function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {
@@ -1688,26 +1685,32 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 <form name="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 <table class="header" style="font-size:90%">
 <?php
+  // Get some paper properties
+  $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
+
+  if (!$propertyObj) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+  }
+  $paper_title = $propertyObj->get_paper_title();
+  $paper_type = $propertyObj->get_paper_type();
+  $labelcolor = $propertyObj->get_labelcolor();
+  $themecolor = $propertyObj->get_themecolor();
+  $marking = $propertyObj->get_marking();
+  $pass_mark = $propertyObj->get_pass_mark();
+
+  $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
+
   // Get any questions to exclude.
   $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $parts);
   while ($result->fetch()) {
     $excluded[$q_id] = $parts;
   }
   $result->close();
-
-  // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_title, paper_type, labelcolor, themecolor, marking, pass_mark FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($paper_title, $paper_type, $labelcolor, $themecolor, $marking, $pass_mark);
-  $result->fetch();
-  $result->close();
-
-  $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
 
   // Get the standards setting
   if (substr($marking,0,1) == '2') {
@@ -1729,8 +1732,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $users_on_modules = '';
   if (is_array($moduleIDs)) {
     $users_on_modules = '';
-    $moduleIDs_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
-    $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM modules_student,modules WHERE modules.id = modules_student.idMod AND idMod IN ($moduleIDs_in)");
+    $moduleIDs_in = "'" . implode(',', array_keys($moduleIDs)) . "'";
+    $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM modules_student, modules WHERE modules.id = modules_student.idMod AND idMod IN ($moduleIDs_in)");
     $mod_query->execute();
     $mod_query->bind_result($tmp_userID, $tmp_moduleid);
     $mod_query->store_result();
@@ -1752,7 +1755,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   }
 
   if ($_GET['studentsonly'] == 1) {
-    $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
+    $roles_sql = " AND (users.roles = 'Student' OR users.roles = 'graduate')";
   } else {
     $roles_sql = '';
   }

@@ -157,7 +157,7 @@ class VLE_UoNCM implements iVLEAPI {
         'occurrance' => 'Non-timetabled',
         'calendar_year' => $calendar_year,
         'VLE' => 'UoNCM',
-        'source_url' => sprintf($this->_moodle_base_urls[$this->_sess_year], $this->_module_id, $this->_sess_year, $session['@attributes']['id']),
+        'source_url' => sprintf($this->_moodle_base_url, $this->_module_id, $this->_sess_year, $learning_act['@attributes']['id']) . '&ses=' . $learning_act['code'],
         'mapped' => 0,
         'objectives' => array()
       );

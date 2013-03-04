@@ -25,14 +25,31 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
-require_once 'summary_report.inc';
 
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
-check_var('paperID', 'GET', true, false, false);
-check_var('startdate', 'GET', true, false, false);
-check_var('enddate', 'GET', true, false, false);
+$paperID = check_var('paperID', 'GET', true, false, true);
+$startdate = check_var('startdate', 'GET', true, false, true);
+$enddate = check_var('enddate', 'GET', true, false, true);
+
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+
+if (!$propertyObj) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+}
+
+$paper_title = $propertyObj->get_paper_title();
+$calendar_year = $propertyObj->get_calendar_year();
+$type = $propertyObj->get_rubric();
+$marking = $propertyObj->get_marking();
+$review_type = $propertyObj->get_display_question_mark();
+$modules_array = Paper_utils::get_modules($paperID, $mysqli);
+
+require_once 'summary_report.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -171,6 +188,7 @@ check_var('enddate', 'GET', true, false, false);
   echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
 ?>
 <?php
+
   //work out ordring
   if (isset($_GET['ordering']) and $_GET['ordering'] == 'asc') {
     $ordering = 'desc';
@@ -184,9 +202,14 @@ check_var('enddate', 'GET', true, false, false);
   } else {
     $sortby = 'surname';
   }
+  if (isset($_GET['percent'])) {
+    $percent =  $_GET['percent'];
+  } else {
+    $percent = 100;
+  }
 
   // write out headings
-  $query_string = "percent=" . $_GET['percent'] . "&paperID=" . $_GET['paperID'] . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=" . $_GET['meta1'] . "";
+  $query_string = "percent=" . $percent . "&paperID=" . $_GET['paperID'] . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=" . $_GET['meta1'] . "";
   $heading = array('surname'=>$string['name'], 'student_id'=>$string['studentid'], 'have_review'=>$string['reviewed'], 'group'=>$type);
   if ($review_type == 1) {
     $heading['review_no'] = $string['reviews'];
@@ -279,9 +302,12 @@ check_var('enddate', 'GET', true, false, false);
 
   // Sort the data.
   $master_array = array_csort($master_array, $sortby, $ordering);
+  
+  //var_dump($master_array);
 
   for ($i=0; $i<$user_number; $i++) {
-    if ($student_userID > 0) {
+    //if ($student_userID > 0) {
+    if ($master_array[$i]['student_id'] > 0) {
       echo '<tr>';
       echo '<td class="greyln"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" border="0" onclick="ItemSelMenu(' . $master_array[$i]['userid'] . ', event);" /></td>';
       echo '<td class="greyln" onclick="ItemSelMenu(' . $master_array[$i]['userid'] . ', event);">' . $master_array[$i]['title'] . ' ' . $master_array[$i]['surname'] . ', <span class="fn">' . $master_array[$i]['first_names'] . '</span></td>';

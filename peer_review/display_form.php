@@ -26,18 +26,35 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
-check_var('paperID', 'GET', true, false, false);
+$paperID = check_var('paperID', 'GET', true, false, true);
 
-// Get some properties of the paper.
-$result = $mysqli->prepare("SELECT property_id, paper_title, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, labs, crypt_name, display_question_mark FROM properties WHERE property_id = ? LIMIT 1");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->bind_result($property_id, $paper_title, $start_date, $end_date, $calendar_year, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $type, $paper_prologue, $marking, $display_photos, $labs, $crypt_name, $review_type);
-$result->fetch();
-$result->close();
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
 
-$modules = Paper_utils::get_modules($property_id, $mysqli);
+if (!$propertyObj) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+}
+
+$paper_title = $propertyObj->get_paper_title();
+$start_date = $propertyObj->get_start_date();
+$end_date = $propertyObj->get_end_date();
+$calendar_year = $propertyObj->get_calendar_year();
+$paper_bgcolor = $propertyObj->get_bgcolor();
+$paper_fgcolor = $propertyObj->get_fgcolor();
+$paper_themecolor = $propertyObj->get_themecolor();
+$paper_labelcolor = $propertyObj->get_labelcolor();
+$type = $propertyObj->get_rubric();
+$paper_prologue = $propertyObj->get_paper_prologue();
+$marking = $propertyObj->get_marking();
+$display_photos = $propertyObj->get_display_correct_answer();
+$labs = $propertyObj->get_labs();
+$crypt_name = $propertyObj->get_crypt_name();
+$review_type = $propertyObj->get_display_question_mark();
+
+$modules = Paper_utils::get_modules($paperID, $mysqli);
 
 if ($calendar_year == '') {
   display_error('Error', 'No Academic Session is set.', false, true);
@@ -46,19 +63,14 @@ if ($type == '') {   // What metadata field to use.
   display_error('Error', 'No field in the metadata set for groups.', false, true);
 }
 
-// If set overwrite the default colours with the current users' special settings
-if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
-if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
-if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
+$bgcolor = $paper_fgcolor = $textsize = $marks_color = $paper_themecolor = $labelcolor = $font = $unanswered_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $paper_themecolor, $labelcolor, $font, $unanswered_color);
 
 // Get questions on the paper
 $questions = array();
 
 $result = $mysqli->prepare("SELECT question, q_type, leadin, display_method FROM (papers, questions) WHERE papers.question = questions.q_id AND paper = ? ORDER BY display_pos");
-$result->bind_param('i', $property_id);
+$result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($questionID, $q_type, $leadin, $display_method);
 while ($result->fetch()) {
@@ -99,7 +111,7 @@ if ($group == '') {
 }
 
 // Get the name of the current user.
-$result = $mysqli->prepare("SELECT username, surname, first_names, title FROM users WHERE id=? LIMIT 1");
+$result = $mysqli->prepare("SELECT username, surname, first_names, title FROM users WHERE id = ? LIMIT 1");
 $result->bind_param('i', $_GET['userID']);
 $result->execute();
 $result->bind_result($student_username, $student_surname, $student_first_names, $student_title);
@@ -113,7 +125,7 @@ if ($review_type == '1') {
 } else {
   $result = $mysqli->prepare("SELECT id, reviewerID, q_id, rating FROM log6 WHERE reviewerID = ? AND paperID = ?");
 }
-$result->bind_param('ii', $_GET['userID'], $property_id);
+$result->bind_param('ii', $_GET['userID'], $paperID);
 $result->execute();
 $result->bind_result($id, $reviwerID, $q_id, $rating);
 while ($result->fetch()) {
@@ -157,7 +169,7 @@ $result->close();
 echo "<form>\n";
 
 echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
-echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>Student:</strong> ' . $student_title . ' ' . $student_surname . ', ' . $student_first_names . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ' . $group . '</div></td><td width="160"><img src="../config/logo.png" width="160" height="67" alt="Logo" /></td></tr>';
+echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>' . $string['student'] . '</strong> ' . $student_title . ' ' . $student_surname . ', ' . $student_first_names . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $string['group'] . '</strong> ' . $group . '</div></td><td width="160"><img src="../config/logo.png" width="160" height="67" alt="Logo" /></td></tr>';
 echo '</table>';
 
 echo "<br />\n<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" style=\"margin-left:auto; margin-right:auto\">\n";
@@ -185,7 +197,7 @@ if ($review_type == '1') {
 echo "</table>\n";
 
 echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td style=\"border-top:1px solid #164994;background-color:#2765AB;background-image:url('../artwork/title_gradient.png');background-repeat:repeat-y;background-position:center; text-align:center\">";
-echo "<input type=\"button\" name=\"close\" value=\"Close\" style=\"width:100px\" onclick=\"window.close();\" />";
+echo "<input type=\"button\" name=\"close\" value=\"" . $string['close'] . "\" style=\"width:100px\" onclick=\"window.close();\" />";
 echo "</td></tr>\n";
 
 echo "</table>\n</form>\n";

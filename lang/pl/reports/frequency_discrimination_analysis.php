@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/include/not_found.inc';
+
 $string['frequencydiscrimination'] = 'Analiza częstości i różnicowania'; 
 $string['reporttitle'] = 'Raport analizy częstości i różnicowania (U-L)';
 $string['totalcandidatenumber'] = 'liczba wszystkich kandydatów';

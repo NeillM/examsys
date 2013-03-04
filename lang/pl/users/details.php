@@ -16,6 +16,7 @@
 
 require '../lang/' . $language . '/include/user_search_options.inc';
 require '../lang/' . $language . '/include/titles.inc';
+require '../lang/' . $language . '/include/not_found.inc';
  
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
 $string['status'] = 'Status'; //cognate //Status, Stan

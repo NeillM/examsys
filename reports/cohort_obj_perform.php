@@ -27,11 +27,13 @@ require '../include/mapping.inc';
 require '../include/feedback.inc';
 require_once '../include/sort.inc';
 require_once '../classes/folderutils.class.php';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/paperutils.class.php';
 
-$paperID = $_GET['paperID'];
-$startdate = $_GET['startdate'];
-$enddate = $_GET['enddate'];
-
+$paperID = check_var('paperID', 'GET', true, false, true);
+$startdate = check_var('startdate', 'GET', true, false, true);
+$enddate = check_var('enddate', 'GET', true, false, true);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -40,7 +42,7 @@ $enddate = $_GET['enddate'];
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō: <?php echo $string['learningobjectiveanalysis'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['learningobjectiveanalysis'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -54,7 +56,18 @@ $enddate = $_GET['enddate'];
 <table class="header" style="font-size:90%">
 <?php
   // Get some paper properties
-  getPaperProperties($mysqli, $paperID);
+  $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+  
+  if (!$propertyObj) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+  }
+  
+  $paper_title = $propertyObj->get_paper_title();
+  $paper_type = $propertyObj->get_paper_type();
+  $session = $propertyObj->get_calendar_year();
+
+  $moduleID = Paper_utils::get_modules($paperID, $mysqli);
   
   if ($_GET['percent'] != 100 and $_GET['percent'] != '') {
     $percent = $_GET['percent'];

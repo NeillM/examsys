@@ -57,15 +57,15 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color) 
 
   $tab_array = array('Log');
 
-  if (stripos($user_roles,'Staff') !== false) {
+  if (stripos($user_roles, 'Staff') !== false) {
     $tab_array[] = 'Teams';
   }
 
-  if (stripos($user_roles,'Admin') !== false and stripos($user_roles, 'SysAdmin') === false) {
+  if (stripos($user_roles, 'Admin') !== false and stripos($user_roles, 'SysAdmin') === false) {
     $tab_array[] = 'Admin';
   }
 
-  if (stripos($user_roles,'Student') !== false or stripos($user_roles, 'Graduate') !== false) {
+  if (stripos($user_roles, 'Student') !== false or stripos($user_roles, 'Graduate') !== false) {
     $tab_array[] = 'Modules';
     $tab_array[] = 'Notes';
     $tab_array[] = 'Accessibility';
@@ -346,10 +346,18 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 </head>
 
 <body>
-
 <?php
-  require '../tools/colour_picker/colour_picker.inc';
-  require '../include/user_search_options.inc';
+  $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, student_id, user_deleted FROM users LEFT JOIN sid ON users.id = sid.userID WHERE users.id = ?");
+  $user_result->bind_param('i', $_GET['userID']);
+  $user_result->execute();
+  $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
+  $user_result->fetch();
+  $user_result->close();
+  
+  if (!isset($tmp_id)) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($string['usernotfound'], $msg, '../artwork/user_not_found.png', '#C00000', true, true);
+  }
 
   $needs_result = $mysqli->prepare("SELECT special_id FROM special_needs WHERE userID = ?");
   $needs_result->bind_param('i', $_GET['userID']);
@@ -358,13 +366,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   if ($needs_result->num_rows > 0) $special_needs = true;
   $needs_result->close();
 
-  $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, student_id, user_deleted FROM users LEFT JOIN sid ON users.id=sid.userID WHERE users.id=?");
-  $user_result->bind_param('i', $_GET['userID']);
-  $user_result->execute();
-  $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
-  $user_result->fetch();
-  $user_result->close();
-
+  require '../tools/colour_picker/colour_picker.inc';
+  require '../include/user_search_options.inc';
+  
   $original_username = $username;
   if ($demo == true) {
     // Hide the personal details.

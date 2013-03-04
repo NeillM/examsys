@@ -26,12 +26,12 @@
 
 require '../include/staff_auth.inc';
 require '../include/media.inc';
-
+require_once '../include/errors.inc';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/folderutils.class.php';
 
-$type = $_GET['type'];
-$paperID = $_GET['paperID'];
+$type = check_var('type', 'GET', true, false, true);
+$paperID = check_var('paperID', 'GET', true, false, true);
 
 function displayRank($rank_position, $string) {
   if ($rank_position == 1) {
@@ -548,46 +548,48 @@ if (isset($_GET['scrOfY'])) {
 <form name="theform">
 <table class="header">
 <?php
+  $comments_array = array();
+  
   // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, marking, pass_mark, externals, internal_reviewers FROM properties WHERE property_id = ?");
+  $result = $mysqli->prepare("SELECT paper_type, paper_title, marking, pass_mark FROM properties WHERE property_id = ?");
   $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($paper_type, $paper, $marking, $pass_mark, $external_reviewers, $internal_reviewers);
+  $result->bind_result($paper_type, $paper, $marking, $pass_mark);
   $result->fetch();
   $result->close();
-  if ($type == 'external') {
-    $reviewers = $external_reviewers;
-  } else {
-    $reviewers = $internal_reviewers;
-  }
-  $comments_array = array();
-  if ($reviewers != '') {
   
-    $reviewer_data = array();
-    $result = $mysqli->prepare("SELECT id, title, initials, surname FROM users WHERE id IN ($reviewers) ORDER BY surname, initials");
-    $result->execute();
-    $result->bind_result($id, $title, $initials, $surname);
-    while ($result->fetch()) {
-      $reviewer_data[$id]['title'] = $title;
-      $reviewer_data[$id]['initials'] = $initials;
-      $reviewer_data[$id]['surname'] = $surname;
-    }
-    $result->close();
-
-    // Capture reviewer comments data first.
-    $result = $mysqli->prepare("SELECT q_id, comment, category, DATE_FORMAT(reviewed,'%d/%m/%Y %T') AS reviewed, reviewer, action, response FROM review_comments WHERE review_type = ? AND q_paper = ?");
-    $result->bind_param('si', $type, $paperID);
-    $result->execute();
-    $result->bind_result($tmp_q_id, $comment, $category, $reviewed, $tmp_reviewer, $action, $response);
-    while ($result->fetch()) {
-      $comments_array[$tmp_q_id][$tmp_reviewer]['reviewed'] = $reviewed;
-      $comments_array[$tmp_q_id][$tmp_reviewer]['comment']  = $comment;
-      $comments_array[$tmp_q_id][$tmp_reviewer]['category'] = $category;
-      $comments_array[$tmp_q_id][$tmp_reviewer]['action']   = $action;
-      $comments_array[$tmp_q_id][$tmp_reviewer]['response'] = $response;
-    }
-    $result->close();
+  if (!isset($paper)) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
   }
+  
+  
+  $reviewer_data = array();
+  $result = $mysqli->prepare("SELECT users.id, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND type = ? AND paperID = ? ORDER BY surname, initials");
+  $result->bind_param('si', $type, $paperID);
+  $result->execute();
+  $result->bind_result($id, $title, $initials, $surname);
+  while ($result->fetch()) {
+    $reviewer_data[$id]['title'] = $title;
+    $reviewer_data[$id]['initials'] = $initials;
+    $reviewer_data[$id]['surname'] = $surname;
+  }
+  $result->close();
+
+  // Capture reviewer comments data first.
+  $result = $mysqli->prepare("SELECT q_id, comment, category, DATE_FORMAT(reviewed,'%d/%m/%Y %T') AS reviewed, reviewer, action, response FROM review_comments WHERE review_type = ? AND q_paper = ?");
+  $result->bind_param('si', $type, $paperID);
+  $result->execute();
+  $result->bind_result($tmp_q_id, $comment, $category, $reviewed, $tmp_reviewer, $action, $response);
+  while ($result->fetch()) {
+    $comments_array[$tmp_q_id][$tmp_reviewer]['reviewed'] = $reviewed;
+    $comments_array[$tmp_q_id][$tmp_reviewer]['comment']  = $comment;
+    $comments_array[$tmp_q_id][$tmp_reviewer]['category'] = $category;
+    $comments_array[$tmp_q_id][$tmp_reviewer]['action']   = $action;
+    $comments_array[$tmp_q_id][$tmp_reviewer]['response'] = $response;
+  }
+  $result->close();
+  
 
   // Capture the paper makeup.
   $display_header = true;
@@ -614,7 +616,7 @@ if (isset($_GET['scrOfY'])) {
 
       echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string[$type . 'report'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
       echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
-      if ($reviewers == '') {
+      if (count($reviewer_data) == 0) {
         echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:46px; height:32px; padding-left:6px; text-align:right\"><img src=\"../artwork/warning_user_icon.gif\" style=\"padding-top:1px\" width=\"32\" height=\"30\" alt=\"!\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\">" . $string['noreviewers'] . "</td></tr></table>\n</body>\n</html>\n";
         exit;
       }

@@ -63,7 +63,7 @@ function display_question($qID, $details, $member_userID, &$row_no, $columns, $m
 }
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
   $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
   //this will exit php
@@ -106,9 +106,9 @@ if ($type == '') {   // What metadata field to use.
 //get lab info
 $current_ip_address = NetworkUtils::get_ipaddress();
 $lab_factory = new LabFactory($mysqli);
-if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
-    $lab_name = $lab_object->get_name();
-    $lab_id = $lab_object->get_id();
+if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+  $lab_name = $lab_object->get_name();
+  $lab_id = $lab_object->get_id();
 }
 
 if ($userObject->has_role('Student')) {

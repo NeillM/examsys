@@ -17,6 +17,7 @@
 require '../lang/' . $language . '/include/paper_options.inc';
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/paper/new_paper2.php';
+require '../lang/' . $language . '/include/not_found.inc';
 
 $string['start'] = 'Start';
 $string['owner'] = 'Owner';
@@ -46,9 +47,7 @@ $string['warning'] = 'Warning';
 $string['variablenomarks'] = 'Warning: Variable number of marks';
 $string['export12'] = 'Export 1.2';
 $string['import'] = 'Import';
-$string['papernotfound'] = 'Paper not Found';
 $string['paperdeleted'] = 'Paper Deleted';
-$string['furtherassistance'] = 'For further assistance contact: <a href="mailto:%s">%s</a>';
 $string['deleted_msg1'] = 'Paper <strong>%s</strong> has been deleted.';
 $string['deleted_msg2'] = 'It can still be recovered from the <a href="' . $configObject->get('cfg_root_path') . '/delete/recycle_list.php" style="color:blue">recycle bin</a>.';
 $string['deleted_msg3'] = 'You do not own this paper, you will need to get <a href="mailto:%s" style="color:blue">%s %s</a> to recover it.';

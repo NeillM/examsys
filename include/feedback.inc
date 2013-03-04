@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once '../classes/paperutils.class.php';
-
 function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $repmodule, $repyear, $paperID, $paper_type, $direction, &$student_no = 0, &$user_total = 0, $percent = 100) {
   global $qid_list;
   
@@ -110,7 +108,10 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
   
   //get users log data
   $qid_list = '';
+  $user_count = 0;
   $question_data = array();
+  //var_dump($student_list);
+  //exit;
   if ($student_list != '') {
     if ($paper_type == '4') {
       $sql = "SELECT COUNT(userID) AS user_count, q_id, SUM(rating) AS mark, SUM(1) AS totalpos FROM log4 WHERE userID IN ($student_list) $excluded AND q_paper = $paperID GROUP BY q_id ORDER BY q_id";
@@ -141,18 +142,6 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
   }  
   
   return $question_data;
-}
-
-function getPaperProperties($db, $paperID) {
-  global $paper_title, $paper_type, $moduleID, $session, $pass_mark, $random_mark, $total_mark, $marking, $exam_duration, $start_date, $end_date;
-  $result = $db->prepare("SELECT paper_title, paper_type, calendar_year, pass_mark, random_mark, total_mark, marking, exam_duration, start_date, end_date FROM properties WHERE property_id = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($paper_title, $paper_type, $session, $pass_mark, $random_mark, $total_mark, $marking, $exam_duration, $start_date, $end_date);
-  $result->fetch();
-  $result->close();
-
-  $moduleID = Paper_utils::get_modules($paperID, $db);
 }
 
 function formatsec($seconds) {

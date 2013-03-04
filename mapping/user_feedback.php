@@ -30,6 +30,8 @@ require_once '../include/feedback.inc';
 require_once '../include/sort.inc';
 require_once '../include/calculate_marks.inc';
 require_once '../classes/logger.class.php';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/paperutils.class.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -53,9 +55,18 @@ if ($userObject->has_role(array('Staff', 'SysAdmin'))) {
 }
 
 
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
+
+if (!$propertyObj) {
+  $logger->record_access_denied($userID, 'accessdenied', 'Paper not found.');  // Record attempt in access denied log.
+  header("HTTP/1.0 404 Not Found");
+  exit();
+}
+
 //check the feedback has been released !!!
 if ($userObject->has_role('Student')) {
-  $result = $mysqli->prepare("SELECT property_id, date FROM feedback_release, properties WHERE properties.property_id=feedback_release.paper_id AND crypt_name = ? AND date < NOW()");
+  $result = $mysqli->prepare("SELECT property_id, date FROM feedback_release, properties WHERE properties.property_id = feedback_release.paper_id AND crypt_name = ? AND date < NOW()");
   $result->bind_param('s', $_GET['id']);
   $result->execute();
   $result->bind_result($paperID, $date);
@@ -66,13 +77,6 @@ if ($userObject->has_role('Student')) {
     header("HTTP/1.0 404 Not Found");
     exit;
   }
-} else {
-  $result = $mysqli->prepare("SELECT property_id FROM properties WHERE crypt_name = ?");
-  $result->bind_param('s', $_GET['id']);
-  $result->execute();
-  $result->bind_result($paperID);
-  $result->fetch();
-  $result->close();
 }
 
 if (!isset($_GET['ordering'])) {
@@ -80,6 +84,18 @@ if (!isset($_GET['ordering'])) {
   $direction = 'asc';
 }
 
+$paperID = $propertyObj->get_property_id();
+$paper_title = $propertyObj->get_paper_title();
+$paper_type = $propertyObj->get_paper_type();
+$session = $propertyObj->get_calendar_year();
+$pass_mark = $propertyObj->get_pass_mark();
+$random_mark = $propertyObj->get_random_mark();
+$total_mark = $propertyObj->get_total_mark();
+$marking = $propertyObj->get_marking();
+$exam_duration = $propertyObj->get_exam_duration();
+$start_date = $propertyObj->get_start_date();
+$end_date = $propertyObj->get_end_date();
+/*
 // Get some paper properties
 $paper_title = $paper_type = $moduleID = $session = $pass_mark = $random_mark = $total_mark = $marking = $exam_duration = $start_date = $end_date = '';
 getPaperProperties($mysqli, $paperID);
@@ -89,6 +105,7 @@ if ($paper_title == '') {
   header("HTTP/1.0 404 Not Found");
   exit;
 }
+*/
 
 $logger->record_access($userID, 'Objectives-based feedback report', $paperID);  
 
@@ -98,7 +115,7 @@ $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 if ($paper_type == '5') {
   $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log5, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND userID = ? LIMIT 1");
 } elseif ($paper_type == '4') {
-  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log4 WHERE q_paper=? AND userID=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log4 WHERE q_paper = ? AND userID = ? LIMIT 1");
 } else {
   $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND userID = ? ORDER BY screen DESC LIMIT 1");
 }
@@ -117,7 +134,7 @@ $start_seconds = (substr($started,0,2) * 60 * 60) + (substr($started,3,2) * 60) 
 $updated = (substr($updated,0,2) * 60 * 60) + (substr($updated,3,2) * 60) + substr($updated,6,2);
 $time_spent = $updated - $start_seconds;
 
-$result = $mysqli->prepare("SELECT username, title, initials, surname FROM users WHERE id=?");
+$result = $mysqli->prepare("SELECT username, title, initials, surname FROM users WHERE id = ?");
 $result->bind_param('i', $userID);
 $result->execute();
 $result->bind_result($tmp_username, $title, $initials, $surname);

@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/include/not_found.inc';
+
 $string['learningobjectiveanalysis'] = 'Learning Objective Analysis';
 $string['msg1'] = 'This paper has not been attempted by anyone';
 $string['msg2'] = 'This paper has not been mapped to any learning objectives.';

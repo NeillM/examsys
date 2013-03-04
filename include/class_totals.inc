@@ -38,6 +38,25 @@ require_once '../include/calculate_marks.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sort.inc';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
+
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
+
+if (!$propertyObj) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+}
+
+$paper = $propertyObj->get_paper_title();
+$marking = $propertyObj->get_marking();
+$pass_mark = $propertyObj->get_pass_mark();
+$distinction_mark = $propertyObj->get_distinction_mark();
+$paper_ownerID = $propertyObj->get_paper_ownerID();
+$paper_type = $propertyObj->get_paper_type();
+$calendar_year = $propertyObj->get_calendar_year();
+$crypt_name = $propertyObj->get_crypt_name();
+
 
 function getRandomDetails($questionID, &$random_q_ids) {
   $configObject = Config::get_instance();
@@ -763,11 +782,11 @@ while ($result->fetch()) {
 $result->close();
 
 // Load the correct answers into 'paper_buffer' array.
-$result = $mysqli->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, paper_title, marking, pass_mark, distinction_mark, paper_ownerID, q_type, paper_type, correct, score_method, option_text, calendar_year, status, display_pos, crypt_name FROM (papers, questions, options, properties) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND papers.paper=? AND questions.q_id=options.o_id AND q_type!='info' ORDER BY screen, display_pos, id_num");
+$result = $mysqli->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos FROM (papers, questions, options) WHERE papers.question = questions.q_id AND papers.paper = ? AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY screen, display_pos, id_num");
 $result->bind_param('i', $_GET['paperID']);
 $result->execute();
 $result->store_result();
-$result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $paper_title, $marking, $pass_mark, $distinction_mark, $tmp_ownerID, $q_type, $paper_type, $correct, $score_method, $option_text, $calendar_year, $status, $display_pos, $crypt_name);
+$result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $q_type, $correct, $score_method, $option_text, $status, $display_pos);
 $old_q_id = '';
 $question_no = 0;
 $total_marks = 0;
@@ -830,7 +849,6 @@ while ($result->fetch()) {
     } else {
       $paper_buffer[$question_id]['correct'][$option_no] = $correct;
     }
-    $paper = $paper_title;
   } else {
     $paper_buffer[$question_id]['correct'][$option_no] = $correct;
   }
@@ -882,7 +900,7 @@ if ($old_status != 'Experimental') {
 
 $cohort_size = 0;
 $out_of_range = 0;
-$moduleID = Paper_utils::get_modules($_GET['paperID'],$mysqli);
+$moduleID = Paper_utils::get_modules($_GET['paperID'], $mysqli);
 $moduleID_in = implode(',', array_keys($moduleID));
 if ($_GET['absent'] == 1) {
   // Get students in the cohort.
@@ -1098,6 +1116,7 @@ if ($paper_type == '0') {
   $log_query->bind_param('isssisss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '2') {
   $log_query = $mysqli->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
+  //echo "SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = " . $_GET['paperID'] . " AND grade LIKE " . $_GET['repcourse'] . " $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= " . $_GET['startdate'] . " AND started <= " . $_GET['enddate'] . " ORDER BY userID, started, screen";
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '5') {
   $log_query =   $mysqli->prepare("SELECT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
