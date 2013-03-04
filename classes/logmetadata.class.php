@@ -48,7 +48,7 @@ class LogMetadata {
 
   /**
    * Create new object to represent the Log Metadata table
-   * @param userObject $userObject Object describing a user
+   * @param integer    $userID     ID of the user we're dealing with
    * @param integer    $paper_id   ID of the current paper
    * @param mysqli     $db         Database connection
    */
@@ -112,7 +112,7 @@ class LogMetadata {
     $this->lab_name = $lab_name;
     $this->populate_start_date_time();
     $this->save();
-    
+
     return true;
   }
 
@@ -187,7 +187,7 @@ class LogMetadata {
       $stmt->bind_param('iississ', $this->userid, $this->paper_id, $this->session_id, $this->ipadress, $this->attempt, $this->completed, $this->lab_name);
       $stmt->execute();
       $stmt->close();
-      
+
       $this->id = $this->db->insert_id;
     }
 
