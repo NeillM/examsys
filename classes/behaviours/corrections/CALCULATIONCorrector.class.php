@@ -84,7 +84,7 @@ class CALCULATIONCorrector extends Corrector {
           $answer_equation = $first->get_correct();
 
           // Remark the student's answers in 'log{$paper_type}'.
-          $result = $this->_mysqli->prepare("SELECT user_answer, id FROM log{$paper_type} WHERE q_id = ? AND q_paper = ?");
+          $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
           $result->bind_param('ii', $this->_question->id, $paper_id);
           $result->execute();
           $result->store_result();
@@ -92,13 +92,13 @@ class CALCULATIONCorrector extends Corrector {
 
           while ($result->fetch()) {
             $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
-            
+
             // Split up the user answer into its constituent parts.
             $answer_parts = explode('|', $user_answer);
             $variable_array = explode(',', $answer_parts[2]);
             $saved_response = $answer_parts[0];
-            $var_no = 1;           
-            
+            $var_no = 1;
+
             if (isset($answer_parts[2]) and $answer_parts[2] != '') {
               foreach ($variable_array as $individual_variable) {
                 $var = chr(64 + $var_no);
@@ -117,12 +117,12 @@ class CALCULATIONCorrector extends Corrector {
                 $tolerance_full = $this->_question->get_tolerance_full();
                 if (StringUtils::ends_with($tolerance_full, '%')) {
                   $tolerance_perc = rtrim($tolerance_full, '%');
-                  $tolerance_full = round($answer * ($tolerance_perc/100), 12);
+                  $tolerance_full = abs(round($answer * ($tolerance_perc/100), 12));
                 }
                 $tolerance_partial = $this->_question->get_tolerance_partial();
                 if (StringUtils::ends_with($tolerance_partial, '%')) {
                   $tolerance_perc = rtrim($tolerance_partial, '%');
-                  $tolerance_partial = round($answer * ($tolerance_perc/100), 12);
+                  $tolerance_partial = abs(round($answer * ($tolerance_perc/100), 12));
                 }
 
                 $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
@@ -146,8 +146,8 @@ class CALCULATIONCorrector extends Corrector {
               $mark = $mark_incorrect;
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, user_answer = ? WHERE id = ? AND q_paper = ?");
-            $updateLog->bind_param('dsii', $mark, $saved_response, $id, $paper_id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, user_answer = ? WHERE id = ?");
+            $updateLog->bind_param('dsi', $mark, $saved_response, $id);
             $updateLog->execute();
             $updateLog->close();
           }
