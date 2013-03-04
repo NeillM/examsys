@@ -75,6 +75,12 @@ $string['question_marks'] = 'Question Marks';
 $string['hideallfeedback'] = 'Hide all feedback if<br />unanswered';
 $string['correctanswerhighlight'] = 'Correct Answer Highlight';
 $string['textfeedback'] = 'Text Feedback';
+$string['photos'] = 'Photos';
+$string['ifavailable'] = 'if available';
+$string['review'] = 'Review';
+$string['allpeerspergroup'] = 'All peers per group';
+$string['singlereview'] = 'Single Review';
+$string['numberfrom'] = 'Number from';
 
 // Security tab
 $string['securitytab'] = 'Security';
@@ -122,6 +128,10 @@ $string['on'] = 'On';
 $string['off'] = 'Off';
 $string['objectivesreport'] = 'Objectives-based Feedback';
 $string['questionfeedback'] = 'Question-based Feedback';
+$string['textualfeedback'] = 'Textual Feedback';
+$string['above'] = 'Above';
+$string['message'] = 'Message';
+$string['answerscreensettings'] = 'Answer Screen Settings';
 
 // Changes tab
 $string['changesheading'] = 'List of changes to the current paper.';

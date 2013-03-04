@@ -75,6 +75,12 @@ $string['question_marks'] = 'Punktacja pytania';
 $string['hideallfeedback'] = 'Ukryj odzew<br />jeśli nie odpowiedziano';
 $string['correctanswerhighlight'] = 'Wyróżnienie poprawnej odpowiedzi';
 $string['textfeedback'] = 'Odzew tekstowy';
+$string['photos'] = 'Photos';  // Niko
+$string['ifavailable'] = 'if available';  // Niko
+$string['review'] = 'Review';  // Niko
+$string['allpeerspergroup'] = 'All peers per group';  // Niko
+$string['singlereview'] = 'Single Review';  // Niko
+$string['numberfrom'] = 'Number from';  // Niko
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';
@@ -122,6 +128,10 @@ $string['on'] = 'Wł.';
 $string['off'] = 'Wył.';
 $string['objectivesreport'] = 'Odzew dot. celów';
 $string['questionfeedback'] = 'Odzew dot. pytań';
+$string['textualfeedback'] = 'Textual Feedback';  // Niko
+$string['above'] = 'Above';  // Niko
+$string['message'] = 'Message';  // Niko
+$string['answerscreensettings'] = 'Answer Screen Settings';  // Niko
 
 // Changes tab
 $string['changesheading'] = 'Lista zmian dokonanych w aktualnym arkuszu.'; 

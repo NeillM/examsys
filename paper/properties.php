@@ -114,6 +114,14 @@ function format_method($method, $string) {
   }
 }
 
+function format_review($method, $string) {
+  if ($method == '0') {
+    return $string['singlereview'];
+  } else {
+    return $string['allpeerspergroup'];
+  }
+}
+
 function format_on_off($data, $string) {
   if ($data == 0) {
     return $string['off'];
@@ -245,6 +253,11 @@ if (isset($_POST['Submit'])) {
   $old_internals = $properties->get_internal_reviewers();
   $old_external_review_deadline = $properties->get_external_review_deadline();
   $old_internal_review_deadline = $properties->get_internal_review_deadline();
+  $old_display_students_response = $properties->get_display_students_response();
+  $old_display_question_mark = $properties->get_display_question_mark();
+  $old_hide_if_unanswered = $properties->get_hide_if_unanswered();
+  $old_display_correct_answer = $properties->get_display_correct_answer();
+  $old_display_feedback = $properties->get_display_feedback();
 
   // Check that the new paper name is not already used by any other paper (i.e. unique).
   $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ? LIMIT 1");
@@ -265,20 +278,32 @@ if (isset($_POST['Submit'])) {
     } else {
       $bidirectional = 0;
     }
-    if (isset($_POST['display_correct_answer'])) {
-      $display_correct_answer = 1;
+    if ($properties->get_paper_type() == '6') {
+      if (isset($_POST['display_photos'])) {
+        $display_correct_answer = 1;
+      } else {
+        $display_correct_answer = 0;
+      }
     } else {
-      $display_correct_answer = 0;
+      if (isset($_POST['display_correct_answer'])) {
+        $display_correct_answer = 1;
+      } else {
+        $display_correct_answer = 0;
+      }
     }
     if (isset($_POST['display_students_response'])) {
       $display_students_response = 1;
     } else {
       $display_students_response = 0;
     }
-    if (isset($_POST['display_question_mark'])) {
-      $display_question_mark = 1;
+    if ($properties->get_paper_type() == '6') {
+      $display_question_mark = $_POST['review'];
     } else {
-      $display_question_mark = 0;
+      if (isset($_POST['display_question_mark'])) {
+        $display_question_mark = 1;
+      } else {
+        $display_question_mark = 0;
+      }
     }
     if (isset($_POST['display_feedback'])) {
       $display_feedback = 1;
@@ -422,9 +447,13 @@ if (isset($_POST['Submit'])) {
       $tmp_postscript = clearMSOtags($tmp_postscript);
     }
 
-    $tmp_rubric = $_POST['rubric_text'];
-    $tmp_rubric = clearMSOtags($tmp_rubric);
-
+    if ($properties->get_paper_type() == '6') {
+      $rubric = $_POST['type'];      // Reuse the 'rubric' field to store which field in the metadata to use for groups.
+    } else {
+      $tmp_rubric = $_POST['rubric_text'];
+      $tmp_rubric = clearMSOtags($tmp_rubric);
+    }
+    
     $tmp_marking = $_POST['marking'];
     if ($tmp_marking == '') $tmp_marking = '0';
     if ($tmp_marking == '2') $tmp_marking = $_POST['std_set'];
@@ -534,36 +563,50 @@ if (isset($_POST['Submit'])) {
       $tmp_end_date = $end_date->format('U');
     }
 
-    if ($paper_title != $old_paper_title)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_title, $paper_title, 'name');
-    if ($fullscreen != $old_fullscreen)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
-    if ($bidirectional != $old_bidirectional)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
-    if ($tmp_start_date != $old_start_date)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_start_date, $tmp_start_date, 'startdate');
-    if ($tmp_end_date != $old_end_date)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_end_date, $tmp_end_date, 'enddate');
-    if ($calendar_year != $old_calendar_year)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calendar_year, $calendar_year, 'session');
-    if ($timezone != $old_timezone)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_timezone, $timezone, 'timezone');
-    if ($password != $old_password)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_password, $password, 'password');
-    if ($exam_duration != $old_exam_duration)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_exam_duration, $exam_duration, 'duration');
-    if ($tmp_rubric != $old_rubric)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_rubric, $tmp_rubric, 'rubric');
-    if ($tmp_prologue != $old_paper_prologue)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_prologue, $tmp_prologue, 'prologue');
-    if ($tmp_postscript != $old_paper_postscript)                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_postscript, $tmp_postscript, 'postscript');
-    if ($tmp_pass_mark != $old_pass_mark)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_pass_mark, $tmp_pass_mark, 'passmark');
-    if ($tmp_distinction_mark != $old_distinction_mark)             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_distinction_mark, $tmp_distinction_mark, 'distinction');
-    if ($tmp_sound_demo != $old_sound_demo)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_sound_demo, $tmp_sound_demo, 'demosoundclip');
-    if ($tmp_calculator != $old_calculator)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
-    if ($lab_string != $old_labs)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
-    if ($bgcolor != $old_bgcolor)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bgcolor, $bgcolor, 'background');
-    if ($fgcolor != $old_fgcolor)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fgcolor, $fgcolor, 'foreground');
-    if ($themecolor != $old_themecolor)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_themecolor, $themecolor, 'theme');
-    if ($labelcolor != $old_labelcolor)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labelcolor, $labelcolor, 'labelsnotes');
+    if ($paper_title != $old_paper_title)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_title, $paper_title, 'name');
+    if ($fullscreen != $old_fullscreen)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
+    if ($bidirectional != $old_bidirectional)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
+    if ($tmp_start_date != $old_start_date)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_start_date, $tmp_start_date, 'startdate');
+    if ($tmp_end_date != $old_end_date)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_end_date, $tmp_end_date, 'enddate');
+    if ($calendar_year != $old_calendar_year)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calendar_year, $calendar_year, 'session');
+    if ($timezone != $old_timezone)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_timezone, $timezone, 'timezone');
+    if ($password != $old_password)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_password, $password, 'password');
+    if ($exam_duration != $old_exam_duration)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_exam_duration, $exam_duration, 'duration');
+    if ($tmp_rubric != $old_rubric)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_rubric, $tmp_rubric, 'rubric');
+    if ($tmp_prologue != $old_paper_prologue)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_prologue, $tmp_prologue, 'prologue');
+    if ($tmp_postscript != $old_paper_postscript)                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_postscript, $tmp_postscript, 'postscript');
+    if ($tmp_pass_mark != $old_pass_mark)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_pass_mark, $tmp_pass_mark, 'passmark');
+    if ($tmp_distinction_mark != $old_distinction_mark)               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_distinction_mark, $tmp_distinction_mark, 'distinction');
+    if ($tmp_sound_demo != $old_sound_demo)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_sound_demo, $tmp_sound_demo, 'demosoundclip');
+    if ($properties->get_paper_type() == '6') {
+      if ($display_correct_answer != $old_display_correct_answer)     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_correct_answer, $display_correct_answer, 'photos');
+    } else {
+      if ($display_correct_answer != $old_display_correct_answer)     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_correct_answer, $display_correct_answer, 'correctanswerhighlight');
+      if ($tmp_calculator != $old_calculator)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
+    }
+    if ($lab_string != $old_labs)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
+    if ($bgcolor != $old_bgcolor)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bgcolor, $bgcolor, 'background');
+    if ($fgcolor != $old_fgcolor)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fgcolor, $fgcolor, 'foreground');
+    if ($themecolor != $old_themecolor)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_themecolor, $themecolor, 'theme');
+    if ($labelcolor != $old_labelcolor)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labelcolor, $labelcolor, 'labelsnotes');
     $new_modules = array_keys($paper_modules);
     sort($new_modules, SORT_NUMERIC);
     $new_modules = implode(',', $new_modules);
-    if ($new_modules != $old_modules)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
-    if (implode(',',$new_externals) != implode(',',$old_externals)) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
-    if (implode(',',$new_internals) != implode(',',$old_internals)) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
-    if ($external_review_deadline != $old_external_review_deadline) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_external_review_deadline, $external_review_deadline, 'externalreviewdeadline');
-    if ($internal_review_deadline != $old_internal_review_deadline) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_internal_review_deadline, $internal_review_deadline, 'internalreviewdeadline');
-    if ($tmp_marking != $old_marking)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_marking, $tmp_marking, 'method');
+    if ($new_modules != $old_modules)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
+    if (implode(',',$new_externals) != implode(',',$old_externals))   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
+    if (implode(',',$new_internals) != implode(',',$old_internals))   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
+    if ($external_review_deadline != $old_external_review_deadline)   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_external_review_deadline, $external_review_deadline, 'externalreviewdeadline');
+    if ($internal_review_deadline != $old_internal_review_deadline)   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_internal_review_deadline, $internal_review_deadline, 'internalreviewdeadline');
+    if ($tmp_marking != $old_marking)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_marking, $tmp_marking, 'method');
+    if ($properties->get_paper_type() == '6') {
+      if ($_POST['review'] != $old_display_question_mark)             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_question_mark, $_POST['review'], 'review');
+    } else {
+      if ($display_question_mark != $old_display_question_mark)       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_question_mark, $display_question_mark, 'question_marks');
+    }
+    if ($display_students_response != $old_display_students_response) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_students_response, $display_students_response, 'ticks_crosses');
+    if ($hide_if_unanswered != $old_hide_if_unanswered)               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_hide_if_unanswered, $hide_if_unanswered, 'hideallfeedback');
+    if ($display_feedback != $old_display_feedback)                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_feedback, $display_feedback, 'textfeedback');
+
 
     if ($properties->get_paper_type() != '2') {
       // Update textual feedback
@@ -966,16 +1009,10 @@ if (isset($_POST['Submit'])) {
       document.getElementById('security').style.display = 'none';
       document.getElementById('reviewers').style.display = 'none';
       document.getElementById('feedback').style.display = 'none';
-      <?php
-        if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5') {
-      ?>
       document.getElementById('rubric').style.display = 'none';
       document.getElementById('prologue').style.display = 'none';
       document.getElementById('postscript').style.display = 'none';
       document.getElementById('reference').style.display = 'none';
-      <?php
-        }
-      ?>
       document.getElementById('changes').style.display = 'none';
       document.getElementById(sectionID).style.display = '';
 
@@ -983,16 +1020,10 @@ if (isset($_POST['Submit'])) {
       document.getElementById('tab2').style.background = '';
       document.getElementById('tab3').style.background = '';
       document.getElementById('tab4').style.background = '';
-      <?php
-        if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5') {
-      ?>
       document.getElementById('tab5').style.background = '';
       document.getElementById('tab6').style.background = '';
       document.getElementById('tab7').style.background = '';
       document.getElementById('tab8').style.background = '';
-      <?php
-        }
-      ?>
       document.getElementById('tab9').style.background = '';
 
       document.getElementById(tabID).style.background = 'url("../artwork/2007_button_on.png")';
@@ -1057,17 +1088,29 @@ if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') {
   echo "<tr><td id=\"tab1\" style=\"background-image:url('../artwork/2007_button_on.png'); height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab1')\" onmouseout=\"buttonout('tab1')\" onclick=\"buttonclick('general','tab1')\">&nbsp;" . $string['generaltab'] . "</td></tr>\n";
   echo "<tr><td id=\"tab2\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab2')\" onmouseout=\"buttonout('tab2')\" onclick=\"buttonclick('security','tab2')\">&nbsp;" . $string['securitytab'] . "</td></tr>\n";
 }
-?>
-<tr><td id="tab3" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab3')" onmouseout="buttonout('tab3')" onclick="buttonclick('feedback','tab3')">&nbsp;<?php echo $string['feedback']; ?></td></tr>
-<tr><td id="tab4" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab4')" onmouseout="buttonout('tab4')" onclick="buttonclick('reviewers','tab4')">&nbsp;<?php echo $string['reviewerstab']; ?></td></tr>
-<?php
+if ($properties->get_paper_type() != '6') {
+  echo '<tr><td id="tab3" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab3\')" onmouseout="buttonout(\'tab3\')" onclick="buttonclick(\'feedback\',\'tab3\')">&nbsp;' . $string['feedback'] . '</td></tr>';
+  echo '<tr><td id="tab4" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab4\')" onmouseout="buttonout(\'tab4\')" onclick="buttonclick(\'reviewers\',\'tab4\')">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
+} else {
+  echo '<tr><td id="tab3" style="display:none">&nbsp;' . $string['feedback'] . '</td></tr>';
+  echo '<tr><td id="tab4" style="display:none">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
+}
+if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
+  echo '<tr><td id="tab5" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab5\')" onmouseout="buttonout(\'tab5\')" onclick="buttonclick(\'rubric\',\'tab5\')">&nbsp;' . $string['rubrictab'] . '</td></tr>';
+} else {
+  echo '<tr><td id="tab5" style="display:none">&nbsp;' . $string['rubrictab'] . '</td></tr>';
+}
 if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5') {
-?>
-<tr><td id="tab5" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab5')" onmouseout="buttonout('tab5')" onclick="buttonclick('rubric','tab5')">&nbsp;<?php echo $string['rubrictab']; ?></td></tr>
-<tr><td id="tab6" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab6')" onmouseout="buttonout('tab6')" onclick="buttonclick('prologue','tab6')">&nbsp;<?php echo $string['prologuetab']; ?></td></tr>
-<tr><td id="tab7" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab7')" onmouseout="buttonout('tab7')" onclick="buttonclick('postscript','tab7')">&nbsp;<?php echo $string['postscripttab']; ?></td></tr>
-<tr><td id="tab8" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab8')" onmouseout="buttonout('tab8')" onclick="buttonclick('reference','tab8')">&nbsp;<?php echo $string['referencematerial']; ?></td></tr>
-<?php
+  echo '<tr><td id="tab6" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab6\')" onmouseout="buttonout(\'tab6\')" onclick="buttonclick(\'prologue\',\'tab6\')">&nbsp;' . $string['prologuetab'] . '</td></tr>';
+  echo '<tr><td id="tab7" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab7\')" onmouseout="buttonout(\'tab7\')" onclick="buttonclick(\'postscript\',\'tab7\')">&nbsp;' . $string['postscripttab'] . '</td></tr>';
+} else {
+  echo '<tr><td id="tab6" style="display:none">&nbsp;' . $string['prologuetab'] . '</td></tr>';
+  echo '<tr><td id="tab7" style="display:none">&nbsp;' . $string['postscripttab'] . '</td></tr>';
+}
+if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
+  echo '<tr><td id="tab8" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab8\')" onmouseout="buttonout(\'tab8\')" onclick="buttonclick(\'reference\',\'tab8\')">&nbsp;' . $string['referencematerial'] . '</td></tr>';
+} else {
+  echo '<tr><td id="tab8" style="display:none">&nbsp;' . $string['referencematerial'] . '</td></tr>';
 }
 ?>
 <tr><td id="tab9" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab9')" onmouseout="buttonout('tab9')" onclick="buttonclick('changes','tab9')">&nbsp;Changes</td></tr>
@@ -1109,7 +1152,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        echo "<option value=\"1\" selected=\"selected\" />" . $string['progress test'] . "</option>\n";
      } else {
        echo "<select name=\"paper_type\" disabled>";
-       $tmp_types = array('formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper');
+       $tmp_types = array('formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper', 'peer review');
        echo "<option value=\"0\" selected=\"selected\" />" . $string[$tmp_types[$properties->get_paper_type()]] . "</option>\n";
      }
 
@@ -1171,19 +1214,29 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        echo "<td align=\"right\">" . $string['labelsnotes'] . "&nbsp;</td><td><div onclick=\"showPicker('labelcolor',event)\" id=\"span_labelcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:" . $properties->get_labelcolor() . "\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"" . $properties->get_labelcolor() . "\" /></td>";
        echo "</tr>\n";
 
-       if ($properties->get_calculator() == 1) {
-         $checked = ' checked="checked"';
+       if ($properties->get_paper_type() == '6') {
+         echo "<tr><td align=\"right\">" . $string['photos'] . "&nbsp;</td><td colspan=\"3\">";
+         if ($properties->get_display_correct_answer() == '1') {
+           echo "<input type=\"checkbox\" name=\"display_photos\" value=\"1\" checked />";
+         } else {
+           echo "<input type=\"checkbox\" name=\"display_photos\" value=\"1\" />";
+         }
+         echo "&nbsp;" . $string['ifavailable'] . "</td></tr>\n";
        } else {
-         $checked = '';
-       }
-       echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label></td>";
+         if ($properties->get_calculator() == 1) {
+           $checked = ' checked="checked"';
+         } else {
+           $checked = '';
+         }
+         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label></td>";
        
-       if ($properties->get_sound_demo() == 1) {
-         $checked = ' checked="checked"';
-       } else {
-         $checked = '';
+         if ($properties->get_sound_demo() == 1) {
+           $checked = ' checked="checked"';
+         } else {
+           $checked = '';
+         }
+         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label></td></tr>\n";
        }
-       echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label></td></tr>\n";
        
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      }
@@ -1202,6 +1255,39 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 </td></tr>
     <?php
       echo "</select></td></tr>\n";
+    } elseif ($properties->get_paper_type() == '6') {
+      $review = $properties->get_display_question_mark();
+    
+      echo "<tr><td align=\"right\">Group Details&nbsp;</td><td><select name=\"type\">\n";
+      
+      $field_details = $mysqli->prepare("SELECT DISTINCT type FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (" . implode(',', array_keys($staff_modules)) . ") ORDER BY type");
+      $field_details->execute();
+      $field_details->bind_result($type);
+      while ($field_details->fetch()) {
+        echo "<option value=\"$type\">$type</option>\n";
+      }
+      $field_details->close();
+      echo "</select>\n</td>\n";
+      echo "<td align=\"right\">" . $string['numberfrom'] . "</td><td><select name=\"marking\">\n";
+      if ($properties->get_marking() == '1') {
+        echo "<option value=\"0\">0</option>\n<option value=\"1\" selected>1</option>\n";
+      } else {
+        echo "<option value=\"0\" selected>0</option>\n<option value=\"1\">1</option>\n";
+      }
+      echo "</select>\n</td></tr>\n";
+      echo '<tr><td align="right">' . $string['review']  . '</td><td>';
+      if ($review == '1') {
+        echo '<input type="radio" name="review" value="1" checked="checked" />';
+      } else {
+        echo '<input type="radio" name="review" value="1" />';
+      }
+      echo $string['allpeerspergroup'] . '<br />';
+      if ($review == '0') {
+        echo '<input type="radio" name="review" value="0" checked="checked" />';
+      } else {
+        echo '<input type="radio" name="review" value="0" />';
+      }
+      echo $string['singlereview'] . '</td></tr>';
     } else {
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['passmark'] . "&nbsp;</td><td valign=\"top\"><select name=\"pass_mark\" id=\"pass_mark\"";
       if ($properties->get_paper_type() == '3') echo ' disabled';
@@ -1597,9 +1683,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        $feedback_details->close();
 
        echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
-       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      }
      if (in_array($properties->get_paper_type(), array('1', '2', '5'))) {
+       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
        echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
        // Question-based Feedback
        $idfeedback_release = '';
@@ -1624,12 +1710,13 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
      echo "</table>\n";
      
      if ($properties->get_paper_type() == '0') {
-       echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
+       echo '<table cellpadding="3" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
      } else {
        echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%; display:none">';
      }
      if ($properties->get_paper_type() != '4') {
      ?>
+     <tr><td colspan="4"style="background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB">&nbsp;<?php echo $string['answerscreensettings']; ?></td></tr>
      <tr><td colspan="4">&nbsp;</td></tr>
      <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($properties->get_display_students_response() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['ticks_crosses'];?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($properties->get_display_question_mark() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($properties->get_hide_if_unanswered() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['hideallfeedback'];?></td></tr>
      <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($properties->get_display_correct_answer() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['correctanswerhighlight'];?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($properties->get_display_feedback() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['textfeedback'];?></td></tr>
@@ -1646,8 +1733,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
      echo "</td></tr>\n";
 
      if ($properties->get_paper_type() != '2') {
-       echo "<tr><td colspan=\"2\"style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;Textual Feedback</td></tr>\n";
-       echo "<tr><td style=\"text-align:center\">Above</td><td style=\"text-align:center\">Message</td></tr>\n";
+       echo "<tr><td colspan=\"2\"style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['textualfeedback'] . "</td></tr>\n";
+       echo "<tr><td style=\"text-align:center\">" . $string['above'] . "</td><td style=\"text-align:center\">" . $string['message'] . "</td></tr>\n";
        for ($i=1; $i<=10; $i++) {
          echo "<tr><td><select name=\"feedback_value$i\"><option value=\"\"></option>";
          for ($percent=0; $percent<=100; $percent++) {
@@ -1659,7 +1746,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
          }
          $msg = '';
          if (isset($textual_feedback[$i]['msg'])) $msg = $textual_feedback[$i]['msg'];
-         echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"2\" style=\"width:620px\">$msg</textarea></td></tr>\n";
+         echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"1\" style=\"width:620px\">$msg</textarea></td></tr>\n";
        }
      }
      ?>
@@ -1944,7 +2031,7 @@ for ($i=0; $i<$rows; $i++) {
   } elseif ($part == 'method') {
     $old = format_method($old, $string);
     $new = format_method($new, $string);
-  } elseif ($part == 'displaycalculator' or $part == 'demosoundclip') {
+  } elseif ($part == 'displaycalculator' or $part == 'demosoundclip' or $part == 'photos' or $part == 'ticks_crosses' or $part == 'hideallfeedback' or $part == 'textfeedback' or $part == 'correctanswerhighlight' or $part == 'question_marks') {
     $old = format_on_off($old, $string);
     $new = format_on_off($new, $string);
   } elseif ($part == 'externals' or $part == 'internals') {
@@ -1962,6 +2049,9 @@ for ($i=0; $i<$rows; $i++) {
   } elseif ($part == 'navigation') {
     $old = format_navigation($old, $string);
     $new = format_navigation($new, $string);
+  } elseif ($part == 'review') {
+    $old = format_review($old, $string);
+    $new = format_review($new, $string);
   }
   
   if (isset($string[$part])) $part = $string[$part];
