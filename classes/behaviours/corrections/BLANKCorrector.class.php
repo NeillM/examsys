@@ -68,12 +68,12 @@ class BLANKCorrector extends Corrector {
               $totalpos += $mark_correct;
               $part_marks[] = $mark_correct;
             }
-  
+
             // Get correct answer.
             $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
             $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
             $answer_list = explode(',',$blank_details[$i]);
-  
+
             $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
             if ($display_method != 'textboxes') {
               $answer_list = array($answer_list[0]);
@@ -84,11 +84,11 @@ class BLANKCorrector extends Corrector {
             $answer_lists[] = $answer_list;
           }
 
-    	    $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log{$paper_type} WHERE q_id=? AND q_paper=?");
+    	    $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
           $result->bind_param('ii', $this->_question->id, $paper_id);
           $result->execute();
           $result->store_result();
-          $result->bind_result($user_answer);
+          $result->bind_result($user_answer, $id);
           while ($row = $result->fetch()) {
             $user_answers = explode('|', $user_answer);
             // Drop first element
@@ -115,8 +115,8 @@ class BLANKCorrector extends Corrector {
               $totalpos = $mark_correct;
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-            $updateLog->bind_param('disii', $mark, $totalpos, $user_answer, $this->_question->id, $paper_id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE id = ?");
+            $updateLog->bind_param('dii', $mark, $totalpos, $id);
             $updateLog->execute();
             $updateLog->close();
           }

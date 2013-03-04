@@ -76,11 +76,11 @@ class LABELLINGCorrector extends Corrector {
 
           $totalpos = ($score_method == 'Mark per Question') ? $mark_correct : $mark_correct * $correct_count;
 
-    	    $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log{$paper_type} WHERE q_id=? AND q_paper=?");
+    	    $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
           $result->bind_param('ii', $this->_question->id, $paper_id);
           $result->execute();
           $result->store_result();
-          $result->bind_result($user_answer);
+          $result->bind_result($user_answer, $id);
           while ($row = $result->fetch()) {
             $mark = 0;
             $all_correct = true;
@@ -119,8 +119,8 @@ class LABELLINGCorrector extends Corrector {
             $user_split1[0] = $mark . '$' . $totalpos;
             $user_answer_new = implode(';', $user_split1);
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=?, user_answer=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-            $updateLog->bind_param('dissii', $mark, $totalpos, $user_answer_new, $user_answer, $this->_question->id, $paper_id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=?, user_answer=? WHERE id=?");
+            $updateLog->bind_param('disi', $mark, $totalpos, $user_answer_new, $id);
             $updateLog->execute();
             $updateLog->close();
           }
