@@ -3679,6 +3679,7 @@ QUERY;
       $updater_utils->execute_query("ALTER TABLE log$tableNo DROP INDEX " . 'idx_log' . $tableNo . '_screen', true);
     }
 
+    $mysqli->query("set session old_alter_table=1;");
     if ($tableNo != '5') {
       if (!$updater_utils->does_index_exist('log' . $tableNo, 'idx_metadataid_qid_screen')) {
         $updater_utils->execute_query("ALTER IGNORE TABLE log$tableNo ADD UNIQUE idx_metadataID_qid_screen(`metadataID` ,`q_id`,`screen`)", true);
@@ -3688,6 +3689,9 @@ QUERY;
         $updater_utils->execute_query("ALTER IGNORE TABLE log$tableNo ADD UNIQUE idx_metadataID_qid(`metadataID` ,`q_id`)", true);
       }
     }
+    $mysqli->query("set session old_alter_table=0;");
+
+    
   }
   
   // 
