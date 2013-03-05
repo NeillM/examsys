@@ -1671,8 +1671,7 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          KEY `idx_log0_screen` (`screen`),
-          KEY `idx_metadataid` (`metadataID`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1690,8 +1689,7 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          KEY `idx_log0_screen` (`screen`),
-          KEY `idx_metadataid` (`metadataID`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1709,8 +1707,7 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          KEY `idx_log0_screen` (`screen`),
-          KEY `idx_metadataid` (`metadataID`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1727,9 +1724,8 @@ QUERY;
           `dismiss` char(20) DEFAULT NULL,
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
-          PRIMARY KEY (`id`),
-          KEY `idx_log0_screen` (`screen`),
-          KEY `idx_metadataid` (`metadataID`)
+          PRIMARY KEY  (`id`),
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1762,10 +1758,8 @@ QUERY;
           `examinerID` mediumint(8) unsigned DEFAULT NULL,
           `osce_type` enum('electronic','paper') DEFAULT NULL,
           `year` tinyint(4) DEFAULT NULL,
-          PRIMARY KEY (`id`),
-          KEY `q_paper` (`q_paper`),
-          KEY `username` (`userID`),
-          KEY `started` (`started`)
+          PRIMARY KEY  (`id`),
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1777,7 +1771,7 @@ QUERY;
           `totalpos` tinyint(4) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          KEY `idx_metadataid` (`metadataID`)
+          UNIQUE KEY `idx_metadataID_qid` (`metadataID`,`q_id`)
        ) ENGINE=InnoDB AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1835,8 +1829,8 @@ QUERY;
           `dismiss` char(20) default NULL,
           `option_order` varchar(255) default NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
-          PRIMARY KEY (`id`),
-          KEY `idx_metadataid` (`metadataID`)
+          PRIMARY KEY  (`id`),
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 

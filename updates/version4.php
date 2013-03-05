@@ -1573,12 +1573,7 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("CREATE INDEX idx_log_metadata_paperID ON log_metadata (paperID)", true);
   }
 
-  if (!$updater_utils->does_index_exist('log0', 'idx_log0_screen')) {
-    $updater_utils->execute_query("CREATE INDEX idx_log0_screen ON log0 (screen)", true);
-    $updater_utils->execute_query("CREATE INDEX idx_log1_screen ON log1 (screen)", true);
-    $updater_utils->execute_query("CREATE INDEX idx_log2_screen ON log2 (screen)", true);
-    $updater_utils->execute_query("CREATE INDEX idx_log3_screen ON log3 (screen)", true);
-  }
+
 
   if (!$updater_utils->does_index_exist('courses', 'idx_courses_name')) {
     $updater_utils->execute_query("CREATE INDEX idx_courses_name ON courses (name)", true);
@@ -3615,12 +3610,6 @@ QUERY;
       $updater_utils->execute_query("ALTER TABLE log$tableNo DROP q_paper, DROP userID, DROP started", true);
     }
   }
-  
-  foreach ($tableNos as $tableNo) {
-    if (!$updater_utils->does_index_exist('log' . $tableNo, 'idx_metadataid')) {
-      $updater_utils->execute_query("ALTER TABLE log$tableNo ADD INDEX idx_metadataid (metadataID)", true);
-    }
-  }
 
   // 27/02/2013 (brzsw) - Alter the primary key to an unsigned int.
   if (!$updater_utils->does_column_type_value_exist('log_metadata', 'id', 'int(11) unsigned')) {
@@ -3678,7 +3667,28 @@ QUERY;
     // Drop the two columns now.
     $updater_utils->execute_query("ALTER TABLE properties DROP externals, DROP internal_reviewers", true);
   }
-  
+
+
+  // 05-03-2013 cczsa1 add new index to log to avoid duplicates
+  $tableNos = array('0', '1', '2', '3', '5', '_late');
+  foreach ($tableNos as $tableNo) {
+    if ($updater_utils->does_index_exist('log' . $tableNo, 'idx_metadataid')) {
+      $updater_utils->execute_query("ALTER TABLE log$tableNo DROP INDEX idx_metadataid", true);
+    }
+    if ($updater_utils->does_index_exist('log' . $tableNo, 'idx_log' . $tableNo . '_screen')) {
+      $updater_utils->execute_query("ALTER TABLE log$tableNo DROP INDEX " . 'idx_log' . $tableNo . '_screen', true);
+    }
+
+    if ($tableNo != '5') {
+      if (!$updater_utils->does_index_exist('log' . $tableNo, 'idx_metadataid_qid_screen')) {
+        $updater_utils->execute_query("ALTER IGNORE TABLE log$tableNo ADD UNIQUE idx_metadataID_qid_screen(`metadataID` ,`q_id`,`screen`)", true);
+      }
+    } else {
+      if (!$updater_utils->does_index_exist('log' . $tableNo, 'idx_metadataid_qid')) {
+        $updater_utils->execute_query("ALTER IGNORE TABLE log$tableNo ADD UNIQUE idx_metadataID_qid(`metadataID` ,`q_id`)", true);
+      }
+    }
+  }
   
   // 
   /*

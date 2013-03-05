@@ -90,7 +90,7 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
       $save_answers = $db->prepare("UPDATE log$paper_type SET mark = ?, user_answer = ?, duration = ?, updated = NOW(), dismiss = ? WHERE id = ?");
       $save_answers->bind_param('dsisi', $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss'], $log_id);
     } else {
-      $save_answers = $db->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
+      $save_answers = $db->prepare("REPLACE INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
       $save_answers->bind_param('idisiissi', $response['q_id'], $response['mark'], $response['totalpos'], $response['saved_response'], $response['screen_no'], $response['tmp_duration'], $response['dismiss'], $response['option_order'], $metadataID);
     }
     $res = $save_answers->execute();     // Save to the database.
