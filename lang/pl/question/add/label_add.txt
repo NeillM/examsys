@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 $string['fillcolour'] = 'Kolor wypełnienia';
 $string['linecolour'] = 'Kolor linii';
@@ -6,10 +6,10 @@ $string['textcolour'] = 'Kolor liter';
 $string['textsize'] = 'Rozmiar liter';
 $string['lines'] = 'Grubość linii';
 $string['erase'] = 'Wymaż etykietę/linię';
-$string['edit'] = 'Przesuń linię';
-$string['line'] = 'Narysuj linię';//?Draw Line
-$string['bobble'] = 'Narysuj linię';//?Draw Line
-$string['arrow'] = 'Narysują strzałkę';
+$string['edit'] = 'Przesuń element';
+$string['line'] = 'Narysuj linię';
+$string['bobble'] = 'Narysuj pałkę';
+$string['arrow'] = 'Narysuj strzałkę';
 $string['single'] = 'Pojedyncza etykieta';
 $string['multiple'] = 'Wielokrotna etykieta';
 $string['label'] = 'Przesuwalna etykieta';
