@@ -239,7 +239,7 @@ foreach ($lang_array as $lang) {
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 
-    //Missing strings from file
+    //Strings missing from file
     $last_key = '';
     $last_value = '';
     $display_text = '';
@@ -251,7 +251,7 @@ foreach ($lang_array as $lang) {
         display_this(Array(implode(", ", $data_path3), $strings_data[1], $strings_data[2], $strings_data[3]), -1);
       }
     }   
-    echo '<h3>Missing strings from file:</h3>';
+    echo '<h3>Strings missing from file:</h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 
@@ -262,8 +262,9 @@ foreach ($lang_array as $lang) {
     foreach ($strings_pl as $strings_key => $strings_data) {
       if ($strings_data[1]=='') {
       $data_path1 = explode("|", $strings_data[0]);
-      foreach ($data_path1 as $data_path1_key => $data_path1_elem)
-        $display_text .= '<em>' . $data_path1_elem . '</em><br />';
+      foreach ($data_path1 as $data_path1_key => $data_path1_elem) {
+          $display_text .= '<em>' . $data_path1_elem . '</em><br />';
+        }
       }
     }
     echo '<h3>Files with empty keys for the \'string\' array:</h3>';
