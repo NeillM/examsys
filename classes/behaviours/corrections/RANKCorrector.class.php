@@ -63,11 +63,11 @@ class RANKCorrector extends Corrector {
           $correct_rank = true;
 
 
-    	    $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log{$paper_type} WHERE q_id=? AND q_paper=?");
+    	    $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
           $result->bind_param('ii', $this->_question->id, $paper_id);
           $result->execute();
           $result->store_result();
-          $result->bind_result($user_answer);
+          $result->bind_result($user_answer, $id);
           while ($row = $result->fetch()) {
             $user_answers = explode(',', $user_answer);
             $totalpos = 0;
@@ -111,8 +111,8 @@ class RANKCorrector extends Corrector {
               $mark = ($order_correct) ? $totalpos : $mark;
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-            $updateLog->bind_param('disii', $mark, $totalpos, $user_answer, $this->_question->id, $paper_id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE id=?");
+            $updateLog->bind_param('dii', $mark, $totalpos, $id);
             $updateLog->execute();
             $updateLog->close();
           }
