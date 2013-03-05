@@ -67,7 +67,7 @@ if ($mysqli->error) {
 
 
 
-function execute($save_answers, $db, $count, $commit_interval = 8000) {
+function execute($save_answers, $db, $count, $commit_interval = 800) {
   global $log_id, $mark, $totalpos, $saved_response, $screen_no, $tmp_duration, $dismiss, $option_order, $metadataID;
 
 
