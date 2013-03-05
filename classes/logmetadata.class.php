@@ -177,9 +177,9 @@ class LogMetadata {
 
     if ($this->id != null) {
       //update
-      $query = 'UPDATE log_metadata (ipaddress, attempt, completed, lab_name) VALUES (?, ?, ?, ?)';
+      $query = 'UPDATE log_metadata set ipaddress = ?, attempt = ?, completed = ?, lab_name = ? WHERE id = ?';
       $stmt = $this->db->prepare($query);
-      $stmt->bind_param('siss', $this->ipadress, $this->attempt, $this->completed, $this->lab_name);
+      $stmt->bind_param('sissi', $this->ipadress, $this->attempt, $this->completed, $this->lab_name, $this->id);
       $stmt->execute();
       $stmt->close();
     } else {
