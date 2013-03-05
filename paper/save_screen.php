@@ -39,7 +39,7 @@ require_once '../classes/paperproperties.class.php';
 $displayDebug = false; //ajax call so debug info messes up the output
 
 //autosave retries at $configObject->get('cfg_autosave_frequency') seconds lets sopt this exicuting if we are
-set_time_limit($configObject->get('cfg_autosave_frequency'));
+set_time_limit($configObject->get('cfg_autosave_settimeout')1);
 
 check_var('id', 'GET', true, false, false);
 
