@@ -1264,7 +1264,11 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $field_details->execute();
       $field_details->bind_result($type);
       while ($field_details->fetch()) {
-        echo "<option value=\"$type\">$type</option>\n";
+        if ($properties->get_rubric() == $type) {
+          echo "<option value=\"$type\" selected>$type</option>\n";
+        } else {
+          echo "<option value=\"$type\">$type</option>\n";
+        }
       }
       $field_details->close();
       echo "</select>\n</td>\n";

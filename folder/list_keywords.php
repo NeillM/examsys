@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/moduleutils.class.php';
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -115,8 +114,14 @@ require_once '../classes/moduleutils.class.php';
   $keyword_list = array();
   
   if (isset($_GET['module']) and $_GET['module'] != '') {
+    $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
+    if (!$module_code) {
+       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+       $notice->display_notice_and_exit($string['modulenotfound'], $msg, '../artwork/module_not_found.png', '#C00000', true, true);
+    }
+
     // Get team keywords
-    $result = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE keyword_type='team' AND userID=? ORDER BY keyword");
+    $result = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE keyword_type = 'team' AND userID = ? ORDER BY keyword");
     $result->bind_param('i', $_GET['module']);
     $result->execute();
     $result->bind_result($keywordID, $keyword);
@@ -126,7 +131,7 @@ require_once '../classes/moduleutils.class.php';
     $result->close();
   } else {
     // Get personal keywords
-    $result = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE keyword_type='personal' AND userid=? ORDER BY keyword");
+    $result = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE keyword_type = 'personal' AND userid = ? ORDER BY keyword");
     $result->bind_param('i', $userObject->get_user_ID());
     $result->execute();
     $result->bind_result($keywordID, $keyword);

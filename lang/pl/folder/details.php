@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/include/paper_options.inc';
+require_once '../lang/' . $language . '/include/paper_options.inc';
 require_once '../lang/' . $language . '/include/paper_types.inc';
+require_once '../lang/' . $language . '/include/not_found.inc';
 
 $string['showretired'] = 'Pokaż wycofane';
 $string['teammembers'] = 'Członkowie zespołu';
@@ -50,7 +51,5 @@ $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['create'] = 'Utwórz';
 $string['newfolder'] = 'Nowy Folder';
-$string['modulenotfound'] = 'Nie odnaleziony modułu';
-$string['modulenotfoundmsg'] = "Nie można odnaleźć wskazanego modułu .";
 $string['sudentson'] = 'Studenci w '; 
 ?>

@@ -30,21 +30,18 @@ require_once '../include/errors.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
-$idMod = check_var('module', 'GET', true, false, true);
+$module = check_var('module', 'GET', true, false, true);
 set_time_limit(0);
 ob_start();
-
 
 // Folder security checks
 $folder = '';
 
 $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
-  
-if ($module_details == false) {
-  $notice->display_notice($string['modulenotfound'], $string['modulenotfoundmsg'], '/artwork/module_not_found.png', '#C00000', true, true);
-  exit;
+if (!$module_details) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($string['modulenotfound'], $msg, '../artwork/module_not_found.png', '#C00000', true, true);    
 }
-$module = $module_details['moduleid'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -129,7 +126,7 @@ $module = $module_details['moduleid'];
         $unknown_users = array();
         $headings = array();
         $stmt = $mysqli->prepare("REPLACE INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param('iisss', $student_id, $idMod, $type, $value, $_POST['session']);
+        $stmt->bind_param('iisss', $student_id, $module, $type, $value, $_POST['session']);
         foreach ($lines as $separate_line) {
           $cols = explode(',', $separate_line);
           if ($line_no == 0) {  // Read the header row

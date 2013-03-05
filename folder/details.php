@@ -96,9 +96,9 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   
   $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
     
-  if ($module_details == false) {
-    $notice->display_notice($string['modulenotfound'], $string['modulenotfoundmsg'], '/artwork/module_not_found.png', '#C00000', true, true);
-    exit;
+  if (!$module_details) {
+   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+   $notice->display_notice_and_exit($string['modulenotfound'], $msg, '../artwork/module_not_found.png', '#C00000', true, true);    
   }
 } else {
   $module = '';

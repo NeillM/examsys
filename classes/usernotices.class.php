@@ -118,7 +118,7 @@ Class user_notices extends RogoStaticSingleton {
       $logger->record_access_denied($user->get_user_ID(), 'accessdenied', $message);  // Record attempt in access denied log.
     }
 
-    $this->display_notice_and_exit($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');    
+    $this->display_notice_and_exit($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000', $output_header, $output_footer);    
   }
 
 }
