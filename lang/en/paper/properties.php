@@ -81,6 +81,7 @@ $string['review'] = 'Review';
 $string['allpeerspergroup'] = 'All peers per group';
 $string['singlereview'] = 'Single Review';
 $string['numberfrom'] = 'Number from';
+$string['groupdetails'] = 'Group Details';
 
 // Security tab
 $string['securitytab'] = 'Security';

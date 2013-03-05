@@ -81,6 +81,7 @@ $string['review'] = 'Recenzja';
 $string['allpeerspergroup'] = 'wszystkich członków grupy'; 
 $string['singlereview'] = 'recenzja indywidualna';
 $string['numberfrom'] = 'Numeruj od';
+$string['groupdetails'] = 'Group Details';  // Niko
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';
