@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
   // Check for unique moduleID
   //TODO this has been moved to moduleutils
   $modulecode = trim($_POST['modulecode']);
-  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
+  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid = ?");
   $result->bind_param('s', $modulecode);
   $result->execute();
   $result->store_result();
@@ -84,14 +84,14 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   $ebel_grid_template = $_POST['ebel_grid_template'];
 
-  $module_added = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
+  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
 
-  if ($module_added and isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
+  if ($modID !== false and isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
     $enrolements = 0;
 
     // Get the current academic session
     $session = date_utils::get_current_academic_year();
-    $session_parts = explode('/',$session);
+    $session_parts = explode('/', $session);
 
     $module = trim($_POST['modulecode']);
     // UoN code to strip off prefix codes.
@@ -120,7 +120,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
           $student->Faculty = trim($student->Faculty);
 
           // Create new account for the user
-          $names = explode(' ',$student->Forename);
+          $names = explode(' ', $student->Forename);
           $initials = '';
           foreach ($names as $tmp_name) {
             $initials .= substr($tmp_name,0,1);
@@ -130,7 +130,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
             $tmp_userID = UserUtils::create_user($student->Username, '', $student->Title, $student->Forename, $student->Surname, $student->Email, $student->CourseCode, $student->Gender, $student->YearofStudy, 'Student', $student->StudentID, $mysqli);
           }
           // Add student onto the module
-          UserUtils::add_student_to_module($tmp_userID, $module, 1, $session, $mysqli, 1);
+          UserUtils::add_student_to_module($tmp_userID, $modID, 1, $session, $mysqli, 1);
 
           $enrolements++;
           if ($enrolement_details == '') {

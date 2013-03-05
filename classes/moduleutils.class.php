@@ -59,7 +59,7 @@ Class module {
     }
 
     //dont let modules with no id to be created ;-)
-    if($moduleid == '') {
+    if ($moduleid == '') {
       return false;
     }
 
@@ -85,7 +85,7 @@ Class module {
       $SMS->update_module_enrolement($moduleid, $idMod, $sms_api, $db);
     }
 
-    return true;
+    return $idMod;
   }
 
   public function module_exists($moduleid, $db) {
