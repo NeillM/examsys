@@ -115,9 +115,10 @@ function encodeQuotes(str) {
 
             // when content is loaded, add the render js
             ed.onSetContent.add(function (ed, o) {
-                var addhtml = '<link rel="stylesheet" type="text/css" href="/tools/mee/mee/css/main.css"><\/link>';
-                addhtml += '<link rel="stylesheet" type="text/css" href="/tools/mee/mee/css/fonts.css"><\/link>';
-                $(ed.getBody()).prepend(addhtml);
+                //removed 05/03/2013 causing ie to download this files recousivly !
+                //var addhtml = '<link rel="stylesheet" type="text/css" href="/tools/mee/mee/css/main.css"><\/link>';
+                //addhtml += '<link rel="stylesheet" type="text/css" href="/tools/mee/mee/css/fonts.css"><\/link>';
+                //$(ed.getBody()).prepend(addhtml);
 
                 var body = ed.getBody();
                 var elems = $(body).find('.mee');
