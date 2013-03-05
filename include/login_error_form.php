@@ -1,11 +1,27 @@
 <?php
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Created by JetBrains PhpStorm.
- * User: cczsa1
- * Date: 11/12/12
- * Time: 11:51
- * To change this template use File | Settings | File Templates.
- */
+* 
+* @author Simon Atack
+* @version 1.0
+* @copyright Copyright (c) 2013 The University of Nottingham
+* @package
+*/
+
 
 global $string;
 
@@ -24,7 +40,7 @@ if (isset($displayerrformobj->li)) {
 $message .= '<li>' . $string['pressf5'] . '</li>';
 
 $message .= "</ul>";
-if ($configObject->get('cfg_use_ldap') != true) $message .= $fp_link;
+if ($configObject->get('cfg_use_ldap') != true and isset($fp_link)) $message .= $fp_link;
 $notice->display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000', $title_color = 'black', $output_header = true, $output_footer = true);
 
 if (isset($displayerrformobj->messages)) {
@@ -39,3 +55,4 @@ echo <<<END
 </html>
 
 END;
+?>
