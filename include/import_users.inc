@@ -243,12 +243,14 @@ function add_users_from_file($fileName) {
     $module = trim($fields[$header['modules']]);
     $session = trim($fields[$header['session']]);
     $idMod = module_utils::get_idMod($module, $mysqli);
-    if ($role != 'Staff' and $role != 'External Examiner' and $invalid_user != true and isset($header['modules']) and isset($header['session'])) {
-      //add students to modules
-      UserUtils::add_student_to_module($tmp_userID, $idMod, 1, $session, $mysqli);
-    }
-    if ($role == 'Staff') {
-      UserUtils::add_staff_to_module($tmp_userID, $idMod, $mysqli);
+    if ($idMod !== false) {
+      if ($role != 'Staff' and $role != 'External Examiner' and $invalid_user != true and isset($header['modules']) and isset($header['session'])) {
+        //add students to modules
+        UserUtils::add_student_to_module($tmp_userID, $idMod, 1, $session, $mysqli);
+      }
+      if ($role == 'Staff') {
+        UserUtils::add_staff_to_module($tmp_userID, $idMod, $mysqli);
+      }
     }
   }
   $users['html'] .= "</table>\n";
