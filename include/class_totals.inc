@@ -58,6 +58,10 @@ $calendar_year = $propertyObj->get_calendar_year();
 $crypt_name = $propertyObj->get_crypt_name();
 
 
+function nicedate($original) {
+  return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
+}
+
 function getRandomDetails($questionID, &$random_q_ids) {
   $configObject = Config::get_instance();
   global $paper_buffer, $mysqli;

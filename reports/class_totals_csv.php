@@ -33,6 +33,8 @@
   header("Content-type: application/vnd.ms-excel");
   header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . "_CT.csv");
 
+  $csv = '';
+
   if ($cohort_size > 0) {
     if ($marking == '0') {
       $marking_label = '%';
@@ -43,8 +45,6 @@
     }
 
     $total_time = 0;
-
-    $csv = '';
 
     //output table heading
     $table_order = array($string['title']=>'title', $string['surname']=>'Surname', $string['firstnames']=>'First_Names', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['module']=>'module', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'mark', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
@@ -147,7 +147,8 @@
     	$csv .= "),,,,,,,,,,\n";
     }
   } else {
-    $csv .= $string['noattempts'];
+    //$csv .= $string['noattempts'];
+    $csv .= strip_tags(sprintf($string['noattempts'], nicedate($_GET['startdate']), nicedate($_GET['enddate'])));
   }
 
   echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");

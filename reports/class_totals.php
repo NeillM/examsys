@@ -33,11 +33,6 @@ check_var('enddate', 'GET', true, false, false);
 require '../include/class_totals.inc';
 require_once '../classes/folderutils.class.php';
 
-
-function nicedate($original) {
-  return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
-}
-
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 
 ob_start();
