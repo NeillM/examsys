@@ -20,6 +20,7 @@ $string['entermoduletitle'] = 'Please enter a title for the module.';
 $string['moduleid'] = 'Module ID';
 $string['createmodule'] = 'Create new Module';
 $string['editmodule'] = 'Edit Module';
+$string['deletemodule'] = 'Delete Module';
 $string['modulefolder'] = 'Module Folder';
 $string['studentcohort'] = 'Student Cohort';
 $string['bulkmoduleimport'] = 'Bulk Module Import';
