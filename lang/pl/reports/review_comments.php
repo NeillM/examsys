@@ -34,4 +34,6 @@ $string['notreviewed'] = 'Nie przejrzano';
 $string['noresponse'] = 'Brak reakcji';
 $string['noreviewers'] = '<strong>Uwaga:</strong> Tego arkusza jeszcze nie recenzowano.';
 $string['screen'] = 'Ekran';
+$string['papernotfound'] = 'Nie odnaleziono arkusza';
+$string['furtherassistance'] = 'W celu uzyskania dalszej pomocy skontaktuj się z: <a href="mailto:%s">%s</a>';
 ?>
