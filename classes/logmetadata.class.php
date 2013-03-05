@@ -106,8 +106,10 @@ class LogMetadata {
    * Create a new log_metadata record
    * @return bool
    */
-  public function create_new_record($ipadress, $attempt, $lab_name) {
+  public function create_new_record($ipadress, $student_grade, $year, $attempt, $lab_name) {
     $this->ipadress = $ipadress;
+    $this->student_grade = $student_grade;
+    $this->year = $year;
     $this->attempt = $attempt;
     $this->lab_name = $lab_name;
     $this->populate_start_date_time();
@@ -182,9 +184,9 @@ class LogMetadata {
       $stmt->close();
     } else {
       //insert
-      $query = 'INSERT INTO log_metadata (id, userID, paperID, started, ipaddress, attempt, completed, lab_name) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)';
+      $query = 'INSERT INTO log_metadata (id, userID, paperID, started, ipaddress, student_grade, year, attempt, completed, lab_name) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
       $stmt = $this->db->prepare($query);
-      $stmt->bind_param('iississ', $this->userid, $this->paper_id, $this->session_id, $this->ipadress, $this->attempt, $this->completed, $this->lab_name);
+      $stmt->bind_param('iisssiiss', $this->userid, $this->paper_id, $this->session_id, $this->ipadress, $this->student_grade, $this->year, $this->attempt, $this->completed, $this->lab_name);
       $stmt->execute();
       $stmt->close();
 

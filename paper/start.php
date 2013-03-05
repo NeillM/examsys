@@ -366,11 +366,11 @@ $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)) {
 
   //in preview mode or for non-restartable papers always start a new session if we have relaunched the window
-  $log_metadata->create_new_record($current_ip_address, $attempt, $lab_name);
+  $log_metadata->create_new_record($current_ip_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 
 } elseif ($log_metadata->get_record() == false) { //load the data and check for no records
   //we have no log_metadata record so make one
-  $log_metadata->create_new_record($current_ip_address, $attempt, $lab_name);
+  $log_metadata->create_new_record($current_ip_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 }
 
 $sessionid = $log_metadata->get_session_id();
