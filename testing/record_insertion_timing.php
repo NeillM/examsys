@@ -32,7 +32,7 @@ error_reporting(E_ALL);
  */
 
 
-$count = 1600;
+$count = 16000;
 $cfg_web_root = '../';
 require_once '../include/custom_error_handler.inc';
 require_once '../classes/configobject.class.php';
@@ -67,7 +67,7 @@ if ($mysqli->error) {
 
 
 
-function execute($save_answers, $db, $count, $commit_interval = 80) {
+function execute($save_answers, $db, $count, $commit_interval = 8000) {
   global $log_id, $mark, $totalpos, $saved_response, $screen_no, $tmp_duration, $dismiss, $option_order, $metadataID;
 
 
