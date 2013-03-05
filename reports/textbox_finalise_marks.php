@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -109,16 +109,16 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['finalisemarks'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
   body {font-size:80%}
   .l {font-size:110%}
   </style>
-  
+
   <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
@@ -147,16 +147,50 @@ if (isset($_POST['submit'])) {
 
   echo '<tr><th><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $string['finalisemarks'] . '</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
   echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
-  
+
   $student_no = 1;
   $marked_no = 0;
 
   // Get student answers
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT 0 AS logtype, log0.id, log0.userID, user_answer FROM (log0, users) WHERE q_paper=? AND users.roles='Student' AND users.id=log0.userID AND log0.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?) UNION ALL (SELECT 1 AS logtype, log1.id, log1.userID, user_answer FROM (log1, users) WHERE q_paper=? AND users.roles='Student' AND users.id=log1.userID AND log1.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?)");
+    $sql = <<< SQL
+SELECT 0 AS logtype, l.id, lm.userID, l.user_answer
+  FROM (log0 l, log_metadata lm, users u)
+  WHERE lm.paperID = ?
+  AND l.metadataID = lm.id
+  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND u.id = lm.userID
+  AND l.q_id = ?
+  AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
+  AND lm.started <= ?
+UNION ALL
+SELECT 1 AS logtype, l.id, lm.userID, l.user_answer
+  FROM (log1 l, log_metadata lm, users u)
+  WHERE lm.paperID = ?
+  AND l.metadataID = lm.id
+  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND u.id = lm.userID
+  AND l.q_id = ?
+  AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
+  AND lm.started <= ?
+SQL;
+
+    $result = $mysqli->prepare($sql);
     $result->bind_param('iissiiss', $paperID, $q_id, $startdate, $enddate, $paperID, $q_id, $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT $paper_type AS logtype, log$paper_type.id, log$paper_type.userID, user_answer FROM (log$paper_type, users) WHERE q_paper=? AND users.roles='Student' AND users.id=log$paper_type.userID AND log$paper_type.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?");
+    $sql = <<< SQL
+SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer
+FROM (log{$paper_type} l, log_metadata lm, users u)
+WHERE lm.paperID = ?
+AND l.metadataID = lm.id
+AND (u.roles = 'Student' OR u.roles = 'graduate')
+AND u.id = lm.userID
+AND l.q_id = ?
+AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
+AND lm.started <= ?;
+SQL;
+
+    $result = $mysqli->prepare($sql);
     $result->bind_param('iiss', $paperID, $q_id, $startdate, $enddate);
   }
   $result->execute();

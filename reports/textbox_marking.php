@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -25,19 +25,19 @@
   require '../include/staff_auth.inc';
   require '../include/errors.inc';
   require_once '../classes/stateutils.class.php';
-  
+
   $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/reports/textbox_header.php');
-  
+
   $paperID = $_GET['paperID'];
   $q_id = $_GET['q_id'];
   $startdate = $_GET['startdate'];
   $enddate = $_GET['enddate'];
   $ws = $_GET['ws'];
   $phase = $_GET['phase'];
-    
+
   function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username) {
     global $marks_correct, $string;
-    
+
     $html = '<select name="mark' . $id . '"><option value="NULL"></option>';
     $inc = 1;
     if ($halfmarks == true) $inc = 0.5;
@@ -54,19 +54,24 @@
         $html .= "<option value=\"$i\">$display_i</option>";
       }
     }
-    $html .= '</select>&nbsp;<span style="color:black">' . $string['marks'] . '</span><br />&nbsp;<input type="hidden" name="logrec' . $id . '" value="' . $log_record_id . '"><input type="hidden" name="log' . $id . '" value="' . $log . '"><input type="hidden" name="username' . $id . '" value="' . $tmp_username . '">';
+    $html .= <<< HTML
+</select>&nbsp;<span style="color:black">{$string['marks']}</span><br />&nbsp;
+<input type="hidden" name="logrec{$id}" value="{$log_record_id}">
+<input type="hidden" name="log{$id}" value="{$log}">
+<input type="hidden" name="username{$id}" value="{$tmp_username}">
+HTML;
     return $html;
   }
-  
+
   if (isset($_POST['submit']) or isset($_POST['continue'])) {
     $paper_type = $_POST['paper_type'];
-    
+
     // Delete previous records from the marks table.
     $result = $mysqli->prepare("DELETE FROM textbox_marking WHERE paperID=? AND q_id=? AND phase=?");
     $result->bind_param('iii', $paperID, $q_id, $phase);
     $result->execute();
     $result->close();
-    
+
     // Write in the new marks.
     $comments = '';
     for ($i=1; $i<=$_POST['answer_no']; $i++) {
@@ -77,7 +82,7 @@
         $result->close();
       }
     }
-   
+
     if (isset($_POST['submit'])) {
       $mysqli->close();
       ?>
@@ -99,9 +104,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Textbox Marking</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%}
@@ -133,7 +138,7 @@
     display_error("Properties Query Error","SELECT paper_type FROM properties WHERE property_id=$paperID");
     $mysqli->close();
   }
-  
+
   // Get the marks for the question
   if ($result = $mysqli->prepare("SELECT marks_correct, marks_incorrect, leadin, correct_fback FROM (questions, options) WHERE questions.q_id=options.o_id AND o_id=? LIMIT 1")) {
     $result->bind_param('i', $q_id);
@@ -144,11 +149,11 @@
   } else {
     display_error("Marks Query Error",$mysqli->close());
   }
-  
+
   if ($phase == 2) {
     // Get the usernames of papers to second mark.
     $second_mark = array();
-    
+
     $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID=?");
     $result->bind_param('i', $paperID);
     $result->execute();
@@ -158,16 +163,53 @@
     }
     $result->close();
   }
-  
-  $half_marks = true; 
+
+  $half_marks = true;
 ?>
 <table cellpadding="4" cellspacing="0" border="0" style="margin-right:10px">
 <?php
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT 0 AS logtype, log0.id, log0.userID, user_answer, textbox_marking.mark FROM (log0, users) LEFT JOIN textbox_marking ON log0.id=textbox_marking.answer_id AND log0.q_paper=textbox_marking.paperID AND phase=? WHERE q_paper=? AND (users.roles='Student' OR users.roles='graduate') AND users.id=log0.userID AND log0.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?) UNION ALL (SELECT 1 AS logtype, log1.id, log1.userID, user_answer, textbox_marking.mark FROM (log1, users) LEFT JOIN textbox_marking ON log1.id=textbox_marking.answer_id AND log1.q_paper=textbox_marking.paperID AND phase=? WHERE q_paper=? AND users.roles='Student' AND users.id=log1.userID AND log1.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?)");
+
+    $sql = <<< SQL
+SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark
+  FROM (log0 l, log_metadata lm, users u)
+  LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
+  WHERE lm.paperID = ?
+  AND l.metadataID = lm.id
+  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND u.id = lm.userID
+  AND l.q_id = ?
+  AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
+  AND lm.started <= ?
+UNION ALL
+SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark
+  FROM (log1 l, log_metadata lm, users u)
+  LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
+  WHERE lm.paperID = ?
+  AND l.metadataID = lm.id
+  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND u.id = lm.userID
+  AND l.q_id = ?
+  AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
+  AND lm.started <= ?
+SQL;
+    $result = $mysqli->prepare($sql);
     $result->bind_param('iiissiiiss', $phase, $paperID, $q_id, $startdate, $enddate, $phase, $paperID, $q_id, $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT $paper_type AS logtype, log$paper_type.id, log$paper_type.userID, user_answer, textbox_marking.mark FROM (log$paper_type, users) LEFT JOIN textbox_marking ON log$paper_type.id=textbox_marking.answer_id AND log$paper_type.q_paper=textbox_marking.paperID AND phase=? WHERE q_paper=? AND (users.roles='Student' OR users.roles='graduate') AND users.id=log$paper_type.userID AND log$paper_type.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?");
+    $sql = <<< SQL
+SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, t.mark
+FROM (log{$paper_type} l, log_metadata lm, users u)
+LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
+WHERE lm.paperID = ?
+AND l.metadataID = lm.id
+AND (u.roles = 'Student' OR u.roles = 'graduate')
+AND u.id = lm.userID
+AND l.q_id = ?
+AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
+AND lm.started <= ?;
+SQL;
+
+    $result = $mysqli->prepare($sql);
     $result->bind_param('iiiss', $phase, $paperID, $q_id, $startdate, $enddate);
   }
   $answer_no = 0;
@@ -196,7 +238,6 @@
     }
   }
   $result->close();
-  $mysqli->close();
 ?>
 </table>
 

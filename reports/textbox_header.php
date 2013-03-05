@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -32,15 +32,15 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Textbox Marking</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
   body {font-size:90%}
   </style>
-  
+
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
@@ -51,7 +51,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
       } else {
         setting = "";
       }
-      
+
       parent.body.$('.marked').toggle();
 
     }
@@ -67,11 +67,11 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   $result->bind_result($paper_type, $paper);
   $result->fetch();
   $result->close();
-  
+
   $candidate_no = 0;
   if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
-    $result = $mysqli->prepare("SELECT DISTINCT userID FROM (log$paper_type, users) WHERE log$paper_type.userID=users.id AND q_paper=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=? AND (users.roles='Student' OR users.roles='graduate')");
+    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles='Student' OR u.roles='graduate')");
     $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
     $result->execute();
     $result->bind_result($tmp_userID);
