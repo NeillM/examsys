@@ -72,7 +72,7 @@ function execute($save_answers, $db, $count, $commit_interval = 8000) {
 
 
   $screen_no = 1;
-  $metadataID = 1;
+  $metadataID = 1+10000+((rand(0,100)/10)*7123);
   $log_id = 1;
 
   for ($i = 0; $i < $count; $i++) {
