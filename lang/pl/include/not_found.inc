@@ -15,6 +15,8 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['papernotfound'] = 'Nie odnaleziono arkusza';
-$string['usernotfound'] = 'Nie odnaleziono użytkownika';  
+$string['usernotfound'] = 'Nie odnaleziono użytkownika';
+$string['modulenotfound'] = 'Nie odnaleziono modułu';
+$string['questionnotfound'] = 'Nie odnaleziono pytania';
 $string['furtherassistance'] = 'W celu uzyskania dalszej pomocy skontaktuj sie z: <a href="mailto:%s">%s</a>';
 ?>
