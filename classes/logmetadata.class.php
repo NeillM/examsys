@@ -88,7 +88,7 @@ class LogMetadata {
 
     $bindResult = $stmt->bind_result( $this->id,
                                       $this->session_id,
-                                      $this->ipadress,
+                                      $this->ipaddress,
                                       $this->student_grade,
                                       $this->year,
                                       $this->attempt,
@@ -107,7 +107,7 @@ class LogMetadata {
    * @return bool
    */
   public function create_new_record($ipadress, $student_grade, $year, $attempt, $lab_name) {
-    $this->ipadress = $ipadress;
+    $this->ipaddress = $ipadress;
     $this->student_grade = $student_grade;
     $this->year = $year;
     $this->attempt = $attempt;
@@ -179,14 +179,14 @@ class LogMetadata {
       //update
       $query = 'UPDATE log_metadata set ipaddress = ?, attempt = ?, completed = ?, lab_name = ? WHERE id = ?';
       $stmt = $this->db->prepare($query);
-      $stmt->bind_param('sissi', $this->ipadress, $this->attempt, $this->completed, $this->lab_name, $this->id);
+      $stmt->bind_param('sissi', $this->ipaddress, $this->attempt, $this->completed, $this->lab_name, $this->id);
       $stmt->execute();
       $stmt->close();
     } else {
       //insert
       $query = 'INSERT INTO log_metadata (id, userID, paperID, started, ipaddress, student_grade, year, attempt, completed, lab_name) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
       $stmt = $this->db->prepare($query);
-      $stmt->bind_param('iisssiiss', $this->userid, $this->paper_id, $this->session_id, $this->ipadress, $this->student_grade, $this->year, $this->attempt, $this->completed, $this->lab_name);
+      $stmt->bind_param('iisssiiss', $this->userid, $this->paper_id, $this->session_id, $this->ipaddress, $this->student_grade, $this->year, $this->attempt, $this->completed, $this->lab_name);
       $stmt->execute();
       $stmt->close();
 
