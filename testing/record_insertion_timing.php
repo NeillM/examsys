@@ -64,26 +64,15 @@ if ($mysqli->error) {
 
   }
 }
-function get_log_ids_and_lock($paper_log_type, $screen_no, $metadataID, $db) {
-  $log_ids = array();
-  $log_check = $db->prepare("SELECT id, q_id FROM log$paper_log_type WHERE metadataID = ? AND screen = ? FOR UPDATE");
-  $log_check->bind_param('ii', $metadataID, $screen_no);
-  $log_check->execute();
-  $log_check->bind_result($tmp_id, $tmp_q_id);
-  while ($log_check->fetch()) {
-    $log_ids[$tmp_q_id] = $tmp_id;
-  }
-  $log_check->close();
 
-  return $log_ids;
-}
+
 
 function execute($save_answers, $db, $count, $commit_interval = 80) {
   global $log_id, $mark, $totalpos, $saved_response, $screen_no, $tmp_duration, $dismiss, $option_order, $metadataID;
 
 
-  $screen_no = 0;
-  $metadataID = 0;
+  $screen_no = 1;
+  $metadataID = 1;
   $log_id = 1;
 
   for ($i = 0; $i < $count; $i++) {
@@ -93,10 +82,11 @@ function execute($save_answers, $db, $count, $commit_interval = 80) {
       echo "<br>:::$i<br />\n";
     }
 
-    if (rand(0, 100) > 80) {
+    if (rand(0, 100) > 57) {
       $metadataID++;
       if ($metadataID % 25 == 0) {
         $screen_no++;
+        if($screen_no>10) { $screen_no=1;}
       }
     }
 
@@ -146,7 +136,7 @@ for ($times = 0; $times < 10; $times++) {
   $timetaken[] = $endtime - $starttime;
   $save_answers->close();
   $db->commit();
-  $db->query("TRUNCATE log0");
+ // $db->query("TRUNCATE log0");
   $individual[] = $endtime - $starttime;
 }
 $average = array_sum($timetaken) / count($timetaken);
@@ -164,7 +154,7 @@ for ($times = 0; $times < 10; $times++) {
   $timetaken[] = $endtime - $starttime;
   $save_answers->close();
   $db->commit();
-  $db->query("TRUNCATE log0");
+ // $db->query("TRUNCATE log0");
   $individual[] = $endtime - $starttime;
 }
 $average = array_sum($timetaken) / count($timetaken);
@@ -182,7 +172,7 @@ for ($times = 0; $times < 10; $times++) {
   $timetaken[] = $endtime - $starttime;
   $save_answers->close();
   $db->commit();
-  $db->query("TRUNCATE log0");
+ // $db->query("TRUNCATE log0");
   $individual[] = $endtime - $starttime;
 }
 $average = array_sum($timetaken) / count($timetaken);
