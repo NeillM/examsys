@@ -33,18 +33,26 @@ Class question_info {
    * @param object $db
    * @return formated HTML for display of question information
    */
-  static function full_question_information($q_id, $db, $userObj) {
+  static function full_question_information($q_id, $db, $userObj, $string, $notice) {
     global  $configObject, $string;
     
     $html = '';
-     
-    $question_data = $db->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"{$configObject->get('cfg_long_date_time')}\") AS locked,  q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
+    $html .= '<table cellpadding="5" cellspacing="0" border="0" width="100%">';
+    $html .= '<tr><td colspan="2" valign="middle" style="background-color:white; text-align:left; border-bottom:1px solid #CCD9EA">';
+    $html .= '<img src="../artwork/lrg_info_icon.png" width="37" height="37" alt="Information" style="float:left" /><span class="midblue_header" style="font-size:18pt; font-weight:bold">&nbsp;&nbsp;' .  $string['questioninformation'] . '</span></td></tr>';
+    
+    $question_data = $db->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"{$configObject->get('cfg_long_date_time')}\") AS locked,  q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id = ? LIMIT 1");
     $question_data->bind_param('i', $_GET['q_id']);
     $question_data->execute();
     $question_data->bind_result($email, $title, $surname, $initials, $creation_date, $last_edited, $locked, $q_type, $std, $status);
     $question_data->store_result();
     $question_data->fetch();
     $question_data->close();
+    
+    if (!isset($creation_date)) {
+      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $notice->display_notice_and_exit($string['modulenotfound'], $msg, '../artwork/module_not_found.png', '#C00000', false, true);
+    }
     
     $modules = QuestionUtils::get_modules($q_id, $db);
 
@@ -124,6 +132,8 @@ Class question_info {
       }
       echo "</tr>\n";    
     }
+    
+    $html .= '</table></div>';
  
     return $html;
   }

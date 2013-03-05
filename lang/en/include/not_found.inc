@@ -17,5 +17,6 @@
 $string['papernotfound'] = 'Paper not Found';
 $string['usernotfound'] = 'User not found';
 $string['modulenotfound'] = 'Module not found';
+$string['questionnotfound'] = 'Question not found';
 $string['furtherassistance'] = 'For further assistance contact: <a href="mailto:%s">%s</a>';
 ?>

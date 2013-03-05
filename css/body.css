@@ -45,3 +45,10 @@ table.fixed {
 .midblue_header {
   color:#4F81BD
 }
+
+hr {
+  height:1px;
+  color:grey;
+  background-color:grey;
+  border:0px
+}

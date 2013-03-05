@@ -22,12 +22,12 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/errors.inc';
-  require '../classes/questioninfo.class.php';
-  require_once '../classes/questionutils.class.php';
-  
-  check_var('q_id', 'GET', true, false, false);
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+require '../classes/questioninfo.class.php';
+require_once '../classes/questionutils.class.php';
+
+check_var('q_id', 'GET', true, false, false);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -35,7 +35,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Information<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['questioninformation'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -65,23 +65,15 @@
 </head>
 
 <body>
-<table cellpadding="5" cellspacing="0" border="0" width="100%">
-<tr>
-<td colspan="2" valign="middle" style="background-color:white; text-align:left; border-bottom:1px solid #CCD9EA">
 
-<img src="../artwork/lrg_info_icon.png" width="37" height="37" alt="Information" style="float:left" /><span class="midblue_header" style="font-size:18pt; font-weight:bold">&nbsp;&nbsp;<?php echo $string['questioninformation']; ?></span>
-
-</td>
-</tr>
 <?php
-  echo question_info::full_question_information($_GET['q_id'], $mysqli, $userObject);
+  echo question_info::full_question_information($_GET['q_id'], $mysqli, $userObject, $string, $notice);
 ?>
-</table>
-</div>
+
 
 <div style="text-align:center; padding-top:5px">
 <form>
-<input type="button" style="width: 120px" name="ok" onclick="javascript:window.close();" value="<?php echo $string['close']; ?>" />
+<input type="button" style="width:120px" name="ok" onclick="javascript:window.close();" value="<?php echo $string['close']; ?>" />
 </form>
 </div>
 </body>
