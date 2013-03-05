@@ -43,7 +43,7 @@ error_reporting(E_ALL);
 set_time_limit(0);
 $configObject = Config::get_instance();
 $notice = null;
-$db = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), 'root', '' , 'rogotest', $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port')); //$configObject->get('cfg_db_staff_user') $configObject->get('cfg_db_staff_passwd') $configObject->get('cfg_db_database')
+$db = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), 'root', '@Password1' , 'rogotest', $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port')); //$configObject->get('cfg_db_staff_user') $configObject->get('cfg_db_staff_passwd') $configObject->get('cfg_db_database')
 
 error_reporting(E_ALL);
 
