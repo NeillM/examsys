@@ -16,6 +16,6 @@
 
 $string['passwordreset'] = 'Resetowanie hasła';  
 $string['msg'] = 'Resetuj hasło do:';  
-$string['resetfailed'] = 'Reset Failed';  // Niko
-$string['failuremsg'] = 'There was a problem resetting the password.';  // Niko
+$string['resetfailed'] = 'Resetowanie nie powiodło się'; 
+$string['failuremsg'] = 'Zaistniał problem podczas resetowania hasła.';
 ?>
