@@ -3694,6 +3694,40 @@ QUERY;
     
   }
   
+  // 06/03/2013 (brzab3) - add a the $cfg_autosave_backoff_factor to the cfg file
+    
+  $new_cfg_str = array();
+  $new_cfg_str[] = "\$cfg_autosave_backoff_factor = 1.5; //each retry is lenghtend to \$cfg_autosave_settimeout + (\$cfg_autosave_backoff_factor * \$cfg_autosave_settimeout * retryCount);\r\n";
+    
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg_new = array();
+  $found = false;
+  $target_line = count($cfg);
+
+  foreach ($cfg as $curline => $line) {
+
+    if (strpos($line,'cfg_autosave_backoff_factor') !== false) {
+      $found = true;
+    }
+    if (strpos($line, 'cfg_autosave_retrylimit') !== false) {
+      $target_line = count($cfg_new) + 1;
+    }
+    $cfg_new[] = $line;
+  }
+
+  if (!$found) {
+    //add the new config chunk
+    array_splice($cfg_new, $target_line, 0, $new_cfg_str);
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old16.php');
+    }
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Add cfg_autosave_backoff_factor config variables</li>\n";
+  }
+  
   // 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****

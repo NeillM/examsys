@@ -38,10 +38,17 @@ require_once '../classes/paperproperties.class.php';
 
 $displayDebug = false; //ajax call so debug info messes up the output
 
-//autosave retries at $configObject->get('cfg_autosave_frequency') seconds lets sopt this exicuting if we are
-set_time_limit($configObject->get('cfg_autosave_settimeout')1);
-
 check_var('id', 'GET', true, false, false);
+
+//calculate how long this request should be processed based on the config vars and the retry number
+if ( isset($_GET['retry']) and is_numeric($_GET['retry']) and $_GET['retry'] > 0 and $_GET['retry'] <= $configObject->get('cfg_autosave_retrylimit') ) {
+  $extra_time = 1 + ceil($configObject->get('cfg_autosave_backoff_factor') * intval($_GET['retry']) *  $configObject->get('cfg_autosave_settimeout')); 
+} else {
+  $extra_time = 1;
+}
+
+//kill this request if it is taking to long the javascript will retry if it can
+set_time_limit($configObject->get('cfg_autosave_settimeout') + $extra_time);
 
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
@@ -115,6 +122,7 @@ if ($log_metadata->get_record() === false) {
 $metadataid = $log_metadata->get_metadata_id();
 
 $ret = record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $metadataid, $preview_q_id);
+
 if($ret === true) {
   //everthing worked ;-) 
   echo $_POST['randomPageID'];

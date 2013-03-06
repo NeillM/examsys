@@ -697,15 +697,15 @@ if ($css != '') {
   }
 ?>
 
-  //Bind save function to the screen for fault tolerant form saving
+  <?php //Bind save function to the screen for fault tolerant form saving ?>
   var submitPending = false;
   var success = false;
   var usingAjax = false;
   var submitType = '';
   var autoSaveRef = '';
-  var last_saved_user_awnsers = null; //holds the data of the last successful auto save
+  var last_saved_user_awnsers = null;    <?php //holds the data of the last successful auto save ?>
   $(document).ready(function () {
-      //we have javascript replace the form submit buttons to enable ajax saving
+      <?php  //we have javascript replace the form submit buttons to enable ajax saving ?>
       usingAjax = true;
       $('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />&nbsp;";?>');
       $('#next').click(userSubmit);
@@ -716,15 +716,15 @@ if ($css != '') {
       $('#finish').replaceWith('<?php echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />&nbsp;";?>');
       $('#finish').click(userSubmit);
 
-      //attach ui events
+      <?php //attach ui events ?>
       $('.rankselect').change(rankCheck);
       $(".calc-answer").keydown(filterKeypress);
 
-      //setup autosave
+       <?php //setup autosave ?>
       startAutoSave();
   });
 
-  //normal user submit by clicking on next, prevous, finish or jump screen
+  <?php //normal user submit by clicking on next, prevous, finish or jump screen ?>
   var userSubmit = function (event) {
     submitType = 'userSubmit';
     stopAutoSave();
@@ -735,7 +735,7 @@ if ($css != '') {
       $('#saveError').fadeOut('slow');
       $('#savemsg').html("<img src=\"../artwork/busy.gif\" width=\"20\" height=\"20\" alt=\"Wait\" />")
 
-      //log which method the users submitted the page via
+      <?php //log which method the users submitted the page via ?>
       if (!!event) {
         if(event.target.id != 'finish') {
           $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
@@ -745,7 +745,7 @@ if ($css != '') {
     }
   }
 
-  //called when a user has run out of time by UpdateTimerWithRemainingTime in start.js
+   <?php  //called when a user has run out of time by UpdateTimerWithRemainingTime in start.js ?>
   var forceSave = function() {
     stopAutoSave();
     submitType = 'forcedSubmit';
@@ -753,21 +753,21 @@ if ($css != '') {
     ajaxSave();
   }
 
-  //called on auto save time out
+   <?php  //called on auto save time out ?>
   var autoSave = function() {
     submitType = 'autoSave';
-    //only save if the screen has changed
+    <?php //only save if the screen has changed ?>
     if(typeof(tinyMCE) != "undefined"){
       tinyMCE.triggerSave();
     }
     var formData = $('#qForm').serialize();
 
-    //only auto save if the data has changed
+    <?php //only auto save if the data has changed ?>
     if(last_saved_user_awnsers !== formData) {
       $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
       ajaxSave();
     }
-    //reset the timer in-case this is a long screen
+    <?php //reset the timer in-case this is a long screen ?>
     startAutoSave();
   }
 
@@ -781,9 +781,9 @@ if ($css != '') {
 
   var ajaxSave = function () {
     submitPending = true;
-    //hide any errors
+    <?php //hide any errors ?>
     $('#saveError').fadeOut('fast');
-    //random page ID to stop IE caching results. arrrggg
+    <?php //random page ID to stop IE caching results. arrrggg ?>
     date = new Date();
     randomPageID = date.getTime();
     $('#randomPageID').val(randomPageID);
@@ -795,40 +795,77 @@ if ($css != '') {
           type: 'post',
           data: $('#qForm').serialize(),
           dataType: 'html',
-          timeout: <?php echo ($configObject->get('cfg_autosave_settimeout') * 1000); ?>,
+          timeout: <?php 
+                        //set the time out of one requst to be the maximum total time plus 5s for network latency
+                        //php handles nomal timeouts. This is just to make sure the user wont wait forever if somthing
+                        //weird happens
+                        echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000; 
+                   ?>,
           cache: false,
           tryCount : 0,
-          retryLimit : <?php echo $configObject->get('cfg_autosave_retrylimit'); ?>, //try 3 times before erroring
+          retryLimit : <?php echo $configObject->get('cfg_autosave_retrylimit'); //try 3 times before erroring ?>, 
           beforeSend: function() {
               submitPending = true;
               success = false;
           },
           fail: function() {
-              saveFail();
-          },
-          error: function(xhr, textStatus, errorThrown) {
-              if (textStatus == 'timeout' || textStatus == 'error') {
-                this.tryCount++;
-                if (this.tryCount <= this.retryLimit) {
-                  //try again
-                  $.ajax(this);
-                  return;
-                }
-              }
+            if(this.retry()) {
+              return;
+            } else  {
               saveFail();
               return;
+            }
+          },
+          error: function(xhr, textStatus, errorThrown) {
+            if (textStatus == 'timeout' ) {
+              <?php
+              //we have timed out either  the server has gone away or somthing went wrong in the network
+              //get the user to retry
+              ?>
+              saveFail();
+              return;
+            } else if (textStatus == 'error') {
+              if(this.retry()) {
+                return;
+              } else  {
+                saveFail();
+                return;
+              }
+            }
+            saveFail();
+            return;
           },
           success: function (ret_data, jqXHR, textStatus) {
               submitPending = false;
               if (ret_data == randomPageID) {
                   success = true;
-                  //cache the form data to look for changes on next auto save
+                  <?php //cache the form data to look for changes on next auto save ?>
                   last_saved_user_awnsers = this.data;
                   saveSuccess();
                   return;
               }
-              saveFail();
-              return;
+              if(this.retry()) {
+                return;
+              } else  {
+                saveFail();
+                return;
+              }
+          },
+          retry: function (){
+            <?php //retry if we can ?>
+            this.tryCount++;
+            if (this.tryCount <= this.retryLimit) {
+              <?php //indicate the retry on the url ?>
+              if(this.tryCount == 1) {
+                this.url = this.url + "&retry=" + this.tryCount;
+              } else {
+                this.url = this.url.replace("&retry=" + (this.tryCount - 1), "&retry=" + this.tryCount);
+              }
+              alert(this.url + ' ' + (this.timeout) + ' ' + (this.timeout/1000));
+              $.ajax(this);
+              return true;
+            }
+            return false
           }
       });
     submitPending = false;
@@ -843,7 +880,7 @@ if ($css != '') {
       $('#qForm').submit();
     } else {
       $('#savemsg').html("<?php echo $string['auto_ok']; ?>");
-      //clear auto save message
+      <?php //clear auto save message ?>
       setTimeout("$('#savemsg').html(\"\")",5000);
     }
   }
