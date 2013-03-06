@@ -139,7 +139,8 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
 
   // Get any questions to exclude.
   $excluded = array();
-  $exclude_query = $mysqlidb->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+  $exclude_query = $mysqlidb->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
+  echo $mysqlidb->error;
   $exclude_query->bind_param('i', $paperID);
   $exclude_query->execute();
   $exclude_query->bind_result($exclude_q_id, $exclude_parts);

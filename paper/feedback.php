@@ -54,9 +54,6 @@ if (isset($_GET['type'])) {
   $log_type = $propertyObj->get_paper_type();
 }
 
-$logger = new Logger($mysqli);
-$logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', $paperID);  
-
 $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
@@ -66,7 +63,10 @@ if (isset($_GET['userid'])) {
 } else {
   $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 }
+$log_metadata->get_record();
 $sessionid = $log_metadata->get_session_id();
+$metadataid = $log_metadata->get_metadata_id();
+
 if ($sessionid === null) {
   $notice->access_denied($mysqli, $string, $string['nottaken'], false);
 }
@@ -102,6 +102,9 @@ if ($userObject->has_role('Student')) {
 }
 
 $pass_mark = $propertyObj->get_pass_mark();
+
+$logger = new Logger($mysqli);
+$logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', $paperID);  
 
 require '../config/finish.inc';
 ?>
@@ -177,7 +180,7 @@ require '../config/finish.inc';
   echo $logo_html;
   echo '</table>';
   
-  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $mysqli, $preview_q_id);
+  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $metadataid, $mysqli, $preview_q_id);
 
   echo "</body>\n</html>";
   $mysqli->close();
