@@ -861,7 +861,6 @@ if ($css != '') {
               } else {
                 this.url = this.url.replace("&retry=" + (this.tryCount - 1), "&retry=" + this.tryCount);
               }
-              alert(this.url + ' ' + (this.timeout) + ' ' + (this.timeout/1000));
               $.ajax(this);
               return true;
             }
