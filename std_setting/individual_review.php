@@ -572,8 +572,8 @@ if (isset($_POSR['paperID'])) {
     if (empty($ebel)) {
       $templateID = '';
       // If empty look to see if there is a default grid to load
-      $result = $mysqli->prepare("SELECT ebel_grid_template FROM modules WHERE moduleid=?");
-      $result->bind_param('s', $_GET['module']);
+      $result = $mysqli->prepare("SELECT ebel_grid_template FROM modules WHERE id=?");
+      $result->bind_param('i', $_GET['module']);
       $result->execute();
       $result->bind_result($templateID);
       $result->fetch();
