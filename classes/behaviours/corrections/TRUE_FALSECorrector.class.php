@@ -80,11 +80,11 @@ class TRUE_FALSECorrector extends Corrector {
           // Remark the student's answers in 'log{$paper_type}'.
           $score_method = $this->_question->get_score_method();
 
-    	    $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log{$paper_type} WHERE q_id=? AND q_paper=?");
+    	    $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
           $result->bind_param('ii', $this->_question->id, $paper_id);
           $result->execute();
           $result->store_result();
-          $result->bind_result($user_answer);
+          $result->bind_result($user_answer, $id);
           while ($row = $result->fetch()) {
             $user_answers = str_split($user_answer);
             $mark = 0;
@@ -106,8 +106,8 @@ class TRUE_FALSECorrector extends Corrector {
               $mark = ($mark == count($new_correct_val)) ? $mark_correct : $mark_incorrect;
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-            $updateLog->bind_param('dsii', $mark, $user_answer, $this->_question->id, $paper_id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=? WHERE id=?");
+            $updateLog->bind_param('di', $mark, $id);
             $updateLog->execute();
             $updateLog->close();
           }
