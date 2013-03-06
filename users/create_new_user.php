@@ -58,7 +58,7 @@ if (isset($_POST['submit'])) {
   }
 
   $initials = '';
-  $first_names_array = explode(' ',$_POST['new_first_names']);
+  $first_names_array = explode(' ', $_POST['new_first_names']);
   foreach ($first_names_array as $individual_name) {
     $initials .= trim(substr($individual_name,0,1));
   }
