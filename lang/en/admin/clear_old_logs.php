@@ -18,4 +18,8 @@ $string['administrativetools'] = 'Administrative Tools';
 $string['clearoldlogs'] = 'Clear Old Logs';
 $string['log0deleted'] = 'Log0 records deleted:';
 $string['log1deleted'] = 'Log1 records deleted:';
+$string['trackchangemsg'] = 'Deleted records from log%d';
+$string['trackchangeltimsg'] = 'Deleted LTI user';
+$string['trackchangepwdmsg'] = 'Reset passwords for roles %s';
+$string['trackchangescope'] = 'Clear old logs';
 ?>

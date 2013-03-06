@@ -205,7 +205,7 @@ if (!isset($_POST['update'])) {
 
   error_reporting(-1);
   ob_start();
-  
+
   echo "<div>Starting at " . date("H:i:s") . "</div>";
 
   echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>\n<ol>";
@@ -829,7 +829,7 @@ if (!isset($_POST['update'])) {
   if (floatval($old_version) < 4.2) {
     // 20/09/2011 - set marks for fill-in-the-blank question type
     $updater_utils->execute_query("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND (marks_correct IS NULL OR marks_correct=0)", true);
- 
+
     // 15/09/2011 Update calculation questions so that they have two tolerances, one for full marks the other for partial
     $result = $mysqli->prepare("SELECT q_id, display_method FROM questions WHERE q_type='calculation'");
     $result->execute();
@@ -883,7 +883,7 @@ if (!isset($_POST['update'])) {
     }
   }
   $mysqli->commit();
-  
+
   $check->free_result();
   $check->close();
 
@@ -3397,16 +3397,16 @@ QUERY;
   // 20/02/2013 (brzsw) - Add new access_log table
   if (!$updater_utils->does_table_exist('access_log')) {
     $updater_utils->execute_query("CREATE TABLE access_log (id int(11) unsigned not null primary key auto_increment, userID int(11) unsigned, type varchar(255), accessed DATETIME, ipaddress char(60), page varchar(255)) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
-    
+
     $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.access_log TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.access_log TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.access_log TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.access_log TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
@@ -3414,16 +3414,16 @@ QUERY;
   // 20/02/2013 (brzsw) - Add new denied_log table
   if (!$updater_utils->does_table_exist('denied_log')) {
     $updater_utils->execute_query("CREATE TABLE denied_log (id int(11) unsigned not null primary key auto_increment, userID int(11) unsigned, tried DATETIME, ipaddress char(60), page varchar(255), title varchar(255), msg text) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
-    
+
     $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
@@ -3434,7 +3434,7 @@ QUERY;
     $updater_utils->execute_query("ALTER TABLE log_lab_end_time ADD COLUMN start_time int(10) unsigned AFTER invigilatorID", true);
   }
 
-  // 21/02/2012 (brzsw) - Add some missing indexes to modules_student  
+  // 21/02/2012 (brzsw) - Add some missing indexes to modules_student
   if (!$updater_utils->does_index_exist('modules_student', 'idx_userID')) {
     $updater_utils->execute_query("ALTER TABLE modules_student ADD INDEX idx_userID (userID)", true);
   }
@@ -3576,7 +3576,7 @@ QUERY;
       echo"<li>Changed config file to new lookup method and adjusted info for authentication method</li>";
     }
   }
-  
+
   // 22/02/2013 (brzsw) - Add deleted file to modules table.
   if (!$updater_utils->does_column_type_value_exist('modules', 'mod_deleted', 'datetime')) {
     $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN mod_deleted datetime", true);
@@ -3587,7 +3587,7 @@ QUERY;
   foreach ($tableNos as $tableNo) {
     if (!$updater_utils->does_column_exist('log' . $tableNo, 'metadataID')) {
       $updater_utils->execute_query("ALTER TABLE log$tableNo ADD COLUMN metadataID int(11) unsigned", true);
-      
+
       $mysqli->autocommit(false);
       $result = $mysqli->prepare("SELECT DISTINCT m.id, l.userID, l.q_paper, l.started FROM log$tableNo l, log_metadata m WHERE l.userID = m.userID AND l.q_paper = m.paperID AND l.started = m.started");
       $result->execute();
@@ -3596,7 +3596,7 @@ QUERY;
       while ($result->fetch()) {
         if ($paperID > 0) {
           $updater_utils->execute_query("UPDATE log$tableNo SET metadataID = $id WHERE userID = $userID AND q_paper = $paperID AND started = '$started'", false);
-        } 
+        }
       }
       $result->free_result();
       $result->close();
@@ -3618,14 +3618,14 @@ QUERY;
   if (!$updater_utils->does_column_type_value_exist('log_metadata', 'id', 'int(11) unsigned')) {
     $updater_utils->execute_query("ALTER TABLE log_metadata CHANGE COLUMN id id int(11) unsigned not null auto_increment", true);
   }
-  
+
   // 28/02/2013 (brzsw) - Add new indexes.
   if (!$updater_utils->does_index_exist('questions', 'idx_owner_deleted')) {
     $updater_utils->execute_query("ALTER TABLE questions ADD INDEX idx_owner_deleted (ownerID, deleted)", true);
-  }  
+  }
   if (!$updater_utils->does_index_exist('modules', 'idx_moduleid_deleted')) {
     $updater_utils->execute_query("ALTER TABLE modules ADD INDEX idx_moduleid_deleted (moduleID, mod_deleted)", true);
-  }  
+  }
   if (!$updater_utils->does_index_exist('properties', 'idx_owner_deleted')) {
     $updater_utils->execute_query("ALTER TABLE properties ADD INDEX idx_owner_deleted (paper_ownerID, deleted)", true);
   }
@@ -3633,7 +3633,7 @@ QUERY;
   // 01/03/2013 (brzsw) - Split out reviewers table.
   if (!$updater_utils->does_table_exist('properties_reviewers')) {
     $updater_utils->execute_query("CREATE TABLE properties_reviewers (id int(11) unsigned not null primary key auto_increment, paperID mediumint(8) unsigned, reviewerID int(11) unsigned, type enum('internal','external')) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset PACK_KEYS=1 AUTO_INCREMENT=1", true);
-    
+
     $mysqli->autocommit(false);
     $result = $mysqli->prepare("SELECT property_id, externals, internal_reviewers FROM properties");
     $result->execute();
@@ -3657,10 +3657,10 @@ QUERY;
     $result->close();
     $mysqli->commit();
     $mysqli->autocommit(true);
-    
+
     $updater_utils->execute_query("ALTER TABLE properties_reviewers ADD INDEX idx_paperID (paperID)", true);
     $updater_utils->execute_query("ALTER TABLE properties_reviewers ADD INDEX idx_type (type)", true);
-    
+
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.properties_reviewers TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
 
@@ -3693,15 +3693,12 @@ QUERY;
       }
     }
     $mysqli->query("set session old_alter_table=0;");
-
-
   }
-  
+
   // 06/03/2013 (brzab3) - add a the $cfg_autosave_backoff_factor to the cfg file
-    
   $new_cfg_str = array();
   $new_cfg_str[] = "\$cfg_autosave_backoff_factor = 1.5; //each retry is lenghtend to \$cfg_autosave_settimeout + (\$cfg_autosave_backoff_factor * \$cfg_autosave_settimeout * retryCount);\r\n";
-    
+
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $cfg_new = array();
   $found = false;
@@ -3730,8 +3727,67 @@ QUERY;
     }
     echo "<li>Add cfg_autosave_backoff_factor config variables</li>\n";
   }
-  
-  // 
+
+  // 06/03/2013 - nazrji - Add new tables for records deleted from main logs when clearing old logs
+  if (!$updater_utils->does_table_exist('log_metadata_deleted')) {
+    $sql = <<< SQL
+CREATE TABLE `log_metadata_deleted` (
+  `id` int(11) unsigned NOT NULL UNIQUE,
+  `userID` int(10) unsigned DEFAULT NULL,
+  `paperID` mediumint(8) unsigned DEFAULT NULL,
+  `started` datetime DEFAULT NULL,
+  `ipaddress` char(15) DEFAULT NULL,
+  `student_grade` char(25) DEFAULT NULL,
+  `year` tinyint(4) DEFAULT NULL,
+  `attempt` tinyint(4) DEFAULT NULL,
+  `completed` datetime DEFAULT NULL,
+  `lab_name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset
+SQL;
+
+    $updater_utils->execute_query($sql, true);
+
+  }
+
+    $sql = <<< SQL
+CREATE TABLE `log0_deleted` (
+  `id` int(8) NOT NULL UNIQUE,
+  `q_id` int(4) NOT NULL DEFAULT '0',
+  `mark` float DEFAULT NULL,
+  `totalpos` tinyint(4) DEFAULT NULL,
+  `user_answer` text,
+  `screen` tinyint(3) unsigned DEFAULT NULL,
+  `duration` mediumint(9) DEFAULT NULL,
+  `updated` datetime DEFAULT NULL,
+  `dismiss` char(20) DEFAULT NULL,
+  `option_order` varchar(255) DEFAULT NULL,
+  `metadataID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset
+SQL;
+
+    $updater_utils->execute_query($sql, true);
+
+    $sql = <<< SQL
+CREATE TABLE `log1_deleted` (
+  `id` int(8) NOT NULL UNIQUE,
+  `q_id` int(4) NOT NULL DEFAULT '0',
+  `mark` float DEFAULT NULL,
+  `totalpos` tinyint(4) DEFAULT NULL,
+  `user_answer` text,
+  `screen` tinyint(3) unsigned DEFAULT NULL,
+  `duration` mediumint(9) DEFAULT NULL,
+  `updated` datetime DEFAULT NULL,
+  `dismiss` char(20) DEFAULT NULL,
+  `option_order` varchar(255) DEFAULT NULL,
+  `metadataID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=$cfg_db_charset
+SQL;
+
+    $updater_utils->execute_query($sql, true);
+  }
+
+
+  //
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */

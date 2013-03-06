@@ -939,7 +939,7 @@ Class InstallUtils {
                                 self::$db
                              );
     self::$db->commit();
-    
+
     //FLUSH PRIVILEGES
     self::$db->query("FLUSH PRIVILEGES");
     if (self::$db->errno != 0) {
@@ -1675,6 +1675,22 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
+    $this->tableList['log0_deleted'] = <<<QUERY
+        CREATE TABLE `log0_deleted` (
+          `id` int(8) NOT NULL UNIQUE,
+          `q_id` int(4) NOT NULL DEFAULT '0',
+          `mark` float DEFAULT NULL,
+          `totalpos` tinyint(4) DEFAULT NULL,
+          `user_answer` text,
+          `screen` tinyint(3) unsigned DEFAULT NULL,
+          `duration` mediumint(9) DEFAULT NULL,
+          `updated` datetime DEFAULT NULL,
+          `dismiss` char(20) DEFAULT NULL,
+          `option_order` varchar(255) DEFAULT NULL,
+          `metadataID` int(11) DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['log1'] = <<<QUERY
         CREATE TABLE `log1` (
           `id` int(8) NOT NULL auto_increment,
@@ -1691,6 +1707,22 @@ QUERY;
           PRIMARY KEY  (`id`),
           UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+QUERY;
+
+    $this->tableList['log1_deleted'] = <<<QUERY
+        CREATE TABLE `log1_deleted` (
+          `id` int(8) NOT NULL UNIQUE,
+          `q_id` int(4) NOT NULL DEFAULT '0',
+          `mark` float DEFAULT NULL,
+          `totalpos` tinyint(4) DEFAULT NULL,
+          `user_answer` text,
+          `screen` tinyint(3) unsigned DEFAULT NULL,
+          `duration` mediumint(9) DEFAULT NULL,
+          `updated` datetime DEFAULT NULL,
+          `dismiss` char(20) DEFAULT NULL,
+          `option_order` varchar(255) DEFAULT NULL,
+          `metadataID` int(11) DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log2'] = <<<QUERY
@@ -1851,6 +1883,21 @@ QUERY;
           KEY `idx_log_metadata_student_grade` (`student_grade`),
           KEY `idx_log_metadata_paperID` (`paperID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['log_metadata_deleted'] = <<<QUERY
+        CREATE TABLE `log_metadata_deleted` (
+          `id` int(11) unsigned NOT NULL UNIQUE,
+          `userID` int(10) unsigned DEFAULT NULL,
+          `paperID` mediumint(8) unsigned DEFAULT NULL,
+          `started` datetime DEFAULT NULL,
+          `ipaddress` char(15) DEFAULT NULL,
+          `student_grade` char(25) DEFAULT NULL,
+          `year` tinyint(4) DEFAULT NULL,
+          `attempt` tinyint(4) DEFAULT NULL,
+          `completed` datetime DEFAULT NULL,
+          `lab_name` varchar(255) DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['lti_context'] = <<<QUERY
