@@ -593,7 +593,7 @@ class Authentication {
   }
 
   /**
-   * Check if the autrhentication stack is using a plugin of a given type
+   * Check if the authentication stack is using a plugin of a given type
    * @param  string  $type The class name of the plugin for which to check
    * @return boolean       True if the plugin is loaded in the current authentication stack
    */
