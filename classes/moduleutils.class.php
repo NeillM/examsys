@@ -164,9 +164,11 @@ Class module {
         $ids[] = $id;
       }
       $result->close();
+      
       if (count($ids) == 0) {
         return false;
       }
+      
       return $ids;
     } else {
       $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
