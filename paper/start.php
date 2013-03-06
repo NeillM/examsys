@@ -737,7 +737,9 @@ if ($css != '') {
 
       <?php //log which method the users submitted the page via ?>
       if (!!event) {
-        if(event.target.id != 'finish') {
+        if(event.target.id == 'finish') {
+          $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id']; ?>&dont_record=true");  
+        } else {
           $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
         }
       }
