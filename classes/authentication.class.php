@@ -592,7 +592,25 @@ class Authentication {
     return $return_data;
   }
 
+  /**
+   * Check if the autrhentication stack is using a plugin of a given type
+   * @param  string  $type The class name of the plugin for which to check
+   * @return boolean       True if the plugin is loaded in the current authentication stack
+   */
+  function has_plugin_type($type) {
+    $found = false;
 
+    $data->plugins = array();
+    foreach ($this->authPluginObj as $authobj) {
+      $info = $authobj->get_info();
+      if ($info->classname == $type) {
+        $found = true;
+        break;
+      }
+    }
+
+    return $found;
+  }
 }
 
 class authtypereturn {
