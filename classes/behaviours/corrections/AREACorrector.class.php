@@ -84,7 +84,7 @@ class AREACorrector extends Corrector {
           $error_partial = $this->_question->get_error_partial();
 
           // Remark the student's answers in 'log{$paper_type}'.
-          $result = $this->_mysqli->prepare("SELECT user_answer, id, mark FROM log{$paper_type} WHERE q_id=? AND q_paper=?");
+          $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id, l.mark FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
           $result->bind_param('ii', $this->_question->id, $paper_id);
           $result->execute();
           $result->store_result();
@@ -104,8 +104,8 @@ class AREACorrector extends Corrector {
             }
 
             if ($mark != $user_mark) {
-              $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=? WHERE id=? AND q_paper=?");
-              $updateLog->bind_param('sii', $mark, $id, $paper_id);
+              $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=? WHERE id=?");
+              $updateLog->bind_param('si', $mark, $id);
               $updateLog->execute();
               $updateLog->close();
             }

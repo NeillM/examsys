@@ -25,7 +25,7 @@
  */
 
 Class QuestionAREA extends Question {
-  
+
   protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
 
   protected $points1 = '';
@@ -47,12 +47,12 @@ Class QuestionAREA extends Question {
 
     // Convert the max number of options into a list of variables
     $this->option_order = 'display_order';
-    $this->_fields_change = array('option_marks_correct', 'option_marks_incorrect', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
+    $this->_fields_change = array('option_marks_correct', 'option_marks_partial', 'option_marks_incorrect', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
     $this->_score_methods = array($this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial']);
   }
 
-  
+
   /**
    * Persist the object to the database
    * @return boolean Success or failure of the save operation
@@ -66,7 +66,7 @@ Class QuestionAREA extends Question {
     return parent::save($clear_checkout);
   }
 
-  
+
   // ACCESSORS
   /**
    * Set the question leadin, stripping any carriage returns
