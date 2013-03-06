@@ -85,10 +85,9 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
         $errors[] = $string['incorrectemail'];
       } else {
         // Update user's password
-        $new_pw = encpw($configObject->get('cfg_encrypt_salt'), $username, $password);
-        $update = $mysqli->prepare("UPDATE users SET password = ? WHERE id = ?");
-        $update->bind_param('si', $new_pw, $user_id);
-        if(!$update->execute()) {
+        $success = UserUtils::update_password($username, $password, $user_id, $mysqli);
+
+        if (!$success) {
           $errors[] = $string['databaseupdateerror'];
         } else {
           // Delete password token entry for this user
@@ -110,7 +109,6 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
 
           $message = $string['passwordupdated'] . ' <a href="' . $redirect_url . '">' . $string['login'] . '</a>.';
         }
-        $update->close();
       }
     }
     $stmt->close();

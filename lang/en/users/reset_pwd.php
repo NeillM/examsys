@@ -16,4 +16,6 @@
 
 $string['passwordreset'] = 'Password Reset';
 $string['msg'] = 'Password reset to:';
+$string['resetfailed'] = 'Reset Failed';
+$string['failuremsg'] = 'There was a problem resetting the password.';
 ?>

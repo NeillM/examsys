@@ -23,6 +23,19 @@
 */
 
 require '../include/sysadmin_auth.inc';
+require_once '../classes/userutils.class.php';
+require_once '../include/errors.inc';
+
+check_var('userID', 'GET', true, false, false);
+check_var('username', 'GET', true, false, false);
+
+$new_password = gen_password();
+$success = UserUtils::update_password($_GET['username'], $new_password, $_GET['userID'], $mysqli);
+
+if (!$success) {
+  display_error($string['resetfailed'], $string['failuremsg'], $configObject->get('cfg_root_path') . '/artwork/bomb.png', '#C00000', true, true, true);
+}
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -42,15 +55,6 @@ require '../include/sysadmin_auth.inc';
 </head>
 
 <body class="dialog_body">
-<?php
-  $new_password = gen_password();
-  $encrypt_password = encpw($configObject->get('cfg_encrypt_salt'), $_GET['username'], $new_password);
-
-  $stmt = $mysqli->prepare("UPDATE users SET password=? WHERE id=?");
-  $stmt->bind_param('si', $encrypt_password, $_GET['userID']);
-  $stmt->execute();
-  $mysqli->close();
-?>
 <table cellpadding="2" cellspacing="0" style="width:100%">
 <tr><td class="dialog_header header_line" style="width:54px"><img src="../artwork/user_info_48.png" width="48" height="48" /></td><td class="dialog_header header_line" style="width:90%"><?php echo $string['passwordreset']; ?></td></tr>
 <tr><td colspan="2">&nbsp;</tr>
@@ -58,6 +62,5 @@ require '../include/sysadmin_auth.inc';
 <tr><td colspan="2">&nbsp;</tr>
 <tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="OK" style="width:100px" onclick="window.close();" /></tr>
 </table>
-
 </body>
 </html>

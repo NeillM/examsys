@@ -46,8 +46,6 @@ Class UserUtils {
   }
 
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = NULL) {
-    $configObj = Config::get_instance();
-
     if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
       if (is_null($initials)) {
         $initial = explode(' ', $forname);
@@ -71,10 +69,11 @@ Class UserUtils {
         $gender = NULL;
       }
 
+      $salt = UserUtils::get_salt();
+      $encrypt_password = encpw($salt, $username, $password);  // One way encrypt the password.
+
       //add new users
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?, NULL)");
-      $encrypt_password = encpw($configObj->get('cfg_encrypt_salt'), $username, $password);
-
       $result->bind_param('ssssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
       $result->close();
@@ -100,6 +99,35 @@ Class UserUtils {
     return false;
   }
 
+  static function get_salt() {
+    $configObj = Config::get_instance();
+  
+    $auth_settings = $configObj->get('authentication');
+    for ($i=0; $i<count($auth_settings); $i++) {
+      if ($auth_settings[$i][0] == 'internaldb') {
+        $cfg_encrypt_salt = $auth_settings[$i][1]['encrypt_salt'];
+      }
+    }
+    
+    return $cfg_encrypt_salt;
+  }
+
+  static function update_password($username, $password, $userID, $db) {
+    $salt = UserUtils::get_salt();
+    $encrypt_password = encpw($salt, $username, $password);
+
+    $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $stmt->bind_param('si', $encrypt_password, $userID);
+    if (!$stmt->execute()) {
+      $success = false;
+    } else {
+      $success = true;
+    }
+    $stmt->close();
+    
+    return $success;
+  }
+  
   /**
    * Check if username exists and if so return ID.
    *
