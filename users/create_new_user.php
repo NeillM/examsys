@@ -225,7 +225,15 @@ MESSAGE;
 <tr><td>
 <table border="0" cellspacing="6" cellpadding="0" style="background-color:#F1F5FB">
 <?php
-  if ($configObject->get('cfg_use_ldap') == true) {
+  $authinfo = $authentication->version_info();
+  $ldap_enabled = false;
+  foreach($authinfo->plugins as $p) {
+    if($p->name == 'LDAP') {
+      $ldap_enabled = true;
+      break;
+    }
+  }
+  if ($ldap_enabled == true) {
     echo '<tr><td colspan=\"4\"><input type="button" name="lookup" value="' . $string['getldapdetails'] . '" onclick="ldaplookup();" /><td></tr>';
   }
 ?>
