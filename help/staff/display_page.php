@@ -52,7 +52,7 @@
     $roles_check = 'AND roles="Staff"';
   }
   
-  $search_results = $mysqli->prepare("SELECT title, body, type, deleted FROM staff_help WHERE id=? $roles_check");
+  $search_results = $mysqli->prepare("SELECT title, body, type, deleted FROM staff_help WHERE id = ? $roles_check");
   $search_results->bind_param('i', $_GET['id']);
   $search_results->execute();
   $search_results->store_result();
@@ -60,7 +60,7 @@
   while ($row = $search_results->fetch()) {
     $edit_id = $_GET['id'];
     if ($type == 'pointer') {
-      $pointer_results = $mysqli->prepare("SELECT title, body, deleted FROM staff_help WHERE id=?");
+      $pointer_results = $mysqli->prepare("SELECT title, body, deleted FROM staff_help WHERE id = ?");
       $pointer_results->bind_param('i', $tmp_body);
       $pointer_results->execute();
       $pointer_results->store_result();
@@ -78,7 +78,7 @@
     exit;
   }
 
-  if ($_GET['id'] != '1' and $userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
+  if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
     $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'staff', ?, NOW(), ?)");
     $result->bind_param('ii', $userObject->get_user_ID(), $_GET['id']);
     $result->execute();  

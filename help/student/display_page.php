@@ -71,7 +71,7 @@ if ($tmp_body == '' and $tmp_title == '') {
   exit;
 }
 
-if ($_GET['id'] != '1' and !$userObject->has_role(array('SysAdmin','External'))) {   // Don't record the homepage or SysAdmin or External examiner activities.
+if ($_GET['id'] != '1' and !$userObject->has_role(array('SysAdmin', 'External'))) {   // Don't record the homepage or SysAdmin or External examiner activities.
   $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'student', ?, NOW(), ?)");
   $result->bind_param('ii', $userObject->get_user_ID(), $_GET['id']);
   $result->execute();  
