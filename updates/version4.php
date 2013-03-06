@@ -2986,6 +2986,9 @@ QUERY;
     if ($cfg_use_ldap === true) {
       $extra1 = ',';
     }
+    $array_new[] = "array('ltilogin', array(), 'LTI Auth'),";
+    $array_new[] = "array('guestlogin', array(), 'Guest Login'),";
+    $array_new[] = "array('impersonation', array('separator' => '_'), 'Impersonation'),";
     $array_new[] = "array('internaldb', array('table' => 'users', 'username_col' => 'username', 'passwd_col' => 'password', 'id_col' => 'id', 'encrypt' => 'SHA-512', 'encrypt_salt' => \$cfg_encrypt_salt), 'Internal Database')$extra1\n";
     if ($cfg_use_ldap === true) {
       $array_new[] = "array('ldap',array( 'table' => 'users', 'username_col' => 'username', 'id_col' => 'id', 'ldap_server' => \$cfg_ldap_server, 'ldap_search_dn' => \$cfg_ldap_search_dn, 'ldap_bind_rdn' => \$cfg_ldap_bind_rdn, 'ldap_bind_password' => \$cfg_ldap_bind_password, 'ldap_user_prefix' => \$cfg_ldap_user_prefix),'LDAP')\n";
@@ -3691,7 +3694,7 @@ QUERY;
     }
     $mysqli->query("set session old_alter_table=0;");
 
-    
+
   }
   
   // 06/03/2013 (brzab3) - add a the $cfg_autosave_backoff_factor to the cfg file
