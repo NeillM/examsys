@@ -58,7 +58,7 @@ $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $fo
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
 //lookup previous sessionid from log_metadata.started property_id
-if (isset($_GET['userid'])) {
+if (isset($_GET['userid']) and $userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
   $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
 } else {
   $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
@@ -103,8 +103,10 @@ if ($userObject->has_role('Student')) {
 
 $pass_mark = $propertyObj->get_pass_mark();
 
-$logger = new Logger($mysqli);
-$logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', $paperID);  
+if ($userObject->has_role('Student')) {  // Only log student views (i.e. not staff, sysadmin, etc).
+  $logger = new Logger($mysqli);
+  $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', $paperID);  
+}
 
 require '../config/finish.inc';
 ?>

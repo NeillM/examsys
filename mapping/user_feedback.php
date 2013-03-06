@@ -54,7 +54,6 @@ if ($userObject->has_role(array('Staff', 'SysAdmin'))) {
   }
 }
 
-
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 
@@ -95,20 +94,10 @@ $marking = $propertyObj->get_marking();
 $exam_duration = $propertyObj->get_exam_duration();
 $start_date = $propertyObj->get_start_date();
 $end_date = $propertyObj->get_end_date();
-/*
-// Get some paper properties
-$paper_title = $paper_type = $moduleID = $session = $pass_mark = $random_mark = $total_mark = $marking = $exam_duration = $start_date = $end_date = '';
-getPaperProperties($mysqli, $paperID);
-//check the paper is valid
-if ($paper_title == '') {
-  $logger->record_access_denied($userID, 'accessdenied', 'Paper not found.');  // Record attempt in access denied log.
-  header("HTTP/1.0 404 Not Found");
-  exit;
+
+if ($userObject->has_role('Student')) {  // Only log student views (i.e. not staff, sysadmin, etc).
+  $logger->record_access($userID, 'Objectives-based feedback report', $paperID);  
 }
-*/
-
-$logger->record_access($userID, 'Objectives-based feedback report', $paperID);  
-
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
 //check the user sat the paper!
@@ -185,7 +174,9 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   echo "<tr><th class=\"bevel\"></th></tr>\n";
 
   //get Cohort Data
-  $chort_question_data = getCohortData($mysqli, $moduleID, $start_date, $end_date, '%', '%', '%', $paperID, $paper_type, '');
+  $tmp_start_date  = DateTime::createFromFormat('U', $start_date);
+  $tmp_end_date    = DateTime::createFromFormat('U', $end_date);  
+  $chort_question_data = getCohortData($mysqli, $moduleID, $tmp_start_date ->format('YmdHis'), $tmp_end_date ->format('YmdHis'), '%', '%', '%', $paperID, $paper_type, '');
 
   //get users log data excluding exclued questions
   $qid_list = '';
