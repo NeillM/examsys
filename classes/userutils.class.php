@@ -393,7 +393,7 @@ Class UserUtils {
 
   static function fixcase_callback($word) {
     $word = $word[1];
-    $word = strtolower($word);
+    $word = mb_strtolower($word);
 
     if ($word == 'de') return $word;
 
@@ -412,8 +412,11 @@ Class UserUtils {
   }
 
   static function my_ucwords($s) {
-    $s = preg_replace_callback("/(\b[\w|']+\b)/s", array('UserUtils', 'fixcase_callback'), $s);
-
+    if (mb_check_encoding($s, "UTF-8")) {
+      //do nothing 
+    } else {
+      $s = preg_replace_callback("/(\b[\w|']+\b)/s", array('UserUtils', 'fixcase_callback'), $s);
+    }
     return $s;
   }
 
