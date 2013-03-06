@@ -118,17 +118,17 @@ $old_school = '';
 for ($i=0; $i<$course_no; $i++) {
   $id = $courses[$i]['id'];
   
-  if ($sortby == 'code' and substr($courses[$i]['code'], 0, 1) != $old_code_letter) {
+  if ($sortby == 'code' and strtoupper(substr($courses[$i]['code'], 0, 1)) != $old_code_letter) {
     echo '<tr><td colspan="3"><table border="0" class="subsect" style="margin-left:10px; padding-bottom:5px; width:99%"><tr><td>' . substr($courses[$i]['code'], 0, 1) . '</td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
-  } elseif ($sortby == 'name' and substr($courses[$i]['name'], 0, 1) != $old_name_letter) {
+  } elseif ($sortby == 'name' and strtoupper(substr($courses[$i]['name'], 0, 1)) != $old_name_letter) {
     echo '<tr><td colspan="3"><table border="0" class="subsect" style="margin-left:10px; padding-bottom:5px; width:99%"><tr><td>' . substr($courses[$i]['name'], 0, 1) . '</td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
   } elseif ($sortby == 'school' and $courses[$i]['school'] != $old_school) {
     echo '<tr><td colspan="3"><table border="0" class="subsect" style="margin-left:10px; padding-bottom:5px; width:99%"><tr><td><nobr>' . $courses[$i]['school'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
   }  
   echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit($id)\" class=\"l\"><td class=\"col30\">" . $courses[$i]['code'] . "</td><td class=\"col\">" . $courses[$i]['name'] . "</td><td class=\"col\"><nobr>" . $courses[$i]['school'] . "</nobr></td></tr>\n";
 
-  $old_code_letter = substr($courses[$i]['code'], 0, 1);
-  $old_name_letter = substr($courses[$i]['name'], 0, 1);
+  $old_code_letter = strtoupper(substr($courses[$i]['code'], 0, 1));
+  $old_name_letter = strtoupper(substr($courses[$i]['name'], 0, 1));
   $old_school = $courses[$i]['school'];
 }
 
