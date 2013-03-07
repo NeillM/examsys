@@ -59,7 +59,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   // Get the questions on the paper.
   $paper = array();
   $question_no = 0;
-  $result = $db->prepare("SELECT question, marks_correct FROM papers, options WHERE paper = ? AND papers.question=options.o_id ORDER BY screen, display_pos");
+  $result = $db->prepare("SELECT question, marks_correct FROM papers, options WHERE paper = ? AND papers.question = options.o_id ORDER BY screen, display_pos");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($question, $marks);
@@ -69,12 +69,11 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   }
   $result->close();
   
-  $moduleID   = array_keys(Paper_utils::get_modules($paperID, $db));
-  $mod_list = array_keys($moduleID);
+  $moduleIDs = array_keys(Paper_utils::get_modules($paperID, $db));
   
   // Get student data.
   $students = array();
-  $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($mod_list) AND calendar_year = ?");
+  $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($moduleIDs) AND calendar_year = ?");
   $result->bind_param('s', $session);
   $result->execute();
   $result->bind_result($id, $student_id, $username, $year, $grade);
