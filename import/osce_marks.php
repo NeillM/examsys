@@ -69,11 +69,10 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   }
   $result->close();
   
-  $moduleIDs = array_keys(Paper_utils::get_modules($paperID, $db));
+  $moduleIDs = implode(',', array_keys(Paper_utils::get_modules($paperID, $db)));
   
   // Get student data.
   $students = array();
-  echo "SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($moduleIDs) AND calendar_year = ?";
   $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($moduleIDs) AND calendar_year = ?");
   $result->bind_param('s', $session);
   $result->execute();
