@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -25,33 +25,34 @@
   require '../include/staff_auth.inc';
   require '../include/question_types.inc';
   require '../include/errors.inc';
-  
-  $summative_lock = 0; 
-  
-  function marks_from_file($fileName) {
-    global $mysqli;
+
+  $paperID = check_var('paperID', 'GET', true, false, true);
+
+  $summative_lock = 0;
+
+  function marks_from_file($fileName, $paperID, $string, $db) {
     $configObject=Config::get_instance();
     $configObject->get('cfg_tmpdir');
     $userObject = UserObject::get_instance();
     // Get properties of the paper.
-    $result = $mysqli->prepare("SELECT property_id, calendar_year, start_date FROM properties WHERE property_id=?");
-    $result->bind_param('i', $_GET['paperID']);
+    $result = $db->prepare("SELECT property_id, calendar_year, start_date FROM properties WHERE property_id=?");
+    $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($property_id, $session, $paper_date);
     $result->fetch();
     $result->close();
-    
+
     if ($property_id == '') {   // Paper could not be found, exit.
       unlink( $configObject->get('cfg_tmpdir') . $userObject->get_username() . '_spotter_marks.csv');
-      exit;    
+      exit;
     }
-    $moduleIDs=Paper_utils::get_modules($_GET['paperID'], $mysqli);
-    
+    $moduleIDs=Paper_utils::get_modules($paperID, $db);
+
     // Get the questions on the paper.
     $paper = array();
     $question_no = 0;
-    $result = $mysqli->prepare("SELECT question, sum(marks_correct) as sum FROM papers, options WHERE paper=? AND papers.question=options.o_id GROUP BY question ORDER BY screen, display_pos");
-    $result->bind_param('i', $_GET['paperID']);
+    $result = $db->prepare("SELECT question, sum(marks_correct) as sum FROM papers, options WHERE paper=? AND papers.question=options.o_id GROUP BY question ORDER BY screen, display_pos");
+    $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($question, $marks_correct);
     while ($row = $result->fetch()) {
@@ -60,13 +61,13 @@
       $paper[$question_no]['marks_correct'] = $marks_correct;
     }
     $result->close();
-    
+
     // Get student data.
     $students = array();
     $modids=implode(',',array_keys($moduleIDs));
-    $result = $mysqli->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id=sid.userID AND users.id=modules_student.userID AND idMod IN ($modids) AND calendar_year=?");
+    $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id=sid.userID AND users.id=modules_student.userID AND idMod IN ($modids) AND calendar_year=?");
 
-    print $mysqli->error;
+    print $db->error;
     $result->bind_param('s', $session);
     $result->execute();
     $result->bind_result($id, $student_id, $username, $year, $grade);
@@ -86,12 +87,13 @@
       echo "<ol>\n";
     }
     foreach ($lines as $separate_line) {
+      $error = '';
       if ((!isset($_POST['header_row']) or $_POST['header_row'] !=1 ) or $line_written > 0) {
         $fields = explode(',',$separate_line);
         $sid = trim($fields[0]);
         if (!isset($students[$sid]['username'])) {  // Student is not in class List.
           // Look up to see if anywhere else in Authentication database.
-          $result = $mysqli->prepare("SELECT id, student_id, users.username, yearofstudy, grade FROM users, sid WHERE users.id=sid.userID AND sid.student_id=?");
+          $result = $db->prepare("SELECT id, student_id, users.username, yearofstudy, grade FROM users, sid WHERE users.id=sid.userID AND sid.student_id=?");
           $result->bind_param('s', $sid);
           $result->execute();
           $result->store_result();
@@ -103,43 +105,106 @@
             $students[$student_id]['grade'] = $grade;
             $students[$student_id]['id'] = $id;
           }
-          $result->close();          
+          $result->close();
         }
         if (isset($students[$sid]) and $students[$sid]['username'] != '') {  // Student is in class List.
-          
-          $result = $mysqli->prepare("DELETE FROM log_metadata WHERE userID=? AND paperID=? AND started=?");
-          $result->bind_param('iis', $students[$sid]['id'], $_GET['paperID'], $paper_date);
+
+          $save_ok = true;
+          $db->autocommit(false);
+
+          $result = $db->prepare("SELECT id FROM log_metadata WHERE userID=? AND paperID=? AND started=?");
+          $result->bind_param('iis', $students[$sid]['id'], $paperID, $paper_date);
           $result->execute();
-          $result->close();
-          
-          $result = $mysqli->prepare("DELETE FROM log5 WHERE userID=? AND q_paper=? AND started=?");
-          $result->bind_param('iis', $students[$sid]['id'], $_GET['paperID'], $paper_date);
-          $result->execute();
+          $result->store_result();
+          $result->bind_result($lmd_id);
+          if ($result->num_rows > 0) {
+            $delete1 = $db->prepare("DELETE FROM log5 WHERE metadataID = ?");
+            $delete1->bind_param('i', $lmd_id);
+            $res = $delete1->execute();
+            if ($res == false) {
+              $save_ok = false;
+            }
+            $delete1->close();
+
+            if ($save_ok) {
+              $delete2 = $db->prepare("DELETE FROM log_metadata WHERE id = ?");
+              $delete2->bind_param('i', $lmd_id);
+              $res = $delete2->execute();
+              if ($res == false) {
+                $save_ok = false;
+              }
+              $delete2->close();
+            }
+          }
           $result->close();
 
+          //
+          // did the all the save to log operations succeed?
+          //
+          if ($save_ok === false) {
+            //NO - rollback
+            $db->rollback();
+            $error = $string['errorsaving'];
+            break;
+          } else {
+            //YES - commit the updates to the log tables
+            $db->commit();
+          }
+
           echo "<li>$sid -&gt; " . $students[$sid]['username'] . "</li>";
-          
-          $result = $mysqli->prepare("INSERT INTO log_metadata VALUES(NULL,?,?,?,?,?,?,?)");
+
+          $result = $db->prepare("INSERT INTO log_metadata VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)");
           $ip = '127.0.0.1';
           $attempt = 1;
-          $result->bind_param('iisssii', $students[$sid]['id'], $_GET['paperID'], $paper_date, $ip, $students[$sid]['grade'], $students[$sid]['year'], $attempt);
-          $result->execute();
+          $result->bind_param('iisssii', $students[$sid]['id'], $paperID, $paper_date, $ip, $students[$sid]['grade'], $students[$sid]['year'], $attempt);
+          $res = $result->execute();
+          if ($res == false) {
+            $save_ok = false;
+          } else {
+            $lmd_id = $db->insert_id;
+          }
           $result->close();
-          
-          for ($q=1; $q<=$question_no; $q++) {
-            $result = $mysqli->prepare("INSERT INTO log5 VALUES(NULL,?,?,?,?,?,?)");
-            $mark = floatval(trim($fields[$q]));
-            $result->bind_param('isiidi', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $mark, $paper[$q]['marks_correct']);
-            $result->execute();
-            $result->close();
+
+          if ($save_ok) {
+            for ($q=1; $q<=$question_no; $q++) {
+              $result = $db->prepare("INSERT INTO log5 VALUES(NULL, ?, ?, ?, ?)");
+              $mark = floatval(trim($fields[$q]));
+              $result->bind_param('idii', $paper[$q]['id'], $mark, $paper[$q]['marks_correct'], $lmd_id);
+              $res = $result->execute();
+              if ($res == false) {
+                $save_ok = false;
+                break;
+              }
+              $result->close();
+            }
+          }
+
+          //
+          // did the all the save to log operations succeed?
+          //
+          if ($save_ok === false) {
+            //NO - rollback
+            $db->rollback();
+            $error = $string['errorsaving'];
+            break;
+          } else {
+            //YES - commit the updates to the log tables
+            $db->commit();
           }
         } else {
-          echo "<li style=\"color:C00000\">$sid -&gt; username not found!</li>";
+          echo "<li style=\"color:C00000\">$sid -&gt; {$string['notfound']}</li>";
         }
       }
+
       $line_written++;
     }
+    if ($error != '') {
+      echo "<li style=\"color:C00000\">$error</li>";
+    }
     echo "</ol>\n";
+
+    //turn auto commit back on so future queries function as before
+    $db->autocommit(true);
   }
 
   if (isset($_POST['submit']) and $_POST['submit']) {
@@ -148,7 +213,7 @@
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
-        marks_from_file( $configObject->get('cfg_tmpdir') . $userObject->get_username() . '_spotter_marks.csv');
+        marks_from_file( $configObject->get('cfg_tmpdir') . $userObject->get_username() . '_spotter_marks.csv', $paperID, $string, $mysqli);
         unlink( $configObject->get('cfg_tmpdir') . $userObject->get_username() . '_spotter_marks.csv');
         ?>
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -159,7 +224,7 @@
         </head>
         <body>
         <p><?php echo $string['marksloaded']; ?></p>
-        <p><input type="submit" name="submit" onclick="window.location='../paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'" value="OK" style="width:100px" /></p>
+        <p><input type="submit" name="submit" onclick="window.location='../paper/details.php?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'" value="OK" style="width:100px" /></p>
         <?php
       }
     }
@@ -170,9 +235,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['loadofflinemarks']; ?></title>
-  
+
   <link rel="stylesheet" href="../css/body.css" type="text/css">
   <link rel="stylesheet" href="../css/dialog.css" type="text/css">
   <link rel="stylesheet" href="../css/submenu.css" type="text/css">
@@ -200,7 +265,7 @@
 
 
 <div align="center">
-<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data">
+<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data">
 
 <p><input type="file" size="50" name="csvfile" /><br />
 <input type="checkbox" name="header_row" value="1" checked />&nbsp;<?php echo $string['headerrow']; ?></p>
