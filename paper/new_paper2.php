@@ -38,7 +38,7 @@ require '../lang/' . $language. '/include/timezones.inc';
   <title><?php echo $string['createnewpaper'] . $configObject->get('cfg_install_type'); ?></title>
 <?php
   // Delete any half completed papers owned by current user.
-  $result = $mysqli->prepare("DELETE FROM properties WHERE deleted='0000-00-00 00:00:00' AND paper_ownerID=?");
+  $result = $mysqli->prepare("DELETE FROM properties WHERE deleted='0000-00-00 00:00:00' AND paper_ownerID = ?");
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();  
 
@@ -193,9 +193,9 @@ require '../lang/' . $language. '/include/timezones.inc';
   
   if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
     // Summative paper so set null dates
-    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,NULL,NULL,'Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',?,NULL,NULL,'0',0,'',NULL,NULL)");
+    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL, ?, NULL, NULL, 'Europe/London', ?, '', '', 'white', 'black', '#316AC5', '#C00000', '1', '1', '1', 40, 70, ?, ?, '', ?, 1, NULL, '00000000000000', NOW(), 0, 0, '1', '1', '1', '1', '0', ?, NULL, NULL, '0', 0, '', NULL, NULL)");
   } else {
-    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20100101090000','20250101090000','Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',?,NULL,NULL,'0',0,'',NULL,NULL)");
+    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL, ?, '20100101090000', '20250101090000', 'Europe/London', ?, '', '', 'white', 'black', '#316AC5', '#C00000', '1', '1', '1', 40, 70, ?, ?, '', ?, 1, NULL, '00000000000000', NOW(), 0, 0, '1', '1', '1', '1', '0', ?, NULL, NULL, '0', 0, '', NULL, NULL)");
   }
   $result->bind_param('ssssss', $paper_name, $paper_types[$_POST['paper_type']], $userObject->get_user_ID(), $folder, $default_rubric, $session);
   $result->execute();  
