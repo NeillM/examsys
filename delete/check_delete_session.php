@@ -22,20 +22,22 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  
-  $tmp_identifier = $_GET['identifier'];
-  $tmp_session = $_GET['session'];
-  $tmp_moduleID = $_GET['moduleID'];
-  
-  $question_data = $mysqli->prepare("SELECT DATE_FORMAT(occurrence,'{$configObject->get('cfg_long_date_time')}'), title FROM sessions WHERE identifier=? AND calendar_year=? AND moduleID=?");
-  $question_data->bind_param('dss', $tmp_identifier, $tmp_session, $tmp_moduleID);
-  $question_data->execute();
-  $question_data->bind_result($occurrence, $session_title);
-  $question_data->fetch();
-  $question_data->close();
-  
-  $mysqli->close();
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+
+$tmp_identifier = check_var('identifier', 'GET', true, false, true);
+$tmp_session    = check_var('session', 'GET', true, false, true);
+$tmp_moduleID   = check_var('moduleID', 'GET', true, false, true);
+
+
+$question_data = $mysqli->prepare("SELECT DATE_FORMAT(occurrence,'{$configObject->get('cfg_long_date_time')}'), title FROM sessions WHERE identifier = ? AND calendar_year = ? AND idMod = ?");
+$question_data->bind_param('dsi', $tmp_identifier, $tmp_session, $tmp_moduleID);
+$question_data->execute();
+$question_data->bind_result($occurrence, $session_title);
+$question_data->fetch();
+$question_data->close();
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
