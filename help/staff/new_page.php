@@ -26,7 +26,7 @@
   require '../../include/errors.inc';
   require '../../include/help.inc';
 
-  header('Content-Type: text/html; charset=' . {$configObject->get('cfg_page_charset')});
+  header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 
   if (isset($_POST['save_changes'])) {
     $tmp_title = $_POST['title'];
@@ -35,7 +35,7 @@
     $tmp_body = $_POST['edit1'];
     $tmp_body_plain = strip_tags($tmp_body);
 
-    $result = $mysqli->prepare("INSERT INTO staff_help VALUES (NULL,?,?,?,'page',NULL,NULL,?,NULL)");
+    $result = $mysqli->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, ?, NULL)");
     $result->bind_param('ssss', $tmp_title, $tmp_body, $tmp_body_plain, $_POST['page_roles']);
     $result->execute();  
     $result->close();
