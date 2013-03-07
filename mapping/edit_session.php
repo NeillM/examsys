@@ -40,8 +40,8 @@ if (isset($_POST['Edit'])) {
   $occurrence = $_POST['year'] . $_POST['month'] . $_POST['day'] . $_POST['time'];
  
   //update session
-  $stmt = $mysqli->prepare("UPDATE sessions SET title = ?,source_url = ?, occurrence = ? WHERE identifier = ? AND moduleID = ? AND identifier = ? AND calendar_year = ?");
-  $stmt->bind_param('sssssss', $_POST['session_title'], $_POST['url'], $occurrence, $identifier, $moduleID, $identifier, $_POST['session']);
+  $stmt = $mysqli->prepare("UPDATE sessions SET title = ?,source_url = ?, occurrence = ? WHERE identifier = ? AND idMod = ? AND identifier = ? AND calendar_year = ?");
+  $stmt->bind_param('ssssiss', $_POST['session_title'], $_POST['url'], $occurrence, $identifier, $moduleID, $identifier, $_POST['session']);
   $stmt->execute();
   $stmt->close();
 
@@ -61,20 +61,20 @@ if (isset($_POST['Edit'])) {
       case 'obj':
         if ($value == '') {
           //delete objs and mappings
-          $stmt = $mysqli->prepare("DELETE FROM objectives WHERE obj_id = ? AND moduleID = ? AND identifier = ? AND calendar_year = ?");
-          $stmt->bind_param('isss', $objId, $moduleID, $identifier, $_POST['session']);
+          $stmt = $mysqli->prepare("DELETE FROM objectives WHERE obj_id = ? AND idMod = ? AND identifier = ? AND calendar_year = ?");
+          $stmt->bind_param('iiss', $objId, $moduleID, $identifier, $_POST['session']);
           $stmt->execute();
           $stmt->close();
 
-          $stmt = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND module_id = ? AND calendar_year = ? AND vle_api=''");
-          $stmt->bind_param('iss', $objId, $moduleID, $_POST['session']);
+          $stmt = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND idMod = ? AND calendar_year = ? AND vle_api=''");
+          $stmt->bind_param('iis', $objId, $moduleID, $_POST['session']);
           $stmt->execute();
           $stmt->close();
         } else {
           $sequence++;
           //update obj
-          $stmt = $mysqli->prepare("UPDATE objectives SET objective = ?, sequence = ? WHERE obj_id = ? AND moduleID = ? AND identifier = ? AND calendar_year = ?");
-          $stmt->bind_param('sissss', $value, $sequence, $objId, $moduleID, $identifier, $_POST['session']);
+          $stmt = $mysqli->prepare("UPDATE objectives SET objective = ?, sequence = ? WHERE obj_id = ? AND idMod = ? AND identifier = ? AND calendar_year = ?");
+          $stmt->bind_param('sisiss', $value, $sequence, $objId, $moduleID, $identifier, $_POST['session']);
           $stmt->execute();
           $stmt->close();
         }
