@@ -160,16 +160,22 @@ Class UpdaterUtils {
         ob_flush();
         flush();
       }
+    } elseif ($mysqli->warning_count()) {
+      echo '<li class="warning">WARNING: ' . $sql . '</li>';
+      $e = $mysqli->get_warnings();
+      do {
+        echo "Warning No: $e->errno: - $e->message <br />\n";
+      } while ($e->next());
     } else {
       echo '<li class="error">ERROR: ' . $sql . '</li>';
       if ($this->mysqli->error) {
         try {
-          $err=$this->mysqli->error;
-          $mess=$this->mysqli->errno;
+          $err = $this->mysqli->error;
+          $mess = $this->mysqli->errno;
           throw new Exception("MySQL error $err", $mess);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-         // echo nl2br($e->getTraceAsString());
+          // echo nl2br($e->getTraceAsString());
         }
       }
     }

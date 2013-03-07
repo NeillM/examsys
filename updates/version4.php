@@ -2862,7 +2862,7 @@ QUERY;
     //translate moduleID to idMod in all tables
     $updater_utils->execute_query("ALTER TABLE sessions DROP PRIMARY KEY", false);
 
-    $tables = array('objectives ' => 'moduleID', 'relationships' => 'module_id', 'sessions' => 'moduleID', 'sms_imports' => 'moduleid', 'student_modules' => 'moduleid', 'teams' => 'name');
+    $tables = array('objectives' => 'moduleID', 'relationships' => 'module_id', 'sessions' => 'moduleID', 'sms_imports' => 'moduleid', 'student_modules' => 'moduleid', 'teams' => 'name');
     foreach ($tables as $table => $col) {
       foreach ($modules as $code => $id) {
         $updater_utils->execute_query("UPDATE $table SET $col = '$id' WHERE $col = '$code'", false);
@@ -2874,7 +2874,7 @@ QUERY;
     $tables['reference_modules'] = 'moduleID'; //this just needs renaming
     $tables['users_metadata'] = 'moduleID'; //this just needs renaming
     foreach ($tables as $table => $col) {
-      $updater_utils->execute_query("ALTER TABLE $table CHANGE $col idMod INT(11) unsigned DEFAULT NULL", true);
+      $updater_utils->execute_query("ALTER IGNORE TABLE $table CHANGE $col idMod INT(11) unsigned DEFAULT NULL", true);
     }
     //rename teams and student_modues
     $updater_utils->execute_query('RENAME TABLE teams TO modules_staff, student_modules TO modules_student', true);
@@ -3177,6 +3177,10 @@ QUERY;
   if (!$updater_utils->does_column_type_value_exist('log_metadata', 'lab_name', 'varchar(255)')) {
     $updater_utils->execute_query("ALTER TABLE log_metadata ADD COLUMN lab_name varchar(255)", true);
 
+    if (!$updater_utils->does_index_exist('log_metadata' , 'idx_ipaddress')) {
+      $updater_utils->execute_query("ALTER TABLE log_metadata ADD INDEX idx_ipaddress (`ipaddress`)", true);
+    }
+    $mysqli->commit();
     // Populate existing records.
     $lab_lookup = array();
     $result2 = $mysqli->prepare("SELECT address, name FROM (ip_addresses, labs) WHERE ip_addresses.lab = labs.id");
@@ -3211,6 +3215,9 @@ QUERY;
     }
     $result2->free_result();
     $result2->close();
+    if ($updater_utils->does_index_exist('log_metadata' , 'idx_ipaddress')) {
+      $updater_utils->execute_query("ALTER TABLE log_metadata DROP INDEX idx_ipaddress", true);
+    }
   }
   $mysqli->commit();
 
