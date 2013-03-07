@@ -511,7 +511,8 @@ if ($_POST['paper_type'] == 'summative') {
   $staff_modules_sql = "'" . implode("','", array_keys($staff_modules)) . "'";
   
   $module_no = 0;
-  if ($userObject->has_role('SysAdmin')) {
+  $module_array = $userObject->get_staff_accessable_modules();
+/*  if ($userObject->has_role('SysAdmin')) {
     $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules ORDER BY moduleID");
   } elseif ($userObject->has_role('Admin')) {
     $schoolIDs = implode(',', SchoolUtils::get_admin_schools($userObject->get_user_ID(), $mysqli));
@@ -520,16 +521,17 @@ if ($_POST['paper_type'] == 'summative') {
     $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules WHERE modules.id IN ($staff_modules_sql)  ORDER BY moduleID");
   }
   $result->execute();
-  $result->bind_result($idMod, $module_id, $module_name);
-  while ($result->fetch()) {
-    if (isset($_POST['module']) and $_POST['module'] == $idMod) {
-      echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $idMod . "\" checked />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
+  $result->bind_result($idMod, $module_id, $module_name);*/
+  //while ($result->fetch()) {
+  foreach($module_array as $module) {
+    if (isset($_POST['module']) and $_POST['module'] == $module['idMod']) {
+      echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked />&nbsp;" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</div>\n";
     } else {
-      echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $idMod . "\" />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
+      echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" />&nbsp;" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</div>\n";
     }
     $module_no++;
   }
-  $result->close();
+  //$result->close();
   echo "</div>\n";
 
   echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" />\n";

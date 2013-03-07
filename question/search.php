@@ -307,7 +307,6 @@ if (isset($_POST['submit'])) {
   } else {
     $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
   }
-
   $result = $mysqli->prepare($sql);
   if (count($variables) > 0) {
     array_unshift($variables, $params);
@@ -316,6 +315,10 @@ if (isset($_POST['submit'])) {
     }
     call_user_func_array(array($result,'bind_param'), $tmp);
   }
+
+  echo $sql;
+  var_dump($tmp);
+
   $result->execute();
   $result->store_result();
   $result->bind_result($title, $initials, $surname, $q_type, $q_id, $leadin, $last_edited, $ownerID, $locked, $status);
