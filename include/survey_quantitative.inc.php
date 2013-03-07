@@ -22,6 +22,17 @@
 * @package
 */
 
+/**
+ * Get qualitative data for survey reports
+ * @param  integer $paper_id   ID of paper we're reporting on
+ * @param  string  $course     Name of course
+ * @param  string  $start_date Start date for report
+ * @param  string  $end_date   End date for report
+ * @param  string  $exclude    SQL snippet to exclude certain users
+ * @param  array   $log_array  Reference to array that will be populatesd with the data
+ * @param  mysqli  $db         Database connection
+ * @return integer             Number of records we're returning
+ */
 function get_quantitative_log_data($paper_id, $course, $start_date, $end_date, $exclude, &$log_array, $db) {
   $hits = 0;
   // Capture the log data first.
