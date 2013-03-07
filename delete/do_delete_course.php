@@ -54,7 +54,7 @@ $mysqli->close();
   </script>
 </head>
 
-<body onload="javascript:updateParent();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
+<body>
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
