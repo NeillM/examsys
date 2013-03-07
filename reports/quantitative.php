@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -28,7 +28,7 @@
   function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $log, $correct_buf, $screen, $candidates) {
       global $old_likert_scale, $old_score_method, $old_display_method, $table_on, $string;
       if ($q_type != 'likert' and $q_type != 'textbox' and $table_on == 1) {
-        echo "</table>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n"; 
+        echo "</table>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
       }
       if ($q_type != 'textbox') {
         if ($theme != '') {
@@ -79,7 +79,7 @@
                     echo ', ' . $individual_blank_option . '=' . $log[$screen][$q_id][$blank_count+1][$individual_blank_option];
                   }
                   $i++;
-                }                
+                }
                 echo '<span style="color:#800000; font-weight:bold">[/blank]</span>' . $remainder;
               }
               $blank_count++;
@@ -105,7 +105,7 @@
               } else {
                 echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i]['t'] . "&nbsp;(" . round(($log[$screen][$q_id][$i]['t']/$candidates)*100) . "%)</td><td class=\"figures\">" . $log[$screen][$q_id][$i]['f'] . "&nbsp;(" . round(($log[$screen][$q_id][$i]['f']/$candidates)*100) . "%)</td><td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "&nbsp;(" . round(($log[$screen][$q_id][$i]['u']/$candidates)*100) . "%)</td><td>$individual_option</td></tr>\n";
               }
-            }            
+            }
             break;
           case 'labelling':
 ?>
@@ -252,7 +252,7 @@
             }
             $q_option_no = count($options);
             $log_option_no = count($log[$screen][$q_id]);
-            
+
             if ($log_option_no > $q_option_no) {
               foreach ($log[$screen][$q_id] as $key=>$value) {
                 if ($key > $q_option_no) {
@@ -266,14 +266,14 @@
           case 'rank':
             $old_likert_scale = '';
             $rank_no = count($correct_buf);
-                      
+
             $i = 0;
             $require_na = false;
             foreach ($options as $individual_option) {
               $i++;
               if (isset($log[$screen][$q_id][$i]['correct']) and $log[$screen][$q_id][$i]['correct'] == 9990) $require_na = true;
             }
-            
+
             $i = 0;
             foreach ($options as $individual_option) {
               echo "<tr><td colspan=\"4\">$individual_option</td></tr>\n";
@@ -391,7 +391,7 @@
         }
         echo "</ol>\n";
       }
-    echo "</td></tr>\n";  
+    echo "</td></tr>\n";
   }
 ?>
 
@@ -401,9 +401,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['quantitativereport']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -415,7 +415,7 @@
     .figures {text-align:right; width:60px}
     .q_no {text-align:right; width:40px}
   </style>
-  
+
   <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
@@ -436,7 +436,8 @@
     $result->bind_result($tmp_userID, $answer_no);
     while ($result->fetch()) {
       if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
-        $exclude .= ' AND log3.userID!=' . $tmp_userID;
+        // log_metadata aliased as lm in queries below for brevity
+        $exclude .= ' AND lm.userID!=' . $tmp_userID;
       }
     }
     $result->close();
@@ -445,15 +446,19 @@
   $log_array = array();
   $hits = 0;
   // Capture the log data first.
-  if ($_GET['repcourse'] == 'Staff') {
-    $result = $mysqli->prepare("SELECT DISTINCT log3.userID, log3.q_id, user_answer, q_type, screen, score_method FROM (log3, questions, users) WHERE log3.q_id=questions.q_id AND q_paper=? AND users.id=log3.userID AND (users.roles LIKE 'Staff%' OR users.roles LIKE '%SysAdmin%')$exclude AND started>=? AND started<=?");
-    $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
-    $result->execute();
-  } else {
-    $result = $mysqli->prepare("SELECT DISTINCT log3.userID, log3.q_id, user_answer, q_type, screen, score_method FROM (log3, questions, users) WHERE log3.q_id=questions.q_id AND q_paper=? AND users.id=log3.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started>=? AND started<=?");
-    $result->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
-    $result->execute();
-  }
+  $sql = <<< SQL
+SELECT DISTINCT lm.userID, l.q_id, l.user_answer, q.q_type, l.screen, q.score_method
+FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
+INNER JOIN questions q ON l.q_id = q.q_id
+INNER JOIN users u on lm.userID = u.id
+WHERE lm.paperID = ?
+AND (u.roles='Student' OR u.roles='graduate')$exclude
+AND u.grade LIKE ?
+AND lm.started >= ? AND lm.started <= ?
+SQL;
+  $result = $mysqli->prepare($sql);
+  $result->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+  $result->execute();
   $result->bind_result($tmp_userID, $question_ID, $tmp_answer, $q_type, $screen, $score_method);
   $result->store_result();
   while ($result->fetch()) {
@@ -597,7 +602,7 @@
         $result2->store_result();
         $result2->fetch();
         $result2->close();
-      
+
         for ($i=0; $i<$tmp_option_no; $i++) {
           $tmp_individual_answer = substr($tmp_answer, $i, 1);
           if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
@@ -606,17 +611,17 @@
             $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer] = 1;
           }
         }
-        
+
         if (strlen($tmp_answer) > $tmp_option_no) {
           $other = substr($tmp_answer, $tmp_option_no+1);
-          
+
           if (isset($log_array[$screen][$question_ID][$i+1][$other])) {
             $log_array[$screen][$question_ID][$i+1][$other]++;
           } else {
             $log_array[$screen][$question_ID][$i+1][$other] = 1;
-          }         
+          }
         }
-        
+
         break;
       case 'extmatch':
         $tmp_answer_parts = array();
@@ -695,6 +700,17 @@
   }
   $result->close();
 
+  $module_code = '';
+  $module = (isset($_GET['module']) and $_GET['module'] != '') ? $_GET['module'] : '';
+  if ($module != '') {
+    $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE id=? LIMIT 1");
+    $result->bind_param('i', $module);
+    $result->execute();
+    $result->bind_result($module_code);
+    $result->fetch();
+    $result->close();
+  }
+
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     $folder = $_GET['folder'];
@@ -708,7 +724,7 @@
   echo "<table class=\"header\" style=\"font-size:90%\">\n";
   echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if ($folder != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  if (isset($_GET['module']) and $_GET['module'] != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
+  if ($module != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
   echo "<span style=\"margin-left:10px; font-size:220%; color:black; font-weight:bold\">" . $string['quantitativereport'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(33); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
   echo '<tr><th colspan="11" class="bevel"></th></tr>';
@@ -725,7 +741,7 @@
   $table_on = 1;
   $options_buffer = array();
   $correct_buffer = array();
-  
+
   $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, score_method, display_method, q_media, q_media_width, q_media_height, correct FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
@@ -769,7 +785,7 @@
         if (isset($log_array[$old_screen][$old_q_id][1]['other'])) $respondents += count($log_array[$old_screen][$old_q_id][1]['other']);
         echo "<tr><td colspan=\"2\">($respondents " . $string['respondents'] . ")</td></tr>\n";
         $display_respondents = 0;
-        
+
         if ($respondents == 0) {
           exit;
         }
