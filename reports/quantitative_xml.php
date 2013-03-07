@@ -23,6 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
+require '../include/survey_quantitative.inc.php';
 require '../include/errors.inc';
 check_var('paperID', 'GET', true, false, false);
 
@@ -303,11 +304,11 @@ echo '<?mso-application progid="Word.Document"?>
 echo $paper;
 $tmp_start = substr($_GET['startdate'], 6, 2) . '/' . substr($_GET['startdate'], 4, 2) . '/' . substr($_GET['startdate'], 0, 4) . ' ' . substr($_GET['startdate'], 8, 2) . ':' . substr($_GET['startdate'], 10, 2);
 $tmp_end = substr($_GET['enddate'], 6, 2) . '/' . substr($_GET['enddate'], 4, 2) . '/' . substr($_GET['enddate'], 0, 4) . ' ' . substr($_GET['enddate'], 8, 2) . ':' . substr($_GET['enddate'], 10, 2);
-echo '</o:Title><o:Author>Rogo ' . $configObject->get('rogo_version') . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end .'.</o:Description><o:LastAuthor>Rogo ' . $rogo_version . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
+echo '</o:Title><o:Author>Rogo ' . $configObject->get('rogo_version') . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end .'.</o:Description><o:LastAuthor>Rogo ' . $configObject->get('rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
 echo '</o:Created><o:LastSaved>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
-echo '</o:LastSaved><o:Pages>1</o:Pages><o:Company>' . $cfg_company . '</o:Company>';
+echo '</o:LastSaved><o:Pages>1</o:Pages><o:Company>' . $configObject->get('cfg_company') . '</o:Company>';
 echo '</o:DocumentProperties><w:fonts><w:defaultFonts w:ascii="Times New Roman" w:fareast="Times New Roman" w:h-ansi="Times New Roman" w:cs="Times New Roman"/></w:fonts><w:styles><w:versionOfBuiltInStylenames w:val="4"/><w:latentStyles w:defLockedState="off" w:latentStyleCount="156"/><w:style w:type="paragraph" w:default="on" w:styleId="Normal"><w:name w:val="Normal"/><w:rsid w:val="000322AA"/><w:rPr><w:rFonts w:ascii="Arial" w:h-ansi="Arial"/><wx:font wx:val="Arial"/><w:sz w:val="18"/><w:sz-cs w:val="24"/><w:lang w:val="EN-GB" w:fareast="EN-GB" w:bidi="AR-SA"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><wx:uiName wx:val="Heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:rsid w:val="000322AA"/><w:pPr><w:pStyle w:val="Heading1"/><w:keepNext/><w:spacing w:before="240" w:after="60"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:rFonts w:cs="Arial"/><wx:font wx:val="Arial"/><w:b/><w:b-cs/><w:kern w:val="32"/><w:sz w:val="32"/><w:sz-cs w:val="32"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><wx:uiName wx:val="Heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:rsid w:val="000322AA"/><w:pPr><w:pStyle w:val="Heading2"/><w:keepNext/><w:spacing w:before="240" w:after="60"/><w:outlineLvl w:val="1"/></w:pPr><w:rPr><w:rFonts w:cs="Arial"/><wx:font wx:val="Arial"/><w:b/><w:b-cs/><w:sz w:val="24"/></w:rPr></w:style><w:style w:type="character" w:default="on" w:styleId="DefaultParagraphFont"><w:name w:val="Default Paragraph Font"/><w:semiHidden/></w:style><w:style w:type="table" w:default="on" w:styleId="TableNormal"><w:name w:val="Normal Table"/><wx:uiName wx:val="Table Normal"/><w:semiHidden/><w:rPr><wx:font wx:val="Times New Roman"/></w:rPr><w:tblPr><w:tblInd w:w="0" w:type="dxa"/><w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:left w:w="108" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/><w:right w:w="108" w:type="dxa"/></w:tblCellMar></w:tblPr></w:style><w:style w:type="list" w:default="on" w:styleId="NoList"><w:name w:val="No List"/><w:semiHidden/></w:style><w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:basedOn w:val="TableNormal"/><w:rsid w:val="000322AA"/><w:rPr><wx:font wx:val="Times New Roman"/></w:rPr><w:tblPr><w:tblInd w:w="0" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/></w:tblBorders><w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:left w:w="108" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/><w:right w:w="108" w:type="dxa"/></w:tblCellMar></w:tblPr></w:style></w:styles><w:docPr><w:view w:val="print"/><w:zoom w:percent="100"/><w:displayBackgroundShape/><w:doNotEmbedSystemFonts/><w:proofState w:spelling="clean" w:grammar="clean"/><w:attachedTemplate w:val=""/><w:defaultTabStop w:val="720"/><w:characterSpacingControl w:val="DontCompress"/><w:optimizeForBrowser/><w:allowPNG/><w:targetScreenSz w:val="1024x768"/><w:validateAgainstSchema/><w:saveInvalidXML w:val="off"/><w:ignoreMixedContent w:val="off"/><w:alwaysShowPlaceholderText w:val="off"/><w:footnotePr><w:footnote w:type="separator"><w:p><w:r><w:separator/></w:r></w:p></w:footnote><w:footnote w:type="continuation-separator"><w:p><w:r><w:continuationSeparator/></w:r></w:p></w:footnote></w:footnotePr><w:endnotePr><w:endnote w:type="separator"><w:p><w:r><w:separator/></w:r></w:p></w:endnote><w:endnote w:type="continuation-separator"><w:p><w:r><w:continuationSeparator/></w:r></w:p></w:endnote></w:endnotePr><w:compat><w:breakWrappedTables/><w:snapToGridInCell/><w:wrapTextWithPunct/><w:useAsianBreakRules/><w:useWord2002TableStyleRules/></w:compat><wsp:rsids><wsp:rsidRoot wsp:val="00E97566"/><wsp:rsid wsp:val="00634024"/><wsp:rsid wsp:val="006F2D72"/><wsp:rsid wsp:val="00E97566"/></wsp:rsids></w:docPr>';
 
 // Document body text here.
@@ -315,199 +316,9 @@ echo '<w:body><wx:sect><wx:sub-section>';
 echo '<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>' . wordToUtf8($paper) . '</w:t></w:r></w:p>';
 
 $log_array = array();
-$hits = 0;
-// Capture the log data first.
-$result = $mysqli->prepare("SELECT DISTINCT log3.userID, log3.q_id, user_answer, q_type, screen, display_method FROM (log3, log_metadata, questions, users) WHERE log3.q_paper=log_metadata.paperID AND log3.userID=log_metadata.userID AND log3.started=log_metadata.started AND log3.q_id=questions.q_id AND q_paper=? AND users.id=log3.userID AND log_metadata.year LIKE ? AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND log_metadata.started>=? AND log_metadata.started<=?");
-$result->bind_param('issss', $_GET['paperID'], $_GET['repyear'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
-$result->execute();
-$result->store_result();
-$hits = $result->num_rows;
-$result->bind_result($tmp_username, $question_ID, $tmp_answer, $q_type, $screen, $display_method);
-while ($row = $result->fetch()) {
-  $tmp_answer = str_replace('&','&amp;',$tmp_answer);
-  switch ($q_type) {
-    case 'blank':
-      $tmp_answer_parts = array();
-      $tmp_answer_parts = explode('|',$tmp_answer);
-      $i = 0;
-      foreach ($tmp_answer_parts as $tmp_individual_answer) {
-        $i++;
-        if (isset($log_array[$screen][$question_ID][$i][$tmp_individual_answer])) {
-          $log_array[$screen][$question_ID][$i][$tmp_individual_answer]++;
-        } else {
-          $log_array[$screen][$question_ID][$i][$tmp_individual_answer] = 1;
-        }
-      }
-      break;
-    case 'calculation':
-      $tmp_display_method = array();
-      $tmp_display_method = explode(',',$display_method);
-      $tolerance = $tmp_display_method[1];
-      $tmp_first_split = explode('|', $tmp_answer);
-      if ($tmp_first_split[0] == $tmp_first_split[1]) {
-        $log_array[$screen][$question_ID][1]['correct']++;
-      } else {
-        if ($tmp_first_split[0] == '') {
-          if (isset($log_array[$screen][$question_ID][1]['u'])) {
-            $log_array[$screen][$question_ID][1]['u']++;
-          } else {
-            $log_array[$screen][$question_ID][1]['u'] = 1;
-          }
-        } elseif (abs($tmp_first_split[0] - $tmp_first_split[1]) <= $tolerance) {
-          if (isset($log_array[$screen][$question_ID][1]['tolerance'])) {
-            $log_array[$screen][$question_ID][1]['tolerance']++;
-          } else {
-            $log_array[$screen][$question_ID][1]['tolerance'] = 1;
-          }
-        } else {
-          if (isset($log_array[$screen][$question_ID][1]['incorrect'])) {
-            $log_array[$screen][$question_ID][1]['incorrect']++;
-          } else {
-            $log_array[$screen][$question_ID][1]['incorrect'] = 1;
-          }
-        }
-      }
-      break;
-    case 'dichotomous':
-      for ($i=0; $i<strlen($tmp_answer); $i++) {
-        $tmp_individual_answer = substr($tmp_answer, $i, 1);
-        if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
-          $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
-        } else {
-          $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer] = 1;
-        }
-      }
-      break;
-    case 'labelling':
-      $tmp_first_split = explode(';', $tmp_answer);
-      $tmp_second_split = explode('$', $tmp_first_split[1]);
-      $sections = count($tmp_second_split);
-      for ($i=2; $i<=count($tmp_second_split);$i+=4) {
-        $x_coord = $tmp_second_split[$i-2];
-        $y_coord = $tmp_second_split[$i-1];
-        $tmp_individual_answer = trim($tmp_second_split[$i]);
-        $element = $x_coord . 'x' . $y_coord;
-        if (isset($log_array[$screen][$question_ID][$element][$tmp_individual_answer])) {
-          $log_array[$screen][$question_ID][$element][$tmp_individual_answer]++;
-        } else {
-          $log_array[$screen][$question_ID][$element][$tmp_individual_answer] = 1;
-        }
-      }
-      break;
-    case 'likert':
-      if (isset($log_array[$screen][$question_ID][1][$tmp_answer])) {
-        $log_array[$screen][$question_ID][1][$tmp_answer]++;
-      } else {
-        $log_array[$screen][$question_ID][1][$tmp_answer] = 1;
-      }
-      break;
-    case 'hotspot':
-      if (substr($tmp_answer,0,1) == '1') {
-        $log_array[$screen][$question_ID][1]['1']++;
-      } elseif (substr($tmp_answer,0,1) == '0') {
-        $log_array[$screen][$question_ID][1]['0']++;
-      } else {
-        $log_array[$screen][$question_ID][1]['u']++;
-      }
-      if ($log_array[$screen][$question_ID][1]['coords'] == '') {
-        $log_array[$screen][$question_ID][1]['coords'] = substr($tmp_answer,2);
-      } else {
-        $log_array[$screen][$question_ID][1]['coords'] .= ';' . substr($tmp_answer,2);
-      }
-      break;
-    case 'mcq':
-      if (substr($tmp_answer,0,5) == 'other') {
-        $log_array[$screen][$question_ID][1]['other'][] = substr($tmp_answer,6);
-      } elseif ($tmp_answer == 0) {
-        if (isset($log_array[$screen][$question_ID][1]['u'])) {
-          $log_array[$screen][$question_ID][1]['u']++;
-        } else {
-          $log_array[$screen][$question_ID][1]['u'] = 1;
-        }
-      } else {
-        if (isset($log_array[$screen][$question_ID][1][$tmp_answer])) {
-          $log_array[$screen][$question_ID][1][$tmp_answer]++;
-        } else {
-          $log_array[$screen][$question_ID][1][$tmp_answer] = 1;
-        }
-      }
-      break;
-    case 'mrq':
-      for ($i=0; $i<strlen($tmp_answer); $i++) {
-        $tmp_individual_answer = substr($tmp_answer, $i, 1);
-        if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
-          $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
-        } else {
-          $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer] = 1;
-        }
-      }
-      break;
-    case 'extmatch':
-      $tmp_answer_parts = array();
-      $tmp_answer_parts = explode('|',$tmp_answer);
-      $i = 0;
-      foreach ($tmp_answer_parts as $tmp_individual_answer) {
-        $i++;
-        $tmp_sub_parts = array();
-        $tmp_sub_parts = explode('$',$tmp_individual_answer);
-        foreach ($tmp_sub_parts as $tmp_individual_part) {
-          if ($tmp_individual_answer == 'u') {
-            if (isset($log_array[$screen][$question_ID][$i]['u'])) {
-              $log_array[$screen][$question_ID][$i]['u']++;
-            } else {
-              $log_array[$screen][$question_ID][$i]['u'] = 1;
-            }
-          } else {
-            if (isset($log_array[$screen][$question_ID][$i][$tmp_individual_part])) {
-              $log_array[$screen][$question_ID][$i][$tmp_individual_part]++;
-            } else {
-              $log_array[$screen][$question_ID][$i][$tmp_individual_part] = 1;
-            }
-          }
-        }
-      }
-      break;
-    case 'matrix':
-      $tmp_answer_parts = array();
-      $tmp_answer_parts = explode('|',$tmp_answer);
-      $row_no = 0;
-      foreach ($tmp_answer_parts as $tmp_individual_answer) {
-        if ($tmp_individual_answer != '') {
-          if (isset($log_array[$screen][$question_ID][$row_no][$tmp_individual_answer])) {
-            $log_array[$screen][$question_ID][$row_no][$tmp_individual_answer]++;
-          } else {
-            $log_array[$screen][$question_ID][$row_no][$tmp_individual_answer] = 1;
-          }
-        }
-        $row_no++;
-      }
-      break;
-    case 'rank':
-      $tmp_answer_parts = array();
-      $tmp_answer_parts = explode(',',$tmp_answer);
-      $i = 0;
-      foreach ($tmp_answer_parts as $tmp_individual_answer) {
-        if ($tmp_individual_answer == '9999') {
-          if (isset($log_array[$screen][$question_ID][$i]['u'])) {
-            $log_array[$screen][$question_ID][$i]['u']++;
-          } else {
-            $log_array[$screen][$question_ID][$i]['u']++;
-          }
-        } else {
-          if (isset($log_array[$screen][$question_ID][$i][$tmp_individual_answer])) {
-            $log_array[$screen][$question_ID][$i][$tmp_individual_answer]++;
-          } else {
-            $log_array[$screen][$question_ID][$i][$tmp_individual_answer] = 1;
-          }
-        }
-        $i++;
-      }
-      break;
-    case 'textbox':
-      $log_array[$screen][$question_ID][1]['other'][] = $tmp_answer;
-      break;
-  }
-}
+$hits = get_quantitative_log_data($_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $exclude, $log_array, $mysqli);
+
+$table_on = 0;
 
 if ($hits > 0) {
   // Capture the paper makeup.
@@ -517,7 +328,6 @@ if ($hits > 0) {
   $respondents = 0;
   $old_likert_scale = '';
   $old_screen = 0;
-  $table_on = 0;
   $options_buffer = array();
   $correct_buffer = array();
 
