@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -29,9 +29,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['qualitativeanalysis'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -47,6 +47,17 @@
   $result->bind_result($paper);
   $result->fetch();
   $result->close();
+
+  $module_code = '';
+  $module = (isset($_GET['module']) and $_GET['module'] != '') ? $_GET['module'] : '';
+  if ($module != '') {
+    $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE id=? LIMIT 1");
+    $result->bind_param('i', $module);
+    $result->execute();
+    $result->bind_result($module_code);
+    $result->fetch();
+    $result->close();
+  }
 
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
@@ -64,13 +75,13 @@
   echo '<div class="breadcrumb"><a href="../staff/index.php" target="_top">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '" target="_top">' . $folder_name . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '" target="_top">' . $_GET['module'] . '</a>';
+  } elseif ($module != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '" target="_top">' . $module_code . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '" target="_top">' . $paper . '</a></div>';
   echo "<span style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">" . $string['qualitativeanalysis'] . "</span></td>";
   echo "<th valign=\"top\" style=\"width:25%\"><input type=\"text\" name=\"keywords\" size=\"20\" value=\"";
-  if (isset($_GET['keywords'])) echo $_GET['keywords']; 
+  if (isset($_GET['keywords'])) echo $_GET['keywords'];
   echo "\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['highlight'] . "\" />";
   if (isset($_GET['collapse']) and $_GET['collapse'] == '1') {
     echo "<br /><input type=\"checkbox\" name=\"collapse\" value=\"1\" checked />&nbsp;" . $string['collapse'];
@@ -86,7 +97,7 @@
   echo '<input type="hidden" name="paperID" value="' . $_GET['paperID'] . '" />';
   echo '<input type="hidden" name="startdate" value="' . $_GET['startdate'] . '" />';
   echo '<input type="hidden" name="enddate" value="' . $_GET['enddate'] . '" />';
-  echo '<input type="hidden" name="module" value="' . $_GET['module'] . '" />';
+  echo '<input type="hidden" name="module" value="' . $module . '" />';
   echo '<input type="hidden" name="repcourse" value="' . $_GET['repcourse'] . '" />';
   echo '<input type="hidden" name="repyear" value="' . $_GET['repyear'] . '" />';
   echo "</th></tr>";

@@ -77,8 +77,24 @@
   $list_on = 0;
   $q_no = 0;
 
-  $result = $mysqli->prepare("SELECT DISTINCT log3.screen, theme, log_metadata.started, users.username AS username, users.surname AS surname, log3.q_id AS q_id, leadin, user_answer FROM (log3, log_metadata, papers, questions, users) WHERE log3.userID=log_metadata.userID AND log3.q_paper=log_metadata.paperID AND log3.started=log_metadata.started AND users.id=log3.userID AND papers.question=log3.q_id AND papers.screen=log3.screen AND paper=? AND q_paper=? AND log_metadata.student_grade LIKE ? AND log_metadata.year LIKE ? AND log3.q_id=questions.q_id AND q_type='textbox' AND log3.started>=? AND log3.started<=? AND (roles='Student' OR roles='graduate') ORDER BY log3.screen, display_pos");
-  $result->bind_param('iissss', $_GET['paperID'], $_GET['paperID'], $_GET['repcourse'], $_GET['repyear'], $startdate, $enddate);
+  $sql = <<< SQL
+SELECT DISTINCT l.screen, q.theme, lm.started, u.username, u.surname, l.q_id, q.leadin, l.user_answer
+FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
+INNER JOIN papers p ON p.question = l.q_id AND p.screen = l.screen AND p.paper = lm.paperID
+INNER JOIN questions q ON l.q_id = q.q_id
+INNER JOIN users u ON lm.userID = u.id
+WHERE p.paper = ?
+AND lm.student_grade LIKE ?
+AND lm.year LIKE ?
+AND q.q_type='textbox'
+AND lm.started >= ? AND lm.started <= ?
+AND (u.roles = 'Student' OR u.roles = 'graduate')
+ORDER BY l.screen, p.display_pos
+SQL;
+
+  $result = $mysqli->prepare($sql);
+  // $result = $mysqli->prepare("SELECT DISTINCT log3.screen, theme, log_metadata.started, users.username AS username, users.surname AS surname, log3.q_id AS q_id, leadin, user_answer FROM (log3, log_metadata, papers, questions, users) WHERE log3.userID=log_metadata.userID AND log3.q_paper=log_metadata.paperID AND log3.started=log_metadata.started AND users.id=log3.userID AND papers.question=log3.q_id AND papers.screen=log3.screen AND paper=? AND q_paper=? AND log_metadata.student_grade LIKE ? AND log_metadata.year LIKE ? AND log3.q_id=questions.q_id AND q_type='textbox' AND log3.started>=? AND log3.started<=? AND (roles='Student' OR roles='graduate') ORDER BY log3.screen, display_pos");
+  $result->bind_param('issss', $_GET['paperID'], $_GET['repcourse'], $_GET['repyear'], $startdate, $enddate);
   $result->execute();
   $result->bind_result($screen, $theme, $started, $tmp_username, $surname, $q_id, $leadin, $user_answer);
 
