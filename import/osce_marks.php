@@ -74,7 +74,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   
   // Get student data.
   $students = array();
-  $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules.student.userID AND idMod IN ($mod_list) AND calendar_year = ?");
+  $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($mod_list) AND calendar_year = ?");
   $result->bind_param('s', $session);
   $result->execute();
   $result->bind_result($id, $student_id, $username, $year, $grade);
