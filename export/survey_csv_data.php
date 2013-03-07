@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -23,7 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
-  
+
 $paper_id = $_GET['paperID'];
 $rep_year = (empty($_GET['repyear'])) ? '%' : $_GET['repyear'];
 $rep_course = (empty($_GET['repcourse'])) ? '%' : $_GET['repcourse'];
@@ -88,7 +88,8 @@ if ($_GET['complete'] == 1) {
   $stmt->bind_result($uID, $answer_no); //TODO replaced $userID with $uID
   while($stmt->fetch()) {
     if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
-      $exclude .= " AND log3.userID != $uID";
+      // log_metadata aliased as lm in queries below for brevity
+      $exclude .= " AND lm.userID != $uID";
     }
   }
   $stmt->close();
@@ -96,7 +97,21 @@ if ($_GET['complete'] == 1) {
 
 $log_array = array();
 $hits = 0;
-$stmt = $mysqli->prepare("SELECT DISTINCT sid.student_id, username, title, surname, initials, grade, gender, log_metadata.year, log3.started, log3.q_id, user_answer, q_type, screen FROM (log3, questions, users, log_metadata) LEFT JOIN sid ON users.id=sid.userID WHERE log3.userID = log_metadata.userID AND log3.q_paper = log_metadata.paperID AND log3.started = log_metadata.started AND log3.q_id=questions.q_id AND q_paper=? AND log_metadata.year LIKE ? AND users.id=log3.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND log3.started>=? AND log3.started<=?");
+
+$sql = <<< SQL
+SELECT DISTINCT sid.student_id, u.username, u.title, u.surname, u.initials, u.grade,
+u.gender, lm.year, lm.started, l.q_id, l.user_answer, q.q_type, l.screen
+FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
+INNER JOIN questions q ON l.q_id = q.q_id
+INNER JOIN users u ON lm.userID = u.id
+LEFT JOIN sid ON u.id = sid.userID
+WHERE lm.paperID = ?
+AND lm.year LIKE ?
+AND (u.roles = 'Student' OR u.roles = 'graduate')$exclude
+AND u.grade LIKE ?
+AND lm.started >= ? AND lm.started <= ?
+SQL;
+$stmt = $mysqli->prepare($sql);
 $stmt->bind_param('issss', $paper_id, $rep_year, $rep_course, $_GET['startdate'], $_GET['enddate']);
 $stmt->execute();
 $stmt->bind_result($student_id, $username, $title, $surname, $initials, $grade, $gender, $year, $started, $q_id, $user_answer, $q_type, $screen);
@@ -114,7 +129,7 @@ while($stmt->fetch()) {
   $user_no++;
 }
 $stmt->close();
-  
+
 $row_written = 0;
 foreach ($log_array as $individual) {
   $tmp_user_ID = $individual['username'];
@@ -228,7 +243,7 @@ foreach ($log_array as $individual) {
           $tmp_data = trim($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
           $tmp_data = preg_replace("/(\r\n|\n|\r)/", "", $tmp_data);
           $tmp_data = str_replace('"',"'",$tmp_data);
-          
+
           if (substr($tmp_data,0,1) == '-') $tmp_data = trim(substr($tmp_data,1));
           echo '"' . $tmp_data . '"';
           break;
