@@ -73,10 +73,10 @@ class LogMetadata {
    */
   public function get_record($timedate = '') {
     if ($timedate == '') {
-      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID  = ? AND paperID = ? ORDER BY id DESC LIMIT 1');
+      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID = ? AND paperID = ? ORDER BY id DESC LIMIT 1');
       $stmt->bind_param('ii', $this->userid, $this->paper_id);
     } else {
-      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID  = ? AND paperID = ? AND started = ? ORDER BY id DESC LIMIT 1');
+      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID = ? AND paperID = ? AND started = ? ORDER BY id DESC LIMIT 1');
       $stmt->bind_param('iis', $this->userid, $this->paper_id, $timedate);
     }
     $stmt->execute();
