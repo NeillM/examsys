@@ -25,9 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('announcementID', 'POST', true, false, false);
-
-$tmp_announcementID = $_POST['announcementID'];
+$tmp_announcementID = check_var('announcementID', 'POST', true, false, true);
 
 $result = $mysqli->prepare("UPDATE announcements SET deleted = NOW() WHERE id = ?");
 $result->bind_param('i', $tmp_announcementID);
