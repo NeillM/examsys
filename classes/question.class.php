@@ -1099,6 +1099,7 @@ QUERY;
       $editor->bind_param('s', $this->checkout_author_id);
       $editor->execute();
       $editor->bind_result($title, $initials, $surname);
+      $editor->store_result();
       $editor->fetch();
       if($editor->num_rows !== 0) {
         $name = $title . ' ' . $initials . ' ' . $surname;
