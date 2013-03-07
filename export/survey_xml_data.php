@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -23,7 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
-  
+
   // Capture the paper makeup.
   $paper_buffer = array();
   $question_no = 0;
@@ -54,7 +54,7 @@ require '../include/staff_auth.inc';
     $result->bind_result($number_of_questions);
     $result->fetch();
     $result->close();
-  
+
     $result = $mysqli->prepare("SELECT userID, COUNT(id) AS answer_no FROM log$paper_type WHERE q_paper=? AND started>=? AND started<=? GROUP BY userID");
     $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
     $result->execute();
@@ -69,7 +69,22 @@ require '../include/staff_auth.inc';
 
   // Capture the log data first.
   $user_no = 0;
-  $result = $mysqli->prepare("SELECT log3.q_id, grade, DATE_FORMAT(log_metadata.started,\"%d/%m/%Y %T\") AS started, log_metadata.year, surname, initials, title, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log3.userID FROM (log3, log_metadata, questions, users) WHERE log3.q_paper=log_metadata.paperID AND log3.userID=log_metadata.userID AND log3.started=log_metadata.started AND log3.q_id=questions.q_id AND q_paper=? AND log_metadata.year LIKE ? AND users.id=log3.userID AND grade LIKE ? AND (users.roles='Student' OR users.roles='graduate')$exclude AND log_metadata.started>=? AND log_metadata.started<=? ORDER BY surname, initials");
+  $sql = <<< SQL
+SELECT l.q_id, u.grade, DATE_FORMAT(lm.started,"%d/%m/%Y %T") AS started, lm.year, u.surname,
+u.initials, u.title, REPLACE(l.user_answer,'"',"'") AS user_answer, q.q_type, lm.userID
+FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
+INNER JOIN questions q ON l.q_id = q.q_id
+INNER JOIN users u ON lm.userID = u.id
+WHERE lm.paperID = ?
+AND lm.year LIKE ?
+AND u.grade LIKE ?
+AND (u.roles='Student' OR u.roles='graduate')$exclude
+AND lm.started >= ? AND lm.started <= ?
+ORDER BY u.surname, u.initials
+SQL;
+
+  // $result = $mysqli->prepare("SELECT log3.q_id, grade, DATE_FORMAT(log_metadata.started,\"%d/%m/%Y %T\") AS started, log_metadata.year, surname, initials, title, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log3.userID FROM (log3, log_metadata, questions, users) WHERE log3.q_paper=log_metadata.paperID AND log3.userID=log_metadata.userID AND log3.started=log_metadata.started AND log3.q_id=questions.q_id AND q_paper=? AND log_metadata.year LIKE ? AND users.id=log3.userID AND grade LIKE ? AND (users.roles='Student' OR users.roles='graduate')$exclude AND log_metadata.started>=? AND log_metadata.started<=? ORDER BY surname, initials");
+  $result = $mysqli->prepare($sql);
   $result->bind_param('issss', $_GET['paperID'], $_GET['repyear'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
   $result->execute();
   $result->bind_result($question_ID, $grade, $started, $year, $surname, $initials, $title, $user_answer, $q_type, $user_ID);
@@ -111,14 +126,14 @@ require '../include/staff_auth.inc';
           $tmp_answers = explode('$',$log_array[$tmp_user_ID][$tmp_question_ID]);
           foreach ($tmp_answers as $individual_answer) {
             echo "<question no=\"$Qno.$sub_part\">$individual_answer</question>\n";
-            $sub_part++;          
+            $sub_part++;
           }
           break;
         case 'matrix':
           $sub_part = 1;
           if (isset($log_array[$tmp_user_ID][$tmp_question_ID])) {
             $tmp_answers = explode('|',$log_array[$tmp_user_ID][$tmp_question_ID]);
-            foreach ($tmp_answers as $individual_answer) { 
+            foreach ($tmp_answers as $individual_answer) {
               echo "<question no=\"$Qno.$sub_part\">$individual_answer</question>\n";
               $sub_part++;
             }
@@ -135,7 +150,7 @@ require '../include/staff_auth.inc';
                 } else {
                   echo "<question no=\"$Qno.$sub_part\">$individual_answer</question>\n";
                 }
-                $sub_part++;          
+                $sub_part++;
               }
             }
           }
