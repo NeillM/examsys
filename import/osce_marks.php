@@ -28,13 +28,13 @@ require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
-function marks_from_file($paperID, $fileName, $db) {
+function marks_from_file($userObj, $paperID, $fileName, $db) {
   $configObject = Config::get_instance();
 
   // Get the paper properties
   $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paperID, $db);
   if ($propertyObj == false) {  // No properties found, this crypt_name
-    unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
+    unlink($configObject->get('cfg_tmpdir') . $userObj->get_user_ID() . '_osce_marks.csv');
     $notice->access_denied($mysqli, $string, $string['error_paper']);    //this will exit php
   }
  
@@ -51,7 +51,7 @@ function marks_from_file($paperID, $fileName, $db) {
   $result->close();
   
   if ($property_id == '') {   // Paper could not be found, exit.
-    unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
+    unlink( $configObject->get('cfg_tmpdir') . $userObj->get_user_ID() . '_osce_marks.csv');
     exit;    
   }
   */
@@ -149,7 +149,7 @@ function marks_from_file($paperID, $fileName, $db) {
         echo $fields[$question_no+1] . ', ' . $examinerID . '<br />';
         
         if ($examinerID == '') {
-          $examinerID = $userObject->get_user_ID();
+          $examinerID = $userObj->get_user_ID();
         }
         
         switch ($marking) {
@@ -197,7 +197,7 @@ if (isset($_POST['submit'])) {
       echo uploadError($_FILES['csvfile']['error']);
       exit;
     } else {
-      marks_from_file($paperID, $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv', $mysqli);
+      marks_from_file($userObject, $paperID, $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv', $mysqli);
       unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
       ?>
       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
