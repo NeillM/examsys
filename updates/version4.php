@@ -3747,8 +3747,6 @@ SQL;
 
     $updater_utils->execute_query($sql, true);
 
-  }
-
     $sql = <<< SQL
 CREATE TABLE `log0_deleted` (
   `id` int(8) NOT NULL UNIQUE,
