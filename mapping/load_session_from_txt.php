@@ -23,9 +23,11 @@
 */
 
 require '../include/sysadmin_auth.inc';  
+require '../include/errors.inc';
 
+$moduleID = check_var('module', 'REQUIRE', true, false, true);
+  
 if (isset($_POST['submit'])) {
-  $moduleID = $_POST['module'];
   $session = $_POST['session'];
   $session_flag = false;
 
@@ -61,22 +63,22 @@ if (isset($_POST['submit'])) {
           $title = substr($separate_line,1);
           $identifier++;
      
-          $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL,?,?,?,'',?,NOW())");
-          $stmt->bind_param('ssss', $identifier, $moduleID, $title, $session);
+          $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, '', ?, NOW())");
+          $stmt->bind_param('siss', $identifier, $moduleID, $title, $session);
           $stmt->execute();
           $stmt->close();
           $session_flag = true;
         } else {                                   // Objective
           if ($session_flag == false) {
-            $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL,?,?,'Temp Session Title','',?,NOW())");
-            $stmt->bind_param('sss',$identifier,$moduleID,$session);
+            $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, 'Temp Session Title', '', ?, NOW())");
+            $stmt->bind_param('sis', $identifier, $moduleID, $session);
             $stmt->execute();
             $stmt->close();
             $session_flag = true;
           }
         
-          $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?,?,?,?,?,?)");
-          $stmt->bind_param('issssi', $obj_id, $separate_line, $moduleID, $identifier, $session, $obj_id);
+          $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
+          $stmt->bind_param('isissi', $obj_id, $separate_line, $moduleID, $identifier, $session, $obj_id);
           $stmt->execute();
           $stmt->close();
           $obj_id++;
@@ -85,8 +87,8 @@ if (isset($_POST['submit'])) {
     }
   }
   
-  unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['module']);
+  unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
+  header("location: " . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $moduleID);
 } else {
   //display the form
 ?>
@@ -100,7 +102,6 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    img {border:none;}
     .editBox {width:90%}
     .field {text-align:right; font-weight:bold}
     .note {width:90%}
@@ -113,10 +114,8 @@ if (isset($_POST['submit'])) {
 ?>
 <div id="content" class="content" style="font-size:80%">
 <?php
-  $module = $_GET['module'];
-
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$module\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['importfromfile'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
+  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$moduleID\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['importfromfile'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
   echo "<tr><td colspan=\"2\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
   echo "</table>\n";
 ?>
@@ -141,7 +140,7 @@ if (isset($_POST['submit'])) {
 <table cellpadding="3" cellspacing="0" border="0" style="text-align:left">
 <tr>
 <td style="text-align:right"><?php echo $string['objectivesfile']; ?></td><td><input type="file" size="50" name="txtfile" />
-<input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></td>
+<input type="hidden" name="module" value="<?php echo $moduleID; ?>" /></td>
 </tr>
 
 <tr>
