@@ -23,13 +23,14 @@
 */
 
 require '../include/staff_auth.inc';
+require '../include/errors.inc';
+
+$paperID = check_var('paperID', 'GET', true, false, true);
 
 function marks_from_file($fileName, $mysqlidb) {
-  global $REPLACEMEuserIDold;
-
   // Get properties of the paper.
-  $result = $mysqlidb->prepare("SELECT property_id, moduleID, calendar_year, start_date, marking FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqlidb->prepare("SELECT property_id, moduleID, calendar_year, start_date, marking FROM properties WHERE property_id = ?");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($property_id, $moduleID, $session, $paper_date, $marking);
   $result->fetch();
@@ -44,7 +45,7 @@ function marks_from_file($fileName, $mysqlidb) {
   $paper = array();
   $question_no = 0;
   $result = $mysqlidb->prepare("SELECT question, marks_correct FROM papers, options WHERE paper=? AND papers.question=options.o_id ORDER BY screen, display_pos");
-  $result->bind_param('i', $_GET['paperID']);
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($question, $marks);
   while ($result->fetch()) {
@@ -55,7 +56,7 @@ function marks_from_file($fileName, $mysqlidb) {
   
   // Get student data.
   $students = array();
-  $result = $mysqlidb->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, student_modules WHERE users.id=sid.userID AND users.id=student_modules.userID AND moduleid=? AND calendar_year=?");
+  $result = $mysqlidb->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, student_modules WHERE users.id = sid.userID AND users.id = student_modules.userID AND moduleid = ? AND calendar_year = ?");
   $result->bind_param('ss', $moduleID, $session);
   $result->execute();
   $result->bind_result($id, $student_id, $username, $year, $grade);
@@ -80,7 +81,7 @@ function marks_from_file($fileName, $mysqlidb) {
       $sid = trim($fields[0]);
       if (!isset($students[$sid])) {  // Student is not in class List.
         // Look up to see if anywhere else in Authentication database.
-        $result = $mysqlidb->prepare("SELECT id, student_id, username, yearofstudy, grade FROM users, sid WHERE users.id=sid.userID AND sid.student_id=?");
+        $result = $mysqlidb->prepare("SELECT id, student_id, username, yearofstudy, grade FROM users, sid WHERE users.id = sid.userID AND sid.student_id = ?");
         $result->bind_param('s', $sid);
         $result->execute();
         $result->store_result();
@@ -95,13 +96,13 @@ function marks_from_file($fileName, $mysqlidb) {
         $result->close();          
       }
       if (isset($students[$sid]) and $students[$sid]['username'] != '') {  // Student is in class List.
-        $result = $mysqlidb->prepare("DELETE FROM log4 WHERE userID=? AND q_paper=?");
-        $result->bind_param('ii', $students[$sid]['id'], $_GET['paperID']);
+        $result = $mysqlidb->prepare("DELETE FROM log4 WHERE userID = ? AND q_paper = ?");
+        $result->bind_param('ii', $students[$sid]['id'], $paperID);
         $result->execute();
         $result->close();
 
-        $result = $mysqlidb->prepare("DELETE FROM log4_overall WHERE userID=? AND q_paper=?");
-        $result->bind_param('ii', $students[$sid]['id'], $_GET['paperID']);
+        $result = $mysqlidb->prepare("DELETE FROM log4_overall WHERE userID = ? AND q_paper = ?");
+        $result->bind_param('ii', $students[$sid]['id'], $paperID);
         $result->execute();
         $result->close();
 
@@ -111,7 +112,7 @@ function marks_from_file($fileName, $mysqlidb) {
         $numeric_score = 0;
         $result = $mysqlidb->prepare("INSERT INTO log4 VALUES(NULL, ?, ?, ?, ?, ?, NULL)");
         for ($q=1; $q<=$question_no; $q++) {
-          $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $fields[$q]);
+          $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $paperID, $paper[$q]['id'], $fields[$q]);
           $fields[$q] = trim($fields[$q]);
           $result->execute();
           $numeric_score += trim($fields[$q]);
@@ -119,7 +120,7 @@ function marks_from_file($fileName, $mysqlidb) {
         $result->close();
           
         // Record overall student/station details.
-        $result = $mysqlidb->prepare("SELECT id FROM users WHERE username=? LIMIT 1");
+        $result = $mysqlidb->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
         $fields[$question_no+1] = trim($fields[$question_no+1]);
         $result->bind_param('s', $fields[$question_no+1]);
         $result->execute();
@@ -160,7 +161,7 @@ function marks_from_file($fileName, $mysqlidb) {
           $feedback = '';
         }
         $result = $mysqlidb->prepare("INSERT INTO log4_overall VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'paper', ?)");
-        $result->bind_param('isisissii', $students[$sid]['id'], $paper_date, $_GET['paperID'], $overall_rating, $numeric_score, $feedback, $students[$sid]['grade'], $examinerID, $students[$sid]['year']);
+        $result->bind_param('isisissii', $students[$sid]['id'], $paper_date, $paperID, $overall_rating, $numeric_score, $feedback, $students[$sid]['grade'], $examinerID, $students[$sid]['year']);
         $result->execute();
         $result->close();
       } else {
@@ -232,7 +233,7 @@ if (isset($_POST['submit'])) {
 <div style="text-align:center"><img src="../artwork/osce_import.png" width="386" height="139" style="border:1px solid black" alt="<?php echo $string['import']; ?>" /></div>
 
 <div align="center">
-<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data">
+<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data">
 
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" /><br />
 <input type="checkbox" name="header_row" value="1" checked />&nbsp;<?php echo $string['headerrow']; ?></p>
