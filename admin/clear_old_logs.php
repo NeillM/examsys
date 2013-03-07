@@ -74,8 +74,6 @@ ob_start();
   $stmt->store_result();
   $stmt->bind_result($user_to_delete);
   while ($stmt->fetch()) {
-    // TODO: Turn off auto commit?
-
     $log0_deleted = 0;
     $log1_deleted = 0;
     $lti_user_deleted = 0;
