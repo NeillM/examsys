@@ -19,4 +19,5 @@ $string['usernotfound'] = 'Nie odnaleziono użytkownika';
 $string['modulenotfound'] = 'Nie odnaleziono modułu';
 $string['questionnotfound'] = 'Nie odnaleziono pytania';
 $string['furtherassistance'] = 'W celu uzyskania dalszej pomocy skontaktuj sie z: <a href="mailto:%s">%s</a>';
+$string['pagenotfound'] = 'Page not Found';  // Niko
 ?>

@@ -24,28 +24,28 @@
 * @package
 */
 
-
 require '../../include/staff_student_auth.inc';
+require_once '../../include/errors.inc';
 
-function getPath($path) {
-  global $string;
-  
-  $parts = explode('/',$path);
+function getPath($path, $string) {
+  $parts = explode('/', $path);
   $path = '<a style="color:#666666" href="display_page.php?id=1">' . $string['home'] . '</a>';
   if (count($parts) > 1) {
     for ($i=0; $i<count($parts)-1; $i++) {
       $path .= " > <a style=\"color:#666666\" href=\"display_folder.php?title=" . $parts[$i] . "\">" . $parts[$i] . "</a>";
     }
-  }    
+  }
+  
   return $path;
 }
 
 function getTitle($path) {
-  $parts = explode('/',$path);
-  return $parts[count($parts)-1];
+  $parts = explode('/', $path);
+  
+  return $parts[count($parts) - 1];
 }
 
-$search_results = $mysqli->prepare("SELECT title, body, type, deleted FROM student_help WHERE id=?");
+$search_results = $mysqli->prepare("SELECT title, body, type, deleted FROM student_help WHERE id = ?");
 $search_results->bind_param('i', $_GET['id']);
 $search_results->execute();
 $search_results->store_result();
@@ -53,7 +53,7 @@ $search_results->bind_result($tmp_title, $tmp_body, $type, $deleted);
 while ($search_results->fetch()) {
   $edit_id = $_GET['id'];
   if ($type == 'pointer') {
-    $pointer_results = $mysqli->prepare("SELECT title, body, deleted FROM student_help WHERE id=?");
+    $pointer_results = $mysqli->prepare("SELECT title, body, deleted FROM student_help WHERE id = ?");
     $pointer_results->bind_param('i', $tmp_body);
     $pointer_results->execute();
     $pointer_results->store_result();
@@ -67,8 +67,8 @@ $search_results->free_result();
 $search_results->close();
 
 if ($tmp_body == '' and $tmp_title == '') {
-  header("HTTP/1.0 404 Not Found");
-  exit;
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($string['pagenotfound'], $msg, $configObject->get('cfg_root_path') . '/artwork/paper_not_found.png', '#C00000');
 }
 
 if ($_GET['id'] != '1' and !$userObject->has_role(array('SysAdmin', 'External'))) {   // Don't record the homepage or SysAdmin or External examiner activities.
@@ -139,7 +139,7 @@ if ($_GET['id'] != '1' and !$userObject->has_role(array('SysAdmin', 'External'))
     echo "<div>\n";
   } else {
     echo "<a name=\"top\"></a>";
-    echo "<div class=\"path\">" . getPath($tmp_title) . "</div>";
+    echo "<div class=\"path\">" . getPath($tmp_title, $string) . "</div>";
     echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#7598C4\">" . getTitle($tmp_title) . "</div>\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px\" />\n";
     echo "<div style=\"margin-left:20px; margin-right:20px\">\n";
   }

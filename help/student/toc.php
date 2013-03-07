@@ -71,14 +71,17 @@
 
   $expand_id = 0;
   if (isset($_GET['id'])) {
-    $slash_pos = strpos($help_toc_titles[$_GET['id']], '/');
-    if ($slash_pos !== false) {
-      $target_parent = substr($help_toc_titles[$_GET['id']], 0, $slash_pos);
+    if (isset($help_toc_titles[$_GET['id']])) {
+    
+      $slash_pos = strpos($help_toc_titles[$_GET['id']], '/');
+      if ($slash_pos !== false) {
+        $target_parent = substr($help_toc_titles[$_GET['id']], 0, $slash_pos);
 
 
-      for ($i=0; $i<$help_section; $i++) {
-        if (strpos($help_toc[$i]['title'], $target_parent) === 0 and $expand_id == 0) {
-          $expand_id = $help_toc[$i]['id'];
+        for ($i=0; $i<$help_section; $i++) {
+          if (strpos($help_toc[$i]['title'], $target_parent) === 0 and $expand_id == 0) {
+            $expand_id = $help_toc[$i]['id'];
+          }
         }
       }
     }
