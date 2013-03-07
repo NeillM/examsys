@@ -46,7 +46,7 @@ require_once '../../classes/questionutils.class.php';
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript">
     function orderTable(order_val, direction_val) {
-      document.getElementById('order.value').value = order_val;
+      document.getElementById('order').value = order_val;
       document.getElementById('direction').value = direction_val;
       document.keywordsform.submit();
     }
