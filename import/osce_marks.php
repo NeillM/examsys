@@ -41,20 +41,6 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   $session    = $propertyObj->get_calendar_year();
   $paper_date = $propertyObj->get_raw_start_date();
   $marking    = $propertyObj->get_marking();
-  /*
-  // Get properties of the paper.
-  $result = $db->prepare("SELECT property_id, moduleID, calendar_year, start_date, marking FROM properties WHERE property_id = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($property_id, $moduleID, $session, $paper_date, $marking);
-  $result->fetch();
-  $result->close();
-  
-  if ($property_id == '') {   // Paper could not be found, exit.
-    unlink( $configObject->get('cfg_tmpdir') . $userObj->get_user_ID() . '_osce_marks.csv');
-    exit;    
-  }
-  */
   
   // Get the questions on the paper.
   $paper = array();
