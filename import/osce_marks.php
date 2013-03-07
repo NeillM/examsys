@@ -23,13 +23,25 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
-function marks_from_file($fileName, $mysqlidb) {
+function marks_from_file($paperID, $fileName, $db) {
+  // Get the paper properties
+  $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paperID, $db);
+  if ($propertyObj == false) {  // No properties found, this crypt_name
+    unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
+    $notice->access_denied($mysqli, $string, $string['error_paper']);    //this will exit php
+  }
+ 
+  $session    = $propertyObj->get_calendar_year();
+  $paper_date = $propertyObj->get_raw_start_date();
+  $marking    = $propertyObj->get_marking();
+  /*
   // Get properties of the paper.
-  $result = $mysqlidb->prepare("SELECT property_id, moduleID, calendar_year, start_date, marking FROM properties WHERE property_id = ?");
+  $result = $db->prepare("SELECT property_id, moduleID, calendar_year, start_date, marking FROM properties WHERE property_id = ?");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($property_id, $moduleID, $session, $paper_date, $marking);
@@ -40,11 +52,12 @@ function marks_from_file($fileName, $mysqlidb) {
     unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
     exit;    
   }
+  */
   
   // Get the questions on the paper.
   $paper = array();
   $question_no = 0;
-  $result = $mysqlidb->prepare("SELECT question, marks_correct FROM papers, options WHERE paper=? AND papers.question=options.o_id ORDER BY screen, display_pos");
+  $result = $db->prepare("SELECT question, marks_correct FROM papers, options WHERE paper = ? AND papers.question=options.o_id ORDER BY screen, display_pos");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($question, $marks);
@@ -54,10 +67,13 @@ function marks_from_file($fileName, $mysqlidb) {
   }
   $result->close();
   
+  $moduleID   = array_keys(Paper_utils::get_modules($paperID, $mysqli));
+  $mod_list = array_keys($moduleID);
+  
   // Get student data.
   $students = array();
-  $result = $mysqlidb->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, student_modules WHERE users.id = sid.userID AND users.id = student_modules.userID AND moduleid = ? AND calendar_year = ?");
-  $result->bind_param('ss', $moduleID, $session);
+  $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules.student.userID AND idMod IN ($mod_list) AND calendar_year = ?");
+  $result->bind_param('s', $session);
   $result->execute();
   $result->bind_result($id, $student_id, $username, $year, $grade);
   while ($result->fetch()) {
@@ -81,7 +97,7 @@ function marks_from_file($fileName, $mysqlidb) {
       $sid = trim($fields[0]);
       if (!isset($students[$sid])) {  // Student is not in class List.
         // Look up to see if anywhere else in Authentication database.
-        $result = $mysqlidb->prepare("SELECT id, student_id, username, yearofstudy, grade FROM users, sid WHERE users.id = sid.userID AND sid.student_id = ?");
+        $result = $db->prepare("SELECT id, student_id, username, yearofstudy, grade FROM users, sid WHERE users.id = sid.userID AND sid.student_id = ?");
         $result->bind_param('s', $sid);
         $result->execute();
         $result->store_result();
@@ -96,12 +112,12 @@ function marks_from_file($fileName, $mysqlidb) {
         $result->close();          
       }
       if (isset($students[$sid]) and $students[$sid]['username'] != '') {  // Student is in class List.
-        $result = $mysqlidb->prepare("DELETE FROM log4 WHERE userID = ? AND q_paper = ?");
+        $result = $db->prepare("DELETE FROM log4 WHERE userID = ? AND q_paper = ?");
         $result->bind_param('ii', $students[$sid]['id'], $paperID);
         $result->execute();
         $result->close();
 
-        $result = $mysqlidb->prepare("DELETE FROM log4_overall WHERE userID = ? AND q_paper = ?");
+        $result = $db->prepare("DELETE FROM log4_overall WHERE userID = ? AND q_paper = ?");
         $result->bind_param('ii', $students[$sid]['id'], $paperID);
         $result->execute();
         $result->close();
@@ -110,7 +126,7 @@ function marks_from_file($fileName, $mysqlidb) {
         
         // Record individual questions.
         $numeric_score = 0;
-        $result = $mysqlidb->prepare("INSERT INTO log4 VALUES(NULL, ?, ?, ?, ?, ?, NULL)");
+        $result = $db->prepare("INSERT INTO log4 VALUES(NULL, ?, ?, ?, ?, ?, NULL)");
         for ($q=1; $q<=$question_no; $q++) {
           $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $paperID, $paper[$q]['id'], $fields[$q]);
           $fields[$q] = trim($fields[$q]);
@@ -120,7 +136,7 @@ function marks_from_file($fileName, $mysqlidb) {
         $result->close();
           
         // Record overall student/station details.
-        $result = $mysqlidb->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
+        $result = $db->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
         $fields[$question_no+1] = trim($fields[$question_no+1]);
         $result->bind_param('s', $fields[$question_no+1]);
         $result->execute();
@@ -160,7 +176,7 @@ function marks_from_file($fileName, $mysqlidb) {
         } else {
           $feedback = '';
         }
-        $result = $mysqlidb->prepare("INSERT INTO log4_overall VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'paper', ?)");
+        $result = $db->prepare("INSERT INTO log4_overall VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'paper', ?)");
         $result->bind_param('isisissii', $students[$sid]['id'], $paper_date, $paperID, $overall_rating, $numeric_score, $feedback, $students[$sid]['grade'], $examinerID, $students[$sid]['year']);
         $result->execute();
         $result->close();
@@ -179,7 +195,7 @@ if (isset($_POST['submit'])) {
       echo uploadError($_FILES['csvfile']['error']);
       exit;
     } else {
-      marks_from_file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv', $mysqli);
+      marks_from_file($paperID, $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv', $mysqli);
       unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
       ?>
       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -244,7 +260,6 @@ if (isset($_POST['submit'])) {
 </td>
 </tr>
 </table>
-
 
 </div>
 

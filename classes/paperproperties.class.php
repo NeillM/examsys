@@ -177,6 +177,8 @@ class PaperProperties {
     $sql = "SELECT
                   property_id,
                   paper_title,
+                  start_date AS raw_start_date,
+                  end_date AS raw_end_date,
                   UNIX_TIMESTAMP(start_date) AS start_date,
                   UNIX_TIMESTAMP(end_date) AS end_date,
                   timezone,
@@ -241,6 +243,8 @@ class PaperProperties {
 
     $paper_results->bind_result(  $this->property_id,
                                   $this->paper_title,
+                                  $this->raw_start_date,
+                                  $this->raw_end_date,
                                   $this->start_date,
                                   $this->end_date,
                                   $this->timezone,
@@ -480,6 +484,13 @@ class PaperProperties {
   }
 
   /**
+   * @return string $start_date
+   */
+  public function get_raw_start_date() {
+      return $this->raw_start_date;
+  }
+
+  /**
    * @param string $start_date
    */
   public function set_start_date($start_date) {
@@ -507,6 +518,13 @@ class PaperProperties {
     } else {
       $this->display_start_date = $display_start_date;
     }
+  }
+
+  /**
+   * @return string $end_date
+   */
+  public function get_raw_end_date() {
+      return $this->raw_end_date;
   }
 
   /**
