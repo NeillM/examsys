@@ -32,10 +32,10 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   $configObject = Config::get_instance();
 
   // Get the paper properties
-  $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paperID, $db);
-  if ($propertyObj == false) {  // No properties found, this crypt_name
+  $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $db);
+  if ($propertyObj == false) {  // No properties found
     unlink($configObject->get('cfg_tmpdir') . $userObj->get_user_ID() . '_osce_marks.csv');
-    $notice->access_denied($db, $string, $string['error_paper']);    //this will exit php
+    $notice->access_denied($db, $string, 'An error has occurred');    //this will exit php
   }
  
   $session    = $propertyObj->get_calendar_year();
