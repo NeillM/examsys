@@ -30,6 +30,7 @@ require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../include/load_config.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
+require_once '../classes/folderutils.class.php';
 require_once '../lang/' . $language . '/include/timezones.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
@@ -75,6 +76,18 @@ function format_modules($text, $modules) {
     } else {
       $formatted_string .= ', ' . $modules[$part]['code'];
     }
+  }
+  
+  return $formatted_string;
+}
+
+function format_folders($id, $folders) {
+  if ($id == '') return '';
+  
+  if (isset($folders[$id])) {
+    $formatted_string = str_replace(';', '/', $folders[$id]);
+  } else {
+    $formatted_string = $id;
   }
   
   return $formatted_string;
@@ -258,6 +271,7 @@ if (isset($_POST['Submit'])) {
   $old_hide_if_unanswered = $properties->get_hide_if_unanswered();
   $old_display_correct_answer = $properties->get_display_correct_answer();
   $old_display_feedback = $properties->get_display_feedback();
+  $old_folder = $properties->get_folder();
 
   // Check that the new paper name is not already used by any other paper (i.e. unique).
   $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ? LIMIT 1");
@@ -606,6 +620,7 @@ if (isset($_POST['Submit'])) {
     if ($display_students_response != $old_display_students_response) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_students_response, $display_students_response, 'ticks_crosses');
     if ($hide_if_unanswered != $old_hide_if_unanswered)               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_hide_if_unanswered, $hide_if_unanswered, 'hideallfeedback');
     if ($display_feedback != $old_display_feedback)                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_feedback, $display_feedback, 'textfeedback');
+    if ($folderID != $old_folder)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_folder, $folderID, 'folder');
 
 
     if ($properties->get_paper_type() != '2') {
@@ -1161,13 +1176,13 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
      $additional = '';
 
      if (is_array($staff_modules) and count($staff_modules) > 0) {
-       $additional = ' OR idMod IN ("' . implode("','", array_keys($staff_modules)) . '")';
+       $additional = ' OR idMod IN (' . implode(',', array_keys($staff_modules)) . ')';
      }
      
      if ($properties->get_folder() != '') $additional .= ' OR id=' . $properties->get_folder();
 
-     $folder_details = $mysqli->prepare("SELECT id, name FROM folders, folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID=?$additional) AND deleted IS NULL ORDER BY name");
-     $folder_details->bind_param('s', $userObject->get_user_ID());
+     $folder_details = $mysqli->prepare("SELECT id, name FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $additional) AND deleted IS NULL ORDER BY name");
+     $folder_details->bind_param('i', $userObject->get_user_ID());
      $folder_details->execute();
      $folder_details->bind_result($folder_id, $folder_name);
      while ($folder_details->fetch()) {
@@ -2015,6 +2030,8 @@ while ($results->fetch()) {
 }
 $results->close();
 
+$folders = folder_utils::get_all_folders($mysqli);
+
 echo "<tr><th>" . $string['part'] . "</th><th>" . $string['old'] . "</th><th>" . $string['new'] . "</th><th>" . $string['date'] . "</th><th>" . $string['author'] . "</th></tr>";
 $changes = $logger->get_changes('Alter Paper', $paperID);
 $rows = count($changes);
@@ -2032,6 +2049,9 @@ for ($i=0; $i<$rows; $i++) {
   } elseif ($part == 'modules') {
     $old = format_modules($old, $modules);
     $new = format_modules($new, $modules);
+  } elseif ($part == 'folder') {
+    $old = format_folders($old, $folders);
+    $new = format_folders($new, $folders);
   } elseif ($part == 'method') {
     $old = format_method($old, $string);
     $new = format_method($new, $string);

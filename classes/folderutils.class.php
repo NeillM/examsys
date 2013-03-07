@@ -78,5 +78,19 @@ Class folder_utils {
     
     return $duplicate;
   }
+  
+  static function get_all_folders($db) {
+    $folders = array();
+  
+    $result = $db->prepare("SELECT id, name FROM folders");
+    $result->execute();
+    $result->bind_result($id, $name);
+    while ($result->fetch()) {
+      $folders[$id] = $name;
+    }
+    $result->close();
+    
+    return $folders;
+  }
 
 }
