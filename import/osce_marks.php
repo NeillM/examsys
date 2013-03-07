@@ -28,7 +28,7 @@ require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
-function marks_from_file($notice, $userObj, $paperID, $fileName, $db) {
+function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   $configObject = Config::get_instance();
 
   // Get the paper properties
@@ -197,7 +197,7 @@ if (isset($_POST['submit'])) {
       echo uploadError($_FILES['csvfile']['error']);
       exit;
     } else {
-      marks_from_file($notice, $userObject, $paperID, $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv', $mysqli);
+      marks_from_file($notice, $userObject, $paperID, $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv', $mysqli, $string);
       unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
       ?>
       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
