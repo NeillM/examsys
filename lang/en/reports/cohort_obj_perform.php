@@ -16,6 +16,7 @@
 
 require '../lang/' . $language . '/include/not_found.inc';
 
+$string['studentsonly'] = 'students only';
 $string['learningobjectiveanalysis'] = 'Learning Objective Analysis';
 $string['msg1'] = 'This paper has not been attempted by anyone';
 $string['msg2'] = 'This paper has not been mapped to any learning objectives.';

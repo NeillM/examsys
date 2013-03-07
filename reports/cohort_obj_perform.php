@@ -78,13 +78,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   $student_no = 0;
   $user_total = 0;
   $question_data = getCohortData($mysqli, $moduleID, $startdate, $enddate, $_GET['repcourse'], $_GET['repmodule'], '%', $paperID, $paper_type, $_GET['ordering'], $student_no, $user_total, $percent);
-  
-  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
-    $paper_title = $paper_title . ' - ' . $_GET['repmodule'] . ' students only';
-  } else {
-    $paper_title = $paper_title;
-  }
-  
+
   echo '<tr><th>';
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
@@ -94,11 +88,15 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['learningobjectiveanalysis'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['learningobjectiveanalysis'] . "</strong>";
+  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
+    echo ' (' . module_utils::get_moduleid_from_id($_GET['repmodule'], $mysqli) . ' ' . $string['studentsonly'] . ')';
+  }
+  echo "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
   echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
 
   if ($student_no == 0) {
-    echo "</table>\n<table style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;".$string['msg1']."</td></tr></table>\n<div>\n</body>\n</html>";
+    echo "</table>\n<table style=\"margin:0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['msg1'] . "</td></tr></table>\n<div>\n</body>\n</html>";
     exit;
   }
   echo '</table>';

@@ -1718,7 +1718,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
     $std_set_array = array();
 
-    $result = $mysqli->prepare("SELECT questionID, rating FROM standards_setting WHERE setterID=? AND std_set=?");
+    $result = $mysqli->prepare("SELECT questionID, rating FROM standards_setting WHERE setterID = ? AND std_set = ?");
     $result->bind_param('is', $tmp_parts[1], $tmp_parts[2]);
     $result->execute();
     $result->bind_result($questionID, $rating);
@@ -1733,12 +1733,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   if (is_array($moduleIDs)) {
     $users_on_modules = '';
     $moduleIDs_in = "'" . implode(',', array_keys($moduleIDs)) . "'";
-    $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM modules_student, modules WHERE modules.id = modules_student.idMod AND idMod IN ($moduleIDs_in)");
+    $mod_query = $mysqli->prepare("SELECT idMod, userID, moduleid FROM modules_student, modules WHERE modules.id = modules_student.idMod AND idMod IN ($moduleIDs_in)");
     $mod_query->execute();
-    $mod_query->bind_result($tmp_userID, $tmp_moduleid);
+    $mod_query->bind_result($idMod, $tmp_userID, $tmp_moduleid);
     $mod_query->store_result();
     while ($mod_query->fetch()) {
-	  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and $tmp_moduleid != $_GET['repmodule']) {
+	  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and idMod != $_GET['repmodule']) {
 	    continue; //this user is not on the module set in repmodule so dont put them in the array
 	  }
 	  if ($users_on_modules == '') {

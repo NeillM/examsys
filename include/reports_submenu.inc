@@ -309,8 +309,8 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   if ($properties->get_paper_type() != '3') {
     echo "<tr><td>" . $string['module'] . "</td><td><select name=\"repmodule\" style=\"width:150px\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
-    foreach ($moduleIDs as $mod) {
-      echo "<option value=\"" . $mod . "\">" . $mod . "</option>\n";
+    foreach ($moduleIDs as $modID=>$modCode) {
+      echo "<option value=\"" . $modID . "\">" . $modCode . "</option>\n";
     }
     echo "</select></td></tr>\n";
     

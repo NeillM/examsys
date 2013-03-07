@@ -16,6 +16,7 @@
 
 require '../lang/' . $language . '/include/not_found.inc';
 
+$string['studentsonly'] = 'Tylko studenci';
 $string['learningobjectiveanalysis'] = 'Analiza celów kształcenia';
 $string['msg1'] = 'Ten arkusz nie był przez nikogo wybrany';
 $string['msg2'] = 'Ten arkusz nie odwzorowuje żadnych celów kształcenia.';
