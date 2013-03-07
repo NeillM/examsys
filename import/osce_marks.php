@@ -29,6 +29,8 @@ require_once '../classes/paperproperties.class.php';
 $paperID = check_var('paperID', 'GET', true, false, true);
 
 function marks_from_file($paperID, $fileName, $db) {
+  $configObject = Config::get_instance();
+
   // Get the paper properties
   $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paperID, $db);
   if ($propertyObj == false) {  // No properties found, this crypt_name
