@@ -35,7 +35,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db) {
   $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paperID, $db);
   if ($propertyObj == false) {  // No properties found, this crypt_name
     unlink($configObject->get('cfg_tmpdir') . $userObj->get_user_ID() . '_osce_marks.csv');
-    $notice->access_denied($mysqli, $string, $string['error_paper']);    //this will exit php
+    $notice->access_denied($db, $string, $string['error_paper']);    //this will exit php
   }
  
   $session    = $propertyObj->get_calendar_year();
@@ -69,7 +69,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db) {
   }
   $result->close();
   
-  $moduleID   = array_keys(Paper_utils::get_modules($paperID, $mysqli));
+  $moduleID   = array_keys(Paper_utils::get_modules($paperID, $db));
   $mod_list = array_keys($moduleID);
   
   // Get student data.
