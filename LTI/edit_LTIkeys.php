@@ -27,6 +27,7 @@ require '../include/errors.inc';
 require_once 'ims-lti/UoN_LTI.php';
 
 $lti = new UoN_LTI($mysqli);
+$lti->init_lti0($mysqli);
 check_var('LTIkeysid', 'GET', true, false, false);
 
 if (isset($_POST['submit'])) {
@@ -70,7 +71,7 @@ if (isset($_POST['submit'])) {
     <script language="JavaScript">
       function checkForm() {
         if (document.getElementById('ltiname').value == "" || document.getElementById('ltiname').value == "<?php echo $string['prompt1']; ?>" || document.getElementById('ltikey').value == "" || document.getElementById('ltikey').value == "<?php echo $string['prompt2']; ?>" || document.getElementById('ltisec').value == "" || document.getElementById('ltisec').value == "<?php echo  $string['prompt3']; ?>") {
-          alert('<?php echo $string['enternameofschool'] ?>');
+          alert('<?php echo $string['missingfields'] ?>');
           return false;
         }
       }

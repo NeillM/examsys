@@ -29,7 +29,8 @@ require_once '../LTI/ims-lti/UoN_LTI.php';
 
 check_var('LTIkeysID', 'POST', true, false, false);
 
-$lti = new UoN_LTI($mysqli);
+$lti = new UoN_LTI();
+$lti->init_lti0($mysqli);
 $lti->delete_lti_key($_POST['LTIkeysID']);
 
 ?>

@@ -29,5 +29,6 @@ $string['mandatory'] = 'Oznacza pole <strong>wymagane</strong>, które musi być
 $string['bymodulecode'] = 'względem modułu';
 $string['myfolders'] = 'Moje foldery';
 $string['papersoncurrentmodule'] = 'Arkusze w tym module';
-$string['describemodulechoice'] = 'Wybierz arkusz, który ma być przyłączony';  
+$string['describemodulechoice'] = 'Wybierz arkusz, który ma być przyłączony';
+$string['missingfields'] ='Missing Fields'; //TODO Niko
 ?>

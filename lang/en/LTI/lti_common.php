@@ -30,4 +30,5 @@ $string['bymodulecode'] = 'By Module';
 $string['myfolders'] = 'My folders';
 $string['papersoncurrentmodule'] = 'Papers on this module';
 $string['describemodulechoice'] = 'Select Paper for Link';
+$string['missingfields'] ='Missing Fields';
 ?>

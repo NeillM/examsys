@@ -19,7 +19,7 @@ $mysqli = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_username, $cfg_db_passw
 
 
 $lti = new UoN_LTI($mysqli);
-
+$lti->init_lti0($mysqli);
 $lti->init_lti(true, false);
 
 print "<pre>";
