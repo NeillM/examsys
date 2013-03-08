@@ -623,9 +623,28 @@ if (isset($_POST['Submit'])) {
     if ($folderID != $old_folder)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_folder, $folderID, 'folder');
 
 
-    if ($properties->get_paper_type() != '2') {
-      // Update textual feedback
+    if ($properties->get_paper_type() != '2') {    // Update textual feedback if not a summative paper.
+      // Get old settings
+      $old_textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli);
+      for ($i=1; $i<10; $i++) {
+        if (!isset($old_textual_feedback[$i]['msg'])) {
+          $old_textual_feedback[$i]['msg'] = '';
+          $old_textual_feedback[$i]['boundary'] = '';
+        }
+      }
+      
+      // Get new settings
       $textual_feedback = array();
+      for ($i=1; $i<10; $i++) {
+        if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
+          $textual_feedback[$i]['msg'] = $_POST["feedback_msg$i"];
+          $textual_feedback[$i]['boundary'] = $_POST["feedback_value$i"];
+        } else {
+          $textual_feedback[$i]['msg'] = '';
+          $textual_feedback[$i]['boundary'] = '';
+        }
+      }
+      
       $editProperties = $mysqli->prepare("DELETE FROM paper_feedback WHERE paperID = ?");
       $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
@@ -638,6 +657,11 @@ if (isset($_POST['Submit'])) {
           $editProperties->execute();
         }
         $editProperties->close();
+        
+        if ($old_textual_feedback[$i]['msg'] != $_POST["feedback_msg$i"] or $old_textual_feedback[$i]['boundary'] != $_POST["feedback_value$i"]) {
+          // log a change
+          $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
+        }
       }
     }
 
@@ -721,6 +745,7 @@ if (isset($_POST['Submit'])) {
       
       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $existing_ref, '', 'referencematerial');
     }
+    exit;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
