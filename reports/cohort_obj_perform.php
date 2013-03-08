@@ -161,9 +161,9 @@ $enddate = check_var('enddate', 'GET', true, false, true);
     <?php
     echo "<blockquote><table cellspacing=\"0\" cellpadding=\"2\" border=\"0\">\n";
     foreach($objectives as $id => $obj_data) {
-      if($obj_data['ratio'] >= 80) {
-       $img_src = '../artwork/ok_comment.png';
-       $session_string = '';
+      $session_string = '';
+      if ($obj_data['ratio'] >= 80) {
+        $img_src = '../artwork/ok_comment.png';
       } else if ($obj_data['ratio'] >= 50) {
        $img_src = '../artwork/minor_comment.png';
       } else {
