@@ -95,9 +95,10 @@ class internaldb_auth extends outline_authentication {
       $datastore->uname = $uname;
       $lookupuserobj->results[] = $datastore;
       $this->savetodebug(var_export($datastore, true));
+      $lookupuserobj->found = true;
     }
 
-    $lookupuserobj->found = true;
+
 
     return $lookupuserobj;
   }
