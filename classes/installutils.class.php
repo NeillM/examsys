@@ -1383,6 +1383,10 @@ CONFIG;
 
     $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
     $config = str_replace('{cfg_long_date_time}', self::$cfg_long_date_time, $config);
+    $config = str_replace('{cfg_long_date_php}', self::$cfg_long_date_php, $config);
+    $config = str_replace('{cfg_short_date_php}', self::$cfg_short_date_php, $config);
+    $config = str_replace('{cfg_long_time_php}', self::$cfg_long_time_php, $config);
+    $config = str_replace('{cfg_short_time_php}', self::$cfg_short_time_php, $config);
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
 
