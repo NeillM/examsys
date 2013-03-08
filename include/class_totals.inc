@@ -979,7 +979,6 @@ if ($calendar_year == '') {
   $mod_query = $mysqli->prepare("SELECT modules_student.idMod, userID, moduleID FROM modules_student, modules WHERE modules_student.idMod = modules.id AND idMod IN ($tmp_moduleID_in) AND calendar_year = ?");
   $mod_query->bind_param('s', $calendar_year);
 }
-echo $mysqli->error;
 $mod_query->execute();
 $mod_query->bind_result($idMod, $tmp_userID, $tmp_moduleid);
 $mod_query->store_result();
@@ -1229,9 +1228,9 @@ while ($log_query->fetch() !== null) {
   $old_status   = $status;
 }
 
-
 if (!empty($tmp_array)) {
-  if (!isset($_GET['repmodule']) or $_GET['repmodule'] == '' or (isset($user_modules[$tmp_userID]['idMod']) and $user_modules[$tmp_userID]['idMod'] == $_GET['repmodule'])) {
+  if (!isset($_GET['repmodule']) or $_GET['repmodule'] == '' or (isset($user_modules[$old_userID]['idMod']) and $user_modules[$old_userID]['idMod'] == $_GET['repmodule'])) {
+
     $user_duration += $old_duration;
     $log_query->free_result();
     $log_query->close();

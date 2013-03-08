@@ -66,10 +66,6 @@ if (!$properties) {
   $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
 }
 
-//var_dump($properties);
-//exit;
-//$properties = Paper_utils::get_all_properties($paperID, $mysqli, $configObject);
-
 function check_duplicates($q_screens) {
   global $string;
 
