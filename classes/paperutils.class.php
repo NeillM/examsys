@@ -100,15 +100,18 @@ Class PaperUtils {
   */
   public function get_modules($paperID, $db) {
     $modules = array();
+    if ($paperID == -1) {
+      return $modules;
+    }
     $result = $db->prepare("SELECT idMod, moduleid FROM (modules, properties_modules) WHERE idMod = id AND property_id = ?");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($idMod, $moduleid);
-    while($result->fetch()) {
+    while ($result->fetch()) {
       $modules[$idMod] = $moduleid;
     }
     $result->close();
-    
+
     return $modules;
   } 
 

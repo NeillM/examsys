@@ -316,7 +316,7 @@ Class Question extends RogoObject {
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
         $this->last_edited = date ('Y-m-d H:i:s');
-        $params = array_merge(array('ssssssssssssssisssssissss'), $this->_data);
+        $params = array_merge(array('ssssssssssssssissssisssss'), $this->_data);
         $query = <<< QUERY
 INSERT INTO questions(q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method, 
 display_method, q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID, 
@@ -325,7 +325,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
 QUERY;
       } else {
         // Otherwise we're updating an existing one
-        $params = array_merge(array('ssssssssssssssisssssissssi'), $this->_data, array(&$this->id));
+        $params = array_merge(array('ssssssssssssssissssisssssi'), $this->_data, array(&$this->id));
         $this->last_edited = date('Y-m-d H:i:s');
         $query = <<< QUERY
 UPDATE questions
@@ -339,7 +339,14 @@ QUERY;
       call_user_func_array (array($result,'bind_param'), $params);
       $result->execute();
       $success = ($result->affected_rows > -1);
-      
+      if ($this->_mysqli->error) {
+        try {
+          throw new Exception("0MySQL error " . $this->_mysqli->error . "<br /> Query:<br /> $query", $this->_mysqli->errno);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+        }
+      }
       if ($success) {
         if ($this->id == -1) {
           $this->id = $this->_mysqli->insert_id;
