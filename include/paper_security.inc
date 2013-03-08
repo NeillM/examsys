@@ -43,13 +43,13 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
     $stmt->store_result();
     $stmt->fetch();
     if ($stmt->num_rows == 0) {
-      $notice->access_denied($db, $string, $string['denied_location'], false);
+      $notice->access_denied($db, $string, $string['denied_location'], true, true);
     }
     $stmt->close();
   } else {
     // Exit if a summative exam is on no labs and no password.
     if ($paper_type == '2' and trim($pword) == '') {
-      $notice->access_denied($db, $string, $string['specificpassword'], false);
+      $notice->access_denied($db, $string, $string['specificpassword'], true, true);
     }
   }
 
@@ -72,7 +72,7 @@ function check_paper_password($password, $string, $show_form = false) {
         }
       } else {
         $notice = UserNotices::get_instance();
-        $notice->access_denied($mysqli, $string, $string['specificpassword'], false);
+        $notice->access_denied($mysqli, $string, $string['specificpassword'], true, true);
       }
     }
   }
@@ -85,7 +85,7 @@ function check_datetime($start_date, $end_date) {
 
   if ((time()+120) < $start_date or (time()-3600) > $end_date) {
     $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
-    $notice->access_denied($mysqli, $string, $tmp_string, $output_header = false);
+    $notice->access_denied($mysqli, $string, $tmp_string, true, true);
   }
 }
 
@@ -119,13 +119,13 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
           }
         }
         $tmp_string = sprintf($string['notregistered'], $userObj->get_title(), $userObj->get_surname(), $userObj->get_username(), $html, $calendar_year);
-        $notice->access_denied($db, $string, $tmp_string, $output_header = false);
+        $notice->access_denied($db, $string, $tmp_string, true, true);
       } else {
         $stmt->fetch();
       }
       $stmt->close();
     } else {
-      $notice->access_denied($db, $string, $string['error_module'], false);
+      $notice->access_denied($db, $string, $string['error_module'], true, true);
     }
   }
 
@@ -140,7 +140,7 @@ function check_metadata($property_id, $userObj, $moduleIDs, $string, $db) {
   foreach ($metadata as $security_type=>$security_value) {
     if (!$userObj->has_metadata($moduleIDs, $security_type, $security_value)) {
       $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-      $notice->access_denied($db, $string, $tmp_string, $output_header = false);
+      $notice->access_denied($db, $string, $tmp_string, true, true);
     }
   }
 }

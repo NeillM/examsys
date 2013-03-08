@@ -94,20 +94,18 @@ $total_random_mark = 0;
 $total_marks = 0;
 
 //get paper info
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
-  //this will exit php
+  $notice->access_denied($mysqli, $string, $string['papernotfound'], true, true);    //this will exit php
 }
 
 //get lab info
 $current_ip_address = NetworkUtils::get_ipaddress();
 $lab_factory = new LabFactory($mysqli);
-if($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
-    $lab_name = $lab_object->get_name();
-    $lab_id = $lab_object->get_id();
+if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+  $lab_name = $lab_object->get_name();
+  $lab_id   = $lab_object->get_id();
 }
-
 
 $property_id          = $propertyObj->get_property_id();
 $paper_title          = $propertyObj->get_paper_title();
@@ -135,9 +133,9 @@ $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
 // Adjust for timezones.
 $UK_time = new DateTimeZone("Europe/London");
-$target_timezone = new DateTimeZone($timezone);
+$target_timezone    = new DateTimeZone($timezone);
 $display_start_date = DateTime::createFromFormat('U', $paper_start, $UK_time);
-$display_end_date = DateTime::createFromFormat('U', $paper_end, $UK_time);
+$display_end_date   = DateTime::createFromFormat('U', $paper_end, $UK_time);
 
 $display_start_date->setTimezone($target_timezone);
 $display_end_date->setTimezone($target_timezone);
@@ -145,7 +143,7 @@ $display_end_date->setTimezone($target_timezone);
 $tmp_cfg_long_date_time = str_replace('%', '', $configObject->get('cfg_long_date_time'));
 
 $display_start_date = $display_start_date->format($tmp_cfg_long_date_time);
-$display_end_date = $display_end_date->format($tmp_cfg_long_date_time);
+$display_end_date   = $display_end_date->format($tmp_cfg_long_date_time);
 
 $previously_submitted = 0;
 

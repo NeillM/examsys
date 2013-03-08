@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['norights'] = 'You do not have rights to view this feedback.';
 $string['examfeedback'] = 'Exam Feedback';
 $string['feedback'] = 'Feedback';
 $string['learningobjectives'] = 'Learning Objectives';

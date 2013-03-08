@@ -17,6 +17,7 @@
 require '../lang/' . $language . '/question/sct_shared.php';
 require_once '../lang/' . $language . '/include/paper_security.inc';
 
+$string['norights'] = 'You do not have rights to see this paper.';  // Niko
 $string['examscript'] = 'Zapis egzaminu';
 $string['error_paper'] = 'Wskazany arkusz nie mógł być odnaleziony.';
 $string['thankyoumsg'] = 'Dziękujemy za wypełnienie <strong>%s</strong>. Twoje odpowiedzi zostały zarejestrowane.';

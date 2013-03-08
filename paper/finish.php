@@ -49,12 +49,10 @@ if ($userObject->has_role('Demo')) {
 
 $userID = $userObject->get_user_ID();
 
-
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], $output_header = false);
-  //this will exit php
+  $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);    //this will exit php
 }
 
 /*
@@ -160,7 +158,11 @@ if (isset($_GET['previous'])) {
 }
 
 if (isset($_GET['userid'])) {
-  $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
+  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+    $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
+  } else {
+    $notice->access_denied($mysqli, $string, $string['norights'], true, true);
+  }
 } else {
   $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 }

@@ -644,6 +644,8 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function impersonate($userid) {
+    global $string;
+  
     if ($this->has_role('SysAdmin')) {
       $this->store_original_user();
       $this->roles = array();
@@ -651,6 +653,9 @@ class UserObject extends RogoStaticSingleton {
       $this->studentModules = array();
       $this->load($userid);
       $this->configObj->append('cfg_install_type', " as $this->title $this->surname");
+    } else {
+      $notice = UserNotices::get_instance();
+      $notice->access_denied($this->db, $string, $string['impersonatepriv'], true, true);
     }
   }
 

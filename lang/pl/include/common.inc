@@ -59,6 +59,7 @@ $string['LTIFAILURE'] = 'niepowodzenie LTI';
 $string['expiredtimestamp'] = 'Datownik tego połączenia jest już przeterminowany. Powróć do poprzedniej strony i ponownie wybierz ten link (nie odświeżaj przeglądarki).';
 $string['UserMissing'] = 'Brak stowarzyszonego użytkownika ';
 $string['UserMissingDesc'] = 'Z jakiegoś powodu w systemie Rogo brak jest stowarzyszonego użytkownika. To jest poważny błąd dlatego powinieneś skontaktować się z administratorem systemu';
+$string['impersonatepriv'] = 'You do not have sufficient privileges to impersonate users.';  // Niko
 
 $string['NoAuthenticationConfigured'] = 'Nie skonfigurowano uwierzytelniania';
 $string['NoAuthenticationConfiguredmessage'] = 'Konfiguracja uwierzytelniania nie została wpisana do pliku konfiguracyjnego. Skontaktuj się z administratorem systemu.';

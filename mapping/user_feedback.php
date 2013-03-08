@@ -44,15 +44,34 @@ if ($userObject->has_role('Demo')) {
 }
 
 $showReflection = true;
+if (isset($_GET['userid'])) {
+  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+    if (isset($_GET['userID']) and $_GET['userID'] != '') {
+      $userID = $_GET['userID'];
+    } else {
+      display_error($string['idmissing'], $string['idmissing_msg'], false, true, false);
+    }
+  } else {
+    $notice->access_denied($mysqli, $string, $string['norights'], true, true);
+  }
+} else {
+  $userID = $userObject->get_user_ID();
+}
+
+
+
+
+/*
 $userID = $userObject->get_user_ID();
 
-if ($userObject->has_role(array('Staff', 'SysAdmin'))) {
+if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
   if (isset($_GET['userID']) and $_GET['userID'] != '') {
     $userID = $_GET['userID'];
   } else {
     display_error($string['idmissing'], $string['idmissing_msg'], false, true, false);
   }
 }
+*/
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);

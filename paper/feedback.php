@@ -42,7 +42,7 @@ check_var('id', 'GET', true, false, false);
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper']);
+  $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);
   //this will exit php
 }
 
@@ -58,8 +58,12 @@ $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $fo
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
 //lookup previous sessionid from log_metadata.started property_id
-if (isset($_GET['userid']) and $userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
-  $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
+if (isset($_GET['userid'])) {
+  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+    $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
+  } else {
+    $notice->access_denied($mysqli, $string, $string['norights'], true, true);
+  }
 } else {
   $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 }

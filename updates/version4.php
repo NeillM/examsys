@@ -3433,8 +3433,10 @@ QUERY;
 
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-  }
 
+    $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
 
   // 21/02/2013 (nazrji) - Add start time to log_lab_end_time
   if (!$updater_utils->does_column_type_value_exist('log_lab_end_time', 'start_time', 'int(10) unsigned')) {

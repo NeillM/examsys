@@ -17,6 +17,7 @@
 require_once '../lang/' . $language . '/include/paper_security.inc';
 require_once '../lang/' . $language . '/question/sct_shared.php';
 
+$string['norights'] = 'You do not have rights to see this paper.';
 $string['examscript'] = 'Exam Script';
 $string['error_paper'] = 'The requested paper cannot be found.';
 $string['thankyoumsg'] = 'Thank you for completing <strong>%s</strong>. Your responses have been recorded.';
