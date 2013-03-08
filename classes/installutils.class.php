@@ -39,6 +39,10 @@ Class InstallUtils {
   public static $cfg_company;
   public static $cfg_short_date;
   public static $cfg_long_date_time;
+  public static $cfg_long_date_php;
+  public static $cfg_short_date_php;
+  public static $cfg_long_time_php;
+  public static $cfg_short_time_php;
   public static $cfg_timezone;
   public static $cfg_tmpdir;
 
@@ -133,7 +137,7 @@ Class InstallUtils {
 
       <table class="h"><tr><td><nobr><?php echo $string['server']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <br />
-        <div><label for="tmpdir"><?php echo $string['tempdirectory']; ?></label> <input type="text" id="mysql_admin_pass" name="tmpdir" value="/tmp/" /></div>
+        <div><label for="tmpdir"><?php echo $string['tempdirectory']; ?></label> <input type="text" id="tmpdir" name="tmpdir" value="/tmp/" /></div>
         <div style="clear: left"><label for="page_charset"><?php echo $string['pagecharset']; ?></label> <select id="page_charset" name="page_charset"><option value="UTF-8">UTF-8</option><option value="ISO-8859-1">ISO 8859-1</option></select></div>
 
       <table class="h"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -149,14 +153,20 @@ Class InstallUtils {
         <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /></div>
         <div><label for="mysql_db_charset"><?php echo $string['databasecharset']; ?></label> <select id="mysql_db_charset" name="mysql_db_charset"><option value="utf8">UTF-8</option><option value="latin1">latin1</option></select></div>
 
-        <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" /></div>
+        <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" /></div>
 
 
       <table class="h"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><?php echo sprintf($string['tdformatsare'],'<a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format" target="_blank">MySQL DATE_FORMAT</a>'); ?></div>
-        <br />
-        <div><label for="cfg_short_date"><?php echo $string['date']; ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
-        <div><label for="cfg_long_date_time"><?php echo $string['datetime']; ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+<?php
+$mysql_date_url = 'http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format';
+$php_date_url = 'http://www.php.net/manual/en/function.date.php';
+?>
+        <div><label for="cfg_short_date"><?php echo sprintf($string['date'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
+        <div><label for="cfg_long_date_time"><?php echo sprintf($string['datetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+        <div><label for="cfg_long_date_php"><?php echo sprintf($string['longdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_date_php" name="cfg_long_date_php" class="required" value="d/m/Y" /></div>
+        <div><label for="cfg_short_date_php"><?php echo sprintf($string['shortdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_date_php" name="cfg_short_date_php" class="required" value="d/m/y" /></div>
+        <div><label for="cfg_long_time_php"><?php echo sprintf($string['longtimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" /></div>
+        <div><label for="cfg_short_time_php"><?php echo sprintf($string['shorttimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_time_php" name="cfg_short_time_php" class="required" value="H:i" /></div>
         <div><label for="cfg_timezone"><?php echo $string['currenttimezone']; ?></label> <select id="cfg_timezone" name="cfg_timezone">
         <?php
           foreach ($timezone_array as $individual_zone => $display_zone) {
@@ -259,6 +269,10 @@ Class InstallUtils {
 
     self::$cfg_short_date = $_POST['cfg_short_date'];
     self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
+    self::$cfg_long_date_php = $_POST['cfg_long_date_php'];
+    self::$cfg_short_date_php = $_POST['cfg_short_date_php'];
+    self::$cfg_long_time_php = $_POST['cfg_long_time_php'];
+    self::$cfg_short_time_php = $_POST['cfg_short_time_php'];
     self::$cfg_timezone = $_POST['cfg_timezone'];
     self::$cfg_tmpdir = $_POST['tmpdir'];
 
@@ -348,7 +362,11 @@ Class InstallUtils {
     $cfg_encrypt_salt = $salt;
 
     $configObj = Config::get_instance();
-    $configObj->set('cfg_encrypt_salt', $cfg_encrypt_salt);
+
+    $authentication = array(
+      array('internaldb', array('table' => '', 'username_col' => '', 'passwd_col' => '', 'id_col' => '', 'sql_extra' => '', 'encrypt' => 'SHA-512', 'encrypt_salt' => $cfg_encrypt_salt), 'Internal Database')
+    );
+    $configObj->set('authentication', $authentication);
 
     self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset);
 
@@ -1255,6 +1273,10 @@ require \$root . '/include/path_functions.inc.php';
   // Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
+  \$cfg_long_date_php = '{cfg_long_date_php}';
+  \$cfg_short_date_php = '{cfg_short_date_php}';
+  \$cfg_long_time_php = '{cfg_long_time_php}';
+  \$cfg_short_time_php = '{cfg_short_time_php}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
 
@@ -1790,8 +1812,8 @@ QUERY;
           `examinerID` mediumint(8) unsigned DEFAULT NULL,
           `osce_type` enum('electronic','paper') DEFAULT NULL,
           `year` tinyint(4) DEFAULT NULL,
-          PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
+          PRIMARY KEY  (`id`)
+
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 

@@ -16,9 +16,9 @@
 
 $string['company'] = 'Instytucja';
 $string['companyname'] = 'Nazwa instytucji:';
-$string['databaseadminuser'] = 'Administrator bazy danych'; 
-$string['server'] = 'Serwer';  
-$string['tempdirectory'] = 'Katalog Tymczasowy';  
+$string['databaseadminuser'] = 'Administrator bazy danych';
+$string['server'] = 'Serwer';
+$string['tempdirectory'] = 'Katalog Tymczasowy';
 $string['needusername'] = 'Ten instalator wymaga nazwy użytkownika administracyjnego bazy danych MySQL oraz jego hasła aby utworzyć bazę danych i wymagane tablice. Dane tego użytkownika nie są zapisywane, a tylko zastosowane w instalacji.';
 $string['dbusername'] = 'Użytkownik:';
 $string['dbpassword'] = 'Hasło:';
@@ -26,15 +26,18 @@ $string['databasesetup'] = 'Ustawienia bazy danych';
 $string['databasehost'] = 'Adres:';
 $string['databaseport'] = 'Port:';
 $string['databasename'] = 'Nazwa:';
-$string['databasecharset'] = 'Kodowanie znaków w bazie danych'; 
+$string['databasecharset'] = 'Kodowanie znaków w bazie danych';
 $string['databaseuser'] = 'Użytkownik bazy danych Rogō';
-$string['pagecharset'] = 'Kodowanie znaków na stronach'; 
+$string['pagecharset'] = 'Kodowanie znaków na stronach';
 $string['rdbusername'] = 'Użytkownik';
 $string['rdbpassword'] = 'Hasło:';
 $string['timedateformats'] = 'Formaty czasu/daty';
-$string['tdformatsare'] = 'Formaty czasu/daty zdefiniowane są wg. stylu %s ';
-$string['date'] = 'Data:';
-$string['datetime'] = 'Data/Czas:';
+$string['date'] = 'Data (MySQL)';
+$string['datetime'] = 'Data/Czas (MySQL)';
+$string['longdatephp'] = 'Long date (PHP)'; // Niko
+$string['shortdatephp'] = 'Short date (PHP)'; // Niko
+$string['longtimephp'] = 'Long time (PHP)'; // Niko
+$string['shorttimephp'] = 'Short time (PHP)'; // Niko
 $string['currenttimezone'] = 'Aktualna strefa czasowa';
 $string['authentication'] = 'Uwierzytelnianie';
 
@@ -44,7 +47,7 @@ $string['allowguest'] = 'Logowanie przez konto gościa (dla egzaminów sumatywny
 $string['allowimpersonation'] = 'podszywanie się pod użytkownika (tylko SysAdmin)';
 $string['useldap'] = 'Zastosuj LDAP:';
 
-$string['lookup'] = 'Źródła danych odnośników'; 
+$string['lookup'] = 'Źródła danych odnośników';
 $string['allowlookupXML'] = 'użyj XML (wymaga dostosowania w pliku konfiguracyjnym)';
 $string['rdbbasename'] = 'część bazowa nazwy użytkownika';
 
@@ -52,8 +55,8 @@ $string['ldapserver'] = 'Serwer LDAP:';
 $string['searchdn'] = 'Wyszukaj dn:';
 $string['bindusername'] = 'użytkownik:';
 $string['bindpassword'] = 'hasło:';
-$string['userprefix'] = 'Prefiks nazwy użytkownika'; 
-$string['userprefixtip'] = 'Prefiks nazwy użytkownika w wyszukiwaniach LDAP, np. &quot;sAMAccountName=&quot;'; 
+$string['userprefix'] = 'Prefiks nazwy użytkownika';
+$string['userprefixtip'] = 'Prefiks nazwy użytkownika w wyszukiwaniach LDAP, np. &quot;sAMAccountName=&quot;';
 $string['sysadminuser'] = 'Administrator systemu Rogō';
 $string['initialsysadmin'] = 'Wymagane jest wyjściowe konto administratora systemu, aby móc zalogować się i utworzyć zwykłe konta użytkowników i zarządzać systemem.';
 $string['title'] = 'Tytuł:';
@@ -71,9 +74,9 @@ $string['supportnumbers'] = 'Numer telefonów wsparcia';
 $string['name'] = 'Nazwisko:';
 $string['number'] = 'Numer:';
 $string['install'] = 'Instalacja Rogō';
-$string['installed'] = 'Rogō jest skutecznie zainstalowane.';  
-$string['deleteinstall'] = 'Ze względów bezpieczeństwa usuń katalog install.';  
-$string['staffhomepage'] = 'Przejdź do strony startowej kadry';  
+$string['installed'] = 'Rogō jest skutecznie zainstalowane.';
+$string['deleteinstall'] = 'Ze względów bezpieczeństwa usuń katalog install.';
+$string['staffhomepage'] = 'Przejdź do strony startowej kadry';
 
 $string['logwarning1'] = 'nie załadowano staff_help.sql, nie można było zainstalować pomocy dla kadry';
 $string['logwarning2'] = 'nie znaleziono staff_help.sql, nie można było zainstalować pomocy dla kadry';
@@ -103,5 +106,5 @@ $string['errors14'] = 'Wygenerowano następujące ostrzeżenia';
 $string['errors15'] = 'Uwaga';
 $string['errors16'] = 'Rogō wymaga prawa zapisu w swym pliku konfiguracyjnym %s/include/load_config.php. Jednym ze sposobów realizacji tego jest tymczasowe udzielenie praw zapisu do  %s/config i przywrócenie oryginalnych przywilejów zaraz po dokonaniu aktualizacji.';
 $string['installscript'] = 'Skrypt instalacyjny Rogō';
-$string['systeminstallation'] = 'Instalacja systemu'; 
+$string['systeminstallation'] = 'Instalacja systemu';
 ?>

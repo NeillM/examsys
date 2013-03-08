@@ -32,9 +32,12 @@ $string['pagecharset'] = 'Page Character Set';
 $string['rdbusername'] = 'Username';
 $string['rdbpassword'] = 'Password';
 $string['timedateformats'] = 'Time/Date formats';
-$string['tdformatsare'] = 'Time and date formats are in %s style';
-$string['date'] = 'Date';
-$string['datetime'] = 'Date/Time';
+$string['date'] = 'Date (%s)';
+$string['datetime'] = 'Date/Time (%s)';
+$string['longdatephp'] = 'Long date (%s)';
+$string['shortdatephp'] = 'Short date (%s)';
+$string['longtimephp'] = 'Long time (%s)';
+$string['shorttimephp'] = 'Short time (%s)';
 $string['currenttimezone'] = 'Current Timezone';
 $string['authentication'] = 'Authentication';
 
@@ -103,5 +106,5 @@ $string['errors14'] = 'The following warnings were generated';
 $string['errors15'] = 'Warning';
 $string['errors16'] = 'Rogo requires ability to write its config file %s/include/load_config.php, One way to fix this is you can temporarily allow write access to %s/config and change permissions once update has run.';
 $string['installscript'] = 'Rogō Install script';
-$string['systeminstallation'] = 'System Installation'; 
+$string['systeminstallation'] = 'System Installation';
 ?>
