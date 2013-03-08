@@ -315,10 +315,6 @@ if (isset($_POST['submit'])) {
     }
     call_user_func_array(array($result,'bind_param'), $tmp);
   }
-
-  echo $sql;
-  var_dump($tmp);
-
   $result->execute();
   $result->store_result();
   $result->bind_result($title, $initials, $surname, $q_type, $q_id, $leadin, $last_edited, $ownerID, $locked, $status);
