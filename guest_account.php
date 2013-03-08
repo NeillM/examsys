@@ -29,6 +29,7 @@ require_once './include/load_config.php';
 require_once './classes/lang.class.php';
 require_once './include/auth.inc';
 require_once './classes/networkutils.class.php';
+require_once './classes/userutils.class.php';
 
 $mysqli = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_student_user'), $configObject->get('cfg_db_student_passwd'), $configObject->get('cfg_db_database'));
 
@@ -121,16 +122,19 @@ if (isset($_POST['submit'])) {
   $stmt->execute();
   $stmt->close();
   $recordID = $mysqli->insert_id;
-  
+
+  // Get the user ID
+  $stmt = $mysqli->prepare("SELECT id FROM users WHERE username = ?");
+  $stmt->bind_param('s', $free_account);
+  $stmt->execute();
+  $stmt->bind_result($temp_user_id);
+  $stmt->fetch();
+  $stmt->close();
+
   // Reset password on the chosen guest account.
   $color = array('blue', 'green', 'orange', 'gold', 'silver', 'purple', 'white', 'black', 'yellow');
   $random_password = $color[rand(0, 4)] . rand(10, 99);
-  $tmp_password = encpw($configObject->get('cfg_encrypt_salt'), $free_account, $random_password);
-  $stmt = $mysqli->prepare("UPDATE users SET password = ? WHERE username = ?");
-  $stmt->bind_param('ss', $tmp_password, $free_account);
-  $stmt->execute();
-  $stmt->close();
-  
+  UserUtils::update_password($free_account, $random_password, $temp_user_id, $mysqli);
   
 ?>
 <html>
