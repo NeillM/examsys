@@ -33,6 +33,7 @@ require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/userutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/moduleutils.class.php';
 
@@ -463,7 +464,7 @@ $result->close();
   } else {
     $active_date = 0;
   }
-  
+
   if (!$properties->get_summative_lock()) {
 ?>
   <script type="text/javascript" src="../js/jquery.paperdetails.js"></script>
@@ -663,7 +664,7 @@ $result->close();
     if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
   $result->close();
-  
+
   $q_mod_check = array_unique($q_mod_check);
   if (count($q_mod_check) > 0) {
     $q_mod_found = QuestionUtils::multi_get_modules($q_mod_check, $mysqli);
@@ -677,7 +678,7 @@ $result->close();
       }
     }
   }
-  
+
   if ($row_no > 0) {
     $temp_array[$row_no]['options'] = $options;
     $temp_array[$row_no]['o_media'] = $old_o_media;
@@ -703,7 +704,7 @@ $result->close();
     if ($latex == 0 and count($rnd_q_ids) > 0) {
       $latex = check_latex_random($rnd_q_ids, $mysqli);
     }
-    
+
     if ((round($total_random_mark,10) != round($properties->get_random_mark(), 10) or $total_marks != $properties->get_total_mark() or $latex != $properties->get_latex_needed()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
       $result = $mysqli->prepare("UPDATE properties SET random_mark = ?, total_mark = ?, latex_needed = ? WHERE property_id = ?");
       $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $_GET['paperID']);
