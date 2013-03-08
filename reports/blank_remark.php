@@ -15,11 +15,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * This script presents a list of all the unique entries (words) entered for a particular blank in
 * a fill-in-the-blank question with textboxes. The interface allows staff to tick correct alternative
 * spellings and have the system remark student scripts (only works with summative exams).
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -28,7 +28,7 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require '../classes/logger.class.php';
+require_once '../classes/logger.class.php';
 
 check_var('q_id', 'GET', true, false, false);
 check_var('paperID', 'GET', true, false, false);
@@ -40,7 +40,7 @@ $result->execute();
 $result->bind_result($option_text);
 $result->fetch();
 $result->close();
-  
+
 // Read user properties from questions.
 $result = $mysqli->prepare("SELECT score_method, marks_correct, marks_incorrect FROM questions, options WHERE questions.q_id = options.o_id AND q_id = ?");
 $result->bind_param('i', $_GET['q_id']);
@@ -48,10 +48,10 @@ $result->execute();
 $result->bind_result($score_method, $marks_correct, $marks_incorrect);
 $result->fetch();
 $result->close();
-  
+
 // Read user answers from log.
 $log_answers = array();
-$result = $mysqli->prepare("SELECT id, user_answer FROM log2 WHERE q_id = ? AND q_paper = ? AND log2.started >= ? AND log2.started <= ?");
+$result = $mysqli->prepare("SELECT l.id, l.user_answer FROM log2 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
 $result->bind_param('iiss', $_GET['q_id'], $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
 $result->execute();
 $result->bind_result($id, $user_answer);
@@ -59,7 +59,7 @@ while ($result->fetch()) {
   $log_answers[$id] = $user_answer;
 }
 $result->close();
-  
+
 if (isset($_POST['submit'])) {
   $option_list = '';
 
@@ -73,38 +73,38 @@ if (isset($_POST['submit'])) {
       }
     }
   }
- 
+
   $blank_details = explode('[blank', $option_text);
   for ($i=1; $i<count($blank_details); $i++) {
     $end_start_tag = strpos($blank_details[$i],']');
     $start_end_tag = strpos($blank_details[$i],'[/blank]');
     $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
-    
+
     $new_option_text = substr($blank_details[$i],0,($end_start_tag+1));
   }
-  
+
   for ($i=1; $i<count($blank_details); $i++) {
     $tmp_parts = explode('[/blank]', $blank_details[$i]);
-    
+
     if ($i == $_GET['blank']) {
       $blank_details[$i] = ']' . $option_list . '[/blank]' . $tmp_parts[1];
     }
   }
-  
+
   $new_option_text = $blank_details[0];
   for ($i=1; $i<count($blank_details); $i++) {
     $new_option_text .= '[blank' . $blank_details[$i];
   }
-  
+
   // Save the new option text back to the Questions table.
   $result = $mysqli->prepare("UPDATE options SET option_text = ? WHERE o_id = ?");
   $result->bind_param('si', $new_option_text, $_GET['q_id']);
-  $result->execute();  
+  $result->execute();
   $result->close();
-  
+
   $logger = new Logger($mysqli);
   $success = $logger->track_change('Post-Exam Blank correction', $_GET['q_id'], $userObject->get_user_ID(), $option_text, $new_option_text, 'Question/Stem');
-  
+
   // Remark student answers
   $blank_details = explode("[blank", $new_option_text);
   $no_answers = count($blank_details) - 1;
@@ -114,11 +114,11 @@ if (isset($_POST['submit'])) {
     $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
     $answer_list[] = explode(',',$blank_details[$i]);
   }
-    
+
   foreach ($log_answers as $id=>$log_answer) {
     $mark = 0;
     $user_parts = explode('|', $log_answer);
-    
+
     for ($i=1; $i<=$no_answers; $i++) {
       $match = false;
       if ($user_parts[$i] != 'u') {
@@ -139,7 +139,7 @@ if (isset($_POST['submit'])) {
     $result->bind_param('ii', $mark, $id);
     $result->execute();
     $result->close();
-  }  
+  }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -158,7 +158,7 @@ if (isset($_POST['submit'])) {
 </body>
 </html>
 
-<?php  
+<?php
 } else {
   $blank_details = explode('[blank',$option_text);
   for ($i=1; $i<count($blank_details); $i++) {
@@ -176,9 +176,9 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['remark'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
@@ -190,7 +190,7 @@ if (isset($_POST['submit'])) {
     .r2 {background-color:#B3C8E8}
     .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
   </style>
-  
+
   <script language="JavaScript">
     function toggle(objectID) {
       if (document.getElementById(objectID).className == 'r2') {
@@ -199,7 +199,7 @@ if (isset($_POST['submit'])) {
         document.getElementById(objectID).className = 'r2';
       }
     }
-    
+
     function resizeList() {
       var winW = 630, winH = 460;
       if (document.body && document.body.offsetWidth) {
@@ -228,7 +228,7 @@ if (isset($_POST['submit'])) {
   </table>
 
   <div class="msg"><?php echo $string['msg']; ?></div>
-  
+
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
   <tr><th style="width:70px"><?php echo $string['correct']; ?></th><th style="width:250px"><?php echo $string['wordphrase']; ?></th><th><?php echo $string['occurrence']; ?></th></tr>
   </table>
@@ -240,9 +240,9 @@ $unique_list = array();
 
 foreach ($log_answers as $id=>$log_answer) {
   $parts = explode('|', $log_answer);
-  
+
   $word = strtolower(trim($parts[$_GET['blank']]));
-  
+
   if ($word != 'u') {
     if (isset($unique_list[$word])) {
       $unique_list[$word]++;
@@ -262,7 +262,7 @@ foreach ($unique_list as $word=>$occurrance) {
       $word = $blank;
     }
   }
-  
+
   if ($match) {
     echo '<tr id="div' . $word_count . '" class="r2"><td class="c1"><input type="checkbox" onclick="toggle(\'div'. $word_count . '\')" name="word' . $word_count . '" value="' . $word . '" checked="checked" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
   } else {
