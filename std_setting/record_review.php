@@ -118,7 +118,7 @@
             $result->bind_param('iisss', $log_id, $userObject->get_user_ID(), $t0, $rating, $now);
             $result->execute();
             $result->close();
-            if ($mysqli->error)) {
+            if ($mysqli->error) {
               display_error('Error writing to track_changes table', $mysqli->error, true, true);
               $mysqli->close();
               exit;
@@ -390,7 +390,7 @@ $result = $mysqli->prepare($std_query);
 $result->bind_param('iississ', $userObject->get_user_ID(), $log_id, $now, $rating, $paperID, $tmp_method, $group_review);
 $result->execute();
 $result->close();
-  if ($mysqli->error)) {
+  if ($mysqli->error) {
   echo "<p>Error writing to standards_setting table: " . $mysqli->error . "</p>\n";
   echo "<p>Query: $std_query</p>\n";
   $mysqli->close();
