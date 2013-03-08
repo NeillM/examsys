@@ -107,7 +107,7 @@
           $result->bind_param('si', $rating, $log_id);
           $result->execute();
           $result->close();
-          if ($mysqli->error)) {
+          if ($mysqli->error) {
             display_error('Error writing to questions table', $mysqli->error, true, true);
             $mysqli->close();
             exit;
