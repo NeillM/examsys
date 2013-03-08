@@ -231,13 +231,6 @@ class LogLabEndTime {
     $date_interval = new DateInterval('PT' . $exam_duration_secs . 'S');
     $start_datetime->add($date_interval);
 
-
-    if ($start_datetime > $paper_end_datetime) {
-      $this->msg = 'The extended exam end time exceeds the paper\'s end time.';
-
-      return $paper_end_datetime;
-    }
-
     return $start_datetime;
   }
 
