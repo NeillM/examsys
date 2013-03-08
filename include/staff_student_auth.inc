@@ -57,8 +57,6 @@ require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Inc
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 require_once $cfg_web_root . 'classes/networkutils.class.php';
-require_once $cfg_web_root . 'LTI/ims-lti/UoN_LTI.php';
-require_once $cfg_web_root . 'classes/lti_integration.class.php';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 require_once $cfg_web_root . 'classes/authentication.class.php';
 
