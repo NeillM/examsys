@@ -218,7 +218,7 @@ if ($userObject->has_role('SysAdmin')) {
   }
 
   //Can the user acsess the paper?
-  if ((isset($_REQUEST['paperID']) and $_REQUEST['paperID'] != '')) {
+  if ((isset($_REQUEST['paperID']) and !($_REQUEST['paperID'] == '' or  $_REQUEST['paperID'] == '-1') )) {
     $tmp_paperID = $_REQUEST['paperID'];
     if (substr($tmp_paperID, 0, 5) != 'find:') {
       $paper_ownerID = Paper_utils::get_ownerID($tmp_paperID, $mysqli);
