@@ -174,6 +174,9 @@ $enddate = check_var('enddate', 'GET', true, false, true);
       } else {
         $tmp_identifier = '';
       }
+      if (isset($obj_data['session']['specificguide'])) {
+        $session_string = "&nbsp;&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" /></a>&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\">" . $obj_data['session']['sessiontitle'] . "</a>";
+      }
       echo "<tr><td><img src=\"$img_src\" alt=\"" . $obj_data['mark_sum'] . ' out of ' . $obj_data['totalpos_sum'] . " objectives acquired\" width=\"16\" height=\"16\" /></td><td>" . floor(($obj_data['mark_sum']/$obj_data['totalpos_sum'])*100) . "%</td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
     }
     echo "</table></blockquote>\n";
