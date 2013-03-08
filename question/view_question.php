@@ -93,7 +93,7 @@
   
   $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
 
-  display_question($question, $paper_type, 1, '', $question_no, $question_offset, $user_answers, $unanswered);
+  display_question($question, $paper_type, 1, '', $question_no, $user_answers, $unanswered);
 
   $question_nos[] = $old_q_id;
   echo "<table>\n";
