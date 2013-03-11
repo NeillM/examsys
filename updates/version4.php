@@ -3793,6 +3793,84 @@ SQL;
     $updater_utils->execute_query($sql, true);
   }
 
+  // 11/03/2013 - nazrji - Fix string values of NULL in special_needs table
+  $bg_count = 0;
+  $result = $mysqli->prepare("SELECT count(special_id) FROM special_needs WHERE background = 'NULL' OR background = 'null'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($bg_count);
+  $result->fetch();
+  if ($bg_count > 0) {
+    $sql = "UPDATE special_needs SET background = NULL WHERE background = 'NULL' OR background = 'null'";
+    $updater_utils->execute_query($sql, true);
+  }
+
+  $fg_count = 0;
+  $result = $mysqli->prepare("SELECT count(special_id) FROM special_needs WHERE foreground = 'NULL' OR foreground = 'null'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($fg_count);
+  $result->fetch();
+  if ($fg_count > 0) {
+    $sql = "UPDATE special_needs SET foreground = NULL WHERE foreground = 'NULL' OR foreground = 'null'";
+    $updater_utils->execute_query($sql, true);
+  }
+
+  $mc_count = 0;
+  $result = $mysqli->prepare("SELECT count(special_id) FROM special_needs WHERE marks_color = 'NULL' OR marks_color = 'null'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($mc_count);
+  $result->fetch();
+  if ($mc_count > 0) {
+    $sql = "UPDATE special_needs SET marks_color = NULL WHERE marks_color = 'NULL' OR marks_color = 'null'";
+    $updater_utils->execute_query($sql, true);
+  }
+
+  $tc_count = 0;
+  $result = $mysqli->prepare("SELECT count(special_id) FROM special_needs WHERE themecolor = 'NULL' OR themecolor = 'null'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($tc_count);
+  $result->fetch();
+  if ($tc_count > 0) {
+    $sql = "UPDATE special_needs SET themecolor = NULL WHERE themecolor = 'NULL' OR themecolor = 'null'";
+    $updater_utils->execute_query($sql, true);
+  }
+
+  $lc_count = 0;
+  $result = $mysqli->prepare("SELECT count(special_id) FROM special_needs WHERE labelcolor = 'NULL' OR labelcolor = 'null'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($lc_count);
+  $result->fetch();
+  if ($lc_count > 0) {
+    $sql = "UPDATE special_needs SET labelcolor = NULL WHERE labelcolor = 'NULL' OR labelcolor = 'null'";
+    $updater_utils->execute_query($sql, true);
+  }
+
+  $f_count = 0;
+  $result = $mysqli->prepare("SELECT count(special_id) FROM special_needs WHERE font = 'NULL' OR font = 'null'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($f_count);
+  $result->fetch();
+  if ($f_count > 0) {
+    $sql = "UPDATE special_needs SET font = NULL WHERE font = 'NULL' OR font = 'null'";
+    $updater_utils->execute_query($sql, true);
+  }
+
+  $u_count = 0;
+  $result = $mysqli->prepare("SELECT count(special_id) FROM special_needs WHERE unanswered = 'NULL' OR unanswered = 'null'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($u_count);
+  $result->fetch();
+  if ($u_count > 0) {
+    $sql = "UPDATE special_needs SET unanswered = NULL WHERE unanswered = 'NULL' OR unanswered = 'null'";
+    $updater_utils->execute_query($sql, true);
+  }
+
 
   //
   /*

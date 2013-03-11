@@ -149,7 +149,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $result->bind_param('i', $_POST['old_userID']);
   $result->execute();
   $result->close();
-  
+
   if (isset($_POST['sid']) and $_POST['sid'] != '' and $_POST['sid'] != $string['unknown']) {
     $result = $mysqli->prepare("INSERT INTO sid VALUES (?, ?)");
     $result->bind_param('si', $_POST['sid'], $_POST['old_userID']);
@@ -169,28 +169,29 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   }
 } elseif (isset($_POST['updateaccess']) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
   $background = $_POST['background'];
-  if ($_POST['bg_radio'] == '0') $background = 'NULL';
+  if ($_POST['bg_radio'] == '0') $background = NULL;
   $foreground = $_POST['foreground'];
-  if ($_POST['fg_radio'] == '0') $foreground = 'NULL';
+  if ($_POST['fg_radio'] == '0') $foreground = NULL;
   $textsize = $_POST['textsize'];
   $extra_time = $_POST['extra_time'];
+  $font = ($_POST['font'] != '') ? $_POST['font'] : NULL;
   $marks_color = $_POST['marks_color'];
-  if ($_POST['marks_radio'] == '0') $marks_color = 'NULL';
+  if ($_POST['marks_radio'] == '0') $marks_color = NULL;
   $themecolor = $_POST['themecolor'];
-  if ($_POST['theme_radio'] == '0') $themecolor = 'NULL';
+  if ($_POST['theme_radio'] == '0') $themecolor = NULL;
   $labelcolor = $_POST['labelcolor'];
-  if ($_POST['labels_radio'] == '0') $labelcolor = 'NULL';
+  if ($_POST['labels_radio'] == '0') $labelcolor = NULL;
   $unansweredcolor = $_POST['unansweredcolor'];
-  if ($_POST['unanswered_radio'] == '0') $unansweredcolor = 'NULL';
+  if ($_POST['unanswered_radio'] == '0') $unansweredcolor = NULL;
 
   $result = $mysqli->prepare("DELETE FROM special_needs WHERE userID = ?");
   $result->bind_param('i', $_GET['userID']);
   $result->execute();
   $result->close();
 
-  if ($background != 'NULL' or $foreground != 'NULL' or $marks_color != 'NULL' or $textsize != 'null' or $extra_time != 'null' or $themecolor != 'NULL' or $labelcolor != 'NULL' or $unansweredcolor != 'NULL') {
+  if ($background != NULL or $foreground != NULL or $marks_color != NULL or $textsize != 0 or $extra_time != 0 or $font != NULL or $themecolor != NULL or $labelcolor != NULL or $unansweredcolor != NULL) {
     $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('issiisssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $_POST['font'], $unansweredcolor);
+    $result->bind_param('issiisssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor);
     $result->execute();
     $result->close();
 
@@ -285,7 +286,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         editwin.focus();
       }
     }
-    
+
     function updateAccessDemo() {
 
       var e = document.getElementById("textsize");
@@ -294,32 +295,32 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         textsize = '100%';
       }
       document.getElementById('demo_paper_background').style.fontSize = textsize;
-    
+
       e = document.getElementById("font");
       var font = e.options[e.selectedIndex].text;
       if (font == '<default>') {
         font = 'Arial';
       }
       document.getElementById('demo_paper_background').style.fontFamily = font;
-    
+
       if (document.getElementById("bg_radio_on").checked) {
         document.getElementById('demo_paper_background').style.backgroundColor = document.getElementById('span_background').style.backgroundColor;
       } else {
         document.getElementById('demo_paper_background').style.backgroundColor = '#FFFFFF';
       }
-      
+
       if (document.getElementById("fg_radio_on").checked) {
         document.getElementById('demo_paper_background').style.color = document.getElementById('span_foreground').style.backgroundColor;
       } else {
         document.getElementById('demo_paper_background').style.color = '#000000';
       }
-            
+
       if (document.getElementById("theme_radio_on").checked) {
         document.getElementById('demo_theme').style.color = document.getElementById('span_themecolor').style.backgroundColor;
       } else {
         document.getElementById('demo_theme').style.color = '#316AC5';
       }
-      
+
       if (document.getElementById("labels_radio_on").checked) {
         document.getElementById('demo_true_label').style.color = document.getElementById('span_labelcolor').style.backgroundColor;
         document.getElementById('demo_false_label').style.color = document.getElementById('span_labelcolor').style.backgroundColor;
@@ -327,20 +328,20 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         document.getElementById('demo_true_label').style.color = '#C00000';
         document.getElementById('demo_false_label').style.color = '#C00000';
       }
-      
+
       if (document.getElementById("unanswered_radio_on").checked) {
         document.getElementById('demo_unanswered').style.backgroundColor = document.getElementById('span_unansweredcolor').style.backgroundColor;
       } else {
         document.getElementById('demo_unanswered').style.backgroundColor = '#FFC0C0';
       }
-      
+
       if (document.getElementById("marks_radio_on").checked) {
         document.getElementById('demo_marks').style.color = document.getElementById('span_marks_color').style.backgroundColor;
       } else {
         document.getElementById('demo_marks').style.color = '#808080';
       }
     }
-    
+
     $(document).ready(updateAccessDemo);
   </script>
 </head>
@@ -353,7 +354,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
   $user_result->fetch();
   $user_result->close();
-  
+
   if (!isset($tmp_id)) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($string['usernotfound'], $msg, '../artwork/user_not_found.png', '#C00000', true, true);
@@ -368,7 +369,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
   require '../tools/colour_picker/colour_picker.inc';
   require '../include/user_search_options.inc';
-  
+
   $original_username = $username;
   if ($demo == true) {
     // Hide the personal details.
@@ -617,14 +618,14 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   }
 
   $stmt = false;
-  
+
   if ($userObject->has_role(array('Admin', 'SysAdmin')) or $userObject->get_user_ID() == $_GET['userID']) {
     $log_viewable = true;
   } else {
     $idMod = array_keys($userObject->get_staff_modules());
     $log_viewable = UserUtils::is_user_on_module($_GET['userID'], $idMod, '', $mysqli);
   }
-  
+
   $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
 
   if (stripos('External Examiner', $tmp_roles) !== false) {      // Get the papers the External is down to review.
@@ -662,7 +663,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 5 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log5, log_metadata WHERE log5.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ?)";
     $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log6 WHERE properties.property_id = log6.paperID AND reviewerID = ?)";
     $query_sql .= " ORDER BY paperID, started, screen";
-    
+
     $stmt = $mysqli->prepare($query_sql);
     $stmt->bind_param('iiiiiii', $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id);
     $stmt->execute();
@@ -711,7 +712,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       $results_no++;
     }
 
-    // Add in feedback 
+    // Add in feedback
     $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(accessed, '%Y%m%d%H%i%s') AS accessed, DATE_FORMAT(accessed,'{$configObject->get('cfg_long_date_time')}') AS display_started, crypt_name, type, paper_title FROM access_log, properties WHERE access_log.page = properties.property_id AND userID = ? AND type IN ('Objectives-based feedback report', 'Question-based feedback report')");
     $stmt->bind_param('i', $_GET['userID']);
     $stmt->execute();
@@ -948,33 +949,25 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $result->store_result();
   $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor);
   $result->fetch();
-  if ($result->num_rows == 0) {
-    $textsize     = '';
-    $background   = '';
-    $foreground   = '';
-    $extra_time   = '';
-    $themecolor   = '';
-    $labelcolor   = '';
-    $marks_color  = '';
-    $font         = '';
-    $unansweredcolor = '';
-  } else {
+  if ($result->num_rows > 0) {
     $special_needs = true;
-    if ($background == 'NULL')  $background = '';
-    if ($foreground == 'NULL')  $foreground = '';
-    if ($themecolor == 'NULL')  $themecolor = '';
-    if ($labelcolor == 'NULL')  $labelcolor = '';
-    if ($marks_color == 'NULL') $marks_color = '';
-    if ($font == 'NULL')        $font = '';
-    if ($unansweredcolor == 'NULL') $unansweredcolor = '';
   }
+  if (!isset($background))  $background = '';
+  if (!isset($foreground))  $foreground = '';
+  if (!isset($themecolor))  $themecolor = '';
+  if (!isset($labelcolor))  $labelcolor = '';
+  if (!isset($marks_color)) $marks_color = '';
+  if (!isset($textsize))    $textsize = 0;
+  if (!isset($extra_time))  $extra_time = 0;
+  if (!isset($font))        $font = '';
+  if (!isset($unansweredcolor)) $unansweredcolor = '';
   $result->close();
 ?>
 <tr>
 <td><?php echo $string['extratime']; ?></td>
 <td colspan="2">
 <select name="extra_time">
-<option value="null"><?php echo $string['noextratime']; ?></option>
+<option value="0"><?php echo $string['noextratime']; ?></option>
 <?php
   $times = array(5, 10, 25, 33, 50, 100, 200, 300);
   foreach ($times as $individual_time) {
@@ -1012,7 +1005,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <td><?php echo $string['fontsize']; ?></td>
 <td colspan="2">
 <select name="textsize" id="textsize" onchange="updateAccessDemo()">
-<option value="null"><?php echo $string['angledefault']; ?></option>
+<option value="0"><?php echo $string['angledefault']; ?></option>
 <?php
   $fontsizes = array(90, 100, 110, 120, 130, 140, 150, 175, 200, 300, 400);
   foreach ($fontsizes as $individual_fontsize) {
@@ -1030,7 +1023,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <td><?php echo $string['typeface']; ?></td>
 <td colspan="2">
 <select name="font" id="font" onchange="updateAccessDemo()">
-<option value="null"><?php echo $string['angledefault']; ?></option>
+<option value=""><?php echo $string['angledefault']; ?></option>
 <?php
   $fontfamily = array('Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana');
   foreach ($fontfamily as $individual_fontfamily) {

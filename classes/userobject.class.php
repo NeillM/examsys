@@ -122,65 +122,65 @@ class UserObject extends RogoStaticSingleton {
     return $this->userroles;
   }
 
-  function get_bgcolor() {
-    if (!isset($this->background)) {
-      return 'NULL';
+  function get_bgcolor($default = '') {
+    if (!isset($this->background) && $default != '') {
+      $this->background = $default;
     }
 
     return $this->background;
   }
 
-  function get_fgcolor() {
-    if (!isset($this->foreground)) {
-      return 'NULL';
+  function get_fgcolor($default = '') {
+    if (!isset($this->foreground) && $default != '') {
+      $this->foreground = $default;
     }
 
     return $this->foreground;
   }
 
-  function get_textsize() {
-    if ($this->textsize == 0) {
-      return 'NULL';
+  function get_textsize($default = '') {
+    if ($this->textsize == 0 && $default != '') {
+      $this->textsize = $default;
     }
 
     return $this->textsize;
   }
 
-  function get_marks_color() {
-    if (!isset($this->marks_color)) {
-      return 'NULL';
+  function get_marks_color($default = '') {
+    if (!isset($this->marks_color) && $default != '') {
+      $this->marks_color = $default;
     }
 
     return $this->marks_color;
   }
 
-  function get_themecolor() {
-    if (!isset($this->themecolor)) {
-      return 'NULL';
+  function get_themecolor($default = '') {
+    if (!isset($this->themecolor) && $default != '') {
+      $this->themecolor = $default;
     }
 
     return $this->themecolor;
   }
 
-  function get_labelcolor() {
-    if (!isset($this->labelcolor)) {
-      return 'NULL';
+  function get_labelcolor($default = '') {
+    if (!isset($this->labelcolor) && $default != '') {
+      $this->labelcolor = $default;
     }
 
     return $this->labelcolor;
   }
 
-  function get_font() {
-    if (!isset($this->font)) {
-      return 'NULL';
+  function get_font($default = '') {
+    if (!isset($this->font) && $default != '') {
+      $this->font = $default;
     }
 
     return $this->font;
   }
 
-  function get_unanswered_color() {
-    if (!isset($this->unanswered_color)) {
-      return 'NULL';
+  function get_unanswered_color($default = '') {
+    if (!isset($this->unanswered_color) && $default != '') {
+      $this->unanswered_color = $default;
     }
 
     return $this->unanswered_color;
@@ -358,7 +358,7 @@ class UserObject extends RogoStaticSingleton {
     $result = $this->db->prepare("SELECT idMod, moduleID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID");
     if ($this->db->error) {
       try {
-        
+
         throw new Exception("MySQL error " . $this->db->error , $this->db->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -645,7 +645,7 @@ class UserObject extends RogoStaticSingleton {
 
   function impersonate($userid) {
     global $string;
-  
+
     if ($this->has_role('SysAdmin')) {
       $this->store_original_user();
       $this->roles = array();

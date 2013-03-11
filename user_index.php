@@ -73,21 +73,19 @@ function displayPrevTake($markTotal, $adjPercent, $totalRandomMark, $marking_sty
   echo '</td></tr>';
 }
 
+$special_needs_percentage = 0;
+$textsize = 100;
+$font = 'Arial';
+
 if ($userObject->is_special_needs()) {
   //look up special_needs data
-  $textsize = $userObject->get_textsize();
-  if ($textsize != '') {
-    $textsize = $textsize + 5;
-  }
-} else {
-  $special_needs_percentage = 0;
-  $textsize = '';
-  $font = '';
+  $special_needs_percentage = $userObject->get_special_needs_percentage();
+  $textsize = $userObject->get_textsize($textsize);
+  $font = $userObject->get_font($font);
 }
 
-//if blank reset to defaults
-if ($textsize == '') $textsize = 95;
-if ($font == '') $font = 'Arial';
+// Adjust text size
+$textsize -= 5;
 
 $person = $userObject->get_title() . ' ' . $userObject->get_surname();
 $total_random_mark = 0;
@@ -224,7 +222,7 @@ if ($exam_duration !== null) {
 
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <style type="text/css">
-    body {font-size:<?php echo $textsize; ?>%}
+    body {font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
     input {font-size:90%}
     td {text-align:left}
     p { margin: 2px 0 8px 0 }
