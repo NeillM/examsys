@@ -1737,7 +1737,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     $mod_query->bind_result($idMod, $tmp_userID, $tmp_moduleid);
     $mod_query->store_result();
     while ($mod_query->fetch()) {
-	  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and idMod != $_GET['repmodule']) {
+	  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and $idMod != $_GET['repmodule']) {
 	    continue; //this user is not on the module set in repmodule so dont put them in the array
 	  }
 	  if ($users_on_modules == '') {
