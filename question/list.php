@@ -49,6 +49,11 @@ if (isset($_GET['keyword'])) {
 }
 if (isset($_GET['module'])) {
   $module = $_GET['module'];
+  $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
+  if (!$module_code) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($string['modulenotfound'], $msg, '../artwork/module_not_found.png', '#C00000', true, true);
+  }
 } else {
   $module = '';
 }
@@ -119,20 +124,20 @@ if (isset($_GET['checked'])) {
     $bank_type = ": '" . $parts[1] . "'";
   }
   if ($module != '') {
-    $bank_type = ': ' . $module;
+    $bank_type = ": $module_code";
   }
   if ($_GET['type'] != '%') {
     $bank_type = ': ' . $_GET['type'];
   }
   $staff_modules_sql = '';
   if ($module != '') {
-    if (in_array($module, $staff_modules)) {
-      $idMod = module_utils::get_idMod($module, $mysqli);
-      $module_sql = "idMod = $idMod";
-    } else {
-      echo "<tr><td colspan=\"4\">" . $string['notinteam'] . "</td></tr>\n</body>\n</html>\n";
-      exit;
-    }
+    //if (in_array($module, $staff_modules)) {
+    //  $idMod = module_utils::get_idMod($module, $mysqli);
+      $module_sql = "idMod = " . $_GET['module'];
+    //} else {
+    //  echo "<tr><td colspan=\"4\">" . $string['notinteam'] . "</td></tr>\n</body>\n</html>\n";
+    //  exit;
+    //}
   } else {
     if (count($staff_modules) > 0) {
       $staff_modules_sql = implode(',', array_keys($staff_modules));

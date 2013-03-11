@@ -15,6 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once '../lang/' . $language . '/include/status.inc';
+require_once '../lang/' . $language . '/include/not_found.inc';
 
 $string['question'] = 'Pytanie';
 $string['questionbank'] = 'Bank pytań';
