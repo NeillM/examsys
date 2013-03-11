@@ -381,6 +381,9 @@ if ($critical_error == '') {
 } else {
   // Bad things have happened
   $q_type_display = '';
+  
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($string['error'], $critical_error, '../../artwork/paper_not_found.png', '#C00000', true, true);
 }
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
@@ -515,7 +518,7 @@ if ($critical_error == '') {
 	</div>
 
 <?php
-if($critical_error != '') {
+if ($critical_error != '') {
   // We have a major error so won't even display a form
 ?>
   <div id="major-error" class="edit-spacer">
@@ -528,7 +531,7 @@ if($critical_error != '') {
 } else {
 
   $query_string = '';
-  if($question->id != -1) {
+  if ($question->id != -1) {
     $query_string = '?q_id=' . $question->id;
   } else {
     $query_string .= '?type=' . $question->get_type();;
@@ -555,7 +558,7 @@ if($critical_error != '') {
 				</div>
 
 <?php
-if (count($errors) > 0) {
+  if (count($errors) > 0) {
 ?>
         <div id="errors" class="form">
           <ul>
@@ -570,7 +573,7 @@ if (count($errors) > 0) {
         </div>
 
 <?php
-}
+  }
 ?>
         <div id="question-holder" class="clearfix">
           <div class="form">
