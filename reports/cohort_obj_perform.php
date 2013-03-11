@@ -143,7 +143,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
     <?php
       echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['totalcandidate'] . '</td><td>' . number_format($user_total) . '</td></tr>';
       if ($_GET['percent'] != 100 and $_GET['percent'] != '') {
-        if ($_GET['direction'] == 'desc') {
+        if ($_GET['ordering'] == 'desc') {
           echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['uppersize'] . '</td><td>' . $_GET['percent'] . '% (' . $student_no . ' ' . $string['candidates'] . ')</td></tr>';
         } else {
           echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['lowersize'] . '</td><td>' . $_GET['percent'] . '% (' . $student_no . ' ' . $string['candidates'] . ')</td></tr>';
