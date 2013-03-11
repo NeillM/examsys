@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require_once '../lang/' . $language . '/include/not_found.inc';
+
 $string['nomodules'] = 'No modules found for academic session';
 $string['modules'] = 'Modules';
 $string['modulesfor'] = 'Modules for';

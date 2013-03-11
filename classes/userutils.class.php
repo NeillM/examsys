@@ -151,6 +151,28 @@ Class UserUtils {
   }
 
   /**
+   * Check if userID exists.
+   *
+   * @param string $userid user ID
+   * @param object $db mysqli database connection
+   *
+   * @return true if exists else false
+   *
+   */
+  static function userid_exists($userid, $db) {
+    $stmt = $db->prepare("SELECT id FROM users WHERE id = ? AND user_deleted IS NULL");
+    $stmt->bind_param('s', $userid);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($tmp_userID);
+    $stmt->fetch();
+    $exists = ($stmt->num_rows == 0) ? false : true;
+    $stmt->close();
+
+    return $exists;
+  }
+
+  /**
    * Check if Student ID exists and if so return ID.
    *
    * @param string $sid Student ID

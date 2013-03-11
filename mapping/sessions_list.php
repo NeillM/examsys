@@ -26,8 +26,14 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/moduleutils.class.php';
 
-check_var('module', 'GET', true, false, false);
+$modID = check_var('module', 'GET', true, false, true);
 
+$module = module_utils::get_moduleid_from_id($modID, $mysqli);
+
+if (!$module) {
+   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+   $notice->display_notice_and_exit($string['modulenotfound'], $msg, '../artwork/module_not_found.png', '#C00000', true, true);
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onclick="hideSessCopyMenu(event);">
@@ -100,13 +106,7 @@ check_var('module', 'GET', true, false, false);
   require '../include/sessions_options.inc';
 ?>
 <div id="content" class="content">
-<?php
-  if (isset($_GET['module'])) {
-    $module = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
-  } else {
-    $module = '';
-  }
-  
+<?php  
   echo "<table class=\"header\">\n";
   echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=" . $_GET['module'] . "\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
   echo "<tr><th class=\"vert_div col10\">" . $string['date'] . "&nbsp;</th>\n";

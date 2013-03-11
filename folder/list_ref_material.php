@@ -26,8 +26,14 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/moduleutils.class.php';
 
-check_var('module', 'GET', true, false, false);
- 
+$modID = check_var('module', 'GET', true, false, true);
+
+$module_code = module_utils::get_moduleid_from_id($modID, $mysqli);
+
+if (!$module_code) {
+   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+   $notice->display_notice_and_exit($string['modulenotfound'], $msg, '../artwork/module_not_found.png', '#C00000', true, true);
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -100,7 +106,7 @@ check_var('module', 'GET', true, false, false);
 <?php
   $reference_materials = array();
 
-  $result = $mysqli->prepare("SELECT reference_material.id, reference_material.title FROM reference_material, reference_modules WHERE reference_material.id=reference_modules.refID AND reference_material.deleted IS NULL AND idMod = ? ORDER BY reference_material.id");
+  $result = $mysqli->prepare("SELECT reference_material.id, reference_material.title FROM reference_material, reference_modules WHERE reference_material.id = reference_modules.refID AND reference_material.deleted IS NULL AND idMod = ? ORDER BY reference_material.id");
   $result->bind_param('i', $_GET['module']);
   $result->execute();
   $result->store_result();
