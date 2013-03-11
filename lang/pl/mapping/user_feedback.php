@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['norights'] = 'You do not have rights to view this feedback.';  // Niko
+$string['norights'] = 'Nie masz wystarczających przywilejów aby zobaczyć ten odzew.';  // Niko
 $string['examfeedback'] = 'Informacje zwrotne egzaminu';// Informacje zwrotne? odzew? dobre kontra krótkie
 $string['feedback'] = '- informacje zwrotne';
 $string['learningobjectives'] = 'Cele kształcenia';

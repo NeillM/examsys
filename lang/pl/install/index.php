@@ -34,10 +34,10 @@ $string['rdbpassword'] = 'Hasło:';
 $string['timedateformats'] = 'Formaty czasu/daty';
 $string['date'] = 'Data (MySQL)';
 $string['datetime'] = 'Data/Czas (MySQL)';
-$string['longdatephp'] = 'Long date (PHP)'; // Niko
-$string['shortdatephp'] = 'Short date (PHP)'; // Niko
-$string['longtimephp'] = 'Long time (PHP)'; // Niko
-$string['shorttimephp'] = 'Short time (PHP)'; // Niko
+$string['longdatephp'] = 'Długi format daty (PHP)'; 
+$string['shortdatephp'] = 'Krótki format daty (PHP)';
+$string['longtimephp'] = 'Długi format czasu (PHP)'; 
+$string['shorttimephp'] = 'Krótki format czasu (PHP)'; 
 $string['currenttimezone'] = 'Aktualna strefa czasowa';
 $string['authentication'] = 'Uwierzytelnianie';
 

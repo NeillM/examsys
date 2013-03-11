@@ -22,6 +22,6 @@ $string['marksloaded'] = 'Punkty/ów załadowano.';
 $string['msg1'] = 'Plik CSV powinien zawierać kolumny w następującym porządku: student_id, Question 1, Question 2...';
 $string['msg2'] = 'Wskaż plik CSV do załadowania:';
 $string['headerrow'] = 'Plik zawiera wiersz nagłówka';
-$string['errorsaving'] = 'Error updating logs'; // Niko
-$string['notfound'] = 'username not found!'; // Niko
+$string['errorsaving'] = 'Błąd aktualizacji logów'; 
+$string['notfound'] = 'nie znaleziono nazwy użytkownika!'; 
 ?>
