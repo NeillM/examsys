@@ -33,8 +33,27 @@ Class QuestionUtils {
    * @param resource $db
    * @return string The leadin
    */
+  static function question_exists($q_id, $db) {
+    $stmt = $db->prepare("SELECT q_id FROM questions WHERE q_id = ? LIMIT 1");
+    $stmt->bind_param('i', $q_id);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($tmp_q_id);
+    $stmt->fetch();
+    $exists = ($stmt->num_rows == 0) ? false : true;
+    $stmt->close();
+
+    return $exists;
+  }
+
+  /**
+   * Get the leading for a give question ID
+   * @param integer $q_id
+   * @param resource $db
+   * @return string The leadin
+   */
   static function get_ownerID($q_id, $db) {
-    $stmt = $db->prepare("SELECT ownerID FROM questions WHERE q_id=? LIMIT 1");
+    $stmt = $db->prepare("SELECT ownerID FROM questions WHERE q_id = ? LIMIT 1");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
     $stmt->store_result();
@@ -52,7 +71,7 @@ Class QuestionUtils {
    * @return string The leadin
    */
   static function get_leadin($q_id, $db) {
-    $stmt = $db->prepare("SELECT leadin FROM questions WHERE q_id=? LIMIT 1");
+    $stmt = $db->prepare("SELECT leadin FROM questions WHERE q_id = ? LIMIT 1");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
     $stmt->store_result();
@@ -91,7 +110,7 @@ Class QuestionUtils {
   static function get_keywords($q_id, $db) {
     $keywords = array();
 
-    $stmt = $db->prepare("SELECT keywordID, keyword FROM keywords_question, keywords_user WHERE q_id=? and keywords_question.keywordID = keywords_user.id");
+    $stmt = $db->prepare("SELECT keywordID, keyword FROM keywords_question, keywords_user WHERE q_id = ? and keywords_question.keywordID = keywords_user.id");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
     $stmt->bind_result($keywordID, $keyword);
@@ -132,7 +151,7 @@ Class QuestionUtils {
   static function get_modules($q_id, $db) {
     $modules = array();
     
-    $stmt = $db->prepare("SELECT idMod, moduleID FROM questions_modules, modules WHERE q_id=? AND questions_modules.idMod = modules.id");
+    $stmt = $db->prepare("SELECT idMod, moduleID FROM questions_modules, modules WHERE q_id = ? AND questions_modules.idMod = modules.id");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
     $stmt->bind_result($idMod, $moduleID);
