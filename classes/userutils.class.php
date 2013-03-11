@@ -381,6 +381,28 @@ Class UserUtils {
   }
 
   /**
+   * Clear a user (student) from all modules for that session and attempt.
+   *
+   * @param integer $tmp_userID UserID of the member of student to remove
+   * @param integer $session session year to be removed from
+   * @param integer $attemp attempt to be removed from
+   * @param object $db mysqli database connection
+   *
+   */
+  static function clear_student_modules_by_userID($tmp_userID, $session, $attempt, $db) {
+    $userObject = UserObject::get_instance();
+
+    $result = $db->prepare("DELETE FROM modules_student WHERE userID = ? AND calendar_year = ? AND attempt = ?");
+    $result->bind_param('isi', $tmp_userID, $session, $attempt);
+    $result->execute();
+    $result->close();
+
+    if ($userObject->get_user_ID() == $tmp_userID) {
+      $userObject->load_student_modules();     // Re-cache modules if the user is the currently logged in person.
+    }
+  }
+
+  /**
    * Test to see if a student is on a module.
    *
    * @param int $tmp_userID ID of the student.

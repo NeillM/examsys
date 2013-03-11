@@ -68,6 +68,7 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
       echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
     }
 
+    $loop=0;
     foreach ($mod as $idMod => $mod_info) {
       $moduleid = $mod_info['moduleid'];
       $fullname = $mod_info['fullname'];
@@ -77,10 +78,11 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
       }
 
       if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
-        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" id=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $idMod . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
       } else {
-        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" id=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $idMod . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
       }
+      $loop++;
       $old_letter = strtoupper(substr($moduleid, 0, 1));
     }
     echo "</div>\n</div>\n";
@@ -89,28 +91,25 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
   if (isset($_POST['submit'])) {
     for ($attempt=1; $attempt<=3; $attempt++) {
       // Clear the student of all modules.
+      UserUtils::clear_student_modules_by_userID($_POST['userID'], $_POST['session'], $attempt, $mysqli);
+/*
       $result = $mysqli->prepare("DELETE FROM modules_student WHERE userID = ? AND calendar_year = ? AND attempt = ?");
       $result->bind_param('isi', $_POST['userID'], $_POST['session'], $attempt);
       $result->execute();
       $result->close();
-$stopsa=0;
+      */
       // Insert a record for each module.
-      for ($i=1; $i<=$_POST['mod_count']; $i++) {
+      for ($i=0; $i<=$_POST['mod_count']; $i++) {
         if (isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '') {
+          UserUtils::add_student_to_module($_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $attempt, $_POST['session'], $mysqli, 0);
+/*
           $result = $mysqli->prepare( 'INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, 0)' );
           $result->bind_param('iisi', $_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $_POST['session'], $attempt);
           $result->execute();
-          if($i==642) {
-            print "FOUND ITY";
-            $stopsa=1;
-          }
           $result->close();
+          */
         }
       }
-    }
-    if($stopsa==1)
-    {
-      exit();
     }
   ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
