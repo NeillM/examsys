@@ -43,7 +43,6 @@ if ($userObject->has_role('Demo')) {
   $demo = false;
 }
 
-$showReflection = true;
 if (isset($_GET['userid'])) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
     if (isset($_GET['userID']) and $_GET['userID'] != '') {
@@ -58,26 +57,11 @@ if (isset($_GET['userid'])) {
   $userID = $userObject->get_user_ID();
 }
 
-
-
-
-/*
-$userID = $userObject->get_user_ID();
-
-if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
-  if (isset($_GET['userID']) and $_GET['userID'] != '') {
-    $userID = $_GET['userID'];
-  } else {
-    display_error($string['idmissing'], $string['idmissing_msg'], false, true, false);
-  }
-}
-*/
-
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 
 if (!$propertyObj) {
-  $logger->record_access_denied($userID, 'accessdenied', 'Paper not found.');  // Record attempt in access denied log.
+  $logger->record_access_denied($userObject->get_user_ID(), 'accessdenied', 'Paper not found.');  // Record attempt in access denied log.
   header("HTTP/1.0 404 Not Found");
   exit();
 }
@@ -91,7 +75,7 @@ if ($userObject->has_role('Student')) {
   $result->fetch();
   $result->close();
   if ($date == '') {
-    $logger->record_access_denied($userID, 'accessdenied', 'Objective-based feedback is not currently available for this paper.');  // Record attempt in access denied log.
+    $logger->record_access_denied($userObject->get_user_ID(), 'accessdenied', 'Objective-based feedback is not currently available for this paper.');  // Record attempt in access denied log.
     header("HTTP/1.0 404 Not Found");
     exit;
   }
@@ -115,7 +99,7 @@ $start_date = $propertyObj->get_start_date();
 $end_date = $propertyObj->get_end_date();
 
 if ($userObject->has_role('Student')) {  // Only log student views (i.e. not staff, sysadmin, etc).
-  $logger->record_access($userID, 'Objectives-based feedback report', $paperID);  
+  $logger->record_access($userObject->get_user_ID(), 'Objectives-based feedback report', $paperID);  
 }
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
