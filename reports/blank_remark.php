@@ -236,7 +236,9 @@ if (isset($_POST['submit'])) {
   <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:0px 4px 8px 4px; font-size:90%" id="list">
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
 <?php
-$unique_list = array();
+// Make sure words that are already defined as correct appear in the list even if no users have
+// given them as an answer
+$unique_list = array_fill_keys($blanks, 0);
 
 foreach ($log_answers as $id=>$log_answer) {
   $parts = explode('|', $log_answer);
