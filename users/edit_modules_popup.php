@@ -93,7 +93,7 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
       $result->bind_param('isi', $_POST['userID'], $_POST['session'], $attempt);
       $result->execute();
       $result->close();
-$stopsa=0
+$stopsa=0;
       // Insert a record for each module.
       for ($i=1; $i<=$_POST['mod_count']; $i++) {
         if (isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '') {
