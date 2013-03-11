@@ -1715,10 +1715,11 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
-       $feedback_details->bind_result($idfeedback_release);
+       $feedback_details->store_result();
        $feedback_details->fetch();
-       echo "<td><input type=\"hidden\" name=\"old_objectives_report\" value=\"$idfeedback_release\" />";
-       if ($idfeedback_release == '') {
+       $ob_feedback_release = ($feedback_details->num_rows > 0) ? '1' : '';
+       echo "<td><input type=\"hidden\" name=\"old_objectives_report\" value=\"$ob_feedback_release\" />";
+       if ($ob_feedback_release == '') {
          echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
        } else {
          echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" checked=\"checked\" />". $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" />" . $string['off'] . "</td>";
@@ -1731,14 +1732,15 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
        echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
        // Question-based Feedback
-       $idfeedback_release = '';
+       $q_feedback_release = '';
        $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
-       $feedback_details->bind_result($idfeedback_release);
+       $feedback_details->store_result();
        $feedback_details->fetch();
-       echo "<td><input type=\"hidden\" name=\"old_questions_report\" value=\"$idfeedback_release\" />";
-       if ($idfeedback_release == '') {
+       $q_feedback_release = ($feedback_details->num_rows > 0) ? '1' : '';
+       echo "<td><input type=\"hidden\" name=\"old_questions_report\" value=\"$q_feedback_release\" />";
+       if ($q_feedback_release == '') {
          echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
        } else {
          echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" />" . $string['off'] . "</td>";
