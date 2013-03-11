@@ -28,9 +28,22 @@ require '../include/mapping.inc';
 require '../include/errors.inc';
 
 require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
 require_once '../classes/folderutils.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
+
+//get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+if ($propertyObj == false) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+}
+$paper_title = $propertyObj->get_paper_title();
+$session = $propertyObj->get_calendar_year();
+$start_date = $propertyObj->get_raw_start_date();
+$end_date = $propertyObj->get_raw_end_date();
+$paper_type = $propertyObj->get_paper_type();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -58,27 +71,19 @@ $paperID = check_var('paperID', 'GET', true, false, true);
   if (!isset($_GET['ordering'])) {
     $ordering = 'screen';
     $direction = 'asc';
+  }    
+
+  echo "<table class=\"header\">\n";
+  echo '<tr><th>';
+  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    $modules = explode(',', $_GET['module']);
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
   }
-    
-  $result = $mysqli->prepare("SELECT paper_title, calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id=? LIMIT 1");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($paper_title, $session, $start_date, $end_date, $paper_type);
-  while ($result->fetch()) {
-    echo "<table class=\"header\">\n";
-    echo '<tr><th>';
-    echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-    if (isset($_GET['folder']) and $_GET['folder'] != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-    } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-      $modules = explode(',', $_GET['module']);
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
-    }
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
-    echo "<div style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['mappedobjectives'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(147); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n</table>\n";
-  }
-  $result->close();
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+  echo "<div style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['mappedobjectives'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(147); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n</table>\n";
 
   //build excluded array
   // Get any questions to exclude.
