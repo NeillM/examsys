@@ -735,8 +735,12 @@ $result->close();
     $module = '';
   } else {
     $paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);  // Get the modules from paper properties
-    $module = array_slice(array_keys($paper_modules), 0, 1);
-    $module = $module[0];
+    if (count($paper_modules) > 0) {
+      $module = array_slice(array_keys($paper_modules), 0, 1);
+      $module = $module[0];
+    } else {
+      $module = '';
+    }
     $folder = '';
   }
 

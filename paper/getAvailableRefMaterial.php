@@ -25,6 +25,8 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../lang/' . $language . '/paper/properties.php';
+
+$ref_line = 0;
 ?>
 <table cellpadding="0" cellspacing="3" border="0" style="width:100%">
 <?php
@@ -41,24 +43,26 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 // Get the dropdown list values
-$stmt = $mysqli->prepare("SELECT DISTINCT title, reference_material.id FROM reference_material, reference_modules, modules WHERE reference_material.id = reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.idMod=modules.id AND modules.id IN (" . $_GET['modules'] . ") GROUP BY reference_material.id");
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($title, $refID);
-$ref_line = $stmt->num_rows();
-if ($ref_line > 0) {
-  while ($stmt->fetch()) {
-    if (isset($current_settings[$refID])) {
-      echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" checked=\"checked\" /> $title<br />";
-    } else {
-      echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" /> $title<br />";
+if ($_GET['modules'] != '') {
+  $stmt = $mysqli->prepare("SELECT DISTINCT title, reference_material.id FROM reference_material, reference_modules, modules WHERE reference_material.id = reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.idMod = modules.id AND modules.id IN (" . $_GET['modules'] . ") GROUP BY reference_material.id");
+  $stmt->execute();
+  $stmt->store_result();
+  $stmt->bind_result($title, $refID);
+  $ref_line = $stmt->num_rows();
+  if ($ref_line > 0) {
+    while ($stmt->fetch()) {
+      if (isset($current_settings[$refID])) {
+        echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" checked=\"checked\" /> $title<br />";
+      } else {
+        echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" /> $title<br />";
+      }
+      $ref_line++;
     }
-    $ref_line++;
+  } else {
+    echo $string['nomaterials'];
   }
-} else {
-  echo $string['nomaterials'];
+  $stmt->close();
 }
-$stmt->close();
 
 $mysqli->close();
 echo "</table>\n<input type=\"hidden\" name=\"reference_no\" value=\"$ref_line\" />";

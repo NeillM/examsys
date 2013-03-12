@@ -87,11 +87,13 @@ require '../include/sidebar_menu.inc';
     $used[$assigned_account]['reserved'] = $reserved;
   }
   $result->close();
-  
+
+  $result = $mysqli->prepare("SELECT DISTINCT paperID, paper_title FROM log2, log_metadata, properties, users WHERE log2.metadataID = log_metadata.id AND log_metadata.userID = users.id AND log_metadata.paperID = properties.property_id AND username = ?");
   for ($i=1; $i<=100; $i++) {
     if (isset($used[$i]['reserved']) and $used[$i]['reserved'] != '') {
       $paper_title = '';
-      $result = $mysqli->prepare("SELECT DISTINCT q_paper, paper_title FROM log2, properties, users WHERE log2.userID=users.id AND log2.q_paper=properties.property_id AND username='user$i'");
+      $tmp_user="user$i";
+      $result->bind_param('s',$tmp_user);
       $result->execute();
       $result->bind_result($q_paper, $paper_title);
       $result->fetch();

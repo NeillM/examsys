@@ -59,19 +59,21 @@ $staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
 $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysqli);
 
 $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-$moduleIDs = array_keys($moduleIDs);
-$stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE id IN (" . implode(',', $moduleIDs) . ")");
-$stmt->execute();
-$stmt->bind_result($tmp_checklist);
-$check[] = array();
-while ($stmt->fetch()) {
-  $tmp = explode(',', $tmp_checklist);
-  foreach ($tmp as $c) {
-    $check[$c] = $c;
+if (count($moduleIDs) > 0) {
+  $moduleIDs = array_keys($moduleIDs);
+  $stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE id IN (" . implode(',', $moduleIDs) . ")");
+  $stmt->execute();
+  $stmt->bind_result($tmp_checklist);
+  $check[] = array();
+  while ($stmt->fetch()) {
+    $tmp = explode(',', $tmp_checklist);
+    foreach ($tmp as $c) {
+      $check[$c] = $c;
+    }
   }
+  $checklist = implode(',', array_keys($check));
+  $stmt->close();
 }
-$checklist = implode(',', array_keys($check));
-$stmt->close();
 ?>
 
 <?php echo $configObject->get('cfg_js_root') ?>
