@@ -22,42 +22,44 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/errors.inc';
-  require '../config/campuses.inc';
+require '../include/sysadmin_auth.inc';
+require '../include/errors.inc';
+require '../config/campuses.inc';
 
-  if (isset($_POST['submit'])) {
-    // Delete the existing IP addresses for the lab first.
-    $result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab=?");
-    $result->bind_param('i', $_GET['labID']);
-    $result->execute();  
-    $result->close();
+$lab_id = check_var('labID', 'REQUEST', true, false, true);
 
-    // Insert the new IP addresses.
-    $addresses = explode('<br />',nl2br($_POST['addresses']));
-    foreach ($addresses as $individual_address) {
-      $ip_address = trim($individual_address);
-      if ($ip_address != '') {
-        if ($configObject->get('cfg_client_lookup') == 'name') {
-          $hostname = $ip_address;
-        } else {
-          $hostname = gethostbyaddr($ip_address);
-        }
-        $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL, ?, ?, ?, ?)");
-        $result->bind_param('issi', $_GET['labID'], $ip_address, $hostname, $_POST['low_bandwidth']);
-        $result->execute();  
-        $result->close();
+if (isset($_POST['submit'])) {
+  // Delete the existing IP addresses for the lab first.
+  $result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab=?");
+  $result->bind_param('i', $lab_id);
+  $result->execute();  
+  $result->close();
+
+  // Insert the new IP addresses.
+  $addresses = explode('<br />',nl2br($_POST['addresses']));
+  foreach ($addresses as $individual_address) {
+    $ip_address = trim($individual_address);
+    if ($ip_address != '') {
+      if ($configObject->get('cfg_client_lookup') == 'name') {
+        $hostname = $ip_address;
+      } else {
+        $hostname = gethostbyaddr($ip_address);
       }
+      $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL, ?, ?, ?, ?)");
+      $result->bind_param('issi', $lab_id, $ip_address, $hostname, $_POST['low_bandwidth']);
+      $result->execute();  
+      $result->close();
     }
-    
-    // Edit Lab table.
-    $result = $mysqli->prepare("UPDATE labs SET name=?, campus=?, building=?, room_no=?, timetabling=?, it_support=?, plagarism=? WHERE id=?");
-    $result->bind_param('sssssssi', $_POST['name'], $_POST['campus'], $_POST['building'], $_POST['room_no'], $_POST['timetabling'], $_POST['it_support'], $_POST['plagarism'], $_GET['labID']);
-    $result->execute();  
-    $result->close();
+  }
+  
+  // Edit Lab table.
+  $result = $mysqli->prepare("UPDATE labs SET name=?, campus=?, building=?, room_no=?, timetabling=?, it_support=?, plagarism=? WHERE id=?");
+  $result->bind_param('sssssssi', $_POST['name'], $_POST['campus'], $_POST['building'], $_POST['room_no'], $_POST['timetabling'], $_POST['it_support'], $_POST['plagarism'], $lab_id);
+  $result->execute();  
+  $result->close();
 
-    header("location: lab_details.php?labID=" . $_GET['labID']);
-  } else {
+  header("location: lab_details.php?labID=$lab_id");
+} else {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -83,8 +85,8 @@
 
 <?php
   $ip_no = 0;
-  $result = $mysqli->prepare("SELECT name, address, campus, building, room_no, timetabling, it_support, plagarism, low_bandwidth FROM (ip_addresses, labs) WHERE ip_addresses.lab=labs.id AND labs.id=?");
-  $result->bind_param('i', $_GET['labID']);
+  $result = $mysqli->prepare("SELECT name, address, campus, building, room_no, timetabling, it_support, plagarism, low_bandwidth FROM (ip_addresses, labs) WHERE ip_addresses.lab=labs.id AND labs.id = ?");
+  $result->bind_param('i', $lab_id);
   $result->execute();
   $result->bind_result($name, $address, $campus, $building, $room_no, $timetabling, $it_support, $plagarism, $low_bandwidth);
   while ($result->fetch()) {
@@ -132,6 +134,5 @@
 </html>
 <?php
 }
-
 $mysqli->close();
 ?>

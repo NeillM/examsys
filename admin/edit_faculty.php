@@ -25,11 +25,13 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
+check_var('facultyID', 'REQUEST', true, false, false);
+
 $duplicate = false;
 if (isset($_POST['submit'])) {
   // Check for existing name
 
-  $result = $mysqli->prepare("SELECT id FROM faculty WHERE name=?");
+  $result = $mysqli->prepare("SELECT id FROM faculty WHERE name = ?");
   $result->bind_param('s', $_POST['new_faculty']);
   $result->execute(); 
   $result->store_result();
@@ -39,7 +41,7 @@ if (isset($_POST['submit'])) {
   $result->close();
 
   if (!$duplicate) {
-    $result = $mysqli->prepare("UPDATE faculty SET name=? WHERE id=?");
+    $result = $mysqli->prepare("UPDATE faculty SET name = ? WHERE id = ?");
     $result->bind_param('si', $_POST['new_faculty'], $_POST['facultyID']);
     $result->execute();  
     $result->close();
@@ -58,7 +60,7 @@ if (isset($_POST['submit'])) {
   }
 }
 
-$result = $mysqli->prepare("SELECT name FROM faculty WHERE id=?");
+$result = $mysqli->prepare("SELECT name FROM faculty WHERE id = ?");
 $result->bind_param('i', $_GET['facultyID']);
 $result->execute();
 $result->bind_result($name);

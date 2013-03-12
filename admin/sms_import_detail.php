@@ -24,6 +24,9 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/sidebar_menu.inc';
+require '../include/errors.inc';
+  
+check_var('day', 'GET', true, false, false);
 
 function get_list($list, $db) {
   $html = '';
@@ -75,14 +78,14 @@ function get_list($list, $db) {
   $db = $mysqli;
   if ($db->error) {
     try {
-      throw new Exception("MySQL error $db->error <br> Query:<br> $query", $db->errno);
+      throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
     } catch (Exception $e) {
       echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
       echo nl2br($e->getTraceAsString());
     }
   }
 
-  $result->bind_param('s',$_GET['day']);
+  $result->bind_param('s', $_GET['day']);
   $result->execute();
   $result->store_result();
   $result->bind_result($idMod, $moduleid, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);

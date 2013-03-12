@@ -26,6 +26,8 @@ require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/dateutils.class.php';
 
+$announcementid = check_var('announcementid', 'REQUEST', true, false, true);
+
 if (isset($_POST['save'])) {
   $news_title = trim($_POST['title']);
   $staff_msg = $_POST['staff_msg'];
@@ -33,9 +35,8 @@ if (isset($_POST['save'])) {
   $startdate = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'] . '00';
   $enddate = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'] . '00';
   $icon = $_POST['icon'];
-  $announcementid = $_POST['announcementid'];
   
-  $result = $mysqli->prepare("UPDATE announcements SET title=?, staff_msg=?, student_msg=?, icon=?, startdate=?, enddate=? WHERE id=?");
+  $result = $mysqli->prepare("UPDATE announcements SET title = ?, staff_msg = ?, student_msg = ?, icon = ?, startdate = ?, enddate = ? WHERE id = ?");
   $result->bind_param('ssssssi', $news_title, $staff_msg, $student_msg, $icon, $startdate, $enddate, $announcementid);
   $result->execute();  
   $result->close();
@@ -45,8 +46,8 @@ if (isset($_POST['save'])) {
   exit;
 }
 
-$result = $mysqli->prepare("SELECT title, staff_msg, student_msg, icon, DATE_FORMAT(startdate, '%Y%m%d%H%i'), DATE_FORMAT(enddate, '%Y%m%d%H%i') FROM announcements WHERE id=?");
-$result->bind_param('i', $_GET['announcementid']);
+$result = $mysqli->prepare("SELECT title, staff_msg, student_msg, icon, DATE_FORMAT(startdate, '%Y%m%d%H%i'), DATE_FORMAT(enddate, '%Y%m%d%H%i') FROM announcements WHERE id = ?");
+$result->bind_param('i', $announcementid);
 $result->execute();
 $result->bind_result($news_title, $staff_msg, $student_msg, $news_icon, $startdate, $enddate);
 $result->fetch(); 

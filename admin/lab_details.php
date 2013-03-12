@@ -22,7 +22,10 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
+require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+
+$lab_id = check_var('labID', 'GET', true, false, true);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -47,8 +50,8 @@
 ?>
 <div id="content" class="content">
 <?php
-  $results = $mysqli->prepare("SELECT name, address, hostname, campus, building, room_no, timetabling, it_support, plagarism, low_bandwidth FROM (ip_addresses, labs) WHERE ip_addresses.lab=labs.id AND labs.id=?");
-  $results->bind_param('i', $_GET['labID']);
+  $results = $mysqli->prepare("SELECT name, address, hostname, campus, building, room_no, timetabling, it_support, plagarism, low_bandwidth FROM (ip_addresses, labs) WHERE ip_addresses.lab = labs.id AND labs.id = ?");
+  $results->bind_param('i', $lab_id);
   $results->execute();
   $results->store_result();
   $results->bind_result($name, $address, $hostname, $campus, $building, $room_no, $timetabling, $it_support, $plagarism, $low_bandwidth);

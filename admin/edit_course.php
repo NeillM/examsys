@@ -23,6 +23,9 @@
 */
 
 require '../include/sysadmin_auth.inc';
+require '../include/errors.inc';
+
+check_var('courseID', 'REQUEST', true, false, false);
 
 $unique_course = true;
 $tmp_course = '';
@@ -31,7 +34,7 @@ if (isset($_POST['submit']) and $_POST['course'] != $_POST['old_course']) {
   // Check for unique course name
   $tmp_course = trim($_POST['course']);
   
-  $result = $mysqli->prepare("SELECT name FROM courses WHERE name=?");
+  $result = $mysqli->prepare("SELECT name FROM courses WHERE name = ?");
   $result->bind_param('s', $tmp_course);
   $result->execute();
   $result->store_result();
@@ -48,7 +51,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
   $tmp_description = trim($_POST['description']);
   $tmp_courseID = $_POST['courseID'];
 
-  $result = $mysqli->prepare("UPDATE courses SET name=?, description=?, schoolid=? WHERE id=?");
+  $result = $mysqli->prepare("UPDATE courses SET name = ?, description = ?, schoolid = ? WHERE id = ?");
   $result->bind_param('ssii', $tmp_course, $tmp_description, $tmp_school, $tmp_courseID);
   $result->execute();  
   $result->close();
@@ -57,7 +60,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
   exit;
 } else {
   $courseID = $_GET['courseID'];
-  $result = $mysqli->prepare("SELECT schoolid, name, description FROM courses WHERE id=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT schoolid, name, description FROM courses WHERE id = ? LIMIT 1");
   $result->bind_param('i', $courseID);
   $result->execute();
   $result->bind_result($current_school, $name, $description);
@@ -120,7 +123,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
     <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="description" value="<?php echo $description; ?>" /></td></tr>
     <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school">
     <?php
-      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id AND school != '' ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != '' ORDER BY name, school");
       $result->execute();
       $result->bind_result($schoolid, $school, $faculty);
       

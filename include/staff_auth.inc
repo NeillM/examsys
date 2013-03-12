@@ -165,7 +165,7 @@ if ($userObject->has_role('SysAdmin')) {
       if ($tmp_q_id != -1) {
         $group_array = array();
 
-        $result = $mysqli->prepare("SELECT qm.idMod, q.ownerID FROM questions q INNER JOIN questions_modules qm ON q.q_id=qm.q_id WHERE q.q_id=?");
+        $result = $mysqli->prepare("SELECT qm.idMod, q.ownerID FROM questions q INNER JOIN questions_modules qm ON q.q_id = qm.q_id WHERE q.q_id = ?");
         $result->bind_param('i', $tmp_q_id);
         $result->execute();
         $result->store_result();
@@ -179,7 +179,7 @@ if ($userObject->has_role('SysAdmin')) {
           $is_admin = false;
           if (count($group_array) > 0) {
             $module_list = "'" . str_replace(';', ',', $q_group) . "'";
-            $result2 = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND moduleid IN ({$module_list})");
+            $result2 = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID = ? AND admin_access.schools_id = schools.id AND schools.id = modules.schoolid AND moduleid IN ({$module_list})");
             $result2->bind_param('i', $userObject->get_user_ID());
             $result2->execute();
             $result2->store_result();
