@@ -16,6 +16,7 @@
 
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
+require '../lang/' . $language . '/include/not_found.inc';
 
 $string['propertiestitle'] = 'Właściwości';
 $string['edittitle'] = 'Edytuj';

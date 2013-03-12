@@ -41,6 +41,10 @@ require_once '../classes/paperproperties.class.php';
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+if (!$properties) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+}
 $logger = new Logger($mysqli);
 
 if ($properties->get_summative_lock() and !$userObject->has_role('SysAdmin')) {
@@ -1824,6 +1828,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $split_day = 0;
     } else {
       $internal_review_deadline = DateTime::createFromFormat('U', $properties->get_internal_review_deadline(), $local_time);
+      $internal_review_deadline->setTimezone($local_time);
+
       $split_year = $internal_review_deadline->format('Y');
       $split_month = $internal_review_deadline->format('m');
       $split_day = $internal_review_deadline->format('d');
@@ -1893,6 +1899,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $split_day = 0;
     } else {
       $external_review_deadline = DateTime::createFromFormat('U', $properties->get_external_review_deadline(), $local_time);
+      $external_review_deadline->setTimezone($local_time);
+
       $split_year = $external_review_deadline->format('Y');
       $split_month = $external_review_deadline->format('m');
       $split_day = $external_review_deadline->format('d');
@@ -2070,8 +2078,8 @@ for ($i=0; $i<$rows; $i++) {
     $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
     $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
   } elseif ($part == 'externalreviewdeadline' or $part == 'internalreviewdeadline') {
-    $old = date($configObject->get('cfg_long_date_php'), $old);
-    $new = date($configObject->get('cfg_long_date_php'), $new);
+    if ($old != '') $old = date($configObject->get('cfg_long_date_php'), $old);
+    if ($new != '') $new = date($configObject->get('cfg_long_date_php'), $new);
   } elseif ($part == 'modules') {
     $old = format_modules($old, $modules);
     $new = format_modules($new, $modules);

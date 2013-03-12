@@ -844,13 +844,17 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $results->close();
 
   if ($current_year == false) {
-    echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . date_utils::get_current_academic_year() . "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . date_utils::get_current_academic_year() . "','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a></nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . date_utils::get_current_academic_year();
+    if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
+      echo "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . date_utils::get_current_academic_year() . "','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
+    }
+    echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
 
   for ($i=0; $i<$row_no; $i++) {
     if ($user_modules[$i]['calendar_year'] != $old_year) {
       echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $user_modules[$i]['calendar_year'];
-      if ($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == date_utils::get_current_academic_year() ) {
+      if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == date_utils::get_current_academic_year()) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
         echo "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . $user_modules[$i]['calendar_year'] . "','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
       }
       echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
@@ -1118,7 +1122,11 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 </td>
 </tr>
 <tr><td colspan="3">&nbsp;</td></tr>
-<tr><td colspan="3" align="center"><input type="submit" name="updateaccess" value="<?php echo $string['save']; ?>" style="width:100px" /></td></tr>
+<?php
+if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
+  echo "<tr><td colspan=\"3\" align=\"center\"><input type=\"submit\" name=\"updateaccess\" value=\"" . $string['save'] . "\" style=\"width:100px\" /></td></tr>\n";
+}
+?>
 </table>
 
 
@@ -1163,7 +1171,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $stmt->close();
 
   echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
-  echo "<tr><td colspan=\"5\" style=\"text-align:center\"><input type=\"submit\" name=\"save_metadata\" value=\"" . $string['save'] . "\" style=\"width:100px\" /><input type=\"hidden\" name=\"metadata_no\" value=\"$metadata_no\" /></td></tr>\n";
+  if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
+    echo "<tr><td colspan=\"5\" style=\"text-align:center\"><input type=\"submit\" name=\"save_metadata\" value=\"" . $string['save'] . "\" style=\"width:100px\" /><input type=\"hidden\" name=\"metadata_no\" value=\"$metadata_no\" /></td></tr>\n";
+  }
 ?>
 </form>
 </table>
