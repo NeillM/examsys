@@ -184,11 +184,12 @@ if ($exam_duration !== null) {
     if ($remaining_time === false) {
       $display_remaining_time = false;
     } else {
-      if ($remaining_time > ($exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs) ) {
-        // sanity check if we have longer remaining then the exam duration set the time remaining
-        // to the exam duration (happens in summative exams if we have not started yet)
-        $remaining_time = $exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs;
-      }
+      // nazrji - remove bending consultation with Exams Office
+     // if ($remaining_time > ($exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs) ) {
+     //   // sanity check if we have longer remaining then the exam duration set the time remaining
+     //   // to the exam duration (happens in summative exams if we have not started yet)
+     //   $remaining_time = $exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs;
+     //  }
       if ($exam_started == false and $remaining_time == 0) {
         // sanity check if we have not started the exam but time remaing is 0
         // happens in summative exams if we have the start and end time set wider
