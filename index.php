@@ -86,66 +86,9 @@ function display_labs($labs, $computer_lab, $string) {
   return $html;
 }
 
-$paper_no = 0;
+$paper_utils = Paper_utils::get_instance();
 $paper_display = array();
-$paper_query = $mysqli->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, calendar_year, password FROM (papers, properties) WHERE papers.paper=properties.property_id AND (labs != '' OR password != '') AND (paper_type='1' OR paper_type='2') AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() GROUP BY paper");
-if ($mysqli->error) {
-  try {
-    throw new Exception("MySQL error $mysqli->error <br> ", $mysqli->errno);
-  } catch (Exception $e) {
-    echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-    echo nl2br($e->getTraceAsString());
-    exit();
-  }
-}
-$paper_query->execute();
-$paper_query->store_result();
-$paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $calendar_year, $password);
-while ($paper_query->fetch()) {
-  if ($labs != '') {
-    $machineOK = false;
-    $labs = str_replace(",", " OR lab=", $labs);
-    $lab_info = $mysqli->query("SELECT address FROM ip_addresses WHERE address='" . NetworkUtils::get_ipaddress() . "' AND (lab=$labs)");
-    if ($lab_info->num_rows > 0) $machineOK = true;
-    $lab_info->close();
-  } else {
-    $machineOK = true;
-  }
-  if (strpos($userObject->get_username(), 'user') !== 0) {
-    $moduleIDs = Paper_utils::get_modules($property_id, $mysqli);
-    if (count($moduleIDs) > 0) {
-      $moduleOK = false;
-      if ($calendar_year != '') {
-        $cal_sql = "AND calendar_year = '" . $calendar_year . "'";
-      } else {
-        $cal_sql = '';
-      }
-      $module_in = implode(',', array_keys($moduleIDs));
-      $moduleInfo = $mysqli->prepare("SELECT userID FROM modules_student WHERE userID=? $cal_sql AND idMod IN ($module_in)");
-      $moduleInfo->bind_param('i', $userObject->get_user_ID());
-      $moduleInfo->execute();
-      $moduleInfo->store_result();
-      $moduleInfo->bind_result($tmp_userID);
-      $moduleInfo->fetch();
-      if ($moduleInfo->num_rows() > 0) $moduleOK = true;
-      $moduleInfo->close();
-    } else {
-      $moduleOK = true;
-    }
-  } else {
-    $moduleOK = true;
-  }
-  if ($machineOK == true and $moduleOK == true) {
-    $paper_display[$paper_no]['paper_title'] = $paper_title;
-    $paper_display[$paper_no]['crypt_name'] = $crypt_name;
-    $paper_display[$paper_no]['paper_type'] = $paper_type;
-    $paper_display[$paper_no]['max_screen'] = $max_screen;
-    $paper_display[$paper_no]['bidirectional'] = $bidirectional;
-    $paper_display[$paper_no]['password'] = $password;
-    $paper_no++;
-  }
-}
-$paper_query->close();
+$paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli);
 
 if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   header("location: user_index.php?id=" . $paper_display[0]['crypt_name']);

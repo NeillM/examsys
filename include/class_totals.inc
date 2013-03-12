@@ -37,7 +37,6 @@ if ($userObject->has_role('Demo')) {
 require_once '../include/calculate_marks.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sort.inc';
-require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 
 // Get some paper properties

@@ -369,14 +369,10 @@ if ($textsize > 120) {
   if ($test_type == 2) echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
   echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['help'] . "\" name=\"help\" onclick=\"launchHelp(31);\" onkeypress=\"launchHelp(31);\" />\n";
   if ($test_type == 2) {
-    $switch_info = $mysqli->prepare("SELECT property_id FROM properties WHERE paper_type IN('1','2') AND start_date > DATE_SUB(NOW(), INTERVAL 4 HOUR) AND start_date < DATE_ADD(NOW(), INTERVAL 3 HOUR) AND end_date < DATE_ADD(NOW(), INTERVAL 6 HOUR) AND property_id != ?");
-    $switch_info->bind_param('i', $property_id);
-    $switch_info->execute();
-    $switch_info->bind_result($tmp_property_id);
-    $switch_info->store_result();
-    $switch_info->fetch();
-    if ($switch_info->num_rows > 0) echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='../index.php'\" />&nbsp;&nbsp;&nbsp;&nbsp;\n";
-    $switch_info->close();
+    $paper_utils = Paper_utils::get_instance();
+    $paper_display = array();
+    $paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli, $property_id);
+    if ($paper_no > 0) echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='../index.php'\" />&nbsp;&nbsp;&nbsp;&nbsp;\n";
   }
 
   $display_date = '';
