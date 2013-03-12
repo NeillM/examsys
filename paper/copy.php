@@ -26,7 +26,7 @@
   require_once '../include/errors.inc';
   require_once '../include/media.inc';
   require_once '../include/mapping.inc';
-  
+
   require_once '../classes/paperutils.class.php';
   require_once '../classes/logger.class.php';
 
@@ -233,7 +233,7 @@
           $logger->track_change('Copied Question', $question_id, $userObject->get_user_ID(), $question, $question_id, 'Copied Question');
           // Create a track changes record to say new question added to paper.
           $logger->track_change('Alter Paper', $new_paper_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
-          
+
           // Lookup and copy the keywords
           $keyword_result = $mysqli->prepare("SELECT keywordID FROM keywords_question WHERE q_id = ?");
           $keyword_result->bind_param('i', $question);
@@ -339,7 +339,6 @@
       }
     }
   }
-  exit;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
