@@ -22,19 +22,19 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/errors.inc';
-  
-  $tmp_paperID = check_var('paperID', 'POST', true, false, true);
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
 
-  // Set the deleted field to now and appened the date onto the paper title.
-  // This will allow someone to make a new paper with the same name as that being deleted.
-  $result = $mysqli->prepare("UPDATE properties SET deleted=NOW(), paper_title=CONCAT(paper_title,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE property_id = ?");
-  $result->bind_param('i', $tmp_paperID);
-  $result->execute();  
-  $result->close();
+$tmp_paperID = check_var('paperID', 'POST', true, false, true);
 
-  $mysqli->close();
+// Set the deleted field to now and appened the date onto the paper title.
+// This will allow someone to make a new paper with the same name as that being deleted.
+$result = $mysqli->prepare("UPDATE properties SET deleted = NOW(), paper_title = CONCAT(paper_title,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE property_id = ?");
+$result->bind_param('i', $tmp_paperID);
+$result->execute();  
+$result->close();
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

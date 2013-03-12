@@ -38,6 +38,25 @@ Class Paper_utils extends RogoStaticSingleton {
 
 Class PaperUtils {
 
+  public function paper_exists($paperid, $db) {
+    // Check for unique moduleID
+    $exist = true;
+    
+    $result = $db->prepare("SELECT property_id FROM properties WHERE property_id = ? AND deleted IS NULL");
+    $result->bind_param('i', $paperid);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($tmp_paperid);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $exist = false;
+    }
+    $result->free_result();
+    $result->close();
+
+    return $exist;
+  }
+
   /**
   * Add a question onto a paper
   *
@@ -285,7 +304,7 @@ Class PaperUtils {
   */
   public function delete_paper($paperID, $db) {
     //delete the paper
-    $update = $db->prepare("UPDATE properties SET deleted=NOW(), paper_ownerID=-1 WHERE property_id=?");
+    $update = $db->prepare("UPDATE properties SET deleted = NOW(), paper_ownerID = -1 WHERE property_id = ?");
     $update->bind_param('i', $paperID);
     $update->execute();
     $update->close();

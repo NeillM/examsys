@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/include/not_found.inc';
+
 $string['confirmdelete'] = 'Potwierdzenie usunięcia arkusza';
 $string['msg'] = 'Usunięcie tego arkusza <em>nie</em> usuwa samych pytań z banku pytań.<br /><br /><strong>Czy na pewno usunąć ten arkusz?</strong>';
 $string['deletepaper'] = 'Usuń arkusz';

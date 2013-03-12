@@ -23,9 +23,15 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
 
-check_var('paperID', 'GET', true, false, false);
+$paperid = check_var('paperID', 'GET', true, false, true);
+
+if (!Paper_utils::paper_exists($paperid, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+}
 
 $mysqli->close();
 ?>
@@ -52,7 +58,7 @@ $mysqli->close();
 
 <div style="text-align:right">
 <form action="do_delete_paper.php" method="post">
-<input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
+<input type="hidden" name="paperID" value="<?php echo $paperid; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
 <input style="width:140px" type="submit" name="submit" value="<?php echo $string['deletepaper'] ; ?>" />&nbsp;
