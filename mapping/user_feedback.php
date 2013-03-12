@@ -43,7 +43,7 @@ if ($userObject->has_role('Demo')) {
   $demo = false;
 }
 
-if (isset($_GET['userid'])) {
+if (isset($_GET['userID'])) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
     if (isset($_GET['userID']) and $_GET['userID'] != '') {
       $userID = $_GET['userID'];
@@ -179,7 +179,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   //get Cohort Data
   $tmp_start_date  = DateTime::createFromFormat('U', $start_date);
   $tmp_end_date    = DateTime::createFromFormat('U', $end_date);  
-  $chort_question_data = getCohortData($mysqli, $moduleID, $tmp_start_date ->format('YmdHis'), $tmp_end_date ->format('YmdHis'), '%', '%', '%', $paperID, $paper_type, '');
+  $chort_question_data = getCohortData($mysqli, $moduleID, $tmp_start_date->format('YmdHis'), $tmp_end_date->format('YmdHis'), '%', '%', '%', $paperID, $paper_type, '');
 
   //get users log data excluding exclued questions
   $qid_list = '';
@@ -307,8 +307,12 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     if ($obj_data['mark_sum'] == '') $obj_data['mark_sum'] = 0;
 
     //cohort performance comparison
-    $comparison = round($objectives[$id]['mark_sum'] - ( $objectives[$id]['totalpos_sum'] * ($objectives[$id]['chort_mark_sum']/$objectives[$id]['chort_totalpos_sum'])),1);
-    if($comparison == 0) {
+    if ($objectives[$id]['chort_totalpos_sum'] == 0) {
+      $comparison = 0;
+    } else {
+      $comparison = round($objectives[$id]['mark_sum'] - ( $objectives[$id]['totalpos_sum'] * ($objectives[$id]['chort_mark_sum'] / $objectives[$id]['chort_totalpos_sum'])), 1);
+    }
+    if ($comparison == 0) {
       $comparison = '0';
     } else if($comparison > 0) {
       $comparison = '+' . $comparison;
@@ -332,7 +336,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
 
   //display student marks
   if ($paper_type < '3') {
-    echo "<tr><td>" . $string['examlength'] . "</td><td>" . formatsec($exam_duration*60) . "</td></tr>\n";
+    echo "<tr><td>" . $string['examlength'] . "</td><td>" . formatsec($exam_duration * 60) . "</td></tr>\n";
     echo "<tr><td>" . $string['timespent'] . "</td><td>" . formatsec($time_spent) . "</td></tr>\n";
   }
   echo "</table>\n";

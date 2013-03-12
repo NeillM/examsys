@@ -655,60 +655,62 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $stmt->bind_param('i', $tmp_id);
   } elseif ($log_viewable) {
     // Only allow Admin/SysAdmin or current user to view this information
-    $query_sql = "(SELECT crypt_name, paper_title, 0 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log0, log_metadata WHERE log0.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ?)";
-    $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 1 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log1, log_metadata WHERE log1.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ?)";
-    $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 2 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log2, log_metadata WHERE log2.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ?)";
-    $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 3 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log3, log_metadata WHERE log3.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ?)";
-    $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log4_overall WHERE properties.property_id = log4_overall.q_paper AND userID = ?)";
-    $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 5 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log5, log_metadata WHERE log5.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ?)";
-    $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log6 WHERE properties.property_id = log6.paperID AND reviewerID = ?)";
-    $query_sql .= " ORDER BY paperID, started, screen";
+    $queries = array();
+    $queries[] = "SELECT crypt_name, paper_title, 0 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log0, log_metadata WHERE log0.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+    $queries[] = "SELECT crypt_name, paper_title, 1 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log1, log_metadata WHERE log1.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+    $queries[] = "SELECT crypt_name, paper_title, 2 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log2, log_metadata WHERE log2.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+    $queries[] = "SELECT crypt_name, paper_title, 3 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log3, log_metadata WHERE log3.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+    $queries[] = "SELECT crypt_name, paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log4_overall WHERE properties.property_id = log4_overall.q_paper AND userID = ? ORDER BY started, screen";
+    $queries[] = "SELECT crypt_name, paper_title, 5 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log5, log_metadata WHERE log5.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+    $queries[] = "SELECT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log6 WHERE properties.property_id = log6.paperID AND reviewerID = ? ORDER BY started, screen";
 
-    $stmt = $mysqli->prepare($query_sql);
-    $stmt->bind_param('iiiiiii', $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id);
-    $stmt->execute();
-    $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $duration, $screen, $ipaddress);
-    while ($stmt->fetch()) {
-      if ($old_q_paper != $q_paper or $old_started != $started) {
-        if ($old_q_paper != '') {
-          $paper[$results_no]['crypt_name'] = $old_crypt_name;
-          $paper[$results_no]['q_paper'] = $old_paper_title;
-          $paper[$results_no]['id'] = $old_q_paper;
-          $paper[$results_no]['type'] = $old_paper_type;
-          $paper[$results_no]['paper_type'] = $paper_types[$old_paper_type];
-          $paper[$results_no]['started'] = $old_started;
-          $paper[$results_no]['display_started'] = $old_display_started;
-          $paper[$results_no]['duration'] = $old_duration;
-          $paper[$results_no]['ipaddress'] = $old_ipaddress;
-          $results_no++;
+    foreach ($queries as $query_sql) {
+      $stmt = $mysqli->prepare($query_sql);
+      $stmt->bind_param('i', $tmp_id);
+      $stmt->execute();
+      $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $duration, $screen, $ipaddress);
+      while ($stmt->fetch()) {
+        if ($old_q_paper != $q_paper or $old_started != $started) {
+          if ($old_q_paper != '') {
+            $paper[$results_no]['crypt_name']       = $old_crypt_name;
+            $paper[$results_no]['q_paper']          = $old_paper_title;
+            $paper[$results_no]['id']               = $old_q_paper;
+            $paper[$results_no]['type']             = $old_paper_type;
+            $paper[$results_no]['paper_type']       = $paper_types[$old_paper_type];
+            $paper[$results_no]['started']          = $old_started;
+            $paper[$results_no]['display_started']  = $old_display_started;
+            $paper[$results_no]['duration']         = $old_duration;
+            $paper[$results_no]['ipaddress']        = $old_ipaddress;
+            $results_no++;
+          }
+          $old_screen   = 0;
+          $old_duration = 0;
         }
-        $old_screen = 0;
-        $old_duration = 0;
+        if ($old_screen != $screen) {
+          $old_duration += $duration;
+        }
+        $old_crypt_name       = $crypt_name;
+        $old_q_paper          = $q_paper;
+        $old_started          = $started;
+        $old_display_started  = $display_started;
+        $old_paper_type       = $paper_type;
+        $old_screen           = $screen;
+        $old_paper_title      = $paper_title;
+        $old_ipaddress        = $ipaddress;
       }
-      if ($old_screen != $screen) {
-        $old_duration += $duration;
-      }
-      $old_crypt_name = $crypt_name;
-      $old_q_paper = $q_paper;
-      $old_started = $started;
-      $old_display_started = $display_started;
-      $old_paper_type = $paper_type;
-      $old_screen = $screen;
-      $old_paper_title = $paper_title;
-      $old_ipaddress = $ipaddress;
+      $stmt->close();
     }
-    $stmt->close();
 
     if ($old_q_paper != '') {
-      $paper[$results_no]['crypt_name'] = $old_crypt_name;
-      $paper[$results_no]['q_paper'] = $old_paper_title;
-      $paper[$results_no]['id'] = $old_q_paper;
-      $paper[$results_no]['type'] = $old_paper_type;
-      $paper[$results_no]['paper_type'] = $paper_types[$old_paper_type];
-      $paper[$results_no]['started'] = $old_started;
-      $paper[$results_no]['display_started'] = $old_display_started;
-      $paper[$results_no]['duration'] = $old_duration;
-      $paper[$results_no]['ipaddress'] = $old_ipaddress;
+      $paper[$results_no]['crypt_name']       = $old_crypt_name;
+      $paper[$results_no]['q_paper']          = $old_paper_title;
+      $paper[$results_no]['id']               = $old_q_paper;
+      $paper[$results_no]['type']             = $old_paper_type;
+      $paper[$results_no]['paper_type']       = $paper_types[$old_paper_type];
+      $paper[$results_no]['started']          = $old_started;
+      $paper[$results_no]['display_started']  = $old_display_started;
+      $paper[$results_no]['duration']         = $old_duration;
+      $paper[$results_no]['ipaddress']        = $old_ipaddress;
       $results_no++;
     }
 
@@ -718,15 +720,15 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $stmt->execute();
     $stmt->bind_result($page, $ipaddress, $accessed, $display_started, $crypt_name, $type, $paper_title);
     while ($stmt->fetch()) {
-      $paper[$results_no]['crypt_name'] = $crypt_name;
-      $paper[$results_no]['q_paper'] = $paper_title;
-      $paper[$results_no]['id'] = $page;
-      $paper[$results_no]['type'] = $type;
-      $paper[$results_no]['paper_type'] = $type;
-      $paper[$results_no]['started'] = $accessed;
-      $paper[$results_no]['display_started'] = $display_started;
-      $paper[$results_no]['duration'] = 'N/A';
-      $paper[$results_no]['ipaddress'] = $ipaddress;
+      $paper[$results_no]['crypt_name']       = $crypt_name;
+      $paper[$results_no]['q_paper']          = $paper_title;
+      $paper[$results_no]['id']               = $page;
+      $paper[$results_no]['type']             = $type;
+      $paper[$results_no]['paper_type']       = $type;
+      $paper[$results_no]['started']          = $accessed;
+      $paper[$results_no]['display_started']  = $display_started;
+      $paper[$results_no]['duration']         = 'N/A';
+      $paper[$results_no]['ipaddress']        = $ipaddress;
       $results_no++;
     }
     $stmt->close();
@@ -737,14 +739,14 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $stmt->execute();
     $stmt->bind_result($page, $ipaddress, $tried, $display_started, $title);
     while ($stmt->fetch()) {
-      $paper[$results_no]['crypt_name'] = '';
-      $paper[$results_no]['q_paper'] = '/' . $page;
-      $paper[$results_no]['type'] = $title;
-      $paper[$results_no]['paper_type'] = $string[$title];
-      $paper[$results_no]['started'] = $tried;
-      $paper[$results_no]['display_started'] = $display_started;
-      $paper[$results_no]['duration'] = 'N/A';
-      $paper[$results_no]['ipaddress'] = $ipaddress;
+      $paper[$results_no]['crypt_name']       = '';
+      $paper[$results_no]['q_paper']          = '/' . $page;
+      $paper[$results_no]['type']             = $title;
+      $paper[$results_no]['paper_type']       = $string[$title];
+      $paper[$results_no]['started']          = $tried;
+      $paper[$results_no]['display_started']  = $display_started;
+      $paper[$results_no]['duration']         = 'N/A';
+      $paper[$results_no]['ipaddress']        = $ipaddress;
       $results_no++;
     }
     $stmt->close();
