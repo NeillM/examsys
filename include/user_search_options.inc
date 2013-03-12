@@ -153,8 +153,8 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
   } else {
     echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" /> <label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
   }
-  if ($userObject->has_role('Admin')) {
-  if (isset($state['chkbox6']) and $state['chkbox6'] == 'true') {
+  if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+    if (isset($state['chkbox6']) and $state['chkbox6'] == 'true') {
       echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" checked /> <label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
     } else {
       echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" /> <label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
