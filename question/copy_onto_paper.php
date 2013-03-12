@@ -32,7 +32,7 @@ require_once '../classes/logger.class.php';
 
 check_var('q_id', 'GET', true, false, false);
 
-if (!QuestionUtils::question_exists($_GET['q_id'], $mysqli)) {
+if (!QuestionUtils::question_exists(substr($_GET['q_id'],1), $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($string['questionnotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
 }
