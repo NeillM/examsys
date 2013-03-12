@@ -130,10 +130,15 @@ function get_staff_module_links($staff_modules, $db) {
 function get_keywords($teams, $userID, $db) {
   $configObject = Config::get_instance();
 
+  if (count($teams) == 0) {
+    return array();
+  }
+
   $keywords_array = array();
+  
   $keyword_no = 0;
   $old_moduleID = '';
-  $result = $db->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID = modules.id AND modules.id IN (" . implode(',',array_keys($teams)) . ") ORDER BY moduleid, keyword");
+  $result = $db->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID = modules.id AND modules.id IN (" . implode(',', array_keys($teams)) . ") ORDER BY moduleid, keyword");
   $result->execute();
   $result->store_result();
   $result->bind_result($moduleID, $tmp_keyword, $keywordID);
@@ -148,7 +153,7 @@ function get_keywords($teams, $userID, $db) {
   if ($result->num_rows > 0) $keywords_array[$keyword_no] = '#Personal Keywords';
   $result->close();
 
-  $result = $db->prepare("SELECT DISTINCT id, keyword FROM keywords_user WHERE userID=? ORDER BY keyword");
+  $result = $db->prepare("SELECT DISTINCT id, keyword FROM keywords_user WHERE userID = ? ORDER BY keyword");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($keywordID, $tmp_keyword);
