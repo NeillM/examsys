@@ -888,7 +888,6 @@ if (isset($_POST['Submit'])) {
           }
         }
       }
-      alert(mod_codes);
       $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>&session=' + $('#session').val() );
       $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>');
     }
