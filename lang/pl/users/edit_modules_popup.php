@@ -14,9 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../lang/' . $language . '/include/not_found.inc';
-
-$string['nomodules'] = 'Brak modułów dla sesji akademickiej'; 
+$string['nomodules'] = 'Brak modułów dla sesji akademickiej';
 $string['modules'] = 'Moduły';
 $string['modulesfor'] = 'Moduły dla';
 $string[1] = 'Pierwsze podejście';

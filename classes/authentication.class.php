@@ -93,7 +93,7 @@ class Authentication {
 
     if (!isset($this->config)) {
       global $string;
-      $notice->display_notice_and_exit($string['NoAuthenticationConfigured'], $string['NoAuthenticationConfiguredmessage'], '../artwork/software_64.png', $title_color = '#C00000');
+      $notice->display_notice_and_exit($this->db, $string['NoAuthenticationConfigured'], $string['NoAuthenticationConfiguredmessage'], $string['NoAuthenticationConfiguredmessage'], '../artwork/software_64.png', $title_color = '#C00000');
       $config_ok = false;
     }
 
@@ -438,7 +438,14 @@ class Authentication {
 
         //failed but no callbacks or callbacks finished
         $notice = UserNotices::get_instance();
-        $notice->display_notice_and_exit($string['Authentication_issue1'], sprintf($string['Authentication_issue2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()), '/artwork/user_info_48.png', '#C00000', true, true);
+        $notice->display_notice_and_exit(
+          $this->db,
+          $string['Authentication_issue1'],
+          sprintf($string['Authentication_issue2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          sprintf($string['Authentication_issue2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          '/artwork/user_info_48.png', '#C00000',
+          true,
+          true);
       }
     }
 
@@ -516,7 +523,15 @@ class Authentication {
       }
       if ($this->get_userid() < 1) {
         $notice = UserNotices::get_instance();
-        $notice->display_notice_and_exit($string['Authentication_notloggedin1'], sprintf($string['Authentication_notloggedin2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()), '/artwork/user_info_48.png', '#C00000', true, true);
+        $notice->display_notice_and_exit(
+          $this->db,
+          $string['Authentication_notloggedin1'],
+          sprintf($string['Authentication_notloggedin2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          sprintf($string['Authentication_notloggedin2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          '/artwork/user_info_48.png',
+          '#C00000',
+          true,
+          true);
 
       }
       $getauthobj->userObj->load($this->get_userid());

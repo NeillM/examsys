@@ -59,7 +59,7 @@ for ($i=0; $i<count($items); $i++) {
     }
     $result->close();
     
-    $restore = $mysqli->prepare("UPDATE properties SET deleted=NULL, paper_title = ? WHERE property_id = ?");
+    $restore = $mysqli->prepare("UPDATE properties SET deleted = NULL, paper_title = ? WHERE property_id = ?");
     $restore->bind_param('si', $new_title, $item_id);
     $restore->execute();  
     $restore->close();

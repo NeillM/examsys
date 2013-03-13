@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['furtherassistance'] = 'For further assistance contact: <a href="mailto:%s">%s</a>';
+$string['pagenotfound'] = 'Page not Found';
 $string['signinmsg'] = 'The page you are trying to access requires authentication. Please sign in using your username and password:';
 $string['username'] = 'Username';
 $string['password'] = 'Password';

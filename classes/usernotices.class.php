@@ -82,12 +82,22 @@ Class user_notices extends RogoStaticSingleton {
    * This function will output a message to the user and exit php; 
    *
    * @param string $title string title to display
-   * @param string $msg string the message
+   * @param string $msg string the message displayed on screen
+   * @param string $reason string the message displayed in the database
    * @param string $icon name of the icon image file
    * @param string $title_color color of the tile text
    *
    */
-  public function display_notice_and_exit($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
+  public function display_notice_and_exit($mysqli, $title, $msg, $reason, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
+    $user = UserObject::get_instance();
+    if ($user !== NULL and $user->get_user_ID() > 0) {
+      $logger = new Logger($mysqli);
+      $logger->record_access_denied($user->get_user_ID(), $title, $reason);  // Record attempt in access denied log against userID.
+    } else {
+      $logger = new Logger($mysqli);
+      $logger->record_access_denied(0, $title, $reason);                     // Record attempt in access denied log, userID set to zero.
+    }
+
     $this->display_notice($title, $msg, $icon, $title_color, $output_header, $output_footer);
     exit;
   }
@@ -112,14 +122,8 @@ Class user_notices extends RogoStaticSingleton {
    * @param string $output_header if true output 401 headers
    *
    */
-  public function access_denied($mysqli, $string, $message, $output_header = false, $output_footer = true) {
-    $user = UserObject::get_instance();
-    if ($user !== NULL and $user->get_user_ID() > 0) {
-      $logger = new Logger($mysqli);
-      $logger->record_access_denied($user->get_user_ID(), 'accessdenied', $message);  // Record attempt in access denied log.
-    }
-
-    $this->display_notice_and_exit($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000', $output_header, $output_footer);    
+  public function access_denied($db, $string, $message, $output_header = false, $output_footer = true) {
+    $this->display_notice_and_exit($db, $string['accessdenied'], $message, $string['accessdenied'], '/artwork/access_denied.png', '#C00000', $output_header, $output_footer);
   }
 
 }

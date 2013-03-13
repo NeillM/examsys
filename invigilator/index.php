@@ -291,8 +291,7 @@ if ($room_name != '') {
   if ($properties_list === false) {
     // No properties found
     $notice = UserNotices::get_instance();
-    $notice->display_notice_and_exit($string['nopapersfound'], '', '../artwork/red_warning_48.png');
-    //this will exit php
+    $notice->display_notice_and_exit($mysqli, $string['nopapersfound'], '', $string['nopapersfound'], '../artwork/red_warning_48.png');
   }
 }
 

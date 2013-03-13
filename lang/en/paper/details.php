@@ -17,7 +17,6 @@
 require '../lang/' . $language . '/include/paper_options.inc';
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/paper/new_paper2.php';
-require '../lang/' . $language . '/include/not_found.inc';
 
 $string['start'] = 'Start';
 $string['owner'] = 'Owner';

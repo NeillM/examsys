@@ -153,7 +153,9 @@ if ($userObject->has_role('SysAdmin')) {
     // Override access for the system training module.
     if ($on_staff_module == false and strpos($_GET['module'], 'SYSTEM') === false) {
       $message = ($failed_paper) ? $string['denied_paper'] : $string['denied_folder'];
-      $notice->access_denied($mysqli, $string, $message, false);
+      //$notice->access_denied($mysqli, $string, $message, false);
+      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 
@@ -191,7 +193,9 @@ if ($userObject->has_role('SysAdmin')) {
 
           if (!$is_admin) {
             $result->close();
-            $notice->access_denied($mysqli, $string, $string['denied_question'], false);
+            //$notice->access_denied($mysqli, $string, $string['denied_question'], false);
+            $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+            $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
           }
         }
         $result->close();
@@ -213,7 +217,9 @@ if ($userObject->has_role('SysAdmin')) {
       }
     }
     if ($staff_module_match == false) {
-      $notice->access_denied($mysqli, $string, str_replace('%s', module_utils::get_moduleid_from_id($_GET['module'], $mysqli), $string['denied_team']), false);
+      //$notice->access_denied($mysqli, $string, str_replace('%s', module_utils::get_moduleid_from_id($_GET['module'], $mysqli), $string['denied_team']), false);
+      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 
@@ -235,7 +241,9 @@ if ($userObject->has_role('SysAdmin')) {
       }
 
       if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
-        $notice->access_denied($mysqli, $string, $string['denied_paper'], false);
+        //$notice->access_denied($mysqli, $string, $string['denied_paper'], false);
+        $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
       }
     }
   }
@@ -263,7 +271,9 @@ if ($userObject->has_role('SysAdmin')) {
 
         //allow acsess to the TRAIN module for training!
         if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
-          $notice->access_denied($mysqli, $string, $string['denied_question'], false);
+          //$notice->access_denied($mysqli, $string, $string['denied_question'], false);
+          $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+          $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
         }
       }
     }

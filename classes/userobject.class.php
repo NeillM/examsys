@@ -80,38 +80,6 @@ class UserObject extends RogoStaticSingleton {
   }
 
   /**
-   * TEMP Function loads old style data in - a temp translation function
-   *
-   * @param $array array of data in old format
-   *
-   * @return array
-   */
-  /*
-  function old_load($array) {
-    list($this->password, $this->userID, $this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs, $this->record_no, $this->split_username) = $array;
-
-    if (strpos($this->userroles, 'SysAdmin') !== false) {
-      $this->roles['SysAdmin'] = 1;
-    }
-    if (strpos($this->userroles, 'Admin') !== false and strpos($this->userroles, 'SysAdmin') === false) {
-      $this->roles['Admin'] = 1;
-    }
-    if (strpos($this->userroles, 'Staff') !== false or strpos($this->userroles, 'Admin') !== false) { // Process staff first to get higher priority than students --no need
-      $this->roles['Staff'] = 1;
-    }
-    if (strpos($this->userroles, 'Student') !== false) {
-      $this->roles['Student'] = 1;
-    }
-    if (strpos($this->userroles, 'External Examiner') !== false) {
-      $this->roles['ExternalExaminer'] = 1;
-    }
-    if (strpos($this->userroles, 'Invigilator') !== false) {
-      $this->roles['Invigilator'] = 1;
-    }
-  }
-*/
-
-  /**
    * TEMP Function exports user roles in old style
    *
    * @param $array array of data in old format

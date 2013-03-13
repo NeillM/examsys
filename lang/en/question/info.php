@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once $configObject->get('cfg_web_root') . 'lang/' . $language . '/include/not_found.inc';
-
 $string['questioninformation'] = 'Question Information';
 $string['author'] = 'Author';
 $string['status'] = 'Status';

@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../lang/' . $language . '/include/not_found.inc';
-
 $string['keywords'] = 'Słowa kluczowe';
 $string['mypersonalkeywords'] = '<strong>Moje osobiste:</strong> słowa kluczowe';
 $string['modulekeywords'] = '<strong>%s: </strong>słowa kluczowe';

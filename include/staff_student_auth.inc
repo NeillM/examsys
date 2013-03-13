@@ -48,7 +48,7 @@ require_once $root . 'include/auth.inc';
 include_once $root . 'include/load_config.php';
 if (!file_exists($root . 'config/config.inc.php')) {
   $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
-  $notice->display_notice_and_exit('Install Required', 'Rog&#333; needs installing before use. The Installer is avalable <a href="' . $cfg_root_path . '/install/index.php">here</a>.', '../artwork/software_64.png', $title_color = '#C00000', true, true);
+  $notice->display_notice_and_exit($mysqli, 'Install Required', 'Rog&#333; needs installing before use. The Installer is avalable <a href="' . $cfg_root_path . '/install/index.php">here</a>.', 'Install Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
 }
 
 require_once $cfg_web_root . 'classes/configobject.class.php';
@@ -62,17 +62,17 @@ require_once $cfg_web_root . 'classes/authentication.class.php';
 
 // Check to see if the update script has been run.
 if ($configObject->get('rogo_version') != '5.0') {
-  $notice->display_notice_and_exit('Update Required', 'System needs configuring before use. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000', true, true);
+  $notice->display_notice_and_exit($mysqli, 'Update Required', 'System needs configuring before use. Please contact your local system administrator.', 'Update Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
 }
 
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_root_path')}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
 
 if ($configObject->get('protocol') == 'https://' and $_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
   $msg = $string['secureconnectionmsg'] . ' <a href="https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '">https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '</a>.';
-  $notice->display_notice_and_exit($string['secureconnection'], $msg, '../artwork/secure_connection.png', $title_color = '#C00000', true, true);
+  $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '../artwork/secure_connection.png', $title_color = '#C00000', true, true);
 }
 if (!(preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version))) {
-  $notice->display_notice_and_exit('Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', '../artwork/browser.png', $title_color = '#C00000', true, true);
+  $notice->display_notice_and_exit($mysqli, 'Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', 'Browser Incompatibility', '../artwork/browser.png', $title_color = '#C00000', true, true);
 }
 if (is_null($configObject->get('cfg_db_port'))) {
   $configObject->set('cfg_db_port', 3306);

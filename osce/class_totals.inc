@@ -46,7 +46,7 @@ if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
 if (!$propertyObj) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($string['papernotfound'], $msg, '../artwork/paper_not_found.png', '#C00000', true, true);
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $paper = $propertyObj->get_paper_title();
 $calendar_year = $propertyObj->get_calendar_year();

@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/user_search_options.inc';
 require '../lang/' . $language . '/include/titles.inc';
-require '../lang/' . $language . '/include/not_found.inc';
 
 $string['usermanagement'] = 'User Management';
 $string['status'] = 'Status';

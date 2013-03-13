@@ -60,6 +60,8 @@ if (isset($_GET['folder'])) {
   $folder = '';
 }
 if ($folder != '') {
+  $orig_folder_name = '';
+
   $result = $mysqli->prepare("SELECT ownerID, name FROM folders WHERE id = ?");
   $result->bind_param('i', $folder);
   $result->execute();
@@ -67,11 +69,16 @@ if ($folder != '') {
   $result->bind_result($folder_ownerID, $orig_folder_name);
   $result->fetch();
   $result->close();
+  
+  if ($orig_folder_name == '') {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
 
   $parent_list = array();
   if (substr_count($orig_folder_name,';') > 0) {
     $last_semicolon = strrpos($orig_folder_name,';');
-    $path = substr($orig_folder_name,0,$last_semicolon);
+    $path = substr($orig_folder_name, 0, $last_semicolon);
     $parts = explode(';', $path);
     $part_sql = '';
     foreach ($parts as $part) {
@@ -98,7 +105,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
     
   if (!$module_details) {
    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-   $notice->display_notice_and_exit($string['modulenotfound'], $msg, '../artwork/module_not_found.png', '#C00000', true, true);    
+   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
 } else {
   $module = '';

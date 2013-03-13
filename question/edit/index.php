@@ -383,7 +383,7 @@ if ($critical_error == '') {
   $q_type_display = '';
   
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($string['error'], $critical_error, '../../artwork/paper_not_found.png', '#C00000', true, true);
+  $notice->display_notice_and_exit($mysqli, $string['error'], $critical_error, $string['error'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";

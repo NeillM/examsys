@@ -15,7 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once './lang/' . $language . '/include/paper_security.inc';
-require_once './lang/' . $language . '/include/not_found.inc';
 
 $string['startscreen'] = 'Ekran startowy';
 $string['availability'] = 'Dostępność';

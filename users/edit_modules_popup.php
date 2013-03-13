@@ -24,94 +24,94 @@
 * @package
 */
 
-  require_once '../include/admin_auth.inc';
-  require_once '../include/errors.inc';
-  require_once '../classes/dateutils.class.php';
+require_once '../include/admin_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/dateutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'REQUEST', true, false, true);
 
 if (!UserUtils::userid_exists($userID, $mysqli)) {
-   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-   $notice->display_notice_and_exit($string['usernotfound'], $msg, '../artwork/user_not_found.png', '#C00000', true, true);
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-  function drawTabs($current_tab) {
-    global $string;
+function drawTabs($current_tab) {
+  global $string;
 
-    $html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $_GET['session'] . ':</strong></td>';
-    for ($i=1; $i<=3; $i++) {
-      if ($i == $current_tab) {
-        $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
-      } else {
-        $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_off.gif)\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
-      }
+  $html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $_GET['session'] . ':</strong></td>';
+  for ($i=1; $i<=3; $i++) {
+    if ($i == $current_tab) {
+      $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
+    } else {
+      $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_off.gif)\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
     }
-    $html .= "</tr></table>\n";
-    return $html;
+  }
+  $html .= "</tr></table>\n";
+  return $html;
+}
+
+function list_modules($mod, $id, $student_mod) {
+  $old_letter = '';
+
+  if ($id == '1') {
+    echo "<div style=\"display:block; width:100%; border-bottom:10px\" id=\"list$id\">";
+  } else {
+    echo "<div style=\"display:none; width:100%; border-bottom:10px\" id=\"list$id\">";
   }
 
-  function list_modules($mod, $id, $student_mod) {
-    $old_letter = '';
+  echo drawTabs($id);
 
-    if ($id == '1') {
-      echo "<div style=\"display:block; width:100%; border-bottom:10px\" id=\"list$id\">";
-    } else {
-      echo "<div style=\"display:none; width:100%; border-bottom:10px\" id=\"list$id\">";
-    }
-
-    echo drawTabs($id);
-
-    if ($id == '1') {
-      echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
-    } else {
-      echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
-    }
-
-    $loop=0;
-    foreach ($mod as $idMod => $mod_info) {
-      $moduleid = $mod_info['moduleid'];
-      $fullname = $mod_info['fullname'];
-
-      if ($old_letter != strtoupper(substr($moduleid,0,1))) {
-        echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>&nbsp;" . strtoupper(substr($moduleid,0,1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-      }
-
-      if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
-        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
-      } else {
-        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
-      }
-      $loop++;
-      $old_letter = strtoupper(substr($moduleid, 0, 1));
-    }
-    echo "</div>\n</div>\n";
+  if ($id == '1') {
+    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
+  } else {
+    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
   }
 
-  if (isset($_POST['submit'])) {
-    for ($attempt=1; $attempt<=3; $attempt++) {
-      // Clear the student of all modules.
-      UserUtils::clear_student_modules_by_userID($_POST['userID'], $_POST['session'], $attempt, $mysqli);
+  $loop=0;
+  foreach ($mod as $idMod => $mod_info) {
+    $moduleid = $mod_info['moduleid'];
+    $fullname = $mod_info['fullname'];
+
+    if ($old_letter != strtoupper(substr($moduleid,0,1))) {
+      echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>&nbsp;" . strtoupper(substr($moduleid,0,1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    }
+
+    if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
+      echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+    } else {
+      echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+    }
+    $loop++;
+    $old_letter = strtoupper(substr($moduleid, 0, 1));
+  }
+  echo "</div>\n</div>\n";
+}
+
+if (isset($_POST['submit'])) {
+  for ($attempt=1; $attempt<=3; $attempt++) {
+    // Clear the student of all modules.
+    UserUtils::clear_student_modules_by_userID($_POST['userID'], $_POST['session'], $attempt, $mysqli);
 /*
-      $result = $mysqli->prepare("DELETE FROM modules_student WHERE userID = ? AND calendar_year = ? AND attempt = ?");
-      $result->bind_param('isi', $_POST['userID'], $_POST['session'], $attempt);
-      $result->execute();
-      $result->close();
-      */
-      // Insert a record for each module.
-      for ($i=0; $i<=$_POST['mod_count']; $i++) {
-        if (isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '') {
-          UserUtils::add_student_to_module($_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $attempt, $_POST['session'], $mysqli, 0);
+    $result = $mysqli->prepare("DELETE FROM modules_student WHERE userID = ? AND calendar_year = ? AND attempt = ?");
+    $result->bind_param('isi', $_POST['userID'], $_POST['session'], $attempt);
+    $result->execute();
+    $result->close();
+    */
+    // Insert a record for each module.
+    for ($i=0; $i<=$_POST['mod_count']; $i++) {
+      if (isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '') {
+        UserUtils::add_student_to_module($_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $attempt, $_POST['session'], $mysqli, 0);
 /*
-          $result = $mysqli->prepare( 'INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, 0)' );
-          $result->bind_param('iisi', $_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $_POST['session'], $attempt);
-          $result->execute();
-          $result->close();
-          */
-        }
+        $result = $mysqli->prepare( 'INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, 0)' );
+        $result->bind_param('iisi', $_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $_POST['session'], $attempt);
+        $result->execute();
+        $result->close();
+        */
       }
     }
-  ?>
+  }
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>

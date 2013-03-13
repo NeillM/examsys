@@ -16,7 +16,6 @@
 
 require_once '../lang/' . $language . '/include/paper_options.inc';
 require_once '../lang/' . $language . '/include/paper_types.inc';
-require_once '../lang/' . $language . '/include/not_found.inc';
 
 $string['showretired'] = 'Show retired';
 $string['teammembers'] = 'Team Members';

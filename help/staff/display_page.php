@@ -76,7 +76,7 @@ $search_results->close();
 
 if ($tmp_body == '' and $tmp_title == '') {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($string['pagenotfound'], $msg, $configObject->get('cfg_root_path') . '/artwork/paper_not_found.png', '#C00000');
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000');
 }
 
 if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.

@@ -15,7 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/paper/details.php';
-require_once '../lang/' . $language . '/include/not_found.inc';
 
 $string['start'] = 'Start'; //cognate
 $string['owner'] = 'Właściciel';

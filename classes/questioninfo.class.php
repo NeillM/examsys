@@ -50,7 +50,7 @@ Class question_info {
     
     if (!isset($creation_date)) {
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-      $notice->display_notice_and_exit($string['modulenotfound'], $msg, '../artwork/module_not_found.png', '#C00000', false, true);
+      $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', false, true);
     }
     
     $modules = QuestionUtils::get_modules($q_id, $db);
