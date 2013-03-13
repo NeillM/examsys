@@ -61,9 +61,9 @@ if (isset($_GET['userID'])) {
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 
 if (!$propertyObj) {
-  $logger->record_access_denied($userObject->get_user_ID(), 'accessdenied', 'Paper not found.');  // Record attempt in access denied log.
   header("HTTP/1.0 404 Not Found");
-  exit();
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 //check the feedback has been released !!!
@@ -75,9 +75,9 @@ if ($userObject->has_role('Student')) {
   $result->fetch();
   $result->close();
   if ($date == '') {
-    $logger->record_access_denied($userObject->get_user_ID(), 'accessdenied', 'Objective-based feedback is not currently available for this paper.');  // Record attempt in access denied log.
     header("HTTP/1.0 404 Not Found");
-    exit;
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
 }
 
@@ -118,7 +118,8 @@ $result->store_result();
 $result->fetch();
 if ($result->num_rows == 0) {
   header("HTTP/1.0 404 Not Found");
-  exit;
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $result->close();
 
