@@ -22,6 +22,7 @@ $string['clearorphanmedia'] = 'Clear Orphan Media';
 $string['cleartraining'] = 'Clear Training';
 $string['computerlabs'] = 'Computer Labs';
 $string['courses'] = 'Courses';
+$string['deniedlogwarnings'] = 'Denied Log Warnings';
 $string['ebelgridtemplates'] = 'Ebel Grid Templates';
 $string['faculties'] = 'Faculties';
 $string['modules'] = 'Modules';

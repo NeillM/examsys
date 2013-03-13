@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['administrativetools'] = 'Administrative Tools';
-$string['accessdeniedwarnings'] = 'Access Denied Warnings';
+$string['deniedlogwarnings'] = 'Denied Log Warnings';
 $string['date'] = 'Date';
 $string['user'] = 'User';
 $string['url'] = 'URL';
