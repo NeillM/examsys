@@ -98,4 +98,5 @@ $string['sysadmin'] = 'SysAdmin';
 $string['reset'] = 'Reset';
 $string['forcereset'] = 'Force Reset';
 $string['classifiedinfo'] = 'classified information';
+$string['custom'] = 'Custom';
 ?>

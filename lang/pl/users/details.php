@@ -98,4 +98,5 @@ $string['sysadmin'] = 'Administrator systemu';
 $string['reset'] = 'Resetuj';
 $string['forcereset'] = 'Wymuś reset';
 $string['classifiedinfo'] = 'informacja zastrzeżona';
+$string['custom'] = 'Custom'; //TODO Niko
 ?>
