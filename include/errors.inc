@@ -23,6 +23,7 @@
 */
 
 require $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
+require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 /**
  * Display an error to the screen.
@@ -33,8 +34,19 @@ require $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
  * @param bool $display_support_email - if true display the support email address (if it is set)
  */
 function display_error($error_title, $error_description, $headers = true, $stop_execution = true, $display_support_email = true) {
-  global $mysqli, $support_email, $string, $notice, $configObject;
+  global $mysqli, $string, $notice, $configObject;
+  
+  $support_email = $configObject->get('support_email');
     
+  $user = UserObject::get_instance();
+  if ($user !== NULL and $user->get_user_ID() > 0) {
+    $logger = new Logger($mysqli);
+    $logger->record_access_denied($user->get_user_ID(), $error_title, $error_description);  // Record attempt in access denied log against userID.
+  } else {
+    $logger = new Logger($mysqli);
+    $logger->record_access_denied(0, $error_title, $error_description);                     // Record attempt in access denied log, userID set to zero.
+  }
+  
   if ($headers == false) {
     echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>" . $error_title . "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/notice.css\" />\n</head>\n<body>\n";
   }
@@ -42,6 +54,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
     $error_description .= '<br /><br /><span style="color:#808080">' . $string['errormsg'] . ' <a href="mailto:' . $support_email . '" style="color:blue">' . $support_email . '</a></span>';
   }
   $notice->display_notice($error_title, $error_description, $configObject->get('cfg_root_path') . '/artwork/bomb.png', '#C00000');
+
 
   if ($headers == false) {
     echo "</body>\n</html>\n";
