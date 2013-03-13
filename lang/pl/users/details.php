@@ -98,6 +98,6 @@ $string['sysadmin'] = 'Administrator systemu';
 $string['reset'] = 'Resetuj';
 $string['forcereset'] = 'Wymuś reset';
 $string['classifiedinfo'] = 'informacja zastrzeżona';
-$string['custom'] = 'Custom'; //TODO Niko
-$string['Access Denied']='Access Denied'; //TODO Niko
+$string['custom'] = 'Własna';
+$string['Access Denied']='Brak dostępu';
 ?>
