@@ -328,11 +328,11 @@ if ($room_name != '') {
       cursor: pointer;
     }
     #start_exam_button {
-      background-color: #1CD40C;
+      background-color: #26A61E;
       color: #fff;
     }
     #end_exam_button {
-      background-color: #FF9F24;
+      background-color: #ff8901;
       color: #fff;
       margin-bottom: 6px;
     }
