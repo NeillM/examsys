@@ -348,6 +348,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
 <body>
 <?php
+  unset($tmp_id);
   $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, student_id, user_deleted FROM users LEFT JOIN sid ON users.id = sid.userID WHERE users.id = ?");
   $user_result->bind_param('i', $_GET['userID']);
   $user_result->execute();
