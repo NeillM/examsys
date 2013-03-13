@@ -356,7 +356,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $user_result->fetch();
   $user_result->close();
   
-  var_dump($tmp_id);
+  var_dump($_GET['userID']);
 
   if (!isset($tmp_id)) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
