@@ -348,18 +348,19 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
 <body>
 <?php
-  unset($tmp_id);
+  $records_found = 0;
+    
   $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, student_id, user_deleted FROM users LEFT JOIN sid ON users.id = sid.userID WHERE users.id = ?");
   $user_result->bind_param('i', $_GET['userID']);
   $user_result->execute();
   $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
   $user_result->store_result();
   $user_result->fetch();
-  var_dump($user_result->num_rows,array($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted));
+  $records_found = $user_result->num_rows;
   $user_result->close();
   
 
-  if (!isset($tmp_id)) {
+  if ($records_found == 0) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
