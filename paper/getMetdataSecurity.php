@@ -51,7 +51,6 @@ if ($_GET['session'] != '') {
 
 // Get the dropdown list values
 if ($_GET['modules'] != '') {
-  var_dump("SELECT DISTINCT type, value FROM users_metadata, modules WHERE modules.id = users_metadata.idMod AND modules.id IN (" . $_GET['modules'] . ") $sql_session GROUP BY value ORDER BY type, value");
   $stmt = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE modules.id = users_metadata.idMod AND modules.id IN (" . $_GET['modules'] . ") $sql_session GROUP BY value ORDER BY type, value");
   $stmt->execute();
   $stmt->store_result();
