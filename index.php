@@ -29,6 +29,7 @@
 require_once './include/staff_student_auth.inc';
 require_once './classes/networkutils.class.php';
 require_once './classes/paperutils.class.php';
+require_once './classes/logger.class.php';
 
 // Redirect External Exminers and Invigilators to their own areas.
 if ($userObject->has_role('External Examiner')) {
@@ -85,6 +86,9 @@ function display_labs($labs, $computer_lab, $string) {
 
   return $html;
 }
+
+$logger = new Logger($mysqli);
+$logger->record_access($userObject->get_user_ID(), 'Summative homepage', '/');  
 
 $paper_utils = Paper_utils::get_instance();
 $paper_display = array();

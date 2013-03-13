@@ -51,6 +51,9 @@ function drawTabs($tab_array, $current_tab) {
 $sessions_with_papers = array();
 
 if ($userObject->has_role('Student')) {
+  $logger = new Logger($mysqli);
+  $logger->record_access($userObject->get_user_ID(), 'Student homepage', '/students/');  
+
   // Check if our student is in a lab
   $lab_info = $mysqli->prepare("SELECT lab FROM ip_addresses WHERE address = ? LIMIT 1");
   $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
