@@ -23,8 +23,16 @@
 */
 
 require '../../include/staff_auth.inc';
+require '../../include/errors.inc';
 require '../../include/question_types.inc';
 require_once '../../classes/questionutils.class.php';
+
+$question_paper = check_var('question_paper', 'GET', true, false, true);
+
+if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
+}
 ?>
 <html>
 <head>
@@ -64,8 +72,8 @@ require_once '../../classes/questionutils.class.php';
 <body onload="populateTicks()">
 <?php
   // Get the title of the paper.
-  $stmt = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id=?");
-  $stmt->bind_param('i', $_GET['question_paper']);
+  $stmt = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id = ?");
+  $stmt->bind_param('i', $question_paper);
   $stmt->execute();
   $stmt->bind_result($paper_title);
   $stmt->fetch();
@@ -80,7 +88,7 @@ require_once '../../classes/questionutils.class.php';
 
   // Get the questions in order off the paper.
   $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
-  $stmt->bind_param('i', $_GET['question_paper']);
+  $stmt->bind_param('i', $question_paper);
   $stmt->execute();
   $stmt->bind_result($q_id, $leadin, $leadin_plain, $q_type, $screen, $last_edited, $locked, $parts);
   $old_screen = 0;
