@@ -160,9 +160,9 @@ Class UpdaterUtils {
         ob_flush();
         flush();
       }
-    } elseif ($mysqli->warning_count()) {
+    } elseif ($this->mysqli->warning_count>0) {
       echo '<li class="warning">WARNING: ' . $sql . '</li>';
-      $e = $mysqli->get_warnings();
+      $e = $this->mysqli->get_warnings();
       do {
         echo "Warning No: $e->errno: - $e->message <br />\n";
       } while ($e->next());
