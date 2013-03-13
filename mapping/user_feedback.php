@@ -45,13 +45,15 @@ if ($userObject->has_role('Demo')) {
 
 if (isset($_GET['userID'])) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
-    if (isset($_GET['userID']) and $_GET['userID'] != '') {
+    if ($_GET['userID'] != '') {
       $userID = $_GET['userID'];
     } else {
       display_error($string['idmissing'], $string['idmissing_msg'], false, true, false);
     }
-  } else {
-    $notice->access_denied($mysqli, $string, $string['norights'], true, true);
+  } else {  // Student is trying to hack into another students userID on the URL.
+    header("HTTP/1.0 404 Not Found");
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
 } else {
   $userID = $userObject->get_user_ID();
