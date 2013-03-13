@@ -715,7 +715,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     }
 
     // Add in feedback
-    $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(accessed, '%Y%m%d%H%i%s') AS accessed, DATE_FORMAT(accessed,'{$configObject->get('cfg_long_date_time')}') AS display_started, crypt_name, type, paper_title FROM access_log, properties WHERE access_log.page = properties.property_id AND userID = ? AND type IN ('Objectives-based feedback report', 'Question-based feedback report')");
+    $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(accessed, '%Y%m%d%H%i%s') AS accessed, DATE_FORMAT(accessed,'{$configObject->get('cfg_long_date_time')}') AS display_started, crypt_name, type, paper_title FROM access_log, properties WHERE access_log.page = properties.property_id AND userID = ?");
     $stmt->bind_param('i', $_GET['userID']);
     $stmt->execute();
     $stmt->bind_result($page, $ipaddress, $accessed, $display_started, $crypt_name, $type, $paper_title);
