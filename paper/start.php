@@ -1067,13 +1067,14 @@ if ($css != '') {
   $method = 'StartClock()';
   $timer_label = '';
 
+  $special_needs_percentage = $userObject->get_special_needs_percentage();
   if ($propertyObj->get_exam_duration() != null) {
     // Summative type. Time is only active in live.
     if (($propertyObj->get_paper_type() == '2' or $original_paper_type == 2) and $is_preview_mode === false) {
 
       //has the student been allotted extra time by an invigilator
       $student_object['user_ID'] = $userObject->get_user_ID();
-      $student_object['special_needs_percentage'] = $userObject->get_special_needs_percentage();
+      $student_object['special_needs_percentage'] = $special_needs_percentage;
       $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
 
       // Do not time the exam if the invigilator has not clicked on the 'Start' button
@@ -1086,7 +1087,7 @@ if ($css != '') {
 
     } else {
 
-      $timer          = new Timer($log_metadata, $propertyObj->get_exam_duration());
+      $timer          = new Timer($log_metadata, $propertyObj->get_exam_duration(), $special_needs_percentage);
       $start_datetime = $timer->get_start_datetime();
 
       if ($start_datetime === false) {

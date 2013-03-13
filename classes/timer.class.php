@@ -32,14 +32,16 @@ class Timer {
 
   private $exam_duration;
   private $start_datetime;
+  private $special_needs_percentage;
 
   /**
    * @param LogStartTime $log_start_time
    * @param int $exam_duration
    */
-  public function __construct( $log_metadata, $exam_duration ) {
+  public function __construct($log_metadata, $exam_duration, $special_needs_percentage) {
     $this->log_start_time = $log_metadata;
     $this->exam_duration  = $exam_duration;
+    $this->special_needs_percentage  = $special_needs_percentage;
   }
 
   /**
@@ -63,31 +65,35 @@ class Timer {
   }
 
   /**
-   * @retun int
+   * @return int
    */
   public function calculate_remaining_time() {
 
     $exam_duration_mins  = $this->exam_duration;
     $exam_duration_secs  = $exam_duration_mins * 60;
 
+    if ($this->special_needs_percentage > 0) {
+      $exam_duration_secs += $exam_duration_secs * $this->special_needs_percentage/100;
+    }
+
     // get existing start time or create a new one
     $start_datetime      = $this->get_start_datetime();
 
     if($start_datetime === null or $start_datetime === false){
-      return $exam_duration_secs;
+      $remaining_time_secs = $exam_duration_secs;
+    } else {
+      $start_timestamp     = $start_datetime->getTimestamp();
+      $now_datetime        = new DateTime;
+      $now_timestamp       = $now_datetime->getTimestamp();
+      $time_elapsed_secs   = $now_timestamp - $start_timestamp;
+      $remaining_time_secs = $exam_duration_secs - $time_elapsed_secs;
     }
-
-    $start_timestamp     = $start_datetime->getTimestamp();
-    $now_datetime        = new DateTime;
-    $now_timestamp       = $now_datetime->getTimestamp();
-    $time_elapsed_secs   = $now_timestamp - $start_timestamp;
-    $remaining_time_secs = $exam_duration_secs - $time_elapsed_secs;
 
     if( $remaining_time_secs < 1 ){
       $remaining_time_secs = 0;
     }
 
-    return $remaining_time_secs;
+    return ceil($remaining_time_secs);
 
   }
 

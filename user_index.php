@@ -170,26 +170,25 @@ $log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_pr
 $exam_started = $log_metadata->get_record();
 
 if ($exam_duration !== null) {
-  $display_remaining_time = true;
 
-  if ((int)$test_type == 2) {
+  if ($test_type == '2') {
+    $student_object['special_needs_percentage'] = $special_needs_percentage;
     $student_object['user_ID']   = $userObject->get_user_ID();
-    $student_object['special_needs_percentage'] = $userObject->get_special_needs_percentage();
     $log_lab_end_time   = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
     $log_extra_time     = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
     $extra_time_secs    = $log_extra_time->get_extra_time_secs();
     $extra_time_mins    = $extra_time_secs / 60;
     $summative_timer    = new SummativeTimer( $log_extra_time );
     $remaining_time     = $summative_timer->calculate_remaining_time_secs();
-    if ($remaining_time === false) {
-      $display_remaining_time = false;
-    } else {
+    if ($remaining_time !== false) {
+      $display_remaining_time = true;
+
       // nazrji - remove bending consultation with Exams Office
-     // if ($remaining_time > ($exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs) ) {
-     //   // sanity check if we have longer remaining then the exam duration set the time remaining
-     //   // to the exam duration (happens in summative exams if we have not started yet)
-     //   $remaining_time = $exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs;
-     //  }
+      // if ($remaining_time > ($exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs) ) {
+      //   // sanity check if we have longer remaining then the exam duration set the time remaining
+      //   // to the exam duration (happens in summative exams if we have not started yet)
+      //   $remaining_time = $exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs;
+      //  }
       if ($exam_started == false and $remaining_time == 0) {
         // sanity check if we have not started the exam but time remaing is 0
         // happens in summative exams if we have the start and end time set wider
@@ -198,14 +197,16 @@ if ($exam_duration !== null) {
         $display_remaining_time = false;
       }
     }
+    $extra_time_mins    = $extra_time_secs / 60;
   } else {
-    $studentID         = $userObject->get_user_ID();
-    if ($test_type == 1) {
-      $timer             = new Timer($log_metadata, $exam_duration);
-      $remaining_time    = $timer->calculate_remaining_time();
-    } else {
-      $remaining_time = $exam_duration * 60;
+    if ($test_type == '1') {
+      $display_remaining_time = true;
     }
+    $studentID         = $userObject->get_user_ID();
+    $timer             = new Timer($log_metadata, $exam_duration, $special_needs_percentage);
+    $remaining_time    = $timer->calculate_remaining_time();
+
+    $extra_time_mins = null;
   }
 
   $remaining_minutes = (int) ($remaining_time / 60);
@@ -339,7 +340,7 @@ if ($textsize > 120) {
     echo '</td></tr>';
   }
   echo "<tr><td class=\"f\"><nobr>&nbsp;" . $string['currentuser'] . "</nobr></td><td>$person</td>";
-  if ($test_type == 2 and $exam_duration) {
+  if ($exam_duration) {
     echo '<td class="f">' . $string['duration'] . '</td><td>' . display_duration($exam_duration, $extra_time_mins, $special_needs_percentage) . ' ' . $string['minutes'] . '</td>';
   } else {
     echo '<td></td><td></td>';

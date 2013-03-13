@@ -75,7 +75,7 @@ class SummativeTimer {
       $remaining_time_secs = 0;
     }
 
-    return $remaining_time_secs;
+    return ceil($remaining_time_secs);
   }
 
   /*
