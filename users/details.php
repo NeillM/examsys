@@ -355,6 +355,8 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
   $user_result->fetch();
   $user_result->close();
+  
+  var_dump($tmp_id);
 
   if (!isset($tmp_id)) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
