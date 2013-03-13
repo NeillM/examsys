@@ -355,7 +355,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
   $user_result->store_result();
   $user_result->fetch();
-  var_dump($user_result->num_rows);
+  var_dump($user_result->num_rows,array($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted));
   $user_result->close();
   
 
