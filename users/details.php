@@ -353,10 +353,11 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $user_result->bind_param('i', $_GET['userID']);
   $user_result->execute();
   $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
+  $user_result->store_result();
   $user_result->fetch();
+  var_dump($user_result->num_rows);
   $user_result->close();
   
-  var_dump($_GET['userID']);
 
   if (!isset($tmp_id)) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
