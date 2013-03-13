@@ -62,7 +62,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '0 out of 2');
@@ -117,7 +117,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '2 out of 2');
@@ -171,7 +171,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '0 out of 2');
@@ -223,7 +223,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '1 out of 2');
@@ -275,7 +275,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=51357812182102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[4]/span', '2 out of 2');

@@ -114,7 +114,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("link=Edit Teams...");
     $this->waitForPopUp("editmodule", "30000");
     $this->selectWindow("name=editmodule");
-    $this->assertTitle('Manage Teams');
+    $this->assertTitle('Manage Teams' . $this->install_type);
 
     $this->click("id=mod0");
     $this->click("name=submit");
@@ -133,7 +133,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("link=School of Selenium Testing");
     $this->click("link=exact:S01SET: Selenium Testing");
     $this->waitForPageToLoad("30000");
-    $this->assertElementContainsText("//div[8]/form/div/ul/li[2]/span", 'Staff2, T. Mr');
+    $this->assertElementContainsText("//div[8]/form/div/ul/li[2]/a", 'Staff2, T. Mr');
   }
 
   /**

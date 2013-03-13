@@ -70,7 +70,7 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Rogō: Admin' . $this->install_type);
 
-    $this->click("css=#8 > tbody > tr > td > img");
+    $this->click("css=#9 > tbody > tr > td > img");
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Faculties' . $this->install_type);
 

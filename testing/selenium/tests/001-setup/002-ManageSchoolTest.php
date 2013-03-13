@@ -18,7 +18,7 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     do_admin_login($this);
 
     $this->open("/admin/index.php");
-    $this->click("css=#13 > tbody > tr > td > img");
+    $this->click("css=#14 > tbody > tr > td > img");
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Schools' . $this->install_type);
 
@@ -72,7 +72,7 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     do_admin_login($this);
 
     $this->open("/admin/index.php");
-    $this->click("css=#13 > tbody > tr > td > img");
+    $this->click("css=#14 > tbody > tr > td > img");
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Schools' . $this->install_type);
 

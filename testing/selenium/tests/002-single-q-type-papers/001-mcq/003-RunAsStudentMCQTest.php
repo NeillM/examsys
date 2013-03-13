@@ -73,7 +73,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '0 out of 1');
@@ -121,7 +121,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '1 out of 1');
@@ -169,7 +169,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '0 out of 1');
@@ -217,7 +217,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=11355244387102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr/td[2]/p/span', '1 out of 1');

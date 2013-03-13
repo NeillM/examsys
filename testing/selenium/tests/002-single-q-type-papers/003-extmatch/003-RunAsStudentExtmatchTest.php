@@ -443,7 +443,7 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText('//table[2]/tbody/tr[2]/td[2]/p[2]/span', '0 out of 3');
@@ -736,7 +736,7 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText("//table[2]/tbody/tr[2]/td[2]/p[2]/span", '3 out of 3');
@@ -1028,7 +1028,7 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText("//table[2]/tbody/tr[2]/td[2]/p[2]/span", '0 out of 3');
@@ -1320,7 +1320,7 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText("//table[2]/tbody/tr[2]/td[2]/p[2]/span", '2 out of 3');
@@ -1554,7 +1554,7 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("id=finish");
     $this->assertEquals("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.", $this->getConfirmation());
     $this->waitForPageToLoad("30000");
-    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102');
+    $this->assertLocation($this->page_root . '/paper/finish.php?id=31357211657102&dont_record=true');
 
     // Individual Question Marks
     $this->assertElementContainsText("//table[2]/tbody/tr[2]/td[2]/p[2]/span", '2 out of 3');
