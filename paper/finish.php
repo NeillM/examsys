@@ -161,8 +161,9 @@ if (isset($_GET['previous'])) {
 if (isset($_GET['userid'])) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
     $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
-  } else {
-    $notice->access_denied($mysqli, $string, $string['norights'], true, true);
+  } else {   // Student is hacking the userid parameter
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
 } else {
   $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);

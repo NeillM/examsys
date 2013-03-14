@@ -84,8 +84,11 @@
     textarea {
       border:1px solid #C0C0C0;
       background-color: transparent;
-      width:98%;
-      height:290px;
+      width:99%;
+      height:275px;
+    }
+    select {
+      width: 99%;
     }
   </style>
   
@@ -94,16 +97,30 @@
    $(document).ready(function() {
      $("#note").focus();
    });
+   
+   function checkForm() {
+     if ($("#paper").val() == '') {
+       alert("<?php echo $string['namecheck']; ?>");
+       return false;
+     }
+   
+     if ($("#note").val() == '') {
+       alert("<?php echo $string['notecheck']; ?>");
+       return false;
+     }
+     
+     return true;
+   }
  </script>
 </head>
 
 <body>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform" onsubmit="return checkForm();">
 <?php
   if (isset($_GET['paperID'])) {
     echo "<input type=\"hidden\" name=\"paper\" value=\"" . $_GET['paperID'] . "\" />\n";
 
-    $result = $mysqli->prepare("SELECT title, initials, surname, student_id FROM users LEFT JOIN sid ON users.id=sid.userID WHERE id=? LIMIT 1");
+    $result = $mysqli->prepare("SELECT title, initials, surname, student_id FROM users LEFT JOIN sid ON users.id = sid.userID WHERE id = ? LIMIT 1");
     $result->bind_param('i', $_GET['userID']);
     $result->execute();
     $result->bind_result($tmp_title, $tmp_initials, $tmp_surname, $tmp_student_id);
@@ -112,8 +129,8 @@
     
     echo "<strong>$tmp_title $tmp_surname, $tmp_initials ($tmp_student_id)</strong></br />\n";
   } else {
-    echo $string['papername'] . " <select name=\"paper\">\n<option value=\"\"></option>\n";
-    $result = $mysqli->prepare("SELECT DISTINCT property_id, paper_title FROM properties WHERE paper_type='2' AND deleted IS NULL ORDER BY paper_title");
+    echo $string['papername'] . " <select name=\"paper\" id=\"paper\">\n<option value=\"\"></option>\n";
+    $result = $mysqli->prepare("SELECT DISTINCT property_id, paper_title FROM properties WHERE paper_type = '2' AND deleted IS NULL ORDER BY paper_title");
     $result->execute();
     $result->bind_result($property_id, $paper_title);
     while ($result->fetch()) {
