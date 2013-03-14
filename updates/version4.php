@@ -3145,6 +3145,7 @@ QUERY;
                                    , invigilatorID int unsigned NOT NULL
                                    , userID        int unsigned NOT NULL
                                    , extra_time    int unsigned NOT NULL
+                                   , end_date      int unsigned NOT NULL
                                    , CONSTRAINT    key_lab_id_paper_id_user_id UNIQUE ( labID, paperID, userID )
                                  ) ENGINE=InnoDB DEFAULT CHARSET=' . $cfg_db_charset . ' PACK_KEYS=1 AUTO_INCREMENT=1;';
     $updater_utils->execute_query($sql, false);
@@ -3873,6 +3874,28 @@ SQL;
   // 14/03/2013 - remove end_date field from log_extra_time (probably only exists for Nottingham developers)
   if ($updater_utils->does_column_exist('log_extra_time', 'end_date')) {
     $updater_utils->execute_query("ALTER TABLE log_extra_time DROP COLUMN end_date", true);
+  }
+  // 14/03/2013 (cczsa1) - Add new indexes.
+  if (!$updater_utils->does_index_exist('modules', 'idx_schoolid_deleted')) {
+    $updater_utils->execute_query("ALTER TABLE modules ADD INDEX idx_schoolid_deleted (`schoolid`,`mod_deleted`)", true);
+  }
+  $f_count = 0;
+  $result = $mysqli->prepare("show indexes in sid where key_name='PRIMARY'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $f10, $f11, $f12, $f13);
+  $result->fetch();
+  $count=$result->num_rows;
+  if($count<2) {
+    $updater_utils->execute_query("ALTER TABLE sid DROP PRIMARY KEY, ADD PRIMARY KEY  (`userID`,`student_id`)", true);
+  }
+
+
+  if (!$updater_utils->does_index_exist('objective', 'idx_identifier_calendar_year_objective300_sequence')) {
+    $updater_utils->execute_query("ALTER TABLE objectives ADD INDEX idx_identifier_calendar_year_objective300_sequence (identifier, calendar_year, objective(300) , sequence )", true);
+  }
+  if (!$updater_utils->does_index_exist('admin_access', 'idx_schoolsid_userid')) {
+    $updater_utils->execute_query("ALTER TABLE admin_access ADD INDEX idx_schoolsid_userid (schools_id, userID )", true);
   }
 
 

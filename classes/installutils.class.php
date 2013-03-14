@@ -1474,6 +1474,7 @@ QUERY;
         `userID` int(10) unsigned default NULL,
         `schools_id` int(11) default NULL,
         PRIMARY KEY (`adminID`)
+        KEY idx_schoolsid_userid (schools_id, userID )
       ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1988,7 +1989,8 @@ QUERY;
           `mod_deleted` datetime default NULL,
           PRIMARY KEY (`id`),
           KEY `guideid` (`moduleid`),
-          KEY `idx_moduleid_deleted` (`moduleid`,`mod_deleted`)
+          KEY `idx_moduleid_deleted` (`moduleid`,`mod_deleted`),
+          KEY `idx_schoolid_deleted` (`schoolid`,`mod_deleted`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2396,7 +2398,7 @@ QUERY;
         CREATE TABLE `sid` (
           `student_id` char(15) default NULL,
           `userID` int(10) unsigned NOT NULL default '0',
-          PRIMARY KEY  (`userID`)
+          PRIMARY KEY  (`userID`,`student_id`),
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
