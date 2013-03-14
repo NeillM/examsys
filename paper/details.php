@@ -821,7 +821,7 @@ $result->close();
     //if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
     if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
       echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
-      printf($string['farfuturewarning'], $properties->get_display_start_date()));
+      printf($string['farfuturewarning'], $properties->get_display_start_date());
       echo "</td></tr>\n";
     } elseif ($tmp_hour < $configObject->get('cfg_hour_warning')) {
       echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
