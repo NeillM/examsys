@@ -747,7 +747,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       $paper[$results_no]['crypt_name']       = '';
       $paper[$results_no]['q_paper']          = '/' . $page;
       $paper[$results_no]['type']             = $title;
-      $paper[$results_no]['paper_type']       = $string[$title];
+      $paper[$results_no]['paper_type']       = $title;
       $paper[$results_no]['started']          = $tried;
       $paper[$results_no]['display_started']  = $display_started;
       $paper[$results_no]['duration']         = 'N/A';
@@ -796,7 +796,10 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         case 'Question-based feedback report':
           echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/questions_feedback_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>Questions Feedback report</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
-        case 'accessdenied':
+        case $string['pagenotfound']:
+          echo "<tr style=\"height:17px; color:#C00000\"><td style=\"text-align:right\"><img src=\"../artwork/access_denied_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;" . $paper[$i]['q_paper'] . "</td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          break;
+        case $string['accessdenied']:
           echo "<tr style=\"height:17px; color:#C00000\"><td style=\"text-align:right\"><img src=\"../artwork/access_denied_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;" . $paper[$i]['q_paper'] . "</td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
       }

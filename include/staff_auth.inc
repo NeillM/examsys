@@ -75,134 +75,6 @@ $system_id = module_utils::get_idMod('SYSTEM', $mysqli);
 
 if ($userObject->has_role('SysAdmin')) {
   //sysadmin can access any thing !!!
-
-} elseif ($userObject->has_role('Admin')) {
-  //For 'Admin' users look up permissions from 'admin_access' table.
-
-  $on_staff_module = false;
-  $failed_paper = false;
-
-  //Can the user access the paper?
-  if ((isset($_GET['paperID']) and $_GET['paperID'] != '') or (isset($_POST['paperID']) and $_POST['paperID'] != '')) {
-    $tmp_paperID = $_REQUEST['paperID'];
-
-    if (substr($tmp_paperID, 0, 5) != 'find:') {
-
-      // Get the moduleID of the paper
-      $moduleIDs = Paper_utils::get_modules($tmp_paperID, $mysqli);
-      $module_in = implode(',', array_keys($moduleIDs));
-      
-      if ($module_in != '') {
-        // Check which Schools the moduleID(s) are in.
-        $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)"); 
-        $result->bind_param('i', $userObject->get_user_ID());
-        $result->execute();
-        $result->store_result();
-        $result->bind_result($paper_school);
-        if ($result->num_rows() > 0) {
-          $on_staff_module = true;
-        } else {
-          $on_staff_module = false;
-        }
-        $result->close();
-      }
-
-      // Override access for the system training module.
-      if ($on_staff_module == false and strpos($module_in, 'SYSTEM') === false) {
-        //TODO Why is this here!!
-        $failed_paper = true;
-      }
-    }
-  }
-
-
-  if ($on_staff_module == false and isset($_GET['module']) and $_GET['module'] != '') {
-    // Is 'Admin' on the module as normal
-    $on_staff_module = false;
-    $module_list = explode(',', $_GET['module']);
-    foreach ($module_list as $module) {
-      if ($userObject->is_staff_user_on_module((int)$module)) {
-        $on_staff_module = true;
-      }
-    }
-    
-    // Parse all the parts of the passed data for safety
-    $modules_passed = explode(',', $_GET['module']);
-    $module_in = array();
-    foreach ($modules_passed as $individual_module) {
-      if (is_numeric($individual_module)) {
-        $module_in[] = $individual_module;
-      }
-    }
-    $module_in = implode(',', $module_in);
-    
-    if ($on_staff_module == false) { // Check which Schools the moduleID(s) are in and match school to 'Admin' person.
-      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)");
-      $result->bind_param('i', $userObject->get_user_ID());
-      $result->execute();
-      $result->store_result();
-      $result->bind_result($paper_school);
-      if ($result->num_rows() > 0) {
-        $on_staff_module = true;
-      } else {
-        $on_staff_module = false;
-      }
-      $result->close();
-    }
-
-    // Override access for the system training module.
-    if ($on_staff_module == false and strpos($_GET['module'], 'SYSTEM') === false) {
-      $message = ($failed_paper) ? $string['denied_paper'] : $string['denied_folder'];
-      //$notice->access_denied($mysqli, $string, $message, false);
-      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
-    }
-  }
-
-  // Check if user has access to the questions
-  if (isset($_REQUEST['q_id'])) {
-    $tmp_q_id = ltrim($_REQUEST['q_id'], ',');
-    $q_id_list = explode(',', $tmp_q_id);
-    foreach ($q_id_list as $tmp_q_id) {
-      if ($tmp_q_id != -1) {
-        $group_array = array();
-
-        $result = $mysqli->prepare("SELECT qm.idMod, q.ownerID FROM questions q INNER JOIN questions_modules qm ON q.q_id = qm.q_id WHERE q.q_id = ?");
-        $result->bind_param('i', $tmp_q_id);
-        $result->execute();
-        $result->store_result();
-        $result->bind_result($q_group, $ownerID);
-        while($result->fetch()) {
-          $group_array[] = $q_group;
-        }
-
-        if ($ownerID != $userObject->get_user_ID() and !in_array($system_id, $group_array) and count(array_intersect($group_array, array_keys($staff_modules))) == 0) {
-          // Not owner or on staff_module so check schools
-          $is_admin = false;
-          if (count($group_array) > 0) {
-            $module_list = "'" . str_replace(';', ',', $q_group) . "'";
-            $result2 = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID = ? AND admin_access.schools_id = schools.id AND schools.id = modules.schoolid AND moduleid IN ({$module_list})");
-            $result2->bind_param('i', $userObject->get_user_ID());
-            $result2->execute();
-            $result2->store_result();
-            if ($result2->num_rows > 0) {
-              $is_admin = true;
-            }
-            $result2->close();
-          }
-
-          if (!$is_admin) {
-            $result->close();
-            //$notice->access_denied($mysqli, $string, $string['denied_question'], false);
-            $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-            $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
-          }
-        }
-        $result->close();
-      }
-    }
-  }
-
 } else {
   //normal users can access things they own or are on the staff_module of only !!
   $on_staff_module = false;
@@ -219,7 +91,7 @@ if ($userObject->has_role('SysAdmin')) {
     if ($staff_module_match == false) {
       //$notice->access_denied($mysqli, $string, str_replace('%s', module_utils::get_moduleid_from_id($_GET['module'], $mysqli), $string['denied_team']), false);
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 
@@ -243,7 +115,7 @@ if ($userObject->has_role('SysAdmin')) {
       if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
         //$notice->access_denied($mysqli, $string, $string['denied_paper'], false);
         $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
       }
     }
   }
@@ -273,7 +145,7 @@ if ($userObject->has_role('SysAdmin')) {
         if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
           //$notice->access_denied($mysqli, $string, $string['denied_question'], false);
           $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-          $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../artwork/page_not_found.png', '#C00000', true, true);
+          $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
         }
       }
     }
