@@ -25,8 +25,9 @@
 */
 require_once 'staff_student_auth.inc';
 
-if (!$userObject->has_role(array('SysAdmin','Admin'))) {
-  $notice->access_denied($mysqli, $string, $string['accessdeniedadmin'],true);
+if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
 } 
 
 // Get staff_modules.
