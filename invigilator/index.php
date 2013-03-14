@@ -184,17 +184,15 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
 
   $student_end_datetime = $student_end_datetime->add($total_extra_time_interval);
 
-  // Check it does not exceed the paper's end time
-
-  $paper_end_datetime = $log_lab_end_time->get_paper_end_datetime();
-
-  if ($student_end_datetime > $paper_end_datetime) {
-    $student_end_datetime = $paper_end_datetime;
-  }
+  $paper_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
 
   $ft = clone $student_end_datetime;
   $ft->setTimezone(new DateTimeZone($property_object->get_timezone()));
-  $formatted_end_time = $ft->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'));
+  $formatted_end_time = $ft->format($configObject->get('cfg_short_time_php'));
+
+  if ($student_end_datetime != $paper_end_datetime) {
+    $formatted_end_time = '<strong>' . $formatted_end_time . '</strong>';
+  }
 
   // Get student description
   $tmp_userID = $student_object['user_ID'];
@@ -532,6 +530,7 @@ if ($room_name != '') {
       StartClock();
       resizeLists();
       $(window).unload(KillClock);
+      $(window).resize(resizeLists);
     });
 </script>
 
