@@ -52,26 +52,26 @@ class SummativeTimer {
     //has the lab got an end time set?
     $session_end_datetime = $this->get_session_end_datetime();
 
-    if($session_end_datetime === false) {
+    if ($session_end_datetime === false) {
       // Invigilator hasn't pressed Start - we aren't timing the exam
       return false;
     }
 
-    //has the student been given extra time?
-    $session_end_timestamp = $this->get_extra_end_date_timestamp();
+    $session_end_timestamp = $session_end_datetime->getTimestamp();
 
-    if($session_end_timestamp === false) {
-      $session_end_timestamp = $session_end_datetime->getTimestamp();
+    //has the student been given extra time?
+    $extra_time = $this->get_extra_time_secs();
+    if ($extra_time === false) {
+      $extra_time = 0;
     }
 
     $now_timestamp = time();
 
-    $remaining_time_secs = $session_end_timestamp - $now_timestamp;
-
     $special_needs_secs = $this->calculate_special_needs_secs();
-    $remaining_time_secs = $remaining_time_secs + $special_needs_secs;
 
-    if( $remaining_time_secs < 1 ){
+    $remaining_time_secs = $session_end_timestamp - $now_timestamp + $extra_time + $special_needs_secs;
+
+    if ($remaining_time_secs < 1) {
       $remaining_time_secs = 0;
     }
 
@@ -95,20 +95,13 @@ class SummativeTimer {
   /*
    * @return int
    */
-  private function get_extra_end_date_timestamp(){
-    $end_date_datetime = $this->log_extra_time->get_end_date_datetime();
+  private function get_extra_time_secs(){
+    $extra_time = $this->log_extra_time->get_extra_time_secs();
 
-    if( $end_date_datetime === false ){
+    if($extra_time === false) {
       return false;
     }
-    return $end_date_datetime->getTimestamp();
-  }
-
-  /*
-   * @return DateTime
-   */
-  private function get_end_date_datetime(){
-    return $this->get_end_date_datetime();
+    return $extra_time;
   }
 
   /*
@@ -134,6 +127,4 @@ class SummativeTimer {
   private function get_default_session_end_datetime(){
     return $this->log_extra_time->get_default_session_end_datetime();
   }
-
-
 }

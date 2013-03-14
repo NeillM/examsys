@@ -103,35 +103,6 @@ class LogLabEndTime {
   }
 
   /**
-   * Called when the invigilator clicks the 'Start' button and extends the exam session's end time
-   * @return DateTime
-   */
-  function list_records_with_extra_time() {
-
-    $data=array();
-
-    $query = 'SELECT userID FROM log_extra_time WHERE labID=? AND paperID=?';
-
-    $stmt = $this->db->prepare($query);
-
-    $lab_id = $this->get_lab_id();
-    $paper_id = $this->get_paper_id();
-
-    $stmt->bind_param('ii', $lab_id, $paper_id);
-
-    $stmt->execute();
-    $stmt->store_result();
-
-    $bindResult = $stmt->bind_result($uid);
-
-    while($stmt->fetch()) {
-      $data[]=$uid;
-    }
-    $stmt->close();
-    return $data;
-  }
-
-  /**
    * Calculate the end time for a paper and record it in the database
    * @param  integer  $invigilator_id ID of the invigilator setting the end time for the paper
    * @param  string   $time           Time at which to end the exam as an interval from midnight in interval_spec format
@@ -181,17 +152,6 @@ class LogLabEndTime {
 
     // Update cached end time
     $this->end_datetime_cached = $end_datetime;
-
-    $records_to_update = $this->list_records_with_extra_time();
-    $log_lab_end_time = new LogLabEndTime($this->lab_id, $this->property_object, $this->db);
-    foreach($records_to_update as $uid) {
-      $stuobj['user_ID'] = $uid;
-
-      $ext_timeobj = new LogExtraTime($this, $stuobj, $this->db);
-      $ext_time = (int)$ext_timeobj->get_extra_time_secs()/60; // give time in minutes that it needs next
-      $ext_timeobj->save($invigilator_id, $ext_time);
-      unset($ext_timeobj);
-    }
 
     return $end_datetime;
   }

@@ -1856,7 +1856,6 @@ QUERY;
           `invigilatorID` int(10) unsigned NOT NULL,
           `userID` int(10) unsigned NOT NULL,
           `extra_time` int(10) unsigned NOT NULL,
-          `end_date` int(10) unsigned NOT NULL,
           PRIMARY KEY (`id`),
           UNIQUE KEY `key_lab_id_paper_id_user_id` (`labID`,`paperID`,`userID`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset} PACK_KEYS=1

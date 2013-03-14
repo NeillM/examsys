@@ -69,17 +69,16 @@ class LogExtraTime {
 
     $paper_id = $this->get_paper_id();
 
-    $query = 'SELECT extra_time, end_date, userID, labID FROM log_extra_time WHERE paperID = ?';
+    $query = 'SELECT extra_time, userID, labID FROM log_extra_time WHERE paperID = ?';
     $stmt = $this->db->prepare($query);
     $stmt->bind_param('i', $paper_id);
     $stmt->execute();
     $stmt->store_result();
 
-    $bindResult = $stmt->bind_result($extra_time_secs, $end_date, $userID, $labID);
+    $bindResult = $stmt->bind_result($extra_time_secs, $userID, $labID);
 
     while ( $stmt->fetch() ) {
       $this->log_extra_time_cache[$userID][$labID]['extra_time_secs'] =  $extra_time_secs;
-      $this->log_extra_time_cache[$userID][$labID]['end_date'] =  $end_date;
     }
     $stmt->close();
   }
@@ -124,52 +123,6 @@ class LogExtraTime {
   }
 
   /**
-   * @return DateTime
-   */
-  public function get_end_date_datetime() {
-    $lab_id = $this->get_lab_id();
-    $student_id = $this->get_student_id();
-    $paper_id = $this->get_paper_id();
-
-    if ($this->use_cache) {
-      if(isset($this->log_extra_time_cache[$student_id][$lab_id]['extra_time_secs'])) {
-        $end_date = $this->log_extra_time_cache[$student_id][$lab_id]['extra_time_secs'];
-        $end_datetime = new DateTime();
-        $end_datetime->setTimestamp($end_date);
-        return $end_datetime;
-      } else {
-        return false;
-      }
-    }
-
-    $query = 'SELECT end_date FROM log_extra_time WHERE labID = ? AND userID = ? AND paperID = ?';
-
-    $stmt = $this->db->prepare($query);
-    $stmt->bind_param('iii', $lab_id, $student_id, $paper_id);
-    $stmt->execute();
-    $stmt->store_result();
-
-    $bindResult = $stmt->bind_result($end_date);
-
-    $num_results = $stmt->num_rows;
-
-    $stmt->fetch();
-    $stmt->close();
-
-    // If no record exists then fall back to the default
-    if ($num_results < 1 or $end_date === NULL) {
-      return false;
-    }
-
-
-    $end_datetime = new DateTime();
-    $end_datetime->setTimestamp($end_date);
-
-    return $end_datetime;
-
-  }
-
-  /**
    * @param int $invigilator_id
    * @param int $extra_time_minutes
    */
@@ -179,11 +132,9 @@ class LogExtraTime {
       return 0;
     }
 
-    $query = 'INSERT INTO log_extra_time ( labID , paperID , invigilatorID , userID , extra_time , end_date ) VALUES ( ? , ? , ? , ? , ? , ? ) ON DUPLICATE KEY UPDATE extra_time = ? , end_date   = ?';
+    $query = 'INSERT INTO log_extra_time (labID, paperID, invigilatorID, userID, extra_time) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE extra_time = ?';
 
     $stmt = $this->db->prepare($query);
-
-    $extended_end_date_timestamp = $this->calculate_end_date_timestamp($extra_time_minutes);
 
     $lab_id = $this->get_lab_id();
     $paper_id = $this->get_paper_id();
@@ -191,36 +142,13 @@ class LogExtraTime {
 
     $extra_time_seconds = $extra_time_minutes * 60;
 
-    $stmt->bind_param('iiiiiiii', $lab_id, $paper_id, $invigilator_id, $student_id, $extra_time_seconds, $extended_end_date_timestamp, $extra_time_seconds, $extended_end_date_timestamp);
+    $stmt->bind_param('iiiiii', $lab_id, $paper_id, $invigilator_id, $student_id, $extra_time_seconds, $extra_time_seconds);
 
     $stmt->execute();
     $stmt->close();
 
     return $extra_time_seconds;
 
-  }
-
-  /**
-   * @param int
-   * @return int
-   */
-  private function calculate_end_date_timestamp($extra_time_minutes) {
-
-    $end_datetime = $this->get_session_end_datetime();
-
-    if ($end_datetime == false) {
-      $end_datetime = $this->get_default_session_end_datetime();
-    }
-
-    $extra_time_seconds = $extra_time_minutes * 60;
-
-    $end_timestamp = $end_datetime->getTimestamp();
-
-    $extended_end_date_timestamp = $end_timestamp + $extra_time_seconds;
-
-    $paper_end_timestamp = $this->get_paper_end_timestamp();
-
-    return $extended_end_date_timestamp;
   }
 
   /**
@@ -274,18 +202,6 @@ class LogExtraTime {
    */
   public function get_students_special_needs_percentage() {
     return $this->student_object['special_needs_percentage'];
-  }
-
-  /**
-   * @return int
-   */
-  private function get_end_date_timestamp() {
-    $end_date_datetime = $this->get_end_date_datetime();
-    if ($end_date_datetime === false) {
-      return false;
-    }
-
-    return $end_date_datetime->getTimestamp();
   }
 
   /**
