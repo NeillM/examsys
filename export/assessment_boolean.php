@@ -213,24 +213,13 @@ foreach ($user_results as $individual) {
       }
       
       if (!$skip_random) {
-
         if ($question['q_type'] == 'extmatch' and $question['score_method'] == 'Mark per Option') {
           $sub_parts = 0;
           $paper_answers = explode('|', $question['correct'][0]);
-          foreach ($paper_answers as $subparts1) {
-            if ($subparts1!='' and substr($tmp_exclude, $sub_parts, 1) == '0') {
-              $num_ix = 0;
-              $subparts2 = explode('$', $subparts1);
-              
-              if (count($subparts2)>1) {
-                foreach ($subparts2 as $subpart) {
-                  $csv .= ',Q' . $q_no .  $numerals[$sub_parts] . chr(++$num_ix + 64); 
-                }
-              } else {
-                $csv .= ',Q' . $q_no . $numerals[$sub_parts];
-              }
-              $sub_parts++;
-            }              
+          for ($a=0; $a<count($paper_answers); $a++) {
+            $sub_parts += substr_count($paper_answers[$a], '$');
+
+            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') $csv .= ',Q' . $q_no . $numerals[$a];
           }
         } elseif ($question['q_type'] == 'matrix' and $question['score_method'] == 'Mark per Option') {
           $sub_parts = 0;
