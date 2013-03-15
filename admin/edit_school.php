@@ -25,16 +25,22 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('schoolid', 'GET', true, false, false);
+$schoolid = check_var('schoolid', 'GET', true, false, true);
 
 $school = $string['prompt'];
 $faculty = '';
 
 $result = $mysqli->prepare("SELECT school, facultyID FROM schools WHERE id = ?");
-$result->bind_param('i', $_GET['schoolid']);
+$result->bind_param('i', $schoolid);
 $result->execute();
+$result->store_result();
 $result->bind_result($school, $curr_faculty);
 $result->fetch();
+if ($result->num_rows == 0) {
+  $result->close();
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 $result->close();
 
 if (isset($_POST['submit'])) {
@@ -50,7 +56,7 @@ if (isset($_POST['submit'])) {
   } else {
     if ($changed) {
       $result = $mysqli->prepare("UPDATE schools SET facultyID = ?, school = ? WHERE id = ?");
-      $result->bind_param('isi', $faculty, $school_tmp, $_GET['schoolid']);
+      $result->bind_param('isi', $faculty, $school_tmp, $schoolid);
       $result->execute();
       $result->close();
     }
@@ -119,7 +125,7 @@ $result->close();
 
   <br />
   <div align="center">
-  <form name="add_school" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $_GET['schoolid']; ?>">
+  <form name="add_school" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $schoolid; ?>">
 <?php
   if (isset($error) and $error = 'duplicate') {
 ?>
