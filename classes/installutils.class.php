@@ -1344,6 +1344,8 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   \$cfg_hour_warning = 10;       // Warning for summative exams
 //Paper auto saving time out in seconds - default 180s
   \$cfg_autosave_timeout = 180;
+  \$cfg_autosave_settimeout = 10;
+  \$cfg_autosave_retrylimit = 3;
   \$cfg_autosave_backoff_factor = 1.5; //each retry is lenghtend to \$cfg_autosave_settimeout + (\$cfg_autosave_backoff_factor * \$cfg_autosave_settimeout * retryCount);
 //Assistance
   \$support_email = '{cfg_support_email}';
