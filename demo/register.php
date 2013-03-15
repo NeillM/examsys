@@ -137,7 +137,7 @@ if (isset($_POST['submit'])) {
 
 
   if ($unique_module == true) {
-    $new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, 5, NULL, NULL, true, true, true, false, false, true, false, $mysqli);
+    $new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, 5, NULL, NULL, true, true, true, false, false, true, false, $mysqli, 0, 0, 1, 1);
   }
 
   if ($unique_username == true) {

@@ -150,7 +150,7 @@ function returnTrueFalse($value) {
               if (in_array($moduleid, $module_list)) {
                 echo "<li class=\"existing\">$moduleid - " . $string['alreadyexists'] . "</li>\n";
               } else {
-                $success = module_utils::add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
+                $success = module_utils::add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, 0, 0, 1, 1);
                 if ($success) {
                   echo "<li class=\"added\">$moduleid - " . $string['added'] . "</li>\n";
                   $modulesAdded++;

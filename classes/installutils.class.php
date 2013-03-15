@@ -940,7 +940,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                                 true,
                                 null,
                                 null,
-                                self::$db
+                                self::$db,
+                                0,
+                                0,
+                                1,
+                                1
                              );
 
     module_utils::add_modules(  'SYSTEM',

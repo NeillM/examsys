@@ -231,7 +231,7 @@ if (!$lti->isInstructor()) {
 
           $sms_api = $lti_i::sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
-          $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1);
+          $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1, 0, 1, 1);
         } elseif (!module_utils::module_exists($v[1], $mysqli) and  !$lti_i::allow_module_create($v)) {
           UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png');
           exit();
