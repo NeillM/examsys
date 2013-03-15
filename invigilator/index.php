@@ -217,9 +217,8 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
       <img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" border="0"/>
     <?php
   }
-  echo $surname;
   ?>
-    <span style="color:#808080">, <?php echo $first_names . ' ' . $title; ?></span>
+    <?php echo $surname ?><span style="color:#808080">, <?php echo $first_names . ' ' . $title; ?></span>
     </td>
 
     <td style="text-align:center">
