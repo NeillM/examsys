@@ -95,7 +95,7 @@ Class CourseUtils {
     // Check for unique course
     $unique_courseid = false;
 
-    $result = $db->prepare("SELECT id FROM courses WHERE name=?");
+    $result = $db->prepare("SELECT id FROM courses WHERE name = ?");
     if ($db->error) {
       try {
         $a = $db->error;
@@ -111,7 +111,7 @@ Class CourseUtils {
     $result->bind_param('s', $name);
     $result->execute();
     $result->store_result();
-    if ($result->num_rows > 0) {
+    if ($result->num_rows == 0) {
       $unique_courseid = true;
     }
     $result->free_result();
@@ -120,6 +120,22 @@ Class CourseUtils {
     return $unique_courseid;
   }
 
+  static function courseid_exists($courseID, $db) {
+    $result = $db->prepare("SELECT id FROM courses WHERE id = ?");
+    $result->bind_param('i', $courseID);
+    $result->execute();
+    $result->store_result();
+    if ($result->num_rows == 0) {
+      $exist = false;
+    } else {
+      $exist = true;
+    }
+    $result->free_result();
+    $result->close();
+    
+    return $exist;
+  }
+  
 }
 
 ?>

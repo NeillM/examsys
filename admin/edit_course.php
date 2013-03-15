@@ -23,9 +23,15 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/courseutils.class.php';
 
-check_var('courseID', 'REQUEST', true, false, false);
+$courseID = check_var('courseID', 'REQUEST', true, false, true);
+
+if (!CourseUtils::courseid_exists($courseID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $unique_course = true;
 $tmp_course = '';
@@ -33,33 +39,22 @@ $tmp_course = '';
 if (isset($_POST['submit']) and $_POST['course'] != $_POST['old_course']) {
   // Check for unique course name
   $tmp_course = trim($_POST['course']);
-  
-  $result = $mysqli->prepare("SELECT name FROM courses WHERE name = ?");
-  $result->bind_param('s', $tmp_course);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($tmp_course);
-  $result->fetch();
-  if ($result->num_rows > 0) $unique_course = false;
-  $result->free_result();
-  $result->close();
+  $unique_course = CourseUtils::course_exists($tmp_course, $mysqli);
 }
 
 if (isset($_POST['submit']) and $unique_course == true) {
   $tmp_course = trim($_POST['course']);
   $tmp_school = $_POST['school'];
   $tmp_description = trim($_POST['description']);
-  $tmp_courseID = $_POST['courseID'];
 
   $result = $mysqli->prepare("UPDATE courses SET name = ?, description = ?, schoolid = ? WHERE id = ?");
-  $result->bind_param('ssii', $tmp_course, $tmp_description, $tmp_school, $tmp_courseID);
+  $result->bind_param('ssii', $tmp_course, $tmp_description, $tmp_school, $courseID);
   $result->execute();  
   $result->close();
   $mysqli->close();
   header("location: list_courses.php");
   exit;
 } else {
-  $courseID = $_GET['courseID'];
   $result = $mysqli->prepare("SELECT schoolid, name, description FROM courses WHERE id = ? LIMIT 1");
   $result->bind_param('i', $courseID);
   $result->execute();
