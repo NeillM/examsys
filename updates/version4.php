@@ -3882,13 +3882,9 @@ SQL;
   $result->bind_result($f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $f10, $f11, $f12, $f13);
   $result->fetch();
   $count=$result->num_rows;
-  if($count<2) {
-    $updater_utils->execute_query("ALTER TABLE sid DROP PRIMARY KEY, ADD PRIMARY KEY  (`userID`,`student_id`)", true);
+  if ($count < 2) {
+    $updater_utils->execute_query("ALTER TABLE sid DROP PRIMARY KEY, ADD PRIMARY KEY (`userID`,`student_id`)", true);
   }
-
-  // 14/03/2013 - Add field to specify if timed exams are allowed.
-  if (!$updater_utils->does_column_exist('modules', 'timed_exams')) {
-    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN timed_exams tinyint", true);
 
   if (!$updater_utils->does_index_exist('objective', 'idx_identifier_calendar_year_objective300_sequence')) {
     $updater_utils->execute_query("ALTER TABLE objectives ADD INDEX idx_identifier_calendar_year_objective300_sequence (identifier, calendar_year, objective(300) , sequence )", true);
@@ -3897,14 +3893,17 @@ SQL;
     $updater_utils->execute_query("ALTER TABLE admin_access ADD INDEX idx_schoolsid_userid (schools_id, userID )", true);
   }
 
-
+  // 14/03/2013 - Add field to specify if timed exams are allowed.
+  if (!$updater_utils->does_column_exist('modules', 'timed_exams')) {
+    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN timed_exams tinyint(4)", true);
+    
     $sql = "UPDATE modules SET timed_exams = 0";
     $updater_utils->execute_query($sql, true);
   }
 
   // 14/03/2013 - Add field to specify if question-based feedback is allowed for exams.
   if (!$updater_utils->does_column_exist('modules', 'exam_q_feedback')) {
-    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN exam_q_feedback tinyint", true);
+    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN exam_q_feedback tinyint(4)", true);
 
     $sql = "UPDATE modules SET exam_q_feedback = 1";
     $updater_utils->execute_query($sql, true);
@@ -3912,7 +3911,7 @@ SQL;
 
   // 14/03/2013 - Add field to specify if team members are allowed to control the makeup of the team.
   if (!$updater_utils->does_column_exist('modules', 'add_team_members')) {
-    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN add_team_members tinyint", true);
+    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN add_team_members tinyint(4)", true);
 
     $sql = "UPDATE modules SET add_team_members = 1";
     $updater_utils->execute_query($sql, true);
