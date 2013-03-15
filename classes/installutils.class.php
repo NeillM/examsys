@@ -29,6 +29,7 @@ require_once $cfg_web_root . 'classes/facultyutils.class.php';
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'classes/configobject.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/timezones.inc';
+require_once $cfg_web_root . 'lang/' . $language . '/install/index.php';
 
 Class InstallUtils {
   public static $db;
@@ -1056,7 +1057,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $errors = array();
     //apache
     $apache = explode('/',$_SERVER['SERVER_SOFTWARE']);
-    $apache_min_ver = '2.0';
+    /*$apache_min_ver = '2.0';
     if ( isset($apache[0]) and isset($apache[1]) ) {
       if ($apache[0] != 'Apache') {
         $errors['200'] = $string['errors8'].$apache[1];
@@ -1065,7 +1066,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       if (isset($ver[0]) and $ver[0] < $apache_min_ver) {
         $errors['201'] = $string['errors9']. $ver[0];
       }
-    }
+    }*/
 
     //php
     $php_min_ver = '5.0';
@@ -1101,6 +1102,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function displayError($error = '') {
     global $string;
+    var_dump($error);
     echo "<div class=\"error\">\n";
     if (is_array($error)) {
       foreach($error as $errCode => $message) {
@@ -1473,7 +1475,7 @@ QUERY;
         `adminID` int(11) NOT NULL auto_increment,
         `userID` int(10) unsigned default NULL,
         `schools_id` int(11) default NULL,
-        PRIMARY KEY (`adminID`)
+        PRIMARY KEY (`adminID`),
         KEY idx_schoolsid_userid (schools_id, userID )
       ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -2397,8 +2399,8 @@ QUERY;
     $this->tableList['sid'] = <<<QUERY
         CREATE TABLE `sid` (
           `student_id` char(15) default NULL,
-          `userID` int(10) unsigned NOT NULL default '0',
-          PRIMARY KEY  (`userID`,`student_id`),
+          `userID` int(10) unsigned NOT NULL default 0,
+          PRIMARY KEY  (`userID`,`student_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
