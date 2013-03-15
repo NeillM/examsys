@@ -27,6 +27,24 @@
 
 Class FacultyUtils {
 
+  static function facultyid_exists($facultyID, $db) {
+    $result = $db->prepare("SELECT id FROM faculty WHERE id = ? AND deleted IS NULL");
+    $result->bind_param('i', $facultyID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($tmp_paperid);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $exist = false;
+    } else {
+      $exist = true;
+    }
+    $result->free_result();
+    $result->close();
+
+    return $exist;
+  }
+
   static function add_faculty($faculty, $db) {
 
     $result = $db->prepare("INSERT INTO faculty(name) VALUES(?)");
@@ -41,9 +59,7 @@ Class FacultyUtils {
   }
 
   static function get_faculty_id_by_name($faculty, $db) {
-
-
-    $stmt = $db->prepare("SELECT id FROM schools WHERE name=?");
+    $stmt = $db->prepare("SELECT id FROM schools WHERE name = ?");
     $stmt->bind_param('s', $faculty);
     $stmt->execute();
     $stmt->bind_result($id);
