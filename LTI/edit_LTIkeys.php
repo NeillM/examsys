@@ -23,20 +23,36 @@
  */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
 require_once 'ims-lti/UoN_LTI.php';
 
 $lti = new UoN_LTI($mysqli);
 $lti->init_lti0($mysqli);
-check_var('LTIkeysid', 'GET', true, false, false);
+$LTIkeysid = check_var('LTIkeysid', 'GET', true, false, true);
+
+$result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE id = ?");
+$result->bind_param('i', $LTIkeysid);
+$result->execute();
+$result->store_result();
+$result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'], $ltis['context_id']);
+$result->fetch();
+if ($result->num_rows == 0) {
+  $result->close();
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+$result->close();
 
 if (isset($_POST['submit'])) {
-  $ltiname = trim($_POST['ltiname']);
-  $ltikey = trim($_POST['ltikey']);
-  $ltisec = trim($_POST['ltisec']);
+  $ltiname    = trim($_POST['ltiname']);
+  $ltikey     = trim($_POST['ltikey']);
+  $ltisec     = trim($_POST['ltisec']);
   $lticontext = trim($_POST['lticontext']);
-  $insert_id = $lti->update_lti_key($_GET['LTIkeysid'], $ltiname, $ltikey, $ltisec, $lticontext);
+  
+  $insert_id = $lti->update_lti_key($LTIkeysid, $ltiname, $ltikey, $ltisec, $lticontext);
+  
   header("location: lti_keys_list.php");
+  exit;
 } else {
   ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -80,15 +96,7 @@ if (isset($_POST['submit'])) {
 <body>
 <?php
   require '../include/lti_keys_options.inc';
-
-  $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE id=?");
-  $result->bind_param('i', $_GET['LTIkeysid']);
-  $result->execute();
-  $result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'], $ltis['context_id']);
-  $result->fetch();
-  $result->close();
-
-  ?>
+?>
 <div id="content" class="content" style="font-size:80%">
 
 <table class="header">
