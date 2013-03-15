@@ -43,6 +43,7 @@ $string['fireexit'] = 'Fire Exit';
 $string['pleasecomplete'] = '<strong>NOTE:</strong> Please complete all questions before clicking &#145;Screen %d &gt;&#146;, you will not be able to go back.';
 $string['javacheck1'] = 'Have you completed all the questions on this screen, you will NOT be able to go back.\nAre you sure you wish to continue?';
 $string['javacheck2'] = "Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.";
+$string['error_random'] = 'ERROR: unable to find unique question for random question block';
 $string['error_keywords'] = 'ERROR: unable to find unique question for supplied keywords';
 $string['error_paper'] = 'The requested paper cannot be found.';
 $string['error_qtype'] = 'No question type defined.';

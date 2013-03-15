@@ -43,6 +43,7 @@ $string['fireexit'] = 'Ewakuacja pożarowa';
 $string['pleasecomplete'] = '<strong>Uwaga:</strong> Należy udzielić wszystkich odpowiedzi przed wybraniem &#145;Ekranu %d &gt;&#146;, - powrót nie jest możliwy.';
 $string['javacheck1'] = 'Czy wypełniłeś wszystkie odpowiedzi na ekranie - powrót NIE będzie jest możliwy, czy na pewno chcesz kontynuować?';
 $string['javacheck2'] = "Czy na pewno chcesz finalizować? Po wybraniu 'OK' nie będziesz mógł powrócić.";
+$string['error_random'] = 'ERROR: unable to find unique question for random question block';  // Niko
 $string['error_keywords'] = 'BŁĄD: nie można odszukać unikalnego pytania dla podanych słów kluczowych';
 $string['error_paper'] = 'Wskazany arkusz nie mógł być odnaleziony.';
 $string['error_qtype'] = 'Nie zdefiniowano typu pytania.';
