@@ -248,13 +248,13 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     echo '</select></td></tr>';
   ?>
     <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option><option value="UoNCM"<?php if ($vle_api == 'UoNCM') echo ' selected'; ?>><?php echo $string['uoncm']; ?></option><option value="NLE"<?php if ($vle_api == 'NLE') echo ' selected'; ?>><?php echo $string['nle']; ?></option></select></td></tr>
-    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked'; ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
-    <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking"<?php if ($neg_marking == 1) echo ' checked'; ?> /></td></tr>
-    <tr><td class="field">Timed Exams</td><td><input type="checkbox" name="timed_exams"<?php if ($timed_exams == 1) echo ' checked'; ?> /></td></tr>
-    <tr><td class="field">Question-based Feedback</td><td><input type="checkbox" name="exam_q_feedback"<?php if ($exam_q_feedback == 1) echo ' checked'; ?> /></td></tr>
-    <tr><td class="field">Add team members</td><td><input type="checkbox" name="add_team_members"<?php if ($add_team_members == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked="checked"'; ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
+    <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking"<?php if ($neg_marking == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['timedexams']; ?></td><td><input type="checkbox" name="timed_exams"<?php if ($timed_exams == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['questionbasedfeedback']; ?></td><td><input type="checkbox" name="exam_q_feedback"<?php if ($exam_q_feedback == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['addteammembers']; ?></td><td><input type="checkbox" name="add_team_members"<?php if ($add_team_members == 1) echo ' checked="checked"'; ?> /></td></tr>
     <tr id="ebelgrid" style="display:<?php
     if ($stdset == 1) {
       echo 'table-row';

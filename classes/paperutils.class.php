@@ -134,6 +134,24 @@ Class PaperUtils {
     return $modules;
   }
 
+  public function q_feedback_enabled($moduleIDs, $db) {
+    $enabled = true;
+    
+    $module_list = implode(',', $moduleIDs);
+  
+    $result = $db->prepare("SELECT exam_q_feedback FROM modules WHERE id IN ($module_list)");
+    $result->execute();
+    $result->bind_result($exam_q_feedback);
+    while ($result->fetch()) {
+      if ($exam_q_feedback == 0) {
+        $enabled = false;
+      }
+    }
+    $result->close();
+
+    return $enabled;
+  }
+  
   /**
   * Return a array of metadata pairs assigned to a paper
   *

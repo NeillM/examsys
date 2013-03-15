@@ -210,9 +210,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active" checked /></td></tr>
     <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll" /></td></tr>
     <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking" checked="checked" /></td></tr>
-    <tr><td class="field">Timed Exams</td><td><input type="checkbox" name="timed_exams" /></td></tr>
-    <tr><td class="field">Question-based Feedback</td><td><input type="checkbox" name="exam_q_feedback" checked="checked" /></td></tr>
-    <tr><td class="field">Add team members</td><td><input type="checkbox" name="add_team_members" checked="checked" /></td></tr>
+    <tr><td class="field"><?php echo $string['timedexams']; ?></td><td><input type="checkbox" name="timed_exams" /></td></tr>
+    <tr><td class="field"><?php echo $string['questionbasedfeedback']; ?></td><td><input type="checkbox" name="exam_q_feedback" checked="checked" /></td></tr>
+    <tr><td class="field"><?php echo $string['addteammembers']; ?></td><td><input type="checkbox" name="add_team_members" checked="checked" /></td></tr>
     <tr id="ebelgrid" style="display:none"><td class="field"><?php echo $string['ebelgrid']; ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
     $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
     $result->execute();

@@ -582,8 +582,18 @@ if (isset($_POST['Submit'])) {
     }
 
     if ($paper_title != $old_paper_title)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_title, $paper_title, 'name');
-    if ($fullscreen != $old_fullscreen)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
-    if ($bidirectional != $old_bidirectional)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
+    if ($disabled == '') {   // If disabled is set then don't check certain disabled fields.
+      if ($fullscreen != $old_fullscreen)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
+      if ($bidirectional != $old_bidirectional)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
+      if ($properties->get_paper_type() != '6') {
+        if ($tmp_calculator != $old_calculator)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
+      }
+      if ($lab_string != $old_labs)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
+      $new_modules = array_keys($paper_modules);
+      sort($new_modules, SORT_NUMERIC);
+      $new_modules = implode(',', $new_modules);
+      if ($new_modules != $old_modules)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
+    }
     if ($tmp_start_date != $old_start_date)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_start_date, $tmp_start_date, 'startdate');
     if ($tmp_end_date != $old_end_date)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_end_date, $tmp_end_date, 'enddate');
     if ($calendar_year != $old_calendar_year)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calendar_year, $calendar_year, 'session');
@@ -600,17 +610,12 @@ if (isset($_POST['Submit'])) {
       if ($display_correct_answer != $old_display_correct_answer)     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_correct_answer, $display_correct_answer, 'photos');
     } else {
       if ($display_correct_answer != $old_display_correct_answer)     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_correct_answer, $display_correct_answer, 'correctanswerhighlight');
-      if ($tmp_calculator != $old_calculator)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
     }
-    if ($lab_string != $old_labs)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
     if ($bgcolor != $old_bgcolor)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bgcolor, $bgcolor, 'background');
     if ($fgcolor != $old_fgcolor)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fgcolor, $fgcolor, 'foreground');
     if ($themecolor != $old_themecolor)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_themecolor, $themecolor, 'theme');
     if ($labelcolor != $old_labelcolor)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labelcolor, $labelcolor, 'labelsnotes');
-    $new_modules = array_keys($paper_modules);
-    sort($new_modules, SORT_NUMERIC);
-    $new_modules = implode(',', $new_modules);
-    if ($new_modules != $old_modules)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
+
     if (implode(',',$new_externals) != implode(',',$old_externals))   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
     if (implode(',',$new_internals) != implode(',',$old_internals))   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
     if ($external_review_deadline != $old_external_review_deadline)   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_external_review_deadline, $external_review_deadline, 'externalreviewdeadline');
@@ -625,7 +630,6 @@ if (isset($_POST['Submit'])) {
     if ($hide_if_unanswered != $old_hide_if_unanswered)               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_hide_if_unanswered, $hide_if_unanswered, 'hideallfeedback');
     if ($display_feedback != $old_display_feedback)                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_feedback, $display_feedback, 'textfeedback');
     if ($folderID != $old_folder)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_folder, $folderID, 'folder');
-
 
     if ($properties->get_paper_type() != '2') {    // Update textual feedback if not a summative paper.
       // Get old settings
@@ -1654,6 +1658,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "<div style=\"display:block; width:400px; height:425px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
 
     $modules_array = Paper_utils::get_modules($paperID, $mysqli);
+    
+    $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
+    
     $total_modules = array_merge($staff_modules, $modules_array);
 
     $module_sql = implode("','", $total_modules);
@@ -1732,7 +1739,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
        echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
      }
-     if (in_array($properties->get_paper_type(), array('1', '2', '5'))) {
+     if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '5'))) {
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
        echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
        // Question-based Feedback

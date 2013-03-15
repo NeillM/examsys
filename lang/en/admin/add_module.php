@@ -41,4 +41,7 @@ $string['modulefolder'] = 'Module Folder';
 $string['studentcohort'] = 'Student Cohort';
 $string['nolookup'] = '&lt;No lookup&gt;';
 $string['ebelgrid'] = 'Ebel Grid';
+$string['timedexams'] = 'Timed Exams';
+$string['questionbasedfeedback'] = 'Question-based Feedback';
+$string['addteammembers'] = 'Add team members';
 ?>

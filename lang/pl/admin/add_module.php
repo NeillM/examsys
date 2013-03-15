@@ -41,4 +41,7 @@ $string['modulefolder'] = 'Folder modułu';
 $string['studentcohort'] = 'Grupa studentów';
 $string['nolookup'] = '&lt;brak odnośnika&gt;';
 $string['ebelgrid'] = 'Szablon siatki metody Ebel';
+$string['timedexams'] = 'Timed Exams';  // Niko
+$string['questionbasedfeedback'] = 'Question-based Feedback';  // Niko
+$string['addteammembers'] = 'Add team members';  // Niko
 ?>
