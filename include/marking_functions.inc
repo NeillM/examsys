@@ -113,8 +113,10 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
   //turn auto commit back on so future queries function as befor
   $db->autocommit(true);
 
-  // Close still open database prepared queries
-  $save_answers->close();
+  // Close prepared queries
+  if (count($response_data) > 0) {    // Could happen on a screen with just an info block
+    $save_answers->close();
+  }
 
   return $save_ok;
 }
