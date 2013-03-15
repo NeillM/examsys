@@ -78,7 +78,7 @@ if ($configObject->get('protocol') == 'https://' and $_SERVER['SERVER_PORT'] != 
   $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '../artwork/secure_connection.png', $title_color = '#C00000', true, true);
 }
 if (!(preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version))) {
-  $notice->($mysqli, 'Browser Incompatibidisplay_notice_and_exitlity', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', 'Browser Incompatibility', '../artwork/browser.png', $title_color = '#C00000', true, true);
+  $notice->display_notice_and_exit($mysqli, 'Browser Incompatibidisplay_notice_and_exitlity', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', 'Browser Incompatibility', '../artwork/browser.png', $title_color = '#C00000', true, true);
 }
 
 session_name('RogoAuthentication');
