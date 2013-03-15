@@ -31,7 +31,7 @@ require_once '../classes/lab.class.php';
 require_once '../classes/log_extra_time.class.php';
 require_once '../classes/logmetadata.class.php';
 
-function get_students($modules, $property_object, $log_lab_end_time, $string, $db) {
+function get_students($modules, $property_object, $log_lab_end_time, $allow_timing, $string, $db) {
   $paperID = $property_object->get_property_id();
 
   $configObject = Config::get_instance();
@@ -110,7 +110,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $string, $d
       $results->close();
 
       foreach( $student_object as $student_id => $student_obj) {
-          process_student_list($log_lab_end_time, $log_extra_time, $student_obj, $property_object, $configObject, $notes_array, $string, $db);
+          process_student_list($log_lab_end_time, $log_extra_time, $student_obj, $property_object, $configObject, $notes_array, $allow_timing, $string, $db);
       }
 
       ?>
@@ -129,7 +129,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $string, $d
 * @param string         $string
 * @param mysqli         $mysqli
  */
-function process_student_list($log_lab_end_time, $log_extra_time, $student_object, $property_object, $configObject, $notes_array, $string, $mysqli) {
+function process_student_list($log_lab_end_time, $log_extra_time, $student_object, $property_object, $configObject, $notes_array, $allow_timing, $string, $mysqli) {
 
   // Determine when the current exam session will end
 
@@ -190,7 +190,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
   $ft->setTimezone(new DateTimeZone($property_object->get_timezone()));
   $formatted_end_time = $ft->format($configObject->get('cfg_short_time_php'));
 
-  if ($student_end_datetime != $paper_end_datetime) {
+  if ($extra_time_secs > 0 or $special_needs_extra_time_secs > 0) {
     $formatted_end_time = '<strong>' . $formatted_end_time . '</strong>';
   }
 
@@ -210,7 +210,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
 
   ?>
 <tr class="<?php echo $class; ?>">
-    <td style="cursor:hand" onclick="popMenu( '<?php echo $tmp_userID; ?>', '<?php echo $paperID; ?>', event);"/>
+    <td style="cursor:hand" onclick="popMenu('<?php echo $tmp_userID ?>', '<?php echo $paperID ?>', <?php echo $allow_timing ? 'true' : 'false'; ?>, event);"/>
   <?php
   if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == true) {
     ?>
@@ -390,7 +390,7 @@ if ($room_name != '') {
         }
     }
 
-    function popMenu(tmpUserID, paperID, e) {
+    function popMenu(tmpUserID, paperID, showExtension, e) {
 
         if (!e) var e = window.event;
         var currentX = e.clientX;
@@ -398,8 +398,8 @@ if ($room_name != '') {
         var scrOfX = getScrollX();
         var scrOfY = getScrollY();
 
-        document.getElementById('userID').value = tmpUserID;
-        document.getElementById('paperID').value = paperID;
+        $('#userID').val(tmpUserID);
+        $('#paperID').val(paperID);
 
         top_pos = currentY + scrOfY;
 
@@ -407,10 +407,16 @@ if ($room_name != '') {
             top_pos = $(window).height() + scrOfY - 130;
         }
 
-        document.getElementById('menudiv').style.left = currentX + scrOfX + 'px';
-        document.getElementById('menudiv').style.top = top_pos + 'px';
+        if (showExtension) {
+          $('.menu-time').show();
+        } else {
+          $('.menu-time').hide();
+        }
 
-        document.getElementById('menudiv').style.display = "";
+        $('#menudiv').css('left', currentX + scrOfX);
+        $('#menudiv').css('top', top_pos);
+
+        $('#menudiv').show();
 
         isMenu = true;
         return false;
@@ -608,13 +614,36 @@ if (count($properties_list) > 0) {
     <?php
 
   foreach ($properties_list as $property_object) {
-    $exam_started = false;
 
     $title = $property_object->get_paper_title();
     $property_id = $property_object->get_property_id();
     $exam_duration = $property_object->get_exam_duration();
     $start_date = $property_object->get_display_start_date();
     $calendar_year = $property_object->get_calendar_year();
+
+    // Get modules for this paper and check if timing is allowed
+    $timed_modules = $all_modules = 0;
+    $sql = 'SELECT m.id, m.timed_exams FROM properties_modules pm INNER JOIN modules m ON pm.idMod = m.id WHERE pm.property_id = ?';
+
+    $module_results = $mysqli->prepare($sql);
+    $module_results->bind_param('i', $property_id);
+    $module_results->execute();
+    $module_results->store_result();
+    $module_results->bind_result($moduleID, $timed_exams);
+
+    $modules = array();
+
+    while ($module_results->fetch()) {
+      $modules[] = $moduleID;
+      $all_modules++;
+      if ($timed_exams == true) {
+        $timed_modules++;
+      }
+    }
+
+    $allow_timing = ($timed_modules == $all_modules);
+
+    $exam_started = false;
 
     // Has 'Start' button been submitted
 
@@ -632,7 +661,7 @@ if (count($properties_list) > 0) {
 
     $disptimezone = new DateTimeZone($property_object->get_timezone());
 
-    if (isset($_POST['start_exam_form'])) {
+    if ($allow_timing and isset($_POST['start_exam_form'])) {
 
       $paper_id = (int)$_POST['paper_id'];
 
@@ -648,7 +677,7 @@ if (count($properties_list) > 0) {
 ?>
       <td style="vertical-align:top; width:<?php echo $col_width; ?>%">
 <?php
-    if(isset($_POST['end_exam_form'])) {
+    if ($allow_timing and isset($_POST['end_exam_form'])) {
 
       $paper_id = (int)$_POST['paper_id'];
 
@@ -704,7 +733,7 @@ if (count($properties_list) > 0) {
                       <td>
                         <?php echo $start_date ?>
                       </td>
-                      <td><strong><?php echo $string['timedexam'] ?></strong></td>
+                      <td><strong><?php if ($allow_timing) echo $string['timedexam']; ?></strong></td>
                   </tr>
 
                   <tr>
@@ -715,6 +744,9 @@ if (count($properties_list) > 0) {
                         <?php echo $end_date;   ?>
                       </td>
                       <td rowspan="2" style="width: 45%; vertical-align: top">
+                        <?php
+                        if ($allow_timing) {
+                        ?>
                         <form id="start_exam_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
                           <input name="paper_id" type="hidden" value="<?php echo $property_id; ?>"/>
                           <?php
@@ -740,18 +772,11 @@ if (count($properties_list) > 0) {
                             }
                           ?>
                         </form>
+                        <?php
+                        }
+                        ?>
                       </td>
                   </tr>
-
-<!--                   <tr>
-                      <td>
-                        <?php //echo $string['end'];   ?>:
-                      </td>
-                      <td>
-                        <?php //echo $paper_end_date;   ?>
-                      </td>
-                  </tr>
- -->
                   <tr>
                       <td>
                         <?php echo $string['duration']; ?>:
@@ -782,27 +807,11 @@ if (count($properties_list) > 0) {
 
 
         <?php
-
-        $sql = 'SELECT idMod as moduleID FROM properties_modules WHERE property_id = ?';
-
-        $module_results = $mysqli->prepare($sql);
-
-        $module_results->bind_param('i', $property_id);
-        $module_results->execute();
-        $module_results->store_result();
-        $module_results->bind_result($moduleID);
-
-        $modules = array();
-
-        while ($module_results->fetch()) {
-          $modules[] = $moduleID;
-        }
-
         $modules = implode('\',\'', $modules);
 
         $modules = '\'' . $modules . '\'';
 
-        get_students($modules, $property_object, $log_lab_end_time, $string, $mysqli);
+        get_students($modules, $property_object, $log_lab_end_time, $allow_timing, $string, $mysqli);
         ?>
       </td>
     <?php
