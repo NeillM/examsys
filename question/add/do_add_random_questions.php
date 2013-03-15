@@ -34,21 +34,23 @@
   <?php
     $newHTML = '';
     $question_no = 0;
-    $questions = explode(',',$_POST['questions_to_add']);
-    foreach ($questions as $item) {
-      $stmt = $mysqli->prepare("SELECT leadin FROM questions WHERE q_id=?");
-      $stmt->bind_param('i', $item);
-      $stmt->execute();
-      $stmt->bind_result($leadin);
-      $stmt->fetch();
-      $stmt->close();
-      
-      $leadin = trim(strip_tags($leadin));
-      $leadin = preg_replace( '/\r\n/', ' ',$leadin);
-      if (strlen($leadin) > 160) $leadin = substr($leadin,0,160) . '...';
-      $newHTML .= "<div style=\"background-color:highlight; color:white\" id=\"divquestion_$question_no\"><input type=\"hidden\" name=\"question_id$question_no\" value=\"$item\" /><input type=\"checkbox\" onclick=\"toggle(\'divquestion_$question_no\'); updateList();\" id=\"question_text$question_no\" name=\"question_text$question_no\" value=\"" . addslashes($leadin) . "\" checked>&nbsp;" .  addslashes($leadin) . "</div>";
-      $question_no++;
-      echo "questions.push([$item, '" . addslashes($leadin) . "']);";
+    if ($_POST['questions_to_add'] != '') {
+      $questions = explode(',', $_POST['questions_to_add']);
+      foreach ($questions as $item) {
+        $stmt = $mysqli->prepare("SELECT leadin FROM questions WHERE q_id=?");
+        $stmt->bind_param('i', $item);
+        $stmt->execute();
+        $stmt->bind_result($leadin);
+        $stmt->fetch();
+        $stmt->close();
+
+        $leadin = trim(strip_tags($leadin));
+        $leadin = preg_replace( '/\r\n/', ' ',$leadin);
+        if (strlen($leadin) > 160) $leadin = substr($leadin,0,160) . '...';
+        $newHTML .= "<div style=\"background-color:highlight; color:white\" id=\"divquestion_$question_no\"><input type=\"hidden\" name=\"question_id$question_no\" value=\"$item\" /><input type=\"checkbox\" onclick=\"toggle(\'divquestion_$question_no\'); updateList();\" id=\"question_text$question_no\" name=\"question_text$question_no\" value=\"" . addslashes($leadin) . "\" checked>&nbsp;" .  addslashes($leadin) . "</div>";
+        $question_no++;
+        echo "questions.push([$item, '" . addslashes($leadin) . "']);";
+      }
     }
     echo "window.top.opener.addQuestionsToList(questions);";
     $mysqli->close();
