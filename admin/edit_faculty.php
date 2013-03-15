@@ -25,7 +25,20 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('facultyID', 'REQUEST', true, false, false);
+$facultyID = check_var('facultyID', 'REQUEST', true, false, true);
+
+$result = $mysqli->prepare("SELECT name FROM faculty WHERE id = ?");
+$result->bind_param('i', $facultyID);
+$result->execute();
+$result->store_result();
+$result->bind_result($name);
+$result->fetch();
+if ($result->num_rows == 0) {
+  $result->close();
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+$result->close();
 
 $duplicate = false;
 if (isset($_POST['submit'])) {
@@ -42,7 +55,7 @@ if (isset($_POST['submit'])) {
 
   if (!$duplicate) {
     $result = $mysqli->prepare("UPDATE faculty SET name = ? WHERE id = ?");
-    $result->bind_param('si', $_POST['new_faculty'], $_POST['facultyID']);
+    $result->bind_param('si', $_POST['new_faculty'], $facultyID);
     $result->execute();  
     $result->close();
   ?>
@@ -59,13 +72,6 @@ if (isset($_POST['submit'])) {
     exit;
   }
 }
-
-$result = $mysqli->prepare("SELECT name FROM faculty WHERE id = ?");
-$result->bind_param('i', $_GET['facultyID']);
-$result->execute();
-$result->bind_result($name);
-$result->fetch();
-$result->close();
 ?>
 <html>
 <head>
@@ -91,7 +97,7 @@ if ($duplicate) {
   echo '<input type="text" style="width:99%" name="new_faculty" value="' . $name . '" />';
 }
 ?>
-<input type="hidden" name="facultyID" value="<?php echo $_GET['facultyID']; ?>" />
+<input type="hidden" name="facultyID" value="<?php echo $facultyID; ?>" />
 </div>
 <div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>
 </form>
