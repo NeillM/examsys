@@ -956,7 +956,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                                 true,
                                 null,
                                 null,
-                                self::$db
+                                self::$db,
+                                0,
+                                0,
+                                1,
+                                1
                              );
     self::$db->commit();
 
@@ -974,6 +978,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function configFile() {
     global $string;
+    
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     if (file_exists($rogo_path . '/config/config.inc.php')) {
@@ -989,6 +994,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function configFileIsWriteable() {
     global $string;
+    
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
@@ -1005,6 +1011,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function checkDirPermissionsPre() {
     global $string;
+    
     self::$rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     //media
@@ -1054,19 +1061,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function checkSoftware() {
     global $string;
+    
     $errors = array();
     //apache
-    $apache = explode('/',$_SERVER['SERVER_SOFTWARE']);
-    /*$apache_min_ver = '2.0';
-    if ( isset($apache[0]) and isset($apache[1]) ) {
-      if ($apache[0] != 'Apache') {
-        $errors['200'] = $string['errors8'].$apache[1];
-      }
-      $ver = explode(' ',$apache[1]);
-      if (isset($ver[0]) and $ver[0] < $apache_min_ver) {
-        $errors['201'] = $string['errors9']. $ver[0];
-      }
-    }*/
+    $apache = explode('/', $_SERVER['SERVER_SOFTWARE']);
 
     //php
     $php_min_ver = '5.0';
@@ -1089,7 +1087,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function checkHTTPS() {
     global $string;
-	if ($_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
+    
+    if ($_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
       self::displayError(array(100=> $string['errors12']));
       return false;
     }
@@ -1102,6 +1101,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function displayError($error = '') {
     global $string;
+    
     var_dump($error);
     echo "<div class=\"error\">\n";
     if (is_array($error)) {
@@ -1991,6 +1991,9 @@ QUERY;
           `neg_marking` tinyint(1) default NULL,
           `ebel_grid_template` int(11) default NULL,
           `mod_deleted` datetime default NULL,
+          `timed_exams` tinyint(4) default NULL,
+          `exam_q_feedback` tinyint(4) default NULL,
+          `add_team_members` tinyint(4) default NULL,
           PRIMARY KEY (`id`),
           KEY `guideid` (`moduleid`),
           KEY `idx_moduleid_deleted` (`moduleid`,`mod_deleted`),
