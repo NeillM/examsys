@@ -52,7 +52,7 @@ Class module {
   */
   public function __construct() {}
 
-  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0) {
+  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1) {
 
     if ($moduleid == '' or $fullname == '' or $schoolID == '' or module_utils::module_exists($moduleid, $db) !== false) {
       return false;
@@ -70,8 +70,8 @@ Class module {
     if ($mapping == true) $checklist .= ',mapping';
     $tmp_checklist = substr($checklist, 1);
     
-    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)");
-    $result->bind_param('ssisssiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template);
+    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+    $result->bind_param('ssisssiiiiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -116,11 +116,11 @@ Class module {
 
   public function get_full_details_by_ID($modID, $db) {
     // returns false if not self enrol else returns needed data;
-    $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ? AND mod_deleted IS NULL");
+    $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist, timed_exams, exam_q_feedback, add_team_members FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ? AND mod_deleted IS NULL");
     $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
-    $result->bind_result($moduleid, $fullname, $school, $active, $selfenroll, $checklist);
+    $result->bind_result($moduleid, $fullname, $school, $active, $selfenroll, $checklist, $timed_exams, $exam_q_feedback, $add_team_members);
     $result->fetch();
     if ($result->num_rows == 0) {
       $result->close();
@@ -128,7 +128,7 @@ Class module {
     }
     $result->close();
 
-    return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist);
+    return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist, 'timed_exams'=>$timed_exams, 'exam_q_feedback'=>$exam_q_feedback, 'add_team_members'=>$add_team_members);
   }
 
   public function get_moduleid_from_id($modID, $db) {

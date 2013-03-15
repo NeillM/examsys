@@ -81,86 +81,32 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['schoolid']))  $schoolid = $_POST['schoolid'];
   if (isset($_POST['vle_api']))   $vle_api = $_POST['vle_api'];
   if (isset($_POST['sms_api']))   $sms_api = $_POST['sms_api'];
+  
+  $sms_import = 1;
+  
+  if (isset($_POST['timed_exams'])) {
+    $timed_exams = 1;
+  } else {
+    $timed_exams = 0;
+  }
+  if (isset($_POST['exam_q_feedback'])) {
+    $exam_q_feedback = 1;
+  } else {
+    $exam_q_feedback = 0;
+  }
+  if (isset($_POST['add_team_members'])) {
+    $add_team_members = 1;
+  } else {
+    $add_team_members = 0;
+  }
 
   $ebel_grid_template = $_POST['ebel_grid_template'];
 
-  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
-
-  if ($modID !== false and isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
-    $enrolements = 0;
-
-    // Get the current academic session
-    $session = date_utils::get_current_academic_year();
-    $session_parts = explode('/', $session);
-
-    $module = trim($_POST['modulecode']);
-    // UoN code to strip off prefix codes.
-    //------------------------------------
-    $replaced_module = str_replace('_UNMC','',$module);
-    $replaced_module = str_replace('_UNNC','',$replaced_module);
-    //------------------------------------
-
-    $url = $_POST['sms_api'] . "&code=$replaced_module&year=" . $session_parts[0];
-    $returned_data = @file_get_contents($url);
-    if ($returned_data !== false) {
-      $xml = new SimpleXMLElement($returned_data);
-      $enrolement_details = '';
-
-      if (isset($xml->Module->Membership->Student)) {
-        foreach ($xml->Module->Membership->Student as $student) {
-          $student->Title = trim($student->Title);
-          $student->Surname = trim($student->Surname);
-          $student->Forename = trim($student->Forename);
-          $student->CourseCode = trim($student->CourseCode);
-          $student->Username = trim($student->Username);
-          $student->Email = trim($student->Email);
-          $student->Faculty = trim($student->Faculty);
-          $student->Gender = trim($student->Gender);
-          $student->YearofStudy = trim($student->YearofStudy);
-          $student->Faculty = trim($student->Faculty);
-
-          // Create new account for the user
-          $names = explode(' ', $student->Forename);
-          $initials = '';
-          foreach ($names as $tmp_name) {
-            $initials .= substr($tmp_name,0,1);
-          }
-          $tmp_userID = UserUtils::username_exists($student->Username, $mysqli);
-          if ($tmp_userID === false) {
-            $tmp_userID = UserUtils::create_user($student->Username, '', $student->Title, $student->Forename, $student->Surname, $student->Email, $student->CourseCode, $student->Gender, $student->YearofStudy, 'Student', $student->StudentID, $mysqli);
-          }
-          // Add student onto the module
-          UserUtils::add_student_to_module($tmp_userID, $modID, 1, $session, $mysqli, 1);
-
-          $enrolements++;
-          if ($enrolement_details == '') {
-            $enrolement_details = $student->Username;
-          } else {
-            $enrolement_details .= ',' . $student->Username;
-          }
-        }
-      }
-    }
-
-    // Write in a record to sms_imports table
-    if ($enrolements > 0) {
-      if ($_POST['sms_api'] == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
-        $import_type = 'SATURN Malaysia';
-      } elseif ($_POST['sms_api'] == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china') {
-        $import_type = 'SATURN China';
-      } else {
-        $import_type = 'SATURN UK';
-      }
-
-      $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, 0, '', ?)");
-      $result->bind_param('siss', $module, $enrolements, $enrolement_details, $import_type);
-      $result->execute();
-      $result->close();
-    }
-  }
+  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members);
 
   $mysqli->close();
   header("location: list_modules.php");
+  exit;
 } else {
 ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -260,10 +206,13 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <option value="UoNCM"<?php if (isset($_POST['vle_api']) and $_POST['vle_api'] == 'UoNCM') echo ' selected'; ?>>Curriculum Map (UoNCM)</option>
     <option value="NLE"<?php if (isset($_POST['vle_api']) and $_POST['vle_api'] == 'NLE') echo ' selected'; ?>>Networked Learning Environment (NLE)</option>
     </select></td></tr>
-    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer" checked /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external" checked /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset" /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping" /> <?php echo $string['mapping']; ?></td></tr>
+    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer" checked="checked" /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external" checked /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset" /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping" /> <?php echo $string['mapping']; ?></td></tr>
     <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active" checked /></td></tr>
     <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll" /></td></tr>
-    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking" checked /></td></tr>
+    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking" checked="checked" /></td></tr>
+    <tr><td class="field">Timed Exams</td><td><input type="checkbox" name="timed_exams" /></td></tr>
+    <tr><td class="field">Question-based Feedback</td><td><input type="checkbox" name="exam_q_feedback" checked="checked" /></td></tr>
+    <tr><td class="field">Add team members</td><td><input type="checkbox" name="add_team_members" checked="checked" /></td></tr>
     <tr id="ebelgrid" style="display:none"><td class="field"><?php echo $string['ebelgrid']; ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
     $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
     $result->execute();

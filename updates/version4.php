@@ -3563,12 +3563,8 @@ QUERY;
 
   if (isset($arrayexchange)) {
     foreach ($cfg_new as $line) {
-
       $cfg_new3[] = str_replace(array_keys($arrayexchange), array_values($arrayexchange), $line);
-
     }
-
-
     $cfg = $cfg_new3;
   } else {
     $cfg = $cfg_new;
@@ -3890,12 +3886,36 @@ SQL;
     $updater_utils->execute_query("ALTER TABLE sid DROP PRIMARY KEY, ADD PRIMARY KEY  (`userID`,`student_id`)", true);
   }
 
+  // 14/03/2013 - Add field to specify if timed exams are allowed.
+  if (!$updater_utils->does_column_exist('modules', 'timed_exams')) {
+    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN timed_exams tinyint", true);
 
   if (!$updater_utils->does_index_exist('objective', 'idx_identifier_calendar_year_objective300_sequence')) {
     $updater_utils->execute_query("ALTER TABLE objectives ADD INDEX idx_identifier_calendar_year_objective300_sequence (identifier, calendar_year, objective(300) , sequence )", true);
   }
   if (!$updater_utils->does_index_exist('admin_access', 'idx_schoolsid_userid')) {
     $updater_utils->execute_query("ALTER TABLE admin_access ADD INDEX idx_schoolsid_userid (schools_id, userID )", true);
+  }
+
+
+    $sql = "UPDATE modules SET timed_exams = 0";
+    $updater_utils->execute_query($sql, true);
+  }
+
+  // 14/03/2013 - Add field to specify if question-based feedback is allowed for exams.
+  if (!$updater_utils->does_column_exist('modules', 'exam_q_feedback')) {
+    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN exam_q_feedback tinyint", true);
+
+    $sql = "UPDATE modules SET exam_q_feedback = 1";
+    $updater_utils->execute_query($sql, true);
+  }
+
+  // 14/03/2013 - Add field to specify if team members are allowed to control the makeup of the team.
+  if (!$updater_utils->does_column_exist('modules', 'add_team_members')) {
+    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN add_team_members tinyint", true);
+
+    $sql = "UPDATE modules SET add_team_members = 1";
+    $updater_utils->execute_query($sql, true);
   }
 
 

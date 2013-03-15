@@ -69,9 +69,25 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $tmp_fullname = trim($_POST['fullname']);
   $tmp_checklist = substr($checklist, 1);
 
+  if (isset($_POST['timed_exams'])) {
+    $timed_exams = 1;
+  } else {
+    $timed_exams = 0;
+  }
+  if (isset($_POST['exam_q_feedback'])) {
+    $exam_q_feedback = 1;
+  } else {
+    $exam_q_feedback = 0;
+  }
+  if (isset($_POST['add_team_members'])) {
+    $add_team_members = 1;
+  } else {
+    $add_team_members = 0;
+  }
+
   if ($tmp_modulecode != '' and $tmp_fullname != '' and $_POST['schoolid'] != '') {
-    $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=?, neg_marking=?, ebel_grid_template=? WHERE id=?");
-    $result->bind_param('ssisssiiiii', $tmp_modulecode, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['ebel_grid_template'], $_GET['moduleid']);
+    $result = $mysqli->prepare("UPDATE modules SET moduleid = ?, fullname = ?, active = ?, sms = ?, vle_api = ?, checklist = ?, selfenroll = ?, schoolid = ?, neg_marking = ?, ebel_grid_template = ?, timed_exams = ?, exam_q_feedback = ?, add_team_members = ? WHERE id = ?");
+    $result->bind_param('ssisssiiiiiiii', $tmp_modulecode, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['ebel_grid_template'], $timed_exams, $exam_q_feedback, $add_team_members, $_GET['moduleid']);
     $result->execute();
     $result->close();
   }
@@ -80,10 +96,10 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   header("location: list_modules.php");
   exit;
 } else {
-  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id=?");
+  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template, timed_exams, exam_q_feedback, add_team_members FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ?");
   $stmt->bind_param('i', $_GET['moduleid']);
   $stmt->execute();
-  $stmt->bind_result($modulecode, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking, $current_ebel_grid);
+  $stmt->bind_result($modulecode, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking, $current_ebel_grid, $timed_exams, $exam_q_feedback, $add_team_members);
   $stmt->fetch();
   $stmt->close();
 
@@ -236,6 +252,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked'; ?> /></td></tr>
     <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
     <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking"<?php if ($neg_marking == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field">Timed Exams</td><td><input type="checkbox" name="timed_exams"<?php if ($timed_exams == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field">Question-based Feedback</td><td><input type="checkbox" name="exam_q_feedback"<?php if ($exam_q_feedback == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field">Add team members</td><td><input type="checkbox" name="add_team_members"<?php if ($add_team_members == 1) echo ' checked'; ?> /></td></tr>
     <tr id="ebelgrid" style="display:<?php
     if ($stdset == 1) {
       echo 'table-row';

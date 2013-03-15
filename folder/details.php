@@ -262,7 +262,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
     } else {
       $tmp_html .= "<li><span style=\"color:#254280\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</span></li>\n";
     }
-    if ($tmp_userID == $userObject->get_user_ID()) $add_member = true;
+    if ($tmp_userID == $userObject->get_user_ID() and $module_details['add_team_members'] == 1) $add_member = true;
   }
   if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
   echo '<div style="box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC">';

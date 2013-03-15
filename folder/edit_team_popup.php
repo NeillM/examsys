@@ -28,11 +28,19 @@ require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
 $moduleID = check_var('module', 'GET', true, false, true);
-$module_code = module_utils::get_moduleid_from_id($moduleID, $mysqli);
 
-if (!$module_code) {
+$module_details = module_utils::get_full_details_by_ID($moduleID, $mysqli);
+
+if (!$module_details) {
    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+if (!$userObject->has_role('SysAdmin', 'Admin')) {
+  if ($module_details['add_team_members'] == 0) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);  
+  }
 }
 
 if (isset($_POST['submit'])) {
@@ -50,7 +58,7 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['teammembers'] . ' ' . $module_code; ?></title>
+  <title><?php echo $string['teammembers'] . ' ' . $module_details['moduleid']; ?></title>
   <script language="JavaScript">
     function closeWindow() {
       window.opener.location.href = '../folder/details.php?module=<?php echo $moduleID; ?>';
@@ -70,7 +78,7 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>" />
-  <title><?php echo $string['teammembers'] . ' ' . $module_code . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['teammembers'] . ' ' . $module_details['moduleid'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -113,7 +121,7 @@ if (isset($_POST['submit'])) {
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/team_members.png" width="32" height="32 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $module_code; ?></td></tr>
+  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/team_members.png" width="32" height="32 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $module_details['moduleid']; ?></td></tr>
   </table>
 
 <?php
