@@ -28,9 +28,22 @@ require '../config/campuses.inc';
 
 $lab_id = check_var('labID', 'REQUEST', true, false, true);
 
+$results = $mysqli->prepare("SELECT name, campus, building, room_no, timetabling, it_support, plagarism FROM labs WHERE id = ? LIMIT 1");
+$results->bind_param('i', $lab_id);
+$results->execute();
+$results->store_result();
+$results->bind_result($name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
+if ($results->num_rows == 0) {
+  $results->close();
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+$results->fetch();
+$results->close();
+
 if (isset($_POST['submit'])) {
   // Delete the existing IP addresses for the lab first.
-  $result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab=?");
+  $result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab = ?");
   $result->bind_param('i', $lab_id);
   $result->execute();  
   $result->close();
@@ -53,7 +66,7 @@ if (isset($_POST['submit'])) {
   }
   
   // Edit Lab table.
-  $result = $mysqli->prepare("UPDATE labs SET name=?, campus=?, building=?, room_no=?, timetabling=?, it_support=?, plagarism=? WHERE id=?");
+  $result = $mysqli->prepare("UPDATE labs SET name = ?, campus = ?, building = ?, room_no = ?, timetabling = ?, it_support = ?, plagarism = ? WHERE id = ?");
   $result->bind_param('sssssssi', $_POST['name'], $_POST['campus'], $_POST['building'], $_POST['room_no'], $_POST['timetabling'], $_POST['it_support'], $_POST['plagarism'], $lab_id);
   $result->execute();  
   $result->close();
@@ -85,10 +98,10 @@ if (isset($_POST['submit'])) {
 
 <?php
   $ip_no = 0;
-  $result = $mysqli->prepare("SELECT name, address, campus, building, room_no, timetabling, it_support, plagarism, low_bandwidth FROM (ip_addresses, labs) WHERE ip_addresses.lab=labs.id AND labs.id = ?");
+  $result = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE lab = ?");
   $result->bind_param('i', $lab_id);
   $result->execute();
-  $result->bind_result($name, $address, $campus, $building, $room_no, $timetabling, $it_support, $plagarism, $low_bandwidth);
+  $result->bind_result($address, $low_bandwidth);
   while ($result->fetch()) {
     if ($ip_no == 0) {
       echo "<table class=\"header\">\n";

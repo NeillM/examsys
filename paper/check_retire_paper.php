@@ -22,12 +22,12 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/errors.inc';
-  
-  check_var('paperID', 'GET', true, false, false);
-  
-  $mysqli->close();
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+
+check_var('paperID', 'GET', true, false, false);
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

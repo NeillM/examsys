@@ -26,6 +26,19 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
 $lab_id = check_var('labID', 'GET', true, false, true);
+
+$results = $mysqli->prepare("SELECT name, campus, building, room_no, timetabling, it_support, plagarism FROM labs WHERE id = ? LIMIT 1");
+$results->bind_param('i', $lab_id);
+$results->execute();
+$results->store_result();
+$results->bind_result($name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
+if ($results->num_rows == 0) {
+  $results->close();
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+$results->fetch();
+$results->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -50,12 +63,13 @@ $lab_id = check_var('labID', 'GET', true, false, true);
 ?>
 <div id="content" class="content">
 <?php
-  $results = $mysqli->prepare("SELECT name, address, hostname, campus, building, room_no, timetabling, it_support, plagarism, low_bandwidth FROM (ip_addresses, labs) WHERE ip_addresses.lab = labs.id AND labs.id = ?");
+  $ip_no = 0;
+  
+  $results = $mysqli->prepare("SELECT address, hostname, low_bandwidth FROM ip_addresses WHERE lab = ?");
   $results->bind_param('i', $lab_id);
   $results->execute();
   $results->store_result();
-  $results->bind_result($name, $address, $hostname, $campus, $building, $room_no, $timetabling, $it_support, $plagarism, $low_bandwidth);
-  $ip_no = 0;
+  $results->bind_result($address, $hostname, $low_bandwidth);
   while ($results->fetch()) {
     if ($ip_no == 0) {
       echo "<table class=\"header\">\n";
