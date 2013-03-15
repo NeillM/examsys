@@ -60,6 +60,12 @@ require_once $cfg_web_root . 'classes/networkutils.class.php';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 require_once $cfg_web_root . 'classes/authentication.class.php';
 
+if (is_null($configObject->get('cfg_db_port'))) {
+  $configObject->set('cfg_db_port', 3306);
+}
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+
+
 // Check to see if the update script has been run.
 if ($configObject->get('rogo_version') != '5.0') {
   $notice->display_notice_and_exit($mysqli, 'Update Required', 'System needs configuring before use. Please contact your local system administrator.', 'Update Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
@@ -72,12 +78,8 @@ if ($configObject->get('protocol') == 'https://' and $_SERVER['SERVER_PORT'] != 
   $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '../artwork/secure_connection.png', $title_color = '#C00000', true, true);
 }
 if (!(preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version))) {
-  $notice->display_notice_and_exit($mysqli, 'Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', 'Browser Incompatibility', '../artwork/browser.png', $title_color = '#C00000', true, true);
+  $notice->($mysqli, 'Browser Incompatibidisplay_notice_and_exitlity', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', 'Browser Incompatibility', '../artwork/browser.png', $title_color = '#C00000', true, true);
 }
-if (is_null($configObject->get('cfg_db_port'))) {
-  $configObject->set('cfg_db_port', 3306);
-}
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
 session_name('RogoAuthentication');
 $return = session_start();
