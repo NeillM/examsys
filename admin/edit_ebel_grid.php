@@ -25,7 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
   
-check_var('id', 'GET', true, false, false);
+$gridID = check_var('id', 'GET', true, false, true);
 
 function ebelDropdown($dropdownID, $default) {
   $html = "<select name=\"$dropdownID\">\n";
@@ -41,22 +41,28 @@ function ebelDropdown($dropdownID, $default) {
   return $html;
 }
   
+$result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?");
+$result->bind_param('i', $gridID);
+$result->execute();
+$result->store_result();
+$result->bind_result($EE, $EI, $EN, $ME, $MI, $MN, $HE, $HI, $HN, $EE2, $EI2, $EN2, $ME2, $MI2, $MN2, $HE2, $HI2, $HN2, $name);
+$result->fetch();
+if ($result->num_rows == 0) {
+  $result->close();
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+$result->close();
+
 if (isset($_POST['submit'])) {
-  $result = $mysqli->prepare("UPDATE ebel_grid_templates SET EE=?, EI=?, EN=?, ME=?, MI=?, MN=?, HE=?, HI=?, HN=?, EE2=?, EI2=?, EN2=?, ME2=?, MI2=?, MN2=?, HE2=?, HI2=?, HN2=?, name=? WHERE id=?");
-  $result->bind_param('iiiiiiiiiiiiiiiiiisi', $_POST['EE'], $_POST['EI'], $_POST['EN'], $_POST['ME'], $_POST['MI'], $_POST['MN'], $_POST['HE'], $_POST['HI'], $_POST['HN'], $_POST['EE2'], $_POST['EI2'], $_POST['EN2'], $_POST['ME2'], $_POST['MI2'], $_POST['MN2'], $_POST['HE2'], $_POST['HI2'], $_POST['HN2'], $_POST['name'], $_GET['id']);
+  $result = $mysqli->prepare("UPDATE ebel_grid_templates SET EE = ?, EI = ?, EN = ?, ME = ?, MI = ?, MN = ?, HE = ?, HI = ?, HN = ?, EE2 = ?, EI2 = ?, EN2 = ?, ME2 = ?, MI2 = ?, MN2 = ?, HE2 = ?, HI2 = ?, HN2 = ?, name = ? WHERE id = ?");
+  $result->bind_param('iiiiiiiiiiiiiiiiiisi', $_POST['EE'], $_POST['EI'], $_POST['EN'], $_POST['ME'], $_POST['MI'], $_POST['MN'], $_POST['HE'], $_POST['HI'], $_POST['HN'], $_POST['EE2'], $_POST['EI2'], $_POST['EN2'], $_POST['ME2'], $_POST['MI2'], $_POST['MN2'], $_POST['HE2'], $_POST['HI2'], $_POST['HN2'], $_POST['name'], $gridID);
   $result->execute();
   $result->close();
   
   $mysqli->close();
   header("location: list_ebel_grids.php");
 } else {
-  $result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id=?");
-  $result->bind_param('i', $_GET['id']);
-  $result->execute();
-  $result->bind_result($EE, $EI, $EN, $ME, $MI, $MN, $HE, $HI, $HN, $EE2, $EI2, $EN2, $ME2, $MI2, $MN2, $HE2, $HI2, $HN2, $name);
-  $result->fetch();
-  $result->close();
-
 ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
