@@ -512,7 +512,7 @@ if ($propertyObj->get_paper_type() == '3') {
   echo "<title>" . $string['assessment'] . "</title>\n";
 }
 
-$url_mod = ($is_question_preview_mode) ? '&amp;q_id=' . $_GET['q_id'] : '';
+$url_mod = ($is_question_preview_mode) ? '&q_id=' . $_GET['q_id'] : '';
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -747,9 +747,9 @@ if ($css != '') {
       <?php //log which method the users submitted the page via ?>
       if (!!event) {
         if(event.target.id == 'finish') {
-          $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id']; ?>&dont_record=true");  
+          $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");  
         } else {
-          $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
+          $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
         }
       }
       ajaxSave();
@@ -760,7 +760,7 @@ if ($css != '') {
   var forceSave = function() {
     stopAutoSave();
     submitType = 'forcedSubmit';
-    $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
+    $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
     ajaxSave();
   }
 
@@ -802,7 +802,7 @@ if ($css != '') {
       tinyMCE.triggerSave();
     }
     $.ajax({
-          url: 'save_screen.php?id=<?php echo $_GET['id'] ?>&rnd=' + randomPageID + '<?php echo html_entity_decode($url_mod) ?>',
+          url: 'save_screen.php?id=<?php echo $_GET['id'] . $url_mod; ?>&rnd=' + randomPageID + '<?php echo html_entity_decode($url_mod) ?>',
           type: 'post',
           data: $('#qForm').serialize(),
           dataType: 'html',
@@ -1207,62 +1207,68 @@ if ($css != '') {
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
   echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
   echo "<input type=\"hidden\" id=\"randomPageID\" name=\"randomPageID\" value=\"\" />\n";
-  if(isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview') {
+  if (isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview') {
     echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
-  }
-  if ($current_screen > $no_screens) {
-    echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
-    if (!isset($_GET['q_id'])) {
-      echo $string['finishnote'];
-      if ($propertyObj->get_bidirectional() == 1) echo "<br />" . $string['gobackpink'];
+  } else {
+    if ($current_screen > $no_screens) {
+      echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
+      if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
+      if (!isset($_GET['q_id'])) {
+        echo $string['finishnote'];
+        if ($propertyObj->get_bidirectional() == 1) echo "<br />" . $string['gobackpink'];
+      }
+      echo "</div>\n<br />\n";
+    } elseif ($propertyObj->get_bidirectional() == 0) {
+      echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
+      if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
+      printf($string['pleasecomplete'], $current_screen);
+      echo "</div>\n<br >\n";
     }
-    echo "</div>\n<br />\n";
-  } elseif ($propertyObj->get_bidirectional() == 0) {
-    echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
-    printf($string['pleasecomplete'], $current_screen);
-    echo "</div>\n<br >\n";
   }
 
   echo '<div id="saveError"><img alt="Warning" src="/artwork/no_save.png" /> <div><strong>' .  $string['savefailed'] . '</strong><br />' . $string['tryagain'] . '</div></div>';
 
-  echo $bottom_html;
-  ?>
-  <span>
-  <?php
-  if ($propertyObj->get_exam_duration() != null) {
-    echo $timer_label;
-  }
-
-  ?>
-  <span id="theTime" type="text" class="thetime"></span>
-  </span>
-  <?php
-  echo '</td><td align="right">';
-
-  echo '<span id="savemsg"></span>';
-  if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
-    if ($current_screen > 2) echo "<input input id=\"prevous\" type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous';\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
-    if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
-      echo "<select name=\"jump_screen\" onchange=\"jumpScreen()\">";
-      for ($i=1; $i<=$no_screens; $i++) {
-        if ($i == ($current_screen - 1)) {
-          echo "<option value=\"$i\" selected>$i</option>";
-        } else {
-          echo "<option value=\"$i\">$i</option>";
-        }
-      }
-      echo "</select>&nbsp;";
-    }
-  }
-  echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
-  if ($current_screen > $no_screens) {
-    echo "<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;\n";
+  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $_REQUEST['mode'] == 'preview') {
+    echo "&nbsp;&nbsp;<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />\n";
+    echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
   } else {
-    echo "<input id=\"next\" type=\"submit\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;\n";
+    echo $bottom_html;
+    ?>
+    <span>
+    <?php
+    if ($propertyObj->get_exam_duration() != null) {
+      echo $timer_label;
+    }
+
+    ?>
+    <span id="theTime" type="text" class="thetime"></span>
+    </span>
+    <?php
+    echo '</td><td align="right">';
+
+    echo '<span id="savemsg"></span>';
+    if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
+      if ($current_screen > 2) echo "<input input id=\"prevous\" type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous';\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
+      if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
+        echo "<select name=\"jump_screen\" onchange=\"jumpScreen()\">";
+        for ($i=1; $i<=$no_screens; $i++) {
+          if ($i == ($current_screen - 1)) {
+            echo "<option value=\"$i\" selected>$i</option>";
+          } else {
+            echo "<option value=\"$i\">$i</option>";
+          }
+        }
+        echo "</select>&nbsp;";
+      }
+    }
+    echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
+    if ($current_screen > $no_screens) {
+      echo "<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;\n";
+    } else {
+      echo "<input id=\"next\" type=\"submit\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;\n";
+    }
+    echo '</td></tr></table>';
   }
-  echo '</td></tr></table>';
 ?>
 </td></tr></table>
 </form>

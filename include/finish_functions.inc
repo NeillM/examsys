@@ -400,6 +400,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     display_error($string['useranswererror'], $mysqlidb->error);
   }
 
+  if ($preview_q_id == null) {
   ?>
     <br />
     <div align="center">
@@ -418,7 +419,8 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     </table>
     </div>
     <br />
- <?php
+  <?php
+  }
 
   // Process the array for display.
   $old_screen = 1;
@@ -2343,8 +2345,10 @@ echo '</script>';
   echo "</table>\n";
 
   // Marks summary
-  echo display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $mysqlidb);
-
+  if ($preview_q_id == null) {
+    echo display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $mysqlidb);
+  }
+  
   if ($paper_postscript != '') echo "<br />\n<blockquote>$paper_postscript</blockquote>\n";
   echo $bottom_html;
   if ($_SERVER['PHP_SELF'] == '/paper/finish.php') {

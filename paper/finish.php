@@ -258,7 +258,7 @@ require '../config/finish.inc';
 
   if (isset($_GET['userid'])) {
     $temp_userID = $_GET['userid'];
-    $result = $mysqli->prepare("SELECT title, initials, surname, student_id FROM users LEFT JOIN sid ON users.id = sid.userID WHERE id=? LIMIT 1");
+    $result = $mysqli->prepare("SELECT title, initials, surname, student_id FROM users LEFT JOIN sid ON users.id = sid.userID WHERE id = ? LIMIT 1");
     $result->bind_param('i', $_GET['userid']);
     $result->execute();
     $result->store_result();
