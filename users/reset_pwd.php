@@ -26,12 +26,17 @@ require '../include/sysadmin_auth.inc';
 require_once '../classes/userutils.class.php';
 require_once '../include/errors.inc';
 
-check_var('userID', 'GET', true, false, false);
-check_var('username', 'GET', true, false, false);
+$userid = check_var('userID', 'GET', true, false, true);
 
+if (!UserUtils::userid_exists($userid, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+$username     = UserUtils::get_username($userid, $mysqli);
 $new_password = gen_password();
-$success = UserUtils::update_password($_GET['username'], $new_password, $_GET['userID'], $mysqli);
 
+$success = UserUtils::update_password($username, $new_password, $userid, $mysqli);
 if (!$success) {
   display_error($string['resetfailed'], $string['failuremsg'], $configObject->get('cfg_root_path') . '/artwork/bomb.png', '#C00000', true, true, true);
 }

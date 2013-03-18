@@ -274,7 +274,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     }
 
     function forceResetPassword(username) {
-      editwin=window.open("reset_pwd.php?userID=<?php echo $_GET['userID']; ?>&username=" + username + "","editmodule","width=450,height=400,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      editwin=window.open("reset_pwd.php?userID=<?php echo $_GET['userID']; ?>","editmodule","width=450,height=400,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         editwin.focus();
       }

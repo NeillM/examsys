@@ -23,19 +23,25 @@
 */
 
 require '../include/admin_auth.inc';
-require '../include/errors.inc';
-  
-check_var('paperID', 'POST', true, false, false);
+require_once '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
+
+$paperid = check_var('paperID', 'POST', true, false, true);
+
+if (!Paper_utils::paper_exists($paperid, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 // Remove the record from scheduling.
 $result = $mysqli->prepare("DELETE FROM scheduling WHERE paperID = ?");
-$result->bind_param('i', $_POST['paperID']);
+$result->bind_param('i', $paperid);
 $result->execute();  
 $result->close();
 
 // Set start/end dates and the type to 0 (i.e. formative).
 $result = $mysqli->prepare("UPDATE properties SET start_date = NOW(), end_date = NOW(), paper_type = '0' WHERE property_id = ?");
-$result->bind_param('i', $_POST['paperID']);
+$result->bind_param('i', $paperid);
 $result->execute();  
 $result->close();
 
@@ -47,7 +53,7 @@ $mysqli->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Lab Deleted</title>
+  <title>Paper Converted</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">

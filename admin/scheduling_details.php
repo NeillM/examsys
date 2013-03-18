@@ -27,24 +27,29 @@ require '../include/errors.inc';
 
 require '../classes/paperutils.class.php';
 
-check_var('paperID', 'GET', true, false, false);
+$paperid = check_var('paperID', 'GET', true, false, true);
 
-$paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);
+$paper_modules = Paper_utils::get_modules($paperid, $mysqli);
 $module_id_list = implode(',', array_keys($paper_modules));
 
 // Get data about the paper which needs scheduling
-$results = $mysqli->prepare("SELECT property_id, paper_title, calendar_year, period, barriers_needed, cohort_size, notes, sittings, campus, title, first_names, surname, email, exam_duration FROM (properties, scheduling, users) WHERE property_id=? AND properties.property_id=scheduling.paperID AND properties.paper_ownerID=users.id");
-$results->bind_param('i', $_GET['paperID']);
+$results = $mysqli->prepare("SELECT property_id, paper_title, calendar_year, period, barriers_needed, cohort_size, notes, sittings, campus, title, first_names, surname, email, exam_duration FROM (properties, scheduling, users) WHERE property_id = ? AND properties.property_id = scheduling.paperID AND properties.paper_ownerID = users.id");
+$results->bind_param('i', $paperid);
 $results->execute();
 $results->store_result();
 $results->bind_result($property_id, $paper_title, $calendar_year, $period, $barriers_needed, $cohort_size, $notes, $sittings, $campus, $title, $first_names, $surname, $email, $exam_duration);
 $results->fetch();
+if ($results->num_rows == 0) {
+  $results->close();
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 $results->close();
 
 
 // Get student enrolments
 $module_sizes = array();
-$query = "SELECT moduleID, COUNT(modules_student.id) FROM (modules_student, modules) WHERE modules_student.idMod=modules.id AND idMod IN ($module_id_list) AND calendar_year=? GROUP BY moduleid";
+$query = "SELECT moduleID, COUNT(modules_student.id) FROM (modules_student, modules) WHERE modules_student.idMod=modules.id AND idMod IN ($module_id_list) AND calendar_year = ? GROUP BY moduleid";
 $results = $mysqli->prepare($query);
 $results->bind_param('s', $calendar_year);
 $results->execute();
@@ -57,7 +62,7 @@ $results->close();
 
 // Get extra time
 $extra_time_list = array();
-$results = $mysqli->prepare("SELECT extra_time FROM (special_needs, modules_student) WHERE special_needs.userID=modules_student.userID AND idMod IN ($module_id_list) AND calendar_year=?");
+$results = $mysqli->prepare("SELECT extra_time FROM (special_needs, modules_student) WHERE special_needs.userID=modules_student.userID AND idMod IN ($module_id_list) AND calendar_year = ?");
 $results->bind_param('s', $calendar_year);
 $results->execute();
 $results->store_result();

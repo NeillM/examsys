@@ -23,9 +23,15 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
-  
-check_var('paperID', 'GET', true, false, false);
+require_once '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
+
+$paperid = check_var('paperID', 'GET', true, false, true);
+
+if (!Paper_utils::paper_exists($paperid, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

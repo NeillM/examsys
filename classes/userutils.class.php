@@ -161,12 +161,25 @@ Class UserUtils {
    */
   static function userid_exists($userid, $db) {
     $stmt = $db->prepare("SELECT id FROM users WHERE id = ? AND user_deleted IS NULL");
-    $stmt->bind_param('s', $userid);
+    $stmt->bind_param('i', $userid);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($tmp_userID);
     $stmt->fetch();
     $exists = ($stmt->num_rows == 0) ? false : true;
+    $stmt->close();
+
+    return $exists;
+  }
+
+  static function get_username($userid, $db) {
+    $stmt = $db->prepare("SELECT username FROM users WHERE id = ? AND user_deleted IS NULL");
+    $stmt->bind_param('i', $userid);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($username);
+    $stmt->fetch();
+    $exists = ($stmt->num_rows == 0) ? false : $username;
     $stmt->close();
 
     return $exists;
