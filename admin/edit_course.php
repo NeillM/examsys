@@ -47,10 +47,10 @@ $result->close();
 if (isset($_POST['submit']) and $_POST['course'] != $_POST['old_course']) {
   // Check for unique course name
   $new_course = trim($_POST['course']);
-  $unique_course = CourseUtils::course_exists($new_course, $mysqli);
+  $course_exists = CourseUtils::course_exists($new_course, $mysqli);
 }
 
-if (isset($_POST['submit']) and $unique_course == true) {
+if (isset($_POST['submit']) and $course_exists == false) {
   $new_course = trim($_POST['course']);
   $new_school = $_POST['school'];
   $new_description = trim($_POST['description']);
