@@ -42,7 +42,7 @@ for ($i=1; $i<count($tmp_pIDs); $i++) {
 
     // Create a track changes record to say new question added.
     $logger = new Logger($mysqli);
-    $logger->track_change('Alter Paper', $tmp_paperID, $userObject->get_user_ID(), $tmp_questionIDs[$i], '', 'Delete Question');
+    $logger->track_change('Paper', $tmp_paperID, $userObject->get_user_ID(), $tmp_questionIDs[$i], '', 'Delete Question');
   } else {
     display_error('Papers Delete Error', $mysqli->error);
   }

@@ -23,7 +23,8 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/logger.class.php';
 
 $facultyID = check_var('facultyID', 'REQUEST', true, false, true);
 
@@ -56,8 +57,12 @@ if (isset($_POST['submit'])) {
   if (!$duplicate) {
     $result = $mysqli->prepare("UPDATE faculty SET name = ? WHERE id = ?");
     $result->bind_param('si', $_POST['new_faculty'], $facultyID);
-    $result->execute();  
+    $result->execute();
     $result->close();
+    
+    $logger = new Logger($mysqli);
+    if ($name != $_POST['new_faculty']) $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $name, $_POST['new_faculty'], 'name');
+
   ?>
 <html>
 <head>

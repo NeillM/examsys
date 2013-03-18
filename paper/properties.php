@@ -544,7 +544,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
       
-      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), 'Objectives-based Feedback', '', 'feedback');
+      $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Objectives-based Feedback', '', 'feedback');
     }
     if (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] == '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '1') {
       $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'objectives')");
@@ -552,7 +552,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
 
-      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), '', 'Objectives-based Feedback', 'feedback');
+      $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Objectives-based Feedback', 'feedback');
     }
 
     // Release question-based feedback
@@ -562,7 +562,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
       
-      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), 'Question-based Feedback', '', 'feedback');
+      $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Question-based Feedback', '', 'feedback');
     }
     if (isset($_POST['old_questions_report']) and $_POST['old_questions_report'] == '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '1') {
       $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
@@ -570,7 +570,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();    
       
-      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), '', 'Question-based Feedback', 'feedback');
+      $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Question-based Feedback', 'feedback');
     }
     
     // Track changes
@@ -581,55 +581,55 @@ if (isset($_POST['Submit'])) {
       $tmp_end_date = $end_date->format('U');
     }
 
-    if ($paper_title != $old_paper_title)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_title, $paper_title, 'name');
+    if ($paper_title != $old_paper_title)                             $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_paper_title, $paper_title, 'name');
     if ($disabled == '') {   // If disabled is set then don't check certain disabled fields.
-      if ($fullscreen != $old_fullscreen)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
-      if ($bidirectional != $old_bidirectional)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
+      if ($fullscreen != $old_fullscreen)                             $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
+      if ($bidirectional != $old_bidirectional)                       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
       if ($properties->get_paper_type() != '6') {
-        if ($tmp_calculator != $old_calculator)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
+        if ($tmp_calculator != $old_calculator)                       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
       }
-      if ($lab_string != $old_labs)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
+      if ($lab_string != $old_labs)                                   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
       $new_modules = array_keys($paper_modules);
       sort($new_modules, SORT_NUMERIC);
       $new_modules = implode(',', $new_modules);
-      if ($new_modules != $old_modules)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
+      if ($new_modules != $old_modules)                               $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
     }
-    if ($tmp_start_date != $old_start_date)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_start_date, $tmp_start_date, 'startdate');
-    if ($tmp_end_date != $old_end_date)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_end_date, $tmp_end_date, 'enddate');
-    if ($calendar_year != $old_calendar_year)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calendar_year, $calendar_year, 'session');
-    if ($timezone != $old_timezone)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_timezone, $timezone, 'timezone');
-    if ($password != $old_password)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_password, $password, 'password');
-    if ($exam_duration != $old_exam_duration)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_exam_duration, $exam_duration, 'duration');
-    if ($tmp_rubric != $old_rubric)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_rubric, $tmp_rubric, 'rubric');
-    if ($tmp_prologue != $old_paper_prologue)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_prologue, $tmp_prologue, 'prologue');
-    if ($tmp_postscript != $old_paper_postscript)                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_postscript, $tmp_postscript, 'postscript');
-    if ($tmp_pass_mark != $old_pass_mark)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_pass_mark, $tmp_pass_mark, 'passmark');
-    if ($tmp_distinction_mark != $old_distinction_mark)               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_distinction_mark, $tmp_distinction_mark, 'distinction');
-    if ($tmp_sound_demo != $old_sound_demo)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_sound_demo, $tmp_sound_demo, 'demosoundclip');
+    if ($tmp_start_date != $old_start_date)                           $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_start_date, $tmp_start_date, 'startdate');
+    if ($tmp_end_date != $old_end_date)                               $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_end_date, $tmp_end_date, 'enddate');
+    if ($calendar_year != $old_calendar_year)                         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_calendar_year, $calendar_year, 'session');
+    if ($timezone != $old_timezone)                                   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_timezone, $timezone, 'timezone');
+    if ($password != $old_password)                                   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_password, $password, 'password');
+    if ($exam_duration != $old_exam_duration)                         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_exam_duration, $exam_duration, 'duration');
+    if ($tmp_rubric != $old_rubric)                                   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_rubric, $tmp_rubric, 'rubric');
+    if ($tmp_prologue != $old_paper_prologue)                         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_paper_prologue, $tmp_prologue, 'prologue');
+    if ($tmp_postscript != $old_paper_postscript)                     $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_paper_postscript, $tmp_postscript, 'postscript');
+    if ($tmp_pass_mark != $old_pass_mark)                             $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_pass_mark, $tmp_pass_mark, 'passmark');
+    if ($tmp_distinction_mark != $old_distinction_mark)               $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_distinction_mark, $tmp_distinction_mark, 'distinction');
+    if ($tmp_sound_demo != $old_sound_demo)                           $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_sound_demo, $tmp_sound_demo, 'demosoundclip');
     if ($properties->get_paper_type() == '6') {
-      if ($display_correct_answer != $old_display_correct_answer)     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_correct_answer, $display_correct_answer, 'photos');
+      if ($display_correct_answer != $old_display_correct_answer)     $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_display_correct_answer, $display_correct_answer, 'photos');
     } else {
-      if ($display_correct_answer != $old_display_correct_answer)     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_correct_answer, $display_correct_answer, 'correctanswerhighlight');
+      if ($display_correct_answer != $old_display_correct_answer)     $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_display_correct_answer, $display_correct_answer, 'correctanswerhighlight');
     }
-    if ($bgcolor != $old_bgcolor)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bgcolor, $bgcolor, 'background');
-    if ($fgcolor != $old_fgcolor)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fgcolor, $fgcolor, 'foreground');
-    if ($themecolor != $old_themecolor)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_themecolor, $themecolor, 'theme');
-    if ($labelcolor != $old_labelcolor)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labelcolor, $labelcolor, 'labelsnotes');
+    if ($bgcolor != $old_bgcolor)                                     $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_bgcolor, $bgcolor, 'background');
+    if ($fgcolor != $old_fgcolor)                                     $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_fgcolor, $fgcolor, 'foreground');
+    if ($themecolor != $old_themecolor)                               $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_themecolor, $themecolor, 'theme');
+    if ($labelcolor != $old_labelcolor)                               $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_labelcolor, $labelcolor, 'labelsnotes');
 
-    if (implode(',',$new_externals) != implode(',',$old_externals))   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
-    if (implode(',',$new_internals) != implode(',',$old_internals))   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
-    if ($external_review_deadline != $old_external_review_deadline)   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_external_review_deadline, $external_review_deadline, 'externalreviewdeadline');
-    if ($internal_review_deadline != $old_internal_review_deadline)   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_internal_review_deadline, $internal_review_deadline, 'internalreviewdeadline');
-    if ($tmp_marking != $old_marking)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_marking, $tmp_marking, 'method');
+    if (implode(',',$new_externals) != implode(',',$old_externals))   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
+    if (implode(',',$new_internals) != implode(',',$old_internals))   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
+    if ($external_review_deadline != $old_external_review_deadline)   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_external_review_deadline, $external_review_deadline, 'externalreviewdeadline');
+    if ($internal_review_deadline != $old_internal_review_deadline)   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_internal_review_deadline, $internal_review_deadline, 'internalreviewdeadline');
+    if ($tmp_marking != $old_marking)                                 $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_marking, $tmp_marking, 'method');
     if ($properties->get_paper_type() == '6') {
-      if ($_POST['review'] != $old_display_question_mark)             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_question_mark, $_POST['review'], 'review');
+      if ($_POST['review'] != $old_display_question_mark)             $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_display_question_mark, $_POST['review'], 'review');
     } else {
-      if ($display_question_mark != $old_display_question_mark)       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_question_mark, $display_question_mark, 'question_marks');
+      if ($display_question_mark != $old_display_question_mark)       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_display_question_mark, $display_question_mark, 'question_marks');
     }
-    if ($display_students_response != $old_display_students_response) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_students_response, $display_students_response, 'ticks_crosses');
-    if ($hide_if_unanswered != $old_hide_if_unanswered)               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_hide_if_unanswered, $hide_if_unanswered, 'hideallfeedback');
-    if ($display_feedback != $old_display_feedback)                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_display_feedback, $display_feedback, 'textfeedback');
-    if ($folderID != $old_folder)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_folder, $folderID, 'folder');
+    if ($display_students_response != $old_display_students_response) $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_display_students_response, $display_students_response, 'ticks_crosses');
+    if ($hide_if_unanswered != $old_hide_if_unanswered)               $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_hide_if_unanswered, $hide_if_unanswered, 'hideallfeedback');
+    if ($display_feedback != $old_display_feedback)                   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_display_feedback, $display_feedback, 'textfeedback');
+    if ($folderID != $old_folder)                                     $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_folder, $folderID, 'folder');
 
     if ($properties->get_paper_type() != '2') {    // Update textual feedback if not a summative paper.
       // Get old settings
@@ -668,7 +668,7 @@ if (isset($_POST['Submit'])) {
         
         if ($old_textual_feedback[$i]['msg'] != $_POST["feedback_msg$i"] or $old_textual_feedback[$i]['boundary'] != $_POST["feedback_value$i"]) {
           // log a change
-          $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
+          $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
         }
       }
     }
@@ -712,7 +712,7 @@ if (isset($_POST['Submit'])) {
         }
       }
     }
-    if ($old_meta != $new_meta) $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_meta, $new_meta, 'restricttometadata');
+    if ($old_meta != $new_meta) $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_meta, $new_meta, 'restricttometadata');
 
     // Get existing Reference Materials
     $existing_refs = array();
@@ -742,7 +742,7 @@ if (isset($_POST['Submit'])) {
         $editProperties->execute();
         $editProperties->close();
         
-        $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), '', $new_ref, 'referencematerial');
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', $new_ref, 'referencematerial');
       }
     }
     foreach ($existing_refs as $existing_ref) {
@@ -751,7 +751,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
       
-      $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $existing_ref, '', 'referencematerial');
+      $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $existing_ref, '', 'referencematerial');
     }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -2085,7 +2085,7 @@ $results->close();
 $folders = folder_utils::get_all_folders($mysqli);
 
 echo "<tr><th>" . $string['part'] . "</th><th>" . $string['old'] . "</th><th>" . $string['new'] . "</th><th>" . $string['date'] . "</th><th>" . $string['author'] . "</th></tr>";
-$changes = $logger->get_changes('Alter Paper', $paperID);
+$changes = $logger->get_changes('Paper', $paperID);
 $rows = count($changes);
 for ($i=0; $i<$rows; $i++) {
   $part = $changes[$i]['part'];

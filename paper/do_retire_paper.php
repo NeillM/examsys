@@ -54,7 +54,7 @@ $result->bind_param('i', $paperID);
 $result->execute();  
 $result->close();
 
-$logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), '', '', 'retired');
+$logger->track_change('paper', $paperID, $userObject->get_user_ID(), '', '', 'retired');
 
 
 $mysqli->close();

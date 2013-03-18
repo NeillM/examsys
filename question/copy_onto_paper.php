@@ -245,7 +245,7 @@ if (!isset($_POST['submit'])) {
     Paper_utils::add_question($property_id, $question_id, $screen, $display_pos, $mysqli);
 
     // Create a track changes record to say new question added.
-    $success = $logger->track_change('Alter Paper', $property_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
+    $success = $logger->track_change('Paper', $property_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
   }
 
   echo "<p>" . sprintf($string['success'], Paper_utils::get_title($property_id, $mysqli)) . "</p>\n";

@@ -25,6 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/courseutils.class.php';
+require_once '../classes/logger.class.php';
 
 $courseID = check_var('courseID', 'REQUEST', true, false, true);
 
@@ -36,31 +37,39 @@ if (!CourseUtils::courseid_exists($courseID, $mysqli)) {
 $unique_course = true;
 $tmp_course = '';
 
+$result = $mysqli->prepare("SELECT schoolid, name, description FROM courses WHERE id = ? LIMIT 1");
+$result->bind_param('i', $courseID);
+$result->execute();
+$result->bind_result($current_school, $name, $description);
+$result->fetch();
+$result->close();
+  
 if (isset($_POST['submit']) and $_POST['course'] != $_POST['old_course']) {
   // Check for unique course name
-  $tmp_course = trim($_POST['course']);
-  $unique_course = CourseUtils::course_exists($tmp_course, $mysqli);
+  $new_course = trim($_POST['course']);
+  $unique_course = CourseUtils::course_exists($new_course, $mysqli);
 }
 
 if (isset($_POST['submit']) and $unique_course == true) {
-  $tmp_course = trim($_POST['course']);
-  $tmp_school = $_POST['school'];
-  $tmp_description = trim($_POST['description']);
+  $new_course = trim($_POST['course']);
+  $new_school = $_POST['school'];
+  $new_description = trim($_POST['description']);
 
   $result = $mysqli->prepare("UPDATE courses SET name = ?, description = ?, schoolid = ? WHERE id = ?");
-  $result->bind_param('ssii', $tmp_course, $tmp_description, $tmp_school, $courseID);
+  $result->bind_param('ssii', $new_course, $new_description, $new_school, $courseID);
   $result->execute();  
   $result->close();
+  
+  $logger = new Logger($mysqli);
+  if ($name != $new_course)             $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $name, $new_course, 'code');
+  if ($description != $new_description) $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $description, $new_description, 'name');
+  if ($current_school != $new_school)   $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $current_school, $new_school, 'school');
+  
+  
   $mysqli->close();
   header("location: list_courses.php");
   exit;
 } else {
-  $result = $mysqli->prepare("SELECT schoolid, name, description FROM courses WHERE id = ? LIMIT 1");
-  $result->bind_param('i', $courseID);
-  $result->execute();
-  $result->bind_result($current_school, $name, $description);
-  $result->fetch();
-  $result->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

@@ -25,6 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/moduleutils.class.php';
+require_once '../classes/logger.class.php';
 
 check_var('moduleid', 'GET', true, false, false);
 
@@ -33,12 +34,19 @@ if (!module_utils::get_moduleid_from_id($_GET['moduleid'], $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+$stmt = $mysqli->prepare("SELECT moduleid, fullname, active, schools.id, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template, timed_exams, exam_q_feedback, add_team_members FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ?");
+$stmt->bind_param('i', $_GET['moduleid']);
+$stmt->execute();
+$stmt->bind_result($modulecode, $fullname, $active, $schoolid, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking, $current_ebel_grid, $timed_exams, $exam_q_feedback, $add_team_members);
+$stmt->fetch();
+$stmt->close();
+  
 $unique_moduleid = true;
 if (isset($_POST['submit']) and $_POST['modulecode'] != $_POST['old_modulecode']) {
   // Check for unique moduleid
   $tmp_modulecode = trim($_POST['modulecode']);
   $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid = ?");
-  $result->bind_param('s', $tmp_modulecode);
+  $result->bind_param('i', $tmp_modulecode);
   $result->execute();
   $result->store_result();
   $result->bind_result($tmp_modulecode);
@@ -50,65 +58,74 @@ if (isset($_POST['submit']) and $_POST['modulecode'] != $_POST['old_modulecode']
 
 if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['active'])) {
-    $active = 1;
+    $new_active = 1;
   } else {
-    $active = 0;
+    $new_active = 0;
   }
   if (isset($_POST['selfenroll'])) {
-    $selfenroll = 1;
+    $new_selfenroll = 1;
   } else {
-    $selfenroll = 0;
+    $new_selfenroll = 0;
   }
   if (isset($_POST['neg_marking'])) {
-    $neg_marking = 1;
+    $new_neg_marking = 1;
   } else {
-    $neg_marking = 0;
+    $new_neg_marking = 0;
   }
-  $checklist = '';
-  if (isset($_POST['peer'])) $checklist .= ',peer';
-  if (isset($_POST['external'])) $checklist .= ',external';
-  if (isset($_POST['stdset'])) $checklist .= ',stdset';
-  if (isset($_POST['mapping'])) $checklist .= ',mapping';
+  $new_checklist = '';
+  if (isset($_POST['peer']))     $new_checklist .= ',peer';
+  if (isset($_POST['external'])) $new_checklist .= ',external';
+  if (isset($_POST['stdset']))   $new_checklist .= ',stdset';
+  if (isset($_POST['mapping']))  $new_checklist .= ',mapping';
 
   // Update the properties of the module.
-  $tmp_modulecode = trim($_POST['modulecode']);
-  $tmp_fullname = trim($_POST['fullname']);
-  $tmp_checklist = substr($checklist, 1);
+  $new_modulecode = trim($_POST['modulecode']);
+  $new_fullname = trim($_POST['fullname']);
+  $new_checklist = substr($new_checklist, 1);
 
   if (isset($_POST['timed_exams'])) {
-    $timed_exams = 1;
+    $new_timed_exams = 1;
   } else {
-    $timed_exams = 0;
+    $new_timed_exams = 0;
   }
   if (isset($_POST['exam_q_feedback'])) {
-    $exam_q_feedback = 1;
+    $new_exam_q_feedback = 1;
   } else {
-    $exam_q_feedback = 0;
+    $new_exam_q_feedback = 0;
   }
   if (isset($_POST['add_team_members'])) {
-    $add_team_members = 1;
+    $new_add_team_members = 1;
   } else {
-    $add_team_members = 0;
+    $new_add_team_members = 0;
   }
 
-  if ($tmp_modulecode != '' and $tmp_fullname != '' and $_POST['schoolid'] != '') {
+  if ($new_modulecode != '' and $new_fullname != '' and $_POST['schoolid'] != '') {
     $result = $mysqli->prepare("UPDATE modules SET moduleid = ?, fullname = ?, active = ?, sms = ?, vle_api = ?, checklist = ?, selfenroll = ?, schoolid = ?, neg_marking = ?, ebel_grid_template = ?, timed_exams = ?, exam_q_feedback = ?, add_team_members = ? WHERE id = ?");
-    $result->bind_param('ssisssiiiiiiii', $tmp_modulecode, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['ebel_grid_template'], $timed_exams, $exam_q_feedback, $add_team_members, $_GET['moduleid']);
+    $result->bind_param('ssisssiiiiiiii', $new_modulecode, $new_fullname, $new_active, $_POST['sms_api'], $_POST['vle_api'], $new_checklist, $new_selfenroll, $_POST['schoolid'], $new_neg_marking, $_POST['ebel_grid_template'], $new_timed_exams, $new_exam_q_feedback, $new_add_team_members, $_GET['moduleid']);
     $result->execute();
     $result->close();
   }
+  
+  // Log any changes
+  $logger = new Logger($mysqli);
+  if ($modulecode != $new_modulecode)                     $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $modulecode, $new_modulecode, $string['moduleid']);
+  if ($fullname != $new_fullname)                         $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $fullname, $new_fullname, $string['name']);
+  if ($schoolid != $_POST['schoolid'])                    $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $schoolid, $_POST['schoolid'], $string['school']);
+  if ($sms != $_POST['sms_api'])                          $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $sms, $_POST['sms_api'], $string['smsapi']);
+  if ($vle_api != $_POST['vle_api'])                      $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $vle_api, $_POST['vle_api'], $string['objapi']);
+  if ($checklist != $new_checklist)                       $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $checklist, $new_checklist, $string['summativechecklist']);
+  if ($active != $new_active)                             $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $active, $new_active, $string['active']);
+  if ($selfenroll != $new_selfenroll)                     $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $selfenroll, $new_selfenroll, $string['allowselfenrol']);
+  if ($neg_marking != $new_neg_marking)                   $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $neg_marking, $new_neg_marking, $string['negativemarking']);
+  if ($timed_exams != $new_timed_exams)                   $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $timed_exams, $new_timed_exams, $string['timedexams']);
+  if ($exam_q_feedback != $new_exam_q_feedback)           $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $exam_q_feedback, $new_exam_q_feedback, $string['questionbasedfeedback']);
+  if ($add_team_members != $new_add_team_members)         $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $add_team_members, $new_add_team_members, $string['addteammembers']);
+  if ($current_ebel_grid != $_POST['ebel_grid_template']) $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $current_ebel_grid, $_POST['ebel_grid_template'], $string['ebelgrid']);
 
   $mysqli->close();
   header("location: list_modules.php");
   exit;
 } else {
-  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template, timed_exams, exam_q_feedback, add_team_members FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ?");
-  $stmt->bind_param('i', $_GET['moduleid']);
-  $stmt->execute();
-  $stmt->bind_result($modulecode, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking, $current_ebel_grid, $timed_exams, $exam_q_feedback, $add_team_members);
-  $stmt->fetch();
-  $stmt->close();
-
   require_once '../classes/smsutils.class.php';
 
   $SMS = SMSutils::GetSmsUtils();

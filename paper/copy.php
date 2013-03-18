@@ -239,7 +239,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         $logger = new Logger($mysqli);
         $logger->track_change('Copied Question', $question_id, $userObject->get_user_ID(), $question, $question_id, 'Copied Question');
         // Create a track changes record to say new question added to paper.
-        $logger->track_change('Alter Paper', $new_paper_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
+        $logger->track_change('Paper', $new_paper_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
 
         // Lookup and copy the keywords
         $keyword_result = $mysqli->prepare("SELECT keywordID FROM keywords_question WHERE q_id = ?");

@@ -23,7 +23,8 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/logger.class.php';
 
 $schoolid = check_var('schoolid', 'GET', true, false, true);
 
@@ -59,6 +60,10 @@ if (isset($_POST['submit'])) {
       $result->bind_param('isi', $faculty, $school_tmp, $schoolid);
       $result->execute();
       $result->close();
+      
+      $logger = new Logger($mysqli);
+      if ($school != $school_tmp)     $logger->track_change('School', $schoolid, $userObject->get_user_ID(), $school, $school_tmp, $string['name']);
+      if ($curr_faculty != $faculty)  $logger->track_change('School', $schoolid, $userObject->get_user_ID(), $curr_faculty, $faculty, $string['faculty']);
     }
 
     header("location: list_schools.php");
@@ -134,7 +139,7 @@ $result->close();
   }
 ?>
     <table cellpadding="0" cellspacing="2" border="0">
-    <tr><td class="field"><?php echo $string['school'] ?></td><td><input type="text" size="70" id="school" name="school" value="<?php echo $school; ?>" /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="school" name="school" value="<?php echo $school; ?>" /></td></tr>
     <tr><td class="field"><?php echo $string['faculty'] ?></td><td><select name="faculty">
     <?php
       foreach ($faculty_list as $faculty) {
