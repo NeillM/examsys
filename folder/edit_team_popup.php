@@ -36,7 +36,7 @@ if (!$module_details) {
    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (!$userObject->has_role('SysAdmin', 'Admin')) {
+if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
   if ($module_details['add_team_members'] == 0) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);  
