@@ -41,11 +41,14 @@ function get_table_name_from_grant($grant) {
 function get_grants($db_name, $user, $db, $replace_name = '') {
   $details = array();
 
-  $result = $db->prepare("SHOW GRANTS FOR '" . $db_name . $user . "'@'127.0.0.1'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($grant);
-  while ($result->fetch()) {
+  $result = $db->query("SHOW GRANTS FOR '" . $db_name . $user . "'@'127.0.0.1'");
+  
+  if($result === false) {
+    return array();
+  }
+
+  while ($row = $result->fetch_row()) {
+    $grant = $row[0];
     if ($replace_name != '') {
       $grant = str_replace("`$db_name`", "`$replace_name`", $grant);  // Replace the database name.
       $grant = str_replace($db_name . '_' . $user, $replace_name . '_' . $user, $grant);  // Replace the database name.
@@ -123,7 +126,7 @@ function compare_permissions($db_master, $db_test, $masterdb, $testdb, $dbuserna
 if (isset($_POST['submit'])) {
   make_db_connections();
   
-  $users = array('user', '_stu', '_staff', '_ext', '_sys', '_sct', '_inv');
+  $users = array('_auth', '_stu', '_staff', '_ext', '_sys', '_sct', '_inv');
   
   foreach ($users as $user) {
     echo "<h1>" . $_POST['master_dbname'] . $user . "</h1>\n";
