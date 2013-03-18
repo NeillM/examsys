@@ -24,6 +24,7 @@
 * @package
 */
 
+global $cfg_web_root;
 require_once "../classes/userobject.class.php";
 
 class UserObjectTests extends \Enhance\TestFixture
