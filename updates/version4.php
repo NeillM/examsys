@@ -3886,7 +3886,7 @@ SQL;
     $updater_utils->execute_query("ALTER TABLE sid DROP PRIMARY KEY, ADD PRIMARY KEY (`userID`,`student_id`)", true);
   }
 
-  if (!$updater_utils->does_index_exist('objective', 'idx_identifier_calendar_year_objective300_sequence')) {
+  if (!$updater_utils->does_index_exist('objectives', 'idx_identifier_calendar_year_objective300_sequence')) {
     $updater_utils->execute_query("ALTER TABLE objectives ADD INDEX idx_identifier_calendar_year_objective300_sequence (identifier, calendar_year, objective(300) , sequence )", true);
   }
   if (!$updater_utils->does_index_exist('admin_access', 'idx_schoolsid_userid')) {
@@ -3916,7 +3916,23 @@ SQL;
     $sql = "UPDATE modules SET add_team_members = 1";
     $updater_utils->execute_query($sql, true);
   }
-
+  
+  // 18/03/2013 - cczab - Add indexes to speed up some question back queries in add_questions_to_paper.php
+  if ($updater_utils->does_index_exist('keywords_question', 'q_id')) {
+     $updater_utils->execute_query("ALTER TABLE keywords_question DROP INDEX q_id", false);
+  }
+  if (!$updater_utils->does_index_exist('keywords_question', 'PRIMARY')) {
+     $updater_utils->execute_query("ALTER IGNORE TABLE keywords_question ADD PRIMARY KEY (q_id , keywordID)", false);
+  }
+  if (!$updater_utils->does_index_exist('question_exclude', 'idx_q_id')) {
+     $updater_utils->execute_query("ALTER TABLE question_exclude ADD INDEX idx_q_id (q_id)", false);
+  }
+  if (!$updater_utils->does_index_exist('questions', 'idx_deleted')) {
+     $updater_utils->execute_query("ALTER TABLE questions ADD INDEX idx_deleted (deleted)", false);
+  }
+  if (!$updater_utils->does_index_exist('questions_modules', 'idx_idmod')) {
+     $updater_utils->execute_query("ALTER TABLE questions_modules ADD INDEX idx_idmod (idMod)", false);
+  }
 
   //
   /*

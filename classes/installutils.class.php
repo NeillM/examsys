@@ -1666,7 +1666,8 @@ QUERY;
         CREATE TABLE `keywords_question` (
           `q_id` int(11) default NULL,
           `keywordID` int(11) default NULL,
-          KEY `q_id` (`q_id`)
+          KEY `q_id` (`q_id`),
+          PRIMARY KEY (`q_id`, `keywordID`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2224,6 +2225,7 @@ QUERY;
           `userID` int unsigned default NULL,
           `date` datetime default NULL,
           `reason` text,
+          KEY `idx_q_id` (`q_id`),
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -2257,7 +2259,8 @@ QUERY;
           `q_option_order` enum('display order','alphabetic','random') default NULL,
           `score_method` enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark') default NULL,
           PRIMARY KEY (`q_id`),
-          KEY `idx_owner_deleted` (`ownerID`,`deleted`)
+          KEY `idx_owner_deleted` (`ownerID`,`deleted`),
+          KEY `idx_deleted` (`deleted`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2275,6 +2278,7 @@ $this->tableList['questions_modules'] = <<<QUERY
         CREATE TABLE `questions_modules` (
           `q_id` int(4) unsigned NOT NULL DEFAULT '0',
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
+          KEY `idx_idmod` (`idMod`),
           PRIMARY KEY (`q_id`,`idMod`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
