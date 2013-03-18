@@ -68,7 +68,7 @@ function check_paper_password($password, $string, $show_form = false) {
           $notice = UserNotices::get_instance();
           $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/access_denied.png', '#C00000', true, true);
           echo render_password_form($string);
-          exit;
+          $notice->exit_php();
         }
       } else {
         $notice = UserNotices::get_instance();

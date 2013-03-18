@@ -90,28 +90,21 @@ Class module {
 
   public function module_exists($moduleid, $db) {
     // Check for unique moduleID
-    $unique_moduleid = true;
+    $exists = true;
+    
     $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
-    if ($db->error) {
-      try {
-        throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
-      } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());
-      }
-    }
     $result->bind_param('s', $moduleid);
     $result->execute();
     $result->store_result();
     $result->bind_result($tmp_moduleid);
     $result->fetch();
     if ($result->num_rows == 0) {
-      $unique_moduleid = false;
+      $exists = false;
     }
     $result->free_result();
     $result->close();
 
-    return $unique_moduleid;
+    return $exists;
   }
 
   public function get_full_details_by_ID($modID, $db) {

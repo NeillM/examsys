@@ -279,6 +279,34 @@ Class UserUtils {
     $stmt->execute();
     $stmt->close();
   }
+  
+  /**
+   * Lists the team a user id is on (uses the user object for the curent users
+   * use this if we are not dealing with the logged in user)
+   * 
+   * @param string $userID the id of the user
+   * @param object $db mysqli database connection
+   *
+   */
+  static function list_staff_modules_by_userID($userID, $db) {
+    $user_modules = array();
+    $result = $db->prepare("SELECT 
+                                moduleID, idMod 
+                            FROM 
+                                modules_staff, modules 
+                            WHERE 
+                                modules_staff.idMod = modules.id AND 
+                                type = 'System' AND 
+                                memberID = ?");
+    $result->bind_param('i', $userID);
+    $result->execute();
+    $result->bind_result($moduleID, $idMod);
+    while ($result->fetch()) {
+      $user_modules[$idMod] = $moduleID;
+    }
+    $result->close();
+    return $user_modules;
+  }
 
   /**
    * Clear a user (staff) from all teams.

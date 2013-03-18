@@ -93,7 +93,7 @@ Class CourseUtils {
    */
   static function course_exists($name, $db) {
     // Check for unique course
-    $unique_courseid = false;
+    $exists = true;
 
     $result = $db->prepare("SELECT id FROM courses WHERE name = ?");
     if ($db->error) {
@@ -112,12 +112,12 @@ Class CourseUtils {
     $result->execute();
     $result->store_result();
     if ($result->num_rows == 0) {
-      $unique_courseid = true;
+      $exists = false;
     }
     $result->free_result();
     $result->close();
 
-    return $unique_courseid;
+    return $exists;
   }
 
   static function courseid_exists($courseID, $db) {

@@ -21,13 +21,9 @@
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
-error_reporting(E_ALL);
-ini_set('display_errors','On');
 
-//require '../include/staff_student_auth.inc';
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 $root = "$root/../";
-require_once $root . 'include/load_config.php';
 require_once $root . 'include/load_config.php';
 require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'classes/userutils.class.php';
@@ -36,20 +32,41 @@ require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc';   // Include common language file that all scripts need
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 require_once $cfg_web_root . 'classes/networkutils.class.php';
+require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/dateutils.class.php';
+require_once $cfg_web_root . 'classes/usernotices.class.php';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 
-if (substr_count($_GET['url'], '/') > 0) {
-  list($action, $parms) = explode('/',$_GET['url'],2);
+$displayDebug = false; //xml call so debug info messes up the output
+error_reporting(E_ALL);
+ini_set('display_errors','On');
+
+if(!isset($_GET['url'])) {
+  $action = '';
+  $parms = '';
 } else {
-  $action = $_GET['url'];
+  if ( substr_count($_GET['url'], '/') > 0) {
+    list($action, $parms) = explode('/',$_GET['url'],2);
+  } else {
+    $action = $_GET['url'];
+  }
 }
 if ($action == 'getModulePaperList') {
-  $userroles = 'Staff';
-  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
-
-  db_change_user($mysqli);
-
+  //force a staff db connection for getModulePaperList
+  
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), 
+                                     $configObject->get('cfg_db_staff_user'), 
+                                     $configObject->get('cfg_db_staff_passwd'), 
+                                     $configObject->get('cfg_db_database'), 
+                                     $configObject->get('cfg_db_charset'), 
+                                     UserNotices::get_instance(), 
+                                     $configObject->get('dbclass'));
+   
+  $result =  $mysqli->select_db($configObject->get('cfg_db_database'));
+  
+  $result = $mysqli->prepare("SELECT id FROM users LIMIT 10");
+  $result->execute();
+  $result->close();
 } else {
   require '../include/staff_student_auth.inc';
 }
@@ -74,6 +91,9 @@ Class webServiceRestAPI extends restAPI {
   }
 
   function write(XMLWriter $xml, $data, $tmp_tag){
+    if(!is_array($data)) {
+      return; 
+    }
     foreach($data as $key => $value){
       if (is_array($value)){
         if (is_numeric($key)) {
@@ -111,7 +131,7 @@ Class webServiceRestAPI extends restAPI {
   
   public function getUserID($username, $staff = false) {
     if ($staff == true) {
-      $res = $this->db->prepare("SELECT id FROM users WHERE username=? AND roles LIKE 'Staff%'");
+      $res = $this->db->prepare("SELECT id FROM users WHERE username=? AND roles LIKE '%Staff%'");
     } else {
       $res = $this->db->prepare("SELECT id FROM users WHERE username=? AND roles = 'Student'");
     }
@@ -125,10 +145,15 @@ Class webServiceRestAPI extends restAPI {
   }
 
   public function processRequest() {
-    if (substr_count($_GET['url'], '/') > 0) {
-      list($action, $parms) = explode('/',$_GET['url'],2);
+    if(!isset($_GET['url'])) {
+      $action = '';
+      $parms = '';
     } else {
-      $action = $_GET['url'];
+      if ( substr_count($_GET['url'], '/') > 0) {
+        list($action, $parms) = explode('/',$_GET['url'],2);
+      } else {
+        $action = $_GET['url'];
+      }
     }
     switch($action) {
       case 'getAvailableFeedback':
@@ -160,7 +185,6 @@ Class webServiceRestAPI extends restAPI {
         if ($username == '') {
           $this->sendResponse(400, '', '');
         } else {
-          //return the module Available Feedback
           $this->data = $this->getOwnerPaperList($username, $types);
           if ($this->data == '') {
             $this->sendResponse(400, '', '');
@@ -178,7 +202,6 @@ Class webServiceRestAPI extends restAPI {
         if ($team == '') {
           $this->sendResponse(400, '', '');
         } else {
-          //return the module Available Feedback
           $this->data = $this->getModulePaperList($team);
 
           if ($this->data == '') {
@@ -207,23 +230,32 @@ Class webServiceRestAPI extends restAPI {
 
 
 
-  public function getModulePaperList($team) {
-    global $protocol;
-    $moduleSQL='';
-    $moduleSQL .= " (moduleID LIKE ? OR  moduleID LIKE ? OR  moduleID LIKE ? or  moduleID LIKE ?)";
-    $typeSQL = " paper_type!='2'";
-
-    unset($res);
+  public function getModulePaperList($moduleID) {
+    global $protocol, $configObject;
+    
+    $idMod = module_utils::get_idMod($moduleID, $this->db);
+    
     $papers = array();
     $paper_no = 0;
-    $sql="SELECT property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname, crypt_name FROM properties, papers, users WHERE properties.paper_ownerID=users.id AND properties.property_id=papers.paper AND  $moduleSQL AND $typeSQL AND deleted IS NULL AND retired IS NULL GROUP BY property_id ORDER BY paper_title";
+    $sql="SELECT 
+            properties.property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname, crypt_name 
+          FROM 
+            properties, papers, users, properties_modules 
+          WHERE 
+            properties.property_id = properties_modules.property_id AND
+            properties.paper_ownerID=users.id AND 
+            properties.property_id=papers.paper AND  
+            idMod = ? AND 
+            paper_type!='2' AND 
+            deleted IS NULL AND 
+            retired IS NULL 
+          GROUP BY 
+            property_id 
+          ORDER BY 
+            paper_title";
 
     $res = $this->db->prepare($sql);
-    $team1="$team,%";
-    $team2="$team";
-    $team3="%,$team,%";
-    $team4="%,$team";
-    $res->bind_param('ssss',$team1,$team2,$team3,$team4);
+    $res->bind_param('i',$idMod);
     $res->execute();
     $res->store_result();
     $res->bind_result($property_id, $paper_title, $paper_type, $start_date, $end_date, $created, $screens, $title, $surname, $crypt_name);
@@ -251,19 +283,74 @@ Class webServiceRestAPI extends restAPI {
 
 
   public function getAvailableFeedback ($username,$moduleID) {
-    $tmp_userID = $this->get_user_ID($username);
+    
+    $allowaccess = false;
+    $tmp_userID = $this->getUserID($username, false);
+    $userObject=UserObject::get_instance();
+    
+    if ($userObject->has_role('SysAdmin')) {
+      $allowaccess = true;
+    } else if ($userObject->has_role('Staff')) {
+      $allowaccess = true;
+    } else if ($userObject->has_role('Student') and $tmp_userID == $userObject->get_user_ID()) {
+      //students can only list their own feedabck
+      $allowaccess = true;
+    }
+    
+    if ( $allowaccess == false ) {
+      return '';
+    }
+    
+    $idMod = module_utils::get_idMod($moduleID, $this->db);
     
     $paper_no = 0;
     $old_yearID = -1;
     $papers = array();
-
-    $moduleID = '%' . $moduleID . '%';
-    $sql = "SELECT student_modules.moduleID, paper_id, date, UNIX_TIMESTAMP(date) AS is_live, paper_type, paper_title, start_date, end_date, properties.calendar_year, crypt_name FROM feedback_release LEFT JOIN properties ON feedback_release.paper_id = properties.property_id LEFT JOIN student_modules ON properties.moduleID LIKE CONCAT('%',student_modules.moduleID,'%') AND properties.calendar_year = student_modules.calendar_year WHERE userID=? AND properties.moduleID LIKE '$moduleID'";
-    $res = $this->db->prepare($sql);
-    $res->bind_param('i', $tmp_userID);
+    
+    if($idMod == false) {
+      $sql = "SELECT 
+                      paper_id, 
+                      date, 
+                      UNIX_TIMESTAMP(date) AS is_live, 
+                      paper_type, 
+                      paper_title, 
+                      start_date, 
+                      end_date, 
+                      properties.calendar_year, 
+                      crypt_name 
+               FROM feedback_release 
+               LEFT JOIN properties ON feedback_release.paper_id = properties.property_id 
+               LEFT JOIN properties_modules ON properties.property_id =  properties_modules.property_id 
+               LEFT JOIN modules_student ON modules_student.idMod = properties_modules.idMod
+               WHERE 
+                      modules_student.userID=?";
+      $res = $this->db->prepare($sql);
+      $res->bind_param('i', $tmp_userID);  
+    } else {
+      $sql = "SELECT 
+                      paper_id, 
+                      date, 
+                      UNIX_TIMESTAMP(date) AS is_live, 
+                      paper_type, 
+                      paper_title, 
+                      start_date, 
+                      end_date, 
+                      properties.calendar_year, 
+                      crypt_name 
+               FROM feedback_release 
+               LEFT JOIN properties ON feedback_release.paper_id = properties.property_id 
+               LEFT JOIN properties_modules ON properties.property_id =  properties_modules.property_id 
+               LEFT JOIN modules_student ON modules_student.idMod = properties_modules.idMod
+               WHERE 
+                      modules_student.userID=? AND 
+                      modules_student.idMod=?";
+      $res = $this->db->prepare($sql);
+      $res->bind_param('ii', $tmp_userID, $idMod);
+    }
     $res->execute();
     $res->store_result();
-    $res->bind_result($moduleID, $paperID, $date, $is_live, $paper_type, $paper_title, $start_date, $end_date, $calendar_year, $crypt_name);
+    $res->bind_result($paperID, $date, $is_live, $paper_type, $paper_title, $start_date, $end_date, $calendar_year, $crypt_name);
+    
     while ($res->fetch()) {
 
       if ($is_live < time()) {
@@ -301,22 +388,35 @@ Class webServiceRestAPI extends restAPI {
   }
 
   public function getOwnerPaperList($username, $types) {
-    global $protocol;
+    global $protocol, $configObject;
+    
+    $allowaccess = false;
+    $userObject = UserObject::get_instance();
+    $tmp_userID = $this->getUserID($username, true);
 
-    $tmp_userID = $this->get_user_ID($username, true);
+    if ($userObject->has_role('SysAdmin') or $userObject->has_role('Admin')) {
+      $allowaccess = true;
+    } else if ($userObject->has_role('Staff') and $tmp_userID == $userObject->get_user_ID()) {
+      $allowaccess = true;
+    } else if ($userObject->has_role('Student')) {
+      //students can not access this function
+      $allowaccess = false;
+    }
+    
+    if ( $allowaccess == false ) {
+      return '';
+    }
+    
     if ($tmp_userID == '') {
       return '';
     }
     
-    $teams = getUserTeams($tmp_userID, $this->db);
-    
-    // Get the papers for the current owner
-    $moduleSQL = '';
-    if (count($teams) > 0) {
-      foreach ($teams as $team) {
-        $moduleSQL .= " OR moduleID LIKE '%$team%'";
-      }
+    $staff_modules = UserUtils::list_staff_modules_by_userID($tmp_userID, $this->db);
+    if(count($staff_modules) == 0) {
+      //user is not on any teams. stop!!
+      return array();
     }
+    $staff_modules_ids_str = ' OR idMod IN (' . implode(',',array_keys($staff_modules)) . ') ';
     
     switch($types) {
       case 'formative':
@@ -347,7 +447,16 @@ Class webServiceRestAPI extends restAPI {
     
     $papers = array();
     $paper_no = 0;
-    $res = $this->db->prepare("SELECT property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname, crypt_name FROM properties, papers, users WHERE properties.paper_ownerID=users.id AND properties.property_id=papers.paper AND (paper_ownerID=? $moduleSQL)$typeSQL AND deleted IS NULL GROUP BY property_id ORDER BY paper_title");
+    $res = $this->db->prepare("SELECT 
+                                  properties.property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname, crypt_name 
+                               FROM properties, papers, users, properties_modules 
+                               WHERE 
+                                  properties.property_id = properties_modules.property_id AND
+                                  properties.paper_ownerID=users.id AND 
+                                  properties.property_id=papers.paper AND 
+                                  (paper_ownerID=? $staff_modules_ids_str) $typeSQL AND 
+                                  deleted IS NULL 
+                               GROUP BY property_id ORDER BY paper_title");
     $res->bind_param('i', $tmp_userID);
     $res->execute();
     $res->store_result();
