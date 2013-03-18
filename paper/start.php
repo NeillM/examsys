@@ -241,7 +241,7 @@ $paperID = $propertyObj->get_property_id();
  *
  */
 //are we in a staff test and preview mode?
-$is_preview_mode = ($userObject->has_role(array('Staff','SysAdmin')) and isset($_REQUEST['mode']) and $_REQUEST['mode'] == 'preview');
+$is_preview_mode = ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and isset($_REQUEST['mode']) and $_REQUEST['mode'] == 'preview');
 // Are we on the first screen
 $is_first_launch = !isset($_POST['current_screen']);
 //are we in a staff test and preview mode and on the first screen?
@@ -391,7 +391,7 @@ $metadataid = $log_metadata->get_metadata_id();
 * If a summative exam session has been started  then record late answers in log_late
 */
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
-if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
+if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2' and !$is_question_preview_mode) {
   //has this lab had an end time set?
   $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
@@ -1207,7 +1207,7 @@ if ($css != '') {
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
   echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
   echo "<input type=\"hidden\" id=\"randomPageID\" name=\"randomPageID\" value=\"\" />\n";
-  if (isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview') {
+  if (isset($_REQUEST['mode']) and $_REQUEST['mode'] == 'preview') {
     echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
   } else {
     if ($current_screen > $no_screens) {
@@ -1228,7 +1228,7 @@ if ($css != '') {
 
   echo '<div id="saveError"><img alt="Warning" src="/artwork/no_save.png" /> <div><strong>' .  $string['savefailed'] . '</strong><br />' . $string['tryagain'] . '</div></div>';
 
-  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $_REQUEST['mode'] == 'preview') {
+  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
     echo "&nbsp;&nbsp;<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />\n";
     echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
   } else {

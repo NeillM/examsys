@@ -583,16 +583,16 @@ if (isset($_POST['Submit'])) {
 
     if ($paper_title != $old_paper_title)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_paper_title, $paper_title, 'name');
     if ($disabled == '') {   // If disabled is set then don't check certain disabled fields.
-      if ($fullscreen != $old_fullscreen)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
-      if ($bidirectional != $old_bidirectional)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
+      if ($fullscreen != $old_fullscreen)                             $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_fullscreen, $fullscreen, 'display');
+      if ($bidirectional != $old_bidirectional)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_bidirectional, $bidirectional, 'navigation');
       if ($properties->get_paper_type() != '6') {
-        if ($tmp_calculator != $old_calculator)                         $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
+        if ($tmp_calculator != $old_calculator)                       $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_calculator, $tmp_calculator, 'displaycalculator');
       }
-      if ($lab_string != $old_labs)                                     $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
+      if ($lab_string != $old_labs)                                   $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_labs, $lab_string, 'labs');
       $new_modules = array_keys($paper_modules);
       sort($new_modules, SORT_NUMERIC);
       $new_modules = implode(',', $new_modules);
-      if ($new_modules != $old_modules)                                 $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
+      if ($new_modules != $old_modules)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_modules, $new_modules, 'modules');
     }
     if ($tmp_start_date != $old_start_date)                           $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_start_date, $tmp_start_date, 'startdate');
     if ($tmp_end_date != $old_end_date)                               $logger->track_change('Alter paper', $paperID, $userObject->get_user_ID(), $old_end_date, $tmp_end_date, 'enddate');
