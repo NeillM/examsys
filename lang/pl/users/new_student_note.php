@@ -17,6 +17,6 @@
 $string['papername'] = 'Nazwa arkusza:';
 $string['note'] = 'Notatka';
 $string['studentname'] = 'Imię i nazwisko studenta:';
-$string['namecheck'] = 'Please select a paper name.';  // Niko
-$string['notecheck'] = 'Please enter some text for your note.';  // Niko
+$string['namecheck'] = 'Wybierz nazwę arkusza.';  
+$string['notecheck'] = 'Podaj treść notatki.'; 
 ?>
