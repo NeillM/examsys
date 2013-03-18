@@ -23,9 +23,8 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
-
-require '../classes/paperutils.class.php';
+require_once '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
 
 $paperid = check_var('paperID', 'GET', true, false, true);
 

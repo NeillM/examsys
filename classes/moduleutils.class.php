@@ -148,6 +148,22 @@ Class module {
 
     return $moduleid;
   }
+  
+  public function get_moduleID($idMod, $db) {
+    $result = $db->prepare("SELECT moduleID FROM modules WHERE id = ? AND mod_deleted IS NULL");
+    $result->bind_param('i', $idMod);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($module_id);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $result->close();
+      return false;
+    }
+    $result->close();
+    
+    return $module_id;
+  }
 
   public function get_idMod($module_id, $db) {
     if (is_array($module_id)) {
@@ -167,8 +183,7 @@ Class module {
       
       if (count($ids) == 0) {
         return false;
-      }
-      
+      }      
       return $ids;
     } else {
       $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
@@ -192,22 +207,6 @@ Class module {
       $result->close();
       return $id;
     }
-  }
-
-  public function get_moduleID($idMod, $db) {
-    $result = $db->prepare("SELECT moduleID FROM modules WHERE id = ? AND mod_deleted IS NULL");
-    $result->bind_param('s', $idMod);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($module_id);
-    $result->fetch();
-    if ($result->num_rows == 0) {
-      $result->close();
-      return false;
-    }
-    $result->close();
-    
-    return $module_id;
   }
 
   public function get_module_list_by_id($db) {

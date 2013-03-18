@@ -65,7 +65,7 @@ $mysqli->close();
 <tr><td colspan="2">&nbsp;</tr>
 <tr><td colspan="2" class="msg"><?php echo $string['msg']; ?> <span class="passwd"><?php echo $new_password; ?></span></tr>
 <tr><td colspan="2">&nbsp;</tr>
-<tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="OK" style="width:100px" onclick="window.close();" /></tr>
+<tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="<?php echo $string['ok']; ?>" style="width:100px" onclick="window.close();" /></tr>
 </table>
 </body>
 </html>
