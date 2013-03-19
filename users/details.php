@@ -633,7 +633,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
   $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
 
-  if (stripos('External Examiner', $tmp_roles) !== false) {      // Get the papers the External is down to review.
+  if (stripos($tmp_roles, 'External Examiner') !== false) {      // Get the papers the External is down to review.
     $external_array = array();
 
     $stmt = $mysqli->prepare("SELECT DISTINCT crypt_name, paper_title, property_id, paper_type FROM properties LEFT JOIN review_comments ON property_id=review_comments.q_paper AND reviewer=? WHERE deleted IS NULL AND externals LIKE ? AND reviewed IS NULL ORDER BY paper_title");

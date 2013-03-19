@@ -100,8 +100,10 @@ $exam_duration = $propertyObj->get_exam_duration();
 $start_date = $propertyObj->get_start_date();
 $end_date = $propertyObj->get_end_date();
 
-if ($userObject->has_role('Student')) {  // Only log student views (i.e. not staff, sysadmin, etc).
-  $logger->record_access($userObject->get_user_ID(), 'Objectives-based feedback report', $paperID);  
+if ($userObject->has_role('Student')) {
+  $logger->record_access($userObject->get_user_ID(), 'Objectives-based feedback report', $paperID);  // Students write in the paperID
+} else {
+  $logger->record_access($userObject->get_user_ID(), 'Objectives-based feedback report', '/mapping/user_feedback.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
 }
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 

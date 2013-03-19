@@ -63,23 +63,23 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
 $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
-$paperID = $propertyObj->get_property_id();
-$labs = $propertyObj->get_labs();
-$calendar_year = $propertyObj->get_calendar_year();
-$display_correct_answer = $propertyObj->get_display_correct_answer();
-$display_question_mark = $propertyObj->get_display_question_mark();
-$display_students_response = $propertyObj->get_display_students_response();
-$display_feedback = $propertyObj->get_display_feedback();
-$hide_if_unanswered = $propertyObj->get_hide_if_unanswered();
-$paper_title = $propertyObj->get_paper_title();
-$paper_type = $propertyObj->get_paper_type();
-$start_date = $propertyObj->get_start_date();
-$end_date = $propertyObj->get_end_date();
-$marking = $propertyObj->get_marking();
-$paper_postscript = $propertyObj->get_paper_postscript();
-$pass_mark = $propertyObj->get_pass_mark();
-$latex_needed = $propertyObj->get_latex_needed();
-$password = $propertyObj->get_password();
+$paperID                    = $propertyObj->get_property_id();
+$labs                       = $propertyObj->get_labs();
+$calendar_year              = $propertyObj->get_calendar_year();
+$display_correct_answer     = $propertyObj->get_display_correct_answer();
+$display_question_mark      = $propertyObj->get_display_question_mark();
+$display_students_response  = $propertyObj->get_display_students_response();
+$display_feedback           = $propertyObj->get_display_feedback();
+$hide_if_unanswered         = $propertyObj->get_hide_if_unanswered();
+$paper_title                = $propertyObj->get_paper_title();
+$paper_type                 = $propertyObj->get_paper_type();
+$start_date                 = $propertyObj->get_start_date();
+$end_date                   = $propertyObj->get_end_date();
+$marking                    = $propertyObj->get_marking();
+$paper_postscript           = $propertyObj->get_paper_postscript();
+$pass_mark                  = $propertyObj->get_pass_mark();
+$latex_needed               = $propertyObj->get_latex_needed();
+$password                   = $propertyObj->get_password();
 
 
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
@@ -311,6 +311,14 @@ require '../config/finish.inc';
 
   if ($show_feedback) {
     display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $metadataid, $mysqli, $preview_q_id);
+
+    // Record the fact that the script has been viewed.
+    $logger = new Logger($mysqli);
+    if ($userObject->has_role('Student')) {
+      $logger->record_access($userObject->get_user_ID(), 'Assessment script', $paperID);  // Students write in the paperID
+    } else {
+      $logger->record_access($userObject->get_user_ID(), 'Assessment script', '/paper/finish.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
+    }
   } else {
     echo '<blockquote>';
     if ($language == 'en') {

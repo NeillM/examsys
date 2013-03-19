@@ -106,9 +106,11 @@ if ($userObject->has_role('Student')) {
 
 $pass_mark = $propertyObj->get_pass_mark();
 
-if ($userObject->has_role('Student')) {  // Only log student views (i.e. not staff, sysadmin, etc).
-  $logger = new Logger($mysqli);
-  $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', $paperID);  
+$logger = new Logger($mysqli);
+if ($userObject->has_role('Student')) {
+  $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', $paperID);  // Students write in the paperID
+} else {
+  $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', '/paper/feedback.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
 }
 
 require '../config/finish.inc';
