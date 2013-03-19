@@ -382,12 +382,17 @@ if (isset($_POST['Submit'])) {
         }
         $tmp_end_date = $end_date->format("YmdHis");
       }
+      $timezone = $_POST['timezone'];
+      $calendar_year = $_POST['calendar_year'];
+      $exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
     } else {
       // If we are in here the paper type is 2 and summative management is on.
       // Set times to the old time settings.
       $tmp_start_date = $old_start_date;
       $tmp_end_date = $old_end_date;
       $timezone = $old_timezone;
+      $calendar_year = $old_calendar_year;
+      $exam_duration = $old_exam_duration;
     }
 
     $leap = is_leap($_POST['ext_tyear']);
@@ -505,11 +510,8 @@ if (isset($_POST['Submit'])) {
       $tmp_start_date = $old_start_date;
       $tmp_end_date = $old_end_date;
     } else {
-      $timezone = $_POST['timezone'];
-      $exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
       $password = trim($_POST['password']);
       $fullscreen = $_POST['fullscreen'];
-      $calendar_year = $_POST['calendar_year'];
     }
     $bgcolor = $_POST['bgcolor'];
     $fgcolor = $_POST['fgcolor'];
