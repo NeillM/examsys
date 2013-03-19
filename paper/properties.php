@@ -335,7 +335,7 @@ if (isset($_POST['Submit'])) {
       $hide_if_unanswered = '0';
     }
 
-    if (($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$configObject->get('cfg_summative_mgmt') or !$configObject->get('cfg_summative_mgmt') or  $paper_type != '2') {
+    if (($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$configObject->get('cfg_summative_mgmt') or  $paper_type != '2') {
   		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   		$target_timezone = new DateTimeZone($_POST['timezone']);
 
