@@ -385,6 +385,17 @@ if (isset($_POST['Submit'])) {
       $timezone = $_POST['timezone'];
       $calendar_year = $_POST['calendar_year'];
       $exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
+      
+      $lab_string = '';
+      for ($i=0; $i<$_POST['lab_no']; $i++) {
+        if (isset($_POST["lab$i"])) {
+          if ($lab_string == '') {
+            $lab_string = $_POST["lab$i"];
+          } else {
+            $lab_string .= ',' . $_POST["lab$i"];
+          }
+        }
+      }
     } else {
       // If we are in here the paper type is 2 and summative management is on.
       // Set times to the old time settings.
@@ -393,6 +404,7 @@ if (isset($_POST['Submit'])) {
       $timezone = $old_timezone;
       $calendar_year = $old_calendar_year;
       $exam_duration = $old_exam_duration;
+      $lab_string = $old_labs;
     }
 
     $leap = is_leap($_POST['ext_tyear']);
@@ -436,17 +448,6 @@ if (isset($_POST['Submit'])) {
           $first_module_id = $_POST['module' . $i];
         } else {
           $paper_modules[$_POST['module' . $i]] = $_POST['module' . $i];
-        }
-      }
-    }
-
-    $lab_string = '';
-    for ($i=0; $i<$_POST['lab_no']; $i++) {
-      if (isset($_POST["lab$i"])) {
-        if ($lab_string == '') {
-          $lab_string = $_POST["lab$i"];
-        } else {
-          $lab_string .= ',' . $_POST["lab$i"];
         }
       }
     }
@@ -520,27 +521,33 @@ if (isset($_POST['Submit'])) {
     $folderID = $_POST['folderID'];
 
     if ($locked) {
-      $editProperties = $mysqli->prepare("UPDATE properties SET marking=?, pass_mark=?, distinction_mark=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=? WHERE property_id=?");
+      $editProperties = $mysqli->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ? WHERE property_id = ?");
       $editProperties->bind_param('siiiiiii', $tmp_marking, $tmp_pass_mark, $tmp_distinction_mark, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $paperID);
       $editProperties->execute();
       $editProperties->close();
     } elseif ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
-      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
+      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, rubric = ?, calculator = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ? WHERE property_id = ?");
       $editProperties->bind_param('ssssssssssiississsssssssi', $paper_title, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $external_deadline, $internal_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
       $editProperties->close();
 
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
+      
+      $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
+      
       Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli);
       Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli);
     } else {
 
-      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
+      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title = ?, paper_type = ?, start_date = ?, end_date = ?, timezone = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, labs = ?, rubric = ?, calculator = ?, exam_duration = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, calendar_year = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ? WHERE property_id = ?");
       $editProperties->bind_param('ssssssssssssssiisssiissssssssssi', $paper_title, $paper_type, $tmp_start_date, $tmp_end_date, $timezone, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $calendar_year, $external_deadline, $internal_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
       $editProperties->close();
 
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
+      
+      $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
+      
       Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli);
       Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli);
     }
