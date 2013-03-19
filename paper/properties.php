@@ -383,8 +383,11 @@ if (isset($_POST['Submit'])) {
         $tmp_end_date = $end_date->format("YmdHis");
       }
     } else {
-      echo "hi";
-      exit;
+      // If we are in here the paper type is 2 and summative management is on.
+      // Set times to the old time settings.
+      $tmp_start_date = $old_start_date;
+      $tmp_end_date = $old_end_date;
+      $timezone = $old_timezone;
     }
 
     $leap = is_leap($_POST['ext_tyear']);
