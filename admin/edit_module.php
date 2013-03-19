@@ -44,12 +44,12 @@ $stmt->close();
 $unique_moduleid = true;
 if (isset($_POST['submit']) and $_POST['modulecode'] != $_POST['old_modulecode']) {
   // Check for unique moduleid
-  $tmp_modulecode = trim($_POST['modulecode']);
+  $new_modulecode = trim($_POST['modulecode']);
   $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid = ?");
-  $result->bind_param('i', $tmp_modulecode);
+  $result->bind_param('s', $new_modulecode);
   $result->execute();
   $result->store_result();
-  $result->bind_result($tmp_modulecode);
+  $result->bind_result($new_modulecode);
   $result->fetch();
   if ($result->num_rows > 0) $unique_moduleid = false;
   $result->free_result();
@@ -190,7 +190,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if ($unique_moduleid == false) {
   ?>
   function moduleWarning() {
-    alert("<?php echo sprintf($string['moduleidinuse'], $tmp_modulecode); ?>");
+    alert("<?php echo sprintf($string['moduleidinuse'], $new_modulecode); ?>");
   }
   <?php
   }
@@ -239,22 +239,22 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $result->close();
     echo "</optgroup>\n</select></td></tr>\n";
 
-    if (strpos($checklist,'peer') !== false) {
+    if (strpos($checklist, 'peer') !== false) {
       $peer = 1;
     } else {
       $peer = 0;
     }
-    if (strpos($checklist,'external') !== false) {
+    if (strpos($checklist, 'external') !== false) {
       $external = 1;
     } else {
       $external = 0;
     }
-    if (strpos($checklist,'stdset') !== false) {
+    if (strpos($checklist, 'stdset') !== false) {
       $stdset = 1;
     } else {
       $stdset = 0;
     }
-    if (strpos($checklist,'mapping') !== false) {
+    if (strpos($checklist, 'mapping') !== false) {
       $mapping = 1;
     } else {
       $mapping = 0;
