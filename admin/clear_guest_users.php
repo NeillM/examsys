@@ -92,12 +92,11 @@ require '../include/sidebar_menu.inc';
   for ($i=1; $i<=100; $i++) {
     if (isset($used[$i]['reserved']) and $used[$i]['reserved'] != '') {
       $paper_title = '';
-      $tmp_user="user$i";
-      $result->bind_param('s',$tmp_user);
+      $tmp_user = "user$i";
+      $result->bind_param('s', $tmp_user);
       $result->execute();
       $result->bind_result($q_paper, $paper_title);
       $result->fetch();
-      $result->close();
     
       if ($used[$i]['surname'] == '') $used[$i]['surname'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
       if ($used[$i]['first_names'] == '') $used[$i]['first_names'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
@@ -121,6 +120,8 @@ require '../include/sidebar_menu.inc';
       echo "<tr><td class=\"loff\"><input type=\"checkbox\" name=\"clear$i\" value=\"\" disabled /></td><td class=\"loff\">user$i</td><td class=\"loff\">guest$i</td><td colspan=\"6\" class=\"loff\" style=\"text-align:center\">" . $string['free'] . "</td></tr>";
     }
   }
+  $result->close();
+  
   $mysqli->close();
 ?>
 <tr><td colspan="9" style="text-align:center"><input style="width:120px" type="submit" name="submit" value="<?php echo $string['cleanup']; ?>" /></td></tr>

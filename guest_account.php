@@ -146,19 +146,34 @@ if (isset($_POST['submit'])) {
   
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/guest_account.css" />
+  
+  <script language="JavaScript">
+    function checkForm() {
+      if (document.getElementById('first_names').value == '') {
+        alert("Please enter your first name.");
+        return false;
+      }
+      
+      if (document.getElementById('surname').value == '') {
+        alert("Please enter your surname.");
+        return false;
+      }
+      
+    }
+  </script>
 </head>
 
 <body>
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return checkForm();">
 <div style="text-align:center">
 <table cellpadding="0" cellspacing="0" style="text-align:left; margin-left:auto; margin-right:auto; width:450px; border:1px #C8C8C8 solid">
 <tr><td class="topbar" style="padding-left:6px; width:60px"><img src="./artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px"><?php echo $string['guestaccountreg']; ?></td></tr>
 
 <tr><td style="text-align:center; padding:6px" colspan="2">
 <table cellpadding="2" cellspacing="0" style="width:100%; border:0px; text-align:left">
-<tr><td><?php echo $string['title']; ?></td><td><select name="title"><option value="Mr">Mr</option><option value="Miss">Miss</option><option value="Mrs">Mrs</option><option value="Ms">Ms</option><option value="Dr">Dr</option></select></td></tr>
-<tr><td><?php echo $string['firstname']; ?></td><td><input type="text" name="first_names" value="" size="40" /></td></tr>
-<tr><td><?php echo $string['surname']; ?></td><td><input type="text" name="surname" value="" size="40" /></td></tr>
+<tr><td><?php echo $string['title']; ?></td><td><input type="radio" name="title" value="Mr" />Mr&nbsp;&nbsp;<input type="radio" name="title" value="Miss" />Miss&nbsp;&nbsp;<input type="radio" name="title" value="Mrs" />Mrs&nbsp;&nbsp;<input type="radio" name="title" value="Ms" />Ms&nbsp;&nbsp;<input type="radio" name="title" value="Dr" />Dr</td></tr>
+<tr><td><?php echo $string['firstname']; ?></td><td><input type="text" name="first_names" id="first_names" value="" size="40" /></td></tr>
+<tr><td><?php echo $string['surname']; ?></td><td><input type="text" name="surname" id="surname" value="" size="40" /></td></tr>
 <tr><td><?php echo $string['studentid']; ?></td><td><input type="text" name="student_id" value="" size="20" /></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:100px" /></td></tr>

@@ -29,7 +29,6 @@ $notice = UserNotices::get_instance();
 $mysqli =& $this->db;
 $configObject =& $this->configObj;
 
-
 $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
 if (isset($displayerrformobj->li)) {
   foreach ($displayerrformobj->li as $li) {
@@ -38,9 +37,8 @@ if (isset($displayerrformobj->li)) {
 }
 
 $message .= '<li>' . $string['pressf5'] . '</li>';
-
 $message .= "</ul>";
-if ($configObject->get('cfg_use_ldap') != true and isset($fp_link)) $message .= $fp_link;
+
 $notice->display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000', $title_color = 'black', $output_header = true, $output_footer = true);
 
 if (isset($displayerrformobj->messages)) {

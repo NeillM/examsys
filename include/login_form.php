@@ -20,7 +20,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $this->configObj->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['signin']; ?></title>
+  <title>Rog&#333; - <?php echo $string['signin']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
   <link rel="stylesheet" type="text/css" href="../css/login_form.css"/>
@@ -32,7 +32,7 @@
 
         <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px" />
 
-        <div style="color:#1F497D;font-size:28pt; font-weight:bold">Rogo</div>
+        <div style="color:#1F497D;font-size:28pt; font-weight:bold">Rog&#333;</div>
         <div style="color:#1F497D;font-size:9pt">e-Assessment Management System</div>
 
         <br/>
