@@ -218,8 +218,14 @@ foreach ($user_results as $individual) {
           $paper_answers = explode('|', $question['correct'][0]);
           for ($a=0; $a<count($paper_answers); $a++) {
             $sub_parts += substr_count($paper_answers[$a], '$');
-
-            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') $csv .= ',Q' . $q_no . $numerals[$a];
+            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') {
+              $num_ix = 0;
+              $correct_subparts = explode('$', $paper_answers[$a]);
+              foreach ($correct_subparts as $subpart) {
+                $csv .= ',Q' . $q_no . $numerals[$a]. chr($num_ix + 65);
+                $num_ix++;
+              }
+            }
           }
         } elseif ($question['q_type'] == 'matrix' and $question['score_method'] == 'Mark per Option') {
           $sub_parts = 0;
