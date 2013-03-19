@@ -25,6 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 require_once 'ims-lti/UoN_LTI.php';
+require_once '../classes/logger.class.php';
 
 $lti = new UoN_LTI($mysqli);
 $lti->init_lti0($mysqli);
@@ -51,6 +52,13 @@ if (isset($_POST['submit'])) {
   
   $insert_id = $lti->update_lti_key($LTIkeysid, $ltiname, $ltikey, $ltisec, $lticontext);
   
+  // Log changes
+  $logger = new Logger($mysqli);
+  if ($ltis['name'] != $ltiname)              $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['name'], $ltiname, 'name');
+  if ($ltis['oauth_consumer_key'] != $ltikey) $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['name'], $ltikey, 'key');
+  if ($ltis['secret'] != $ltisec)             $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['secret'], $ltisec, 'secret');
+  if ($ltis['context_id'] != $lticontext)     $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['context_id'], $lticontext, 'context');
+
   header("location: lti_keys_list.php");
   exit;
 } else {
@@ -71,7 +79,6 @@ if (isset($_POST['submit'])) {
       td {
         text-align: left
       }
-
       .field {
         font-weight: bold;
         text-align: right;
@@ -139,8 +146,7 @@ if (isset($_POST['submit'])) {
         </tr>
         <tr>
           <td class="field"><?php echo $string['oauth_context_id']; ?></td>
-          <td><input type="text" size="70" name="lticontext" id="lticontext"
-                     value="<?php echo $ltis['context_id']; ?>"/></td>
+          <td><input type="text" size="70" name="lticontext" id="lticontext" value="<?php echo $ltis['context_id']; ?>"/></td>
         </tr>
 
 
