@@ -31,8 +31,7 @@ Class RogoStaticSingleton {
   * Create and return the Global instance of parent::$class_name for use in 
   * the Local scope.
   */
-  public static function get_instance()
-  {
+  public static function get_instance() {
     //some objects are global and need parameters these are constructed using
     //a stranded constructor and need parameters passing. if they have not been 
     //built and get_instance is call it should return null
@@ -55,8 +54,7 @@ Class RogoStaticSingleton {
   * sets the Mock instance to return. ONLY used for unit testing 
   * 
   */
-  public static function set_mock_instance($obj)
-  {
+  public static function set_mock_instance($obj) {
     static::$inst = $obj;
   }
 
@@ -64,8 +62,7 @@ Class RogoStaticSingleton {
   *  Dynamicly map static function calls to dynamic methods the 
   *  class defined in parent::$class_name 
   */
-  public static function  __callStatic($name, $args)
-  {
+  public static function  __callStatic($name, $args) {
     if (!is_object(static::$inst)) {
       $inst = static::$inst = static::get_instance();
     } else {

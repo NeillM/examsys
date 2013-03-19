@@ -180,14 +180,6 @@ Class module {
       return $ids;
     } else {
       $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
-      if ($db->error) {
-        try {
-          throw new Exception("MySQL error $db->error <br> Query:<br /> $query", $db->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
       $result->bind_param('s', $module_id);
       $result->execute();
       $result->store_result();
