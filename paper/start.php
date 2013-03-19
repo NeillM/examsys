@@ -506,11 +506,6 @@ $stmt->close();
 
 require '../config/start.inc';
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n";
-if ($propertyObj->get_paper_type() == '3') {
-  echo "<title>" . $string['survey'] . "</title>\n";
-} else {
-  echo "<title>" . $string['assessment'] . "</title>\n";
-}
 
 $url_mod = ($is_question_preview_mode) ? '&q_id=' . $_GET['q_id'] : '';
 ?>
@@ -522,6 +517,12 @@ $url_mod = ($is_question_preview_mode) ? '&q_id=' . $_GET['q_id'] : '';
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <?php
+if ($propertyObj->get_paper_type() == '3') {
+  echo "<title>" . $string['survey'] . "</title>\n";
+} else {
+  echo "<title>" . $string['assessment'] . "</title>\n";
+}
+
 $css = '';
 if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
   $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
