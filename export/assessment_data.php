@@ -246,6 +246,7 @@ if ($q_type != 'extmatch' and $q_type != 'matrix') {
   $old_correct = ',' . $correct;
 }
 $paper_title = $propertyObj->get_paper_title();
+
 header('Pragma: public');
 header('Content-type: application/octet-stream');
 header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . "_ER.csv");
@@ -993,9 +994,9 @@ if ($student_no > 0) {
                   } else {
                     $answers[] = '';
                   }
-                  $sec++;
                 }
               }
+              $sec++;
             }
             for ($j = 0; $j < count($answers); $j++) {
               $answer = $answers[$j];
