@@ -32,8 +32,8 @@ Class QuestionKEYWORD_BASED extends Question {
   
   protected $_fields_editable = array('leadin');
   
-  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
-    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
   }
   

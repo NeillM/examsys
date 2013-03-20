@@ -31,8 +31,8 @@ Class QuestionMRQ extends Question {
   protected $min_options = 3;
   protected $_fields_force = array('display_method');
   
-  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
-    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $userObj, $lang_strings, $data);
     
     $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
     
@@ -51,7 +51,7 @@ Class QuestionMRQ extends Question {
     
     $this->save();
 
-    $q =  new QuestionMCQ($this->_mysqli, $this->_user_id, $this->_lang_strings, $this->id);
+    $q =  new QuestionMCQ($this->_mysqli, $this->_userObj, $this->_lang_strings, $this->id);
     return $q;
   }
 

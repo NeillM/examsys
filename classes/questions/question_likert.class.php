@@ -40,8 +40,8 @@ Class QuestionLIKERT extends Question {
   
   protected $_scale_types;
   
-  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
-    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
     $this->_scale_types = array(
     	$this->_lang_strings['oscescales'] => array('0|1' => '0, 1', '0|1|2' => '0, 1, 2', $this->_lang_strings['failpass3'] => $this->_lang_strings['failpass']),

@@ -40,8 +40,8 @@ Class QuestionCALCULATION extends Question {
   
   private $_variables = null;
   
-  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
-    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $userObj, $lang_strings, $data);
     
     $this->_score_methods = array($this->_lang_strings['allowpartial']);
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
