@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['furtherassistance'] = 'W celu uzyskania dalszej pomocy skontaktuj się z: <a href="mailto:%s">%s</a>';
+$string['pagenotfound'] = 'Strony nie odnaleziono';
 $string['signinmsg'] = 'Strona, którą chcesz zobaczyć wymaga uwierzytelnienia. Zaloguj się używając swojej nazwy użytkownika i hasła:';
 $string['username'] = 'Nazwa użytkownika';
 $string['password'] = 'Hasło';
