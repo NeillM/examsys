@@ -1,12 +1,26 @@
 <?php
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Created by JetBrains PhpStorm.
- * User: cczsa1
- * Date: 25/07/12
- * Time: 09:59
- *  * Version 1.2 (2012-10-04)
- * To change this template use File | Settings | File Templates.
- */
+* 
+* @author Simon Atack
+* @version 1.0
+* @copyright Copyright (c) 2013 The University of Nottingham
+* @package
+*/
 
 require_once 'lti_util.php';
 /**
@@ -22,8 +36,7 @@ class UoN_LTI extends BLTI {
    * Create and return the Global instance of parent::$class_name for use in
    * the Local scope.
    */
-  public static function get_instance()
-  {
+  public static function get_instance() {
     if (!is_object(static::$inst)) {
       static::$inst = new static::$class_name;
     }
@@ -33,10 +46,10 @@ class UoN_LTI extends BLTI {
    * sets the Mock instance to return. ONLY used for unit testing
    *
    */
-  public static function set_mock_instance($obj)
-  {
+  public static function set_mock_instance($obj) {
     static::$inst = $obj;
   }
+  
   private $db;
   /**
    * @var array|bool
@@ -123,7 +136,7 @@ class UoN_LTI extends BLTI {
         $result = mysql_query($sql);
         $num_rows = mysql_num_rows($result);
         if ($num_rows != 1) {
-          $this->message = "Your consumer is not authorized oauth_consumer_key=" . $oauth_consumer_key;
+          $this->message = "Your consumer is not authorized oauth_consumer_key = " . $oauth_consumer_key;
           unset($_SESSION['_lti_context']);
           return;
         } else {
@@ -140,20 +153,17 @@ class UoN_LTI extends BLTI {
             return;
           }
         }
-      }
-      elseif ($this->parm['dbtype'] == 'mysqli')
-      {
+      } elseif ($this->parm['dbtype'] == 'mysqli') {
         if ($this->db->error) {
           try {
-            throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
+            throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> $query", $msqli->errno);
           } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
             echo nl2br($e->getTraceAsString());
           }
         }
 
-
-        $stmt = $this->db->prepare("SELECT secret,context_id,name FROM " . $this->parm['table_prefix'] . "lti_keys WHERE oauth_consumer_key=? AND `deleted` IS NULL");
+        $stmt = $this->db->prepare("SELECT secret, context_id, name FROM " . $this->parm['table_prefix'] . "lti_keys WHERE oauth_consumer_key = ? AND `deleted` IS NULL");
         $stmt->bind_param('s', $oauth_consumer_key);
         $stmt->execute();
         $stmt->store_result();
@@ -168,7 +178,7 @@ class UoN_LTI extends BLTI {
 
         $stmt->close();
         if (!is_string($secret)) {
-          $this->message = "Could not retrieve secret oauth_consumer_key=" . $oauth_consumer_key;
+          $this->message = "Could not retrieve secret oauth_consumer_key = " . $oauth_consumer_key;
           unset($_SESSION['_lti_context']);
 
           return;
@@ -210,7 +220,7 @@ class UoN_LTI extends BLTI {
         continue;
       }
     }
-    $newinfo['oauth_consumer_secret']=$secret;
+    $newinfo['oauth_consumer_secret'] = $secret;
 
     $this->info = $newinfo;
     if ($usesession == true and strlen(session_id()) > 0) {
@@ -228,13 +238,13 @@ class UoN_LTI extends BLTI {
   }
 
 
-  function get_lti_keys($deleted=false) {
+  function get_lti_keys($deleted = false) {
     $dataret = array();
     if ($this->parm['dbtype'] == 'mysqli') {
       $db = $this->db;
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
@@ -247,7 +257,7 @@ class UoN_LTI extends BLTI {
       $stmt = $this->db->prepare("SELECT * FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
         }
         catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -266,11 +276,7 @@ class UoN_LTI extends BLTI {
 
       return $dataret;
     }
-
-
   }
-
-
 
   /**
    * Function to update lti key
@@ -285,21 +291,18 @@ class UoN_LTI extends BLTI {
       $db = $this->db;
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
         }
         catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
         }
       }
-      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys set oauth_consumer_key=?, secret=?, context_id=? , `name`=? WHERE id=?");
+      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET oauth_consumer_key = ?, secret = ?, context_id = ?, `name`=? WHERE id=?");
       $stmt->bind_param('ssssi', $ltikey, $ltisec, $lticontext, $ltiname, $ltiid);
       $stmt->execute();
       $stmt->close();
-
     }
-
-
   }
 
   /**
@@ -311,22 +314,18 @@ class UoN_LTI extends BLTI {
       $db = $this->db;
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
         }
         catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
         }
       }
-      //  $result = $this->db->prepare("DELETE FROM " . $this->parm['table_prefix'] . "lti_keys WHERE id=?");
-      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys set deleted=NOW() WHERE id=?");
+      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET deleted = NOW() WHERE id = ?");
       $stmt->bind_param('i', $ltiid);
       $stmt->execute();
       $stmt->close();
-
     }
-
-
   }
 
 
@@ -445,7 +444,7 @@ class UoN_LTI extends BLTI {
   function lookup_lti_resource($lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("SELECT internal_id, internal_type, updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key=?");
+      $stmt = $this->db->prepare("SELECT internal_id, internal_type, updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key = ?");
       $stmt->bind_param('s', $lti_resource_key);
       $stmt->execute();
       $stmt->store_result();
@@ -490,7 +489,7 @@ class UoN_LTI extends BLTI {
   function update_lti_resource($internal_id, $internal_type, $lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_resource SET internal_id=?, internal_type=? WHERE lti_resource_key=?");
+      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_resource SET internal_id = ?, internal_type = ? WHERE lti_resource_key = ?");
       $stmt->bind_param('sss', $internal_id, $internal_type, $lti_resource_key);
       $stmt->execute();
       $rows = $stmt->affected_rows;
@@ -515,9 +514,9 @@ class UoN_LTI extends BLTI {
       $db=$this->db;
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br> Query:<br> ", $db->errno);
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
           exit();
         }
@@ -540,14 +539,14 @@ class UoN_LTI extends BLTI {
   function lookup_lti_context($lti_context_key = false) {
     if ($lti_context_key === false) $lti_context_key = $this->getCourseKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $sql = "SELECT c_internal_id,updated_on FROM " . $this->parm['table_prefix'] . "lti_context WHERE lti_context_key=?";
+      $sql = "SELECT c_internal_id, updated_on FROM " . $this->parm['table_prefix'] . "lti_context WHERE lti_context_key = ?";
       $stmt = $this->db->prepare($sql);
       $db=$this->db;
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br> Query:<br> ", $db->errno);
+          throw new Exception("0MySQL error $db->error <br /> Query:<br /> ", $db->errno);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
           exit();
         }
