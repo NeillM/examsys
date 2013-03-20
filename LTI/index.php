@@ -181,7 +181,7 @@ if (!$lti->isInstructor()) {
     $data = $lti_i::module_code_translate($mod);
     foreach ($data as $v) {
       if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-        UserUtils::add_staff_to_module($userObject->get_user_ID(), $v[1], $mysqli);
+        UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
       } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
         UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
         exit();
@@ -245,8 +245,7 @@ if (!$lti->isInstructor()) {
           exit();
         }
         if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-          UserUtils::add_staff_to_module($userObject->get_user_ID(), $v[1], $mysqli);
-          print "ADDING TO MODULE $v[1] " . $v[1] ." END<br>";
+          UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
           exit();
         } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
           UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');

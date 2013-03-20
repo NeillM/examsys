@@ -28,7 +28,7 @@ require_once $cfg_web_root . '/classes/courseutils.class.php';
 
 Class UserUtils {
 
-  static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = NULL, $password = '') {
+  static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = null, $password = '') {
     $courseok = CourseUtils::add_course($school, $course, $coursedesc, $db);
 
     if ($courseok !== true or $username == '' or $surname == '' or $email == '') {
@@ -45,7 +45,7 @@ Class UserUtils {
     return $userid;
   }
 
-  static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = NULL) {
+  static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null) {
     if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
       if (is_null($initials)) {
         $initial = explode(' ', $forname);
@@ -66,7 +66,7 @@ Class UserUtils {
 
       //force valid value for gender or default to NULL
       if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
-        $gender = NULL;
+        $gender = null;
       }
 
       $salt = UserUtils::get_salt();
@@ -251,11 +251,12 @@ Class UserUtils {
    * Add a member of staff onto a team.
    *
    * @param integer $tmp_userID UserID of the member of staff
-   * @param string $idmod the name of the team (module)
+   * @param int $idmod the id of the team (module)
    * @param object $db mysqli database connection
    *
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
+
 
     if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
       $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NULL, 'System')");
@@ -264,6 +265,27 @@ Class UserUtils {
       $stmt->close();
     }
 
+  }  /**
+   * Add a member of staff onto a team by modulecode.
+   *
+   * @param integer $tmp_userID UserID of the member of staff
+   * @param string $idmod the name of the team (module)
+   * @param object $db mysqli database connection
+   *
+   */
+  static function add_staff_to_module_by_modulecode($tmp_userID, $idMod, $db) {
+
+    if (!UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
+      return;
+    }
+    $moduleid = module_utils::get_idMod($idMod, $db);
+    if ($moduleid !== false) {
+      $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NULL, 'System')");
+      $stmt->bind_param('si', $moduleid, $tmp_userID);
+      $stmt->execute();
+      $stmt->close();
+
+    }
   }
 
   /**
