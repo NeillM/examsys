@@ -23,14 +23,17 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/moduleutils.class.php';
 
 $idMod = check_var('idMod', 'POST', true, false, true);
 
-$result = $mysqli->prepare("UPDATE modules SET mod_deleted = NOW() WHERE id = ?");
-$result->bind_param('i', $idMod);
-$result->execute();  
-$result->close();
+if (!module_utils::get_moduleid_from_id($idMod, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+module_utils::delete_module($idMod, $mysqli);
 
 $mysqli->close();
 ?>

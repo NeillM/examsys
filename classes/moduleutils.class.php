@@ -209,6 +209,13 @@ Class module {
     
     return $modules;
   }
+  
+  public function delete_module($idMod, $db) {
+    $result = $db->prepare("UPDATE modules SET mod_deleted = NOW() WHERE id = ?");
+    $result->bind_param('i', $idMod);
+    $result->execute();  
+    $result->close();
+  }
 }
 
 ?>

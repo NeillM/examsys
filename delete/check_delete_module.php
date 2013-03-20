@@ -23,9 +23,15 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/moduleutils.class.php';
 
-check_var('idMod', 'GET', true, false, false);
+$idMod = check_var('idMod', 'GET', true, false, true);
+
+if (!module_utils::get_moduleid_from_id($idMod, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $mysqli->close();
 ?>
