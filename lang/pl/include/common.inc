@@ -76,6 +76,6 @@ $string['NoLookupConfiguredmessage'] = 'Konfiguracja odnośnika nie została wpi
 $string['guestbutton'] = 'Logowanie gościnne';
 $string['authentication_lti_authmessage'] = 'Zaloguj się, aby uwierzytelnić połączenie LTI.';
 
-$string['denied_role'] = '<strong>Odmowa dostępu</strong> twoja rola użytkownika - %s - nie daje ci prawa dostępu.'; 
+$string['denied_role'] = 'Twoja rola użytkownika - %s - nie daje ci prawa dostępu.';
 
 ?>

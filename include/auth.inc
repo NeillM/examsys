@@ -31,27 +31,23 @@ require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 $notice = UserNotices::get_instance();
 
-
-function db_change_user($db,$userObj) {
-
-
-//  global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $configObject->get('cfg_install_type'), $cfg_db_database, $string;
-  $getback=array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd','cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
+function db_change_user($db, $userObj) {
+  global $db_errors, $string;
+  
+  $getback = array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
 
   $configObject = Config::get_instance();
-  $arr=$configObject->get($getback);
+  $arr = $configObject->get($getback);
   foreach($arr as $k=>$v) {
-    ${$k}=$v;
+    ${$k} = $v;
   }
-    global $db_errors, $string;
-
-
 
   $userroles = $userObj->old_getuserroles();
+
   //select the aproprate database user
   if ($userObj->has_role('SysAdmin')) {
     $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
-  } else if ($userObj->has_role(array('Staff','Admin'))) { // Process staff first to get higher priority than students
+  } else if ($userObj->has_role(array('Staff', 'Admin'))) { // Process staff first to get higher priority than students
     $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
   } else if ($userObj->has_role('Student')) {
     $result = $db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
@@ -69,8 +65,6 @@ function db_change_user($db,$userObj) {
   }
   return true;
 }
-
-
 
 /**
  * This is function encpw encrpts a password using SHA-512 for storage in the DB.
@@ -124,6 +118,4 @@ function gen_password($len = 8) {
   }
   return $pass;
 }
-
-
 ?>

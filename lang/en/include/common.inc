@@ -76,7 +76,7 @@ $string['NoLookupConfiguredmessage'] = 'No lookup configuration has been set in 
 $string['guestbutton'] = 'Guest Login';
 $string['authentication_lti_authmessage'] = 'Please Login to authenticate the LTI Connection.';
 
-$string['denied_role'] = '<strong>Access Denied</strong> your user role of %s does not allow you access.';
+$string['denied_role'] = 'Your user role of %s does not allow you access.';
 
 
 ?>
