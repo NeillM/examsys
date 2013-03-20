@@ -202,7 +202,7 @@ if (!$lti->isInstructor()) {
   } else {
     // no existing stored link so need to create one
     if(!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-      UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'], '../artwork/exclamation_64.png','#C00000');
+      UserNotices::display_notice($string['NotAddedToModuleTitle2'], $string['NotAddedToModule2'], '../artwork/exclamation_64.png','#C00000');
       exit();
     }
     $returned2 = $lti->lookup_lti_context();
