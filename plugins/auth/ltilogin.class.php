@@ -70,6 +70,9 @@ class ltilogin_auth extends outline_authentication {
     $this->savetodebug('Data returned from lti lookup was: ' . var_export($returned, true));
 
     if ($returned !== false) {
+      if(!isset($this->retdata)) {
+        $this->retdata=new stdClass();
+      }
       $this->retdata->success = true;
       $this->retdata->form = 'std';
       $this->rogoid = $returned[0];
