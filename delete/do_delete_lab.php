@@ -25,15 +25,31 @@
 require '../include/admin_auth.inc';
 require '../include/errors.inc';
   
-check_var('labID', 'POST', true, false, false);
+$labID = check_var('labID', 'POST', true, false, true);
+
+$lab_no = 0;
+
+$result = $mysqli->prepare("SELECT name FROM labs WHERE id = ?");
+$result->bind_param('i', $labID);
+$result->execute();
+$result->store_result();
+$result->bind_result($lab_name);
+$result->fetch();
+$lab_no = $result->num_rows;
+$result->close();
+
+if ($lab_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab = ?");
-$result->bind_param('i', $_POST['labID']);
+$result->bind_param('i', $labID);
 $result->execute();  
 $result->close();
 
 $result = $mysqli->prepare("DELETE FROM labs WHERE id = ?");
-$result->bind_param('i', $_POST['labID']);
+$result->bind_param('i', $labID);
 $result->execute();  
 $result->close();
 

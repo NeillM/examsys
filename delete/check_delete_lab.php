@@ -22,19 +22,28 @@
 * @package
 */
 
-  require '../include/admin_auth.inc';
-  require '../include/errors.inc';
+require '../include/admin_auth.inc';
+require_once '../include/errors.inc';
 
-  check_var('labID', 'GET', true, false, false);
-  
-  $result = $mysqli->prepare("SELECT name FROM labs WHERE id = ?");
-  $result->bind_param('i', $_GET['labID']);
-  $result->execute();
-  $result->bind_result($lab_name);
-  $result->fetch();
-  $result->close();
+$labID = check_var('labID', 'GET', true, false, true);
 
-  $mysqli->close();
+$lab_no = 0;
+
+$result = $mysqli->prepare("SELECT name FROM labs WHERE id = ?");
+$result->bind_param('i', $labID);
+$result->execute();
+$result->store_result();
+$result->bind_result($lab_name);
+$result->fetch();
+$lab_no = $result->num_rows;
+$result->close();
+
+if ($lab_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
