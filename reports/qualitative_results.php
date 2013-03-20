@@ -30,7 +30,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Qualitative Analysis<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+  <title><?php echo $string['qualitativeanalysis'] . " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
@@ -100,14 +100,14 @@ SQL;
   while ($row = $result->fetch()) {
     if ($theme != '') $old_theme = $theme;
     if ($old_q_id != $q_id or $old_screen < $screen) {
-      if ($comment_flag == 0) echo "<div class=\"comments\">&lt;No Comments&gt;</div>\n";
+      if ($comment_flag == 0) echo "<div class=\"comments\">" . $string['nocomments'] . "</div>\n";
       if ($old_q_id != 0) {
         if ($list_on == 1) echo "</ul>\n";
         $list_on = 0;
         if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
-          echo "<div class=\"comments\">$occurrence_words - occurrences of <strong>" . $_GET['keywords'] . "</strong> in $occurrence_comments comments.</div>\n";
+          echo "<div class=\"comments\">" . sprintf($string['occurencesof'], $occurrence_words, $_GET['keywords'], $occurrence_comments) . "</div>\n";
         } else {
-          echo "<div class=\"comments\">$occurrence_comments comments.</div>\n";
+          echo "<div class=\"comments\">" . sprintf($string['comments'], $occurrence_comments) . "</div>\n";
         }
       }
       $comment_flag = 0;
@@ -228,12 +228,12 @@ SQL;
   echo "</ul>\n";
 
   if ($comment_flag == 0) {
-    echo "<div class=\"comments\">&lt;No Comments&gt;</div>\n";
+    echo "<div class=\"comments\">" . $string['nocomments'] . "</div>\n";
   } else {
     if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
-      echo "<div class=\"comments\">$occurrence_words - occurrences of <strong>" . $_GET['keywords'] . "</strong> in $occurrence_comments comments.</div>\n";
+      echo "<div class=\"comments\">" . sprintf($string['occurencesof'], $occurrence_words, $_GET['keywords'], $occurrence_comments) . "</div>\n";
     } else {
-      echo "<div class=\"comments\">$occurrence_comments comments.</div>\n";
+      echo "<div class=\"comments\">" . sprintf($string['comments'], $occurrence_comments) . "</div>\n";
     }
   }
   $mysqli->close();

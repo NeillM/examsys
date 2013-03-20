@@ -15,4 +15,8 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['screen'] = 'Ekran';
+$string['qualitativeanalysis'] = 'Analiza jakościowa';
+$string['comments'] = '%d comments.'; // Niko
+$string['nocomments'] = '&lt;No Comments&gt;'; // Niko
+$string['occurencesof'] = '%d - occurrences of <strong>%s</strong> in %d comments.'; // Niko
 ?>
