@@ -23,9 +23,18 @@
  */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../LTI/ims-lti/UoN_LTI.php';
 
-check_var('LTIkeysID', 'GET', true, false, false);
+$LTIkeysid = check_var('LTIkeysID', 'GET', true, false, true);
+
+$lti = new UoN_LTI($mysqli);
+$lti->init_lti0($mysqli);
+
+if (!$lti->lti_key_exists($LTIkeysid)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $mysqli->close();
 ?>

@@ -23,16 +23,20 @@
  */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
-
+require_once '../include/errors.inc';
 require_once '../LTI/ims-lti/UoN_LTI.php';
 
-check_var('LTIkeysID', 'POST', true, false, false);
+$LTIkeysid = check_var('LTIkeysID', 'POST', true, false, true);
 
 $lti = new UoN_LTI();
 $lti->init_lti0($mysqli);
-$lti->delete_lti_key($_POST['LTIkeysID']);
 
+if (!$lti->lti_key_exists($LTIkeysid)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+$lti->delete_lti_key($LTIkeysid);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

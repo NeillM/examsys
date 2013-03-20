@@ -31,17 +31,16 @@ $lti = new UoN_LTI($mysqli);
 $lti->init_lti0($mysqli);
 $LTIkeysid = check_var('LTIkeysid', 'GET', true, false, true);
 
-$result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE id = ?");
-$result->bind_param('i', $LTIkeysid);
-$result->execute();
-$result->store_result();
-$result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'], $ltis['context_id']);
-$result->fetch();
-if ($result->num_rows == 0) {
-  $result->close();
+if (!$lti->lti_key_exists($LTIkeysid)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
+
+$result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE id = ?");
+$result->bind_param('i', $LTIkeysid);
+$result->execute();
+$result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'], $ltis['context_id']);
+$result->fetch();
 $result->close();
 
 if (isset($_POST['submit'])) {

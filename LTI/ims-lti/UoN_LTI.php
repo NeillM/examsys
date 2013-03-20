@@ -251,7 +251,7 @@ class UoN_LTI extends BLTI {
         }
       }
       $extra='';
-      if(!$deleted) {
+      if (!$deleted) {
         $extra=' WHERE deleted IS NULL ';
       }
       $stmt = $this->db->prepare("SELECT * FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
@@ -273,9 +273,29 @@ class UoN_LTI extends BLTI {
       while ($stmt->fetch()) {
         $dataret[$lti_keys_id]=array('lti_keys_id'=>$lti_keys_id, 'lti_keys_key'=>$lti_keys_key, 'lti_keys_secret'=>$lti_keys_secret, 'lti_keys_name'=>$lti_keys_name, 'lti_keys_context_id'=>$lti_keys_context_id, 'lti_keys_deleted'=>$lti_keys_deleted, 'lti_keys_updated_on'=>$lti_keys_updated_on);
       }
+      $stmt->close();
 
       return $dataret;
     }
+  }
+
+  function lti_key_exists($keyID) {
+    $rows = 0;
+    
+    if ($this->parm['dbtype'] == 'mysqli') {
+      $db = $this->db;
+      $stmt = $this->db->prepare("SELECT id FROM " . $this->parm['table_prefix'] . "lti_keys WHERE id = ? AND deleted IS NULL LIMIT 1");
+      $stmt->bind_param('i', $keyID);
+      $stmt->execute();
+      $stmt->store_result();
+      $stmt->bind_result($lti_keys_id);
+      $rows = $stmt->num_rows;
+      $stmt->fetch();
+      $stmt->close();
+
+    }
+    
+    return $rows > 0;
   }
 
   /**

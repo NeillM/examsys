@@ -23,9 +23,21 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/userutils.class.php';
 
-check_var('id', 'GET', true, false, false);
+$userID = check_var('id', 'GET', true, false, true);
+
+// Check that all the past user IDs actually exist.
+$id_list = explode(',', $userID);
+foreach ($id_list as $id) {
+  if ($id != '') {
+    if (!UserUtils::userid_exists($id, $mysqli)) {
+      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    }
+  }
+}
 
 $id_list = explode(',', $_GET['id']);
 $user_no = count($id_list) - 1;
