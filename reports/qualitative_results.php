@@ -104,7 +104,7 @@ SQL;
       if ($old_q_id != 0) {
         if ($list_on == 1) echo "</ul>\n";
         $list_on = 0;
-        if (isset($_GET['keywords'])) {
+        if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
           echo "<div class=\"comments\">$occurrence_words - occurrences of <strong>" . $_GET['keywords'] . "</strong> in $occurrence_comments comments.</div>\n";
         } else {
           echo "<div class=\"comments\">$occurrence_comments comments.</div>\n";
@@ -138,7 +138,7 @@ SQL;
       } else {
         $content = '';
       }
-      if (isset($_GET['keywords'])) {
+      if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
         if (substr_count($content,'and') > 0 and $content != 'and') {
           $keywords = explode('and',$content);
           $match = true;
@@ -230,7 +230,7 @@ SQL;
   if ($comment_flag == 0) {
     echo "<div class=\"comments\">&lt;No Comments&gt;</div>\n";
   } else {
-    if (isset($_GET['keywords'])) {
+    if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
       echo "<div class=\"comments\">$occurrence_words - occurrences of <strong>" . $_GET['keywords'] . "</strong> in $occurrence_comments comments.</div>\n";
     } else {
       echo "<div class=\"comments\">$occurrence_comments comments.</div>\n";
