@@ -23,11 +23,26 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
   
-check_var('keywordID', 'POST', true, false, false);
+$keywordIDs = check_var('keywordID', 'POST', true, false, true);
 
-$keyword_list = explode(',', substr($_POST['keywordID'], 1));
+$keyword_names = array();
+$result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id IN (" . substr($keywordIDs, 1) . ")");
+$result->execute();
+$result->bind_result($keyword);
+while ($result->fetch()) {
+  $keyword_names[] = $keyword;
+}
+$result->close();
+
+if (count($keyword_names) < substr_count($keywordIDs, ',')) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+
+$keyword_list = explode(',', substr($keywordIDs, 1));
 foreach ($keyword_list as $individualID) {
   // Delete the keyword
   $result = $mysqli->prepare("DELETE FROM keywords_user WHERE id = ?");

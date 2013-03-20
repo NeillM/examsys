@@ -39,7 +39,6 @@ foreach ($id_list as $id) {
   }
 }
 
-$id_list = explode(',', $_GET['id']);
 $user_no = count($id_list) - 1;
 
 $mysqli->close();
