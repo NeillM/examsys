@@ -49,7 +49,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
   $configObject = Config::get_instance();
 
   $moduleidorig = $moduleid;
-  $moduleid = module::get_idMod($moduleid, $mysqli);
+  $moduleid = module_utils::get_idMod($moduleid, $mysqli);
   $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, idMod FROM properties,properties_modules WHERE idMod=? and properties.property_id=properties_modules.property_id  AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
   $results2 = $mysqli->prepare($query_string);
   if ($mysqli->error) {
@@ -246,7 +246,6 @@ if (!$lti->isInstructor()) {
         }
         if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
           UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
-          exit();
         } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
           UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
           exit();
