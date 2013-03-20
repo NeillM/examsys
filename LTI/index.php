@@ -212,7 +212,7 @@ if (!$lti->isInstructor()) {
       foreach ($data as $v) {
         if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v)) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-            UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png');
+            UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png');
             exit();
           }
           $peer = 1;
