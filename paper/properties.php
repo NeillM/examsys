@@ -65,7 +65,7 @@ function format_color($color) {
 
 function format_referencematerial($ID, $refID) {
   if ($ID == '') return '';
-  
+
   return $refID[$ID];
 }
 
@@ -81,19 +81,19 @@ function format_modules($text, $modules) {
       $formatted_string .= ', ' . $modules[$part]['code'];
     }
   }
-  
+
   return $formatted_string;
 }
 
 function format_folders($id, $folders) {
   if ($id == '') return '';
-  
+
   if (isset($folders[$id])) {
     $formatted_string = str_replace(';', '/', $folders[$id]);
   } else {
     $formatted_string = $id;
   }
-  
+
   return $formatted_string;
 }
 
@@ -109,7 +109,7 @@ function format_user($text, $user_list) {
       $formatted_string .= ', ' . $user_list[$part];
     }
   }
-  
+
   return $formatted_string;
 }
 
@@ -367,7 +367,7 @@ if (isset($_POST['Submit'])) {
         $tmp_end_date = NULL;
       } else {
         $leap = is_leap($_POST['tyear']);
-        
+
         if ($leap == true and $_POST['tmonth'] == '02' and ($_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '29';
         if ($leap == false and $_POST['tmonth'] == '02' and ($_POST['tday'] == '29' or $_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '28';
         if (($_POST['tmonth'] == '04' or $_POST['tmonth'] == '06' or $_POST['tmonth'] == '09' or $_POST['tmonth'] == '11') and $_POST['tday'] == '31') $_POST['tday'] = '30';
@@ -385,7 +385,7 @@ if (isset($_POST['Submit'])) {
       $timezone = $_POST['timezone'];
       $calendar_year = $_POST['calendar_year'];
       $exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
-      
+
       $lab_string = '';
       for ($i=0; $i<$_POST['lab_no']; $i++) {
         if (isset($_POST["lab$i"])) {
@@ -421,7 +421,7 @@ if (isset($_POST['Submit'])) {
       $external_review_deadline = $ext_date->format('U');
     }
     unset($tmp_date);
-      
+
     $leap = is_leap($_POST['int_tyear']);
     if ($leap == true and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '29';
     if ($leap == false and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '29' or $_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '28';
@@ -436,7 +436,7 @@ if (isset($_POST['Submit'])) {
       $internal_deadline = $int_date->format('Y-m-d');
       $internal_review_deadline = $int_date->format('U');
     }
-      
+
     $paper_modules = array();
     $first_module_id = '';
 
@@ -483,7 +483,7 @@ if (isset($_POST['Submit'])) {
       $tmp_rubric = $_POST['rubric_text'];
       $tmp_rubric = clearMSOtags($tmp_rubric);
     }
-    
+
     $tmp_marking = $_POST['marking'];
     if ($tmp_marking == '') $tmp_marking = '0';
     if ($tmp_marking == '2') $tmp_marking = $_POST['std_set'];
@@ -532,9 +532,9 @@ if (isset($_POST['Submit'])) {
       $editProperties->close();
 
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
-      
+
       $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
-      
+
       Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli);
       Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli);
     } else {
@@ -545,9 +545,9 @@ if (isset($_POST['Submit'])) {
       $editProperties->close();
 
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
-      
+
       $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
-      
+
       Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli);
       Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli);
     }
@@ -558,7 +558,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
       $editProperties->close();
-      
+
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Objectives-based Feedback', '', 'feedback');
     }
     if (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] == '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '1') {
@@ -576,18 +576,18 @@ if (isset($_POST['Submit'])) {
       $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
       $editProperties->close();
-      
+
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Question-based Feedback', '', 'feedback');
     }
     if (isset($_POST['old_questions_report']) and $_POST['old_questions_report'] == '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '1') {
       $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
       $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
-      $editProperties->close();    
-      
+      $editProperties->close();
+
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Question-based Feedback', 'feedback');
     }
-    
+
     // Track changes
     if (isset($start_date)) {
       $tmp_start_date = $start_date->format('U');
@@ -655,7 +655,7 @@ if (isset($_POST['Submit'])) {
           $old_textual_feedback[$i]['boundary'] = '';
         }
       }
-      
+
       // Get new settings
       $textual_feedback = array();
       for ($i=1; $i<10; $i++) {
@@ -667,7 +667,7 @@ if (isset($_POST['Submit'])) {
           $textual_feedback[$i]['boundary'] = '';
         }
       }
-      
+
       $editProperties = $mysqli->prepare("DELETE FROM paper_feedback WHERE paperID = ?");
       $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
@@ -680,7 +680,7 @@ if (isset($_POST['Submit'])) {
           $editProperties->execute();
         }
         $editProperties->close();
-        
+
         if ($old_textual_feedback[$i]['msg'] != $_POST["feedback_msg$i"] or $old_textual_feedback[$i]['boundary'] != $_POST["feedback_value$i"]) {
           // log a change
           $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
@@ -703,7 +703,7 @@ if (isset($_POST['Submit'])) {
       }
     }
     $result->close();
-    
+
     $new_meta = '';
     for ($i=0; $i<$_POST['meta_dropdown_no']; $i++) {
       $meta_type = $_POST['meta_type' . $i];
@@ -756,7 +756,7 @@ if (isset($_POST['Submit'])) {
         $editProperties->bind_param('ii', $paperID, $new_ref);
         $editProperties->execute();
         $editProperties->close();
-        
+
         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', $new_ref, 'referencematerial');
       }
     }
@@ -765,7 +765,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->bind_param('ii', $paperID, $existing_ref);
       $editProperties->execute();
       $editProperties->close();
-      
+
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $existing_ref, '', 'referencematerial');
     }
 ?>
@@ -854,7 +854,7 @@ if (isset($_POST['Submit'])) {
   } else {
     $start_date = '';
   }
-  
+
   if ($properties->get_end_date() != '') {
     $end_date = DateTime::createFromFormat('U', $properties->get_end_date(), $local_time);
     $end_date->setTimezone($target_timezone);
@@ -891,7 +891,20 @@ if (isset($_POST['Submit'])) {
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-  <script language="JavaScript">
+<?php
+  if ($properties->get_paper_type() == '2' or $properties->get_paper_type() == '4' or $properties->get_paper_type() == '5') {
+?>
+  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('.datecopy').change(dateCopy);
+    })
+  </script>
+<?php
+}
+?>
+  <script type="text/javascript">
     $(getMeta);
 
     function getMeta() {
@@ -1102,35 +1115,6 @@ if (isset($_POST['Submit'])) {
         document.getElementById(tabID).style.backgroundImage = '';
       }
     }
-
-    function dateCopy(dropdownID) {
-      <?php
-        if ($properties->get_paper_type() == '2' or $properties->get_paper_type() == '4') {
-      ?>
-        switch(dropdownID) {
-          case "fday":
-            $("#tday").val($("#fday").val());
-            break;
-          case "fmonth":
-            $("#tmonth").val($("#fmonth").val());
-            break;
-          case "fyear":
-            $("#tyear").val($("#fyear").val());
-            break;
-          case "tday":
-            $("#fday").val($("#tday").val());
-            break;
-          case "tmonth":
-            $("#fmonth").val($("#tmonth").val());
-            break;
-          case "tyear":
-            $("#fyear").val($("#tyear").val());
-            break;
-        }
-      <?php
-        }
-      ?>
-    }
   </script>
 </head>
 <body onload="window.focus()" onclick="hidePicker();">
@@ -1236,7 +1220,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
      if (is_array($staff_modules) and count($staff_modules) > 0) {
        $additional = ' OR idMod IN (' . implode(',', array_keys($staff_modules)) . ')';
      }
-     
+
      if ($properties->get_folder() != '') $additional .= ' OR id=' . $properties->get_folder();
 
      $folder_details = $mysqli->prepare("SELECT id, name FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $additional) AND deleted IS NULL ORDER BY name");
@@ -1302,7 +1286,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
            $checked = '';
          }
          echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label></td>";
-       
+
          if ($properties->get_sound_demo() == 1) {
            $checked = ' checked="checked"';
          } else {
@@ -1310,7 +1294,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
          }
          echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label></td></tr>\n";
        }
-       
+
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      }
      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['marking'] . "</td></tr>\n";
@@ -1330,9 +1314,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       echo "</select></td></tr>\n";
     } elseif ($properties->get_paper_type() == '6') {
       $review = $properties->get_display_question_mark();
-    
+
       echo "<tr><td align=\"right\">" . $string['groupdetails'] . "&nbsp;</td><td><select name=\"type\">\n";
-      
+
       $field_details = $mysqli->prepare("SELECT DISTINCT type FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (" . implode(',', array_keys($staff_modules)) . ") ORDER BY type");
       $field_details->execute();
       $field_details->bind_result($type);
@@ -1486,7 +1470,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     } else {
       echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\"$disabled /></td></tr>\n";
     }
-    
+
     echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";
     foreach ($timezone_array as $individual_zone => $display_zone) {
       if ($properties->get_timezone() == $individual_zone) {
@@ -1519,7 +1503,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
 
     // Available from Day
-    echo "<select name=\"fday\" id=\"fday\" onchange=\"dateCopy('fday')\"$sum_disabled>\n";
+    echo "<select name=\"fday\" id=\"fday\" class=\"datecopy\"$sum_disabled>\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1543,7 +1527,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "</select>\n";
    // Available from Month
     $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-    echo "<select name=\"fmonth\" id=\"fmonth\" onchange=\"dateCopy('fmonth')\"$sum_disabled>\n";
+    echo "<select name=\"fmonth\" id=\"fmonth\" class=\"datecopy\"$sum_disabled>\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1565,7 +1549,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</select>\n";
     // Available from Year
-    echo "<select name=\"fyear\" id=\"fyear\" onchange=\"dateCopy('fyear')\"$sum_disabled>\n";
+    echo "<select name=\"fyear\" id=\"fyear\" class=\"datecopy\"$sum_disabled>\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1576,7 +1560,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select>\n<select name=\"ftime\"$sum_disabled>\n";
+    echo "</select>\n<select id=\"ftime\" name=\"ftime\" class=\"datecopy\"$sum_disabled>\n";
     // Available from Hour
     $times = array('000000'=>'00:00','003000'=>'00:30','010000'=>'01:00','013000'=>'01:30','020000'=>'02:00','023000'=>'02:30','030000'=>'03:00','033000'=>'03:30','040000'=>'04:00','043000'=>'04:30','050000'=>'05:00','053000'=>'05:30','060000'=>'06:00','063000'=>'06:30','070000'=>'07:00','073000'=>'07:30','080000'=>'08:00','083000'=>'08:30','090000'=>'09:00','093000'=>'09:30','100000'=>'10:00','103000'=>'10:30','110000'=>'11:00','113000'=>'11:30','120000'=>'12:00','123000'=>'12:30','130000'=>'13:00','133000'=>'13:30','140000'=>'14:00','143000'=>'14:30','150000'=>'15:00','153000'=>'15:30','160000'=>'16:00','163000'=>'16:30','170000'=>'17:00','173000'=>'17:30','180000'=>'18:00','183000'=>'18:30','190000'=>'19:00','193000'=>'19:30','200000'=>'20:00','203000'=>'20:30','210000'=>'21:00','213000'=>'21:30','220000'=>'22:00','223000'=>'22:30','230000'=>'23:00','233000'=>'23:30');
     if ($start_date == '') {
@@ -1605,7 +1589,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
 
      // Available from Day
-    echo "<select name=\"tday\" id=\"tday\" onchange=\"dateCopy('tday')\"$sum_disabled>\n";
+    echo "<select name=\"tday\" id=\"tday\" class=\"datecopy\"$sum_disabled>\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }
@@ -1629,7 +1613,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "</select>\n";
 
     // Available to Month
-    echo "<select name=\"tmonth\" id=\"tmonth\" onchange=\"dateCopy('tmonth')\"$sum_disabled>\n";
+    echo "<select name=\"tmonth\" id=\"tmonth\" class=\"datecopy\"$sum_disabled>\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }
@@ -1651,7 +1635,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</select>\n";
     // Available to Year
-    echo "<select name=\"tyear\" id=\"tyear\" onchange=\"dateCopy('tyear')\"$sum_disabled>\n";
+    echo "<select name=\"tyear\" id=\"tyear\" class=\"datecopy\"$sum_disabled>\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }
@@ -1662,7 +1646,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select>&nbsp;<select name=\"ttime\"$sum_disabled>\n";
+    echo "</select>&nbsp;<select id=\"ttime\" name=\"ttime\" class=\"datecopy\"$sum_disabled>\n";
     // Available to Hour
     if ($end_date == '') {
       echo '<option value=""></option>';
@@ -1684,9 +1668,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "<div style=\"display:block; width:400px; height:425px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
 
     $modules_array = Paper_utils::get_modules($paperID, $mysqli);
-    
+
     $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
-    
+
     $total_modules = array_merge($staff_modules, $modules_array);
 
     $module_sql = implode("','", $total_modules);
@@ -1742,7 +1726,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
   <?php
      echo "<tr><td colspan=\"2\" valign=\"top\">";
-     
+
      echo "<table cellspacing=\"0\" cellpadding=\"6\" border=\"0\" style=\"margin:15px\">\n";
 
      if (in_array($properties->get_paper_type(), array('0', '1', '2', '5'))) {
@@ -1788,9 +1772,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        if ($properties->get_paper_type() == '2') echo '<span style="color:#C00000">' . $string['feedbackwarning'] . '</span></br />';
        echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
      }
-     
+
      echo "</table>\n";
-     
+
      if ($properties->get_paper_type() == '0') {
        echo '<table cellpadding="3" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
      } else {
@@ -2104,7 +2088,7 @@ $changes = $logger->get_changes('Paper', $paperID);
 $rows = count($changes);
 for ($i=0; $i<$rows; $i++) {
   $part = $changes[$i]['part'];
-  
+
   $old = $changes[$i]['old'];
   $new = $changes[$i]['new'];
   if ($part == 'startdate' or $part == 'enddate') {
@@ -2144,7 +2128,7 @@ for ($i=0; $i<$rows; $i++) {
     $old = format_review($old, $string);
     $new = format_review($new, $string);
   }
-  
+
   if (isset($string[$part])) $part = $string[$part];
   echo "<tr><td>" . ucfirst($part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $changes[$i]['date']) . "</td><td>" . $changes[$i]['title'] . " " . $changes[$i]['surname'] . "</td><tr>\n";
 }

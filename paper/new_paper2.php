@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -34,17 +34,17 @@ require '../lang/' . $language. '/include/timezones.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['createnewpaper'] . $configObject->get('cfg_install_type'); ?></title>
 <?php
   // Delete any half completed papers owned by current user.
   $result = $mysqli->prepare("DELETE FROM properties WHERE deleted='0000-00-00 00:00:00' AND paper_ownerID = ?");
   $result->bind_param('i', $userObject->get_user_ID());
-  $result->execute();  
+  $result->execute();
 
   // Check that the new paper name is not already used by any other paper (i.e. unique).
   $unique = Paper_utils::is_paper_title_unique($_POST['paper_name'], $mysqli);
-  
+
   if (!$unique) {
 ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -52,7 +52,7 @@ require '../lang/' . $language. '/include/timezones.inc';
     body {background-color:#F0F0F0; margin:6px; font-size:90%}
     .icon {color:#001687; padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; font-size:8pt}
   </style>
-  
+
   <script type="text/javascript">
     function over(id) {
       if (id != document.getElementById('paper_type').value) {
@@ -174,23 +174,23 @@ require '../lang/' . $language. '/include/timezones.inc';
   } else {
     $default_rubric = '';
   }
-  
+
   // Create the new paper.
   $session = date_utils::get_current_academic_year();
-  
+
   if (isset($_POST['folder'])) {
     $folder = $_POST['folder'];
   } else {
     $folder = '';
   }
-  
+
   if (isset($_POST['paper_name'])) {
     $paper_name = $_POST['paper_name'];
   } else {
     echo "Error, no paper name.";
     exit;
   }
-  
+
   if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
     // Summative paper so set null dates
     $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL, ?, NULL, NULL, 'Europe/London', ?, '', '', 'white', 'black', '#316AC5', '#C00000', '1', '1', '1', 40, 70, ?, ?, '', ?, 1, NULL, '00000000000000', NOW(), 0, 0, '1', '1', '1', '1', '0', ?, NULL, NULL, '0', 0, '', NULL, NULL)");
@@ -198,7 +198,7 @@ require '../lang/' . $language. '/include/timezones.inc';
     $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL, ?, '20100101090000', '20250101090000', 'Europe/London', ?, '', '', 'white', 'black', '#316AC5', '#C00000', '1', '1', '1', 40, 70, ?, ?, '', ?, 1, NULL, '00000000000000', NOW(), 0, 0, '1', '1', '1', '1', '0', ?, NULL, NULL, '0', 0, '', NULL, NULL)");
   }
   $result->bind_param('ssssss', $paper_name, $paper_types[$_POST['paper_type']], $userObject->get_user_ID(), $folder, $default_rubric, $session);
-  $result->execute();  
+  $result->execute();
   $property_id = $mysqli->insert_id;
   $result->close();
 ?>
@@ -207,6 +207,20 @@ require '../lang/' . $language. '/include/timezones.inc';
     body {background-color:#F0F0F0; margin:4px; font-size:90%}
   </style>
 
+<?php
+  if ($paper_types[$_POST['paper_type']] == '2' or $paper_types[$_POST['paper_type']] == '4' or $paper_types[$_POST['paper_type']] == '5') {
+?>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('.datecopy').change(dateCopy);
+    })
+  </script>
+<?php
+}
+?>
 <script language="JavaScript">
   function toggle(objectID) {
     if (document.getElementById(objectID).style.backgroundColor == 'white') {
@@ -217,37 +231,12 @@ require '../lang/' . $language. '/include/timezones.inc';
       document.getElementById(objectID).style.color = 'black';
     }
   }
-  
-  function dateCopy(dropdownID) {
-    if (document.getElementById('paper_type').value == 'summative' || document.getElementById('paper_type').value == 'osce' || document.getElementById('paper_type').value == 'offline') {
-      switch(dropdownID) {
-        case "fday":
-          document.myform.tday.value = document.myform.fday.options[document.myform.fday.selectedIndex].value;
-          break;
-        case "fmonth":
-          document.myform.tmonth.value = document.myform.fmonth.options[document.myform.fmonth.selectedIndex].value;
-          break;
-        case "fyear":
-          document.myform.tyear.value = document.myform.fyear.options[document.myform.fyear.selectedIndex].value;
-          break;
-        case "tday":
-          document.myform.fday.value = document.myform.tday.options[document.myform.tday.selectedIndex].value;
-          break;
-        case "tmonth":
-          document.myform.fmonth.value = document.myform.tmonth.options[document.myform.tmonth.selectedIndex].value;
-          break;
-        case "tyear":
-          document.myform.fyear.value = document.myform.tyear.options[document.myform.tyear.selectedIndex].value;
-          break;
-      }
-    }
-  }
-  
+
   function checkForm() {
     var module_no = document.getElementById('module_no').value;
     var moduleList = '';
     for (var i = 0; i < module_no; i++) {
-      objectID = 'module' + i;        
+      objectID = 'module' + i;
       if (document.getElementById(objectID).checked == true) {
         if (moduleList == '') {
           moduleList = document.getElementById(objectID).value;
@@ -261,30 +250,30 @@ require '../lang/' . $language. '/include/timezones.inc';
       return false;
     }
   }
-  
+
   function checkSummativeForm() {
     periodSelect = document.getElementById('period');
     if (periodSelect.options[periodSelect.selectedIndex].text == '') {
       alert ("<?php echo $string['msg7']; ?>");
       return false;
     }
-    
+
     durationSelect = document.getElementById('duration');
     if (durationSelect.options[durationSelect.selectedIndex].text == '') {
       alert ("<?php echo $string['msg8']; ?>");
       return false;
     }
-    
+
     cohortsizeSelect = document.getElementById('cohort_size');
     if (cohortsizeSelect.options[cohortsizeSelect.selectedIndex].text == '') {
       alert ("<?php echo $string['msg9']; ?>");
       return false;
     }
-    
+
     var module_no = document.getElementById('module_no').value;
     var moduleList = '';
     for (var i = 0; i < module_no; i++) {
-      objectID = 'module' + i;        
+      objectID = 'module' + i;
       if (document.getElementById(objectID).checked == true) {
         if (moduleList == '') {
           moduleList = document.getElementById(objectID).value;
@@ -297,7 +286,7 @@ require '../lang/' . $language. '/include/timezones.inc';
       alert ("<?php echo $string['msg4']; ?>");
       return false;
     }
-    
+
   }
 </script>
 <body>
@@ -320,12 +309,12 @@ if ($_POST['paper_type'] == 'summative') {
   }
   if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
     $next_flag = 1;
-    
+
     $year_options = array();
     $calendar_year = date_utils::get_current_academic_year();
     $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
     $year_options[] = $next_session;   // Add next year's session
-    
+
     $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
     $module_details->execute();
     $module_details->bind_result($calendar_year);
@@ -333,11 +322,11 @@ if ($_POST['paper_type'] == 'summative') {
       $year_options[] = $calendar_year;
     }
     $module_details->close();
-    
+
     if (count($year_options) == 1) {
       $year_options[] = date_utils::get_current_academic_year();  // Add current year
     }
-    
+
     echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
     echo "<select name=\"session\">\n";
     foreach ($year_options as $calendar_year) {
@@ -348,14 +337,14 @@ if ($_POST['paper_type'] == 'summative') {
   } else {
     echo "<input type=\"hidden\" name=\"session\" value=\"null\" />\n";
   }
-  
+
   if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
     echo "</tr><tr><td align=\"right\" valign=\"top\">" . $string['from'] . "&nbsp;</td><td>";
     $date_array = getdate();
 
     // Available from Day
     $current_day = date('j');
-    echo "<select name=\"fday\" onchange=\"dateCopy('fday')\">\n";
+    echo "<select id=\"fday\" name=\"fday\" class=\"datecopy\">\n";
     for ($i=1; $i<=31; $i++) {
       echo '<option value="';
       if ($i < 10) echo '0';
@@ -367,7 +356,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "</select>\n";
     // Available from Month
-    echo "<select name=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
+    echo "<select id=\"fmonth\" name=\"fmonth\" class=\"datecopy\">\n";
     $current_month = (date('n') + 1);
     if ($current_month > 12) $current_month = 1;
     $months = array('', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
@@ -385,11 +374,11 @@ if ($_POST['paper_type'] == 'summative') {
         } else {
           echo "<option value=\"$i\">$trans_month</option>\n";
         }
-      }    
+      }
     }
     echo "</select>\n";
     // Available from Year
-    echo "<select name=\"fyear\" onchange=\"dateCopy('fyear')\">\n";
+    echo "<select id=\"fyear\" name=\"fyear\" class=\"datecopy\">\n";
     for ($i = $date_array['year']; $i < ($date_array['year']+21); $i++) {
       if ($current_month == 1 and $i == ($date_array['year'] + 1)) {
         echo "<option value=\"$i\" selected>$i</option>\n";
@@ -397,7 +386,7 @@ if ($_POST['paper_type'] == 'summative') {
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select>\n<select name=\"ftime\">\n";
+    echo "</select>\n<select id=\"ftime\" name=\"ftime\" class=\"datecopy\">\n";
     // Available from Hour
     $times = array('000000'=>'00:00','003000'=>'00:30','010000'=>'01:00','013000'=>'01:30','020000'=>'02:00','023000'=>'02:30','030000'=>'03:00','033000'=>'03:30','040000'=>'04:00','043000'=>'04:30','050000'=>'05:00','053000'=>'05:30','060000'=>'06:00','063000'=>'06:30','070000'=>'07:00','073000'=>'07:30','080000'=>'08:00','083000'=>'08:30','090000'=>'09:00','093000'=>'09:30','100000'=>'10:00','103000'=>'10:30','110000'=>'11:00','113000'=>'11:30','120000'=>'12:00','123000'=>'12:30','130000'=>'13:00','133000'=>'13:30','140000'=>'14:00','143000'=>'14:30','150000'=>'15:00','153000'=>'15:30','160000'=>'16:00','163000'=>'16:30','170000'=>'17:00','173000'=>'17:30','180000'=>'18:00','183000'=>'18:30','190000'=>'19:00','193000'=>'19:30','200000'=>'20:00','203000'=>'20:30','210000'=>'21:00','213000'=>'21:30','220000'=>'22:00','223000'=>'22:30','230000'=>'23:00','233000'=>'23:30');
     foreach ($times as $key => $value) {
@@ -407,7 +396,7 @@ if ($_POST['paper_type'] == 'summative') {
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
     // Available from Day
     $current_day = date('j');
-    echo "<select name=\"tday\" onchange=\"dateCopy('tday')\">\n";
+    echo "<select id=\"tday\" name=\"tday\" class=\"datecopy\">\n";
     for ($i=1; $i<=31; $i++) {
       echo '<option value="';
       if ($i < 10) echo '0';
@@ -419,7 +408,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "</select>\n";
     // Available to Month
-    echo "<select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
+    echo "<select id=\"tmonth\" name=\"tmonth\" class=\"datecopy\">\n";
     for ($i=1; $i<=12; $i++) {
       $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
       if ($i < 10) {
@@ -434,7 +423,7 @@ if ($_POST['paper_type'] == 'summative') {
         } else {
           echo "<option value=\"$i\">$trans_month</option>\n";
         }
-      }    
+      }
     }
     echo "</select>\n";
     // Available to Year
@@ -443,7 +432,7 @@ if ($_POST['paper_type'] == 'summative') {
     } else {
       $target_year = $date_array['year']+20;
     }
-    echo "<select name=\"tyear\" onchange=\"dateCopy('tyear')\">\n";
+    echo "<select id=\"tyear\" name=\"tyear\" class=\"datecopy\">\n";
     for ($i = $date_array['year']; $i < ($date_array['year']+21); $i++) {
       if ($i == $target_year) {
         echo "<option value=\"$i\" selected>$i</option>\n";
@@ -451,7 +440,7 @@ if ($_POST['paper_type'] == 'summative') {
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select>&nbsp;<select name=\"ttime\">\n";
+    echo "</select>&nbsp;<select id=\"ttime\" name=\"ttime\" class=\"datecopy\">\n";
     // Available to Hour
     foreach ($times as $key => $value) {
       echo "<option value=\"" . $key . "\">" . $value . "</option>\n";
@@ -492,7 +481,7 @@ if ($_POST['paper_type'] == 'summative') {
       echo "<option value=\"$i\">$i</option>";
     }
     echo '</select></td></tr>';
-    
+
     echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td colspan="5"><select name="campus">';
     foreach ($cfg_campus_list as $campus) {
       if ($campus == $cfg_campus_default) {
@@ -504,12 +493,12 @@ if ($_POST['paper_type'] == 'summative') {
     echo '</select></td></tr>';
     echo '<tr><td style="text-align:right">' . $string['notes'] . '</td><td colspan="5"><textarea style="width:100%; height:75px" cols="40" rows="3" name="notes"></textarea></td></tr>';
   }
-    
+
   echo "</table>\n";
-  
+
   echo "<div style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['modules'] . "</div><div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
   $staff_modules_sql = "'" . implode("','", array_keys($staff_modules)) . "'";
-  
+
   $module_no = 0;
   $module_array = $userObject->get_staff_accessable_modules();
 /*  if ($userObject->has_role('SysAdmin')) {
