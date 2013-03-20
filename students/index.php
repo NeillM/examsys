@@ -69,7 +69,7 @@ if ($userObject->has_role('Student')) {
   // Get modules
   $modules = array();
   $i = 0;
-  if ($stmt = $mysqli->prepare("SELECT idMod, m.moduleid, m.fullname, sm.calendar_year FROM modules m INNER JOIN modules_student sm ON m.id = sm.idMod WHERE sm.userID = ? AND m.active = 1 AND mod_deleted IS NULL ORDER BY sm.calendar_year ASC, m.moduleid ASC")) {
+  if ($stmt = $mysqli->prepare("SELECT DISTINCT idMod, m.moduleid, m.fullname, sm.calendar_year FROM modules m INNER JOIN modules_student sm ON m.id = sm.idMod WHERE sm.userID = ? AND m.active = 1 AND mod_deleted IS NULL ORDER BY sm.calendar_year ASC, m.moduleid ASC")) {
     $stmt->bind_param('i', $userObject->get_user_ID());
     $stmt->execute();
     $stmt->bind_result($idMod, $moduleID, $module_name, $module_year);
