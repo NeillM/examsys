@@ -125,12 +125,37 @@ Class SchoolUtils {
  * @return bool            True if school name already exists for the faculty
  */
   static function school_exists_in_faculty($facultyID, $school, $db) {
-    $query = 'SELECT id FROM schools WHERE school=? AND facultyID=?';
+    $row_no = 0;
+  
+    $query = 'SELECT id FROM schools WHERE school = ? AND facultyID = ?';
     $stmt = $db->prepare($query);
     $stmt->bind_param('si', $school, $facultyID);
     $stmt->execute();
     $stmt->store_result();
+    $row_no = $stmt->num_rows;
+    $stmt->close();
 
-    return $stmt->num_rows > 0;
+    return $row_no > 0;
+  }
+  
+  static function schoolid_exists($schoolID, $db) {
+    $row_no = 0;
+    
+    $query = 'SELECT id FROM schools WHERE id = ?';
+    $stmt = $db->prepare($query);
+    $stmt->bind_param('i', $schoolID);
+    $stmt->execute();
+    $stmt->store_result();
+    $row_no = $stmt->num_rows;
+    $stmt->close();
+
+    return $row_no > 0;
+  }
+
+  static function delete_school($schoolID, $db) {
+    $result = $db->prepare("UPDATE schools SET deleted = NOW() WHERE id = ?");
+    $result->bind_param('i', $schoolID);
+    $result->execute();  
+    $result->close();
   }
 }
