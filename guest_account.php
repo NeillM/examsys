@@ -56,7 +56,8 @@ $results->close();
 if ($paper_match == false) {
   $notice->access_denied($mysqli, $string, $string['cannotfindexams'], false, true);
 } elseif ($ip_match == false) {
-  $notice->access_denied($mysqli, $string, $string['denied_msg'], false, true);
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 
