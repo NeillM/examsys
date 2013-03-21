@@ -124,6 +124,18 @@ Class module {
     return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist, 'timed_exams'=>$timed_exams, 'exam_q_feedback'=>$exam_q_feedback, 'add_team_members'=>$add_team_members);
   }
 
+  public function is_allowed_add_team_members($modID, $db) {
+    $data = self::get_full_details_by_ID($modID, $db);
+    if ($data === false) {
+      return false;
+    }
+    if ($data['add_team_members'] == 1) {
+      return true;
+    }
+
+    return false;
+  }
+
   public function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
 

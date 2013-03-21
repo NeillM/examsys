@@ -215,7 +215,7 @@ if (!$lti->isInstructor()) {
 
 //      /var_dump($data);
       foreach ($data as $v) {
-        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v)) {
+        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) module_utils::is_allowed_add_team_members($v[1],$mysqli)) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $v[1], '../artwork/exclamation_64.png','#C00000');
             exit();
