@@ -25,7 +25,7 @@
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 require_once $cfg_web_root . 'include/auth.inc';
 
-$mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 if (isset($_GET['paperID'])) {
   $paperID = $_GET['paperID'];
