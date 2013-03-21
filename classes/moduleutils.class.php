@@ -133,20 +133,25 @@ Class module {
     return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist, 'timed_exams'=>$timed_exams, 'exam_q_feedback'=>$exam_q_feedback, 'add_team_members'=>$add_team_members);
   }
 
-  public function is_allowed_add_team_members($modID, $db) {
-    $moduleid=self::get_idMod($modID,$db);
+  public function is_allowed_add_team_members_by_name($modID, $db) {
+    $moduleid = self::get_idMod($modID, $db);
     if ($moduleid === false) {
       return false;
     }
-    $data = self::get_full_details_by_ID($moduleid, $db);
+
+    return self::is_allowed_add_team_members_by_id($moduleid, $db);
+  }
+
+  public function is_allowed_add_team_members_by_id($modID, $db) {
+    $data = self::get_full_details_by_ID($modID, $db);
     if ($data === false) {
       return false;
     }
-    if ($data['add_team_members'] == 1) {
-      return true;
+    if ($data['add_team_members'] == 0) {
+      return false;
     }
 
-    return false;
+    return true;
   }
 
   public function get_moduleid_from_id($modID, $db) {
