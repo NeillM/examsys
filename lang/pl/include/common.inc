@@ -75,7 +75,6 @@ $string['NoLookupConfigured'] = 'Nie skonfigurowano odnośnika';
 $string['NoLookupConfiguredmessage'] = 'Konfiguracja odnośnika nie została wpisana do pliku konfiguracyjnego. Skontaktuj się z administratorem systemu.';
 $string['guestbutton'] = 'Logowanie gościnne';
 $string['authentication_lti_authmessage'] = 'Zaloguj się, aby uwierzytelnić połączenie LTI.';
-
 $string['denied_role'] = 'Twoja rola użytkownika - %s - nie daje ci prawa dostępu.';
 
 ?>

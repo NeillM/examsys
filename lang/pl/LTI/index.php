@@ -26,6 +26,6 @@ $string['NotAddedToModule'] = 'Dodawanie do zespołu modułu nie jest umożliwio
 
 $string['SELECT']='Wybierz';
 
-$string['NoModCreateTitle2'] = 'Module Creation not run'; //TODO Niko
-$string['NoModCreate2'] = 'Module Creation from LTI has not run as the user does not have permission, so we cannot create the module with course code: '; //TODO Niko
+$string['NoModCreateTitle2'] = 'Tworzenie modułu nie nastapiło'; 
+$string['NoModCreate2'] = 'Tworzenie modułu z LTI nie nastąpiło jako że użytkownik nie ma wystarczających przywilejów, stąd też my nie możemy utworzyć modułu z kodem kursu: '; //TODO Niko
 ?>
