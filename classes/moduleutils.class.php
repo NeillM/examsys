@@ -110,6 +110,15 @@ Class module {
   public function get_full_details_by_ID($modID, $db) {
     // returns false if not self enrol else returns needed data;
     $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist, timed_exams, exam_q_feedback, add_team_members FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ? AND mod_deleted IS NULL");
+    if ($db->error) {
+      try {
+        throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+      }
+      catch (Exception $e) {
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+        echo nl2br($e->getTraceAsString());
+      }
+    }
     $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
@@ -125,7 +134,11 @@ Class module {
   }
 
   public function is_allowed_add_team_members($modID, $db) {
-    $data = self::get_full_details_by_ID($modID, $db);
+    $moduleid=self::get_idMod($modID,$db);
+    if ($moduleid === false) {
+      return false;
+    }
+    $data = self::get_full_details_by_ID($moduleid, $db);
     if ($data === false) {
       return false;
     }
