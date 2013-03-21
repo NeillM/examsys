@@ -1316,7 +1316,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $review = $properties->get_display_question_mark();
 
       echo "<tr><td align=\"right\">" . $string['groupdetails'] . "&nbsp;</td><td><select name=\"type\">\n";
-
+      echo "<option value=\"\" selected>&nbsp;</option>\n";
       $field_details = $mysqli->prepare("SELECT DISTINCT type FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (" . implode(',', array_keys($staff_modules)) . ") ORDER BY type");
       $field_details->execute();
       $field_details->bind_result($type);
