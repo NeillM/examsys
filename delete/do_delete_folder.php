@@ -24,11 +24,17 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+require '../classes/folderutils.class.php';
 
-check_var('folderID', 'POST', true, false, false);
+$folderID = check_var('folderID', 'POST', true, false, true);
+
+if ($userObject->get_user_ID() != folder_utils::get_ownerID($folderID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $result = $mysqli->prepare("SELECT name FROM folders WHERE id = ?");
-$result->bind_param('i', $_POST['folderID']);
+$result->bind_param('i', $folderID);
 $result->execute();
 $result->bind_result($name);
 $result->fetch();
@@ -55,14 +61,8 @@ if ($parent != '') {
   $result->close();
 }
 
-if ($userObject->has_role('SysAdmin')) {
-  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ?");
-  $result->bind_param('i', $_POST['folderID']);
-} else {
-  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ? AND ownerID = ?");
-  $result->bind_param('ii', $_POST['folderID'],$userObject->get_user_ID());
-}
-
+$result = $mysqli->prepare("UPDATE folders SET deleted = NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ? AND ownerID = ?");
+$result->bind_param('ii', $folderID, $userObject->get_user_ID());
 $result->execute();
 $result->close();
 

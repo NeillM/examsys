@@ -23,16 +23,28 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+
+$folderID = check_var('folder', 'GET', true, false, true);
+
+$ownerID = 0;
+
+$result = $mysqli->prepare("SELECT ownerID FROM folders WHERE id = ?");
+$result->bind_param('i', $folderID);
+$result->execute();
+$result->bind_result($ownerID);
+$result->fetch();
+$result->close();
+
+if ($ownerID != $userObject->get_user_ID()) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 if (isset($_POST['prefix']) and trim($_POST['prefix']) != '') {
   $new_folder = $_POST['prefix'] . ';' . $_POST['folder'];
 } elseif (isset($_POST['folder'])) {
   $new_folder = $_POST['folder'];
-}
-if (isset($_POST['folderID'])) {
-  $folderID = $_POST['folderID'];
-} else {
-  $folderID = 0;
 }
 
 if (isset($_POST['moduleID'])) {
@@ -98,7 +110,7 @@ if (isset($_POST['Submit'])) {
   }
     
   if (strtolower($new_folder) != strtolower($_POST['old_folder'])) {
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE name=? AND ownerID=? LIMIT 1");
+    $result = $mysqli->prepare("SELECT name FROM folders WHERE name = ? AND ownerID = ? LIMIT 1");
     $result->bind_param('si', $new_folder, $userObject->get_user_ID());
     $result->execute();
     $result->store_result();
@@ -107,24 +119,20 @@ if (isset($_POST['Submit'])) {
     if ($result->num_rows > 0) {
       $unique_name = false;
     } else {
-
       // Alter the name of the folder in the 'folders' table first.
-      $editProperties = $mysqli->prepare("UPDATE folders SET name=?, color=? WHERE name=? AND ownerID=?");
-      $editProperties->bind_param('sssi', $new_folder, $_POST['color'], $_POST['old_folder'], $userObject->get_user_ID());
+      $editProperties = $mysqli->prepare("UPDATE folders SET name = ?, color = ? WHERE id = ? AND ownerID = ?");
+      $editProperties->bind_param('sssi', $new_folder, $_POST['color'], $folderID, $userObject->get_user_ID());
       $editProperties->execute();  
       $editProperties->close();
 
-      $result = $mysqli->prepare("UPDATE folders SET name=REPLACE(name, ? , ?) WHERE name LIKE ? AND ownerID=?");
+      $result2 = $mysqli->prepare("UPDATE folders SET name = REPLACE(name, ? , ?) WHERE name LIKE ? AND ownerID = ?");
       $t0 = $_POST['old_folder'] . ';';
       $t1 = $new_folder . ';';
       $t2 = $_POST['old_folder'] . ';%';
-      $result->bind_param('sssi', $t0, $t1, $t2, $userObject->get_user_ID());
-      $result->execute();
-      $result->close();
+      $result2->bind_param('sssi', $t0, $t1, $t2, $userObject->get_user_ID());
+      $result2->execute();
+      $result2->close();
 
-
-
-      // !$mysqli->query("UPDATE folders SET name=REPLACE(name,\"" . $_POST['old_folder'] . ";\",\"" . $new_folder . ";\") WHERE name LIKE \"" . $_POST['old_folder'] . ";%\" AND ownerID=". $userObject->get_user_ID())
       // Alter the prefix of any child folders.
       if ($mysqli->error) {
         echo "<p class=\"error\">Folders Edit Error 2</p>\n<p>Query: " . $editProperties . "</p>\n<p>" . mysql_error($link_id) . "</p>\n";
@@ -133,17 +141,15 @@ if (isset($_POST['Submit'])) {
       }
       
       // Next update the folder name in the 'properties' table (moves papers).
-      $editProperties = $mysqli->prepare("UPDATE properties SET folder=? WHERE folder=? AND paper_ownerID=?");
+      $editProperties = $mysqli->prepare("UPDATE properties SET folder = ? WHERE folder = ? AND paper_ownerID = ?");
       $editProperties->bind_param('ssi', $new_folder, $_POST['old_folder'], $userObject->get_user_ID());
       $editProperties->execute();  
       $editProperties->close();
     }
     $result->free_result();
     $result->close();
-    
   } else {
-    
-    $editProperties = $mysqli->prepare("UPDATE folders SET color=? WHERE name=? AND ownerID=?");
+    $editProperties = $mysqli->prepare("UPDATE folders SET color = ? WHERE name = ? AND ownerID = ?");
     $editProperties->bind_param('ssi', $_POST['color'], $_POST['old_folder'], $userObject->get_user_ID());
     $editProperties->execute();  
     $editProperties->close();
@@ -156,7 +162,7 @@ if (isset($_POST['Submit'])) {
     $editProperties->execute();  
     $editProperties->close();
 
-    $editProperties = $mysqli->prepare("INSERT INTO folders_modules_staff VALUES(?,?)");
+    $editProperties = $mysqli->prepare("INSERT INTO folders_modules_staff VALUES(?, ?)");
     foreach($module_array as $idMod) {
       $editProperties->bind_param('ii', $_POST['folder_id'],  $idMod);
       $editProperties->execute();  
@@ -165,7 +171,7 @@ if (isset($_POST['Submit'])) {
 
   }
 
-  if ($unique_name AND 1 == 2) {
+  if ($unique_name) {
   ?>
     <body onload="closeWindow();">
     <form>
@@ -176,26 +182,24 @@ if (isset($_POST['Submit'])) {
   <?php
     exit;
   }
-  exit;
   $color = $_POST['color'];
   $created = $_POST['created'];
   $owner = $_POST['owner'];
   $full_path = $_POST['folder'];
-  $folder_team = $_POST['folder_team'];
   
 } else {
-  $result = $mysqli->prepare("SELECT folders.id, name, color, DATE_FORMAT(created, '{$configObject->get('cfg_long_date_time')}'), title, initials, surname FROM folders, users WHERE folders.ownerID=users.id AND folders.id=?");
-  $result->bind_param('i', $_GET['folder']);
+  $result = $mysqli->prepare("SELECT name, color, DATE_FORMAT(created, '{$configObject->get('cfg_long_date_time')}'), title, initials, surname FROM folders, users WHERE folders.ownerID = users.id AND folders.id = ?");
+  $result->bind_param('i', $folderID);
   $result->execute();
-  $result->bind_result($folder_id, $full_path, $color, $created, $title, $initials, $surname);
+  $result->bind_result($full_path, $color, $created, $title, $initials, $surname);
   $result->fetch();
   $result->close();
   
   $owner = $title . ' ' . $initials . ', ' . $surname;
 
   $folder_staff_modules = array();
-  $result = $mysqli->prepare("SELECT idMod, moduleID FROM folders,folders_modules_staff, modules WHERE folders.id = folders_modules_staff.folders_id AND modules.id = folders_modules_staff.idMod AND  folders.id=?");
-  $result->bind_param('i', $_GET['folder']);
+  $result = $mysqli->prepare("SELECT idMod, moduleID FROM folders, folders_modules_staff, modules WHERE folders.id = folders_modules_staff.folders_id AND modules.id = folders_modules_staff.idMod AND folders.id = ?");
+  $result->bind_param('i', $folderID);
   $result->execute();
   $result->bind_result($idMod, $moduleID);
   while ($result->fetch()) {
@@ -274,10 +278,8 @@ if ($unique_name) {
   <br />
   <div align="center"><input type="submit" style="width:100px" name="Submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input type="button" name="home" style="width:100px" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <?php
-  echo '<input type="hidden" name="folder_id" value="' . $folder_id . '" />';
   echo '<input type="hidden" name="created" value="' . $created . '" />';
   echo '<input type="hidden" name="owner" value="' . $owner . '" />';
-  echo '<input type="hidden" name="folder_team" value="' . implode(',', array_keys($folder_staff_modules)) . '" />';
 ?>
 </form>
 

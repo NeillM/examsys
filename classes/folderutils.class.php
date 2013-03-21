@@ -92,5 +92,22 @@ Class folder_utils {
     
     return $folders;
   }
+  
+  static function get_ownerID($folderID, $db) {
+    $result = $db->prepare("SELECT ownerID FROM folders WHERE id = ? LIMIT 1");
+    $result->bind_param('i', $folderID);
+    $result->execute();
+    $result->bind_result($ownerID);
+    $result->store_result();
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $ownerID = false;
+    }    
+    $result->close();
+    
+    return $ownerID;
+  }
+  
+  
 
 }

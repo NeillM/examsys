@@ -42,12 +42,13 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 <table class="sidebar_tbl">
 <?php
 
-  if ($folder_ownerID == $userObject->get_user_ID() or $userObject->has_role('SysAdmin')) {
+  if ($folder_ownerID == $userObject->get_user_ID() ) {
     echo '<tr><td class="ico"><a href="#" onclick="folderProperties(); return false;"><img src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon.gif" width="16" height="16" alt="Properties" /></a></td><td class="menuitem"><a href="#" onclick="folderProperties(); return false;">' . $string['folderproperties'] . '</a></td></tr>';
     echo '<tr><td class="ico"><a href="' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16.png" width="16" height="16" alt="New Folder" /></a></td><td class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $_GET['folder'] . '&newfolder=y">' . $string['makesubfolder'] . '</a></td></tr>';
     echo '<tr><td class="ico"><a href="#" onclick="deleteFolder(); return false;"><img src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross.png" width="16" height="16" alt="Delete Folder" /></a></td><td class="menuitem"><a href="#" onclick="deleteFolder(); return false;">' . $string['deletefolder'] . '</a></td></tr>';
   } else {
     echo '<tr><td class="ico"><img src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon_grey.gif" width="16" height="16" alt="Properties" /></td><td class="greymenuitem">' . $string['folderproperties'] . '</td></tr>';
+    echo '<tr><td class="ico"><img src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16_grey.png" width="16" height="16" alt="New Folder" /></td><td class="greymenuitem">' . $string['makesubfolder'] . '</td></tr>';
     echo '<tr><td class="ico"><img src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross_grey.png" width="16" height="16" alt="Delete Folder" /></td><td class="greymenuitem">' . $string['deletefolder'] . '</td></tr>';
   }
 ?>
