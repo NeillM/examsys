@@ -136,8 +136,6 @@ require_once '../../classes/questionutils.class.php';
               status != 'retired' AND deleted IS NULL 
             ORDER BY 
               $order $direction, questions.q_id";
-    echo $sql;
-    
   }
   
   if ($order == 'leadin') $order = 'leadin_plain';
