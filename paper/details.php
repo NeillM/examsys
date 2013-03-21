@@ -280,7 +280,7 @@ function check_latex_random($q_ids, $mysqli) {
   $latex = 0;
 
   $result = $mysqli->prepare("SELECT leadin, scenario, option_text, score_method, correct_fback, feedback_right FROM questions INNER JOIN options ON questions.q_id = options.o_id WHERE questions.q_id IN ($q_ids)");
-  echo '<!--' . $mysqli->error . '-->';
+  echo '<!--' . $q_ids . '|' . $mysqli->error . '-->';
   $result->execute();
   $result->store_result();
   $result->bind_result($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
