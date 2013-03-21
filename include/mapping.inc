@@ -75,9 +75,8 @@ QUERY;
   $html = '';
   
   foreach ($objsByModuleSession as $moduleid => $objsBySession) {
-    $moduleid_forform = str_replace(' ', '_', $moduleid);
     $tmp = array_flip($modules_array);
-    $idmod = $tmp[$moduleid_forform];
+    $idmod = $tmp[$moduleid];
 
     $html .= <<< HTML
         <h2>{$moduleid} {$string['objectives']}</h2>
