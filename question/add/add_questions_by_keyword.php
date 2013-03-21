@@ -69,7 +69,7 @@ require_once '../../classes/questionutils.class.php';
     $(function () {
       var selected_qs = parent.top.controls.selected_q;
       for (var i = 0; i < selected_qs.length; i++) {
-        $('#' + selected_qs[i]).checked(true);
+        $('#' + selected_qs[i]).prop('checked', true);
       }
     });
 
