@@ -214,7 +214,7 @@ if (!$lti->isInstructor()) {
 
 //      /var_dump($data);
       foreach ($data as $v) {
-        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) and module_utils::is_allowed_add_team_members($v[1],$mysqli)) {
+        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) ) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $v[1], '../artwork/exclamation_64.png','#C00000');
             exit();
@@ -242,7 +242,7 @@ if (!$lti->isInstructor()) {
           UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png','#C00000');
           exit();
         }
-        if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+        if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members($v[1],$mysqli) ) {
           UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
         } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
           UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
