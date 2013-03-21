@@ -34,6 +34,12 @@ class alreadyloggedin_auth extends outline_authentication {
   public $version = 0.9;
 
   function register_callback_routines() {
+
+    if(isset ($this->settings['disabled']) and $this->settings['disabled']===true) {
+
+      return array();
+    }
+
     $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
     $callbackarray[] = array(array($this, 'store_user'), 'sessionstore', $this->number, $this->name);
     $callbackarray[] = array(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
@@ -42,6 +48,12 @@ class alreadyloggedin_auth extends outline_authentication {
   }
 
   function auth($authobj) {
+    if(isset ($this->settings['disabled']) and $this->settings['disabled'] === true) {
+      $this->retdata->fail($this->number);
+      $this->savetodebug('disabling alreadyloggedin as setting has been set to do so');
+      return $authobj;
+    }
+
     $this->retdata =& $authobj;
     $this->savetodebug('Authing');
     $this->savetodebug(str_replace("\n", '', trim(rtrim(var_export($this->session, true)))));

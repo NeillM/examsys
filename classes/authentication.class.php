@@ -46,6 +46,8 @@ class Authentication {
   public $form;
   public $authPluginObj;
 
+  public $username;
+
   public $successfullauthmodule;
 
   private $callbackregister;
@@ -103,7 +105,7 @@ class Authentication {
   }
 
   /*
-   *  Parse the config and register the relivant callbacks in the auth plugins
+   *  Parse the config and register the relevant callbacks in the auth plugins
    */
   private function setup() {
     $notfound = true;
@@ -297,6 +299,9 @@ class Authentication {
         if ($authobj->returned === ROGO_AUTH_OBJ_SUCCESS) {
           $this->success = true;
           $this->userid = $authobj->rogoid;
+          if (isset($authobj->username) and $authobj->username!='') {
+            $this->username = $authobj->username;
+          }
           $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
           $this->successfullauthmodule[] = $objid;
 
@@ -490,6 +495,13 @@ class Authentication {
     return $this->form['std']->password;
   }
 
+  function get_username() {
+    if(isset($this->username) and $this->username!='') {
+      return $this->username;
+    }
+    return false;
+  }
+
   function append_auth_object_debug($number, $desc = '') {
     $new_messages = $this->authPluginObj[$number]->get_new_debug_messages();
     foreach ($new_messages as $key => $value) {
@@ -654,6 +666,7 @@ class authobjreturn {
   public $data;
   public $datas;
   public $statuses;
+  public $username;
 
   function __construct() {
     $this->returned = ROGO_AUTH_OBJ_FAILED;
