@@ -215,7 +215,7 @@ if (!$lti->isInstructor()) {
 
 //      /var_dump($data);
       foreach ($data as $v) {
-        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) module_utils::is_allowed_add_team_members($v[1],$mysqli)) {
+        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) and module_utils::is_allowed_add_team_members($v[1],$mysqli)) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $v[1], '../artwork/exclamation_64.png','#C00000');
             exit();
@@ -236,7 +236,6 @@ if (!$lti->isInstructor()) {
             $mapping = 0;
             $neg_marking = 1;
           }
-
           $sms_api = $lti_i::sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1, 0, 1, 1);
