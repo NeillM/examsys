@@ -22,7 +22,7 @@
 * @package
 */
 
-require '../include/sysadmin_auth.inc';
+require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
 $refID = check_var('refID', 'POST', true, false, true);

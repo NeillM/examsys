@@ -60,8 +60,22 @@ Class refmaterials_utils {
       }
     }
     $result->close();
-  
+    
     return $permission_granted;
+  }
+  
+  static function delete($refID, $db) {
+    // Update deleted to NOW in reference_material
+    $result = $db->prepare("UPDATE reference_material SET deleted = NOW() WHERE id = ?");
+    $result->bind_param('i', $refID);
+    $result->execute();  
+    $result->close();
+    
+    // Delete any links to the reference material in papers
+    $result = $db->prepare("DELETE FROM reference_papers WHERE refID = ?");
+    $result->bind_param('i', $refID);
+    $result->execute();  
+    $result->close();
   }
   
 }
