@@ -93,4 +93,8 @@ $userObject = UserObject::get_instance();
 $userObject->db_user_change();
 
 $included_files = get_included_files();
+
+//set string encoding for the mbstring module for interfaces
+mb_internal_encoding($configObject->get('cfg_page_charset'));
+
 ?>
