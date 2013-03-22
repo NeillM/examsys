@@ -506,7 +506,7 @@ if ($sortby == 'title') {
       echo $tmp_grade;
     }
     echo "</td></tr>\n";
-    $old_letter = md_strtoupper(mb_substr($tmp_surname, 0, 1));
+    $old_letter = mb_strtoupper(mb_substr($tmp_surname, 0, 1));
     $old_title = $tmp_title;
     $old_username = mb_substr($tmp_username, 0, 4);
     $old_grade = $tmp_grade;
