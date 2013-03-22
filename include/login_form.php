@@ -62,6 +62,24 @@ HTML;
                     <td><?php echo $string['password']; ?></td>
                     <td><input type="password" name="ROGO_PW" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" /></td>
                 </tr>
+<?php
+
+              if(isset($displaystdformobj->fields)) {
+                foreach($displaystdformobj->fields as $field) {
+                  echo '<tr>';
+                  echo '<td>' . $field->description . '</td>';
+                  if(isset($_POST[$field->name])) {
+                    $value=$_POST[$field->name];
+                  } elseif(isset($field->defaultvalue) and $field->defaultvalue!='') {
+                    $value=$field->defaultvalue;
+                  } else {
+                    $value='';
+                  }
+                  echo '<td><input type="' . $field->type . '" name="' .$field->name . '" value="' . $value .'"></td>';
+                  echo '</tr>';
+                }
+              }
+?>
             </table>
             <br/>
             </div>

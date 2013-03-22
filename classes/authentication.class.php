@@ -747,3 +747,19 @@ class displaystdformobjbutton extends stdClass {
   }
 
 }
+
+class displaystdformobjfield extends stdClass {
+  public $description;
+  public $type;
+  public $name;
+  public $defaultvalue;
+
+  function __construct() {
+    $this->description = '';
+    $this->type = '';
+    $this->name = '';
+    $this->defaultvalue = '';
+
+  }
+
+}

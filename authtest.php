@@ -40,9 +40,9 @@ $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configOb
 
 
 
-
+//array('alreadyloggedin', array('disabled' => true), 'Disabled Already Logged In'),
 $newauth=array(
-array('alreadyloggedin', array('disabled' => true), 'Disabled Already Logged In'),
+array('loginformfields',array('fields' => array(array('name'=>'Button1','description'=>'Description1','type'=>'input','defaultvalue'=>''),array('name'=>'Button2','description'=>'Description2','type'=>'input','defaultvalue'=>''))),'SCT Reviewer Data Info'),
 array('fixedlist', array('authusers' => array('sctreviewer' => '@Password1')), 'SCT Reviewer List')
 );
 $configObject->set('authentication',$newauth);
@@ -72,4 +72,5 @@ $getauthobj = new stdClass();
 $authentication->display_debug();
 $userObject = UserObject::get_instance();
 var_dump($authentication);
+var_dump($_REQUEST);
 var_dump($userObject);
