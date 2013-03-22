@@ -79,13 +79,14 @@
       margin:4px;
       background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
       background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
+      background-image: -ms-linear-gradient(top, #FFF6BD 0%, #FFEC82 100%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
     }
     textarea {
-      border:1px solid #C0C0C0;
+      border: 1px solid #C0C0C0;
       background-color: transparent;
-      width:99%;
-      height:275px;
+      width: 99%;
+      height: 275px;
     }
     select {
       width: 99%;

@@ -496,6 +496,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       border-top: 1px solid #B5C4DF;
       background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
       background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
+      background-image: -ms-linear-gradient(top, #E4EEFC 0%, #FFFFFF 100%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
     }
     .reviewbar {
@@ -504,6 +505,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       width:100%;
       background: -moz-linear-gradient(top, #FFFFFF, #C5DEFF);
       background: -webkit-linear-gradient(top, #FFFFFF, #C5DEFF);
+      background-image: -ms-linear-gradient(top, #FFFFFF 0%, #C5DEFF 100%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#C5DEFF');
       border-top: 1px solid #6593CF;
       border-bottom: 1px solid #6593CF;

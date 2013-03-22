@@ -62,7 +62,8 @@ td {
   background-color:#FFFFC0;
   background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
   background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
+  background-image: -ms-linear-gradient(top, #FFF6BD 0%, #FFEC82 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
   float:left;
   border:5px solid white;
 }

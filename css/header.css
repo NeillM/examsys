@@ -25,7 +25,8 @@
   height:3px;
   background: -moz-linear-gradient(top, #F1F5FB, #CCD9EA);
   background: -webkit-linear-gradient(top, #F1F5FB, #CCD9EA);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E8EEF7', endColorstr='#CCD9EA');
+  background-image: -ms-linear-gradient(top, #F1F5FB 0%, #CCD9EA 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E8EEF7', endColorstr='#CCD9EA');
 }
 
 .breadcrumb {

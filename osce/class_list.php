@@ -70,6 +70,7 @@ $modules = Paper_utils::get_modules($paperID, $mysqli);
       font-weight:bold;
       background: -moz-linear-gradient(top, #EAEAEA, #C0C0C0);
       background: -webkit-linear-gradient(top, #EAEAEA, #C0C0C0);
+      background-image: -ms-linear-gradient(top, #EAEAEA 0%, #C0C0C0 100%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EAEAEA', endColorstr='#C0C0C0');
     }
     .n {color:#808080}

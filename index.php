@@ -363,6 +363,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
               padding: 10px;
               background: -moz-linear-gradient(top, #EAEAEA, #C0C0C0);
               background: -webkit-linear-gradient(top, #EAEAEA, #C0C0C0);
+              background-image: -ms-linear-gradient(top, #EAEAEA 0%, #C0C0C0 100%);
               filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#EAEAEA', endColorstr = '#C0C0C0');
           }
       </style>

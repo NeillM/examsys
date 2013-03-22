@@ -39,7 +39,7 @@
   a.highlight {color:black}
   a.highlight:hover {background-color:#000080; color:white}
   .icon {width:250px; height:110px; padding-top:20px; padding-bottom:20px; float:left; text-align:center}
-  .num {line-height:100%; display:inline-block; background-color:red; color:white; font-weight:bold; background: -moz-linear-gradient(top, #FFC0C0, #FF0000); background: -webkit-linear-gradient(top, #FFC0C0, #FF0000); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFC0C0', endColorstr='#FF0000')}
+  .num {line-height:100%; display:inline-block; background-color:red; color:white; font-weight:bold; background: -moz-linear-gradient(top, #FFC0C0, #FF0000); background: -webkit-linear-gradient(top, #FFC0C0, #FF0000); background-image: -ms-linear-gradient(top, #FFC0C0 0%, #FF0000 100%); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFC0C0', endColorstr='#FF0000')}
   .corners {border:2px solid white; display:inline-block; box-shadow: 1px 1px 2px #808080; border-radius: 15px; overflow: hidden}
   .icon_title {display:inline-block; height:25px; line-height:25px; cursor:pointer}
 </style>

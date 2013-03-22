@@ -49,6 +49,7 @@
     border-top: 1px solid #B5C4DF;
     background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
     background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
+    background-image: -ms-linear-gradient(top, #E4EEFC 0%, #FFFFFF 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
   }
   </style>
