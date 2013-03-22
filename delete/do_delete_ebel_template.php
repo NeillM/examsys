@@ -25,10 +25,26 @@
 require '../include/admin_auth.inc';
 require '../include/errors.inc';
   
-check_var('gridID', 'POST', true, false, false);
+$gridID = check_var('gridID', 'POST', true, false, true);
+
+$row_no = 0;
+
+$result = $mysqli->prepare("SELECT name FROM ebel_grid_templates WHERE id = ?");
+$result->bind_param('i', $_GET['gridID']);
+$result->execute();
+$result->store_result();
+$result->bind_result($grid_name);
+$result->fetch();
+$row_no = $result->num_rows;
+$result->close();
+
+if ($row_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $result = $mysqli->prepare("DELETE FROM ebel_grid_templates WHERE id = ?");
-$result->bind_param('i', $_POST['gridID']);
+$result->bind_param('i', $gridID);
 $result->execute();  
 $result->close();
 
