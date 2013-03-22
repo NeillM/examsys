@@ -22,24 +22,19 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/errors.inc';
+require '../include/sysadmin_auth.inc';
+require '../include/errors.inc';
 
-  $tmp_refID = check_var('refID', 'POST', true, false, true);
+$refID = check_var('refID', 'POST', true, false, true);
 
-  // Update deleted to NOW in reference_material
-  $result = $mysqli->prepare("UPDATE reference_material SET deleted = NOW() WHERE id = ?");
-  $result->bind_param('i', $tmp_refID);
-  $result->execute();  
-  $result->close();
+if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+refmaterials_utils::delete($refID, $mysqli);
   
-  // Delete any links to the reference material in papers
-  $result = $mysqli->prepare("DELETE FROM reference_papers WHERE refID = ?");
-  $result->bind_param('i', $tmp_refID);
-  $result->execute();  
-  $result->close();
-  
-  $mysqli->close();
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
