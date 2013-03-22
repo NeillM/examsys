@@ -29,6 +29,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
+require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
 
 $userObject = UserObject::get_instance();
 
@@ -148,6 +149,14 @@ if ($userObject->has_role('SysAdmin')) {
           $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
         }
       }
+    }
+  }
+  
+  //Can the user access reference material?
+  if (isset($_REQUEST['refID'])) {
+    if (!refmaterials_utils::check_access($userObject, $_REQUEST['refID'], $mysqli)) {
+      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 }

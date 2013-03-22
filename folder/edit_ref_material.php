@@ -26,16 +26,21 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/searchutils.class.php';
 
-check_var('refID', 'GET', true, false, false);
+$refID = check_var('refID', 'GET', true, false, true);
+
+if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 if (isset($_POST['submit'])) {
   // Write the reference material
-  $result = $mysqli->prepare("UPDATE reference_material SET title=?, content=?, width=? WHERE id=?");
+  $result = $mysqli->prepare("UPDATE reference_material SET title = ?, content = ?, width = ? WHERE id = ?");
   $result->bind_param('sssi', $_POST['title'], $_POST['ref_content'], $_POST['width'], $_GET['refID']);
   $result->execute();
   
   // Add it to the modules
-  $result = $mysqli->prepare("DELETE FROM reference_modules WHERE refID=?");
+  $result = $mysqli->prepare("DELETE FROM reference_modules WHERE refID = ?");
   $result->bind_param('i', $_GET['refID']);
   $result->execute();
 
@@ -51,7 +56,7 @@ if (isset($_POST['submit'])) {
   exit;
 }
 
-$result = $mysqli->prepare("SELECT title, content, width FROM reference_material WHERE id=?");
+$result = $mysqli->prepare("SELECT title, content, width FROM reference_material WHERE id = ?");
 $result->bind_param('i', $_GET['refID']);
 $result->execute();
 $result->bind_result($title, $content, $width);

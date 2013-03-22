@@ -25,7 +25,12 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('refID', 'GET', true, false, false);
+$refID = check_var('refID', 'GET', true, false, true);
+
+if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $mysqli->close();
 ?>
@@ -51,7 +56,7 @@ $mysqli->close();
 <br />
 <div style="text-align:right">
 <form action="do_delete_ref_material.php" method="post">
-<input type="hidden" name="refID" value="<?php echo $_GET['refID']; ?>" />
+<input type="hidden" name="refID" value="<?php echo $refID; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
 <input style="width:90px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
