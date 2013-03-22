@@ -2,6 +2,7 @@
   width:100%;
   height:30px;
   line-height:30px;
+  background: linear-gradient(top, #FFF6BD, #FFEC82);
   background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
   background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
@@ -12,6 +13,7 @@
 }
 
 .redwarn {
+  background: linear-gradient(top, #FFC0C0, #FF8181);
   background: -moz-linear-gradient(top, #FFC0C0, #FF8181);
   background: -webkit-linear-gradient(top, #FFC0C0, #FF8181);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFC0C0', endColorstr='#FF8181');
@@ -24,6 +26,7 @@
   width:100%;
   height:30px;
   line-height:30px;
+  background: linear-gradient(top, #EAEAEA, #C0C0C0);
   background: -moz-linear-gradient(top, #EAEAEA, #C0C0C0);
   background: -webkit-linear-gradient(top, #EAEAEA, #C0C0C0);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EAEAEA', endColorstr='#C0C0C0');
