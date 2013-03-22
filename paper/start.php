@@ -475,12 +475,6 @@ if ($sessionid !== false or $is_fire_alarm == true) {
   $log_data->close();
 }
 
-// If we're restarting, move to screen after the highest for which we have log records
-if ($do_restart and $screen_pre_submitted == 1 and $current_screen < $no_screens) {
-  $current_screen++;
-  $screen_pre_submitted = 0;
-}
-
 /*
 *
 * Get any Reference Material
