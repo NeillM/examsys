@@ -283,15 +283,6 @@ $room_name = $lab_object->get_name();
 
 $properties_list = array();
 
-if ($room_name != '') {
-  $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
-  if ($properties_list === false) {
-    // No properties found
-    $notice = UserNotices::get_instance();
-    $notice->display_notice_and_exit($mysqli, $string['nopapersfound'], '', $string['nopapersfound'], '../artwork/red_warning_48.png');
-  }
-}
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
