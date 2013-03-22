@@ -283,6 +283,8 @@ $room_name = $lab_object->get_name();
 
 $properties_list = array();
 
+$properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -595,7 +597,7 @@ if ($language != 'en') {
 <br/>
 <?php
 
-if (count($properties_list) > 0) {
+if ($properties_list !== false and count($properties_list) > 0) {
 
   $col_width = round(100 / (count($properties_list) + 1));
   ?>
