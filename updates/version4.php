@@ -3933,6 +3933,9 @@ SQL;
   if (!$updater_utils->does_index_exist('questions_modules', 'idx_idmod')) {
      $updater_utils->execute_query("ALTER TABLE questions_modules ADD INDEX idx_idmod (idMod)", false);
   }
+  if (!$updater_utils->does_index_exist('special_needs', 'idx_userID')) {
+     $updater_utils->execute_query("ALTER TABLE special_needs ADD UNIQUE idx_idmod (userID)", false);
+  }
   
   // 18/03/2013 - Slight change to format of track_changes
   $updater_utils->execute_query("UPDATE track_changes SET type='Paper' WHERE type LIKE 'Alter paper%'", false);

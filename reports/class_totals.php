@@ -349,16 +349,23 @@ if ($language != 'en') {
   }
   $result->close();
 
-  $special_needs = array();
+  
   // Query any student special needs for the current paper
-  $result = $mysqli->prepare("SELECT userID FROM special_needs");
-  $result->execute();
-  $result->bind_result($special_userID);
-  while ($result->fetch()) {
-    $special_needs[$special_userID] = 'y';
+  $special_needs = array();
+  $users_in = array();
+  foreach($user_results as $u) {
+    $users_in[] = $u['tmp_userID'];
   }
-  $result->close();
-
+  $users_in = implode(',',$users_in);
+  if($users_in != '') {
+    $result = $mysqli->prepare("SELECT userID FROM special_needs where userID IN ($users_in)");
+    $result->execute();
+    $result->bind_result($special_userID);
+    while ($result->fetch()) {
+      $special_needs[$special_userID] = 'y';
+    }
+    $result->close();
+  }
   $log_late = array();
   // Check log_late for any records
   $late_ts = strtotime($enddate) + 7200;
