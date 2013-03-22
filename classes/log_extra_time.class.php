@@ -132,7 +132,7 @@ class LogExtraTime {
       return 0;
     }
 
-    $query = 'INSERT INTO log_extra_time (labID, paperID, invigilatorID, userID, extra_time) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE extra_time = ?';
+    $query = 'INSERT INTO log_extra_time (labID, paperID, invigilatorID, userID, extra_time) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE extra_time = ?';
 
     $stmt = $this->db->prepare($query);
 

@@ -3937,6 +3937,15 @@ SQL;
   // 18/03/2013 - Slight change to format of track_changes
   $updater_utils->execute_query("UPDATE track_changes SET type='Paper' WHERE type LIKE 'Alter paper%'", false);
 
+  // 22/03/2012 - nazrji - I am missing select on 'modules' and 'log_metadata' for _inv needed for adding extra time
+  if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'modules', $cfg_db_host)) {
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.modules TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
+  if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'log_metadata', $cfg_db_host)) {
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.log_metadata TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
 
   //
   /*
