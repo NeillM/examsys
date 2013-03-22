@@ -23,9 +23,9 @@
 */
 
   require '../include/staff_auth.inc';
-  require '../include/errors.inc';
+  require_once '../include/errors.inc';
   
-  $paperID = $_POST['paperID'];
+  $paperID = check_var('paperID', 'POST', true, false, true);
 
   $rating = '';
   $old_leadin = '';
@@ -46,13 +46,13 @@
   }
 
   if ($_POST['setterID'] != '') {
-    $std_query = "DELETE FROM standards_setting WHERE paperID=$paperID AND setterID=" . $_POST['setterID'] . " AND std_set='" . $_POST['dateID'] . "'";
+    $std_query = "DELETE FROM standards_setting WHERE paperID = $paperID AND setterID = " . $_POST['setterID'] . " AND std_set='" . $_POST['dateID'] . "'";
     if (!$mysqli->query($std_query)) {
       display_error('Error deleting previous settings', $mysqli->error, true, true);
       $mysqli->close();
       exit;
     }
-    $std_query = "DELETE FROM ebel WHERE setterID=" . $_POST['setterID'] . " AND date_set='" . $_POST['dateID'] . "'";
+    $std_query = "DELETE FROM ebel WHERE setterID = " . $_POST['setterID'] . " AND date_set = '" . $_POST['dateID'] . "'";
     if (!$mysqli->query($std_query)) {
       display_error('Error deleting previous settings', $mysqli->error, true, true);
       $mysqli->close();
@@ -62,14 +62,12 @@
 
   $last_question = 0;
   $old_q_id = 0;
-
-  $result = $mysqli->prepare("SELECT q_id, scenario, leadin, q_type, option_text, q_media, correct, score_method, marks_correct, correct FROM papers, questions, options WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type != 'info' ORDER BY display_pos, id_num");
+  
+  $result = $mysqli->prepare("SELECT q_id, scenario, leadin, q_type, option_text, q_media, correct, score_method, marks_correct, correct FROM papers, questions, options WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY display_pos, id_num");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
   $result->bind_result($q_id, $scenario, $leadin, $q_type, $option_text, $q_media, $correct, $score_method, $marks_correct, $correct);
-
-  //$questions = $mysqli->query("SELECT q_id, scenario, leadin, q_type, option_text, q_media, correct, score_method, marks_correct, correct FROM papers, questions, options WHERE paper=$paperID AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type != 'info' ORDER BY display_pos, id_num");
   while ($result->fetch()) {
     if ($old_q_id != $q_id) {
       if ($question_no > 0) {
@@ -92,32 +90,31 @@
           $total_parts++;
         }
 
-
-        $result = $mysqli->prepare("INSERT INTO standards_setting (`id`, `setterID`, `questionID`, `std_set`, `rating`, `paperID`, `method`, `group_review`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
-        $result->bind_param('iississ', $userObject->get_user_ID(), $log_id, $now, $rating, $paperID, $tmp_method, $group_review);
-        $result->execute();
-        $result->close();
+        $std_query = $mysqli->prepare("INSERT INTO standards_setting (`id`, `setterID`, `questionID`, `std_set`, `rating`, `paperID`, `method`, `group_review`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+        $std_query->bind_param('iississ', $userObject->get_user_ID(), $log_id, $now, $rating, $paperID, $tmp_method, $group_review);
+        $std_query->execute();
+        $std_query->close();
         if ($mysqli->error) {
           display_error('Error writing to standards_setting table', $mysqli->error, true, true);
           $mysqli->close();
           exit;
         }
         if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
-          $result = $mysqli->prepare("UPDATE questions SET std=? WHERE q_id=?");
-          $result->bind_param('si', $rating, $log_id);
-          $result->execute();
-          $result->close();
+          $std_query = $mysqli->prepare("UPDATE questions SET std = ? WHERE q_id = ?");
+          $std_query->bind_param('si', $rating, $log_id);
+          $std_query->execute();
+          $std_query->close();
           if ($mysqli->error) {
             display_error('Error writing to questions table', $mysqli->error, true, true);
             $mysqli->close();
             exit;
           }
           if ($rating != $_POST["old$log_id"]) {
-            $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Edit Question', ?, ?, ?, ?, ?, 'Std Setting')");
+            $std_query = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Edit Question', ?, ?, ?, ?, ?, 'Std Setting')");
             $t0 = $_POST["old$log_id"];
-            $result->bind_param('iisss', $log_id, $userObject->get_user_ID(), $t0, $rating, $now);
-            $result->execute();
-            $result->close();
+            $std_query->bind_param('iisss', $log_id, $userObject->get_user_ID(), $t0, $rating, $now);
+            $std_query->execute();
+            $std_query->close();
             if ($mysqli->error) {
               display_error('Error writing to track_changes table', $mysqli->error, true, true);
               $mysqli->close();
@@ -456,7 +453,7 @@ $result->close();
     if ($tmp_method == 'Angoff (Yes/No)' or $tmp_method = 'Modified Angoff') {
       $pass_mark = round($total_rating/$total_parts);
 
-      $std_query = $mysqli->prepare("UPDATE properties SET pass_mark=? WHERE property_id=?");
+      $std_query = $mysqli->prepare("UPDATE properties SET pass_mark = ? WHERE property_id = ?");
       $std_query->bind_param('ii', $pass_mark, $paperID);
       $std_query->execute();
       $std_query->close();
