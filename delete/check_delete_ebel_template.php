@@ -27,12 +27,21 @@ require '../include/errors.inc';
 
 check_var('gridID', 'GET', true, false, false);
 
+$row_no = 0;
+
 $result = $mysqli->prepare("SELECT name FROM ebel_grid_templates WHERE id = ?");
 $result->bind_param('i', $_GET['gridID']);
 $result->execute();
+$result->store_result();
 $result->bind_result($grid_name);
 $result->fetch();
+$row_no = $result->num_rows;
 $result->close();
+
+if ($row_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $mysqli->close();
 ?>
