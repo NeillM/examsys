@@ -2922,8 +2922,8 @@ QUERY;
   }
 
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
-  if (!$updater_utils->has_grant($cfg_db_student_user, 'SELECT, INSERT', 'modules_student', $cfg_db_host)) {
-    $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+  if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT', 'modules_student', $cfg_db_host)) {
+    $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
 
