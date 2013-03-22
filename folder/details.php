@@ -326,8 +326,8 @@ if ($folder != '') {
     $paper_types[$paper_type] = $no_papers;
   }
   $results->close();
-
-  $query_string = "SELECT DISTINCT paper_ownerID, properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND modules.id = properties_modules.idMod AND properties.paper_ownerID=users.id AND modules.id = ? AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
+// UPDATED sql query simplified removed the modules table as no data was coming from it.  also removed distinct as group by was doing it.  the user data is returned but for some reason the icons alt tags (that contain the user data dont display
+  $query_string = "SELECT paper_ownerID, properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = ? AND properties.paper_ownerID=users.id  AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
   $results = $mysqli->prepare($query_string);
   $results->bind_param('i', $_GET['module']);
 }

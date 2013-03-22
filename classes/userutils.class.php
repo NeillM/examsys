@@ -429,14 +429,6 @@ Class UserUtils {
       return true;
     } else {
       $result = $db->prepare("INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, ?)");
-      if ($db->error) {
-        try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
       $result->bind_param('iisii', $tmp_userID, $idMod, $session, $attempt, $auto_update);
       $result->execute();
       $result->close();

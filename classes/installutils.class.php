@@ -2202,7 +2202,8 @@ QUERY;
         CREATE TABLE `properties_modules` (
           `property_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
-          PRIMARY KEY (`property_id`,`idMod`)
+          PRIMARY KEY (`property_id`,`idMod`),
+          KEY `idx_idmod` (`idMod`),
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2281,7 +2282,7 @@ $this->tableList['questions_modules'] = <<<QUERY
           `q_id` int(4) unsigned NOT NULL DEFAULT '0',
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
           KEY `idx_idmod` (`idMod`),
-          PRIMARY KEY (`q_id`,`idMod`)
+          PRIMARY KEY (`q_id`,`idMod`),
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 

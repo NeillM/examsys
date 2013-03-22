@@ -3950,6 +3950,11 @@ SQL;
     $updater_utils->execute_query($sql, true);
   }
 
+// 22/03/2013 cczsa1 - adding index on idx_idmod to speed up queries eg folder view page
+  if (!$updater_utils->does_index_exist('properties_modules', 'idx_idmod')) {
+    $updater_utils->execute_query("ALTER TABLE properties_modules ADD INDEX idx_idmod (idMod)", false);
+  }
+
   //
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
