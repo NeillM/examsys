@@ -23,9 +23,15 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/announcementutils.class.php';
 
-check_var('announcementID', 'GET', true, false, false);
+$announcementID = check_var('announcementID', 'GET', true, false, true);
+
+if (!announcement_utils::announcement_exist($announcementID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $mysqli->close();
 ?>
@@ -52,7 +58,7 @@ $mysqli->close();
 <br />
 <div style="text-align:right">
 <form action="do_delete_announcement.php" method="post">
-<input type="hidden" name="announcementID" value="<?php echo $_GET['announcementID']; ?>" />
+<input type="hidden" name="announcementID" value="<?php echo $announcementID; ?>" />
 <input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
 <input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>

@@ -23,14 +23,17 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/announcementutils.class.php';
 
-$tmp_announcementID = check_var('announcementID', 'POST', true, false, true);
+$announcementID = check_var('announcementID', 'POST', true, false, true);
 
-$result = $mysqli->prepare("UPDATE announcements SET deleted = NOW() WHERE id = ?");
-$result->bind_param('i', $tmp_announcementID);
-$result->execute();  
-$result->close();
+if (!announcement_utils::announcement_exist($announcementID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+announcement_utils::delete($announcementID, $mysqli);
 
 $mysqli->close();
 ?>

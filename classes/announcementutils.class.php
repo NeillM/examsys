@@ -28,7 +28,7 @@
 Class announcement_utils {
  
   /**
-   * See if a reference material ID actually exists.
+   * See if an announcement ID actually exists.
    * @return true or false.
    */
   static function announcement_exist($announcementID, $db) {
@@ -44,6 +44,13 @@ Class announcement_utils {
     $result->close();
     
     return $row_no > 0;
+  }
+  
+  static function delete($announcementID, $db) {
+    $result = $db->prepare("UPDATE announcements SET deleted = NOW() WHERE id = ?");
+    $result->bind_param('i', $announcementID);
+    $result->execute();  
+    $result->close();
   }
   
 }
