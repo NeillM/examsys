@@ -152,18 +152,13 @@ if (!$lti->isInstructor()) {
 
     foreach ($data as $v) {
       $returned_check = module_utils::get_full_details_by_name($v[1], $mysqli);
-      var_dump($returned_check);
-var_dump(UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1], $session, $mysqli));
-      var_dump($lti_i::allow_module_self_reg($v));
       if (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1], $session, $mysqli) and $returned_check !== false and $lti_i::allow_module_self_reg($v)) {
-        list($fullname, $school, $active, $selfenroll) = $returned_check;
         if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1 and !UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1], $session, $mysqli)) {
           // Insert new module enrollment
-          UserUtils::add_student_to_module($userObject->get_user_ID(), $v[1], 1, $session, $mysqli);
+          UserUtils::add_student_to_module_by_name($userObject->get_user_ID(), $v[1], 1, $session, $mysqli);
         }
       }
     }
-    exit();
     // do 'something' here
     $_SESSION['lti']['paperlink'] = $returned[0];
     header("location: ../user_index.php?id=" . $returned[0]);

@@ -284,7 +284,6 @@ Class UserUtils {
       $stmt->bind_param('si', $moduleid, $tmp_userID);
       $stmt->execute();
       $stmt->close();
-
     }
   }
 
@@ -408,6 +407,24 @@ Class UserUtils {
     $result->close();
 
     return $team_members;
+  }
+
+  /**
+   * Enrole a student on a module.
+   *
+   * @param int $userID ID of the student to be enroled.
+   * @param string $idMod Module code for the enrolement.
+   * @param object $db $mysqli database connection.
+   *
+   * @return bool return true if successful.
+   *
+   */
+  static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
+
+    $moduleid = module_utils::get_idMod($idMod, $db);
+    if ($moduleid !== false) {
+      return self::add_student_to_module($tmp_userID, $moduleid, $attempt, $session, $db, $auto_update);
+    }
   }
 
   /**
