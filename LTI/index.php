@@ -163,6 +163,7 @@ var_dump(UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1],
         }
       }
     }
+    exit();
     // do 'something' here
     $_SESSION['lti']['paperlink'] = $returned[0];
     header("location: ../user_index.php?id=" . $returned[0]);
