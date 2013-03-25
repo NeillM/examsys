@@ -762,7 +762,11 @@ if ($css != '') {
   <?php  //called on auto save time out ?>
   var autoSave = function() {
     submitType = 'autoSave';
-    <?php //only save if the screen has changed ?>
+    
+    <?php //this could take longer than the autosave timeout stop auto save to stop duplicate events ?>
+    stopAutoSave();
+    
+    <?php //save any data from wysiwyg  ?>
     if(typeof(tinyMCE) != "undefined"){
       tinyMCE.triggerSave();
     }
@@ -773,7 +777,7 @@ if ($css != '') {
       $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
       ajaxSave();
     }
-    <?php //reset the timer in-case this is a long screen ?>
+    <?php //rereister the autosave timer ?>
     startAutoSave();
   }
 
