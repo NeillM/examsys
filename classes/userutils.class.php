@@ -466,6 +466,29 @@ Class UserUtils {
   }
 
   /**
+   * Test to see if a student is on a module by name.
+   *
+   * @param int $tmp_userID ID of the student.
+   * @param int $idMod Module ID for the enrolement.
+   * @param string $session The academic year.
+   * @param object $db $mysqli database connection.
+   *
+   * @return bool return true if successful.
+   *
+   */
+  static function is_user_on_module_by_name($tmp_userID, $idMod, $session, $db) {
+    if (is_array($idMod)) {
+      foreach ($idMod as $idmods) {
+        $modid[] = module_utils::get_idMod($idmods, $db);
+      }
+    } else {
+      $modid = module_utils::get_idMod($idMod, $db);
+    }
+
+    return is_user_on_module($tmp_userID, $modid, $session, $db);
+  }
+
+  /**
    * Test to see if a student is on a module.
    *
    * @param int $tmp_userID ID of the student.
