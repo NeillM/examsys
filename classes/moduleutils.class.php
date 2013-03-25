@@ -107,6 +107,15 @@ Class module {
     return $exists;
   }
 
+  public function get_full_details_by_name($modID, $db) {
+    $moduleid = self::get_idMod($modID, $db);
+    if ($moduleid === false) {
+      return false;
+    }
+
+    return self::get_full_details_by_ID($moduleid, $db);
+  }
+
   public function get_full_details_by_ID($modID, $db) {
     // returns false if not self enrol else returns needed data;
     $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist, timed_exams, exam_q_feedback, add_team_members FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ? AND mod_deleted IS NULL");

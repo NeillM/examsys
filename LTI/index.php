@@ -151,7 +151,7 @@ if (!$lti->isInstructor()) {
     $data = $lti_i::module_code_translate($c_internal_id);
 
     foreach ($data as $v) {
-      $returned_check = module_utils::get_full_details_by_ID($v[1], $mysqli);
+      $returned_check = module_utils::get_full_details_by_name($v[1], $mysqli);
       var_dump($returned_check);
 var_dump(UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1], $session, $mysqli));
       var_dump($lti_i::allow_module_self_reg($v));
