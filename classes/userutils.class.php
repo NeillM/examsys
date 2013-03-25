@@ -485,7 +485,7 @@ Class UserUtils {
       $modid = module_utils::get_idMod($idMod, $db);
     }
 
-    return is_user_on_module($tmp_userID, $modid, $session, $db);
+    return self::is_user_on_module($tmp_userID, $modid, $session, $db);
   }
 
   /**
