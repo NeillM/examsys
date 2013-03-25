@@ -898,8 +898,6 @@ if ($css != '') {
     submitted = false;
     submitPending = false;
     success = false;
-    <?php //the save failed dont cache the last submitted awnsers ?>
-    last_saved_user_awnsers = null;
     <?php //setup autosave ?>
     startAutoSave();
     return false;
