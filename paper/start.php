@@ -751,7 +751,7 @@ if ($css != '') {
     }
   }
 
-   <?php  //called when a user has run out of time by UpdateTimerWithRemainingTime in start.js ?>
+  <?php  //called when a user has run out of time by UpdateTimerWithRemainingTime in start.js ?>
   var forceSave = function() {
     stopAutoSave();
     submitType = 'forcedSubmit';
@@ -759,7 +759,7 @@ if ($css != '') {
     ajaxSave();
   }
 
-   <?php  //called on auto save time out ?>
+  <?php  //called on auto save time out ?>
   var autoSave = function() {
     submitType = 'autoSave';
     <?php //only save if the screen has changed ?>
@@ -778,6 +778,7 @@ if ($css != '') {
   }
 
   var startAutoSave = function () {
+    clearTimeout(autoSaveRef);<?php //Cancel any outstanding timeouts to make sure only one auto save is ever registered?>
     autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get('cfg_autosave_frequency') + rand(-5,5)) * 1000); ?>);
   }
 
