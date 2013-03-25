@@ -486,6 +486,7 @@ Class UserUtils {
       $result->bind_param('i', $tmp_userID);
     } else {
       $result = $db->prepare("SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod) AND calendar_year = ?");
+      echo "SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod) AND calendar_year = ?";
       if ($db->error) {
         try {
           throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
