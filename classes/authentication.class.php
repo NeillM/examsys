@@ -26,6 +26,7 @@
  */
 
 require_once $cfg_web_root . '/classes/lookup.class.php';
+require_once $cfg_web_root . '/classes/userutils.class.php';
 
 define('ROGO_AUTH_OBJ_FAILED', 0);
 define('ROGO_AUTH_OBJ_SUCCESS', 1);
@@ -312,6 +313,7 @@ class Authentication {
           $lookup = Lookup::get_instance($this->configObj, $this->db);
 
           //$authobj->data contains lookup info;
+          $data=new stdClass();
           $data->lookupdata = clone $authobj->data;
           $info = $lookup->userlookup($data);
 
