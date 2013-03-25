@@ -702,8 +702,6 @@ if ($css != '') {
 ?>
 
   <?php //Bind save function to the screen for fault tolerant form saving ?>
-  var submitPending = false;
-  var success = false;
   var usingAjax = false;
   var submitType = '';
   var autoSaveRef = '';
@@ -776,9 +774,10 @@ if ($css != '') {
     if(last_saved_user_awnsers !== formData) {
       $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
       ajaxSave();
+    } else {
+      <?php //rereister the autosave timer ?>
+      startAutoSave();
     }
-    <?php //rereister the autosave timer ?>
-    startAutoSave();
   }
 
   var startAutoSave = function () {
@@ -791,7 +790,6 @@ if ($css != '') {
   }
 
   var ajaxSave = function () {
-    submitPending = true;
     <?php //hide any errors ?>
     $('#saveError').fadeOut('fast');
     <?php //random page ID to stop IE caching results. arrrggg ?>
@@ -816,8 +814,6 @@ if ($css != '') {
           tryCount : 0,
           retryLimit : <?php echo $configObject->get('cfg_autosave_retrylimit'); //try 3 times before erroring ?>, 
           beforeSend: function() {
-              submitPending = true;
-              success = false;
           },
           fail: function() {
             if(this.retry()) {
@@ -847,9 +843,7 @@ if ($css != '') {
             return;
           },
           success: function (ret_data, jqXHR, textStatus) {
-              submitPending = false;
               if (ret_data == randomPageID) {
-                  success = true;
                   <?php //cache the form data to look for changes on next auto save ?>
                   last_saved_user_awnsers = this.data;
                   saveSuccess();
@@ -878,11 +872,12 @@ if ($css != '') {
             return false
           }
       });
-    submitPending = false;
     return;
   }
 
   var saveSuccess = function () {
+    <?php //rereister the autosave timer ?>
+    startAutoSave();
     if (submitType == 'userSubmit') {
       $('#qForm').submit();
       return true;
@@ -896,14 +891,14 @@ if ($css != '') {
   }
 
   var saveFail = function () {
+    <?php //rereister the autosave timer ?>
+    startAutoSave();
+      
     $('#saveError').fadeIn('fast');
     $('#savemsg').html("");
     document.body.style.cursor = 'default';
     submitted = false;
-    submitPending = false;
-    success = false;
-    <?php //setup autosave ?>
-    startAutoSave();
+    
     return false;
   }
 
