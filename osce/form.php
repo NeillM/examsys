@@ -25,8 +25,28 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require './osce.inc';
+require_once '../classes/userutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 check_var('id', 'GET', true, false, false);
+
+if (isset($_REQUEST['userID'])) {
+  $userID = $_REQUEST['userID'];
+  
+  if (!UserUtils::userid_exists($userID, $mysqli)) {   // Check the passed through user ID actually exists.
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
+}
+
+//get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+$paperID = $propertyObj->get_property_id();
 
 if (isset($_POST['submit'])) {
   if ($_POST['userID'] != '') {
@@ -35,12 +55,12 @@ if (isset($_POST['submit'])) {
 
     // Delete any Log4 previous submissions for this student.
     $result = $mysqli->prepare("DELETE FROM log4 WHERE q_paper = ? AND userID = ?");
-    $result->bind_param('ii', $_POST['paperID'], $_POST['userID']);
+    $result->bind_param('ii', $paperID, $userID);
     $result->execute();
 
     // Delete any Log4_overall record for this student.
     $result = $mysqli->prepare("DELETE FROM log4_overall WHERE q_paper = ? AND userID = ?");
-    $result->bind_param('ii', $_POST['paperID'], $_POST['userID']);
+    $result->bind_param('ii', $paperID, $userID);
     $result->execute();
 
     // Write individual ratings into Log4.
@@ -52,7 +72,7 @@ if (isset($_POST['submit'])) {
         $q_parts = '';
       }
       $result = $mysqli->prepare("INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?, ?, ?)");
-      $result->bind_param('isssss', $_POST['userID'], $started, $_POST['paperID'], $_POST['q' . $question . '_id'], $tmp_val, $q_parts);
+      $result->bind_param('isssss', $userID, $started, $paperID, $_POST['q' . $question . '_id'], $tmp_val, $q_parts);
       $result->execute();
       $result->close();
       $total_score += ($_POST['q' . $question . '_val'] - 1);
@@ -69,13 +89,14 @@ if (isset($_POST['submit'])) {
       $overall_val = $_POST['overall_val'];
     }
     $result = $mysqli->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'electronic', ?)");
-    $result->bind_param('isssissii', $_POST['userID'], $started, $_POST['paperID'], $overall_val, $total_score, $_POST['fback'], $_POST['grade'], $userID, $_POST['year']);
+    $result->bind_param('isisissii', $userID, $started, $paperID, $overall_val, $total_score, $_POST['fback'], $_POST['grade'], $userID, $_POST['year']);
     $result->execute();
     $result->close();
   }
   
   // Redirect back to the class list to get the next student.
   header("location: " . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $_GET['id']);
+  exit;
 } else {
   // Get the module ID and calendar year of the OSCE station.
   if (isset($_GET['username']) and $_GET['username'] == 'test') {
@@ -89,21 +110,20 @@ if (isset($_POST['submit'])) {
     $test = true;
   } else {
     $result = $mysqli->prepare("SELECT username, title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE users.id = ? AND users.id = sid.userID");
-    $result->bind_param('s', $_GET['userID']);
+    $result->bind_param('i', $userID);
     $result->execute();
     $result->bind_result($username, $title, $surname, $first_names, $grade, $year, $student_id);
     $result->fetch();
     $result->close();
     $test = false;
   }
-
+  
   // Get properties of the paper.
-  $result = $mysqli->prepare("SELECT property_id, paper_title, bgcolor, fgcolor, labelcolor, themecolor, paper_postscript, marking, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date) FROM properties WHERE crypt_name=?");
-  $result->bind_param('s', $_GET['id']);
-  $result->execute();
-  $result->bind_result($paperID, $paper_title, $bgcolor, $fgcolor, $labelcolor, $themecolor, $postscript, $marking, $start_date, $end_date);
-  $result->fetch();
-  $result->close();
+  $marking    = $propertyObj->get_marking();
+  $start_date = $propertyObj->get_start_date();
+  $end_date   = $propertyObj->get_end_date();
+  $number_of_questions = $propertyObj->get_question_no();
+
   
   // Check time security
   if ($test == false) {
@@ -114,14 +134,7 @@ if (isset($_POST['submit'])) {
       $mysqli->close();
       exit;
     }
-  }
-  
-  $result = $mysqli->prepare("SELECT COUNT(question) FROM papers WHERE paper = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($number_of_questions);
-  $result->fetch();
-  $result->close();
+  }  
 ?>
 <!DOCTYPE html>
 <html>
@@ -143,12 +156,12 @@ if (isset($_POST['submit'])) {
   <style type="text/css">
   <?php
     if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
-      echo "body {background-color:$bgcolor; color:$fgcolor; font-size:100%}\n";
+      echo "body {background-color:" . $propertyObj->get_bgcolor() . "; color:" . $propertyObj->get_fgcolor() . "; font-size:100%}\n";
     } else {
-      echo "body {background-color:$bgcolor; color:$fgcolor; font-size:90%}\n";
+      echo "body {background-color:" . $propertyObj->get_bgcolor() . "; color:" . $propertyObj->get_fgcolor() . "; font-size:90%}\n";
     }
     ?>
-    .t {color:<?php echo $themecolor; ?>}
+    .t {color:<?php echo $propertyObj->get_themecolor(); ?>}
   </style>
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -259,13 +272,13 @@ if (isset($_POST['submit'])) {
   } else {
     echo '<td class="photo"><img src="./test_photo.png" width="90" height="135" border="1" alt="Photo" /></td>';
   }
-  echo "<td style=\"vertical-align:top; font-weight:bold; text-align:left\"><div class=\"title\">$paper_title</div><br /><br /><div style=\"font-size:150%\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><span style=\"color:#808080\">($student_id)</span></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\">";
+  echo "<td style=\"vertical-align:top; font-weight:bold; text-align:left\"><div class=\"title\">" . $propertyObj->get_paper_title() . "</div><br /><br /><div style=\"font-size:150%\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><span style=\"color:#808080\">($student_id)</span></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\">";
 
   if ($test == false) {
     // Query Log4 just in case form has already been submitted for this user.
     $stored_results = array();
     $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE q_paper = ? AND userID = ?");
-    $result->bind_param('ii', $paperID, $_GET['userID']);
+    $result->bind_param('ii', $paperID, $userID);
     $result->execute();
     $result->bind_result($q_id, $rating, $q_parts);
     while ($result->fetch()) {
@@ -275,7 +288,7 @@ if (isset($_POST['submit'])) {
     $result->close();
 
     $result = $mysqli->prepare("SELECT feedback, overall_rating FROM log4_overall WHERE q_paper = ? AND userID = ?");
-    $result->bind_param('ii', $paperID, $_GET['userID']);
+    $result->bind_param('ii', $paperID, $userID);
     $result->execute();
     $result->bind_result($feedback, $overall_rating);
     $result->fetch();
@@ -299,7 +312,7 @@ if (isset($_POST['submit'])) {
 
     echo "<tr><td class=\"q\">";
     if (trim($notes) != '') {
-      echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/small_note_icon.png\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+      echo "<span style=\"color:" . $propertyObj->get_labelcolor() . "\"><img src=\"../artwork/small_note_icon.png\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
     echo strip_tags($leadin, '<b><i><strong><em><br><br />');
     if (isset($stored_results[$q_id])) {
@@ -329,7 +342,7 @@ if (isset($_POST['submit'])) {
   
   if ($marking == '3' or $marking == '4' or $marking == '6') {
     if (!isset($overall_rating)) $overall_rating = '0';
-    echo "<tr><td colspan=\"4\" style=\"text-align:left\">$postscript</td></tr><tr><td colspan=\"4\" style=\"font-weight:bold; text-align:left\">" . $string['overallclassification'] . "<input type=\"hidden\" name=\"overall_val\" id=\"overall_val\" value=\"" . $overall_rating . "\" /></td></tr><tr><td colspan=\"4\" id=\"overall\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr>";
+    echo "<tr><td colspan=\"4\" style=\"text-align:left\">" . $propertyObj->get_paper_postscript() . "</td></tr><tr><td colspan=\"4\" style=\"font-weight:bold; text-align:left\">" . $string['overallclassification'] . "<input type=\"hidden\" name=\"overall_val\" id=\"overall_val\" value=\"" . $overall_rating . "\" /></td></tr><tr><td colspan=\"4\" id=\"overall\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr>";
 
     for ($i=0; $i<count($labels); $i++) {
       echo '<td';
@@ -350,11 +363,11 @@ if (isset($_POST['submit'])) {
     // For external examiners just close the window without saving.
     if ($userObject->has_role('External Examiner')) {
   ?>
-    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="paperID" value="<?php echo $paperID; ?>" /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($_GET['userID'])) echo $_GET['userID']; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
     } else {
   ?>
-    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled /><input type="hidden" name="paperID" value="<?php echo $paperID; ?>" /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($_GET['userID'])) echo $_GET['userID']; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
   }
   ?>
