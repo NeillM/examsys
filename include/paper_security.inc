@@ -28,6 +28,7 @@ require_once $cfg_web_root . '/classes/moduleutils.class.php';
 require_once $cfg_web_root . '/classes/paperutils.class.php';
 require_once $cfg_web_root . '/classes/lab_factory.class.php';
 require_once $cfg_web_root . '/classes/lab.class.php';
+require_once $cfg_web_root . '/classes/dateutils.class.php';
 
 function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
   $low_bandwidth = 0;
@@ -108,7 +109,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
       $stmt->bind_result($moduleid, $attempt);
       $stmt->store_result();
       if ($stmt->num_rows == 0) {
-        if ($calendar_year == '') $calendar_year = 'current year';
+        if ($calendar_year == '') $calendar_year = date_utils::get_current_academic_year(); //'current year';
         $html = '';
         foreach ($moduleIDs as $modID) {
           $mod_details = module_utils::get_full_details_by_ID($modID, $db);
