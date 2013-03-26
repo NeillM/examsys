@@ -92,6 +92,7 @@ $result->close();
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
       if (document.getElementById(objectID).className == 'r2') {
@@ -127,7 +128,7 @@ for ($size=200; $size<850; $size+=50) {
 ?></select></td><td><?php echo $string['modules']; ?></td></tr>
 <tr><td><textarea name="ref_content" id="ref_content" rows="40" cols="100" style="height:600px" class="mceEditor"><?php echo $content; ?></textarea></td><td style="vertical-align:top">
 <?php
-  echo "<div style=\"margin-top:1px; display:block; width:400px; height:604px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+  echo "<div style=\"margin-top:1px; display:block; width:420px; height:604px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
 
   $extra_modules = array();
   $result = $mysqli->prepare("SELECT idMod FROM reference_modules WHERE refID = ?");

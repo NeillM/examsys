@@ -19,7 +19,6 @@ tinyMCE.init({
     content_css : cfgRootPath + "/css/editor.css",
     entity_encoding : "named",
 
-
     setup : function(ed) {
       ed.onInit.add(function(ed, evt) {
 
