@@ -72,12 +72,9 @@ function display_q($db) {
   
   $question_offset = $_GET['qNo'];
   
-  //display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered)
-  
   $screen_pre_submitted = 0;
   
-  $user_answers[1][$question_offset] = '';
-  display_question($question, $paper_type, 1, $q_type, $question_no, $question_offset, $user_answers, $unanswered);	
+  display_question($question, $paper_type, $question_offset, $q_type, $question_no, $user_answers, $unanswered);	
   $question_nos[] = $old_q_id;
   echo "</table>\n";
 }
