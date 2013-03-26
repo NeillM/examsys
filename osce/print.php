@@ -22,15 +22,20 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
 
-  // Get properties of the paper.
-  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($paper_title);
-  $result->fetch();
-  $result->close();
+$paperID = check_var('paperID', 'GET', true, false, true);
+
+//get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+
 ?>
   <html>
   <head>
@@ -49,7 +54,7 @@
   </head>
   
   <body>
-  <h1><?php echo $paper_title; ?></h1>
+  <h1><?php echo $propertyObj->get_paper_title(); ?></h1>
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
   <tr>
   <td style="text-align:left"><strong><?php echo $string['student']; ?></strong></td>
@@ -65,15 +70,15 @@
   // Get the questions.
   $question_no = 1;
   $cell_colors = array('#FF8080','#FFC169','#50E850');
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, score_method, marking FROM properties, papers, questions WHERE property_id=? AND properties.property_id=papers.paper AND papers.question=questions.q_id ORDER BY display_pos");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY display_pos");
+  $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $score_method, $marking);
-  while ($row = $result->fetch()) {
+  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
+  while ($result->fetch()) {
     if ($question_no == 1) {
       // Header row
-      $cols = substr_count($score_method,"|");
-      $headings = explode("|",$score_method);
+      $cols = substr_count($display_method, '|');
+      $headings = explode('|', $display_method);
       echo '<tr><td></td>';
       for ($i=0; $i<$cols; $i++) {
         echo "<td style=\"width:80px; font-weight:bold\">" . $headings[$i] . "</td>";
@@ -94,6 +99,7 @@
     echo "</tr>\n";
     $question_no++;
   }
+  $result->close();
 ?>  
   </table>
   
@@ -105,6 +111,8 @@
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
   <tr>
   <?php
+    $marking = $propertyObj->get_marking();
+
     if ($marking == '3') {
       echo '<td>[' . $string['clear fail'] . ']</td><td class="overall">[' . $string['borderline'] . ']</td><td class="overall">[' . $string['clear pass'] . ']</td>';
     } elseif ($marking == '4') {
@@ -119,7 +127,6 @@
   <div><strong><?php echo $string['feedback']; ?></strong></div>
 
 <?php
-  $result->close();
   $mysqli->close();
 ?>
 </body>
