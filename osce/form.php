@@ -46,7 +46,13 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$paperID = $propertyObj->get_property_id();
+// Get properties of the paper.
+$paperID      = $propertyObj->get_property_id();
+$marking      = $propertyObj->get_marking();
+$start_date   = $propertyObj->get_start_date();
+$end_date     = $propertyObj->get_end_date();
+$number_of_qs = $propertyObj->get_question_no();
+
 
 if (isset($_POST['submit'])) {
   if ($_POST['userID'] != '') {
@@ -64,7 +70,7 @@ if (isset($_POST['submit'])) {
     $result->execute();
 
     // Write individual ratings into Log4.
-    for ($question = 1; $question <= $_POST['q_no']; $question++) {
+    for ($question = 1; $question <= $number_of_qs; $question++) {
       $tmp_val = ($_POST['q' . $question . '_val'] - 1);
       if (isset( $_POST[$_POST['q' . $question . '_id'] . '_parts'] )) {
         $q_parts = $_POST[$_POST['q' . $question . '_id'] . '_parts'];
@@ -79,7 +85,7 @@ if (isset($_POST['submit'])) {
     }
 
     // Write summary information into Log4_overall.
-    if ($_POST['marking'] == '5') {
+    if ($marking == '5') {
       if ($total_score < 12) {
         $overall_val = '1';
       } else {
@@ -118,11 +124,6 @@ if (isset($_POST['submit'])) {
     $test = false;
   }
   
-  // Get properties of the paper.
-  $marking    = $propertyObj->get_marking();
-  $start_date = $propertyObj->get_start_date();
-  $end_date   = $propertyObj->get_end_date();
-  $number_of_questions = $propertyObj->get_question_no();
 
   
   // Check time security
@@ -194,7 +195,7 @@ if (isset($_POST['submit'])) {
       var fails = 0;
       var borderlines = 0;
       var passes = 0;
-      for (i=1; i<=<?php echo $number_of_questions; ?>; i++) {
+      for (i=1; i<=<?php echo $number_of_qs; ?>; i++) {
         if (document.getElementById('q' + i + '_val').value == '1') {
           fails++;
         } else if (document.getElementById('q' + i + '_val').value == '2') {
@@ -305,7 +306,7 @@ if (isset($_POST['submit'])) {
   while ($result->fetch()) {
     if ($question_no == 1) {
       // Header row
-      $cols = substr_count($display_method,'|');
+      $cols = substr_count($display_method, '|');
     }
 
     if (trim($theme) != '') echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
@@ -363,11 +364,11 @@ if (isset($_POST['submit'])) {
     // For external examiners just close the window without saving.
     if ($userObject->has_role('External Examiner')) {
   ?>
-    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
     } else {
   ?>
-    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
   }
   ?>
