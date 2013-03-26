@@ -74,6 +74,8 @@ function display_q($db) {
   
   //display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered)
   
+  $screen_pre_submitted = 0;
+  
   $user_answers = array();
   display_question($question, $paper_type, 1, $q_type, $question_no, $question_offset, $user_answers, $unanswered);	
   $question_nos[] = $old_q_id;

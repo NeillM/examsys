@@ -367,7 +367,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "</tr>\n";
       break;
     case 'mcq':
-      var_dump($user_answers);
       if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
         echo '<blockquote class="unans">';
         $unanswered = true;
