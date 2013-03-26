@@ -43,16 +43,17 @@ $modules = Paper_utils::get_modules($paperID, $mysqli);
 <head>
   <?php
   if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
-    echo "  <meta name=\"viewport\" content=\"user-scalable=no\">\n";
+    echo "<meta name=\"viewport\" content=\"user-scalable=no\">\n";
   } else {
-    echo "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
+    echo "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
   }
   ?>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>OSCE: Class List</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/osce_list.css" />
   <style type="text/css">
   <?php
     if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
@@ -61,25 +62,6 @@ $modules = Paper_utils::get_modules($paperID, $mysqli);
       echo "body {font-size:90%}\n";
     }
   ?>
-    table {font-size:100%; width:100%; line-height:150%}
-    tr {border:1px solid #C0C0C0}
-    a {color:black}
-    .title {
-      padding:6px;
-      font-size:150%;
-      font-weight:bold;
-      background: -moz-linear-gradient(top, #EAEAEA, #C0C0C0);
-      background: -webkit-linear-gradient(top, #EAEAEA, #C0C0C0);
-      background-image: -ms-linear-gradient(top, #EAEAEA 0%, #C0C0C0 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EAEAEA', endColorstr='#C0C0C0');
-    }
-    .n {color:#808080}
-    .bl {font-weight:bold}
-    .l {color:#808080}
-    .indent {padding-left:40px}
-    .letter {color:#316AC5; font-weight:bold; font-size:120%}
-    .qlink {background-color:#316AC5; font-weight:bold; font-size:120%; width:3.8%}
-    a.qlink {color:white}
   </style>
   
   <script language="JavaScript">

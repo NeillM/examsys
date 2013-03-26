@@ -82,7 +82,7 @@ $result->close();
 
   // Query Log4 just in case form has already been submitted for this user.
   $stored_results = array();
-  $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE q_paper=? AND userID=?");
+  $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE q_paper = ? AND userID = ?");
   $result->bind_param('ii', $_GET['paperID'], $_GET['userID']);
   $result->execute();
   $result->bind_result($q_id, $rating,$q_parts);
@@ -92,9 +92,7 @@ $result->close();
   }
   $result->close();
   
-  var_dump($stored_q_parts);
-  
-  $result = $mysqli->prepare("SELECT feedback, overall_rating FROM log4_overall WHERE q_paper=? AND userID=?");
+  $result = $mysqli->prepare("SELECT feedback, overall_rating FROM log4_overall WHERE q_paper = ? AND userID = ?");
   $result->bind_param('ii', $_GET['paperID'], $_GET['userID']);
   $result->execute();
   $result->bind_result($feedback, $overall_rating);
@@ -107,7 +105,7 @@ $result->close();
   $cell_colors = array('#FF8080','#FFC169','#50E850');
   $rating_class = array('rating1','rating2','rating3');
   
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
+  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question=questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);

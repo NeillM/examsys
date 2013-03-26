@@ -185,7 +185,7 @@ require 'class_totals.inc';
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
+    $result = $mysqli->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
     $result->bind_param('i', $folder);
     $result->execute();
     $result->bind_result($folder_name);
