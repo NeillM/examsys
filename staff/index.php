@@ -180,19 +180,9 @@ require_once '../include/staff_auth.inc';
   $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, properties_reviewers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND internal_review_deadline >= CURDATE() AND reviewerID = ? AND type = 'internal' ORDER BY paper_title");
   $tmp = $userObject->get_user_ID();
   $result->bind_param('i', $tmp);
-  if ($mysqli->error) {
-    try {
-      throw new Exception("MySQL error $mysqli->error <br> Query:<br> $query", $mysqli->errno);
-    }
-    catch (Exception $e) {
-      echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-      echo nl2br($e->getTraceAsString());
-    }
-  }
   $result->execute();
   $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $internal_review_deadline, $crypt_name);
   $result->store_result();
-
   if ($result->num_rows() > 0) {
     echo "<br />\n";
     echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['papersforreview'] . " (" . $result->num_rows() . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
