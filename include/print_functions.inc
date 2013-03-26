@@ -72,9 +72,6 @@ function checkVariables($number) {
 function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset, $user_answers) {
   global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language;
 
-  echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\" class=\"qtable\">\n";
-  echo "<col width=\"40\"><col>\n";
-
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
   
@@ -129,11 +126,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   $question_no++;
 
   $li_set = 0;
-  if ($old_q_type == 'likert' and $question['q_type'] != 'likert') {
-    echo "</table>\n<br />\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
-    echo "<col width=\"40\"><col>\n";
-  } elseif ($old_q_type != 'likert' and $question['q_type'] == 'likert') {
-    echo "</table>\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
+  if ($old_q_type != '') {
+    if ($old_q_type == 'likert' and $question['q_type'] != 'likert') {
+      echo "</table>\n<br />\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
+      echo "<col width=\"40\"><col>\n";
+    } elseif ($old_q_type != 'likert' and $question['q_type'] == 'likert') {
+      echo "</table>\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
+    }
   }
 
   if ($question['theme'] != '') echo '<tr><td colspan="2" class="theme">' . $question['theme'] . '</td></tr>';
@@ -233,8 +232,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $na = false;
       $likert_display = explode('|',$question['display_method']);
       $likert_col_no = substr_count($question['display_method'],'|');
+ 
       if (strtolower($old_likert_label) != strtolower($question['display_method']) or $question['theme'] != '') {
-        if ($likert_col_no != $old_likert_cols) echo '</table><table cellpadding="4" cellspacing="0" border="0"><col width="40"><col>';
+        if ($likert_col_no != $old_likert_cols) {
+          echo '</table><table cellpadding="4" cellspacing="0" border="0"><col width="40"><col>';
+        }
         if ($likert_display[$likert_col_no] == 'true') {
           $likert_col_no++;
           $na = true;
@@ -258,6 +260,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } else {
         if ($question['scenario'] != '') echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">" . $question['scenario'] . "</td></tr>\n";
       }
+      
       $old_likert_label = $question['display_method'];
       $old_likert_cols = $likert_col_no;
       break;
@@ -909,11 +912,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo ")</div>\n<br /></td></tr>\n";
     }
   } else {
-    echo "</td></tr>\n";
+    //echo "</td></tr>\n";
   }
   if ($question['q_type'] != 'info') echo "<input type=\"hidden\" name=\"order$question_no\" value=\"" . implode(',', $question['option_order']) . "\" />\n";
   $used_questions[$q_id] = $q_id;
   
-  echo "</table>\n";
+  //echo "</table>\n";
 }
 ?>

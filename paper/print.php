@@ -87,64 +87,6 @@ function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answer
   echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
 }
 
-function branchingQOverwrite(&$questions,$branching_q_data,$paper_type,$user_answers,$current_screen,$userObject) {
-  global $mysqli, $DISABLEDuserID, $sessionid;
-  $previous_user_answer = '';
-  for ($screen=1; $screen<=count($user_answers); $screen++) {
-    foreach ($user_answers[$screen] as $questionID=>$past_answer) {
-      if ($branching_q_data['scenario'] == $questionID) $previous_user_answer = $past_answer;
-    }
-  }
-  $target_questionIDs = explode(',',$branching_q_data['options'][$previous_user_answer-1]['option_text']);
-  
-  // Remove any additional records from log, if user goes down different 'branch'.
-  
-  foreach ($branching_q_data['options'] as $individual_option) {
-    //build a list of all optional questions
-    $optional_qids .= $individual_option['option_text'] . ',';
-  }
-  $optional_qids = array_unique(explode(',',$optional_qids)); //get the unique qids
-  foreach ($optional_qids as $op_qid) {
-    if (!in_array($op_qid,$target_questionIDs) and isset($user_answers[$current_screen][$op_qid])) {
-      //if any of the possible qids are set on this screen remove old answer as the user is no on a different branch 
-      $stmt = $mysqli->prepare("DELETE FROM log$paper_type WHERE userid=? AND screen=? AND started=? AND q_id=?");
-      $stmt->bind_param('iisi',$userObject->get_user_ID(), $current_screen, $sessionid, $op_qid);
-      $stmt->execute();
-    }
-  }
-    
-  foreach ($target_questionIDs as $target_questionID) {
-    // Look up selected question and overwrite data.
-    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
-    $question_data->bind_param('i', $target_questionID);
-    $question_data->execute();
-    $question_data->store_result();
-    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
-    $question = array();
-    while ($question_data->fetch()) {
-      if ($question['q_id'] != $q_id or $question['display_pos'] != $display_pos) {
-        $question['theme'] = $theme;
-        $question['scenario'] = $scenario;
-        $question['leadin'] = $leadin;
-        $question['notes'] = $notes;
-        $question['q_type'] = $q_type;
-        $question['q_id'] = $q_id;
-        $question['display_pos'] = $display_pos;
-        $question['score_method'] = $score_method;
-        $question['display_method'] = $display_method;
-        $question['q_media'] = $q_media;
-        $question['q_media_width'] = $q_media_width;
-        $question['q_media_height'] = $q_media_height;
-        $question['q_option_order'] = $q_option_order;
-        $question['dismiss'] = $dismiss;
-      }
-      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
-   }
-   $questions[] = $question;
-  }
-  echo "\n<input type=\"hidden\" name=\"q" . $branching_q_data['q_id'] . '_' . ($previous_user_answer-1) . "_branchID\" value=\"" . ($previous_user_answer-1) . "\" />\n";
-}
-
 function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions, $string;
   
@@ -161,7 +103,7 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
   if ($selected_q_id == '') {
     // Generate a random question ID from keywords.
     $question_ids = array();
-    $question_data = $mysqli->prepare("SELECT DISTINCT q_id FROM keywords_question WHERE keywordID=?");
+    $question_data = $mysqli->prepare("SELECT DISTINCT q_id FROM keywords_question WHERE keywordID = ?");
     $question_data->bind_param('i', $random_q_data['options'][0]['option_text']);
     $question_data->execute();
     $question_data->bind_result($q_id);
@@ -351,11 +293,9 @@ $current_screen = 1;
       $tmp_q_no++;
     }
     if ($question['q_type'] == 'random') {
-      randomQOverwrite($questions_array,$question,$paper_type,$user_answers,$current_screen,$tmp_q_no);
-    } elseif ($question['q_type'] == 'branching') {
-      branchingQOverwrite($questions_array,$question,$paper_type,$user_answers,$current_screen,$userObject);
+      randomQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no);
     } elseif ($question['q_type'] == 'keyword_based') {
-      keywordQOverwrite($questions_array,$question,$paper_type,$user_answers,$current_screen,$tmp_q_no);
+      keywordQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no);
     } else {
       $questions_array[] = $question;
     }
@@ -363,6 +303,8 @@ $current_screen = 1;
   unset($tmp_questions_array);
   
   //display the questions
+  echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\" class=\"qtable\">\n";
+  echo "<col width=\"40\"><col>\n";
   foreach($questions_array as &$question) {
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
@@ -370,6 +312,7 @@ $current_screen = 1;
     $previous_q_type = $question['q_type'];
     $q_displayed++;
   }
+  echo "</table>\n";
   
   $mysqli->close();
 ?>
