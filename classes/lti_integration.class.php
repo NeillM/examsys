@@ -50,7 +50,7 @@ class lti_integration {
   static function allow_staff_edit_link() {
 
     // returns true if staff should be allowed to edit a link (currently not fully coded as of 2012-09)
-
+    $configObject=Config::get_instance();
     return false;
   }
 
@@ -58,24 +58,24 @@ class lti_integration {
 
     //returns true if you wish to allow self registration on modules that are self reg launched via lti
 
-    global $cfg_lti_allow_module_self_reg;
-    return $cfg_lti_allow_module_self_reg;
+    $configObject=Config::get_instance();
+    return $configObject->get('cfg_lti_allow_module_self_reg');
   }
 
   static function allow_staff_module_register($data) {
 
     // if this returns true then allow adding staff onto module team if they arent on it and launch via lti says they are teacher (Instructor)
 
-    global $cfg_lti_allow_staff_module_register;
-    return $cfg_lti_allow_staff_module_register;
+    $configObject=Config::get_instance();
+    return $configObject->get('cfg_lti_allow_staff_module_register');
   }
 
   static function allow_module_create($data) {
 
     // if this returns true then allow the creation of modules via an lti launch, module_code_translate function can convert VLE module into Rogo module(s)
 
-    global $cfg_lti_allow_module_create;
-    return $cfg_lti_allow_module_create;
+    $configObject=Config::get_instance();
+    return $configObject->get('cfg_lti_allow_module_create');
   }
 
   static function module_code_translate($c_internal_id, $course_title = '') {

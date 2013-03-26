@@ -214,7 +214,7 @@ if (!$lti->isInstructor()) {
       foreach ($data as $v) {
 
         var_dump($lti_i::allow_module_create($v),module_utils::module_exists($v[1], $mysqli));
-        
+
         if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) ) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $v[1], '../artwork/exclamation_64.png','#C00000');
