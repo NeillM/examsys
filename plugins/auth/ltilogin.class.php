@@ -27,7 +27,7 @@
 
 require_once $configObject->get('cfg_web_root') . 'LTI/ims-lti/UoN_LTI.php';
 require_once 'outline_authentication.class.php';
-
+require_once $configObject->get('cfg_web_root') . 'classes/lti_integration.class.php';
 
 class ltilogin_auth extends outline_authentication {
 
@@ -44,7 +44,9 @@ class ltilogin_auth extends outline_authentication {
     $this->lti->init_lti0($this->db);
     $this->savetodebug('Starting LTI');
     $this->lti->init_lti();
-
+    if (!isset($this->lti_i)) {
+      $this->lti_i = lti_integration::load();
+    }
   }
 
   function register_callback_routines() {
@@ -80,7 +82,7 @@ class ltilogin_auth extends outline_authentication {
       $result->store_result();
       $result->bind_result($username);
 
-      $authneeded = $lti_i->user_time_check($returned[1], $username);
+      $authneeded = $this->lti_i->user_time_check($returned[1], $username);
       if ($authneeded === true) {
         $this->session['authenticationobj']['ltilogin']['needsreuserlookup'] = true;
         $authobj->fail($this->number);
