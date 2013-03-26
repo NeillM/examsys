@@ -124,8 +124,8 @@ class PaperProperties {
     $sql = "SELECT
     			properties.property_id,
     			paper_title,
-    			UNIX_TIMESTAMP(start_date) as start_date,
-                UNIX_TIMESTAMP(end_date) as end_date,
+    			UNIX_TIMESTAMP(start_date) AS start_date,
+          UNIX_TIMESTAMP(end_date) AS end_date,
     			exam_duration,
     			calendar_year,
     			password,

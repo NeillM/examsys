@@ -24,8 +24,14 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
+require_once '../classes/facultyutils.class.php';
 
-check_var('facultyID', 'GET', true, false, false);
+$facultyID = check_var('facultyID', 'GET', true, false, true);
+
+if (!FacultyUtils::facultyid_exists($facultyID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $mysqli->close();
 ?>
