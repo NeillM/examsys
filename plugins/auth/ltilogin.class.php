@@ -57,6 +57,8 @@ class ltilogin_auth extends outline_authentication {
 
 
   function auth($authobj) {
+    $this->retdata =& $authobj;
+
     if ($this->lti->valid !== true) {
       $this->savetodebug('Not valid LTI Launch: ' . $this->lti->message);
       $authobj->fail($this->number);
@@ -70,9 +72,21 @@ class ltilogin_auth extends outline_authentication {
     $this->savetodebug('Data returned from lti lookup was: ' . var_export($returned, true));
 
     if ($returned !== false) {
-      if(!isset($this->retdata)) {
-        $this->retdata=new stdClass();
+
+      $sql="SELECT username from users where id = ?";
+      $result=$this->db->prepare($sql);
+      $result->bind_param('i', $returned[0]);
+      $result->execute();
+      $result->store_result();
+      $result->bind_result($username);
+
+      $authneeded = $lti_i->user_time_check($returned[1], $username);
+      if ($authneeded === true) {
+        $this->session['authenticationobj']['ltilogin']['needsreuserlookup'] = true;
+        $authobj->fail($this->number);
+        return $authobj;
       }
+
       $this->retdata->success = true;
       $this->retdata->form = 'std';
       $this->rogoid = $returned[0];
@@ -160,11 +174,18 @@ class ltilogin_auth extends outline_authentication {
   }
 
   function registeruserwithlti($postauthsuccessobj) {
+
+    if (isset($_SESSION['authenticationobj']['ltilogin']['needsreuserlookup']) and $_SESSION['authenticationobj']['ltilogin']['needsreuserlookup'] === true) {
+      $this->lti->update_lti_user();
+      $_SESSION['authenticationobj']['ltilogin']['needsreuserlookup'] = false;
+      return $postauthsuccessobj;
+    }
+
     if (!isset($_SESSION['authenticationobj']['ltilogin']['needsuserlookup']) or $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] === false) {
-      return;
+      return $postauthsuccessobj;
     }
     $this->savetodebug('storing rogo userid against lti user');
-    $rogoid = $this->calling_object->get_userid();
+    $rogoid = $postauthsuccessobj->userid;
     $this->lti->add_lti_user($rogoid);
     $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = false;
 
@@ -173,6 +194,17 @@ class ltilogin_auth extends outline_authentication {
 
   function displaystdform($displaystdformobj) {
     global $string;
+    if (isset($this->session['authenticationobj']['ltilogin']['needsreuserlookup']) and  $this->session['authenticationobj']['ltilogin']['needsreuserlookup'] === true) {
+
+      $message = new stdClass();
+      $message->pretext = '';
+      $message->posttext = '';
+
+      $message->content = $string['authentication_lti_reauthmessage'];
+      $displaystdformobj->messages[] = $message;
+      $displaystdformobj->replace = true;
+    }
+
     if (isset($this->session['authenticationobj']['ltilogin']['needsuserlookup']) and  $this->session['authenticationobj']['ltilogin']['needsuserlookup'] === true) {
 
       $message = new stdClass();

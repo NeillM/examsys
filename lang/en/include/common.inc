@@ -75,6 +75,7 @@ $string['NoLookupConfigured'] = 'No lookup configured';
 $string['NoLookupConfiguredmessage'] = 'No lookup configuration has been set in the config file. Please contact your local system administrator.';
 $string['guestbutton'] = 'Guest Login';
 $string['authentication_lti_authmessage'] = 'Please Login to authenticate the LTI Connection.';
+$string['authentication_lti_reauthmessage'] = 'Please Login to re-authenticate the LTI Connection.';
 
 $string['denied_role'] = 'Your user role of %s does not allow you access.';
 
