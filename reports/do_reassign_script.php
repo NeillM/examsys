@@ -32,7 +32,7 @@ check_var('temp_userID', 'GET', true, false, false);
 // Get start time of the paper.
 $papers = array();
 $paper_no = 0;
-$result = $mysqli->prepare("SELECT DISTINCT q_paper, started FROM log2 WHERE userID = ?");
+$result = $mysqli->prepare("SELECT DISTINCT paperID, started FROM log_metadata WHERE userID = ?");
 $result->bind_param('i', $_GET['temp_userID']);
 $result->execute();
 $result->bind_result($q_paper, $started);
