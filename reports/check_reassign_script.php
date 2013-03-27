@@ -31,12 +31,12 @@ function getModules($userID, $mysqlidb) {
   $modules = array();
   $session = date_utils::get_current_academic_year();
 
-  $result = $mysqlidb->prepare("SELECT moduleid FROM student_modules WHERE calendar_year=? AND userID=?");
+  $result = $mysqlidb->prepare("SELECT idmod FROM modules_student WHERE calendar_year=? AND userID=?");
   $result->bind_param('si', $session, $userID);
   $result->execute();
   $result->bind_result($moduleid);
   while ($result->fetch()) {
-    $modules[] = $moduleid;
+    $modules[] = module_utils::get_moduleid_from_id($moduleid, $mysqlidb);
   }
   $result->close();
   
