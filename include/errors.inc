@@ -98,17 +98,24 @@ function uploadError($errCode) {
 
 /**
  * Check that a variable exists of not.
- * @param string $var_name - name of the variable to check
- * @param string $method - $_GET or $_POST
- * @param bool $mandatory - if true then exit if the  does not exist
- * @param bool $headers - if true then output HTML header code
- * @param bool $return_var - if true return the value of the tested variable back
+ * @param string  $var_name     Name of the variable to check
+ * @param string  $method       Name of superglobal ($_GET, $_POST or $_REQUEST (default)) or an array to search
+ * @param bool    $mandatory    If true then exit if the variable does not exist
+ * @param bool    $headers      If true then output HTML header code
+ * @param bool    $return_var   If true return the value of the tested variable back
  */
 function check_var($var_name, $method, $mandatory, $headers, $return_var) {
   global $string;
   
   if ($mandatory) {
-    if ($method == 'GET') {
+    if (is_array($method)) {
+      if (!isset($method[$var_name]) or $method[$var_name] === '' ) {
+        display_error($string['fatalerrormsg0'], $string['fatalerrorarray'], $headers);
+      }
+      if ($return_var) {
+        return $method[$var_name];
+      }
+    } elseif ($method == 'GET') {
       if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
         display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
       }
