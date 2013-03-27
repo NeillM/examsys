@@ -922,6 +922,7 @@ if (!isset($_POST['update'])) {
   }
 
   //ADD new role based MySQL users - 10/10/2011
+  $cfg_db_sct_username = $cfg_db_database . '_sct';
   $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_sct'");
   $result->execute();
   $result->store_result();
@@ -929,7 +930,6 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() == 0) {
 
-    $cfg_db_sct_username = $cfg_db_database . '_sct';
     $cfg_db_sct_password = gen_password(16);
 
     $priv_SQL = array();
@@ -3950,17 +3950,23 @@ SQL;
     $updater_utils->execute_query($sql, true);
   }
 
-// 22/03/2013 cczsa1 - adding index on idx_idmod to speed up queries eg folder view page
+  // 22/03/2013 cczsa1 - adding index on idx_idmod to speed up queries eg folder view page
   if (!$updater_utils->does_index_exist('properties_modules', 'idx_idmod')) {
     $updater_utils->execute_query("ALTER TABLE properties_modules ADD INDEX idx_idmod (idMod)", false);
   }
 
-  //
+  // 27/03/2012 - nazrji - sct_reviewer insert into denied log
+  if (!$updater_utils->has_grant($cfg_db_sct_username, 'INSERT', 'denied_log', $cfg_db_host)) {
+    $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_sct_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
+
+
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */
 
-    // End of updates -----------------------------------------------------------------
+  // End of updates -----------------------------------------------------------------
 
   // Final housekeeping activities - put all updates above this line
   $updater_utils->execute_query('FLUSH PRIVILEGES', true);

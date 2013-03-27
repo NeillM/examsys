@@ -58,7 +58,7 @@ class loginformfields_auth extends outline_authentication {
     }
     foreach ($list as $name) {
       $this->savetodebug('session store of input data key is ' . $name);
-      if ($isset($_REQUEST[$name])) {
+      if (isset($_REQUEST[$name])) {
         $this->session['authenticationObj']['loginformfields'][$name] = $_REQUEST[$name];
       }
     }

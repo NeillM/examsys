@@ -57,7 +57,7 @@ class alreadyloggedin_auth extends outline_authentication {
     $this->retdata =& $authobj;
     $this->savetodebug('Authing');
     $this->savetodebug(str_replace("\n", '', trim(rtrim(var_export($this->session, true)))));
-    if (isset($this->session['authenticationObj']['loggedin']['userid']) and $this->session['authenticationObj']['loggedin']['userid'] > 0 and $this->session['authenticationObj']['loggedin']['userid'] != '' and $this->session['authenticationObj']['loggedin']['userid'] != 'null' and is_int($this->session['authenticationObj']['loggedin']['userid'])) {
+    if (isset($this->session['authenticationObj']['loggedin']['userid']) and ($this->session['authenticationObj']['loggedin']['userid'] > 0 or $this->session['authenticationObj']['loggedin']['userid'] < -999) and $this->session['authenticationObj']['loggedin']['userid'] != '' and $this->session['authenticationObj']['loggedin']['userid'] != 'null' and is_int($this->session['authenticationObj']['loggedin']['userid'])) {
       $this->savetodebug('userid found in session');
       if (isset($this->settings['timeout']) and $this->settings['timeout'] != 0 and (($this->session['authenticationObj']['loggedin']['time'] + $this->settings['timeout']) > time())) {
         $this->savetodebug('Timeout is set and run out');

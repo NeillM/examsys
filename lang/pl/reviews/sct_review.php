@@ -17,7 +17,11 @@
 require '../lang/' . $language . '/include/common.inc';
 require '../lang/' . $language . '/question/sct_shared.php';
 
+$string['notallowed'] = 'Access to this paper is not currently allowed.'; // Niko
+$string['authfailed'] = 'Authentication with Rogo has failed.'; // Niko
 $string['sctreview'] = 'Recenzja SCT';
+$string['name'] = 'Name'; // Niko
+$string['email'] = 'Email'; // Niko
 $string['clinicalvignette'] = 'Przypadek kliniczny';
 $string['newinformation'] = 'Nowe informacje';
 $string['note'] = 'Notatka:';

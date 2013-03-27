@@ -63,13 +63,13 @@ class fixedlist_auth extends outline_authentication {
 
     $success=false;
     foreach($this->settings['authusers'] as $user => $upasswd) {
-      if($user==$this->form['std']->username and $upasswd=$this->form['std']->password) {
+      if($user == $this->form['std']->username and $upasswd == $this->form['std']->password) {
         $success=true;
         break;
       }
     }
 
-    if($success===false) {
+    if($success === false) {
       $this->retdata->fail($this->number);
       $this->retdata->message = 'Doesnt match list of users';
 
@@ -125,11 +125,6 @@ class fixedlist_auth extends outline_authentication {
     //default behaviour is to display username/password form
     $postauthfailreturn->form = 'std';
     $postauthfailreturn->exit = true;
-
-
-
-
-
 
     return $postauthfailreturn;
 
