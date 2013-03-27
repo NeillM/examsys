@@ -35,6 +35,7 @@ function getModules($userID, $mysqlidb) {
   $result->bind_param('si', $session, $userID);
   $result->execute();
   $result->bind_result($moduleid);
+  $result->store_result();
   while ($result->fetch()) {
     $modules[] = module_utils::get_moduleid_from_id($moduleid, $mysqlidb);
   }
