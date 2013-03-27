@@ -159,6 +159,12 @@ if (!$lti->isInstructor()) {
         }
       }
     }
+    /* Cannot leave this in as it will cause an issue.
+     *  elseif (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1], $session, $mysqli) and $returned_check !== false and !$lti_i::allow_module_self_reg($v)) {
+        UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['lti_not_allow_add_selfreg'] . $v[1], '../artwork/exclamation_64.png','#C00000');
+        exit();
+      }
+    */
     // do 'something' here
     $_SESSION['lti']['paperlink'] = $returned[0];
     header("location: ../user_index.php?id=" . $returned[0]);

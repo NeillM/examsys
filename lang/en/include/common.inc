@@ -76,6 +76,7 @@ $string['NoLookupConfiguredmessage'] = 'No lookup configuration has been set in 
 $string['guestbutton'] = 'Guest Login';
 $string['authentication_lti_authmessage'] = 'Please Login to authenticate the LTI Connection.';
 $string['authentication_lti_reauthmessage'] = 'Please Login to re-authenticate the LTI Connection.';
+$string['lti_not_allow_add_selfreg'] = 'Automatic adding of students on this type of module hasnt been enabled in the config for module: ';
 
 $string['denied_role'] = 'Your user role of %s does not allow you access.';
 
