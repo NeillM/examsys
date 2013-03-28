@@ -22,55 +22,72 @@
 * @package
 */
 
-  require '../../include/sysadmin_auth.inc';
-  require '../../include/errors.inc';
-  require '../../include/help.inc';
+require '../../include/sysadmin_auth.inc';
+require '../../include/errors.inc';
+require '../../include/help.inc';
 
-  header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset') );
+$pageid = check_var('id', 'REQUEST', true, false, true);
 
-  if (isset($_POST['save_changes'])) {
-    // Update help file record
-    $tmp_body = $_POST['edit1'];
-    $tmp_body_plain = strip_tags($tmp_body);
-    $order = array("\r\n", "\n", "\r", "\t");
-    $tmp_body_plain = str_replace($order,' ',$tmp_body_plain);
-    $tmp_body_plain = str_replace('  ',' ',$tmp_body_plain);
-    $tmp_title = $_POST['page_title'];
+header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 
-    if ($_POST['edit_id'] == $_POST['original_id']) {
-      // Editing normal page.
-      $result = $mysqli->prepare("UPDATE staff_help SET title=?, body=?, body_plain=?, checkout_time=NULL, checkout_authorID=NULL, roles=? WHERE id=?");
-      $result->bind_param('ssssi', $tmp_title, $tmp_body, $tmp_body_plain, $_POST['page_roles'], $_POST['edit_id']);
-      $result->execute();
-      $result->close();
-    } else {
-      // Editing a page pointed to.
-      $result = $mysqli->prepare("UPDATE staff_help SET title=? WHERE id=?");
-      $result->bind_param('si', $tmp_title, $_POST['original_id']);
-      $result->execute();
-      $result->close();
+$rows = 0;
+$result = $mysqli->prepare("SELECT title, body, id, DATE_FORMAT(checkout_time,'%Y%m%d%H%i%S') AS checkout_time, checkout_authorID, type, roles FROM staff_help WHERE id = ? LIMIT 1");
+$result->bind_param('i', $pageid);
+$result->execute();
+$result->store_result();
+$result->bind_result($page_title, $body, $id, $page_checkout_time, $page_checkout_authorID, $type, $roles);
+$rows = $result->num_rows;
+$result->fetch();
+$result->close();
 
-      $result = $mysqli->prepare("UPDATE staff_help SET body=?, body_plain=?, checkout_time=NULL, checkout_authorID=NULL, roles=? WHERE id=?");
-      $result->bind_param('sssi', $tmp_body, $tmp_body_plain, $_POST['page_roles'], $_POST['edit_id']);
-      $result->execute();
-      $result->close();
-    }
+if ($rows == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
+}
 
-    $mysqli->close();
-    header("location: display_page.php?id=" . $_POST['original_id']);
-    exit;
-  } elseif (isset($_POST['cancel'])) {
-    // Release authoring lock.
-    if ($_POST['checkout_authorID'] == $userObject->get_user_ID()) {
-      $result = $mysqli->prepare("UPDATE staff_help SET checkout_time=NULL, checkout_authorID=NULL WHERE id=?");
-      $result->bind_param('i', $_POST['edit_id']);
-      $result->execute();
-      $result->close();
-    }
-    $mysqli->close();
-    header("location: display_page.php?id=" . $_POST['original_id']);
-    exit;
+if (isset($_POST['save_changes'])) {
+  // Update help file record
+  $tmp_body = $_POST['edit1'];
+  $tmp_body_plain = strip_tags($tmp_body);
+  $order = array("\r\n", "\n", "\r", "\t");
+  $tmp_body_plain = str_replace($order, ' ', $tmp_body_plain);
+  $tmp_body_plain = str_replace('  ', ' ', $tmp_body_plain);
+  $tmp_title = $_POST['page_title'];
+
+  if ($_POST['edit_id'] == $pageid) {
+    // Editing normal page.
+    $result = $mysqli->prepare("UPDATE staff_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL, roles = ? WHERE id = ?");
+    $result->bind_param('ssssi', $tmp_title, $tmp_body, $tmp_body_plain, $_POST['page_roles'], $_POST['edit_id']);
+    $result->execute();
+    $result->close();
   } else {
+    // Editing a page pointed to.
+    $result = $mysqli->prepare("UPDATE staff_help SET title = ? WHERE id = ?");
+    $result->bind_param('si', $tmp_title, $pageid);
+    $result->execute();
+    $result->close();
+
+    $result = $mysqli->prepare("UPDATE staff_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL, roles = ? WHERE id = ?");
+    $result->bind_param('sssi', $tmp_body, $tmp_body_plain, $_POST['page_roles'], $_POST['edit_id']);
+    $result->execute();
+    $result->close();
+  }
+
+  $mysqli->close();
+  header("location: display_page.php?id=$pageid");
+  exit;
+} elseif (isset($_POST['cancel'])) {
+  // Release authoring lock.
+  if ($_POST['checkout_authorID'] == $userObject->get_user_ID()) {
+    $result = $mysqli->prepare("UPDATE staff_help SET checkout_time = NULL, checkout_authorID = NULL WHERE id = ?");
+    $result->bind_param('i', $_POST['edit_id']);
+    $result->execute();
+    $result->close();
+  }
+  $mysqli->close();
+  header("location: display_page.php?id=$pageid");
+  exit;
+} else {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -122,19 +139,12 @@
 
 <body onload="toScreenHeight('edit1',120)" onresize="toScreenHeight('edit1',120)">
 
-<form name="add_form" charset="UTF-8" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=" . $_GET['id']; ?>" onsubmit="return checkForm();">
+<form name="add_form" charset="UTF-8" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>" onsubmit="return checkForm();">
 <?php
-  $result = $mysqli->prepare("SELECT title, body, id, DATE_FORMAT(checkout_time,'%Y%m%d%H%i%S') AS checkout_time, checkout_authorID, type, roles FROM staff_help WHERE id=? LIMIT 1");
-  $result->bind_param('i', $_GET['id']);
-  $result->execute();
-  $result->bind_result($page_title, $body, $id, $page_checkout_time, $page_checkout_authorID, $type, $roles);
-  $result->fetch();
-  $result->close();
-
   if ($type == 'pointer') {
     $edit_id = $body;
 
-    $result = $mysqli->prepare("SELECT body FROM staff_help WHERE id=?");
+    $result = $mysqli->prepare("SELECT body FROM staff_help WHERE id = ?");
     $result->bind_param('i', $body);
     $result->execute();
     $result->store_result();
@@ -146,7 +156,7 @@
   }
 
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"padding-left:20px\"><input type=\"text\" style=\"color:#7598C4; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" /></td><td style=\"text-align:right\"><select name=\"page_roles\">\n";
-  $categories = array('Staff','Admin','SysAdmin');
+  $categories = array('Staff', 'Admin', 'SysAdmin');
   foreach ($categories as $category) {
     if ($category == $roles) {
       echo "<option value=\"$category\" selected>$category</option>\n";
@@ -190,7 +200,7 @@
   ?>
   <input type="hidden" name="checkout_authorID" value="<?php echo $checkout_authorID; ?>" />
   <div style="text-align:center; padding-top:8px"><input style="width:120px" type="submit" name="save_changes" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> />&nbsp;&nbsp;<input style="width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
-  <input type="hidden" name="edit_id" value="<?php echo $edit_id; ?>" /><input type="hidden" name="original_id" value="<?php echo $_GET['id']; ?>" />
+  <input type="hidden" name="edit_id" value="<?php echo $edit_id; ?>" />
 </form>
 </body>
 </html>

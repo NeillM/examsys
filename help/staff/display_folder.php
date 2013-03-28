@@ -22,8 +22,10 @@
 * @package
 */
 
-
 require '../../include/staff_auth.inc';
+require '../../include/errors.inc';
+
+check_var('title', 'GET', true, false, false);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -52,7 +54,7 @@ require '../../include/staff_auth.inc';
 <?php
   if ((isset($_GET['id']) and $_GET['id'] != '1') or $userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
     $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'staff', ?, NOW(), ?)");
-    $result->bind_param('ii',$userObject->get_user_ID(), $_GET['id']);
+    $result->bind_param('ii', $userObject->get_user_ID(), $_GET['id']);
     $result->execute();
     $result->close();
     if ($mysqli->error) {
@@ -60,9 +62,9 @@ require '../../include/staff_auth.inc';
     }
   }
   
+  $t = $_GET['title'] . '/%';
   $search_results = $mysqli->prepare("SELECT id, title, type FROM staff_help WHERE title LIKE ? ORDER BY title");
-  $t=$_GET['title'] . '/%';
-  $search_results->bind_param('s',$t);
+  $search_results->bind_param('s', $t);
   $search_results->execute();
   $search_results->store_result();
   $search_results->bind_result($id, $title, $type);
@@ -73,7 +75,7 @@ require '../../include/staff_auth.inc';
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n<tr><td style=\"width:20px\">&nbsp;</td><td>";
   
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-  echo "<tr><td style=\"border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\">&nbsp;&nbsp;" . $string['topics'] . "</td><td style=\"border-top: 1px solid #6B82B2; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; text-align:right\">" . $search_results->num_rows . "&nbsp;" . $string['items'] . "&nbsp;</td></tr>";
+  echo "<tr><td style=\"border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-color: #81A9D4; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\">&nbsp;&nbsp;" . $string['topics'] . "</td><td style=\"border-top: 1px solid #6B82B2; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2; background-color: #81A9D4; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; text-align:right\">" . $search_results->num_rows . "&nbsp;" . $string['items'] . "&nbsp;</td></tr>";
   echo "</table>\n";
 
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
@@ -81,7 +83,7 @@ require '../../include/staff_auth.inc';
   while ($search_results->fetch()) {
     $row_no++;
     if ($row_no % 2) {
-      echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/','',$title) . "</a></td></tr>\n";
+      echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/', '', $title) . "</a></td></tr>\n";
     } else {
       echo "<tr><td style=\"width:24px; background-color:#F2F2F2\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td style=\"background-color:#F2F2F2\" class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/','',$title) . "</a></td></tr>\n";
     }
