@@ -117,7 +117,7 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
   if ($order == 'leadin') $order = 'leadin_plain';
   
   $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited, '" . $configObject->get('cfg_short_date') . "') AS display_date, locked FROM (questions, questions_modules) WHERE questions.q_id=questions_modules.q_id AND idMod=? AND deleted IS NULL ORDER BY $order $direction");
-  $stmt->bind_param('i', $_GET['teamID']);
+  $stmt->bind_param('i', $teamID);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked);
@@ -132,7 +132,7 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
     }
     $stmt->close();
   } else {
-    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['warningnoquestion'] . " <strong>" . $_GET['team'] . ".</td></tr></table>\n";
+    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['warningnoquestion'] . " <strong>" . $module_details['moduleid'] . ".</td></tr></table>\n";
   }
   $mysqli->close();
 ?>
