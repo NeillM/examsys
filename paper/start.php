@@ -68,6 +68,8 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
       $try++;
     }
     $used_questions[$selected_q_id] = 1;
+  } else {
+    $unique = true;
   }
 
   $question['assigned_number'] = $random_q_data['assigned_number'];
