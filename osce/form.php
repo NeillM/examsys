@@ -95,7 +95,7 @@ if (isset($_POST['submit'])) {
       $overall_val = $_POST['overall_val'];
     }
     $result = $mysqli->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'electronic', ?)");
-    $result->bind_param('isisissii', $userID, $started, $paperID, $overall_val, $total_score, $_POST['fback'], $_POST['grade'], $userID, $_POST['year']);
+    $result->bind_param('isisissii', $userID, $started, $paperID, $overall_val, $total_score, $_POST['fback'], $_POST['grade'], $userObject->get_user_ID(), $_POST['year']);
     $result->execute();
     $result->close();
   }

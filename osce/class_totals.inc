@@ -38,7 +38,11 @@ require_once '../classes/paperproperties.class.php';
 $sortby = '';
 $ordering = '';
 
-$paperID = check_var('paperID', 'GET', true, false, true);
+$paperID   = check_var('paperID', 'GET', true, false, true);
+$startdate = check_var('startdate', 'GET', true, false, true);
+$enddate   = check_var('enddate', 'GET', true, false, true);
+
+
 if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
 if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
 
@@ -58,10 +62,10 @@ $modIDs = implode(',', array_keys(Paper_utils::get_modules($paperID, $mysqli)));
 $user_no = 0;
 if (!isset($_GET['absent']) or $_GET['absent'] == 0) {
   $result = $mysqli->prepare("SELECT DISTINCT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (users AS students, users AS examiners, sid, log4_overall) WHERE students.id = log4_overall.userID AND examiners.id = log4_overall.examinerID AND started >= ? AND started <= ? AND q_paper = ? AND students.id=sid.userID ORDER BY students.surname, students.initials");
-  $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
+  $result->bind_param('ssi', $startdate, $enddate, $paperID);
 } else {
   $result = $mysqli->prepare("SELECT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (modules_student, users AS students, sid) LEFT JOIN log4_overall ON students.id = log4_overall.userID AND started >= ? AND started <= ? AND q_paper = ? LEFT JOIN users AS examiners ON log4_overall.examinerID = examiners.id WHERE modules_student.userID=students.id AND students.id = sid.userID AND modules_student.idMod IN ($modIDs) AND calendar_year = ? ORDER BY students.surname, students.initials");
-  $result->bind_param('ssis', $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $calendar_year);
+  $result->bind_param('ssis', $startdate, $enddate, $paperID, $calendar_year);
 }
 $result->execute();
 $result->bind_result($tmp_userID, $gender, $grade, $year, $surname, $initials, $first_names, $title, $student_id, $started, $display_started, $overall_rating, $numeric_score, $examiner_title, $examiner_surname, $examiner_initials);
@@ -78,10 +82,10 @@ while ($result->fetch()) {
   $user_results[$user_no]['year'] = $year;
   $user_results[$user_no]['display_started'] = $display_started;
   $user_results[$user_no]['title'] = $title;  
-  $user_results[$user_no]['surname'] = demo_replace($surname,$demo);
-  $user_results[$user_no]['initials'] = demo_replace($initials,$demo);
-  $user_results[$user_no]['first_names'] = demo_replace($first_names,$demo);
-  $user_results[$user_no]['student_id'] = demo_replace_number($student_id,$demo);
+  $user_results[$user_no]['surname'] = demo_replace($surname, $demo);
+  $user_results[$user_no]['initials'] = demo_replace($initials, $demo);
+  $user_results[$user_no]['first_names'] = demo_replace($first_names, $demo);
+  $user_results[$user_no]['student_id'] = demo_replace_number($student_id, $demo);
   $user_results[$user_no]['gender'] = $gender;
   $user_results[$user_no]['examiner'] = $examiner_title . ' ' . $examiner_initials . ' ' . $examiner_surname;
   $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
@@ -94,25 +98,25 @@ $user_results = array_csort($user_results, $sortby, $ordering);
 
 switch ($propertyObj->get_marking()) {
   case '1':
-    $labels = array(1=>'Fail',2=>'Pass','ERROR'=>'ERROR');
+    $labels = array(1=>'Fail', 2=>'Pass', 'ERROR'=>'ERROR');
     break;
   case '3':
-    $labels = array(1=>'Clear Fail',2=>'Borderline',3=>'Clear Pass','ERROR'=>'ERROR');
+    $labels = array(1=>'Clear Fail', 2=>'Borderline', 3=>'Clear Pass', 'ERROR'=>'ERROR');
     break;
   case '4':
-    $labels = array(1=>'Fail',2=>'Borderline fail',3=>'Borderline pass',4=>'Pass',5=>'Good pass','ERROR'=>'ERROR');
+    $labels = array(1=>'Fail', 2=>'Borderline fail', 3=>'Borderline pass', 4=>'Pass', 5=>'Good pass', 'ERROR'=>'ERROR');
     break;
   case '5':
-    $labels = array(1=>'Unsatisfactory',2=>'Competent','ERROR'=>'ERROR');
+    $labels = array(1=>'Unsatisfactory', 2=>'Competent', 'ERROR'=>'ERROR');
     break;
   case '6':
-    $labels = array(1=>'Clear FAIL',2=>'BORDERLINE',3=>'Clear PASS',4=>'Honours PASS','ERROR'=>'ERROR');
+    $labels = array(1=>'Clear FAIL', 2=>'BORDERLINE', 3=>'Clear PASS', 4=>'Honours PASS', 'ERROR'=>'ERROR');
     break;
 }
 
 $completed_no = 0;
 $total_score = 0;
-$classifications = array(''=>'',1=>0,2=>0,3=>0,4=>0,5=>0,'ERROR'=>0);
+$classifications = array(''=>'', 1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 'ERROR'=>0);
 
 for ($i=0; $i<$user_no; $i++) {
   if ($user_results[$i]['started'] != '') {   // No attendance
@@ -121,5 +125,4 @@ for ($i=0; $i<$user_no; $i++) {
     $completed_no++;
   }
 }
-
 ?>
