@@ -80,7 +80,7 @@ function get_random_question_details($question, $rand_id, $mysqli) {
   return $question;
 }
 
-function add_random_column_standard($i, $sec, $subsec = ''){
+function add_random_column_standard($i, $sec, &$csv, $subsec = ''){
   $csv .= ':user';
   $csv .= ',Q' . ($i+1) . chr($sec+64) . $subsec . ':correct';
 }
@@ -367,7 +367,7 @@ if ($student_no > 0) {
                 if (substr($tmp_exclude, $sec - 1, 1) == '0') {
                   $csv .= ',Q' . ($i+1) . chr($sec + 64);
                   if ($is_random) {
-                    add_random_column_standard($i, $sec);
+                    add_random_column_standard($i, $sec, $csv);
                   }
                 }
               }
@@ -380,7 +380,7 @@ if ($student_no > 0) {
                   if (strpos($correct_parts[$sec], '$') === false) {
                     $csv .= ',Q' . ($i+1) . $numerals[$sec-1];
                     if ($is_random) {
-                      add_random_column_standard($i, $sec);
+                      add_random_column_standard($i, $sec, $csv);
                     }
                   } else {
                     $num_ix = 0;
@@ -388,7 +388,7 @@ if ($student_no > 0) {
                     foreach ($correct_subparts as $subpart) {
                       $csv .= ',Q' . ($i+1) . $numerals[$sec-1] . chr($num_ix + 65);
                       if ($is_random) {
-                        add_random_column_standard($i, $sec, $numerals[$num_ix]);
+                        add_random_column_standard($i, $sec, $csv, $numerals[$num_ix]);
                       }
                       $num_ix++;
                     }
@@ -414,7 +414,7 @@ if ($student_no > 0) {
                   if (substr($tmp_exclude,$sec-1,1) == '0') {
                     $csv .= ',Q' . ($i+1) . chr($sec+64);
                     if ($is_random) {
-                      add_random_column_standard($i, $sec);
+                      add_random_column_standard($i, $sec, $csv);
                     }
                   }
                   $sec++;
@@ -427,7 +427,7 @@ if ($student_no > 0) {
                 if (substr($tmp_exclude, $sec - 1, 1) == '0' and $correct_parts[$sec] != '') {
                   $csv .= ',Q' . ($i+1) . chr($sec+64);
                   if ($is_random) {
-                    add_random_column_standard($i, $sec);
+                    add_random_column_standard($i, $sec, $csv);
                   }
                 }
               }
@@ -437,7 +437,7 @@ if ($student_no > 0) {
                 for ($sec=1; $sec<=substr_count($question['correct'],','); $sec++) {
                   $csv .= ',Q' . ($i+1) . chr($sec+64);
                   if ($is_random) {
-                    add_random_column_standard($i, $sec);
+                    add_random_column_standard($i, $sec, $csv);
                   }
                 }
               }
@@ -448,7 +448,7 @@ if ($student_no > 0) {
                 if (substr($tmp_exclude,$sec-1,1) == '0') {
                   $csv .= ',Q' . ($i+1) . chr($sec+64);
                   if ($is_random) {
-                    add_random_column_standard($i, $sec);
+                    add_random_column_standard($i, $sec, $csv);
                   }
                 }
               }
@@ -458,7 +458,7 @@ if ($student_no > 0) {
                 if (!isset($excluded[$tmp_question_ID])) {
                   $csv .= ',Q' . ($i+1) . chr($sec+64);
                   if ($is_random) {
-                    add_random_column_standard($i, $sec);
+                    add_random_column_standard($i, $sec, $csv);
                   }
                 }
               }
