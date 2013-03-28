@@ -27,6 +27,7 @@ require '../config/campuses.inc';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/paperutils.class.php';
+require_once '../include/sort.inc';
 require '../lang/' . $language. '/include/timezones.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -50,7 +51,7 @@ require '../lang/' . $language. '/include/timezones.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {background-color:#F0F0F0; margin:6px; font-size:90%}
-    .icon {color:#001687; padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; font-size:8pt}
+    .icon {color:#001687; padding: 15px 0px; vertical-align:top; width:98px; font-size:8pt}
   </style>
 
   <script type="text/javascript">
@@ -205,6 +206,7 @@ require '../lang/' . $language. '/include/timezones.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {background-color:#F0F0F0; margin:4px; font-size:90%}
+    h2 { font-size: 100%; margin: 8px 0 0 0; }
   </style>
 
 <?php
@@ -501,18 +503,12 @@ if ($_POST['paper_type'] == 'summative') {
 
   $module_no = 0;
   $module_array = $userObject->get_staff_accessable_modules();
-/*  if ($userObject->has_role('SysAdmin')) {
-    $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules ORDER BY moduleID");
-  } elseif ($userObject->has_role('Admin')) {
-    $schoolIDs = implode(',', SchoolUtils::get_admin_schools($userObject->get_user_ID(), $mysqli));
-    $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules WHERE (schoolid IN ($schoolIDs) OR modules.id IN ($staff_modules_sql)) AND ORDER BY moduleID");
-  } else {
-    $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules WHERE modules.id IN ($staff_modules_sql)  ORDER BY moduleID");
-  }
-  $result->execute();
-  $result->bind_result($idMod, $module_id, $module_name);*/
-  //while ($result->fetch()) {
+  $current_school = '---';
   foreach($module_array as $module) {
+    if ($module['school'] != $current_school) {
+      echo '<h2>' . $module['school'] . '</h2>';
+      $current_school = $module['school'];
+    }
     if (isset($_POST['module']) and $_POST['module'] == $module['idMod']) {
       echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked />&nbsp;" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</div>\n";
     } else {
@@ -520,7 +516,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     $module_no++;
   }
-  //$result->close();
+
   echo "</div>\n";
 
   echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" />\n";
