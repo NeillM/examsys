@@ -26,8 +26,8 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/logger.class.php';
 
-check_var('userID', 'GET', true, false, false); 
-check_var('temp_userID', 'GET', true, false, false); 
+check_var('userID', 'GET', true, false, false);
+check_var('temp_userID', 'GET', true, false, false);
 
 // Get start time of the paper.
 $papers = array();
@@ -51,11 +51,15 @@ $result->bind_result($grade, $yearofstudy, $new_username);
 $result->fetch();
 $result->close();
 
+$mysqli->autocommit(false);
+
+$errors=false;
 foreach ($papers as $paper) {
   // Record the change in 'track_changes'.
   $logger = new Logger($mysqli);
   $logger->track_change('Exam Script', $paper['ID'], $userObject->get_user_ID(), $_GET['temp_userID'], $_GET['userID'], 'Reassigned temporary user');
 
+/*
   // Transfer records in log2.
   $result = $mysqli->prepare("UPDATE log2 SET userID = ? WHERE userID = ? AND q_paper = ? AND started = ?");
   $result->bind_param('iiis', $_GET['userID'], $_GET['temp_userID'], $paper['ID'], $paper['started']);
@@ -67,37 +71,86 @@ foreach ($papers as $paper) {
   $result->bind_param('iiis', $_GET['userID'], $_GET['temp_userID'], $paper['ID'], $paper['started']);
   $result->execute();
   $result->close();
+*/
 
   // Transfer records in log_metadata.
   $result = $mysqli->prepare("UPDATE log_metadata SET userID = ?, student_grade = ?, year = ? WHERE userID = ? AND paperID = ? AND started = ?");
+  if ($mysqli->error) {
+    $error = true;
+  }
   $result->bind_param('issiis', $_GET['userID'], $grade, $yearofstudy, $_GET['temp_userID'], $paper['ID'], $paper['started']);
   $result->execute();
+  if ($mysqli->error) {
+    $error = true;
+  }
   $result->close();
 
   // Transfer textbox marking (just in case marking done before marks reasignment).
   $result = $mysqli->prepare("UPDATE textbox_marking SET student_userID = ? WHERE student_userID = ? AND paperID = ?");
+  if ($mysqli->error) {
+    $error = true;
+  }
   $result->bind_param('iii', $_GET['userID'], $_GET['temp_userID'], $paper['ID']);
   $result->execute();
+  if ($mysqli->error) {
+    $error = true;
+  }
   $result->close();
 
   // Transfer any student notes.
   $result = $mysqli->prepare("UPDATE student_notes SET userID = ? WHERE userID = ? AND paper_id = ?");
+  if ($mysqli->error) {
+    $error = true;
+  }
   $result->bind_param('iii', $_GET['userID'], $_GET['temp_userID'], $paper['ID']);
   $result->execute();
+  if ($mysqli->error) {
+    $error = true;
+  }
+  $result->close();
+
+  if ($error === true) {
+    break;
+  }
+}
+
+if ($error !== true) {
+// Free up the temporary account once all assignments are complete
+  $result = $mysqli->prepare("DELETE FROM temp_users WHERE assigned_account = ?");
+  if ($mysqli->error) {
+    $error = true;
+  }
+  $result->bind_param('s', $_GET['assigned_account']);
+  $result->execute();
+  if ($mysqli->error) {
+    $error = true;
+  }
   $result->close();
 }
 
-// Free up the temporary account once all assignments are complete
-$result = $mysqli->prepare("DELETE FROM temp_users WHERE assigned_account = ?");
-$result->bind_param('s', $_GET['assigned_account']);
-$result->execute();
-$result->close();
-
+if ($error !== true) {
 // Change the password of the temporary account
-$result = $mysqli->prepare("UPDATE users SET password = '' WHERE id = ?");
-$result->bind_param('i', $_GET['temp_userID']);
-$result->execute();
-$result->close();
+  $result = $mysqli->prepare("UPDATE users SET password = '' WHERE id = ?");
+  if ($mysqli->error) {
+    $error = true;
+  }
+  $result->bind_param('i', $_GET['temp_userID']);
+  $result->execute();
+  if ($mysqli->error) {
+    $error = true;
+  }
+  $result->close();
+}
+
+if ($error === true) {
+  $mysqli->rollback();
+} else {
+  $mysqli->commit();
+}
+
+
+
+$mysqli->autocommit(true);
 ?>
 <html>
 <head>
