@@ -186,7 +186,7 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
   }
   echo '</select> ' . $string['mins'] . '</td></tr>';
   echo '<tr><td style="text-align:right">' . $string['daterequired'] . '</td><td><select name="period" id="period">';
-  $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
+  $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
   echo "<option value=\"\"></option>\n";
   for ($i=0; $i<12; $i++) {
     echo "<option value=\"$i\">" . $string[$months[$i]] . "</option>\n";

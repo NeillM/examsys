@@ -437,7 +437,11 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   $tmp_internal_review_deadline = $internal_review_deadline;
   if ($tmp_internal_review_deadline == '') $tmp_internal_review_deadline = NULL;
 
-  $new_calendar_year = checkSession($calendar_year);
+  if (isset($_POST['session'])) {
+    $new_calendar_year = $_POST['session'];
+  } else {
+    $new_calendar_year = checkSession($calendar_year);
+  }
 
   $addPaper = $db->prepare("INSERT INTO properties VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)");
   $addPaper->bind_param('ssssssssssssisiiisssiidisssssssssis', $_POST['new_paper'], $tmp_start_date, $tmp_end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $userID, $folder, $labs, $rubric, $calculator, $tmp_exam_duration, $tmp_random_mark, $tmp_total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $new_calendar_year, $tmp_external_review_deadline, $tmp_internal_review_deadline, $sound_demo, $latex_needed, $password);
