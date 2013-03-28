@@ -209,6 +209,10 @@ foreach ($user_results as $individual) {
   $row_written++;
 }
 
+if ($row_written == 0) {
+  $csv = $string['nodata'];
+}
+
 echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");
 
 $mysqli->close();
