@@ -3960,12 +3960,6 @@ SQL;
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_sct_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-  
-  // 03/04/2013 (brzsw) - add select on properties_modules table to invigilators
-  if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'properties_modules', $cfg_db_host)) {
-    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.properties_modules TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
-    $updater_utils->execute_query($sql, true);
-  }
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
