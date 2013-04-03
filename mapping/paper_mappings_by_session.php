@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -50,15 +50,21 @@ $paper_type = $propertyObj->get_paper_type();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō: <?php echo $string['mappingbysession'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
-  
+
+  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('a[rel=external]').attr('target', '_blank');
+    });
+  </script>
 </head>
 
 <body onclick="hideMenus()">
@@ -71,7 +77,7 @@ $paper_type = $propertyObj->get_paper_type();
   if (!isset($_GET['ordering'])) {
     $ordering = 'screen';
     $direction = 'asc';
-  }    
+  }
 
   echo "<table class=\"header\">\n";
   echo '<tr><th>';
@@ -156,7 +162,7 @@ $paper_type = $propertyObj->get_paper_type();
         $year_in_title = true;
         $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
       } elseif (preg_match( '/\d\d.\d\d/' , $paper_title , $matches) == 1) {
-        $year_in_title = true;      
+        $year_in_title = true;
         $tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
       }
       if ($year_in_title == true) {
@@ -187,8 +193,8 @@ $paper_type = $propertyObj->get_paper_type();
         if ($sessionData['class_code'] != '') {
           echo $sessionData['class_code'] . ': ';
         }
-        echo $sessionData['title'] . ' <a href="' . $sessionData['source_url'] . '"><img src="../artwork/small_link.png" width="12" height="12" alt="" /></a> ';
-        
+        echo $sessionData['title'] . ' <a href="' . $sessionData['source_url'] . '" rel="external"><img src="../artwork/small_link.png" width="12" height="12" alt="" /></a> ';
+
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
         if (isset($sessionData["objectives"]) and is_array($sessionData["objectives"])) {
           echo '<tr><td colspan="2"><ul>';

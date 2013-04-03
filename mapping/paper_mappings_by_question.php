@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -49,16 +49,21 @@ $paper_type = $propertyObj->get_paper_type();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō: <?php echo $string['mappingbyquestion'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
-  
+
+  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script language="JavaScript">
+  <script type="text/javascript">
+    $(function () {
+      $('a[rel=external]').attr('target', '_blank');
+    });
+
     function mapQuestion(qNo, pid, qid, session) {
       mapWindow = window.open('./map_question.php?qNo=' + qNo + '&paperID=' + pid + '&q_id=' + qid + '&session=' + session, "",'height=' + (screen.height - 300) + ',width=' + (screen.width - 300) + ',scrollbars=1,resizable=1,statusbar=0');
       mapWindow.moveTo(100,100);
@@ -73,12 +78,12 @@ $paper_type = $propertyObj->get_paper_type();
 
 <div id="content" class="content">
 <?php
-  
+
   if (!isset($_GET['ordering'])) {
     $ordering = 'screen';
     $direction = 'asc';
   }
-  
+
   echo "<table class=\"header\">\n";
   echo '<tr><th>';
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
@@ -90,7 +95,7 @@ $paper_type = $propertyObj->get_paper_type();
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
   echo "<div style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['mappedobjectives'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(147); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n</table>\n";
-  
+
   //build excluded array
   // Get any questions to exclude.
   $excluded = array();
@@ -102,7 +107,7 @@ $paper_type = $propertyObj->get_paper_type();
     $excluded[$q_id] = $parts;
   }
   $result->close();
-  
+
   ?>
   <table class="header">
   <tr><th style="padding-top:1px">
@@ -125,7 +130,7 @@ $paper_type = $propertyObj->get_paper_type();
     $year_in_title = true;
     $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
   } elseif (preg_match( '/\d\d.\d\d/' , $paper_title , $matches) == 1) {
-    $year_in_title = true;      
+    $year_in_title = true;
     $tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
   }
   if ($year_in_title == true) {
@@ -219,7 +224,7 @@ $paper_type = $propertyObj->get_paper_type();
       echo "<tr><td colspan=\"4\" style=\"padding-left:4px\"><table border=\"0\" style=\"padding-top:6px; padding-bottom:2px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['screen'] . " " . $temp_array[$x]['screen'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
     }
     $old_screen = $temp_array[$x]['screen'];
-    
+
     $moduleIDs = Paper_utils::get_modules($paperID,$mysqli);
     $objByModule = getObjectivesByMapping($moduleIDs, $session, $paperID, $temp_array[$x]['q_id'], $mysqli);
     if(array_key_exists($temp_array[$x]['q_id'],$excluded)) {
@@ -258,7 +263,7 @@ $paper_type = $propertyObj->get_paper_type();
         if ($temp_array[$x]['q_type'] != 'info') echo "<img style=\"cursor: pointer\" onclick=\"mapQuestion('$question_number', '" . $paperID . "','" . $temp_array[$x]['q_id'] . "','" . $session . "')\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
       }
       echo "</tr>\n";
-      
+
       //output mappings
       echo "<tr><td colspan=\"2\">&nbsp;</td><td>\n";
       $sessiontitle = '';
@@ -281,7 +286,7 @@ $paper_type = $propertyObj->get_paper_type();
                 echo "$module: ";
               }
               echo strip_tags($mappingData['content'], '<b><i><strong><em><sub><sup>');
-              echo "&nbsp;&nbsp;&nbsp;<span title=\"$sessiontitle\" class=\"mapping\"><a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $sessiondata ."</a></span>";
+              echo "&nbsp;&nbsp;&nbsp;<span title=\"$sessiontitle\" class=\"mapping\"><a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\">" . $sessiondata ."</a></span>";
               echo '</li>';
             }
           }
