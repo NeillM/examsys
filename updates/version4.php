@@ -3917,7 +3917,7 @@ SQL;
     $updater_utils->execute_query($sql, true);
   }
   
-  // 18/03/2013 - cczab - Add indexes to speed up some question back queries in add_questions_to_paper.php
+  // 18/03/2013 (cczab) - Add indexes to speed up some question back queries in add_questions_to_paper.php
   if ($updater_utils->does_index_exist('keywords_question', 'q_id')) {
      $updater_utils->execute_query("ALTER TABLE keywords_question DROP INDEX q_id", false);
   }
@@ -3940,7 +3940,7 @@ SQL;
   // 18/03/2013 - Slight change to format of track_changes
   $updater_utils->execute_query("UPDATE track_changes SET type='Paper' WHERE type LIKE 'Alter paper%'", false);
 
-  // 22/03/2012 - nazrji - I am missing select on 'modules' and 'log_metadata' for _inv needed for adding extra time
+  // 22/03/2012 (nazrji) - I am missing select on 'modules' and 'log_metadata' for _inv needed for adding extra time
   if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'modules', $cfg_db_host)) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.modules TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
@@ -3950,17 +3950,22 @@ SQL;
     $updater_utils->execute_query($sql, true);
   }
 
-  // 22/03/2013 cczsa1 - adding index on idx_idmod to speed up queries eg folder view page
+  // 22/03/2013 (cczsa1) - adding index on idx_idmod to speed up queries eg folder view page
   if (!$updater_utils->does_index_exist('properties_modules', 'idx_idmod')) {
     $updater_utils->execute_query("ALTER TABLE properties_modules ADD INDEX idx_idmod (idMod)", false);
   }
 
-  // 27/03/2012 - nazrji - sct_reviewer insert into denied log
+  // 27/03/2013 (nazrji) - sct_reviewer insert into denied log
   if (!$updater_utils->has_grant($cfg_db_sct_username, 'INSERT', 'denied_log', $cfg_db_host)) {
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_sct_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-
+  
+  // 03/04/2013 (brzsw) - add select on properties_modules table to invigilators
+  if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'properties_modules', $cfg_db_host)) {
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.properties_modules TO \'' . $cfg_db_inv_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****

@@ -363,173 +363,178 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript">
 
-    var ie = document.all;
-    var ns6 = document.getElementById && !document.all;
-    var isMenu = false;
-    var menuSelObj = null;
-    var overpopupmenu = false;
+  var ie = document.all;
+  var ns6 = document.getElementById && !document.all;
+  var isMenu = false;
+  var menuSelObj = null;
+  var overpopupmenu = false;
 
-    function mouseSelect(e) {
-        var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;
-        if (isMenu) {
-            if (overpopupmenu == false) {
-                isMenu = false;
-                overpopupmenu = false;
-                document.getElementById('menudiv').style.display = 'none';
-                return true;
-            }
-            return true;
-        }
+  function mouseSelect(e) {
+      var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;
+      if (isMenu) {
+          if (overpopupmenu == false) {
+              isMenu = false;
+              overpopupmenu = false;
+              document.getElementById('menudiv').style.display = 'none';
+              return true;
+          }
+          return true;
+      }
+  }
+
+  function popMenu(tmpUserID, paperID, showExtension, e) {
+    if (!e) var e = window.event;
+    var currentX = e.clientX;
+    var currentY = e.clientY;
+    var scrOfX = getScrollX();
+    var scrOfY = getScrollY();
+
+    $('#userID').val(tmpUserID);
+    $('#paperID').val(paperID);
+
+    top_pos = currentY + scrOfY;
+
+    if (top_pos > ($(window).height() + scrOfY - 130)) {
+        top_pos = $(window).height() + scrOfY - 130;
     }
 
-    function popMenu(tmpUserID, paperID, showExtension, e) {
-
-        if (!e) var e = window.event;
-        var currentX = e.clientX;
-        var currentY = e.clientY;
-        var scrOfX = getScrollX();
-        var scrOfY = getScrollY();
-
-        $('#userID').val(tmpUserID);
-        $('#paperID').val(paperID);
-
-        top_pos = currentY + scrOfY;
-
-        if (top_pos > ($(window).height() + scrOfY - 130)) {
-            top_pos = $(window).height() + scrOfY - 130;
-        }
-
-        if (showExtension) {
-          $('.menu-time').show();
-        } else {
-          $('.menu-time').hide();
-        }
-
-        $('#menudiv').css('left', currentX + scrOfX);
-        $('#menudiv').css('top', top_pos);
-
-        $('#menudiv').show();
-
-        isMenu = true;
-        return false;
+    if (showExtension) {
+      $('.menu-time').show();
+    } else {
+      $('.menu-time').hide();
     }
 
-    function getScrollX() {
-        var scrollOfX = 0;
-        if (typeof( window.pageYOffset ) == 'number') {
-            //Netscape compliant
-            scrollOfX = window.pageXOffset;
-        } else if (document.body && ( document.body.scrollLeft || document.body.scrollTop )) {
-            //DOM compliant
-            scrollOfX = document.body.scrollLeft;
-        } else if (document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop )) {
-            //IE6 standards compliant mode
-            scrollOfX = document.documentElement.scrollLeft;
-        }
-        return scrollOfX;
+    $('#menudiv').css('left', currentX + scrOfX);
+    $('#menudiv').css('top', top_pos);
+
+    $('#menudiv').show();
+
+    isMenu = true;
+    return false;
+  }
+
+  function getScrollX() {
+    var scrollOfX = 0;
+    if (typeof( window.pageYOffset ) == 'number') {
+        //Netscape compliant
+        scrollOfX = window.pageXOffset;
+    } else if (document.body && ( document.body.scrollLeft || document.body.scrollTop )) {
+        //DOM compliant
+        scrollOfX = document.body.scrollLeft;
+    } else if (document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop )) {
+        //IE6 standards compliant mode
+        scrollOfX = document.documentElement.scrollLeft;
     }
+    return scrollOfX;
+  }
 
-    function getScrollY() {
-        var scrollOfY = 0;
-        if (typeof( window.pageYOffset ) == 'number') {
-            //Netscape compliant
-            scrollOfY = window.pageYOffset;
-        } else if (document.body && ( document.body.scrollLeft || document.body.scrollTop )) {
-            //DOM compliant
-            scrollOfY = document.body.scrollTop;
-        } else if (document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop )) {
-            //IE6 standards compliant mode
-            scrollOfY = document.documentElement.scrollTop;
-        }
-        return scrollOfY;
+  function getScrollY() {
+    var scrollOfY = 0;
+    if (typeof( window.pageYOffset ) == 'number') {
+        //Netscape compliant
+        scrollOfY = window.pageYOffset;
+    } else if (document.body && ( document.body.scrollLeft || document.body.scrollTop )) {
+        //DOM compliant
+        scrollOfY = document.body.scrollTop;
+    } else if (document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop )) {
+        //IE6 standards compliant mode
+        scrollOfY = document.documentElement.scrollTop;
     }
+    return scrollOfY;
+  }
 
 
-    // please keep these lines on when you copy the source
-    // made by: Nicolas - http://www.javascript-page.com
-    var clockID = 0;
-    function UpdateClock() {
-        if (clockID) {
-            clearTimeout(clockID);
-            clockID = 0;
-        }
-        var tDate = new Date();
-        document.getElementById('theTime').value = "<?php echo $string['currenttime']; ?> " + ((tDate.getHours() < 10) ? "0" : "") + tDate.getHours() +
-                ((tDate.getMinutes() < 10) ? ":0" : ":") + tDate.getMinutes() +
-                ((tDate.getSeconds() < 10) ? ":0" : ":") + tDate.getSeconds();
-        clockID = setTimeout("UpdateClock()", 1000);
+  // please keep these lines on when you copy the source
+  // made by: Nicolas - http://www.javascript-page.com
+  var clockID = 0;
+  function UpdateClock() {
+    if (clockID) {
+      clearTimeout(clockID);
+      clockID = 0;
     }
+    var tDate = new Date();
+    document.getElementById('theTime').value = "<?php echo $string['currenttime']; ?> " + ((tDate.getHours() < 10) ? "0" : "") + tDate.getHours() +
+            ((tDate.getMinutes() < 10) ? ":0" : ":") + tDate.getMinutes() +
+            ((tDate.getSeconds() < 10) ? ":0" : ":") + tDate.getSeconds();
+    clockID = setTimeout("UpdateClock()", 1000);
+  }
 
-    function StartClock() {
-        clockID = setTimeout("UpdateClock()", 500);
+  function StartClock() {
+    clockID = setTimeout("UpdateClock()", 500);
+  }
+
+  function KillClock() {
+    if (clockID) {
+      clearTimeout(clockID);
+      clockID = 0;
     }
+  }
 
-    function KillClock() {
-        if (clockID) {
-            clearTimeout(clockID);
-            clockID = 0;
-        }
+  function newStudentNote() {
+    var paperID = document.getElementById('paperID').value;
+    var userID = document.getElementById('userID').value;
+
+    studentnote = window.open("new_student_note.php?userID=" + userID + "&paperID=" + paperID + "", "studentnote", "width=650,height=430,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+
+    if (window.focus) {
+      studentnote.focus();
     }
+  }
 
-    function newStudentNote() {
 
-        var paperID = document.getElementById('paperID').value;
-        var userID = document.getElementById('userID').value;
 
-        studentnote = window.open("new_student_note.php?userID=" + userID + "&paperID=" + paperID + "", "studentnote", "width=650,height=430,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-
-        if (window.focus) {
-            studentnote.focus();
-        }
+  function newPaperNote(paperID) {
+    papernote = window.open("new_paper_note.php?paperID=" + paperID + "","papernote","width=650,height=410,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    if (window.focus) {
+      papernote.focus();
     }
+  }
 
+  function extendTime() {
+    var paperID = document.getElementById('paperID').value;
+    var userID = document.getElementById('userID').value;
 
-    function extendTime() {
+    papernote = window.open("extend_time.php?paperID=" + paperID + "&userID=" + userID, "extendtime", "width=250,height=150,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
 
-        var paperID = document.getElementById('paperID').value;
-        var userID = document.getElementById('userID').value;
-
-        papernote = window.open("extend_time.php?paperID=" + paperID + "&userID=" + userID, "extendtime", "width=250,height=150,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-
-        if (window.focus) {
-            papernote.focus();
-        }
+    if (window.focus) {
+      papernote.focus();
     }
+  }
 
-    function resizeLists() {
-        var myHeight = 0;
-        if (typeof( window.innerWidth ) == 'number') {
-            //Non-IE
-            myHeight = window.innerHeight;
-        } else if (document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight )) {
-            //IE 6+ in 'standards compliant mode'
-            myHeight = document.documentElement.clientHeight;
-        } else if (document.body && ( document.body.clientWidth || document.body.clientHeight )) {
-            //IE 4 compatible
-            myHeight = document.body.clientHeight;
-        }
-        myHeight = myHeight - 280;
-
-        var mysheet = document.styleSheets[0];
-        var totalrules = mysheet.cssRules ? mysheet.cssRules.length : mysheet.rules.length
-        if (mysheet.deleteRule) { //if Firefox
-            mysheet.insertRule(".cohortlist {height:" + myHeight + "px; overflow:auto}", totalrules);
-        } else if (mysheet.removeRule) { //else if IE
-            document.styleSheets[0].addRule(".cohortlist", "height:" + myHeight + "px; overflow:auto");
-        }
+  function resizeLists() {
+    var myHeight = 0;
+    if (typeof( window.innerWidth ) == 'number') {
+      //Non-IE
+      myHeight = window.innerHeight;
+    } else if (document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight )) {
+      //IE 6+ in 'standards compliant mode'
+      myHeight = document.documentElement.clientHeight;
+    } else if (document.body && ( document.body.clientWidth || document.body.clientHeight )) {
+      //IE 4 compatible
+      myHeight = document.body.clientHeight;
     }
+    myHeight = myHeight - 280;
 
-    document.onmousedown = mouseSelect;
+    var mysheet = document.styleSheets[0];
+    var totalrules = mysheet.cssRules ? mysheet.cssRules.length : mysheet.rules.length
+    if (mysheet.deleteRule) { //if Firefox
+      mysheet.insertRule(".cohortlist {height:" + myHeight + "px; overflow:auto}", totalrules);
+    } else if (mysheet.removeRule) { //else if IE
+      document.styleSheets[0].addRule(".cohortlist", "height:" + myHeight + "px; overflow:auto");
+    }
+  }
 
-    // Register the events we need
-    $(function () {
-      $('.menu-time').click(extendTime);
-      $('.menu-note').click(newStudentNote);
-      StartClock();
-      resizeLists();
-      $(window).unload(KillClock);
-      $(window).resize(resizeLists);
-    });
+  document.onmousedown = mouseSelect;
+
+  // Register the events we need
+  $(function () {
+    $('.menu-time').click(extendTime);
+    $('.menu-note').click(newStudentNote);
+    StartClock();
+    resizeLists();
+    $(window).unload(KillClock);
+    $(window).resize(resizeLists);
+  });
 </script>
 
 </head>
