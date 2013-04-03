@@ -25,10 +25,23 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('setterID', 'GET', true, false, false);
-check_var('dateID', 'GET', true, false, false);
-check_var('paperID', 'GET', true, false, false);
+$setterID = check_var('setterID', 'GET', true, false, true);
+$dateID   = check_var('dateID', 'GET', true, false, true);
+$paperID  = check_var('paperID', 'GET', true, false, true);
 
+$row_no = 0;
+$result = $mysqli->prepare("SELECT id FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
+$result->bind_param('iis', $paperID, $setterID, $dateID);
+$result->execute();  
+$result->store_result();
+$row_no = $result->num_rows;
+$result->close();
+
+if ($row_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+  
 $mysqli->close();
 
 function niceDate($tmp_date) {

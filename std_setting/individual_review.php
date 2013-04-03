@@ -26,6 +26,22 @@ require_once '../include/staff_auth.inc';
 require_once '../include/media.inc';
 require_once '../include/std_set_functions.inc';
 require_once '../classes/stateutils.class.php';
+require_once '../classes/paperproperties.class.php';
+require_once '../include/errors.inc';
+
+$paperID = check_var('paperID', 'GET', true, false, true);
+
+//get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+$paper_title = $propertyObj->get_paper_title();
+$paper_type = $propertyObj->get_paper_type();
+$paper_prologue = $propertyObj->get_paper_prologue();
+$marking = $propertyObj->get_marking();
+
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
@@ -61,12 +77,6 @@ function check_ebel_distinction_type($ebel) {
   return $type;
 }
 
-if (isset($_POST['paperID'])) {
-  $paperID = $_POST['paperID'];
-} else {
-  $paperID = $_GET['paperID'];
-}
-  
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -87,21 +97,6 @@ if (isset($_POST['paperID'])) {
   }
   $result->close();
 
-  // Get how many screens make up the question paper.
-  $screen_data = array();
-  $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper_type, paper_prologue, marking, screen, leadin, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, bidirectional FROM (properties, papers, questions) WHERE papers.question=questions.q_id AND properties.property_id=papers.paper AND paper=? ORDER BY screen, p_id");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($paper_title, $paper_type, $paper_prologue, $marking, $screen, $leadin, $start_date, $end_date, $bgcolor, $fgcolor, $themecolor, $labelcolor, $bidirectional);
-  while ($result->fetch()) {
-    $no_screens = strval($screen);
-    if (isset($screen_data[$no_screens])) {
-      $screen_data[$no_screens] += 1;
-    } else {
-      $screen_data[$no_screens] = 1;
-    }
-  }
-  $result->close();
   $current_screen = 1;
   ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -419,7 +414,7 @@ if (isset($_POST['paperID'])) {
   <tr><td valign="top">
 <?php
 
-  echo "\n<table class=\"header\">\n";
+  echo "\n<table class=\"header\" style=\"font-size:90%\">\n";
   echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';

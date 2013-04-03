@@ -25,17 +25,34 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-  // Delete from standards setting table.
-  $result = $mysqli->prepare("DELETE FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
-  $result->bind_param('iss', $_POST['paperID'], $_POST['setterID'], $_POST['dateID']);
-  $result->execute();  
-  $result->close();
+$setterID = check_var('setterID', 'POST', true, false, true);
+$dateID   = check_var('dateID', 'POST', true, false, true);
+$paperID  = check_var('paperID', 'POST', true, false, true);
 
-  // Delete from ebel table.
-  $result = $mysqli->prepare("DELETE FROM ebel WHERE setterID=? and date_set=?");
-  $result->bind_param('ss', $_POST['setterID'], $_POST['dateID']);
-  $result->execute();  
-  $result->close();
+$row_no = 0;
+$result = $mysqli->prepare("SELECT id FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
+$result->bind_param('iis', $paperID, $setterID, $dateID);
+$result->execute();  
+$result->store_result();
+$row_no = $result->num_rows;
+$result->close();
+
+if ($row_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+// Delete from standards setting table.
+$result = $mysqli->prepare("DELETE FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
+$result->bind_param('iis', $paperID, $setterID, $dateID);
+$result->execute();  
+$result->close();
+
+// Delete from ebel table.
+$result = $mysqli->prepare("DELETE FROM ebel WHERE setterID = ? and date_set = ?");
+$result->bind_param('is', $setterID, $dateID);
+$result->execute();
+$result->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
