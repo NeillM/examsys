@@ -403,8 +403,8 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   if ($preview_q_id == null) {
   ?>
     <br />
-    <div align="center">
-    <table cellpadding="4" cellspacing="0" border="0" class="box" style="font-size:90%">
+    <div class="key">
+    <table cellpadding="4" cellspacing="0" border="0" style="width:100%">
     <tr>
     <td style="margin:0px"><div style="font-weight:bold; font-size:120%"><?php echo $string['key']; ?></div>
     <div><?php echo display_response(1, 'tick') . ' '  . $string['correctanswer']; ?><br />
@@ -2415,8 +2415,8 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
   $html = '';
 
   if ($total_marks > 0 and $paper_type != 3) {
-    $html .= '<br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" class="box">';
-    $html .= '<tr><td><table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
+    $html .= '<br /><div class="key">';
+    $html .= '<table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
     $html .= '<tr><td colspan="3" style="margin:0px; font-weight:bold; font-size:120%">' . $string['summaryofmarks'] . '</td></tr>';
     if ($marking == 1) {
       $html .= "<tr><td style=\"width:170px\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:100px\">" . $user_mark . " " . $string['outof'] . " $total_marks</td><td></td></tr>\n";
@@ -2471,8 +2471,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
       $html .= "<tr><td>Feedback</td><td colspan=\"2\">$msg</td></tr>\n";
     }
 
-    $html .= '</table>';
-    $html .= "</td></tr>\n</table></div>\n";
+    $html .= "</table></div>\n";
   }
 
   return $html;

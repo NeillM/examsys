@@ -192,6 +192,7 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
+<link rel="stylesheet" type="text/css" href="../css/key.css" />
 <?php
   $css = '';
   if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {

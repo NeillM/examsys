@@ -24,4 +24,5 @@ $string['changedmsg'] = '<strong>Warning</strong>: One or more of the individual
 $string['note'] = 'NOTE';
 $string['updatepassmark'] = 'Update paper pass mark';
 $string['saveratings'] = 'Save Ratings';
+$string['screen'] = 'Screen';
 ?>

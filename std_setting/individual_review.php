@@ -61,7 +61,7 @@ function check_ebel_distinction_type($ebel) {
   return $type;
 }
 
-if (isset($_POSR['paperID'])) {
+if (isset($_POST['paperID'])) {
   $paperID = $_POST['paperID'];
 } else {
   $paperID = $_GET['paperID'];
@@ -78,7 +78,7 @@ if (isset($_POSR['paperID'])) {
   <?php
   // Get any questions to exclude.
   $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($q_id, $parts);
@@ -108,6 +108,7 @@ if (isset($_POSR['paperID'])) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
+  <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style>
   table {table-layout:auto}
   #maincontent {height:auto}
@@ -370,7 +371,7 @@ if (isset($_POSR['paperID'])) {
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
+    $result = $mysqli->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
     $result->bind_param('i', $folder);
     $result->execute();
     $result->bind_result($folder_name);
@@ -393,7 +394,7 @@ if (isset($_POSR['paperID'])) {
   
   if ($setterID != '') {
     $tmp_date_id = $date_id;
-    $result = $mysqli->prepare("SELECT std_set, rating, questionID FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
+    $result = $mysqli->prepare("SELECT std_set, rating, questionID FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
     $result->bind_param('iss', $_GET['paperID'], $setterID, $tmp_date_id);
     $result->execute();
     $result->bind_result($std_set, $rating, $questionID);
@@ -404,7 +405,7 @@ if (isset($_POSR['paperID'])) {
   }
   
   // Load default setting from the Questions table and save to reviews array if no existing data
-  $result = $mysqli->prepare("SELECT question, std FROM (papers, questions) WHERE paper=? AND papers.question=questions.q_id");
+  $result = $mysqli->prepare("SELECT question, std FROM (papers, questions) WHERE paper = ? AND papers.question = questions.q_id");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($questionID, $std);
@@ -447,13 +448,7 @@ if (isset($_POSR['paperID'])) {
   }
 ?>
   <br />
-  <div align="center">
-  <table cellpadding="4" cellspacing="0" border="0" width="90%" style="background-color:#E4EEFC; border:1px solid #B5C4DF; text-align:left">
-  <tr>
-  <td style="margin:0px"><?php echo $std_instruction; ?></td>
-  </tr>
-  </table>
-  </div>
+  <div class="key"><?php echo $std_instruction; ?></div>
   <br />
 <?php
   $old_leadin = '';
@@ -594,9 +589,7 @@ if (isset($_POSR['paperID'])) {
       }
     }
     
-    echo "<br />\n<div align=\"center\">\n";
-    echo "<table cellpadding=\"4\" cellspacing=\"0\" width=\"90%\" style=\"background-color:#E4EEFC; border: 1px solid #B5C4DF; text-align:left\">\n";
-    echo "<tr>\n<td style=\"margin:0px\">" . $string['step2'] . "<br />&nbsp;</td>\n</tr>\n</table>\n</div>\n<br />\n";
+    echo "<br />\n<div class=\"key\">" . $string['step2'] . "<br />&nbsp;</div>\n<br />\n";
 
     echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
     echo "<tr><td>&nbsp;</td><td style=\"width:200px; text-align:center\"><strong>" . $string['essential'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['important'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['nicetoknow'] . "</strong></td></tr>\n";
@@ -607,9 +600,8 @@ if (isset($_POSR['paperID'])) {
     echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0px; text-align:center\" name=\"cut_score\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
     echo "</table>\n</div>\n<br />\n";
 
-    echo "<br />\n<div align=\"center\">\n";
-    echo "<table cellpadding=\"4\" cellspacing=\"0\" width=\"90%\" style=\"background-color:#E4EEFC; border: 1px solid #B5C4DF; text-align:left\">\n";
-    echo "<tr>\n<td style=\"margin:0px\">" . $string['step3'] . "<br />";
+    echo "<br />\n";
+    echo "<div class=\"key\">" . $string['step3'] . "<br />";
     ?>
     <blockquote style="margin-top:8px; margin-bottom:8px">
 <?php
@@ -620,7 +612,8 @@ if (isset($_POSR['paperID'])) {
     <input type="radio" id="distinction_type_dna" name="distinction_type" value="3"<?php if ($ebel_dist == 'dna') echo ' checked="checked"'; ?> /> <label for="distinction_type_dna"><?php echo $string['donotapply']; ?></label><br />
     </blockquote>
     <?php
-    echo "</td>\n</tr>\n</table>\n</div>\n<br />\n";
+    echo "</div>\n<br />\n";
+    
     echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
     echo "<tr><td>&nbsp;</td><td style=\"width:200px; text-align:center\"><strong>" . $string['essential'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['important'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['nicetoknow'] . "</strong></td></tr>\n";
     echo "<tr><td style=\"text-align:right\"><strong>" . $string['easy'] . "</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; border:0px; color:red; text-decoration:line-through; background-color:#F8F8F2\" name=\"origee2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; border:0px; background-color:#F8F8F2\" name=\"ee2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE2',$ebel[9]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI2',$ebel[10]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN2',$ebel[11]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";

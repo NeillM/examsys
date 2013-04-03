@@ -968,7 +968,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
     if ($valid) {
       $review_string = "mean=$mean%, $review_string\n";
     } else {
-      $review_string = "<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" /><span style=\"font-weight:bold\">mean=$mean%, </span><span style=\"color:red; font-weight:bold\">$review_string</span>\n";
+      $review_string = "<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" /><span style=\"font-weight:bold\">mean=$mean%, </span><span style=\"color:#C00000; font-weight:bold\">$review_string</span>\n";
     }
     if (isset($value['prev_review']) and $value['prev_review'] > 0) {
       $tmp_value = $value['prev_review'];

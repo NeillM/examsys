@@ -24,4 +24,5 @@ $string['changedmsg'] = '<strong>Uwaga</strong>: Jedna lub więcej recenzji indy
 $string['note'] = 'Uwaga';
 $string['updatepassmark'] = 'Zaktualizuj liczbę punktów na zaliczenie';
 $string['saveratings'] = 'Zapisz zaszeregowanie';
+$string['screen'] = 'Ekran';
 ?>

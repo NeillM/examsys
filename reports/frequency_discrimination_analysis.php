@@ -36,9 +36,9 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
 
-$paperID = check_var('paperID', 'GET', true, false, true);
-$startdate = check_var('startdate', 'GET', true, false, true);
-$enddate = check_var('enddate', 'GET', true, false, true);
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$startdate  = check_var('startdate', 'GET', true, false, true);
+$enddate    = check_var('enddate', 'GET', true, false, true);
 
 set_time_limit(0);
 
@@ -1611,6 +1611,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
+<link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
     body {font-size:90%}
     h1 {margin-left:15px; font-size:18pt}
@@ -1873,8 +1874,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(154); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
         echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
 
-        echo '<br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" width="95%" style="background-color:#E4EEFC; border:1px solid #B5C4DF">';
-        echo '<tr><td style="text-align:left"><table cellpadding="2" cellspacing="0" border="0">';
+        echo '<br /><div class="key">';
+        echo '<table cellpadding="2" cellspacing="0" border="0">';
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['totalcandidatenumber'] . '</td><td style="width:500px">' . number_format($user_total) . '</td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="Warning" class="in-exclusion" /> ' . $string['warning'] . ' ' . $string['p_warning'] . '</td></tr>';
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right"><nobr>' . $string['groupsizes'] . '</nobr></td><td>' . $cohort_percent . '% (' . $user_no . ' ' . $string['pergroup'] . ')</td><td rowspan="7" style="vertical-align:top"><img src="../artwork/red_flag.png" width="14" height="14" alt="Warning" class="in-exclusion" /> ' . $string['warning'] . ' ' . $string['d_warning'] . '</td></tr>';
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['boldstems'] . '</td><td>' . $string['correctanswers'] . '</td></tr>';
@@ -1883,7 +1884,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">t=</td><td>' . $string['t_definition'] . '</td></tr>';
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">u=</td><td>' . $string['u_definition'] . '</td></tr>';
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">l=</td><td>' . $string['l_definition'] . '</td></tr>';
-        echo '</table></td></tr>';
         echo '</table></div><br />';
 
         echo '<table cellpadding="0" cellspacing="0" border="0" width="100%">';

@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/std_setting/index.php';
+
 $string['selectreviewers'] = 'Wybierz recenzentów';
 $string['standardsetter'] = 'Wyznaczający standard';//??
 $string['standardssetting'] = 'Wyznaczanie standardu';
