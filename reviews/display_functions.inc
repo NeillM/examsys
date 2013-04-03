@@ -257,6 +257,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($likert_display[$likert_col_no] == 'true') {
           $likert_col_no++;
           $na = true;
+        } else {
+          $na = false;
         }
         if ($question['notes'] != '') {
           echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"notes\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"" . $string['note'] . "\" />&nbsp;<strong>" . $string['note'] . "</strong>&nbsp;" . $question['notes'] . "</td></tr>\n";
