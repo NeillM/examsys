@@ -27,19 +27,6 @@ require_once $cfg_web_root . 'classes/mathsutils.class.php';
 function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questions, $paperID, $db) {
   $incomplete_screens = array_fill(1, $screen_no, 0);  // Set all screens to be initinally complete
 
-  // Get some extra details for labelling type questions
-  $label_data = array();
-
-  $stmt = $db->prepare("SELECT o_id, correct FROM options, papers WHERE papers.paper = ? AND papers.question = options.o_id");
-  $stmt->bind_param('i', $paperID);
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($o_id, $correct);
-  while ($stmt->fetch()) {
-    $label_data[$o_id] = $correct;
-  }
-  $stmt->close();
-
   for ($i=1; $i<=$screen_no; $i++) {
     if (!isset($user_answers[$i])) {                            // No user answers exist for that screen
       $incomplete_screens[$i] = 1;
@@ -58,9 +45,15 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
       for ($a=1; $a<=$tmp_answer_no; $a++) {
         $current_q_id = $screen_data[$i][$a-1][1];
         if (isset($answers[$current_q_id])) {
-          $current_answer = $answers[$current_q_id];
+          $current_answer = $answers[$current_q_id];          
         } else {
           $current_answer = '';
+        }
+        // Get the ID of the question array
+        for ($x=0; $x<count($questions); $x++) {
+          if ($questions[$x]['q_id'] == $current_q_id) {
+            $questionID = $x;
+          }
         }
         switch ($screen_data[$i][$a-1][0]) {
           case 'area':
@@ -102,7 +95,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
             }
             break;
           case 'labelling':
-            $tmp_first_split = explode(';', $label_data[$current_q_id]);
+            $tmp_first_split = explode(';', $questions[$questionID]['options'][0]['correct']);
             $tmp_second_split = explode('$', $tmp_first_split[11]);
 
             $placeholders = 0;
@@ -111,7 +104,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
               if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
                 $x = $tmp_second_split[$label_no-2];
                 $y = $tmp_second_split[$label_no-1] - 25;
-                $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
+                $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no],'|'));
                 $placeholders++;
               }
             }
@@ -148,8 +141,30 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
             }
             break;
           case 'rank':
-            if (strpos($current_answer, 'u') !== false) {
-              $incomplete_screens[$i] = 1;
+            if ($questions[$questionID]['score_method'] == 'Mark per Option') {
+              if (strpos($current_answer, 'u') !== false) {
+                $incomplete_screens[$i] = 1;
+              }
+            } else {
+              $no_correct = 0;
+              foreach ($questions[$questionID]['options'] as $option) {
+                if ($option['correct'] > 0) {
+                  $no_correct++;
+                }
+              }
+              
+              $parts = explode(',', $current_answer);
+              $user_answer_no = 0;
+              
+              foreach ($parts as $part) {
+                if ($part != '' and $part != 'u' and $part != '0') {
+                  $user_answer_no++;
+                }
+              }
+              
+              if ($user_answer_no < $no_correct) {
+                $incomplete_screens[$i] = 1;
+              }
             }
             break;
           case 'sct':
@@ -756,14 +771,20 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           if ($question['options'][$i]['correct'] == 0) $require_na = true;
         }
         $tmp_user_answers = 0;
-        for ($i=1; $i<count($rank_answers); $i++) {
+        for ($i=0; $i<count($rank_answers); $i++) {
           if ($rank_answers[$i] != 'u' and $rank_answers[$i] != 0 and $rank_answers[$i] != 'u') {
             $tmp_user_answers++;
           }
         }
+        
+        if ($question['score_method'] == 'Mark per Option') {
+          $answers_needed = $option_no;
+        } else {
+          $answers_needed = $total_rank_no;
+        }
 
         echo '<tr';
-        if (isset($rank_answers[$tmp_part_id - 1]) and $rank_answers[$tmp_part_id - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $total_rank_no) {
+        if (isset($rank_answers[$tmp_part_id - 1]) and $rank_answers[$tmp_part_id - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
           echo ' class="unans"';
           $unanswered = true;
         }
