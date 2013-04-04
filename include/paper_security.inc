@@ -67,7 +67,7 @@ function check_paper_password($password, $string, $show_form = false) {
           @setcookie('paperpwd', $_POST['paperpwd']);
         } else {
           $notice = UserNotices::get_instance();
-          $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/access_denied.png', '#C00000', true, true);
+          $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/blue_padlock_64.png', '#316AC5', true, true);
           echo render_password_form($string);
           $notice->exit_php();
         }
