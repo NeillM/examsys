@@ -23,6 +23,16 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
+
+$paperID = check_var('paperID', 'GET', true, false, true);
+
+// Check the paper actually exists.
+if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -47,8 +57,8 @@ require '../include/staff_auth.inc';
 <body>
 <?php
   // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_type AS paper_type, paper_title FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT paper_type AS paper_type, paper_title FROM properties WHERE property_id = ?");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($paper_type, $paper);
   $result->fetch();
@@ -57,8 +67,8 @@ require '../include/staff_auth.inc';
   $candidate_no = 0;
   if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
-    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles='Student' OR u.roles='graduate')");
-    $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
+    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles = 'Student' OR u.roles = 'graduate')");
+    $result->bind_param('iss', $paper, $_GET['startdate'], $_GET['enddate']);
     $result->execute();
     $result->bind_result($tmp_userID);
     while ($result->fetch()) {
@@ -79,34 +89,12 @@ require '../include/staff_auth.inc';
   }
   if ($candidate_no > 0) $phase_description .= " - $candidate_no " . $string['candidates'];
 
-  $module_code = '';
-  $module = (isset($_GET['module']) and $_GET['module'] != '') ? $_GET['module'] : '';
-  if ($module != '') {
-    $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE id=? LIMIT 1");
-    $result->bind_param('i', $module);
-    $result->execute();
-    $result->bind_result($module_code);
-    $result->fetch();
-    $result->close();
-  }
-
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
-
   echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th>";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-  if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  } elseif ($module != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
+  if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $phase_description . '</div></th>';
   echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(214); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
@@ -117,8 +105,8 @@ require '../include/staff_auth.inc';
   echo "<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
 
   $question_no = 1;
-  $result = $mysqli->prepare("SELECT q_id, leadin, q_type FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id AND q_type!='info' ORDER BY display_pos");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT q_id, leadin, q_type FROM (papers, questions) WHERE papers.paper = ? AND papers.question=questions.q_id AND q_type != 'info' ORDER BY display_pos");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
   $result->bind_result($q_id, $leadin, $q_type);
@@ -126,8 +114,8 @@ require '../include/staff_auth.inc';
     if ($q_type == 'textbox') {
       if (($paper_type == '1' or $paper_type == '2') and isset($_GET['phase'])) {
         // Check how many candidates are marked for this question.
-        $marked = $mysqli->prepare("SELECT COUNT(id) FROM textbox_marking WHERE paperID=? AND q_id=? AND logtype=? AND phase=?");
-        $marked->bind_param('iiii', $_GET['paperID'], $q_id, $paper_type, $_GET['phase']);
+        $marked = $mysqli->prepare("SELECT COUNT(id) FROM textbox_marking WHERE paperID = ? AND q_id = ? AND logtype = ? AND phase = ?");
+        $marked->bind_param('iiii', $paperID, $q_id, $paper_type, $_GET['phase']);
         $marked->execute();
         $marked->bind_result($candidates_marked);
         $marked->fetch();
@@ -153,7 +141,7 @@ require '../include/staff_auth.inc';
           echo "<a href=\"textbox_mark_frame_ws.php";
         }
       }
-      echo "?ws=1&q_id=$q_id&qNo=$question_no&paperID=" . $_GET['paperID'] . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&folder=" . $_GET['folder'] . "&module=" . $module . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">$leadin</a></td></tr>\n";
+      echo "?ws=1&q_id=$q_id&qNo=$question_no&paperID=" . $paperID . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&folder=" . $_GET['folder'] . "&module=" . $module . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">$leadin</a></td></tr>\n";
     }
     $question_no++;
   }
