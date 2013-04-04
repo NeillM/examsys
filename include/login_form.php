@@ -53,41 +53,41 @@ HTML;
       }
       ?>
         <div style="margin-left:65px">
-            <table>
-                <tr>
-                    <td><?php echo $string['username']; ?></td>
-                    <td><input type="text" name="ROGO_USER" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" /></td>
-                </tr>
-                <tr>
-                    <td><?php echo $string['password']; ?></td>
-                    <td><input type="password" name="ROGO_PW" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" /></td>
-                </tr>
+          <table>
+              <tr>
+                  <td><?php echo $string['username']; ?></td>
+                  <td><input type="text" name="ROGO_USER" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" /></td>
+              </tr>
+              <tr>
+                  <td><?php echo $string['password']; ?></td>
+                  <td><input type="password" name="ROGO_PW" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" /></td>
+              </tr>
 <?php
 
-              if(isset($displaystdformobj->fields)) {
-                foreach($displaystdformobj->fields as $field) {
-                  echo '<tr>';
-                  echo '<td>' . $field->description . '</td>';
-                  if(isset($_POST[$field->name])) {
-                    $value=$_POST[$field->name];
-                  } elseif(isset($field->defaultvalue) and $field->defaultvalue!='') {
-                    $value=$field->defaultvalue;
-                  } else {
-                    $value='';
-                  }
-                  echo '<td><input type="' . $field->type . '" name="' .$field->name . '" value="' . $value .'"></td>';
-                  echo '</tr>';
+            if (isset($displaystdformobj->fields)) {
+              foreach($displaystdformobj->fields as $field) {
+                echo '<tr>';
+                echo '<td>' . $field->description . '</td>';
+                if(isset($_POST[$field->name])) {
+                  $value=$_POST[$field->name];
+                } elseif(isset($field->defaultvalue) and $field->defaultvalue!='') {
+                  $value=$field->defaultvalue;
+                } else {
+                  $value='';
                 }
+                echo '<td><input type="' . $field->type . '" name="' .$field->name . '" value="' . $value .'"></td>';
+                echo '</tr>';
               }
+            }
 ?>
-            </table>
-            <br/>
-            </div>
-            <div style="text-align:center"><input type="submit" name="rogo-login-form-std" value="<?php echo $string['signin']; ?>" style="width:150px" />
-          <?php
-          if (isset($displaystdformobj->buttons)) {
-            foreach ($displaystdformobj->buttons as $object) {
-              echo <<<HTML
+          </table>
+          <br/>
+          </div>
+          <div style="text-align:center"><input type="submit" name="rogo-login-form-std" value="<?php echo $string['signin']; ?>" style="width:150px" />
+        <?php
+        if (isset($displaystdformobj->buttons)) {
+          foreach ($displaystdformobj->buttons as $object) {
+            echo <<<HTML
 $object->pretext
 <input type="$object->type" name="$object->name" value="$object->value" style="$object->style" />
 $object->posttext
