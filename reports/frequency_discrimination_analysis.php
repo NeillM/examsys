@@ -510,9 +510,16 @@ function count_labels($correct) {
 
 function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $o_media, $bottom_log, $top_log, $freq_log, $correct_buf, $candidate_no, $score_method, $display_method, $themecolor, $std) {
   global $ex_no, $d_no, $d_total, $excluded, $user_total, $language;
+  
   if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
   echo "<tr>\n";
-  $tmp_std_array = (!empty($std)) ? explode(',',$std) : array();
+  $tmp_std_array = (!empty($std)) ? explode(',', $std) : array();
+  
+  $parts = count($tmp_std_array);
+  for ($i=0; $i<$parts; $i++) {
+    $tmp_std_array[$i] = str_replace('exclude_', '', $tmp_std_array[$i]);
+  }
+  
   if ($q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'textbox') {
     if ($q_type == 'info') {
       echo "<td colspan=\"2\" style=\"padding-left:15px\">$leadin\n";
@@ -2080,7 +2087,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     //----------------------------------------------------------------------------------------------
     $q_rec_ids = array();
     // First a quick query to get the IDs from performance_main to use in performance_details
-    $result = $mysqli->prepare("SELECT id, q_id FROM performance_main WHERE paperID=? AND taken=?");
+    $result = $mysqli->prepare("SELECT id, q_id FROM performance_main WHERE paperID = ? AND taken = ?");
     $result->bind_param('is', $_GET['paperID'], $date_started);
     $result->execute();
     $result->bind_result($id, $tmp_q_id);
