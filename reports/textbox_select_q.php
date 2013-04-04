@@ -44,6 +44,7 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
     body {font-size:90%}
     table {font-size:100%}
@@ -100,7 +101,7 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
   echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(214); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
   echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
 
-  echo "<br />\n<div style=\"margin:20px; background-color:#E4EEFC; border:1px solid #B5C4DF; padding:10px; font-size:90%\">" . $string['msg'] . "</div>\n";
+  echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n";
 
   echo "<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
 
@@ -141,7 +142,7 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
           echo "<a href=\"textbox_mark_frame_ws.php";
         }
       }
-      echo "?ws=1&q_id=$q_id&qNo=$question_no&paperID=" . $paperID . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&folder=" . $_GET['folder'] . "&module=" . $module . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">$leadin</a></td></tr>\n";
+      echo "?ws=1&q_id=$q_id&qNo=$question_no&paperID=" . $paperID . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">$leadin</a></td></tr>\n";
     }
     $question_no++;
   }
