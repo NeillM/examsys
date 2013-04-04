@@ -1,5 +1,5 @@
 body {
-  background-color:#FCFCFC;
+  background-color:#FAFAFA;
   color:black;
   font-size:90%;
 }
@@ -13,9 +13,19 @@ body {
   border:1px solid #95AEC8;
   border-radius:5px;
 }
-.field {
-  width:80px;
+
+input[type=text], input[type='password'] {
+  outline: none;
+  border: 1px solid #C0C0C0;
+  width: 160px;
 }
+
+input[type=text]:focus, input[type='password']:focus {
+  outline: none;
+  border-color: #9ecaed;
+  box-shadow:0 0 10px #9ecaed;
+}
+
 .msg {
   font-size:90%;
   padding-bottom:10px;
