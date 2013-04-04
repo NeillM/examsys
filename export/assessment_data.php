@@ -327,8 +327,6 @@ if ($student_no > 0) {
   }
   $result->close();
   
-  var_dump($log_array);
-
   $sortby = 'name';
   $ordering = 'asc';
   $log_array = array_csort($log_array, $sortby, $ordering);
