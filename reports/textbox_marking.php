@@ -22,81 +22,91 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/errors.inc';
-  require_once '../classes/stateutils.class.php';
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+require_once '../classes/stateutils.class.php';
 
-  $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/reports/textbox_header.php');
+$state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/reports/textbox_header.php');
 
-  $paperID = $_GET['paperID'];
-  $q_id = $_GET['q_id'];
-  $startdate = $_GET['startdate'];
-  $enddate = $_GET['enddate'];
-  $ws = $_GET['ws'];
-  $phase = $_GET['phase'];
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$q_id       = check_var('q_id', 'GET', true, false, true);
+$startdate  = check_var('startdate', 'GET', true, false, true);
+$enddate    = check_var('enddate', 'GET', true, false, true);
+$ws         = check_var('ws', 'GET', true, false, true);
+$phase      = check_var('phase', 'GET', true, false, true);
 
-  function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username) {
-    global $marks_correct, $string;
+// Check the paper actually exists.
+if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
-    $html = '<select name="mark' . $id . '"><option value="NULL"></option>';
-    $inc = 1;
-    if ($halfmarks == true) $inc = 0.5;
-    for ($i=0; $i<=$marks_correct; $i+=$inc) {
-      $display_i = $i;
-      if ($i == 0.5) {
-        $display_i = '&#189;';
-      } elseif ($i - floor($i) > 0) {
-        $display_i = floor($i) . '&#189;';
-      }
-      if ($i == $default and is_numeric($default)) {
-        $html .= "<option value=\"$i\" selected>$display_i</option>";
-      } else {
-        $html .= "<option value=\"$i\">$display_i</option>";
-      }
+// Check the question exists.
+if (!QuestionUtils::question_exists($q_id, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username, $marks, $string) {
+  $html = '<select name="mark' . $id . '"><option value="NULL"></option>';
+  $inc = 1;
+  if ($halfmarks == true) $inc = 0.5;
+  for ($i=0; $i<=$marks; $i+=$inc) {
+    $display_i = $i;
+    if ($i == 0.5) {
+      $display_i = '&#189;';
+    } elseif ($i - floor($i) > 0) {
+      $display_i = floor($i) . '&#189;';
     }
-    $html .= <<< HTML
+    if ($i == $default and is_numeric($default)) {
+      $html .= "<option value=\"$i\" selected>$display_i</option>";
+    } else {
+      $html .= "<option value=\"$i\">$display_i</option>";
+    }
+  }
+  $html .= <<< HTML
 </select>&nbsp;<span style="color:black">{$string['marks']}</span><br />&nbsp;
 <input type="hidden" name="logrec{$id}" value="{$log_record_id}">
 <input type="hidden" name="log{$id}" value="{$log}">
 <input type="hidden" name="username{$id}" value="{$tmp_username}">
 HTML;
-    return $html;
-  }
+  return $html;
+}
 
-  if (isset($_POST['submit']) or isset($_POST['continue'])) {
-    $paper_type = $_POST['paper_type'];
+if (isset($_POST['submit']) or isset($_POST['continue'])) {
+  $paper_type = $_POST['paper_type'];
 
-    // Delete previous records from the marks table.
-    $result = $mysqli->prepare("DELETE FROM textbox_marking WHERE paperID=? AND q_id=? AND phase=?");
-    $result->bind_param('iii', $paperID, $q_id, $phase);
-    $result->execute();
-    $result->close();
+  // Delete previous records from the marks table.
+  $result = $mysqli->prepare("DELETE FROM textbox_marking WHERE paperID=? AND q_id = ? AND phase = ?");
+  $result->bind_param('iii', $paperID, $q_id, $phase);
+  $result->execute();
+  $result->close();
 
-    // Write in the new marks.
-    $comments = '';
-    for ($i=1; $i<=$_POST['answer_no']; $i++) {
-      if ($_POST["mark$i"] != 'NULL') {
-        $result = $mysqli->prepare("INSERT INTO textbox_marking VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
-        $result->bind_param('iiiidsiis', $paperID, $q_id, $_POST["logrec$i"], $userObject->get_user_ID(), $_POST["mark$i"], $comments, $phase, $_POST["log$i"], $_POST["username$i"]);
-        $result->execute();
-        $result->close();
-      }
-    }
-
-    if (isset($_POST['submit'])) {
-      $mysqli->close();
-      ?>
-      <html>
-      <body>
-      <script language="JavaScript">
-        window.top.location = "textbox_select_q.php?paperID=<?php echo $paperID; ?>&q_id=<?php echo $_GET['q_id']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&ws=<?php echo $ws; ?>&phase=<?php echo $phase; ?>&action=mark&repcourse=%";
-      </script>
-      </body>
-      </html>
-      <?php
-      exit;
+  // Write in the new marks.
+  $comments = '';
+  for ($i=1; $i<=$_POST['answer_no']; $i++) {
+    if ($_POST["mark$i"] != 'NULL') {
+      $result = $mysqli->prepare("INSERT INTO textbox_marking VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
+      $result->bind_param('iiiidsiis', $paperID, $q_id, $_POST["logrec$i"], $userObject->get_user_ID(), $_POST["mark$i"], $comments, $phase, $_POST["log$i"], $_POST["username$i"]);
+      $result->execute();
+      $result->close();
     }
   }
+
+  if (isset($_POST['submit'])) {
+    $mysqli->close();
+    ?>
+    <html>
+    <body>
+    <script language="JavaScript">
+      window.top.location = "textbox_select_q.php?paperID=<?php echo $paperID; ?>&q_id=<?php echo $_GET['q_id']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&ws=<?php echo $ws; ?>&phase=<?php echo $phase; ?>&action=mark&repcourse=%";
+    </script>
+    </body>
+    </html>
+    <?php
+    exit;
+  }
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -127,44 +137,44 @@ HTML;
 <body style="margin:0px">
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&q_id=<?php echo $_GET['q_id']; ?>&startdate=<?php echo $startdate; ?>&enddate=<?php echo $enddate; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&ws=<?php echo $ws; ?>&phase=<?php echo $phase; ?>&action=mark" method="post">
 <?php
-  // Get some paper properties
-  if ($result = $mysqli->prepare("SELECT paper_type FROM properties WHERE property_id=?")) {
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->bind_result($paper_type);
-    $result->fetch();
-    $result->close();
-  } else {
-    display_error("Properties Query Error","SELECT paper_type FROM properties WHERE property_id=$paperID");
-    $mysqli->close();
+// Get some paper properties
+if ($result = $mysqli->prepare("SELECT paper_type FROM properties WHERE property_id=?")) {
+  $result->bind_param('i', $paperID);
+  $result->execute();
+  $result->bind_result($paper_type);
+  $result->fetch();
+  $result->close();
+} else {
+  display_error("Properties Query Error","SELECT paper_type FROM properties WHERE property_id=$paperID");
+  $mysqli->close();
+}
+
+// Get the marks for the question
+if ($result = $mysqli->prepare("SELECT marks_correct, marks_incorrect, leadin, correct_fback FROM (questions, options) WHERE questions.q_id=options.o_id AND o_id = ? LIMIT 1")) {
+  $result->bind_param('i', $q_id);
+  $result->execute();
+  $result->bind_result($marks_correct, $marks_incorrect, $leadin, $correct_fback);
+  $result->fetch();
+  $result->close();
+} else {
+  display_error("Marks Query Error",$mysqli->close());
+}
+
+if ($phase == 2) {
+  // Get the usernames of papers to second mark.
+  $second_mark = array();
+
+  $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
+  $result->bind_param('i', $paperID);
+  $result->execute();
+  $result->bind_result($remark_userID);
+  while ($row = $result->fetch()) {
+    $second_mark[] = $remark_userID;
   }
+  $result->close();
+}
 
-  // Get the marks for the question
-  if ($result = $mysqli->prepare("SELECT marks_correct, marks_incorrect, leadin, correct_fback FROM (questions, options) WHERE questions.q_id=options.o_id AND o_id=? LIMIT 1")) {
-    $result->bind_param('i', $q_id);
-    $result->execute();
-    $result->bind_result($marks_correct, $marks_incorrect, $leadin, $correct_fback);
-    $result->fetch();
-    $result->close();
-  } else {
-    display_error("Marks Query Error",$mysqli->close());
-  }
-
-  if ($phase == 2) {
-    // Get the usernames of papers to second mark.
-    $second_mark = array();
-
-    $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID=?");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->bind_result($remark_userID);
-    while ($row = $result->fetch()) {
-      $second_mark[] = $remark_userID;
-    }
-    $result->close();
-  }
-
-  $half_marks = true;
+$half_marks = true;
 ?>
 <table cellpadding="4" cellspacing="0" border="0" style="margin-right:10px">
 <?php
@@ -227,13 +237,13 @@ SQL;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
            $style = ' class="marked"';
         }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID) . "</td></tr>\n";
+        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
       } else {
         $answer_no++;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
           $style = ' class="marked"';
         }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID) . "</td></tr>\n";
+        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
       }
     }
   }
