@@ -23,14 +23,22 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
+require_once '../classes/questionutils.class.php';
 
-$paperID = $_GET['paperID'];
+$paperID = check_var('paperID', 'GET', true, false, true);
 
-function displayMarks($id) {
-  global $marks_correct;
+// Check the paper actually exists.
+if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+function displayMarks($id, $marks) {
   $html = '<select name="override' . $id . '"><option value="NULL"></option>';
   $inc = 0.5;
-  for ($i=0; $i<=$marks_correct; $i+=$inc) {
+  for ($i=0; $i<=$marks; $i+=$inc) {
     $display_i = $i;
     if ($i == 0.5) {
       $display_i = '&#189;';
@@ -40,6 +48,7 @@ function displayMarks($id) {
     $html .= "<option value=\"$i\">$display_i</option>";
   }
   $html .= '</select>';
+  
   return $html;
 }
 
@@ -55,17 +64,23 @@ if (isset($_POST['submit'])) {
     $logtype = $_POST["logtype$i"];
     $log_id = $_POST["log_id$i"];
 
-    $result = $mysqli->prepare("UPDATE log$logtype SET mark=? WHERE id=?");
+    $result = $mysqli->prepare("UPDATE log$logtype SET mark = ? WHERE id = ?");
     $result->bind_param('di', $tmp_mark, $log_id);
     $result->execute();
     $result->close();
   }
   header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
 } else {
-  $q_id = $_GET['q_id'];
-  $startdate = $_GET['startdate'];
-  $enddate = $_GET['enddate'];
+  $q_id       = check_var('q_id', 'GET', true, false, true);
+  $startdate  = check_var('startdate', 'GET', true, false, true);
+  $enddate    = check_var('enddate', 'GET', true, false, true);
 
+  // Check the question exists.
+  if (!QuestionUtils::question_exists($q_id, $mysqli)) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
+  
   // Get some paper properties
   $result = $mysqli->prepare("SELECT paper_type, paper_title FROM properties WHERE property_id=?");
   $result->bind_param('i', $paperID);
@@ -76,7 +91,7 @@ if (isset($_POST['submit'])) {
 
   // Get primary marks
   $primary_marks = array();
-  $result = $mysqli->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID=? AND q_id=? AND phase=1");
+  $result = $mysqli->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = 1");
   $result->bind_param('ii', $paperID, $q_id);
   $result->execute();
   $result->bind_result($answer_id, $mark);
@@ -87,7 +102,7 @@ if (isset($_POST['submit'])) {
 
   // Get secondary marks
   $secondary_marks = array();
-  $result = $mysqli->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID=? AND q_id=? AND phase=2");
+  $result = $mysqli->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = 2");
   $result->bind_param('ii', $paperID, $q_id);
   $result->execute();
   $result->bind_result($answer_id, $mark);
@@ -97,7 +112,7 @@ if (isset($_POST['submit'])) {
   $result->close();
 
   // Get some paper properties
-  $result = $mysqli->prepare("SELECT marks_correct FROM options WHERE o_id=?");
+  $result = $mysqli->prepare("SELECT marks_correct FROM options WHERE o_id = ?");
   $result->bind_param('i', $q_id);
   $result->execute();
   $result->bind_result($marks_correct);
@@ -124,24 +139,13 @@ if (isset($_POST['submit'])) {
 
 <body>
 <?php
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
-
   echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
   echo "<table class=\"header\">\n<tr><th colspan=\"3\">";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-  if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div></th><th style="text-align:right; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th></tr>';
 
@@ -198,7 +202,7 @@ SQL;
   while ($result->fetch()) {
     if (trim($user_answer) != '') {
       if (isset($secondary_marks[$log_id]) and isset($primary_marks[$log_id]) and abs($primary_marks[$log_id] - $secondary_marks[$log_id]) > 1) {
-        echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; background-color:#FFC0C0\">" . displayMarks($student_no);
+        echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; background-color:#FFC0C0\">" . displayMarks($student_no, $marks_correct);
       } else {
         if (isset($primary_marks[$log_id])) {
           echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td>";
@@ -211,12 +215,12 @@ SQL;
         } else {
           echo "<td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; width:50px; background-color:#EEEEEE\">&nbsp;</td>";
         }
-        echo "<td style=\"text-align:right; border-bottom:1px solid #C0C0C0\">" . displayMarks($student_no);
+        echo "<td style=\"text-align:right; border-bottom:1px solid #C0C0C0\">" . displayMarks($student_no, $marks_correct);
       }
     } else {
       if (!isset($primary_marks[$log_id])) $primary_marks[$log_id] = '';
       if (!isset($secondary_marks[$log_id])) $secondary_marks[$log_id] = '';
-      echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0; color:#C00000; font-weight:bold\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; background-color:#FFC0C0\">" . displayMarks($student_no);
+      echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0; color:#C00000; font-weight:bold\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; background-color:#FFC0C0\">" . displayMarks($student_no, $marks_correct);
     }
     echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";
     $student_no++;
