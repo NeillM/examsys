@@ -183,7 +183,7 @@ if ($folder != '') {
     }
 
     function folderProperties() {
-      notice=window.open("properties.php?folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice=window.open("properties.php?folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=600,height=600,left="+(screen.width/2-300)+",top="+(screen.height/2-300)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         notice.focus();
       }

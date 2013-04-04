@@ -257,12 +257,17 @@ if ($unique_name) {
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['owner'] . "&nbsp;</td><td>$owner</td></tr>\n";
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['created'] . "&nbsp;</td><td>$created</td></tr>\n";
        
-      echo "<tr><td align=\"right\">" . $string['teams'] . "&nbsp;</td><td><div style=\"background-color:white; display:block; height:200px; width:100%; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
-      //$total_modules = $userObject->get_staff_accessable_modules();
+      echo "<tr><td align=\"right\">" . $string['teams'] . "&nbsp;</td><td><div style=\"background-color:white; display:block; height:330px; width:100%; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+
       $module_no = 0;
+      $old_school = '';
+
       foreach ($userObject->get_staff_accessable_modules() as $IdMod => $module) {
+        if ($module['school'] != $old_school) {
+          echo "<div style=\"padding-top:2px\"><strong>" . $module['school'] . "</strong></div>";
+        }
         if (isset($folder_staff_modules[$IdMod])) {
-          if ( $userObject->is_staff_user_on_module($IdMod) OR $userObject->has_role('SysAdmin')) {
+          if ( $userObject->is_staff_user_on_module($IdMod) or $userObject->has_role('SysAdmin')) {
             echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           } else {
             echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
@@ -271,7 +276,9 @@ if ($unique_name) {
           echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
         }
         $module_no++;
+        $old_school = $module['school'];
       }
+
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n</td></tr>";
       ?>
     </table>
