@@ -26,7 +26,9 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 
-$paperID = check_var('paperID', 'GET', true, false, true);
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$startdate  = check_var('startdate', 'GET', true, false, true);
+$enddate    = check_var('enddate', 'GET', true, false, true);
 
 // Check the paper actually exists.
 if (!Paper_utils::paper_exists($paperID, $mysqli)) {
@@ -69,7 +71,7 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
   if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
     $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles = 'Student' OR u.roles = 'graduate')");
-    $result->bind_param('iss', $paper, $_GET['startdate'], $_GET['enddate']);
+    $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();
     $result->bind_result($tmp_userID);
     while ($result->fetch()) {
@@ -78,17 +80,20 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
     $result->close();
   }
 
+  $phase_description = '<strong>';
   if (!isset($_GET['phase'])) {
-    $phase_description = $string['finalisemarks'];
+    $phase_description .= $string['finalisemarks'];
     $tmp_phase = '';
   } elseif ($_GET['phase'] == 1) {
-    $phase_description = $string['primarymarking'];
+    $phase_description .= $string['primarymarking'];
     $tmp_phase = '&phase=1';
   } elseif ($_GET['phase'] == 2) {
-    $phase_description = $string['secondmarking'];
+    $phase_description .= $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
-  if ($candidate_no > 0) $phase_description .= " - $candidate_no " . $string['candidates'];
+  $phase_description .= '</strong>';
+
+  if ($candidate_no > 0) $phase_description .= ": " . number_format($candidate_no) . " " . $string['candidates'];
 
   echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th>";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
@@ -97,7 +102,7 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $phase_description . '</div></th>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%">' . $phase_description . '</div></th>';
   echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(214); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
   echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
 
@@ -142,7 +147,7 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
           echo "<a href=\"textbox_mark_frame_ws.php";
         }
       }
-      echo "?ws=1&q_id=$q_id&qNo=$question_no&paperID=" . $paperID . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">$leadin</a></td></tr>\n";
+      echo "?ws=1&q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">$leadin</a></td></tr>\n";
     }
     $question_no++;
   }

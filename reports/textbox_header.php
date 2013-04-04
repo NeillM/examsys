@@ -24,6 +24,11 @@
 
 require '../include/staff_auth.inc';
 require '../classes/stateutils.class.php';
+require_once '../include/errors.inc';
+
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$startdate  = check_var('startdate', 'GET', true, false, true);
+$enddate    = check_var('enddate', 'GET', true, false, true);
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 ?>
@@ -61,7 +66,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 <body>
 <?php
   // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_type AS paper_type, paper_title FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT paper_type AS paper_type, paper_title FROM properties WHERE property_id = ?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($paper_type, $paper);
@@ -71,8 +76,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   $candidate_no = 0;
   if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
-    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles='Student' OR u.roles='graduate')");
-    $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
+    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles = 'Student' OR u.roles = 'graduate')");
+    $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();
     $result->bind_result($tmp_userID);
     while ($row = $result->fetch()) {
@@ -81,48 +86,27 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
     $result->close();
   }
 
+  $phase_description = '<strong>';
   if (!isset($_GET['phase'])) {
-    $phase_description = $string['finalisemarks'];
+    $phase_description .= $string['finalisemarks'];
     $tmp_phase = '';
   } elseif ($_GET['phase'] == 1) {
-    $phase_description = $string['primarymarking'];
+    $phase_description .= $string['primarymarking'];
     $tmp_phase = '&phase=1';
   } elseif ($_GET['phase'] == 2) {
-    $phase_description = $string['secondmarking'];
+    $phase_description .= $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
-  $phase_description .= " - $candidate_no " . $string['candidates'];
-
-  $module_code = '';
-  $module = (isset($_GET['module']) and $_GET['module'] != '') ? $_GET['module'] : '';
-  if ($module != '') {
-    $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE id=? LIMIT 1");
-    $result->bind_param('i', $module);
-    $result->execute();
-    $result->bind_result($module_code);
-    $result->fetch();
-    $result->close();
-  }
-
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
+  $phase_description .= ":</strong> " . number_format($candidate_no) . " " . $string['candidates'];
 
   echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th style=\"height:52px\">";
   echo '<div class="breadcrumb"><a href="../staff/index.php" target="_top">' . $string['home'] . '</a>';
-  if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '" target="_top">' . $folder_name . '</a>';
-  } elseif ($module != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '" target="_top">' . $module_code . '</a>';
+  if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '" target="_top">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '" target="_top">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '" target="_top">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $phase_description . '</div></th>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '" target="_top">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%">' . $phase_description . '</div></th>';
   echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\" onclick=\"hideMarked();\"";
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
   echo "  /> " . $string['hidemarked'] . "</th></tr>\n";
