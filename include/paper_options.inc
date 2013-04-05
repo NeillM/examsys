@@ -59,6 +59,7 @@ $staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
 $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysqli);
 
 $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
+$checklist = '';
 if (count($moduleIDs) > 0) {
   $moduleIDs = array_keys($moduleIDs);
   $stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE id IN (" . implode(',', $moduleIDs) . ")");
