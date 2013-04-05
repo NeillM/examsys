@@ -1670,7 +1670,6 @@ QUERY;
         CREATE TABLE `keywords_question` (
           `q_id` int(11) default NULL,
           `keywordID` int(11) default NULL,
-          KEY `q_id` (`q_id`),
           PRIMARY KEY (`q_id`, `keywordID`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
@@ -1833,8 +1832,10 @@ QUERY;
           `examinerID` mediumint(8) unsigned DEFAULT NULL,
           `osce_type` enum('electronic','paper') DEFAULT NULL,
           `year` tinyint(4) DEFAULT NULL,
-          PRIMARY KEY  (`id`)
-
+          PRIMARY KEY  (`id`),
+          KEY `q_paper` (`q_paper`),
+          KEY `username` (`userID`),
+          KEY `started` (`started`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1984,6 +1985,7 @@ QUERY;
           `lti_user_equ` varchar(255) NOT NULL,
           `updated_on` datetime NOT NULL,
           PRIMARY KEY (`lti_user_key`),
+          KEY `rogo_id` (`lti_user_equ`),
           KEY `lti_user_equ` (`lti_user_equ`)
          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -2046,7 +2048,8 @@ QUERY;
           `identifier` bigint(20) unsigned NOT NULL,
           `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL DEFAULT '2008/09',
           `sequence` int(11) default NULL,
-          PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`)
+          PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
+          KEY `idx_identifier_calendar_year_objective300_sequence` (`identifier`,`calendar_year`,`objective`(300),`sequence`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 

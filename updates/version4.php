@@ -3960,6 +3960,11 @@ SQL;
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_sct_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
+  
+  // 05/04/2013 (brzsw) - remove rogo_id key from lti_user table
+  if ($updater_utils->does_index_exist('lti_user', 'rogo_id')) {
+    $updater_utils->execute_query("ALTER TABLE lti_user DROP INDEX rogo_id", true);
+  }
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
