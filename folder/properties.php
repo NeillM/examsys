@@ -175,7 +175,7 @@ if (isset($_POST['Submit'])) {
   ?>
     <body onload="closeWindow();">
     <form>
-      <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="updateParent('<?php echo $paper; ?>');" /></div>
+      <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="closeWindow();" /></div>
     </form>
     </body>
     </html>
