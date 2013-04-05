@@ -141,16 +141,16 @@ if (isset($_POST['Submit'])) {
       }
       
       // Next update the folder name in the 'properties' table (moves papers).
-      $editProperties = $mysqli->prepare("UPDATE properties SET folder = ? WHERE folder = ? AND paper_ownerID = ?");
-      $editProperties->bind_param('ssi', $new_folder, $_POST['old_folder'], $userObject->get_user_ID());
+      $editProperties = $mysqli->prepare("UPDATE properties SET folder = ? WHERE id = ? AND paper_ownerID = ?");
+      $editProperties->bind_param('sii', $new_folder, $folderID, $userObject->get_user_ID());
       $editProperties->execute();  
       $editProperties->close();
     }
     $result->free_result();
     $result->close();
   } else {
-    $editProperties = $mysqli->prepare("UPDATE folders SET color = ? WHERE name = ? AND ownerID = ?");
-    $editProperties->bind_param('ssi', $_POST['color'], $_POST['old_folder'], $userObject->get_user_ID());
+    $editProperties = $mysqli->prepare("UPDATE folders SET color = ? WHERE id = ? AND ownerID = ?");
+    $editProperties->bind_param('sii', $_POST['color'], $folderID, $userObject->get_user_ID());
     $editProperties->execute();  
     $editProperties->close();
   }
@@ -158,13 +158,13 @@ if (isset($_POST['Submit'])) {
   if (count($module_array) > 0 ) {
     //set the folder staff_modules
     $editProperties = $mysqli->prepare("DELETE FROM folders_modules_staff WHERE folders_id = ?");
-    $editProperties->bind_param('i', $_POST['folder_id']);
+    $editProperties->bind_param('i', $folderID);
     $editProperties->execute();  
     $editProperties->close();
 
     $editProperties = $mysqli->prepare("INSERT INTO folders_modules_staff VALUES(?, ?)");
-    foreach($module_array as $idMod) {
-      $editProperties->bind_param('ii', $_POST['folder_id'],  $idMod);
+    foreach ($module_array as $idMod) {
+      $editProperties->bind_param('ii', $folderID,  $idMod);
       $editProperties->execute();  
     }
     $editProperties->close();
@@ -261,13 +261,13 @@ if ($unique_name) {
 
       $module_no = 0;
       $old_school = '';
-
+      
       foreach ($userObject->get_staff_accessable_modules() as $IdMod => $module) {
         if ($module['school'] != $old_school) {
           echo "<div style=\"padding-top:2px\"><strong>" . $module['school'] . "</strong></div>";
         }
         if (isset($folder_staff_modules[$IdMod])) {
-          if ( $userObject->is_staff_user_on_module($IdMod) or $userObject->has_role('SysAdmin')) {
+          if ($userObject->is_staff_user_on_module($IdMod) or $userObject->has_role('SysAdmin')) {
             echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           } else {
             echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
