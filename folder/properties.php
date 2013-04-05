@@ -141,8 +141,8 @@ if (isset($_POST['Submit'])) {
       }
       
       // Next update the folder name in the 'properties' table (moves papers).
-      $editProperties = $mysqli->prepare("UPDATE properties SET folder = ? WHERE id = ? AND paper_ownerID = ?");
-      $editProperties->bind_param('sii', $new_folder, $folderID, $userObject->get_user_ID());
+      $editProperties = $mysqli->prepare("UPDATE properties SET folder = ? WHERE folder = ? AND paper_ownerID = ?");
+      $editProperties->bind_param('ssi', $new_folder, $_POST['old_folder'], $userObject->get_user_ID());
       $editProperties->execute();  
       $editProperties->close();
     }

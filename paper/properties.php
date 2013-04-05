@@ -1223,7 +1223,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
      if ($properties->get_folder() != '') $additional .= ' OR id=' . $properties->get_folder();
 
-     $folder_details = $mysqli->prepare("SELECT id, name FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $additional) AND deleted IS NULL ORDER BY name");
+     $folder_details = $mysqli->prepare("SELECT DISTINCT id, name FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $additional) AND deleted IS NULL ORDER BY name");
      $folder_details->bind_param('i', $userObject->get_user_ID());
      $folder_details->execute();
      $folder_details->bind_result($folder_id, $folder_name);
