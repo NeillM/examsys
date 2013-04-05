@@ -985,7 +985,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function configFile() {
     global $string;
-    
+
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     if (file_exists($rogo_path . '/config/config.inc.php')) {
@@ -1001,7 +1001,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function configFileIsWriteable() {
     global $string;
-    
+
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
@@ -1018,7 +1018,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function checkDirPermissionsPre() {
     global $string;
-    
+
     self::$rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     //media
@@ -1068,7 +1068,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function checkSoftware() {
     global $string;
-    
+
     $errors = array();
     //apache
     $apache = explode('/', $_SERVER['SERVER_SOFTWARE']);
@@ -1094,7 +1094,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function checkHTTPS() {
     global $string;
-    
+
     if ($_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
       self::displayError(array(100=> $string['errors12']));
       return false;
@@ -1108,8 +1108,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function displayError($error = '') {
     global $string;
-    
-    var_dump($error);
+
     echo "<div class=\"error\">\n";
     if (is_array($error)) {
       foreach($error as $errCode => $message) {
@@ -1349,9 +1348,9 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
 
 //Warnings
   \$cfg_hour_warning = 10;       // Warning for summative exams
-  
+
 //Paper auto saving settings
-  \$cfg_autosave_settimeout = 5; //Maximum time to wait for one request to succeed 
+  \$cfg_autosave_settimeout = 5; //Maximum time to wait for one request to succeed
   \$cfg_autosave_frequency = 30; //How often to auto save in seconds
   \$cfg_autosave_retrylimit = 3; //How many times to retry a failed save befor informing the user
   \$cfg_autosave_backoff_factor = 1.5; //each retry is lenghtend to \$cfg_autosave_settimeout + (\$cfg_autosave_backoff_factor * \$cfg_autosave_settimeout * retryCount);
