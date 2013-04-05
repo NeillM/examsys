@@ -71,7 +71,6 @@ $result->close();
     $(function () {
       $('#results').hide();
       $('#start').click(function () {
-          alert('test');
         var period = $('#period').val();
         var paper = $('#paper').val();
         var passwd = $('#passwd').val();
