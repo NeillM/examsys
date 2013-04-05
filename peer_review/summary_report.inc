@@ -22,6 +22,8 @@
 * @package
 */
 
+require_once '../classes/paperutils.class.php';
+
 function padDecimals($number, $rounding) {
   $number = round($number, $rounding);
 
@@ -45,7 +47,7 @@ function padDecimals($number, $rounding) {
 
 // Get questions on the paper
 $questions = array();
-$result = $mysqli->prepare("SELECT q_type, question, leadin, display_method, option_text FROM (papers, questions, options) WHERE papers.question = questions.q_id AND questions.q_id=options.o_id AND paper = ? ORDER BY display_pos, id_num");
+$result = $mysqli->prepare("SELECT q_type, question, leadin, display_method, option_text FROM (papers, questions, options) WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ? ORDER BY display_pos, id_num");
 $result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($q_type, $questionID, $leadin, $display_method, $option_text);
@@ -64,10 +66,10 @@ while ($result->fetch()) {
   }
 }
 $result->close();
-
 $heading_no = $questions[$questionID]['scale_size'];
 
 $group = '%';
+$type = $propertyObj->get_rubric();
 foreach ($_GET as $key => $value) {
   if (substr($key, 0, 4) == 'meta') {
     $md_parts = explode('=', $value);
@@ -80,7 +82,8 @@ foreach ($_GET as $key => $value) {
 // Load basic user information
 $user_data = array();
 $groups = array();
-
+$modules_array = Paper_utils::get_modules($paperID, $mysqli);
+$calendar_year = $propertyObj->get_calendar_year();
 if ($group == '%') {
   $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id = sid.userID WHERE users_metadata.userID = users.id AND idMod IN (" . implode(',', array_keys($modules_array)) . ") AND calendar_year = ? AND type = ? ORDER BY surname, initials");
   $result->bind_param('ss', $calendar_year, $type);
@@ -91,14 +94,15 @@ if ($group == '%') {
 $result->execute();
 $result->bind_result($userID, $group, $surname, $first_names, $title, $student_id);
 while ($result->fetch()) {
-  $user_data[$userID]['group'] = $group;
-  $user_data[$userID]['surname'] = $surname;
-  $user_data[$userID]['first_names'] = $first_names;
-  $user_data[$userID]['title'] = $title;
-  $user_data[$userID]['student_id'] = $student_id;
-  $user_data[$userID]['userID'] = $userID;
 
-  $groups[$group][$student_id] = $student_id;
+  $user_data[$userID]['group']        = $group;
+  $user_data[$userID]['surname']      = $surname;
+  $user_data[$userID]['first_names']  = $first_names;
+  $user_data[$userID]['title']        = $title;
+  $user_data[$userID]['student_id']   = $student_id;
+  $user_data[$userID]['userID']       = $userID;
+
+  $groups[$group][$student_id]        = $student_id;
 }
 $result->close();
 
@@ -120,6 +124,7 @@ while ($result->fetch()) {
 $result->close();
 
 // Parse the data calculating means
+$review_type = $propertyObj->get_display_question_mark();
 if ($review_type == '1') {
   parse_group_data($questions, $user_data);
 } else {
@@ -135,10 +140,10 @@ function parse_group_data($questions, &$user_data) {
     $student_marks = 0;
     if (isset($student['data'])) {
       foreach ($student['data'] as $questionID => $question_data) {
-        $review_no = 0;
-        $review_total = 0;
-        $sub_student = 0;
-        $sub_available = 0;
+        $review_no      = 0;
+        $review_total   = 0;
+        $sub_student    = 0;
+        $sub_available  = 0;
         foreach ($question_data as $individual_question) {
           if ($individual_question != '') {
             $review_no++;
@@ -154,8 +159,8 @@ function parse_group_data($questions, &$user_data) {
           $user_data[$studentID]['means'][$questionID] = $review_total / $review_no;
           $user_data[$studentID]['percent'][$questionID] = ($sub_student / $sub_available) * 100;
         } else {
-          $user_data[$studentID]['means'][$questionID] = 0;
-          $user_data[$studentID]['percent'][$questionID] = 0;
+          $user_data[$studentID]['means'][$questionID]    = 0;
+          $user_data[$studentID]['percent'][$questionID]  = 0;
         }
         $user_data[$studentID]['review_total'][$questionID] = $student_marks;
         $user_data[$studentID]['total_percent'][$questionID] = ($student_marks / $available_marks) * 100;

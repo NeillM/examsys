@@ -26,13 +26,12 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 
-require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
 
-$paperID = check_var('paperID', 'GET', true, false, true);
-$startdate = check_var('startdate', 'GET', true, false, true);
-$enddate = check_var('enddate', 'GET', true, false, true);
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$startdate  = check_var('startdate', 'GET', true, false, true);
+$enddate    = check_var('enddate', 'GET', true, false, true);
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
@@ -47,7 +46,6 @@ $calendar_year = $propertyObj->get_calendar_year();
 $type = $propertyObj->get_rubric();
 $marking = $propertyObj->get_marking();
 $review_type = $propertyObj->get_display_question_mark();
-$modules_array = Paper_utils::get_modules($paperID, $mysqli);
 
 require_once 'summary_report.inc';
 ?>
