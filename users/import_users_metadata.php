@@ -71,7 +71,7 @@ if (!$module_details) {
 
 <?php
   if (isset($_POST['submit'])) {
-    echo "<body onclick=\"hideMenus()\" onload=\"changeMsg()\">\n";
+    echo "<body onclick=\"hideMenus()\">\n";
   } else {
     echo "<body onclick=\"hideMenus()\">\n";
   }
@@ -81,12 +81,9 @@ if (!$module_details) {
 <br />
 
 <?php
-
+  $file_problem = false;
+      
   if (isset($_POST['submit'])) {
-    echo '<div id="msg">' . $string['loadingdata'] . '</div>';
-    ob_flush();
-    flush();
-
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv"))  {
         echo 'Problem - ';
@@ -118,13 +115,14 @@ if (!$module_details) {
         $stmt->close();
 
         $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv');
-        $type = '';
+        $type  = '';
         $value = '';
 
         $line_no = 0;
-        $col_no = 0;
+        $col_no  = 0;
         $unknown_users = array();
-        $headings = array();
+        $headings      = array();
+        
         $stmt = $mysqli->prepare("REPLACE INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param('iisss', $student_id, $module, $type, $value, $_POST['session']);
         foreach ($lines as $separate_line) {
@@ -153,23 +151,25 @@ if (!$module_details) {
         }
         $stmt->close();
       }
-    }
-
-    echo "<br />\n<div>" . (count($lines) - count($unknown_users) - 1) . " " . $string['uploadedcorrectly'] . "<br />\n";
-    if (count($unknown_users) > 0) {
-      echo count($unknown_users) . " " . $string['notrecognised'] . "\n<ul>\n";
-      foreach ($unknown_users as $unknown) {
-        echo "<li>$unknown</li>\n";
+      
+      echo "<br />\n<div>" . (count($lines) - count($unknown_users) - 1) . " " . $string['uploadedcorrectly'] . "<br />\n";
+      if (count($unknown_users) > 0) {
+        echo count($unknown_users) . " " . $string['notrecognised'] . "\n<ul>\n";
+        foreach ($unknown_users as $unknown) {
+          echo "<li>$unknown</li>\n";
+        }
+        echo "</ul>\n";
       }
-      echo "</ul>\n";
+      echo "<br />\n<input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../folder/details.php?module=" . $_GET['module'] . "';\" /></div>";
+
+      unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv");
+
+      $mysqli->close();
+      exit;
+    } else {
+      $file_problem = true;
     }
-    echo "<br />\n<input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../folder/details.php?module=" . $_GET['module'] . "';\" /></div>";
-
-    unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv");
-
-    $mysqli->close();
-    exit;
-  } else {
+  }
 ?>
 <br />
 <table border="0" cellpadding="4" cellspacing="0" class="dialog_border" style="width:700px">
@@ -179,7 +179,6 @@ if (!$module_details) {
 <tr>
 <td class="dialog_body" colspan="2">
 
-<p style="text-align:justify; padding:4px"><?php echo $string['msg']; ?></p>
 <br />
 <div style="text-align:center">
 <img src="../artwork/user_metadata_sheet.png" width="350" height="165" style="border:1px solid black" alt="" />
@@ -197,7 +196,14 @@ if (!$module_details) {
 
 ?>
 </select></td></tr>
-<tr><td><?php echo $string['file']; ?></td><td><input type="file" size="50" name="csvfile" /></td></tr>
+<tr><?php
+if ($file_problem) {
+  echo '<td></td><td style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" />&nbsp;Please specify a file for upload.</td></tr><tr>';
+  echo '<td style="color:#C00000; font-weight:bold">' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" />';
+} else {
+  echo '<td>' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" />';
+}
+?></td></tr>
 </table>
 <br />
 <p style="padding-bottom:10px"><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
@@ -210,7 +216,6 @@ if (!$module_details) {
 <?php
   $mysqli->close();
   ob_end_flush();
-}
 ?>
 </body>
 </html>
