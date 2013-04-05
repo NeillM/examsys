@@ -638,11 +638,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_help TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT,INSERT,UPDATE ON " . $dbname . ".temp_users TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".temp_users TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".users TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users_metadata TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".log_start_time TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
@@ -775,6 +776,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".properties_reviewers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".log_start_time TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {

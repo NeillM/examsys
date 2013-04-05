@@ -51,7 +51,7 @@ function get_grants($db_name, $user, $db, $replace_name = '') {
     $grant = $row[0];
     if ($replace_name != '') {
       $grant = str_replace("`$db_name`", "`$replace_name`", $grant);  // Replace the database name.
-      $grant = str_replace($db_name . '_' . $user, $replace_name . '_' . $user, $grant);  // Replace the database name.
+      $grant = str_replace($db_name . '_', $replace_name . '_', $grant);  // Replace the database name.
     }
     $pos = strpos($grant, 'IDENTIFIED BY PASSWORD');
     if ($pos !== false) {
