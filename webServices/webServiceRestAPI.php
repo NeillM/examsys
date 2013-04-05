@@ -155,6 +155,7 @@ Class webServiceRestAPI extends restAPI {
         $action = $_GET['url'];
       }
     }
+    
     switch($action) {
       case 'getAvailableFeedback':
         //process url
@@ -216,13 +217,15 @@ Class webServiceRestAPI extends restAPI {
         if ($this->data === 'accessdenied') {
           $this->sendResponse(401, '', '');
         } elseif ($this->data === false) {
-          $this->sendResponse(400, '', '');
+          $this->sendResponse(409, '', '');
+        } elseif (!is_numeric($this->data)) {
+          $this->sendResponse(200, $this->formatData(array('ERROR' => $this->data), 'user', 'paper'), $this->http_accept);
         } else {
-          $this->sendResponse(200, $this->formatData($this->data, 'user', 'paper'), $this->http_accept);
+          $this->sendResponse(200, $this->formatData(array('userID' => $this->data), 'user', 'paper'), $this->http_accept);
         }
         break;
       default:
-        //if we get here the action is unsupported so give a http 400 bad request
+        //if we get here the action is unsupported so give a http 405 bad request
         $this->sendResponse(405, '', '');
         break;
     }
@@ -484,18 +487,21 @@ Class webServiceRestAPI extends restAPI {
   }
 
   public function createAccount() {
-    global $userroles;
 
     $userObject=UserObject::get_instance();
     if (!$userObject->has_role('SysAdmin')) {
-      return 'accessdenied';
+      return false;
+    }
+    
+    if(!isset($_POST['data'])) {
+      return false;
     }
 
     $xml = new SimpleXMLElement($_POST['data']);
     $fields = array('username', 'password', 'firstnames', 'title', 'surname', 'email', 'course', 'gender', 'yearofstudy', 'roles');
     
     foreach ($fields as $field) {
-      if (isset($xml->$field)) {
+      if (isset($xml->$field) and $xml->$field != '') {
         $$field = $xml->$field;
       } else {
         return 'Missing data: ' . $field;
@@ -513,10 +519,10 @@ Class webServiceRestAPI extends restAPI {
     
     $success = UserUtils::create_user($username, $password, $title, $firstnames, $surname, $email, $course, $gender, $yearofstudy, $roles, $studentid, $this->db);
     
-    if (!$success) {
+    if ($success === false) {
       return false;
     } else {
-      return true;
+      return $success;
     }
   }
   
