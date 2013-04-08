@@ -64,9 +64,6 @@ if ($action == 'getModulePaperList') {
    
   $result =  $mysqli->select_db($configObject->get('cfg_db_database'));
   
-  $result = $mysqli->prepare("SELECT id FROM users LIMIT 10");
-  $result->execute();
-  $result->close();
 } else {
   require '../include/staff_student_auth.inc';
 }
@@ -214,7 +211,7 @@ Class webServiceRestAPI extends restAPI {
         break;
       case 'createAccount':
         $this->data = $this->createAccount();
-        if ($this->data === 'accessdenied') {
+        if ($this->data === 'AccessDenied') {
           $this->sendResponse(401, '', '');
         } elseif ($this->data === false) {
           $this->sendResponse(409, '', '');
@@ -498,7 +495,7 @@ Class webServiceRestAPI extends restAPI {
 
     $userObject=UserObject::get_instance();
     if (!$userObject->has_role('SysAdmin')) {
-      return false;
+      return 'AccessDenied';
     }
     
     if(!isset($_POST['data'])) {
