@@ -88,7 +88,7 @@ if ($userObject->has_role('Student')) {
   $papers_query = <<< QUERY
   SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM (properties p, properties_modules pm)
   INNER JOIN papers pa ON p.property_id = pa.paper
-  WHERE p.paper_type IN ('0', '1', '3', '6')
+  WHERE p.paper_type IN ('0', '1', '3', '4', '6')
   AND p.property_id = pm.property_id
   AND idMod = ?
   AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
@@ -114,7 +114,7 @@ QUERY;
 
           // Don't show if 0 screens
           if ($screens > 0) {
-            $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name, 'password' => $password);
+            $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $paper_type, 'original_type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name, 'password' => $password);
             $papers++;
 
             if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
@@ -154,7 +154,7 @@ QUERY;
 
   // Get any objectives-based feedback released.
   $feedback_query = <<< QUERY
-  SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, p.start_date, p.password FROM (feedback_release f, properties p, properties_modules pm)
+  SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, paper_type, p.start_date, p.password FROM (feedback_release f, properties p, properties_modules pm)
   WHERE f.paper_id = p.property_id
   AND p.property_id = pm.property_id
   AND idMod = ?
@@ -169,11 +169,11 @@ QUERY;
     if ($stmt = $mysqli->prepare($feedback_query)) {
       $stmt->bind_param('is', $modules[$i]['idMod'], $modules[$i]['year']);
       $stmt->execute();
-      $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type, $start_date, $password);
+      $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type, $paper_type, $start_date, $password);
       $stmt->store_result();
       while ($stmt->fetch()) {
         if (in_array($paper_id, $papers_taken)) {
-          $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name, 'password' => $password);
+          $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'original_type' => $paper_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name, 'password' => $password);
           $papers++;
 
           if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
@@ -296,23 +296,27 @@ if (!$userObject->has_role('Student')) {
 <?php
   			foreach($module['papers'] as $paper) {
           if ($paper['type'] == '6') {
-            $script_name = '../peer_review/form.php';
+            $script_name = '../peer_review/form.php?id=' . $paper['crypt_name'];
           } elseif ($paper['type'] == 'objectives') {
-            $script_name = '../mapping/user_feedback.php';
+            $script_name = '../mapping/user_feedback.php?id=' . $paper['crypt_name'];
           } elseif ($paper['type'] == 'questions') {
-            $script_name = '../paper/feedback.php';
+            if ($paper['original_type'] == '4') {
+              $script_name = '../osce/view_form.php?id=' . $paper['crypt_name'];
+            } else {
+              $script_name = '../paper/feedback.php?id=' . $paper['crypt_name'];
+            }
           } else {
-            $script_name = '../user_index.php';
+            $script_name = '../user_index.php?id=' . $paper['crypt_name'];
           }
 ?>
 			  <div class="file">
 			  	<table cellpadding="0" cellspacing="0" border="0">
 			  		<tr>
 			  			<td style="width:60px" align="center">
-								<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank"><?php echo($paper_utils->displayIcon($paper['type'], $paper['title'], '', '', '', '')); ?></a>
+								<a href="<?php echo $script_name; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank"><?php echo($paper_utils->displayIcon($paper['type'], $paper['title'], '', '', '', '')); ?></a>
 							</td>
 	    				<td>
-	    					<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a>
+	    					<a href="<?php echo $script_name; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a>
 <?php
   if (isset($paper['password']) and $paper['password'] != '') {
 ?>

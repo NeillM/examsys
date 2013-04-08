@@ -1752,7 +1752,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
        echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
      }
-     if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '5'))) {
+     if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '4', '5'))) {
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
        echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
        // Question-based Feedback

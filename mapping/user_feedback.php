@@ -70,14 +70,7 @@ if (!$propertyObj) {
 
 //check the feedback has been released !!!
 if ($userObject->has_role('Student')) {
-  $result = $mysqli->prepare("SELECT property_id, date FROM feedback_release, properties WHERE properties.property_id = feedback_release.paper_id AND crypt_name = ? AND date < NOW()");
-  $result->bind_param('s', $_GET['id']);
-  $result->execute();
-  $result->bind_result($paperID, $date);
-  $result->fetch();
-  $result->close();
-  if ($date == '') {
-    header("HTTP/1.0 404 Not Found");
+  if (!$propertyObj->is_objective_fb_released()) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
@@ -88,17 +81,17 @@ if (!isset($_GET['ordering'])) {
   $direction = 'asc';
 }
 
-$paperID = $propertyObj->get_property_id();
-$paper_title = $propertyObj->get_paper_title();
-$paper_type = $propertyObj->get_paper_type();
-$session = $propertyObj->get_calendar_year();
-$pass_mark = $propertyObj->get_pass_mark();
-$random_mark = $propertyObj->get_random_mark();
-$total_mark = $propertyObj->get_total_mark();
-$marking = $propertyObj->get_marking();
-$exam_duration = $propertyObj->get_exam_duration();
-$start_date = $propertyObj->get_start_date();
-$end_date = $propertyObj->get_end_date();
+$paperID        = $propertyObj->get_property_id();
+$paper_title    = $propertyObj->get_paper_title();
+$paper_type     = $propertyObj->get_paper_type();
+$session        = $propertyObj->get_calendar_year();
+$pass_mark      = $propertyObj->get_pass_mark();
+$random_mark    = $propertyObj->get_random_mark();
+$total_mark     = $propertyObj->get_total_mark();
+$marking        = $propertyObj->get_marking();
+$exam_duration  = $propertyObj->get_exam_duration();
+$start_date     = $propertyObj->get_start_date();
+$end_date       = $propertyObj->get_end_date();
 
 if ($userObject->has_role('Student')) {
   $logger->record_access($userObject->get_user_ID(), 'Objectives-based feedback report', $paperID);  // Students write in the paperID
@@ -127,9 +120,9 @@ if ($result->num_rows == 0) {
 }
 $result->close();
 
-$start_seconds = (substr($started,0,2) * 60 * 60) + (substr($started,3,2) * 60) + substr($started,6,2);
-$updated = (substr($updated,0,2) * 60 * 60) + (substr($updated,3,2) * 60) + substr($updated,6,2);
-$time_spent = $updated - $start_seconds;
+$start_seconds  = (substr($started,0,2) * 60 * 60) + (substr($started,3,2) * 60) + substr($started,6,2);
+$updated        = (substr($updated,0,2) * 60 * 60) + (substr($updated,3,2) * 60) + substr($updated,6,2);
+$time_spent     = $updated - $start_seconds;
 
 $result = $mysqli->prepare("SELECT username, title, initials, surname FROM users WHERE id = ?");
 $result->bind_param('i', $userID);

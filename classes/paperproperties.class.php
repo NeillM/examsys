@@ -77,6 +77,8 @@ class PaperProperties {
   private $question_no;
   private $max_screen;
   private $max_display_pos;
+  private $objective_fb_released;
+  private $question_fb_released;
 
   private $_date_timezone = null;
 
@@ -382,6 +384,52 @@ class PaperProperties {
     }
 
     return $this->summative_lock;
+  }
+  
+  public function is_objective_fb_released() {
+    if (!isset($this->objective_fb_released)) {
+      $this->load_objective_fb_released();
+    }
+
+    return $this->objective_fb_released;
+  }
+  
+  public function is_question_fb_released() {
+    if (!isset($this->question_fb_released)) {
+      $this->load_question_fb_released();
+    }
+
+    return $this->question_fb_released;
+  }
+  
+  private function load_objective_fb_released() {
+    $row_no = 0;
+  
+    $result = $this->db->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
+    $property_id = $this->get_property_id();
+    $result->bind_param('i', $property_id);
+    $result->execute();
+    $result->bind_result($idfeedback_release);
+    $result->store_result();
+    $row_no = $result->num_rows;
+    $result->close();
+    
+    $this->objective_fb_released = $row_no > 0;
+  }
+  
+  private function load_question_fb_released() {
+    $row_no = 0;
+  
+    $result = $this->db->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
+    $property_id = $this->get_property_id();
+    $result->bind_param('i', $property_id);
+    $result->execute();
+    $result->bind_result($idfeedback_release);
+    $result->store_result();
+    $row_no = $result->num_rows;
+    $result->close();
+    
+    $this->question_fb_released = $row_no > 0;
   }
 
   public function get_item_no() {

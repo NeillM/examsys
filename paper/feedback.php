@@ -56,6 +56,12 @@ if (isset($_GET['type'])) {
 $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
+// Check if paper can be released date wise
+if (!$propertyObj->is_question_fb_released()) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
 //lookup previous sessionid from log_metadata.started property_id
 if (isset($_GET['userid'])) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
@@ -71,23 +77,11 @@ $sessionid = $log_metadata->get_session_id();
 $metadataid = $log_metadata->get_metadata_id();
 
 if ($sessionid === null) {
-  $notice->access_denied($mysqli, $string, $string['nottaken'], false);
+  $notice->access_denied($mysqli, $string, $string['nottaken'], true, true);
 }
 
 $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
-
-// Check if paper can be released date wise
-$stmt = $mysqli->prepare("SELECT UNIX_TIMESTAMP(date) FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
-$stmt->bind_param('i', $paperID);
-$stmt->execute();
-$stmt->bind_result($access_date);
-$stmt->store_result();
-$stmt->fetch();
-if ($stmt->num_rows == 0) {
-  $notice->access_denied($mysqli, $string, $string['nofeedback'], false);
-}
-$stmt->close();
 
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper

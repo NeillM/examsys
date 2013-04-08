@@ -22,15 +22,41 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
+require '../include/staff_student_auth.inc';
 require '../include/demo_replace.inc';
 require './osce.inc';
+require_once '../classes/paperproperties.class.php';
 
 if ($userObject->has_role('Demo')) $demo = true;
 
+$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+
+if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+  $userID = $_GET['userID'];
+  $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
+  if ($propertyObj == false) {
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
+  $paperID = $_GET['paperID'];
+} elseif ($userObject->has_role('Student')) {
+  $userID = $userObject->get_user_ID();
+  $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
+  if ($propertyObj == false) {  // No properties found, this crypt_name
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
+  
+  if (!$propertyObj->is_question_fb_released()) {
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
+  $paperID = $propertyObj->get_property_id();
+} else {
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+
 // Get the module ID and calendar year of the OSCE station.
-$result = $mysqli->prepare("SELECT username, title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE users.id=? AND users.id=sid.userID");
-$result->bind_param('i', $_GET['userID']);
+$result = $mysqli->prepare("SELECT username, title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE users.id = ? AND users.id = sid.userID");
+$result->bind_param('i', $userID);
 $result->execute();
 $result->bind_result($username, $title, $surname, $first_names, $grade, $year, $student_id);
 $result->fetch();
@@ -38,18 +64,17 @@ $result->close();
 
 $original_username = $username;
 if (isset($demo) and $demo == true) {
-  $surname = demo_replace($surname,$demo);
-  $first_names = demo_replace($first_names,$demo);
-  $student_id = demo_replace_number($student_id,$demo);
+  $surname = demo_replace($surname, $demo);
+  $first_names = demo_replace($first_names, $demo);
+  $student_id = demo_replace_number($student_id, $demo);
 }
 
-// Get properties of the paper.
-$result = $mysqli->prepare("SELECT paper_title, bgcolor, fgcolor, labelcolor, themecolor, marking FROM properties WHERE property_id=?");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->bind_result($paper_title, $bgcolor, $fgcolor, $labelcolor, $themecolor, $marking);
-$result->fetch();
-$result->close();
+$paper_title  = $propertyObj->get_paper_title();
+$bgcolor      = $propertyObj->get_bgcolor();
+$fgcolor      = $propertyObj->get_fgcolor();
+$labelcolor   = $propertyObj->get_labelcolor();
+$themecolor   = $propertyObj->get_themecolor();
+$marking      = $propertyObj->get_marking();
 ?>
 <html>
   <head>
@@ -83,9 +108,9 @@ $result->close();
   // Query Log4 just in case form has already been submitted for this user.
   $stored_results = array();
   $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE q_paper = ? AND userID = ?");
-  $result->bind_param('ii', $_GET['paperID'], $_GET['userID']);
+  $result->bind_param('ii', $paperID, $userID);
   $result->execute();
-  $result->bind_result($q_id, $rating,$q_parts);
+  $result->bind_result($q_id, $rating, $q_parts);
   while ($result->fetch()) {
     $stored_results[$q_id] = $rating;
     $stored_q_parts[$q_id] = $q_parts;
@@ -93,7 +118,7 @@ $result->close();
   $result->close();
   
   $result = $mysqli->prepare("SELECT feedback, overall_rating FROM log4_overall WHERE q_paper = ? AND userID = ?");
-  $result->bind_param('ii', $_GET['paperID'], $_GET['userID']);
+  $result->bind_param('ii', $paperID, $userID);
   $result->execute();
   $result->bind_result($feedback, $overall_rating);
   $result->fetch();
@@ -105,8 +130,8 @@ $result->close();
   $cell_colors = array('#FF8080','#FFC169','#50E850');
   $rating_class = array('rating1','rating2','rating3');
   
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question=questions.q_id ORDER BY display_pos");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
   while ($result->fetch()) {
