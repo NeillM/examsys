@@ -266,8 +266,8 @@ Class webServiceRestAPI extends restAPI {
         $papers[$paper_no]['id'] = $crypt_name;
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
-        $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
-        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
+        $papers[$paper_no]['staff_url'] = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
+        $papers[$paper_no]['student_url'] = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
         $papers[$paper_no]['start_date'] = $start_date;
         $papers[$paper_no]['end_date'] = $end_date;
         $papers[$paper_no]['created'] = $created;
@@ -400,7 +400,7 @@ Class webServiceRestAPI extends restAPI {
   }
 
   public function getOwnerPaperList($username, $types) {
-    global $protocol, $configObject;
+    global $configObject;
     
     $allowaccess = false;
     $userObject = UserObject::get_instance();
@@ -480,8 +480,8 @@ Class webServiceRestAPI extends restAPI {
         $papers[$paper_no]['id'] = $crypt_name;
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
-        $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
-        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
+        $papers[$paper_no]['staff_url'] = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
+        $papers[$paper_no]['student_url'] = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
         $papers[$paper_no]['start_date'] = $start_date;
         $papers[$paper_no]['end_date'] = $end_date;
         $papers[$paper_no]['created'] = $created;
