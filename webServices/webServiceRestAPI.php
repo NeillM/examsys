@@ -373,7 +373,11 @@ Class webServiceRestAPI extends restAPI {
           $log->close();
           continue;
         } else {
-          $papers[$paper_no]['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/mapping/user_feedback.php?id=' .  $crypt_name . '&userID=' . $tmp_userID;
+          if ($userObject->has_role('Student')) {
+            $papers[$paper_no]['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/mapping/user_feedback.php?id=' .  $crypt_name;
+          } else {
+            $papers[$paper_no]['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/mapping/user_feedback.php?id=' .  $crypt_name . '&userID=' . $tmp_userID;
+          }
           $log->close();
         }
       } else {
@@ -499,7 +503,7 @@ Class webServiceRestAPI extends restAPI {
     }
     
     if(!isset($_POST['data'])) {
-      return false;
+      return 'No data';
     }
 
     $xml = new SimpleXMLElement($_POST['data']);
