@@ -129,7 +129,20 @@ QUERY;
 
   // Get which papers a student has taken (for feedback purposes).
   $papers_taken = array();
-  $log_query = "SELECT DISTINCT paperID FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id AND userID = ?";
+  $types = array(0, 1, 2);
+  foreach ($types as $type) {
+    $log_query = "SELECT DISTINCT paperID FROM log$type, log_metadata WHERE log$type.metadataID = log_metadata.id AND userID = ?";
+    $stmt = $mysqli->prepare($log_query);
+    $stmt->bind_param('i', $userObject->get_user_ID());
+    $stmt->execute();
+    $stmt->bind_result($paperID);
+    while ($stmt->fetch()) {
+      $papers_taken[] = $paperID;
+    }
+    $stmt->close();
+  }
+
+  $log_query = "SELECT DISTINCT q_paper FROM log4_overall WHERE userID = ?";
   $stmt = $mysqli->prepare($log_query);
   $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
@@ -146,7 +159,7 @@ QUERY;
   AND p.property_id = pm.property_id
   AND idMod = ?
   AND NOW() > f.date
-  AND p.paper_type IN ('0','1','2')
+  AND p.paper_type IN ('0', '1', '2', '4')
   AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
   AND p.end_date < NOW()
   ORDER BY p.paper_title
@@ -182,7 +195,7 @@ $paper_utils = Paper_utils::get_instance();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />

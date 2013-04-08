@@ -646,7 +646,7 @@ if (isset($_POST['Submit'])) {
     if ($display_feedback != $old_display_feedback)                   $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_display_feedback, $display_feedback, 'textfeedback');
     if ($folderID != $old_folder)                                     $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_folder, $folderID, 'folder');
 
-    if ($properties->get_paper_type() != '2') {    // Update textual feedback if not a summative paper.
+    if ($properties->get_paper_type() != '2' and $properties->get_paper_type() != '4') {    // Update textual feedback if not a summative paper or OSCE station.
       // Get old settings
       $old_textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli);
       for ($i=1; $i<10; $i++) {
@@ -1732,7 +1732,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
      echo "<table cellspacing=\"0\" cellpadding=\"6\" border=\"0\" style=\"margin:15px\">\n";
 
-     if (in_array($properties->get_paper_type(), array('0', '1', '2', '5'))) {
+     if (in_array($properties->get_paper_type(), array('0', '1', '2', '4', '5'))) {
        echo '<tr><td><img src="../artwork/feedback_release_icon.png" width="48" height="48" />';
        // Objectives-based Feedback
        $idfeedback_release = '';
@@ -1801,7 +1801,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
      echo "</td></tr>\n";
 
-     if ($properties->get_paper_type() != '2') {
+     if ($properties->get_paper_type() != '2' and $properties->get_paper_type() != '4') {
        echo "<tr><td colspan=\"2\"style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['textualfeedback'] . "</td></tr>\n";
        echo "<tr><td style=\"text-align:center\">" . $string['above'] . "</td><td style=\"text-align:center\">" . $string['message'] . "</td></tr>\n";
        for ($i=1; $i<=10; $i++) {

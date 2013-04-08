@@ -185,7 +185,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   $tmp_start_date  = DateTime::createFromFormat('U', $start_date);
   $tmp_end_date    = DateTime::createFromFormat('U', $end_date);  
   $chort_question_data = getCohortData($mysqli, $moduleID, $tmp_start_date->format('YmdHis'), $tmp_end_date->format('YmdHis'), '%', '%', '%', $paperID, $paper_type, '');
-
+  
   //get users log data excluding exclued questions
   $qid_list = '';
   $question_data = array();
