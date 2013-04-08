@@ -76,7 +76,7 @@ $string['NoLookupConfiguredmessage'] = 'Konfiguracja odnośnika nie została wpi
 $string['guestbutton'] = 'Logowanie gościnne';
 $string['authentication_lti_authmessage'] = 'Zaloguj się, aby uwierzytelnić połączenie LTI.';
 $string['authentication_lti_reauthmessage'] = 'Zaloguj się, aby ponownie uwierzytelnić połączenie LTI.';
-$string['lti_not_allow_add_selfreg'] = 'Automatic adding of students on this type of module hasnt been enabled in the config for module: '; // TODO Niko
+$string['lti_not_allow_add_selfreg'] = 'Automatyczne dodawanie studentów do tego typu modułu nie zostało umożliwione w kofiguracji modułu: '; 
 
 $string['denied_role'] = 'Twoja rola użytkownika - %s - nie daje ci prawa dostępu.';
 
