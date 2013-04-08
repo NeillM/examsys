@@ -286,7 +286,7 @@ Class webServiceRestAPI extends restAPI {
 
 
   public function getAvailableFeedback ($username,$moduleID) {
-    
+
     $allowaccess = false;
     $tmp_userID = $this->getUserID($username, false);
     $userObject=UserObject::get_instance();
@@ -304,13 +304,17 @@ Class webServiceRestAPI extends restAPI {
       return '';
     }
     
-    $idMod = module_utils::get_idMod($moduleID, $this->db);
+    if ($moduleID != '') {
+      $idMod = module_utils::get_idMod($moduleID, $this->db);
+      if ($idMod == false) {
+        return "Unknown Module";
+      }
+    }
     
     $paper_no = 0;
     $old_yearID = -1;
     $papers = array();
-    
-    if($idMod == false) {
+    if($moduleID == '') {
       $sql = "SELECT 
                       paper_id, 
                       date, 
@@ -320,11 +324,13 @@ Class webServiceRestAPI extends restAPI {
                       start_date, 
                       end_date, 
                       properties.calendar_year, 
-                      crypt_name 
+                      crypt_name, 
+                      moduleId 
                FROM feedback_release 
                LEFT JOIN properties ON feedback_release.paper_id = properties.property_id 
                LEFT JOIN properties_modules ON properties.property_id =  properties_modules.property_id 
                LEFT JOIN modules_student ON modules_student.idMod = properties_modules.idMod
+               LEFT JOIN modules ON modules.id = properties_modules.idMod 
                WHERE 
                       modules_student.userID=?";
       $res = $this->db->prepare($sql);
@@ -339,11 +345,13 @@ Class webServiceRestAPI extends restAPI {
                       start_date, 
                       end_date, 
                       properties.calendar_year, 
-                      crypt_name 
+                      crypt_name,
+                      moduleId  
                FROM feedback_release 
                LEFT JOIN properties ON feedback_release.paper_id = properties.property_id 
                LEFT JOIN properties_modules ON properties.property_id =  properties_modules.property_id 
-               LEFT JOIN modules_student ON modules_student.idMod = properties_modules.idMod
+               LEFT JOIN modules_student ON modules_student.idMod = properties_modules.idMod 
+               LEFT JOIN modules ON modules.id = properties_modules.idMod 
                WHERE 
                       modules_student.userID=? AND 
                       modules_student.idMod=?";
@@ -352,10 +360,10 @@ Class webServiceRestAPI extends restAPI {
     }
     $res->execute();
     $res->store_result();
-    $res->bind_result($paperID, $date, $is_live, $paper_type, $paper_title, $start_date, $end_date, $calendar_year, $crypt_name);
+    $res->bind_result($paperID, $date, $is_live, $paper_type, $paper_title, $start_date, $end_date, $calendar_year, $crypt_name, $moduleID);
     
     while ($res->fetch()) {
-
+      
       if ($is_live < time()) {
         //have they sat the paper?
         $log = $this->db->prepare("SELECT userID FROM log_metadata WHERE userID=? AND paperID=? LIMIT 1");
