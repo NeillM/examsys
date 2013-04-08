@@ -161,6 +161,17 @@ Class FormUtils {
 		
 		return $rval;
 	}
+  
+  function is_email_in_cfg_institutional_domains($email) {
+    $cfg = Config::get_instance();
+    $domains  = $cfg->get('cfg_institutional_domains');
+    foreach($domains as $d) {
+      if(stripos($email, $d)) {
+        return true;
+      }
+    }
+    return false;
+  }
 	
 	// Get a unique version of a given file name
 	/**

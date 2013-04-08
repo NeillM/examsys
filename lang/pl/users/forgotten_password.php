@@ -18,6 +18,7 @@ $string['forgottenpassword'] = 'Utracone hasło';
 $string['emailaddress'] = 'Adres Email';
 $string['emailaddressinvalid'] = 'Podaj poprawny adres Email';
 $string['emailaddressnotfound'] = 'Nie znaleziono tego adresu Email';
+$string['emailaddressininstitutionaldomains'] = 'Your account is from an institution which is managed using a central authentication service. Please contact IT support to inquire about the password reset procedure.';
 $string['passwordreset'] = 'Resetowanie hasła';
 $string['emailhtml'] = <<< EMAIL_HTML
 <p>Cześć %s %s,</p>

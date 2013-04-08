@@ -47,6 +47,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
   // Check if the supplied value is an email address (avoid an unnecessary DB call)
     if(!$form_util->is_email($email)) {
       $errors[] = $string['emailaddressinvalid'];
+    } else if ($form_util->is_email_in_cfg_institutional_domains($email)) {
+      $errors[] = $string['emailaddressininstitutionaldomains'];
     } else {
       // If it is, look for the user in the database
       $stmt = $mysqli->prepare("SELECT id, title, surname FROM users WHERE email=? ORDER BY id DESC LIMIT 1");

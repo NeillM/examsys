@@ -38,6 +38,7 @@ class internaldb_auth extends outline_authentication {
     $callbackarray[]=array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
     $callbackarray[]=array(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
     $callbackarray[]=array(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
     return $callbackarray;
   }
@@ -65,7 +66,17 @@ class internaldb_auth extends outline_authentication {
     return $postauthfailreturn;
 
   }
+  
+  function errordisp($displayerrformobj) {
+    global $string;
+    $cfg = Config::get_instance();
+    
+    $this->savetodebug('adding forgotten password link ');
+    $displayerrformobj->li[] = '<a href="' . $cfg->get('cfg_root_path') . '/users/forgotten_password.php">' . $string['forgottenpassword'] . '</a>' ;
 
+    return $displayerrformobj;
+  }
+  
   function lookupuser($lookupuserobj) {
 
     if (!isset($lookupuserobj->username)) {
