@@ -34,6 +34,7 @@ Class NetworkUtils {
   
     if ($configObject->get('cfg_client_lookup') == 'name') {
       if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        var_dump($tmp_parts);
         $tmp_parts = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
         $tmp_client_ipaddress = gethostbyaddr(trim($tmp_parts[0]));
       } else {
@@ -47,7 +48,7 @@ Class NetworkUtils {
         $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
       }
     }
-    
+    var_dump($tmp_parts,$tmp_client_ipaddress,$_SERVER);
     return $tmp_client_ipaddress;
   }
 
