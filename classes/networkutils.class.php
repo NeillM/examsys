@@ -33,7 +33,12 @@ Class NetworkUtils {
     $configObject = Config::get_instance();
   
     if ($configObject->get('cfg_client_lookup') == 'name') {
+      if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $tmp_parts = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
+        $tmp_client_ipaddress = gethostbyaddr(trim($tmp_parts[0]));
+      } else {
       $tmp_client_ipaddress = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+      }
     } else {
       if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         $tmp_parts = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
