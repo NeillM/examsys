@@ -950,7 +950,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $_SESSION['q' . $q_id] = ($question_no + $question_offset);
     
     echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"$answer\" />" . $score_array[3] . "</p>\n";
-    $marks = 1;
+    $marks = $display_option['marks_correct'];
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
     if ($question['score_method'] == 'other') {
       $part_id++;
