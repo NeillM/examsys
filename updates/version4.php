@@ -1753,10 +1753,10 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE question_exclude CHANGE COLUMN userID userID int(10) unsigned", true);
   }
 
-/*  // 05/04/2012 - Enlarge the size of the integer for ownerID in questions table.
-  if (!$updater_utils->does_column_type_value_exist('questions', 'ownerID', 'int(10) unsigned')) {
-    $updater_utils->execute_query("ALTER TABLE questions CHANGE COLUMN ownerID ownerID int(10) unsigned", true);
-  }*/
+  // 05/04/2012 - Owner ID needs to be signed as it is set to -1 when relationship is deleted
+  if (!$updater_utils->does_column_type_value_exist('questions', 'ownerID', 'int(11)')) {
+    $updater_utils->execute_query("ALTER TABLE questions CHANGE COLUMN ownerID ownerID int(11)", true);
+  }
 
   // 05/04/2012 - Enlarge the size of the integer for checkout_authorID in questions table.
   if (!$updater_utils->does_column_type_value_exist('questions', 'checkout_authorID', 'int(10) unsigned')) {
