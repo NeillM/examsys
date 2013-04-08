@@ -28,10 +28,14 @@ require_once '../include/auth.inc';
 require_once '../classes/lang.class.php';
 require_once '../classes/dbutils.class.php';
 require_once '../classes/usernotices.class.php';
+require_once '../classes/userutils.class.php';
 
 $notice = UserNotices::get_instance();
 
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+//$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+
+require_once '../include/debug.inc';
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, 'debug_mysqli');
 
 $password = $password_confirm = $email = '';
 $message = '';
