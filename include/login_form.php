@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+$root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
+$cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
 ?>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
@@ -22,15 +24,15 @@
 
   <title>Rog&#333; - <?php echo $string['signin']; ?></title>
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-  <link rel="stylesheet" type="text/css" href="../css/login_form.css"/>
+  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css"/>
+  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css"/>
 </head>
 
 <body>
 <form method="post">
     <div class="mainbox">
 
-        <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px" />
+        <img src="<?php echo $cfg_root_path ?>/artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px" />
 
         <div style="color:#1F497D;font-size:28pt; font-weight:bold">Rog&#333;</div>
         <div style="color:#1F497D;font-size:9pt">e-Assessment Management System</div>
