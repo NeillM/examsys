@@ -99,7 +99,12 @@ function tidyLine($line) {
 }
 
 function parseRawMarks($data) {
-  if($data==NULL) {
+  // No result
+  if ($data==NULL) {
+    return false;
+  }
+  // Asking for authentication
+  if (strpos($data, 'rogo-login-form-std')) {
     return false;
   }
   $marks = array();

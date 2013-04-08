@@ -64,26 +64,35 @@ $result->close();
     input[type=text] {
       width: 400px;
     }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 
   <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
+  <script src="../js/jquery.validate.min.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(function () {
       $('#results').hide();
-      $('#start').click(function () {
-        var period = $('#period').val();
-        var paper = $('#paper').val();
-        var passwd = $('#passwd').val();
-        var username = $('#username').val();
-        $.post('class_totals_with_script_ajax.php',
-                {
-                  period:period,
-                  paper:paper,
-                  username:username,
-                  passwd:passwd
-                });
-        $('#results').show();
-        $('#form').hide();
+      $('#start').click(function (e) {
+        e.preventDefault();
+        $('#the_form').validate();
+        if ($('#the_form').valid()) {
+          var period = $('#period').val();
+          var paper = $('#paper').val();
+          var passwd = $('#passwd').val();
+          var username = $('#username').val();
+          $.post('class_totals_with_script_ajax.php',
+                  {
+                    period:period,
+                    paper:paper,
+                    username:username,
+                    passwd:passwd
+                  });
+          $('#results').show();
+          $('#form').hide();
+        }
       });
       $('#status').click(function() {
         var period = $('#period').val();
@@ -98,6 +107,7 @@ $result->close();
 
 
 <div id="form">
+  <form id="the_form" action="./" method="post">
   <dl class="form">
     <dt><label for="period">Select time period:</label></dt>
     <dd>
@@ -123,12 +133,13 @@ endforeach;
 ?>
       </select>
     </dd>
-<dt>Username:</dt><input type='text' id='username'>
-    <br>
-    <dt>Password:</dt><input type='password' id='passwd'>
-    <br>
+    <dt>Username:</dt>
+    <dd><input type="text" id="username" name="username" class="required" /></dd>
+    <dt>Password:</dt>
+    <dd><input type="password" id="passwd" name="passwd" class="required" /></dd>
   </dl>
     <button id="start">Start Analysis</button>
+  </form>
 </div>
 <div id="results">
   <p>Analysis started.</p>
