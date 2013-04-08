@@ -145,9 +145,6 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 <?php
 $css = '';
 
-if ($special_needs == 1 and $bgcolor != '#FFFFFF') {
-  $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
-}
 if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
   $css .= "body {background-color:$bgcolor;color:$fgcolor;font-size:$textsize%}\n";
 }
