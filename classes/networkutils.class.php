@@ -48,7 +48,6 @@ Class NetworkUtils {
         $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
       }
     }
-    var_dump($tmp_parts,$tmp_client_ipaddress,$_SERVER);
     return $tmp_client_ipaddress;
   }
 
