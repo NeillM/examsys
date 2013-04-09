@@ -3981,7 +3981,7 @@ SQL;
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.textbox_marking TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-  if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE', 'textbox_remark', $cfg_db_host)) {
+  if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'textbox_remark', $cfg_db_host)) {
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.textbox_remark TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
