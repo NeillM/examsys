@@ -510,16 +510,16 @@ function count_labels($correct) {
 
 function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $o_media, $bottom_log, $top_log, $freq_log, $correct_buf, $candidate_no, $score_method, $display_method, $themecolor, $std) {
   global $ex_no, $d_no, $d_total, $excluded, $user_total, $language;
-  
+
   if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
   echo "<tr>\n";
   $tmp_std_array = (!empty($std)) ? explode(',', $std) : array();
-  
+
   $parts = count($tmp_std_array);
   for ($i=0; $i<$parts; $i++) {
     $tmp_std_array[$i] = str_replace('exclude_', '', $tmp_std_array[$i]);
   }
-  
+
   if ($q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'textbox') {
     if ($q_type == 'info') {
       echo "<td colspan=\"2\" style=\"padding-left:15px\">$leadin\n";
@@ -564,7 +564,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if (!isset($bottom_log[$q_id][1]['correct'])) $bottom_log[$q_id][1]['correct'] = 0;
         if (!isset($bottom_log[$q_id][1]['partial'])) $bottom_log[$q_id][1]['partial'] = 0;
         if (!isset($bottom_log[$q_id][1]['incorrect'])) $bottom_log[$q_id][1]['incorrect'] = 0;
-        
+
         echo "<table>\n";
         $t = number_format(($freq_log[$q_id][1]['correct']/$user_total)*100,0);
         $u = number_format(($top_log[$q_id][1]['correct']/$candidate_no)*100,0);
@@ -1288,7 +1288,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
         }
         $p = ($freq_log[$q_id]['totalpos'] > 0) ? $freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'] : 0;
-       
+
         echo "<tr><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
     }
@@ -1647,6 +1647,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
       background-image: -ms-linear-gradient(top, #E4EEFC 0%, #FFFFFF 100%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
+    }
+    .mee {
+      display: inline;
     }
   </style>
 
