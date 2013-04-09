@@ -22,7 +22,14 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+
+$paperID  = check_var('paperID', 'GET', true, false, true);
+$userID   = check_var('userID', 'GET', true, false, true);
+$started  = check_var('started', 'GET', true, false, true);
+$log_type = check_var('log_type', 'GET', true, false, true);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -62,8 +69,8 @@
 <form name="myform" action="do_reassign_log_late.php" method="post" onsubmit="return confirmIntention();">
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
-  $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id = ?");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($end_date);
   $result->fetch();
@@ -78,7 +85,7 @@
   $questions = array();
   $q_no = 1;
   $result = $mysqli->prepare("SELECT title, surname, first_names FROM users WHERE id=? LIMIT 1");
-  $result->bind_param('i', $_GET['userID']);
+  $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($title, $surname, $first_names);
   $result->fetch();
@@ -87,8 +94,8 @@
   // Get the order of the questions on the paper.
   $questions = array();
   $q_no = 1;
-  $result = $mysqli->prepare("SELECT question FROM papers, questions WHERE papers.question=questions.q_id AND paper=? AND q_type != 'info' ORDER BY screen, display_pos");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT question FROM papers, questions WHERE papers.question = questions.q_id AND paper = ? AND q_type != 'info' ORDER BY screen, display_pos");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($question);
   while ($result->fetch()) {
@@ -100,16 +107,16 @@
   // Get any the questions which have gone into log_late
   $missing = array();
   $missing_no = 0;
-  $result = $mysqli->prepare("SELECT l.q_id, l.screen, DATE_FORMAT(l.updated,'%d/%m/%Y %T'), lm.ipaddress FROM log_late l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID=? AND lm.paperID=? AND lm.started=? ORDER BY l.screen");
-  $result->bind_param('iis', $_GET['userID'], $_GET['paperID'], $_GET['started']);
+  $result = $mysqli->prepare("SELECT l.q_id, l.screen, DATE_FORMAT(l.updated,'%d/%m/%Y %T'), lm.ipaddress FROM log_late l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.started = ? ORDER BY l.screen");
+  $result->bind_param('iis', $userID, $paperID, $started);
   $result->execute();
   $result->bind_result($q_id, $screen, $updated, $ipaddress);
   while ($result->fetch()) {
     $question_no = $questions[$q_id];
-    $missing[$missing_no]['question_no'] = $question_no;
-    $missing[$missing_no]['screen'] = $screen;
-    $missing[$missing_no]['updated'] = $updated;
-    $missing[$missing_no]['ipaddress'] = $ipaddress;
+    $missing[$missing_no]['question_no']  = $question_no;
+    $missing[$missing_no]['screen']       = $screen;
+    $missing[$missing_no]['updated']      = $updated;
+    $missing[$missing_no]['ipaddress']    = $ipaddress;
     $missing_no++;
   }
   $result->close();
@@ -132,7 +139,7 @@
   echo "<div style=\"text-align:center\">\n";
 
   echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['accept'] . "\" onclick=\"document.myform.button_pressed.value='Accept';\" style=\"width:100px\" />&nbsp;<input type=\"submit\" name=\"submit\" value=\"" . $string['reject'] . "\" onclick=\"document.myform.button_pressed.value='Reject';\" style=\"width:100px\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"Cancel\" style=\"width:100px\" onclick=\"window.close();\" /></div>";
-  echo "<input type=\"hidden\" name=\"userID\" value=\"" . $_GET['userID'] . "\" /><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" /><input type=\"hidden\" name=\"started\" value=\"" . $_GET['started'] . "\" /><input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . "\" />";
+  echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /><input type=\"hidden\" name=\"paperID\" value=\"$paperID\" /><input type=\"hidden\" name=\"started\" value=\"$started\" /><input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . "\" />";
 
   $mysqli->close();
 ?>
