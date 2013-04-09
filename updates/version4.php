@@ -3977,7 +3977,7 @@ SQL;
   }
 
   // 09/04/2013 (nazrji) - make sure of grants for textbox tables
-  if (!$updater_utils->has_grant($cfg_db_staff_user, 'GRANT SELECT, INSERT, UPDATE, DELETE', 'textbox_marking', $cfg_db_host)) {
+  if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'textbox_marking', $cfg_db_host)) {
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.textbox_marking TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
