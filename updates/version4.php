@@ -3968,11 +3968,11 @@ SQL;
 
   // 09/04/2013 (nazrji) - make sure of grants for log6
   if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE', 'log6', $cfg_db_host)) {
-    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.log6 TO \'' . $cfg_db_staff_username . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.log6 TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
   if (!$updater_utils->has_grant($cfg_db_student_user, 'SELECT, INSERT, UPDATE', 'log6', $cfg_db_host)) {
-    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.log6 TO \'' . $cfg_db_student_username . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.log6 TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
 
