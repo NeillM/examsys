@@ -52,12 +52,20 @@ $log_type = check_var('log_type', 'POST', true, false, true);
 <body onload="reloadClose()">
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
+  $row_no = 0;
   $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id = ?");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($end_date);
+  $result->store_result();
   $result->fetch();
+  $row_no = $result->num_rows;
   $result->close();
+
+  if ($row_no == 0) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
 
   if (time() < $end_date) {
     echo "<p><strong>Warning</strong><p><p>Exam scripts cannot be reassigned mid exam.<br />Please wait until after the exam has finished</p>\n";
@@ -65,20 +73,26 @@ $log_type = check_var('log_type', 'POST', true, false, true);
   }
 
   // Get questions that are already in the standard log
+  $row_no = 0;
   $logged_qns = array();
   $log_check = $mysqli->prepare("SELECT l.id, l.q_id, l.metadataID FROM log$log_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.started = ?");
   $log_check->bind_param('iis', $userID, $paperID, $started);
   $log_check->execute();
   $log_check->store_result();
   $log_check->bind_result($log_id, $log_q_id, $log_metadata_id);
+  $row_no = $result->num_rows;
   while($log_check->fetch()) {
     $logged_qns[$log_q_id] = $log_id;
   }
   $log_check->close();
     
+  if ($row_no == 0) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
+
   if ($_POST['button_pressed'] == 'Accept') {
     $log_type = 'log' . $log_type;
-
 
     $stmt = $mysqli->prepare("SELECT q_id, mark, totalpos, user_answer, screen, duration, updated, dismiss, option_order FROM log_late WHERE metadataID = ?");
     $stmt->bind_param('i', $log_metadata_id);
