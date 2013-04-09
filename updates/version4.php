@@ -3896,7 +3896,7 @@ SQL;
   // 14/03/2013 - Add field to specify if timed exams are allowed.
   if (!$updater_utils->does_column_exist('modules', 'timed_exams')) {
     $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN timed_exams tinyint(4)", true);
-    
+
     $sql = "UPDATE modules SET timed_exams = 0";
     $updater_utils->execute_query($sql, true);
   }
@@ -3916,7 +3916,7 @@ SQL;
     $sql = "UPDATE modules SET add_team_members = 1";
     $updater_utils->execute_query($sql, true);
   }
-  
+
   // 18/03/2013 (cczab) - Add indexes to speed up some question back queries in add_questions_to_paper.php
   if ($updater_utils->does_index_exist('keywords_question', 'q_id')) {
      $updater_utils->execute_query("ALTER TABLE keywords_question DROP INDEX q_id", false);
@@ -3936,7 +3936,7 @@ SQL;
   if (!$updater_utils->does_index_exist('special_needs', 'idx_userID')) {
      $updater_utils->execute_query("ALTER TABLE special_needs ADD UNIQUE idx_userID (userID)", false);
   }
-  
+
   // 18/03/2013 - Slight change to format of track_changes
   $updater_utils->execute_query("UPDATE track_changes SET type='Paper' WHERE type LIKE 'Alter paper%'", false);
 
@@ -3960,10 +3960,20 @@ SQL;
     $sql = 'GRANT INSERT ON ' . $cfg_db_database . '.denied_log TO \'' . $cfg_db_sct_username . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-  
+
   // 05/04/2013 (brzsw) - remove rogo_id key from lti_user table
   if ($updater_utils->does_index_exist('lti_user', 'rogo_id')) {
     $updater_utils->execute_query("ALTER TABLE lti_user DROP INDEX rogo_id", true);
+  }
+
+  // 09/04/2013 (nazrji) - make sure of grants for log6
+  if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE', 'log6', $cfg_db_host)) {
+    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.log6 TO \'' . $cfg_db_staff_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
+  if (!$updater_utils->has_grant($cfg_db_student_user, 'SELECT, INSERT, UPDATE', 'log6', $cfg_db_host)) {
+    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.log6 TO \'' . $cfg_db_student_username . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
   }
 
   /*
