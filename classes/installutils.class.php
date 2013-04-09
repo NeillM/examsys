@@ -1984,7 +1984,6 @@ QUERY;
           `lti_user_equ` varchar(255) NOT NULL,
           `updated_on` datetime NOT NULL,
           PRIMARY KEY (`lti_user_key`),
-          KEY `rogo_id` (`lti_user_equ`),
           KEY `lti_user_equ` (`lti_user_equ`)
          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
