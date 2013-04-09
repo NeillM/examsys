@@ -66,7 +66,7 @@ $log_type = check_var('log_type', 'POST', true, false, true);
 
   // Get questions that are already in the standard log
   $logged_qns = array();
-  $log_check = $mysqli->prepare("SELECT l.id, l.q_id, l.metadataID FROM $log_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.started = ?");
+  $log_check = $mysqli->prepare("SELECT l.id, l.q_id, l.metadataID FROM log$log_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.started = ?");
   $log_check->bind_param('iis', $userID, $paperID, $started);
   $log_check->execute();
   $log_check->store_result();
@@ -88,7 +88,7 @@ $log_type = check_var('log_type', 'POST', true, false, true);
     while ($stmt->fetch()) {
       if (array_key_exists($q_id, $logged_qns)) {
         // Update the record in the real log table with values from log_late
-        $update = $mysqli->prepare("UPDATE $log_type SET mark=?, user_answer=?, duration=?, updated=? WHERE id=?");
+        $update = $mysqli->prepare("UPDATE $log_type SET mark = ?, user_answer = ?, duration = ?, updated = ? WHERE id = ?");
         $update->bind_param('isssi', $mark, $user_answer, $duration, $updated, $logged_qns[$q_id]);
         $update->execute();
         $update->close();
