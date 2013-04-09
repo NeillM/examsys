@@ -22,7 +22,14 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+
+$paperID  = check_var('paperID', 'POST', true, false, true);
+$userID   = check_var('userID', 'POST', true, false, true);
+$started  = check_var('started', 'POST', true, false, true);
+$log_type = check_var('log_type', 'POST', true, false, true);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -45,8 +52,8 @@
 <body onload="reloadClose()">
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
-  $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id = ?");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($end_date);
   $result->fetch();
@@ -57,22 +64,23 @@
     exit;
   }
 
+  // Get questions that are already in the standard log
+  $logged_qns = array();
+  $log_check = $mysqli->prepare("SELECT l.id, l.q_id, l.metadataID FROM $log_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.started = ?");
+  $log_check->bind_param('iis', $userID, $paperID, $started);
+  $log_check->execute();
+  $log_check->store_result();
+  $log_check->bind_result($log_id, $log_q_id, $log_metadata_id);
+  while($log_check->fetch()) {
+    $logged_qns[$log_q_id] = $log_id;
+  }
+  $log_check->close();
+    
   if ($_POST['button_pressed'] == 'Accept') {
-    $log_type = 'log' . $_POST['log_type'];
+    $log_type = 'log' . $log_type;
 
-    // Get questions that are already in the standard log
-    $logged_qns = array();
-    $log_check = $mysqli->prepare("SELECT l.id, l.q_id, l.metadataID FROM $log_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID=? AND lm.paperID=? AND lm.started=?");
-    $log_check->bind_param('iis', $_POST['userID'], $_POST['paperID'], $_POST['started']);
-    $log_check->execute();
-    $log_check->store_result();
-    $log_check->bind_result($log_id, $log_q_id, $log_metadata_id);
-    while($log_check->fetch()) {
-      $logged_qns[$log_q_id] = $log_id;
-    }
-    $log_check->close();
 
-    $stmt = $mysqli->prepare("SELECT q_id, mark, totalpos, user_answer, screen, duration, updated, dismiss, option_order FROM log_late WHERE metadataID=?");
+    $stmt = $mysqli->prepare("SELECT q_id, mark, totalpos, user_answer, screen, duration, updated, dismiss, option_order FROM log_late WHERE metadataID = ?");
     $stmt->bind_param('i', $log_metadata_id);
     $stmt->execute();
     $stmt->store_result();
@@ -99,13 +107,13 @@
     $reason = trim($_POST['reason']);
 
     $result = $mysqli->prepare("INSERT INTO student_notes VALUES (NULL, ?, ?, NOW(), ?, ?)");
-    $result->bind_param('isis', $_POST['userID'], $reason, $_POST['paperID'], $userObject->get_user_ID());
+    $result->bind_param('isis', $userID, $reason, $paperID, $userObject->get_user_ID());
     $result->execute();
     $result->close();
   }
 
   // Clearing up of records in 'log_late' table.
-  $result = $mysqli->prepare("DELETE FROM log_late WHERE metadataID=?");
+  $result = $mysqli->prepare("DELETE FROM log_late WHERE metadataID = ?");
   $result->bind_param('i', $log_metadata_id);
   $result->execute();
   $result->close();
