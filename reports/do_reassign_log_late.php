@@ -80,7 +80,7 @@ $log_type = check_var('log_type', 'POST', true, false, true);
   $log_check->execute();
   $log_check->store_result();
   $log_check->bind_result($log_id, $log_q_id, $log_metadata_id);
-  $row_no = $result->num_rows;
+  $row_no = $log_check->num_rows;
   while($log_check->fetch()) {
     $logged_qns[$log_q_id] = $log_id;
   }
