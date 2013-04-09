@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -31,15 +31,16 @@ require_once '../../classes/questionutils.class.php';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
     body {font-size:80%}
+    .mee { display: inline; }
   </style>
-  
+
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
@@ -66,7 +67,7 @@ require_once '../../classes/questionutils.class.php';
   } else {
     $display_pos = 1;
   }
-  
+
   if (isset($_GET['order'])) {
     $order = $_GET['order'];
     $direction = $_GET['direction'];
@@ -93,16 +94,16 @@ require_once '../../classes/questionutils.class.php';
     echo "<tr><th>&nbsp;</th><th>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?status=" . $_GET['status'] . "&order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?status=" . $_GET['status'] . "&order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?status=" . $_GET['status'] . "&order=last_edited&direction=desc\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   } elseif ($order == 'last_edited' and $direction == 'desc') {
     echo "<tr><th>&nbsp;</th><th>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?status=" . $_GET['status'] . "&order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?status=" . $_GET['status'] . "&order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?status=" . $_GET['status'] . "&order=last_edited&direction=asc\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
-  }  
+  }
   echo "<tr><th colspan=\"5\" class=\"bevel\"></th></tr>\n";
-  
+
   $id = 0;
   if ($order == 'leadin') $order = 'leadin_plain';
   if ($order == 'q_type') $order = 'CAST(q_type AS CHAR)';
 
   $teams = $userObject->get_staff_modules();
   $module_id_list = implode(',', array_keys($teams));
-  
+
   $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions, questions_modules, modules) WHERE questions.q_id=questions_modules.q_id AND questions_modules.idMod=modules.id AND status=? AND (ownerID=? OR modules.id IN ($module_id_list)) AND deleted IS NULL ORDER BY $order $direction");
   $stmt->bind_param('si', $_GET['status'], $userObject->get_user_ID());
   $stmt->execute();
@@ -111,7 +112,7 @@ require_once '../../classes/questionutils.class.php';
   while ($stmt->fetch()) {
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
-      
+
     echo '<tr>';
     if ($locked != '') {
       echo '<td><img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" /></td>';

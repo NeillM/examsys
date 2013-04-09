@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -23,7 +23,7 @@
 */
 
 require '../../include/staff_auth.inc';
-require '../../include/errors.inc'; 
+require '../../include/errors.inc';
 require '../../include/media.inc';
 require_once '../../classes/searchutils.class.php';
 require_once '../../classes/questionutils.class.php';
@@ -32,16 +32,17 @@ require_once '../../classes/questionutils.class.php';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
     body {font-size:80%}
     p, td {font-size:90%}
+    .mee { display: inline; }
   </style>
-  
+
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
@@ -75,7 +76,7 @@ require_once '../../classes/questionutils.class.php';
   <tr>
   <th colspan="5">
   <form name="search" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-  &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input type="text" size="30" name="searchterm" <?php if (isset($_GET['searchterm'])) echo 'value="' . $_GET['searchterm'] . '" '; ?>/> <strong><?php echo $string['in']; ?></strong> 
+  &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input type="text" size="30" name="searchterm" <?php if (isset($_GET['searchterm'])) echo 'value="' . $_GET['searchterm'] . '" '; ?>/> <strong><?php echo $string['in']; ?></strong>
   <select name="searchtype">
     <option value="%"><?php echo $string['anytype']; ?></option>
     <option value="area" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'area') echo 'selected '; ?>><?php echo $string['area']; ?></option>
@@ -140,19 +141,19 @@ require_once '../../classes/questionutils.class.php';
     echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=desc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   } elseif ($order == 'last_edited' and $direction == 'desc') {
     echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
-  }  
+  }
 ?>
   <tr><th colspan="5" class="bevel"></th></tr>
 <?php
   echo "<form name=\"theform\" method=\"post\" action=\"\">\n";
   echo '<input type="hidden" name="screen" value="1" />';
-  
+
   if (isset($_GET['search']) or isset($_GET['order'])) {
     $old_id = 0;
     $searchterm = '%' . $_GET['searchterm'] . '%';
-    
+
     if ($order == 'q_type') $order = 'CAST(q_type AS CHAR)';
-    
+
     if ($_GET['owner'] == '') {
       $teams = array_keys($userObject->get_staff_modules());
       $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions_modules, questions, options) WHERE questions.q_id=questions_modules.q_id AND (idMod IN (" . implode(',', $teams) . ") OR questions.ownerID=?) AND questions.q_id=options.o_id AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, questions.q_id");
@@ -161,12 +162,12 @@ require_once '../../classes/questionutils.class.php';
       $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions, options) WHERE questions.q_id=options.o_id AND questions.ownerID=? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
       $result->bind_param('issssss', $_GET['owner'], $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
     }
-    $result->execute();  
+    $result->execute();
     $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked);
     while ($result->fetch()) {
       $tmp_leadin = QuestionUtils::clean_leadin($leadin);
       if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
-    
+
       echo "<tr><td style=\"width:16px\">";
       if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
       echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td></tr>\n";

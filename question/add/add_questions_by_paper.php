@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -38,9 +38,9 @@ if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>by Paper</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
@@ -48,18 +48,19 @@ if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
     .divider {font-size:80%; font-weight:bold; padding-left:6px}
     .s {padding-left:6px}
     .q_no {text-align:right; width:35px}
+    .mee { display: inline; }
   </style>
-  
+
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
-  <script language="JavaScript">  
+  <script language="JavaScript">
     function Qpreview(qID) {
       parent.previewurl.location = '../view_question.php?q_id=' + qID;
     }
 
     function populateTicks() {
       q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
-      for (i=0; i<q_array.length; i++) { 
+      for (i=0; i<q_array.length; i++) {
         var obj = document.getElementById(q_array[i]);
         if (obj != null) {
           obj.checked = true;
@@ -78,7 +79,7 @@ if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
   $stmt->bind_result($paper_title);
   $stmt->fetch();
   $stmt->close();
-      
+
   echo "<form name=\"theform\" method=\"post\" action=\"\">\n";
   echo "<input type=\"hidden\" name=\"screen\" value=\"1\" />\n";
   echo "<table class=\"header\">\n";
@@ -116,7 +117,7 @@ if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
     $old_screen = $screen;
   }
   $stmt->close();
-      
+
 ?>
 </table>
 </form>

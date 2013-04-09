@@ -41,6 +41,7 @@ require_once '../../classes/questionutils.class.php';
     body {font-size:80%}
     .f {padding-left:2px}
     .n {text-align:right; padding-right:2px}
+    .mee { display: inline; }
   </style>
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
@@ -128,25 +129,25 @@ require_once '../../classes/questionutils.class.php';
   }
 
   $teams = $userObject->get_staff_modules();
-   
+
   if (count($teams) == 0) {
     $sql = "SELECT questions.q_id, leadin, leadin_plain, q_type, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, parts FROM (questions, keywords_question) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE questions.q_id=keywords_question.q_id AND keywords_question.keywordID IN ($keyword_ids) AND ownerID=? AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction, questions.q_id";
   } else {
-    
-    $sql = "SELECT 
-              questions.q_id, leadin, leadin_plain, q_type, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, parts 
-            FROM 
-              (questions) 
-            LEFT JOIN 
-              question_exclude ON questions.q_id=question_exclude.q_id 
-            WHERE 
-              questions.q_id IN (SELECT q_id from keywords_question WHERE keywords_question.keywordID IN ($keyword_ids))  AND 
-              (ownerID=? OR questions.q_id IN (SELECT q_id from questions_modules where idMod IN (" . implode(',', array_keys($teams)) . "))) AND 
-              status != 'retired' AND deleted IS NULL 
-            ORDER BY 
+
+    $sql = "SELECT
+              questions.q_id, leadin, leadin_plain, q_type, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, parts
+            FROM
+              (questions)
+            LEFT JOIN
+              question_exclude ON questions.q_id=question_exclude.q_id
+            WHERE
+              questions.q_id IN (SELECT q_id from keywords_question WHERE keywords_question.keywordID IN ($keyword_ids))  AND
+              (ownerID=? OR questions.q_id IN (SELECT q_id from questions_modules where idMod IN (" . implode(',', array_keys($teams)) . "))) AND
+              status != 'retired' AND deleted IS NULL
+            ORDER BY
               $order $direction, questions.q_id";
   }
-  
+
   if ($order == 'leadin') $order = 'leadin_plain';
   if ($order == 'q_type') $order = 'CAST(q_type AS CHAR)';
   if ($order == 'created') $order = 'CAST(created AS DATE)';

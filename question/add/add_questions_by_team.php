@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -40,15 +40,16 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo$configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Add new Question</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
     body {font-size:80%}
+    .mee { display: inline; }
   </style>
-  
+
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
@@ -82,7 +83,7 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
     $order = 'leadin';
     $direction = 'asc';
   }
-  
+
   $module = '';
   $folder = '';
   $scrOfY = '';
@@ -91,7 +92,7 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
   if (isset($_GET['scrOfY'])) $scrOfY = $_GET['scrOfY'];
 
   echo "<form name=\"theform\" method=\"post\" action=\"do_add_questions.php?module=$module&display_pos=$display_pos&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&scrOfY=" . $_GET['scrOfY'] . "\">\n";
-  
+
   $module_details = module_utils::get_full_details_by_ID($teamID, $mysqli);
   ?>
   <input type="hidden" name="screen" value="1" />
@@ -110,12 +111,12 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
     echo "<tr><th colspan=\"2\">&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?teamID=$teamID&module=$module&folder=$folder&scrOfY=$scrOfY&order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?teamID=$teamID&module=$module&folder=$folder&scrOfY=$scrOfY&order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?teamID=$teamID&module=$module&folder=$folder&scrOfY=$scrOfY&order=last_edited&direction=desc\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   } elseif ($order == 'last_edited' and $direction == 'desc') {
     echo "<tr><th colspan=\"2\">&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?teamID=$teamID&module=$module&folder=$folder&scrOfY=$scrOfY&order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?teamID=$teamID&module=$module&folder=$folder&scrOfY=$scrOfY&order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?teamID=$teamID&module=$module&folder=$folder&scrOfY=$scrOfY&order=last_edited&direction=asc\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
-  }  
+  }
   echo "<tr><td colspan=\"5\" class=\"bevel\"></th></tr>\n";
-  
+
   $id = 0;
   if ($order == 'leadin') $order = 'leadin_plain';
-  
+
   $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited, '" . $configObject->get('cfg_short_date') . "') AS display_date, locked FROM (questions, questions_modules) WHERE questions.q_id=questions_modules.q_id AND idMod=? AND deleted IS NULL ORDER BY $order $direction");
   $stmt->bind_param('i', $teamID);
   $stmt->execute();
@@ -125,7 +126,7 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
     while ($stmt->fetch()) {
       $tmp_leadin = QuestionUtils::clean_leadin($leadin);
       if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
-      
+
       echo "<tr><td>";
       if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
       echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td></tr>\n";
