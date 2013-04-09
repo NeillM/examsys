@@ -671,27 +671,29 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         $correct_labels[$key] = $tmp_parts[0];
       }
 
-      $user_split1 = explode(';', $tmp_user_answer);
-      $user_split2 = explode('$', $user_split1[1]);
+      if ($tmp_user_answer != '') {
+        $user_split1 = explode(';', $tmp_user_answer);
+        $user_split2 = explode('$', $user_split1[1]);
 
-      $i = 0;
-      $correct = 0;
-      $count_user_split2 = count($user_split2)-3;
-      for ($a=0; $a<$count_user_split2; $a+=4) {
-        $x = $user_split2[$a];
-        $y = $user_split2[$a+1];
-        if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
-          $tmp_mark += $question['marks_correct'];
-          $correct += $question['marks_correct'];
-          $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
-        } elseif (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] != $user_split2[$a+2]) {
-          $tmp_mark += $question['marks_incorrect'];
-          $correct += $question['marks_incorrect'];
-          $tmp_user_mark_array[$q_id][] = $question['marks_incorrect'];
-        } else {
-          $tmp_user_mark_array[$q_id][] = 0;
+        $i = 0;
+        $correct = 0;
+        $count_user_split2 = count($user_split2)-3;
+        for ($a=0; $a<$count_user_split2; $a+=4) {
+          $x = $user_split2[$a];
+          $y = $user_split2[$a+1];
+          if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
+            $tmp_mark += $question['marks_correct'];
+            $correct += $question['marks_correct'];
+            $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
+          } elseif (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] != $user_split2[$a+2]) {
+            $tmp_mark += $question['marks_incorrect'];
+            $correct += $question['marks_incorrect'];
+            $tmp_user_mark_array[$q_id][] = $question['marks_incorrect'];
+          } else {
+            $tmp_user_mark_array[$q_id][] = 0;
+          }
+          $i++;
         }
-        $i++;
       }
 
       // If the user has not answered the question pad out with zero marks.
