@@ -26,18 +26,18 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/logger.class.php';
 
-check_var('userID', 'GET', true, false, false);
-check_var('temp_userID', 'GET', true, false, false);
+$userID       = check_var('userID', 'GET', true, false, true);
+$temp_userID  = check_var('temp_userID', 'GET', true, false, true);
 
 // Get start time of the paper.
 $papers = array();
 $paper_no = 0;
 $result = $mysqli->prepare("SELECT DISTINCT paperID, started FROM log_metadata WHERE userID = ?");
-$result->bind_param('i', $_GET['temp_userID']);
+$result->bind_param('i', $temp_userID);
 $result->execute();
 $result->bind_result($q_paper, $started);
 while ($result->fetch()) {
-  $papers[$paper_no]['ID'] = $q_paper;
+  $papers[$paper_no]['ID']      = $q_paper;
   $papers[$paper_no]['started'] = $started;
   $paper_no++;
 }
@@ -45,7 +45,7 @@ $result->close();
 
 // Get grade and student of the user.
 $result = $mysqli->prepare("SELECT grade, yearofstudy, username FROM users WHERE id = ?");
-$result->bind_param('i', $_GET['userID']);
+$result->bind_param('i', $userID);
 $result->execute();
 $result->bind_result($grade, $yearofstudy, $new_username);
 $result->fetch();
@@ -53,32 +53,18 @@ $result->close();
 
 $mysqli->autocommit(false);
 
-$errors=false;
+$errors = false;
 foreach ($papers as $paper) {
   // Record the change in 'track_changes'.
   $logger = new Logger($mysqli);
-  $logger->track_change('Exam Script', $paper['ID'], $userObject->get_user_ID(), $_GET['temp_userID'], $_GET['userID'], 'Reassigned temporary user');
-
-/*
-  // Transfer records in log2.
-  $result = $mysqli->prepare("UPDATE log2 SET userID = ? WHERE userID = ? AND q_paper = ? AND started = ?");
-  $result->bind_param('iiis', $_GET['userID'], $_GET['temp_userID'], $paper['ID'], $paper['started']);
-  $result->execute();
-  $result->close();
-
-  // Transfer records in log_late.
-  $result = $mysqli->prepare("UPDATE log_late SET userID = ? WHERE userID = ? AND q_paper = ? AND started = ?");
-  $result->bind_param('iiis', $_GET['userID'], $_GET['temp_userID'], $paper['ID'], $paper['started']);
-  $result->execute();
-  $result->close();
-*/
+  $logger->track_change('Exam Script', $paper['ID'], $userObject->get_user_ID(), $temp_userID, $userID, 'Reassigned temporary user');
 
   // Transfer records in log_metadata.
   $result = $mysqli->prepare("UPDATE log_metadata SET userID = ?, student_grade = ?, year = ? WHERE userID = ? AND paperID = ? AND started = ?");
   if ($mysqli->error) {
     $error = true;
   }
-  $result->bind_param('issiis', $_GET['userID'], $grade, $yearofstudy, $_GET['temp_userID'], $paper['ID'], $paper['started']);
+  $result->bind_param('issiis', $userID, $grade, $yearofstudy, $temp_userID, $paper['ID'], $paper['started']);
   $result->execute();
   if ($mysqli->error) {
     $error = true;
@@ -90,7 +76,7 @@ foreach ($papers as $paper) {
   if ($mysqli->error) {
     $error = true;
   }
-  $result->bind_param('iii', $_GET['userID'], $_GET['temp_userID'], $paper['ID']);
+  $result->bind_param('iii', $userID, $temp_userID, $paper['ID']);
   $result->execute();
   if ($mysqli->error) {
     $error = true;
@@ -102,7 +88,7 @@ foreach ($papers as $paper) {
   if ($mysqli->error) {
     $error = true;
   }
-  $result->bind_param('iii', $_GET['userID'], $_GET['temp_userID'], $paper['ID']);
+  $result->bind_param('iii', $userID, $temp_userID, $paper['ID']);
   $result->execute();
   if ($mysqli->error) {
     $error = true;
@@ -134,7 +120,7 @@ if ($error !== true) {
   if ($mysqli->error) {
     $error = true;
   }
-  $result->bind_param('i', $_GET['temp_userID']);
+  $result->bind_param('i', $temp_userID);
   $result->execute();
   if ($mysqli->error) {
     $error = true;
@@ -147,8 +133,6 @@ if ($error === true) {
 } else {
   $mysqli->commit();
 }
-
-
 
 $mysqli->autocommit(true);
 ?>
