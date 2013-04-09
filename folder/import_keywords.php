@@ -33,7 +33,7 @@ function keywords_from_file($fileName, $userObj) {
     
     // Get the existing personal keywords.
     $existing_keywords = array();
-    $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID=?");
+    $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID = ?");
     $result->bind_param('i', $tmp_userID);
     $result->execute();
     $result->bind_result($keyword);
@@ -48,7 +48,7 @@ function keywords_from_file($fileName, $userObj) {
 
     // Get the existing team keywords for the folder.
     $existing_keywords = array();
-    $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID=?");
+    $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID = ?");
     $result->bind_param('i', $_GET['module']);
     $result->execute();
     $result->bind_result($keyword);
@@ -71,19 +71,26 @@ function keywords_from_file($fileName, $userObj) {
   }    
 }
 
+$file_problem = false;
+
 if (isset($_POST['submit'])) {
-  $filename =$configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_keywords.txt';
+  $filename = $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_keywords.txt';
+  
   if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
     if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $filename))  {
       echo uploadError($_FILES['txtfile']['error']);
       exit;
     } else {
       keywords_from_file($filename, $userObject);
-      unlink($cfg_tmpdir . $userObject->get_user_ID() . '_keywords.txt');
+      unlink($filename);
       header("location: list_keywords.php?paperID=". $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
     }
+    $mysqli->close();
+    exit;
+  } else {
+    $file_problem = true;
   }
-} else {
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -91,7 +98,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo  $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo 'x'. $string['loadkeywords'] . 'x'; ?></title>
+  <title><?php echo $string['loadkeywords']; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
@@ -122,6 +129,12 @@ if (isset($_POST['submit'])) {
 <div align="center">
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php if (isset($_GET['paperID'])) echo $_GET['paperID']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data">
 
+<?php
+if ($file_problem) {
+  echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" />&nbsp;Please specify a file for upload.</div>';
+}
+?>
+
 <p><input type="file" size="50" name="txtfile" /></p>
 
 <p><input type="submit" style="width:130px" value="<?php echo $string['loadkeywordsbtn']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
@@ -133,10 +146,8 @@ if (isset($_POST['submit'])) {
 
 </div>
 
-
 </body>
 </html>
 <?php
-  }
   $mysqli->close();
 ?>
