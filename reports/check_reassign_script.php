@@ -26,6 +26,12 @@
 
 require_once '../include/staff_auth.inc';
 require_once '../classes/dateutils.class.php';
+require_once '../include/errors.inc';
+
+$paperID  = check_var('paperID', 'GET', true, false, true);
+$userID   = check_var('userID', 'GET', true, false, true);
+$started  = check_var('started', 'GET', true, false, true);
+$log_type = check_var('log_type', 'GET', true, false, true);
 
 function getModules($userID, $mysqlidb) {
   $modules = array();
@@ -46,18 +52,18 @@ function getModules($userID, $mysqlidb) {
 
 
 // Get all the details from 'temp_users' for given userID.
-$result = $mysqli->prepare("SELECT temp_users.id, temp_users.title, temp_users.first_names, temp_users.surname, student_id, assigned_account, username FROM users, temp_users WHERE users.id=? AND users.username=temp_users.assigned_account");
-$result->bind_param('i', $_GET['userID']);
+$result = $mysqli->prepare("SELECT temp_users.id, temp_users.title, temp_users.first_names, temp_users.surname, student_id, assigned_account, username FROM users, temp_users WHERE users.id = ? AND users.username = temp_users.assigned_account");
+$result->bind_param('i', $userID);
 $result->execute();
 $result->bind_result($temp_account_id, $temp_title, $temp_first_names, $temp_surname, $temp_student_id, $assigned_account, $temp_username);
 $result->fetch();
 $result->close();
 
 if (isset($_POST['submit'])) {
-  $temp_title = $_POST['title'];
+  $temp_title       = $_POST['title'];
   $temp_first_names = $_POST['first_names'];
-  $temp_surname = $_POST['surname'];
-  $temp_student_id = $_POST['student_id'];
+  $temp_surname     = $_POST['surname'];
+  $temp_student_id  = $_POST['student_id'];
 }
 
 ?>
@@ -76,7 +82,7 @@ if (isset($_POST['submit'])) {
 
   <script language="JavaScript">
     function doReassign(targetID) {
-      window.location = "do_reassign_script.php?temp_userID=<?php echo $_GET['userID']; ?>&userID=" + targetID + "&assigned_account=<?php echo $temp_username; ?>";
+      window.location = "do_reassign_script.php?temp_userID=<?php echo $userID; ?>&userID=" + targetID + "&assigned_account=<?php echo $temp_username; ?>";
     }
 
     function lon(lineID) {
@@ -94,8 +100,8 @@ if (isset($_POST['submit'])) {
 <body>
 <?php
 // Check if the exam is still running. Re-assignment mid-exam would upset the data.
-$result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id=?");
-$result->bind_param('i', $_GET['paperID']);
+$result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id = ?");
+$result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($end_date);
 $result->fetch();
@@ -113,18 +119,18 @@ $target_student = array();
 // Look up the temporary information in 'users'.
 if ($temp_student_id != '') {
   // Try student number lookup.
-  $result = $mysqli->prepare("SELECT id, surname, first_names, title, gender FROM users, sid WHERE users.id=sid.userID AND student_id=?");
+  $result = $mysqli->prepare("SELECT id, surname, first_names, title, gender FROM users, sid WHERE users.id = sid.userID AND student_id = ?");
   $result->bind_param('i', $temp_student_id);
   $result->execute();
   $result->store_result();
   $result->bind_result($target_userID, $target_surname, $target_first_names, $target_title, $gender);
   while ($result->fetch()) {
-    $target_student[$target_userID]['surname'] = $target_surname;
-    $target_student[$target_userID]['first_names'] = $target_first_names;
-    $target_student[$target_userID]['title'] = $target_title;
-    $target_student[$target_userID]['gender'] = $gender;
-    $target_student[$target_userID]['student_id'] = $temp_student_id;
-    $target_student[$target_userID]['modules'] = getModules($target_userID, $mysqli);
+    $target_student[$target_userID]['surname']      = $target_surname;
+    $target_student[$target_userID]['first_names']  = $target_first_names;
+    $target_student[$target_userID]['title']        = $target_title;
+    $target_student[$target_userID]['gender']       = $gender;
+    $target_student[$target_userID]['student_id']   = $temp_student_id;
+    $target_student[$target_userID]['modules']      = getModules($target_userID, $mysqli);
   }
   $result->close();
 }
@@ -139,19 +145,19 @@ if ($target_userID == '') {
   $result->store_result();
   $result->bind_result($target_userID, $target_surname, $target_first_names, $target_title, $gender, $student_id);
   while ($result->fetch()) {
-    $target_student[$target_userID]['surname'] = $target_surname;
-    $target_student[$target_userID]['first_names'] = $target_first_names;
-    $target_student[$target_userID]['title'] = $target_title;
-    $target_student[$target_userID]['gender'] = $gender;
-    $target_student[$target_userID]['student_id'] = $student_id;
-    $target_student[$target_userID]['modules'] = getModules($target_userID, $mysqli);
+    $target_student[$target_userID]['surname']      = $target_surname;
+    $target_student[$target_userID]['first_names']  = $target_first_names;
+    $target_student[$target_userID]['title']        = $target_title;
+    $target_student[$target_userID]['gender']       = $gender;
+    $target_student[$target_userID]['student_id']   = $student_id;
+    $target_student[$target_userID]['modules']      = getModules($target_userID, $mysqli);
   }
   $result->close();
 }
 
-echo "<p style=\"color:#0033BC\">" . str_replace('user','Temporary Account ',$temp_username) . " was reserved with the following details:</p>\n<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=" . $_GET['userID'] . "\">\n<table border=\"0\" style=\"width:100%\">\n";
+echo "<p style=\"color:#0033BC\">" . str_replace('user','Temporary Account ',$temp_username) . " was reserved with the following details:</p>\n<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&paperID=$paperID&started=$started&log_type=$log_type\">\n<table border=\"0\" style=\"width:100%\">\n";
 echo "<tr><th>Title</th><th>Last Name</th><th>First Names</th><th>Student ID</th><th></th></tr>\n";
-echo "<tr><td><input type=\"text\" name=\"title\" value=\"$temp_title\" size=\"5\" /></td><td><input type=\"text\" name=\"surname\" value=\"$temp_surname\" size=\"15\" /></td><td><input type=\"text\" name=\"first_names\" value=\"$temp_first_names\" size=\"15\" /></td><td><input type=\"text\" name=\"student_id\" value=\"$temp_student_id\" size=\"6\" /></td><td><input type=\"submit\" name=\"submit\" value=\"Search\" style=\"width:80px\" /></tr>\n";
+echo "<tr><td><input type=\"text\" name=\"title\" value=\"$temp_title\" size=\"5\" /></td><td><input type=\"text\" name=\"surname\" value=\"$temp_surname\" size=\"15\" /></td><td><input type=\"text\" name=\"first_names\" value=\"$temp_first_names\" size=\"15\" /></td><td><input type=\"text\" name=\"student_id\" value=\"$temp_student_id\" size=\"6\" /></td><td><input type=\"submit\" name=\"submit\" value=\"" . $string['search'] . "\" style=\"width:80px\" /></tr>\n";
 echo "</table>\n</form>\n";
 
 if (count($target_student) == 0) {
@@ -178,7 +184,7 @@ if (count($target_student) == 0) {
 }
 ?>
 <br />
-<div style="text-align:center"><input type="button" name="cancel" value="Cancel" onclick="window.close()" style="width:100px" /></div>
+<div style="text-align:center"><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" style="width:100px" /></div>
 
 </body>
 </html>
