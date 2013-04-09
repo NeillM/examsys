@@ -71,14 +71,16 @@ $log_extra_time = new LogExtraTime($log_lab_end_time, $student, $mysqli);
 
 $onload = '';
 
-if (isset($_POST['submit']) and (int)$_POST['extra_time'] > 0) {
-
-  $special_needs_percentage = $_POST['extra_time'];
-
+if (isset($_POST['submit'])) {
   $invigilator_id = $userObject->get_user_ID();
 
-  $log_extra_time->save($invigilator_id, $special_needs_percentage);
+  if ((int)$_POST['extra_time'] == 0) {
+    $log_extra_time->delete($invigilator_id);
+  } elseif ((int)$_POST['extra_time'] > 0) {
+    $special_needs_percentage = $_POST['extra_time'];
 
+    $log_extra_time->save($invigilator_id, $special_needs_percentage);
+  }
   $onload = 'closeWindow();';
 }
 

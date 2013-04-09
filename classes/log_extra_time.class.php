@@ -151,6 +151,21 @@ class LogExtraTime {
 
   }
 
+  public function delete($invigilator_id) {
+    $query = 'DELETE FROM log_extra_time WHERE labID = ? AND paperID = ? AND invigilatorID = ? AND userID = ?';
+
+    $stmt = $this->db->prepare($query);
+
+    $lab_id = $this->get_lab_id();
+    $paper_id = $this->get_paper_id();
+    $student_id = $this->get_student_id();
+
+    $stmt->bind_param('iiii', $lab_id, $paper_id, $invigilator_id, $student_id);
+
+    $stmt->execute();
+    $stmt->close();
+  }
+
   /**
    * @return int
    */
