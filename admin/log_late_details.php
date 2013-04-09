@@ -65,7 +65,7 @@
   $icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif');
   $data = array();
 
-  $result = $mysqli->prepare("SELECT DISTINCT paper_type, paper_title, q_paper, userID FROM log_late, properties WHERE log_late.q_paper=properties.property_id GROUP BY userID ORDER BY paper_title");
+  $result = $mysqli->prepare("SELECT DISTINCT paper_type, paper_title, paperID, userID FROM log_metadata, log_late, properties WHERE log_late.metadataID = log_metadata.id AND log_metadata.paperID = properties.property_id GROUP BY userID ORDER BY paper_title");
   $result->execute();
   $result->bind_result($paper_type, $paper_title, $paperID, $uID);
   while ($result->fetch()) {
