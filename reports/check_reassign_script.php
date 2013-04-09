@@ -52,12 +52,20 @@ function getModules($userID, $mysqlidb) {
 
 
 // Get all the details from 'temp_users' for given userID.
+$row_no = 0;
 $result = $mysqli->prepare("SELECT temp_users.id, temp_users.title, temp_users.first_names, temp_users.surname, student_id, assigned_account, username FROM users, temp_users WHERE users.id = ? AND users.username = temp_users.assigned_account");
 $result->bind_param('i', $userID);
 $result->execute();
 $result->bind_result($temp_account_id, $temp_title, $temp_first_names, $temp_surname, $temp_student_id, $assigned_account, $temp_username);
+$result->store_result();
+$row_no = $result->num_rows;
 $result->fetch();
 $result->close();
+
+if ($row_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 if (isset($_POST['submit'])) {
   $temp_title       = $_POST['title'];
@@ -100,12 +108,20 @@ if (isset($_POST['submit'])) {
 <body>
 <?php
 // Check if the exam is still running. Re-assignment mid-exam would upset the data.
+$row_no = 0;
 $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id = ?");
 $result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($end_date);
+$result->store_result();
+$row_no = $result->num_rows;
 $result->fetch();
 $result->close();
+
+if ($row_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 if (time() < $end_date) {
   echo "<p><strong>Warning</strong><p><p>Exam scripts cannot be reassigned mid exam.<br />Please wait until after the exam has finished</p>\n";
