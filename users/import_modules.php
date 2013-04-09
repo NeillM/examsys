@@ -59,6 +59,8 @@ require_once '../classes/userutils.class.php';
 <br />
 
 <?php
+  $file_problem = false;
+
   if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv"))  {
@@ -162,32 +164,35 @@ require_once '../classes/userutils.class.php';
           }
         }
       }
-    }
-    unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv");
+      unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv");
 
-    echo "<h2>$modulesAdded " . $string['enrolementsperformed'] . "</h2>";
-    echo "<p>" . count($missing_users) . " " . $string['missingusers'] . "</p>";
-    foreach ($missing_users as $sid => $module) {
-      echo "$sid<br />";
-      foreach ($module['module'] as $moduleid) {
-        echo "<p style=\"margin-left:10px\">$moduleid</p>";
+      echo "<h2>$modulesAdded " . $string['enrolementsperformed'] . "</h2>";
+      echo "<p>" . count($missing_users) . " " . $string['missingusers'] . "</p>";
+      foreach ($missing_users as $sid => $module) {
+        echo "$sid<br />";
+        foreach ($module['module'] as $moduleid) {
+          echo "<p style=\"margin-left:10px\">$moduleid</p>";
+        }
       }
+      echo "<p>" . count($unknow_ModuleID) . " " . $string['missingmodules'] . "</p>";
+      foreach($unknow_ModuleID as $moduleID) {
+         echo "<p style=\"margin-left:10px\">$moduleID</p>";
+      }
+      ?>
+      </div>
+      </td>
+      </tr>
+      </table>
+      </div>
+      </td></tr>
+      </table>
+      <?php
+      $mysqli->close();
+      exit;
+    } else {
+      $file_problem = true;
     }
-    echo "<p>" . count($unknow_ModuleID) . " " . $string['missingmodules'] . "</p>";
-    foreach($unknow_ModuleID as $moduleID) {
-       echo "<p style=\"margin-left:10px\">$moduleID</p>";
-    }
-    $mysqli->close();
-    ?>
-    </div>
-    </td>
-    </tr>
-    </table>
-    </div>
-    </td></tr>
-    </table>
-    <?php
-  } else {
+  }
 ?>
 <table class="dialog_border" style="width:730px">
 <tr>
@@ -204,7 +209,14 @@ require_once '../classes/userutils.class.php';
 <br />
 <div align="center">
 <form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
-<p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
+<?php
+if ($file_problem) {
+  echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" />&nbsp;Please specify a file for upload.</div>';
+  echo '<p style="color:#C00000; font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" /></p>';
+} else {
+  echo '<p style="font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" /></p>';
+}
+?>
 <br />
 <p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 <br />
@@ -215,7 +227,7 @@ require_once '../classes/userutils.class.php';
 </table>
 
 <?php
-  }
+  $mysqli->close();
 ?>
 </body>
 </html>

@@ -44,16 +44,6 @@
   <style type="text/css">
     label.error {display:block; color:#f00}
   </style>
-
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
-    function updateMsg() {
-      document.getElementById('msg').innerHTML = '';
-    }
-
-    $(function () { $('#import_form').validate(); });
-  </script>
 </head>
 
 <?php
@@ -67,11 +57,9 @@
 ?>
 <div id="content" class="content" style="padding-left:10px">
 <?php
-  if (isset($_POST['submit'])) {
-    echo "<div id=\"msg\">" . $string['loading'] . "</div>\n";
-    ob_flush();
-    flush();
+  $file_problem = false;
 
+  if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_new_cohort.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
@@ -90,9 +78,14 @@
           echo $users['html'];
         }
       }
+      
+      $mysqli->close();
+      exit;
+    } else {
+      $file_problem = true;
     }
-  } else {
-    // Display upload form.
+  }
+  // Display upload form.
 ?>
 <br />
 <br />
@@ -113,7 +106,14 @@
 <br />
 <div style="text-align:center">
 <form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
-<p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
+<?php
+if ($file_problem) {
+  echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" />&nbsp;Please specify a file for upload.</div>';
+  echo '<p style="color:#C00000; font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" /></p>';
+} else {
+  echo '<p style="font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" /></p>';
+}
+?>
 
 <div align="center"><input type="checkbox" name="welcome" value="1" />&nbsp;<?php echo $string['sendwelcomeemail']; ?></div>
 <p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
@@ -124,7 +124,6 @@
 </table>
 
 <?php
-  }
   $mysqli->close();
 ?>
 </div>
