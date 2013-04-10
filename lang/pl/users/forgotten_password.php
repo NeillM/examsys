@@ -18,17 +18,17 @@ $string['forgottenpassword'] = 'Utracone hasło';
 $string['emailaddress'] = 'Adres Email';
 $string['emailaddressinvalid'] = 'Podaj poprawny adres Email';
 $string['emailaddressnotfound'] = 'Nie znaleziono tego adresu Email';
-$string['emailaddressininstitutionaldomains'] = 'Your account is from an institution which is managed using a central authentication service. Please contact IT support to inquire about the password reset procedure.';
+$string['emailaddressininstitutionaldomains'] = 'Twoje konto jest z instytucji, która zarządzana jest z użyciem centralnego systemu uwierzytelniania. Skontaktuj się z zespołem wsparcia IT w celu uzskania informacji o procedurach resetowania hasła.';
 $string['passwordreset'] = 'Resetowanie hasła';
 $string['emailhtml'] = <<< EMAIL_HTML
 <p>Cześć %s %s,</p>
-<p>Otrzymaliśmy życzenie zmiany hasła w Rog&#333;. Aby potwierdzić to życzenie kliknij na poniższy link:</p>
+<p>Otrzymaliśmy polecenie zmiany hasła w Rog&#333;. Aby potwierdzić to polecenie kliknij na poniższy link:</p>
 <p><a href="https://%s/users/reset_password.php?token=%s">Resetowanie hasła</a></p>
-<p>Jeśli nie prosiłeś o resetowanie hasła prosimy abyś do nas o tym <a href="mailto:%s">napisał</a>. Twój dotychczasowy login i hasło będą nadal obowiązywały w Rog&#333;.</p>
+<p>Jeśli nie wnioskowałeś/łaś o resetowanie hasła prosimy abyś do nas o tym <a href="mailto:%s">napisał/a</a>. Twój dotychczasowy login i hasło będą w Rog&#333; nadal obowiązywały.</p>
 
 EMAIL_HTML;
 $string['couldntsendemail'] = 'Nie można było wysłać Emaila do <strong>%s</strong>';
-$string['emailsentmsg'] = 'Został wysłany Email do <em>%s</em> zawierający link umożliwiający zresetowanie Twojego hasła. Link ten pozostanie aktywny przez <strong>24 godziny</strong>.';
+$string['emailsentmsg'] = 'Wysłany został Email na <em>%s</em> zawierający link umożliwiający zresetowanie Twojego hasła. Link ten pozostanie aktywny przez <strong>24 godziny</strong>.';
 $string['intromsg'] = 'Podaj swój adres Email, a my wyślemy tam link umożliwiający zresetowanie hasła.';
 $string['send'] = 'Wyślij';
 ?>
