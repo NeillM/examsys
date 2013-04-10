@@ -95,11 +95,12 @@ class CALCULATIONCorrector extends Corrector {
 
             // Split up the user answer into its constituent parts.
             $answer_parts = explode('|', $user_answer);
-            $variable_array = explode(',', $answer_parts[2]);
-            $saved_response = $answer_parts[0];
-            $var_no = 1;
 
             if (isset($answer_parts[2]) and $answer_parts[2] != '') {
+              $variable_array = explode(',', $answer_parts[2]);
+              $saved_response = $answer_parts[0];
+              $var_no = 1;
+
               foreach ($variable_array as $individual_variable) {
                 $var = chr(64 + $var_no);
                 $$var = $individual_variable;
