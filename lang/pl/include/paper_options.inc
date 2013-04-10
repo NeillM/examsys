@@ -116,7 +116,7 @@ $string['studentsonly'] = 'tylko próby studenckie';
 $string['completedatasets'] = 'Pokaż tylko pełne zbiory danych';
 $string['anyyear'] = 'Każdy rok';
 
-$string['copyname'] = 'Nazwa kopii:';
+$string['copyname'] = 'Nazwa kopii';
 $string['paperonly'] = 'Tylko arkusze';
 $string['paperandquestions'] = 'Arkusze i pytania';
 $string['next'] = 'Dalej &gt;&gt;'; 

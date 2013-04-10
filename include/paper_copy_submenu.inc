@@ -80,7 +80,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 </tr>
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>
-<td style="text-align:right"><?php echo $string['copyname']; ?></td>
+<td style="text-align:right"><?php echo $string['copyname']; ?>&nbsp;</td>
 <td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title(); ?>" size="65" />
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $module; ?>" />
@@ -89,7 +89,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 </tr>
 
 <tr>
-<td style="text-align:right">Type:</td>
+<td style="text-align:right"><?php echo $string['type']; ?>&nbsp;</td>
 <td colspan="4"><select name="paper_type" id="paper_type" onchange="changeButton()">
 <?php
   switch ($properties->get_paper_type()) {

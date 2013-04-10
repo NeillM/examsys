@@ -116,7 +116,7 @@ $string['studentsonly'] = 'student attempts only';
 $string['completedatasets'] = 'Show complete datasets only';
 $string['anyyear'] = 'Any Year';
 
-$string['copyname'] = 'Copy Name:';
+$string['copyname'] = 'Copy Name';
 $string['paperonly'] = 'Paper Only';
 $string['paperandquestions'] = 'Paper and Questions';
 $string['next'] = 'Next &gt;&gt;';
