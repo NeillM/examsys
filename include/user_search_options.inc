@@ -89,7 +89,7 @@ if (isset($_GET['student_id'])) {
 } else {
   $student_id = '';
 }
-if ($search_surname == '' and $search_username == '' and $student_id == '' and !isset($_GET['module']) and !isset($_GET['calendar_year'])) {
+if (isset($username) and $search_surname == '' and $search_username == '' and $student_id == '' and !isset($_GET['module']) and !isset($_GET['calendar_year'])) {
   $search_username = $username;
 }
 ?>

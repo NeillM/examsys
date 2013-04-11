@@ -389,7 +389,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $tmp_name = $tmp_title . ' ' . $tmp_initials . ' ' . $tmp_surname;
 
   $description = '';
-  $user_query = $mysqli->prepare("SELECT DISTINCT description FROM courses WHERE name=? LIMIT 1");
+  $user_query = $mysqli->prepare("SELECT DISTINCT description FROM courses WHERE name = ? LIMIT 1");
   $user_query->bind_param('s', $grade);
   $user_query->execute();
   $user_query->bind_result($description);
@@ -408,7 +408,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <?php
 
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-    if (strpos($tmp_roles,'Student') !== false or stripos($tmp_roles,'graduate') !== false or strpos($tmp_roles,'left') !== false or strpos($tmp_roles,'suspended') !== false) {
+    if (strpos($tmp_roles, 'Student') !== false or stripos($tmp_roles, 'graduate') !== false or strpos($tmp_roles, 'left') !== false or strpos($tmp_roles, 'suspended') !== false) {
       $student_photo =  $cfg_web_root . 'users/photos/' . $original_username . '.jpg';
       $row_no = 7;
       if (file_exists($student_photo)) {
