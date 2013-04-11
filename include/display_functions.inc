@@ -58,7 +58,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
         switch ($screen_data[$i][$a-1][0]) {
           case 'area':
             $parts = explode(';', $current_answer);
-            if ($parts[1] == '') {
+            if (!isset($parts[1]) or (isset($parts[1] and $parts[1] == '')) {
               $incomplete_screens[$i] = 1;
             }
             break;
@@ -520,7 +520,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if (isset($user_answers[$current_screen][$q_id])) {
           $tmp_user_answer = $user_answers[$current_screen][$q_id];
           $answer_parts = explode(';', $tmp_user_answer);
-          $tmp_user_answer = substr($answer_parts[1], 0, -2);
+          if (isset($answer_parts[1])) {
+            $tmp_user_answer = substr($answer_parts[1], 0, -2);
+          } else {
+            $tmp_user_answer = '';
+          }
         } else {
           $tmp_user_answer = '';
         }
