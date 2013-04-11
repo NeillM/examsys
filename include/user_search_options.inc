@@ -71,7 +71,28 @@ if (isset($_GET['calendar_year'])) {
     }
   }
 </script>
+<?php
+if (isset($_GET['search_surname'])) {
+  $search_surname = stripslashes($_GET['search_surname']);
+} else {
+  $search_surname = '';
+}
 
+if (isset($_GET['search_username'])) {
+  $search_username = $_GET['search_username'];
+} else {
+  $search_username = '';
+}
+
+if (isset($_GET['student_id'])) {
+  $student_id = $_GET['student_id'];
+} else {
+  $student_id = '';
+}
+if ($search_surname == '' and $search_username == '' and $student_id == '' and !isset($_GET['module']) and !isset($_GET['calendar_year'])) {
+  $search_username = $username;
+}
+?>
 <div id="left-sidebar" class="sidebar">
 <form name="PapersMenu" action="search.php" method="get">
 <br />
@@ -80,11 +101,11 @@ if (isset($_GET['calendar_year'])) {
 <tr><td>
 <div><strong><?php echo $string['genmsg']; ?></strong></div>
 <div style="font-size:50%">&nbsp;</div>
-<div><?php echo $string['name']; ?><br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php if (isset($_GET['search_surname'])) echo stripslashes($_GET['search_surname']); ?>" /></div>
+<div><?php echo $string['name']; ?><br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php echo $search_surname; ?>" /></div>
 
 <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%">
 <tr><td><?php echo $string['username']; ?></td><td>&nbsp;</td><td><?php echo $string['studentid']; ?></td></tr>
-<tr><td><input type="text" name="search_username" size="9" value="<?php if (isset($_GET['search_username'])) echo $_GET['search_username']; ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="9" value="<?php if (isset($_GET['student_id'])) echo $_GET['student_id']; ?>" /></td></tr>
+<tr><td><input type="text" name="search_username" size="9" value="<?php echo $search_username; ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="9" value="<?php echo $student_id; ?>" /></td></tr>
 </table>
 <div><?php echo $string['module']; ?><br /><?php 
 search_utils::display_staff_modules_dropdown($userObject, $mysqli); 
