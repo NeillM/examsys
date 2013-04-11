@@ -718,7 +718,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       case 'mrq':
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
         if ($paper_type == 3) {
-          if (isset($user_answers[$current_screen][$q_id]) AND substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
+          if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
             echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"y\" checked /></td><td>";
           } else {
             echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"y\" /></td><td>";
@@ -1229,7 +1229,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } else {
         echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
       }
-      echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($answer,($part_id+1)) . "\" /></td></tr>\n";
+      echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($answer, $part_id) . "\" /></td></tr>\n";
     }
     echo '</table>';
     if ($question['score_method'] == 'Mark per Question') {
