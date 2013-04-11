@@ -216,13 +216,13 @@ if ($unique_name) {
 }
 ?>
 <body>
-<table border="0" cellpadding="6" cellspacing="0" width="100%">
+<form name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?folder=' . $_GET['folder']; ?>">
+<table border="0" cellpadding="4" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" style="background-color:white; text-align:left"><img src="../artwork/properties.png" width="48" height="48" alt="Properties" />&nbsp;&nbsp;<span class="midblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['folderproperties']; ?></span></td>
+<td style="width:48px; background-color:white; text-align:left"><img src="../artwork/properties.png" width="48" height="48" alt="Properties" /></td><td style="background-color:white; text-align:left">&nbsp;&nbsp;<span class="midblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['folderproperties']; ?></span></td>
 </tr>
 <tr>
-<td style="text-align:left">
-  <form name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?folder=' . $_GET['folder']; ?>">
+<td style="text-align:left" colspan="2">
     <br />
     <?php
 
@@ -284,15 +284,15 @@ if ($unique_name) {
     </table>
   <br />
   <div align="center"><input type="submit" style="width:100px" name="Submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input type="button" name="home" style="width:100px" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+</td>
+</tr>
+</table>
+
 <?php
   echo '<input type="hidden" name="created" value="' . $created . '" />';
   echo '<input type="hidden" name="owner" value="' . $owner . '" />';
 ?>
 </form>
-
-</td>
-</tr>
-</table>
 <?php
 $mysqli->close();
 ?>
