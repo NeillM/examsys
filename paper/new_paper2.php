@@ -311,7 +311,7 @@ if ($_POST['paper_type'] == 'summative') {
   if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
     echo "<tr><td><span style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['availability'] . "<span></td></tr>\n";
   } else {
-    echo "<tr><td colspan=\"3\"><span style=\"font-weight:bold; color:#001687; font-size:120%\">".$string['summativeexamdetails']."<span></td></tr>\n";
+    echo "<tr><td colspan=\"3\"><span style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['summativeexamdetails'] . "<span></td></tr>\n";
   }
   if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
     $next_flag = 1;
@@ -496,7 +496,12 @@ if ($_POST['paper_type'] == 'summative') {
 
   echo "</table>\n";
 
-  echo "<div style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['modules'] . "</div><div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
+  echo "<div style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['modules'] . "</div>";
+  if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
+    echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
+  } else {
+    echo "<div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
+  }
   $staff_modules_sql = "'" . implode("','", array_keys($staff_modules)) . "'";
 
   $module_no = 0;
