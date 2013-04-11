@@ -20,6 +20,9 @@ h2 {
   font-size:140%;
   color:#f27000;
 }
+hr {
+  text-align:left;
+}
 .path {
   background-color:#F2F2F2;
   color:#666666;
