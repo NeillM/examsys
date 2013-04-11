@@ -31,6 +31,7 @@ require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 
 require_once '../classes/moduleutils.class.php';
+require_once '../classes/folderutils.class.php';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/paperutils.class.php';
 
@@ -120,20 +121,10 @@ if (isset($_POST['submit'])) {
   $folder_results->close();
 
   $new_folder_name = $folder_parent . ';' . $_POST['folder_name'];
-  $duplicate_name = 0;
 
-  $folder_details = $mysqli->prepare("SELECT name FROM folders WHERE ownerID = ? AND name = ?");
-  $folder_details->bind_param('is', $userObject->get_user_ID(), $new_folder_name);
-  $folder_details->execute();
-  $folder_details->store_result();
-  $folder_details->bind_result($name);
-  if ($folder_details->num_rows() > 0) {
-    $duplicate_name = 1;
-  }
-  $folder_details->close();
-
-  if ($duplicate_name == 0) {
-    create_folder($new_folder_name, $userObject, $db);
+  $duplicate_folder = folder_utils::folder_exists($new_folder_name, $userObject, $mysqli);
+  if ($duplicate_folder == false) {
+    folder_utils::create_folder($new_folder_name, $userObject, $mysqli);
   }
 }
 
