@@ -372,9 +372,9 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[25]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '0 out of 168');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '0.0%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[2]/td[2]', '0 out of 168');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[4]/td[2]', '0.0%');
   }
 
   public function testCompletePaperCorrect() {
@@ -718,9 +718,9 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[25]/tbody/tr[3]/td[2]/p/span', '1 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '168 out of 168');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '100.0%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[2]/td[2]', '168 out of 168');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[4]/td[2]', '100.0%');
   }
 
   public function testCompletePaperIncorrect() {
@@ -1063,9 +1063,9 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[25]/tbody/tr[3]/td[2]/p/span', '-1 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-54 out of 168');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-32.1%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[2]/td[2]', '-54 out of 168');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[4]/td[2]', '-32.1%');
   }
 
   public function testCompletePaperMixed() {
@@ -1408,9 +1408,9 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[25]/tbody/tr[3]/td[2]/p/span', '-1 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '50.5 out of 168');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '30.1%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[2]/td[2]', '50.5 out of 168');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[4]/td[2]', '30.1%');
   }
 
   public function testCompletePaperWithAbstentions() {
@@ -1638,9 +1638,9 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[25]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '7 out of 168');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '4.2%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[2]/td[2]', '7 out of 168');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[4]/td[2]', '4.2%');
   }
 
   public function testCompletePaperPartialAnswers() {
@@ -1917,9 +1917,9 @@ class RunAsStudentDichotomousTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[25]/tbody/tr[3]/td[2]/p/span', '-1 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '17.5 out of 168');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[25]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '10.4%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[2]/td[2]', '17.5 out of 168');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[25]/table/tbody/tr[4]/td[2]', '10.4%');
   }
 
   public function testClassTotals() {

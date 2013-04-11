@@ -113,9 +113,9 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '-2 out of 3');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-9 out of 27');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-33.3%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[2]/td[2]', '-9 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[4]/td[2]', '-33.3%');
   }
 
   public function testCompletePaperCorrect() {
@@ -185,9 +185,9 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '3 out of 3');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '27 out of 27');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '100.0%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[2]/td[2]', '27 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[4]/td[2]', '100.0%');
   }
 
   public function testCompletePaperIncorrect() {
@@ -257,9 +257,9 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '-2 out of 3');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-9 out of 27');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-33.3%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[2]/td[2]', '-9 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[4]/td[2]', '-33.3%');
   }
 
   public function testCompletePaperMixed() {
@@ -329,9 +329,9 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '-2 out of 3');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '3.5 out of 27');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '13.0%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[2]/td[2]', '3.5 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[4]/td[2]', '13.0%');
   }
 
   public function testCompletePaperPartialAnswers() {
@@ -389,9 +389,9 @@ class RunAsStudentMRQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[7]/tbody/tr[3]/td[2]/p/span', '-2 out of 3');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-3.5 out of 27');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[7]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-13.0%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[2]/td[2]', '-3.5 out of 27');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[7]/table/tbody/tr[4]/td[2]', '-13.0%');
   }
 
   public function testClassTotals() {

@@ -62,9 +62,9 @@ class ExamScrtiptMarksExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[19]/tbody/tr[3]/td[2]/p/span', '0 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '0 out of 162');
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '0%');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[2]/td[2]', '0 out of 162');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[4]/td[2]', '0%');
   }
 
   public function testAllCorrect() {
@@ -115,9 +115,9 @@ class ExamScrtiptMarksExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[19]/tbody/tr[3]/td[2]/p/span', '1 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '162 out of 162');
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '100%');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[2]/td[2]', '162 out of 162');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[4]/td[2]', '100%');
   }
 
   public function testAllIncorrect() {
@@ -168,9 +168,9 @@ class ExamScrtiptMarksExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[19]/tbody/tr[3]/td[2]/p/span', '-1 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '-47.5 out of 162');
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '-29%');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[2]/td[2]', '-47.5 out of 162');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[4]/td[2]', '-29%');
   }
 
   public function testMixed() {
@@ -221,9 +221,9 @@ class ExamScrtiptMarksExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//table[19]/tbody/tr[3]/td[2]/p/span', '-1 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[2]/td[2]', '47.5 out of 162');
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[4]/td[2]', '29%');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[2]/td[2]', '47.5 out of 162');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[4]/td[2]', '29%');
   }
 
   public function testPartialAnswers() {
@@ -274,9 +274,9 @@ class ExamScrtiptMarksExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText("//table[19]/tbody/tr[3]/td[2]/p/span", '-1 out of 1');
 
     // Overall Marks
-    $this->assertElementContainsText("//div[19]/table/tbody/tr/td/table/tbody/tr[2]/td[2]", '14 out of 162');
-    $this->assertElementContainsText('//div[19]/table/tbody/tr/td/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText("//div[19]/table/tbody/tr/td/table/tbody/tr[4]/td[2]", '9%');
+    $this->assertElementContainsText("//div[19]/table/tbody/tr[2]/td[2]", '14 out of 162');
+    $this->assertElementContainsText('//div[19]/table/tbody/tr[3]/td[2]', '40%');
+    $this->assertElementContainsText("//div[19]/table/tbody/tr[4]/td[2]", '9%');
   }
 }
 ?>
