@@ -52,9 +52,9 @@ require '../../include/staff_auth.inc';
 <div id="main">
 <?php
   if ($userObject->has_role('SysAdmin')) {
-    $roles_check = 'roles IN ("SysAdmin","Admin","Staff")';
+    $roles_check = 'roles IN ("SysAdmin", "Admin", "Staff")';
   } elseif ($userObject->has_role('Admin')) {
-    $roles_check = 'roles IN ("Admin","Staff")';
+    $roles_check = 'roles IN ("Admin", "Staff")';
   } else {
     $roles_check = 'roles="Staff"';
   }
@@ -129,7 +129,7 @@ require '../../include/staff_auth.inc';
       $old_parent = $parent;
     }
     
-    echo "<div id=\"title$id\"><nobr><a onclick=\"highlight('title$id')\" href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">$tmp_title</a></nobr></div>\n";
+    echo "<div id=\"title$id\"><nobr><a href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">$tmp_title</a></nobr></div>\n";
   }
 
   if ($old_parent != '') echo "</div>\n";

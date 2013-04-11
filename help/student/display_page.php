@@ -90,9 +90,9 @@ if ($_GET['id'] != '1' and !$userObject->has_role(array('SysAdmin', 'External'))
   <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   
   <script language="JavaScript">
-    function updateToolbar(editID,deleteID) {
-      parent.frames['toolbar'].document.myform.editid.value=editID;
-      parent.frames['toolbar'].document.myform.deleteid.value=deleteID;
+    function updateToolbar(editID, deleteID) {
+      window.parent.frames[0].document.getElementById('editid').value   = editID;
+      window.parent.frames[0].document.getElementById('deleteid').value = deleteID;
       <?php
       if (isset($_GET['section'])) {
         echo "window.location='#" . $_GET['section'] . "'\">\n";

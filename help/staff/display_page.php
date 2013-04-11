@@ -97,10 +97,11 @@ if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't reco
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
-    function updateToolbar(editID,deleteID) {
-      parent.frames['toolbar'].document.myform.editid.value=editID;
-      parent.frames['toolbar'].document.myform.deleteid.value=deleteID;
+    function updateToolbar(editID, deleteID) {
+      window.parent.frames[0].document.getElementById('editid').value   = editID;
+      window.parent.frames[0].document.getElementById('deleteid').value = deleteID;
       <?php
       if (isset($_GET['section'])) {
         echo "window.location='#" . $_GET['section'] . "'\">\n";
@@ -126,6 +127,11 @@ if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't reco
         notice.focus();
       }
    }
+   
+   $(document).ready(function() {
+     updateToolbar(<?php echo $_GET['id']; ?>,<?php echo $_GET['id']; ?>);
+     updateTOC();
+     });
   </script>
 </head>
 
@@ -136,7 +142,7 @@ if ($deleted != '') {
   exit;
 }
 
-echo "<body onload=\"updateToolbar(" . $_GET['id'] . "," . $_GET['id'] . "); updateTOC();\">\n";
+echo "<body>\n";
 
 if ($_GET['id'] == 1) {
   // ID 1 is for the homepage.
