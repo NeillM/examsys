@@ -27,15 +27,23 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('errorID', 'GET', true, false, false);
+$errorID = check_var('errorID', 'GET', true, false, true);
+
+$row_no = 0;
 
 $result = $mysqli->prepare("SELECT sys_errors.id, auth_user, title, initials, surname, DATE_FORMAT(occurred,'%d/%m/%y&nbsp;%H:%i:%s'), userID, errtype, errstr, errfile, errline, php_self, query_string, request_method, DATE_FORMAT(fixed,'%d/%m/%y&nbsp;%H:%i:%s'), paperID, post_data, variables, backtrace FROM sys_errors LEFT JOIN users ON sys_errors.userID=users.id WHERE sys_errors.id=?");
-$result->bind_param('i', $_GET['errorID']);
+$result->bind_param('i', $errorID);
 $result->execute();
 $result->store_result();
 $result->bind_result($error_id, $auth_user, $title, $initials, $surname, $occurred, $uID, $errtype, $errstr, $errfile, $errline, $php_self, $query_string, $request_method, $fixed, $paperID, $post_data, $variables, $backtrace);
+$row_no = $result->num_rows;
 $result->fetch();
 $result->close();
+
+if ($row_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 if (isset($_POST['submit'])) {
   $result = $mysqli->prepare("UPDATE sys_errors SET fixed = NOW() WHERE errstr = ? AND errfile = ? AND errline = ?");
