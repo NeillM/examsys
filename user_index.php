@@ -402,7 +402,7 @@ if ($textsize > 120) {
     }
 
     // Has the student run out of time or clicked the 'Finish' button?
-    $no_time_left = ($display_remaining_time === true and $remaining_time === 0);
+    $no_time_left = ($display_remaining_time === true and (int)$remaining_time === 0);
 
     if ($no_time_left) {
       $hide_restart = true;
