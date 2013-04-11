@@ -49,7 +49,7 @@ if ($userObject->get_user_ID() != folder_utils::get_ownerID($folderID, $mysqli))
 
 <table>
 <tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td><p><?php echo $string['msg']; ?></p>
 
