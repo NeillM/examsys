@@ -25,7 +25,12 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('paperID', 'GET', true, false, false);
+$paperID = check_var('paperID', 'GET', true, false, true);
+
+if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $mysqli->close();
 ?>
@@ -54,7 +59,7 @@ $mysqli->close();
 
 <div style="text-align:right">
 <form action="do_retire_paper.php" method="post">
-<input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
+<input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
 <input style="width:140px" type="submit" name="paper" value="<?php echo $string['paper']; ?>" onclick="" />&nbsp;
