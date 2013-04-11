@@ -58,7 +58,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
         switch ($screen_data[$i][$a-1][0]) {
           case 'area':
             $parts = explode(';', $current_answer);
-            if (!isset($parts[1]) or (isset($parts[1] and $parts[1] == '')) {
+            if (!isset($parts[1]) or (isset($parts[1]) and $parts[1] == '')) {
               $incomplete_screens[$i] = 1;
             }
             break;
