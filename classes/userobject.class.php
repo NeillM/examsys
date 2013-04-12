@@ -32,9 +32,6 @@ require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 class UserObject extends RogoStaticSingleton {
 
-  /**
-   * @var
-   */
   protected static $inst = NULL;
   protected static $class_name = 'UserObject';
   protected static $dont_construct = true;
