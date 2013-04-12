@@ -66,9 +66,9 @@ class guestlogin_auth extends outline_authentication {
 
   function loginbutton($displaystdformobj) {
     global $string;
+    
     $this->savetodebug('Button Check');
     $labs_list = '';
-    //$displaybutton = false;
     // detect if we should display login button
     $paper_match = false;
     $ip_match = false;
@@ -80,7 +80,7 @@ class guestlogin_auth extends outline_authentication {
         $en = $this->db->errno;
         throw new Exception("MySQL error $e <br> Query:<br> $query", $en);
       } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
       }
     }
@@ -97,7 +97,7 @@ class guestlogin_auth extends outline_authentication {
           $en = $this->db->errno;
           throw new Exception("MySQL error $e <br> Query:<br> $query", $en);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
         }
       }
@@ -112,7 +112,7 @@ class guestlogin_auth extends outline_authentication {
     }
     $results->close();
 
-    $this->savetodebug('Status paper_match:' . var_export($paper_match, true) . ' ip_match:' . var_export($ip_match, true) . ' ip address:' . var_export(NetworkUtils::get_ipaddress(), true) . ' <br> ' . $labs . ' ' . $labs_list);
+    $this->savetodebug('Status paper_match:' . var_export($paper_match, true) . ' ip_match:' . var_export($ip_match, true) . ' ip address:' . var_export(NetworkUtils::get_ipaddress(), true) . ' <br /> ' . $labs . ' ' . $labs_list);
     if ($paper_match === true and $ip_match === true) { //($displaybutton === true) {
       $this->savetodebug('Adding New Button');
       $newbutton = new displaystdformobjbutton();
