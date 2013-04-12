@@ -23,33 +23,62 @@
 */
 
 require '../include/staff_auth.inc';
+require '../include/errors.inc';
 
-$moduleID = '';
-$identifier = '';
-$session = '';
-$folder = '';
+$identifier     = check_var('identifier', 'REQUEST', true, false, true);
+$calendar_year  = check_var('calendar_year', 'GET', true, false, true);
+$moduleID       = check_var('module', 'GET', true, false, true);
 
-if (isset($_GET['module'])) $moduleID = $_GET['module'];
-if (isset($_GET['folder'])) $folder = $_GET['folder'];
-if (isset($_GET['identifier'])) $identifier = $_GET['identifier'];
-if (isset($_GET['calendar_year'])) $session = $_GET['calendar_year'];
+if (isset($_GET['folder'])) {
+  $folder = $_GET['folder'];
+} else {
+  $folder = '';
+}
+
+// Get session information
+$result = $mysqli->prepare("SELECT sessions.title, source_url, sessions.calendar_year, sessions.occurrence, obj_id, objective FROM sessions LEFT JOIN objectives ON sessions.identifier=objectives.identifier AND sessions.calendar_year = objectives.calendar_year AND sessions.idMod = objectives.idMod WHERE sessions.idMod = ? and sessions.identifier = ? AND sessions.calendar_year = ? ORDER BY sequence");
+$result->bind_param('iis', $moduleID, $identifier, $calendar_year);
+$result->execute();
+$result->bind_result($title, $source_url, $calendar_year, $occurrence, $obj_id, $objective);
+$sess = array();
+while ($result->fetch()) {
+  if ( !isset($sess['identifier']) ) {
+    $sess['identifier'] = $identifier;
+    $sess['moduleID'] = $moduleID;
+    $sess['title'] = $title;
+    $sess['source_url'] = $source_url;
+    $sess['calendar_year'] = $calendar_year;
+    $sess['occurrence'] = $occurrence;
+  }
+  if ($obj_id != '') {
+   $sess['objectives'][$obj_id] = $objective;
+   $sess['objectives'][$obj_id] = $objective;
+   $sess['objectives'][$obj_id] = $objective;
+  }
+}
+$result->close();
+
+if (count($sess) == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
 
 if (isset($_POST['Edit'])) {
   //save session
-  $identifier = $_POST['identifier'];
   $occurrence = $_POST['year'] . $_POST['month'] . $_POST['day'] . $_POST['time'];
  
   //update session
   $stmt = $mysqli->prepare("UPDATE sessions SET title = ?,source_url = ?, occurrence = ? WHERE identifier = ? AND idMod = ? AND identifier = ? AND calendar_year = ?");
-  $stmt->bind_param('ssssiss', $_POST['session_title'], $_POST['url'], $occurrence, $identifier, $moduleID, $identifier, $_POST['session']);
+  $stmt->bind_param('ssssiss', $_POST['session_title'], $_POST['url'], $occurrence, $identifier, $moduleID, $identifier, $calendar_year);
   $stmt->execute();
   $stmt->close();
 
   $maxID = 0;
   $sequence = 0;
-  foreach($_POST as $key => $value) {
-    $tmp = explode('_',$key);
-    if(count($tmp) > 1) {
+  foreach ($_POST as $key => $value) {
+    $tmp = explode('_', $key);
+    if (count($tmp) > 1) {
       $type = $tmp[0];
       $objId = $tmp[1];
     } else {
@@ -62,12 +91,12 @@ if (isset($_POST['Edit'])) {
         if ($value == '') {
           //delete objs and mappings
           $stmt = $mysqli->prepare("DELETE FROM objectives WHERE obj_id = ? AND idMod = ? AND identifier = ? AND calendar_year = ?");
-          $stmt->bind_param('iiss', $objId, $moduleID, $identifier, $_POST['session']);
+          $stmt->bind_param('iiss', $objId, $moduleID, $identifier, $calendar_year);
           $stmt->execute();
           $stmt->close();
 
-          $stmt = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND idMod = ? AND calendar_year = ? AND vle_api=''");
-          $stmt->bind_param('iis', $objId, $moduleID, $_POST['session']);
+          $stmt = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND idMod = ? AND calendar_year = ? AND vle_api = ''");
+          $stmt->bind_param('iis', $objId, $moduleID, $calendar_year);
           $stmt->execute();
           $stmt->close();
         } else {
@@ -93,7 +122,7 @@ if (isset($_POST['Edit'])) {
           $sequence++;
           //insert new obj
           $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param('issssi', $maxID, $value, $moduleID, $identifier, $_POST['session'], $sequence);
+          $stmt->bind_param('issssi', $maxID, $value, $moduleID, $identifier, $calendar_year, $sequence);
           $stmt->execute();
           $stmt->close();
           $maxID++;
@@ -104,9 +133,8 @@ if (isset($_POST['Edit'])) {
 
   //redirect to list sessions
   header("Location: ./sessions_list.php?module=" . $moduleID . "&folder=" . $folder);
-
 } else if(isset($_POST['cancel'])) {
-  header("Location: ./sessions_list.php?module=" .  $moduleID . "&folder=" . $folder);
+  header("Location: ./sessions_list.php?module=" . $moduleID . "&folder=" . $folder);
 } else {
   //display form
   ?>
@@ -121,6 +149,7 @@ if (isset($_POST['Edit'])) {
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
     <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+    <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
     <style type="text/css">
       .editBox {width:90%}
       .field {text-align:right; font-weight:bold}
@@ -161,9 +190,9 @@ if (isset($_POST['Edit'])) {
         ul = li.parentNode;
         var i = 0;
         while(ul.childNodes[i].id != liId) {
-           i++;
+          i++;
         }
-        if( i > 0 && i < (ul.childNodes.length - 2) ) {
+        if ( i > 0 && i < (ul.childNodes.length - 2) ) {
           temp = ul.removeChild(ul.childNodes[i]);
           ul.insertBefore(temp,ul.childNodes[i+1]);
         }
@@ -175,7 +204,7 @@ if (isset($_POST['Edit'])) {
         ul = li.parentNode;
         var i = 0;
         while(ul.childNodes[i].id != liId) {
-           i++;
+          i++;
         }
         if ( i > 1 ) {
           temp = ul.removeChild(ul.childNodes[i]);
@@ -190,17 +219,17 @@ if (isset($_POST['Edit'])) {
         for (var i = 1; i < (lis.length - 1) ; i++ ) {
           if (lis[i].id != '') {
             ObjCount++;
-            if(lis[i - 1].id == '') {
-               //disable up
-               lis[i].childNodes[0].src = './up_off.png';
+            if (lis[i - 1].id == '') {
+              //disable up
+              lis[i].childNodes[0].src = './up_off.png';
             } else {
-               lis[i].childNodes[0].src = './up_on.png';
+              lis[i].childNodes[0].src = './up_on.png';
             }
-            if(lis[i+ 1].id == '') {
-               //disable down
-               lis[i].childNodes[2].src = './down_off.png';
+            if (lis[i+ 1].id == '') {
+              //disable down
+              lis[i].childNodes[2].src = './down_off.png';
             } else {
-                lis[i].childNodes[2].src = './down_on.png';
+              lis[i].childNodes[2].src = './down_on.png';
             }
           }
         }
@@ -210,50 +239,14 @@ if (isset($_POST['Edit'])) {
   <body onclick="hideSessCopyMenu(event);">
 <?php
 require '../include/sessions_options.inc';
-if (isset($_GET['module'])) {
-  $module = $_GET['module'];
-} else {
-  $module = '';
-}
-if (isset($_GET['folder'])) {
-  $folder = $_GET['folder'];
-} else {
-  $folder = '';
-}
 
-if (isset($_GET['calendar_year'])) {
-  $session = $_GET['calendar_year'];
-}
 echo '<div id="content" class="content" style="font-size:80%">';
 echo "<table class=\"header\">\n";
-echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">" . module_utils::get_moduleid_from_id($module, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$module&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['editsession'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$moduleID&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['editsession'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
 echo "<tr><th colspan=\"4\" class=\"bevel\"></td></tr>\n";
-echo '</table><br />';
+echo '</table>';
 
-//get session information
-$result = $mysqli->prepare("SELECT sessions.title, source_url, sessions.calendar_year, sessions.occurrence, obj_id, objective FROM sessions LEFT JOIN objectives ON sessions.identifier=objectives.identifier AND sessions.calendar_year = objectives.calendar_year AND sessions.idMod = objectives.idMod WHERE sessions.idMod = ? and sessions.identifier = ? AND sessions.calendar_year = ? ORDER BY sequence");
-$result->bind_param('iis', $moduleID, $identifier, $session);
-$result->execute();
-$result->bind_result($title, $source_url, $calendar_year, $occurrence, $obj_id, $objective);
-$sess = array();
-while ($result->fetch()) {
-  if( !isset($sess['identifier']) ) {
-    $sess['identifier'] = $identifier;
-    $sess['moduleID'] = $moduleID;
-    $sess['title'] = $title;
-    $sess['source_url'] = $source_url;
-    $sess['calendar_year'] = $calendar_year;
-    $sess['occurrence'] = $occurrence;
-  }
-  if ($obj_id != '') {
-   $sess['objectives'][$obj_id] = $objective;
-   $sess['objectives'][$obj_id] = $objective;
-   $sess['objectives'][$obj_id] = $objective;
-  }
-}
-$result->close();
-
-echo "<form name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "\" method=\"post\" onsubmit=\"return checkForm();\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
+echo "<br /><form name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=$moduleID&calendar_year=$calendar_year\" method=\"post\" onsubmit=\"return checkForm();\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
 
 echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"" . $sess['title'] . "\"/></td></tr>\n";
 
