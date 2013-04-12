@@ -104,8 +104,9 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%">
 <tr>
 
-<?php  
-  $now_time = date("U");
+<?php
+  $now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':00:00';
+  $now_time = date('U', strtotime($now_data));
   if ($properties->get_start_date() > $now_time) {
     $target_start_date = $properties->get_created();
   } else {
