@@ -72,6 +72,7 @@ $string['people'] = 'People';
 $string['studentcohort'] = 'Student Cohort of Paper';
 
 $string['dates'] = 'Dates';
+$string['to'] = 'to';
 $string['course'] = 'Course';
 $string['anycourse'] = '&lt;Any Course&gt;';
 $string['module'] = 'Module';

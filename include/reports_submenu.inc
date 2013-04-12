@@ -212,7 +212,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   echo "</select>\n";
 
   // ---------------------------------------------------------------------------------
-  echo " to ";
+  echo " ".$string['to']." ";
   // End Day
   echo "<select name=\"end_day\">\n";
   for ($i=1; $i<=31; $i++) {

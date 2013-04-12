@@ -15,6 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['formative self-assessment'] = 'Formatywna samoocena';
+$string['formative quiz'] = 'Test formatywny';
 $string['progress test'] = 'Test postępów';
 $string['summative exam'] = 'Egzamin końcowy';
 $string['survey'] = 'Ankieta';

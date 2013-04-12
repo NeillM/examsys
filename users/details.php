@@ -1117,7 +1117,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 </td>
 </tr>
 <tr>
-<td>Unanswered</td>
+<td><?php echo $string['unanswered']; ?></td>
 <td><input type="radio" onchange="updateAccessDemo()" name="unanswered_radio" value="0"<?php if ($unansweredcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
 <td><input type="radio" onchange="updateAccessDemo()" name="unanswered_radio" id="unanswered_radio_on" value="1"<?php if ($unansweredcolor != '') echo ' checked'; ?> />
 <?php

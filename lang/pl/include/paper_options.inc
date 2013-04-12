@@ -72,6 +72,7 @@ $string['people'] = 'Osoby';
 $string['studentcohort'] = 'Grupa studentów';  // Student Cohort of Paper
 
 $string['dates'] = 'Daty'; 
+$string['to'] = 'do';
 $string['course'] = 'Kurs';
 $string['anycourse'] = '&lt;Każdy kurs&gt;';
 $string['module'] = 'Moduł';

@@ -27,7 +27,7 @@ if (isset($_GET['path'])) $thispath=$_GET['path'];
 //echo $thispath;
 $conn_table = Array(Array());
 
-//multibyte array search
+//search for more strings
 function strpos_arr($string, $array, $strtpnt) {
   $pos=mb_strlen($string,'UTF-8');
   foreach($array as $search) {

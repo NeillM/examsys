@@ -17,6 +17,11 @@
 $string['osceform'] = 'OSCE Formularz';
 $string['overallclassification'] = 'Klasyfikacja całościowa:';
 $string['feedback'] = 'Odzew:';
+$string['Access Denied'] = 'Brak dostępu';
 $string['save'] = 'Zachowaj';
 $string['paperavailable'] = 'Arkusz który próbujesz otworzyć jest dostępny tylko w czasie:';
+$string['marking3'] = array('Jednoznacznie niezdany', 'Na granicy', 'Jednoznacznie zdany');
+$string['marking4'] = array('Niezdany', 'Na granicy niezdania', 'Na granicy zdania', 'Zdany', 'Zdecydowanie zdany');
+$string['marking5'] = array('Niesatysfakcjonujący', 'Kompetentny');
+$string['marking6'] = array('Jednoznacznie niezdany', 'Na granicy', 'Jednoznacznie zdany', 'Wyróżniająco zdany');
 ?>

@@ -96,19 +96,19 @@ if ($configObject->get('cfg_summative_mgmt')) {
     case 0:
     case 1:
     case 2:
-      $types = array(0=>'Formative Quiz', 1=>'Progress Test', 2=>'Summative Exam');
+      $types = array(0=>$string['formative quiz'], 1=>$string['progress test'], 2=>$string['summative exam']);
       break;
     case 3:
-      $types = array(3=>'Survey');
+      $types = array(3=>$string['survey']);
       break;
     case 4:
-      $types = array(4=>'OSCE Station');
+      $types = array(4=>$string['osce station']);
       break;
     case 5:
-      $types = array(5=>'Offline Paper');
+      $types = array(5=>$string['offline paper']);
       break;
     case 6:
-      $types = array(6=>'Peer Review');
+      $types = array(6=>$string['peer review']);
       break;
   }
   foreach ($types as $type_no=>$type_text) {

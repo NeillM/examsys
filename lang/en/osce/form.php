@@ -17,6 +17,11 @@
 $string['osceform'] = 'OSCE Form';
 $string['overallclassification'] = 'Overall Classification:';
 $string['feedback'] = 'Feedback:';
+$string['Access Denied'] = 'Access Denied';
 $string['save'] = 'Save';
 $string['paperavailable'] = 'The paper you are attempting to access is only available between the following times:';
+$string['marking3'] = array('Clear Fail', 'Borderline', 'Clear Pass');
+$string['marking4'] = array('Fail', 'Borderline Fail', 'Borderline pass', 'Pass', 'Good Pass');
+$string['marking5'] = array('Unsatisfactory', 'Competent');
+$string['marking6'] = array('Clear FAIL', 'BORDERLINE', 'Clear PASS', 'Honours PASS');
 ?>

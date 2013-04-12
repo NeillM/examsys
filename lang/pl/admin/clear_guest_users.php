@@ -23,9 +23,9 @@ $string['surname'] = 'Nazwisko';
 $string['firstnames'] = 'Imię';
 $string['title'] = 'Tytuł';
 $string['studentid'] = 'Numer legitymacji';
-$string['datereserved'] = 'Ochrona danych konta';
-$string['assessmenttaken'] = 'Egzamin podjęty';
-$string['free'] = 'wolne';
+$string['datereserved'] = 'Data zarezerwowania konta';
+$string['assessmenttaken'] = 'Podjęty egzamin';
+$string['free'] = 'wolny';
 $string['cleanup'] = 'Oczyść';
 $string['unset'] = '&lt;nieokreślone&gt;';
 ?>

@@ -45,8 +45,9 @@ $result->store_result();
 $result->bind_result($paper_title);
 if ($result->num_rows > 0) {
   ?>
-  <html>
-  <head>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title>Rog&#333;</title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   </head>

@@ -16,7 +16,19 @@
 
 $string['frequencydiscrimination'] = 'Analiza częstości i różnicowania';
 $string['reporttitle'] = 'Raport analizy częstości i różnicowania (U-L)';
+$string['PaperNotAttempted'] = "Ten arkusz nie był przez nikogo wybrany.";
+$string['NotEnoughData'] = "Brak wystarczających danych do obliczenia górnej o dolnej grupy. Wybierz wyższy procent.";
 $string['totalcandidatenumber'] = 'liczba wszystkich kandydatów';
+$string['AllItemsCorrect'] = "Wszystkie elementy poprawne";
+$string['FullMarks'] = "Pełne punkty";
+$string['PartialMarks'] = "Punkty ułamkowe";
+$string['Incorrect'] = "Niepoprawnie";
+$string['Correct'] = "Poprawnie";
+$string['True'] = "Prawda";
+$string['False'] = "Fałsz";
+$string['TopGroup'] = "Górna grupa";
+$string['BottomGroup'] = "Dolna grupa";
+$string['meanWordCount'] = "średnia liczba wyrazów";
 $string['groupsizes'] = 'Górne/dolne rozmiary grup';
 $string['pergroup'] = 'na grupę';
 $string['boldstems'] = 'pogrubiona opcja';

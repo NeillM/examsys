@@ -114,7 +114,7 @@ require '../include/staff_auth.inc';
 <td class="icon" onclick="activate('survey')" onmouseover="over('survey')" onmouseout="out('survey')" id="survey"><img src="../artwork/survey.png" width="48" height="48" border="0" alt="Survey" /><br /><?php echo $string['survey']; ?></td>
 <td class="icon" onclick="activate('osce')" onmouseover="over('osce')" onmouseout="out('osce')" id="osce"><img src="../artwork/osce.png" width="48" height="48" border="0" alt="OSCE" /><br /><?php echo $string['osce station']; ?></td>
 <td class="icon" onclick="activate('offline')" onmouseover="over('offline')" onmouseout="out('offline')" id="offline"><img src="../artwork/offline.png" width="48" height="48" border="0" alt="Offline" /><br /><?php echo $string['offline paper']; ?></td>
-<td class="icon" onclick="activate('peer_review')" onmouseover="over('peer_review')" onmouseout="out('peer_review')" id="peer_review"><img src="../artwork/peer_review.png" width="48" height="48" border="0" alt="Peer Review" /><br />Peer Review</td>
+<td class="icon" onclick="activate('peer_review')" onmouseover="over('peer_review')" onmouseout="out('peer_review')" id="peer_review"><img src="../artwork/peer_review.png" width="48" height="48" border="0" alt="Peer Review" /><br /><?php echo $string['peer review']; ?></td>
 <td>&nbsp;</td>
 </tr>
 <tr>

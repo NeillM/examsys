@@ -16,7 +16,19 @@
 
 $string['frequencydiscrimination'] = 'Frequency & Discrimination Analysis';
 $string['reporttitle'] = 'Frequency & Discrimination (U-L) Analysis Report';
+$string['PaperNotAttempted'] = "This paper has not been attempted by anyone.";
+$string['NotEnoughData'] = "Not enough data to calculate upper and lower groups. Please select a higher percentage.";
+$string['AllItemsCorrect'] = "All items correct";
 $string['totalcandidatenumber'] = 'Total candidate number';
+$string['FullMarks'] = "Full marks";
+$string['PartialMarks'] = "Partial marks";
+$string['Incorrect'] = "Incorrect";
+$string['Correct'] = "Correct";
+$string['True'] = "True";
+$string['False'] = "False";
+$string['TopGroup'] = "Top Group";
+$string['BottomGroup'] = "Bottom Group";
+$string['meanWordCount'] = "mean word count";
 $string['groupsizes'] = 'Upper/lower group sizes';
 $string['pergroup'] = 'per group';
 $string['boldstems'] = 'Bold stems';
