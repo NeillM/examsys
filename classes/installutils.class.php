@@ -170,8 +170,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="cfg_short_time_php"><?php echo sprintf($string['shorttimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_time_php" name="cfg_short_time_php" class="required" value="H:i" /></div>
         <div><label for="cfg_timezone"><?php echo $string['currenttimezone']; ?></label> <select id="cfg_timezone" name="cfg_timezone">
         <?php
+          $default_timezone = date_default_timezone_get();
+          if ($default_timezone == 'UTC') $default_timezone = 'Europe/London';
           foreach ($timezone_array as $individual_zone => $display_zone) {
-            if ($individual_zone == 'Europe/London') {
+            if ($individual_zone == $default_timezone) {
               echo "<option value=\"$individual_zone\" selected>$display_zone</option>";
             } else {
               echo "<option value=\"$individual_zone\">$display_zone</option>";
