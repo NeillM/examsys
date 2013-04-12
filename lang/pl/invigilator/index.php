@@ -23,13 +23,15 @@ $string['name'] = 'Nazwa';
 $string['extension_mins']  = 'Przedłużenie (min)';
 $string['endtime'] = 'Czas końcowy';
 $string['extendtimeby']     = 'Przedłuż czas o';
-$string['extendtime']       = 'Przedłuż czas:';
+$string['extendtime']       = 'Przedłuż czas';
 $string['addnote']          = 'Dodaj notatkę';
 $string['currenttime']      = 'Aktualny czas:';
 $string['start']     		= 'Start'; //cognate
-$string['end']      		= 'Koniec:';
+$string['end']      		= 'Koniec';
+$string['start_but'] = 'Rozpocznij'; //cognate
+$string['endat_but']  = 'Zakończ o';
 $string['session_end'] 		= 'Koniec sesji';
-$string['duration']  		= 'Czas trwania:';
+$string['duration'] = 'Czas trwania';
 $string['mins'] = 'min.';
 $string['papernote'] = 'Uwagi dot. arkusza';
 $string['extratime'] = 'Dodatkowy czas';
@@ -56,7 +58,7 @@ $string['checklist'] = '<div><strong>Lista zadań</strong></div>
     <li>"Proszę kliknąć \'Zamknij okno\' a następnie nacisnąć równocześnie CTRL, ALT i DELETE aby się wylogować."</li>
     <li>Zbierz instrukcje logowania</li>
     <li>Zbierz pozostałe czyste kartki</li>
-    <li>Upewnij się, że wylogowano się, że <strong>wszystkich</strong> komputerów</li>
+    <li>Upewnij się, że wylogowano się ze <strong>wszystkich</strong> komputerów</li>
     </ol>'; //??
 $string['time'] = 'Czas';
 $string['timedexam'] = 'Egzamin odmierzany czasowo:';
