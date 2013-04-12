@@ -18,6 +18,7 @@ require_once './lang/' . $language . '/include/paper_security.inc';
 
 $string['startscreen'] = 'Ekran startowy';
 $string['availability'] = 'Dostępność';
+$string['to'] = 'do';
 $string['candidates'] = 'Kandydaci';
 $string['screens'] = 'Ekrany';
 $string['marks'] = 'Punktów';
@@ -39,6 +40,8 @@ $string['papernotavailablestudents'] = 'Arkusz czasowo niedostępny dla student�
 $string['nottakenpaper'] = '(Nie podjąłeś się jeszcze rozwiązania tego arkusza.)';
 $string['donotstart'] = "<strong>Nie</strong> wybieraj przycisku 'Start &gt;&gt;' do czasu decyzji osoby nadzorującej.";
 $string['minutes'] = 'minut(y)';
+$string['mins'] = 'min.';
+$string['secs'] = 'sec.';
 $string['papernotfound'] = 'Nie odnaleziono arkusza';
 $string['requestedpaper'] = 'Wybrany arkusz nie jest dostępny.';
 ?>

@@ -298,7 +298,7 @@ if ($textsize > 120) {
     if (time() < $paper_start or time() > $paper_end) {
       $html = ' class="warn"';
     }
-    echo '<tr><td class="f"><nobr>' . $string['availability'] .'</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' to '. $display_end_date;
+    echo '<tr><td class="f"><nobr>' . $string['availability'] .'</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' '.$string['to'].' '. $display_end_date;
     if ($timezone != 'Europe/London') echo ' (' . str_replace('_',' ',$timezone) . ')';
   }
   echo '<input type="hidden" name="startdate" value="' . $display_start_date . '" /><input type="hidden" name="testtype" value="' . $test_type . "\" /></td></tr>\n";
@@ -354,7 +354,7 @@ if ($textsize > 120) {
        <td></td>
        <td></td>
        <td class="f"><?php echo $string['timeremaining'] ?></td>
-       <td><?php echo $remaining_minutes ?> mins <?php echo $remaining_seconds ?> secs</td>
+       <td><?php echo $remaining_minutes .' '. $string['mins'] . ' ' . $remaining_seconds  .' '. $string['secs']?></td>
     </tr>
 
     <?php

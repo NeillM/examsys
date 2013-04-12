@@ -18,6 +18,7 @@ require_once './lang/' . $language . '/include/paper_security.inc';
 
 $string['startscreen'] = 'Start Screen';
 $string['availability'] = 'Availability';
+$string['to'] = 'to';
 $string['candidates'] = 'Candidates';
 $string['screens'] = 'Screens';
 $string['marks'] = 'Marks';
@@ -39,6 +40,8 @@ $string['papernotavailablestudents'] = 'Paper not available to students at this 
 $string['nottakenpaper'] = '(You have not yet taken this paper.)';
 $string['donotstart'] = "Do <strong>not</strong> click 'Start &gt;&gt;' until instructed to by an invigilator.";
 $string['minutes'] = 'minutes';
+$string['mins'] = 'mins';
+$string['secs'] = 'secs';
 $string['papernotfound'] = 'Paper not Found';
 $string['requestedpaper'] = 'The requested paper cannot be found.';
 ?>
