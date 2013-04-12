@@ -289,7 +289,7 @@ if ($critical_error == '') {
     }
   } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {
     //$question->clear_checkout();
-    redirect($userObject, $mysqli);
+    redirect($userObject, $question->id, $configObject, $mysqli);
   }
 
   if ($do_save) {
@@ -361,7 +361,7 @@ if ($critical_error == '') {
       }
     }
 
-    if (count($errors) == 0) redirect($userObject, $mysqli);
+    if (count($errors) == 0) redirect($userObject, $question->id, $configObject, $mysqli);
   }
 
   $q_type_display = '';

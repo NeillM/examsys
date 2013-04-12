@@ -53,8 +53,8 @@ function check_fullSave($q_id, $mysqli) {
     return false;
   }
 
-  $result = $mysqli->prepare("SELECT locked FROM questions WHERE q_id=?");
-  $result->bind_param('i',$q_id);
+  $result = $mysqli->prepare("SELECT locked FROM questions WHERE q_id = ?");
+  $result->bind_param('i', $q_id);
   $result->execute();
   $result->bind_result($locked);
   $result->fetch();
@@ -67,20 +67,19 @@ function check_fullSave($q_id, $mysqli) {
   }
 }
 
-function redirect($userObject,$mysqli) {
-  global $q_id, $configObject;
+function redirect($userObj, $q_id, $configObj, $db) {
   // Release the lock.
-  if ($_POST['checkout_author'] == $userObject->get_user_ID()) {
-    $result = $mysqli->prepare("UPDATE questions SET checkout_time=NULL, checkout_authorID=NULL WHERE q_id=?");
+  if ($_POST['checkout_author'] == $userObj->get_user_ID()) {
+    $result = $db->prepare("UPDATE questions SET checkout_time = NULL, checkout_authorID = NULL WHERE q_id = ?");
     $result->bind_param('i', $q_id);
     $result->execute();
     $result->close();
   }
 
-  $url_prefix = 'location: ' . $configObject->get( 'protocol' ) . $_SERVER['HTTP_HOST'] . $configObject->get( 'cfg_root_path' );
+  $url_prefix = 'location: ' . $configObj->get( 'protocol' ) . $_SERVER['HTTP_HOST'] . $configObj->get('cfg_root_path');
 
-  if (substr($_POST['paperID'],0,5) == 'list:') {
-    $type = substr($_POST['paperID'],5);
+  if (substr($_POST['paperID'], 0, 5) == 'list:') {
+    $type = substr($_POST['paperID'], 5);
     $url =  $url_prefix . "/question/list.php?type=$type&keyword=" . $_POST['keyword'] . "&team=" . $_POST['team'];
   } elseif ($_POST['calling'] == 'find') {
     $url =  $url_prefix . "/question/search.php";
@@ -93,39 +92,39 @@ function redirect($userObject,$mysqli) {
   } else {
     $url =  $url_prefix . "/staff/index.php";
   }
-  header( $url );
+  header($url);
   $mysqli->close();
   exit;   // Stop script execution after the redirect.
 }
 
 function save_external_responses($dblink, $question, $ids, $actions, $responses, $paper_id = -1) {
   // Record responses to external examiner comments.
-    $comments = $question->get_comments($paper_id);
-    $changed = false;
+  $comments = $question->get_comments($paper_id);
+  $changed = false;
 
-    $i = 0;
-    foreach ($ids as $id) {
-      $action = $actions[$i];
-      $response = $responses[$i];
+  $i = 0;
+  foreach ($ids as $id) {
+    $action = $actions[$i];
+    $response = $responses[$i];
 
-      if($action != $comments[$id]['action'] or $response != $comments[$id]['response']) {
-        $result = $dblink->prepare("UPDATE review_comments SET action=?, response=? WHERE id=?");
-        $result->bind_param('ssi', $action, $response, $id);
-        $result->execute();
-        $result->close();
+    if ($action != $comments[$id]['action'] or $response != $comments[$id]['response']) {
+      $result = $dblink->prepare("UPDATE review_comments SET action = ?, response = ? WHERE id = ?");
+      $result->bind_param('ssi', $action, $response, $id);
+      $result->execute();
+      $result->close();
 
-        $comments[$id]['action'] = $action;
-        $comments[$id]['response'] = $response;
-        $changed = true;
-      }
-      $i++;
+      $comments[$id]['action'] = $action;
+      $comments[$id]['response'] = $response;
+      $changed = true;
     }
-
-    if($changed) $question->set_comments($comments);
+    $i++;
   }
 
+  if ($changed) $question->set_comments($comments);
+}
+
 function check_edit_rights($q_id, $checkout_authorID, $checkout_authorName, $checkout_time, $locked, $dblink, $userObject) {
-  global $tmp_ownerID, $REPLACEMEuserIDold;
+  global $tmp_ownerID;
   $disabled = '';
 
   if (check_MSCAA($q_id, $dblink)) {    // Check for MSC-AA question
@@ -143,7 +142,7 @@ function check_edit_rights($q_id, $checkout_authorID, $checkout_authorName, $che
 function check_MSCAA($q_id, $dblink) {
   $mscaa = false;
 
-  $stmt = $dblink->prepare("SELECT id FROM questions_metadata WHERE questionID=? AND type='QTI Ident' AND value LIKE 'MSC_AA%'");
+  $stmt = $dblink->prepare("SELECT id FROM questions_metadata WHERE questionID = ? AND type = 'QTI Ident' AND value LIKE 'MSC_AA%'");
   $stmt->bind_param('i', $q_id);
   $stmt->execute();
   $stmt->store_result();
@@ -157,7 +156,7 @@ function check_MSCAA($q_id, $dblink) {
 }
 
 function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_time, &$disabled, $dblink, $questionID, $userObject) {
-  global $REPLACEMEuserIDold, $string;
+  global $string;
 
   // Check for lockout.
   $current_time = time();
@@ -172,7 +171,7 @@ function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_t
     }
   } elseif ($disabled == '' and $userObject->get_user_ID() == $checkout_authorID) {
     // Set the lock to the current time/author.
-    $editLock = $dblink->prepare("UPDATE questions SET checkout_time=NOW(), checkout_authorID=? WHERE q_id=?");
+    $editLock = $dblink->prepare("UPDATE questions SET checkout_time = NOW(), checkout_authorID = ? WHERE q_id = ?");
     $editLock->bind_param('ii', $userObject->get_user_ID(), $questionID);
     $editLock->execute();
     $editLock->close();
@@ -189,7 +188,7 @@ function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_t
  * @param integer $user_id ID of the user to assign the lock
  */
 function check_out_paper($dblink, $q_id, $user_id) {
-  $editLock = $dblink->prepare("UPDATE questions SET checkout_time=NOW(), checkout_authorID=? WHERE q_id=?");
+  $editLock = $dblink->prepare("UPDATE questions SET checkout_time = NOW(), checkout_authorID = ? WHERE q_id = ?");
   $editLock->bind_param('ii', $user_id, $q_id);
   $editLock->execute();
   $editLock->close();
@@ -201,8 +200,7 @@ function record_trackChanges($type, $questionID, $old_value, $new_value, $part, 
 
   if ($old_value != $new_value) {
     $changes = true;
-    //echo "INSERT INTO track_changes VALUES (NULL,$type,$questionID,$current_userID,$old_value,$new_value,NOW(),$part)<br />";
-    $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,?,?,$current_userID,?,?,NOW(),?)");
+    $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, ?, ?, $current_userID, ?, ?, NOW(), ?)");
     $result->bind_param('sisss', $type, $questionID, $old_value, $new_value, $part);
     $result->execute();
     $result->close();
@@ -332,7 +330,7 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
 
   if ($branching_question == true) {
     //Get the Question ID of the source question
-    $result = $mysqli->prepare("SELECT scenario FROM questions WHERE q_id=?");
+    $result = $mysqli->prepare("SELECT scenario FROM questions WHERE q_id = ?");
     $result->bind_param('i', $q_id);
     $result->execute();
     $result->bind_result($scenario);
@@ -340,7 +338,7 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
     $result->close();
 
     //Get the screen number of the source question on the paper
-    $result = $mysqli->prepare("SELECT screen FROM papers WHERE paper=? AND question=?");
+    $result = $mysqli->prepare("SELECT screen FROM papers WHERE paper = ? AND question = ?");
     $result->bind_param('ii', $p_id, $scenario);
     $result->execute();
     $result->bind_result($source_screen);
@@ -351,12 +349,12 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
   }
 
   //force random mark to recaculate
-  $result = $mysqli->prepare("UPDATE properties SET random_mark=NULL, total_mark=NULL WHERE property_id=?");
+  $result = $mysqli->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?");
   $result->bind_param('i', $p_id);
   $result->execute();
   $result->close();
 
-  if ($result = $mysqli->prepare("INSERT INTO papers VALUES (NULL,?,?,?,?)")) {
+  if ($result = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)")) {
     $result->bind_param('iiii', $p_id, $q_id, $screen, $display_pos);
     $result->execute();
     $result->close();
