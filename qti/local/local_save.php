@@ -203,10 +203,12 @@ class IE_Local_Save extends IE_Main {
       $new_keywords = array();
       if ($module_id != -1) {
         if (is_array($module_id)) {
+          $user_keywords2 = array();
           foreach (array_keys($module_id) as $mod_id) {
-            $new_keywords1 = $this->SaveKeywords($this->q_row['q_id'], $question->keywords, $mod_id, $user_keywords);
+            $new_keywords1 = $this->SaveKeywords($this->q_row['q_id'], $question->keywords, $mod_id, $user_keywords, $user_keywords2);
             $new_keywords = array_merge($new_keywords, $new_keywords1);
           }
+          $user_keywords = array_merge($user_keywords, $user_keywords2);
         } else {
           $new_keywords = $this->SaveKeywords($this->q_row['q_id'], $question->keywords, $module_id, $user_keywords);
         }
@@ -781,7 +783,7 @@ class IE_Local_Save extends IE_Main {
    * @param int $userID
    * @param array $user_keywords
    */
-  function SaveKeywords($q_id, $q_keywords, $moduleID, &$user_keywords) {
+  function SaveKeywords($q_id, $q_keywords, $moduleID, &$user_keywords, &$user_keywords2 = NULL) {
     $new_keywords = array();
 
     // Loop through the keywords, saving against the user and question
@@ -807,7 +809,13 @@ class IE_Local_Save extends IE_Main {
       }
     }
 
-    $user_keywords = array_merge($user_keywords, $new_keywords);
+    if(!is_null($user_keywords2)) {
+      $user_keywords2 = array_merge($user_keywords2, $new_keywords);
+    } else {
+      $user_keywords = array_merge($user_keywords, $new_keywords);
+    }
+
+
 
     return $new_keywords;
   }
