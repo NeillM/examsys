@@ -292,14 +292,15 @@ if ($textsize > 120) {
   }
   echo '</tr>';
   if ($rubric != '') echo '<tr><td class="f" style="vertical-align:top"><nobr>' . $string['rubric'] . '</nobr></td><td colspan="3" style="text-align:justify; line-height:140%; padding-right:20px; padding-bottom:15px">' . $rubric . '</td></tr>';
-  if ($test_type != 2) {
+
+  if ($test_type != '2') {
     $html = '';
     if (time() < $paper_start or time() > $paper_end) {
       $html = ' class="warn"';
     }
     echo '<tr><td class="f"><nobr>' . $string['availability'] .'</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' to '. $display_end_date;
+    if ($timezone != 'Europe/London') echo ' (' . str_replace('_',' ',$timezone) . ')';
   }
-  if ($timezone != 'Europe/London') echo ' (' . str_replace('_',' ',$timezone) . ')';
   echo '<input type="hidden" name="startdate" value="' . $display_start_date . '" /><input type="hidden" name="testtype" value="' . $test_type . "\" /></td></tr>\n";
   echo "<tr><td class=\"f\"><nobr>" . $string['candidates'] . "</nobr></td><td colspan=\"3\">";
   $html = '';
