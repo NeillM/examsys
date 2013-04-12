@@ -117,7 +117,15 @@ class IE_Local_Save extends IE_Main {
 
 
       // Get a list of the team and user's keywords
-      $user_keywords = $this->GetExistingKeywords($module_id, $userID);
+      $user_keywords = array();
+      if (is_array($module_id)) {
+        foreach (array_keys($module_id) as $mod_id) {
+          $user_keywordsl = $this->GetExistingKeywords($mod_id, $userID);
+          $user_keywords = array_merge($user_keywords, $user_keywordsl);
+        }
+      } else {
+        $user_keywords = $this->GetExistingKeywords($module_id, $userID);
+      }
     }
 
     foreach ($data->questions as & $question) {
@@ -146,9 +154,9 @@ class IE_Local_Save extends IE_Main {
       $this->q_row['q_media_width'] = $question->media_width;
       $this->q_row['q_media_height'] = $question->media_height;
 
-      $this->q_row['deleted'] = NULL;
-      $this->q_row['locked'] = NULL;
-      $this->q_row['std'] = NULL;
+      $this->q_row['deleted'] = null;
+      $this->q_row['locked'] = null;
+      $this->q_row['std'] = null;
 
       $this->q_row['q_option_order'] = $question->q_option_order;
 
@@ -183,12 +191,25 @@ class IE_Local_Save extends IE_Main {
 
       $this->qm_row =$this->db->GetBlankTableRow("questions_modules");
       $this->qm_row['q_id'] = $this->q_row['q_id'];
+      if(is_array($module_id)) {
+        foreach (array_keys($module_id) as $mod_id) {
+          $this->qm_row['idMod']=$mod_id;
+          $this->db->InsertRow("questions_modules", "temp", $this->qm_row);
+        }
+      }else {
       $this->qm_row['idMod']=$module_id;
       $this->db->InsertRow("questions_modules", "temp", $this->qm_row);
-
+      }
       $new_keywords = array();
       if ($module_id != -1) {
-        $new_keywords = $this->SaveKeywords($this->q_row['q_id'], $question->keywords, $module_id, $user_keywords);
+        if (is_array($module_id)) {
+          foreach (array_keys($module_id) as $mod_id) {
+            $new_keywords1 = $this->SaveKeywords($this->q_row['q_id'], $question->keywords, $mod_id, $user_keywords);
+            $new_keywords = array_merge($new_keywords, $new_keywords1);
+          }
+        } else {
+          $new_keywords = $this->SaveKeywords($this->q_row['q_id'], $question->keywords, $module_id, $user_keywords);
+        }
       }
 
       // store option rows
@@ -200,7 +221,7 @@ class IE_Local_Save extends IE_Main {
 
       // store additional metadata
       if ($question->load_id != '') {
-        $meta_row = array('id' => NULL, 'questionID' => $question->save_id, 'type' => 'QTI Ident', 'value' => $question->load_id);
+        $meta_row = array('id' => null, 'questionID' => $question->save_id, 'type' => 'QTI Ident', 'value' => $question->load_id);
       }
       $this->db->InsertRow("questions_metadata", "id", $meta_row);
 
