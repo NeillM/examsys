@@ -750,7 +750,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
                             if ($exam_started) {
                           ?>
                             <fieldset id="set_end">
-                              <input id="end_exam_button" name="end_exam_form" type="submit" value="End At" class="exam-button" /><br />
+                              <input id="end_exam_button" name="end_exam_form" type="submit" value="<?php echo $string['endat_but'] ?>" class="exam-button" /><br />
                               <?php echo $string['time'] ?>:<select id="hour" name="hour">
                                   <?php for($hr=0; $hr<24; $hr++) { $selected = ''; if($hr == $end_time_h) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . str_pad($hr, 2, '0', STR_PAD_LEFT) . '</option>'; } ?>
                               </select>
@@ -759,11 +759,11 @@ if ($properties_list !== false and count($properties_list) > 0) {
                                 <?php for($hr=0; $hr<60; $hr++) { $selected = ''; if($hr == $end_time_m) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . str_pad($hr, 2, '0', STR_PAD_LEFT) . '</option>'; } ?>
                               </select>
                             </fieldset>
-                          <?php
+                          <?php                          
                             } else {
                           ?>
                             <fieldset id="start_exam">
-                              <input id="start_exam_button" name="start_exam_form" type="submit" value="Start" class="exam-button" />
+                              <input id="start_exam_button" name="start_exam_form" type="submit" value="<?php echo $string['start_but'] ?>" class="exam-button" />
                             </fieldset>
                           <?php
                             }
