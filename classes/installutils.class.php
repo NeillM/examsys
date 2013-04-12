@@ -1185,6 +1185,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         .h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:98%}
         td.line {width:98%}
         input {width:200px}
+        input[type="text"] {margin:0px}
+        select {margin:0px; padding:0px}
         form {padding:1em}
         form div {padding-left:2em}
       </style>

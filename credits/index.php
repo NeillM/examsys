@@ -32,31 +32,30 @@
   <title><?php echo $string['credits']; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {background-image:url('./background.jpg')}
+    body {background-image:url('./background.jpg'); line-height:100%}
   </style>
 </head>
 <body>
 
-<div style="position:absolute; top:12px; left:25px">
+<div style="position:absolute; top:12px; left:25px; width:300px">
   <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
-  <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogō</div>
+  <div style="color:#1F497D; font-size:30pt; font-weight:bold; line-height:110%">Rogō</div>
   <div style="color:#1F497D; font-size:9pt">eAssessment Management System</div>
 </div>
 
 <div style="position:absolute; top:10px; left:510px"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="University of Nottingham" /></div>
 
-<div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:5px">
-<br />
+<div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:10px">
 <br />
 <p>Rogō <?php echo $configObject->get('rogo_version') . ' ' . $string['msg']; ?></p>
-<br />
 <table cellpadding="0" cellspacing="0" border="0" style="width:650px">
-<tr><td style="vertical-align:top; width:250px">
+<tr><td style="vertical-align:top; width:240px">
 <strong><?php echo $string['designprogramming']; ?></strong><br />
 Dr Simon Wilkinson<br />
 Dr Rob Ingram<br />
 Anthony Brown<br />
 Simon Atack<br />
+Ben Parish<br />
 <br />
 <strong>Flash</strong><br />
 Fay Cross<br />
@@ -92,8 +91,7 @@ Dr Nikodem Miranowicz</td>
 </td>
 </tr>
 </table>
-<br />
-<br />
+
 <input type="button" value="OK" name="<?php echo $string['ok']; ?>" style="width:100px" onclick="window.close()" />
 </div>
 

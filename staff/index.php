@@ -81,8 +81,8 @@ require_once '../include/staff_auth.inc';
     }
 
     function displayCredits(){
-      notice=window.open("../credits/index.php","credits","width=696,height=500,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
-      notice.moveTo(screen.width/2-350,screen.height/2-250)
+      notice=window.open("../credits/index.php","credits","width=696,innerwidth=708,height=510,innerheight=560,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
+      notice.moveTo(screen.width/2-350,screen.height/2-255)
       if (window.focus) {
         notice.focus();
       }
