@@ -244,7 +244,9 @@ require_once '../include/staff_auth.inc';
   if (!isset($_GET['folder']) OR $_GET['folder'] == '') {
     echo "<br />\n";
     // -- Display module folders ------------------------------------
-    $module_no = count($modules_array);
+    $staff_team_array = $userObject->get_staff_team_modules();
+
+    $module_no = count($staff_team_array);
     if ($userObject->has_role('Admin')) $module_no++;
 
     echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['mymodules'] . " ($module_no)</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
@@ -253,9 +255,9 @@ require_once '../include/staff_auth.inc';
     } elseif ($userObject->has_role('Admin')) {
       echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></td></tr></table></div>\n";
     }
-    foreach ($modules_array as $folder_title => $url) {
-	    $title_parts = explode(' - ',$folder_title);
-	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"$url\" class=\"blacklink\">" . $title_parts[0] . "</a><br /><span style=\"color:#808080\">" . $title_parts[1] . "</span></td></tr></table></div>\n";
+    foreach ($staff_team_array as $idMod => $folder_title) {
+      $url = '../folder/details.php?module=' . $idMod;
+	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span style=\"color:#808080\">" . $folder_title['fullName'] . "</span></td></tr></table></div>\n";
     }
 
     if ($module_no == 0) {

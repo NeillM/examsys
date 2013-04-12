@@ -18,14 +18,6 @@
 /**
  * UserObject Class
  *
- * @author Simon Atack
- * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
- * @package
- */
-
-/**
- *
  * class for the currently logged in user and any functions related to this
  *
  * @author Simon Atack
@@ -40,7 +32,6 @@ require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 class UserObject extends RogoStaticSingleton {
 
-  // include old variables as private ones in this class
   /**
    * @var
    */
@@ -49,7 +40,7 @@ class UserObject extends RogoStaticSingleton {
   protected static $dont_construct = true;
   private $password, $userID, $userroles, $title, $initials, $first_names, $surname, $username, $email, $grade, $year, $special_needs, $special_needs_percentage, $record_no, $split_username;
   private $demomode = false;
-  private $roles, $staffModules, $studentModules, $db, $configObj;
+  private $roles, $staffModules, $staffTeamModules, $studentModules, $db, $configObj;
 
   // Special needs variables
   private $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unanswered;
@@ -248,6 +239,27 @@ class UserObject extends RogoStaticSingleton {
 
     return $this->staffModules;
   }
+  
+  /**
+   * get the staff members teams only (not a list of all modules thay can access 
+   * just their temas) used in /staff/index.php
+   * 
+   * @return false if not staff else an array of the modules by id with idMod 
+   *         and fullName
+   */
+  function get_staff_team_modules() {
+
+    if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+      //this is not a staff user so it cant be on any modules
+      return false;
+    }
+
+    if (count($this->staffTeamModules) < 1) {
+      $this->load_staff_team_modules();
+    }
+
+    return $this->staffTeamModules;
+  }
 
   function has_metadata($modIDs, $security_type, $security_value) {
     if (count($modIDs) == 0) return false;
@@ -330,6 +342,29 @@ class UserObject extends RogoStaticSingleton {
     $result->close();
     
     return $this->staffModules;
+  }
+  
+  /**
+   * loads the modules a staff member is explicitly on the team for
+   * used in /staff/index.php
+   * 
+   * @return array the staff module list
+   */
+  function load_staff_team_modules() {
+    $this->staffTeamModules = array();
+
+    $result = $this->db->prepare("SELECT idMod, moduleID, fullname FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID");
+    $result->bind_param('i', $this->userID);
+    $result->execute();
+    
+    $result->bind_result($idMod, $moduleID, $fullName);
+    while ($result->fetch()) {
+      $this->staffTeamModules[$idMod]['code'] = $moduleID;
+      $this->staffTeamModules[$idMod]['fullName'] = $fullName;
+    }
+    $result->close();
+    
+    return $this->staffTeamModules;
   }
 
   /**
@@ -471,7 +506,8 @@ class UserObject extends RogoStaticSingleton {
     return $staff_modules_list;
   }
 
-  /** loads the student modules
+  /** 
+   * loads the student modules
    *
    * @return array the student module list //TODO probably dont need the return
    */
@@ -689,7 +725,6 @@ class UserObject extends RogoStaticSingleton {
         }
       }
     }
-
-
   }
+  
 }
