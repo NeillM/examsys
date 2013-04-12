@@ -22,11 +22,10 @@
 * @package
 */
 
-require '../include/sysadmin_auth.inc';  
+require '../include/staff_auth.inc';  
 require '../include/errors.inc';
 
-$moduleID = check_var('module', 'REQUIRE', true, false, true);
-  
+$moduleID = check_var('module', 'REQUEST', true, false, true);
 if (isset($_POST['submit'])) {
   $session = $_POST['session'];
   $session_flag = false;
