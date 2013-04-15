@@ -93,7 +93,7 @@ function redirect($userObj, $q_id, $configObj, $db) {
     $url =  $url_prefix . "/staff/index.php";
   }
   header($url);
-  $mysqli->close();
+  $db->close();
   exit;   // Stop script execution after the redirect.
 }
 
