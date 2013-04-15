@@ -79,5 +79,9 @@ $string['authentication_lti_reauthmessage'] = 'Zaloguj się, aby ponownie uwierz
 $string['lti_not_allow_add_selfreg'] = 'Automatyczne dodawanie studentów do tego typu modułu nie zostało umożliwione w kofiguracji modułu: '; 
 
 $string['denied_role'] = 'Twoja rola użytkownika - %s - nie daje ci prawa dostępu.';
+$string['Error'] = 'Błąd';
+$string['NoAcademicSession'] = 'Nie określono sesji akademickiej.';
+$string['NoFieldMetadata'] = 'W metadanych brakuje pola dla grup.';
+$string['NoGroup'] = 'Nie znaleziono żadnej grupy dla aktualnego użytkownika.';
 
 ?>

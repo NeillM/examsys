@@ -79,6 +79,10 @@ $string['authentication_lti_reauthmessage'] = 'Please Login to re-authenticate t
 $string['lti_not_allow_add_selfreg'] = 'Automatic adding of students on this type of module hasnt been enabled in the config for module: ';
 
 $string['denied_role'] = 'Your user role of %s does not allow you access.';
+$string['Error'] = 'Error';
+$string['NoAcademicSession'] = 'No Academic Session is set.';
+$string['NoFieldMetadata'] = 'No field in the metadata set for groups.';
+$string['NoGroup'] = 'No Group can be found for the current user.';
 
 
 ?>

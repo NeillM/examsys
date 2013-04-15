@@ -96,11 +96,11 @@ $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize
 $modules = Paper_utils::get_modules($property_id, $mysqli);
 
 if ($calendar_year == '') {
-  display_error('Error', 'No Academic Session is set.', false, true);
+  display_error($string['Error'], $string['NoAcademicSession'], false, true);
 }
 
 if ($type == '') {   // What metadata field to use.
-  display_error('Error', 'No field in the metadata set for groups.', false, true);
+  display_error($string['Error'], $string['NoFieldMetadata'], false, true);
 }
 
 //get lab info
@@ -188,7 +188,7 @@ if ($userObject->has_role('Student')) {
 }
 
 if ($group == '') {
-  display_error('Error', 'No Group can be found for the current user.', true, true);
+  display_error($string['Error'], $string['NoGroup'], true, true);
 }
 
 if (isset($_POST['submit'] )) {

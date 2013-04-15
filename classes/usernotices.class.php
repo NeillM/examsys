@@ -57,11 +57,12 @@ Class user_notices extends RogoStaticSingleton {
   public function display_notice($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
     $configObject = Config::get_instance();
     $rp = $configObject->get('cfg_root_path');
+    $cs = $configObject->get('cfg_page_charset');
     
     if ($output_header == true) {
       echo "<html>\n";
       echo "<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
-      echo "<meta http-equiv=\"content-type\" content=\"text/html;charset={$rp}\" />\n";
+      echo "<meta http-equiv=\"content-type\" content=\"text/html;charset={$cs}\" />\n";
       echo "<title>$title</title>\n";
       echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/body.css\" />\n";
       echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/notice.css\" />\n";
