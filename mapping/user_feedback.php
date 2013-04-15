@@ -267,8 +267,17 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
             $objectives[$id]['chort_mark_sum'] = $chort_question_data[$q_id]['mark'];
           }
         }
-        $objectives[$id]['ratio'] = $objectives[$id]['mark_sum']/$objectives[$id]['totalpos_sum'];
-        $objectives[$id]['chort_ratio'] = $objectives[$id]['chort_mark_sum'] / $objectives[$id]['chort_totalpos_sum'];
+        if ($objectives[$id]['totalpos_sum'] == 0) {
+          $objectives[$id]['ratio'] = 0;
+        } else {
+          $objectives[$id]['ratio'] = $objectives[$id]['mark_sum'] / $objectives[$id]['totalpos_sum'];
+        }
+        
+        if ($objectives[$id]['chort_totalpos_sum'] == 0) {
+          $objectives[$id]['chort_ratio'] = 0;
+        } else {
+          $objectives[$id]['chort_ratio'] = $objectives[$id]['chort_mark_sum'] / $objectives[$id]['chort_totalpos_sum'];
+        }
       }
     }
     $objectives = array_csort($objectives, 'ratio', 'desc');
