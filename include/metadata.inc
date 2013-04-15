@@ -28,7 +28,8 @@
   
   function render_metadata($mysqlidb, $question, $bloom_on, $module, $disabled, &$string, $userObj) {
     global $staff_modules, $faculty;
-
+  
+    $configObject = Config::get_instance(); 
     $current_status = ($question->get_status() == '') ? $string['normal'] : $question->get_status();
     
     $html = <<< META
@@ -150,7 +151,7 @@ META;
             $checked = ' checked="checked"';
             $on = ' on';
           }
-          $enc_keyword = htmlentities($keyword['keyword']);
+          $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, $configObject->get('cfg_page_charset'));
           $html .= <<< META
       						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$enc_keyword}</label></li>
 
@@ -177,7 +178,7 @@ META;
             $checked = ' checked="checked"';
             $on = ' on';
           }
-          $enc_keyword = htmlentities($keyword['keyword']);
+          $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, $configObject->get('cfg_page_charset'));
           $html .= <<< META
       						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$enc_keyword}</label></li>
           
@@ -234,7 +235,7 @@ HEADING;
         $on = ' on';
       }
             
-      $enc_name = htmlentities($fullname);
+      $enc_name = htmlentities($fullname, ENT_COMPAT, $configObject->get('cfg_page_charset'));
       $html .= <<< META
                 	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_idMod}" type="checkbox"{$checked} /> {$team_name}: {$enc_name}</label></li>
 
