@@ -420,7 +420,7 @@ class UoN_LTI extends BLTI {
   function add_lti_user($lti_user_equ, $lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_user (lti_user_key, lti_user_equ,updated_on) VALUES (?,?,NOW()) ON DUPLICATE KEY ");
+      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_user (lti_user_key, lti_user_equ,updated_on) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE updated_on=NOW()");
       $result->bind_param('ss', $lti_user_key, $lti_user_equ);
       $result->execute();
       $ret = $this->db->insert_id;
