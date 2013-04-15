@@ -28,19 +28,22 @@
 Class LangUtils {
 
   static function getLang($web_root) {
-    $langs = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
     $language = '';
-    $i = 0;
+    
+    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {  // Check this is set as some webservices do not have this data.
+      $langs = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+      $i = 0;
 
-    while ($i < count($langs) and $language == '') {
-      $parts = explode(';', $langs[$i]);
-      $test_lang = $parts[0];
-      if (file_exists($web_root . "/lang/" . substr($test_lang, 0, 5) . "/")) {
-        $language = substr($test_lang, 0, 5);
-      } elseif (file_exists($web_root . "/lang/" . substr($test_lang, 0, 2) . "/")) {
-        $language = substr($test_lang, 0, 2);
+      while ($i < count($langs) and $language == '') {
+        $parts = explode(';', $langs[$i]);
+        $test_lang = $parts[0];
+        if (file_exists($web_root . "/lang/" . substr($test_lang, 0, 5) . "/")) {
+          $language = substr($test_lang, 0, 5);
+        } elseif (file_exists($web_root . "/lang/" . substr($test_lang, 0, 2) . "/")) {
+          $language = substr($test_lang, 0, 2);
+        }
+        $i++;
       }
-      $i++;
     }
 
     if ($language == '') $language = 'en'; // Default to English if no languages found
