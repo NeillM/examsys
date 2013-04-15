@@ -440,7 +440,7 @@ if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
   }
   if ($rating != $_POST["old$log_id"]) {
     $std_query = "INSERT INTO track_changes VALUES (NULL, 'Edit Question', ?, ?, ?, ?, ?, 'Std Setting')";
-    $result = $mysqli->prepare();
+    $result = $mysqli->prepare($std_query);
     $t0 = $_POST["old$log_id"];
     $result->bind_param('iisss', $log_id, $userObject->get_user_ID(), $t0, $rating, $now);
     $result->execute();
