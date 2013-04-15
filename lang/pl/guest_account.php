@@ -29,5 +29,7 @@ $string['surname'] = 'Nazwisko';
 $string['studentid'] = 'Numer legitymacji';
 $string['denied_msg'] = 'Ta strona jest dostępna tylko z komputerów uniwersyteckich znajdujących się w pomieszczeniu egzaminacyjnym.';
 $string['cannotfindexams'] = 'Rogō nie odnalazło żadnego egzaminu';
-$string['msg'] = 'Zanotuj przedstawione poniżej detale logowania na wypadek koniczności restartu komputera w czasie egzaminu.';  
+$string['msg'] = 'Zanotuj przedstawione poniżej detale logowania na wypadek koniczności restartu komputera w czasie egzaminu.'; 
+$string['enterfirstname'] = "Wpisz imię.";
+$string['entersurname'] = "Wpisz nazwisko.";
 ?>

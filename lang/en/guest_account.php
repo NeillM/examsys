@@ -30,4 +30,6 @@ $string['studentid'] = 'Student ID';
 $string['denied_msg'] = 'This page can only be accessed from a university computer within the examination room.';
 $string['cannotfindexams'] = 'Rogō cannot find any Exams';
 $string['msg'] = 'Please write down the log in details below in case you have to restart your computer half way through the exam.';
+$string['enterfirstname'] = "Please enter your first name.";
+$string['entersurname'] = "Please enter your surname.";
 ?>

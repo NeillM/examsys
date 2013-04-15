@@ -151,12 +151,12 @@ if (isset($_POST['submit'])) {
   <script language="JavaScript">
     function checkForm() {
       if (document.getElementById('first_names').value == '') {
-        alert("Please enter your first name.");
+        alert("<?php echo $string['enterfirstname']; ?>");
         return false;
       }
       
       if (document.getElementById('surname').value == '') {
-        alert("Please enter your surname.");
+        alert("<?php echo $string['entersurname']; ?>");
         return false;
       }
       
