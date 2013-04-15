@@ -1167,7 +1167,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
   echo '<tr><td id="tab8" class="button_off" style="display:none">&nbsp;' . $string['referencematerial'] . '</td></tr>';
 }
 ?>
-<tr><td id="tab9" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab9')" onmouseout="buttonout('tab9')" onclick="buttonclick('changes','tab9')">&nbsp;Changes</td></tr>
+<tr><td id="tab9" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab9')" onmouseout="buttonout('tab9')" onclick="buttonclick('changes','tab9')">&nbsp;<?php echo $string['changes']; ?></td></tr>
 </table>
 
 </td>

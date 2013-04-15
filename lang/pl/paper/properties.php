@@ -135,6 +135,7 @@ $string['message'] = 'Wiadomość';
 $string['answerscreensettings'] = 'Ustawienia ekranu odpowiedzi';
 
 // Changes tab
+$string['changes'] = 'Zmiany';
 $string['changesheading'] = 'Lista zmian dokonanych w aktualnym arkuszu.'; 
 $string['part'] = 'Część';
 $string['old'] = 'Poprzednio';

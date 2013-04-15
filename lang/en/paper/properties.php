@@ -135,6 +135,7 @@ $string['message'] = 'Message';
 $string['answerscreensettings'] = 'Answer Screen Settings';
 
 // Changes tab
+$string['changes'] = 'Changes';
 $string['changesheading'] = 'List of changes to the current paper.';
 $string['part'] = 'Part';
 $string['old'] = 'Old';
