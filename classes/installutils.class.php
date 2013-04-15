@@ -999,16 +999,45 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   }
 
   /**
-  * Check that we do not have a config file and that we can write one
+  * Check that  config file is writeable
   *
   */
   static function configFileIsWriteable() {
-    global $string;
+    
+    $rogo_path = '';
+    
+    if (strpos('/install/index.php',$_SERVER['SCRIPT_FILENAME'])  !== false) {
+      $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    }
+    
+    if (strpos('/updates/version4.php',$_SERVER['SCRIPT_FILENAME']) !== false) {
+      $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+    }
 
-    $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
-    $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
-    $errors = array();
     if (is_writable($rogo_path . '/config/config.inc.php')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  /**
+  * Check that we write to the /config/ dir 
+  *
+  */
+  static function configPathIsWriteable() {
+
+    $rogo_path = '';
+
+    if (strpos('/install/index.php',$_SERVER['SCRIPT_FILENAME'])  !== false) {
+      $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    }
+    
+    if (strpos('/updates/version4.php',$_SERVER['SCRIPT_FILENAME']) !== false) {
+      $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+    }
+    
+    if (is_writable($rogo_path . '/config')) {
       return true;
     } else {
       return false;

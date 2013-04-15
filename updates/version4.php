@@ -124,11 +124,17 @@ if (!isset($_POST['update'])) {
   <?php
   if (!InstallUtils::configFileIsWriteable()) {
     ?>
-  <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get('rogo_version') . ' to ' . $version; ?></h2>
-  <div><?php echo $string['warning1']; ?></div>
-  <div><?php echo $string['warning1']; ?></div>
+    <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get('rogo_version') . ' to ' . $version; ?></h2>
+    <div><?php echo $string['warning1']; ?></div>
+    <div><?php echo $string['warning2']; ?></div>
     <?php
-  } else {
+  } else if (!InstallUtils::configPathIsWriteable()) {
+    ?>
+    <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get('rogo_version') . ' to ' . $version; ?></h2>
+    <div><?php echo $string['warning3']; ?></div>
+    <div><?php echo $string['warning4']; ?></div>
+    <?php
+  }else {
     ?>
   <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <div><?php printf($string['msg1'], $version); ?></div>
@@ -3985,7 +3991,13 @@ SQL;
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.textbox_remark TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
-
+  
+  //brzab3 15/04/2013 - Add new grants for student users needing SELECT, INSERT from modules_student
+  if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'modules_student', $cfg_db_host)) {
+    $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $updater_utils->execute_query($sql, true);
+  }
+  
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */
