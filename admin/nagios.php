@@ -1,4 +1,4 @@
-<?php 
+<?php
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,29 +15,44 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Script used by Nagios to check the service is running
-* 
-* @author Anthony Brown 
+*
+* @author Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
-*/ 
+*/
   require "../include/load_config.php";
   require_once $cfg_web_root . 'classes/dbutils.class.php';
+  require_once $cfg_web_root . 'classes/usernotices.class.php';
   $error = false;
-  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
+  $notice = UserNotices::get_instance();
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
   if (mysqli_connect_error()) {
-    echo "ERROR::Can not Connect to MySQL on $cfg_db_host";
+    echo "ERROR::Can not Connect to MySQL on " . $configObject->get('cfg_db_host');
     $error = true;
   }
-  
-  $ldap = ldap_connect( $cfg_ldap_server );
-  if (!ldap_bind( $ldap ) ) {
-    echo "ERROR::Can not Connect to LDAP @ $cfg_ldap_server";
-    $error = true;
+
+  $cfg_ldap_server = '';
+  $auth_array = $configObject->get('authentication');
+  foreach ($auth_array as $auth_settings) {
+    if ($auth_settings[0] == 'ldap') {
+      $cfg_ldap_server = $auth_settings[1]['ldap_server'];
+    }
   }
-  
+
+  if ($cfg_ldap_server == '') {
+    echo "ERROR::No LDAP server defined";
+    $error = true;
+  } else {
+    $ldap = ldap_connect($cfg_ldap_server);
+    if (!ldap_bind( $ldap ) ) {
+      echo "ERROR::Can not Connect to LDAP @ ". $cfg_ldap_server;
+      $error = true;
+    }
+  }
+
   if (!$error) {
     echo "OK";
   }
