@@ -428,7 +428,7 @@ if ($mysqli->error) {
 
 if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
   $std_query = "UPDATE questions SET std = ? WHERE q_id = ?";
-  $result = $mysqli->prepare();
+  $result = $mysqli->prepare($std_query);
   $result->bind_param('si', $rating, $log_id);
   $result->execute();
   $result->close();
