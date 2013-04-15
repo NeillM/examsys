@@ -46,6 +46,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
     body {font-size:90%}
     h1 {margin-left:15px; font-size:18pt}
@@ -138,8 +139,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
 
     //Display the feedback
     ?>
-    <br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" width="95%" style="background-color:#E4EEFC; border:1px solid #B5C4DF">
-    <tr><td style="text-align:left"><table cellpadding="2" cellspacing="0" border="0">
+    <br /><div class="key"><table cellpadding="2" cellspacing="0" border="0">
     <?php
       echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['totalcandidate'] . '</td><td>' . number_format($user_total) . '</td></tr>';
       if ($_GET['percent'] != 100 and $_GET['percent'] != '') {
@@ -154,7 +154,6 @@ $enddate = check_var('enddate', 'GET', true, false, true);
     <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/minor_comment.png" width="16" height="16" alt="<?php echo $string['partically']; ?>" /></td><td><?php echo $string['key2']; ?></td></tr>
     <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/major_comment.png" width="16" height="16" alt="<?php echo $string['mostly']; ?>" /></td><td><?php echo $string['key3']; ?></td></tr>
     <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/small_link.png" width="12" height="12" alt="<?php echo $string['shortcut']; ?>" /></td><td><?php echo $string['key4']; ?></td></tr>
-    </table></td></tr>
     </table></div>
     <h1><?php echo $string['learningobjectives']; ?></h1>
     <p><?php printf($string['msg'], count($objectives)); ?></p>
