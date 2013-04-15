@@ -91,8 +91,8 @@ Class QuestionUtils {
   static function clean_leadin($leadin) {
     if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false) {
       $leadin = strip_tags($leadin);                                     // No equation, strip all tags
-      if (strlen($leadin) > 160) {
-        $leadin = substr($leadin, 0, 160) . '...';
+      if (mb_strlen($leadin) > 160) {
+        $leadin = mb_substr($leadin, 0, 160) . '...';
       }
     } else {
       $leadin = trim(str_replace('&nbsp;',' ', $leadin));
