@@ -1003,9 +1003,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   *
   */
   static function configFileIsWriteable() {
-    
-    var_dump($_SERVER);
-    
+        
     $rogo_path = '';
     
     if (strpos($_SERVER['SCRIPT_FILENAME'], '/install/index.php')  !== false) {
