@@ -162,19 +162,24 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   </style>
 </head>
 <body>
-    <table style="position:relative; border: 1px solid #808080; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); z-index:10; float:right; top:10px; right:10px; font-size:90%; background-color:#FFFFEE; margin-bottom:8px">
-    <tr><td colspan="2" style="padding-left:10px; padding-right:10px"><strong><?php echo $string['key']; ?></strong></td></tr>
-    <tr><td style="padding-left:10px"><img src="../artwork/ok_comment.png" width="16" height="16" alt="Completely/Mostly acquired" /></td><td style="padding-right:10px"><?php echo $string['greenicon']; ?></td></tr>
-    <tr><td style="padding-left:10px"><img src="../artwork/minor_comment.png" width="16" height="16" alt="Partically acquired" /></td><td style="padding-right:10px"><?php echo $string['ambericon']; ?></td></tr>
-    <tr><td style="padding-left:10px"><img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /></td><td style="padding-right:10px"><?php echo $string['redicon']; ?></td></tr>
-    <tr><td style="padding-left:10px" colspan="2"><?php echo $string['relativekey']; ?></td></tr>
-    <tr><td style="padding-left:10px" colspan="2"><?php echo $string['question']; ?></td></tr>
+    <table style="position:relative; border: 1px solid #808080; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); z-index:10; float:right; top:10px; right:10px; font-size:90%; background-color:#FFFFEE; margin-bottom:8px; padding-left:6px; padding-right:6px">
+    <tr><td><img src="../artwork/ok_comment.png" width="16" height="16" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon']; ?></td></tr>
+    <tr><td><img src="../artwork/minor_comment.png" width="16" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon']; ?></td></tr>
+    <tr><td><img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon']; ?></td></tr>
+    <tr><td colspan="2"><?php echo $string['relativekey']; ?></td></tr>
+    <tr><td colspan="2"><?php echo $string['question']; ?></td></tr>
     </table>
   <?php
-  echo "<table class=\"header\" style=\"position:absolute; top:0px; left:0px; font-size:90%\">\n";
+  echo "<div style=\"position:absolute; top:0px; left:0px; font-size:90%\">\n";
+  echo "<table class=\"header\">\n";
   echo "<tr><th style=\"padding:10px\"><div style=\"font-size:220%; font-weight:bold\">$paper_title</div>\n";
   echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th></tr>\n";
   echo "<tr><th class=\"bevel\"></th></tr>\n";
+  
+  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and !isset($_GET['userID'])) {
+    echo "<tr><td class=\"yellowwarn\"><div style=\"margin-left:10px\">" . $string['staffmsg'] . "</div></td></tr>\n";
+  }
+
 
   //get Cohort Data
   $tmp_start_date  = DateTime::createFromFormat('U', $start_date);
@@ -296,17 +301,13 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
 
   //Display the feedback
   ?>
-  <br />
-  <br />
-  <br />
-  <br />
   <h1><?php echo $string['learningobjectives']; ?></h1>
   <p><?php echo $string['explanation']; ?></p>
   <?php
 
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; line-height:150%\">\n";
   echo "<tr><td style=\"border-top: 1px solid #D6E5F5\">&nbsp;</td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td colspan=\"3\" style=\"border-top: 1px solid #D6E5F5; color:#1E3287\">&nbsp;<nobr>" . $string['yourmark'] . "&nbsp;</nobr></td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287\">&nbsp;" . $string['relative'] . "&nbsp;</td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287\"><nobr>&nbsp;" . $string['qno'] . "&nbsp;</nobr></td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287; text-align:center\">" . $string['objective'] . "</td></tr>";
-  foreach($objectives as $id => $obj_data) {
+  foreach ($objectives as $id => $obj_data) {
     $session_string = '';
     if ($obj_data['ratio'] >= 0.8) {
      $img_src = '../artwork/ok_comment.png';
@@ -326,7 +327,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     }
     if ($comparison == 0) {
       $comparison = '0';
-    } else if($comparison > 0) {
+    } elseif ($comparison > 0) {
       $comparison = '+' . $comparison;
     } else {
       $comparison = $comparison;
@@ -351,7 +352,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     echo "<tr><td>" . $string['examlength'] . "</td><td>" . formatsec($exam_duration * 60) . "</td></tr>\n";
     echo "<tr><td>" . $string['timespent'] . "</td><td>" . formatsec($time_spent) . "</td></tr>\n";
   }
-  echo "</table>\n";
+  echo "</table>\n</div>\n";
 
   $mysqli->close();
 ?>

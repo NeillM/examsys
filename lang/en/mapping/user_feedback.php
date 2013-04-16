@@ -31,6 +31,7 @@ $string['examlength'] = 'Exam Length';
 $string['timespent'] = 'Time spent';
 $string['outof'] = 'out&nbsp;of';
 $string['adjusted'] = 'adjusted';
+$string['staffmsg'] = 'To see feedback for specific students please access via the Class Totals report.';
 
 // Key
 $string['key'] = 'Key';

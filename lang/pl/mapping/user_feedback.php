@@ -31,6 +31,7 @@ $string['examlength'] = 'Czas trwania egzaminu';
 $string['timespent'] = 'Czas wykorzystany';
 $string['outof'] = 'z';
 $string['adjusted'] = 'skorygowany';
+$string['staffmsg'] = 'To see feedback for specific students please access via the Class Totals report.';
 
 // Key
 $string['key'] = 'Legenda';
