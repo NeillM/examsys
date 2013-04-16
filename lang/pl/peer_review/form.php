@@ -20,4 +20,9 @@ $string['peerreview'] = 'Recenzja wewnętrzna';
 $string['Reviewer'] = 'Recenzent';
 $string['save'] = 'Zachowaj';
 $string['close'] = 'Zamknij';
+$string['Review Form'] = 'Formularz recenzji';
+$string['Student Profile'] = 'Profil Studenta';
+$string['Group'] = 'Grupa';
+$string['Thank You'] = 'Dziękujemy';
+$string['The ratings saved'] = 'Twoja ocena wzajemna została zapisana.';
 ?>

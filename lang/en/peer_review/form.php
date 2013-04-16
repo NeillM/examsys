@@ -20,4 +20,9 @@ $string['peerreview'] = 'Peer Review';
 $string['Reviewer'] = 'Reviewer';
 $string['save'] = 'Save';
 $string['close'] = 'Close';
+$string['Review Form'] = 'Review Form';
+$string['Student Profile'] = 'Student Profile';
+$string['Group'] = 'Group';
+$string['Thank You'] = 'Thank You';
+$string['The ratings saved'] = 'The ratings of your peers have been saved.';
 ?>

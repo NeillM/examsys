@@ -302,10 +302,10 @@ if (isset($_POST['submit'] )) {
     <tr><td>
       <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
         <tr>
-          <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="/artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();">Review Form</td>
+          <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="/artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['Review Form']; ?></td>
         </tr>
         <tr>
-          <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><img src="/artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();">Student Profile</td>
+          <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><img src="/artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><?php echo $string['Student Profile']; ?></td>
         </tr>
       </table>
     </td></tr>
@@ -313,15 +313,15 @@ if (isset($_POST['submit'] )) {
   </div>
   <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ' . $group . '</strong></div></td></tr></table>';
+  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$string['Group'].':</strong> ' . $group . '</strong></div></td></tr></table>';
   
   if ($language == 'en') {
-    echo '<p style="margin-left:10px; font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank You</p>';
+    echo '<p style="margin-left:10px; font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">'.$string['Thank You'].'</p>';
   } else {
     // Do not use fancy fonts for foreign lanuages due to extended character support issues.
-    echo '<p style="margin-left:10px; font-size:450%">Thank You</p>';
+    echo '<p style="margin-left:10px; font-size:450%">'.$string['Thank You'].'</p>';
   }
-  echo '<p style="margin-left:10px">The ratings of your peers have been saved.</p>';
+  echo '<p style="margin-left:10px">'.$string['The ratings saved'].'</p>';
 } else {
   // Get existing values.
   $saved_results = array();
@@ -366,7 +366,7 @@ if (isset($_POST['submit'] )) {
   echo "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\">\n";
 
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ';
+  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$string['Group'].':</strong> ';
   if ($userObject->has_role('Student')) {
     echo $group;
   } else {
@@ -449,7 +449,7 @@ if (isset($_POST['submit'] )) {
   if ($userObject->has_role('Student')) {
     echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" style=\"width:100px\" />";
   } else {
-    echo "<input type=\"button\" name=\"close\" value=\"".$string['close']."\" style=\"width:100px\" onclick=\"window.close();\" />";
+    echo "<input type=\"button\" name=\"close\" value=\"" . $string['close'] . "\" style=\"width:100px\" onclick=\"window.close();\" />";
   }
   echo "</td></tr>\n";
   echo "</table>\n</form>\n";
