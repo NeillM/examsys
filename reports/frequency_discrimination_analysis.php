@@ -123,8 +123,6 @@ function dStats($value, $qid, $part_no) {
 }
 
 function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i, $keys) {
-  global $q_id;
-
   $top_key_value = 0;
   $bottom_key_value = 0;
 
