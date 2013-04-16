@@ -471,8 +471,8 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
   //START:: get the currently mapped objectives in Rogo.
   $mapped = array();
   if ($questionID != '') {
-    $original_thisModuleid_in = "'" . implode("','", array_keys($original_thisModuleid)) . "'";
-    if ($result = $db->prepare("SELECT obj_id, question_id FROM relationships WHERE idMod IN($original_thisModuleid_in) AND paper_id=? AND calendar_year=? AND question_id IN ($questionID) AND vle_api=?")) {
+    $original_thisModuleid_in = implode(',', array_keys($original_thisModuleid));
+    if ($result = $db->prepare("SELECT obj_id, question_id FROM relationships WHERE idMod IN ($original_thisModuleid_in) AND paper_id = ? AND calendar_year = ? AND question_id IN ($questionID) AND vle_api = ?")) {
       $result->bind_param('iss', $paperID, $session, $vle_api);
       $result->execute();
       $result->bind_result($obj_id, $question_id);

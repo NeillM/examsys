@@ -26,6 +26,8 @@
 
 require_once $cfg_web_root . 'include/sidebar_menu.inc';
 require_once $cfg_web_root . 'include/sidebar_functions.inc';
+require_once $cfg_web_root . 'include/mapping.inc';
+
 require_once $cfg_web_root . 'classes/paperutils.class.php';
 require_once $cfg_web_root . 'classes/paperproperties.class.php';
 
@@ -481,7 +483,7 @@ if ($properties->get_paper_type() == '2') {
         $internal_array[$tmp_internal] = 0;
       }
 
-      $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal' GROUP BY reviewer, reviewed");
+       $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal' GROUP BY reviewer, reviewed");
       $stmt->bind_param('i', $_GET['paperID']);
       $stmt->execute();
       $stmt->bind_result($review_records, $reviewer);
@@ -576,16 +578,49 @@ if ($properties->get_paper_type() == '2') {
   // Mapped
   if (strpos($checklist, 'mapping') !== false) {
     $mappings_complete = 0;
-    $stmt = $mysqli->prepare("SELECT DISTINCT question_id FROM relationships WHERE paper_id = ?");
-    $stmt->bind_param('i', $_GET['paperID']);
+    $tmp_session = $properties->get_calendar_year();
+    
+    $question_list = array();
+    $stmt = $mysqli->prepare("SELECT question FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id AND q_type != 'info'");
+    $stmt->bind_param('i', $paperID);
     $stmt->execute();
     $stmt->bind_result($questionID);
     while ($stmt->fetch()) {
-      if (isset($question_list[$questionID]) and $question_list[$questionID] === 0) {
-        $mappings_complete++;
+      $question_list[$questionID] = $questionID;
+    }
+    $stmt->close();
+    $tmp_question_list = implode(',', array_keys($question_list));
+    
+    $objIDs = array();
+    
+    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
+    $objsBySession = getObjectives($moduleIDs, $tmp_session, $paperID, $tmp_question_list, $mysqli);
+    foreach ($objsBySession as $moduleCode) {
+      foreach ($moduleCode as $sessionID) {
+        if (isset($sessionID['objectives'])) {
+          foreach ($sessionID['objectives'] as $objective) {
+            $ID = $objective['id'];
+            $objIDs[$ID] = $ID;
+          }
+        }
+      }
+    }
+    
+    $mappings = array();
+
+    $stmt = $mysqli->prepare("SELECT question_id, obj_id FROM relationships WHERE paper_id = ? AND calendar_year = ?");
+    $stmt->bind_param('is', $paperID, $tmp_session);
+    $stmt->execute();
+    $stmt->bind_result($questionID, $obj_id);
+    while ($stmt->fetch()) {
+      if (isset($question_list[$questionID]) and isset($objIDs[$obj_id])) {
+        $mappings[$questionID] = $questionID;
       }
     }
     $stmt->close();
+    
+    $mappings_complete = count($mappings);
+    
     if ($mappings_complete < $properties->get_question_no()) {
       if ($mappings_complete == 0) {
         $tmp_color = '#C00000';

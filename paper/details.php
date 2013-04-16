@@ -519,31 +519,30 @@ $result->close();
   }
   $result->close();
 
-  $old_p_id = 0;
-  $row_no = 0;
-  $row_no2 = 0;
-  $old_display_pos = -1;
-  $temp_array = array();
-  $latex = 0;
-  $old_q_id = 0;
-  $old_q_type  = '';
-  $old_marks  = 0;
-  $old_option_text = array();
-  $old_o_media = array();
-  $old_correct  = '';
+  $old_p_id           = 0;
+  $row_no             = 0;
+  $row_no2            = 0;
+  $old_display_pos    = -1;
+  $temp_array         = array();
+  $latex              = 0;
+  $old_q_id           = 0;
+  $old_q_type         = '';
+  $old_marks          = 0;
+  $old_option_text    = array();
+  $old_o_media        = array();
+  $old_correct        = '';
   $old_display_method = '';
-  $old_score_method  = '';
-  $old_q_media  = '';
-  $old_q_media_width = '';
+  $old_score_method   = '';
+  $old_q_media        = '';
+  $old_q_media_width  = '';
   $old_q_media_height = '';
-  $old_scenario  = '';
-  $total_random_mark = 0;
-  $total_marks  = 0;
-  $options = 0;
-  $neg_marking = false;
-  $rnd_q_ids = array();
-  $q_mod_check = array();
-  $question_list = array();
+  $old_scenario       = '';
+  $total_random_mark  = 0;
+  $total_marks        = 0;
+  $options            = 0;
+  $neg_marking        = false;
+  $rnd_q_ids          = array();
+  $q_mod_check        = array();
 
   // Get the questions (if any).
   $result = $mysqli->prepare("SELECT theme, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, o_media, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
@@ -602,34 +601,32 @@ $result->close();
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
         checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
       }
-      $old_correct = array();
-      $old_option_text = array();
-      $old_o_media = array();
+      $old_correct      = array();
+      $old_option_text  = array();
+      $old_o_media      = array();
       $old_marks = 0;
       $row_no2++;
 
       $row_no++;
-      $temp_array[$row_no]['theme'] = $theme;
-      $temp_array[$row_no]['screen'] = $screen;
-      $temp_array[$row_no]['q_type'] = $q_type;
-      $temp_array[$row_no]['leadin'] = QuestionUtils::clean_leadin($leadin);
-      $temp_array[$row_no]['scenario'] = $scenario;
-      $temp_array[$row_no]['p_id'] = $p_id;
-      $temp_array[$row_no]['q_id'] = $q_id;
+      $temp_array[$row_no]['theme']           = $theme;
+      $temp_array[$row_no]['screen']          = $screen;
+      $temp_array[$row_no]['q_type']          = $q_type;
+      $temp_array[$row_no]['leadin']          = QuestionUtils::clean_leadin($leadin);
+      $temp_array[$row_no]['scenario']        = $scenario;
+      $temp_array[$row_no]['p_id']            = $p_id;
+      $temp_array[$row_no]['q_id']            = $q_id;
       $temp_array[$row_no]['display_last_edited'] = $display_last_edited;
-      $temp_array[$row_no]['q_media'] = $q_media;
-      $temp_array[$row_no]['q_media_width'] = $q_media_width;
-      $temp_array[$row_no]['q_media_height'] = $q_media_height;
-      $temp_array[$row_no]['ownerID'] = $ownerID;
-      $temp_array[$row_no]['display_pos'] = $display_pos;
-      $temp_array[$row_no]['correct'] = $correct;
+      $temp_array[$row_no]['q_media']         = $q_media;
+      $temp_array[$row_no]['q_media_width']   = $q_media_width;
+      $temp_array[$row_no]['q_media_height']  = $q_media_height;
+      $temp_array[$row_no]['ownerID']         = $ownerID;
+      $temp_array[$row_no]['display_pos']     = $display_pos;
+      $temp_array[$row_no]['correct']         = $correct;
+      $temp_array[$row_no]['status']          = $status;
+      $temp_array[$row_no]['warnings']        = '';
+      $temp_array[$row_no]['random']          = array();
+
       $q_mod_check[] = $q_id;
-      if ($q_type != 'info') {
-        $question_list[$q_id] = 0;
-      }
-      $temp_array[$row_no]['status'] = $status;
-      $temp_array[$row_no]['warnings'] = '';
-      $temp_array[$row_no]['random'] = array();
 
       if ($q_type == 'random') {
         $temp_array[$row_no]['random'] = randomDetails($q_id);
@@ -644,19 +641,22 @@ $result->close();
         $excluded[$q_id] = NULL;
       }
     }
-    $old_q_id = $q_id;
-    $old_display_pos = $display_pos;
-    $old_q_type = $q_type;
+    $old_q_id           = $q_id;
+    $old_display_pos    = $display_pos;
+    $old_q_type         = $q_type;
     $old_display_method = $display_method;
-    $old_score_method = $score_method;
-    $old_correct[] = $correct;
-    $old_scenario = $scenario;
-    $old_q_media = $q_media;
-    $old_q_media_width = $q_media_width;
+    $old_score_method   = $score_method;
+    $old_correct[]      = $correct;
+    $old_scenario       = $scenario;
+    $old_q_media        = $q_media;
+    $old_q_media_width  = $q_media_width;
     $old_q_media_height = $q_media_height;
-    $old_option_text[] = $option_text;
-    if (trim($o_media != '')) $old_o_media[] = $o_media;
-    $old_marks = $marks_correct;
+    $old_option_text[]  = $option_text;
+    if (trim($o_media != '')) {
+      $old_o_media[]    = $o_media;
+    }
+    $old_marks          = $marks_correct;
+    
     if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
   $result->close();
