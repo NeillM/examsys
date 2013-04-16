@@ -34,7 +34,6 @@ $string['adjusted'] = 'adjusted';
 $string['staffmsg'] = 'To see feedback for specific students please access via the Class Totals report.';
 
 // Key
-$string['key'] = 'Key';
 $string['greenicon'] = 'Acquisition of 80-100% of specific objective';
 $string['ambericon'] = 'Acquisition of 50-79% of specific objective';
 $string['redicon'] = 'Acquisition of 0-49% of specific objective';

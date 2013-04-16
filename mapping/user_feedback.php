@@ -170,7 +170,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     <tr><td colspan="2"><?php echo $string['question']; ?></td></tr>
     </table>
   <?php
-  echo "<div style=\"position:absolute; top:0px; left:0px; font-size:90%\">\n";
+  echo "<div style=\"position:absolute; top:0px; left:0px\">\n";
   echo "<table class=\"header\">\n";
   echo "<tr><th style=\"padding:10px\"><div style=\"font-size:220%; font-weight:bold\">$paper_title</div>\n";
   echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th></tr>\n";

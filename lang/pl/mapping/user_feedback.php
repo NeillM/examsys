@@ -34,7 +34,6 @@ $string['adjusted'] = 'skorygowany';
 $string['staffmsg'] = 'To see feedback for specific students please access via the Class Totals report.';
 
 // Key
-$string['key'] = 'Legenda';
 $string['greenicon'] = 'Osiągnięcie 80-100% celów specyficznych'; 
 $string['ambericon'] = 'Osiągnięcie 50-79% celów specyficznych';
 $string['redicon'] = 'Osiągnięcie 0-49% celów specyficznych';
