@@ -23,12 +23,14 @@
 */
 
 require '../include/staff_student_auth.inc';
+
 require_once '../include/demo_replace.inc';
 require_once '../include/mapping.inc';
 require_once '../include/errors.inc';
 require_once '../include/feedback.inc';
 require_once '../include/sort.inc';
 require_once '../include/calculate_marks.inc';
+
 require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/paperutils.class.php';
@@ -255,6 +257,9 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
           }
           $objectives[$id]['session']['sessiontitle'] = $sessiontitle;
           
+          // Just in case the is no cohort data because the paper has not been sat, set zeros to stop errors further down.
+          if (!isset($chort_question_data[$q_id]['totalpos'])) $chort_question_data[$q_id]['totalpos'] = 0;
+          if (!isset($chort_question_data[$q_id]['mark'])) $chort_question_data[$q_id]['mark'] = 0;
           
           if (isset($objectives[$id]['chort_totalpos_sum'])) {
             $objectives[$id]['chort_totalpos_sum'] += $chort_question_data[$q_id]['totalpos'];
