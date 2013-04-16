@@ -35,7 +35,7 @@ function shutdownHandler() {
   global $php_errormsg;
   $isError = false;
   if ($error = error_get_last()) {
-    customErrorHandler(E_ERROR, $error['message'], $error['file'], $error['line'], array());
+    customErrorHandler($error['type'], $error['message'], $error['file'], $error['line'], array());
   }
 
 }
