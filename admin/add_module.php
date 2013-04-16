@@ -37,21 +37,14 @@ if (is_object($SMS)) {
 
 $unique_moduleid = true;
 $tmp_modulecode = '';
+
 if (isset($_POST['submit'])) {
   // Check for unique moduleID
-  //TODO this has been moved to moduleutils
   $modulecode = trim($_POST['modulecode']);
-  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid = ?");
-  $result->bind_param('s', $modulecode);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($tmp_modulecode);
-  $result->fetch();
-  if ($result->num_rows > 0) {
+  
+  if (module_utils::module_exists($modulecode, $mysqli)) {
     $unique_moduleid = false;
   }
-  $result->free_result();
-  $result->close();
 }
 
 if (isset($_POST['submit']) and $unique_moduleid == true) {
