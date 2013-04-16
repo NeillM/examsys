@@ -313,7 +313,7 @@ if (isset($_POST['submit'] )) {
   </div>
   <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>Reviewer:</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ' . $group . '</strong></div></td></tr></table>';
+  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ' . $group . '</strong></div></td></tr></table>';
   
   if ($language == 'en') {
     echo '<p style="margin-left:10px; font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank You</p>';
@@ -366,7 +366,7 @@ if (isset($_POST['submit'] )) {
   echo "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\">\n";
 
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>Reviewer:</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ';
+  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group:</strong> ';
   if ($userObject->has_role('Student')) {
     echo $group;
   } else {
@@ -430,7 +430,6 @@ if (isset($_POST['submit'] )) {
   } else {
     $row_no = 0;
     $member_userID = 0;
-    
     echo "<tr><td></td>";
     for ($i=0; $i<$columns; $i++) {
       echo "<td class=\"col\">" . $parts[$i] . "</td>";
@@ -450,7 +449,7 @@ if (isset($_POST['submit'] )) {
   if ($userObject->has_role('Student')) {
     echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" style=\"width:100px\" />";
   } else {
-    echo "<input type=\"button\" name=\"close\" value=\"Close\" style=\"width:100px\" onclick=\"window.close();\" />";
+    echo "<input type=\"button\" name=\"close\" value=\"".$string['close']."\" style=\"width:100px\" onclick=\"window.close();\" />";
   }
   echo "</td></tr>\n";
   echo "</table>\n</form>\n";
