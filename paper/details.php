@@ -708,41 +708,6 @@ $result->close();
       $result->close();
     }
   }
-  if (isset($_GET['module']) and $_GET['module'] != '') {
-    $module = $_GET['module'];
-    $folder = '';
-    $paper_modules = explode(',', $module);
-    if (count($paper_modules) > 0) {     // Paper is on multiple modules
-      if ($userObject->has_role('SysAdmin')) {
-        $module = $paper_modules[0];
-      } else {
-        for ($i=count($paper_modules)-1; $i>0; $i--) {
-          if (in_array($paper_modules[$i], $staff_modules)) {
-            $module = $paper_modules[$i];
-          }
-        }
-      }
-    }
-  } elseif (isset($_GET['folder'])) {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-
-    $module = '';
-  } else {
-    $paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);  // Get the modules from paper properties
-    if (count($paper_modules) > 0) {
-      $module = array_slice(array_keys($paper_modules), 0, 1);
-      $module = $module[0];
-    } else {
-      $module = '';
-    }
-    $folder = '';
-  }
 
   require '../include/paper_options.inc';
 ?>
@@ -755,11 +720,17 @@ $result->close();
   echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
 
   echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
-  if ($module != '') {
-    $module_code = module_utils::get_moduleid_from_id($module, $mysqli);
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
-  } elseif ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  if (isset( $_GET['module'] ) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  } elseif (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } else {
+    $paper_modules = Paper_utils::get_modules($paperID, $mysqli);  // Get the modules from paper properties
+    reset($paper_modules);
+    $moduleID = key($paper_modules);
+    $module_code = $paper_modules[$moduleID];
+    
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $moduleID . '">' . $module_code . '</a>';
   }
   echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';
   if ($properties->get_retired() != '') {
@@ -818,7 +789,6 @@ $result->close();
     echo "&nbsp;</div></td></tr>\n";
   } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
     $tmp_hour = date("G", $properties->get_start_date());
-    //if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
     if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
       echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['farfuturewarning'], $properties->get_display_start_date());
