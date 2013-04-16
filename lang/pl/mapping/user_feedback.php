@@ -31,7 +31,7 @@ $string['examlength'] = 'Czas trwania egzaminu';
 $string['timespent'] = 'Czas wykorzystany';
 $string['outof'] = 'z';
 $string['adjusted'] = 'skorygowany';
-$string['staffmsg'] = 'To see feedback for specific students please access via the Class Totals report.';
+$string['staffmsg'] = 'Aby zobaczyć odzew dla konkrentego studenta przejdź przez raport Zestawienie Klasy.';
 
 // Key
 $string['greenicon'] = 'Osiągnięcie 80-100% celów specyficznych'; 
