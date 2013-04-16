@@ -96,7 +96,7 @@ class Authentication {
 
     if (!isset($this->config)) {
       global $string;
-      $notice->display_notice_and_exit($this->db, $string['NoAuthenticationConfigured'], $string['NoAuthenticationConfiguredmessage'], $string['NoAuthenticationConfiguredmessage'], '../artwork/software_64.png', $title_color = '#C00000');
+      $notice->display_notice_and_exit($this->db, $string['NoAuthenticationConfigured'], $string['NoAuthenticationConfiguredmessage'], $string['NoAuthenticationConfiguredmessage'], '../artwork/software_64.png', '#C00000');
       $config_ok = false;
     }
 
