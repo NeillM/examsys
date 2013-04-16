@@ -143,7 +143,7 @@ function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i,
   return number_format($top_ratio - $bottem_ratio,2);
 }
 
-function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mark, $totalpos, $opt_order, $stop_words, $analysis_type) {
+function storeData(&$log_array, $qID, $answer, $q_type, $display, $mark, $totalpos, $stop_words, $analysis_type) {
 
   if (!isset($log_array[$qID]['mark'])) $log_array[$qID]['mark'] = 0;
   if (!isset($log_array[$qID]['totalpos'])) $log_array[$qID]['totalpos'] = 0;
@@ -199,7 +199,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
       $tmp_score_method = explode(',',$display);
       $tolerance = $tmp_score_method[1];
       $tmp_first_split = explode('|', $answer);
-      $user_ans_clean = $saved_response_clean = str_replace(',', '', str_replace(' ', '', $tmp_first_split[0]));
+      $user_ans_clean = str_replace(',', '', str_replace(' ', '', $tmp_first_split[0]));
 
       if (isset($tmp_first_split[1])) {
         if ($user_ans_clean == $tmp_first_split[1]) {
@@ -1810,12 +1810,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $result->bind_result($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, $started);
 
   while ($result->fetch()) {
-    storeData($freq_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, $stop_words, 'all');
+    storeData($freq_array, $question_ID, $tmp_answer, $q_type, $display_method, $mark, $totalpos, $stop_words, 'all');
     if (isset($bottom_cohort[$started][$username])) {
-      storeData($bottom_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, $stop_words, 'bottom');
+      storeData($bottom_log_array, $question_ID, $tmp_answer, $q_type, $display_method, $mark, $totalpos, $stop_words, 'bottom');
     }
     if (isset($top_cohort[$started][$username])) {
-      storeData($top_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, $stop_words, 'top');
+      storeData($top_log_array, $question_ID, $tmp_answer, $q_type, $display_method, $mark, $totalpos, $stop_words, 'top');
     }
   }
   $result->close();
