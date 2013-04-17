@@ -33,6 +33,7 @@ require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/folderutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/moduleutils.class.php';
