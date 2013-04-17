@@ -34,22 +34,26 @@ if (isset($_GET['calyear'])) {
   $current_year = date("Y");
 }
 
-function echoButtons($year) {
-  $html = '';
+function drawTabs($current_tab) {
+  $html = '<table cellpadding="0" cellspacing="0" border="0" style="margin-top:8px; margin-left:auto; margin-right:0px"><tr>';
   
-  $prev_param = 'calyear=' . ($year - 1);
-  $next_param = 'calyear=' . ($year + 1);
-  $module = (isset($_GET['module'])) ? $_GET['module'] : '';
-  
-  if ($module != '') {
-    $prev_param .= '&module=' . $_GET['module'];
-    $next_param .= '&module=' . $_GET['module'];
+  if (isset($_GET['module'])) {
+    $extra = '&module=' . $_GET['module'];
+  } else {
+    $extra = '';
   }
   
-  $html = '<input style="width:100px" type="button" onclick="window.location=\'' . $_SERVER['PHP_SELF'] . '?' . $prev_param . '\'" value="&lt; ' . ($year - 1) . '" />';
-  $html .= '&nbsp;';
-  $html .= '<input style="width:100px" type="button" onclick="window.location=\'' . $_SERVER['PHP_SELF'] . '?' . $next_param . '\'" value="' . ($year + 1) . ' &gt;" />';
-
+  $start_year = date("Y");
+  $start_year -= 3;
+  for ($tmp_year=$start_year; $tmp_year < $start_year + 5; $tmp_year++) {
+    if ($tmp_year == $current_tab) {
+      $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:100%; background-image:url(../artwork/tab_on.gif)\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra . "'\">" . $tmp_year . "</td>";
+    } else {
+      $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:100%; background-image:url(../artwork/tab_off.gif)\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra ."'\">" . $tmp_year . "</td>";
+    }
+  }
+  $html .= "</tr></table>";
+  
   return $html;
 }
 
@@ -59,7 +63,9 @@ function echoButtons($year) {
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+
 <title>Rogō: <?php echo $string['calendar'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+
 <?php echo $configObject->get('cfg_js_root') ?>
 <script language="JavaScript" src="../js/sidebar.js"></script>
 <script language="JavaScript">
@@ -73,17 +79,16 @@ function echoButtons($year) {
 </script>
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style type="text/css">
-  .month {font-size:140%; margin-left:10px; margin-right:10px}
+  body {font-size:80%}
+  select {margin-top:3px}
+  .month {font-size:140%; margin-left:8px; margin-right:8px}
 </style>
 </head>
 
 <body>
 
 <?php
-  include '../include/calendar_options.inc';
-  
   //get faculty and school info
   $schools = array($string['default']=>array('-1'=>$string['allschools']));
   $stmt = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE faculty.id = schools.facultyID ORDER BY faculty.name, school");
@@ -105,9 +110,8 @@ function echoButtons($year) {
   $stmt->close();
 ?>
 
-<div id="content" class="content">
 <form action="" method="get">
-<table class="header">
+<table class="header" border="1">
 <tr><th>
 <?php
   if (isset($_GET['module'])) {
@@ -148,12 +152,11 @@ function echoButtons($year) {
   }
   echo "</select>&nbsp;";
   echo "<input type=\"hidden\" name=\"calyear\" value=\"$current_year\" /><br />";
-  
 ?>
-<div style="text-align:right"><?php echo echoButtons($current_year); ?>&nbsp;</div>
+<div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year); ?></div>
 </th>
 </tr>
-<tr><th colspan="2" class="bevel"></th></tr>
+<tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
 <br />
 <?php
@@ -222,37 +225,19 @@ function echoButtons($year) {
     $result->execute();
     $result->bind_result($password, $main_date, $labs, $start_time, $end_time, $property_id, $paper_title, $month, $cal_year, $start_day, $end_date, $idMod, $paper_type);
     while ($result->fetch()) {
-      /*
-      $paper_details[$paper_no]['labs'] = $labs;
-      $paper_details[$paper_no]['date'] = $main_date;
-      $paper_details[$paper_no]['start_day'] = $start_day;
-      $paper_details[$paper_no]['end_date'] = $end_date;
-      $paper_details[$paper_no]['paper_title'] = $paper_title;
-      $paper_details[$paper_no]['property_id'] = $property_id;
-      $paper_details[$paper_no]['month'] = $month;
-      $paper_details[$paper_no]['cal_year'] = $cal_year;
-      $paper_details[$paper_no]['start_time'] = $start_time;
-      $paper_details[$paper_no]['end_time'] = $end_time;
-      $paper_details[$paper_no]['paper_type'] = $paper_type;
-      $tmp_modules = explode(',', $moduleID);
-      $paper_details[$paper_no]['moduleID'] = $tmp_modules[0];
-      $paper_details[$paper_no]['password'] = $password;
-      $paper_no++;
-      */
-      
-      $paper_details[$property_id]['labs'] = $labs;
-      $paper_details[$property_id]['date'] = $main_date;
-      $paper_details[$property_id]['start_day'] = $start_day;
-      $paper_details[$property_id]['end_date'] = $end_date;
+      $paper_details[$property_id]['labs']        = $labs;
+      $paper_details[$property_id]['date']        = $main_date;
+      $paper_details[$property_id]['start_day']   = $start_day;
+      $paper_details[$property_id]['end_date']    = $end_date;
       $paper_details[$property_id]['paper_title'] = $paper_title;
       $paper_details[$property_id]['property_id'] = $property_id;
-      $paper_details[$property_id]['month'] = $month;
-      $paper_details[$property_id]['cal_year'] = $cal_year;
-      $paper_details[$property_id]['start_time'] = $start_time;
-      $paper_details[$property_id]['end_time'] = $end_time;
-      $paper_details[$property_id]['paper_type'] = $paper_type;
-      $paper_details[$property_id]['idMod'] = $idMod;
-      $paper_details[$property_id]['password'] = $password;
+      $paper_details[$property_id]['month']       = $month;
+      $paper_details[$property_id]['cal_year']    = $cal_year;
+      $paper_details[$property_id]['start_time']  = $start_time;
+      $paper_details[$property_id]['end_time']    = $end_time;
+      $paper_details[$property_id]['paper_type']  = $paper_type;
+      $paper_details[$property_id]['idMod']       = $idMod;
+      $paper_details[$property_id]['password']    = $password;
     }
     $result->close();
   }
@@ -269,7 +254,7 @@ function echoButtons($year) {
     $first_day = true;
 
     echo "<div>";
-    echo "<table cellpadding=\"0\" cellspacing=\"8\" border=\"0\" style=\"background-color:#E3EFFF; width:96%; margin-left:auto; margin-right:auto; text-align:left\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"8\" border=\"0\" style=\"background-color:#E3EFFF; width:98%; margin-left:auto; margin-right:auto; text-align:left\">\n";
     $tmp_month = strtolower(date("F", mktime(0, 0, 0, $current_month, 1, $current_year)));
     echo "<tr><td class=\"month\"><a name=\"$i\"></a>" . $string[$tmp_month] . "</td></tr>\n";
     echo "<tr><td>";
@@ -362,7 +347,6 @@ function echoButtons($year) {
               echo "<tr><td style=\"color:#294C7A; text-align:right; width:50px\" valign=\"top\">";
               if ($individual_paper['start_time'] == $individual_paper['end_time']) echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" align="texttop" alt="Warning: problem with times!" />';
               echo $individual_paper['start_time'] . "&nbsp;&nbsp;</td><td style=\"color:#294C7A; width:38px\" valign=\"top\">" . $individual_paper['end_time'] . "&nbsp;</td><td><a href=\"../paper/details.php?paperID=" . $individual_paper['property_id'] . "&module=" . $individual_paper['idMod'] . "&folder=\">" . $individual_paper['paper_title'] . "</a>&nbsp;";
-              //echo $individual_paper['start_time'] . "&nbsp;&nbsp;</td><td style=\"color:#294C7A; width:38px\" valign=\"top\">" . $individual_paper['end_time'] . "&nbsp;</td><td><a href=\"../paper/details.php?paperID=" . $individual_paper['property_id'] . "&folder=\">" . $individual_paper['paper_title'] . "</a>&nbsp;";
               $rooms = explode(',', $individual_paper['labs']);
               $html = '';
               foreach ($rooms as $individual_room) {
@@ -440,9 +424,7 @@ function echoButtons($year) {
   }
   $mysqli->close();
 ?>
-<div style="text-align:right"><?php echo echoButtons($current_year); ?>&nbsp;</div>
 </form>
-</div>
 
 </body>
 </html>
