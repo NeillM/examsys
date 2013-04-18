@@ -943,7 +943,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
           function flash<?php echo $q_no; ?>_DoFSCommand(command, args) {
             var flash<?php echo $q_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $q_no; ?> : document.flash<?php echo $q_no; ?>;
-            document.questions.q<?php echo $q_no; ?>.value = args;
+             //document.questions.q<?php echo $q_no; ?>.value = args;
           }
           if (navigator.appName && navigator.appName.indexOf("Microsoft") != -1 && navigator.userAgent.indexOf("Windows") != -1 && navigator.userAgent.indexOf("Windows 3.1") == -1) {
             document.write('<script language=\"VBScript\"\>\n');
