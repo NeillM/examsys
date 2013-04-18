@@ -57,6 +57,7 @@ $paper_type = $propertyObj->get_paper_type();
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
+  <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
   <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
@@ -167,8 +168,8 @@ $paper_type = $propertyObj->get_paper_type();
       }
       if ($year_in_title == true) {
         if ($tmp_match != $session) {
-          echo "<tr><td colspan=\"4\"><table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
-          echo "<tr><td style=\"width:40px; height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/non_owner_icon.png\" width=\"25\" height=\"30\" alt=\"Warning\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;&nbsp;";
+          echo "<tr><td colspan=\"4\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
+          echo "<tr><td  class=\"redwarn\" style=\"padding: 4px 0 4px 8px\"><img src=\"../artwork/non_owner_icon.png\" width=\"25\" height=\"30\" alt=\"Warning\" />&nbsp;&nbsp;</td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;&nbsp;";
           printf($string['nomatchsession'], $tmp_match, $session);
           echo "</td></tr>\n</table>\n</td></tr>\n";
         }
