@@ -41,7 +41,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
 
   function checkForm() {
-    if (searchoptions.searchterm.value == "") {
+    if (PapersMenu.searchterm.value == "") {
       alert ("<?php echo $string['entersearchterm'];?>");
       return false;
     }
