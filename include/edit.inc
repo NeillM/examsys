@@ -195,18 +195,6 @@ function check_out_paper($dblink, $q_id, $user_id) {
   return $user_id;
 }
 
-function record_trackChanges($type, $questionID, $old_value, $new_value, $part, $current_userID, &$changes) {
-  global $mysqli;
-
-  if ($old_value != $new_value) {
-    $changes = true;
-    $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, ?, ?, $current_userID, ?, ?, NOW(), ?)");
-    $result->bind_param('sisss', $type, $questionID, $old_value, $new_value, $part);
-    $result->execute();
-    $result->close();
-  }
-}
-
 function hidden_edit_fields() {
   global $checkout_author;
   $html = '';
