@@ -44,6 +44,11 @@ if (isset($_GET['calendar_year'])) {
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../js/state.js"></script>
 <script language="JavaScript">
+  function updateDropdownState(mySel, NameOfState) {
+    setting = mySel.options[mySel.selectedIndex].value;
+    updateState(NameOfState, setting);    
+  }
+  
   function updateMenu(ID) {
     current = (document.getElementById('menu' + ID).style.display == 'block') ? 'none' : 'block';
     document.getElementById('menu' + ID).style.display = current;
