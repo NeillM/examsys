@@ -85,9 +85,9 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
 ?>
   function checkAll() {
-    box = document.forms[0].direction;
+    box = document.stats_menu.direction;
     if (box.selectedIndex == 0) {
-      document.forms[0].percent.selectedIndex = 6;    
+      document.stats_menu.percent.selectedIndex = 7;    
     }
   }
 </script>
