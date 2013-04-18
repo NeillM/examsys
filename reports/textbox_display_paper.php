@@ -69,6 +69,7 @@ $stmt->close();
 
   <meta http-equiv="imagetoolbar" content="no">
   <meta http-equiv="imagetoolbar" content="false">
+  <script src="../reviews/start.js" type="text/javascript"></script>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
