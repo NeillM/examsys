@@ -419,7 +419,11 @@
   echo '</Row>';
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['averagetime'] . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="String">' . formatsec(round($total_time / $completed_no,0)) . '</Data></Cell>';
+  if ($completed_no == 0) {
+    echo '<Cell><Data ss:Type="String">' . formatsec(0) . '</Data></Cell>';
+  } else {
+    echo '<Cell><Data ss:Type="String">' . formatsec(round($total_time / $completed_no,0)) . '</Data></Cell>';
+  }
   echo '</Row>';
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['excludedquestions'] . '</Data></Cell>';
