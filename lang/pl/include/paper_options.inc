@@ -62,7 +62,7 @@ $string['mapping'] = 'Odwzorowania';
 $string['questionbanktasks'] = 'Działania dot. banku pytań';
 $string['questionsbytype'] = 'Pytania wg. typu';
 $string['questionsbyteam'] = 'Pytania wg. zespołu';
-$string['questionsbykeyword'] = 'Pytania wg. słowa kluczowego';
+$string['questionsbykeyword'] = 'Pytania wg. słowa klucz.';
 $string['search'] = 'Szukaj';
 $string['createnewquestion'] = 'Utwórz nowe pytanie';
 
