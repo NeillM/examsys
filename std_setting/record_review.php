@@ -24,10 +24,12 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
+require_once '../classes/logger.class.php';
 
 $paperID    = check_var('paperID', 'POST', true, false, true);
 $tmp_method = check_var('method', 'POST', true, false, true);
 
+$logger           = new Logger($mysqli);
 $rating           = '';
 $old_leadin       = '';
 $old_type         = '';
@@ -108,22 +110,10 @@ while ($result->fetch()) {
         $std_query->bind_param('si', $rating, $log_id);
         $std_query->execute();
         $std_query->close();
-        if ($mysqli->error) {
-          display_error('Error writing to questions table', $mysqli->error, true, true);
-          $mysqli->close();
-          exit;
-        }
+
         if ($rating != $_POST["old$log_id"]) {
-          $std_query = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Edit Question', ?, ?, ?, ?, ?, 'Std Setting')");
-          $t0 = $_POST["old$log_id"];
-          $std_query->bind_param('iisss', $log_id, $userObject->get_user_ID(), $t0, $rating, $now);
-          $std_query->execute();
-          $std_query->close();
-          if ($mysqli->error) {
-            display_error('Error writing to track_changes table', $mysqli->error, true, true);
-            $mysqli->close();
-            exit;
-          }
+          $old_value = $_POST["old$log_id"];
+          $logger->track_change('Edit Question', $log_id, $userObject->get_user_ID(), $old_value, $rating, 'Std Setting');
         }
       }
       $rating = '';
@@ -432,25 +422,10 @@ if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
   $result->bind_param('si', $rating, $log_id);
   $result->execute();
   $result->close();
-  if ($mysqli->error) {
-    echo "<p>Error writing to questions table: " . $mysqli->error . "</p>\n";
-    echo "<p>Query: $std_query</p>\n";
-    $mysqli->close();
-    exit;
-  }
+
   if ($rating != $_POST["old$log_id"]) {
-    $std_query = "INSERT INTO track_changes VALUES (NULL, 'Edit Question', ?, ?, ?, ?, ?, 'Std Setting')";
-    $result = $mysqli->prepare($std_query);
-    $t0 = $_POST["old$log_id"];
-    $result->bind_param('iisss', $log_id, $userObject->get_user_ID(), $t0, $rating, $now);
-    $result->execute();
-    $result->close();
-    if ($mysqli->error) {
-      echo "<p>Error writing to track_changes: " . $mysqli->error . "</p>\n";
-      echo "<p>Query: $std_query</p>\n";
-      $mysqli->close();
-      exit;
-    }
+    $old_value = $_POST["old$log_id"];
+    $logger->track_change('Edit Question', $log_id, $userObject->get_user_ID(), $old_value, $rating, 'Std Setting');
   }
 }
 
