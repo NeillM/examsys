@@ -1594,7 +1594,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $std_part = 0;
         $option_answered = 0;
         for ($scenario_no=0; $scenario_no<$total_scenarios; $scenario_no++) {
-          if(isset($matching_scenarios[$scenario_no])) {
+          if (isset($matching_scenarios[$scenario_no])) {
             $single_scenario = $matching_scenarios[$scenario_no];
           } else {
             $single_scenario = '';
@@ -1609,6 +1609,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $separate_answers = explode('$', $correct_answers[$i]);
           $separate_user_answers = array();
           $separate_user_answers = explode('$', $user_answers[$i]);
+
           echo '<table cellpadding="0" cellspacing="1" border="0">';
           $tmp_option_no = 1;
           if (count($separate_answers) == 1) {   // Single answer Extended Matching
@@ -1663,7 +1664,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               $tmp_option_no++;
             }
             echo '</select>';
-            if ($tmp_display_correct_answer == '1') {
+            if ($tmp_display_correct_answer == '1' and isset($paper[$question]['option_text'][$correct_answers[$i]-1])) {
               echo '&nbsp;&nbsp;<strong>' . $paper[$question]['option_text'][$correct_answers[$i]-1] . '</strong>';
             }
             echo "</td>\n";

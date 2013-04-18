@@ -67,9 +67,7 @@ if (!$properties) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-function check_duplicates($q_screens) {
-  global $string;
-
+function check_duplicates($q_screens, $string) {
   foreach ($q_screens as $q_screen=>$qs) {
     if (count($qs) > 1) {
       echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td colspan=\"4\" class=\"warn\"><strong>Duplicate questions:</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
@@ -77,8 +75,7 @@ function check_duplicates($q_screens) {
   }
 }
 
-function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status) {
-  global $string;
+function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string) {
 
   if (!isset($tmp_excluded) and ($status == 'Normal' or $status == 'Experimental' or $status == 'Beta')) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
@@ -93,7 +90,9 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
       $temp_array[$row_no]['warnings'] = $string['zeromarks'];
     } elseif ($q_type == 'extmatch' or $q_type == 'matrix') {
       $matching_scenarios = explode('|', $scenario);
-      $matching_media = explode('|', $q_media);
+      $matching_media     = explode('|', $q_media);
+      $matching_correct   = explode('|', $correct_array[0]);
+      
       $text_scenarios = 0;
       for ($part_id=0; $part_id<count($matching_scenarios); $part_id++) {
         if (trim(strip_tags($matching_scenarios[$part_id])) != '') $text_scenarios++;
@@ -103,7 +102,13 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
         if ($matching_media[$part_id] != '') $media_scenarios++;
       }
       $scenario_no = max($text_scenarios, $media_scenarios);
-      if ($score_method == 'Mark per Option' and $question_marks < $scenario_no) $temp_array[$row_no]['warnings'] = $string['answermissing'];
+      
+      $correct_answers = 0;
+      for ($part_id=0; $part_id<count($matching_correct); $part_id++) {
+        if ($matching_correct[$part_id] != '') $correct_answers++;
+      }
+      
+      if ($score_method == 'Mark per Option' and $correct_answers < $scenario_no) $temp_array[$row_no]['warnings'] = $string['answermissing'];
     } elseif ($q_type == 'labelling') {
       if (!have_valid_labels($temp_array[$row_no]['correct'])) {
         $temp_array[$row_no]['warnings'] = $string['nolabels'];
@@ -600,7 +605,7 @@ $result->close();
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
+        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string);
       }
       $old_correct      = array();
       $old_option_text  = array();
@@ -695,7 +700,7 @@ $result->close();
     if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
-    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
+    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string);
 
     // If we had random questions on paper need to check if they need LaTeX
     if ($latex == 0 and count($rnd_q_ids) > 0) {
@@ -982,7 +987,7 @@ $result->close();
   }
 
   if ($properties->get_paper_type() != '3') {
-    check_duplicates($q_screen);
+    check_duplicates($q_screen, $string);
   }
 
   // Final paper warnings.

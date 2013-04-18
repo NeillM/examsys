@@ -140,13 +140,14 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
   $extra_duration = $_POST['previous_duration'];
 
   // Load the structure of the paper into a local array.
-  $paper_array = array();
-  $tmp_question_no = 0;
-  $old_q_id = 0;
-  $old_q_type = '';
-  $random_on = false;
-  $option_order = '';
-  $old_display_pos = 0;
+  $paper_array      = array();
+  $tmp_question_no  = 0;
+  $old_q_id         = 0;
+  $old_display_pos  = 0;
+  $old_q_type       = '';
+  $option_order     = '';
+  $random_on        = false;
+  
   if (isset($preview_q_id)) {
     $questions = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions, options WHERE paper=? AND questions.q_id=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
     $questions->bind_param('ii', $paper_id, $preview_q_id);
@@ -196,29 +197,29 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
   $questions->close();
 
   // Use the new structure to look for posted responses.
-  $old_type = '';
-  $old_score_method = '';
-  $old_display_method = '';
-  $correct_rank = true;
+  $old_type             = '';
+  $old_score_method     = '';
+  $old_display_method   = '';
+  $correct_rank         = true;
 
-  $no_correct = 0;
-  $no_incorrect = 0;
+  $no_correct           = 0;
+  $no_incorrect         = 0;
 
-  $question_no = 0;
-  $q_type = '';
-  $question_part = 0;
-  $saved_response = '';
+  $question_no          = 0;
+  $q_type               = '';
+  $question_part        = 0;
+  $saved_response       = '';
   $mrq_options_selected = 0;
-  $log_id = 0;
-  $mark = 0;
-  $totalpos = 0;
-  $old_q_id = 0;
-  $submit_time = date("YmdHis", time());
-  $log_query = '';
-  $display_pos = 0;
-  $old_display_pos = 0;
-  $all_items_abstain = true;
-  $dismiss = '';
+  $log_id               = 0;
+  $mark                 = 0;
+  $totalpos             = 0;
+  $old_q_id             = 0;
+  $submit_time          = date("YmdHis", time());
+  $log_query            = '';
+  $display_pos          = 0;
+  $old_display_pos      = 0;
+  $all_items_abstain    = true;
+  $dismiss              = '';
 
   // Record posted data for saving later
   $response_data = array();
@@ -262,24 +263,24 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         $dismiss = '';
       }
       if ($q_type != 'info') $question_no++;
-      $question_part = 0;
-      $old_q_id = $q_id;
-      $old_type = $q_type;
-      $old_score_method = $score_method;
-      $old_display_method = $display_method;
-      $old_display_pos = $display_pos;
+      $question_part        = 0;
+      $old_q_id             = $q_id;
+      $old_type             = $q_type;
+      $old_score_method     = $score_method;
+      $old_display_method   = $display_method;
+      $old_display_pos      = $display_pos;
 
-      $old_marks_correct = $marks_correct;
-      $old_marks_incorrect = $marks_incorrect;
-      $old_marks_partial = $marks_partial;
+      $old_marks_correct    = $marks_correct;
+      $old_marks_incorrect  = $marks_incorrect;
+      $old_marks_partial    = $marks_partial;
 
-      $correct_rank = true;
-      $no_correct = 0;
-      $no_incorrect = 0;
+      $correct_rank         = true;
+      $no_correct           = 0;
+      $no_incorrect         = 0;
       $mrq_options_selected = 0;
-      $mark = 0;
-      $totalpos = 0;
-      $saved_response = '';
+      $mark                 = 0;
+      $totalpos             = 0;
+      $saved_response       = '';
     }
 
     $log_id = $q_id;
@@ -525,17 +526,27 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
           } else {
             $correct_options = explode('|',$correct);
           }
-          foreach ($correct_options as $individual_correct) {
-            if (trim($individual_correct) != '') $part_no++;
-          }
 
+          $matching_scenarios = explode('|', $scenario);
+          $text_scenarios = 0;
+          for ($part_id=0; $part_id<10; $part_id++) {
+            if (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id])) != '') $text_scenarios++;
+          }
+          
+          $matching_media = explode('|', $q_media);
+          $media_scenarios = 0;
+          for ($part_id=1; $part_id<=10; $part_id++) {
+            if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
+          }
+          $part_no = max($text_scenarios, $media_scenarios);
+          
           $option_no = 1;
           for ($scenario_no=0; $scenario_no<$part_no; $scenario_no++) {
             if ($option_no > 1) {
               $saved_response .= '|';
             }
             $qid = 'q' . $question_no . '_' . $option_no;
-            $correct_answers = explode('$',$correct_options[$option_no - 1]);
+            $correct_answers = explode('$', $correct_options[$option_no - 1]);
             if (isset($_POST[$qid])) {
               $answer_count = count($_POST[$qid]);
               if ($score_method == 'Mark per Question' and (is_array($_POST[$qid]) or $_POST[$qid] != 'u')) {
@@ -555,7 +566,6 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
               } else {
                 $saved_response .= '$' . $_POST[$qid][$i];
               }
-
 
               if ($answer_count == 1) {
                 if ($_POST[$qid] == $correct_answers[0]) {
