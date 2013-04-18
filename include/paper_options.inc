@@ -455,27 +455,27 @@ if ($properties->get_paper_type() == '2') {
     $tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
   }
   if ($year_in_title == true and $tmp_match != $properties->get_calendar_year()) {
-    echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['session'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['mismatch'] . "</strong></td></tr>\n";
+    echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" class=\"checklist\" onclick=\"paperProperties(); return false;\">" . $string['session'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['mismatch'] . "</strong></td></tr>\n";
   }
   // Times
   if (date("His", $properties->get_start_date()) == date("His", $properties->get_end_date()) or date("His", $properties->get_start_date()) == '000000' or date("His", $properties->get_start_date()) == '000000') {
-    echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['examtime'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['incorrect'] . "</strong></td></tr>\n";
+    echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" class=\"checklist\" onclick=\"paperProperties(); return false;\">" . $string['examtime'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['incorrect'] . "</strong></td></tr>\n";
   }
   
   // Duration
   if ($properties->get_exam_duration() == '') {
-    echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['duration'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
+    echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" class=\"checklist\" onclick=\"paperProperties(); return false;\">" . $string['duration'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
   }
   
   // Computer labs
   if ($properties->get_labs() == '') {
-    echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['computerlabs'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
+    echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" class=\"checklist\" onclick=\"paperProperties(); return false;\">" . $string['computerlabs'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
   }
 
   // Internal Peer review
   if (strpos($checklist, 'peer') !== false) {
     if ($properties->get_internal_reviewers() == '') {
-      echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['peerreviewed'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
+      echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" class=\"checklist\" onclick=\"paperProperties(); return false;\">" . $string['peerreviewed'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
     } else {
       $tmp_array = $properties->get_internal_reviewers();
       $internal_array = array();
