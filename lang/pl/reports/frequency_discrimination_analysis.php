@@ -17,7 +17,7 @@
 $string['frequencydiscrimination'] = 'Analiza częstości i różnicowania';
 $string['reporttitle'] = 'Raport analizy częstości i różnicowania (U-L)';
 $string['PaperNotAttempted'] = "Ten arkusz nie był przez nikogo wybrany.";
-$string['NotEnoughData'] = "Brak wystarczających danych do obliczenia górnej o dolnej grupy. Wybierz wyższy procent.";
+$string['NotEnoughData'] = "Brak wystarczających danych do obliczenia górnej i dolnej grupy. Wybierz wyższy procent.";
 $string['totalcandidatenumber'] = 'liczba wszystkich kandydatów';
 $string['AllItemsCorrect'] = "Wszystkie elementy poprawne";
 $string['FullMarks'] = "Pełne punkty";
