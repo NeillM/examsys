@@ -332,7 +332,7 @@ if ($display_papers) {
     while ($results->fetch()) {
       if ($old_p_type != $paper_type and (isset($_GET['module']) and $_GET['module'] != '') ) {
         if ($sent_clear_all) {
-          echo "<br clear=\"all\" />";
+          echo "<br clear=\"left\" />";
         }
         $sent_clear_all = true;
 
