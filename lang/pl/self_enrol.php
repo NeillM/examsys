@@ -24,6 +24,6 @@ $string['iwouldliketo'] = 'Ja, %s %s %s (%s), chciałbym/chciałabym zapisać si
 $string['notavailableselfenrollment'] = 'Ten moduł nie jest dostępny do samodzielnego zapisywania się.';
 $string['notactive'] = 'Ten moduł nie jest aktualnie aktywny.';
 $string['icanaccess'] = 'Pokaż arkusze, do których mam dostęp';
-$string['enrolmentcompleted'] = 'Zapisywanie się zakończone';
+$string['enrolmentcompleted'] = 'Zapisywanie zakończone';
 $string['noaccountfound'] = 'Nie znaleziono konta w systemie zarządzania studentami';
 ?>
