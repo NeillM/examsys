@@ -24,6 +24,7 @@ $string['edit'] = 'Edit';
 $string['screen'] = 'Screen';
 $string['screens'] = 'Screens';
 $string['mins'] = 'mins';
+$string['SelfenrolURL'] = "Self-enrol URL";
 $string['createnewpaper'] = 'Create new Paper';
 $string['editpropertiessysadmin'] = 'Edit Properties (SysAdmin)';
 $string['manageobjectives'] = 'Manage Objectives';

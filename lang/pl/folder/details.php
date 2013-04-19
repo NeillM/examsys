@@ -24,6 +24,7 @@ $string['edit'] = 'Edytuj';
 $string['screen'] = 'Ekran';
 $string['screens'] = 'Ekrany';
 $string['mins'] = 'min.';
+$string['SelfenrolURL'] = "URL do samodzielnego zapisywania się";
 $string['createnewpaper'] = 'Utwórz nowy arkusz';
 $string['editpropertiessysadmin'] = 'Edytuj właściwości (SysAdmin)';
 $string['manageobjectives'] = 'Zarządzaj celami';
