@@ -50,9 +50,11 @@ require_once '../../classes/questionutils.class.php';
     function populateTicks() {
       q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
       for (i=0; i<q_array.length; i++) {
-        var obj = document.getElementById(q_array[i]);
-        if (obj != null) {
-          obj.checked = true;
+        if (q_array[i]!='') {
+          var obj = document.getElementById(q_array[i]);
+          if (obj != null) {
+            obj.checked = true;
+          }
         }
       }
     }
@@ -111,7 +113,7 @@ require_once '../../classes/questionutils.class.php';
 
     echo "<tr><td>";
     if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
-    echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"" . $q_id . "\" value=\"" . $q_id . "\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview(" . $q_id . ")\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;" . $display_date . "</td></tr>\n";
+    echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"" . $q_id . "\" id=\"" . $q_id . "\" value=\"" . $q_id . "\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview(" . $q_id . ")\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;" . $display_date . "</td></tr>\n";
   }
   $result->close();
   $mysqli->close();

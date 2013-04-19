@@ -45,17 +45,25 @@ require_once '../../classes/questionutils.class.php';
 
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../../js/state.js"></script>
   <script language="JavaScript">
     function Qpreview(qID) {
       parent.previewurl.location = '../view_question.php?q_id=' + qID;
     }
 
+    function updateDropdownState(mySel, NameOfState) {
+      setting = mySel.options[mySel.selectedIndex].value;
+      updateState(NameOfState, setting);
+    }
+
     function populateTicks() {
       q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
       for (i=0; i<q_array.length; i++) {
-        var obj = document.getElementById(q_array[i]);
-        if (obj != null) {
-          obj.checked = true;
+        if (q_array[i]!='') {
+          var obj = document.getElementById(q_array[i]);
+          if (obj != null) {
+            obj.checked = true;
+          }
         }
       }
     }

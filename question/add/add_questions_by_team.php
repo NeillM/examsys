@@ -60,9 +60,11 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
     function populateTicks() {
       q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
       for (i=0; i<q_array.length; i++) {
-        var obj = document.getElementById(q_array[i]);
-        if (obj != null) {
-          obj.checked = true;
+        if (q_array[i]!='') { 
+          var obj = document.getElementById(q_array[i]);
+          if (obj != null) {
+            obj.checked = true;
+          }
         }
       }
     }
