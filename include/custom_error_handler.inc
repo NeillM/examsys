@@ -32,12 +32,10 @@ set_exception_handler("exceptionHandler");
 register_shutdown_function("shutdownHandler");
 
 function shutdownHandler() {
-  global $php_errormsg;
   $isError = false;
   if ($error = error_get_last()) {
     customErrorHandler($error['type'], $error['message'], $error['file'], $error['line'], array());
   }
-
 }
 
 
@@ -105,8 +103,8 @@ function exceptionHandler($exception) {
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   global $debug_pagestart, $dbclass;
-
-
+  
+  
 
   $configObject = Config::get_instance();
   $notice = UserNotices::get_instance();
@@ -137,7 +135,9 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
   // Errors we do not want to log.
   if ($error_type == 'Warning') {
-    if (strpos($errstr, 'The device is not ready.') !== false) {
+    if (strpos($errstr, 'mysqli::mysqli()') !== false) {
+      return true;
+    } elseif (strpos($errstr, 'The device is not ready.') !== false) {
       return true;
     } elseif (strpos($errstr, 'Access is denied.') !== false) {
       return true;
@@ -152,8 +152,6 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   }
 
   if ($error_type != 'Notice') { // Record errors that are not notices.
-
- //   $variables = base64_encode(serialize($context));
 
     $backtrace = DebugBackTraceDisplay(debug_backtrace());
     if (is_null($configObject->get('cfg_db_port'))) {
@@ -188,8 +186,8 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
     $userid = 0;
     $username = 'PRE LOGIN';
-    if (isset($GLOBALS['userObject'])) {
-      $userid = $GLOBALS['userObject']->get_user_ID();
+    if (isset($userObject)) {
+      $userid = $userObject->get_user_ID();
       $username = $userObject->get_username();
     }
 
