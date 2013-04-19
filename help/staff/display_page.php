@@ -100,22 +100,28 @@ if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't reco
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
     function updateToolbar(editID, deleteID) {
-      window.parent.frames[0].document.getElementById('editid').value   = editID;
-      window.parent.frames[0].document.getElementById('deleteid').value = deleteID;
+      var obj = parent.frames[0].document.getElementById('editid');
+      if (obj != null) obj.value = editID;
+      obj = parent.frames[0].document.getElementById('deleteid');
+      if (obj != null) obj.value = deleteID;
       <?php
       if (isset($_GET['section'])) {
         echo "window.location='#" . $_GET['section'] . "'\">\n";
       }
       ?>
     }
-
     function updateTOC() {
-      if (parent.frames['navigation'].document.getElementById('old_highlight').value != 0) {
-        old_section = parent.frames['navigation'].document.getElementById('old_highlight').value;
-        parent.frames['navigation'].document.getElementById(old_section).style.fontWeight="normal";
+      var obj = parent.frames['navigation'].document.getElementById('old_highlight');
+      if (obj != null) {
+        if (obj.value != 0) {
+          parent.frames['navigation'].document.getElementById(obj.value).style.fontWeight="normal";
+        }
+        parent.frames['navigation'].document.getElementById('title<?php echo $_GET['id']; ?>').style.fontWeight="bold";
+        obj.value = 'title<?php echo $_GET['id']; ?>';
+      } else {
+        obj2 = parent.frames['navigation'].document.getElementById('title1');
+        if (obj2 != null) obj2.style.fontWeight="bold";
       }
-      parent.frames['navigation'].document.getElementById('title<?php echo $_GET['id']; ?>').style.fontWeight="bold";
-      parent.frames['navigation'].document.getElementById('old_highlight').value = 'title<?php echo $_GET['id']; ?>';
     }
 
    function openTutorial(file) {

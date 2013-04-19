@@ -91,15 +91,16 @@ if ($_GET['id'] != '1' and !$userObject->has_role(array('SysAdmin', 'External'))
   
   <script language="JavaScript">
     function updateToolbar(editID, deleteID) {
-      window.parent.frames[0].document.getElementById('editid').value   = editID;
-      window.parent.frames[0].document.getElementById('deleteid').value = deleteID;
-      <?php
+      var obj = parent.frames[0].document.getElementById('editid');
+      if (obj != null) obj.value = editID;
+      obj = parent.frames[0].document.getElementById('deleteid');
+      if (obj != null) obj.value = deleteID;      <?php
       if (isset($_GET['section'])) {
         echo "window.location='#" . $_GET['section'] . "'\">\n";
       }
       ?>
     }
-    
+   
     function updateTOC() {
       if (parent.frames['navigation'].document.getElementById('old_highlight').value != 0) {
         old_section = parent.frames['navigation'].document.getElementById('old_highlight').value;
