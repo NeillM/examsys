@@ -28,7 +28,7 @@ class MappingUtils {
   public static function get_vle_api($idMod, $session, &$vle_api_cache, $db) {
   
  
-    if (!isset($vle_api_cache[$idMod])) {
+    if (!isset($vle_api_cache[$idMod][$session])) {
       // Are there any existing relationships for the module in this session?
       $stmt = $db->prepare("SELECT vle_api FROM relationships WHERE idMod IN (" . $idMod . ") AND calendar_year = ? LIMIT 1");
       $stmt->bind_param('s', $session);
@@ -48,9 +48,9 @@ class MappingUtils {
         $stmt->close();
       }
 
-      $vle_api_cache[$idMod] = $vle_api;
+      $vle_api_cache[$idMod][$session] = $vle_api;
     } else {
-      $vle_api = $vle_api_cache[$idMod];
+      $vle_api = $vle_api_cache[$idMod][$session];
     }
 
     return $vle_api;

@@ -193,19 +193,43 @@ foreach ($papers as $p_id => $paper) {
 
 $allsession = array();
 $n = 0;
+$id_guid_map = array();
+$guid_id_map = array();
+$obs_canonical = array();
 foreach ($objsBySession as $p_id => $module) {
   foreach ($module as $moduleID => $sessions) {
     foreach ($sessions as $id => $session) {
+      if (isset($session['GUID']) and $session['GUID'] != '') {
+        $guid = $session['GUID'];
+      } elseif (isset($id_guid_map[$id])){
+        $guid = $id_guid_map[$id];
+      } else {
+        $guid = $id;
+      }
+      $id_guid_map[$id] = $guid;
+      $guid_id_map[$guid][$p_id] = $id;
+
       if (isset($session['objectives'])) {
         $objbuffer = $session['objectives'];
-        if (!isset($allsession[$moduleID][$id])) {
-          $allsession[$moduleID][$id] = $session;
-          unset($allsession[$moduleID][$id]['objectives']);
+        if (!isset($allsession[$moduleID][$guid])) {
+          $allsession[$moduleID][$guid] = $session;
+          unset($allsession[$moduleID][$guid]['objectives']);
         }
 
         foreach ($objbuffer as $obj) {
-          $allsession[$moduleID][$id]['objectives'][$obj['id']] = $obj;
-          $allsession[$moduleID][$id]['objectives'][$obj['id']]['session'] = $papers[$p_id]['session'];
+          if (isset($obs_canonical[md5($obj['content'])])) {
+            $tmp_obj_id = $obs_canonical[md5($obj['content'])];
+          } else {
+            $tmp_obj_id = $obj['id'];
+            $obs_canonical[md5($obj['content'])] = $tmp_obj_id;
+          }
+          if (isset($allsession[$moduleID][$guid]['objectives'][$tmp_obj_id])) {
+            $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['id_by_paper'][$p_id] = $obj['id'];
+          } else {
+            $obj['id_by_paper'][$p_id] = $obj['id'];
+            $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id] = $obj;
+          }
+          $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['session'] = $papers[$p_id]['session'];
           $n++;
         }
       }
@@ -226,7 +250,7 @@ foreach ($papers as $p) {
 }
 echo "</tr>";
 foreach ($allsession as $moduleID => $module) {
-  foreach ($module as $identifier => $session) {
+  foreach ($module as $guid => $session) {
     echo '<tr><td colspan="' . ($pcount+2) . '" class="divider">';
     if ($session['class_code'] != '') {
       echo $session['class_code'] . ': ';
@@ -235,11 +259,13 @@ foreach ($allsession as $moduleID => $module) {
 
     foreach ($session['objectives'] as $objID => $obj) {
       echo "<tr>\n\t<td style=\"width:2%\">&nbsp;</td><td style=\"width:48%\" class=\"obj\"><li>" . strip_tags($obj['content'], '<b><i><strong><em><sub><sup>') . "</li></td>\n";
-      $objID = $obj['id'];
       foreach ($objsBySession as $p_id => $s) {
-        if (isset($s[$moduleID]) and array_key_exists($identifier,$s[$moduleID])) {
+        $identifier = isset($guid_id_map[$guid][$p_id]) ? $guid_id_map[$guid][$p_id] : -1;
+
+        if (isset($s[$moduleID]) and array_key_exists($identifier, $s[$moduleID])) {
           $mapped = false;
           if (isset($s[$moduleID][$identifier]['objectives'])) {
+            $objID = isset($obj['id_by_paper'][$p_id]) ? $obj['id_by_paper'][$p_id] : -1;
             foreach ($s[$moduleID][$identifier]['objectives'] as $tmpObj) {
               if ($tmpObj['id'] == $objID) {
                 if (is_array($tmpObj['mapped'])) {

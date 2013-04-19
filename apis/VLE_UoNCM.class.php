@@ -110,6 +110,7 @@ class VLE_UoNCM implements iVLEAPI {
     if (is_array($session['objectives'])) {
       $sess_data = array(
         'identifier' => $session['@attributes']['id'],
+        'GUID' => $session['guid'],
         'class_code' => $session['code'],
         'title' => $session['title'],
         'occurrance' => date('d/m/y H:i', strtotime($session['start'])),
