@@ -389,12 +389,7 @@ $sessionid = $log_metadata->get_session_id();
 $metadataid = $log_metadata->get_metadata_id();
 
 // Only allow timing if ALL the modules of the paper allow
-$mod_id_list = implode(',', $modIDs);
-$stmt = $mysqli->prepare("SELECT id FROM modules WHERE id IN ($mod_id_list) AND timed_exams = 0");
-$stmt->execute();
-$stmt->store_result();
-$allow_timing = ($stmt->num_rows === 0);
-$stmt->close();
+$allow_timing = module_utils::modules_allow_timing($modIDs, $mysqli);
 
 /*
 * BP Determine the student's end_date timestamp for a summative exam that has been 'Started'.
