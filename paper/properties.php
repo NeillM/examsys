@@ -1110,7 +1110,7 @@ if (isset($_POST['Submit'])) {
       $('#' + tabID).removeClass("button_over");
     }
 
-    function buttonover(tabID) {      
+    function buttonover(tabID) {
       if (!$('#' + tabID).hasClass("button_on")) {
         $('#' + tabID).addClass("button_over");
         $('#' + tabID).removeClass("button_off");
@@ -1325,9 +1325,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
       echo "<tr><td align=\"right\">" . $string['groupdetails'] . "&nbsp;</td><td><select name=\"type\">\n";
       echo "<option value=\"\" selected>&nbsp;</option>\n";
-      
+
       $modules_array = Paper_utils::get_modules($paperID, $mysqli);
-      
+
       $field_details = $mysqli->prepare("SELECT DISTINCT type FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (" . implode(',', array_keys($modules_array)) . ") ORDER BY type");
       $field_details->execute();
       $field_details->bind_result($type);
@@ -1492,7 +1492,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo '</select></td>';
     echo "<td align=\"right\">" . $string['duration'] . "</td><td><select name=\"exam_duration\"$sum_disabled>";
-    $minutes = array('NULL'=>$string['na'],'5'=>'5','15'=>'15','20'=>'20','25'=>'25','30'=>'30','35'=>'35','40'=>'40','45'=>'45','50'=>'50','55'=>'55','60'=>'60','65'=>'65','70'=>'70','75'=>'75','80'=>'80','85'=>'85','90'=>'90','95'=>'95','100'=>'100','110'=>'110','120'=>'120','150'=>'150','180'=>'180');
+    $minutes = array('NULL'=>$string['na'],'15'=>'15','20'=>'20','25'=>'25','30'=>'30','35'=>'35','40'=>'40','45'=>'45','50'=>'50','55'=>'55','60'=>'60','65'=>'65','70'=>'70','75'=>'75','80'=>'80','85'=>'85','90'=>'90','95'=>'95','100'=>'100','110'=>'110','120'=>'120','150'=>'150','180'=>'180');
     foreach ($minutes as $key => $value) {
       echo "<option value=\"" . $key . "\"";
       if ($properties->get_exam_duration() == $key) echo 'selected="selected"';
