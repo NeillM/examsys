@@ -46,6 +46,10 @@ Class UserUtils {
   }
 
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null) {
+    if ($username == '' or  $surname == '' or $role == '') {
+      return false;
+    }
+
     if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
       if (is_null($initials)) {
         $initial = explode(' ', $forname);
@@ -113,6 +117,10 @@ Class UserUtils {
   }
 
   static function update_password($username, $password, $userID, $db) {
+    if ($userID == '' or $password == '') {
+      return false;
+    }
+    
     $salt = UserUtils::get_salt();
     $encrypt_password = encpw($salt, $username, $password);
 
@@ -138,6 +146,10 @@ Class UserUtils {
    *
    */
   static function username_exists($username, $db) {
+    if ($username == '') {
+      return false;
+    }
+  
     $stmt = $db->prepare("SELECT id FROM users WHERE username = ? AND user_deleted IS NULL");
     $stmt->bind_param('s', $username);
     $stmt->execute();
@@ -256,11 +268,9 @@ Class UserUtils {
    *
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
-
-
     if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
       $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NULL, 'System')");
-      $stmt->bind_param('si', $idMod, $tmp_userID);
+      $stmt->bind_param('ii', $idMod, $tmp_userID);
       $stmt->execute();
       $stmt->close();
     }
@@ -269,21 +279,18 @@ Class UserUtils {
    * Add a member of staff onto a team by modulecode.
    *
    * @param integer $tmp_userID UserID of the member of staff
-   * @param string $idmod the name of the team (module)
+   * @param string $module_code the name of the team (module)
    * @param object $db mysqli database connection
    *
    */
-  static function add_staff_to_module_by_modulecode($tmp_userID, $idMod, $db) {
+  static function add_staff_to_module_by_modulecode($tmp_userID, $module_code, $db) {
 
     if (!UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
       return;
     }
-    $moduleid = module_utils::get_idMod($idMod, $db);
+    $idMod = module_utils::get_idMod($module_code, $db);
     if ($moduleid !== false) {
-      $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NULL, 'System')");
-      $stmt->bind_param('si', $moduleid, $tmp_userID);
-      $stmt->execute();
-      $stmt->close();
+      self::add_staff_to_module($tmp_userID, $idMod, $db);
     }
   }
 
@@ -294,9 +301,9 @@ Class UserUtils {
    * @param object $db mysqli database connection
    *
    */
-  static function clear_staff_modules_by_moduleID($moduleID, $db) {
+  static function clear_staff_modules_by_moduleID($idMod, $db) {
     $stmt = $db->prepare("DELETE FROM modules_staff WHERE idMod = ?");
-    $stmt->bind_param('i', $moduleID);
+    $stmt->bind_param('i', $idMod);
     $stmt->execute();
     $stmt->close();
   }

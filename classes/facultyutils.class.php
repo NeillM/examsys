@@ -27,6 +27,12 @@
 
 Class FacultyUtils {
 
+/**
+ * Checks if a faculty ID already exists.
+ * @param string $facultyID - The ID of the faculty to be checked
+ * @param object $db        - Link to mysqli
+ * @return bool             - True if the faculty ID already exists and is not deleted
+ */
   static function facultyid_exists($facultyID, $db) {
     $result = $db->prepare("SELECT id FROM faculty WHERE id = ? AND deleted IS NULL");
     $result->bind_param('i', $facultyID);
@@ -45,8 +51,17 @@ Class FacultyUtils {
     return $exist;
   }
 
+/**
+ * Creates a new faculty.
+ * @param string $faculty - The name of the faculty to be added
+ * @param object $db      - Link to mysqli
+ * @return int            - The last insert number from the database
+ */
   static function add_faculty($faculty, $db) {
-
+    if (trim($faculty) == '') {
+      return false;
+    }
+  
     $result = $db->prepare("INSERT INTO faculty(name) VALUES(?)");
     $result->bind_param('s', $faculty);
     $result->execute();
@@ -57,24 +72,21 @@ Class FacultyUtils {
 
     return $db->insert_id;
   }
-
-  static function get_faculty_id_by_name($faculty, $db) {
-    $stmt = $db->prepare("SELECT id FROM schools WHERE name = ?");
-    $stmt->bind_param('s', $faculty);
-    $stmt->execute();
-    $stmt->bind_result($id);
-    $stmt->store_result();
-    $stmt->fetch();
-    $row = $stmt->num_rows;
-    $stmt->close();
-    if ($row == 0) {
-      $stmt = $db->prepare("SELECT id FROM faculty WHERE deleted IS NULL and name='UNKNOWN Faculty'");
-      $stmt->execute();
-      $stmt->bind_result($id);
-      $stmt->store_result();
-      $stmt->fetch();
-      $stmt->close();
+  
+/**
+ * Deletes a faculty by setting a flag.
+ * @param string $facultyID - The ID of the faculty to be deleted
+ * @param object $db        - Link to mysqli
+ */
+  static function delete_faculty($facultyID, $db) {
+    if ($facultyID == '') {
+      return false;
     }
-    return $id;
+  
+    $result = $db->prepare("UPDATE faculty SET deleted = NOW() WHERE id = ?");
+    $result->bind_param('i', $facultyID);
+    $result->execute();  
+    $result->close();
   }
+  
 }

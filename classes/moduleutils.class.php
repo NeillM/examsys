@@ -54,12 +54,13 @@ Class module {
 
   public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1) {
 
-    if ($moduleid == '' or $fullname == '' or $schoolID == '' or module_utils::module_exists($moduleid, $db) !== false) {
+    // Return false if missing madatory fields.
+    if ($moduleid == '' or $fullname == '' or $schoolID == '') {
       return false;
     }
 
-    //dont let modules with no id to be created ;-)
-    if ($moduleid == '') {
+    // Don't create a duplicate module with the same module ID.
+    if (module_utils::module_exists($moduleid, $db) !== false) {
       return false;
     }
 
@@ -95,6 +96,10 @@ Class module {
    * @return boolean          True if there is already a module with the code
    */
   public function module_exists($moduleid, $db) {
+    if ($moduleid == '') {  // No ID, don't bother to check the database.
+      return false;
+    }
+  
     // Check for unique moduleID
     $exists = true;
 
@@ -286,6 +291,10 @@ Class module {
    * @param  mysqli  $db    Database link object
    */
   public function delete_module($idMod, $db) {
+    if ($idMod == '') {
+      return false;
+    }
+  
     $result = $db->prepare("UPDATE modules SET mod_deleted = NOW() WHERE id = ?");
     $result->bind_param('i', $idMod);
     $result->execute();

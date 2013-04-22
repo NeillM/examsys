@@ -37,16 +37,19 @@ Class CourseUtils {
    */
   static function add_course($schoolid, $name, $description, $db) {
 
-    if (CourseUtils::course_exists($name, $db) === true) {
-      return true;
-    }
     if ($name == '') {
       return false;
+    }
+    if (CourseUtils::course_exists($name, $db) === true) {
+      return true;
     }
 
     if (!is_int($schoolid)) {
       //school name given not school id so convert
       $schoolid = SchoolUtils::get_school_id_by_name($schoolid, $db);
+      if (!$schoolid) {
+        return false;
+      }
     }
 
     $result = $db->prepare("INSERT INTO courses VALUES (NULL, ?, ?, NULL, ?)");
@@ -70,7 +73,10 @@ Class CourseUtils {
    * @return bool depending on  success
    */
   static function delete_course($name, $db) {
-
+    if (trim($name) == '') {
+      return false;
+    }
+    
     $result = $db->prepare("DELETE FROM courses WHERE name = ? limit 1");
     $result->bind_param('s', $name);
     $result->execute();
@@ -96,18 +102,6 @@ Class CourseUtils {
     $exists = true;
 
     $result = $db->prepare("SELECT id FROM courses WHERE name = ?");
-    if ($db->error) {
-      try {
-        $a = $db->error;
-        $b = $db->errno;
-        throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
-      }
-      catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());
-      }
-    }
-
     $result->bind_param('s', $name);
     $result->execute();
     $result->store_result();

@@ -26,7 +26,7 @@
 
 Class NetworkUtils {
 	/**
-	 * Get the IP address of the user from the server headers
+	 * Get the IP address or name of the computer from the server headers
    * @return mixed client ip address
 	 */
   static function get_ipaddress() {
@@ -34,27 +34,27 @@ Class NetworkUtils {
   
     if ($configObject->get('cfg_client_lookup') == 'name') {
       if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        var_dump($tmp_parts);
-        $tmp_parts = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
+        $tmp_parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
         $tmp_client_ipaddress = gethostbyaddr(trim($tmp_parts[0]));
       } else {
-      $tmp_client_ipaddress = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+        $tmp_client_ipaddress = gethostbyaddr($_SERVER['REMOTE_ADDR']);
       }
     } else {
       if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $tmp_parts = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
+        $tmp_parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
         $tmp_client_ipaddress = trim($tmp_parts[0]);
       } else {
         $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
       }
     }
+    
     return $tmp_client_ipaddress;
   }
 
   static function check_email_domain($output, $domain) {
     global $email;
     
-    if($output !== true) {
+    if ($output !== true) {
       $output = (substr($email, (strlen($domain) * -1)) == $domain);
     }
     return $output;

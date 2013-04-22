@@ -48,10 +48,10 @@ Class user_notices extends RogoStaticSingleton {
   /**
    * This function will output a message to the user 
    *
-   * @param string $title string title to display
-   * @param string $msg string the message
-   * @param string $icon name of the icon image file
-   * @param string $title_color color of the tile text
+   * @param string $title       - title to display
+   * @param string $msg         - string the message
+   * @param string $icon        - name of the icon image file
+   * @param string $title_color - color of the tile text
    *
    */
   public function display_notice($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
@@ -82,11 +82,11 @@ Class user_notices extends RogoStaticSingleton {
   /**
    * This function will output a message to the user and exit php; 
    *
-   * @param string $title string title to display
-   * @param string $msg string the message displayed on screen
-   * @param string $reason string the message displayed in the database
-   * @param string $icon name of the icon image file
-   * @param string $title_color color of the tile text
+   * @param string $title       - string title to display
+   * @param string $msg         - string the message displayed on screen
+   * @param string $reason      - string the message displayed in the database
+   * @param string $icon        - name of the icon image file
+   * @param string $title_color - color of the tile text
    *
    */
   public function display_notice_and_exit($mysqli, $title, $msg, $reason, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
@@ -106,10 +106,10 @@ Class user_notices extends RogoStaticSingleton {
   /**
    * This function will exit php without notice; 
    *
-   * @param string $title string title to display
-   * @param string $msg string the message
-   * @param string $icon name of the icon image file
-   * @param string $title_color color of the tile text
+   * @param string $title       - string title to display
+   * @param string $msg         - string the message
+   * @param string $icon        - name of the icon image file
+   * @param string $title_color - color of the tile text
    *
    */
   public function exit_php() {
@@ -119,8 +119,8 @@ Class user_notices extends RogoStaticSingleton {
    * This function will output an access denied warning and terminate script 
    * execution
    *
-   * @param string $message string message to display
-   * @param string $output_header if true output 401 headers
+   * @param string $message       - message to display
+   * @param string $output_header - if true output 401 headers
    *
    */
   public function access_denied($db, $string, $message, $output_header = false, $output_footer = true) {

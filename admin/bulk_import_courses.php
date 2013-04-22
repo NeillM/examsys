@@ -71,13 +71,13 @@
         ?>
         <br /><br /><br />
         <div align="center">
-        <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%">
+        <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%; width:500px">
         <tr>
         <td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:140%; font-weight:bold; color:#5582D2"><?php echo $string['bulkcourseimport']; ?></span></td>
         </tr>
         <tr>
         <td align="left" style="background-color:#F1F5FB">
-        <ul>
+        <table cellspaing="0" cellpadding="2" border="0" style="margin-top:15px; margin-bottom:15px">
 
         <?php
         // Get a list of courses held by Rogo.
@@ -125,20 +125,20 @@
                   $result->fetch();
                   $result->close();
 
-                  $unknown_schoolID = SchoolUtils::addSchool($facultyID, '', $mysqli);
+                  $unknown_schoolID = SchoolUtils::add_school($facultyID, '', $mysqli);
                 }
                 $schoolID = $unknown_schoolID;
               }              
 
               if (in_array($courseid, $course_list)) {
-                echo "<li class=\"existing\">$courseid - " . $string['alreadyexists'] . "</li>\n";
+                echo "<tr><td></td><td class=\"existing\">$courseid</td><td class=\"existing\">$description</td><td class=\"existing\">". $string['alreadyexists'] . "</td></tr>\n";
               } else {
                 $success = CourseUtils::add_course($schoolID, $courseid, $description, $mysqli);
                 if ($success) {
-                  echo "<li class=\"added\">$courseid - " . $string['added'] . "</li>\n";
+                  echo "<tr><td><img src=\"../artwork/green_plus_16.png\" wodth=\"16\" height=\"16\" alt=\"Add\" /></td><td class=\"added\">$courseid</td><td class=\"added\">$description</td><td class=\"added\">". $string['added'] . "</td></tr>\n";
                   $coursesAdded++;
                 } else {
-                  echo "<li class=\"fail\">$courseid - " . $string['failed'] . "</li>\n";
+                  echo "<tr><td><img src=\"../artwork/red_cross_16.png\" wodth=\"16\" height=\"16\" alt=\"Failed\" /></td><td class=\"failed\">$courseid</td><td class=\"failed\">$description</td><td class=\"failed\">". $string['failed'] . "</td></tr>\n";
                 }
               }
             }
@@ -148,8 +148,8 @@
     }
     unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_course_create.csv");
 
-    echo "</ul>";
-    echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_courses.php'\" style=\"width:100px\" /></div>\n";
+    echo "</table>";
+    echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_courses.php'\" style=\"width:100px\" /></div>\n<br />\n";
 
     $mysqli->close();
     ?>

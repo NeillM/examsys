@@ -16,7 +16,7 @@
 
 /**
 *
-* Utility class for installer related functionality
+* Utility class for functionality related to schools
 *
 * @author Anthony Brown, Simon Wilkinson
 * @version 1.0
@@ -28,7 +28,10 @@
 Class SchoolUtils {
 
   static function add_school($facultyID, $school, $db) {
-
+    if ($facultyID == '' or $school == '') {
+      return false;
+    }
+  
     $result = $db->prepare("INSERT INTO schools(school, facultyID) VALUES (?, ?)");
     $result->bind_param('si', $school, $facultyID);
     $result->execute();
@@ -70,8 +73,13 @@ Class SchoolUtils {
   }
 
   static function get_school_id_by_name($school_name, $db) {
+    if ($school_name == '') {
+      return false;
+    }
+    
+    $id = false;
 
-    $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school=?");
+    $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = ?");
     $stmt->bind_param('s', $school_name);
     $stmt->execute();
     $stmt->bind_result($id);
@@ -81,7 +89,7 @@ Class SchoolUtils {
     $stmt->close();
     //TODO current UoN Fudge for some data that doesnt follow convention should shift to saturn abstraction
     if ($row == 0) {
-      $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school=CONCAT('School of ', ?)");
+      $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = CONCAT('School of ', ?)");
       $stmt->bind_param('s', $school_name);
       $stmt->execute();
       $stmt->bind_result($id);
@@ -90,7 +98,7 @@ Class SchoolUtils {
       $row = $stmt->num_rows;
       $stmt->close();
       if ($row == 0) {
-        $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school='UNKNOWN School'");
+        $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = 'UNKNOWN School'");
         $stmt->execute();
         $stmt->bind_result($id);
         $stmt->store_result();
@@ -98,14 +106,21 @@ Class SchoolUtils {
         $stmt->close();
       }
     }
+    
     return $id;
   }
 
 
+/**
+ * Get the schools a member of staff with 'Admin' rights has access to.
+ * @param int $admin_userid - ID of the member of staff user
+ * @param object $db        - Link to mysqli
+ * @return array            - List of schools the member of staff has access to.
+ */
   static function get_admin_schools($admin_userid, $db) {
     $school_list = array();
 
-    $stmt = $db->prepare("SELECT schools_id FROM admin_access WHERE userID=?");
+    $stmt = $db->prepare("SELECT schools_id FROM admin_access WHERE userID = ?");
     $stmt->bind_param('i', $admin_userid);
     $stmt->execute();
     $stmt->bind_result($school);
@@ -119,10 +134,10 @@ Class SchoolUtils {
 
 /**
  * Check if a school name exists in a given Faculty
- * @param  int $facultyID ID of faculty to check
- * @param  string $school    School name to check
- * @param  object $db        Link to mysqli
- * @return bool            True if school name already exists for the faculty
+ * @param int $facultyID  - ID of faculty to check
+ * @param string $school  - School name to check
+ * @param object $db      - Link to mysqli
+ * @return bool           - True if school name already exists for the faculty
  */
   static function school_exists_in_faculty($facultyID, $school, $db) {
     $row_no = 0;
@@ -138,7 +153,13 @@ Class SchoolUtils {
     return $row_no > 0;
   }
   
-  static function schoolid_exists($schoolID, $db) {
+/**
+ * Check if a school ID exists
+ * @param int $schoolID - ID of the school to check
+ * @param object $db    - Link to mysqli
+ * @return bool         - True if the school ID is found
+ */
+ static function schoolid_exists($schoolID, $db) {
     $row_no = 0;
     
     $query = 'SELECT id FROM schools WHERE id = ?';
@@ -152,7 +173,16 @@ Class SchoolUtils {
     return $row_no > 0;
   }
 
-  static function delete_school($schoolID, $db) {
+/**
+ * Delete a school by setting a flag
+ * @param int $schoolID - ID of the school to delete
+ * @param object $db    - Link to mysqli
+ */
+ static function delete_school($schoolID, $db) {
+    if ($schoolID == '') {
+      return false;
+    }
+    
     $result = $db->prepare("UPDATE schools SET deleted = NOW() WHERE id = ?");
     $result->bind_param('i', $schoolID);
     $result->execute();  

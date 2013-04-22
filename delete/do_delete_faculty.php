@@ -26,17 +26,14 @@ require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/facultyutils.class.php';
 
-$tmp_facultyID = check_var('facultyID', 'POST', true, false, true);
+$facultyID = check_var('facultyID', 'POST', true, false, true);
 
-if (!FacultyUtils::facultyid_exists($tmp_facultyID, $mysqli)) {
+if (!FacultyUtils::facultyid_exists($facultyID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$result = $mysqli->prepare("UPDATE faculty SET deleted = NOW() WHERE id = ?");
-$result->bind_param('i', $tmp_facultyID);
-$result->execute();  
-$result->close();
+FacultyUtils::delete_faculty($facultyID, $mysqli);
 
 $mysqli->close();
 ?>
