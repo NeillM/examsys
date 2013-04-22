@@ -52,7 +52,7 @@
   var graph_metadata = new Array();
   graph_data[0] = 100*Math.random();
   graph_metadata.push(0);
-  graph_data[99] = 100*Math.random();
+  graph_data[99] = Math.abs(100-Math.abs(50-graph_data[0]));//100*Math.random();
   graph_metadata.push(99);
   
   for (var i=0;i<20;i++) {
@@ -66,6 +66,7 @@
       if (graph_metadata.indexOf(dz)==-1) {
         graph_metadata.push(dz);       
         graph_data[dz] = 1.2*dy*Math.random()+graph_data[graph_metadata[j]];
+        if (graph_data[dz]<0) graph_data[dz] = 1;
         if (graph_data[dz]>99) graph_data[dz] = 99;
       }
     }
@@ -78,6 +79,7 @@
       graph_data[i+1] = graph_data[i]+d3;
     }
   }
+  smooth();
   smooth();
 	//end of data creation
   
@@ -181,8 +183,8 @@
       context.textAlign="left";
       context.fillText('x1 = '+Math.round(boundaries[0]*10)/10+'%',50,200);      
       context.fillText('x2 = '+Math.round(boundaries[1]*10)/10+'%',50,220);      
-      context.fillText('y3 = '+Math.round(boundaries[2]*10)/10+'%',50,240);      
-      context.fillText('y4 = '+Math.round(boundaries[3]*10)/10+'%',50,260);      
+      context.fillText('y1 = '+Math.round(boundaries[2]*10)/10+'%',50,240);      
+      context.fillText('y2 = '+Math.round(boundaries[3]*10)/10+'%',50,260);      
       
       //textboxes outside canvas
       document.getElementById('x1').value = Math.round(boundaries[0]*10)/10+'%';
