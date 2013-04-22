@@ -69,7 +69,7 @@ Class module {
     if ($stdset == true) $checklist .= ',stdset';
     if ($mapping == true) $checklist .= ',mapping';
     $tmp_checklist = substr($checklist, 1);
-    
+
     $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
     $result->bind_param('ssisssiiiiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members);
     $result->execute();
@@ -77,7 +77,7 @@ Class module {
     if ($db->errno != 0) {
       return false;
     }
-    
+
     $idMod = $db->insert_id;
 
     if ($sms_import == 1 and $sms_api != '') {
@@ -88,10 +88,16 @@ Class module {
     return $idMod;
   }
 
+  /**
+   * Check if a module with the given code already exists
+   * @param  string $moduleid The Module ID (code) for the module
+   * @param  mysqli $db       Database link class
+   * @return boolean          True if there is already a module with the code
+   */
   public function module_exists($moduleid, $db) {
     // Check for unique moduleID
     $exists = true;
-    
+
     $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
     $result->bind_param('s', $moduleid);
     $result->execute();
@@ -107,6 +113,12 @@ Class module {
     return $exists;
   }
 
+  /**
+   * Get the full details of a module given its module code
+   * @param  string $modID The Module ID (code) for the module
+   * @param  mysqli $db    Database link class
+   * @return array         Associative array containing the details of the module
+   */
   public function get_full_details_by_name($modID, $db) {
     $moduleid = self::get_idMod($modID, $db);
     if ($moduleid === false) {
@@ -116,6 +128,12 @@ Class module {
     return self::get_full_details_by_ID($moduleid, $db);
   }
 
+  /**
+   * Get the full details of a module given its ID
+   * @param  integer $modID Database ID of the module
+   * @param  mysqli $db     Database link class
+   * @return array          Associative array containing the details of the module
+   */
   public function get_full_details_by_ID($modID, $db) {
     // returns false if not self enrol else returns needed data;
     $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist, timed_exams, exam_q_feedback, add_team_members FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ? AND mod_deleted IS NULL");
@@ -142,6 +160,12 @@ Class module {
     return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist, 'timed_exams'=>$timed_exams, 'exam_q_feedback'=>$exam_q_feedback, 'add_team_members'=>$add_team_members);
   }
 
+  /**
+   * Check if the module with the given ID is set to allow team members to add other members of staff to the team
+   * @param  string   $modID Module code of the module
+   * @param  mysqli   $db    Database link class
+   * @return boolean         Can team members add others to the team
+   */
   public function is_allowed_add_team_members_by_name($modID, $db) {
     $moduleid = self::get_idMod($modID, $db);
     if ($moduleid === false) {
@@ -151,6 +175,12 @@ Class module {
     return self::is_allowed_add_team_members_by_id($moduleid, $db);
   }
 
+  /**
+   * Check if the module with the given ID is set to allow team members to add other members of staff to the team
+   * @param  integer  $modID Database ID of the module
+   * @param  mysqli   $db    Database link class
+   * @return boolean         Can team members add others to the team
+   */
   public function is_allowed_add_team_members_by_id($modID, $db) {
     $data = self::get_full_details_by_ID($modID, $db);
     if ($data === false) {
@@ -163,6 +193,12 @@ Class module {
     return true;
   }
 
+  /**
+   * The Module ID (code) of a module given its database ID
+   * @param  integer $modID Database ID of the module
+   * @param  mysqli  $db    Database link object
+   * @return string         Module ID (code) of the module or false if not found
+   */
   public function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
 
@@ -180,23 +216,13 @@ Class module {
 
     return $moduleid;
   }
-  
-  public function get_moduleID($idMod, $db) {
-    $result = $db->prepare("SELECT moduleID FROM modules WHERE id = ? AND mod_deleted IS NULL");
-    $result->bind_param('i', $idMod);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($module_id);
-    $result->fetch();
-    if ($result->num_rows == 0) {
-      $result->close();
-      return false;
-    }
-    $result->close();
-    
-    return $module_id;
-  }
 
+  /**
+   * The database ID of a module given its Module ID (code)
+   * @param  string  $module_id Module ID (code) of the module
+   * @param  mysqli  $db        Database link object
+   * @return string             Database ID of the module or false if not found
+   */
   public function get_idMod($module_id, $db) {
     if (is_array($module_id)) {
       $ids = array();
@@ -212,10 +238,10 @@ Class module {
         $ids[] = $id;
       }
       $result->close();
-      
+
       if (count($ids) == 0) {
         return false;
-      }      
+      }
       return $ids;
     } else {
       $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
@@ -233,29 +259,45 @@ Class module {
     }
   }
 
+  /**
+   * Get a complete list of the Module ID (code) and title of modules indexed by database ID
+   * @param  mysqli $db Database link object
+   * @return array      Array of module details indexed by ID
+   */
   public function get_module_list_by_id($db) {
     $modules = array();
-    
+
     $result = $db->prepare("SELECT id, moduleid, fullname FROM modules WHERE mod_deleted IS NULL");
     $result->execute();
     $result->store_result();
     $result->bind_result($id, $moduleid, $fullname);
     while ($result->fetch()) {
-      $modules[$id]['code'] = $moduleid;      
-      $modules[$id]['name'] = $fullname;      
+      $modules[$id]['code'] = $moduleid;
+      $modules[$id]['name'] = $fullname;
     }
     $result->close();
-    
+
     return $modules;
   }
-  
+
+  /**
+   * Set the deleted date for the module identified by database ID
+   * @param  integer $idMod Database ID of the module to delete
+   * @param  mysqli  $db    Database link object
+   */
   public function delete_module($idMod, $db) {
     $result = $db->prepare("UPDATE modules SET mod_deleted = NOW() WHERE id = ?");
     $result->bind_param('i', $idMod);
-    $result->execute();  
+    $result->execute();
     $result->close();
   }
 
+  /**
+   * Check if a list of modules allow timing. ALL of the given modules must be set to allow timing for this to be true
+   * @param  array  $module_ids List of module database IDs
+   * @param  mysqli $db         Database link object
+   * @return boolean            True if all modules are set to allow timed exams
+   */
   public function modules_allow_timing($module_ids, $db) {
     // Only allow timing if ALL the modules of the paper allow
     $mod_id_list = implode(',', $module_ids);
@@ -268,5 +310,4 @@ Class module {
     return $allow_timing;
   }
 }
-
 ?>

@@ -81,7 +81,7 @@ $modules = array();
 $first = true;
 for ($i=0; $i<$_POST['module_no']; $i++) {
   if (isset($_POST['module' . $i])) {
-    $module_code = module_utils::get_moduleID($_POST['module' . $i], $mysqli);
+    $module_code = module_utils::get_moduleid_from_id($_POST['module' . $i], $mysqli);
     if ($first == true) {
       $first_module = $_POST['module' . $i];
       $first = false;

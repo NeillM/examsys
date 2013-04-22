@@ -216,7 +216,7 @@ if ($critical_error == '') {
       if (isset($_POST['teams'])) {
         //$question_teams = array_combine($_POST['teams'], $_POST['teams']);
         foreach($_POST['teams'] as $idMod) {
-          $question_teams[$idMod] = module_utils::get_moduleID($idMod, $mysqli);
+          $question_teams[$idMod] = module_utils::get_moduleid_from_id($idMod, $mysqli);
         }
       }
       $question->set_teams($question_teams);
@@ -381,7 +381,7 @@ if ($critical_error == '') {
 } else {
   // Bad things have happened
   $q_type_display = '';
-  
+
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['error'], $critical_error, $string['error'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }

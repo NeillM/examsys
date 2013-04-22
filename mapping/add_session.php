@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Anthony Brown, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -26,7 +26,7 @@ require_once '../include/errors.inc';
 
 $moduleID = (int)check_var('module', 'GET', true, false, true);
 
-if (!module_utils::get_moduleID($moduleID, $mysqli)) {
+if (!module_utils::get_moduleid_from_id($moduleID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -84,9 +84,9 @@ if (isset($_POST['Save'])) {
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō: <?php echo $string['manageobjectives'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -103,7 +103,7 @@ if (isset($_POST['Save'])) {
           return false;
         }
       }
-      
+
     function clearTextbox(objectName) {
       if (document.getElementById(objectName).value == '<?php echo $string['msg1']; ?>') {
         document.getElementById(objectName).value = '';
@@ -221,7 +221,7 @@ if (isset($_POST['Save'])) {
     } else {
       $currentmonth   = date('m');
     }
-    
+
     // Day
     if (isset($_POST['day'])) {
       $currentday = $_POST['day'];
@@ -264,9 +264,9 @@ if (isset($_POST['Save'])) {
     echo $validfrom;
 
     echo "</select>\n";
-    
+
     echo "<select name=\"session_time\">\n";
-    
+
     // Available from Hour
     $now = date('H') . ':00' . ':00';
     $times = array('00:00:00'=>'00:00','00:30:00'=>'00:30','01:00:00'=>'01:00','01:30:00'=>'01:30','02:00:00'=>'02:00','02:30:00'=>'02:30','03:00:00'=>'03:00','03:30:00'=>'03:30','04:00:00'=>'04:00','04:30:00'=>'04:30','05:00:00'=>'05:00','05:30:00'=>'05:30','06:00:00'=>'06:00','06:30:00'=>'06:30','07:00:00'=>'07:00','07:30:00'=>'07:30','08:00:00'=>'08:00','08:30:00'=>'08:30','09:00:00'=>'09:00','09:30:00'=>'09:30','10:00:00'=>'10:00','10:30:00'=>'10:30','11:00:00'=>'11:00','11:30:00'=>'11:30','12:00:00'=>'12:00','12:30:00'=>'12:30','13:00:00'=>'13:00','13:30:00'=>'13:30','140000'=>'14:00','14:30:00'=>'14:30','15:00:00'=>'15:00','15:30:00'=>'15:30','16:00:00'=>'16:00','16:30:00'=>'16:30','17:00:00'=>'17:00','17:30:00'=>'17:30','18:00:00'=>'18:00','18:30:00'=>'18:30','19:00:00'=>'19:00','19:30:00'=>'19:30','20:00:00'=>'20:00','20:30:00'=>'20:30','21:00:00'=>'21:00','21:30:00'=>'21:30','22:00:00'=>'22:00','22:30:00'=>'22:30','23:00:00'=>'23:00','23:30:00'=>'23:30');
