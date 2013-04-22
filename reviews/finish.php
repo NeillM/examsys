@@ -103,12 +103,12 @@ if ($userObject->has_role('External Examiner')) {
     echo "Deadline = " . date($configObject->get('cfg_long_date_php'), $external_review_deadline);
   }
   echo '<blockquote>';
-  if ($language == 'en') {
+  //if ($language == 'en') {
     echo '<p style="font-size:450%;font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p>';
-  } else {
+  //} else {
     // Do not use fancy fonts for foreign lanuages due to extended character support issues.
-    echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
-  }
+  //  echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
+  //}
   echo '</blockquote>';
   echo '<div style="text-align:center; border: 1px black solid; padding:10px; margin-left:100px; margin-right:100px" align="center"><input type="button" name="close" value="&nbsp;Close Window&nbsp;" onclick="window.close();" /></div>';
 

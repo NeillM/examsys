@@ -322,12 +322,12 @@ require '../config/finish.inc';
     }
   } else {
     echo '<blockquote>';
-    if ($language == 'en') {
+    //if ($language == 'en') {
       echo '<p style="font-size:450%;font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p>';
-    } else {
+    //} else {
       // Do not use fancy fonts for foreign lanuages due to extended character support issues.
-      echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
-    }
+    //  echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
+    //}
     echo '<p>' . sprintf($string['msg1'], $paper_title) . '</p><br />';
     if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
     echo '</blockquote>';
