@@ -103,8 +103,6 @@ function exceptionHandler($exception) {
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   global $debug_pagestart, $dbclass;
-  
-  
 
   $configObject = Config::get_instance();
   $notice = UserNotices::get_instance();
@@ -121,12 +119,16 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
       $error_type = "Notice";
       break;
     case E_WARNING:
-    case E_USER_WARNING:
       $error_type = "Warning";
       break;
+    case E_USER_WARNING:
+      $error_type = 'Application Warning';
+      break;
     case E_ERROR:
-    case E_USER_ERROR:
       $error_type = "Fatal Error";
+      break;
+    case E_USER_ERROR:
+      $error_type = "Application Error";
       break;
     default:
       $error_type = "Unknown";

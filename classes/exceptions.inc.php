@@ -16,7 +16,7 @@
 
 /**
 * 
-* Utility class for date related functionality
+* Custom exception classes
 * 
 * @author Rob Ingram
 * @version 1.0
@@ -36,4 +36,4 @@ class ClassNotFoundException extends Exception { }
 
 class MethodNotImplementedException extends Exception { }
 
-?>
+class RandomQuestionNotFound extends Exception { }

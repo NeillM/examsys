@@ -34,6 +34,7 @@ require_once '../classes/lab.class.php';
 require_once '../classes/log_extra_time.class.php';
 require_once '../classes/log_lab_end_time.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/exceptions.inc.php';
 
 
 $displayDebug = false; //ajax call so debug info messes up the output
@@ -121,7 +122,11 @@ if ($log_metadata->get_record() === false) {
 }
 $metadataid = $log_metadata->get_metadata_id();
 
-$ret = record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $metadataid, $preview_q_id);
+try {
+  $ret = record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $metadataid, $preview_q_id);
+} catch (RandomQuestionNotFound $ex) {
+  $ret = false;
+}
 
 if($ret === true) {
   //everthing worked ;-) 

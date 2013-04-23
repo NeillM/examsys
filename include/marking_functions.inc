@@ -25,6 +25,8 @@
 */
 require_once $cfg_web_root . 'classes/networkutils.class.php';
 require_once $cfg_web_root . 'classes/stringutils.class.php';
+require_once $cfg_web_root . 'classes/exceptions.inc.php';
+
 
 /**
  * This is function time_to_seconds
@@ -179,7 +181,9 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
             $paper_array[] = array('q_id'=>$new_q_id, 'scenario'=>$scenario, 'q_type'=>$q_type, 'option_text'=>$option_text, 'q_media'=>$q_media, 'correct'=>$correct, 'display_method'=>$display_method, 'score_method'=>$score_method, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial, 'question_no'=>$tmp_question_no, 'display_pos'=>$display_pos);
           }
           if ($random_data->num_rows == 0) {
-            $paper_array[] = array('q_id'=>0, 'scenario'=>'', 'q_type'=>'', 'option_text'=>'', 'q_media'=>'', 'correct'=>'', 'display_method'=>'', 'score_method'=>'', 'marks_correct'=>0, 'marks_incorrect'=>0, 'marks_partial'=>0, 'question_no'=>$tmp_question_no, 'display_pos'=>$display_pos);
+            $ex = new RandomQuestionNotFound(sprintf('Random question ID %s not found in paper %s', $used_qid, $paper_id));
+            trigger_error($ex->getMessage(), E_USER_WARNING);
+            throw($ex);
           }
           $random_data->close();
 

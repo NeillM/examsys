@@ -2566,7 +2566,7 @@ QUERY;
           `occurred` datetime default NULL,
           `userID` int(11) unsigned default NULL,
           `auth_user` varchar(45) default NULL,
-          `errtype` enum('Notice','Warning','Fatal Error','Unknown') default NULL,
+          `errtype` enum('Notice','Warning','Fatal Error','Unknown','Application Warning','Application Error') DEFAULT NULL,
           `errstr` text,
           `errfile` text,
           `errline` int(11) default NULL,

@@ -3997,7 +3997,14 @@ SQL;
     $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
-  
+
+
+  // nazrji 23/02/2013 - Update Error Log enum to show application errors
+  if (!$updater_utils->does_column_type_value_exist('sys_errors', 'errtype', "enum('Notice','Warning','Fatal Error','Unknown','Application Warning','Application Error')")) {
+    $sql = "ALTER TABLE sys_errors CHANGE COLUMN errtype errtype enum('Notice','Warning','Fatal Error','Unknown','Application Warning','Application Error') NULL DEFAULT NULL";
+    $updater_utils->execute_query($sql, true);
+  }
+
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */
