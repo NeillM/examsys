@@ -124,8 +124,13 @@ if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summat
   $result->execute();
   $result->close();
 } else {
-  $result = $mysqli->prepare("UPDATE properties SET start_date = ?, end_date = ?, timezone = ?, deleted = NULL, crypt_name = ?, calendar_year = ? WHERE property_id = ? LIMIT 1");
-  $result->bind_param('sssssi', $tmp_start_date, $tmp_end_date, $timezone, $hash, $session, $property_id);
+  if (isset($session) and $session != '') {
+    $result = $mysqli->prepare("UPDATE properties SET start_date = ?, end_date = ?, timezone = ?, deleted = NULL, crypt_name = ?, calendar_year = ? WHERE property_id = ? LIMIT 1");
+    $result->bind_param('sssssi', $tmp_start_date, $tmp_end_date, $timezone, $hash, $session, $property_id);
+  } else {
+    $result = $mysqli->prepare("UPDATE properties SET start_date = ?, end_date = ?, timezone = ?, deleted = NULL, crypt_name = ? WHERE property_id = ? LIMIT 1");
+    $result->bind_param('ssssi', $tmp_start_date, $tmp_end_date, $timezone, $hash, $property_id);
+  }
   $result->execute();
   $result->close();
 }

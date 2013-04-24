@@ -342,7 +342,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "</select></td>\n";
   } else {
-    echo "<input type=\"hidden\" name=\"session\" value=\"null\" />\n";
+    echo "<input type=\"hidden\" name=\"session\" value=\"\" />\n";
   }
 
   if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
