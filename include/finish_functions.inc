@@ -2431,6 +2431,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
           $percent = number_format((($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100, 1, '.', ',');
           $gradetoret = ($user_mark - $total_random_mark) / ($total_marks - $total_random_mark);
           if ($gradetoret < 0) $gradetoret = 0;
+          $lti = UoN_LTI::get_instance();
           if (isset($lti) and $lti->valid) {
             //return grade back to VLE
             $lti->send_grade($gradetoret);
