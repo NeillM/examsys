@@ -95,7 +95,9 @@ class impersonation_auth extends outline_authentication {
       $this->active = true;
       $this->form['std']->username = $usernameparts[0];
 
-      return $preauthobj;
+      if (!(isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'demo') == 0)) {
+        return $preauthobj;
+      }
     }
     if (!isset($this->lookupuserobj)) {
       $this->lookupuserobj = new stdClass();
@@ -121,7 +123,7 @@ class impersonation_auth extends outline_authentication {
 
     if ($this->lookupuserobj->found === true) {
       $this->active = true;
-      //assuming first lookup is the one we want
+      //assuming first lookup is the one we want is check needed for only one id
       $this->newuserid = $this->lookupuserobj->results[0]->userid;
     }
 

@@ -102,7 +102,7 @@ class ltilogin_auth extends outline_authentication {
       return $authobj;
     }
 
-
+    //TODO check logic in real world situation
     if ((!isset($authobj->manualsignup) or (isset($this->settings['lti_lookup_set_authobj_manualsignup_override']) and $this->settings['lti_lookup_set_authobj_manualsignup_override'] == true)) and (isset($this->settings['lti_lookup_set_authobj_manualsignup']) and $this->settings['lti_lookup_set_authobj_manualsignup'] == true)) {
       $authobj->manualsignup = true;
       $this->savetodebug('Setting the manualsignup to true on authobj');
@@ -135,7 +135,7 @@ class ltilogin_auth extends outline_authentication {
         $ltiinstructorfield = $this->settings['lti_lookup_ltiinstructor_field'];
       }
       if (isset($this->settings['lti_lookup_disabledcreateuser'])) {
-        $data = $this->settings['lti_lookup_disabledcreateuser'];
+        $data->disablecreateuser = $this->settings['lti_lookup_disabledcreateuser'];
       }
       if (isset($this->settings['lti_lookup_fromlti_field'])) {
         $ltifromltifield = $this->settings['lti_lookup_fromlti_field'];

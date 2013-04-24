@@ -111,12 +111,35 @@ class ldap_auth extends outline_authentication {
 
       return $authobj;
     }
-    $ldap = ldap_connect($ldap_server);
+    if(isset($ldap_port)) {
+      $ldap = ldap_connect($ldap_server,$ldap_port);
+    } else {
+      $ldap = ldap_connect($ldap_server);
+    }
     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+    if(isset($ldap_set_option)) {
+      foreach($ldap_set_option as $ldap_opt_key => $ldap_opt_val) {
+        ldap_set_option($ldap,$ldap_opt_key,$ldap_opt_val);
+      }
+    }
+    if (!isset($ldap_bind_rdn)) {
+      $ldap_bind_rdn = null;
+      $ldap_bind_password = null;
+    }
+
     if (ldap_bind($ldap, $ldap_bind_rdn, $ldap_bind_password)) {
       $this->savetodebug('Sucessfull initial bind to ldap server');
-      if (!($search = @ldap_search($ldap, $ldap_search_dn, $ldap_user_prefix . $this->form['std']->username))) {
+      if(is_array($ldap_search_dn)) {
+        $ldpcount=count($ldap_search_dn);
+        $ldapconn=array();
+        for($i=0;$i<$ldpcount;$i++) {
+          $ldapconn[]=$ldap;
+        }
+      } else {
+        $ldapconn=$ldap;
+      }
+      if (!($search = @ldap_search($ldapconn, $ldap_search_dn, $ldap_user_prefix . $this->form['std']->username))) {
         $this->savetodebug($string['ldapservernosearch']);
         $authobj->fail($this->number);
 

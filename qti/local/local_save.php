@@ -752,10 +752,10 @@ class IE_Local_Save extends IE_Main {
 
     if (count($t_kwds) > 0) {
       for ($i = 0; $i < count($t_kwds); $i++) {
-        $user_keywords[$t_kwds[$i]['keyword']] = $t_kwds[$i]['id'];
+        $user_keywords[$t_kwds[$i]['keyword']][] = $t_kwds[$i]['id'];
       }
     }
-
+/*
     $this->db->SetTable('keywords_user');
     $this->db->AddField('id');
     $this->db->AddField('keyword');
@@ -765,11 +765,14 @@ class IE_Local_Save extends IE_Main {
 
     if (count($u_kwds) > 0) {
       for ($i = 0; $i < count($u_kwds); $i++) {
-        if (!in_array($u_kwds[$i]['keyword'], array_keys($user_keywords))) {
-          $user_keywords[$u_kwds[$i]['keyword']] = $u_kwds[$i]['id'];
+        if (!isset($user_keywords[$u_kwds[$i]['keyword']])) {
+          if(!in_array($u_kwds[$i]['id'], $user_keywords[$u_kwds[$i]['keyword']]))
+          {
+            $user_keywords[$u_kwds[$i]['keyword']][] = $u_kwds[$i]['id'];
+          } 
         }
       }
-    }
+    }*/
 
     return $user_keywords;
   }

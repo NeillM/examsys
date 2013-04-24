@@ -44,10 +44,6 @@ class fixedlist_auth extends outline_authentication {
   function auth($authobj) {
     $this->retdata =& $authobj;
     $this->savetodebug('Authing');
-    /*
-        foreach ($this->settings as $key => $value) {
-          ${$key} = $value;
-        }*/
 
     extract($this->settings);
 
