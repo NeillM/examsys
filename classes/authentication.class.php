@@ -126,9 +126,9 @@ class Authentication {
     if (isset($this->request['rogo-login-form-std'])) {
 
       $this->form['std']->username = $this->request['ROGO_USER'];
-      $this->form['std']->password = $this->request['ROGO_PW'];
+      $this->form['std']->password = '***HIDDEN***';
       $this->debug[] = 'Standard form data found - Storing in object ' . var_export($this->form, true);
-
+      $this->form['std']->password = $this->request['ROGO_PW'];
     }
 
     if (!isset($this->session['authenticationObj']['attempt'])) {
