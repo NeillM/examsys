@@ -64,4 +64,6 @@ $string['loadingsection'] = 'Loading section';
 $string['loadingblank'] = 'Loading blank string';
 $string['loadingblankdrop'] = 'Loading blank dropdown';
 $string['fileoutput'] = 'File Output';
+
+$string['type'] = 'Paper Type';
 ?>
