@@ -69,8 +69,8 @@ for ($i=1; $i<$plugin_no; $i++) {
   
   $settinginfo = '';
   foreach ($authinfo->plugins[$i]->settings as $setting => $value) {
-    if ($settinginfo != '') $settinginfo .= ', ';
-    $settinginfo .= $setting . '=' . $value;
+    if ($settinginfo != '') $settinginfo .= ', &nbsp; ';
+    $settinginfo .= $setting . '=' . $value ;
   }
   
   echo "<tr><td>" . $authinfo->plugins[$i]->number . ".</td><td><nobr>" . $authinfo->plugins[$i]->name . "</nobr></td><td>" . $authinfo->plugins[$i]->classname . "</td><td>" . $authinfo->plugins[$i]->version . "</td><td>$settinginfo</td></tr>\n";
@@ -81,11 +81,17 @@ echo "<br />\n";
 
 echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin:10px\">\n";
 echo "<tr><td class=\"sechead\">Name</td><td class=\"sechead\">Function</td><td class=\"sechead\">Description</td><td class=\"sechead\">ID</td></tr>";
+$old_function='';
 foreach ($authinfo->callbacks as $callback_name => $callback_details) {
   foreach ($callback_details as $callback) {
-    echo "<tr><td>" . $callback_name . "</td><td>" . $callback->functionname . "</td><td>" . $callback->plugindescname . "</td><td>" . $callback->pluginconfigid . "</td></tr>\n";
+    if($callback->functionname!=$old_function) {
+      echo "<tr><td colspan=4><hr></td></tr>";
+    }
+    echo "<tr><td>" . $callback_name . "&nbsp;</td><td>" . $callback->functionname . "&nbsp;</td><td>" . $callback->plugindescname . "&nbsp;</td><td>" . $callback->pluginconfigid . "&nbsp;</td></tr>\n";
+    $old_function=$callback->functionname;
   }
 }
+echo "<tr><td colspan=4><hr></td></tr>";
 echo "</table>\n";
 
 ?>
