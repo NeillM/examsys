@@ -237,6 +237,7 @@ foreach ($user_results as $individual) {
           for ($a=0; $a<count($question['correct']); $a++) {            
             if (substr($tmp_exclude, $a, 1) == '0' && ($question['q_type']!='rank' || $question['correct'][$a]>0)) $csv .= ',Q' . $q_no . chr($a+65);
           }
+          if ($question['score_method'] == 'Bonus Mark') $csv .= ',Q' . $q_no.'X';
         } elseif ($question['q_type']=='mrq' and $question['score_method'] == 'Mark per Option') {
           for ($a=0; $a<count($question['correct']); $a++) {
             if (substr($tmp_exclude, $a, 1) == '0' and $question['correct'][$a] == 'y') $csv .= ',Q' . $q_no . chr($a+65);
@@ -338,7 +339,7 @@ foreach ($user_results as $individual) {
               if ($parts_test_fail) $csv .= ',' . (($tmp_mark > 0) ? 1:0);  
             }
           } else {
-            if (($question['q_type'] == 'mrq' and $question['score_method'] == 'Mark per Option') or $question['q_type'] == 'rank') {
+            if (($question['q_type'] == 'mrq'  or $question['q_type'] == 'rank') and $question['score_method'] != 'Mark per Question') {
               $answer = '';
               foreach ($log_array[$row_written] as $kb => $vb) {
                 if (is_array($vb)) {
@@ -349,11 +350,16 @@ foreach ($user_results as $individual) {
               }
               
               $answer .= '                                   ';                  
+              $test_for_bonus = 0;
               foreach ($question['correct'] as $qi => $question_part) {
                 if ($question_part != 'n' && ($question['q_type']!='rank' || $question_part>0)) {
                   $csv .= ',' . (($question_part == $answer[$qi]) ? 1:0);
+                  if ($question_part != $answer[$qi]) $test_for_bonus++;
                 }
               }            
+              if ($question['score_method'] == 'Bonus Mark') {
+                $csv .= ',' . (($test_for_bonus==0) ? 1:0);
+              }
             } else {
               $csv .= ',' . (($individual['mark_array'][$q_id] > 0) ? 1:0);
             }
