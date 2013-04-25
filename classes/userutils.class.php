@@ -289,7 +289,7 @@ Class UserUtils {
       return;
     }
     $idMod = module_utils::get_idMod($module_code, $db);
-    if ($moduleid !== false) {
+    if ($idMod !== false) {
       self::add_staff_to_module($tmp_userID, $idMod, $db);
     }
   }
