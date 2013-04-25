@@ -66,5 +66,5 @@ $string['loadingblank'] = 'Ładowanie pustych tekstów';
 $string['loadingblankdrop'] = 'Ładowanie pustych list rozwijanych';
 $string['fileoutput'] = 'Dane wyjściowe pliku';
 
-$string['type'] = 'Paper Type'; // TODO Niko
+$string['type'] = 'Typ arkusza';
 ?>
