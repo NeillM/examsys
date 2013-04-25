@@ -37,7 +37,7 @@ $log_type = check_var('log_type', 'POST', true, false, true);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Reassign Script to User</title>
+  <title><?php echo $string['Reassign Script to User']. ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 

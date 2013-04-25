@@ -14,5 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['Reassign Script to User'] = 'Przypisywanie zapisu egzaminu do użytkownika';
 $string['search'] = 'Szukaj';
+$string['warning'] = 'Uwaga';
+$string['msg2'] = 'Zapisy egzaminów nie mogą być ponownie przypisane w trakcie trwania egzaminu.<br />Należy poczekać do zakończenia egzaminu.';
+$string['msg3'] = 'został zarezerwowany z następującymi danymi';
+$string['Title'] = 'Tytuł';
+$string['Last Name'] = 'Nazwisko';
+$string['First Names'] = 'Imiona';
+$string['Student ID'] = 'Numer legitymacji';
+$string['msg4'] = 'Nie znaleziono użytkownika pasującego do tych danych';
+$string['Reassign answers'] = 'Przypisz odpowiedzi/oceny z';
+$string['to following user'] = 'do następującego użytkownika';
 ?>
