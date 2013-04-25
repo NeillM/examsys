@@ -348,17 +348,28 @@ foreach ($user_results as $individual) {
                   }
                 }
               }
-              
               $answer .= '                                   ';                  
-              $test_for_bonus = 0;
+              $bonus_q = $bonus_a = Array();
               foreach ($question['correct'] as $qi => $question_part) {
                 if ($question_part != 'n' && ($question['q_type']!='rank' || $question_part>0)) {
-                  $csv .= ',' . (($question_part == $answer[$qi]) ? 1:0);
-                  if ($question_part != $answer[$qi]) $test_for_bonus++;
+                  if ($question['score_method'] == 'Bonus Mark') {
+                    if ($question_part != '') {
+                      array_push($bonus_q,$question_part);
+                      array_push($bonus_a,$answer[$qi]);                           
+                    }
+                  } else {
+                    $csv .= ',' . (($question_part == $answer[$qi]) ? 1:0);
+                  }
                 }
               }            
               if ($question['score_method'] == 'Bonus Mark') {
-                $csv .= ',' . (($test_for_bonus==0) ? 1:0);
+                $bonus_test = count($bonus_a);
+                foreach ($bonus_a as $answer_part) {
+                  $test = ((in_array($answer_part,$bonus_q)) ? 1:0);
+                  $csv .= ',' . $test;
+                  $bonus_test -= $test;
+                }
+                $csv .= ',' . (($bonus_test == 0) ? 1:0);
               }
             } else {
               $csv .= ',' . (($individual['mark_array'][$q_id] > 0) ? 1:0);
