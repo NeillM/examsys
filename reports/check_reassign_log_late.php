@@ -158,11 +158,11 @@ $log_type = check_var('log_type', 'GET', true, false, true);
     echo "<tr><td style=\"text-align:right; width:80px\">" . $missing_question['question_no'] . "</td><td style=\"text-align:right; width:70px\">" . $missing_question['screen'] . "</td><td style=\"width:150px\">" . $missing_question['updated'] . "</td><td>" . $missing_question['ipaddress'] . "</td></tr>\n";
   }
   echo "</table>\n</div><br />";
-  echo "<div><strong>Reason:</strong> <span style=\"font-size:80%; color:#808080\">" . $string['msg1'] . "</div>\n";
+  echo "<div><strong>" . $string['Reason'] . ":</strong> <span style=\"font-size:80%; color:#808080\">" . $string['msg1'] . "</div>\n";
   echo "<div><textarea name=\"reason\" cols=\"40\" rows=\"3\" style=\"width:100%; font-family:Arial,sans-serif\"></textarea></div>\n<br />";
   echo "<div style=\"text-align:center\">\n";
 
-  echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['accept'] . "\" onclick=\"document.myform.button_pressed.value='Accept';\" style=\"width:100px\" />&nbsp;<input type=\"submit\" name=\"submit\" value=\"" . $string['reject'] . "\" onclick=\"document.myform.button_pressed.value='Reject';\" style=\"width:100px\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"Cancel\" style=\"width:100px\" onclick=\"window.close();\" /></div>";
+  echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['accept'] . "\" onclick=\"document.myform.button_pressed.value='Accept';\" style=\"width:100px\" />&nbsp;<input type=\"submit\" name=\"submit\" value=\"" . $string['reject'] . "\" onclick=\"document.myform.button_pressed.value='Reject';\" style=\"width:100px\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"" . $string['Cancel'] . "\" style=\"width:100px\" onclick=\"window.close();\" /></div>";
   echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /><input type=\"hidden\" name=\"paperID\" value=\"$paperID\" /><input type=\"hidden\" name=\"started\" value=\"$started\" /><input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . "\" />";
 
   $mysqli->close();
