@@ -97,8 +97,6 @@ while ($mod_query->fetch()) {
 }
 $mod_query->close();
 
-
-
 //******************** got from assessment_data
 if (!isset($paper_type)) $paper_type = '0';
 $exclude = '';
@@ -340,7 +338,7 @@ foreach ($user_results as $individual) {
               if ($parts_test_fail) $csv .= ',' . (($tmp_mark > 0) ? 1:0);  
             }
           } else {
-            if ($question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
+            if (($question['q_type'] == 'mrq' and $question['score_method'] == 'Mark per Option') or $question['q_type'] == 'rank') {
               $answer = '';
               foreach ($log_array[$row_written] as $kb => $vb) {
                 if (is_array($vb)) {
