@@ -352,7 +352,6 @@ Class PaperUtils {
   }
 
   public function displayIcon($paper_type, $title, $initials, $surname, $locked,  $retired) {
-    global $string;
     $paper_type = strval($paper_type);
 
     if ($retired != '') {

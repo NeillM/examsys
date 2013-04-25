@@ -34,8 +34,10 @@ require_once './classes/logger.class.php';
 // Redirect External Exminers and Invigilators to their own areas.
 if ($userObject->has_role('External Examiner')) {
   header("location: reviews/");
+  exit;
 } elseif ($userObject->has_role('Invigilator')) {
   header("location: invigilator/");
+  exit;
 }
 
 function display_duration($duration, $string) {
