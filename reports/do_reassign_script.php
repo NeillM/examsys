@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -53,7 +53,7 @@ $result->close();
 
 $mysqli->autocommit(false);
 
-$errors = false;
+$error = false;
 foreach ($papers as $paper) {
   // Record the change in 'track_changes'.
   $logger = new Logger($mysqli);
@@ -140,13 +140,14 @@ $mysqli->autocommit(true);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Reassign Script to User</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 </head>
 
-<body onload="window.opener.location.reload(); window.close();">
+<!-- <body onload="window.opener.location.reload(); window.close();"> -->
+<body onload="window.opener.location.reload();">
 
 </body>
 </html>
