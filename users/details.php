@@ -509,7 +509,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     foreach ($roles_array as $value) {
       if (substr($value,0,1) == '#') {
         if ($old_optgroup != '') echo "</optgroup>\n";
-        echo "<optgroup label=\"" . substr($value,1) . "\">\n";
+        echo "<optgroup label=\"" . $string[substr($value,1)] . "\">\n";
         $old_optgroup = $value;
       } else {
         $display_val = str_replace(' ', '', $value);

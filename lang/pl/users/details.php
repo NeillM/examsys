@@ -20,11 +20,12 @@ require '../lang/' . $language . '/include/titles.inc';
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
 $string['status'] = 'Status'; //cognate //Status, Stan
 $string['student'] = 'Student'; //cognate
+$string['Students'] = 'Studenci';
 $string['externalexaminer'] = 'Zewnętrzny egzaminator';
 $string['graduate'] = 'Absolwent';
 $string['left'] = 'Skreślony'; //???
 $string['suspended'] = 'Zawieszony';
-$string['staff'] = 'Kadra';
+$string['Staff'] = 'Kadra';
 $string['externalauth'] = '[zastosowanie zewnętrznej autoryzacji]';
 $string['gender'] = 'Płeć';
 $string['male'] = 'Mężczyzna';
