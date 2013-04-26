@@ -19,6 +19,7 @@ require '../lang/' . $language . '/include/months.inc';
 $string['summativeexamdetails'] = 'Summative Exam Details';
 $string['administrativetools'] = 'Administrative Tools';
 $string['summativescheduling'] = 'Summative Exam Scheduling';
+$string['Paper'] = 'Paper';
 $string['jumptopaper'] = 'Jump to Paper';
 $string['editproperties'] = 'Edit Properties';
 $string['converttoformative'] = 'Convert to Formative';
