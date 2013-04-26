@@ -231,6 +231,8 @@ if ($exam_duration !== null) {
     .f {font-weight:bold; text-align:right;line-height:180%;padding-right:6px}
     .w {font-size:90%;color:#C00000;font-weight:bold}
     .warn {color:#C00000; font-weight:bold}
+    .logout {float:right; font-weight:bold; color:#C00000; cursor:pointer}
+    a.logout {color:#C00000}
   </style>
 
   <script type="text/javascript" src="./js/student_help.js"></script>
@@ -274,9 +276,11 @@ if ($textsize > 120) {
 <tr>
 <?php
   $icon_types = array('formative.png', 'progress.png', 'summative.png', 'survey.png');
-  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0"><tr><td style="vertical-align:top; width:54px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . '" width="48" height="48" alt="Icon" />';
+  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="vertical-align:top; width:54px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . '" width="48" height="48" alt="Icon" />';
   echo "</td><td><span style=\"font-size:80%; color:#4F81BD\">Rogō {$configObject->get('rogo_version')}</span><br />\n";
-  echo "<span style=\"font-size:20pt; font-weight:bold; color:#4F81BD\">$paper_title</span></td>\n</tr></table></td></tr>";
+  echo "<span style=\"font-size:20pt; font-weight:bold; color:#4F81BD\">$paper_title</span>";
+  echo "<div class=\"logout\"><a href=\"logout.php\"><img src=\"./artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"Log Out\" /></a></div><div class=\"logout\" style=\"padding-right:8px\"><a class=\"logout\" href=\"logout.php\">" . $string['signout'] . "</a></div>";
+  echo "</td>\n</tr></table></td></tr>";
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {

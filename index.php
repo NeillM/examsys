@@ -98,6 +98,7 @@ $paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $us
 
 if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   header("location: user_index.php?id=" . $paper_display[0]['crypt_name']);
+  exit;
 } elseif ($paper_no == 0) {
   echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>{$string['exams']}</title>\n";
   ?>
@@ -322,11 +323,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
             <div class="file">
                 <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%">
                     <tr>
-                        <td style="width:60px" align="center"><a class="blacklink"
-                                                                 href="user_index.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview"
-                                                                 rel="<?php echo $paper['fullscreen'] ?>"><img
-                                src="artwork/summative.png" width="48" height="48" alt="Type: Summative Exam"
-                                border="0"/></a></td>
+                        <td style="width:60px" align="center"><a class="blacklink" href="user_index.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview" rel="<?php echo $paper['fullscreen'] ?>"><img src="artwork/summative.png" width="48" height="48" alt="Type: Summative Exam" border="0"/></a></td>
                         <td>
                             <a href="user_index.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview"
                                class="blacklink"
