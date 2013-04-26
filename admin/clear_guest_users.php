@@ -30,7 +30,7 @@ require '../include/sidebar_menu.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Clear Guest Users</title>
+  <title><?php echo $string['clearguestaccounts']; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -111,7 +111,7 @@ require '../include/sidebar_menu.inc';
       }
       echo "</td><td class=\"l\">user$i</td><td class=\"l\">" . $used[$i]['surname'] . "</td><td class=\"l\">" . $used[$i]['first_names'] . "</td><td class=\"l\">" . $used[$i]['title'] . "</td><td class=\"l\">" . $used[$i]['student_id'] . "</td><td class=\"l\">" . $used[$i]['reserved'] . "</td>";
       if ($paper_title == '') {
-        echo "<td class=\"loff\">not taken</td>";
+        echo "<td class=\"loff\">" . $string['not taken'] . "</td>";
       } else {
         echo "<td class=\"l\"><a href=\"../paper/details.php?paperID=$q_paper\">$paper_title</td>";
       }

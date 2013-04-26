@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['administrativetools'] = 'Narzędzia administracyjne';
-$string['clearguestaccounts'] = 'Oczyść konta gości';
+$string['clearguestaccounts'] = 'Oczyszczanie kont gości';
 $string['clear'] = 'Oczyść';
 $string['user'] = 'Użytkownik';
 $string['password'] = 'Hasło';
@@ -26,6 +26,7 @@ $string['studentid'] = 'Numer legitymacji';
 $string['datereserved'] = 'Data zarezerwowania konta';
 $string['assessmenttaken'] = 'Podjęty egzamin';
 $string['free'] = 'wolny';
+$string['not taken'] = 'nie podjęty';
 $string['cleanup'] = 'Oczyść';
 $string['unset'] = '&lt;nieokreślone&gt;';
 ?>

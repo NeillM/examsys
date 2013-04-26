@@ -26,6 +26,7 @@ $string['studentid'] = 'Student ID';
 $string['datereserved'] = 'Date Account Reserved';
 $string['assessmenttaken'] = 'Assessment Taken';
 $string['free'] = 'free';
+$string['not taken'] = 'not taken';
 $string['cleanup'] = 'Clean Up';
 $string['unset'] = '&lt;unset&gt;';
 ?>
