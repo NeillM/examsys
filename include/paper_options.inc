@@ -663,7 +663,7 @@ if ($properties->get_paper_type() == '2') {
   } else {
     makeMenu(array($string['import']=>"{$configObject->get('cfg_root_path')}/qti/import.php?paperID=$paperID&module=$module",$string['export12']=>"{$configObject->get('cfg_root_path')}/qti/export.php?dest=qti12&paperID=$paperID"));
   }
-  makeMenu(array('Continuous'=>$configObject->get('cfg_root_path') . "/paper/print.php?id=" . $properties->get_crypt_name(), 'Page-break per question'=>$configObject->get('cfg_root_path') . "/paper/print.php?id=". $properties->get_crypt_name() . "&break=1"));
+  makeMenu(array($string['Continuous']=>$configObject->get('cfg_root_path') . "/paper/print.php?id=" . $properties->get_crypt_name(), $string['Page-break per question']=>$configObject->get('cfg_root_path') . "/paper/print.php?id=". $properties->get_crypt_name() . "&break=1"));
 
   hideMenuScript($menuNo);
 
