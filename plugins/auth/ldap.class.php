@@ -169,7 +169,6 @@ class ldap_auth extends outline_authentication {
         }
         $sql = "SELECT $username_col as username, $id_col as id FROM $table WHERE $username_col = ? $sql_extra";
         $result = $this->db->prepare($sql);
-
         $result->bind_param('s', $this->form['std']->username);
         $result->execute();
         $result->store_result();
@@ -195,6 +194,9 @@ class ldap_auth extends outline_authentication {
 
           $this->savetodebug('LDAP Record found but no local account');
           $data = new stdClass();
+          if(!isset($this->settings['search_field'])) {
+            $this->settings['search_field'] = 'username';
+          }
           $data->{$this->settings['search_field']} = $this->form['std']->username;
 
           $this->createnewuserassociation = true;
