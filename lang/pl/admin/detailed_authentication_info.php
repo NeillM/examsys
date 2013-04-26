@@ -24,3 +24,12 @@
 
 $string['detailed_authentication_information']='Szczegółowe informacje dot. uwierzytelniania';
 $string['administrativetools'] = 'Narzedzia administracyjne';
+$string['System Information'] = 'Informacje Systemowe';
+$string['No'] = 'Nr';
+$string['Name'] = 'Nazwa';
+$string['Class'] = 'Klasa';
+$string['Version'] = 'Wersja';
+$string['Settings'] = 'Ustawienia';
+$string['Function'] = 'Funkcja';
+$string['Description'] = 'Opis';
+$string['ID'] = 'Identyfikator';

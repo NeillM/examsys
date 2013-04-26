@@ -53,7 +53,7 @@ include '../include/admin_options.inc';
 <div id="content" class="content">
 <table class="header">
 <tr>
-<th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./system_info.php">System Information</a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><nobr>Authentication Information</nobr></div></th>
+<th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./system_info.php"><?php echo $string['System Information']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><nobr><?php echo $string['detailed_authentication_information']; ?></nobr></div></th>
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(240); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
 <tr><th colspan="5" class="bevel"></th></tr>
@@ -64,7 +64,7 @@ $authinfo = $authentication->version_info();
 $plugin_no = count($authinfo->plugins);
 
 echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin:10px\">\n";
-echo "<tr><td class=\"sechead\">No</td><td class=\"sechead\">Name</td><td class=\"sechead\">Class</td><td class=\"sechead\">Version</td><td class=\"sechead\" style=\"text-align:center\">Settings</td></tr>";
+echo "<tr><td class=\"sechead\">" . $string['No'] . "</td><td class=\"sechead\">" . $string['Name'] . "</td><td class=\"sechead\">" . $string['Class'] . "</td><td class=\"sechead\">" . $string['Version'] . "</td><td class=\"sechead\" style=\"text-align:center\">" . $string['Settings'] . "</td></tr>";
 for ($i=1; $i<$plugin_no; $i++) {
   
   $settinginfo = '';
@@ -80,7 +80,7 @@ echo "</table>\n";
 echo "<br />\n";
 
 echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin:10px\">\n";
-echo "<tr><td class=\"sechead\">Name</td><td class=\"sechead\">Function</td><td class=\"sechead\">Description</td><td class=\"sechead\">ID</td></tr>";
+echo "<tr><td class=\"sechead\">" . $string['Name'] . "</td><td class=\"sechead\">" . $string['Function'] . "</td><td class=\"sechead\">" . $string['Description'] . "</td><td class=\"sechead\">" . $string['ID'] . "</td></tr>";
 $old_function='';
 foreach ($authinfo->callbacks as $callback_name => $callback_details) {
   foreach ($callback_details as $callback) {
