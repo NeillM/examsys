@@ -15,10 +15,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['reviewsummary'] = 'Review Summary';
+$string['Review Form'] = 'Review Form';
+$string['Student Profile'] = 'Student Profile';
 $string['name'] = 'Name';
 $string['studentid'] = 'Student ID';
 $string['reviewed'] = 'Reviewed';
 $string['reviews'] = 'Reviews';
 $string['overall'] = 'Overall';
+$string['Complete'] = 'Complete';
+$string['Missing'] = 'Missing';
 $string['q'] = 'Q';
 ?>

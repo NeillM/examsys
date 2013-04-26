@@ -15,10 +15,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['reviewsummary'] = 'Recenzja wewnętrzna';
+$string['Review Form'] = 'Formularz recenzji';
+$string['Student Profile'] = 'Profil Studenta';
 $string['name'] = 'Nazwa';
 $string['studentid'] = 'Numer legitymacji';
 $string['reviewed'] = 'Przejrzany';
 $string['reviews'] = 'Recenzje';
 $string['overall'] = 'Całościowo';
+$string['Complete'] = 'Zakończone';
+$string['Missing'] = 'Brakujące';
 $string['q'] = 'Q'; //cognate
 ?>
