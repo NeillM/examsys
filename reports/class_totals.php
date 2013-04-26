@@ -96,7 +96,7 @@ ob_start();
     }
     document.getElementById('menudiv').style.left = currentX+scrOfX + 'px';
     document.getElementById('menudiv').style.top = top_pos + 'px';
-    
+
     document.getElementById('menudiv').style.display = "";
     document.getElementById('item1b').style.backgroundColor = '#FFFFFF';
     document.getElementById('item2b').style.backgroundColor = '#FFFFFF';
@@ -349,7 +349,7 @@ if ($language != 'en') {
   }
   $result->close();
 
-  
+
   // Query any student special needs for the current paper
   $special_needs = array();
   $users_in = array();
@@ -366,18 +366,6 @@ if ($language != 'en') {
     }
     $result->close();
   }
-  $log_late = array();
-  // Check log_late for any records
-  $late_ts = strtotime($enddate) + 7200;
-  $late_end = date('Y-m-d H:i:s', $late_ts);
-  $result = $mysqli->prepare("SELECT DISTINCT userID, title, surname, first_names FROM log_late, log_metadata, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND started >= ? AND started <= ? ORDER BY surname, initials");
-  $result->bind_param('iss', $paperID, $startdate, $late_end);
-  $result->execute();
-  $result->bind_result($tmp_userID, $title, $surname, $first_names);
-  while ($result->fetch()) {
-    $log_late[$tmp_userID] = $title . ' ' .  $surname . ', ' . $first_names;
-  }
-  $result->close();
 
   if ($marking == '0') {
     $marking_label = $string['%'];
@@ -431,13 +419,13 @@ if ($language != 'en') {
   } else {
     $tmp_folder = '';
   }
-  
+
   if (isset($_GET['module'])) {
     $tmp_module = '&module=' . $_GET['module'];
   } else {
     $tmp_module = '';
   }
-  
+
   // output table header
   if (isset($user_results[0])) {
     echo "<tr style=\"font-size:110%\">\n";
@@ -457,7 +445,7 @@ if ($language != 'en') {
     }
     echo "</tr>\n";
   }
-  
+
   if ($sortby == 'classification') {
     $sortby = 'mark';
   }
@@ -778,7 +766,7 @@ if ($language != 'en') {
       echo '</td><td>&nbsp;</td>';
     }
     echo "</tr>\n";
-    
+
     if ($cohort_size > 0) {
       $percent_failures = round(($failures / $cohort_size) * 100);
       $percent_passes = round(($passes / $cohort_size) * 100);
@@ -786,7 +774,7 @@ if ($language != 'en') {
     } else {
       $percent_failures = 0;
       $percent_passes = 0;
-      $percent_honours = 0;  
+      $percent_honours = 0;
     }
 
     echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">$failures</td><td>(" . $percent_failures . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";

@@ -409,12 +409,8 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
     $display_no++;
   }
 
-  for ($i=0; $i<$cohort_size; $i++) {
-
-    if ($student_cohort[$i]['username'] == $tmp['username']) {
-      $student_cohort[$i]['taken'] = 1;
-    }
-
+  if (isset($student_cohort)) {
+    $student_cohort = check_and_clear_cohort($student_cohort, $tmp['username']);
   }
   $master_array[$user_number]['marking_complete'] = $marking_comp;
 
@@ -557,7 +553,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
           if ($question['display_method'] == 'dropdown') {
             $student_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $question['correct'][$a][0])));
             $correct_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $user_answers[$a+1])));
-            
+
             if ($student_answer == $correct_answer) {
               $tmp_mark += $question['marks_correct'];
               $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
@@ -737,8 +733,25 @@ function formatsec($seconds) {
   $timestring .= "$diff_min:";
   if ($diff_sec < 10) $timestring .= '0';
   $timestring .= $diff_sec;
-  
+
   return $timestring;
+}
+
+/**
+ * Check if a record exists in the student cohort array created when showing absent candidates. If found, remove the entry
+ * @param  array  $student_cohort All (remaining) students in the cohort
+ * @param  string $username       Username to look for
+ * @return array                  Cohort array with current user removed if found
+ */
+function check_and_clear_cohort($student_cohort, $username) {
+  $tmp_cohort_size = count($student_cohort);
+  for ($i=0; $i < $tmp_cohort_size; $i++) {
+    if ($student_cohort[$i]['username'] == $username) {
+      unset($student_cohort[$i]);
+      break;
+    }
+  }
+  return array_values($student_cohort);
 }
 
 set_time_limit(0);
@@ -858,7 +871,7 @@ while ($result->fetch()) {
   }
   $option_no++;
   $stems++;
-  
+
   $old_q_id             = $q_id;
   $old_display_pos      = $display_pos;
   $old_q_type           = $q_type;
@@ -902,6 +915,24 @@ if ($old_status != 'Experimental') {
 	displayExperimental($display_experimental, $question_no);
 }
 
+$cfg_long_date_time = $configObject->get('cfg_long_date_time');
+
+$log_late = array();
+$log_late_missing_users = array();
+// Check log_late for any records
+$late_ts = strtotime($enddate) + 7200;
+$late_end = date('Y-m-d H:i:s', $late_ts);
+$result = $mysqli->prepare("SELECT DISTINCT userID, title, surname, first_names, DATE_FORMAT(started, '$cfg_long_date_time') AS display_started, started FROM log_late, log_metadata, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND started >= ? AND started <= ? ORDER BY surname, initials");
+$result->bind_param('iss', $paperID, $startdate, $late_end);
+$result->execute();
+$result->bind_result($tmp_userID, $title, $surname, $first_names, $display_started, $started);
+while ($result->fetch()) {
+  $log_late[$tmp_userID] = $title . ' ' .  $surname . ', ' . $first_names;
+  $log_late_missing_users[$tmp_userID]['display_started'] = $display_started;
+  $log_late_missing_users[$tmp_userID]['started'] = $started;
+}
+$result->close();
+
 $cohort_size = 0;
 $out_of_range = 0;
 $moduleID = Paper_utils::get_modules($_GET['paperID'], $mysqli);
@@ -939,7 +970,7 @@ if ($_GET['absent'] == 1) {
                 ($moduleID_in)
           AND
                calendar_year = ?";
-               
+
   $result = $mysqli->prepare( $sql );
   $result->bind_param('s', $calendar_year);
   $result->execute();
@@ -956,7 +987,6 @@ if ($_GET['absent'] == 1) {
     $student_cohort[$cohort_size]['grade']         = $grade;
     $student_cohort[$cohort_size]['module']        = $moduleid;
     $student_cohort[$cohort_size]['gender']        = $gender;
-    $student_cohort[$cohort_size]['taken']         = 0;
     $student_cohort[$cohort_size]['timer_started'] = false;
 
     $cohort_size++;
@@ -1012,8 +1042,6 @@ if (isset($_GET['studentsonly']) and $_GET['studentsonly'] == 0) {
 
 // Get log data.
 if ($paper_type == '0') {
-
-  $cfg_long_date_time = $configObject->get('cfg_long_date_time');
 
   $sql = '(SELECT log0.q_id
                     , 0 AS paper_type
@@ -1166,6 +1194,12 @@ while ($log_query->fetch() !== null) {
   if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and !isset($user_modules[$tmp_userID]['idMod'])) {
     continue; //this user is not on the module set in repmodule so dont put them in the array
   }
+
+  // Check if user is in log late so that we can catch any users who ONLY have log_late records
+  if (in_array($tmp_userID, array_keys($log_late_missing_users))) {
+      unset($log_late_missing_users[$tmp_userID]);
+  }
+
   if ($old_screen != $screen or $old_userID != $tmp_userID or $old_started != $started) {
     $user_duration += $old_duration;
   }
@@ -1228,6 +1262,43 @@ while ($log_query->fetch() !== null) {
   $old_status   = $status;
 }
 
+$late_cohort = array();
+$late_cohort_size = 0;
+if (count($log_late_missing_users) > 0) {
+  // Get students who don't have records in main log
+  $late_id_list = implode(',', array_keys($log_late_missing_users));
+
+  $sql = <<< SQL
+SELECT DISTINCT u.id, u.username, u.title, u.surname, u.first_names, u.initials, sid.student_id, u.grade, '', u.gender
+FROM users u INNER JOIN sid ON u.id = sid.userID
+WHERE u.id IN ($late_id_list)
+SQL;
+
+  $result = $mysqli->prepare($sql);
+  echo $mysqli->error;
+  $result->execute();
+  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
+  while ($result->fetch()) {
+    $late_cohort[$late_cohort_size]['username']      = $tmp_username;
+    $late_cohort[$late_cohort_size]['tmp_userID']    = $tmp_userID;
+    $late_cohort[$late_cohort_size]['name']          = trim(str_replace("'","",$surname) . ',' . $first_names);
+    $late_cohort[$late_cohort_size]['title']         = $title;
+    $late_cohort[$late_cohort_size]['surname']       = demo_replace($surname, $demo);
+    $late_cohort[$late_cohort_size]['first_names']   = demo_replace($first_names, $demo);
+    $late_cohort[$late_cohort_size]['initials']      = demo_replace($initials, $demo);
+    $late_cohort[$late_cohort_size]['student_id']    = demo_replace_number($student_id, $demo);
+    $late_cohort[$late_cohort_size]['grade']         = $grade;
+    $late_cohort[$late_cohort_size]['module']        = $moduleid;
+    $late_cohort[$late_cohort_size]['gender']        = $gender;
+    $late_cohort[$late_cohort_size]['display_started'] = $log_late_missing_users[$tmp_userID]['display_started'];
+    $late_cohort[$late_cohort_size]['started'] = $log_late_missing_users[$tmp_userID]['started'];
+    $late_cohort[$late_cohort_size]['timer_started'] = false;
+
+    $late_cohort_size++;
+  }
+  $result->close();
+}
+
 if (!empty($tmp_array)) {
   if (!isset($_GET['repmodule']) or $_GET['repmodule'] == '' or (isset($user_modules[$old_userID]['idMod']) and $user_modules[$old_userID]['idMod'] == $_GET['repmodule'])) {
 
@@ -1263,37 +1334,73 @@ if ($percent < 100) {
   }
 }
 
+if ($late_cohort_size > 0) {
+  for ($i=0; $i < $late_cohort_size; $i++) {
+    $late_user = $late_cohort[$i];
+    if ($absent == 1) {
+      $student_cohort = check_and_clear_cohort($student_cohort, $late_user['username']);
+    }
+    $user_results[$user_no]['name'] = $late_user['name'];
+    $user_results[$user_no]['mark'] = 0;
+    $user_results[$user_no]['adj_percent'] = 0;
+    $user_results[$user_no]['percent'] = 0;
+    $user_results[$user_no]['started'] = '';
+    $user_results[$user_no]['username'] = $late_user['username'];
+    $user_results[$user_no]['tmp_userID'] = $late_user['tmp_userID'];
+    $user_results[$user_no]['student_grade'] = $late_user['grade'];
+    $user_results[$user_no]['module'] = $late_user['module'];
+    $user_results[$user_no]['year'] = '';
+    $user_results[$user_no]['display_started'] = $late_user['display_started'];
+    $user_results[$user_no]['started'] = $late_user['started'];
+    $user_results[$user_no]['attempt'] = 1;
+    $user_results[$user_no]['marking_complete'] = 0;
+    $user_results[$user_no]['title'] = $late_user['title'];
+    $user_results[$user_no]['surname'] = $late_user['surname'];
+    $user_results[$user_no]['initials'] = $late_user['initials'];
+    $user_results[$user_no]['first_names'] = $late_user['first_names'];
+    $user_results[$user_no]['student_id'] = $late_user['student_id'];
+    $user_results[$user_no]['gender'] = $late_user['gender'];
+    $user_results[$user_no]['ipaddress'] = '';
+    $user_results[$user_no]['duration'] = 0;
+    $user_results[$user_no]['questions'] = '';
+    $user_results[$user_no]['paper_type'] = $paper_type;
+    $user_results[$user_no]['room'] = '';
+    $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
+    $user_results[$user_no]['roles'] = 'Student';
+    $user_no++;
+  }
+}
+
 if ($absent == 1) {
   // Add in students in cohort who haven't taken the exam.
   $count_student_cohort = count($student_cohort);
-  for ($i=0; $i<$count_student_cohort; $i++) {
-    if ($student_cohort[$i]['taken'] == 0) {
-      $user_results[$user_no]['name'] = $student_cohort[$i]['name'];
-      $user_results[$user_no]['mark'] = 0;
-      $user_results[$user_no]['adj_percent'] = 0;
-      $user_results[$user_no]['percent'] = 0;
-      $user_results[$user_no]['started'] = '';
-      $user_results[$user_no]['username'] = $student_cohort[$i]['username'];
-      $user_results[$user_no]['tmp_userID'] = $student_cohort[$i]['tmp_userID'];
-      $user_results[$user_no]['student_grade'] = $student_cohort[$i]['grade'];
-      $user_results[$user_no]['module'] = $student_cohort[$i]['module'];
-      $user_results[$user_no]['year'] = '';
-      $user_results[$user_no]['display_started'] = '';
-      $user_results[$user_no]['title'] = $student_cohort[$i]['title'];
-      $user_results[$user_no]['surname'] = $student_cohort[$i]['surname'];
-      $user_results[$user_no]['initials'] = $student_cohort[$i]['initials'];
-      $user_results[$user_no]['first_names'] = $student_cohort[$i]['first_names'];
-      $user_results[$user_no]['student_id'] = $student_cohort[$i]['student_id'];
-      $user_results[$user_no]['gender'] = $student_cohort[$i]['gender'];
-      $user_results[$user_no]['ipaddress'] = '';
-      $user_results[$user_no]['duration'] = 0;
-      $user_results[$user_no]['questions'] = '';
-      $user_results[$user_no]['paper_type'] = '';
-      $user_results[$user_no]['room'] = '';
-      $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
-      $user_results[$user_no]['roles'] = 'Student';
-      $user_no++;
-    }
+  for ($i=0; $i < $count_student_cohort; $i++) {
+    $user_results[$user_no]['name'] = $student_cohort[$i]['name'];
+    $user_results[$user_no]['mark'] = 0;
+    $user_results[$user_no]['adj_percent'] = 0;
+    $user_results[$user_no]['percent'] = 0;
+    $user_results[$user_no]['started'] = '';
+    $user_results[$user_no]['username'] = $student_cohort[$i]['username'];
+    $user_results[$user_no]['tmp_userID'] = $student_cohort[$i]['tmp_userID'];
+    $user_results[$user_no]['student_grade'] = $student_cohort[$i]['grade'];
+    $user_results[$user_no]['module'] = $student_cohort[$i]['module'];
+    $user_results[$user_no]['year'] = '';
+    $user_results[$user_no]['display_started'] = '';
+    $user_results[$user_no]['title'] = $student_cohort[$i]['title'];
+    $user_results[$user_no]['surname'] = $student_cohort[$i]['surname'];
+    $user_results[$user_no]['initials'] = $student_cohort[$i]['initials'];
+    $user_results[$user_no]['first_names'] = $student_cohort[$i]['first_names'];
+    $user_results[$user_no]['student_id'] = $student_cohort[$i]['student_id'];
+    $user_results[$user_no]['gender'] = $student_cohort[$i]['gender'];
+    $user_results[$user_no]['ipaddress'] = '';
+    $user_results[$user_no]['duration'] = 0;
+    $user_results[$user_no]['questions'] = '';
+    $user_results[$user_no]['paper_type'] = '';
+    $user_results[$user_no]['room'] = '';
+    $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
+    $user_results[$user_no]['roles'] = 'Student';
+    $user_results[$user_no]['late'] = true;
+    $user_no++;
   }
 }
 
