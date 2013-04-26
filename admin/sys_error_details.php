@@ -99,7 +99,7 @@ td {border: 1px solid #C0C0C0; padding:2px}
 <tr><td class="f" style="vertical-align: top;" ><?php echo $string['occurranceoferror']; ?></td><td><?php echo $similar_errors; ?></td></tr>
 <tr><td class="f"><?php echo $string['datefixed']; ?></td><td><?php echo ($fixed == '' ? 'n/a' : $fixed); ?></td></tr>
 <tr><td class="f" style="vertical-align: top"><?php echo $string['backtrace']; ?></td><td><?php echo $backtrace; ?></td></tr>
-<tr><td class="f" style="vertical-align: top"><?php echo $string['variables']; ?></td><td><?php var_dump($variables); ?></td></tr>
+<tr><td class="f" style="vertical-align: top"><?php echo $string['variables']; ?></td><td><?php if(isset($variables) and !($variables === '' or $variables === false)) { var_dump($variables); } ?></td></tr>
 </table>
 </div>
 <br />

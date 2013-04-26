@@ -34,7 +34,7 @@ register_shutdown_function("shutdownHandler");
 function shutdownHandler() {
   $isError = false;
   if ($error = error_get_last()) {
-    customErrorHandler($error['type'], $error['message'], $error['file'], $error['line'], array());
+    customErrorHandler($error['type'], 'At Shutdown:: ' . $error['message'], $error['file'], $error['line'], array());
   }
 }
 
@@ -153,9 +153,22 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     }
   }
 
+
   if ($error_type != 'Notice') { // Record errors that are not notices.
 
+    if(strpos($errstr,'customErrorHandler') !== false and strpos($errstr,"Couldn't fetch mysqli") !== false ) {
+      return true;
+    }
+
     $backtrace = DebugBackTraceDisplay(debug_backtrace());
+    try {
+      throw new Exception("New Backtrace Method:", 1);
+    }
+    catch (Exception $e) {
+      $string="Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+      $string=$string . nl2br($e->getTraceAsString());
+      $backtrace=$string . "\r\n<br>Old Method:\r\n<br>" . $backtrace;
+    }
     if (is_null($configObject->get('cfg_db_port'))) {
       $configObject->set('cfg_db_port', 3306);
     }
@@ -184,13 +197,28 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
         }
       }
     }
-
+if(isset($context) and !empty($context)) {
+  $variables = base64_encode(serialize($context));
+}
     $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
     $userid = 0;
     $username = 'PRE LOGIN';
     if (isset($userObject)) {
       $userid = $userObject->get_user_ID();
       $username = $userObject->get_username();
+    }
+$valid_errors=array('Notice','Warning','Fatal Error','Unknown');
+    if(!in_array($error_type,$valid_errors)) {
+      $error_type='Unknown';
+    }
+
+    global $mysqli;
+    if (isset($mysqli)) {
+      if (isset($mysqli->error)) {
+        if (!($mysqli->error == '' or is_null($mysqli->error))) {
+          $errstr = $errstr . "\r\n<br>MySQLi Error:\r\n<br>" . $mysqli->error;
+        }
+      }
     }
 
     $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
