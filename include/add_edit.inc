@@ -147,11 +147,12 @@ HTML;
 
     foreach($changes as $change) {
       $alt = ($i++ % 2 == 1) ? ' class="alt"' : '';
+      $change['old'] = strip_tags($change['old']);
+      $change['new'] = strip_tags($change['new']);
       $change_old = $change['old'];
       $change_old_more = '';
       $change_new = $change['new'];
       $change_new_more = '';
-      $split_pos = 0;
       if (strlen($change['old']) > $cutoff) {
         $split_pos = strrpos(substr($change['old'], 0, $cutoff), ' ');
         $change_old = substr($change['old'], 0, $split_pos);
