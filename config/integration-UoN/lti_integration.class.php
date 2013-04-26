@@ -270,7 +270,7 @@ class lti_integration_extended extends lti_integration {
     return $data;
   }
 
-  function invalid_module_code($c_internal_id, $data, $location = '') {
+  static function invalid_module_code($c_internal_id, $data, $location = '') {
 $notices=UserNotices::get_instance();
     $notices->display_notice("Module code error", 'There is a problem with the module code as the translation code has resulted in an error.  Please contact Learning Team Support <a href="mailto:learning-team-support@nottingham.ac.uk">learning-team-support@nottingham.ac.uk</a>  Please include this debug info below:', '/artwork/access_denied.png', '#C00000');
 
