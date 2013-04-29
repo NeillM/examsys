@@ -5,7 +5,7 @@ body {
 a {
   color:blue;
 }
-p, div, td, strong, ol {
+p, div, td, ol {
   color:#484848;
 }
 ul {
