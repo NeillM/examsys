@@ -165,6 +165,10 @@ class UserObject extends RogoStaticSingleton {
     return false;
   }
 
+  function is_temporary_account() {
+    // Look for 'user' followed by one or more digits.
+    return preg_match('/^user[0-9]+/', $this->username);
+  }
 
   function is_demo() {
     if ($this->demomode or $this->has_role('Demo')) {
@@ -395,6 +399,10 @@ class UserObject extends RogoStaticSingleton {
     return $this->title;
   }
 
+  function get_temp_title() {
+    return $this->temp_title;
+  }
+
   /**
    * Return the user's initials
    *
@@ -420,6 +428,10 @@ class UserObject extends RogoStaticSingleton {
    */
   function get_surname() {
     return $this->surname;
+  }
+  
+  function get_temp_surname() {
+    return $this->temp_surname;
   }
 
   /**
@@ -624,11 +636,11 @@ class UserObject extends RogoStaticSingleton {
 
   function store_original_user() {
     $data = new stdClass();
-    $data->title = $this->title;
-    $data->initials = $this->initials;
-    $data->username = $this->username;
-    $data->email = $this->email;
-    $data->roles = $this->roles;
+    $data->title            = $this->title;
+    $data->initials         = $this->initials;
+    $data->username         = $this->username;
+    $data->email            = $this->email;
+    $data->roles            = $this->roles;
     $this->impersonatedfrom = $data;
   }
 
@@ -637,8 +649,8 @@ class UserObject extends RogoStaticSingleton {
 
     if ($this->has_role('SysAdmin')) {
       $this->store_original_user();
-      $this->roles = array();
-      $this->staffModules = array();
+      $this->roles          = array();
+      $this->staffModules   = array();
       $this->studentModules = array();
       $this->load($userid);
       $this->configObj->append('cfg_install_type', " as $this->title $this->surname");
@@ -663,6 +675,7 @@ class UserObject extends RogoStaticSingleton {
       return false;
     }
 
+    // Add additional special needs data.
     if ($this->special_needs == 1) {
       $stmt = $this->db->prepare('SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userID = ?');
       $stmt->bind_param('i', $userID);
@@ -671,6 +684,16 @@ class UserObject extends RogoStaticSingleton {
       $stmt->bind_result($this->background, $this->foreground, $this->textsize, $this->extra_time, $this->marks_color, $this->themecolor, $this->labelcolor, $this->font, $this->unanswered);
       $stmt->fetch();
       $stmt->close();
+    }
+    
+    // Add temporary account data.
+    if ($this->is_temporary_account()) {
+      $stmt = $this->db->prepare('SELECT title, first_names, surname FROM temp_users WHERE assigned_account = ?');
+      $stmt->bind_param('s', $this->get_username());
+      $stmt->execute();
+      $stmt->bind_result($this->temp_title, $this->temp_first_names, $this->temp_surname);
+      $stmt->fetch();
+      $stmt->close();    
     }
 
     $temp = explode(',', $this->userroles);

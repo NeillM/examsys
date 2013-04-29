@@ -87,7 +87,11 @@ if ($userObject->is_special_needs()) {
 // Adjust text size
 $textsize -= 5;
 
-$person = $userObject->get_title() . ' ' . $userObject->get_surname();
+if ($userObject->is_temporary_account()) {
+  $person = '<img src="./artwork/guest_account_16.png" width="16" height="16" alt="Guest User" /> ' . $string['guestaccount'] . ' (' . $userObject->get_temp_title() . ' ' . $userObject->get_temp_surname() . ')';
+} else {
+  $person = $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname();
+}
 $total_random_mark = 0;
 $total_marks = 0;
 

@@ -44,4 +44,5 @@ $string['mins'] = 'mins';
 $string['secs'] = 'secs';
 $string['papernotfound'] = 'Paper not Found';
 $string['requestedpaper'] = 'The requested paper cannot be found.';
+$string['guestaccount'] = 'Guest Account';
 ?>

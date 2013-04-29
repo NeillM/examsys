@@ -88,6 +88,7 @@ if (isset($_POST['submit'])) {
     body {font-size:90%}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function doReassign(targetID) {
       window.location = "do_reassign_script.php?temp_userID=<?php echo $userID; ?>&userID=" + targetID + "&assigned_account=<?php echo $temp_username; ?>";
@@ -102,6 +103,19 @@ if (isset($_POST['submit'])) {
       document.getElementById(lineID).style.backgroundColor = '';
       document.getElementById(lineID).style.border = '1px solid white';
     }
+    
+    function do_resize() {
+      var tmp_height = $(document).height() - 185;
+      $("#userlist").height(tmp_height);
+    }
+    
+    $(document).ready(function() {
+      do_resize();
+      $(window).resize(function() {
+        do_resize();
+      });
+    });
+    
   </script>
 </head>
 
@@ -179,7 +193,7 @@ echo "</table>\n</form>\n";
 if (count($target_student) == 0) {
   echo "<div>" . $string['msg4'] . ".</div>\n";
 } else {
-  echo "<br /><div style=\"color:#0033BC\">" . $string['Reassign answers'] . " " . str_replace('user','Temporary Account ',$temp_username) . " " . $string['to following user'] . ":</div>\n<div style=\"height:300px; border:1px solid #7F9DB9; overflow-y:scroll\">\n";
+  echo "<br /><div style=\"color:#0033BC\">" . $string['Reassign answers'] . " " . str_replace('user','Temporary Account ',$temp_username) . " " . $string['to following user'] . ":</div>\n<div id=\"userlist\" style=\"height:300px; border:1px solid #7F9DB9; overflow-y:scroll\">\n";
   foreach ($target_student as $individualID=>$individual) {
     if ($individual['title'] == 'Mr') {
       $user_icon = 'user_male_64.png';

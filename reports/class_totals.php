@@ -113,8 +113,10 @@ ob_start();
     }
 
     if (tmpReassign == 'y') {
+      document.getElementById('item3b').style.color = '#C0C0C0';
       document.getElementById('item5b').style.color = '#000000';
     } else {
+      document.getElementById('item3b').style.color = '#000000';
       document.getElementById('item5b').style.color = '#C0C0C0';
     }
 
@@ -195,7 +197,9 @@ ob_start();
 
   function viewProfile() {
     document.getElementById('menudiv').style.display = 'none';
-    window.top.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + document.getElementById('userID').value;
+    if (document.getElementById('reassign').value == 'n') {
+      window.top.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + document.getElementById('userID').value;
+    }
   }
 
   function newStudentNote() {
@@ -208,10 +212,7 @@ ob_start();
 
   function reassignScript() {
     document.getElementById('menudiv').style.display = 'none';
-    if (document.getElementById('reassign').value == 'n') {
-      alert("Only temporary accounts may be reassigned.");
-      return false;
-    } else {
+    if (document.getElementById('reassign').value == 'y') {
       reassign = window.open("check_reassign_script.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>&started=" + document.getElementById('started').value + "&log_type=" + document.getElementById('log_type').value + "","reassign","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         reassign.focus();
@@ -221,10 +222,7 @@ ob_start();
 
   function reassignLogLate() {
     document.getElementById('menudiv').style.display = 'none';
-    if (document.getElementById('loglate').value == 'n') {
-      alert("This student does not have any late answer submissions.");
-      return false;
-    } else {
+    if (document.getElementById('loglate').value == 'y') {
       loglate = window.open("check_reassign_log_late.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>&started=" + document.getElementById('started').value + "&log_type=" + document.getElementById('log_type').value + "","reassign","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         reassign.focus();
@@ -320,7 +318,8 @@ if ($language != 'en') {
       </tr>
       <tr>
         <td id="item5a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">
-        &nbsp;</td>
+        <img src="../artwork/guest_account_16.png" width="16" height="16" alt="" border="0" />
+        </td>
         <td id="item5b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">
         <?php echo $string['reassigntouser']; ?></td>
       </tr>
@@ -575,7 +574,7 @@ if ($language != 'en') {
           $ordered = '';
         }
         if (strpos($user_results[$i]['username'], 'user') === 0) {
-          echo "<td class=\"$class$ordered padl tmpacc $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . $user_results[$i]['adj_percent'] . "',event);" . $onclick ."\">" . str_replace('User','Temporary Account No. ',$user_results[$i]['surname']) . "</span>";
+          echo "<td class=\"$class$ordered padl tmpacc $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . $user_results[$i]['adj_percent'] . "',event);" . $onclick ."\">" . str_replace('User','Guest Account #',$user_results[$i]['surname']) . "</span>";
         } else {
           echo "<td class=\"$class$ordered padl $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . $user_results[$i]['adj_percent'] . "',event);" . $onclick . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></span>";
         }
