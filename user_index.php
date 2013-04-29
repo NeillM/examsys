@@ -109,27 +109,27 @@ if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
   $lab_id   = $lab_object->get_id();
 }
 
-$property_id          = $propertyObj->get_property_id();
-$paper_title          = $propertyObj->get_paper_title();
-$total_random_mark    = $propertyObj->get_random_mark();
-$total_marks          = $propertyObj->get_total_mark();
-$navigation           = $propertyObj->get_bidirectional();
+$property_id        = $propertyObj->get_property_id();
+$paper_title        = $propertyObj->get_paper_title();
+$total_random_mark  = $propertyObj->get_random_mark();
+$total_marks        = $propertyObj->get_total_mark();
+$navigation         = $propertyObj->get_bidirectional();
 
-$paper_screens        = Paper_utils::get_numder_of_screens($property_id, $mysqli);
+$paper_screens      = Paper_utils::get_numder_of_screens($property_id, $mysqli);
 
-$test_type            = $propertyObj->get_paper_type();
-$paper_start          = $propertyObj->get_start_date();
-$paper_end            = $propertyObj->get_end_date();
-$timezone             = $propertyObj->get_timezone();
-$fullscreen           = $propertyObj->get_fullscreen();
-$marking              = $propertyObj->get_marking();
-$labs                 = $propertyObj->get_labs();
-$rubric               = $propertyObj->get_rubric();
-$exam_duration        = $propertyObj->get_exam_duration();
-$exam_duration_sec    = $exam_duration * 60;
-$calendar_year        = $propertyObj->get_calendar_year();
-$sound_demo           = $propertyObj->get_sound_demo();
-$password             = $propertyObj->get_password();
+$test_type          = $propertyObj->get_paper_type();
+$paper_start        = $propertyObj->get_start_date();
+$paper_end          = $propertyObj->get_end_date();
+$timezone           = $propertyObj->get_timezone();
+$fullscreen         = $propertyObj->get_fullscreen();
+$marking            = $propertyObj->get_marking();
+$labs               = $propertyObj->get_labs();
+$rubric             = $propertyObj->get_rubric();
+$exam_duration      = $propertyObj->get_exam_duration();
+$exam_duration_sec  = $exam_duration * 60;
+$calendar_year      = $propertyObj->get_calendar_year();
+$sound_demo         = $propertyObj->get_sound_demo();
+$password           = $propertyObj->get_password();
 
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
@@ -178,16 +178,16 @@ if ($exam_duration !== null) {
   if ($test_type == '2') {
     $student_object['special_needs_percentage'] = $special_needs_percentage;
     $student_object['user_ID']   = $userObject->get_user_ID();
-    $log_lab_end_time   = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
-    $log_extra_time     = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
-    $extra_time_secs    = $log_extra_time->get_extra_time_secs();
-    $extra_time_mins    = $extra_time_secs / 60;
-    $summative_timer    = new SummativeTimer( $log_extra_time );
-    $remaining_time     = $summative_timer->calculate_remaining_time_secs();
+    $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
+    $log_extra_time   = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
+    $extra_time_secs  = $log_extra_time->get_extra_time_secs();
+    $extra_time_mins  = $extra_time_secs / 60;
+    $summative_timer  = new SummativeTimer( $log_extra_time );
+    $remaining_time   = $summative_timer->calculate_remaining_time_secs();
     if ($remaining_time !== false) {
       $display_remaining_time = true;
 
-      // nazrji - remove bending consultation with Exams Office
+      // nazrji - remove pending consultation with Exams Office
       // if ($remaining_time > ($exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs) ) {
       //   // sanity check if we have longer remaining then the exam duration set the time remaining
       //   // to the exam duration (happens in summative exams if we have not started yet)
@@ -206,9 +206,9 @@ if ($exam_duration !== null) {
     if ($test_type == '1') {
       $display_remaining_time = true;
     }
-    $studentID         = $userObject->get_user_ID();
-    $timer             = new Timer($log_metadata, $exam_duration, $special_needs_percentage);
-    $remaining_time    = $timer->calculate_remaining_time();
+    $studentID       = $userObject->get_user_ID();
+    $timer           = new Timer($log_metadata, $exam_duration, $special_needs_percentage);
+    $remaining_time  = $timer->calculate_remaining_time();
 
     $extra_time_mins = null;
   }
@@ -227,16 +227,9 @@ if ($exam_duration !== null) {
   <title><?php echo $string['startscreen']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
+  <link rel="stylesheet" type="text/css" href="./css/user_index.css" />
   <style type="text/css">
-    body {font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
-    input {font-size:90%}
-    td {text-align:left}
-    p { margin: 2px 0 8px 0 }
-    .f {font-weight:bold; text-align:right;line-height:180%;padding-right:6px}
-    .w {font-size:90%;color:#C00000;font-weight:bold}
-    .warn {color:#C00000; font-weight:bold}
-    .logout {float:right; font-weight:bold; color:#C00000; cursor:pointer}
-    a.logout {color:#C00000}
+    body {margin-top:25px; font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
   </style>
 
   <script type="text/javascript" src="./js/student_help.js"></script>
@@ -250,14 +243,14 @@ if ($exam_duration !== null) {
 <?php
   }
 ?>
-    exam=window.open(paperURL,"paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
+    exam = window.open(paperURL,"paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
     if (window.focus) {
       exam.focus();
     }
     document.getElementById('start').value = '<?php echo $string['restart']; ?>';
   }
   function reviewPaper(started,type) {
-    exam=window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    exam = window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       exam.focus();
     }
@@ -266,7 +259,6 @@ if ($exam_duration !== null) {
 </head>
 <body>
 <form name="theform">
-<br />
 <?php
 if ($textsize > 120) {
   $table_width = 90;
@@ -276,13 +268,12 @@ if ($textsize > 120) {
   $button_width = 115;
 }
 ?>
-<table cellpadding="3" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto;font-size:100%;border-top:1px solid #95AEC8;border-left:1px solid #95AEC8;border-right:1px solid #95AEC8;background-color:white;width:<?php echo $table_width; ?>%">
+<table cellpadding="3" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto; font-size:100%; border-top:1px solid #95AEC8;border-left:1px solid #95AEC8; border-right:1px solid #95AEC8; background-color:white; width:<?php echo $table_width; ?>%">
 <tr>
 <?php
   $icon_types = array('formative.png', 'progress.png', 'summative.png', 'survey.png');
-  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="vertical-align:top; width:54px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . '" width="48" height="48" alt="Icon" />';
-  echo "</td><td><span style=\"font-size:80%; color:#4F81BD\">Rogō {$configObject->get('rogo_version')}</span><br />\n";
-  echo "<span style=\"font-size:20pt; font-weight:bold; color:#4F81BD\">$paper_title</span>";
+  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="vertical-align:top; width:52px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . '" width="48" height="48" alt="Icon" />';
+  echo "</td><td><span class=\"title\">$paper_title</span>";
   echo "<div class=\"logout\"><a href=\"logout.php\"><img src=\"./artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"Log Out\" /></a></div><div class=\"logout\" style=\"padding-right:8px\"><a class=\"logout\" href=\"logout.php\">" . $string['signout'] . "</a></div>";
   echo "</td>\n</tr></table></td></tr>";
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
@@ -306,7 +297,7 @@ if ($textsize > 120) {
     if (time() < $paper_start or time() > $paper_end) {
       $html = ' class="warn"';
     }
-    echo '<tr><td class="f"><nobr>' . $string['availability'] .'</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' '.$string['to'].' '. $display_end_date;
+    echo '<tr><td class="f"><nobr>' . $string['availability'] . '</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' ' . $string['to'] . ' ' . $display_end_date;
     if ($timezone != 'Europe/London') echo ' (' . str_replace('_',' ',$timezone) . ')';
   }
   echo '<input type="hidden" name="startdate" value="' . $display_start_date . '" /><input type="hidden" name="testtype" value="' . $test_type . "\" /></td></tr>\n";
@@ -369,7 +360,7 @@ if ($textsize > 120) {
   }
 
   if ($sound_demo == '1') {
-    echo "<tr><td colspan=\"4\" style=\"text-align:center\"><span style=\"color:#D27800;font-size:90%;font-weight:bold\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"./paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
+    echo "<tr><td colspan=\"4\" style=\"text-align:center\"><span class=\"testclip\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"./paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
     echo "<param name=\"wmode\" value=\"transparent\" />\n";
     echo "<param name=\"movie\" value=\"./paper/player_mp3_maxi.swf\" />\n";
     echo "<param name=\"FlashVars\" value=\"mp3={$configObject->get('cfg_root_path')}/paper/sound_demo.mp3&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
@@ -445,7 +436,7 @@ if ($textsize > 120) {
       while ($log_info->fetch()) {
         if ($temp_no == 0) {
           $old_started = $log_started;
-          echo '<hr style="background-color:#95AEC8; color:#95AEC8; height:1px; width:80%; border:0" />';
+          echo '<hr />';
           echo '<table cellpadding="0" cellspacing="0" border="0" align="center">';
           echo '<tr><td colspan="4" style="text-align:center"><strong>' . $string['previouscompletions'] . '</strong></td></tr>';
           if ($log_max_screen > $old_screen) $old_screen = $log_max_screen;
@@ -485,16 +476,11 @@ if ($textsize > 120) {
       }
       echo '</td></tr></table><br />';
     } else {
-      if ($test_type != 2) {
-        echo '<hr style="background-color:#95AEC8; color:#95AEC8; height:1px; width:80%; border:0" /><p style="color:#808080">' . $string['nottakenpaper'] . '</p><br />';
-      }
+      echo '<hr />' . $string['nottakenpaper'] . '</p><br />';
     }
   }
   $mysqli->close();
-  ?>
-</td>
-</tr>
-</table>
+  ?><div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get('rogo_version'); ?></div></td></tr></table>
 
 </form>
 </body>
