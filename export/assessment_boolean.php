@@ -333,13 +333,13 @@ foreach ($user_results as $individual) {
                       }
                     }                      
                   }
-                }
-                
-              
-              if ($parts_test_fail) $csv .= ',' . (($tmp_mark > 0) ? 1:0);  
+                }           
+              if ($question['q_type'] != 'labelling' or substr($tmp_exclude,$mi,1) == '0') {
+                if ($parts_test_fail) $csv .= ',' . (($tmp_mark > 0) ? 1:0);  
+              }
             }
           } else {
-            if (($question['q_type'] == 'mrq'  or $question['q_type'] == 'rank') and $question['score_method'] != 'Mark per Question') {
+            if (($question['q_type'] == 'mrq' or $question['q_type'] == 'rank') and $question['score_method'] != 'Mark per Question') {
               $answer = '';
               foreach ($log_array[$row_written] as $kb => $vb) {
                 if (is_array($vb)) {
