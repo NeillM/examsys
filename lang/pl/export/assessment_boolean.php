@@ -10,4 +10,5 @@ $string['submitted'] = 'Przedłożono';
 $string['started'] = 'Rozpoczęto';
 $string['correctanswers'] = 'Poprawne odpowiedzi ->';
 $string['nodata'] = 'Do tego egzaminu nie przystąpił w wyznaczonym czasie żaden student'; 
+$string['bonus'] = 'bonus'; //cognate
 ?>
