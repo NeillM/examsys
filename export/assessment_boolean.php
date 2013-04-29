@@ -364,10 +364,9 @@ foreach ($user_results as $individual) {
               }            
               if ($question['score_method'] == 'Bonus Mark') {
                 $bonus_test = count($bonus_a);
-                foreach ($bonus_a as $answer_part) {
-                  $test = ((in_array($answer_part,$bonus_q)) ? 1:0);
-                  $csv .= ',' . $test;
-                  $bonus_test -= $test;
+                foreach ($bonus_a as $part_nr => $answer_part) {
+                  $csv .= ',' . (in_array($answer_part,$bonus_q) ? 1:0);
+                  $bonus_test -= (($answer_part==$bonus_q[$part_nr]) ? 1:0);
                 }
                 $csv .= ',' . (($bonus_test == 0) ? 1:0);
               }
