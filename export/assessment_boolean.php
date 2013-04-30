@@ -78,7 +78,7 @@ if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
 
 $global_users = '';
 $calendar_year = $propertyObj->get_calendar_year();
-if ($calendar_year == '') {
+if ($calendar_year == '' or $calendar_year == '2006/07' or $calendar_year == '2007/08') {  // HACK: we don't have students by year before 2008/09
   $mod_query = $mysqli->prepare("SELECT modules_student.idMod, userID, moduleID FROM modules_student, modules WHERE modules_student.idMod = modules.id AND idMod IN ($tmp_moduleID_in)");
 } else {
   $mod_query = $mysqli->prepare("SELECT modules_student.idMod, userID, moduleID FROM modules_student, modules WHERE modules_student.idMod = modules.id AND idMod IN ($tmp_moduleID_in) AND calendar_year = ?");
@@ -98,15 +98,17 @@ while ($mod_query->fetch()) {
 $mod_query->close();
 
 //******************** got from assessment_data
+$paper_type = $propertyObj->get_paper_type();
 if (!isset($paper_type)) $paper_type = '0';
 $exclude = '';
 // Get order of the class.
+
 $student_list = '';
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT log_metadata.userID, sum(mark) AS total_mark FROM log0, log_metadata WHERE log0.metadataID = log_metadata.id AND paperID = ? AND started >= ? AND started <= ? AND userID IN ($global_users) GROUP BY userID, paperID, started) UNION ALL (SELECT log_metadata.userID, sum(mark) AS total_mark FROM log1, log_metadata WHERE log1.metadataID = log_metadata.id AND paperID = ? AND started >= ? AND started <= ? AND userID IN ($global_users) GROUP BY log_metadata.userID, paperID, started) ORDER BY total_mark");
+  $result = $mysqli->prepare("(SELECT log_metadata.userID, SUM(mark) AS total_mark FROM log0, log_metadata WHERE log0.metadataID = log_metadata.id AND paperID = ? AND started >= ? AND started <= ? AND userID IN ($global_users) GROUP BY log_metadata.userID, paperID, started) UNION ALL (SELECT log_metadata.userID, sum(mark) AS total_mark FROM log1, log_metadata WHERE log1.metadataID = log_metadata.id AND paperID = ? AND started >= ? AND started <= ? AND userID IN ($global_users) GROUP BY log_metadata.userID, paperID, started) ORDER BY total_mark");
   $result->bind_param('ississ', $paperID, $startdate, $enddate, $paperID, $startdate, $enddate);
 } else {
-  $result = $mysqli->prepare("SELECT log_metadata.userID, sum(mark) AS total_mark FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? AND userID IN ($global_users) GROUP BY log_metadata.userID, paperID, started ORDER BY total_mark");
+  $result = $mysqli->prepare("SELECT log_metadata.userID, SUM(mark) AS total_mark FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? AND userID IN ($global_users) GROUP BY log_metadata.userID, paperID, started ORDER BY total_mark");
   $result->bind_param('iss', $paperID, $startdate, $enddate);
 }
 $result->execute();
@@ -125,6 +127,7 @@ while ($result->fetch() and $student_no < $user_no) {
 $result->free_result();
 $result->close();
 
+$csv = '';
 
 if ($student_no > 0) {
   $log_array = array();
@@ -168,11 +171,10 @@ if ($student_no > 0) {
   $sortby = 'name';
   $ordering = 'asc';
   $log_array = array_csort($log_array, $sortby, $ordering);
-}
+
 
 //********************************
 
-$csv = '';
 
 $row_written = 0;
 foreach ($user_results as $individual) {
@@ -234,13 +236,17 @@ foreach ($user_results as $individual) {
             if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank' or $question['q_type']=='rank') and $question['score_method'] != 'Mark per Question') {
-          for ($a=0; $a<count($question['correct']); $a++) {            
-            if (substr($tmp_exclude, $a, 1) == '0' && ($question['q_type']!='rank' || $question['correct'][$a]>0)) $csv .= ',Q' . $q_no . chr($a+65);
+          if (!array_key_exists($q_id, $excluded) || $question['q_type']!='rank') {
+            for ($a=0; $a<count($question['correct']); $a++) {            
+              if (substr($tmp_exclude, $a, 1) == '0' && ($question['q_type']!='rank' || $question['correct'][$a]>0)) $csv .= ',Q' . $q_no . chr($a+65);
+            }
+            if ($question['score_method'] == 'Bonus Mark') $csv .= ',Q' . $q_no.'_'.$string['bonus'];
           }
-          if ($question['score_method'] == 'Bonus Mark') $csv .= ',Q' . $q_no.'_'.$string['bonus'];
         } elseif ($question['q_type']=='mrq' and $question['score_method'] == 'Mark per Option') {
-          for ($a=0; $a<count($question['correct']); $a++) {
-            if (substr($tmp_exclude, $a, 1) == '0' and $question['correct'][$a] == 'y') $csv .= ',Q' . $q_no . chr($a+65);
+          if (!array_key_exists($q_id, $excluded)) {
+            for ($a=0; $a<count($question['correct']); $a++) {
+              if (substr($tmp_exclude, $a, 1) == '0' and $question['correct'][$a] == 'y') $csv .= ',Q' . $q_no . chr($a+65);
+            }
           }
         } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
           for ($a=0; $a <(count($question['correct_labels']) + substr_count($tmp_exclude, '1')); $a++) {
@@ -306,11 +312,11 @@ foreach ($user_results as $individual) {
                 // ----- parts (extmatch)-----
                 
                 $parts_test_fail = true;           
-                if ($question['q_type'] == 'extmatch') {
+                if ($question['q_type'] == 'extmatch' and isset($log_array[$row_written])) {
                   $extmatch_parts = explode('|', $question['correct'][0]);
                   if (strpos($extmatch_parts[$mi], '$')!==false) {
                     $parts_test_fail = false;
-                 
+                    
                     $answer = '';
                     foreach ($log_array[$row_written] as $kb => $vb) {
                       if (is_array($vb)) {
@@ -319,7 +325,6 @@ foreach ($user_results as $individual) {
                         }
                       }
                     }        
-
                     $answer_parts = explode('|', $answer);
                     
                     $extmatch_parts_correct = explode('$', $extmatch_parts[$mi]);
@@ -339,7 +344,7 @@ foreach ($user_results as $individual) {
               }
             }
           } else {
-            if (($question['q_type'] == 'mrq' or $question['q_type'] == 'rank') and $question['score_method'] != 'Mark per Question') {
+            if (($question['q_type'] == 'mrq' or $question['q_type'] == 'rank') and $question['score_method'] != 'Mark per Question' and isset($log_array[$row_written])) {
               $answer = '';
               foreach ($log_array[$row_written] as $kb => $vb) {
                 if (is_array($vb)) {
@@ -405,7 +410,9 @@ foreach ($user_results as $individual) {
   }
   $row_written++;
 }
-
+} else {
+  $csv .= $string['nodata'];
+}
 echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");
 
 $mysqli->close();
