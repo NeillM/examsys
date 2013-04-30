@@ -55,7 +55,7 @@ QUERY;
     $modules_array[$idMod] = $moduleId;
   }
   if ($result->num_rows == 0) {
-    return 0;
+    return '';
   }
   $result->close();
 
@@ -174,7 +174,7 @@ QUERY;
     $modules_array[$idMod] = $moduleId;
   }
   if ($result->num_rows == 0) {
-    return 0;
+    return '';
   }
   $result->close();
 
