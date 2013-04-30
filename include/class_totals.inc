@@ -649,10 +649,10 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       for ($label_no = 4; $label_no <= $count_tmp_second_split; $label_no += 4) {
         if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
         if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
-          if ($tmp_exclude{$i} == '0') {
             $x = $tmp_second_split[$label_no-2];
             $y = $tmp_second_split[$label_no-1] - 25;
             $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
+          if ($tmp_exclude{$i} == '0') {
             $placeholders++;
           } else {
             $excluded_no++;
@@ -662,49 +662,62 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       }
 
       // Strip out width and height for graphical labels.
+      $i = 0;
       foreach ($correct_labels as $key=>$value) {
         $tmp_parts = explode('~', $value);
         $correct_labels[$key] = $tmp_parts[0];
+        $correct_labels_pos[$key] = $i++;
       }
 
       if ($tmp_user_answer != '') {
         $user_split1 = explode(';', $tmp_user_answer);
         $user_split2 = explode('$', $user_split1[1]);
-
+        
         $i = 0;
         $correct = 0;
         $count_user_split2 = count($user_split2)-3;
         for ($a=0; $a<$count_user_split2; $a+=4) {
           $x = $user_split2[$a];
           $y = $user_split2[$a+1];
-          if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
-            $tmp_mark += $question['marks_correct'];
-            $correct += $question['marks_correct'];
-            $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
-          } elseif (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] != $user_split2[$a+2]) {
-            $tmp_mark += $question['marks_incorrect'];
-            $correct += $question['marks_incorrect'];
-            $tmp_user_mark_array[$q_id][] = $question['marks_incorrect'];
-          } else {
-            $tmp_user_mark_array[$q_id][] = 0;
-          }
+          $index = 0;
+          if (isset($correct_labels[$x . 'x' . $y])) $index = $correct_labels_pos[$x . 'x' . $y];
+          if ($tmp_exclude{$index} == '0') {
+            if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
+              $tmp_mark += $question['marks_correct'];
+              $correct += $question['marks_correct'];
+              $tmp_user_mark_array[$q_id][$index] = $question['marks_correct'];
+            } elseif (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] != $user_split2[$a+2]) {
+              $tmp_mark += $question['marks_incorrect'];
+              $correct += $question['marks_incorrect'];
+              $tmp_user_mark_array[$q_id][$index] = $question['marks_incorrect'];
+            } else {
+              if (isset($index) && $index!='') $tmp_user_mark_array[$q_id][$index] = 0;
+            }
           $i++;
+          }
         }
       }
-
+      
+      if (isset($tmp_user_mark_array[$q_id])) ksort($tmp_user_mark_array[$q_id]);
+      //create shortened array
+      $i=0;
+      $correct_labels_exc = array();
+      foreach ($correct_labels as $cli => $clv) {
+        if ($tmp_exclude{$i++} == '0') $correct_labels_exc[$cli] = $clv;
+      }
       // If the user has not answered the question pad out with zero marks.
       if (isset($tmp_user_mark_array[$q_id])) {
         $user_answer_no = count($tmp_user_mark_array[$q_id]);
       } else {
         $user_answer_no = 0;
       }
-      if ($user_answer_no < count($correct_labels)) {
-        for ($i=$user_answer_no; $i<count($correct_labels); $i++) {
+      if ($user_answer_no < count($correct_labels_exc)) {
+        for ($i=$user_answer_no; $i<count($correct_labels_exc); $i++) {
           $tmp_user_mark_array[$q_id][] = 0;
         }
       }
-
-      $question['correct_labels'] = $correct_labels;
+      
+      $question['correct_labels'] = $correct_labels_exc;
     }
   } else {
     // Marking per Question, or all other question types, simply return the original mark.

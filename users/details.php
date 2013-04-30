@@ -139,8 +139,10 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   }
 
   // Remove from admin access if role changed from Admin
-  if ($tmp_roles != $_POST['prev_roles'] and $_POST['prev_roles'] == 'Staff,Admin') {
-    UserUtils::clear_admin_access($_POST['old_userID'], $mysqli);
+  if ($userObject->has_role('SysAdmin')) {
+    if ($tmp_roles != $_POST['prev_roles'] and $_POST['prev_roles'] == 'Staff,Admin') {
+      UserUtils::clear_admin_access($_POST['old_userID'], $mysqli);
+    }
   }
 
   $username = $_POST['username'];
