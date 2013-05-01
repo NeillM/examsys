@@ -43,7 +43,9 @@ td {
   text-decoration:line-through
 }
 .nonattend {
-  background-color:#FFC0C0
+  color:#808080;
+  background-color:#EEEEEE;
+  border-bottom:solid white 1px;
 }
 .dist {
   color:#008000
@@ -69,4 +71,9 @@ td {
 }
 .staff {
   background-color:#FCD5B4;
+}
+.subheading {
+  padding-right:2px;
+  padding-bottom:5px;
+  color:#1E3287;
 }

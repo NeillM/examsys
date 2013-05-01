@@ -26,6 +26,7 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
+
 check_var('paperID', 'GET', true, false, false);
 check_var('startdate', 'GET', true, false, false);
 check_var('enddate', 'GET', true, false, false);
@@ -356,7 +357,7 @@ if ($language != 'en') {
     $users_in[] = $u['tmp_userID'];
   }
   $users_in = implode(',',$users_in);
-  if($users_in != '') {
+  if ($users_in != '') {
     $result = $mysqli->prepare("SELECT userID FROM special_needs where userID IN ($users_in)");
     $result->execute();
     $result->bind_result($special_userID);
@@ -375,7 +376,7 @@ if ($language != 'en') {
   }
 
   //output table heading
-  $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'classification', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
+  $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'classification', $string['rank']=>'rank', $string['decile']=>'decile', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
   if ($paper_type == 2) $table_order[$string['room']] = 'room';
   $metadata_cols = array();
   if (isset($user_results[0])){
@@ -493,7 +494,6 @@ if ($language != 'en') {
     }
     echo "$html.</td></tr></table></td></tr>\n";
   }
-  //var_dump($user_results);
 
   $xmean_total = 0;
   $absent_no = 0;
@@ -511,6 +511,7 @@ if ($language != 'en') {
 
       if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
         $bg_color = '#FFC0C0';
+        $late_submissions = '';
         ?>
         <tr class="nonattend" id="res<?php echo $i+1 ?>"><td>&nbsp;</td>
         <td class="padl" onclick="popMenu('', '<?php echo $tmp_userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $adj_percent; ?>', event);<?php echo $onclick; ?>" />
@@ -521,7 +522,7 @@ if ($language != 'en') {
         } else {
           echo "<td class=\"padl\">" . $user_results[$i]['student_id'] . "</td>";
         }
-        echo "<td class=\"padl\">" . $user_results[$i]['student_grade'] . "</td><td colspan=\"3\">&nbsp;</td><td class=\"padl\"><strong>" . $string['noattendance'] . "</strong></td><td colspan=\"3\">&nbsp;</td></tr>\n";
+        echo "<td class=\"padl\">" . $user_results[$i]['student_grade'] . "</td><td colspan=\"" . (9 + count($metadata_cols)) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
         $absent_no++;
       } else {
         if (isset($log_late[$user_results[$i]['tmp_userID']])) {
@@ -550,7 +551,7 @@ if ($language != 'en') {
           $role_css = '';
         }
         if ($user_results[$i]['questions'] < $question_no) {
-          echo "><td class=\"$class $role_css\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['notcompleted'] . "\" border=\"0\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign', '$late_submissions','" . $user_results[$i]['adj_percent'] . "',event);" . $onclick . "\" /></td>";
+          echo "><td class=\"$class $role_css\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['notcompleted'] . "\" border=\"0\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign', '$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent']) . "',event);" . $onclick . "\" /></td>";
         } else {
           echo "><td class=\"$class $role_css\">";
           if (isset($log_late[$user_results[$i]['tmp_userID']])) {
@@ -566,7 +567,7 @@ if ($language != 'en') {
           } elseif ($user_results[$i]['paper_type'] == '5') {
             echo '<img src="../artwork/offline_16.gif" width="16" height="16" alt="' . $string['displaypaper'] . '" border="0"';
           }
-          echo " onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . $user_results[$i]['adj_percent'] . "',event);" . $onclick . "\" /></td>";
+          echo " onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent']) . "',event);" . $onclick . "\" /></td>";
         }
         if ($_GET['sortby'] == 'name') {
           $ordered = ' ordered';
@@ -574,9 +575,9 @@ if ($language != 'en') {
           $ordered = '';
         }
         if (strpos($user_results[$i]['username'], 'user') === 0) {
-          echo "<td class=\"$class$ordered padl tmpacc $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . $user_results[$i]['adj_percent'] . "',event);" . $onclick ."\">" . str_replace('User','Guest Account #',$user_results[$i]['surname']) . "</span>";
+          echo "<td class=\"$class$ordered padl tmpacc $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent']) . "',event);" . $onclick ."\">" . str_replace('User','Guest Account #',$user_results[$i]['surname']) . "</span>";
         } else {
-          echo "<td class=\"$class$ordered padl $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . $user_results[$i]['adj_percent'] . "',event);" . $onclick . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></span>";
+          echo "<td class=\"$class$ordered padl $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent']) . "',event);" . $onclick . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></span>";
         }
         if (isset($special_needs[$user_results[$i]['tmp_userID']]) and $special_needs[$user_results[$i]['tmp_userID']] == 'y') {
           echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" border="0" />';
@@ -618,26 +619,42 @@ if ($language != 'en') {
           echo "<td class=\"mk $class$ordered fail r $role_css\">";
           if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
           echo $user_results[$i]['mark'] . "</td>";
-          echo "<td class=\"$class fail r $role_css\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class fail $role_css\">&nbsp;" . $string['fail'] . "</td>";
+          echo "<td class=\"$class fail r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['adj_percent']) . "%</td><td class=\"$class fail $role_css\">&nbsp;" . $string['fail'] . "</td>";
         } else {
           if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
             echo "<td class=\"mk $class$ordered dist r $role_css\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
-            echo "<td class=\"dist $class r $role_css\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class dist $role_css\">&nbsp;" . $string['distinction'] . "</td>";
+            echo "<td class=\"dist $class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['adj_percent']) . "%</td><td class=\"$class dist $role_css\">&nbsp;" . $string['distinction'] . "</td>";
           } else {
             echo "<td class=\"mk $class$ordered r $role_css\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
-            echo "<td class=\"$class r $role_css\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class $role_css\">&nbsp;" . $string['pass'] . "</td>";
+            echo "<td class=\"$class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['adj_percent']) . "%</td><td class=\"$class $role_css\">&nbsp;" . $string['pass'] . "</td>";
           }
         }
+        // Rank column
+        if ($_GET['sortby'] == 'rank') {
+          $ordered = ' ordered';
+        } else {
+          $ordered = '';
+        }
+        echo "<td class=\"$class$ordered r $role_css\">" . $user_results[$i]['rank'] . "</td>";
+        // Decile column
+        if ($_GET['sortby'] == 'decile') {
+          $ordered = ' ordered';
+        } else {
+          $ordered = '';
+        }
+        echo "<td class=\"$class$ordered r $role_css\">" . $user_results[$i]['decile'] . "</td>";
+        // Start Time column
         if ($_GET['sortby'] == 'started') {
           $ordered = ' ordered';
         } else {
           $ordered = '';
         }
         echo "<td class=\"$class$ordered padl $role_css\">" . $user_results[$i]['display_started'] . "</td>";
+        // Duration column
         if ($_GET['sortby'] == 'duration') {
           $ordered = ' ordered';
         } else {
@@ -703,8 +720,8 @@ if ($language != 'en') {
     //Check for any paper notes
     echo "<tr><td colspan=\"" . ($cols) . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . ($cols) . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . ($cols) . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papernotes'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-    $result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i'), note_workstation FROM paper_notes WHERE paper_id=?");
+    echo "<tr><td colspan=\"" . ($cols) . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['papernotes'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    $result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i'), note_workstation FROM paper_notes WHERE paper_id = ?");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->store_result();
@@ -713,7 +730,7 @@ if ($language != 'en') {
     echo "<tr><td></td><td colspan=\"" . ($cols - 1) . "\">";
     while ($result->fetch()) {
       $lab_name = '';
-      $result2 = $mysqli->prepare("SELECT name FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab AND address=?");
+      $result2 = $mysqli->prepare("SELECT name FROM labs, ip_addresses WHERE labs.id = ip_addresses.lab AND address = ?");
       $result2->bind_param('s', $note_workstation);
       $result2->execute();
       $result2->bind_result($lab_name);
@@ -728,20 +745,21 @@ if ($language != 'en') {
 
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
 
     echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
 
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\"><img src=\"draw_scatter_plot.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
-
+    echo "</table>\n";
     // Display summary -------------------------------------------------------------------------------------
-    echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-
-    echo "<tr><td colspan=\"$cols\">\n";
-    echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:90%\">\n";
+    
+    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size:85%; width:100%\">";
+    echo "<tr><td class=\"subheading\" style=\"width:50px\">Summary</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:50px\">Deciles</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
+    echo "<tr><td colspan=\"2\" style=\"width:50%\">";
+    
+    echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
     echo "<tr><td class=\"field\" style=\"width:150px\">" . $string['paper'] . "</td><td colspan=\"3\">$paper</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
@@ -788,7 +806,7 @@ if ($language != 'en') {
       echo "<tr><td class=\"field\">" . $string['randommark'] . "</td><td class=\"r\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td>&nbsp;</td></tr>\n";
       if ($completed_no > 0) {
         if ($total_marks > 0) {
-          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td><td>&nbsp;</td></tr>\n";
+          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>(" . MathsUtils::formatNumber($mean_percent) . "%)</td><td>&nbsp;</td></tr>\n";
         } else {
           echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
         }
@@ -797,36 +815,30 @@ if ($language != 'en') {
       }
     } elseif ($marking == '0') {
       if ($completed_no > 0) {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>(" . MathsUtils::formatNumber($mean_percent) . "%)</td><td>&nbsp;</td></tr>\n";
       } else {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     } else {
-      echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . round($ss_pass, 2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-      if ($ss_hon > 0) echo "<tr><td class=\"field\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . round($ss_hon, 2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . MathsUtils::formatNumber($ss_pass) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      if ($ss_hon > 0) echo "<tr><td class=\"field\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . MathsUtils::formatNumber($ss_hon) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       if ($completed_no > 0) {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>(" . MathsUtils::formatNumber($mean_percent) . "%)</td><td>&nbsp;</td></tr>\n";
       } else {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     }
     $mid_point = round($cohort_size / 2) - 1;
-    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">$median_mark</td><td>($median_percent%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">$median_mark</td><td>(" . MathsUtils::formatNumber($median_percent) . "%)</td><td>&nbsp;</td></tr>\n";
     if ($completed_no == 0) {
       echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . round($stddev_percent, 1) . "%)</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . MathsUtils::formatNumber($stddev_percent) . "%)</td><td>&nbsp;</td></tr>\n";
     }
-    echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td class=\"r\">$max_mark</td><td>(" . number_format($max_percent) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td class=\"r\">$max_mark</td><td>(" . MathsUtils::formatNumber($max_percent) . "%)</td><td>&nbsp;</td></tr>\n";
     if ($min_mark == 9999) $min_mark = 0;
-    echo "<tr><td class=\"field\">" . $string['minmark'] . "</td><td class=\"r\">$min_mark</td><td>(" . number_format($min_percent) . "%)</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['range'] . "</td><td class=\"r\">" . ($max_mark - $min_mark) . "</td><td>(" . ($max_percent - $min_percent) . "%)</td><td>&nbsp;</td></tr>\n";
-
-    echo "<tr><td class=\"field\">" . $string['top10'] . "</td><td class=\"r\">$top_10%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['top15'] . "</td><td class=\"r\">$top_15%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['top20'] . "</td><td class=\"r\">$top_20%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['top25'] . "</td><td class=\"r\">$top_25%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['bottom10'] . "</td><td class=\"r\">$bottom_10%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['minmark'] . "</td><td class=\"r\">$min_mark</td><td>(" . MathsUtils::formatNumber($min_percent) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['range'] . "</td><td class=\"r\">" . ($max_mark - $min_mark) . "</td><td>(" . MathsUtils::formatNumber($max_percent - $min_percent) . "%)</td><td>&nbsp;</td></tr>\n";
 
     if ($completed_no <= 1) {
       echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
@@ -849,9 +861,20 @@ if ($language != 'en') {
       }
       echo ")</td></tr>\n";
    	}
-    echo "</table>\n</td></tr>\n";
-    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\" height=\"9\">&nbsp;</td></tr>\n";
-
+    echo "</table></td>\n";
+    
+    echo "<td></td>";
+    
+    // Deciles
+    $suffix = array('', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th');
+    echo "<td colspan=\"2\" style=\"width:50%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
+    for ($i=1; $i<10; $i++) {
+      echo "<tr><td style=\"width:40px\">" . $i . $suffix[$i] . "</td><td>" . MathsUtils::formatNumber($decile_values[$i]) . "%</td></tr>\n";
+    }
+    echo "</table></td>\n";
+    
+    echo "</tr></table>\n<br />";
+    
     // Email Class -----------------------------------------------------------------------------------------
     if (isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
       // Save the latest template to disk.
@@ -937,12 +960,12 @@ if ($language != 'en') {
           $headers .= "bcc: " . $_POST['bccaddress'] . "\n";
         }
         $message .= "</body>\n</html>\n";
-        mail ($to, $subject, $message, $headers) or print "<tr><td colspan=\"10\">Could not send mail to <strong>$to</strong>.</td></tr>";
+        mail ($to, $subject, $message, $headers) or print "<div>Could not send mail to <strong>$to</strong>.</div>";
       }
-      echo '<tr><td colspan="10">' . $string['emailssent'] . '</td></tr>';
+      echo '<p>' . $string['emailssent'] . '</p>';
     } else {
       if ($paper_type < 2) {
-        echo "<tr><td>&nbsp;</td><td colspan=\"8\">\n";
+        echo "<div>\n";
         echo "<form name=\"theform\" method=\"post\">\n";
         echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" />\n";
         echo '<input type="hidden" name="emailclass" value="" />';
@@ -951,11 +974,11 @@ if ($language != 'en') {
         echo '<input type="hidden" name="ccaddress" value="" />';
         echo '<input type="hidden" name="bccaddress" value="" />';
         echo '<input type="hidden" name="subject" value="" />';
-        echo "</form>\n</td></tr>\n";
+        echo "</form>\n</div>\n";
       }
     }
   } else {
-    echo "</table>\n<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left; font-size:85%\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . sprintf($string['noattempts'], nicedate($_GET['startdate']), nicedate($_GET['enddate'])) . "</td></tr></table>\n<div>\n</body>\n</html>";
+    //echo "</table>\n<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left; font-size:85%\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . sprintf($string['noattempts'], nicedate($_GET['startdate']), nicedate($_GET['enddate'])) . "</td></tr></table>\n<div>\n</body>\n</html>";
     exit;
   }
   echo "</table>\n";

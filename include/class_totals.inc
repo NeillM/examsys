@@ -38,6 +38,7 @@ require_once '../include/calculate_marks.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sort.inc';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/mathsutils.class.php';
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
@@ -47,14 +48,14 @@ if (!$propertyObj) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$paper = $propertyObj->get_paper_title();
-$marking = $propertyObj->get_marking();
-$pass_mark = $propertyObj->get_pass_mark();
+$paper            = $propertyObj->get_paper_title();
+$marking          = $propertyObj->get_marking();
+$pass_mark        = $propertyObj->get_pass_mark();
 $distinction_mark = $propertyObj->get_distinction_mark();
-$paper_ownerID = $propertyObj->get_paper_ownerID();
-$paper_type = $propertyObj->get_paper_type();
-$calendar_year = $propertyObj->get_calendar_year();
-$crypt_name = $propertyObj->get_crypt_name();
+$paper_ownerID    = $propertyObj->get_paper_ownerID();
+$paper_type       = $propertyObj->get_paper_type();
+$calendar_year    = $propertyObj->get_calendar_year();
+$crypt_name       = $propertyObj->get_crypt_name();
 
 
 function nicedate($original) {
@@ -67,14 +68,14 @@ function getRandomDetails($questionID, &$random_q_ids) {
 
   $random_q_ids[] = $questionID;
 
-  $question_no = 0;
-  $random_questions = array();
-  $old_q_id = '';
-  $old_score_method = '';
-  $old_q_media_width = '';
+  $question_no        = 0;
+  $random_questions   = array();
+  $old_q_id           = '';
+  $old_score_method   = '';
+  $old_q_media_width  = '';
   $old_q_media_height = '';
-  $old_correct = array();
-  $old_option_text = array();
+  $old_correct        = array();
+  $old_option_text    = array();
 
   $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, last_edited, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
   $result->bind_param('i', $questionID);
@@ -86,57 +87,57 @@ function getRandomDetails($questionID, &$random_q_ids) {
       if ($old_q_id != $q_id and $old_q_id != '') {
         $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
         if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
-        $random_questions[$old_q_id]['theme'] = $old_theme;
-        $random_questions[$old_q_id]['q_id'] = $old_q_id;
-        $random_questions[$old_q_id]['q_type'] = $old_q_type;
-        $random_questions[$old_q_id]['leadin'] = $old_leadin;
-        $random_questions[$old_q_id]['scenario'] = $old_scenario;
-        $random_questions[$old_q_id]['correct'] = $old_correct;
-        $random_questions[$old_q_id]['display_method'] = $old_display_method;
-        $random_questions[$old_q_id]['score_method'] = $old_score_method;
-        $random_questions[$old_q_id]['status'] = $old_status;
+        $random_questions[$old_q_id]['theme']               = $old_theme;
+        $random_questions[$old_q_id]['q_id']                = $old_q_id;
+        $random_questions[$old_q_id]['q_type']              = $old_q_type;
+        $random_questions[$old_q_id]['leadin']              = $old_leadin;
+        $random_questions[$old_q_id]['scenario']            = $old_scenario;
+        $random_questions[$old_q_id]['correct']             = $old_correct;
+        $random_questions[$old_q_id]['display_method']      = $old_display_method;
+        $random_questions[$old_q_id]['score_method']        = $old_score_method;
+        $random_questions[$old_q_id]['status']              = $old_status;
         $random_questions[$old_q_id]['display_last_edited'] = $display_last_edited;
-        $random_questions[$old_q_id]['marks_correct'] = $old_marks_correct;
-        $random_questions[$old_q_id]['marks_incorrect'] = $old_marks_incorrect;
-        $random_questions[$old_q_id]['random_mark'] = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-        $random_questions[$old_q_id]['option_text'] = $old_option_text;
-        $old_correct = array();
+        $random_questions[$old_q_id]['marks_correct']       = $old_marks_correct;
+        $random_questions[$old_q_id]['marks_incorrect']     = $old_marks_incorrect;
+        $random_questions[$old_q_id]['random_mark']         = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+        $random_questions[$old_q_id]['option_text']         = $old_option_text;
+        $old_correct     = array();
         $old_option_text = array();
         $question_no++;
       }
-      $old_theme = $theme;
-      $old_q_id = $q_id;
-      $old_q_type = $q_type;
-      $old_leadin = $leadin;
-      $old_scenario = $scenario;
-      $old_status = $status;
-      $old_marks_correct = $marks_correct;
-      $old_marks_incorrect = $marks_incorrect;
-      $old_correct[] = $correct;
-      $old_option_text[] = $option_text;
-      $old_display_method = $display_method;
-      $old_score_method = $score_method;
-      $old_q_media_width = $q_media_width;
-      $old_q_media_height = $q_media_height;
+      $old_theme            = $theme;
+      $old_q_id             = $q_id;
+      $old_q_type           = $q_type;
+      $old_leadin           = $leadin;
+      $old_scenario         = $scenario;
+      $old_status           = $status;
+      $old_marks_correct    = $marks_correct;
+      $old_marks_incorrect  = $marks_incorrect;
+      $old_correct[]        = $correct;
+      $old_option_text[]    = $option_text;
+      $old_display_method   = $display_method;
+      $old_score_method     = $score_method;
+      $old_q_media_width    = $q_media_width;
+      $old_q_media_height   = $q_media_height;
     }
 
     // Write out the last question.
     $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
     if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
-    $random_questions[$old_q_id]['theme'] = $old_theme;
-    $random_questions[$old_q_id]['q_id'] = $old_q_id;
-    $random_questions[$old_q_id]['q_type'] = $old_q_type;
-    $random_questions[$old_q_id]['leadin'] = $old_leadin;
-    $random_questions[$old_q_id]['scenario'] = $old_scenario;
-    $random_questions[$old_q_id]['correct'] = $old_correct;
-    $random_questions[$old_q_id]['display_method'] = $old_display_method;
-    $random_questions[$old_q_id]['score_method'] = $old_score_method;
-    $random_questions[$old_q_id]['status'] = $old_status;
+    $random_questions[$old_q_id]['theme']               = $old_theme;
+    $random_questions[$old_q_id]['q_id']                = $old_q_id;
+    $random_questions[$old_q_id]['q_type']              = $old_q_type;
+    $random_questions[$old_q_id]['leadin']              = $old_leadin;
+    $random_questions[$old_q_id]['scenario']            = $old_scenario;
+    $random_questions[$old_q_id]['correct']             = $old_correct;
+    $random_questions[$old_q_id]['display_method']      = $old_display_method;
+    $random_questions[$old_q_id]['score_method']        = $old_score_method;
+    $random_questions[$old_q_id]['status']              = $old_status;
     $random_questions[$old_q_id]['display_last_edited'] = $display_last_edited;
-    $random_questions[$old_q_id]['marks_correct'] = $old_marks_correct;
-    $random_questions[$old_q_id]['marks_incorrect'] = $old_marks_incorrect;
-    $random_questions[$old_q_id]['random_mark'] = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-    $random_questions[$old_q_id]['option_text'] = $old_option_text;
+    $random_questions[$old_q_id]['marks_correct']       = $old_marks_correct;
+    $random_questions[$old_q_id]['marks_incorrect']     = $old_marks_incorrect;
+    $random_questions[$old_q_id]['random_mark']         = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+    $random_questions[$old_q_id]['option_text']         = $old_option_text;
   }
   $result->close();
 
@@ -342,6 +343,7 @@ function crankMark($tmp_percent, $ss_pass, $ss_hon, $pass_mark, $distinction_mar
 
 function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp, $met_array, $student_met_array) {
   global $student_cohort, $cohort_size, $total_random_mark, $total_marks, $marking, $ss_pass, $ss_hon, $pass_mark, $demo, $display_no, $meta_col_count;
+  
   $master_array[$user_number]['name'] = $tmp['name'];
   $master_array[$user_number]['mark'] = round($tmp_user_mark,1);
   $master_array[$user_number]['mark_array'] = $tmp_user_mark_array;
@@ -350,14 +352,14 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
     $master_array[$user_number]['adj_percent'] = 0;
   } else {
     if ($marking == '1') {                                   // Monkey mark
-      $master_array[$user_number]['percent'] = round(($tmp_user_mark/$total_marks)*100);
-      $master_array[$user_number]['adj_percent'] = round((($tmp_user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100);
+      $master_array[$user_number]['percent'] = ($tmp_user_mark/$total_marks)*100;
+      $master_array[$user_number]['adj_percent'] = (($tmp_user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100;
     } elseif ($marking{0} == '2') {                 // Standards Setting
       $master_array[$user_number]['percent'] = ($tmp_user_mark/$total_marks)*100;
       $master_array[$user_number]['adj_percent'] = ($tmp_user_mark/$total_marks)*100;
     } else {                                                 // Unadjusted mark
-      $master_array[$user_number]['percent'] = round(($tmp_user_mark/$total_marks)*100);
-      $master_array[$user_number]['adj_percent'] = round(($tmp_user_mark/$total_marks)*100);
+      $master_array[$user_number]['percent'] = ($tmp_user_mark/$total_marks)*100;
+      $master_array[$user_number]['adj_percent'] = ($tmp_user_mark/$total_marks)*100;
     }
   }
 
@@ -382,6 +384,7 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   $master_array[$user_number]['paper_type']       = $tmp['paper_type'];
   $master_array[$user_number]['room']             = $tmp['room'];
   $master_array[$user_number]['visible']          = 1;    // Default to visible unless switched off below.
+  $master_array[$user_number]['decile']           = 10;
 
   // Add metadata
   if (!empty($met_array)) {
@@ -1158,7 +1161,7 @@ if ($paper_type == '0') {
                     , order_started
                     , screen';
 
-  $log_query = $mysqli->prepare( $sql );
+  $log_query = $mysqli->prepare($sql);
   $log_query->bind_param('isssisss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '2') {
   $log_query = $mysqli->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
@@ -1226,9 +1229,9 @@ while ($log_query->fetch() !== null) {
       $marking_complete = 1;
     }
     $tmp_array = array();
-    $tmp_array['started']         = $started;
-    $tmp_array['username']        = $username;
-    $tmp_array['tmp_userID']      = $tmp_userID;
+    $tmp_array['started']    = $started;
+    $tmp_array['username']   = $username;
+    $tmp_array['tmp_userID'] = $tmp_userID;
 
     if (isset($user_modules[$tmp_userID]['idMod'])) {
       $tmp_array['module'] = $user_modules[$tmp_userID]['idMod'];
@@ -1288,24 +1291,24 @@ WHERE u.id IN ($late_id_list)
 SQL;
 
   $result = $mysqli->prepare($sql);
-  echo $mysqli->error;
   $result->execute();
+  $result->store_result();
   $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
   while ($result->fetch()) {
-    $late_cohort[$late_cohort_size]['username']      = $tmp_username;
-    $late_cohort[$late_cohort_size]['tmp_userID']    = $tmp_userID;
-    $late_cohort[$late_cohort_size]['name']          = trim(str_replace("'","",$surname) . ',' . $first_names);
-    $late_cohort[$late_cohort_size]['title']         = $title;
-    $late_cohort[$late_cohort_size]['surname']       = demo_replace($surname, $demo);
-    $late_cohort[$late_cohort_size]['first_names']   = demo_replace($first_names, $demo);
-    $late_cohort[$late_cohort_size]['initials']      = demo_replace($initials, $demo);
-    $late_cohort[$late_cohort_size]['student_id']    = demo_replace_number($student_id, $demo);
-    $late_cohort[$late_cohort_size]['grade']         = $grade;
-    $late_cohort[$late_cohort_size]['module']        = $moduleid;
-    $late_cohort[$late_cohort_size]['gender']        = $gender;
-    $late_cohort[$late_cohort_size]['display_started'] = $log_late_missing_users[$tmp_userID]['display_started'];
-    $late_cohort[$late_cohort_size]['started'] = $log_late_missing_users[$tmp_userID]['started'];
-    $late_cohort[$late_cohort_size]['timer_started'] = false;
+    $late_cohort[$late_cohort_size]['username']         = $tmp_username;
+    $late_cohort[$late_cohort_size]['tmp_userID']       = $tmp_userID;
+    $late_cohort[$late_cohort_size]['name']             = trim(str_replace("'","",$surname) . ',' . $first_names);
+    $late_cohort[$late_cohort_size]['title']            = $title;
+    $late_cohort[$late_cohort_size]['surname']          = demo_replace($surname, $demo);
+    $late_cohort[$late_cohort_size]['first_names']      = demo_replace($first_names, $demo);
+    $late_cohort[$late_cohort_size]['initials']         = demo_replace($initials, $demo);
+    $late_cohort[$late_cohort_size]['student_id']       = demo_replace_number($student_id, $demo);
+    $late_cohort[$late_cohort_size]['grade']            = $grade;
+    $late_cohort[$late_cohort_size]['module']           = $moduleid;
+    $late_cohort[$late_cohort_size]['gender']           = $gender;
+    $late_cohort[$late_cohort_size]['display_started']  = $log_late_missing_users[$tmp_userID]['display_started'];
+    $late_cohort[$late_cohort_size]['started']          = $log_late_missing_users[$tmp_userID]['started'];
+    $late_cohort[$late_cohort_size]['timer_started']    = false;
 
     $late_cohort_size++;
   }
@@ -1322,10 +1325,37 @@ if (!empty($tmp_array)) {
   }
 }
 
+// Add in rank data.
+add_rank($user_results);
+
+function add_rank(&$user_results) {
+  // Put the whole array in marks order.
+  $sortby = 'mark';
+  $ordering = 'desc';
+  $user_results = array_csort($user_results, $sortby, $ordering, SORT_NUMERIC);
+  
+  $display_rank = 1;
+  $global_rank   = 1;
+  $old_mark     = 0;
+  
+  $result_no = count($user_results);
+  
+  for ($i=0; $i<$result_no; $i++) {
+    if ($user_results[$i]['mark'] != $old_mark) {
+      $display_rank = $global_rank;
+    }
+    $user_results[$i]['rank'] = $display_rank;
+    $old_mark = $user_results[$i]['mark'];
+    $global_rank++;
+  }
+}
+
+
 if ($percent < 100) {
   // Sort by mark order.
   $sortby = 'mark';
-  $user_results = array_csort($user_results, $sortby, $ordering);
+  $ordering = $_GET['ordering'];
+  $user_results = array_csort($user_results, $sortby, $ordering, SORT_NUMERIC);
   $cohort_size = round(($user_no/100) * $percent);
   // Set visible/invisible flag where necessary.
   for ($i=0; $i<$user_no; $i++) {
@@ -1353,33 +1383,35 @@ if ($late_cohort_size > 0) {
     if ($absent == 1) {
       $student_cohort = check_and_clear_cohort($student_cohort, $late_user['username']);
     }
-    $user_results[$user_no]['name'] = $late_user['name'];
-    $user_results[$user_no]['mark'] = 0;
-    $user_results[$user_no]['adj_percent'] = 0;
-    $user_results[$user_no]['percent'] = 0;
-    $user_results[$user_no]['started'] = '';
-    $user_results[$user_no]['username'] = $late_user['username'];
-    $user_results[$user_no]['tmp_userID'] = $late_user['tmp_userID'];
-    $user_results[$user_no]['student_grade'] = $late_user['grade'];
-    $user_results[$user_no]['module'] = $late_user['module'];
-    $user_results[$user_no]['year'] = '';
-    $user_results[$user_no]['display_started'] = $late_user['display_started'];
-    $user_results[$user_no]['started'] = $late_user['started'];
-    $user_results[$user_no]['attempt'] = 1;
+    $user_results[$user_no]['name']             = $late_user['name'];
+    $user_results[$user_no]['mark']             = 0;
+    $user_results[$user_no]['adj_percent']      = 0;
+    $user_results[$user_no]['percent']          = 0;
+    $user_results[$user_no]['started']          = '';
+    $user_results[$user_no]['username']         = $late_user['username'];
+    $user_results[$user_no]['tmp_userID']       = $late_user['tmp_userID'];
+    $user_results[$user_no]['student_grade']    = $late_user['grade'];
+    $user_results[$user_no]['module']           = $late_user['module'];
+    $user_results[$user_no]['year']             = '';
+    $user_results[$user_no]['display_started']  = $late_user['display_started'];
+    $user_results[$user_no]['started']          = $late_user['started'];
+    $user_results[$user_no]['attempt']          = 1;
     $user_results[$user_no]['marking_complete'] = 0;
-    $user_results[$user_no]['title'] = $late_user['title'];
-    $user_results[$user_no]['surname'] = $late_user['surname'];
-    $user_results[$user_no]['initials'] = $late_user['initials'];
-    $user_results[$user_no]['first_names'] = $late_user['first_names'];
-    $user_results[$user_no]['student_id'] = $late_user['student_id'];
-    $user_results[$user_no]['gender'] = $late_user['gender'];
-    $user_results[$user_no]['ipaddress'] = '';
-    $user_results[$user_no]['duration'] = 0;
-    $user_results[$user_no]['questions'] = '';
-    $user_results[$user_no]['paper_type'] = $paper_type;
-    $user_results[$user_no]['room'] = '';
-    $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
-    $user_results[$user_no]['roles'] = 'Student';
+    $user_results[$user_no]['title']            = $late_user['title'];
+    $user_results[$user_no]['surname']          = $late_user['surname'];
+    $user_results[$user_no]['initials']         = $late_user['initials'];
+    $user_results[$user_no]['first_names']      = $late_user['first_names'];
+    $user_results[$user_no]['student_id']       = $late_user['student_id'];
+    $user_results[$user_no]['gender']           = $late_user['gender'];
+    $user_results[$user_no]['ipaddress']        = '';
+    $user_results[$user_no]['duration']         = 0;
+    $user_results[$user_no]['questions']        = '';
+    $user_results[$user_no]['paper_type']       = $paper_type;
+    $user_results[$user_no]['room']             = '';
+    $user_results[$user_no]['visible']          = 1;    // Default to visible unless switched off below.
+    $user_results[$user_no]['roles']            = 'Student';
+    $user_results[$user_no]['rank']             = 99999999999;
+    $user_results[$user_no]['decile']           = 10;
     $user_no++;
   }
 }
@@ -1387,33 +1419,61 @@ if ($late_cohort_size > 0) {
 if ($absent == 1) {
   // Add in students in cohort who haven't taken the exam.
   $count_student_cohort = count($student_cohort);
+  
   for ($i=0; $i < $count_student_cohort; $i++) {
-    $user_results[$user_no]['name'] = $student_cohort[$i]['name'];
-    $user_results[$user_no]['mark'] = 0;
-    $user_results[$user_no]['adj_percent'] = 0;
-    $user_results[$user_no]['percent'] = 0;
-    $user_results[$user_no]['started'] = '';
-    $user_results[$user_no]['username'] = $student_cohort[$i]['username'];
-    $user_results[$user_no]['tmp_userID'] = $student_cohort[$i]['tmp_userID'];
-    $user_results[$user_no]['student_grade'] = $student_cohort[$i]['grade'];
-    $user_results[$user_no]['module'] = $student_cohort[$i]['module'];
-    $user_results[$user_no]['year'] = '';
-    $user_results[$user_no]['display_started'] = '';
-    $user_results[$user_no]['title'] = $student_cohort[$i]['title'];
-    $user_results[$user_no]['surname'] = $student_cohort[$i]['surname'];
-    $user_results[$user_no]['initials'] = $student_cohort[$i]['initials'];
-    $user_results[$user_no]['first_names'] = $student_cohort[$i]['first_names'];
-    $user_results[$user_no]['student_id'] = $student_cohort[$i]['student_id'];
-    $user_results[$user_no]['gender'] = $student_cohort[$i]['gender'];
-    $user_results[$user_no]['ipaddress'] = '';
-    $user_results[$user_no]['duration'] = 0;
-    $user_results[$user_no]['questions'] = '';
-    $user_results[$user_no]['paper_type'] = '';
-    $user_results[$user_no]['room'] = '';
-    $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
-    $user_results[$user_no]['roles'] = 'Student';
-    $user_results[$user_no]['late'] = true;
+    $user_results[$user_no]['name']             = $student_cohort[$i]['name'];
+    $user_results[$user_no]['mark']             = 0;
+    $user_results[$user_no]['adj_percent']      = 0;
+    $user_results[$user_no]['percent']          = 0;
+    $user_results[$user_no]['started']          = '';
+    $user_results[$user_no]['username']         = $student_cohort[$i]['username'];
+    $user_results[$user_no]['tmp_userID']       = $student_cohort[$i]['tmp_userID'];
+    $user_results[$user_no]['student_grade']    = $student_cohort[$i]['grade'];
+    $user_results[$user_no]['module']           = $student_cohort[$i]['module'];
+    $user_results[$user_no]['year']             = '';
+    $user_results[$user_no]['display_started']  = '';
+    $user_results[$user_no]['title']            = $student_cohort[$i]['title'];
+    $user_results[$user_no]['surname']          = $student_cohort[$i]['surname'];
+    $user_results[$user_no]['initials']         = $student_cohort[$i]['initials'];
+    $user_results[$user_no]['first_names']      = $student_cohort[$i]['first_names'];
+    $user_results[$user_no]['student_id']       = $student_cohort[$i]['student_id'];
+    $user_results[$user_no]['gender']           = $student_cohort[$i]['gender'];
+    $user_results[$user_no]['ipaddress']        = '';
+    $user_results[$user_no]['duration']         = 0;
+    $user_results[$user_no]['questions']        = '';
+    $user_results[$user_no]['paper_type']       = '';
+    $user_results[$user_no]['room']             = '';
+    $user_results[$user_no]['visible']          = 1;    // Default to visible unless switched off below.
+    $user_results[$user_no]['roles']            = 'Student';
+    $user_results[$user_no]['late']             = true;
+    $user_results[$user_no]['rank']             = 99999999999;
+    $user_results[$user_no]['decile']           = 10;
     $user_no++;
+  }
+}
+
+// Convert Module IDs into codes
+convert_moduleIDs($user_results, $mysqli);
+
+function convert_moduleIDs(&$user_results, $db) {
+  $result_no = count($user_results);
+  $moduleIDs = array();
+  
+  // Build up an array of IDs to module codes.
+  for ($i=0; $i<$result_no; $i++) {
+    $id = $user_results[$i]['module'];
+    if ($id != '') {
+      if (!isset($moduleIDs[$id])) {
+        $moduleIDs[$id] = module_utils::get_moduleid_from_id($id, $db);
+      }
+    }
+  }
+  
+  // Loop around the results array and convert to codes.
+  for ($i=0; $i<$result_no; $i++) {
+    if (isset($moduleIDs[$user_results[$i]['module']])) {
+      $user_results[$i]['module'] = $moduleIDs[$user_results[$i]['module']];
+    }
   }
 }
 
@@ -1430,44 +1490,6 @@ for ($i=0; $i<$user_no; $i++) {
   }
 }
 */
-
-// Sort the arrays
-sort($median);
-if (isset($_GET['sortby'])) {
-  $sortby = $_GET['sortby'];
-} else {
-  $sortby = 'name';
-}
-if (isset($_GET['ordering'])) {
-  $ordering = $_GET['ordering'];
-} else {
-  $ordering = 'asc';
-}
-if (isset($_GET['percent'])) {
-  $percent = $_GET['percent'];
-} else {
-  $percent = 100;
-}
-if (isset($_GET['absent'])) {
-  $absent = $_GET['absent'];
-} else {
-  $absent = 0;
-}
-
-$tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
-if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
-if ($tmp_sort == 'classification') $tmp_sort = 'mark';
-$user_results = array_csort($user_results, $tmp_sort, $ordering);
-
-if (substr($marking, 0, 1) == '2') {
-  get_ss_pass($ss_pass, $ss_hon);
-
-  for ($i=0; $i<$user_no; $i++) {
-    if (isset($user_results[$i]['adj_percent'])) {
-      $user_results[$i]['adj_percent'] = crankMark($user_results[$i]['percent'], $ss_pass, $ss_hon, $pass_mark, $distinction_mark);
-    }
-  }
-}
 
 function isEven($intNumber) {
   if ($intNumber % 2 == 0 ) {
@@ -1550,9 +1572,68 @@ if ($completed_no > 0) {
   $median_percent = 0;
 }
 
-$top_10    = mypercentile($marks_data, 0.1);
-$top_15    = mypercentile($marks_data, 0.15);
-$top_20    = mypercentile($marks_data, 0.2);
-$top_25    = mypercentile($marks_data, 0.25);
-$bottom_10 = mypercentile($marks_data, 0.90);
+$decile_values = array();
+for ($i=1; $i<10; $i++) {
+  $decile_values[$i] = mypercentile($marks_data, ($i / 10));
+}
+
+writeStudentDeciles($user_results, $decile_values);
+
+function writeStudentDeciles(&$user_results, $decile) {
+  $student_no = count($user_results);
+  for ($user_no=0; $user_no<$student_no; $user_no++) {
+  
+    for ($i=9; $i>0; $i--) {
+      if ($user_results[$user_no]['adj_percent'] >= $decile[$i]) {
+        $user_results[$user_no]['decile'] = $i;
+      }
+    }
+  
+  }
+}
+
+// Sort the arrays
+sort($median);
+if (isset($_GET['sortby'])) {
+  $sortby = $_GET['sortby'];
+} else {
+  $sortby = 'name';
+}
+if (isset($_GET['ordering'])) {
+  $ordering = $_GET['ordering'];
+} else {
+  $ordering = 'asc';
+}
+if (isset($_GET['percent'])) {
+  $percent = $_GET['percent'];
+} else {
+  $percent = 100;
+}
+if (isset($_GET['absent'])) {
+  $absent = $_GET['absent'];
+} else {
+  $absent = 0;
+}
+
+$tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
+if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
+if ($tmp_sort == 'classification') $tmp_sort = 'mark';
+if ($tmp_sort == 'mark' or $tmp_sort == 'rank' or $tmp_sort == 'decile') {
+  $method = SORT_NUMERIC;
+} else {
+  $method = SORT_STRING;
+}
+$user_results = array_csort($user_results, $tmp_sort, $ordering, $method);
+
+if (substr($marking, 0, 1) == '2') {
+  get_ss_pass($ss_pass, $ss_hon);
+
+  for ($i=0; $i<$user_no; $i++) {
+    if (isset($user_results[$i]['adj_percent'])) {
+      $user_results[$i]['adj_percent'] = crankMark($user_results[$i]['percent'], $ss_pass, $ss_hon, $pass_mark, $distinction_mark);
+    }
+  }
+}
+
+
 ?>

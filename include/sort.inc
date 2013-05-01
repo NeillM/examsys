@@ -21,15 +21,13 @@
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
-function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
+function array_csort($marray, $column, $sort_order, $sort_method = SORT_STRING) {
   $sortarr = array();
   foreach ($marray as $row) {
     $sortarr[] = $row[$column];
   }
-  
-  $sortarr = array_map('strtolower',$sortarr);
-  $sort_method = SORT_STRING;
-  if ($column == 'mark' or $column == 'duration') $sort_method = SORT_NUMERIC;
+
+  $sortarr = array_map('strtolower', $sortarr);
   if ($sort_order == 'asc') {
     array_multisort($sortarr, SORT_ASC, $sort_method, $marray);
   } else {

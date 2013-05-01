@@ -47,7 +47,7 @@
     $total_time = 0;
 
     //output table heading
-    $table_order = array($string['title']=>'title', $string['surname']=>'Surname', $string['firstnames']=>'First_Names', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['module']=>'module', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'mark', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
+    $table_order = array($string['title']=>'title', $string['surname']=>'Surname', $string['firstnames']=>'First_Names', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['module']=>'module', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'mark', $string['rank']=>'rank', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
     $table_order['room'] = 'room';
     $metadata_cols = array();
     if (isset($user_results[0])){
@@ -80,8 +80,7 @@
           // If room is unknown then it will contain HTML that we want to discard
           $user_results[$i]['room'] = (strpos($user_results[$i]['room'], 'unknown') !== false) ? 'unknown' : $user_results[$i]['room'];
 
-          $csv .= $user_results[$i]['student_grade'] . "," . $user_results[$i]['module'] . "," . $user_results[$i]['mark'] . "," . $user_results[$i]['adj_percent'] . "%,";
-
+          $csv .= $user_results[$i]['student_grade'] . ',"' . $user_results[$i]['module'] . '",' . $user_results[$i]['mark'] . ',' . $user_results[$i]['adj_percent'] . '%,';
 
           if ($user_results[$i]['adj_percent'] < $pass_mark) {
             $csv .= $string['fail'] . ',';
@@ -92,11 +91,11 @@
               $csv .= $string['pass'] . ',';
             }
           }
-          $csv .= $user_results[$i]['display_started'] . "," . formatsec($user_results[$i]['duration']) . "," . $user_results[$i]['ipaddress'] . "," . $user_results[$i]['room'];
+          $csv .= $user_results[$i]['rank'] . ',' . $user_results[$i]['display_started'] . ',' . formatsec($user_results[$i]['duration']) . ',' . $user_results[$i]['ipaddress'] . ',"' . $user_results[$i]['room'] . '"';
 
           // Display any associated metadata
           if (count($metadata_cols) > 0) {
-            foreach ( $metadata_cols as $type) {
+            foreach ($metadata_cols as $type) {
               $csv .= ',' . $user_results[$i][$type];
             }
           }
@@ -136,11 +135,11 @@
     $csv .= $string['averagetime'] . "," . $avg_time . ",,,,,,,,,,\n";
     $csv .= $string['excludedquestions'] . ",$display_excluded,,,,,,,,,,\n";
     $csv .= $string['experimantalquestions'] . ",$display_experimental,,,,,,,,,,\n";
-    if(count($warnings['deleted_qns']) > 0) {
+    if (count($warnings['deleted_qns']) > 0) {
     	$csv .= "Warnings,Answers found for questions that no longer appear on the paper (IDs ";
-      for($i = 0; $i < count($warnings['deleted_qns']); $i++) {
+      for ($i = 0; $i < count($warnings['deleted_qns']); $i++) {
        	$csv .= $warnings['deleted_qns'][$i];
-        if($i < count($warnings['deleted_qns']) - 1) {
+        if ($i < count($warnings['deleted_qns']) - 1) {
         	$csv .= ", ";
         }
       }

@@ -206,7 +206,7 @@ Class module {
    */
   public function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
-
+    
     $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ? AND mod_deleted IS NULL");
     $result->bind_param('i', $modID);
     $result->execute();

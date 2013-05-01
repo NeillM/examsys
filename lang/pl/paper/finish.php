@@ -39,6 +39,7 @@ $string['randommark'] = "Liczba punktów na 'chybił-trafił'";
 $string['passmark'] = 'Liczba punktów na zaliczenie';
 $string['yourpercentage'] = 'Twój wynik';//??
 $string['adjusted'] = '(skorygowany)';
+$string['feedback'] = 'Feedback';
 $string['msg1'] = 'Dziękujemy za wypełnienie <strong>%s</strong>. Twoje odpowiedzi zostały zanotowane.';//??
 $string['msg2'] = '<strong>Zasady akademickie</strong><br />1) zakaz opuszczania pomieszczenia egzaminacyjnego przed upływem pierwszej godziny, <br />2) zakaz opuszczania pomieszczenia egzaminacyjnego w czasie ostatnich 15 minut.<br /><br />Jeśli przestrzegane są dwie pierwsze zasady, a egzamin ma tylko jedną turę to można kliknąć na \'Zamknij okno\' a następnie nacisnąć przyciski &lt;CTRL&gt; &lt;ALT&gt; &lt;DELETE&gt; aby wylogować się z tego komputera.';
 $string['closewindow'] = 'Zamknij okno';

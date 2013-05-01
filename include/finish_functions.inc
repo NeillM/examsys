@@ -2428,7 +2428,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
         $percent = $_GET['percent'];
       } else {
         if ( ($total_marks-$total_random_mark) > 0 and (($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100 > 0) {
-          $percent = number_format((($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100, 1, '.', ',');
+          $percent = MathsUtils::formatNumber( ( ($user_mark-$total_random_mark) / ($total_marks-$total_random_mark) ) * 100);
           $gradetoret = ($user_mark - $total_random_mark) / ($total_marks - $total_random_mark);
           if ($gradetoret < 0) $gradetoret = 0;
           $lti = UoN_LTI::get_instance();
@@ -2448,7 +2448,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
       if (isset($_GET['percent'])) {
         $percent = $_GET['percent'];
       } else {
-        $percent = number_format(($user_mark / $total_marks) * 100, 1, '.', ',');
+        $percent = MathsUtils::formatNumber($user_mark / $total_marks);
         $gradetoret = $user_mark / $total_marks;
         if ($gradetoret < 0) $gradetoret = 0;
         if (isset($lit) and $lti->valid) {
@@ -2470,7 +2470,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
       }
     }
     if ($msg != '') {
-      $html .= "<tr><td>Feedback</td><td colspan=\"2\">$msg</td></tr>\n";
+      $html .= "<tr><td>" . $string['feedback'] . "</td><td colspan=\"2\">$msg</td></tr>\n";
     }
 
     $html .= "</table></div>\n";

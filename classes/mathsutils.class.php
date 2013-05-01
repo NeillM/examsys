@@ -66,6 +66,23 @@ Class MathsUtils {
     if ($decimals > 0) $gen_no = number_format(($gen_no / (10 * $decimals)), $decimals, '.', '');
     return $gen_no;
   }
+  
+  static function formatNumber($number, $decimals = 2) {
+    $number = (string) round($number, $decimals);
+    
+    if ($decimals > 0) {
+      $strlength = strlen($number);
+      $decimal_pos = strpos($number, '.');
+      
+      if ($decimal_pos === false) {
+        $number .= '.' . str_repeat('0', $decimals);
+      } elseif (($strlength - $decimal_pos  - 1) < $decimals) {
+        $number .= str_repeat('0', (strpos($number, '.') - 1));
+      }
+    }
+
+    return $number;
+  }
 }
 
 

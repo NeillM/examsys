@@ -44,7 +44,7 @@
   $total_time = 0;
 
   //output table heading
-  $table_order = array('Title'=>'title', 'Surname'=>'Surname' ,'First Names'=>'First_Names','Student ID'=>'student_id','Course'=>'student_grade','Mark'=>'mark',$marking_label=>$marking_key,'Clasification'=>'mark','Start Time'=>'started','Duration'=>'duration','IP Address'=>'ipaddress');
+  $table_order = array('Title'=>'title', 'Surname'=>'Surname' ,'First Names'=>'First_Names','Student ID'=>'student_id','Course'=>'student_grade','Mark'=>'mark',$marking_label=>$marking_key,'Clasification'=>'mark','Rank'=>'rank','Start Time'=>'started','Duration'=>'duration','IP Address'=>'ipaddress');
   $table_order['Room'] = 'room';
   $metadata_cols = array();
   $meta_col_count = 0;
@@ -137,7 +137,7 @@
   echo ' </Style>';
   echo ' </Styles>';
   echo ' <Worksheet ss:Name="' . $string['marks'] . '">';
-  echo '  <Table ss:ExpandedColumnCount="' . (14 + $meta_col_count) .'" ss:ExpandedRowCount="' . ($user_no + 3) . '" x:FullColumns="1" x:FullRows="1">';
+  echo '  <Table ss:ExpandedColumnCount="' . (15 + $meta_col_count) .'" ss:ExpandedRowCount="' . ($user_no + 3) . '" x:FullColumns="1" x:FullRows="1">';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="35"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="80"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="130"/>';
@@ -145,6 +145,7 @@
   echo '   <Column ss:AutoFitWidth="0" ss:Width="60"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="50"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="50"/>';
+  echo '   <Column ss:AutoFitWidth="0" ss:Width="40"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="40"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="40"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="70"/>';
@@ -161,6 +162,7 @@
   }
   echo '   <Row ss:AutoFitHeight="0" ss:Height="26.25">';
   echo '    <Cell ss:StyleID="s27"><Data ss:Type="String">' . $paper . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s28"/>';
   echo '    <Cell ss:StyleID="s28"/>';
   echo '    <Cell ss:StyleID="s28"/>';
   echo '    <Cell ss:StyleID="s28"/>';
@@ -195,6 +197,7 @@
     echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['adjusted%'] . '</Data></Cell>';
   }
   echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['classification'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['rank'] . '</Data></Cell>';
   echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['starttime'] . '</Data></Cell>';
   echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['duration'] . '</Data></Cell>';
   echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['ipaddress'] . '</Data></Cell>';
@@ -248,6 +251,7 @@
             echo '<Cell><Data ss:Type="String">' . $string['pass'] . '</Data></Cell>';
           }
         }
+        echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['rank'] . '</Data></Cell>';
         echo '<Cell><Data ss:Type="String">' . $user_results[$i]['display_started'] . '</Data></Cell>';
         echo '<Cell><Data ss:Type="String">' . formatsec($user_results[$i]['duration']) . '</Data></Cell>';
         echo '<Cell><Data ss:Type="String">' . $user_results[$i]['ipaddress'] . '</Data></Cell>';
