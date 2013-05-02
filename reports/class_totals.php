@@ -747,17 +747,18 @@ if ($language != 'en') {
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
 
-    echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=$quartile1&q2=$quartile2&q3=$quartile3\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></td></tr>\n";
 
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\"><img src=\"draw_scatter_plot.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
     echo "</table>\n";
+    
     // Display summary -------------------------------------------------------------------------------------
     
-    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size:85%; width:100%\">";
-    echo "<tr><td class=\"subheading\" style=\"width:50px\">Summary</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:50px\">Deciles</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
-    echo "<tr><td colspan=\"2\" style=\"width:50%\">";
+    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" style=\"font-size:85%; width:100%\">";
+    echo "<tr><td class=\"subheading\" style=\"width:50px\">" . $string['summary'] . "</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['deciles'] . "</td><td style=\"width:30%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">Quartiles</td><td style=\"width:100%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
+    echo "<tr><td colspan=\"2\" style=\"width:33%\">";
     
     echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
     echo "<tr><td class=\"field\" style=\"width:150px\">" . $string['paper'] . "</td><td colspan=\"3\">$paper</td></tr>\n";
@@ -867,10 +868,20 @@ if ($language != 'en') {
     
     // Deciles
     $suffix = array('', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th');
-    echo "<td colspan=\"2\" style=\"width:50%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
+    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
     for ($i=1; $i<10; $i++) {
       echo "<tr><td style=\"width:40px\">" . $i . $suffix[$i] . "</td><td>" . MathsUtils::formatNumber($decile_values[$i]) . "%</td></tr>\n";
     }
+    echo "</table></td>\n";
+    
+    echo "<td></td>";
+    
+    // Quartiles
+    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
+    echo "<tr><td style=\"width:40px\">Q1</td><td>" . MathsUtils::formatNumber($quartile1) . "%</td></tr>\n";
+    echo "<tr><td style=\"width:40px\">Q2</td><td>" . MathsUtils::formatNumber($quartile2) . "%</td></tr>\n";
+    echo "<tr><td style=\"width:40px\">Q3</td><td>" . MathsUtils::formatNumber($quartile3) . "%</td></tr>\n";
+    
     echo "</table></td>\n";
     
     echo "</tr></table>\n<br />";

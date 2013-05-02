@@ -126,11 +126,6 @@
     $csv .= $string['maxmark'] . ",$max_mark," . number_format($max_percent) . "%,,,,,,,,,\n";
     $csv .= $string['maxmark'] . ",$min_mark," . number_format($min_percent) . "%,,,,,,,,,\n";
     $csv .= $string['range'] . "," . ($max_mark - $min_mark) . "," . ($max_percent - $min_percent) . "%,,,,,,,,,\n";
-    $csv .= $string['top10'] . ",$top_10%,,,,,,,,,,\n";
-    $csv .= $string['top15'] . ",$top_15%,,,,,,,,,,\n";
-    $csv .= $string['top20'] . ",$top_20%,,,,,,,,,,\n";
-    $csv .= $string['top25'] . ",$top_25%,,,,,,,,,,\n";
-    $csv .= $string['bottom10'] . ",$bottom_10%,,,,,,,,,,\n";
     $avg_time = ($completed_no > 0) ? formatsec(round($total_time / $completed_no,0)) : 'n/a';
     $csv .= $string['averagetime'] . "," . $avg_time . ",,,,,,,,,,\n";
     $csv .= $string['excludedquestions'] . ",$display_excluded,,,,,,,,,,\n";

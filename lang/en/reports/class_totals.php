@@ -76,6 +76,7 @@ $string['papernotes'] = 'Paper Notes';
 $string['distributionchart'] = 'Distribution Chart';
 $string['scatterplot'] = 'Scatter Plot';
 $string['summary'] = 'Summary';
+$string['deciles'] = 'Deciles';
 $string['examscript'] = 'Exam Script';
 $string['feedback'] = 'Feedback';
 $string['studentprofile'] = 'Student Profile';

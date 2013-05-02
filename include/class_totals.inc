@@ -1499,6 +1499,16 @@ function isEven($intNumber) {
   }
 }
 
+if (substr($marking, 0, 1) == '2') {
+  get_ss_pass($ss_pass, $ss_hon);
+
+  for ($i=0; $i<$user_no; $i++) {
+    if (isset($user_results[$i]['adj_percent'])) {
+      $user_results[$i]['adj_percent'] = crankMark($user_results[$i]['percent'], $ss_pass, $ss_hon, $pass_mark, $distinction_mark);
+    }
+  }
+}
+
 // Generate summary statistics.
 $failures       = 0;
 $passes         = 0;
@@ -1572,6 +1582,17 @@ if ($completed_no > 0) {
   $median_percent = 0;
 }
 
+$quartile1 = mypercentile($marks_data, 0.75);
+$quartile2 = mypercentile($marks_data, 0.50);
+$quartile3 = mypercentile($marks_data, 0.25);
+
+/*
+ini_set('xdebug.var_display_max_children',-1);
+
+var_dump($marks_data);
+exit;
+*/
+
 $decile_values = array();
 for ($i=1; $i<10; $i++) {
   $decile_values[$i] = mypercentile($marks_data, ($i / 10));
@@ -1624,16 +1645,4 @@ if ($tmp_sort == 'mark' or $tmp_sort == 'rank' or $tmp_sort == 'decile') {
   $method = SORT_STRING;
 }
 $user_results = array_csort($user_results, $tmp_sort, $ordering, $method);
-
-if (substr($marking, 0, 1) == '2') {
-  get_ss_pass($ss_pass, $ss_hon);
-
-  for ($i=0; $i<$user_no; $i++) {
-    if (isset($user_results[$i]['adj_percent'])) {
-      $user_results[$i]['adj_percent'] = crankMark($user_results[$i]['percent'], $ss_pass, $ss_hon, $pass_mark, $distinction_mark);
-    }
-  }
-}
-
-
 ?>

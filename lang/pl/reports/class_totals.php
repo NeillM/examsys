@@ -76,6 +76,7 @@ $string['papernotes'] = 'Uwagi do arkusza';
 $string['distributionchart'] = 'Wykres rozkładu';
 $string['scatterplot'] = 'Wykres rozrzutowy';
 $string['summary'] = 'Podsumowanie';
+$string['deciles'] = 'Deciles';
 $string['examscript'] = 'Zapis egzaminu';
 $string['feedback'] = 'Odzew';
 $string['studentprofile'] = 'Profil studenta';
