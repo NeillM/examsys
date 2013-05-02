@@ -35,7 +35,7 @@ Class RogoStaticSingleton {
     //some objects are global and need parameters these are constructed using
     //a stranded constructor and need parameters passing. if they have not been 
     //built and get_instance is call it should return null
-    if(isset(static::$dont_construct) and static::$dont_construct == true) {
+    if (isset(static::$dont_construct) and static::$dont_construct == true) {
       if (is_object(static::$inst)) {
         return static::$inst;
       } else {

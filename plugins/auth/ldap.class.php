@@ -51,7 +51,7 @@ class ldap_auth extends outline_authentication {
     $username_col = $this->settings['username_col'];
     $id_col = $this->settings['id_col'];
     $table = $this->settings['table'];
-    $sql = "INSERT into $table set $username_col=?, $id_col=?";
+    $sql = "INSERT INTO $table SET $username_col=?, $id_col=?";
     $result = $this->db->prepare($sql);
 
     $result->bind_param('si', $this->form['std']->username, $postauthsuccessobj->userid);
@@ -111,33 +111,36 @@ class ldap_auth extends outline_authentication {
 
       return $authobj;
     }
-    if(isset($ldap_port)) {
-      $ldap = ldap_connect($ldap_server,$ldap_port);
+    
+    if (isset($ldap_port)) {
+      $ldap = ldap_connect($ldap_server, $ldap_port);
     } else {
       $ldap = ldap_connect($ldap_server);
     }
+    
     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-    if(isset($ldap_set_option)) {
+    
+    if (isset($ldap_set_option)) {
       foreach($ldap_set_option as $ldap_opt_key => $ldap_opt_val) {
         ldap_set_option($ldap,$ldap_opt_key,$ldap_opt_val);
       }
     }
     if (!isset($ldap_bind_rdn)) {
-      $ldap_bind_rdn = null;
+      $ldap_bind_rdn      = null;
       $ldap_bind_password = null;
     }
 
     if (ldap_bind($ldap, $ldap_bind_rdn, $ldap_bind_password)) {
       $this->savetodebug('Sucessfull initial bind to ldap server');
-      if(is_array($ldap_search_dn)) {
-        $ldpcount=count($ldap_search_dn);
-        $ldapconn=array();
-        for($i=0;$i<$ldpcount;$i++) {
-          $ldapconn[]=$ldap;
+      if (is_array($ldap_search_dn)) {
+        $ldpcount = count($ldap_search_dn);
+        $ldapconn = array();
+        for($i=0; $i<$ldpcount; $i++) {
+          $ldapconn[] = $ldap;
         }
       } else {
-        $ldapconn=$ldap;
+        $ldapconn = $ldap;
       }
       if (!($search = @ldap_search($ldapconn, $ldap_search_dn, $ldap_user_prefix . $this->form['std']->username))) {
         $this->savetodebug($string['ldapservernosearch']);
@@ -165,9 +168,9 @@ class ldap_auth extends outline_authentication {
 
         $this->savetodebug('Now looking up userid in table from username');
         if(!isset($sql_extra)) {
-          $sql_extra='';
+          $sql_extra = '';
         }
-        $sql = "SELECT $username_col as username, $id_col as id FROM $table WHERE $username_col = ? $sql_extra";
+        $sql = "SELECT $username_col AS username, $id_col AS id FROM $table WHERE $username_col = ? $sql_extra";
         $result = $this->db->prepare($sql);
         $result->bind_param('s', $this->form['std']->username);
         $result->execute();
@@ -186,7 +189,6 @@ class ldap_auth extends outline_authentication {
           $authobj->message = 'Incorrect number of records returned';
 
           return $authobj;
-
         }
 
         if ($result->num_rows() == 0) {

@@ -34,11 +34,11 @@ $notice = UserNotices::get_instance();
 function db_change_user($db, $userObj) {
   global $db_errors, $string;
   
-  $getback = array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
+  $getback = array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd', 'cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd', 'cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
 
   $configObject = Config::get_instance();
   $arr = $configObject->get($getback);
-  foreach($arr as $k=>$v) {
+  foreach ($arr as $k=>$v) {
     ${$k} = $v;
   }
 
@@ -102,10 +102,10 @@ function encpw($salt, $u, $p, $type = 'SHA-512') {
  *
  */
 function gen_password($len = 8) {
-  $lower = 'abcdefghijklmnoprrstuvwxyzabcdefghijklmnoprrstuvwxyz';
-  $upper = 'ABCDEFGHIJKLMN0PQRSTUVWXYZABCDEFGHIJKLMN0PQRSTUVWXYZ';
-  $num = '0123456789012345678901234501234567890123456789012345';
-  $special = '!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-';
+  $lower    = 'abcdefghijklmnoprrstuvwxyzabcdefghijklmnoprrstuvwxyz';
+  $upper    = 'ABCDEFGHIJKLMN0PQRSTUVWXYZABCDEFGHIJKLMN0PQRSTUVWXYZ';
+  $num      = '0123456789012345678901234501234567890123456789012345';
+  $special  = '!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-';
 
   $pass = '';
   $chars = array($lower, $lower, $lower, $special, $num, $num, $upper, $upper);

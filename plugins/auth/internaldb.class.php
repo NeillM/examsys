@@ -29,15 +29,15 @@ require_once 'outline_authentication.class.php';
 class internaldb_auth extends outline_authentication {
 
   public $impliments_api_auth_version = 1;
-  public $version = 0.9;
+  public $version = 1.0;
 
   private $updatable = false;
 
   function register_callback_routines() {
-    $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
     $callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
     return $callbackarray;
@@ -84,22 +84,12 @@ class internaldb_auth extends outline_authentication {
 
     }
     extract($this->settings);
-    $sql = "SELECT $username_col as username, $passwd_col as passwd, $id_col as id FROM $table WHERE $username_col=?";
+    $sql = "SELECT $username_col AS username, $passwd_col AS passwd, $id_col AS id FROM $table WHERE $username_col = ?";
     $result = $this->db->prepare($sql);
     $result->bind_param('s', $lookupuserobj->username);
     $result->execute();
     $result->store_result();
-
     $result->bind_result($uname, $pass, $id);
-    /*
-        if ($result->num_rows() !== 1) {
-          // return not sucessfull either no user or multiple matches
-          $this->retdata->debug[] = 'Lookup user record number not = 1 no user or multiple user found';
-
-          return false;
-
-        }
-        */
     while ($result->fetch()) {
       $datastore = new stdClass();
       $datastore->userid = $id;
@@ -109,18 +99,12 @@ class internaldb_auth extends outline_authentication {
       $lookupuserobj->found = true;
     }
 
-
-
     return $lookupuserobj;
   }
 
   function auth($authobj) {
     $this->retdata =& $authobj;
     $this->savetodebug('Authing');
-    /*
-        foreach ($this->settings as $key => $value) {
-          ${$key} = $value;
-        }*/
 
     extract($this->settings);
 
@@ -134,14 +118,13 @@ class internaldb_auth extends outline_authentication {
       return $authobj;
     }
 
-    $sql = "SELECT $username_col as username, $passwd_col as passwd, $id_col as id FROM $table WHERE $username_col=?";
+    $sql = "SELECT $username_col AS username, $passwd_col AS passwd, $id_col AS id, password_expire FROM $table WHERE $username_col = ?";
     $result = $this->db->prepare($sql);
     $result->bind_param('s', $this->form['std']->username);
     $result->execute();
     $result->store_result();
 
-    $result->bind_result($uname, $pass, $id);
-
+    $result->bind_result($uname, $pass, $id, $password_expire);
 
     if ($result->num_rows() !== 1) {
       // return not sucessfull either no user or multiple matches
@@ -157,7 +140,6 @@ class internaldb_auth extends outline_authentication {
     if (substr($pass, 0, 3) == '$1$') {
       $old_encrypt_type = 'MD5';
       $this->savetodebug('Using old encryption');
-
     } else {
       $old_encrypt_type = 'SHA-512';
     }
@@ -167,13 +149,12 @@ class internaldb_auth extends outline_authentication {
 
     $this->savetodebug('encrypted password strings ' . $encrypt_password . ':::' . $pass);
 
-    if ($encrypt_password == $pass) {
-      $this->updatable = false;
+    if ($encrypt_password == $pass and (time() < $password_expire or $password_expire == '')) {
       if ($old_encrypt_type == 'MD5') { // Re-encrypt MD5 passwords using SHA-512.
         $this->savetodebug('Re Encrypting PW');
         $this->update_password();
-
       }
+      $this->updatable = false;
       $this->savetodebug('Successfully authenticated on this module');
 
       //sucessfull internaldb authentication
@@ -189,13 +170,22 @@ class internaldb_auth extends outline_authentication {
   }
 
   function update_password($postauthsuccessobj = '') {
+    $configObj = Config::get_instance();
+    
     $this->savetodebug('Called update_password');
     if ($this->updatable === true and (!isset($this->settings['donotupdatepassword']) or (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== true))) {
+      if ($configObj->get('cfg_password_expire') == null) {
+        $days = 30;   // If there is no setting in the config file, default to 30 days.
+      } else {
+        $days = $configObj->get('cfg_password_expire');
+      }
+      $expire = time() + ($days * 24 * 60 * 60);
+          
       $this->savetodebug('Updating Password');
       extract($this->settings);
       $encpw_details = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
-      $stmt = $this->db->prepare("UPDATE $table SET $passwd_col = ? WHERE $username_col = ?");
-      $stmt->bind_param('ss', $encpw_details, $this->form['std']->username);
+      $stmt = $this->db->prepare("UPDATE $table SET $passwd_col = ?, password_expire = ? WHERE $username_col = ?");
+      $stmt->bind_param('sis', $encpw_details, $expire, $this->form['std']->username);
       $stmt->execute();
       $stmt->close();
     } elseif ((isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] === true)) {
