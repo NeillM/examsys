@@ -103,9 +103,9 @@
   }
 
   if ($_GET['adjust'] == '0') {
-    imagettftext($Image, 12, 0, 365 + (abs($scale_start)*5), 286, $black, $bold_font, $string['percent']);
+    imagettftext($Image, 12, 0, 375 + (abs($scale_start)*5), 286, $black, $bold_font, $string['percent']);
   } else {
-    imagettftext($Image, 12, 0, 332 + (abs($scale_start)*5), 286, $black, $bold_font, $string['adjustedpercent']);
+    imagettftext($Image, 12, 0, 342 + (abs($scale_start)*5), 286, $black, $bold_font, $string['adjustedpercent']);
   }
   imagettftext($Image, 12, 90, 3 + $negative, 162, $black, $bold_font, $string['time']);
 
