@@ -24,7 +24,7 @@ $string['classification'] = 'Classification';
 $string['starttime'] = 'Start Time/Date';
 $string['examiner'] = 'Examiner';
 $string['summary'] = 'Summary';
-$string['cohortsize'] = 'Cohort Size:';
+$string['cohortsize'] = 'Cohort Size';
 $string['fail'] = 'Fail:';
 $string['pass'] = 'Pass:';
 $string['error'] = 'ERROR:';
@@ -39,6 +39,6 @@ $string['honours pass'] = 'Honours PASS';
 $string['oscemarksheet'] = 'OSCE Mark Sheet';
 $string['feedback'] = 'Feedback';
 $string['studentprofile'] = 'Student Profile';
-$string['unsatisfactory'] = 'Unsatisfactory:';
-$string['competent'] = 'Competent:';
+$string['unsatisfactory'] = 'Unsatisfactory';
+$string['competent'] = 'Competent';
 ?>

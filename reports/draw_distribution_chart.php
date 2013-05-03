@@ -31,7 +31,7 @@
   $mydata = unserialize($mydata[0]);
   
   $max_frequency = 0;
-  $negative = 0;
+  $negative = 10;
   $scale_start = 0;
   $min_mark = 100;
   $max_mark = 0;
@@ -104,6 +104,9 @@
   $dkgreen = ImageColorAllocate($Image, 0, 128, 0);
   $blue    = ImageColorAllocate($Image, 0, 192, 192);
   
+  $font      = '../fonts/SourceSansPro-Regular.otf';
+  $bold_font = '../fonts/SourceSansPro-Semibold.otf';
+  
   // Convert strings from UTF8 to Latin
   $string['occurrance'] = mb_convert_encoding($string['occurrance'], 'ISO-8859-2', 'UTF-8');
   $string['percent'] = mb_convert_encoding($string['percent'], 'ISO-8859-2', 'UTF-8');
@@ -112,14 +115,13 @@
 
   // Label x axis
   if (!isset($_GET['plotuser'])) {
-    
     for ($label=$scale_start; $label<=100; $label+=10) {
       if ($label > 0 and $label < 100) {
-        ImageString($Image, 2, ($label * 7) + 35 + $negative, 270, $label, $black);
+        imagettftext($Image, 10, 0, ($label * 7) + 34 + $negative, 280, $black, $font, $label);
       } elseif ($label == 100) {
-        ImageString($Image, 2, ($label * 7) + 29 + $negative, 270, $label, $black);
+        imagettftext($Image, 10, 0, ($label * 7) + 29 + $negative, 280, $black, $font, $label);
       } else {
-        ImageString($Image, 2, ($label * 7) + 38 + $negative, 270, $label, $black);
+        imagettftext($Image, 10, 0, ($label * 7) + 37 + $negative, 280, $black, $font, $label);
       }
       ImageLine($Image, ($label * 7) + 40 + $negative, 260, ($label * 7) + 40 + $negative, 266, $dkgrey);
       if ($label < 100) ImageLine($Image, ($label * 7) + 75 + $negative, 260, ($label * 7) + 75 + $negative, 263, $dkgrey);
@@ -128,25 +130,26 @@
 
   // Label y axis
   for ($label=0; $label<=$points; $label+=$label_inc) {
-    ImageLine($Image, 41, 230 - ($label * $gap), 740 + $negative, 230 - ($label * $gap), $ltgrey);
+    ImageLine($Image, 41, 260 - ($label * $gap), 740 + $negative, 260 - ($label * $gap), $ltgrey);
   }
 
-  ImageLine($Image, 40 + $negative, 20, 40 + $negative, 260, $dkgrey);
-  ImageLine($Image, 40, 260, 740 + $negative, 260, $dkgrey);
+  if ($negative > 10) {
+    ImageLine($Image, 40 + $negative, 20, 40 + $negative, 260, $dkgrey);
+  }
+  ImageLine($Image, 50, 20, 50, 260, $dkgrey);
+  ImageLine($Image, 50, 260, 740 + $negative, 260, $dkgrey);
 
   // Add quartile lines
   if (isset($_GET['q1']) and isset($_GET['q2']) and isset($_GET['q3'])) {
     for ($i=1; $i<=3; $i++) {
       $quartile = round($_GET["q$i"], 2);
       imagedashedline($Image, ($quartile * 7) + 40 + $negative, 20, ($quartile * 7) + 40 + $negative, 260, $blue);
-      //ImageString($Image, 3, ($quartile * 7) + 34, 0, 'Q' . $i, $blue);
     }
   }
   imagedashedline($Image, ($min_mark * 7) + 40 + $negative, 20, ($min_mark * 7) + 40 + $negative, 260, $blue);
   imagedashedline($Image, ($max_mark * 7) + 40 + $negative, 20, ($max_mark * 7) + 40 + $negative, 260, $blue);
   ImageRectangle($Image, (round($_GET["q1"], 2) * 7) + 40 + $negative, 1, (round($_GET["q3"], 2) * 7) + 40 + $negative, 13, $blue);
   
-  //$min_mark = 48;
   ImageLine($Image, (round($_GET["q2"], 2) * 7) + 40 + $negative, 1, (round($_GET["q2"], 2) * 7) + 40 + $negative, 12, $blue);                // Median vertical
 
   ImageLine($Image, ($min_mark * 7) + 40 + $negative, 1, ($min_mark * 7) + 40 + $negative, 13, $blue);                // Min vertical
@@ -172,12 +175,12 @@
     ImageString($Image, 3, 345, 278, "Performance", $black);
   } else {
     if ($_GET['adjust'] == '0') {
-      ImageString($Image, 3, 355 + (abs($scale_start)*5), 286, $string['percent'], $black);
+      imagettftext($Image, 12, 0, 375 + (abs($scale_start)*5), 296, $black, $bold_font, $string['percent']);
     } else {
-      ImageString($Image, 3, 345 + (abs($scale_start)*5), 286, $string['adjustedpercent'], $black);
+      imagettftext($Image, 12, 0, 342 + (abs($scale_start)*5), 296, $black, $bold_font, $string['adjustedpercent']);
     }
   }
-  ImageStringUp($Image, 3, 0, 166, $string['occurrance'], $black);
+  imagettftext($Image, 12, 90, 12, 182, $black, $bold_font, $string['occurrance']);
   
   if (isset($_GET['plotuser']) and $_GET['plotuser'] != '') {
     if ($label < 100) {
@@ -191,11 +194,11 @@
   // Label y axis
   for ($label=0; $label<=$points; $label+=$label_inc) {
     if ($label < 10) {
-      ImageString($Image, 2, 25 + $negative, 254 - ($label * $gap), $label, $black);
+      imagettftext($Image, 10, 0, 35, 265 - ($label * $gap), $black, $font, $label);
     } else {
-      ImageString($Image, 2, 20 + $negative, 254 - ($label * $gap), $label, $black);
+      imagettftext($Image, 10, 0, 30, 265 - ($label * $gap), $black, $font, $label);
     }
-    ImageLine($Image, 35 + $negative, 260 - ($label * $gap), 40 + $negative, 260 - ($label * $gap), $dkgrey);
+    ImageLine($Image, 45, 260 - ($label * $gap), 50, 260 - ($label * $gap), $dkgrey);
   }
 
   ImagePNG($Image);

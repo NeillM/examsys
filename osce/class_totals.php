@@ -23,6 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
+require '../classes/mathsutils.class.php';
 require 'class_totals.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
@@ -37,7 +38,7 @@ require 'class_totals.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-
+  
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="JavaScript">
@@ -269,6 +270,37 @@ require 'class_totals.inc';
   
   echo '</tr>';
   echo "\n<tr><th colspan=\"8\" class=\"bevel\"></th></tr>\n";
+  
+  if ($propertyObj->get_pass_mark() == 0) {
+    $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
+  }
+  
+  function isBorderline($result, $propertyObj) {
+    if ( ($propertyObj->get_marking() == 4 and ($result == 2 or $result == 3)) or ($propertyObj->get_marking() == 3 and $result == 2) ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  function getBlinePassmk($user_results, $user_no, $propertyObj) {
+    $passmark = 0;
+    
+    $borderlines = array();
+    
+    for ($i=0; $i<$user_no; $i++) {
+      if (isBorderline($user_results[$i]['classification'], $propertyObj)) {
+        $borderlines[] = $user_results[$i]['numeric_score'];
+      }
+    }
+    
+    if (count($borderlines) > 0) {
+      $passmark = MathsUtils::calculate_median($borderlines);
+    }
+    
+    return $passmark;
+  }
+  
 
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
@@ -290,7 +322,17 @@ require 'class_totals.inc';
       echo "<td class=\"greyln\"";
       if ($sortby == 'classification') echo ' style="background-color:#F7F7F7"';
       echo ">&nbsp;";
-      if(isset($labels[$user_results[$i]['classification']])) echo $labels[$user_results[$i]['classification']];
+      if ($propertyObj->get_pass_mark() == 0 and isBorderline($user_results[$i]['classification'], $propertyObj)) {
+        if ($user_results[$i]['numeric_score'] >= $passmark) {
+          echo 'Pass <span class="grey">(' . $labels[$user_results[$i]['classification']] . ')</span>';
+        } else {
+          echo 'Fail <span class="grey">(' . $labels[$user_results[$i]['classification']] . ')</span>';
+        }
+      } else {
+        if (isset($labels[$user_results[$i]['classification']])) {
+          echo $labels[$user_results[$i]['classification']];
+        }
+      }
       echo "</td>";
       echo "<td class=\"greyln\"";
       if ($sortby == 'started') echo ' style="background-color:#F7F7F7"';
@@ -305,7 +347,8 @@ require 'class_totals.inc';
   echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:80%\">\n";
-  echo "<tr><td align=\"right\">" . $string['cohortsize'] . "</td><td style=\"text-align:right\">" . $user_no . "</td></tr>\n";
+  echo "<tr><td align=\"right\" style=\"width:110px\">" . $string['cohortsize'] . "</td><td style=\"text-align:right; width:40px\">" . $user_no . "</td></tr>\n";
+  echo "<tr><td align=\"right\">Pass Mark</td><td style=\"text-align:right\">" . round($passmark, 2) . "</td></tr>\n";
   foreach ($labels as $i => $label) {
     echo "<tr><td align=\"right\">" . $string[strtolower($label)] . "</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
   }

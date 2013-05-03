@@ -28,14 +28,14 @@
 
   $Image = ImageCreate(830, 300);
 
-  $negative = 0;
+  $negative = 10;
   $scale_start = 0;
   $mydata = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_scatter.dat');
   for ($i=0; $i<=count($mydata); $i=$i+2) {
     if (isset($mydata[$i])) {
       $mark = trim($mydata[$i]);
       if ($mark < 0) {
-        $negative = 70;
+        $negative = 80;
         $scale_start = -10;
       }
     }
@@ -48,11 +48,14 @@
   $black = ImageColorAllocate($Image, 0, 0, 0);
   $dkgreen = ImageColorAllocate($Image, 0, 128, 0);
 
+  $font      = '../fonts/SourceSansPro-Regular.otf';
+  $bold_font = '../fonts/SourceSansPro-Semibold.otf';
+
   ImageLine($Image, 40 + $negative, 10, 40 + $negative, 250, $dkgrey);
-  ImageLine($Image, 40, 250, 740 + $negative, 250, $dkgrey);
-  ImageLine($Image, 41, 190, 740 + $negative, 190, $ltgrey);
-  ImageLine($Image, 41, 130, 740 + $negative, 130, $ltgrey);
-  ImageLine($Image, 41, 70, 740 + $negative, 70, $ltgrey);
+  ImageLine($Image, 45, 250, 740 + $negative, 250, $dkgrey);
+  ImageLine($Image, 45, 190, 740 + $negative, 190, $ltgrey);
+  ImageLine($Image, 45, 130, 740 + $negative, 130, $ltgrey);
+  ImageLine($Image, 45, 70, 740 + $negative, 70, $ltgrey);
 
   // Convert strings from UTF8 to Latin
   $string['time'] = mb_convert_encoding($string['time'], 'ISO-8859-2', 'UTF-8');
@@ -64,11 +67,11 @@
     
     for ($label=$scale_start; $label<=100; $label+=10) {
       if ($label > 0 and $label < 100) {
-        ImageString($Image, 2, ($label * 7) + 35 + $negative, 260, $label, $black);
+        imagettftext($Image, 10, 0, ($label * 7) + 34 + $negative, 270, $black, $font, $label);
       } elseif ($label == 100) {
-        ImageString($Image, 2, ($label * 7) + 29 + $negative, 260, $label, $black);
+        imagettftext($Image, 10, 0, ($label * 7) + 29 + $negative, 270, $black, $font, $label);
       } else {
-        ImageString($Image, 2, ($label * 7) + 38 + $negative, 260, $label, $black);
+        imagettftext($Image, 10, 0, ($label * 7) + 37 + $negative, 270, $black, $font, $label);
       }
       ImageLine($Image, ($label * 7) + 40 + $negative, 250, ($label * 7) + 40 + $negative, 256, $dkgrey);
       if ($label < 100) ImageLine($Image, ($label * 7) + 75 + $negative, 250, ($label * 7) + 75 + $negative, 253, $dkgrey);
@@ -80,7 +83,7 @@
     ImageLine($Image, 34 + $negative, $label, 40 + $negative, $label, $dkgrey);
   }
   for ($i=1; $i<=4; $i++) {
-    ImageString($Image, 2, 14 + $negative, 243-($i*60), $i*60, $black);
+    imagettftext($Image, 10, 0, 10 + $negative, 256-($i*60), $black, $font, $i*60);
   }
 
   $mydata = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_scatter.dat');
@@ -100,11 +103,11 @@
   }
 
   if ($_GET['adjust'] == '0') {
-    ImageString($Image, 3, 355 + (abs($scale_start)*5), 278, $string['percent'], $black);
+    imagettftext($Image, 12, 0, 365 + (abs($scale_start)*5), 286, $black, $bold_font, $string['percent']);
   } else {
-    ImageString($Image, 3, 345 + (abs($scale_start)*5), 278, $string['adjustedpercent'], $black);
+    imagettftext($Image, 12, 0, 332 + (abs($scale_start)*5), 286, $black, $bold_font, $string['adjustedpercent']);
   }
-  ImageStringUp($Image, 3, 0, 166, $string['time'], $black);
+  imagettftext($Image, 12, 90, 3 + $negative, 162, $black, $bold_font, $string['time']);
 
   ImagePNG($Image);
 
