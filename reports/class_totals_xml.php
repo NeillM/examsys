@@ -76,7 +76,7 @@
   echo '  <Description>Class totals for assessment taken between ' . $tmp_start . ' and ' . $tmp_end .'.</Description>';
   echo '  <LastAuthor>Rogo ' . $configObject->get('rogo_version') . '</LastAuthor>';
   echo '  <Created>' . date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z</Created>';
-  echo '  <Company>' . $cfg_company . '</Company>';
+  echo '  <Company>' . $configObject->get('cfg_company') . '</Company>';
   echo '  <Version>11.6408</Version>';
   echo ' </DocumentProperties>';
   echo ' <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">';
