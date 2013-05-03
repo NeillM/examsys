@@ -94,7 +94,8 @@ function file_array_read($files, $lang) {
           $line_string = preg_replace('/[\s]+$/', '', $line_string);
           $line_string = substr($line_string, 7, -1);
           $line_string = preg_replace('/^[\[][\']/', '', $line_string);
-          $line_string = preg_replace('/[\'][\]]$/', '', $line_string);
+          $line_string = preg_replace('/[\]]$/', '', $line_string);
+          $line_string = preg_replace('/[\']$/', '', $line_string);
           
           if (!isset($strings[$line_string])) {
             $strings[$line_string] = array($filepath_parts[1], $line_string, $line_text, 1);
@@ -295,8 +296,8 @@ foreach ($lang_array as $lang) {
     $last_key = '';
     $last_value = '';
     $display_text = '';
-    foreach ($strings_en as $strings_key => $strings_data)
-      if (isset($strings_pl[$strings_key]) and ($strings_pl[$strings_key]==$strings_en[$strings_key]))  display_this($strings_data, -1);		
+    foreach ($strings_en as $strings_key => $strings_data) 
+      if (isset($strings_pl[$strings_key]) and $strings_pl[$strings_key]==$strings_en[$strings_key] and strpos($strings_data[2],'&lt;&lt;&lt;')==-1) display_this($strings_data, -1);
     echo '<h3>Identical texts:</h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
