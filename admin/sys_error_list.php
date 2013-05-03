@@ -51,6 +51,11 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
     function refreshPage() {
       window.location = 'sys_error_list.php';
     }
+    
+    function openBug(lineID, evt) {
+      selLine(lineID, evt);
+      displayDetails();
+    }
   </script>
 </head>
 <body>
@@ -79,9 +84,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   $result->bind_result($fixed, $errorID, $title, $initials, $surname, $occurred, $errtype, $errstr, $errfile, $errline, $tmp_userID);
   while ($result->fetch()) {
     if ($fixed == '') {
-      echo "<tr class=\"l\" onclick=\"selLine($errorID,event)\" id=\"$errorID\"><td><div class=\"col\"><nobr>$occurred<nobr></div></td><td><div class=\"col\">$errtype</div></td><td><div class=\"col\">$errstr</div></td><td><div class=\"col\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"col\">$title&nbsp;$initials&nbsp;$surname</div></td><td><div class=\"col\">$tmp_userID</div></td></tr>\n";
+      echo "<tr class=\"l\" onclick=\"selLine($errorID,event)\" ondblclick=\"openBug($errorID,event)\" id=\"$errorID\"><td><div class=\"col\"><nobr>$occurred<nobr></div></td><td><div class=\"col\">$errtype</div></td><td><div class=\"col\">$errstr</div></td><td><div class=\"col\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"col\">$title&nbsp;$initials&nbsp;$surname</div></td><td><div class=\"col\">$tmp_userID</div></td></tr>\n";
     } else {
-      echo "<tr class=\"l deleted\" onclick=\"selLine($errorID,event)\" id=\"$errorID\"><td><div class=\"col\"><nobr>$occurred</nobr></div></td><td><div class=\"col\">$errtype</div></td><td><div class=\"col\">$errstr</div></td><td><div class=\"col\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"col\">";
+      echo "<tr class=\"l deleted\" onclick=\"selLine($errorID,event)\" ondblclick=\"openBug($errorID,event)\" id=\"$errorID\"><td><div class=\"col\"><nobr>$occurred</nobr></div></td><td><div class=\"col\">$errtype</div></td><td><div class=\"col\">$errstr</div></td><td><div class=\"col\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"col\">";
       if ($surname == '') {
         echo '<span class="grey">unauthenticated</span>';
       } else {
