@@ -103,14 +103,21 @@ if ($userObject->has_role('Student')) {
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
 //check the user sat the paper!
-if ($paper_type == '5') {
-  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log5, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND userID = ? LIMIT 1");
+$bound = false;
+if ($paper_type == '0' or $paper_type == '1') {
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log0, log_metadata WHERE log0.metadataID = log_metadata.id AND paperID = ? AND userID = ? UNION SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log1, log_metadata WHERE log1.metadataID = log_metadata.id AND paperID = ? AND userID = ? LIMIT 1");
+  $result->bind_param('iiii', $paperID, $userID, $paperID, $userID);
+  $bound = true;
 } elseif ($paper_type == '4') {
   $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log4 WHERE q_paper = ? AND userID = ? LIMIT 1");
+} elseif ($paper_type == '5') {
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log5, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND userID = ? LIMIT 1");
 } else {
   $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND userID = ? ORDER BY screen DESC LIMIT 1");
 }
-$result->bind_param('ii', $paperID, $userID);
+if (!$bound) {
+  $result->bind_param('ii', $paperID, $userID);
+}
 $result->execute();
 $result->bind_result($started, $updated);
 $result->store_result();
@@ -175,7 +182,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   echo "<tr><th style=\"padding:10px\"><div style=\"font-size:220%; font-weight:bold\">$paper_title</div>\n";
   echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th></tr>\n";
   echo "<tr><th class=\"bevel\"></th></tr>\n";
-  
+
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and !isset($_GET['userID'])) {
     echo "<tr><td class=\"yellowwarn\"><div style=\"margin-left:10px\">" . $string['staffmsg'] . "</div></td></tr>\n";
   }
@@ -183,9 +190,9 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
 
   //get Cohort Data
   $tmp_start_date  = DateTime::createFromFormat('U', $start_date);
-  $tmp_end_date    = DateTime::createFromFormat('U', $end_date);  
+  $tmp_end_date    = DateTime::createFromFormat('U', $end_date);
   $chort_question_data = getCohortData($mysqli, $moduleID, $tmp_start_date->format('YmdHis'), $tmp_end_date->format('YmdHis'), '%', '%', '%', $paperID, $paper_type, '');
-  
+
   //get users log data excluding exclued questions
   $qid_list = '';
   $question_data = array();
@@ -216,7 +223,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     $qid_list .= $q_id . ',';
   }
   $result->close();
-  
+
   if ($paper_type == '4') {   // Get the maximum marks for OSCE station questions.
     $result = $mysqli->prepare("SELECT q_id, q_type, display_method, score_method FROM questions, papers WHERE papers.question = questions.q_id AND paper = ?");
     $result->bind_param('i', $paperID);
@@ -261,11 +268,11 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
             $objectives[$id]['mark_sum'] = $question_data[$q_id]['mark'];
           }
           $objectives[$id]['session']['sessiontitle'] = $sessiontitle;
-          
+
           // Just in case the is no cohort data because the paper has not been sat, set zeros to stop errors further down.
           if (!isset($chort_question_data[$q_id]['totalpos'])) $chort_question_data[$q_id]['totalpos'] = 0;
           if (!isset($chort_question_data[$q_id]['mark'])) $chort_question_data[$q_id]['mark'] = 0;
-          
+
           if (isset($objectives[$id]['chort_totalpos_sum'])) {
             $objectives[$id]['chort_totalpos_sum'] += $chort_question_data[$q_id]['totalpos'];
           } else {
@@ -282,7 +289,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
         } else {
           $objectives[$id]['ratio'] = $objectives[$id]['mark_sum'] / $objectives[$id]['totalpos_sum'];
         }
-        
+
         if ($objectives[$id]['chort_totalpos_sum'] == 0) {
           $objectives[$id]['chort_ratio'] = 0;
         } else {
