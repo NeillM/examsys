@@ -60,6 +60,7 @@ $string['audio'] = 'Audio';
 $string['demosoundclip'] = 'demo sound clip';
 $string['marking'] = 'Marking';
 $string['overallclassification'] = 'Overall Classification';
+$string['markingguidance'] = 'Examiner Marking Guidance';
 $string['overallclass1'] = '&lt;Automatic&gt;';
 $string['overallclass2'] = 'Clear Fail | Borderline | Clear Pass';
 $string['overallclass3'] = 'Fail | Borderline fail | Borderline pass | Pass | Good pass';

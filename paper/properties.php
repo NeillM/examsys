@@ -139,6 +139,16 @@ function format_review($method, $string) {
   }
 }
 
+function format_passmark($method, $string) {
+  if ($method == 101) {
+    return 'Borderline Method';
+  } elseif ($method == 102) {
+    return 'N/A';
+  } else {
+    return $method . '%';
+  }
+}
+
 function format_on_off($data, $string) {
   if ($data == 0) {
     return $string['off'];
@@ -897,7 +907,7 @@ if (isset($_POST['Submit'])) {
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php
-  if ($properties->get_paper_type() == '2' or $properties->get_paper_type() == '4' or $properties->get_paper_type() == '5') {
+  if ($properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
 ?>
   <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
@@ -1207,120 +1217,140 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
    ?>
     <tr><td align="right" valign="top"><?php echo $string['type']; ?>&nbsp;</td><td>
    <?php
-     if ($properties->get_paper_type() == '0') {
-       echo "<select name=\"paper_type\" onclick=\"changeType();\">";
-       echo "<option value=\"0\" selected=\"selected\" />" . $string['formative self-assessment'] . "</option>\n";
-       echo "<option value=\"1\" />" . $string['progress test'] . "</option>\n";
-     } elseif ($properties->get_paper_type() == '1') {
-       echo "<select name=\"paper_type\" onclick=\"changeType();\">";
-       echo "<option value=\"0\" />" . $string['formative self-assessment'] . "</option>\n";
-       echo "<option value=\"1\" selected=\"selected\" />" . $string['progress test'] . "</option>\n";
-     } else {
-       echo "<select name=\"paper_type\" disabled>";
-       $tmp_types = array('formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper', 'peer review');
-       echo "<option value=\"0\" selected=\"selected\" />" . $string[$tmp_types[$properties->get_paper_type()]] . "</option>\n";
-     }
+    if ($properties->get_paper_type() == '0') {
+      echo "<select name=\"paper_type\" onclick=\"changeType();\">";
+      echo "<option value=\"0\" selected=\"selected\" />" . $string['formative self-assessment'] . "</option>\n";
+      echo "<option value=\"1\" />" . $string['progress test'] . "</option>\n";
+    } elseif ($properties->get_paper_type() == '1') {
+      echo "<select name=\"paper_type\" onclick=\"changeType();\">";
+      echo "<option value=\"0\" />" . $string['formative self-assessment'] . "</option>\n";
+      echo "<option value=\"1\" selected=\"selected\" />" . $string['progress test'] . "</option>\n";
+    } else {
+      echo "<select name=\"paper_type\" disabled>";
+      $tmp_types = array('formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper', 'peer review');
+      echo "<option value=\"0\" selected=\"selected\" />" . $string[$tmp_types[$properties->get_paper_type()]] . "</option>\n";
+    }
 
-     echo "<td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\">\n";
-     echo "<option value=\"\"></option>";
-     $additional = '';
+    echo "<td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\">\n";
+    echo "<option value=\"\"></option>";
+    $additional = '';
 
-     if (is_array($staff_modules) and count($staff_modules) > 0) {
-       $additional = ' OR idMod IN (' . implode(',', array_keys($staff_modules)) . ')';
-     }
+    if (is_array($staff_modules) and count($staff_modules) > 0) {
+      $additional = ' OR idMod IN (' . implode(',', array_keys($staff_modules)) . ')';
+    }
 
-     if ($properties->get_folder() != '') $additional .= ' OR id=' . $properties->get_folder();
+    if ($properties->get_folder() != '') $additional .= ' OR id=' . $properties->get_folder();
 
-     $folder_details = $mysqli->prepare("SELECT DISTINCT id, name FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $additional) AND deleted IS NULL ORDER BY name");
-     $folder_details->bind_param('i', $userObject->get_user_ID());
-     $folder_details->execute();
-     $folder_details->bind_result($folder_id, $folder_name);
-     while ($folder_details->fetch()) {
-       $path_parts = substr_count($folder_name, ';');
-       $folder_array = explode(';', $folder_name);
-       $display_name = str_repeat('&nbsp;', $path_parts * 4) . $folder_array[$path_parts];
-       if ($properties->get_folder() == $folder_id) {
-         echo "<option value=\"" . $folder_id . "\" selected>" . $display_name . "</option>";
-       } else {
-         echo "<option value=\"" . $folder_id . "\">" . $display_name . "</option>";
-       }
-     }
-     $folder_details->close();
-     echo "</select>\n</td></tr>\n";
+    $folder_details = $mysqli->prepare("SELECT DISTINCT id, name FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $additional) AND deleted IS NULL ORDER BY name");
+    $folder_details->bind_param('i', $userObject->get_user_ID());
+    $folder_details->execute();
+    $folder_details->bind_result($folder_id, $folder_name);
+    while ($folder_details->fetch()) {
+      $path_parts = substr_count($folder_name, ';');
+      $folder_array = explode(';', $folder_name);
+      $display_name = str_repeat('&nbsp;', $path_parts * 4) . $folder_array[$path_parts];
+      if ($properties->get_folder() == $folder_id) {
+        echo "<option value=\"" . $folder_id . "\" selected>" . $display_name . "</option>";
+      } else {
+        echo "<option value=\"" . $folder_id . "\">" . $display_name . "</option>";
+      }
+    }
+    $folder_details->close();
+    echo "</select>\n</td></tr>\n";
 
-     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-     if ($properties->get_paper_type() == '4') {
-       echo '<input type="hidden" name="bgcolor" value="' . $properties->get_bgcolor() . '" />';
-       echo '<input type="hidden" name="fgcolor" value="' . $properties->get_fgcolor() . '" />';
-       echo '<input type="hidden" name="themecolor" value="' . $properties->get_themecolor() . '" />';
-       echo '<input type="hidden" name="labelcolor" value="' . $properties->get_labelcolor() . '" />';
-       echo '<input type="hidden" name="fullscreen" value="' . $properties->get_fullscreen() . '" />';
-     } else {
-       echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA;color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['displayoptions'] ."</td></tr>\n";
-       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-       if ($properties->get_fullscreen() == 0) {
-         echo "<tr><td align=\"right\">" . $string['display'] . "&nbsp;</td><td><select name=\"fullscreen\"$disabled>\n<option value=\"0\" selected>" . $string['windowed'] ."</option><option value=\"1\">" . $string['fullscreen'] ."</option>\n</select></td>";
-       } else {
-         echo "<tr><td align=\"right\">" . $string['display'] . "&nbsp;</td><td><select name=\"fullscreen\"$disabled>\n<option value=\"0\">" . $string['windowed'] ."</option><option value=\"1\" selected>" . $string['fullscreen'] ."</option>\n</select></td>";
-       }
-       if ($properties->get_bidirectional() == 1) {
-         echo "<td align=\"right\">" . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\"$disabled><option value=\"0\">" . $string['unidirectional'] ."</option><option value=\"1\"selected>" . $string['bidirectional'] ."</option></select></td></tr>\n";
-       } else {
-         echo "<td align=\"right\">" . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\"$disabled><option value=\"0\" selected>" . $string['unidirectional'] ."</option><option value=\"1\">" . $string['bidirectional'] ."</option></select></td></tr>\n";
-       }
+    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+    if ($properties->get_paper_type() == '4') {
+      echo '<input type="hidden" name="bgcolor" value="' . $properties->get_bgcolor() . '" />';
+      echo '<input type="hidden" name="fgcolor" value="' . $properties->get_fgcolor() . '" />';
+      echo '<input type="hidden" name="themecolor" value="' . $properties->get_themecolor() . '" />';
+      echo '<input type="hidden" name="labelcolor" value="' . $properties->get_labelcolor() . '" />';
+      echo '<input type="hidden" name="fullscreen" value="' . $properties->get_fullscreen() . '" />';
+    } else {
+      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA;color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['displayoptions'] ."</td></tr>\n";
+      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+      if ($properties->get_fullscreen() == 0) {
+        echo "<tr><td align=\"right\">" . $string['display'] . "&nbsp;</td><td><select name=\"fullscreen\"$disabled>\n<option value=\"0\" selected>" . $string['windowed'] ."</option><option value=\"1\">" . $string['fullscreen'] ."</option>\n</select></td>";
+      } else {
+        echo "<tr><td align=\"right\">" . $string['display'] . "&nbsp;</td><td><select name=\"fullscreen\"$disabled>\n<option value=\"0\">" . $string['windowed'] ."</option><option value=\"1\" selected>" . $string['fullscreen'] ."</option>\n</select></td>";
+      }
+      if ($properties->get_bidirectional() == 1) {
+        echo "<td align=\"right\">" . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\"$disabled><option value=\"0\">" . $string['unidirectional'] ."</option><option value=\"1\"selected>" . $string['bidirectional'] ."</option></select></td></tr>\n";
+      } else {
+        echo "<td align=\"right\">" . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\"$disabled><option value=\"0\" selected>" . $string['unidirectional'] ."</option><option value=\"1\">" . $string['bidirectional'] ."</option></select></td></tr>\n";
+      }
 
-       echo "<tr>\n";
-       echo "<td align=\"right\">" . $string['background'] . "&nbsp;</td><td><div onclick=\"showPicker('bgcolor',event)\" id=\"span_bgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:" . $properties->get_bgcolor() . "\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"bgcolor\" name=\"bgcolor\" value=\"". $properties->get_bgcolor() . "\" /></td>";
-       echo "<td align=\"right\">" . $string['foreground'] . "&nbsp;</td><td><div onclick=\"showPicker('fgcolor',event)\" id=\"span_fgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:" . $properties->get_fgcolor() . "\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"fgcolor\" name=\"fgcolor\" value=\"" . $properties->get_fgcolor() . "\" /></td>";
-       echo "</tr>\n";
+      echo "<tr>\n";
+      echo "<td align=\"right\">" . $string['background'] . "&nbsp;</td><td><div onclick=\"showPicker('bgcolor',event)\" id=\"span_bgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:" . $properties->get_bgcolor() . "\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"bgcolor\" name=\"bgcolor\" value=\"". $properties->get_bgcolor() . "\" /></td>";
+      echo "<td align=\"right\">" . $string['foreground'] . "&nbsp;</td><td><div onclick=\"showPicker('fgcolor',event)\" id=\"span_fgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:" . $properties->get_fgcolor() . "\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"fgcolor\" name=\"fgcolor\" value=\"" . $properties->get_fgcolor() . "\" /></td>";
+      echo "</tr>\n";
 
-       echo "<tr>\n";
-       echo "<td align=\"right\">" . $string['theme'] . "&nbsp;</td><td><div onclick=\"showPicker('themecolor',event)\" id=\"span_themecolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:" . $properties->get_themecolor() . "\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"" . $properties->get_themecolor() . "\" /></td>";
-       echo "<td align=\"right\">" . $string['labelsnotes'] . "&nbsp;</td><td><div onclick=\"showPicker('labelcolor',event)\" id=\"span_labelcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:" . $properties->get_labelcolor() . "\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"" . $properties->get_labelcolor() . "\" /></td>";
-       echo "</tr>\n";
+      echo "<tr>\n";
+      echo "<td align=\"right\">" . $string['theme'] . "&nbsp;</td><td><div onclick=\"showPicker('themecolor',event)\" id=\"span_themecolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:" . $properties->get_themecolor() . "\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"" . $properties->get_themecolor() . "\" /></td>";
+      echo "<td align=\"right\">" . $string['labelsnotes'] . "&nbsp;</td><td><div onclick=\"showPicker('labelcolor',event)\" id=\"span_labelcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:" . $properties->get_labelcolor() . "\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"" . $properties->get_labelcolor() . "\" /></td>";
+      echo "</tr>\n";
 
-       if ($properties->get_paper_type() == '6') {
-         echo "<tr><td align=\"right\">" . $string['photos'] . "&nbsp;</td><td colspan=\"3\">";
-         if ($properties->get_display_correct_answer() == '1') {
-           echo "<input type=\"checkbox\" name=\"display_photos\" value=\"1\" checked />";
-         } else {
-           echo "<input type=\"checkbox\" name=\"display_photos\" value=\"1\" />";
-         }
-         echo "&nbsp;" . $string['ifavailable'] . "</td></tr>\n";
-       } else {
-         if ($properties->get_calculator() == 1) {
-           $checked = ' checked="checked"';
-         } else {
-           $checked = '';
-         }
-         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label></td>";
+      if ($properties->get_paper_type() == '6') {
+        echo "<tr><td align=\"right\">" . $string['photos'] . "&nbsp;</td><td colspan=\"3\">";
+        if ($properties->get_display_correct_answer() == '1') {
+          echo "<input type=\"checkbox\" name=\"display_photos\" value=\"1\" checked />";
+        } else {
+          echo "<input type=\"checkbox\" name=\"display_photos\" value=\"1\" />";
+        }
+        echo "&nbsp;" . $string['ifavailable'] . "</td></tr>\n";
+      } else {
+        if ($properties->get_calculator() == 1) {
+          $checked = ' checked="checked"';
+        } else {
+          $checked = '';
+        }
+        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label></td>";
 
-         if ($properties->get_sound_demo() == 1) {
-           $checked = ' checked="checked"';
-         } else {
-           $checked = '';
-         }
-         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label></td></tr>\n";
-       }
+        if ($properties->get_sound_demo() == 1) {
+          $checked = ' checked="checked"';
+        } else {
+          $checked = '';
+        }
+        echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label></td></tr>\n";
+      }
 
-       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-     }
-     echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['marking'] . "</td></tr>\n";
-     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-     if ($properties->get_paper_type() == '4') {
-       echo "<tr><td align=\"right\" valign=\"top\"><nobr>" . $string['overallclassification'] . "</nobr>&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
+      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+    }
+    echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['marking'] . "</td></tr>\n";
+    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+    if ($properties->get_paper_type() == '4') {    // OSCE Stations
+      echo "<tr><td align=\"right\" valign=\"top\">" . $string['passmark'] . "&nbsp;</td><td valign=\"top\">\n<select name=\"pass_mark\" id=\"pass_mark\">\n";
+      if ($properties->get_pass_mark() == 102) {
+        echo "<option value=\"102\">N/A</option>";
+      } else {
+        echo "<option value=\"102\" selected>N/A</option>";
+      }
+      if ($properties->get_pass_mark() == 101) {
+        echo "<option value=\"101\" selected>Borderline Method</option>";
+      } else {
+        echo "<option value=\"101\">Borderline Method</option>";
+      }
+      for ($i=0; $i<=100; $i++) {
+        if ($i == $properties->get_pass_mark()) {
+          echo "<option value=\"$i\" selected>$i%</option>\n";
+        } else {
+          echo "<option value=\"$i\">$i%</option>\n";
+        }
+      }
+      echo "</select></td></tr>";
+      echo "<tr><td align=\"right\" valign=\"top\"><nobr>" . $string['overallclassification'] . "</nobr>&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
     ?>
-      <option value="5"<?php if ($properties->get_marking() == '5') echo ' selected'; ?> /><?php echo $string['overallclass1']; ?></option>
       <option value="3"<?php if ($properties->get_marking() == '3') echo ' selected'; ?> /><?php echo $string['overallclass2']; ?></option>
       <option value="4"<?php if ($properties->get_marking() == '4') echo ' selected'; ?> /><?php echo $string['overallclass3']; ?></option>
       <option value="6"<?php if ($properties->get_marking() == '6') echo ' selected'; ?> /><?php echo $string['overallclass4']; ?></option>
   <?php
+    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"4\">" . $string['markingguidance'] . "</td></tr>\n";
     echo "<tr><td colspan=\"4\">" . wysiwyg_editor('oEdit1', 'osce_marking_guidance', $properties->get_paper_prologue(), 684, 230);
   ?>
 </td></tr>
     <?php
       echo "</select></td></tr>\n";
-    } elseif ($properties->get_paper_type() == '6') {
+    } elseif ($properties->get_paper_type() == '6') {  // Peer Review
       $review = $properties->get_display_question_mark();
 
       echo "<tr><td align=\"right\">" . $string['groupdetails'] . "&nbsp;</td><td><select name=\"type\">\n";
@@ -1469,13 +1499,17 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
     echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\"$sum_disabled>\n<option value=\"\">" . $string['na'] .  "</option>\n";
-    $academic_years = array('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16');
-    foreach ($academic_years as $value) {
+    
+    $stop_year = date("Y") + 3;
+    for ($year=2002; $year<$stop_year; $year++) {
+      $next_year = ($year - 2000) + 1;
+      $value = $year . '/' . $next_year;
       echo "<option value=\"" . $value . "\"";
       if ($properties->get_calendar_year() == $value) echo 'selected';
       echo ">";
       echo $value . "</option>\n";
     }
+
     if ($properties->get_paper_type() == '4') {
       echo "</select></td><td></td><td><input type=\"hidden\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\" /></td></tr>\n";
     } else {
@@ -2138,6 +2172,9 @@ for ($i=0; $i<$rows; $i++) {
   } elseif ($part == 'review') {
     $old = format_review($old, $string);
     $new = format_review($new, $string);
+  } elseif ($part == 'passmark') {
+    $old = format_passmark($old, $string);
+    $new = format_passmark($new, $string);
   }
 
   if (isset($string[$part])) $part = $string[$part];

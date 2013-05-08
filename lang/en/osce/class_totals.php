@@ -16,18 +16,22 @@
 
 $string['classtotals'] = 'Class Totals';
 $string['classtotalsmodule'] = 'Class Totals (%s students only)';
+$string['title'] = 'Title';
+$string['surname'] = 'Surname';
+$string['firstnames'] = 'First Names';
 $string['name'] = 'Name';
 $string['studentid'] = 'Student ID';
 $string['course'] = 'Course';
 $string['total'] = 'Total';
 $string['classification'] = 'Classification';
+$string['rating'] = 'Rating';
 $string['starttime'] = 'Start Time/Date';
 $string['examiner'] = 'Examiner';
 $string['summary'] = 'Summary';
 $string['cohortsize'] = 'Cohort Size';
-$string['fail'] = 'Fail:';
-$string['pass'] = 'Pass:';
-$string['error'] = 'ERROR:';
+$string['fail'] = 'Fail';
+$string['pass'] = 'Pass';
+$string['error'] = 'ERROR';
 $string['noattendance'] = 'No Attendance';
 $string['clear fail'] = 'Clear Fail';
 $string['borderline'] = 'Borderline';

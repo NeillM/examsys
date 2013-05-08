@@ -14,10 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['osce'] = 'OSCE:';
-$string['examiner'] = 'Examiner:';
-$string['date'] = 'Date:';
-$string['classification'] = 'Classification:';
-$string['pass'] = 'Pass';
-$string['fail'] = 'Fail';
+require '../lang/' . $language . '/osce/class_totals.php';
 ?>

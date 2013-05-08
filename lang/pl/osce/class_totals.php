@@ -16,18 +16,22 @@
 
 $string['classtotals'] = 'Zestawienie klasy';
 $string['classtotalsmodule'] = 'Zestawienie klasy (%s tylko studentów)';
+$string['title'] = 'Title';
+$string['surname'] = 'Surname';
+$string['firstnames'] = 'First Names';
 $string['name'] = 'Nazwa';
 $string['studentid'] = 'Numer legitymacji';
 $string['course'] = 'Kurs';
 $string['total'] = 'Całkowicie';
 $string['classification'] = 'Klasyfikacja';
+$string['rating'] = 'Rating';
 $string['starttime'] = 'Czas/Data rozpoczęcia';
 $string['examiner'] = 'Egzaminator';
 $string['summary'] = 'Podsumowanie';
 $string['cohortsize'] = 'Rozmiar grupy:';
-$string['fail'] = 'niezaliczone:';
-$string['pass'] = 'zaliczone:';
-$string['error'] = 'BŁĄD:';
+$string['fail'] = 'niezaliczone';
+$string['pass'] = 'zaliczone';
+$string['error'] = 'BŁĄD';
 $string['noattendance'] = 'Brak frekwencji';
 $string['clear fail'] = 'jednoznaczne niezaliczenie';
 $string['borderline'] = 'niepewne';
