@@ -255,9 +255,14 @@ if (!isset($_POST['update'])) {
     flush();
   }  
  
-  
-  
-  
+  // 08/05/2013 (uiznm) - Add permission for external examiners to see standards setting values
+  if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'standards_setting', $cfg_db_host)) {
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $updater_utils->execute_query($sql, true);
+  }  
+ 
+ 
+ 
  
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****

@@ -24,6 +24,23 @@
 
 require_once $cfg_web_root . 'classes/mathsutils.class.php';
 
+function display_std($std_value, $inline=1) {
+  $html = '';
+  if ($std_value != '') {
+    $html .= '<span class="std"';
+    if ($inline == 0) $html .= ' style="display:inline"';
+    if (is_numeric($std_value)) {
+      $html .= '>&nbsp;' . $std_value . '%&nbsp;</span>';
+    } elseif ($std_value != '') {
+      $std_value = str_replace('exclude_','',$std_value);
+
+      $titles = array('EE'=>'Easy/Essential','EI'=>'Easy/Important','EN'=>'Easy/Nice to know','ME'=>'Medium/Essential','MI'=>'Medium/Important','MN'=>'Medium/Nice to know','HE'=>'Hard/Essential','HI'=>'Hard/Important','HN'=>'Hard/Nice to know');
+      $html .= ' title="' . $titles[$std_value] . '">&nbsp;' . $std_value . '&nbsp;</span>';
+    }
+  }
+
+  return $html;
+}
 function displayGeneratedFigures($original_vars) {
   global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max;
   
@@ -364,6 +381,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
   }
   
+  $std_parts = explode(',',$question['std']);
+  
   // Processing for each stem.
   foreach ($question['options'] as $display_option) {
     $part_id++;
@@ -537,9 +556,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       case 'mcq':
         if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
           if ($question['option_order'][$part_id - 1] == $question['options'][0]['correct'] - 1) {
-            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" checked /></td><td>";
+            echo "<tr><td>".display_std($std_parts[0])."</td><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" checked /></td><td>";
           } else {
-            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" /></td><td>";
+            echo "<tr><td></td><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" /></td><td>";
           }
           if ($display_option['option_text'] != '') echo "<span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . '</span>';
           if ($display_option['o_media'] != '') {
@@ -574,9 +593,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
         } else {
           if ($question['options'][$part_id-1]['correct'] == 'y') {
-            echo "<tr><td><input type=\"checkbox\" onclick=\"checkMRQ($question_no,$part_id,$option_no,$mrq_correct);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td><td>";
+            echo "<tr><td>".display_std($std_parts[$question['option_order'][$part_id-1]])."</td><td><input type=\"checkbox\" onclick=\"checkMRQ($question_no,$part_id,$option_no,$mrq_correct);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td><td>";
           } else {
-            echo "<tr><td><input type=\"checkbox\" onclick=\"checkMRQ($question_no,$part_id,$option_no,$mrq_correct);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td><td>";
+            echo "<tr><td>".display_std($std_parts[$question['option_order'][$part_id-1]])."</td><td><input type=\"checkbox\" onclick=\"checkMRQ($question_no,$part_id,$option_no,$mrq_correct);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td><td>";
           }
         }
         if ($display_option['option_text'] != '') echo "<span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . '</span>';
@@ -611,8 +630,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($part_id == 1 and $question['score_method'] == 'Bonus Mark') {
           $marks += $display_option['marks_correct'];  // Add one mark at start in case all options are answered correctly
         }
-        
-        echo "<tr><td class=\"option\"><select name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" onchange=\"rankCheck(" . $question_no . "," . $part_id . ",$option_no,$total_rank_no);\">\n";
+
+        echo "<tr><td>";
+        if (isset($std_parts[$question['option_order'][$part_id-1]])) echo display_std($std_parts[$question['option_order'][$part_id-1]]);
+        echo "</td><td class=\"option\"><select name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" onchange=\"rankCheck(" . $question_no . "," . $part_id . ",$option_no,$total_rank_no);\">\n";
         echo $question . "<option value=\"9999\"></option>\n";
         if ($require_na) {
           echo $question . "<option value=\"9990\">" . $string['na'] . "</option>\n";
@@ -715,6 +736,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             $answer_options = explode("[/blank]",$blank_details[$blank_count]);
             $answer_list = explode(",",$answer_options[0]);
             $correct_answer = $answer_list[0];
+            echo display_std($std_parts[$part_id-1],0);
             echo "<select name=\"q" . $question_no . "_" . $part_id . "\">\n";
             echo "<option value=\"u\"></option>\n";
             shuffle($answer_list);            // Shuffle the answers up.
@@ -783,6 +805,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         </script>
         </div><br />
         <?php
+        echo display_std($std_parts[0]);
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"u\" />\n";
         
         if ($question['score_method'] == 'Mark per Question') {
@@ -948,8 +971,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     
     $_SESSION['ans' . $q_id] = $answer;
     $_SESSION['q' . $q_id] = ($question_no + $question_offset);
-    
+    echo "<table  cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n<tr><td>";
+    echo display_std($std_parts[0]);
+    echo "</td>\n<td>";
     echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"$answer\" />" . $score_array[3] . "</p>\n";
+    echo "</td></tr></table>";
     $marks = $display_option['marks_correct'];
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
     if ($question['score_method'] == 'other') {
@@ -998,6 +1024,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $sub_answers = explode('$',$matching_answers[$part_id - 1]);
       $list_size = 10;
       if (count($matching_options) < 10) $list_size = count($matching_options);
+      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n<tr><td>";
+      echo display_std($std_parts[$part_id-1]);
+      echo "</td>\n<td>";
       if ($answer_no == 1) {
         echo "<select name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
         echo "<option value=\"u\"></option>\n";
@@ -1022,6 +1051,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_option_no++;
       }
       echo '</select>';
+      echo "</td></tr></table>";
       if ($answer_no > 1) echo '<div class="mk">' . $string['holddownctrlkey'] . '</div>';      
       echo '</div><br /></li>';
     }
@@ -1035,7 +1065,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "<p align=\"center\">" . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '') . "</p>\n";
     }
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="1" class="matrix">';
-    echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
+    echo "<tr>\n<td colspan=\"3\">&nbsp;</td>";
     foreach ($matching_options as $single_option) {
       echo '<td>' . $single_option . '</td>';
     }
@@ -1043,7 +1073,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     foreach ($matching_scenarios as $single_scenario) {
       if (trim($single_scenario) != '') {
         echo "<tr>\n";
-        echo '<td align="right">' . chr(64 + $part_id) . '.</td><td>' . $single_scenario . '</td>';
+        echo '<td align="right">' . chr(64 + $part_id) . '.</td><td>'.display_std($std_parts[$part_id-1]).'</td><td>' . $single_scenario . '</td>';
         $col_no = 1;
         foreach ($matching_options as $single_option) {
           $tmp_col_no = $question['option_order'][$col_no - 1] + 1;

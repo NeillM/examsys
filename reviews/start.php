@@ -28,6 +28,8 @@ require '../include/reviews.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
 require '../config/start.inc';
+require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 check_var('id', 'GET', true, false, false);
 //session_start();
@@ -65,7 +67,7 @@ while ($stmt->fetch()) {
   if ($q_type != 'info') {
     $screen_data[$no_screens][] = array($q_type, $q_id);
   }
-
+  
   // If set overwrite the default colours with the current users' special settings
   if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
   if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
@@ -87,6 +89,30 @@ while ($stmt->fetch()) {
 $stmt->free_result();
 $stmt->close();
 
+//get the paper properties
+  $propertyObj = PaperProperties::get_paper_properties_by_id($property_id, $mysqli);
+  if ($propertyObj == false) {  // No properties found, this crypt_name
+    $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);    //this will exit php
+  }
+  $marking = $propertyObj->get_marking();
+
+// Get standards setting data
+if (substr($marking,0,1) == '2') 
+{
+  $standards_setting = array();
+  $tmp_parts = explode(',', $marking);
+  $stmt = $mysqli->prepare("SELECT questionID, rating FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
+  $stmt->bind_param('iis', $property_id, $tmp_parts[1], $tmp_parts[2]);
+  $stmt->execute();
+  $stmt->bind_result($questionID, $rating);
+  while ($row = $stmt->fetch()) {
+    $standards_setting[$questionID] = $rating;
+  }
+  $stmt->close();
+} else {
+  $standards_setting = array();
+}
+ 
 // Get any Reference Material
 $reference_materials = array();
 $ref_no = 0;
@@ -141,6 +167,13 @@ white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
 white-space: -pre-wrap; /* Opera 4-6 */
 white-space: -o-pre-wrap; /* Opera 7 */
 word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+.std {
+  display:block;
+  background-color:#f27000;
+  color:white;
+  width:35px;
+  text-align:center;
 }
 <?php
 $css = '';
@@ -393,6 +426,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
       $questions_array[$q_no]['q_option_order'] = $q_option_order;
       $questions_array[$q_no]['correct_fback'] = $correct_fback;
       $questions_array[$q_no]['dismiss'] = '';
+      $questions_array[$q_no]['std'] = $standards_setting[$q_id];
     }
     $questions_array[$q_no]['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   }
