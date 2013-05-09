@@ -405,11 +405,11 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <div style="text-align:center">
 <?php
   if (isset($_GET['paperID'])) {
-    echo '<input style="width:80px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '\'"/>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<input style="width:80px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'/folder/details.php?module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '\'"/>';
   } else {
-    echo '<input style="width:80px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'/staff/index.php\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/staff/index.php\'"/>';
   }
 ?>
 &nbsp;<input style="width:80px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>

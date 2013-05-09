@@ -222,11 +222,11 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
   }
 
   if (isset($_GET['paperID'])) {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $module . '&folder=' . $folder . '\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $module . '&folder=' . $folder . '\'"/>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/folder/details.php?module=' . $module . '&folder=' . $folder . '\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $folder . '\'"/>';
   } else {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/staff/index.php\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/staff/index.php\'"/>';
   }
 ?>
 &nbsp;<input style="width:90px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>
@@ -242,31 +242,31 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 <tr><td><img src="../artwork/user_file_icon_grey_16.gif" width="16" height="16" alt="User Details" /></td><td class="greymenuitem"><?php echo $string['viewuserfile']; ?></td></tr>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-    echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="Create User" /></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
+    echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="' . $string['createnewuser'] . '" /></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
     if ($userObject->has_role('SysAdmin')) {
-      echo '<tr><td class="ico"><img src="../artwork/delete_user_16_grey.png" width="16" height="16" alt="Create" /></a></td><td class="greymenuitem">' . $string['deleteuser'] . '</td></tr>';
+      echo '<tr><td class="ico"><img src="../artwork/delete_user_16_grey.png" width="16" height="16" alt="' . $string['deleteuser'] . '" /></a></td><td class="greymenuitem">' . $string['deleteuser'] . '</td></tr>';
     }
   }
 ?>
 </table>
 
 <table class="sidebar_tbl" style="display:none" id="menu2b">
-<tr><td class="ico"><a href="#" onclick="viewProfileSingle(); return false;"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
+<tr><td class="ico"><a href="#" onclick="viewProfileSingle(); return false;"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="<?php echo $string['viewuserfile']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-    echo '<tr><td class="ico"><img src="../artwork/small_user_icon_grey.gif" width="16" height="16" alt="Create" /></td><td class="greymenuitem">' . $string['createnewuser'] . '</td></tr>';
+    echo '<tr><td class="ico"><img src="../artwork/small_user_icon_grey.gif" width="16" height="16" alt="' . $string['createnewuser'] . '" /></td><td class="greymenuitem">' . $string['createnewuser'] . '</td></tr>';
   }
 ?>
 </table>
 
 <table class="sidebar_tbl" style="display:none" id="menu2c">
-<tr><td class="ico"><a onclick="viewProfileSingle(); return false;" href="#"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
+<tr><td class="ico"><a onclick="viewProfileSingle(); return false;" href="#"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="<?php echo $string['viewuserfile']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-    echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="Create" /></a></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
+    echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="' . $string['createnewuser'] . '" /></a></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
   }
   if ($userObject->has_role('SysAdmin')) {
-    echo '<tr><td class="ico"><a href="#" onclick="deleteUser(); return false;"><img src="../artwork/delete_user_16.png" width="16" height="16" alt="Delete" /></a></td><td class="menuitem"><a href="#" onclick="deleteUser(); return false;">' . $string['deleteuser'] . '</a></td></tr>';
+    echo '<tr><td class="ico"><a href="#" onclick="deleteUser(); return false;"><img src="../artwork/delete_user_16.png" width="16" height="16" alt="' . $string['deleteuser'] . '" /></a></td><td class="menuitem"><a href="#" onclick="deleteUser(); return false;">' . $string['deleteuser'] . '</a></td></tr>';
   }
 ?>
 </table>
