@@ -636,11 +636,13 @@ class UserObject extends RogoStaticSingleton {
 
   function store_original_user() {
     $data = new stdClass();
+    
     $data->title            = $this->title;
     $data->initials         = $this->initials;
     $data->username         = $this->username;
     $data->email            = $this->email;
     $data->roles            = $this->roles;
+    
     $this->impersonatedfrom = $data;
   }
 
@@ -653,15 +655,21 @@ class UserObject extends RogoStaticSingleton {
       $this->staffModules   = array();
       $this->studentModules = array();
       $this->load($userid);
+      $this->impersonate    = true;
       $this->configObj->append('cfg_install_type', " as $this->title $this->surname");
     } else {
       $notice = UserNotices::get_instance();
       $notice->access_denied($this->db, $string, $string['impersonatepriv'], true, true);
     }
   }
+  
+  public function is_impersonated() {
+    return $this->impersonate;
+  }
 
   function load($userID) {
     $this->userID = $userID;
+    $this->impersonate = false;
 
     $stmt = $this->db->prepare('SELECT roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id = ?');
     $stmt->bind_param('i', $userID);

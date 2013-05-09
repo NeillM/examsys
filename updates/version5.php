@@ -67,11 +67,15 @@ $old_version = $configObject->get('rogo_version');
     </tr>
   </table>
 <?php
+if (round($old_version,0) < 5) {
+  echo "<p style=\"margin-left:10px\">Rog&#333; $old_version is installed.<br /><br />Please use <strong><a href=\"/updates/version4.php\">/updates/version4.php</a></strong> before running /updates/version5.php</p>";
+  exit;
+}
 if (!isset($_POST['update'])) {
   ?>
 <script type="text/javascript">
   $(document).ready(function () {
-   $("#installForm").validate();
+    $("#installForm").validate();
   });
 
   $(document).ready(function () {
@@ -110,7 +114,7 @@ if (!isset($_POST['update'])) {
       <div><?php echo $string['msg2']; ?></div>
       <br/>
 
-      <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2"/></div>
+      <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /></div>
       <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass"/>
       </div>
 
@@ -155,15 +159,14 @@ if (!isset($_POST['update'])) {
 
 
   // Avoid repeated method calls
-  $cfg_db_database = $configObject->get('cfg_db_database');
-  $cfg_db_student_user = $configObject->get('cfg_db_student_user');
-  $cfg_db_staff_user = $configObject->get('cfg_db_staff_user');
-  $cfg_db_host = $configObject->get('cfg_db_host');
-  $cfg_db_username = $configObject->get('cfg_db_username');
+  $cfg_db_database      = $configObject->get('cfg_db_database');
+  $cfg_db_student_user  = $configObject->get('cfg_db_student_user');
+  $cfg_db_staff_user    = $configObject->get('cfg_db_staff_user');
+  $cfg_db_host          = $configObject->get('cfg_db_host');
+  $cfg_db_username      = $configObject->get('cfg_db_username');
   $cfg_db_external_user = $configObject->get('cfg_db_external_user');
-  $cfg_db_inv_username = $configObject->get('cfg_db_inv_user');
-  $cfg_use_ldap = $configObject->get('cfg_use_ldap');
-
+  $cfg_db_inv_username  = $configObject->get('cfg_db_inv_user');
+  $cfg_use_ldap         = $configObject->get('cfg_use_ldap');
 
   error_reporting(-1);
   ob_start();
@@ -262,7 +265,7 @@ if (!isset($_POST['update'])) {
   }  
  
  
- 
+  //update_version($version, $string);
  
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****

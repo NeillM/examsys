@@ -361,7 +361,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 </head>
 <?php
   if (count($error) == 0) {
-  	echo "<body onload=\"javascript:window.location='" . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$new_paper_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "';\">";
+  	echo "<body onload=\"javascript:window.location='" . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$new_paper_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "';\">";
   } else {
 ?>
   <body onclick="hideMenus()">
@@ -386,7 +386,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
     }
    ?>
     </ul>
-    <div style="text-align:center"><input type="button" name="OK" value=" <?php echo $string['ok']; ?> " onclick="javascript:window.location='<?php echo $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $new_paper_id . '&module=' . $_POST['module'] . '&folder=' . $_POST['folder']; ?>'" style="width:100px" /></div>
+    <div style="text-align:center"><input type="button" name="OK" value=" <?php echo $string['ok']; ?> " onclick="javascript:window.location='<?php echo $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $new_paper_id . '&module=' . $_POST['module'] . '&folder=' . $_POST['folder']; ?>'" style="width:100px" /></div>
     <br />
     </td>
     </tr>
