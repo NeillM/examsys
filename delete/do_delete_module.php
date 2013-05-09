@@ -49,7 +49,7 @@ $mysqli->close();
 
   <script type="text/javascript">
     function updateParent() {
-      window.opener.location.reload();
+      window.opener.location='../admin/list_modules.php';
       self.close();
     }
   </script>
@@ -65,7 +65,7 @@ $mysqli->close();
 
 <div style="text-align: center">
 <form action="" method="get">
-<input type="button" name="cancel" value="    OK    " onclick="javascript:window.close();" />
+<input type="button" name="cancel" value="    OK    " onclick="javascript:updateParent();" />
 </form>
 </div>
 </td></tr>
