@@ -149,7 +149,7 @@ if ($_GET['id'] != '1' and !$userObject->has_role(array('SysAdmin', 'External'))
   
   // Perform replacement on certain strings.
   $tmp_body = str_replace('$support_email', '<a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</a>', $tmp_body);
-  $tmp_body = str_replace('$local_server', $configObject->get('protocol ') . $_SERVER['HTTP_HOST'], $tmp_body);
+  $tmp_body = str_replace('$local_server', NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'], $tmp_body);
   
   if (isset($_GET['highlight'])) {
     do {
@@ -173,7 +173,7 @@ if ($_GET['id'] != '1' and !$userObject->has_role(array('SysAdmin', 'External'))
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\"><tr>";
     echo "<td style=\"padding-left:20px\"><a style=\"color:#003366\" href=\"#top\"><img src=\"../../artwork/top_icon.gif\" width=\"9\" height=\"12\" border=\"0\" alt=\"" . $string['top'] . "\" /></a>&nbsp;<a style=\"color:#003366\" href=\"#top\">" . $string['top'] . "</a></td><td style=\"padding-right:20px; text-align:right\">&copy; 2013, The University of Nottingham</td></tr>";
     if ($userObject->has_role('SysAdmin')) {
-      echo '<tr><td colspan="2" style="padding-right:20px; text-align:right; color:#316AC5">' . $configObject->get('protocol ') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/help/student/index.php?id=' . $_GET['id'] . '</tr>';
+      echo '<tr><td colspan="2" style="padding-right:20px; text-align:right; color:#316AC5">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/help/student/index.php?id=' . $_GET['id'] . '</tr>';
     }
     echo "</table>\n";
   }

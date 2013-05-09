@@ -50,6 +50,14 @@ Class NetworkUtils {
     
     return $tmp_client_ipaddress;
   }
+  
+  static function get_protocol() {
+    if ( (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') or (isset($_SERVER['REQUEST_SCHEME']) and $_SERVER['REQUEST_SCHEME'] == 'https') ) {
+      return 'https://';
+    } else {
+      return 'http://';
+    }
+  }
 
   static function check_email_domain($output, $domain) {
     global $email;

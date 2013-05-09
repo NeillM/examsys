@@ -16,7 +16,7 @@
 
 /**
 *
-* @author Simon Wilkinson
+* @author ?
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
@@ -24,8 +24,8 @@
 
   require '../include/staff_auth.inc';
 
-  $prefix = $configObject->get( 'protocol' ) . $_SERVER['HTTP_HOST'];
-  $page = str_replace($prefix , '', $_REQUEST['page']);
+  $prefix = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'];
+  $page = str_ireplace($prefix, '', $_REQUEST['page']);
   $page = str_replace('#', '', $page);
 
   $parts = explode('?', $page);

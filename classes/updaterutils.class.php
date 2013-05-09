@@ -181,7 +181,7 @@ Class UpdaterUtils {
     }
   }
   
-  public function update_version($version, $string) {
+  public function update_version($version, $string, $cfg_web_root) {
     $cfg_new = array();
     $cfg = file($cfg_web_root . 'config/config.inc.php');
     foreach ($cfg as $line) {

@@ -93,7 +93,7 @@ if ($vle_api != '') {
     document.getElementById('menu' + ID).style.display = current;
 
     <?php
-      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
+      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
     ?>
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
     document.getElementById('icon' + ID).setAttribute('src',icon);
@@ -107,7 +107,7 @@ if ($vle_api != '') {
   }
 
   function jumpTo() {
-    window.top.location = '<?php echo $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path'); ?>/paper_frame.php?paperID=' + document.releaseform.paperID.value;
+    window.top.location = '<?php echo $configObject->get('cfg_root_path'); ?>/paper_frame.php?paperID=' + document.releaseform.paperID.value;
   }
 
   function showSessCopyMenu(e) {

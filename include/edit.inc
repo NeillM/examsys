@@ -76,7 +76,7 @@ function redirect($userObj, $q_id, $configObj, $db) {
     $result->close();
   }
 
-  $url_prefix = 'location: ' . $configObj->get( 'protocol' ) . $_SERVER['HTTP_HOST'] . $configObj->get('cfg_root_path');
+  $url_prefix = 'location: ' . $configObj->get('cfg_root_path');
 
   if (substr($_POST['paperID'], 0, 5) == 'list:') {
     $type = substr($_POST['paperID'], 5);

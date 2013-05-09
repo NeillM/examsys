@@ -42,17 +42,17 @@ function displayEditTab() {
 }
 
 function redirect($p_id) {
-  global $protocol, $mysqli;
+  global $mysqli;
   
   if (substr($p_id,0,5) == 'list:') {
     $type = substr($p_id,5);
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/question/list.php");
+    header("location: " . $configObject->get('cfg_root_path') . "/question/list.php");
   } elseif ($p_id != '') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$p_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
+    header("location: " . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$p_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/folder/details.php?module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
+    header("location: " . $configObject->get('cfg_root_path') . "/folder/details.php?module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
   } else {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/");
+    header("location: " . $configObject->get('cfg_root_path') . "/");
   }
   $mysqli->close();
   exit;   // Stop script execution after the redirect.
@@ -73,7 +73,7 @@ function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fba
   // Make bloom field safe for MySQL strict mode
   $bloom = ($bloom == '') ? NULL : $bloom;
 
-  if ($result = $mysqli->prepare("INSERT INTO questions VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NULL,NULL,NULL,NULL,NULL,?,?,NULL)")) {
+  if ($result = $mysqli->prepare("INSERT INTO questions VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, ?, ?, NULL)")) {
     $result->bind_param('ssssssssisssssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $scenario_plain, $leadin_plain, $status, $option_order);
     $result->execute();
     $result->close();

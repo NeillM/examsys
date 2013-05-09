@@ -38,7 +38,7 @@ while ($result->fetch()) {
 $result->close();
 
 if ($paper_no == 1) {
-  header("location: " . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[0]['id']);
+  header("location: " . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[0]['id']);
 } elseif ($paper_no == 0) {
   echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={{$configObject->get('cfg_page_charset')}}\" />\n\t<title>" . $string['exams'] . "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/body.css\" />\n<style type=\"text/css\">\nbody {font-size:90%; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style>\n</head>\n<body>\n";
   echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"../artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
@@ -53,8 +53,8 @@ if ($paper_no == 1) {
   echo "<p style=\"margin-left:10px\">" . $string['pleaseselect'] . "</p>\n";
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
   for ($i=0; $i<$paper_no; $i++) {
-    echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"" . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[$i]['id'] . "\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" alt=\"Type: OSCE Station\" border=\"0\" /></a></td>\n";
-    echo "  <td><a href=\"" . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[$i]['id'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a></td></tr>\n";
+    echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"" . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[$i]['id'] . "\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" alt=\"Type: OSCE Station\" border=\"0\" /></a></td>\n";
+    echo "  <td><a href=\"" . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[$i]['id'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a></td></tr>\n";
   }
   echo "</table>\n";
 }

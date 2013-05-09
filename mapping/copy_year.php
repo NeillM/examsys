@@ -61,7 +61,7 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
 </head>
 <?php
 if (count($errors) == 0) {
-	echo "<body onload=\"javascript:window.location='" . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['moduleID'] . "';\"></body></html>";
+	echo "<body onload=\"javascript:window.location='" . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['moduleID'] . "';\"></body></html>";
 } else {
 ?>
   <body onclick="hideMenus()">

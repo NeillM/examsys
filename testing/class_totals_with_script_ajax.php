@@ -56,8 +56,8 @@ if (isset($_POST['period']) and $_POST['period'] != '') {
   $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 5 YEAR)';
 }
 
-if(!isset($protocol)) {
-  $protocol='https://';
+if (!isset($protocol)) {
+  $protocol = 'https://';
 }
 
 if (isset($_POST['server']) and $_POST['server'] != '') {

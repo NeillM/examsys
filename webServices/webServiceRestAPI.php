@@ -266,8 +266,8 @@ Class webServiceRestAPI extends restAPI {
         $papers[$paper_no]['id'] = $crypt_name;
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
-        $papers[$paper_no]['staff_url'] = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
-        $papers[$paper_no]['student_url'] = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
+        $papers[$paper_no]['staff_url'] = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
+        $papers[$paper_no]['student_url'] = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
         $papers[$paper_no]['start_date'] = $start_date;
         $papers[$paper_no]['end_date'] = $end_date;
         $papers[$paper_no]['created'] = $created;
@@ -283,7 +283,6 @@ Class webServiceRestAPI extends restAPI {
 
 
   public function getAvailableFeedback ($username,$moduleID) {
-
     $allowaccess = false;
     $tmp_userID = $this->getUserID($username, false);
     $userObject=UserObject::get_instance();
@@ -480,8 +479,8 @@ Class webServiceRestAPI extends restAPI {
         $papers[$paper_no]['id'] = $crypt_name;
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
-        $papers[$paper_no]['staff_url'] = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
-        $papers[$paper_no]['student_url'] = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
+        $papers[$paper_no]['staff_url'] = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
+        $papers[$paper_no]['student_url'] = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
         $papers[$paper_no]['start_date'] = $start_date;
         $papers[$paper_no]['end_date'] = $end_date;
         $papers[$paper_no]['created'] = $created;
@@ -496,13 +495,12 @@ Class webServiceRestAPI extends restAPI {
   }
 
   public function createAccount() {
-
-    $userObject=UserObject::get_instance();
+    $userObject = UserObject::get_instance();
     if (!$userObject->has_role('SysAdmin')) {
       return 'AccessDenied';
     }
     
-    if(!isset($_POST['data'])) {
+    if (!isset($_POST['data'])) {
       return 'No data';
     }
 

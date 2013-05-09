@@ -54,7 +54,7 @@ $external_allowed_pages = array(
                             );
 if ($userObject->has_role('External Examiner')) {
   if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
-    header("location: " . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reviews/");
+    header("location: " . $configObject->get('cfg_root_path') . "/reviews/");
   }
 }
 

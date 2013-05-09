@@ -63,5 +63,5 @@ if ($result = $mysqli->prepare("UPDATE papers SET screen=screen+1 WHERE paper=? 
 //}
 
 // Redirect back to paper/details.php
-header("location: " . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&scrOfY=0" . $_GET['scrOfY']);
+header("location: " . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&scrOfY=0" . $_GET['scrOfY']);
 ?>

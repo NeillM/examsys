@@ -86,7 +86,7 @@ if (isset($_POST['submit'])) {
   $stmt->execute();
   $stmt->close();
   
-  echo '<form method="post" action="' . $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/index.php">';
+  echo '<form method="post" action="' . $configObject->get('cfg_root_path') . '/index.php">';
   echo '<input type="hidden" name="ROGO_USER" value="' . $_POST['username'] . '" />';
   echo '<input type="hidden" name="ROGO_PW" value="' . $_POST['password'] . '" />';
   echo '<div align="center"><table cellpadding="0" cellspacing="0" style="text-align:left; width:450px; border:1px #C8C8C8 solid">';

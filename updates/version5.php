@@ -262,10 +262,36 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'standards_setting', $cfg_db_host)) {
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
+  }
+  
+  
+  // 09/05/2013 - Remove $protocol and insert $cfg_secure_connection
+  $lines = array();
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line, '$protocol = ') !== false) {
+      $lines[] = "\$cfg_secure_connection = true;    // If true site must be accessed via HTTPS\n";
+      $found = true;
+    } else {
+      $lines[] = $line;
+    }
+  }
+
+  if ($found) {
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $lines) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added \$cfg_secure_connection config file.</li>\n";
+    ob_flush();
+    flush();
   }  
  
  
-  //update_version($version, $string);
  
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
@@ -274,6 +300,10 @@ if (!isset($_POST['update'])) {
   // End of updates -----------------------------------------------------------------
 
   // Final housekeeping activities - put all updates above this line
+  $updated = $updater_utils->update_version($version, $string, $cfg_web_root);
+  if (!$updated) {
+    echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+  }
   $updater_utils->execute_query('FLUSH PRIVILEGES', true);
   $updater_utils->execute_query('TRUNCATE sys_errors', true);
   echo "</ol>\n";

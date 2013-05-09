@@ -694,7 +694,7 @@ function post_socket_xml($endpoint, $data, $moreheaders=false) {
     if ($url['scheme'] == 'http' && $hostport == ':80' ) $hostport = '';
     if ($url['scheme'] == 'https' && $hostport == ':443' ) $hostport = '';
 
-    $url['protocol']=$url['scheme'].'://';
+    $url['protocol'] = $url['scheme'] . '://';
     $eol="\r\n";
 
   $uri = "/";
@@ -702,30 +702,30 @@ function post_socket_xml($endpoint, $data, $moreheaders=false) {
   if ( isset($url['query']) and strlen($url['query']) > 0 ) $uri .= '?'.$url['query'];
   if ( isset($url['fragment']) and strlen($url['fragment']) > 0 ) $uri .= '#'.$url['fragment'];
 
-    $headers =  "POST ".$uri." HTTP/1.0".$eol.
-                "Host: ".$url['host'].$hostport.$eol.
-                "Referer: ".$url['protocol'].$url['host'].$url['path'].$eol.
+    $headers =  "POST " . $uri . " HTTP/1.0" . $eol.
+                "Host: " . $url['host'] . $hostport . $eol.
+                "Referer: " . $url['protocol'] . $url['host'] . $url['path'] . $eol.
                 "Content-Length: ".strlen($data).$eol;
   if ( is_string($moreheaders) ) $headers .= $moreheaders;
   $len = strlen($headers);
-  if ( substr($headers,$len-2) != $eol ) {
-        $headers .= $eol;
+  if (substr($headers,$len-2) != $eol) {
+    $headers .= $eol;
   }
-    $headers .= $eol.$data;
-  // echo("\n"); echo($headers); echo("\n");
-    // echo("PORT=".$url['port']);
-    try {
-      $fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
-      if($fp) {
-        fputs($fp, $headers);
-        $result = '';
-        while(!feof($fp)) { $result .= fgets($fp, 128); }
-        fclose($fp);
-        //removes headers
-        $pattern="/^.*\r\n\r\n/s";
-        $result=preg_replace($pattern,'',$result);
-        return $result;
+  $headers .= $eol . $data;
+  try {
+    $fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
+    if ($fp) {
+      fputs($fp, $headers);
+      $result = '';
+      while (!feof($fp)) {
+        $result .= fgets($fp, 128);
       }
+      fclose($fp);
+      //removes headers
+      $pattern="/^.*\r\n\r\n/s";
+      $result=preg_replace($pattern,'',$result);
+      return $result;
+    }
   } catch(Exception $e) {
     return false;
   }
