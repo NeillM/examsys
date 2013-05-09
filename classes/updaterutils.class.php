@@ -185,14 +185,13 @@ Class UpdaterUtils {
     $cfg_new = array();
     $cfg = file($cfg_web_root . 'config/config.inc.php');
     foreach ($cfg as $line) {
-      if (strpos($line, 'ts_version') !== false) {
+      if (strpos($line, 'rogo_version') !== false) {
         $cfg_new[] = "\$rogo_version = '$version';\n";
       } else {
         $cfg_new[] = $line;
       }
     }
     if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
-      //echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
       return $string['couldnotwrite'];
     } else {
       return true;

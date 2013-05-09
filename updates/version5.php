@@ -301,7 +301,7 @@ if (!isset($_POST['update'])) {
 
   // Final housekeeping activities - put all updates above this line
   $updated = $updater_utils->update_version($version, $string, $cfg_web_root);
-  if (!$updated) {
+  if ($updated !== true) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
   $updater_utils->execute_query('FLUSH PRIVILEGES', true);
