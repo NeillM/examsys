@@ -382,6 +382,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   }
   
   $std_parts = explode(',',$question['std']);
+  foreach($question['option_order'] as $key => $value) {
+    $qst_order[$value] = $key;
+    }
   
   // Processing for each stem.
   foreach ($question['options'] as $display_option) {
@@ -1012,6 +1015,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     echo "</ol></td></tr>\n</table>\n";
 
     echo '<ol class="extmatch">';
+    $part_std_offset = 0;
     for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
       $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
       $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];
@@ -1024,14 +1028,26 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $sub_answers = explode('$',$matching_answers[$part_id - 1]);
       $list_size = 10;
       if (count($matching_options) < 10) $list_size = count($matching_options);
-      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n<tr><td>";
-      echo display_std($std_parts[$part_id-1]);
+        echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
+      if (count($sub_answers)>1) {
+        echo "<td valign='top'>";
+        echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
+        for ($part_sub=0;$part_sub<count($sub_answers);$part_sub++) {
+          echo "<tr><td>".chr(65+$qst_order[$sub_answers[$part_sub]-1]).".</td>";
+          echo "<td>".display_std($std_parts[$part_id-1+$part_std_offset],0)."</td>";
+          echo "</tr>\n";
+          $part_std_offset++;
+        }
+        $part_std_offset--;
+        echo "</table>";
+      }else{
+        echo "<td>".display_std($std_parts[$part_id-1+$part_std_offset]);
+      }
       echo "</td>\n<td>";
       if ($answer_no == 1) {
         echo "<select name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
         echo "<option value=\"u\"></option>\n";
       } else {
-        echo "<br />\n";
         echo "<div class=\"option\"><select onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
       }
       
