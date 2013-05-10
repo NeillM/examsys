@@ -69,8 +69,8 @@ if ($propertyObj->get_pass_mark() == 101) {
 
 if ($borderline_method) {
   $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
-} elseif ($properties->get_pass_mark() != 102) {
-  $passmark = $properties->get_pass_mark();
+} elseif ($propertyObj->get_pass_mark() != 102) {
+  $passmark = $propertyObj->get_pass_mark();
 } else {
   $passmark = 'N/A';
 }
