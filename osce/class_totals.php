@@ -135,7 +135,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       var scrOfY = $('body,html').scrollTop();
 
       document.getElementById('started').value = tmpStarted;
-      document.getElementById('userID').value = currentUserID;
+      document.getElementById('tmp_userID').value = currentUserID;
 
       top_pos = currentY+scrOfY;
       if (top_pos > ($(window).height() + scrOfY - 75)) {
@@ -144,12 +144,12 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       document.getElementById('menudiv').style.left = e.clientX+scrOfX + 'px';
       document.getElementById('menudiv').style.top = top_pos + 'px';
 
-      document.getElementById('menudiv').style.display = "";
+      document.getElementById('menudiv').style.display = "block";
       document.getElementById('item1b').style.backgroundColor = '#FFFFFF';
       document.getElementById('item2b').style.backgroundColor = '#FFFFFF';
       document.getElementById('item3b').style.backgroundColor = '#FFFFFF';
       isMenu = true;
-      return false ;
+      return false;
     }
     
     function menuRowOn(rowID) {
@@ -186,19 +186,19 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       document.getElementById('menudiv').style.display = 'none';
       var winwidth = 750;
       var winheight = screen.height-80;
-      window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + document.getElementById('userID').value + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + document.getElementById('tmp_userID').value + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
     
     function viewFeedback() {
       document.getElementById('menudiv').style.display = 'none';
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("/mapping/user_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + document.getElementById('userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("/mapping/user_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + document.getElementById('tmp_userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
     
     function viewProfile() {
       document.getElementById('menudiv').style.display = 'none';
-      window.top.location = '/users/details.php?userID=' + document.getElementById('userID').value;
+      window.top.location = '/users/details.php?userID=' + document.getElementById('tmp_userID').value;
     }
     
     document.onmousedown = mouseSelect;
@@ -207,7 +207,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
 
   <body>
 
-<div id="menudiv" style="background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0px; left:0px; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:2px 2px 2px rgba(100, 100, 100, 0.50)" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
+<div id="menudiv" class="popupmenu" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
 <table width="180" cellspacing="2" cellpadding="0" border="0" style="font-size:90%; background-color:white">
   <tr><td>
     <table width="180" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
@@ -242,9 +242,9 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   
   //output table heading
   if ($borderline_method) {
-    $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['total']=>'numeric_score', $string['rating']=>'rating', $string['classification']=>'classification', $string['starttime']=>'started', $string['examiner']=>'examiner');
+    $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'grade', $string['total']=>'numeric_score', $string['rating']=>'rating', $string['classification']=>'classification', $string['starttime']=>'started', $string['examiner']=>'examiner');
   } else {
-    $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['total']=>'numeric_score', $string['classification']=>'classification', $string['starttime']=>'started', $string['examiner']=>'examiner');
+    $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'grade', $string['total']=>'numeric_score', $string['classification']=>'classification', $string['starttime']=>'started', $string['examiner']=>'examiner');
   }
   $metadata_cols = array();
   if (isset($user_results[0])){
@@ -316,35 +316,34 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       echo "<tr style=\"background-color:#FFC0C0\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../users/details.php?userID=" . $user_results[$i]['userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"5\" style=\"text-align:center; font-weight:bold\">" . $string['noattendance'] . "</td></tr>\n";
     } else {
       echo "<tr><td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['userID'] . "', event);\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" /></td>";
-      echo "<td class=\"greyln\"";
-      if ($sortby == 'name') echo ' style="background-color:#F7F7F7"';
-      echo ">&nbsp;<span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "', '" . $user_results[$i]['userID'] . "', event);\">" . $user_results[$i]['title'] . " " . $user_results[$i]['surname'] . ", <span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></td>";
-      echo "<td class=\"greyln\"";
-      if ($sortby == 'student_id') echo ' style="background-color:#F7F7F7"';
-      echo ">&nbsp;" . $user_results[$i]['student_id'] . "</td>";
-      echo "<td class=\"greyln\"";
-      if ($sortby == 'grade') echo ' style="background-color:#F7F7F7"';
-      echo ">&nbsp;" . $user_results[$i]['grade'] . "</td>";
-      echo "<td class=\"greyln\"";
-      if ($sortby == 'numeric_score') echo ' style="background-color:#F7F7F7"';
-      echo ">&nbsp;" . $user_results[$i]['numeric_score'] . "</td>";
-      
-      
+      echo '<td class="greyln';
+      if ($sortby == 'name') echo ' ordered';
+      echo "\">&nbsp;<span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "', '" . $user_results[$i]['userID'] . "', event);\">" . $user_results[$i]['title'] . " " . $user_results[$i]['surname'] . ", <span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></td>";
+      echo '<td class="greyln';
+      if ($sortby == 'student_id') echo ' ordered';
+      echo "\">&nbsp;" . $user_results[$i]['student_id'] . "</td>";
+      echo '<td class="greyln';
+      if ($sortby == 'grade') echo ' ordered';
+      echo "\">&nbsp;" . $user_results[$i]['grade'] . "</td>";
+      echo '<td class="greyln';
+      if ($sortby == 'numeric_score') echo ' ordered';
+      echo "\">&nbsp;" . $user_results[$i]['numeric_score'] . "</td>";
+            
       if ($borderline_method) {
-        echo "<td class=\"greyln\"";
-        if ($sortby == 'rating') echo ' style="background-color:#F7F7F7"';
-        echo ">&nbsp;" . $user_results[$i]['rating'] . "</td>\n";
+        echo '<td class="greyln';
+        if ($sortby == 'rating') echo ' ordered';
+        echo "\">&nbsp;" . $user_results[$i]['rating'] . "</td>\n";
       }
       
-      echo "<td class=\"greyln\"";
-      if ($sortby == 'classification') echo ' style="background-color:#F7F7F7"';
-      echo ">&nbsp;" . $user_results[$i]['classification'] . "</td>";
-      echo "<td class=\"greyln\"";
-      if ($sortby == 'started') echo ' style="background-color:#F7F7F7"';
-      echo ">&nbsp;" . $user_results[$i]['display_started'] . "</td>\n";
-      echo "<td class=\"greyln\"";
-      if ($sortby == 'examiner') echo ' style="background-color:#F7F7F7"';
-      echo ">&nbsp;" . $user_results[$i]['examiner'] . "</td></tr>\n";
+      echo '<td class="greyln';
+      if ($sortby == 'classification') echo ' ordered';
+      echo "\">&nbsp;" . $user_results[$i]['classification'] . "</td>";
+      echo '<td class="greyln';
+      if ($sortby == 'started') echo ' ordered';
+      echo "\">&nbsp;" . $user_results[$i]['display_started'] . "</td>\n";
+      echo '<td class="greyln';
+      if ($sortby == 'examiner') echo ' ordered';
+      echo "\">&nbsp;" . $user_results[$i]['examiner'] . "</td></tr>\n";
     }
   }
 
