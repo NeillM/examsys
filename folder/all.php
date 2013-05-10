@@ -138,15 +138,15 @@
   $results->execute();
   $results->bind_result($modID, $moduleid, $fullname);
   while ($results->fetch()) {
-    if ($old_letter !== substr($moduleid,0,1)) {
+    if ($old_letter !== mb_substr($moduleid,0,1)) {
       if ($module_block == true) {
         echo "</div>\n";
         $module_block = false;
       }
     }
-    if ($old_letter !== substr($moduleid,0,1)) {
+    if ($old_letter !== mb_substr($moduleid,0,1)) {
       if ($moduleid !== '') {
-        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" onclick=\"showHide($block_id)\" />&nbsp;<a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">" . substr($moduleid,0,1) . "</a></div>\n";
+        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" onclick=\"showHide($block_id)\" />&nbsp;<a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">" . mb_substr($moduleid,0,1) . "</a></div>\n";
       }
       if ($module_block == false) {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -157,7 +157,7 @@
     if ($moduleid !== '') {
       echo "<div class=\"mod\"><a href=\"details.php?module=$modID\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" /></a>&nbsp;<a href=\"details.php?module=$modID\">$moduleid: $fullname</a></div>\n";
     }
-    $old_letter = substr($moduleid,0,1);
+    $old_letter = mb_substr($moduleid,0,1);
   }
   $results->close();
 
