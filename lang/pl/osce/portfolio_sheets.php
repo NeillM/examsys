@@ -17,7 +17,7 @@
 $string['osce'] = 'OSCE:'; //cognate
 $string['examiner'] = 'Egzaminator:';//ąę
 $string['date'] = 'Data:';
-$string['classification'] = 'Classification:';
-$string['pass'] = 'Pass';
-$string['fail'] = 'Fail';
+$string['classification'] = 'Klasyfikacja:';
+$string['pass'] = 'Zaliczone';
+$string['fail'] = 'Niezaliczone';
 ?>

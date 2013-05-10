@@ -16,15 +16,15 @@
 
 $string['classtotals'] = 'Zestawienie klasy';
 $string['classtotalsmodule'] = 'Zestawienie klasy (%s tylko studentów)';
-$string['title'] = 'Title';
-$string['surname'] = 'Surname';
-$string['firstnames'] = 'First Names';
+$string['title'] = 'Tytuł';
+$string['surname'] = 'Nazwisko';
+$string['firstnames'] = 'Imiona';
 $string['name'] = 'Nazwa';
 $string['studentid'] = 'Numer legitymacji';
 $string['course'] = 'Kurs';
 $string['total'] = 'Całkowicie';
 $string['classification'] = 'Klasyfikacja';
-$string['rating'] = 'Rating';
+$string['rating'] = 'Zaszeregowanie';
 $string['starttime'] = 'Czas/Data rozpoczęcia';
 $string['examiner'] = 'Egzaminator';
 $string['summary'] = 'Podsumowanie';
