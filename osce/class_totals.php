@@ -58,7 +58,6 @@ if (!$propertyObj) {
 $paper = $propertyObj->get_paper_title();
 $crypt_name = $propertyObj->get_crypt_name();
 
-
 $user_results = load_results($propertyObj, $demo, $configObject, $mysqli);
 $user_no = count($user_results);
 if ($propertyObj->get_pass_mark() == 101) {
@@ -135,7 +134,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       var scrOfY = $('body,html').scrollTop();
 
       document.getElementById('started').value = tmpStarted;
-      document.getElementById('tmp_userID').value = currentUserID;
+      document.getElementById('userID').value = currentUserID;
 
       top_pos = currentY+scrOfY;
       if (top_pos > ($(window).height() + scrOfY - 75)) {
@@ -186,19 +185,19 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       document.getElementById('menudiv').style.display = 'none';
       var winwidth = 750;
       var winheight = screen.height-80;
-      window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + document.getElementById('tmp_userID').value + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + document.getElementById('userID').value + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
     
     function viewFeedback() {
       document.getElementById('menudiv').style.display = 'none';
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("/mapping/user_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + document.getElementById('tmp_userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("/mapping/user_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + document.getElementById('userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
     
     function viewProfile() {
       document.getElementById('menudiv').style.display = 'none';
-      window.top.location = '/users/details.php?userID=' + document.getElementById('tmp_userID').value;
+      window.top.location = '/users/details.php?userID=' + document.getElementById('userID').value;
     }
     
     document.onmousedown = mouseSelect;
@@ -313,9 +312,9 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
 
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
-      echo "<tr style=\"background-color:#FFC0C0\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../users/details.php?userID=" . $user_results[$i]['userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"5\" style=\"text-align:center; font-weight:bold\">" . $string['noattendance'] . "</td></tr>\n";
+      echo "<tr class=\"nonattend\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../users/details.php?userID=" . $user_results[$i]['userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['userID'] . "', event);\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" /></td>";
+      echo "<tr><td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['userID'] . "', event);\" width=\"16\" height=\"16\" /></td>";
       echo '<td class="greyln';
       if ($sortby == 'name') echo ' ordered';
       echo "\">&nbsp;<span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "', '" . $user_results[$i]['userID'] . "', event);\">" . $user_results[$i]['title'] . " " . $user_results[$i]['surname'] . ", <span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></td>";
@@ -350,13 +349,13 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   echo "<tr><td colspan=\"" . $column_no . "\">&nbsp;</td></tr>\n";
   echo "<tr><td colspan=\"" . $column_no . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   
-  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:80%\">\n";
+  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:80%; line-height:150%\">\n";
   echo "<tr><td align=\"right\" style=\"width:110px\">" . $string['cohortsize'] . "</td><td style=\"text-align:right; width:40px\">" . $user_no . "</td></tr>\n";
   
   if ($borderline_method) {
-    echo "<tr><td align=\"right\">Pass Mark</td><td style=\"text-align:right\">" . round($passmark, 2) . "</td></tr>\n";
+    echo "<tr><td align=\"right\">" . $string['passmark'] . "</td><td style=\"text-align:right\">" . round($passmark, 2) . "</td><td>% (borderline method)</td></tr>\n";
   } elseif ($propertyObj->get_pass_mark() != 102) {  // Not the N/A option
-    echo "<tr><td align=\"right\">Pass Mark</td><td style=\"text-align:right\">" . $propertyObj->get_pass_mark() . "%</td></tr>\n";
+    echo "<tr><td align=\"right\">" . $string['passmark'] . "</td><td style=\"text-align:right\">" . $propertyObj->get_pass_mark() . "</td><td>%</td></tr>\n";
   }
   
   $labels = get_labels($propertyObj);
@@ -370,7 +369,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   
   $mysqli->close();
 ?>
-<input type="hidden" id="tmp_userID" value="" />
+<input type="hidden" id="userID" value="" />
 <input type="hidden" id="started" value="" />
 </body>
 </html>
