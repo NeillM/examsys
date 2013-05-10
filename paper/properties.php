@@ -410,11 +410,11 @@ if (isset($_POST['Submit'])) {
       // If we are in here the paper type is 2 and summative management is on.
       // Set times to the old time settings.
       $tmp_start_date = $old_start_date;
-      $tmp_end_date = $old_end_date;
-      $timezone = $old_timezone;
-      $calendar_year = $old_calendar_year;
-      $exam_duration = $old_exam_duration;
-      $lab_string = $old_labs;
+      $tmp_end_date   = $old_end_date;
+      $timezone       = $old_timezone;
+      $calendar_year  = $old_calendar_year;
+      $exam_duration  = $old_exam_duration;
+      $lab_string     = $old_labs;
     }
 
     $leap = is_leap($_POST['ext_tyear']);
@@ -422,9 +422,9 @@ if (isset($_POST['Submit'])) {
     if ($leap == false and $_POST['ext_tmonth'] == '02' and ($_POST['ext_tday'] == '29' or $_POST['ext_tday'] == '30' or $_POST['ext_tday'] == '31')) $_POST['ext_tday'] = '28';
     if (($_POST['ext_tmonth'] == '04' or $_POST['ext_tmonth'] == '06' or $_POST['ext_tmonth'] == '09' or $_POST['ext_tmonth'] == '11') and $_POST['ext_tday'] == '31') $_POST['ext_tday'] = '30';
 
-    $tmp_date = $_POST['ext_tyear'] . $_POST['ext_tmonth'] . $_POST['ext_tday'];
-    if ($tmp_date == '') {
+    if ($_POST['ext_tyear'] == '' or $_POST['ext_tmonth'] == '' or $_POST['ext_tday'] == '') {
       $external_review_deadline = NULL;
+      $ext_date = '';
     } else {
       $ext_date = new DateTime($_POST['ext_tyear'] . '-' . $_POST['ext_tmonth'] . '-' . $_POST['ext_tday']);
       $external_deadline = $ext_date->format('Y-m-d');
@@ -437,8 +437,7 @@ if (isset($_POST['Submit'])) {
     if ($leap == false and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '29' or $_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '28';
     if (($_POST['int_tmonth'] == '04' or $_POST['int_tmonth'] == '06' or $_POST['int_tmonth'] == '09' or $_POST['int_tmonth'] == '11') and $_POST['int_tday'] == '31') $_POST['int_tday'] = '30';
 
-    $tmp_date = $_POST['int_tyear'] . $_POST['int_tmonth'] . $_POST['int_tday'];
-    if ($tmp_date == '') {
+    if ($_POST['int_tyear'] == '' or $_POST['int_tmonth'] == '' or  $_POST['int_tday'] == '') {
       $internal_review_deadline = NULL;
       $int_date = '';
     } else {
