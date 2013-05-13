@@ -148,4 +148,14 @@ $string['enddate'] = 'End Date';
 $string['retired'] = 'Retired';
 $string['externalreviewdeadline'] = 'External Review Deadline';
 $string['internalreviewdeadline'] = 'Internal Review Deadline';
+
+//Colour picker
+$string['colour'] = 'Colour';
+$string['themecolours'] = 'Theme Colours';
+$string['standardcolours'] = 'Standard Colours';
+$string['more'] = 'More...';
+$string['cancel'] = 'Cancel';
+$string['OK'] = 'OK';
+
+
 ?>

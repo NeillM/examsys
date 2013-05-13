@@ -102,4 +102,12 @@ $string['forcereset'] = 'Wymuś reset';
 $string['classifiedinfo'] = 'informacja zastrzeżona';
 $string['custom'] = 'Własna';
 $string['Access Denied']='Brak dostępu';
+
+//Colour picker
+$string['colour'] = 'Kolor';
+$string['themecolours'] = 'Kolory motywu';
+$string['standardcolours'] = 'Kolory standardowe';
+$string['more'] = 'Więcej...';
+$string['cancel'] = 'Anuluj';
+$string['OK'] = 'OK';
 ?>

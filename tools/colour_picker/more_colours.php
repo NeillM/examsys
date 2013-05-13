@@ -49,7 +49,7 @@ function rgb_hex($input) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Colours</title>
+  <title><?php echo $string['colours']; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
@@ -165,10 +165,10 @@ function rgb_hex($input) {
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td colspan="2">
-<div style="position:absolute; left:17px; font-size:90%">New</div>
+<div style="position:absolute; left:17px; font-size:90%"><?php echo $string['new']; ?></div>
 <div id="swatch" style="width:50px; height:50px; position:relative; top:16px; left:0px; background-color:white; border:1px solid #808080"></div>
 <div id="current" style="width:50px; height:50px; position:relative; top:18px; left;0px; background-color:white; border:1px solid #808080"></div>
-<div style="position:relative; top:24px; left:15px; font-size:90%">Old</div>
+<div style="position:relative; top:24px; left:15px; font-size:90%"><?php echo $string['old']; ?></div>
 </td></tr>
 </table>
 </td>
@@ -209,8 +209,7 @@ function rgb_hex($input) {
 
 </td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="OK" style="width:100px" onclick="returnColour();" />&nbsp;<input type="button" name="cancel" value="Cancel" style="width:100px" onclick="window.close();" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="<?php echo $string['ok']; ?>" style="width:100px" onclick="returnColour();" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="window.close();" /></td></tr>
 </table>
-
 </body>
 </html>

@@ -148,4 +148,12 @@ $string['enddate'] = 'Data zakończenia';
 $string['retired'] = 'Wycofany'; 
 $string['externalreviewdeadline'] = 'Termin finalizacji zewnętrznej recenzji';
 $string['internalreviewdeadline'] = 'Termin finalizacji wewnętrznej recenzji';  
+
+//Colour picker
+$string['colour'] = 'Kolor';
+$string['themecolours'] = 'Kolory motywu';
+$string['standardcolours'] = 'Kolory standardowe';
+$string['more'] = 'Więcej...';
+$string['cancel'] = 'Anuluj';
+$string['OK'] = 'OK';
 ?>

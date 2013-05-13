@@ -2129,7 +2129,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   ?>
 
   <input type="hidden" name="question_no" value="<?php echo $ex_no; ?>" />
-  <div align="center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:150px" />&nbsp;&nbsp;<input type="button" name="cancel" value="Cancel" onclick="history.back()" style="width:80px" /></div>
+  <div align="center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:150px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="history.back()" style="width:80px" /></div>
   </form>
 <?php
 }
