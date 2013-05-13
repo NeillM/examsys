@@ -426,7 +426,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
       $questions_array[$q_no]['q_option_order'] = $q_option_order;
       $questions_array[$q_no]['correct_fback'] = $correct_fback;
       $questions_array[$q_no]['dismiss'] = '';
-      $questions_array[$q_no]['std'] = $standards_setting[$q_id];
+      if (isset($standards_setting[$q_id])) $questions_array[$q_no]['std'] = $standards_setting[$q_id];
     }
     $questions_array[$q_no]['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   }
