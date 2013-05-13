@@ -66,13 +66,8 @@ if (!$module_details) {
   </style>
 </head>
 
-
+<body onclick="hideMenus()">
 <?php
-  if (isset($_POST['submit'])) {
-    echo "<body onclick=\"hideMenus()\">\n";
-  } else {
-    echo "<body onclick=\"hideMenus()\">\n";
-  }
   require '../include/folder_options.inc';
 ?>
 <div id="content" class="content" style="font-size:90%; padding-left:10px">

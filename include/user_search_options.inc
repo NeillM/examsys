@@ -277,8 +277,8 @@ if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
   echo "<div class=\"submenuheading\">{$string['cohorttasks']}</div>\n";
 
   echo "<table class=\"sidebar_tbl\">\n";
-  echo '<tr><td class="ico"><a href="import_users.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importusers'] . '" /></a></td><td class="menuitem"><a href="import_users.php">' . $string['importusers'] . '</a></td></tr>';
-  echo '<tr><td class="ico"><a href="import_modules.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importmodules'] . '" /></a></td><td class="menuitem"><a href="import_modules.php">' . $string['importmodules'] . '</a></td></tr>';
+  echo '<tr><td class="ico"><a href="import_users.php"><img src="../artwork/upload_16.gif" width="16" height="16" alt="' . $string['importusers'] . '" /></a></td><td class="menuitem"><a href="import_users.php">' . $string['importusers'] . '</a></td></tr>';
+  echo '<tr><td class="ico"><a href="import_modules.php"><img src="../artwork/upload_16.gif" width="16" height="16" alt="' . $string['importmodules'] . '" /></a></td><td class="menuitem"><a href="import_modules.php">' . $string['importmodules'] . '</a></td></tr>';
   echo "</table>\n";
 }
 ?>
