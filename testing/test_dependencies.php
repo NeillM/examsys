@@ -58,10 +58,9 @@ echo "<table border=1 cellpadding=5 cellspacing=1><tr><td>";
 echo "<a href='?path=".dirname($thispath)."'>..</a><br />";
 if ($handle = opendir($thispath)) {
 	while (false !== ($filename = readdir($handle))) {
-    if ($filename != "." && $filename != ".." && $filename != ".svn" && is_dir($thispath.'/'.$filename)) {
+    //if ($filename != "." && $filename != ".." && $filename != ".svn" && is_dir($thispath.'/'.$filename)) {
       echo "<a href='?path=".$thispath."/".$filename."'>".$filename."</a><br />";
-    }
-
+    //}
     if ($filename != "." && $filename != ".." && (strpos($filename,'.php',0)>0 || strpos($filename,'.inc',0)>0)) {
 			$file_point=fopen($thispath.'/'.$filename,"r");
 			$file_content=fread($file_point, filesize($thispath.'/'.$filename));
@@ -72,11 +71,15 @@ if ($handle = opendir($thispath)) {
           
 			$pos1 = mb_strpos($file_content,'php.',0,'UTF-8');
       $pos1 = strpos_arr($file_content,Array('php.','cni.'),0);
-			while ($pos1!==false) {
-        $part2 = strpos_arr($file_content,Array('\\','\'','"','=','/',')','(',' '),$pos1);
-				$part3 = strrev(mb_substr($file_content,$pos1,$part2-$pos1,'UTF-8'));
-				$part3 = preg_replace('/-/','_',$part3);
-				if ($part3!='' && $part3!='.php' && $part3!='.inc') $conn_table[$filename][$part3]=$part3;
+      $xxx =0;
+			while ($pos1!==false && $xxx<3) {
+        $xxx++;
+        if (mb_substr($file_content,$pos1+1,1)!="'" && mb_substr($file_content,$pos1+1,1)!="\""){ 
+          $part2 = strpos_arr($file_content,Array('\\','\'','"','=','/',')','(',' '),$pos1);
+          $part3 = strrev(mb_substr($file_content,$pos1,$part2-$pos1,'UTF-8'));
+          $part3 = preg_replace('/-/','_',$part3);
+          if ($part3!='' && $part3!='.php' && $part3!='.inc') $conn_table[$filename][$part3]=$part3;
+        }
         $pos1 = strpos_arr($file_content,Array('php.','cni.'),$pos1+1);
 			}
     }
