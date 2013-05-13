@@ -33,7 +33,8 @@ function KillClock() {
 }
 function confirmSubmit() {
   if (document.questions.button_pressed.value == 'finish') {
-    var agree = confirm("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.");
+    
+    var agree = confirm(lang['javacheck2']);
     if (agree) {
       document.body.style.cursor = 'wait';
       return true;
@@ -53,7 +54,7 @@ function checkMRQ(questionid,part_id,options_total,selectable) {
     }
   }
   if (checked_total > selectable) {
-    alert("WARNING: Too many options selected. Only " + selectable + " items can be selected.");
+    alert(lang['msgselectable1'] + selectable + lang['msgselectable2']);
     document.getElementById("q" + questionid + "_" + part_id).checked = 0;
   }
 }
@@ -73,10 +74,10 @@ function rankCheck(questionid,part_id,options_total,selectable) {
     }
   }
   if (checked_total > selectable) {
-    alert("WARNING: Too many options selected. Only " + selectable + " items can be selected.");
+    alert(lang['msgselectable1'] + selectable + lang['msgselectable2']);
     document.getElementById('q' + questionid + '_' + part_id).value = 9990;
   } else if (duplicate == 1) {
-    alert("WARNING: You have already selected " + current_value + ". Please select a different ranking.");
+    alert(lang['msgselectable3'] + current_value + lang['msgselectable4']);
     document.getElementById('q' + questionid + '_' + part_id).value = 9990;    
   }
 }
@@ -89,7 +90,7 @@ function multimatchingCheck(questionid,options_total,selectable) {
   }
   tmp_count = 0;
   if (checked_total > selectable) {
-    alert("WARNING: Too many options selected. Only " + selectable + " items can be selected.");
+    alert(lang['msgselectable1'] + selectable + lang['msgselectable2']);
     for (i=0; i<options_total; i++) {
       if (document.getElementById(questionid).options[i].selected == 1) {
         tmp_count++;

@@ -15,4 +15,5 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['thankyou'] = 'Thank You';
+$string['closewindow'] = 'Close Window';
 ?>

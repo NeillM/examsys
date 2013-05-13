@@ -231,6 +231,21 @@ if ($css != '') {
     echo "});\n";
   }
 ?>
+
+var lang = {
+  <?php
+  $langstrings = array('javacheck2','msgselectable1','msgselectable2','msgselectable3','msgselectable4');
+  $first = true;
+  foreach ($langstrings as $langstring) {
+    if (!$first) {
+      echo ',';
+    }
+    echo "'{$langstring}':'{$string[$langstring]}'";
+    $first = false;
+  }
+  ?>
+  };
+  
   function getWinH() {
     var winH = 460;
     if (document.body && document.body.offsetWidth) {

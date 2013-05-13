@@ -110,7 +110,7 @@ if ($userObject->has_role('External Examiner')) {
   //  echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
   //}
   echo '</blockquote>';
-  echo '<div style="text-align:center; border: 1px black solid; padding:10px; margin-left:100px; margin-right:100px" align="center"><input type="button" name="close" value="&nbsp;Close Window&nbsp;" onclick="window.close();" /></div>';
+  echo '<div style="text-align:center; border: 1px black solid; padding:10px; margin-left:100px; margin-right:100px" align="center"><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></div>';
 
   $mysqli->close();
 ?>
