@@ -29,16 +29,28 @@
 * @package
 */
 
-if ($userObject->has_role('Demo')) {
-  $demo = true;
-} else {
-  $demo = false;
-}
 require_once '../include/calculate_marks.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sort.inc';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/exclusion.class.php';
 require_once '../classes/mathsutils.class.php';
+
+set_time_limit(0);
+
+$paperID    = $_GET['paperID'];
+$startdate  = $_GET['startdate'];
+$enddate    = $_GET['enddate'];
+
+$total_mark   = 0;
+$random_q_ids = array();
+$cfg_long_date_time = $configObject->get('cfg_long_date_time');
+$demo = is_demo($userObject);
+$log_late = array();
+$log_late_missing_users = array();
+
+$moduleID = Paper_utils::get_modules($_GET['paperID'], $mysqli);
+$moduleID_in = implode(',', array_keys($moduleID));
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
@@ -57,6 +69,53 @@ $paper_type       = $propertyObj->get_paper_type();
 $calendar_year    = $propertyObj->get_calendar_year();
 $crypt_name       = $propertyObj->get_crypt_name();
 
+$exclusions     = Exclusion::get_exclusions_by_paperID($_GET['paperID'], $mysqli);                // Get any questions to exclude.
+
+$paper_buffer   = load_answers($exclusions, $random_q_ids, $question_no, $mysqli);
+
+get_log_late($startdate, $enddate, $paperID, $configObject, $log_late, $log_late_missing_users, $mysqli);
+
+$student_cohort = get_absent($_GET['paperID'], $calendar_year, $demo, $mysqli);
+
+$user_modules   = get_users($moduleID_in, $_GET['paperID'], $calendar_year, $mysqli);             // Get all the users on the module(s) the paper is on. 
+
+$metadata_array = get_metadata($moduleID_in, $calendar_year, $mysqli);                            // Query for metadata
+
+$user_results   = load_results($propertyObj, $demo, $configObject, $metadata_array, $log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $mysqli);  // Load the student results
+
+$late_cohort    = load_late_cohort($log_late_missing_users, $mysqli);
+
+std_set_crank($marking, $exclusions, $ss_pass, $ss_hon, $pass_mark, $distinction_mark, $user_results);
+
+add_rank($user_results);                                                                          // Add in rank data.
+
+convert_moduleIDs($user_results, $mysqli);                                                        // Convert Module IDs into codes
+
+$stats          = get_stats($user_results, $question_no, $pass_mark, $distinction_mark);          // Generate the main statistics
+
+writeStudentDeciles($user_results, $stats);                                                       // Add in deciles per student
+
+add_late_students($user_results, $late_cohort, $user_no);                                         // Add in late users into main dataset
+
+add_absent_students($user_results, $student_cohort, $user_no);                                    // Add any absent students into main dataset
+
+$sortby         = sort_results($user_results);
+
+$cohort_size    = flag_subpart($user_results, $stats, $user_no, $total_mark);
+
+
+function std_set_crank($marking, $exclusions, &$ss_pass, &$ss_hon, $pass_mark, $distinction_mark, &$user_results) {
+  if (substr($marking, 0, 1) == '2') {
+    get_ss_pass($exclusions, $ss_pass, $ss_hon);
+
+    $user_no = count($user_results);
+    for ($i=0; $i<$user_no; $i++) {
+      if (isset($user_results[$i]['adj_percent'])) {
+        $user_results[$i]['adj_percent'] = crankMark($user_results[$i]['percent'], $ss_pass, $ss_hon, $pass_mark, $distinction_mark);
+      }
+    }
+  }
+}
 
 function nicedate($original) {
   return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
@@ -76,6 +135,12 @@ function getRandomDetails($questionID, &$random_q_ids) {
   $old_q_media_height = '';
   $old_correct        = array();
   $old_option_text    = array();
+  $old_theme        = '';
+  $old_scenario     = '';
+  $old_leadin       = '';
+  $old_media        = '';
+  $old_type         = '';
+  $old_score_method = '';
 
   $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, last_edited, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
   $result->bind_param('i', $questionID);
@@ -162,40 +227,41 @@ function random_qMarks($random_questions) {
   }
 }
 
-function checkDisplayExcluded(&$html, $q_id, $exclude, $q_no) {
- if (isset($exclude[$q_id])) {
-   $subpart = '';
-   if (strlen($exclude[$q_id]) > 1) {
-     for ($i=0; $i<strlen($exclude[$q_id]); $i++) {
-       if (substr($exclude[$q_id],$i,1) == '1') {
-         if ($subpart == '') {
-           $subpart = chr($i+97);
-         } else {
-           $subpart .= ', Q' . $q_no . chr($i+97);
-         }
-       }
-     }
-   }
-   if ($html == '') {
-     $html = 'Q' . $q_no . $subpart;
-   } else {
-     $html .= ', Q' . $q_no . $subpart;
-   }
- }
+function checkDisplayExcluded(&$html, $exclude, $q_no) {
+  $subpart = '';
+  
+  if (strlen($exclude) > 1) {
+    for ($i=0; $i<strlen($exclude); $i++) {
+      if (substr($exclude,$i,1) == '1') {
+        if ($subpart == '') {
+          $subpart = chr($i+97);
+        } else {
+          $subpart .= ', Q' . $q_no . chr($i+97);
+        }
+      }
+    }
+  }
+  if (strpos($exclude, '1') !== false) {
+    if ($html == '') {
+      $html = 'Q' . $q_no . $subpart;
+    } else {
+      $html .= ', Q' . $q_no . $subpart;
+    }
+  }
 }
 
 function displayExperimental(&$html, $q_no) {
- if ($html == '') {
-   $html = 'Q' . $q_no;
- } else {
-   $html .= ', Q' . $q_no;
- }
+  if ($html == '') {
+    $html = 'Q' . $q_no;
+  } else {
+    $html .= ', Q' . $q_no;
+  }
 }
 
-function get_ss_pass(&$pass_score, &$distinction_score) {
-  global $marking, $mysqli, $excluded, $total_marks;
+function get_ss_pass($exclusions, &$pass_score, &$distinction_score) {
+  global $marking, $mysqli, $total_marks;
   $mark_parts = explode(',',$marking);
-
+  
   $ebel_marks = array();
   $ebel_percents = array();
 
@@ -215,11 +281,13 @@ function get_ss_pass(&$pass_score, &$distinction_score) {
   $result->bind_result($questionID, $rating, $method, $status, $q_type, $score_method);
   while ($result->fetch()) {
     if ($status != 'Experimental') {
-      $individual_ratings = explode(',',$rating);
+      $individual_ratings = explode(',', $rating);
       $count_individual_ratings = count($individual_ratings);
       for ($i=0; $i<$count_individual_ratings; $i++) {
-        $bad_bonus_mark = ($q_type == 'rank' and $score_method == 'Bonus Mark' and isset($excluded[$questionID]) and strpos($excluded[$questionID], '1') !== false);
-        if ((!isset($excluded[$questionID]) or substr($excluded[$questionID],$i,1) == 0) and !$bad_bonus_mark) {
+        $excluded = $exclusions->get_exclusions_by_qid($questionID);
+
+        $bad_bonus_mark = ($q_type == 'rank' and $score_method == 'Bonus Mark' and strpos($excluded, '1') !== false);
+        if ((substr($excluded,$i,1) == 0) and !$bad_bonus_mark) {
           if (in_array($individual_ratings[$i],$std_types)) $ebel_marks[$individual_ratings[$i]]++;
         }
         $std_total += $individual_ratings[$i];
@@ -306,9 +374,9 @@ function mypercentile($data, $percentile) {
   } else {
     return '';
   }
-  $allindex = ($count-1) * $p;
-  $intvalindex = intval($allindex);
-  $floatval = $allindex - $intvalindex;
+  $allindex     = ($count-1) * $p;
+  $intvalindex  = intval($allindex);
+  $floatval     = $allindex - $intvalindex;
   rsort($data);
   if (!is_float($floatval)){
     $result = $data[$intvalindex];
@@ -341,8 +409,8 @@ function crankMark($tmp_percent, $ss_pass, $ss_hon, $pass_mark, $distinction_mar
   return round($cranked);
 }
 
-function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp, $met_array, $student_met_array) {
-  global $student_cohort, $cohort_size, $total_random_mark, $total_marks, $marking, $ss_pass, $ss_hon, $pass_mark, $demo, $display_no, $meta_col_count;
+function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp, $met_array) {
+  global $student_cohort, $cohort_size, $total_random_mark, $total_marks, $marking, $ss_pass, $ss_hon, $demo, $display_no, $meta_col_count;
   
   $master_array[$user_number]['name'] = $tmp['name'];
   $master_array[$user_number]['mark'] = round($tmp_user_mark,1);
@@ -373,10 +441,11 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   $master_array[$user_number]['year']             = $tmp['year'];
   $master_array[$user_number]['display_started']  = $tmp['display_started'];
   $master_array[$user_number]['title']            = $tmp['title'];
-  $master_array[$user_number]['surname']          = demo_replace($tmp['surname'],$demo);
-  $master_array[$user_number]['initials']         = demo_replace($tmp['initials'],$demo);
-  $master_array[$user_number]['first_names']      = demo_replace($tmp['first_names'],$demo);
-  $master_array[$user_number]['student_id']       = demo_replace_number($tmp['student_id'],$demo);
+  $master_array[$user_number]['surname']          = demo_replace($tmp['surname'], $demo);
+  $master_array[$user_number]['initials']         = demo_replace($tmp['initials'], $demo);
+  $master_array[$user_number]['first_names']      = demo_replace($tmp['first_names'], $demo);
+  $master_array[$user_number]['email']            = demo_replace($tmp['email'], $demo);
+  $master_array[$user_number]['student_id']       = demo_replace_number($tmp['student_id'], $demo);
   $master_array[$user_number]['gender']           = $tmp['gender'];
   $master_array[$user_number]['ipaddress']        = $tmp['ipaddress'];
   $master_array[$user_number]['duration']         = $tmp_user_duration;
@@ -387,10 +456,10 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   $master_array[$user_number]['decile']           = 10;
 
   // Add metadata
-  if (!empty($met_array)) {
-    foreach ($met_array as $type) {
-      if (isset($student_met_array[$tmp['tmp_userID']][$type]) ) {
-        $master_array[$user_number]['meta_' . $type] = $student_met_array[$tmp['tmp_userID']][$type];
+  if (!empty($met_array['types'])) {
+    foreach ($met_array['types'] as $type) {
+      if (isset($smet_array['students'][$tmp['tmp_userID']][$type]) ) {
+        $master_array[$user_number]['meta_' . $type] = $met_array['students'][$tmp['tmp_userID']][$type];
       } else {
         $master_array[$user_number]['meta_' . $type] = '';
       }
@@ -462,10 +531,13 @@ function extract_blank_correct($option_text, $display_method, $paper_buffer, $qu
   return $correct;
 }
 
-$multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
-function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status, &$tmp_mark, &$tmp_user_mark_array, $random_q_ids, $tmp_userID) {
-  global $paper_buffer, $user_results, $tmp_array, $multi_part_qns, $explodeCache;
+function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclusions, $status, &$tmp_mark, &$tmp_user_mark_array, $random_q_ids, $tmp_userID) {
+  global $paper_buffer, $user_results, $tmp_array;
 
+  $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
+  
+  $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
+  
   if ($status == 'Experimental') $exclude[$q_id] = '1111111111111111111111111111111111111111';
 
   $skip_random = false;
@@ -490,11 +562,6 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       if (!isset($tmp_user_mark_array[$q_id])) $tmp_user_mark_array[$q_id] = array();
       $paper_answers = explode('|', $question['correct'][0]);
       $user_answers = explode('|', $tmp_user_answer);
-      if (isset($exclude[$q_id])) {
-        $tmp_exclude = $exclude[$q_id];
-      } else {
-        $tmp_exclude = '0000000000000000000000000000000000000000';
-      }
       $section = 0;
       $count_paper_answers = count($paper_answers);
       for ($a=0; $a<$count_paper_answers; $a++) {
@@ -545,11 +612,6 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       }
     } elseif ($question['q_type'] == 'blank') {
       $user_answers = explode('|', $tmp_user_answer);
-      if (isset($exclude[$q_id])) {
-        $tmp_exclude = $exclude[$q_id];
-      } else {
-        $tmp_exclude = '0000000000000000000000000000000000000000';
-      }
       $count_user_awnser = count($user_answers)-1;
       for ($a=0; $a<$count_user_awnser; $a++) {
         if ($tmp_exclude{$a} == '0') {
@@ -591,11 +653,6 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
     } elseif ($question['q_type'] == 'dichotomous') {
       $count_question_correct = count($question['correct']);
       for ($a=0; $a<$count_question_correct; $a++) {
-        if (isset($exclude[$q_id])) {
-          $tmp_exclude = $exclude[$q_id];
-        } else {
-          $tmp_exclude = '0000000000000000000000000000000000000000';
-        }
         if ($tmp_exclude{$a} == '0') {
           if ($question['correct'][$a] == substr($tmp_user_answer,$a,1)) {
             $tmp_mark += $question['marks_correct'];
@@ -611,11 +668,6 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         }
       }
     } elseif ($question['q_type'] == 'hotspot') {
-      if (isset($exclude[$q_id])) {
-        $tmp_exclude = $exclude[$q_id];
-      } else {
-        $tmp_exclude = '0000000000000000000000000000000000000000';
-      }
       $question_parts = explode('|', $question['correct'][0]);
       $user_answers = explode('|', $tmp_user_answer);
       $count_question_parts = count($question_parts);
@@ -633,12 +685,6 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         }
       }
     } elseif ($question['q_type'] == 'labelling') {
-      if (isset($exclude[$q_id])) {
-        $tmp_exclude = $exclude[$q_id];
-      } else {
-        $tmp_exclude = '0000000000000000000000000000000000000000';
-      }
-
       $correct_labels = array();
 
       $tmp_first_split = explode(';', $question['correct'][0]);
@@ -724,12 +770,12 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
     }
   } else {
     // Marking per Question, or all other question types, simply return the original mark.
-    if (!isset($exclude[$q_id])) {
+    if ($tmp_exclude{0} == '0') {
       $round_tmp_user_mark = round($tmp_user_mark, 2);
       $tmp_mark += $round_tmp_user_mark;
       $tmp_user_mark_array[$q_id] = $round_tmp_user_mark;
     }
-  }
+  }  
 }
 
 function formatsec($seconds) {
@@ -770,563 +816,526 @@ function check_and_clear_cohort($student_cohort, $username) {
   return array_values($student_cohort);
 }
 
-set_time_limit(0);
+function load_answers($exclusions, $random_q_ids, &$question_no, $db) {
+  global $total_marks, $total_random_mark, $orig_total_marks, $display_excluded, $display_experimental;
 
-$paperID    = $_GET['paperID'];
-$startdate  = $_GET['startdate'];
-$enddate    = $_GET['enddate'];
+  $old_q_id = '';
+  $question_no = 0;
+  $total_marks = 0;
+  $orig_total_marks = 0;
+  $total_random_mark = 0;
+  $display_excluded = '';
+  $display_experimental = '';
+  $old_correct = array();
+  $old_option_text = array();
+  $stems = 0;
+  $random_q_ids = array();
+  
+  // Load the correct answers into 'paper_buffer' array.
+  $result = $db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos FROM (papers, questions, options) WHERE papers.question = questions.q_id AND papers.paper = ? AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY screen, display_pos, id_num");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $q_type, $correct, $score_method, $option_text, $status, $display_pos);
+  while ($result->fetch()) {
+    if ($q_id != $old_q_id or $old_display_pos != $display_pos) {
+      if ($old_q_id != 0) {
+        if ($old_status != 'Experimental') {
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+          if ($old_q_type == 'random') {
+            $tmp_id = getRandomDetails($old_q_id, $random_q_ids);
 
-$row_count      = 0;
-$old_q_id       = -1;
-$old_screen     = 0;
-$old_userID     = '';
-$old_title      = '';
-$old_surname    = '';
-$old_started    = '';
-$old_display_started = '';
-$old_duration   = 0;
-$old_ipaddress  = '';
-$temp_mark      = 0;
-$temp_time      = '';
-$total_mark     = 0;
-$total_adjusted_mark = 0;
-$total_time     = 0;
-$completed_no   = 0;
-$max_mark       = 0;
-$min_mark       = 9999;
-$user_duration  = 0;
+            $last_random = $paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
-$old_theme        = '';
-$old_scenario     = '';
-$old_leadin       = '';
-$old_media        = '';
-$old_type         = '';
-$old_score_method = '';
-
-// Get any questions to exclude.
-$excluded = array();
-$result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->bind_result($q_id, $parts);
-while ($result->fetch()) {
-  $excluded[$q_id] = $parts;
-}
-$result->close();
-
-// Load the correct answers into 'paper_buffer' array.
-$result = $mysqli->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos FROM (papers, questions, options) WHERE papers.question = questions.q_id AND papers.paper = ? AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY screen, display_pos, id_num");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->store_result();
-$result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $q_type, $correct, $score_method, $option_text, $status, $display_pos);
-$old_q_id = '';
-$question_no = 0;
-$total_marks = 0;
-$orig_total_marks = 0;
-$total_random_mark = 0;
-$display_excluded = '';
-$display_experimental = '';
-$old_correct = array();
-$old_option_text = array();
-$stems = 0;
-$random_q_ids = array();
-
-while ($result->fetch()) {
-  if ($q_id != $old_q_id or $old_display_pos != $display_pos) {
-    if ($old_q_id != 0) {
-      if ($old_status != 'Experimental') {
-        if (isset($excluded[$old_q_id])) {
-          $tmp_exclude = $excluded[$old_q_id];
+            $old_q_type = $last_random['q_type'];
+            $old_marks_correct = $last_random['marks_correct'];
+            $old_option_text = $last_random['option_text'];
+            $old_correct = $last_random['correct'];
+            $old_display_method = $last_random['display_method'];
+            $old_score_method = $last_random['score_method'];
+            $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+            $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+          } else {
+            $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+            $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+            $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+            checkDisplayExcluded($display_excluded, $tmp_exclude, $question_no);
+          }
         } else {
-          $tmp_exclude = '';
+          displayExperimental($display_experimental, $question_no);
         }
-        if ($old_q_type == 'random') {
-          $tmp_id = getRandomDetails($old_q_id, $random_q_ids);
-
-          $last_random = $paper_buffer[$old_q_id]['random_questions'][$tmp_id];
-
-          $old_q_type = $last_random['q_type'];
-          $old_marks_correct = $last_random['marks_correct'];
-          $old_option_text = $last_random['option_text'];
-          $old_correct = $last_random['correct'];
-          $old_display_method = $last_random['display_method'];
-          $old_score_method = $last_random['score_method'];
-          $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-          $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-        } else {
-          $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-          $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-          $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-          checkDisplayExcluded($display_excluded, $old_q_id, $excluded, $question_no);
-        }
-      } else {
-      	displayExperimental($display_experimental, $question_no);
+        $stems = 0;
+        $old_marks_correct = 0;
       }
-      $stems = 0;
-      $old_marks_correct = 0;
-    }
-    $question_no++;
-    $option_no        = 0;
-    $old_correct      = array();
-    $old_option_text  = array();
-    $question_id      = $q_id;
-    $paper_buffer[$question_id]['q_type']           = $q_type;
-    $paper_buffer[$question_id]['score_method']     = $score_method;
-    $paper_buffer[$question_id]['display_method']   = $display_method;
-    $paper_buffer[$question_id]['marks_correct']    = $marks_correct;
-    $paper_buffer[$question_id]['marks_incorrect']  = $marks_incorrect;
+      $question_no++;
+      $option_no        = 0;
+      $old_correct      = array();
+      $old_option_text  = array();
+      $question_id      = $q_id;
+      $paper_buffer[$question_id]['q_type']           = $q_type;
+      $paper_buffer[$question_id]['score_method']     = $score_method;
+      $paper_buffer[$question_id]['display_method']   = $display_method;
+      $paper_buffer[$question_id]['marks_correct']    = $marks_correct;
+      $paper_buffer[$question_id]['marks_incorrect']  = $marks_incorrect;
 
-    if ($q_type == 'blank') {
-      $paper_buffer[$question_id]['correct'] = extract_blank_correct($option_text, $score_method, $paper_buffer, $question_id);
+      if ($q_type == 'blank') {
+        $paper_buffer[$question_id]['correct'] = extract_blank_correct($option_text, $score_method, $paper_buffer, $question_id);
+      } else {
+        $paper_buffer[$question_id]['correct'][$option_no] = $correct;
+      }
     } else {
       $paper_buffer[$question_id]['correct'][$option_no] = $correct;
     }
-  } else {
-    $paper_buffer[$question_id]['correct'][$option_no] = $correct;
-  }
-  $option_no++;
-  $stems++;
+    $option_no++;
+    $stems++;
 
-  $old_q_id             = $q_id;
-  $old_display_pos      = $display_pos;
-  $old_q_type           = $q_type;
-  $old_display_method   = $display_method;
-  $old_score_method     = $score_method;
-  $old_correct[]        = $correct;
-  $old_q_media_width    = $q_media_width;
-  $old_q_media_height   = $q_media_height;
-  $old_option_text[]    = $option_text;
-  $old_marks_correct    = $marks_correct;
-  $old_marks_incorrect  = $marks_incorrect;
-  $old_status           = $status;
-}
-$result->close();
-if ($old_status != 'Experimental') {
-  if (isset($excluded[$old_q_id])) {
-    $tmp_exclude = $excluded[$old_q_id];
-  } else {
-    $tmp_exclude = '';
+    $old_q_id             = $q_id;
+    $old_display_pos      = $display_pos;
+    $old_q_type           = $q_type;
+    $old_display_method   = $display_method;
+    $old_score_method     = $score_method;
+    $old_correct[]        = $correct;
+    $old_q_media_width    = $q_media_width;
+    $old_q_media_height   = $q_media_height;
+    $old_option_text[]    = $option_text;
+    $old_marks_correct    = $marks_correct;
+    $old_marks_incorrect  = $marks_incorrect;
+    $old_status           = $status;
   }
-  if ($old_q_type == 'random') {
-    $tmp_id = getRandomDetails($old_q_id, $random_q_ids);
+  $result->close();
 
-    $last_random = $paper_buffer[$old_q_id]['random_questions'][$tmp_id];
+  if ($old_status != 'Experimental') {
+    $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
-    $old_q_type = $last_random['q_type'];
-    $old_marks_correct = $last_random['marks_correct'];
-    $old_option_text = $last_random['option_text'];
-    $old_correct = $last_random['correct'];
-    $old_display_method = $last_random['display_method'];
-    $old_score_method = $last_random['score_method'];
-    $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-    $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+    if ($old_q_type == 'random') {
+      $tmp_id = getRandomDetails($old_q_id, $random_q_ids);
+
+      $last_random = $paper_buffer[$old_q_id]['random_questions'][$tmp_id];
+
+      $old_q_type = $last_random['q_type'];
+      $old_marks_correct = $last_random['marks_correct'];
+      $old_option_text = $last_random['option_text'];
+      $old_correct = $last_random['correct'];
+      $old_display_method = $last_random['display_method'];
+      $old_score_method = $last_random['score_method'];
+      $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+      $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+    } else {
+      $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+      $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+      $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+      checkDisplayExcluded($display_excluded, $tmp_exclude, $question_no);
+    }
   } else {
-    $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-    $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-    $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-    checkDisplayExcluded($display_excluded, $old_q_id, $excluded, $question_no);
+    displayExperimental($display_experimental, $question_no);
   }
-} else {
-	displayExperimental($display_experimental, $question_no);
+  
+  return $paper_buffer;
 }
 
-$cfg_long_date_time = $configObject->get('cfg_long_date_time');
-
-$log_late = array();
-$log_late_missing_users = array();
-// Check log_late for any records
-$late_ts = strtotime($enddate) + 7200;
-$late_end = date('Y-m-d H:i:s', $late_ts);
-$result = $mysqli->prepare("SELECT DISTINCT userID, title, surname, first_names, DATE_FORMAT(started, '$cfg_long_date_time') AS display_started, started FROM log_late, log_metadata, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND started >= ? AND started <= ? ORDER BY surname, initials");
-$result->bind_param('iss', $paperID, $startdate, $late_end);
-$result->execute();
-$result->bind_result($tmp_userID, $title, $surname, $first_names, $display_started, $started);
-while ($result->fetch()) {
-  $log_late[$tmp_userID] = $title . ' ' .  $surname . ', ' . $first_names;
-  $log_late_missing_users[$tmp_userID]['display_started'] = $display_started;
-  $log_late_missing_users[$tmp_userID]['started'] = $started;
-}
-$result->close();
-
-$cohort_size = 0;
-$out_of_range = 0;
-$moduleID = Paper_utils::get_modules($_GET['paperID'], $mysqli);
-$moduleID_in = implode(',', array_keys($moduleID));
-if ($_GET['absent'] == 1) {
-  // Get students in the cohort.
-  $student_cohort = array();
-
-  $sql = "SELECT DISTINCT
-                         users.id
-                       , users.username
-                       , title
-                       , surname
-                       , first_names
-                       , initials
-                       , student_id
-                       , grade
-                       , moduleid
-                       , gender
-          FROM
-                (modules_student, modules, users, sid)
-          WHERE
-                modules_student.userID = sid.userID
-          AND
-                modules_student.userID = users.id
-          AND
-                modules_student.idMod = modules.id
-          AND
-                users.roles
-          LIKE
-                '%Student%'
-          AND
-                idMod
-          IN
-                ($moduleID_in)
-          AND
-               calendar_year = ?";
-
-  $result = $mysqli->prepare( $sql );
-  $result->bind_param('s', $calendar_year);
+function get_log_late($startdate, $enddate, $paperID, $configObj, &$log_late, &$log_late_missing_users, $db) {
+  global $student_cohort;
+  
+  // Check log_late for any records
+  $late_ts = strtotime($enddate) + 7200;
+  $late_end = date('Y-m-d H:i:s', $late_ts);
+  $cfg_long_date_time = $configObj->get('cfg_long_date_time');
+  $result = $db->prepare("SELECT DISTINCT userID, title, surname, first_names, DATE_FORMAT(started, '$cfg_long_date_time') AS display_started, started FROM log_late, log_metadata, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND started >= ? AND started <= ? ORDER BY surname, initials");
+  $result->bind_param('iss', $paperID, $startdate, $late_end);
   $result->execute();
-  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
+  $result->bind_result($tmp_userID, $title, $surname, $first_names, $display_started, $started);
   while ($result->fetch()) {
-    $student_cohort[$cohort_size]['username']      = $tmp_username;
-    $student_cohort[$cohort_size]['tmp_userID']    = $tmp_userID;
-    $student_cohort[$cohort_size]['name']          = trim(str_replace("'","",$surname) . ',' . $first_names);
-    $student_cohort[$cohort_size]['title']         = $title;
-    $student_cohort[$cohort_size]['surname']       = demo_replace($surname, $demo);
-    $student_cohort[$cohort_size]['first_names']   = demo_replace($first_names, $demo);
-    $student_cohort[$cohort_size]['initials']      = demo_replace($initials, $demo);
-    $student_cohort[$cohort_size]['student_id']    = demo_replace_number($student_id, $demo);
-    $student_cohort[$cohort_size]['grade']         = $grade;
-    $student_cohort[$cohort_size]['module']        = $moduleid;
-    $student_cohort[$cohort_size]['gender']        = $gender;
-    $student_cohort[$cohort_size]['timer_started'] = false;
-
-    $cohort_size++;
+    $log_late[$tmp_userID] = $title . ' ' .  $surname . ', ' . $first_names;
+    $log_late_missing_users[$tmp_userID]['display_started'] = $display_started;
+    $log_late_missing_users[$tmp_userID]['started'] = $started;
   }
   $result->close();
 }
 
-// Get all the users on the module(s) the paper is on.
+function get_absent($paperID, $calendar_year, $demo, $db) {
+  $student_cohort = array();
+  $cohort_size = 0;
 
-$user_modules = array();
-if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
-  $tmp_moduleID_in = $_GET['repmodule'];
-} else {
-  $tmp_moduleID_in = $moduleID_in;
-}
+  $moduleID = Paper_utils::get_modules($paperID, $db);
+  $moduleID_in = implode(',', array_keys($moduleID));
 
-if ($calendar_year == '') {
-  $mod_query = $mysqli->prepare("SELECT modules_student.idMod, userID, moduleID FROM modules_student, modules WHERE modules_student.idMod = modules.id AND idMod IN ($tmp_moduleID_in)");
-} else {
-  $mod_query = $mysqli->prepare("SELECT modules_student.idMod, userID, moduleID FROM modules_student, modules WHERE modules_student.idMod = modules.id AND idMod IN ($tmp_moduleID_in) AND calendar_year = ?");
-  $mod_query->bind_param('s', $calendar_year);
-}
-$mod_query->execute();
-$mod_query->bind_result($idMod, $tmp_userID, $tmp_moduleid);
-$mod_query->store_result();
-while ($mod_query->fetch()) {
-  $user_modules[$tmp_userID]['idMod'] = $idMod;
-}
-$mod_query->close();
+  if ($_GET['absent'] == 1) {
+    // Get students in the cohort.
 
-// Query for metadata
-$metadata_array = array();
-$student_metadata_array = array();
-if ($calendar_year == '') {
-  $stmt = $mysqli->prepare("SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN ($moduleID_in)");
-} else {
-  $stmt = $mysqli->prepare("SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN ($moduleID_in) AND calendar_year = ?");
-  $stmt->bind_param('s', $calendar_year);
-}
-$stmt->execute();
-$stmt->bind_result($student_userID, $type, $value);
-while ($stmt->fetch()) {
-  $student_metadata_array[$student_userID][$type] = $value;
-  $metadata_array[$type] = $type;
-}
-$stmt->close();
+    $sql = "SELECT DISTINCT
+                           users.id
+                         , users.username
+                         , title
+                         , surname
+                         , first_names
+                         , initials
+                         , student_id
+                         , grade
+                         , moduleid
+                         , gender
+            FROM
+                  (modules_student, modules, users, sid)
+            WHERE
+                  modules_student.userID = sid.userID
+            AND
+                  modules_student.userID = users.id
+            AND
+                  modules_student.idMod = modules.id
+            AND
+                  users.roles
+            LIKE
+                  '%Student%'
+            AND
+                  idMod
+            IN
+                  ($moduleID_in)
+            AND
+                 calendar_year = ?";
 
-if (isset($_GET['studentsonly']) and $_GET['studentsonly'] == 0) {
-  $roles_sql = '';
-} else {
-  $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
-}
+    $result = $db->prepare( $sql );
+    $result->bind_param('s', $calendar_year);
+    $result->execute();
+    $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
+    while ($result->fetch()) {
+      $student_cohort[$cohort_size]['username']      = $tmp_username;
+      $student_cohort[$cohort_size]['tmp_userID']    = $tmp_userID;
+      $student_cohort[$cohort_size]['name']          = trim(str_replace("'","",$surname) . ',' . $first_names);
+      $student_cohort[$cohort_size]['title']         = $title;
+      $student_cohort[$cohort_size]['surname']       = demo_replace($surname, $demo);
+      $student_cohort[$cohort_size]['first_names']   = demo_replace($first_names, $demo);
+      $student_cohort[$cohort_size]['initials']      = demo_replace($initials, $demo);
+      $student_cohort[$cohort_size]['student_id']    = demo_replace_number($student_id, $demo);
+      $student_cohort[$cohort_size]['grade']         = $grade;
+      $student_cohort[$cohort_size]['module']        = $moduleid;
+      $student_cohort[$cohort_size]['gender']        = $gender;
+      $student_cohort[$cohort_size]['timer_started'] = false;
 
-// Get log data.
-if ($paper_type == '0') {
-
-  $sql = '(SELECT log0.q_id
-                    , 0 AS paper_type
-                    , grade
-                    , roles
-                    , screen
-                    , duration
-                    , started AS order_started
-                    , user_answer
-                    , DATE_FORMAT(started, "' . $cfg_long_date_time . '") AS display_started
-                    , year
-                    , title
-                    , surname
-                    , initials
-                    , first_names
-                    , gender
-                    , ipaddress
-                    , lab_name
-                    , username
-                    , users.id
-                    , student_id
-                    , user_answer
-                    , q_type
-                    , log_metadata.userID
-                    , mark
-                    , status
-                    , attempt
-                  FROM
-                      log0, log_metadata, questions, users
-                  LEFT JOIN
-                      sid
-                  ON
-                      users.id = sid.userID
-                  WHERE
-                      log_metadata.userID = users.id
-                  AND
-                      log0.metadataID = log_metadata.id
-                  AND
-                      log0.q_id    = questions.q_id
-                  AND
-                      paperID = ?
-                  AND
-                      grade LIKE ?
-                  ' . $roles_sql . '
-                  AND
-                      started >= ?
-                  AND
-                      started <= ? )
-            UNION ALL
-                ( SELECT
-                      log1.q_id
-                    , 1 AS paper_type
-                    , grade
-                    , roles
-                    , screen
-                    , duration
-                    , started AS order_started
-                    , user_answer
-                    , DATE_FORMAT(started, "' . $cfg_long_date_time . '" ) AS display_started
-                    , log_metadata.year
-                    , title
-                    , surname
-                    , initials
-                    , first_names
-                    , gender
-                    , ipaddress
-                    , lab_name
-                    , username
-                    , users.id
-                    , student_id
-                    , user_answer
-                    , q_type
-                    , log_metadata.userID
-                    , mark
-                    , status
-                    , attempt
-                  FROM
-                    (log1, log_metadata, questions, users )
-                  LEFT JOIN
-                        sid
-                  ON
-                        users.id = sid.userID
-                  WHERE
-                        log_metadata.userID = users.id
-                  AND
-                        log1.metadataID = log_metadata.id
-                  AND
-                        log1.q_id    = questions.q_id
-                  AND
-                        paperID = ?
-                  AND
-                        grade LIKE ?
-                  '. $roles_sql . '
-                  AND
-                      started >= ?
-                  AND
-                      started <= ?
-                    )
-                  ORDER BY
-                      userID
-                    , order_started
-                    , screen';
-
-  $log_query = $mysqli->prepare($sql);
-  $log_query->bind_param('isssisss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
-} elseif ($paper_type == '2') {
-  $log_query = $mysqli->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
-  $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
-} elseif ($paper_type == '5') {
-  $log_query =   $mysqli->prepare("SELECT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
-  $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
-} else {
-  $log_query = $mysqli->prepare("SELECT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
-  $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
-}
-$log_query->execute();
-$log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $gender, $ipaddress, $lab_name, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt);
-
-$user_no              = 0;
-$display_no           = 0;
-$tmp_mark             = 0;
-$user_duration        = 0;
-$marking_complete     = 1;
-$old_screen           = 0;
-$total_adjusted_mark  = 0;
-$sortby               = 'name';
-$tmp_user_mark_array  = array();
-$tmp_array            = array();
-$user_results         = array();
-$median               = array();
-
-if (isset($_GET['percent'])) {
-  $percent = $_GET['percent'];
-} else {
-  $percent = 100;
-}
-if (isset($_GET['ordering'])) {
-  $ordering = $_GET['ordering'];
-} else {
-  //$ordering = 'asc';
-}
-if (isset($_GET['absent'])) {
-  $absent = $_GET['absent'];
-} else {
-  $absent = 0;
-}
-
-$warnings = array('deleted_qns' => array());
-while ($log_query->fetch() !== null) {
-  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and !isset($user_modules[$tmp_userID]['idMod'])) {
-    continue; //this user is not on the module set in repmodule so dont put them in the array
-  }
-
-  // Check if user is in log late so that we can catch any users who ONLY have log_late records
-  if (in_array($tmp_userID, array_keys($log_late_missing_users))) {
-      unset($log_late_missing_users[$tmp_userID]);
-  }
-
-  if ($old_screen != $screen or $old_userID != $tmp_userID or $old_started != $started) {
-    $user_duration += $old_duration;
-  }
-  if (($old_userID != $tmp_userID) or ($old_started != $started)) {
-    if ($old_userID != '') {
-      writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $student_metadata_array);
-      $tmp_array['questions'] = 0;
-      $tmp_mark = 0;
-      $tmp_user_mark_array = array();
-      $user_duration = 0;
-      $marking_complete = 1;
+      $cohort_size++;
     }
-    $tmp_array = array();
-    $tmp_array['started']    = $started;
-    $tmp_array['username']   = $username;
-    $tmp_array['tmp_userID'] = $tmp_userID;
-
-    if (isset($user_modules[$tmp_userID]['idMod'])) {
-      $tmp_array['module'] = $user_modules[$tmp_userID]['idMod'];
-    } else {
-      $tmp_array['module'] = '';
-    }
-
-    $tmp_array['attempt']         = $attempt;
-    $tmp_array['grade']           = $grade;
-    $tmp_array['roles']           = $tmp_roles;
-    $tmp_array['year']            = $year;
-    $tmp_array['display_started'] = $display_started;
-    $tmp_array['title']           = $title;
-    $tmp_array['name']            = trim(str_replace("'","",$surname) . ',' . $first_names);
-    $tmp_array['surname']         = $surname;
-    $tmp_array['initials']        = $initials;
-    $tmp_array['first_names']     = $first_names;
-    $tmp_array['student_id']      = $student_id;
-    $tmp_array['gender']          = $gender;
-    $tmp_array['ipaddress']       = $ipaddress;
-    $tmp_array['room']            = $lab_name;
-
-    if ($tmp_array['room'] == '') {
-      $tmp_array['room'] = '<span style="color:#808080">&lt;unknown&gt;</span>';
-    }
-
-    $tmp_array['xmean']           = 0;
-    $tmp_array['xmean_adjusted']  = 0;
-    $tmp_array['duration']        = $user_duration;
-    $tmp_array['paper_type']      = $paper_type;
+    $result->close();
   }
-  getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID);
+  
+  return $student_cohort;
+}
 
-  if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
-  if (isset($tmp_array['questions'])) {
-    $tmp_array['questions']++;
+function get_users($moduleID_in, $paperID, $calendar_year, $db) {     // Get all the users on the module(s) the paper is on.
+  $user_modules = array();
+  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
+    $tmp_moduleID_in = $_GET['repmodule'];
   } else {
-    $tmp_array['questions'] = 1;
+    $tmp_moduleID_in = $moduleID_in;
   }
-  $old_userID   = $tmp_userID;
-  $old_started  = $started;
-  $old_duration = $duration;
-  $old_screen   = $screen;
-  $old_status   = $status;
+
+  if ($calendar_year == '') {
+    $mod_query = $db->prepare("SELECT modules_student.idMod, userID, moduleID FROM modules_student, modules WHERE modules_student.idMod = modules.id AND idMod IN ($tmp_moduleID_in)");
+  } else {
+    $mod_query = $db->prepare("SELECT modules_student.idMod, userID, moduleID FROM modules_student, modules WHERE modules_student.idMod = modules.id AND idMod IN ($tmp_moduleID_in) AND calendar_year = ?");
+    $mod_query->bind_param('s', $calendar_year);
+  }
+  $mod_query->execute();
+  $mod_query->bind_result($idMod, $tmp_userID, $tmp_moduleid);
+  $mod_query->store_result();
+  while ($mod_query->fetch()) {
+    $user_modules[$tmp_userID]['idMod'] = $idMod;
+  }
+  $mod_query->close();
+  
+  return $user_modules;
 }
 
-$late_cohort = array();
-$late_cohort_size = 0;
-if (count($log_late_missing_users) > 0) {
-  // Get students who don't have records in main log
-  $late_id_list = implode(',', array_keys($log_late_missing_users));
+function get_metadata($moduleID_in, $calendar_year, $db) {
+  $metadata_array = array();
+  $student_metadata_array = array();
+  
+  if ($calendar_year == '') {
+    $stmt = $db->prepare("SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN ($moduleID_in)");
+  } else {
+    $stmt = $db->prepare("SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN ($moduleID_in) AND calendar_year = ?");
+    $stmt->bind_param('s', $calendar_year);
+  }
+  $stmt->execute();
+  $stmt->bind_result($student_userID, $type, $value);
+  while ($stmt->fetch()) {
+    $metadata_array['students'][$student_userID][$type] = $value;
+    $metadata_array['types'][$type] = $type;
+  }
+  $stmt->close();
+  
+  return $metadata_array;
+}
 
-  $sql = <<< SQL
-SELECT DISTINCT u.id, u.username, u.title, u.surname, u.first_names, u.initials, sid.student_id, u.grade, '', u.gender
-FROM users u INNER JOIN sid ON u.id = sid.userID
-WHERE u.id IN ($late_id_list)
+function load_results($propertyObj, $demo, $configObj, $metadata_array, &$log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $db) {
+  global $user_no, $paper_buffer, $display_no, $student_cohort;
+
+  if (isset($_GET['studentsonly']) and $_GET['studentsonly'] == 0) {
+    $roles_sql = '';
+  } else {
+    $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
+  }
+  
+  $user_no              = 0;
+  $display_no           = 0;
+  $tmp_mark             = 0;
+  $user_duration        = 0;
+  $marking_complete     = 1;
+  $old_screen           = 0;
+  $old_duration         = 0;
+  $old_userID           = '';
+  $old_started          = '';
+  $tmp_user_mark_array  = array();
+  $tmp_array            = array();
+  $user_results         = array();
+
+  // Get log data.
+  $paper_type = $propertyObj->get_paper_type();
+  if ($paper_type == '0') {
+    $sql = '(SELECT log0.q_id
+                      , 0 AS paper_type
+                      , grade
+                      , roles
+                      , screen
+                      , duration
+                      , started AS order_started
+                      , user_answer
+                      , DATE_FORMAT(started, "' . $configObj->get('cfg_long_date_time') . '") AS display_started
+                      , year
+                      , title
+                      , surname
+                      , initials
+                      , first_names
+                      , email
+                      , gender
+                      , ipaddress
+                      , lab_name
+                      , username
+                      , users.id
+                      , student_id
+                      , user_answer
+                      , q_type
+                      , log_metadata.userID
+                      , mark
+                      , status
+                      , attempt
+                    FROM
+                        log0, log_metadata, questions, users
+                    LEFT JOIN
+                        sid
+                    ON
+                        users.id = sid.userID
+                    WHERE
+                        log_metadata.userID = users.id
+                    AND
+                        log0.metadataID = log_metadata.id
+                    AND
+                        log0.q_id    = questions.q_id
+                    AND
+                        paperID = ?
+                    AND
+                        grade LIKE ?
+                    ' . $roles_sql . '
+                    AND
+                        started >= ?
+                    AND
+                        started <= ? )
+              UNION ALL
+                  ( SELECT
+                        log1.q_id
+                      , 1 AS paper_type
+                      , grade
+                      , roles
+                      , screen
+                      , duration
+                      , started AS order_started
+                      , user_answer
+                      , DATE_FORMAT(started, "' . $configObj->get('cfg_long_date_time') . '" ) AS display_started
+                      , log_metadata.year
+                      , title
+                      , surname
+                      , initials
+                      , first_names
+                      , email
+                      , gender
+                      , ipaddress
+                      , lab_name
+                      , username
+                      , users.id
+                      , student_id
+                      , user_answer
+                      , q_type
+                      , log_metadata.userID
+                      , mark
+                      , status
+                      , attempt
+                    FROM
+                      (log1, log_metadata, questions, users)
+                    LEFT JOIN
+                          sid
+                    ON
+                          users.id = sid.userID
+                    WHERE
+                          log_metadata.userID = users.id
+                    AND
+                          log1.metadataID = log_metadata.id
+                    AND
+                          log1.q_id    = questions.q_id
+                    AND
+                          paperID = ?
+                    AND
+                          grade LIKE ?
+                    '. $roles_sql . '
+                    AND
+                        started >= ?
+                    AND
+                        started <= ?
+                      )
+                    ORDER BY
+                        userID
+                      , order_started
+                      , screen';
+
+    $log_query = $db->prepare($sql);
+    $log_query->bind_param('isssisss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+  } elseif ($paper_type == '2') {
+    $log_query = $db->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObj->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
+    $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+  } elseif ($paper_type == '5') {
+    $log_query =   $db->prepare("SELECT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
+    $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+  } else {
+    $log_query = $db->prepare("SELECT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
+    $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+  }
+  $log_query->execute();
+  $log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt);
+
+  while ($log_query->fetch() !== null) {
+    if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and !isset($user_modules[$tmp_userID]['idMod'])) {
+      continue; //this user is not on the module set in repmodule so dont put them in the array
+    }
+
+    // Check if user is in log late so that we can catch any users who ONLY have log_late records
+    if (in_array($tmp_userID, array_keys($log_late_missing_users))) {
+        unset($log_late_missing_users[$tmp_userID]);
+    }
+
+    if ($old_screen != $screen or $old_userID != $tmp_userID or $old_started != $started) {
+      $user_duration += $old_duration;
+    }
+    if (($old_userID != $tmp_userID) or ($old_started != $started)) {
+      if ($old_userID != '') {
+        writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array);
+        $tmp_array['questions'] = 0;
+        $tmp_mark = 0;
+        $tmp_user_mark_array = array();
+        $user_duration = 0;
+        $marking_complete = 1;
+      }
+      $tmp_array = array();
+      $tmp_array['started']    = $started;
+      $tmp_array['username']   = $username;
+      $tmp_array['tmp_userID'] = $tmp_userID;
+
+      if (isset($user_modules[$tmp_userID]['idMod'])) {
+        $tmp_array['module'] = $user_modules[$tmp_userID]['idMod'];
+      } else {
+        $tmp_array['module'] = '';
+      }
+
+      $tmp_array['attempt']         = $attempt;
+      $tmp_array['grade']           = $grade;
+      $tmp_array['roles']           = $tmp_roles;
+      $tmp_array['year']            = $year;
+      $tmp_array['display_started'] = $display_started;
+      $tmp_array['title']           = $title;
+      $tmp_array['name']            = trim(str_replace("'","",$surname) . ',' . $first_names);
+      $tmp_array['surname']         = $surname;
+      $tmp_array['initials']        = $initials;
+      $tmp_array['first_names']     = $first_names;
+      $tmp_array['email']           = $email;
+      $tmp_array['student_id']      = $student_id;
+      $tmp_array['gender']          = $gender;
+      $tmp_array['ipaddress']       = $ipaddress;
+      $tmp_array['room']            = $lab_name;
+
+      if ($tmp_array['room'] == '') {
+        $tmp_array['room'] = '<span style="color:#808080">&lt;unknown&gt;</span>';
+      }
+
+      $tmp_array['xmean']           = 0;
+      $tmp_array['xmean_adjusted']  = 0;
+      $tmp_array['duration']        = $user_duration;
+      $tmp_array['paper_type']      = $paper_type;
+    }
+    getUserMark($q_id, $user_answer, $mark, $exclusions, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID);
+
+    if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
+    if (isset($tmp_array['questions'])) {
+      $tmp_array['questions']++;
+    } else {
+      $tmp_array['questions'] = 1;
+    }
+    $old_userID   = $tmp_userID;
+    $old_started  = $started;
+    $old_duration = $duration;
+    $old_screen   = $screen;
+    $old_status   = $status;
+  }
+
+  if (!empty($tmp_array)) {
+    if (!isset($_GET['repmodule']) or $_GET['repmodule'] == '' or (isset($user_modules[$old_userID]['idMod']) and $user_modules[$old_userID]['idMod'] == $_GET['repmodule'])) {
+
+      $user_duration += $old_duration;
+      $log_query->free_result();
+      $log_query->close();
+      writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array);
+    }
+  }
+
+  return $user_results;
+}
+
+function load_late_cohort($log_late_missing_users, $db) {
+  global $demo;
+  
+  $late_cohort = array();
+  $late_cohort_size = 0;
+  if (count($log_late_missing_users) > 0) {
+    // Get students who don't have records in main log
+    $late_id_list = implode(',', array_keys($log_late_missing_users));
+
+    $sql = <<< SQL
+  SELECT DISTINCT u.id, u.username, u.title, u.surname, u.first_names, u.initials, sid.student_id, u.grade, '', u.gender
+  FROM users u INNER JOIN sid ON u.id = sid.userID
+  WHERE u.id IN ($late_id_list)
 SQL;
 
-  $result = $mysqli->prepare($sql);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
-  while ($result->fetch()) {
-    $late_cohort[$late_cohort_size]['username']         = $tmp_username;
-    $late_cohort[$late_cohort_size]['tmp_userID']       = $tmp_userID;
-    $late_cohort[$late_cohort_size]['name']             = trim(str_replace("'","",$surname) . ',' . $first_names);
-    $late_cohort[$late_cohort_size]['title']            = $title;
-    $late_cohort[$late_cohort_size]['surname']          = demo_replace($surname, $demo);
-    $late_cohort[$late_cohort_size]['first_names']      = demo_replace($first_names, $demo);
-    $late_cohort[$late_cohort_size]['initials']         = demo_replace($initials, $demo);
-    $late_cohort[$late_cohort_size]['student_id']       = demo_replace_number($student_id, $demo);
-    $late_cohort[$late_cohort_size]['grade']            = $grade;
-    $late_cohort[$late_cohort_size]['module']           = $moduleid;
-    $late_cohort[$late_cohort_size]['gender']           = $gender;
-    $late_cohort[$late_cohort_size]['display_started']  = $log_late_missing_users[$tmp_userID]['display_started'];
-    $late_cohort[$late_cohort_size]['started']          = $log_late_missing_users[$tmp_userID]['started'];
-    $late_cohort[$late_cohort_size]['timer_started']    = false;
+    $result = $db->prepare($sql);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
+    while ($result->fetch()) {
+      $late_cohort[$late_cohort_size]['username']         = $tmp_username;
+      $late_cohort[$late_cohort_size]['tmp_userID']       = $tmp_userID;
+      $late_cohort[$late_cohort_size]['name']             = trim(str_replace("'","",$surname) . ',' . $first_names);
+      $late_cohort[$late_cohort_size]['title']            = $title;
+      $late_cohort[$late_cohort_size]['surname']          = demo_replace($surname, $demo);
+      $late_cohort[$late_cohort_size]['first_names']      = demo_replace($first_names, $demo);
+      $late_cohort[$late_cohort_size]['initials']         = demo_replace($initials, $demo);
+      $late_cohort[$late_cohort_size]['student_id']       = demo_replace_number($student_id, $demo);
+      $late_cohort[$late_cohort_size]['grade']            = $grade;
+      $late_cohort[$late_cohort_size]['module']           = $moduleid;
+      $late_cohort[$late_cohort_size]['gender']           = $gender;
+      $late_cohort[$late_cohort_size]['display_started']  = $log_late_missing_users[$tmp_userID]['display_started'];
+      $late_cohort[$late_cohort_size]['started']          = $log_late_missing_users[$tmp_userID]['started'];
+      $late_cohort[$late_cohort_size]['timer_started']    = false;
 
-    $late_cohort_size++;
+      $late_cohort_size++;
+    }
+    $result->close();
   }
-  $result->close();
+  
+  return $late_cohort;
 }
-
-if (!empty($tmp_array)) {
-  if (!isset($_GET['repmodule']) or $_GET['repmodule'] == '' or (isset($user_modules[$old_userID]['idMod']) and $user_modules[$old_userID]['idMod'] == $_GET['repmodule'])) {
-
-    $user_duration += $old_duration;
-    $log_query->free_result();
-    $log_query->close();
-    writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $student_metadata_array);
-  }
-}
-
-// Add in rank data.
-add_rank($user_results);
 
 function add_rank(&$user_results) {
   // Put the whole array in marks order.
@@ -1335,7 +1344,7 @@ function add_rank(&$user_results) {
   $user_results = array_csort($user_results, $sortby, $ordering, SORT_NUMERIC);
   
   $display_rank = 1;
-  $global_rank   = 1;
+  $global_rank  = 1;
   $old_mark     = 0;
   
   $result_no = count($user_results);
@@ -1350,110 +1359,134 @@ function add_rank(&$user_results) {
   }
 }
 
+function flag_subpart(&$user_results, &$stats, $user_no, &$total_mark) {
+  $stats['out_of_range'] = 0;
+  if (isset($_GET['percent'])) {
+    $percent = $_GET['percent'];
+  } else {
+    $percent = 100;
+  }
+  if (isset($_GET['ordering'])) {
+    $ordering = $_GET['ordering'];
+  } else {
+    $ordering = 'asc';
+  }
+  if (isset($_GET['absent'])) {
+    $absent = $_GET['absent'];
+  } else {
+    $absent = 0;
+  }
 
-if ($percent < 100) {
-  // Sort by mark order.
-  $sortby = 'mark';
-  $ordering = $_GET['ordering'];
-  $user_results = array_csort($user_results, $sortby, $ordering, SORT_NUMERIC);
-  $cohort_size = round(($user_no/100) * $percent);
-  // Set visible/invisible flag where necessary.
-  for ($i=0; $i<$user_no; $i++) {
-    if ($i >= $cohort_size) {
-      $user_results[$i]['visible'] = 0;
-      $out_of_range++;
-    } else {
-      $total_mark += $user_results[$i]['mark'];
-      $total_adjusted_mark += ($user_results[$i]['mark'] - $total_random_mark);
+  if ($percent < 100) {
+    // Sort by mark order.
+    $sortby = 'mark';
+    $ordering = $_GET['ordering'];
+    $user_results = array_csort($user_results, $sortby, $ordering, SORT_NUMERIC);
+    $cohort_size = round(($user_no/100) * $percent);
+    // Set visible/invisible flag where necessary.
+    for ($i=0; $i<$user_no; $i++) {
+      if ($i >= $cohort_size) {
+        $user_results[$i]['visible'] = 0;
+        $stats['out_of_range']++;
+      } else {
+        $total_mark += $user_results[$i]['mark'];
+        $stats['total_time'] += $user_results[$i]['duration'];
+      }
+    }
+  } else {
+    //if ($absent == 0) $cohort_size = $user_no;
+    $cohort_size = $user_no;
+    for ($i=0; $i<$user_no; $i++) {
+      if (isset($user_results[$i]['mark'])) {
+        $total_mark += $user_results[$i]['mark'];
+        $stats['total_time'] += $user_results[$i]['duration'];
+      }
     }
   }
-} else {
-  if ($absent == 0) $cohort_size = $user_no;
-  for ($i=0; $i<$user_no; $i++) {
-    if (isset($user_results[$i]['mark'])) {
-      $total_mark += $user_results[$i]['mark'];
-      $total_adjusted_mark += ($user_results[$i]['mark'] - $total_random_mark);
-    }
-  }
-}
-
-if ($late_cohort_size > 0) {
-  for ($i=0; $i < $late_cohort_size; $i++) {
-    $late_user = $late_cohort[$i];
-    if ($absent == 1) {
-      $student_cohort = check_and_clear_cohort($student_cohort, $late_user['username']);
-    }
-    $user_results[$user_no]['name']             = $late_user['name'];
-    $user_results[$user_no]['mark']             = 0;
-    $user_results[$user_no]['adj_percent']      = 0;
-    $user_results[$user_no]['percent']          = 0;
-    $user_results[$user_no]['started']          = '';
-    $user_results[$user_no]['username']         = $late_user['username'];
-    $user_results[$user_no]['tmp_userID']       = $late_user['tmp_userID'];
-    $user_results[$user_no]['student_grade']    = $late_user['grade'];
-    $user_results[$user_no]['module']           = $late_user['module'];
-    $user_results[$user_no]['year']             = '';
-    $user_results[$user_no]['display_started']  = $late_user['display_started'];
-    $user_results[$user_no]['started']          = $late_user['started'];
-    $user_results[$user_no]['attempt']          = 1;
-    $user_results[$user_no]['marking_complete'] = 0;
-    $user_results[$user_no]['title']            = $late_user['title'];
-    $user_results[$user_no]['surname']          = $late_user['surname'];
-    $user_results[$user_no]['initials']         = $late_user['initials'];
-    $user_results[$user_no]['first_names']      = $late_user['first_names'];
-    $user_results[$user_no]['student_id']       = $late_user['student_id'];
-    $user_results[$user_no]['gender']           = $late_user['gender'];
-    $user_results[$user_no]['ipaddress']        = '';
-    $user_results[$user_no]['duration']         = 0;
-    $user_results[$user_no]['questions']        = '';
-    $user_results[$user_no]['paper_type']       = $paper_type;
-    $user_results[$user_no]['room']             = '';
-    $user_results[$user_no]['visible']          = 1;    // Default to visible unless switched off below.
-    $user_results[$user_no]['roles']            = 'Student';
-    $user_results[$user_no]['rank']             = 99999999999;
-    $user_results[$user_no]['decile']           = 10;
-    $user_no++;
-  }
-}
-
-if ($absent == 1) {
-  // Add in students in cohort who haven't taken the exam.
-  $count_student_cohort = count($student_cohort);
   
-  for ($i=0; $i < $count_student_cohort; $i++) {
-    $user_results[$user_no]['name']             = $student_cohort[$i]['name'];
-    $user_results[$user_no]['mark']             = 0;
-    $user_results[$user_no]['adj_percent']      = 0;
-    $user_results[$user_no]['percent']          = 0;
-    $user_results[$user_no]['started']          = '';
-    $user_results[$user_no]['username']         = $student_cohort[$i]['username'];
-    $user_results[$user_no]['tmp_userID']       = $student_cohort[$i]['tmp_userID'];
-    $user_results[$user_no]['student_grade']    = $student_cohort[$i]['grade'];
-    $user_results[$user_no]['module']           = $student_cohort[$i]['module'];
-    $user_results[$user_no]['year']             = '';
-    $user_results[$user_no]['display_started']  = '';
-    $user_results[$user_no]['title']            = $student_cohort[$i]['title'];
-    $user_results[$user_no]['surname']          = $student_cohort[$i]['surname'];
-    $user_results[$user_no]['initials']         = $student_cohort[$i]['initials'];
-    $user_results[$user_no]['first_names']      = $student_cohort[$i]['first_names'];
-    $user_results[$user_no]['student_id']       = $student_cohort[$i]['student_id'];
-    $user_results[$user_no]['gender']           = $student_cohort[$i]['gender'];
-    $user_results[$user_no]['ipaddress']        = '';
-    $user_results[$user_no]['duration']         = 0;
-    $user_results[$user_no]['questions']        = '';
-    $user_results[$user_no]['paper_type']       = '';
-    $user_results[$user_no]['room']             = '';
-    $user_results[$user_no]['visible']          = 1;    // Default to visible unless switched off below.
-    $user_results[$user_no]['roles']            = 'Student';
-    $user_results[$user_no]['late']             = true;
-    $user_results[$user_no]['rank']             = 99999999999;
-    $user_results[$user_no]['decile']           = 10;
-    $user_no++;
+  return $cohort_size;
+}
+
+function add_late_students(&$user_results, $late_cohort, &$user_no) {
+  $late_cohort_size = count($late_cohort);
+  if ($late_cohort_size > 0) {
+    for ($i=0; $i < $late_cohort_size; $i++) {
+      $late_user = $late_cohort[$i];
+      if ($absent == 1) {
+        $student_cohort = check_and_clear_cohort($student_cohort, $late_user['username']);
+      }
+      $user_results[$user_no]['name']             = $late_user['name'];
+      $user_results[$user_no]['mark']             = 0;
+      $user_results[$user_no]['adj_percent']      = 0;
+      $user_results[$user_no]['percent']          = 0;
+      $user_results[$user_no]['started']          = '';
+      $user_results[$user_no]['username']         = $late_user['username'];
+      $user_results[$user_no]['tmp_userID']       = $late_user['tmp_userID'];
+      $user_results[$user_no]['student_grade']    = $late_user['grade'];
+      $user_results[$user_no]['module']           = $late_user['module'];
+      $user_results[$user_no]['year']             = '';
+      $user_results[$user_no]['display_started']  = $late_user['display_started'];
+      $user_results[$user_no]['started']          = $late_user['started'];
+      $user_results[$user_no]['attempt']          = 1;
+      $user_results[$user_no]['marking_complete'] = 0;
+      $user_results[$user_no]['title']            = $late_user['title'];
+      $user_results[$user_no]['surname']          = $late_user['surname'];
+      $user_results[$user_no]['initials']         = $late_user['initials'];
+      $user_results[$user_no]['first_names']      = $late_user['first_names'];
+      $user_results[$user_no]['student_id']       = $late_user['student_id'];
+      $user_results[$user_no]['gender']           = $late_user['gender'];
+      $user_results[$user_no]['ipaddress']        = '';
+      $user_results[$user_no]['duration']         = 0;
+      $user_results[$user_no]['questions']        = '';
+      $user_results[$user_no]['paper_type']       = $paper_type;
+      $user_results[$user_no]['room']             = '';
+      $user_results[$user_no]['visible']          = 1;    // Default to visible unless switched off below.
+      $user_results[$user_no]['roles']            = 'Student';
+      $user_results[$user_no]['rank']             = 99999999999;
+      $user_results[$user_no]['decile']           = 10;
+      $user_no++;
+    }
   }
 }
 
-// Convert Module IDs into codes
-convert_moduleIDs($user_results, $mysqli);
+function add_absent_students(&$user_results, $student_cohort, &$user_no) {
+  if (isset($_GET['absent']) and $_GET['absent'] == 1) {
+  
+    // Add in students in cohort who haven't taken the exam.
+    $count_student_cohort = count($student_cohort);
+    
+    for ($i=0; $i < $count_student_cohort; $i++) {
+      $user_results[$user_no]['name']             = $student_cohort[$i]['name'];
+      $user_results[$user_no]['mark']             = 0;
+      $user_results[$user_no]['adj_percent']      = 0;
+      $user_results[$user_no]['percent']          = 0;
+      $user_results[$user_no]['started']          = '';
+      $user_results[$user_no]['username']         = $student_cohort[$i]['username'];
+      $user_results[$user_no]['tmp_userID']       = $student_cohort[$i]['tmp_userID'];
+      $user_results[$user_no]['student_grade']    = $student_cohort[$i]['grade'];
+      $user_results[$user_no]['module']           = $student_cohort[$i]['module'];
+      $user_results[$user_no]['year']             = '';
+      $user_results[$user_no]['display_started']  = '';
+      $user_results[$user_no]['title']            = $student_cohort[$i]['title'];
+      $user_results[$user_no]['surname']          = $student_cohort[$i]['surname'];
+      $user_results[$user_no]['initials']         = $student_cohort[$i]['initials'];
+      $user_results[$user_no]['first_names']      = $student_cohort[$i]['first_names'];
+      $user_results[$user_no]['student_id']       = $student_cohort[$i]['student_id'];
+      $user_results[$user_no]['gender']           = $student_cohort[$i]['gender'];
+      $user_results[$user_no]['ipaddress']        = '';
+      $user_results[$user_no]['duration']         = 0;
+      $user_results[$user_no]['questions']        = '';
+      $user_results[$user_no]['paper_type']       = '';
+      $user_results[$user_no]['room']             = '';
+      $user_results[$user_no]['visible']          = 1;    // Default to visible unless switched off below.
+      $user_results[$user_no]['roles']            = 'Student';
+      $user_results[$user_no]['late']             = true;
+      $user_results[$user_no]['rank']             = 99999999999;
+      $user_results[$user_no]['decile']           = 10;
+      $user_no++;
+    }
+  }
+}
 
 function convert_moduleIDs(&$user_results, $db) {
   $result_no = count($user_results);
@@ -1477,135 +1510,105 @@ function convert_moduleIDs(&$user_results, $db) {
   }
 }
 
-/*
-// Remove additional users from array who do not match passed metadata settings.
-$meta_parts = explode('=',$_GET['meta1']);
-for ($i=0; $i<$user_no; $i++) {
-  $type = $meta_parts[0];
-
-  if (isset($user_results[$i]) and $user_results[$i]['metadata'][$type] != $meta_parts[1]) {
-    $total_mark -= $user_results[$i]['mark'];
-    $total_adjusted_mark -= ($user_results[$i]['mark']-$total_random_mark);
-    unset($user_results[$i]);
-  }
-}
-*/
-
-function isEven($intNumber) {
-  if ($intNumber % 2 == 0 ) {
-    return 'y';
-  } else {
-    return 'n';
-  }
-}
-
-if (substr($marking, 0, 1) == '2') {
-  get_ss_pass($ss_pass, $ss_hon);
-
+function get_stats($user_results, $question_no, $pass_mark, $distinction_mark) {
+  // Generate summary statistics.
+  $user_no                = count($user_results);
+  $stats['completed_no']  = 0;
+  $stats['failures']      = 0;
+  $stats['passes']        = 0;
+  $stats['honours']       = 0;
+  $mark_total             = 0;
+  $percent_total          = 0;
+  $stats['total_time']    = 0;
+  $stats['max_mark']      = 0;
+  $stats['min_mark']      = 9999;
+  $stats['max_percent']   = 0;    // adjusted percent.
+  $stats['min_percent']   = 100;  // adjusted percent.
+  $median_mark_array      = array();
+  $median_percent_array   = array();
+  $marks_data             = array();
+  
   for ($i=0; $i<$user_no; $i++) {
-    if (isset($user_results[$i]['adj_percent'])) {
-      $user_results[$i]['adj_percent'] = crankMark($user_results[$i]['percent'], $ss_pass, $ss_hon, $pass_mark, $distinction_mark);
+    if (isset($user_results[$i]['adj_percent']) and $user_results[$i]['questions'] >= $question_no and $user_results[$i]['visible'] == 1) {
+      $stats['completed_no']++;
+      $median_mark_array[] = $user_results[$i]['mark'];
+      $median_percent_array[] = $user_results[$i]['adj_percent'];
+
+      $mark_total += $user_results[$i]['mark'];
+      $percent_total += $user_results[$i]['adj_percent'];
+    }
+    if (isset($user_results[$i]['mark']) and $user_results[$i]['visible'] == 1) {
+      if (isset($user_results[$i]['adj_percent'])) {
+        $marks_data[] = $user_results[$i]['adj_percent'];
+        if ($user_results[$i]['adj_percent'] < $pass_mark) $stats['failures']++;
+        if ($user_results[$i]['adj_percent'] < $stats['min_percent']) $stats['min_percent'] = $user_results[$i]['adj_percent'];
+        if ($user_results[$i]['adj_percent'] > $stats['max_percent']) $stats['max_percent'] = $user_results[$i]['adj_percent'];
+      }
+      if ($user_results[$i]['adj_percent'] >= $pass_mark and $user_results[$i]['adj_percent'] < $distinction_mark) $stats['passes']++;
+      if ($user_results[$i]['adj_percent'] >= $distinction_mark) $stats['honours']++;
+      if ($user_results[$i]['mark'] < $stats['min_mark']) $stats['min_mark'] = $user_results[$i]['mark'];
+      if ($user_results[$i]['mark'] > $stats['max_mark']) $stats['max_mark'] = $user_results[$i]['mark'];
     }
   }
-}
 
-// Generate summary statistics.
-$failures       = 0;
-$passes         = 0;
-$honours        = 0;
-$mark_total     = 0;
-$percent_total  = 0;
-$max_mark       = 0;
-$min_mark       = 9999;
-$max_percent    = 0;    // adjusted percent.
-$min_percent    = 100;  // adjusted percent.
-$median_mark_array    = array();
-$median_percent_array = array();
-$marks_data           = array();
+  if ($stats['min_mark'] == 9999) $stats['min_mark'] = 0;    // Reset back to zero if still on default.
+  $stats['range'] = $stats['max_mark'] - $stats['min_mark'];
+  $stats['range_percent'] = $stats['max_percent'] - $stats['min_percent'];
 
-for ($i=0; $i<$user_no; $i++) {
-  if (isset($user_results[$i]['adj_percent']) and $user_results[$i]['questions'] >= $question_no and $user_results[$i]['visible'] == 1) {
-    $completed_no++;
-    $median_mark_array[] = $user_results[$i]['mark'];
-    $median_percent_array[] = $user_results[$i]['adj_percent'];
-
-    $mark_total += $user_results[$i]['mark'];
-    $percent_total += $user_results[$i]['adj_percent'];
-  }
-  if (isset($user_results[$i]['mark']) and $user_results[$i]['visible'] == 1) {
-    if (isset($user_results[$i]['adj_percent'])) {
-      $marks_data[] = $user_results[$i]['adj_percent'];
-      if ($user_results[$i]['adj_percent'] < $pass_mark) $failures++;
-      if ($user_results[$i]['adj_percent'] < $min_percent) $min_percent = $user_results[$i]['adj_percent'];
-      if ($user_results[$i]['adj_percent'] > $max_percent) $max_percent = $user_results[$i]['adj_percent'];
+  // Calculate StdDev.
+  $xmean_total = 0;
+  $xmean_percent_total = 0;
+  for ($i=0; $i<$user_no; $i++) {
+    if (isset($user_results[$i]['questions']) and $user_results[$i]['questions'] >= $question_no and $user_results[$i]['visible'] == 1 and $stats['completed_no'] > 0) {
+      $xmean_total += (($user_results[$i]['mark'] - ($mark_total / $stats['completed_no'])) * ($user_results[$i]['mark'] - ($mark_total / $stats['completed_no'])));
+      $xmean_percent_total += (($user_results[$i]['adj_percent'] - ($percent_total / $stats['completed_no'])) * ($user_results[$i]['adj_percent'] - ($percent_total / $stats['completed_no'])));
     }
-    if ($user_results[$i]['adj_percent'] >= $pass_mark and $user_results[$i]['adj_percent'] < $distinction_mark) $passes++;
-    if ($user_results[$i]['adj_percent'] >= $distinction_mark) $honours++;
-    if ($user_results[$i]['mark'] < $min_mark) $min_mark = $user_results[$i]['mark'];
-    if ($user_results[$i]['mark'] > $max_mark) $max_mark = $user_results[$i]['mark'];
   }
-}
-
-// Calculate StdDev.
-$xmean_total = 0;
-$xmean_percent_total = 0;
-for ($i=0; $i<$user_no; $i++) {
-  if (isset($user_results[$i]['questions']) and $user_results[$i]['questions'] >= $question_no and $user_results[$i]['visible'] == 1 and $completed_no > 0) {
-    $xmean_total += (($user_results[$i]['mark'] - ($mark_total / $completed_no)) * ($user_results[$i]['mark'] - ($mark_total / $completed_no)));
-    $xmean_percent_total += (($user_results[$i]['adj_percent'] - ($percent_total / $completed_no)) * ($user_results[$i]['adj_percent'] - ($percent_total / $completed_no)));
-  }
-}
-if ($completed_no > 1) {
-  $stddev_mark = sqrt($xmean_total/($completed_no-1));
-  $stddev_percent = sqrt($xmean_percent_total / ($completed_no - 1));
-} else {
-  $stddev_mark    = 0;
-  $stddev_percent = 0;
-}
-
-if ($completed_no > 0) {
-  $mean_mark = round($mark_total / $completed_no,1);
-  $mean_percent = round($percent_total / $completed_no,1);
-  sort($median_mark_array);
-  sort($median_percent_array);
-  if (isEven($completed_no) == 'y') {
-    $median_mark = ($median_mark_array[($completed_no/2)-1] + $median_mark_array[($completed_no/2)-1]) / 2;
-    $median_percent = ($median_percent_array[($completed_no/2)-1] + $median_percent_array[($completed_no/2)-1]) / 2;
+  if ($stats['completed_no'] > 1) {
+    $stats['stddev_mark'] = sqrt($xmean_total / ($stats['completed_no'] - 1));
+    $stats['stddev_percent'] = sqrt($xmean_percent_total / ($stats['completed_no'] - 1));
   } else {
-    $median_mark = $median_mark_array[($completed_no/2)-1];
-    $median_percent = $median_percent_array[($completed_no/2)-1];
+    $stats['stddev_mark']    = 0;
+    $stats['stddev_percent'] = 0;
   }
-} else {
-  $mean_mark      = 0;
-  $mean_percent   = 0;
-  $median_mark    = 0;
-  $median_percent = 0;
+
+  if ($stats['completed_no'] > 0) {
+    $stats['mean_mark'] = round($mark_total / $stats['completed_no'],1);
+    $stats['mean_percent'] = round($percent_total / $stats['completed_no'],1);
+    sort($median_mark_array);
+    sort($median_percent_array);
+    if (MathsUtils::isEven($stats['completed_no']) == 'y') {
+      $stats['median_mark'] = ($median_mark_array[($stats['completed_no']/2)-1] + $median_mark_array[($stats['completed_no']/2)-1]) / 2;
+      $stats['median_percent'] = ($median_percent_array[($stats['completed_no']/2)-1] + $median_percent_array[($stats['completed_no']/2)-1]) / 2;
+    } else {
+      $stats['median_mark'] = $median_mark_array[($stats['completed_no']/2)-1];
+      $stats['median_percent'] = $median_percent_array[($stats['completed_no']/2)-1];
+    }
+  } else {
+    $stats['mean_mark']      = 0;
+    $stats['mean_percent']   = 0;
+    $stats['median_mark']    = 0;
+    $stats['median_percent'] = 0;
+  }
+
+  $stats['q1'] = mypercentile($marks_data, 0.75);
+  $stats['q2'] = mypercentile($marks_data, 0.50);
+  $stats['q3'] = mypercentile($marks_data, 0.25);
+
+  $decile_values = array();
+  for ($i=1; $i<10; $i++) {
+    $stats["decile$i"] = mypercentile($marks_data, ($i / 10));
+  }  
+  
+  return $stats;
 }
 
-$quartile1 = mypercentile($marks_data, 0.75);
-$quartile2 = mypercentile($marks_data, 0.50);
-$quartile3 = mypercentile($marks_data, 0.25);
-
-/*
-ini_set('xdebug.var_display_max_children',-1);
-
-var_dump($marks_data);
-exit;
-*/
-
-$decile_values = array();
-for ($i=1; $i<10; $i++) {
-  $decile_values[$i] = mypercentile($marks_data, ($i / 10));
-}
-
-writeStudentDeciles($user_results, $decile_values);
-
-function writeStudentDeciles(&$user_results, $decile) {
+function writeStudentDeciles(&$user_results, $stats) {
   $student_no = count($user_results);
   for ($user_no=0; $user_no<$student_no; $user_no++) {
   
     for ($i=9; $i>0; $i--) {
-      if ($user_results[$user_no]['adj_percent'] >= $decile[$i]) {
+      if ($user_results[$user_no]['adj_percent'] >= $stats["decile$i"]) {
         $user_results[$user_no]['decile'] = $i;
       }
     }
@@ -1613,36 +1616,39 @@ function writeStudentDeciles(&$user_results, $decile) {
   }
 }
 
-// Sort the arrays
-sort($median);
-if (isset($_GET['sortby'])) {
-  $sortby = $_GET['sortby'];
-} else {
-  $sortby = 'name';
-}
-if (isset($_GET['ordering'])) {
-  $ordering = $_GET['ordering'];
-} else {
-  $ordering = 'asc';
-}
-if (isset($_GET['percent'])) {
-  $percent = $_GET['percent'];
-} else {
-  $percent = 100;
-}
-if (isset($_GET['absent'])) {
-  $absent = $_GET['absent'];
-} else {
-  $absent = 0;
-}
+function sort_results(&$user_results) {
+  // Sort the arrays
+  if (isset($_GET['sortby'])) {
+    $sortby = $_GET['sortby'];
+  } else {
+    $sortby = 'name';
+  }
+  if (isset($_GET['ordering'])) {
+    $ordering = $_GET['ordering'];
+  } else {
+    $ordering = 'asc';
+  }
+  if (isset($_GET['percent'])) {
+    $percent = $_GET['percent'];
+  } else {
+    $percent = 100;
+  }
+  if (isset($_GET['absent'])) {
+    $absent = $_GET['absent'];
+  } else {
+    $absent = 0;
+  }
 
-$tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
-if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
-if ($tmp_sort == 'classification') $tmp_sort = 'mark';
-if ($tmp_sort == 'mark' or $tmp_sort == 'rank' or $tmp_sort == 'decile') {
-  $method = SORT_NUMERIC;
-} else {
-  $method = SORT_STRING;
+  $tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
+  if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
+  if ($tmp_sort == 'classification') $tmp_sort = 'mark';
+  if ($tmp_sort == 'mark' or $tmp_sort == 'rank' or $tmp_sort == 'decile') {
+    $method = SORT_NUMERIC;
+  } else {
+    $method = SORT_STRING;
+  }
+  $user_results = array_csort($user_results, $tmp_sort, $ordering, $method);
+  
+  return $sortby;
 }
-$user_results = array_csort($user_results, $tmp_sort, $ordering, $method);
 ?>

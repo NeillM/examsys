@@ -47,7 +47,7 @@
     $total_time = 0;
 
     //output table heading
-    $table_order = array($string['title']=>'title', $string['surname']=>'Surname', $string['firstnames']=>'First_Names', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['module']=>'module', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'mark', $string['rank']=>'rank', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
+    $table_order = array($string['title']=>'title', $string['surname']=>'Surname', $string['firstnames']=>'First_Names', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['module']=>'module', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'mark', $string['rank']=>'rank', $string['decile']=>'decile', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
     $table_order['room'] = 'room';
     $metadata_cols = array();
     if (isset($user_results[0])){
@@ -75,7 +75,7 @@
           $csv .= $user_results[$i]['student_id'] . ',';
         }
         if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
-          $csv .= $user_results[$i]['student_grade'] . "," . $user_results[$i]['module'] . ",,,,No Attendance,,,\n";
+          $csv .= $user_results[$i]['student_grade'] . "," . $user_results[$i]['module'] . ",,,,No Attendance,,,,\n";
         } else {
           // If room is unknown then it will contain HTML that we want to discard
           $user_results[$i]['room'] = (strpos($user_results[$i]['room'], 'unknown') !== false) ? 'unknown' : $user_results[$i]['room'];
@@ -91,7 +91,7 @@
               $csv .= $string['pass'] . ',';
             }
           }
-          $csv .= $user_results[$i]['rank'] . ',' . $user_results[$i]['display_started'] . ',' . formatsec($user_results[$i]['duration']) . ',' . $user_results[$i]['ipaddress'] . ',"' . $user_results[$i]['room'] . '"';
+          $csv .= $user_results[$i]['rank'] . ',' . $user_results[$i]['decile'] . ',' . $user_results[$i]['display_started'] . ',' . formatsec($user_results[$i]['duration']) . ',' . $user_results[$i]['ipaddress'] . ',"' . $user_results[$i]['room'] . '"';
 
           // Display any associated metadata
           if (count($metadata_cols) > 0) {
@@ -105,12 +105,22 @@
     }
     $csv .= ",,,,,,,,,,,\n";
 
+    if ($cohort_size > 0) {
+      $percent_failures = round(($stats['failures'] / $cohort_size) * 100);
+      $percent_passes = round(($stats['passes'] / $cohort_size) * 100);
+      $percent_honours = round(($stats['honours'] / $cohort_size) * 100);
+    } else {
+      $percent_failures = 0;
+      $percent_passes = 0;
+      $percent_honours = 0;
+    }
+
     $size_msg = ($cohort_size < $display_no) ? $cohort_size . $string['of'] . $display_no : $display_no;
     $csv .= $string['cohortsize'] . ",$size_msg,,,,,,,,,,\n";
-    $csv .= $string['failureno'] . ",$failures,(" . round(($failures / $cohort_size) * 100) . "% of cohort),,,,,,,,,\n";
-    $csv .= $string['passno'] . ",$passes,(" . round(($honours / $cohort_size) * 100) . $string['percentofcohort'] . "),,,,,,,,,\n";
+    $csv .= $string['failureno'] . "," . $stats['failures'] . ",(" . round($percent_failures) . "% of cohort),,,,,,,,,\n";
+    $csv .= $string['passno'] . "," . $stats['passes'] . ",(" . round($percent_passes) . $string['percentofcohort'] . "),,,,,,,,,\n";
     if (isset($ss_hon)) {
-      $csv .= $string['distinctionno'] . ",$honours,(" . round(($honours / $cohort_size) * 100) . "% of cohort),,,,,,,,,\n";
+      $csv .= $string['distinctionno'] . "," . $stats['honours'] . ",(" . round($percent_honours) . "% of cohort),,,,,,,,,\n";
     }
     $csv .= $string['totalmarks'] . ",$total_marks,,,,,,,,,,\n";
     $csv .= $string['passmark'] . ",$pass_mark%,,,,,,,,,,\n";
@@ -120,28 +130,17 @@
       $csv .= $string['ss'] . "," . round($ss_pass,2) . ",,,,,,,,,,\n";
       $csv .= $string['ssdistinction'] . "," . round($ss_hon,2) . ",,,,,,,,,,\n";
     }
-    $csv .= $string['meanmark'] . ",$mean_mark,$mean_percent%,,,,,,,,,\n";
-    $csv .= $string['medianmark'] . ",$median_mark,$median_percent%,,,,,,,,,\n";
-    $csv .= $string['stdevmark'] . "," . number_format($stddev_mark, 2, '.', ',') . "," . round($stddev_percent,1) . "%,,,,,,,,,\n";
-    $csv .= $string['maxmark'] . ",$max_mark," . number_format($max_percent) . "%,,,,,,,,,\n";
-    $csv .= $string['maxmark'] . ",$min_mark," . number_format($min_percent) . "%,,,,,,,,,\n";
-    $csv .= $string['range'] . "," . ($max_mark - $min_mark) . "," . ($max_percent - $min_percent) . "%,,,,,,,,,\n";
-    $avg_time = ($completed_no > 0) ? formatsec(round($total_time / $completed_no,0)) : 'n/a';
+    $csv .= $string['meanmark'] . "," . $stats['mean_mark'] . "," . $stats['mean_percent'] . "%,,,,,,,,,\n";
+    $csv .= $string['medianmark'] . "," . $stats['median_mark'] . "," . $stats['median_percent'] . "%,,,,,,,,,\n";
+    $csv .= $string['stdevmark'] . "," . number_format($stats['stddev_mark'], 2, '.', ',') . "," . round($stats['stddev_percent'], 1) . "%,,,,,,,,,\n";
+    $csv .= $string['maxmark'] . "," . $stats['max_mark'] . "," . number_format($stats['max_percent']) . "%,,,,,,,,,\n";
+    $csv .= $string['maxmark'] . "," . $stats['min_mark'] . "," . number_format($stats['min_percent']) . "%,,,,,,,,,\n";
+    $csv .= $string['range'] . "," . ($stats['range']) . "," . ($stats['range_percent']) . "%,,,,,,,,,\n";
+    $avg_time = ($stats['completed_no'] > 0) ? formatsec(round($stats['total_time'] / $stats['completed_no'],0)) : 'n/a';
     $csv .= $string['averagetime'] . "," . $avg_time . ",,,,,,,,,,\n";
     $csv .= $string['excludedquestions'] . ",$display_excluded,,,,,,,,,,\n";
     $csv .= $string['experimantalquestions'] . ",$display_experimental,,,,,,,,,,\n";
-    if (count($warnings['deleted_qns']) > 0) {
-    	$csv .= "Warnings,Answers found for questions that no longer appear on the paper (IDs ";
-      for ($i = 0; $i < count($warnings['deleted_qns']); $i++) {
-       	$csv .= $warnings['deleted_qns'][$i];
-        if ($i < count($warnings['deleted_qns']) - 1) {
-        	$csv .= ", ";
-        }
-      }
-    	$csv .= "),,,,,,,,,,\n";
-    }
   } else {
-    //$csv .= $string['noattempts'];
     $csv .= strip_tags(sprintf($string['noattempts'], nicedate($_GET['startdate']), nicedate($_GET['enddate'])));
   }
 

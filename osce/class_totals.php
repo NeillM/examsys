@@ -32,13 +32,7 @@ require_once './osce.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 
-
-if ($userObject->has_role('Demo')) {
-  $demo = true;
-} else {
-  $demo = false;
-}
-
+$demo = is_demo($userObject);
 $sortby = '';
 $ordering = '';
 

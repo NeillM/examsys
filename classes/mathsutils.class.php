@@ -36,6 +36,14 @@ Class MathsUtils {
     return $temp;
   }
   
+  static function isEven($intNumber) {
+    if ($intNumber % 2 == 0 ) {
+      return 'y';
+    } else {
+      return 'n';
+    }
+  }
+  
   /**
    * Generate a random number between $min and $max with a specified increment and number of decimal places
    * @param mixed $min
@@ -69,6 +77,7 @@ Class MathsUtils {
   
   static function formatNumber($number, $decimals = 2) {
     $number = (string) round($number, $decimals);
+    
     if ($decimals > 0) {
       $strlength = strlen($number);
       $decimal_pos = strpos($number, '.');
@@ -79,7 +88,7 @@ Class MathsUtils {
         $number .= str_repeat('0', (strpos($number, '.') - 1));
       }
     }
-
+    
     return $number;
   }
   

@@ -22,6 +22,14 @@
 * @package
 */
 
+function is_demo($userObj) {
+  if ($userObj->has_role('Demo')) {
+    $demo = true;
+  } else {
+    $demo = false;
+  }
+}
+
 /**
 * This is function demo_replace takes a string and obscures it. Useful for demonstrating Rogo
 * at conferences and other meetings. 

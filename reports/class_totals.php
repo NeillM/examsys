@@ -427,6 +427,13 @@ if ($language != 'en') {
   }
 
   // output table header
+  $sortby = $_GET['sortby'];
+  $ordering = $_GET['ordering'];
+  if (isset($_GET['absent'])) {
+    $absent = $_GET['absent'];
+  } else {
+    $absent = 0;
+  }
   if (isset($user_results[0])) {
     echo "<tr style=\"font-size:110%\">\n";
     foreach ($table_order as $display => $key) {
@@ -436,11 +443,11 @@ if ($language != 'en') {
         echo "<th class=\"vert_div\">&nbsp;";
       }
       if ($sortby == $key and $ordering == 'asc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=$percent&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
       } elseif ($sortby == $key and $ordering == 'desc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=$percent&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th>";
       } else {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=$percent&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;</th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;</th>";
       }
     }
     echo "</tr>\n";
@@ -536,7 +543,7 @@ if ($language != 'en') {
           $class = 'redln';
         } else {
           $class = 'greyln';
-          $total_time += $user_results[$i]['duration'];
+          //$total_time += $user_results[$i]['duration'];
           $temp_location = $user_results[$i]['adj_percent'];
           if (isset($distribution[$temp_location])) {
             $distribution[$temp_location]++;
@@ -694,9 +701,9 @@ if ($language != 'en') {
         }
         echo "</tr>\n";
 
-        if ($completed_no > 0) {
-          $user_results[$i]['xmean'] = (($user_results[$i]['mark'] - ($total_mark / $completed_no)) * ($user_results[$i]['mark'] - ($total_mark / $completed_no)));
-          $user_results[$i]['xmean_percent'] = (($user_results[$i]['adj_percent'] - ($total_mark / $completed_no)) * ($user_results[$i]['adj_percent'] - ($total_mark / $completed_no)));
+        if ($stats['completed_no'] > 0) {
+          $user_results[$i]['xmean'] = (($user_results[$i]['mark'] - ($total_mark / $stats['completed_no'])) * ($user_results[$i]['mark'] - ($total_mark / $stats['completed_no'])));
+          $user_results[$i]['xmean_percent'] = (($user_results[$i]['adj_percent'] - ($total_mark / $stats['completed_no'])) * ($user_results[$i]['adj_percent'] - ($total_mark / $stats['completed_no'])));
         } else {
           $user_results[$i]['xmean'] = 0;
           $user_results[$i]['xmean_percent'] = 0;
@@ -747,7 +754,7 @@ if ($language != 'en') {
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
 
-    echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=$quartile1&q2=$quartile2&q3=$quartile3\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=" . $stats['q1'] . "&q2=" . $stats['q2'] . "&q3=" . $stats['q3'] . "\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></td></tr>\n";
 
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
@@ -770,10 +777,11 @@ if ($language != 'en') {
         echo ' (bottom ' . $_GET['percent'] . '%)';
       }
     }
+
     $size_msg = ($cohort_size < $display_no) ? $cohort_size . $string['of'] . $display_no : $display_no;
     echo "</td><td class=\"r\" style=\"width:60px\">$size_msg</td>";
-    if (($completed_no + $out_of_range) < $display_no) {
-      echo '<td>(' . ($display_no - $completed_no - $out_of_range). ' ' . $string['candidatenotcomplete'] . ')</td>';
+    if (($stats['completed_no'] + $stats['out_of_range']) < $display_no) {
+      echo '<td>(' . ($display_no - $stats['completed_no'] - $stats['out_of_range']). ' ' . $string['candidatenotcomplete'] . ')</td>';
     } else {
       echo '<td>';
       if ($absent_no == 1) {
@@ -786,18 +794,18 @@ if ($language != 'en') {
     echo "</tr>\n";
 
     if ($cohort_size > 0) {
-      $percent_failures = round(($failures / $cohort_size) * 100);
-      $percent_passes = round(($passes / $cohort_size) * 100);
-      $percent_honours = round(($honours / $cohort_size) * 100);
+      $percent_failures = round(($stats['failures'] / $cohort_size) * 100);
+      $percent_passes = round(($stats['passes'] / $cohort_size) * 100);
+      $percent_honours = round(($stats['honours'] / $cohort_size) * 100);
     } else {
       $percent_failures = 0;
       $percent_passes = 0;
       $percent_honours = 0;
     }
 
-    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">$failures</td><td>(" . $percent_failures . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['passno'] . "</td><td class=\"r\">$passes</td><td>(" . $percent_passes . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\">$honours</td><td>(" . $percent_honours . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">" . $stats['failures'] . "</td><td>(" . $percent_failures . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['passno'] . "</td><td class=\"r\">" . $stats['passes'] . "</td><td>(" . $percent_passes . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\"> " . $stats['honours'] . "</td><td>(" . $percent_honours . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
 
     echo "<tr><td class=\"field\">" . $string['totalmarks'] . "</td><td class=\"r\">";
     if ($total_marks < $orig_total_marks) echo "<span class=\"exclude\">$orig_total_marks</span>&nbsp;&nbsp;";
@@ -805,9 +813,9 @@ if ($language != 'en') {
     echo "<tr><td class=\"field\">" . $string['passmark'] . "</td><td class=\"r\">$pass_mark%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     if ($marking == '1') {
       echo "<tr><td class=\"field\">" . $string['randommark'] . "</td><td class=\"r\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td>&nbsp;</td></tr>\n";
-      if ($completed_no > 0) {
+      if ($stats['completed_no'] > 0) {
         if ($total_marks > 0) {
-          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>(" . MathsUtils::formatNumber($mean_percent) . "%)</td><td>&nbsp;</td></tr>\n";
+          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . $stats['mean_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
         } else {
           echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
         }
@@ -815,53 +823,42 @@ if ($language != 'en') {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     } elseif ($marking == '0') {
-      if ($completed_no > 0) {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>(" . MathsUtils::formatNumber($mean_percent) . "%)</td><td>&nbsp;</td></tr>\n";
+      if ($stats['completed_no'] > 0) {
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . $stats['mean_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
       } else {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     } else {
       echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . MathsUtils::formatNumber($ss_pass) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       if ($ss_hon > 0) echo "<tr><td class=\"field\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . MathsUtils::formatNumber($ss_hon) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-      if ($completed_no > 0) {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>(" . MathsUtils::formatNumber($mean_percent) . "%)</td><td>&nbsp;</td></tr>\n";
+      if ($stats['completed_no'] > 0) {
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . $stats['mean_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
       } else {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     }
     $mid_point = round($cohort_size / 2) - 1;
-    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">$median_mark</td><td>(" . MathsUtils::formatNumber($median_percent) . "%)</td><td>&nbsp;</td></tr>\n";
-    if ($completed_no == 0) {
+    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">" . $stats['median_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['median_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
+    if ($stats['completed_no'] == 0) {
       echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . MathsUtils::formatNumber($stddev_percent) . "%)</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stats['stddev_mark'], 2, '.', ',') . "</td><td>(" . MathsUtils::formatNumber($stats['stddev_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
     }
-    echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td class=\"r\">$max_mark</td><td>(" . MathsUtils::formatNumber($max_percent) . "%)</td><td>&nbsp;</td></tr>\n";
-    if ($min_mark == 9999) $min_mark = 0;
-    echo "<tr><td class=\"field\">" . $string['minmark'] . "</td><td class=\"r\">$min_mark</td><td>(" . MathsUtils::formatNumber($min_percent) . "%)</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['range'] . "</td><td class=\"r\">" . ($max_mark - $min_mark) . "</td><td>(" . MathsUtils::formatNumber($max_percent - $min_percent) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td class=\"r\">" . $stats['max_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['max_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['minmark'] . "</td><td class=\"r\">" . $stats['min_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['min_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['range'] . "</td><td class=\"r\">" . $stats['range'] . "</td><td>(" . MathsUtils::formatNumber($stats['range_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
 
-    if ($completed_no <= 1) {
+    if ($stats['completed_no'] <= 1) {
       echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"r\">" . formatsec(round($total_time / $completed_no, 0)) . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"r\">" . formatsec(round($stats['total_time'] / $stats['completed_no'], 0)) . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     }
-    if (count($excluded) > 0) {
+    if ($exclusions->get_excluded_no() > 0) {
       echo "<tr><td class=\"field\">" . $string['excludedquestions'] . "</td><td colspan=\"3\">$display_excluded</td></tr>\n";
     }
     if ($display_experimental != '') {
       echo "<tr><td class=\"field\">" . $string['experimantalquestions'] . "</td><td colspan=\"3\">$display_experimental</td></tr>\n";
     }
-    if (count($warnings['deleted_qns']) > 0) {
-      echo "<tr><td class=\"field\" valign=\"top\">" . $string['warnings'] . "</td><td colspan=\"3\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning: Answers found for questions that no longer appear on the paper\" border=\"0\" />&nbsp;" . $string['nolongerappear'];
-      for ($i = 0; $i < count($warnings['deleted_qns']); $i++) {
-      	echo $warnings['deleted_qns'][$i];
-      	if ($i < count($warnings['deleted_qns']) - 1) {
-      		echo ", ";
-      	}
-      }
-      echo ")</td></tr>\n";
-   	}
     echo "</table></td>\n";
     
     echo "<td></td>";
@@ -870,7 +867,7 @@ if ($language != 'en') {
     $suffix = array('', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th');
     echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
     for ($i=1; $i<10; $i++) {
-      echo "<tr><td style=\"width:40px\">" . $i . $suffix[$i] . "</td><td>" . MathsUtils::formatNumber($decile_values[$i]) . "%</td></tr>\n";
+      echo "<tr><td style=\"width:40px\">" . $i . $suffix[$i] . "</td><td>" . MathsUtils::formatNumber($stats["decile$i"]) . "%</td></tr>\n";
     }
     echo "</table></td>\n";
     
@@ -878,9 +875,9 @@ if ($language != 'en') {
     
     // Quartiles
     echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
-    echo "<tr><td style=\"width:40px\">Q1</td><td>" . MathsUtils::formatNumber($quartile1) . "%</td></tr>\n";
-    echo "<tr><td style=\"width:40px\">Q2</td><td>" . MathsUtils::formatNumber($quartile2) . "%</td></tr>\n";
-    echo "<tr><td style=\"width:40px\">Q3</td><td>" . MathsUtils::formatNumber($quartile3) . "%</td></tr>\n";
+    echo "<tr><td style=\"width:40px\">Q1</td><td>" . MathsUtils::formatNumber($stats['q1']) . "%</td></tr>\n";
+    echo "<tr><td style=\"width:40px\">Q2</td><td>" . MathsUtils::formatNumber($stats['q2']) . "%</td></tr>\n";
+    echo "<tr><td style=\"width:40px\">Q3</td><td>" . MathsUtils::formatNumber($stats['q3']) . "%</td></tr>\n";
     
     echo "</table></td>\n";
     
@@ -937,28 +934,28 @@ if ($language != 'en') {
         $message = str_replace("{student-percent}", $user_results[$i]['adj_percent'], $message);
         $message = str_replace("{total-paper-mark}", $total_marks, $message);
         $message = str_replace("{student-time}", formatsec($user_results[$i]['duration']), $message);
-        $message = str_replace("{class-mean-mark}", $mean_mark, $message);
-        $message = str_replace("{class-mean-percent}", $mean_percent, $message);
-        if ($completed_no-1 == 0) {
+        $message = str_replace("{class-mean-mark}", $stats['mean_mark'], $message);
+        $message = str_replace("{class-mean-percent}", $stats['mean_percent'], $message);
+        if ($stats['completed_no']-1 == 0) {
           $message = str_replace("{class-stdev}", 0, $message);
         } else {
-          $message = str_replace("{class-stdev}", number_format($stddev_mark, 2, '.', ','), $message);
+          $message = str_replace("{class-stdev}", number_format($stats['stddev_mark'], 2, '.', ','), $message);
         }
-        $message = str_replace("{class-max-mark}", $max_mark, $message);
-        $message = str_replace("{class-min-mark}", $min_mark, $message);
-        $message = str_replace("{class-mean-time}", formatsec(round($total_time / $completed_no,0)), $message);
+        $message = str_replace("{class-max-mark}", $stats['max_mark'], $message);
+        $message = str_replace("{class-min-mark}", $stats['min_mark'], $message);
+        $message = str_replace("{class-mean-time}", formatsec(round($total_time / $stats['completed_no'],0)), $message);
         $message = str_replace("{random-mark}", number_format($total_random_mark, 1, '.', ','), $message);
         $message = str_replace("{paper-title}", $paper, $message);
 
-        $to = $user_results[$i]['username'] . '@nottingham.ac.uk';
+        $to = $user_results[$i]['email'];
 
         $subject = $_POST['subject'];
         $subject = str_replace("{total-paper-mark}", $total_marks, $subject);
-        $subject = str_replace("{class-mean-mark}", round($total_mark / $completed_no, 1), $subject);
-        $subject = str_replace("{class-mean-percent}", $mean_percent, $subject);
-        $subject = str_replace("{class-max-mark}", $max_mark, $subject);
-        $subject = str_replace("{class-min-mark}", $min_mark, $subject);
-        $subject = str_replace("{class-mean-time}", formatsec(round($total_time / $completed_no,0)), $subject);
+        $subject = str_replace("{class-mean-mark}", round($total_mark / $stats['completed_no'], 1), $subject);
+        $subject = str_replace("{class-mean-percent}", $stats['mean_percent'], $subject);
+        $subject = str_replace("{class-max-mark}", $stats['max_mark'], $subject);
+        $subject = str_replace("{class-min-mark}", $stats['min_mark'], $subject);
+        $subject = str_replace("{class-mean-time}", formatsec(round($total_time / $stats['completed_no'],0)), $subject);
         $subject = str_replace("{random-mark}", number_format($total_random_mark, 1, '.', ','), $subject);
         $subject = str_replace("{paper-title}", $paper, $subject);
 
