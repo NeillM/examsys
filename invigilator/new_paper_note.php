@@ -45,7 +45,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <head><title>Note</title>
+  <head><title><?php echo $string['note']; ?></title>
 
   <script language="JavaScript">
     function closeWindow() {
@@ -73,7 +73,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title>Note</title>
+<title><?php echo $string['note']; ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <style type="text/css">
@@ -88,13 +88,13 @@
 <td>
 <?php
   echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n";
-  echo "<strong>Note:</strong><br />\n";
+  echo "<strong>" . $string['note'] . ":</strong><br />\n";
   echo "<textarea name=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; background-color:#FFFFCC; width:100%\">$note</textarea><br />\n";
 ?>
 </td>
 </table>
 <br />
-<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="Save" />&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="javascript:window.close();" /></div>
+<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="note_id" value="<?php echo $note_id; ?>" />
 </form>
 

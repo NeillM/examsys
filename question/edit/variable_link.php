@@ -129,7 +129,7 @@
   $mysqli->close();
 ?>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td style="text-align:center" colspan="2"><input type="button" name="submit" value="OK" style="width:100px" onclick="copyValue()" />&nbsp;<input type="button" name="cancel" value="Cancel" style="width:100px" onclick="window.close()" /></td></tr>
+<tr><td style="text-align:center" colspan="2"><input type="button" name="submit" value="<?php echo $string['ok']; ?>" style="width:100px" onclick="copyValue()" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="window.close()" /></td></tr>
 </table>
 </form>
 

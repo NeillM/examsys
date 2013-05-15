@@ -155,5 +155,5 @@ $string['themecolours'] = 'Kolory motywu';
 $string['standardcolours'] = 'Kolory standardowe';
 $string['more'] = 'Więcej...';
 $string['cancel'] = 'Anuluj';
-$string['OK'] = 'OK';
+$string['OK'] = 'OK'; //cognate
 ?>

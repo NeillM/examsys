@@ -86,6 +86,6 @@ $string['Error'] = 'Error';
 $string['NoAcademicSession'] = 'No Academic Session is set.';
 $string['NoFieldMetadata'] = 'No field in the metadata set for groups.';
 $string['NoGroup'] = 'No Group can be found for the current user.';
-
-
+$string['note'] = 'Note';
+$string['studentname'] = 'Student Name';
 ?>

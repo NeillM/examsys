@@ -39,7 +39,7 @@
   ?>
   <html>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <head><title>Note</title>
+  <head><title><?php echo $string['note']; ?></title>
   <script language="JavaScript">
     function closeWindow() {
       window.opener.location.reload(true);
@@ -71,7 +71,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title>Note</title>
+<title><?php echo $string['note']; ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <style type="text/css">
@@ -80,6 +80,7 @@
 </head>
 
 <body onload="document.myform.note.focus();">
+
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform">
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <tr>
@@ -87,19 +88,19 @@
   if (file_exists($cfg_web_root . 'users/photos/' . $student_username . '.jpg')) {
     echo "<td style=\"border-left:1px solid #5582D2; background-color:white; width:180px; text-align:left; vertical-align:bottom\">&nbsp;<strong>$student_title $student_surname</strong><br />&nbsp;$student_firstnames<br />&nbsp;$student_id<br /><img src=\"../users/photos/$student_username.jpg\" width=\"180\" height=\"270\" border=\"0\" alt=\"Photo\" /></td><td>";
   } else {
-    echo "<td><strong>Student Name:</strong> $student_title $student_surname, $student_firstnames";
+    echo "<td><strong>" . $string['studentname'] . ":</strong> $student_title $student_surname, $student_firstnames";
     if ($student_id != '') echo " ($student_id)";
     echo "<br />";
   }
 
   echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n";
-  echo "<strong>Note:</strong><br />\n";
+  echo "<strong>" . $string['note'] . ":</strong><br />\n";
   echo "<textarea name=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; background-color:#FFFFCC; width:100%\">$note</textarea><br />\n";
 ?>
 </td>
 </table>
 <br />
-<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="Save" />&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="javascript:window.close();" /></div>
+<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="student_userID" value="<?php echo $_GET['userID']; ?>" />
 <input type="hidden" name="note_id" value="<?php echo $note_id; ?>" />
 </form>
