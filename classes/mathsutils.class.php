@@ -36,14 +36,6 @@ Class MathsUtils {
     return $temp;
   }
   
-  static function isEven($intNumber) {
-    if ($intNumber % 2 == 0 ) {
-      return 'y';
-    } else {
-      return 'n';
-    }
-  }
-  
   /**
    * Generate a random number between $min and $max with a specified increment and number of decimal places
    * @param mixed $min
@@ -92,6 +84,11 @@ Class MathsUtils {
     return $number;
   }
   
+  /**
+   * Returns the the median of a list of numbers
+   * @param array set of numbers you wish to find the median from
+   * @return int median of the list
+   */
   static function median($arr) {
     sort($arr);
     $count = count($arr); //total numbers in array
@@ -107,6 +104,12 @@ Class MathsUtils {
     return $median;
   }
   
+  /**
+   * Returns a percentile from a list of numbers
+   * @param array set of numbers to base the percentile on
+   * @param float the percentile required
+   * @return float the requested percentile
+   */
   static function percentile($data, $percentile) {
     $count = count($data);
     if ($count == 0) {
@@ -139,6 +142,4 @@ Class MathsUtils {
   }
   
 }
-
-
 ?>

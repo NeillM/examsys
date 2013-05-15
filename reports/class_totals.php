@@ -183,7 +183,7 @@ ob_start();
     if (document.getElementById('started').value != '') {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("../paper/finish.php?id=<?php echo $crypt_name; ?>&previous=" + document.getElementById('started').value + "&userid=" + document.getElementById('userID').value + "&log_type=" +document.getElementById('log_type').value+ "&percent=" +document.getElementById('percent').value+ "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../paper/finish.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&previous=" + document.getElementById('started').value + "&userid=" + document.getElementById('userID').value + "&log_type=" +document.getElementById('log_type').value+ "&percent=" +document.getElementById('percent').value+ "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
   }
 
@@ -192,7 +192,7 @@ ob_start();
     if (document.getElementById('started').value != '') {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("../mapping/user_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + document.getElementById('userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../mapping/user_feedback.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + document.getElementById('userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
   }
 
@@ -237,34 +237,20 @@ ob_start();
 	  var currentY = e.clientY;
     var scrOfX = $('body,html').scrollLeft();
     var scrOfY = $('body,html').scrollTop();
-	  var XMLHttpRequestObject = false;
-
-    if (window.XMLHttpRequest) {
-      XMLHttpRequestObject = new XMLHttpRequest();
-    } else if (window.ActiveXObject) {
-      XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-
-    if (XMLHttpRequestObject) {
-      dataSource = "getNote.php?paperID=<?php echo $paperID; ?>&userID=" + userID;
-      XMLHttpRequestObject.open("GET", dataSource);
-
-      XMLHttpRequestObject.onreadystatechange = function() {
-        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-          document.getElementById('noteMsg').innerHTML = XMLHttpRequestObject.responseText;
-          document.getElementById('noteDiv').style.display="block";
-          document.getElementById('noteDiv').style.left = currentX+scrOfX+16 + 'px';
-          top_pos = currentY+scrOfY-16;
-          if (top_pos > ($(window).height() + scrOfY - 130)) {
-            top_pos = $(window).height() + scrOfY - 130;
-          }
-          document.getElementById('noteDiv').style.top = top_pos + 'px';
-          delete XMLHttpRequestObject;
-          XMLHttpRequestObject = null;
+	  
+    dataSource = "getNote.php?paperID=<?php echo $paperID; ?>&userID=" + userID;
+    
+    $("#noteMsg").load(dataSource,function(responseTxt,statusTxt,xhr) {
+      if (statusTxt=="success") {
+        document.getElementById('noteDiv').style.display="block";
+        document.getElementById('noteDiv').style.left = currentX+scrOfX+16 + 'px';
+        top_pos = currentY+scrOfY-16;
+        if (top_pos > ($(window).height() + scrOfY - 130)) {
+          top_pos = $(window).height() + scrOfY - 130;
         }
+        document.getElementById('noteDiv').style.top = top_pos + 'px';
       }
-      XMLHttpRequestObject.send(null);
-    }
+    });
   }
 
   document.onmousedown = mouseSelect;
@@ -273,8 +259,8 @@ ob_start();
 
 
 <body>
-<div id="noteDiv" style="position:absolute; background-color:#FDFDCB; top:0px; left:0px; width:350px; z-index:10000; display:none; font-size:90%">
-<div style="background-color:#F8F7B6; text-align:right; padding:2px"><img onclick="document.getElementById('noteDiv').style.display='none'" src="../artwork/close_note.png" width="16" height="16" alt="Close" border="0" style="cursor:pointer" /></div>
+<div id="noteDiv" class="studentnote">
+<div style="text-align:right; padding:2px"><img onclick="document.getElementById('noteDiv').style.display='none'" src="../artwork/close_note.png" width="16" height="16" alt="Close" style="cursor:pointer" /></div>
 <div id="noteMsg"></div>
 </div>
 
@@ -502,7 +488,6 @@ if ($language != 'en') {
     echo "$html.</td></tr></table></td></tr>\n";
   }
 
-  $xmean_total = 0;
   $absent_no = 0;
   $scatter_data = '';
   for ($i=0; $i<$user_no; $i++) {
@@ -543,7 +528,6 @@ if ($language != 'en') {
           $class = 'redln';
         } else {
           $class = 'greyln';
-          //$total_time += $user_results[$i]['duration'];
           $temp_location = $user_results[$i]['adj_percent'];
           if (isset($distribution[$temp_location])) {
             $distribution[$temp_location]++;
@@ -562,17 +546,17 @@ if ($language != 'en') {
         } else {
           echo "><td class=\"$class $role_css\">";
           if (isset($log_late[$user_results[$i]['tmp_userID']])) {
-            echo '<img src="../artwork/log_late_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '" border="0"';
+            echo '<img src="../artwork/log_late_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '"';
           } elseif ($user_results[$i]['paper_type'] == 0) {
-            echo '<img src="../artwork/formative_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '" border="0"';
+            echo '<img src="../artwork/formative_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '"';
           } elseif ($user_results[$i]['paper_type'] == '1') {
-            echo '<img src="../artwork/progress_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '" border="0"';
+            echo '<img src="../artwork/progress_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '"';
           } elseif ($user_results[$i]['paper_type'] == '2') {
-            echo '<img src="../artwork/summative_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '" border="0"';
+            echo '<img src="../artwork/summative_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '"';
           } elseif ($user_results[$i]['paper_type'] == '3') {
-            echo '<img src="../artwork/survey_16.gif" width="16" height="16" alt="' . $string['displaysurvey'] . '" border="0"';
+            echo '<img src="../artwork/survey_16.gif" width="16" height="16" alt="' . $string['displaysurvey'] . '"';
           } elseif ($user_results[$i]['paper_type'] == '5') {
-            echo '<img src="../artwork/offline_16.gif" width="16" height="16" alt="' . $string['displaypaper'] . '" border="0"';
+            echo '<img src="../artwork/offline_16.gif" width="16" height="16" alt="' . $string['displaypaper'] . '"';
           }
           echo " onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent']) . "',event);" . $onclick . "\" /></td>";
         }
@@ -587,14 +571,14 @@ if ($language != 'en') {
           echo "<td class=\"$class$ordered padl $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent']) . "',event);" . $onclick . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></span>";
         }
         if (isset($special_needs[$user_results[$i]['tmp_userID']]) and $special_needs[$user_results[$i]['tmp_userID']] == 'y') {
-          echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" border="0" />';
+          echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" />';
         }
         $student_id = $user_results[$i]['username'];
         if ($user_results[$i]['attempt'] > 1) {
-          echo '&nbsp;<img src="../artwork/resit.png" width="16" height="16" alt="Resit" border="0" />';
+          echo '&nbsp;<img src="../artwork/resit.png" width="16" height="16" alt="Resit" />';
         }
         if (isset($notes[$user_results[$i]['tmp_userID']]) and $notes[$user_results[$i]['tmp_userID']] == 'y') {
-          echo '&nbsp;<a href="" onclick="viewNote(\'' . $user_results[$i]['tmp_userID'] . '\', event); return false;"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Notes" border="0" /></a>';
+          echo '&nbsp;<a href="" onclick="viewNote(\'' . $user_results[$i]['tmp_userID'] . '\', event); return false;"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Notes" /></a>';
         }
         echo "</td>";
         if ($_GET['sortby'] == 'student_id') {
@@ -708,18 +692,14 @@ if ($language != 'en') {
           $user_results[$i]['xmean'] = 0;
           $user_results[$i]['xmean_percent'] = 0;
         }
-
-        if ($user_results[$i]['questions'] >= $question_no) {
-          $xmean_total += $user_results[$i]['xmean'];
-        }
       }
     }
   }
-  $scatter_file = fopen( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
-  fwrite($scatter_file,$scatter_data . "\n");
+  $scatter_file = fopen($configObject->get('cfg_tmpdir') . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
+  fwrite($scatter_file, $scatter_data . "\n");
   fclose($scatter_file);
 
-  $distribution_file = fopen( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat', 'w');         // Distribution data
+  $distribution_file = fopen($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat', 'w');   // Distribution data
   fwrite($distribution_file, serialize($distribution) . "\n");
   fclose($distribution_file);
 
@@ -733,7 +713,6 @@ if ($language != 'en') {
     $result->execute();
     $result->store_result();
     $result->bind_result($note, $note_date, $note_workstation);
-    //echo "<tr><td></td><td colspan=\"" . ($cols - 1 + $meta_col_count) . "\">";
     echo "<tr><td></td><td colspan=\"" . ($cols - 1) . "\">";
     while ($result->fetch()) {
       $lab_name = '';

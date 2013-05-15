@@ -22,16 +22,26 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
 
-  $result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i') AS note_date, title, initials, surname FROM student_notes, users WHERE student_notes.note_authorID=users.id AND paper_id=? AND student_notes.userID=?");
-  $result->bind_param('is', $_GET['paperID'], $_GET['userID']);
-  $result->execute();
-  $result->bind_result($note, $note_date, $title, $initials, $surname);
+$userID  = check_var('userID', 'GET', true, false, true);
+$paperID = check_var('paperID', 'GET', true, false, true);
+
+$result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i') AS note_date, title, initials, surname FROM student_notes, users WHERE student_notes.note_authorID = users.id AND paper_id = ? AND student_notes.userID = ?");
+$result->bind_param('ii', $paperID, $userID);
+$result->execute();
+$result->bind_result($note, $note_date, $title, $initials, $surname);
+$result->store_result();
+if ($result->num_rows == 0) {
+  echo "<div style=\"padding:10px\">" . $string['err'] . "</div>\n";
+} else {
   while ($result->fetch()) {
     echo "<div style=\"padding:10px\">$note</div>\n";
     echo "<div style=\"padding:10px\"><em>$title $initials $surname - $note_date</em></div>\n";
   }
-  $result->close();
-  $mysqli->close();
+}
+$result->close();
+
+$mysqli->close();
 ?>

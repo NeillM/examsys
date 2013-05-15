@@ -64,10 +64,8 @@ $paper            = $propertyObj->get_paper_title();
 $marking          = $propertyObj->get_marking();
 $pass_mark        = $propertyObj->get_pass_mark();
 $distinction_mark = $propertyObj->get_distinction_mark();
-$paper_ownerID    = $propertyObj->get_paper_ownerID();
 $paper_type       = $propertyObj->get_paper_type();
 $calendar_year    = $propertyObj->get_calendar_year();
-$crypt_name       = $propertyObj->get_crypt_name();
 
 $exclusions = Exclusion::get_exclusions_by_paperID($_GET['paperID'], $mysqli);                    // Get any questions to exclude.
 
@@ -83,15 +81,15 @@ $metadata_array = get_metadata($moduleID_in, $calendar_year, $mysqli);          
 
 $user_results = load_results($propertyObj, $demo, $configObject, $metadata_array, $log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $mysqli);  // Load the student results
 
-$late_cohort    = load_late_cohort($log_late_missing_users, $mysqli);
+$late_cohort = load_late_cohort($log_late_missing_users, $demo, $mysqli);
 
-adjust_marks($total_random_mark, $total_marks, $marking, $exclusions, $ss_pass, $ss_hon, $pass_mark, $distinction_mark, $user_results);
+adjust_marks($total_random_mark, $total_marks, $marking, $exclusions, $ss_pass, $ss_hon, $propertyObj, $user_results);
 
 add_rank($user_results);                                                                          // Add in rank data.
 
 convert_moduleIDs($user_results, $mysqli);                                                        // Convert Module IDs into codes
 
-$stats  = get_stats($user_results, $question_no, $pass_mark, $distinction_mark);                  // Generate the main statistics
+$stats  = get_stats($user_results, $question_no, $propertyObj);                                   // Generate the main statistics
 
 writeStudentDeciles($user_results, $stats);                                                       // Add in deciles per student
 
@@ -99,13 +97,16 @@ add_late_students($user_results, $late_cohort, $user_no);                       
 
 add_absent_students($user_results, $student_cohort, $user_no);                                    // Add any absent students into main dataset
 
-$sortby  = sort_results($user_results);
+$sortby  = sort_results($user_results);                                                           // Sort the whole array by the right column
 
 $cohort_size  = flag_subpart($user_results, $stats, $user_no, $total_mark);
 
 
-function adjust_marks($total_random_mark, $total_marks, $marking, $exclusions, &$ss_pass, &$ss_hon, $pass_mark, $distinction_mark, &$user_results) {
+function adjust_marks($total_random_mark, $total_marks, $marking, $exclusions, &$ss_pass, &$ss_hon, $propertyObj, &$user_results) {
   $user_no = count($user_results);
+
+  $pass_mark        = $propertyObj->get_pass_mark();
+  $distinction_mark = $propertyObj->get_distinction_mark();
 
   if ($marking == '1') {                              // Monkey mark
     for ($i=0; $i<$user_no; $i++) {
@@ -368,8 +369,6 @@ function get_ss_hon() {
 
   return MathsUtils::percentile($marks_data,0.2);
 }
-
-
 
 function crankMark($tmp_percent, $ss_pass, $ss_hon, $pass_mark, $distinction_mark) {
   if ($ss_hon > 0 and $ss_hon < 100) {
@@ -1267,9 +1266,7 @@ function load_results($propertyObj, $demo, $configObj, $metadata_array, &$log_la
   return $user_results;
 }
 
-function load_late_cohort($log_late_missing_users, $db) {
-  global $demo;
-  
+function load_late_cohort($log_late_missing_users, $demo, $db) {  
   $late_cohort = array();
   $late_cohort_size = 0;
   if (count($log_late_missing_users) > 0) {
@@ -1483,7 +1480,7 @@ function convert_moduleIDs(&$user_results, $db) {
   }
 }
 
-function get_stats($user_results, $question_no, $pass_mark, $distinction_mark) {
+function get_stats($user_results, $question_no, $propertyObj) {
   // Generate summary statistics.
   $user_no                = count($user_results);
   $stats['completed_no']  = 0;
@@ -1500,7 +1497,9 @@ function get_stats($user_results, $question_no, $pass_mark, $distinction_mark) {
   $median_mark_array      = array();
   $median_percent_array   = array();
   $marks_data             = array();
-  
+  $pass_mark              = $propertyObj->get_pass_mark();
+  $distinction_mark       = $propertyObj->get_distinction_mark();
+
   for ($i=0; $i<$user_no; $i++) {
     if (isset($user_results[$i]['adj_percent']) and $user_results[$i]['questions'] >= $question_no and $user_results[$i]['visible'] == 1) {
       $stats['completed_no']++;

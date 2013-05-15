@@ -69,6 +69,21 @@ td {
   float:left;
   border:5px solid white;
 }
+.studentnote {
+  display:none;
+  position:absolute;
+  top:0px;
+  left:0px;
+  width:350px;
+  z-index:10000;
+  font-size:90%;
+  background-color:#FFFFC0;
+  background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
+  background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
+  background-image: -ms-linear-gradient(top, #FFF6BD 0%, #FFEC82 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
+  box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50);
+}
 .staff {
   background-color:#FCD5B4;
 }
@@ -78,11 +93,11 @@ td {
   color:#1E3287;
 }
 .popupmenu {
+  display:none;
   background-color:white;
   padding:1px;
   font-size:80%;
   position:absolute;
-  display:none;
   top:0px;
   left:0px;
   z-index:10000;
