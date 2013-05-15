@@ -69,29 +69,29 @@ $paper_type       = $propertyObj->get_paper_type();
 $calendar_year    = $propertyObj->get_calendar_year();
 $crypt_name       = $propertyObj->get_crypt_name();
 
-$exclusions     = Exclusion::get_exclusions_by_paperID($_GET['paperID'], $mysqli);                // Get any questions to exclude.
+$exclusions = Exclusion::get_exclusions_by_paperID($_GET['paperID'], $mysqli);                    // Get any questions to exclude.
 
-$paper_buffer   = load_answers($exclusions, $random_q_ids, $question_no, $mysqli);
+$paper_buffer = load_answers($exclusions, $random_q_ids, $question_no, $mysqli);
 
 get_log_late($startdate, $enddate, $paperID, $configObject, $log_late, $log_late_missing_users, $mysqli);
 
 $student_cohort = get_absent($_GET['paperID'], $calendar_year, $demo, $mysqli);
 
-$user_modules   = get_users($moduleID_in, $_GET['paperID'], $calendar_year, $mysqli);             // Get all the users on the module(s) the paper is on. 
+$user_modules = get_users($moduleID_in, $_GET['paperID'], $calendar_year, $mysqli);               // Get all the users on the module(s) the paper is on. 
 
 $metadata_array = get_metadata($moduleID_in, $calendar_year, $mysqli);                            // Query for metadata
 
-$user_results   = load_results($propertyObj, $demo, $configObject, $metadata_array, $log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $mysqli);  // Load the student results
+$user_results = load_results($propertyObj, $demo, $configObject, $metadata_array, $log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $mysqli);  // Load the student results
 
 $late_cohort    = load_late_cohort($log_late_missing_users, $mysqli);
 
-std_set_crank($marking, $exclusions, $ss_pass, $ss_hon, $pass_mark, $distinction_mark, $user_results);
+adjust_marks($total_random_mark, $total_marks, $marking, $exclusions, $ss_pass, $ss_hon, $pass_mark, $distinction_mark, $user_results);
 
 add_rank($user_results);                                                                          // Add in rank data.
 
 convert_moduleIDs($user_results, $mysqli);                                                        // Convert Module IDs into codes
 
-$stats          = get_stats($user_results, $question_no, $pass_mark, $distinction_mark);          // Generate the main statistics
+$stats  = get_stats($user_results, $question_no, $pass_mark, $distinction_mark);                  // Generate the main statistics
 
 writeStudentDeciles($user_results, $stats);                                                       // Add in deciles per student
 
@@ -99,22 +99,29 @@ add_late_students($user_results, $late_cohort, $user_no);                       
 
 add_absent_students($user_results, $student_cohort, $user_no);                                    // Add any absent students into main dataset
 
-$sortby         = sort_results($user_results);
+$sortby  = sort_results($user_results);
 
-$cohort_size    = flag_subpart($user_results, $stats, $user_no, $total_mark);
+$cohort_size  = flag_subpart($user_results, $stats, $user_no, $total_mark);
 
 
-function std_set_crank($marking, $exclusions, &$ss_pass, &$ss_hon, $pass_mark, $distinction_mark, &$user_results) {
-  if (substr($marking, 0, 1) == '2') {
+function adjust_marks($total_random_mark, $total_marks, $marking, $exclusions, &$ss_pass, &$ss_hon, $pass_mark, $distinction_mark, &$user_results) {
+  $user_no = count($user_results);
+
+  if ($marking == '1') {                              // Monkey mark
+    for ($i=0; $i<$user_no; $i++) {
+      if (isset($user_results[$i]['adj_percent'])) {
+        $user_results[$i]['adj_percent'] = (($user_results[$i]['mark'] - $total_random_mark) / ($total_marks - $total_random_mark)) * 100;
+      }
+    }
+  } elseif ($marking{0} == '2') {                     // Standards Setting
     get_ss_pass($exclusions, $ss_pass, $ss_hon);
 
-    $user_no = count($user_results);
     for ($i=0; $i<$user_no; $i++) {
       if (isset($user_results[$i]['adj_percent'])) {
         $user_results[$i]['adj_percent'] = crankMark($user_results[$i]['percent'], $ss_pass, $ss_hon, $pass_mark, $distinction_mark);
       }
     }
-  }
+  }  
 }
 
 function nicedate($original) {
@@ -359,36 +366,10 @@ function get_ss_hon() {
     if (isset($user_results[$i]['percent'])) $marks_data[] = $user_results[$i]['percent'];
   }
 
-  return mypercentile($marks_data,0.2);
+  return MathsUtils::percentile($marks_data,0.2);
 }
 
-function mypercentile($data, $percentile) {
-  $count = count($data);
-  if ($count == 0) {
-    return '';
-  }
-  if (0 < $percentile and $percentile < 1 ) {
-    $p = $percentile;
-  } elseif( 1 < $percentile and $percentile <= 100 ) {
-    $p = $percentile * .01;
-  } else {
-    return '';
-  }
-  $allindex     = ($count-1) * $p;
-  $intvalindex  = intval($allindex);
-  $floatval     = $allindex - $intvalindex;
-  rsort($data);
-  if (!is_float($floatval)){
-    $result = $data[$intvalindex];
-  } else {
-    if ($count > $intvalindex+1) {
-      $result = $floatval*($data[$intvalindex+1] - $data[$intvalindex]) + $data[$intvalindex];
-    } else {
-      $result = $data[$intvalindex];
-    }
-  }
-  return $result;
-}
+
 
 function crankMark($tmp_percent, $ss_pass, $ss_hon, $pass_mark, $distinction_mark) {
   if ($ss_hon > 0 and $ss_hon < 100) {
@@ -419,16 +400,8 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
     $master_array[$user_number]['percent'] = 0;
     $master_array[$user_number]['adj_percent'] = 0;
   } else {
-    if ($marking == '1') {                                   // Monkey mark
-      $master_array[$user_number]['percent'] = ($tmp_user_mark/$total_marks)*100;
-      $master_array[$user_number]['adj_percent'] = (($tmp_user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100;
-    } elseif ($marking{0} == '2') {                 // Standards Setting
-      $master_array[$user_number]['percent'] = ($tmp_user_mark/$total_marks)*100;
-      $master_array[$user_number]['adj_percent'] = ($tmp_user_mark/$total_marks)*100;
-    } else {                                                 // Unadjusted mark
-      $master_array[$user_number]['percent'] = ($tmp_user_mark/$total_marks)*100;
-      $master_array[$user_number]['adj_percent'] = ($tmp_user_mark/$total_marks)*100;
-    }
+    $master_array[$user_number]['percent'] = ($tmp_user_mark / $total_marks) * 100;
+    $master_array[$user_number]['adj_percent'] = ($tmp_user_mark / $total_marks) * 100;
   }
 
   $master_array[$user_number]['started']          = $tmp['started'];
@@ -1565,7 +1538,7 @@ function get_stats($user_results, $question_no, $pass_mark, $distinction_mark) {
     }
   }
   if ($stats['completed_no'] > 1) {
-    $stats['stddev_mark'] = sqrt($xmean_total / ($stats['completed_no'] - 1));
+    $stats['stddev_mark']    = sqrt($xmean_total / ($stats['completed_no'] - 1));
     $stats['stddev_percent'] = sqrt($xmean_percent_total / ($stats['completed_no'] - 1));
   } else {
     $stats['stddev_mark']    = 0;
@@ -1573,17 +1546,10 @@ function get_stats($user_results, $question_no, $pass_mark, $distinction_mark) {
   }
 
   if ($stats['completed_no'] > 0) {
-    $stats['mean_mark'] = round($mark_total / $stats['completed_no'],1);
-    $stats['mean_percent'] = round($percent_total / $stats['completed_no'],1);
-    sort($median_mark_array);
-    sort($median_percent_array);
-    if (MathsUtils::isEven($stats['completed_no']) == 'y') {
-      $stats['median_mark'] = ($median_mark_array[($stats['completed_no']/2)-1] + $median_mark_array[($stats['completed_no']/2)-1]) / 2;
-      $stats['median_percent'] = ($median_percent_array[($stats['completed_no']/2)-1] + $median_percent_array[($stats['completed_no']/2)-1]) / 2;
-    } else {
-      $stats['median_mark'] = $median_mark_array[($stats['completed_no']/2)-1];
-      $stats['median_percent'] = $median_percent_array[($stats['completed_no']/2)-1];
-    }
+    $stats['mean_mark']      = round($mark_total / $stats['completed_no'],1);
+    $stats['mean_percent']   = round($percent_total / $stats['completed_no'],1);
+    $stats['median_mark']    = MathsUtils::median($median_mark_array);
+    $stats['median_percent'] = MathsUtils::median($median_percent_array);
   } else {
     $stats['mean_mark']      = 0;
     $stats['mean_percent']   = 0;
@@ -1591,13 +1557,13 @@ function get_stats($user_results, $question_no, $pass_mark, $distinction_mark) {
     $stats['median_percent'] = 0;
   }
 
-  $stats['q1'] = mypercentile($marks_data, 0.75);
-  $stats['q2'] = mypercentile($marks_data, 0.50);
-  $stats['q3'] = mypercentile($marks_data, 0.25);
+  $stats['q1'] = MathsUtils::percentile($marks_data, 0.75);
+  $stats['q2'] = MathsUtils::percentile($marks_data, 0.50);
+  $stats['q3'] = MathsUtils::percentile($marks_data, 0.25);
 
   $decile_values = array();
   for ($i=1; $i<10; $i++) {
-    $stats["decile$i"] = mypercentile($marks_data, ($i / 10));
+    $stats["decile$i"] = MathsUtils::percentile($marks_data, ($i / 10));
   }  
   
   return $stats;

@@ -92,19 +92,52 @@ Class MathsUtils {
     return $number;
   }
   
-  static function calculate_median($arr) {
+  static function median($arr) {
     sort($arr);
     $count = count($arr); //total numbers in array
     $middleval = floor(($count-1)/2); // find the middle value, or the lowest middle value
     if ($count % 2) { // odd number, middle is the median
       $median = $arr[$middleval];
     } else { // even number, calculate avg of 2 medians
-      $low = $arr[$middleval];
-      $high = $arr[$middleval+1];
-      $median = (($low+$high)/2);
+      $low    = $arr[$middleval];
+      $high   = $arr[$middleval + 1];
+      $median = (($low + $high) / 2);
     }
+    
     return $median;
   }
+  
+  static function percentile($data, $percentile) {
+    $count = count($data);
+    if ($count == 0) {
+      return '';
+    }
+    if (0 < $percentile and $percentile < 1 ) {
+      $p = $percentile;
+    } elseif( 1 < $percentile and $percentile <= 100 ) {
+      $p = $percentile * .01;
+    } else {
+      return '';
+    }
+    $allindex     = ($count-1) * $p;
+    $intvalindex  = intval($allindex);
+    $floatval     = $allindex - $intvalindex;
+    
+    rsort($data);
+    
+    if (!is_float($floatval)){
+      $result = $data[$intvalindex];
+    } else {
+      if ($count > $intvalindex+1) {
+        $result = $floatval*($data[$intvalindex+1] - $data[$intvalindex]) + $data[$intvalindex];
+      } else {
+        $result = $data[$intvalindex];
+      }
+    }
+    
+    return $result;
+  }
+  
 }
 
 

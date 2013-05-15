@@ -155,7 +155,7 @@ function getBlinePassmk($user_results, $user_no, $propertyObj) {
   }
   
   if (count($borderlines) > 0) {
-    $passmark = MathsUtils::calculate_median($borderlines);
+    $passmark = MathsUtils::median($borderlines);
   }
   
   return $passmark;
