@@ -202,15 +202,21 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     $startedSQL = ' AND started = "' . $_GET['started'] . '"';;
   }
 
-  if ($paper_type == '4') {
-    $sql = "SELECT q_id, rating, NULL AS totalpos FROM log4 WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND userID = ? AND q_paper = ? $startedSQL ORDER BY q_id, started";
+  if ($paper_type == '0' or $paper_type == '1') {
+    $sql = "SELECT q_id, mark, totalpos, started FROM log0, log_metadata WHERE log0.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $startedSQL UNION SELECT q_id, mark, totalpos, started FROM log1, log_metadata WHERE log1.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $startedSQL ORDER BY q_id, started";
+  } elseif ($paper_type == '4') {
+    $sql = "SELECT q_id, rating, NULL, NULL AS totalpos FROM log4 WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND userID = ? AND q_paper = ? $startedSQL ORDER BY q_id, started";
   } else {
-    $sql = "SELECT q_id, mark, totalpos FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $startedSQL ORDER BY q_id, started";
+    $sql = "SELECT q_id, mark, totalpos, NULL FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $startedSQL ORDER BY q_id, started";
   }
   $result = $mysqli->prepare($sql);
-  $result->bind_param('iii', $paperID, $userID, $paperID);
+  if ($paper_type == '0' or $paper_type == '1') {
+    $result->bind_param('iiiiii', $paperID, $userID, $paperID, $paperID, $userID, $paperID);
+  } else {
+    $result->bind_param('iii', $paperID, $userID, $paperID);
+  }
   $result->execute();
-  $result->bind_result($q_id, $mark, $totalpos);
+  $result->bind_result($q_id, $mark, $totalpos, $tmp_started);
   $total_student_mark = 0;
   while ($result->fetch()) {
     if (is_string($totalpos)) {
