@@ -18,7 +18,7 @@
 *
 * Utility class for updater related functionality
 *
-* @author Ben Parish
+* @author Ben Parish, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
@@ -26,11 +26,7 @@
 
 Class UpdaterUtils {
 
-  /*
-   * @var $mysqli mysqli
-   */
   private $mysqli;
-
   private $db_name;
 
   public function __construct($mysqli, $db_name) {
@@ -47,7 +43,7 @@ Class UpdaterUtils {
 
     $result->close();
 
-    if( $num_rows < 1 ){
+    if ($num_rows < 1){
       return false;
     }
 
@@ -55,7 +51,7 @@ Class UpdaterUtils {
   }
   
   public function does_column_type_value_exist($table_name, $column_name, $column_type_value) {
-    $result  = $this->mysqli->prepare('SELECT column_type FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ? AND column_type = ?');
+    $result = $this->mysqli->prepare('SELECT column_type FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ? AND column_type = ?');
     $result->bind_param('ssss', $this->db_name, $table_name, $column_name, $column_type_value);
     $result->execute();
     $result->store_result();
@@ -175,7 +171,6 @@ Class UpdaterUtils {
           throw new Exception("MySQL error $err", $mess);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          // echo nl2br($e->getTraceAsString());
         }
       }
     }
@@ -195,6 +190,38 @@ Class UpdaterUtils {
       return $string['couldnotwrite'];
     } else {
       return true;
+    }
+  }
+  
+  public function add_line($search, $new_lines, $default_line, $cfg_web_root, $target_line = '', $offset = 1) {
+    $cfg = file($cfg_web_root . 'config/config.inc.php');
+    $found = false;
+    $line_no = 0;
+    foreach ($cfg as $line) {
+      if (strpos($line, $search) !== false) {
+        $found = true;
+      }
+      if ($target_line != '' and strpos($line, '$authentication = array') !== false) {
+        $default_line = $line_no + $offset;
+      }
+      $line_no++;
+    }
+
+    if (!$found) {
+      array_splice($cfg, $default_line, 0, $new_lines);
+
+      if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+        echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+      }
+      //echo "<li>Adding line to config file: $default_text</li>\n";
+      ob_flush();
+      flush();
+    }
+  }
+  
+  public function backup_file($cfg_web_root, $old_version) {
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      copy($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.' . $old_version . '.php');
     }
   }
 

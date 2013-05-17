@@ -41,7 +41,7 @@ if ($marking == '0') {
   $marking_key = 'adj_percent';
 }
 
-$total_time = 0;
+$percent_decimals = $configObject->get('percent_decimals');
 
 //output table heading
 $table_order = array('Title'=>'title', 'Surname'=>'Surname' ,'First Names'=>'First_Names','Student ID'=>'student_id','Course'=>'student_grade','Mark'=>'mark',$marking_label=>$marking_key,'Clasification'=>'mark','Rank'=>'rank','Start Time'=>'started','Duration'=>'duration','IP Address'=>'ipaddress');
@@ -58,7 +58,6 @@ if (isset($user_results[0])){
     }
   }
 }
-
 
 // Write results to XML ---------------------------------------------------------------------------
 echo '<?xml version="1.0"?>';
@@ -214,7 +213,6 @@ foreach ($metadata_cols as $key => $col) {
 echo '  </Row>';
 
 $absent_no = 0;
-$xmean2_total = 0;
 $user_no = count($user_results);
 for ($i=0; $i<$user_no; $i++) {
   if ($user_results[$i]['visible'] == 1) {
@@ -242,16 +240,15 @@ for ($i=0; $i<$user_no; $i++) {
       } else {
         echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['mark'] . '</Data></Cell>';
       }
-      $total_time += $user_results[$i]['duration'];
       if ($user_results[$i]['adj_percent'] < $pass_mark) {
-        echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent) . '</Data></Cell>';
+        echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent, $percent_decimals) . '</Data></Cell>';
         echo '<Cell ss:StyleID="s25"><Data ss:Type="String">' . $string['fail'] . '</Data></Cell>';
       } else {
         if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
-          echo '<Cell ss:StyleID="s31"><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent) . '</Data></Cell>';
+          echo '<Cell ss:StyleID="s31"><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent, $percent_decimals) . '</Data></Cell>';
           echo '<Cell ss:StyleID="s31"><Data ss:Type="String">' . $string['distinction'] . '</Data></Cell>';
         } else {
-          echo '<Cell><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent) . '</Data></Cell>';
+          echo '<Cell><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent, $percent_decimals) . '</Data></Cell>';
           echo '<Cell><Data ss:Type="String">' . $string['pass'] . '</Data></Cell>';
         }
       }
@@ -396,7 +393,7 @@ echo '</Row>';
 for ($i=1; $i<10; $i++) {
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Decile ' . $i . '</Data></Cell>';
-  echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . MathsUtils::formatNumber(($stats["decile$i"]/100)) . '</Data></Cell>';
+  echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . MathsUtils::formatNumber(($stats["decile$i"]/100), $percent_decimals) . '</Data></Cell>';
   echo '</Row>';
 }
 echo '<Row>';

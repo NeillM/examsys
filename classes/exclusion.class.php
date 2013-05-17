@@ -49,7 +49,7 @@ class Exclusion {
   public function load() {
     $paperID = $this->get_paper_id();
 
-    $excluded = array();
+    $this->excluded = array();
     $result = $this->db->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
     $result->bind_param('i', $paperID);
     $result->execute();

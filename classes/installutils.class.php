@@ -1301,8 +1301,8 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_db_username = '{cfg_db_username}';
   \$cfg_db_passwd   = '{cfg_db_passwd}';
   \$cfg_db_database = '{cfg_db_database}';
-  \$cfg_db_host 	   = '{cfg_db_host}';
-  \$cfg_db_charset 	   = '{cfg_db_charset}';
+  \$cfg_db_host 	  = '{cfg_db_host}';
+  \$cfg_db_charset 	= '{cfg_db_charset}';
 //student db user
   \$cfg_db_student_user = '{cfg_db_student_user}';
   \$cfg_db_student_passwd = '{cfg_db_student_passwd}';
@@ -1321,7 +1321,7 @@ require \$root . '/include/path_functions.inc.php';
 //invigilator db user
   \$cfg_db_inv_user = '{cfg_db_inv_user}';
   \$cfg_db_inv_passwd = '{cfg_db_inv_passwd}';
-  // Date formats in MySQL DATE_FORMAT format
+// Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
   \$cfg_long_date_php = '{cfg_long_date_php}';
@@ -1330,6 +1330,9 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_short_time_php = '{cfg_short_time_php}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
+  
+//Reports
+  $percent_decimals = 2;
 
 // SMS Imports
   \$cfg_sms_api = '';
@@ -1345,6 +1348,7 @@ require \$root . '/include/path_functions.inc.php';
 \$authentication = array(
   {cfg_authentication_arrays}
 );
+\$cfg_password_expire = 30;    // Set in days
 
 //Lookup settings
 \$lookup = array(

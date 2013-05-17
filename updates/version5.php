@@ -157,6 +157,9 @@ if (!isset($_POST['update'])) {
   }
   $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
 
+  // Backup the config file before proceeding.
+  $updater_utils->backup_file($cfg_web_root, $old_version);
+  
 
   // Avoid repeated method calls
   $cfg_db_database      = $configObject->get('cfg_db_database');
@@ -227,36 +230,11 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE users ADD COLUMN password_expire int(11) unsigned", true);
   }
 
-  // 02/05/2013 - Add company name config file.
-  $new_cfg_str = array();
-  $new_cfg_str[] = "\$cfg_password_expire = 30;    // Set in days\n";
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
-  $target_line = 80;
-  $line_no = 0;
-  foreach ($cfg as $line) {
-    if (strpos($line, 'cfg_password_expire') !== false) {
-      $found = true;
-    }
-    if (strpos($line, '$authentication = array') !== false) {
-      $target_line = $line_no;
-    }
-    $line_no++;
-  }
-
-  if (!$found) {
-    array_splice($cfg, $target_line, 0, $new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old.php');
-    }
-
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
-      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
-    }
-    echo "<li>Added company name config file.</li>\n";
-    ob_flush();
-    flush();
-  }  
+  // 02/05/2013 - Add password expire config file.
+  $new_lines = array("\$cfg_password_expire = 30;    // Set in days\n");
+  $target_line = '$authentication = array';
+  $updater_utils->add_line('$percent_decimals', $new_lines, 80, $cfg_web_root, $target_line, 7);
+  
  
   // 08/05/2013 (uiznm) - Add permission for external examiners to see standards setting values
   if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'standards_setting', $cfg_db_host)) {
@@ -265,10 +243,10 @@ if (!isset($_POST['update'])) {
   }
   
   
-  // 09/05/2013 - Remove $protocol and insert $cfg_secure_connection
-  $lines = array();
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
+  // 09/05/2013 (brzsw) - Remove $protocol and insert $cfg_secure_connection
+  $lines  = array();
+  $cfg    = file($cfg_web_root . 'config/config.inc.php');
+  $found  = false;
   foreach ($cfg as $line) {
     if (strpos($line, '$protocol = ') !== false) {
       $lines[] = "\$cfg_secure_connection = true;    // If true site must be accessed via HTTPS\n";
@@ -289,7 +267,11 @@ if (!isset($_POST['update'])) {
     echo "<li>Added \$cfg_secure_connection config file.</li>\n";
     ob_flush();
     flush();
-  }  
+  }
+  
+  // 15/05/2013 (brzsw) - Add in new variable to control number of decimals for percentages.
+  $new_lines = array("//Reports\n", "  \$percent_decimals = 0;\n");
+  $updater_utils->add_line('$percent_decimals', $new_lines, 60, $cfg_web_root);
  
  
  
