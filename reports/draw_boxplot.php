@@ -69,6 +69,9 @@
   $blue    = ImageColorAllocate($Image, 0, 192, 192);
   $bblue    = ImageColorAllocate($Image, 0, 0, 255);
 	$white   = ImageColorAllocate($Image, 255, 255, 255);
+	$amber   = ImageColorAllocate($Image, 247, 150, 70);
+	$ltamber   = ImageColorAllocate($Image, 251, 198, 155);
+	//$ltamber   = ImageColorAllocate($Image, 252, 221, 196);
   $font      = '../fonts/SourceSansPro-Regular.otf';
   $bold_font = '../fonts/SourceSansPro-Semibold.otf';
   
@@ -78,8 +81,8 @@
   $string['adjustedpercent'] = mb_convert_encoding($string['adjustedpercent'], 'ISO-8859-2', 'UTF-8');
   $exam = '';if (isset($_GET['exam'])) $exam = mb_convert_encoding($_GET['exam'], 'UTF-8','ISO-8859-2');
   
-	$trans1 = 60;
-	$trans2 = 25;  
+	$trans1 = 56;
+	$trans2 = 20;  
 
   // Add quartile lines
 	if ($_GET["part"]=='1') {
@@ -107,14 +110,19 @@
 		//ImageLine($Image, $trans1-$trans2-2, 260 - ($_GET["passmark"] * $gap/10), $trans1-$trans2+4, 260 - ($_GET["passmark"] * $gap/10), $dkred);
 		//ImageLine($Image, $trans1+$trans2-4, 260 - ($_GET["passmark"] * $gap/10), $trans1+$trans2+2, 260 - ($_GET["passmark"] * $gap/10), $dkred);
 		$style = array($red, $red, $red, $red, $red, IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT );
+		$style2 = array($red, IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT );
 		//$style = array($dkred, $dkred, $dkred, $dkred, $dkred, IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT , IMG_COLOR_TRANSPARENT );
 		imagesetstyle($Image, $style);
     ImageLine($Image, $trans1-$trans2-7, 260 - ($_GET["passmark"] * $gap/10), $trans1+$trans2+7, 260 - ($_GET["passmark"] * $gap/10), IMG_COLOR_STYLED);
 		
 		//mark
 		$marksize = 3;
-  	ImageLine($Image, $trans1-$marksize, 260 - ($_GET["mark"] * $gap/10) - $marksize, $trans1+$marksize, 260 - ($_GET["mark"] * $gap/10)+$marksize, $bblue);
-  	ImageLine($Image, $trans1+$marksize, 260 - ($_GET["mark"] * $gap/10) - $marksize, $trans1-$marksize, 260 - ($_GET["mark"] * $gap/10)+$marksize, $bblue);
+  	ImageLine($Image, $trans1-$marksize-1, 260 - ($_GET["mark"] * $gap/10) - $marksize, $trans1+$marksize-1, 260 - ($_GET["mark"] * $gap/10)+$marksize, $ltamber);
+  	ImageLine($Image, $trans1-$marksize-1, 260 - ($_GET["mark"] * $gap/10) + $marksize, $trans1+$marksize-1, 260 - ($_GET["mark"] * $gap/10)-$marksize, $ltamber);
+  	ImageLine($Image, $trans1-$marksize+1, 260 - ($_GET["mark"] * $gap/10) - $marksize, $trans1+$marksize+1, 260 - ($_GET["mark"] * $gap/10)+$marksize, $ltamber);
+  	ImageLine($Image, $trans1-$marksize+1, 260 - ($_GET["mark"] * $gap/10) + $marksize, $trans1+$marksize+1, 260 - ($_GET["mark"] * $gap/10)-$marksize, $ltamber);
+  	ImageLine($Image, $trans1-$marksize, 260 - ($_GET["mark"] * $gap/10) - $marksize, $trans1+$marksize, 260 - ($_GET["mark"] * $gap/10)+$marksize, $amber);
+  	ImageLine($Image, $trans1+$marksize, 260 - ($_GET["mark"] * $gap/10) - $marksize, $trans1-$marksize, 260 - ($_GET["mark"] * $gap/10)+$marksize, $amber);
 	}
 	
 	// Label y axis
