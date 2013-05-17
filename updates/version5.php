@@ -273,6 +273,11 @@ if (!isset($_POST['update'])) {
   $new_lines = array("//Reports\n", "  \$percent_decimals = 0;\n");
   $updater_utils->add_line('$percent_decimals', $new_lines, 60, $cfg_web_root);
  
+  // 17/05/2013 (brzsw) - Add cache_paper_stats table
+  if (!$updater_utils->does_table_exist('cache_paper_stats')) {
+    $sql = "CREATE TABLE cache_paper_stats (paperID mediumint(8) unsigned not null, cached int unsigned, max_mark decimal(10,5), max_percent decimal(10,5), min_mark decimal(10,5), min_percent decimal(10,5), q1 decimal(10,5), q2 decimal(10,5), q3 decimal(10,5), mean_mark decimal(10,5), mean_percent decimal(10,5), stdev_mark decimal(10,5), stdev_percent decimal(10,5), UNIQUE KEY `paperID` (`paperID`)) ENGINE=InnoDB";
+    $updater_utils->execute_query($sql, true);
+  }
  
  
   /*

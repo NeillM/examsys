@@ -35,6 +35,7 @@ require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/results_cache.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -445,6 +446,7 @@ if (isset($_POST['submit'])) {
 
   $old_q_id = 0;
   $old_status = '';
+  $excluded = false;
 
   for ($i=1; $i<=$_POST['question_no']; $i++) {
     $current_id = $_POST['id_' . $i];
@@ -472,6 +474,10 @@ if (isset($_POST['submit'])) {
       display_error("Question_exclude Insert Error 2", $mysqli->error);
     }
   }
+  
+  // Invalidate the cache for the paper results.
+  $results_cache = new ResultsCache($mysqli);
+  $results_cache->invalidate_paper_cache($paperID);
 
   header("location: ../paper/details.php?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
 }

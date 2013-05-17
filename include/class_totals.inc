@@ -35,72 +35,72 @@ require_once '../include/sort.inc';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/exclusion.class.php';
 require_once '../classes/mathsutils.class.php';
+require_once '../classes/results_cache.class.php';
 
-set_time_limit(0);
+function compile_report($userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli) {
+  global $total_marks, $total_mark, $total_random_mark, $user_no, $stats, $question_no, $log_late, $exclusions, $cohort_size, $display_no, $random_q_ids, $paper_buffer, $student_cohort;
+  
+  $configObject = Config::get_instance();
+  
+  $user_no            = 0;
+  $total_random_mark  = 0;
+  $random_q_ids = array();
+  $cfg_long_date_time = $configObject->get('cfg_long_date_time');
+  $demo = is_demo($userObject);
+  $log_late = array();
+  $log_late_missing_users = array();
 
-$paperID    = $_GET['paperID'];
-$startdate  = $_GET['startdate'];
-$enddate    = $_GET['enddate'];
+  $moduleID = Paper_utils::get_modules($paperID, $mysqli);
+  $moduleID_in = implode(',', array_keys($moduleID));
 
-$total_mark   = 0;
-$random_q_ids = array();
-$cfg_long_date_time = $configObject->get('cfg_long_date_time');
-$demo = is_demo($userObject);
-$log_late = array();
-$log_late_missing_users = array();
+  $results_cache = new ResultsCache($mysqli);
+  $exclusions    = new Exclusion($_GET['paperID'], $mysqli);
 
-$moduleID = Paper_utils::get_modules($_GET['paperID'], $mysqli);
-$moduleID_in = implode(',', array_keys($moduleID));
+  $paper            = $propertyObj->get_paper_title();
+  $marking          = $propertyObj->get_marking();
+  $pass_mark        = $propertyObj->get_pass_mark();
+  $distinction_mark = $propertyObj->get_distinction_mark();
+  $paper_type       = $propertyObj->get_paper_type();
+  $calendar_year    = $propertyObj->get_calendar_year();
 
-// Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
+  $exclusions->load();                                                                              // Get any questions to exclude.
 
-if (!$propertyObj) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  $paper_buffer = load_answers($exclusions, $random_q_ids, $question_no, $mysqli);
+
+  get_log_late($startdate, $enddate, $paperID, $configObject, $log_late, $log_late_missing_users, $mysqli);
+
+  $student_cohort = get_absent($paperID, $calendar_year, $demo, $mysqli);
+
+  $user_modules = get_users($moduleID_in, $_GET['paperID'], $calendar_year, $mysqli);               // Get all the users on the module(s) the paper is on. 
+
+  $metadata_array = get_metadata($moduleID_in, $calendar_year, $mysqli);                            // Query for metadata
+
+  $user_results = load_results($propertyObj, $demo, $configObject, $metadata_array, $log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $mysqli);  // Load the student results
+
+  $late_cohort = load_late_cohort($log_late_missing_users, $demo, $mysqli);
+  
+  adjust_marks($total_random_mark, $total_marks, $marking, $exclusions, $ss_pass, $ss_hon, $propertyObj, $user_results);
+
+  add_rank($user_results);                                                                          // Add in rank data.
+
+  convert_moduleIDs($user_results, $mysqli);                                                        // Convert Module IDs into codes
+
+  $cohort_size  = flag_subpart($user_results, $user_no, $total_mark);
+
+  $stats = get_stats($user_results, $question_no, $propertyObj);                                    // Generate the main statistics
+
+  writeStudentDeciles($user_results, $stats);                                                       // Add in deciles per student
+
+  add_late_students($user_results, $late_cohort, $user_no);                                         // Add in late users into main dataset
+
+  add_absent_students($user_results, $student_cohort, $user_no);                                    // Add any absent students into main dataset
+
+  $sortby  = sort_results($user_results);                                                           // Sort the whole array by the right column
+
+  $results_cache->save_paper_cache($paperID, $_GET['percent'], $_GET['absent'], $stats);            // Cache general paper stats
+  
+  return $user_results;
 }
-
-$paper            = $propertyObj->get_paper_title();
-$marking          = $propertyObj->get_marking();
-$pass_mark        = $propertyObj->get_pass_mark();
-$distinction_mark = $propertyObj->get_distinction_mark();
-$paper_type       = $propertyObj->get_paper_type();
-$calendar_year    = $propertyObj->get_calendar_year();
-
-$exclusions = Exclusion::get_exclusions_by_paperID($_GET['paperID'], $mysqli);                    // Get any questions to exclude.
-
-$paper_buffer = load_answers($exclusions, $random_q_ids, $question_no, $mysqli);
-
-get_log_late($startdate, $enddate, $paperID, $configObject, $log_late, $log_late_missing_users, $mysqli);
-
-$student_cohort = get_absent($_GET['paperID'], $calendar_year, $demo, $mysqli);
-
-$user_modules = get_users($moduleID_in, $_GET['paperID'], $calendar_year, $mysqli);               // Get all the users on the module(s) the paper is on. 
-
-$metadata_array = get_metadata($moduleID_in, $calendar_year, $mysqli);                            // Query for metadata
-
-$user_results = load_results($propertyObj, $demo, $configObject, $metadata_array, $log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $mysqli);  // Load the student results
-
-$late_cohort = load_late_cohort($log_late_missing_users, $demo, $mysqli);
-
-adjust_marks($total_random_mark, $total_marks, $marking, $exclusions, $ss_pass, $ss_hon, $propertyObj, $user_results);
-
-add_rank($user_results);                                                                          // Add in rank data.
-
-convert_moduleIDs($user_results, $mysqli);                                                        // Convert Module IDs into codes
-
-$stats  = get_stats($user_results, $question_no, $propertyObj);                                   // Generate the main statistics
-
-writeStudentDeciles($user_results, $stats);                                                       // Add in deciles per student
-
-add_late_students($user_results, $late_cohort, $user_no);                                         // Add in late users into main dataset
-
-add_absent_students($user_results, $student_cohort, $user_no);                                    // Add any absent students into main dataset
-
-$sortby  = sort_results($user_results);                                                           // Sort the whole array by the right column
-
-$cohort_size  = flag_subpart($user_results, $stats, $user_no, $total_mark);
-
 
 function adjust_marks($total_random_mark, $total_marks, $marking, $exclusions, &$ss_pass, &$ss_hon, $propertyObj, &$user_results) {
   $user_no = count($user_results);
@@ -129,9 +129,8 @@ function nicedate($original) {
   return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
 }
 
-function getRandomDetails($questionID, &$random_q_ids) {
+function getRandomDetails($questionID, &$random_q_ids, $paper_buffer, $mysqli) {
   $configObject = Config::get_instance();
-  global $paper_buffer, $mysqli;
 
   $random_q_ids[] = $questionID;
 
@@ -367,7 +366,7 @@ function get_ss_hon() {
     if (isset($user_results[$i]['percent'])) $marks_data[] = $user_results[$i]['percent'];
   }
 
-  return MathsUtils::percentile($marks_data,0.2);
+  return MathsUtils::percentile($marks_data, 0.2);
 }
 
 function crankMark($tmp_percent, $ss_pass, $ss_hon, $pass_mark, $distinction_mark) {
@@ -721,7 +720,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclusions, $stat
       
       if (isset($tmp_user_mark_array[$q_id])) ksort($tmp_user_mark_array[$q_id]);
       //create shortened array
-      $i=0;
+      $i = 0;
       $correct_labels_exc = array();
       foreach ($correct_labels as $cli => $clv) {
         if ($tmp_exclude{$i++} == '0') $correct_labels_exc[$cli] = $clv;
@@ -815,7 +814,7 @@ function load_answers($exclusions, $random_q_ids, &$question_no, $db) {
         if ($old_status != 'Experimental') {
           $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
           if ($old_q_type == 'random') {
-            $tmp_id = getRandomDetails($old_q_id, $random_q_ids);
+            $tmp_id = getRandomDetails($old_q_id, $random_q_ids, $paper_buffer, $db);
 
             $last_random = $paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
@@ -880,7 +879,7 @@ function load_answers($exclusions, $random_q_ids, &$question_no, $db) {
     $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
     if ($old_q_type == 'random') {
-      $tmp_id = getRandomDetails($old_q_id, $random_q_ids);
+      $tmp_id = getRandomDetails($old_q_id, $random_q_ids, $paper_buffer, $db);
 
       $last_random = $paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
@@ -1329,8 +1328,7 @@ function add_rank(&$user_results) {
   }
 }
 
-function flag_subpart(&$user_results, &$stats, $user_no, &$total_mark) {
-  $stats['out_of_range'] = 0;
+function flag_subpart(&$user_results, $user_no, &$total_mark) {
   if (isset($_GET['percent'])) {
     $percent = $_GET['percent'];
   } else {
@@ -1357,19 +1355,15 @@ function flag_subpart(&$user_results, &$stats, $user_no, &$total_mark) {
     for ($i=0; $i<$user_no; $i++) {
       if ($i >= $cohort_size) {
         $user_results[$i]['visible'] = 0;
-        $stats['out_of_range']++;
       } else {
         $total_mark += $user_results[$i]['mark'];
-        $stats['total_time'] += $user_results[$i]['duration'];
       }
     }
   } else {
-    //if ($absent == 0) $cohort_size = $user_no;
     $cohort_size = $user_no;
     for ($i=0; $i<$user_no; $i++) {
       if (isset($user_results[$i]['mark'])) {
         $total_mark += $user_results[$i]['mark'];
-        $stats['total_time'] += $user_results[$i]['duration'];
       }
     }
   }
@@ -1483,6 +1477,7 @@ function convert_moduleIDs(&$user_results, $db) {
 function get_stats($user_results, $question_no, $propertyObj) {
   // Generate summary statistics.
   $user_no                = count($user_results);
+  $stats['out_of_range']  = 0;
   $stats['completed_no']  = 0;
   $stats['failures']      = 0;
   $stats['passes']        = 0;
@@ -1520,6 +1515,12 @@ function get_stats($user_results, $question_no, $propertyObj) {
       if ($user_results[$i]['adj_percent'] >= $distinction_mark) $stats['honours']++;
       if ($user_results[$i]['mark'] < $stats['min_mark']) $stats['min_mark'] = $user_results[$i]['mark'];
       if ($user_results[$i]['mark'] > $stats['max_mark']) $stats['max_mark'] = $user_results[$i]['mark'];
+    }
+    
+    if ($user_results[$i]['visible'] == 0) {
+      $stats['out_of_range']++;
+    } else {
+      $stats['total_time'] += $user_results[$i]['duration'];
     }
   }
 
@@ -1563,9 +1564,9 @@ function get_stats($user_results, $question_no, $propertyObj) {
   $decile_values = array();
   for ($i=1; $i<10; $i++) {
     $stats["decile$i"] = MathsUtils::percentile($marks_data, ($i / 10));
-  }  
-  
-  return $stats;
+  }
+
+  return $stats;  
 }
 
 function writeStudentDeciles(&$user_results, $stats) {

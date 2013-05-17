@@ -25,9 +25,31 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/class_totals.inc';
+require_once '../include/errors.inc';
+require_once '../include/class_totals.inc';
+require_once '../classes/folderutils.class.php';
 
 $displayDebug = false; //disable debud output in this script as it effects the output
+
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$startdate  = check_var('startdate', 'GET', true, false, true);
+$enddate    = check_var('enddate', 'GET', true, false, true);
+
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
+
+if (!$propertyObj) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+$paper            = $propertyObj->get_paper_title();
+$marking          = $propertyObj->get_marking();
+$pass_mark        = $propertyObj->get_pass_mark();
+$distinction_mark = $propertyObj->get_distinction_mark();
+$paper_type       = $propertyObj->get_paper_type();
+
+$user_results = compile_report($userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
@@ -84,12 +106,12 @@ if ($cohort_size > 0) {
         $csv .= $user_results[$i]['student_grade'] . ',"' . $user_results[$i]['module'] . '",' . $user_results[$i]['mark'] . ',' . MathsUtils::formatNumber($user_results[$i]['adj_percent'], $percent_decimals) . '%,';
 
         if ($user_results[$i]['adj_percent'] < $pass_mark) {
-          $csv .= "'" . $string['fail'] . "',";
+          $csv .= '"' . $string['fail'] . '",';
         } else {
           if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
-            $csv .= "'" . $string['distinction'] . "',";
+            $csv .= '"' . $string['distinction'] . '",';
           } else {
-            $csv .= "'" . $string['pass'] . "',";
+            $csv .= '"' . $string['pass'] . '",';
           }
         }
         $csv .= $user_results[$i]['rank'] . ',' . $user_results[$i]['decile'] . ',' . $user_results[$i]['display_started'] . ',' . formatsec($user_results[$i]['duration']) . ',' . $user_results[$i]['ipaddress'] . ',"' . $user_results[$i]['room'] . '"';

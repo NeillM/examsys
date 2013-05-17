@@ -68,12 +68,13 @@ if (!$properties) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$exclusions = Exclusion::get_exclusions_by_paperID($_GET['paperID'], $mysqli);
+$exclusions = new Exclusion($_GET['paperID'], $mysqli);
+$exclusions->load();
 
 function check_duplicates($q_screens, $string) {
   foreach ($q_screens as $q_screen=>$qs) {
     if (count($qs) > 1) {
-      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td colspan=\"4\" class=\"warn\"><strong>Duplicate questions:</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
+      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>Duplicate questions:</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
     }
   }
 }

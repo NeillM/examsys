@@ -24,15 +24,32 @@
 * @package
 */
 
+set_time_limit(0);
+
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-
-check_var('paperID', 'GET', true, false, false);
-check_var('startdate', 'GET', true, false, false);
-check_var('enddate', 'GET', true, false, false);
-
-require '../include/class_totals.inc';
+require_once '../include/class_totals.inc';
 require_once '../classes/folderutils.class.php';
+
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$startdate  = check_var('startdate', 'GET', true, false, true);
+$enddate    = check_var('enddate', 'GET', true, false, true);
+
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
+
+if (!$propertyObj) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+$paper            = $propertyObj->get_paper_title();
+$marking          = $propertyObj->get_marking();
+$pass_mark        = $propertyObj->get_pass_mark();
+$distinction_mark = $propertyObj->get_distinction_mark();
+$paper_type       = $propertyObj->get_paper_type();
+
+$user_results = compile_report($userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
 
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 
@@ -363,7 +380,7 @@ if ($language != 'en') {
 
   //output table heading
   $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'classification', $string['rank']=>'rank', $string['decile']=>'decile', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
-  if ($paper_type == 2) $table_order[$string['room']] = 'room';
+  if ($paper_type == '2') $table_order[$string['room']] = 'room';
   $metadata_cols = array();
   if (isset($user_results[0])){
     foreach ($user_results[0] as $key => $val) {
@@ -659,7 +676,7 @@ if ($language != 'en') {
         echo "</td>";
 
         if ($_GET['sortby'] == 'ipaddress') {
-         $ordered = ' ordered';
+          $ordered = ' ordered';
         } else {
           $ordered = '';
         }
@@ -748,7 +765,7 @@ if ($language != 'en') {
     echo "<tr><td colspan=\"2\" style=\"width:33%\">";
     
     echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
-    echo "<tr><td class=\"field\" style=\"width:150px\">" . $string['paper'] . "</td><td colspan=\"3\">$paper</td></tr>\n";
+    echo "<tr><td class=\"field\" style=\"width:170px\">" . $string['paper'] . "</td><td colspan=\"3\">$paper</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
       if ($_GET['ordering'] == 'desc') {

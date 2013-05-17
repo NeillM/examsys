@@ -26,32 +26,17 @@
 class Exclusion {
 
   private $db;
-   
+  private $paper_id;   
 
-  public function __construct($db) {
+  public function __construct($paperID, $db) {
   	$this->db = $db;
-  }
-
-  /*
-  * static helper function to load the paper properties by property_id
-  *	return @PaperProperties
-  */
-  static function get_exclusions_by_paperID($p_id, $db) {
-  	$exclusions = new Exclusion($db);
-  	$exclusions->set_paper_id($p_id);
-  	if ($exclusions->load() !== false) {
-  		return $exclusions;
-  	} else {
-  		return false;
-  	}
+    $this->paper_id = $paperID;  		
   }
 
   public function load() {
-    $paperID = $this->get_paper_id();
-
     $this->excluded = array();
     $result = $this->db->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
-    $result->bind_param('i', $paperID);
+    $result->bind_param('i', $this->paper_id);
     $result->execute();
     $result->bind_result($q_id, $parts);
     while ($result->fetch()) {
@@ -59,15 +44,6 @@ class Exclusion {
     }
     $result->close();
     
-  }
-  
-  private function set_paper_id($paperID) {
-    $this->paper_id = $paperID;
-  }
-  
-  
-  private function get_paper_id() {
-    return $this->paper_id;
   }
   
   public function get_exclusions_by_qid($q_id) {
