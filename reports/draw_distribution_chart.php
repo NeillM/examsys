@@ -146,17 +146,17 @@
       imagedashedline($Image, ($quartile * 7) + 40 + $negative, 20, ($quartile * 7) + 40 + $negative, 260, $blue);
     }
   }
-  imagedashedline($Image, ($min_mark * 7) + 40 + $negative, 20, ($min_mark * 7) + 40 + $negative, 260, $blue);
-  imagedashedline($Image, ($max_mark * 7) + 40 + $negative, 20, ($max_mark * 7) + 40 + $negative, 260, $blue);
+  imagedashedline($Image, ($min_mark * 7) + 38 + $negative, 20, ($min_mark * 7) + 38 + $negative, 260, $blue);
+  imagedashedline($Image, ($max_mark * 7) + 43 + $negative, 20, ($max_mark * 7) + 43 + $negative, 260, $blue);
   ImageRectangle($Image, (round($_GET["q1"], 2) * 7) + 40 + $negative, 1, (round($_GET["q3"], 2) * 7) + 40 + $negative, 13, $blue);
   
   ImageLine($Image, (round($_GET["q2"], 2) * 7) + 40 + $negative, 1, (round($_GET["q2"], 2) * 7) + 40 + $negative, 12, $blue);                // Median vertical
 
-  ImageLine($Image, ($min_mark * 7) + 40 + $negative, 1, ($min_mark * 7) + 40 + $negative, 13, $blue);                // Min vertical
-  ImageLine($Image, ($min_mark * 7) + 40 + $negative, 7, (round($_GET["q1"], 2) * 7) + 40 + $negative, 7, $blue);   // Min whisker
+  ImageLine($Image, ($min_mark * 7) + 38 + $negative, 1, ($min_mark * 7) + 38 + $negative, 13, $blue);                // Min vertical
+  ImageLine($Image, ($min_mark * 7) + 38 + $negative, 7, (round($_GET["q1"], 2) * 7) + 40 + $negative, 7, $blue);   // Min whisker
   
-  ImageLine($Image, ($max_mark * 7) + 40 + $negative, 1, ($max_mark * 7) + 40 + $negative, 13, $blue);                // Max vertical
-  ImageLine($Image, ($max_mark * 7) + 40 + $negative, 7, (round($_GET["q3"], 2) * 7) + 40 + $negative, 7, $blue);   // Max whisker
+  ImageLine($Image, ($max_mark * 7) + 43 + $negative, 1, ($max_mark * 7) + 43 + $negative, 13, $blue);                // Max vertical
+  ImageLine($Image, ($max_mark * 7) + 43 + $negative, 7, (round($_GET["q3"], 2) * 7) + 40 + $negative, 7, $blue);   // Max whisker
 
   for ($i=$scale_start; $i<=100; $i++) {
     if (isset($mydata[$i]) and $mydata[$i] > 0) {
