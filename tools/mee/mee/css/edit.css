@@ -2,7 +2,7 @@
 {
     border: 1px solid #9a9a9a;
     cursor: text;
-    margin: 24px;
+    /* margin: 24px; */
     /*font-size: 150%;*/
     /*background-color: #F0F0ff;*/
 }
@@ -92,7 +92,6 @@
     width: 100px;
     height: 100px;
     background-image: url(../images/edit/highlight_green.png);
-    /*filter:progid:DXImageTransform.Microsoft.AlphaImageLoader (src='../images/edit/highlight_green.png',sizingMethod='scale');*/
 }
 
 .mee_elem_input

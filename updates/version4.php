@@ -4008,7 +4008,21 @@ SQL;
     $sql = "ALTER TABLE sys_errors CHANGE COLUMN errtype errtype enum('Notice','Warning','Fatal Error','Unknown','Application Warning','Application Error') NULL DEFAULT NULL";
     $updater_utils->execute_query($sql, true);
   }
-
+  
+  // 26/04/2013 (cczab) - more indexes
+  if (!$updater_utils->does_index_exist('paper_metadata_security', 'idx_paperID')) {
+     $updater_utils->execute_query("ALTER TABLE paper_metadata_security ADD INDEX idx_paperID(paperID)", false);
+  }
+  if (!$updater_utils->does_index_exist('ip_addresses', 'idx_address')) {
+     $updater_utils->execute_query("ALTER TABLE ip_addresses ADD INDEX idx_address (address)", false);
+  }
+  if (!$updater_utils->does_index_exist('question_exclude', 'idx_q_paper')) {
+     $updater_utils->execute_query("ALTER TABLE question_exclude ADD INDEX idx_q_paper(q_paper)", false);
+  }
+  if (!$updater_utils->does_index_exist('folders_modules_staff ', 'idx_folders_id_idMod')) {
+     $updater_utils->execute_query("ALTER TABLE folders_modules_staff ADD INDEX idx_folders_id_idMod(folders_id,idMod)", false);
+  }
+  
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */

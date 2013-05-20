@@ -7,6 +7,8 @@ $.Class.extend("MEE.Toolbar",
     curpopupmenu: null,
     nomouseover: false,
     leavecount: 0,
+    toolbarelem: false,
+    toolbaralwayson: false,
 
     images: {
         '22x22': 1,
@@ -80,21 +82,6 @@ $.Class.extend("MEE.Toolbar",
             $(element).css('background-repeat', '');
         }
     }
-
-    /*getToolbarFromClass: function (item) {
-    var itemClass = $(item).attr('class');
-    if
-    var classList = itemClass.split(/\s+/);
-    var result = "";
-    $.each(classList, function (index, item) {
-    var parts = item.split(/:/);
-    if (parts.length == 2 && parts[0] == "toolbar") {
-    result = parts[1];
-    }
-    });
-    return result;
-    }*/
-    //#endregion
 },
 {
     // main class for dealing with a equation editor element
@@ -106,17 +93,160 @@ $.Class.extend("MEE.Toolbar",
         this.inputelem = element;
         //this.tbbase = MEE.Toolbar.getToolbarFromClass(element);
         this.currentEdit = null;
+        this.orbmenu = true;
+        this.showtabs = true;
+        
+        this.type = 'default';
+        
+        if($(element).hasClass('sci')) {
+          this.type = 'sci';
+        }
+        
+        if($(element).hasClass('units')) {
+          this.type = 'units';
+        }
     },
 
-    loadToolBar: function () {
+    loadToolBar: function (tbtype) {
+        
+        //default editor
+        var xmlurl = 'toolbar/toolbar.xml';   
+        var callbackfn = "buildToolBar";
+        
+        //scientific notation editor
+        if(tbtype != 'default') {
+          xmlurl = 'toolbar/toolbar_' + tbtype + '.xml';   
+          callbackfn = "buildToolBarSingleFunction";
+          this.toolbaralwayson = true;
+        }
+        
         $.ajax({
             type: "GET",
-            url: mee_baseurl + 'toolbar/toolbar.xml',
+            url: mee_baseurl + xmlurl,
             dataType: "xml",
-            success: this.callback("buildToolBar")
+            success: this.callback(callbackfn)
         });
     },
+    
+    buildToolBarSingleFunction: function (temp, xml) {
+        var toolbar = $.xml2json(xml); // this.xmlToToolbar(xml); // MEE.Toolbar.defs[this.tbbase];
+        //MEE.Toolbar.defs["xml"] = toolbar;
+        var main = $('<div>');
+        this.html_elem = main;
+        main.addClass('mee_toolbar_single');
+        this.toolbarelem = main;
+        for(var k = 0; k < toolbar.items.length; k++) {
+          var paneitem = toolbar.items[k];
+        
+          if (!paneitem.sections) {
+            
+            if(!paneitem.latex)
+                continue
+              
+            temp = MEE.Toolbar.appendElement(main, "div", "tb_symbol");
+            temp.data('latex', paneitem.latex);
+            if (paneitem.command)
+                temp.data('command', paneitem.command);
 
+            MEE.Toolbar.appendElement(temp, "a", "", paneitem.display);
+
+          } else {
+            var menuclass = "tb_menu_small";
+            var menuimg = "toolbar/arrow_down.png";
+            var menuitemconta = MEE.Toolbar.appendElement(main, "div", menuclass);
+            menuitemconta.attr('id', "popupmenubutton" + MEE.Toolbar.popupmenuid);
+            menuitemconta.attr('popuptype', 'menus');
+            menuitemconta.attr('popupmenu', MEE.Toolbar.popupmenuid);
+            menuitemconta.addClass('tb_menu_button');
+
+            var menuitemcont = MEE.Toolbar.appendElement(menuitemconta, "a");
+            menuitemcont.attr('popupmenu', MEE.Toolbar.popupmenuid);
+
+            temp = MEE.Toolbar.appendElement(menuitemcont, "div", "icon");
+
+            if (paneitem.image) {
+                var img = MEE.Toolbar.AddImage(temp, 'tbicons/' + paneitem.image);
+                img.css('margin-left', '14px');
+                img.css('margin-right', '14px');
+            }
+            temp.attr("alt", paneitem.display);
+
+            temp = MEE.Toolbar.appendElement(menuitemcont, "div", "text", paneitem.display);
+
+            temp = MEE.Toolbar.appendElement(menuitemcont, "div", "arrow");
+            var img = MEE.Toolbar.AddImage(temp, menuimg);
+            
+            img.css('margin-left', '12px');
+            img.css('margin-right', '12px');
+            
+                        
+            var menupopup = MEE.Toolbar.appendElement(main, "div", "tb_popupmenu");
+           
+            menupopup.addClass("tb_popupmenu_vert");
+
+            menupopup.css("display", "none");
+            menupopup.attr('id', "popupmenu" + MEE.Toolbar.popupmenuid);
+            var menuinner = MEE.Toolbar.appendElement(menupopup, "div", "tb_popupmenu_inner");
+            var menufooter = MEE.Toolbar.appendElement(menupopup, "div", "tb_popupmenu_footer");
+
+            if (paneitem.popupwidth)
+                menuinner.css('width', paneitem.popupwidth + 'px');
+                          
+            // add panes to popup menu
+            for (var p = 0; p < paneitem.sections.length; p++) {
+              var section = paneitem.sections[p];
+              if (!section) continue;
+
+              MEE.Toolbar.appendElement(menuinner, "div", "tbpm_header", section.heading);
+              MEE.Toolbar.appendElement(menuinner, "div", "clear");
+
+              // add items to popup menu
+              if (section.items) {
+                  for (var q = 0; q < section.items.length; q++) {
+                      var item = section.items[q];
+                      if (!item) continue;
+
+                      var _class = "tbpm_item";
+                      if (section._class)
+                          _class = section._class;
+                      var item_elem = MEE.Toolbar.appendElement(menuinner, "div", _class);
+                      if (item._class) {
+                          item_elem.addClass(item._class);
+                          item_elem.data('class', item._class);
+                      }
+
+                      if (section.listwidth)
+                          item_elem.css('width', section.listwidth + 'px');
+
+                      item_elem.data('latex', item.latex);
+
+                      if (item.wlatex)
+                          item_elem.data('wlatex', item.wlatex);
+                      if (item.mlatex)
+                          item_elem.data('mlatex', item.mlatex);
+
+                      item_elem.data('text', item.display);
+
+                      if (item.command)
+                          item_elem.data('command', item.command);
+
+                      item_elem = MEE.Toolbar.appendElement(item_elem, "a");
+                      var div2 = MEE.Toolbar.appendElement(item_elem, "div", "icon");
+                      if (item.image) {
+                          //var img = MEE.Toolbar.appendElement(div2, "img");
+                          //img.attr('src', mee_baseurl + 'images/tbicons/' + item.image);
+                          MEE.Toolbar.AddImage(div2, 'tbicons/' + item.image);
+                      }
+                      MEE.Toolbar.appendElement(item_elem, "div", "label", item.display);
+                  }
+              }
+
+          }
+          MEE.Toolbar.popupmenuid++;
+        }
+      }
+    },
+    
     //#region Build Toolbar html
     buildToolBar: function (temp, xml) {
         var toolbar = $.xml2json(xml); // this.xmlToToolbar(xml); // MEE.Toolbar.defs[this.tbbase];
@@ -126,61 +256,56 @@ $.Class.extend("MEE.Toolbar",
         main.addClass('mee_toolbar');
         var main_list = MEE.Toolbar.appendElement(main, "div", "mt_main");
         var tabs_list = MEE.Toolbar.appendElement(main, "div", "mt_tabs");
-
+        this.toolbarelem = main;
+        
         // add orb menu to tree
-        var home = MEE.Toolbar.appendElement(main_list, "div", "mt_home");
-        var home_link = MEE.Toolbar.appendElement(home, "a", "", "");
-        home_link.attr('href', '#home');
+        if( this.orbmenu == true) {
+          var home = MEE.Toolbar.appendElement(main_list, "div", "mt_home");
+          var home_link = MEE.Toolbar.appendElement(home, "a", "", "");
+          home_link.attr('href', '#home');
 
-        var homemenu = MEE.Toolbar.appendElement(main, "div", "mt_home_popup");
-        var homeinner = MEE.Toolbar.appendElement(homemenu, "div", "mt_home_inner");
+          var homemenu = MEE.Toolbar.appendElement(main, "div", "mt_home_popup");
+          var homeinner = MEE.Toolbar.appendElement(homemenu, "div", "mt_home_inner");
 
-        for (var k = 0; k < toolbar.home.items.length; k++) {
-            var data = toolbar.home.items[k];
-            if (data.spacer) {
-                var homeitem = MEE.Toolbar.appendElement(homeinner, "div", "mt_home_popup_spacer");
-            } else {
-                var homeitem = MEE.Toolbar.appendElement(homeinner, "div", data._class);
-                var image = MEE.Toolbar.AddImage(homeitem, 'toolbar/' + data.image);
-                //var image = MEE.Toolbar.appendElement(homeitem, "img");
-                //image.attr("src", mee_baseurl + 'images/toolbar/' + data.image);
-                var text = MEE.Toolbar.appendElement(homeitem, "span", "mt_home_popup_item_label");
-                if (data.checked == 1 || data.checked == -1) {
+          for (var k = 0; k < toolbar.home.items.length; k++) {
+              var data = toolbar.home.items[k];
+              if (data.spacer) {
+                  var homeitem = MEE.Toolbar.appendElement(homeinner, "div", "mt_home_popup_spacer");
+              } else {
+                  var homeitem = MEE.Toolbar.appendElement(homeinner, "div", data._class);
+                  var image = MEE.Toolbar.AddImage(homeitem, 'toolbar/' + data.image);
 
-                    /*var check = MEE.Toolbar.appendElement(homeitem, "img", "mt_home_popup_check");
 
-                    if (data.checked == 1) {
-                    check.attr("src", mee_baseurl + 'images/toolbar/home_tick.png');
-                    } else {
-                    check.attr("src", mee_baseurl + 'images/toolbar/home_tick_blank.png');
-                    }*/
-                    var check = null; // MEE.Toolbar.appendElement(homeitem, "img", "mt_home_popup_check");
+                  var text = MEE.Toolbar.appendElement(homeitem, "span", "mt_home_popup_item_label");
+                  if (data.checked == 1 || data.checked == -1) {
 
-                    if (data.checked == 1) {
-                        check = MEE.Toolbar.AddImage(homeitem, 'toolbar/home_tick.png');
-                        //check.attr("src", mee_baseurl + 'images/toolbar/home_tick.png');
-                    } else {
-                        check = MEE.Toolbar.AddImage(homeitem, 'toolbar/home_tick_blank.png');
-                        //check.attr("src", mee_baseurl + 'images/toolbar/home_tick_blank.png');
-                    }
-                    check.addClass('mt_home_popup_check');
-                    if (data.id) {
-                        check.attr('id', data.id + '_check');
-                    }
-                }
-                text.html(data.name);
-                if (data.command) {
-                    homeitem.data('command', data.command);
-                    homeitem.click(this.callback('itemClick'));
-                }
+                      var check = null; // MEE.Toolbar.appendElement(homeitem, "img", "mt_home_popup_check");
 
-                if (data.id) {
-                    homeitem.attr('id', 'tb_home_' + data.id);
-                    image.attr('id', 'tb_home_' + data.id + '_img');
-                }
-            }
+                      if (data.checked == 1) {
+                          check = MEE.Toolbar.AddImage(homeitem, 'toolbar/home_tick.png');
+                          //check.attr("src", mee_baseurl + 'images/toolbar/home_tick.png');
+                      } else {
+                          check = MEE.Toolbar.AddImage(homeitem, 'toolbar/home_tick_blank.png');
+                          //check.attr("src", mee_baseurl + 'images/toolbar/home_tick_blank.png');
+                      }
+                      check.addClass('mt_home_popup_check');
+                      if (data.id) {
+                          check.attr('id', data.id + '_check');
+                      }
+                  }
+                  text.html(data.name);
+                  if (data.command) {
+                      homeitem.data('command', data.command);
+                      homeitem.click(this.callback('itemClick'));
+                  }
+
+                  if (data.id) {
+                      homeitem.attr('id', 'tb_home_' + data.id);
+                      image.attr('id', 'tb_home_' + data.id + '_img');
+                  }
+              }
+          }
         }
-
         // create tabs
         for (var r = 0; r < toolbar.tabs.length; r++) {
             var tab = toolbar.tabs[r];
@@ -266,9 +391,6 @@ $.Class.extend("MEE.Toolbar",
                         var div = MEE.Toolbar.appendElement(temp, "div", "icon");
                         var img = MEE.Toolbar.AddImage(div, 'tbicons/' + paneitem.image);
                         img.css('float', 'left');
-                        //var img = MEE.Toolbar.appendElement(div, "img", "");
-                        // img.attr("src", mee_baseurl + 'images/tbicons/' + paneitem.image);
-
                         MEE.Toolbar.appendElement(temp, "div", "label", paneitem.display);
 
                     }
@@ -343,11 +465,8 @@ $.Class.extend("MEE.Toolbar",
                         var menuitemcont = MEE.Toolbar.appendElement(menuitemconta, "a");
                         menuitemcont.attr('popupmenu', MEE.Toolbar.popupmenuid);
 
-                        // click event for popup menus
-                        //$(menuitemcont).click( this.callback('menuClick') );
-
                         temp = MEE.Toolbar.appendElement(menuitemcont, "div", "icon");
-                        //temp = MEE.Toolbar.appendElement(temp, "img");
+                        
                         if (paneitem.image) {
                             var img = MEE.Toolbar.AddImage(temp, 'tbicons/' + paneitem.image);
                             if (pane.type == "menus") {
@@ -355,7 +474,6 @@ $.Class.extend("MEE.Toolbar",
                                 img.css('margin-right', '14px');
                             }
 
-                            //temp.attr("src", mee_baseurl + 'images/tbicons/' + paneitem.image);
                         }
                         temp.attr("alt", paneitem.display);
 
@@ -367,12 +485,8 @@ $.Class.extend("MEE.Toolbar",
                             img.css('margin-left', '27px');
                             img.css('margin-right', '27px');
                         }
-                        //temp = MEE.Toolbar.appendElement(temp, "img");
-                        //temp.attr('src', menuimg);
-
+                      
                         if (!paneitem.sections) continue;
-
-
 
                         // add menu popup div to document
                         var menupopup = MEE.Toolbar.appendElement(main, "div", "tb_popupmenu");
@@ -471,11 +585,11 @@ $.Class.extend("MEE.Toolbar",
             }
         }
 
-        MEE.Edit.toolbarelem = main;
+        this.toolbarelem = main;
 
         if (MEE.Edit.toolbar.activate)
             MEE.Edit.toolbar.activate.activate();
-
+        
         return main;
     },
 
@@ -504,6 +618,7 @@ $.Class.extend("MEE.Toolbar",
         // toolbar stuff
         this.setMouseImages('.tb_menu_horiz');
         this.setMouseImages('.tb_menu');
+        //this.setMouseImages('.tb_menu_small');
 
         this.setMouseImages('.tb_symbol');
         this.setMouseImages('.tb_bigicons');
@@ -521,22 +636,24 @@ $.Class.extend("MEE.Toolbar",
 
         // set up click handlers
         $(document).click(this.callback('docClick'));
-        $('.mt_home').click(this.callback('homeClick'));
+        $('.mt_home',this.html_elem).click(this.callback('homeClick'));
 
-        $('.mt_tab').children('a').click(this.callback('tabClick'));
+        $('.mt_tab',this.html_elem).children('a').click(this.callback('tabClick'));
+        
+        $('.tb_menu_button',this.html_elem).click(this.callback('menuClick'));
+        
+        //$('.tb_menu_button').click(this.callback('menuClick'));
 
-        $('.tb_menu_button').click(this.callback('menuClick'));
+        $('.tb_symbol',this.html_elem).click(this.callback('itemClick'));
+        $('.tb_bigicons',this.html_elem).click(this.callback('itemClick'));
+        $('.tb_list',this.html_elem).click(this.callback('itemClick'));
 
-        $('.tb_symbol').click(this.callback('itemClick'));
-        $('.tb_bigicons').click(this.callback('itemClick'));
-        $('.tb_list').click(this.callback('itemClick'));
-
-        $('.tbpm_item').click(this.callback('itemClick'));
-        $('.tbpm_list').click(this.callback('itemClick'));
-        $('.tbpm_listbig').click(this.callback('itemClick'));
-        $('.tbpm_grid').click(this.callback('itemClick'));
-        $('.tbpm_gridbig').click(this.callback('itemClick'));
-        $('.tbpm_gridxbig').click(this.callback('itemClick'));
+        $('.tbpm_item',this.html_elem).click(this.callback('itemClick'));
+        $('.tbpm_list',this.html_elem).click(this.callback('itemClick'));
+        $('.tbpm_listbig',this.html_elem).click(this.callback('itemClick'));
+        $('.tbpm_grid',this.html_elem).click(this.callback('itemClick'));
+        $('.tbpm_gridbig',this.html_elem).click(this.callback('itemClick'));
+        $('.tbpm_gridxbig',this.html_elem).click(this.callback('itemClick'));
 
         // scale background on home panel
         $('.mt_home_popup').scale9Grid({ top: 4, bottom: 15, left: 4, right: 15 });
@@ -553,7 +670,13 @@ $.Class.extend("MEE.Toolbar",
         this.hidePopups();
         $('.mt_tabblock').hide();
     },
-
+    
+    hide: function () {
+      if(this.toolbaralwayson == false) {
+        this.toolbarelem.hide();
+      }
+    },
+    
     hideTabs: function () {
         this.visopt = {};
         var tabonly = false;
@@ -848,7 +971,7 @@ $.Class.extend("MEE.Toolbar",
     //#region random stuff
     ///////////////////////
     setMouseImages: function (selector) {
-        $(selector).each(function () {
+        $(selector, this.html_elem).each(function () {
             var width = $(this).outerWidth();
             var height = $(this).outerHeight();
 
@@ -881,32 +1004,6 @@ $.Class.extend("MEE.Toolbar",
             } else {
                 icon = 'tall';
 
-                // create template at the end of the page
-                /*var div = $('<div>');
-                div.css('clear', 'both');
-                div.css('width', '500px');
-                div.html("<div style='clear:both;'>" + size + "</div>");
-
-                var over = $('<div>');
-                over.css('width', width + 'px');
-                over.css('height', height + 'px');
-                over.css('margin-right', '20px');
-                over.css('float', 'left');
-                $(over).css('background-image', 'url(mee/images/toolbar/base/' + icon + '-over.png)');
-                $(over).scale9Grid({ top: 4, bottom: 4, left: 4, right: 4 });
-                div.append(over);
-
-                over = $('<div>');
-                over.css('width', width + 'px');
-                over.css('height', height + 'px');
-                over.css('float', 'left');
-                $(over).css('background-image', 'url(mee/images/toolbar/base/' + icon + '-click.png)');
-                $(over).scale9Grid({ top: 4, bottom: 4, left: 4, right: 4 });
-                div.append(over);
-
-
-                $(document.body).append(div);*/
-
                 MEE.Toolbar.images[size] = -1;
 
                 // dont scale with ie
@@ -914,7 +1011,7 @@ $.Class.extend("MEE.Toolbar",
                     return;
 
                 var overlaydiv = $('<div>');
-                overlaydiv.css('border', '1px solid orange');
+                //overlaydiv.css('border', '1px solid orange');
                 overlaydiv.css('position', 'absolute');
                 overlaydiv.css('z-index', '2');
                 overlaydiv.css('left', '0px');

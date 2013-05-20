@@ -5,6 +5,35 @@
     cursor: default;
 }
 
+.mee_toolbar_single 
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+    cursor: default;  
+    background-color: #D9E4F3;
+    border-bottom: 1px solid #8db2e3;
+    height: 22px;
+    padding-top: 2px;
+}
+
+.units {
+   width: 75px;
+   padding: 0;
+   margin: 0;
+   display: inline-block;
+   overflow: hidden;
+} 
+
+.sci {
+   width: 170px;
+   padding: 0;
+   margin: 0;
+   display: inline-block;
+   text-align: right;
+   overflow: hidden;
+} 
+
+
 .mt_main
 {
     background-color: #D9E4F3;
@@ -189,6 +218,17 @@
 /****************/
 
 /* Symbol Icon */
+
+.mee_toolbar_single .tb_symbol
+{
+    font-size: 120%;
+    float: right;
+    padding: 0px;
+    margin-bottom:1px;
+    margin-right:1px;
+    font-family: MathJax_Main;
+}
+
 .tb_symbol
 {
     font-size: 120%;
@@ -244,6 +284,46 @@
 
 .tb_menu .arrow
 {
+}
+
+
+/* Small Menu Icon */
+.tb_menu_small
+{
+    /*padding-top: 10px;*/
+    /*padding-bottom: 10px;*/
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    text-align: center;
+    float: right;
+    margin-right:0px;
+    background-repeat:no-repeat;
+    font-family: MathJax_Main;
+}
+
+.tb_menu_small a div
+{
+    float: none;
+}
+
+.tb_menu_small a:hover
+{
+}
+
+.tb_menu_small .icon
+{
+    padding-top: 0px;
+}
+
+.tb_menu_small .text
+{
+  width: 25px;
+}
+
+.tb_menu_small .arrow
+{
+  width: 12px
 }
 
 /* Horiz menu */

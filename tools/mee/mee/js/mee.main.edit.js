@@ -3,22 +3,28 @@ MEE.Main.extend("MEE.Edit",
     //#region Static definitiona
     toolbar: null,
     toolbarelem: null,
+    toolbarcache: [],
     currentedit: null
     //#endregion
 },
 {
     // class extensions for using as an editor
+    active: [],
+    element: null,
     //#region Initialization
     init: function (element) {
         // make sure we are ok to run
         if (!this.checkProtocol())
             return;
-
+          
+        this.element = element.name;
+        this.active[this.element] = false;
+        
         // debug configuration
         this.debug = 0; // 0 = no debug, 1 = latex and maxima debug, 2 = full debug including element tree
 
         // turns maxima on or off
-        this.maxima = 1;
+        this.maxima = 0;
 
         // initialize some variables
         this.mode = -1;
@@ -32,7 +38,7 @@ MEE.Main.extend("MEE.Edit",
         this.latex = element.value;
         if ($(element).attr('latex'))
             this.latex = $(element).attr('latex');
-
+        
         // set up for inline edit if needed
         if ($(element).hasClass('inline')) {
             this.inline = true;
@@ -75,6 +81,11 @@ MEE.Main.extend("MEE.Edit",
         // build edit container
         this.editdiv = $('<div>');
         this.editdiv.addClass('mee_edit');
+        
+        //put any extra classes on the edit container for easy styling
+        this.editdiv.addClass($(this.inputelement).attr('class'));
+          
+        
         $(this.inputelement).before(this.editdiv);
 
         // create maxima output if needed
@@ -110,8 +121,16 @@ MEE.Main.extend("MEE.Edit",
         $(this.editdiv).click(this.callback('editorClick'));
 
         // init toolbar
-        this.initToolbar();
-
+        this.ToolbarType = 'default';
+        if($(this.inputelement).hasClass('units')) {
+          this.ToolbarType = 'units';
+        }
+        if($(this.inputelement).hasClass('sci')) {
+          this.ToolbarType = 'sci';
+        }
+        
+        this.initToolbar(this.ToolbarType);
+        
         // create raw input box
         this.initRawInput();
 
@@ -121,17 +140,24 @@ MEE.Main.extend("MEE.Edit",
         // created some needed elements
         this.initHightLightBox();
         this.initInputSizeBox();
-
+        
     },
 
-    initToolbar: function () {
+    initToolbar: function (tbtype) {
         // if we dont already have one, build a toolbar
-        if (!MEE.Edit.toolbar) {
-            MEE.Edit.toolbar = new MEE.Toolbar(this.inputelement);
-            if ($(this.inputelement).hasClass('activate'))
-                MEE.Edit.toolbar.activate = this;
-            MEE.Edit.toolbar.loadToolBar();
+        if (!MEE.Edit.toolbarcache[this.inputelement.id]) {
+            MEE.Edit.toolbarcache[this.inputelement.id] = new MEE.Toolbar(this.inputelement);
+            MEE.Edit.toolbarcache[this.inputelement.id].loadToolBar(tbtype);
+            MEE.Edit.toolbar = MEE.Edit.toolbarcache[this.inputelement.id];
+            MEE.Edit.toolbarelem = MEE.Edit.toolbarcache[this.inputelement.id].toolbarelem;
+        } else {
+          MEE.Edit.toolbar = MEE.Edit.toolbarcache[this.inputelement.id];
+          MEE.Edit.toolbarelem = MEE.Edit.toolbarcache[this.inputelement.id].toolbarelem;
         }
+        
+        if ($(this.inputelement).hasClass('activate'))
+          MEE.Edit.toolbar.activate = this;
+        
     },
 
     initRawInput: function () {
@@ -236,7 +262,7 @@ MEE.Main.extend("MEE.Edit",
 
 
         // highlight stuff
-        if (this.mode == 1 && this.active) {
+        if (this.mode == 1 && this.active[this.element]) {
             this.moveToSet(this.elementset, false, false);
             //this.changed();
             // this.curElemSet.Highlight();
@@ -290,6 +316,12 @@ MEE.Main.extend("MEE.Edit",
         this.showContextRegions();
 
         this.dump();
+        
+        // move the editor a bit !!! this breaks things :-)
+        //var offset = $(this.editdiv).offset();
+        //offset.top += ($(this.editdiv).height() / 2) - 5;
+        //$(this.editdiv).offset(offset);
+        
     },
 
     setIsEditOnElems: function () {
@@ -382,7 +414,7 @@ MEE.Main.extend("MEE.Edit",
     },
 
     Highlight: function () {
-        if (this.mode != 1 || !this.active /*|| ($.browser.msie && document.documentMode == 7)*/) {
+        if (this.mode != 1 || !this.active[this.element]) {
             $('.mee_edit_highlight').css('display', 'none');
             $('.mee_edit_highlight_elem').css('display', 'none');
             return;
@@ -401,16 +433,16 @@ MEE.Main.extend("MEE.Edit",
 
     bindElemClicks: function () {
         //$('.mee_elemsetbasic').unbind('click');
-        $('.mee_elemset_empty_inner').unbind('click');
-        $('.mee_elem').unbind('click');
+        $('.mee_elemset_empty_inner',this.editdiv).unbind('click');
+        $('.mee_elem',this.editdiv).unbind('click');
 
         if (this.mode != 1)
             return;
 
         //$('.mee_elemsetbasic').click(this.callback('elementClick'));
-        $('.mee_elemset_empty_inner').click(this.callback('emptyClick'));
-        $('.mee_elem').click(this.callback('elemClick'));
-        $('.mee_elem').dblclick(this.callback('elemDblClick'));
+        $('.mee_elemset_empty_inner',this.editdiv).click(this.callback('emptyClick'));
+        $('.mee_elem',this.editdiv).click(this.callback('elemClick'));
+        $('.mee_elem',this.editdiv).dblclick(this.callback('elemDblClick'));
     },
 
     clearAlign: function (elem) {
@@ -644,9 +676,9 @@ MEE.Main.extend("MEE.Edit",
     modeWYSIWYG: function () {
         if (this.mode == 1)
             return;
-
-        MEE.Edit.toolbar.enableTab("context");
-
+        if(MEE.Edit.toolbar) {
+          MEE.Edit.toolbar.enableTab("context");
+        }
         this.mode = 1;
         this.rebuildDisplay();
     },
@@ -668,21 +700,23 @@ MEE.Main.extend("MEE.Edit",
 
     sortToolbarchecks: function () {
         // inline mode checks
-        if (this.inline) {
-            MEE.Toolbar.ApplyImage('#mode_inline_check', 'toolbar/home_tick.png');
-            MEE.Toolbar.ApplyImage('#mode_display_check', 'toolbar/home_tick_blank.png');
-        } else {
-            MEE.Toolbar.ApplyImage('#mode_display_check', 'toolbar/home_tick.png');
-            MEE.Toolbar.ApplyImage('#mode_inline_check', 'toolbar/home_tick_blank.png');
-        }
+        if(MEE.Edit.toolbar) {
+          if (this.inline) {
+              MEE.Toolbar.ApplyImage('#mode_inline_check', 'toolbar/home_tick.png');
+              MEE.Toolbar.ApplyImage('#mode_display_check', 'toolbar/home_tick_blank.png');
+          } else {
+              MEE.Toolbar.ApplyImage('#mode_display_check', 'toolbar/home_tick.png');
+              MEE.Toolbar.ApplyImage('#mode_inline_check', 'toolbar/home_tick_blank.png');
+          }
 
-        // editor mode checks
-        if (this.mode == 0) {
-            MEE.Toolbar.ApplyImage('#mode_raw_check', 'toolbar/home_tick.png');
-            MEE.Toolbar.ApplyImage('#mode_wysiwyg_check', 'toolbar/home_tick_blank.png');
-        } else {
-            MEE.Toolbar.ApplyImage('#mode_wysiwyg_check', 'toolbar/home_tick.png');
-            MEE.Toolbar.ApplyImage('#mode_raw_check', 'toolbar/home_tick_blank.png');
+          // editor mode checks
+          if (this.mode == 0) {
+              MEE.Toolbar.ApplyImage('#mode_raw_check', 'toolbar/home_tick.png');
+              MEE.Toolbar.ApplyImage('#mode_wysiwyg_check', 'toolbar/home_tick_blank.png');
+          } else {
+              MEE.Toolbar.ApplyImage('#mode_wysiwyg_check', 'toolbar/home_tick.png');
+              MEE.Toolbar.ApplyImage('#mode_raw_check', 'toolbar/home_tick_blank.png');
+          }
         }
     },
     //#endregion
@@ -716,17 +750,21 @@ MEE.Main.extend("MEE.Edit",
     activate: function () {
         //console.log("activate");
 
-        if (this.active)
+        if (this.active[this.element])
             return;
-        this.active = true;
+        
+        this.active[this.element] = true;
 
 
-        // check for an active edit box, if there is on deactivate it
+        // check for an active edit box, if there is one deactivate it
         if (MEE.Edit.activeEdit) {
             MEE.Edit.activeEdit.deactivate();
         }
         MEE.Edit.activeEdit = this;
-
+        
+        //get the correct toolbar
+        this.initToolbar(this.ToolbarType);
+        
         // move toolbar to correct location
         $(this.editdiv).prepend(MEE.Edit.toolbarelem);
         MEE.Edit.toolbarelem.show();
@@ -762,7 +800,7 @@ MEE.Main.extend("MEE.Edit",
     },
 
     showhideInputs: function () {
-        if (this.active) {
+        if (this.active[this.element]) {
             if (this.mode == 0) {
                 this.rawinput.css('display', 'block');
                 this.inputelembox.css('display', 'none');
@@ -778,14 +816,15 @@ MEE.Main.extend("MEE.Edit",
 
     // deactivate this edit div
     deactivate: function () {
-        if (!this.active)
+        if (!this.active[this.element])
             return;
 
-        this.active = false;
+        this.active[this.element] = false;
 
         MEE.Edit.toolbar.currentEdit = null;
         MEE.Edit.toolbar.closeTabs();
-        MEE.Edit.toolbarelem.hide();
+        MEE.Edit.toolbar.hide();
+        //MEE.Edit.toolbarelem.hide();
         MEE.Edit.activeEdit = null
 
         this.rebuildDisplay();
@@ -796,12 +835,7 @@ MEE.Main.extend("MEE.Edit",
 
     // resize the raw input box to fit the width
     resizeRawInput: function () {
-        //console.log('resizeRawInput');
-        //if ($.browser.msie) {
-        //this.rawinput.css('width', $(this.editdiv).outerWidth() - 6 + 'px');
-        //} else {
         this.rawinput.css('width', $(this.editdiv).outerWidth() + 'px');
-        //}
     },
 
     // handle changes to the raw input
@@ -2026,11 +2060,8 @@ MEE.Main.extend("MEE.Edit",
         if (this.mode == 0)
             return;
 
-        if (!this.active) {
-            this.activate();
-            return;
-        }
-
+        this.activate();
+            
         // need to find the element that contains the clicked element
         var elemid = $(html_elem).attr('elem');
         if (!elemid)
@@ -2107,11 +2138,8 @@ MEE.Main.extend("MEE.Edit",
         if (this.mode == 0)
             return true;
 
-        if (!this.active) {
-            this.activate();
-            return;
-        }
-
+        this.activate();
+            
         // need to find the element that contains the clicked element
         var elemid = $(html_elem.parentNode).attr('elem');
         var elemset = MEE.ElemSet.elemsets[elemid];
@@ -2126,31 +2154,6 @@ MEE.Main.extend("MEE.Edit",
         return false;
     },
 
-    // handle clicking on a element in the equation display
-    /*elementClick: function (html_elem) {
-
-    if (this.mode == 0)
-    return;
-
-    if (!this.active) {
-    this.activate();
-    return;
-    }
-
-    // need to find the element that contains the clicked element
-    var elemid = $(html_elem).attr('elem');
-    if (!elemid)
-    return true;
-
-    var elem = MEE.ElemSetBasic.basicelems[elemid];
-    if (!elem)
-    return true;
-
-    //console.log("elementClick : " + elem.html_elem.text());
-
-    this.moveToElement(elem.parent);
-    return false;
-    },*/
 
     getNewWYSIWYGLatex: function () {
         var newlatex = this.elementset.toLatex().get();
@@ -2421,23 +2424,25 @@ MEE.Main.extend("MEE.Edit",
     },
 
     sortUndoMeun: function () {
-        if (this.undo.canUndo()) {
-            MEE.Toolbar.ApplyImage('#tb_undo_img', 'toolbar/home_undo.png');
-            $('#tb_undo').css('color', '#000000');
-            $('#tb_undo').children().css('color', '#000000');
-        } else {
-            MEE.Toolbar.ApplyImage('#tb_undo_img', 'toolbar/home_undo_g.png');
-            $('#tb_undo').css('color', '#CCCCCC');
-            $('#tb_undo').children().css('color', '#CCCCCC');
-        }
-        if (this.undo.canRedo()) {
-            MEE.Toolbar.ApplyImage('#tb_redo_img', 'toolbar/home_redo.png');
-            $('#tb_redo').css('color', '#000000');
-            $('#tb_redo').children().css('color', '#000000');
-        } else {
-            MEE.Toolbar.ApplyImage('#tb_redo_img', 'toolbar/home_redo_g.png');
-            $('#tb_redo').css('color', '#CCCCCC');
-            $('#tb_redo').children().css('color', '#CCCCCC');
+        if(MEE.Edit.toolbar) {
+          if (this.undo.canUndo()) {
+              MEE.Toolbar.ApplyImage('#tb_undo_img', 'toolbar/home_undo.png');
+              $('#tb_undo').css('color', '#000000');
+              $('#tb_undo').children().css('color', '#000000');
+          } else {
+              MEE.Toolbar.ApplyImage('#tb_undo_img', 'toolbar/home_undo_g.png');
+              $('#tb_undo').css('color', '#CCCCCC');
+              $('#tb_undo').children().css('color', '#CCCCCC');
+          }
+          if (this.undo.canRedo()) {
+              MEE.Toolbar.ApplyImage('#tb_redo_img', 'toolbar/home_redo.png');
+              $('#tb_redo').css('color', '#000000');
+              $('#tb_redo').children().css('color', '#000000');
+          } else {
+              MEE.Toolbar.ApplyImage('#tb_redo_img', 'toolbar/home_redo_g.png');
+              $('#tb_redo').css('color', '#CCCCCC');
+              $('#tb_redo').children().css('color', '#CCCCCC');
+          }
         }
     },
 
