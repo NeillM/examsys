@@ -577,16 +577,16 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'textbox':
-        $textbox_size = explode('x',$question['display_method']);
+        $settings = json_decode($question['settings'], true);
 
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-          echo "<blockquote><textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
+          echo "<blockquote><textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
         } else {
           $ans = '';
           if (isset($user_answers[$current_screen][$q_id])) {
             $ans = $user_answers[$current_screen][$q_id];
           }
-          echo "<blockquote><textarea style=\"border:1px solid black; overflow:hidden; width:100%\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . ($textbox_size[1] * 2) . "\"></textarea></blockquote>\n";
+          echo "<blockquote><textarea style=\"border:1px solid black; overflow:hidden; width:100%\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . ($settings['rows'] * 2) . "\"></textarea></blockquote>\n";
         }
         $marks += $display_option['marks_correct'];
         break;
@@ -751,7 +751,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '</select></div>';
     }
   } elseif ($question['q_type'] == 'calculation') {
-    $score_array = explode(',', $question['display_method']);
+    $settings = json_decode($question['settings'], true);
     if ($li_set == 1) {
       echo '<tr><td></td><td>';
     } else {
@@ -764,17 +764,17 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $question['leadin'] = str_replace('ERROR', '<span style="color:red; font-weight:bold">' . $string['unanswered'] . '</span>', $question['leadin']);
     echo "<p>" . $question['leadin'] . "</p>\n";
     if (in_array('ERROR',$replace,true)) {
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" disabled />" . $score_array[3] .  "</p>\n";
+      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" disabled />" . $settings['units'] .  "</p>\n";
     } else {
       if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '') {
-        echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[3] .  "</div>\n";
+        echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" />" . $settings['units'] .  "</div>\n";
       } else {
         if ((isset($tmp_user_answers[0]) and $tmp_user_answers[0] != '') or $screen_pre_submitted == 0) {
           $ans = '';
           if(isset($tmp_user_answers[0])){
             $ans = $tmp_user_answers[0];
           }
-          echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $ans . "\" />" . $score_array[3] .  "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $ans . "\" />" . $settings['units'] .  "</div>\n";
         }
       }
     }

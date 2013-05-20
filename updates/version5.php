@@ -159,7 +159,7 @@ if (!isset($_POST['update'])) {
 
   // Backup the config file before proceeding.
   $updater_utils->backup_file($cfg_web_root, $old_version);
-  
+
 
   // Avoid repeated method calls
   $cfg_db_database      = $configObject->get('cfg_db_database');
@@ -224,7 +224,7 @@ if (!isset($_POST['update'])) {
     echo "<li>LOADED student_help: " . $ext . "</li>\n";
   }
   $mysqli->commit();
-  
+
   // 01/05/2013
   if (!$updater_utils->does_column_exist('users', 'password_expire')) {
     $updater_utils->execute_query("ALTER TABLE users ADD COLUMN password_expire int(11) unsigned", true);
@@ -234,15 +234,15 @@ if (!isset($_POST['update'])) {
   $new_lines = array("\$cfg_password_expire = 30;    // Set in days\n");
   $target_line = '$authentication = array';
   $updater_utils->add_line('$percent_decimals', $new_lines, 80, $cfg_web_root, $target_line, 7);
-  
- 
+
+
   // 08/05/2013 (uiznm) - Add permission for external examiners to see standards setting values
   if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'standards_setting', $cfg_db_host)) {
     $sql = "GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
-  
-  
+
+
   // 09/05/2013 (brzsw) - Remove $protocol and insert $cfg_secure_connection
   $lines  = array();
   $cfg    = file($cfg_web_root . 'config/config.inc.php');
@@ -268,18 +268,102 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
-  
+
   // 15/05/2013 (brzsw) - Add in new variable to control number of decimals for percentages.
   $new_lines = array("//Reports\n", "  \$percent_decimals = 0;\n");
   $updater_utils->add_line('$percent_decimals', $new_lines, 60, $cfg_web_root);
- 
+
+  // 17/05/2013 - nazrji -Add options column to questions
+  if (!$updater_utils->does_column_exist('questions', 'settings')) {
+    $updater_utils->execute_query("ALTER TABLE questions ADD COLUMN settings text", false);
+    echo '<li>ALTER TABLE questions ADD COLUMN settings text<ul>';
+
+    // Update Area questions
+    $sql = "SELECT q_id, display_method FROM questions WHERE q_type = 'area' AND (settings = '' OR settings IS NULL) AND display_method != ''";
+
+    // Get all area questions
+    $area_qs = $mysqli->prepare($sql);
+    $area_qs->execute();
+    $area_qs->store_result();
+    $area_qs->bind_result($q_id, $display_method);
+    $count = 0;
+    while ($area_qs->fetch()) {
+      $parts = explode(',', $display_method);
+      $extra = array('correct_full' => $parts[0], 'error_full' => $parts[1], 'correct_partial' => $parts[2], 'error_partial' => $parts[3]);
+      $extra_json = json_encode($extra);
+      $sql2 = "UPDATE questions SET display_method='', settings = ? WHERE q_id = ?";
+      $area_upd = $mysqli->prepare($sql2);
+      $area_upd->bind_param('si', $extra_json, $q_id);
+      $area_upd->execute();
+      $area_upd->close();
+      $count++;
+    }
+    $area_qs->close();
+    if ($count > 0) {
+      echo '<li>Updated AREA questions</li>';
+    }
+
+    // Update Calculation questions
+    $sql = "SELECT q_id, display_method FROM questions WHERE q_type = 'calculation' AND (settings = '' OR settings IS NULL) AND display_method != ''";
+
+    // Get all calculation questions
+    $area_qs = $mysqli->prepare($sql);
+    $area_qs->execute();
+    $area_qs->store_result();
+    $area_qs->bind_result($q_id, $display_method);
+    $count = 0;
+    while ($area_qs->fetch()) {
+      $parts = explode(',', $display_method);
+      $extra = array('answer_decimals' => $parts[0], 'tolerance_full' => $parts[1], 'tolerance_partial' => $parts[2], 'units' => $parts[3]);
+      $extra_json = json_encode($extra);
+      $sql2 = "UPDATE questions SET display_method='', settings = ? WHERE q_id = ?";
+      $area_upd = $mysqli->prepare($sql2);
+      $area_upd->bind_param('si', $extra_json, $q_id);
+      $area_upd->execute();
+      $area_upd->close();
+      $count++;
+    }
+    $area_qs->close();
+    if ($count > 0) {
+      echo '<li>Updated CALCULATION questions</li>';
+    }
+
+    // Update Textbox questions
+    $sql = "SELECT q_id, display_method FROM questions WHERE q_type = 'textbox' AND (settings = '' OR settings IS NULL) AND display_method != ''";
+
+    // Get all textbox questions
+    $area_qs = $mysqli->prepare($sql);
+    $area_qs->execute();
+    $area_qs->store_result();
+    $area_qs->bind_result($q_id, $display_method);
+    $count = 0;
+    while ($area_qs->fetch()) {
+      $parts = explode('x', $display_method);
+      $extra = array('columns' => $parts[0], 'rows' => $parts[1]);
+      $extra_json = json_encode($extra);
+      $sql2 = "UPDATE questions SET display_method='', settings = ? WHERE q_id = ?";
+      $area_upd = $mysqli->prepare($sql2);
+      $area_upd->bind_param('si', $extra_json, $q_id);
+      $area_upd->execute();
+      $area_upd->close();
+      $count++;
+    }
+    $area_qs->close();
+    if ($count > 0) {
+      echo '<li>Updated TEXTBOX questions</li>';
+    }
+
+    echo '</ul></li>';
+  }
+
+
   // 17/05/2013 (brzsw) - Add cache_paper_stats table
   if (!$updater_utils->does_table_exist('cache_paper_stats')) {
     $sql = "CREATE TABLE cache_paper_stats (paperID mediumint(8) unsigned not null, cached int unsigned, max_mark decimal(10,5), max_percent decimal(10,5), min_mark decimal(10,5), min_percent decimal(10,5), q1 decimal(10,5), q2 decimal(10,5), q3 decimal(10,5), mean_mark decimal(10,5), mean_percent decimal(10,5), stdev_mark decimal(10,5), stdev_percent decimal(10,5), UNIQUE KEY `paperID` (`paperID`)) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
   }
- 
- 
+
+
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */
