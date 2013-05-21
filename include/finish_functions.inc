@@ -214,7 +214,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
       $paper[$q_no]['screen'] = $screen;
       $paper[$q_no]['display_pos'] = $display_pos;
       $paper[$q_no]['scenario'] = $scenario;
-      $paper[$q_no]['theme'] = $q_id . $theme;
+      $paper[$q_no]['theme'] = $theme;
       $paper[$q_no]['q_type'] = $q_type;
       $paper[$q_no]['leadin'] = $leadin;
       $paper[$q_no]['notes'] = $notes;
