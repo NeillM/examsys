@@ -806,7 +806,7 @@ if ($language != 'en') {
       echo "<tr><td class=\"field\">" . $string['randommark'] . "</td><td class=\"r\">" . number_format($paper_buffer['total_random_mark'], 2, '.', ',') . "</td><td>&nbsp;</td></tr>\n";
       if ($stats['completed_no'] > 0) {
         if ($paper_buffer['total_marks'] > 0) {
-          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . $stats['mean_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
+          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . round($stats['mean_mark'], 1) . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
         } else {
           echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
         }
@@ -815,7 +815,7 @@ if ($language != 'en') {
       }
     } elseif ($marking == '0') {
       if ($stats['completed_no'] > 0) {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . $stats['mean_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . round($stats['mean_mark'], 1) . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
       } else {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
@@ -823,13 +823,13 @@ if ($language != 'en') {
       echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . MathsUtils::formatNumber($ss_pass, $percent_decimals) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       if ($ss_hon > 0) echo "<tr><td class=\"field\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . MathsUtils::formatNumber($ss_hon, $percent_decimals) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       if ($stats['completed_no'] > 0) {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . $stats['mean_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . round($stats['mean_mark'], 1) . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
       } else {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     }
     $mid_point = round($cohort_size / 2) - 1;
-    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">" . $stats['median_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['median_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">" . round($stats['median_mark'], 1) . "</td><td>(" . MathsUtils::formatNumber($stats['median_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
     if ($stats['completed_no'] == 0) {
       echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {

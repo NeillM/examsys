@@ -1521,8 +1521,8 @@ function get_stats($user_results, $question_no, $propertyObj) {
   }
 
   if ($stats['completed_no'] > 0) {
-    $stats['mean_mark']      = round($mark_total / $stats['completed_no'],1);
-    $stats['mean_percent']   = round($percent_total / $stats['completed_no'],1);
+    $stats['mean_mark']      = $mark_total / $stats['completed_no'];
+    $stats['mean_percent']   = $percent_total / $stats['completed_no'];
     $stats['median_mark']    = MathsUtils::median($median_mark_array);
     $stats['median_percent'] = MathsUtils::median($median_percent_array);
   } else {
