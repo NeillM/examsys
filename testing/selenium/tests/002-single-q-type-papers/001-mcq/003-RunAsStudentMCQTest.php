@@ -89,7 +89,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '0 out of 12');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '0.0%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '0.00%');
   }
 
   public function testCompletePaperCorrect() {
@@ -137,7 +137,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '12 out of 12');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100.0%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100.00%');
   }
 
   public function testCompletePaperIncorrect() {
@@ -185,7 +185,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '-4 out of 12');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '-33.3%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '-33.33%');
   }
 
   public function testCompletePaperMixed() {
@@ -233,7 +233,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '5 out of 12');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '41.7%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '41.67%');
   }
 
   public function testClassTotals() {
@@ -247,15 +247,15 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementContainsText('//tr[@id="res5"]/td[7]', 'Fail');
 
     $this->assertElementContainsText('//tr[@id="res6"]/td[5]', '12');
-    $this->assertElementContainsText('//tr[@id="res6"]/td[6]', '100%');
+    $this->assertElementContainsText('//tr[@id="res6"]/td[6]', '100.00%');
     $this->assertElementContainsText('//tr[@id="res6"]/td[7]', 'Distinction');
 
     $this->assertElementContainsText('//tr[@id="res7"]/td[5]', '-4');
-    $this->assertElementContainsText('//tr[@id="res7"]/td[6]', '-33%');
+    $this->assertElementContainsText('//tr[@id="res7"]/td[6]', '-33.33%');
     $this->assertElementContainsText('//tr[@id="res7"]/td[7]', 'Fail');
 
     $this->assertElementContainsText('//tr[@id="res8"]/td[5]', '5');
-    $this->assertElementContainsText('//tr[@id="res8"]/td[6]', '42%');
+    $this->assertElementContainsText('//tr[@id="res8"]/td[6]', '41.67%');
     $this->assertElementContainsText('//tr[@id="res8"]/td[7]', 'Pass');
   }
 }
