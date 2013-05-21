@@ -23,16 +23,23 @@
 
 <table  border="0">
   <tr>
+    <td>&nbsp;</td>
     <td>x1:</td>
     <td>x2:</td>
     <td>y1:</td>
     <td>y2:</td>
+    <td>xs:</td>
+    <td>ys:</td>
   </tr>
   <tr>
+    <td><input type="checkbox" name="checkbox" id="checkbox">
+      only integer values&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><input type='text' size='5' name='x1' id='x1'></td>
     <td><input type='text' size='5' name='x2' id='x2'></td>
     <td><input type='text' size='5' name='y1' id='y1'></td>
     <td><input type='text' size='5' name='y2' id='y2'></td>
+    <td><input type='text' size='5' name='xs' id='xs'></td>
+    <td><input type='text' size='5' name='ys' id='ys'></td>
   </tr>
   </table>
 </div>
@@ -46,6 +53,8 @@
   var redraw = true;
   var boundaries = new Array(20,50,30,60);
   var active_line = 0;
+	var a1,a2,b1,b2;
+	var tx1,tx2,ty1,ty2,xs,ys;
   
   //creating data
   var graph_data = new Array();
@@ -83,7 +92,6 @@
   smooth();
 	//end of data creation
   
-  
   canvas = document.getElementById('canvas_graph');
 
 	if (canvas && canvas.getContext){
@@ -114,8 +122,8 @@
     ctx.fillStyle = cc;
     var pp= 0.4;
     var tt= 10;
-    var x1 = 1*(xx)+Math.cos(rr)*tt/2+pp;
-    var y1 = 1*(yy)+Math.sin(rr)*tt/2+pp;
+    var x1 = 1*(xx)+Math.cos(rr)*tt/2-pp;
+    var y1 = 1*(yy)+Math.sin(rr)*tt/2-pp;
     var x2 = Math.round(x1+Math.cos(rr-Math.PI+pp)*tt); 
     var y2 = Math.round(y1+Math.sin(rr-Math.PI+pp)*tt);
     var x3 = Math.round(x1+Math.cos(rr-Math.PI-pp)*tt); 
@@ -156,6 +164,7 @@
       context.clearRect(0,0,canvas.width,canvas.height);
       context.shadowColor = 'white';
       context.shadowBlur = 0;
+			 
       //drawing a graph  
       context.lineWidth = 1;
       drawLine(context,'#000',graph_x,canvas.height-graph_y,0,-graph_h);
@@ -172,6 +181,12 @@
       }
       context.stroke();
       
+			if (document.getElementById('checkbox').checked) {
+				for (i=0;i<4;i++) {
+					boundaries[i] = Math.round(boundaries[i]);
+				}
+			}
+			
       //displaying data 
       var x1 = graph_x+graph_w/100*boundaries[0];
       var x2 = graph_x+graph_w/100*boundaries[1];
@@ -234,6 +249,55 @@
       context.fillText(Math.round(boundaries[2]*10)/10+'%',graph_x-15,y3+5);
       context.fillText(Math.round(boundaries[3]*10)/10+'%',graph_x-15+divert,y4+5);      
       
+			//drawing cyan line
+      drawLine(context,'#00C0C0',x1,y4,x2-x1,y3-y4);
+			
+			//a and b for the first line
+			a1=0;b1=x2;
+      if (x2!=x1) {
+        a1 = (y3-y4)/(x2-x1);
+        b1 = y4 - a1*x1;
+      }
+
+			//searching for intersection
+			tx2 = graph_x;
+			ty2 = canvas.height-graph_y-5*graph_data[0];			
+      for (var i=1;i<100;i++) {
+				tx1 = graph_x+i*5;
+				ty1 = canvas.height-graph_y-5*graph_data[i];
+        
+				//a and b for the second line
+				a2=0;b2=tx1;
+        if (tx2!=tx1) {
+					a2 = (ty2-ty1)/(tx2-tx1);
+					b2 = ty1 - a2*tx1;
+				}
+						
+				if (a1 != a2) {
+					cx = (b2 - b1)/(a1 - a2);
+					if (tx2==tx1) cx=tx1;
+					cy = a1*cx + b1;
+				}				
+				if (cx>=tx2 && cx<=tx1 && (cy>=ty2 && cy<=ty1) || (cy>=ty1 && cy<=ty2)) {
+					if (cx>=x1 && cx<=x2 && cy>=y4 && cy<=y3) {
+  					xs = Math.round((cx-graph_x)/5*10)/10;
+  					ys = Math.round(-(cy-canvas.height+graph_y)/5*10)/10;
+						
+						for (var j=1;j<ys;j++) drawLine(context,'#00C0C0',cx,canvas.height-graph_y-5*j,0,3);      
+						for (var j=0;j<xs;j++) drawLine(context,'#00C0C0',graph_x+5*j,cy,3,0);      
+						xs+='%';
+						ys+='%';
+					}
+				}
+				if (xs == undefined) xs = '-';
+				if (ys == undefined) ys = '-';
+				document.getElementById('xs').value = xs;
+				document.getElementById('ys').value = ys;
+				tx2 = tx1;
+				ty2 = ty1;
+      }
+			
+
       //drawing boundaries
       var gap = 5;
       act(1);
