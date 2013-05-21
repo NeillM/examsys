@@ -49,7 +49,13 @@ $pass_mark        = $propertyObj->get_pass_mark();
 $distinction_mark = $propertyObj->get_distinction_mark();
 $paper_type       = $propertyObj->get_paper_type();
 
-$user_results = compile_report($userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+$percent  = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
+$ordering = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
+$absent   = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
+$sortby   = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
+
+$user_results = compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+$user_no = count($user_results);
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
@@ -138,17 +144,18 @@ if ($cohort_size > 0) {
     $percent_honours = 0;
   }
 
-  $size_msg = ($cohort_size < $display_no) ? $cohort_size . $string['of'] . $display_no : $display_no;
+  $size_msg = ($cohort_size < $user_no) ? $cohort_size . $string['of'] . $user_no : $user_no;
+
   $csv .= $string['cohortsize'] . ",$size_msg,,,,,,,,,,\n";
   $csv .= $string['failureno'] . "," . $stats['failures'] . ",(" . round($percent_failures) . "% of cohort),,,,,,,,,\n";
   $csv .= $string['passno'] . "," . $stats['passes'] . ",(" . round($percent_passes) . $string['percentofcohort'] . "),,,,,,,,,\n";
   if (isset($ss_hon)) {
     $csv .= $string['distinctionno'] . "," . $stats['honours'] . ",(" . round($percent_honours) . "% of cohort),,,,,,,,,\n";
   }
-  $csv .= $string['totalmarks'] . ",$total_marks,,,,,,,,,,\n";
+  $csv .= $string['totalmarks'] . "," . $paper_buffer['total_marks'] . ",,,,,,,,,,\n";
   $csv .= $string['passmark'] . ",$pass_mark%,,,,,,,,,,\n";
   if ($marking == '1') {
-    $csv .= $string['randommark'] . "," . number_format($total_random_mark, 2, '.', ',') . ",,,,,,,,,,\n";
+    $csv .= $string['randommark'] . "," . number_format($paper_buffer['total_random_mark'], 2, '.', ',') . ",,,,,,,,,,\n";
   } elseif (substr($marking,0,1) == '2') {
     $csv .= $string['ss'] . "," . round($ss_pass,2) . ",,,,,,,,,,\n";
     $csv .= $string['ssdistinction'] . "," . round($ss_hon,2) . ",,,,,,,,,,\n";

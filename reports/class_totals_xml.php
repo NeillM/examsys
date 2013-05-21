@@ -49,7 +49,13 @@ $pass_mark        = $propertyObj->get_pass_mark();
 $distinction_mark = $propertyObj->get_distinction_mark();
 $paper_type       = $propertyObj->get_paper_type();
 
-$user_results = compile_report($userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+$percent  = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
+$ordering = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
+$absent   = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
+$sortby   = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
+
+$user_results = compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+$user_no = count($user_results);
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
@@ -66,7 +72,7 @@ if ($marking == '0') {
 $percent_decimals = $configObject->get('percent_decimals');
 
 //output table heading
-$table_order = array('Title'=>'title', 'Surname'=>'Surname' ,'First Names'=>'First_Names','Student ID'=>'student_id','Course'=>'student_grade','Mark'=>'mark',$marking_label=>$marking_key,'Clasification'=>'mark','Rank'=>'rank','Start Time'=>'started','Duration'=>'duration','IP Address'=>'ipaddress');
+$table_order = array('Title'=>'title', 'Surname'=>'Surname', 'First Names'=>'First_Names', 'Student ID'=>'student_id', 'Course'=>'student_grade', 'Mark'=>'mark', $marking_label=>$marking_key, 'Clasification'=>'mark', 'Rank'=>'rank', 'Start Time'=>'started', 'Duration'=>'duration', 'IP Address'=>'ipaddress');
 $table_order['Room'] = 'room';
 $metadata_cols = array();
 $meta_col_count = 0;
@@ -320,7 +326,6 @@ echo '   <ProtectScenarios>False</ProtectScenarios>';
 echo '  </WorksheetOptions>';
 echo ' </Worksheet>';
 echo ' <Worksheet ss:Name="' . $string['summary'] . '">';
-//$exp_row_count = 20;
 $exp_row_count = 24;
 $exp_row_count += ($marking > 1) ? '2' : $marking;
 
@@ -331,7 +336,7 @@ if (isset($user_results[0]['metadata'])) {
 echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="' . $exp_row_count . '" x:FullColumns="1" x:FullRows="1">';
 echo '  <Column ss:AutoFitWidth="0" ss:Width="120"/>';
 
-$size_msg = ($cohort_size < $display_no) ? $cohort_size : $display_no;
+$size_msg = ($cohort_size < $user_no) ? $cohort_size . $string['of'] . $user_no : $user_no;
 echo '<Row>';
 echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['cohortsize'] . '</Data></Cell>';
 echo '<Cell><Data ss:Type="Number">' . $size_msg . '</Data></Cell>';
@@ -350,7 +355,7 @@ echo '<Cell><Data ss:Type="Number">' . $stats['honours'] . '</Data></Cell>';
 echo '</Row>';
 echo '<Row>';
 echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['totalmarks'] . '</Data></Cell>';
-echo '<Cell><Data ss:Type="Number">' . $total_marks . '</Data></Cell>';
+echo '<Cell><Data ss:Type="Number">' . $paper_buffer['total_marks'] . '</Data></Cell>';
 echo '</Row>';
 echo '<Row>';
 echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['passmark'] . '</Data></Cell>';
@@ -364,7 +369,7 @@ if ($marking == '0') {
 } elseif ($marking == '1') {
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['randommark'] . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="Number">' . number_format($total_random_mark, 1, '.', ',') . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="Number">' . number_format($paper_buffer['total_random_mark'], 2, '.', ',') . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['meanmark'] . '</Data></Cell>';

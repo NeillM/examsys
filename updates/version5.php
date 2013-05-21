@@ -362,8 +362,28 @@ if (!isset($_POST['update'])) {
     $sql = "CREATE TABLE cache_paper_stats (paperID mediumint(8) unsigned not null, cached int unsigned, max_mark decimal(10,5), max_percent decimal(10,5), min_mark decimal(10,5), min_percent decimal(10,5), q1 decimal(10,5), q2 decimal(10,5), q3 decimal(10,5), mean_mark decimal(10,5), mean_percent decimal(10,5), stdev_mark decimal(10,5), stdev_percent decimal(10,5), UNIQUE KEY `paperID` (`paperID`)) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
   }
+ 
+  // 20/05/2013 (brzsw) - Add cache_student_paper_marks table
+  if (!$updater_utils->does_table_exist('cache_student_paper_marks')) {
+    $sql = "CREATE TABLE cache_student_paper_marks (paperID mediumint(8) unsigned not null, userID int(10) unsigned, mark decimal(10,5), percent decimal(10,5)) ENGINE=InnoDB";
+    $updater_utils->execute_query($sql, true);
+    
+    $sql = "ALTER TABLE cache_student_paper_marks ADD CONSTRAINT pk_paperID_userID PRIMARY KEY (paperID, userID)";
+    $updater_utils->execute_query($sql, false);
+  }
+ 
+  // 20/05/2013 (brzsw) - Add cache_median_question_marks table
+  if (!$updater_utils->does_table_exist('cache_median_question_marks')) {
+    $sql = "CREATE TABLE cache_median_question_marks (paperID mediumint(8) unsigned not null, questionID int(10) unsigned, median decimal(10,5) ) ENGINE=InnoDB";
+    $updater_utils->execute_query($sql, true);
+
+    $sql = "ALTER TABLE cache_median_question_marks ADD CONSTRAINT pk_paperID_questionID PRIMARY KEY (paperID, questionID)";
+    $updater_utils->execute_query($sql, false);
+  }
+ 
 
 
+ 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */

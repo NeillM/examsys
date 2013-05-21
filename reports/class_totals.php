@@ -49,9 +49,14 @@ $pass_mark        = $propertyObj->get_pass_mark();
 $distinction_mark = $propertyObj->get_distinction_mark();
 $paper_type       = $propertyObj->get_paper_type();
 
-$user_results = compile_report($userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
-
+$percent      = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
+$ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
+$absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
+$sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
+
+$user_results = compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+$user_no = count($user_results);
 
 ob_start();
 ?>
@@ -67,11 +72,6 @@ ob_start();
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-<style type="text/css">
-  .warn-icon {
-    font-size: 90%;
-  }
-</style>
 
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -259,13 +259,14 @@ ob_start();
     
     $("#noteMsg").load(dataSource,function(responseTxt,statusTxt,xhr) {
       if (statusTxt=="success") {
-        document.getElementById('noteDiv').style.display="block";
-        document.getElementById('noteDiv').style.left = currentX+scrOfX+16 + 'px';
+        $("#noteDiv").css('display', 'block');
+        $("#noteDiv").css('left', currentX + scrOfX + 16 + 'px');
+
         top_pos = currentY+scrOfY-16;
         if (top_pos > ($(window).height() + scrOfY - 130)) {
           top_pos = $(window).height() + scrOfY - 130;
         }
-        document.getElementById('noteDiv').style.top = top_pos + 'px';
+        $("#noteDiv").css('top', top_pos + 'px');
       }
     });
   }
@@ -509,7 +510,7 @@ if ($language != 'en') {
   $absent_no = 0;
   $scatter_data = '';
   for ($i=0; $i<$user_no; $i++) {
-    extract( $user_results[$i] );
+    extract($user_results[$i]);
     $onclick = '';
 
     if ($user_results[$i]['visible'] == 1) {
@@ -702,17 +703,10 @@ if ($language != 'en') {
           }
         }
         echo "</tr>\n";
-
-        if ($stats['completed_no'] > 0) {
-          $user_results[$i]['xmean'] = (($user_results[$i]['mark'] - ($total_mark / $stats['completed_no'])) * ($user_results[$i]['mark'] - ($total_mark / $stats['completed_no'])));
-          $user_results[$i]['xmean_percent'] = (($user_results[$i]['adj_percent'] - ($total_mark / $stats['completed_no'])) * ($user_results[$i]['adj_percent'] - ($total_mark / $stats['completed_no'])));
-        } else {
-          $user_results[$i]['xmean'] = 0;
-          $user_results[$i]['xmean_percent'] = 0;
-        }
       }
     }
   }
+
   $scatter_file = fopen($configObject->get('cfg_tmpdir') . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
   fwrite($scatter_file, $scatter_data . "\n");
   fclose($scatter_file);
@@ -768,17 +762,17 @@ if ($language != 'en') {
     echo "<tr><td class=\"field\" style=\"width:170px\">" . $string['paper'] . "</td><td colspan=\"3\">$paper</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
-      if ($_GET['ordering'] == 'desc') {
+      if ($ordering == 'desc') {
         echo ' (top ' . $_GET['percent'] . '%)';
       } else {
         echo ' (bottom ' . $_GET['percent'] . '%)';
       }
     }
-
-    $size_msg = ($cohort_size < $display_no) ? $cohort_size . $string['of'] . $display_no : $display_no;
+    
+    $size_msg = ($cohort_size < $user_no) ? $cohort_size . $string['of'] . $user_no : $user_no;
     echo "</td><td class=\"r\" style=\"width:60px\">$size_msg</td>";
-    if (($stats['completed_no'] + $stats['out_of_range']) < $display_no) {
-      echo '<td>(' . ($display_no - $stats['completed_no'] - $stats['out_of_range']). ' ' . $string['candidatenotcomplete'] . ')</td>';
+    if (($stats['completed_no'] + $stats['out_of_range']) < $user_no) {
+      echo '<td>(' . ($user_no - $stats['completed_no'] - $stats['out_of_range']). ' ' . $string['candidatenotcomplete'] . ')</td>';
     } else {
       echo '<td>';
       if ($absent_no == 1) {
@@ -805,13 +799,13 @@ if ($language != 'en') {
     echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\"> " . $stats['honours'] . "</td><td>(" . $percent_honours . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
 
     echo "<tr><td class=\"field\">" . $string['totalmarks'] . "</td><td class=\"r\">";
-    if ($total_marks < $orig_total_marks) echo "<span class=\"exclude\">$orig_total_marks</span>&nbsp;&nbsp;";
-    echo "$total_marks</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+    if ($paper_buffer['total_marks'] < $paper_buffer['orig_total_marks']) echo "<span class=\"exclude\">" . $paper_buffer['orig_total_marks'] . "</span>&nbsp;&nbsp;";
+    echo $paper_buffer['total_marks'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['passmark'] . "</td><td class=\"r\">$pass_mark%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     if ($marking == '1') {
-      echo "<tr><td class=\"field\">" . $string['randommark'] . "</td><td class=\"r\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['randommark'] . "</td><td class=\"r\">" . number_format($paper_buffer['total_random_mark'], 2, '.', ',') . "</td><td>&nbsp;</td></tr>\n";
       if ($stats['completed_no'] > 0) {
-        if ($total_marks > 0) {
+        if ($paper_buffer['total_marks'] > 0) {
           echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . $stats['mean_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
         } else {
           echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
@@ -851,10 +845,10 @@ if ($language != 'en') {
       echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"r\">" . formatsec(round($stats['total_time'] / $stats['completed_no'], 0)) . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     }
     if ($exclusions->get_excluded_no() > 0) {
-      echo "<tr><td class=\"field\">" . $string['excludedquestions'] . "</td><td colspan=\"3\">$display_excluded</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['excludedquestions'] . "</td><td colspan=\"3\">" . $paper_buffer['display_excluded'] . "</td></tr>\n";
     }
-    if ($display_experimental != '') {
-      echo "<tr><td class=\"field\">" . $string['experimantalquestions'] . "</td><td colspan=\"3\">$display_experimental</td></tr>\n";
+    if ($paper_buffer['display_experimental'] != '') {
+      echo "<tr><td class=\"field\">" . $string['experimantalquestions'] . "</td><td colspan=\"3\">" . $paper_buffer['display_experimental'] . "</td></tr>\n";
     }
     echo "</table></td>\n";
     
@@ -929,7 +923,7 @@ if ($language != 'en') {
         $message = str_replace("{student-last-name}", $user_results[$i]['surname'], $message);
         $message = str_replace("{student-mark}", $user_results[$i]['mark'], $message);
         $message = str_replace("{student-percent}", $user_results[$i]['adj_percent'], $message);
-        $message = str_replace("{total-paper-mark}", $total_marks, $message);
+        $message = str_replace("{total-paper-mark}", $paper_buffer['total_marks'], $message);
         $message = str_replace("{student-time}", formatsec($user_results[$i]['duration']), $message);
         $message = str_replace("{class-mean-mark}", $stats['mean_mark'], $message);
         $message = str_replace("{class-mean-percent}", $stats['mean_percent'], $message);
@@ -941,19 +935,19 @@ if ($language != 'en') {
         $message = str_replace("{class-max-mark}", $stats['max_mark'], $message);
         $message = str_replace("{class-min-mark}", $stats['min_mark'], $message);
         $message = str_replace("{class-mean-time}", formatsec(round($total_time / $stats['completed_no'],0)), $message);
-        $message = str_replace("{random-mark}", number_format($total_random_mark, 1, '.', ','), $message);
+        $message = str_replace("{random-mark}", number_format($paper_buffer['total_random_mark'], 1, '.', ','), $message);
         $message = str_replace("{paper-title}", $paper, $message);
 
         $to = $user_results[$i]['email'];
 
         $subject = $_POST['subject'];
-        $subject = str_replace("{total-paper-mark}", $total_marks, $subject);
+        $subject = str_replace("{total-paper-mark}", $paper_buffer['total_marks'], $subject);
         $subject = str_replace("{class-mean-mark}", round($total_mark / $stats['completed_no'], 1), $subject);
         $subject = str_replace("{class-mean-percent}", $stats['mean_percent'], $subject);
         $subject = str_replace("{class-max-mark}", $stats['max_mark'], $subject);
         $subject = str_replace("{class-min-mark}", $stats['min_mark'], $subject);
         $subject = str_replace("{class-mean-time}", formatsec(round($total_time / $stats['completed_no'],0)), $subject);
-        $subject = str_replace("{random-mark}", number_format($total_random_mark, 1, '.', ','), $subject);
+        $subject = str_replace("{random-mark}", number_format($paper_buffer['total_random_mark'], 1, '.', ','), $subject);
         $subject = str_replace("{paper-title}", $paper, $subject);
 
         $headers = "From: " . $_POST['from'] . "\n";
