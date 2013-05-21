@@ -50,7 +50,7 @@ function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $u
   $moduleID = Paper_utils::get_modules($paperID, $mysqli);
   $moduleID_in = implode(',', array_keys($moduleID));
 
-  $results_cache = new ResultsCache($mysqli);
+  $results_cache = new ResultsCache($propertyObj, $percent, $absent, $mysqli);
   $exclusions    = new Exclusion($paperID, $mysqli);
 
   $marking       = $propertyObj->get_marking();
@@ -58,7 +58,7 @@ function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $u
   $paper_type    = $propertyObj->get_paper_type();
   $calendar_year = $propertyObj->get_calendar_year();
 
-  $exclusions->load();                                                                              // Get any questions to exclude.
+  $exclusions->load();                                                                                // Get any questions to exclude.
 
   $paper_buffer = load_answers($exclusions, $question_no, $mysqli);
 
@@ -66,9 +66,9 @@ function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $u
 
   $student_cohort = get_absent($moduleID_in, $paperID, $calendar_year, $demo, $mysqli);
 
-  $user_modules = get_users($moduleID_in, $paperID, $calendar_year, $mysqli);                       // Get all the users on the module(s) the paper is on. 
+  $user_modules = get_users($moduleID_in, $paperID, $calendar_year, $mysqli);                         // Get all the users on the module(s) the paper is on. 
 
-  $metadata_array = get_metadata($moduleID_in, $calendar_year, $mysqli);                            // Query for metadata
+  $metadata_array = get_metadata($moduleID_in, $calendar_year, $mysqli);                              // Query for metadata
 
   $user_results = load_results($studentsonly, $propertyObj, $demo, $configObject, $metadata_array, $log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $paper_buffer, $q_medians, $mysqli);  // Load the student results
 
@@ -76,27 +76,27 @@ function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $u
   
   adjust_marks($paper_buffer, $marking, $exclusions, $ss_pass, $ss_hon, $propertyObj, $user_results, $mysqli);
 
-  add_rank($user_results);                                                                          // Add in rank data.
+  add_rank($user_results);                                                                            // Add in rank data.
 
-  convert_moduleIDs($user_results, $mysqli);                                                        // Convert Module IDs into codes
+  convert_moduleIDs($user_results, $mysqli);                                                          // Convert Module IDs into codes
 
   $cohort_size  = flag_subpart($user_results, $percent, $ordering, $absent);
 
-  add_late_students($user_results, $late_cohort, $paper_type);                                      // Add in late users into main dataset
+  add_late_students($user_results, $late_cohort, $paper_type);                                        // Add in late users into main dataset
 
-  add_absent_students($absent, $user_results, $student_cohort);                                     // Add any absent students into main dataset
+  add_absent_students($absent, $user_results, $student_cohort);                                       // Add any absent students into main dataset
 
-  $stats = get_stats($user_results, $question_no, $propertyObj);                                    // Generate the main statistics
+  $stats = get_stats($user_results, $question_no, $propertyObj);                                      // Generate the main statistics
 
-  writeStudentDeciles($user_results, $stats);                                                       // Add in deciles per student
+  writeStudentDeciles($user_results, $stats);                                                         // Add in deciles per student
 
-  sort_results($percent, $ordering, $sortby, $user_results);                                        // Sort the whole array by the right column
+  sort_results($percent, $ordering, $sortby, $user_results);                                          // Sort the whole array by the right column
 
-  $results_cache->save_paper_cache($paperID, $percent, $absent, $stats);                            // Cache general paper stats
+  $results_cache->save_paper_cache($stats);                                                           // Cache general paper stats
   
-  $results_cache->save_student_mark_cache($paperID, $percent, $absent, $user_results);              // Cache student/paper marks
+  $results_cache->save_student_mark_cache($user_results);                                             // Cache student/paper marks
   
-  $results_cache->save_median_question_marks($paperID, $percent, $absent, $q_medians);              // Cache the question/paper medians
+  $results_cache->save_median_question_marks($q_medians);                                             // Cache the question/paper medians
   
   return $user_results;
 }

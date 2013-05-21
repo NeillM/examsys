@@ -23,13 +23,41 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/class_totals.inc';
+require_once '../include/errors.inc';
+require_once '../include/class_totals.inc';
+
+$displayDebug = false; //disable debug output in this script as it effects the output
+
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$startdate  = check_var('startdate', 'GET', true, false, true);
+$enddate    = check_var('enddate', 'GET', true, false, true);
+
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
+
+if (!$propertyObj) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+$paper            = $propertyObj->get_paper_title();
+$marking          = $propertyObj->get_marking();
+$pass_mark        = $propertyObj->get_pass_mark();
+$distinction_mark = $propertyObj->get_distinction_mark();
+$paper_type       = $propertyObj->get_paper_type();
+
+$percent      = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
+$ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
+$absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
+$sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
+$studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
+
+$user_results = compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+$user_no = count($user_results);
 
 header('Pragma: public');
 header('Content-type: application/octet-stream');
 header("Content-Disposition: attachment; filename=new_" . str_replace(' ', '_', $paper) . "_EM.csv");
-
-$displayDebug = false; //disable debug output in this script as it effects the output
 
 function get_correct_labels($question, $tmp_exclude) {
   $correct_labels = array();
@@ -57,6 +85,12 @@ $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', '
 
 $csv = '';
 
+unset($paper_buffer['total_marks']);
+unset($paper_buffer['orig_total_marks']);
+unset($paper_buffer['total_random_mark']);
+unset($paper_buffer['display_experimental']);
+unset($paper_buffer['display_excluded']);
+
 $row_written = 0;
 foreach ($user_results as $individual) {
   $tmp_user_ID = $individual['username'];
@@ -70,11 +104,12 @@ foreach ($user_results as $individual) {
     }
     $q_no = 1;
     foreach ($paper_buffer as $q_id => $question) {
-      if (array_key_exists($q_id,$excluded)) {
-        $tmp_exclude = $excluded[$q_id];
-      } else {
-        $tmp_exclude = '0000000000000000000000000000000000000000';
-      }
+      $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
+      //if (array_key_exists($q_id, $excluded)) {
+      //  $tmp_exclude = $excluded[$q_id];
+      //} else {
+      //  $tmp_exclude = '0000000000000000000000000000000000000000';
+      //}
       // If a random question, get the first on the associated questions from the block. If none exist, output nothing
       $skip_random = false;
       if ($question['q_type'] == 'random') {
@@ -111,19 +146,20 @@ foreach ($user_results as $individual) {
           }
         } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank') and $question['score_method'] == 'Mark per Option') {
           for ($a=0; $a<count($question['correct']); $a++) {
-            if (substr($tmp_exclude, $a, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
+            if ($tmp_exclude{$a} == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
           for ($a=0; $a <(count($question['correct_labels']) + substr_count($tmp_exclude, '1')); $a++) {
-            if (substr($tmp_exclude, $a, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
+            if ($tmp_exclude{$a} == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
           $paper_answers = explode('|', $question['correct'][0]);
           for ($a=0; $a<count($paper_answers); $a++) {
-            if (substr($tmp_exclude, $a, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
+            if ($tmp_exclude{$a} == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } else {
-          if (!array_key_exists($q_id, $excluded)) $csv .= ',Q' . $q_no;
+          //if (!array_key_exists($q_id, $excluded)) $csv .= ',Q' . $q_no;
+          if ($tmp_exclude{0} == '0') $csv .= ',Q' . $q_no;
         }
         $q_no++;
       }
@@ -139,11 +175,13 @@ foreach ($user_results as $individual) {
       $csv .= '"' . $individual['gender'] . '","' . $individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
     }
     foreach ($paper_buffer as $q_id => $question) {
-      if (array_key_exists($q_id, $excluded)) {
-        $tmp_exclude = $excluded[$q_id];
-      } else {
-        $tmp_exclude = '0000000000000000000000000000000000000000';
-      }
+      $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
+
+      //if (array_key_exists($q_id, $excluded)) {
+      //  $tmp_exclude = $excluded[$q_id];
+      //} else {
+      //  $tmp_exclude = '0000000000000000000000000000000000000000';
+      //}
       // If a random question, get the one that the user answered, otherwise just get the first and skip if none exist
       $skip_random = false;
       if ($question['q_type'] == 'random') {
@@ -187,19 +225,20 @@ foreach ($user_results as $individual) {
             }
           } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank') and $question['score_method'] == 'Mark per Option') {
             for ($a=0; $a<count($question['correct']); $a++) {
-              if (substr($tmp_exclude,$a,1) == '0') $csv .= ',0';
+              if ($tmp_exclude{$a} == '0') $csv .= ',0';
             }
           } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
             for ($a=0; $a < count($question['correct_labels']); $a++) {
-              if (substr($tmp_exclude, $a, 1) == '0') $csv .= ',0';
+              if ($tmp_exclude{$a} == '0') $csv .= ',0';
             }
           } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
             $paper_answers = explode("|",$question['correct'][0]);
             for ($a=0; $a<count($paper_answers); $a++) {
-              if (substr($tmp_exclude,$a,1) == '0') $csv .= ',0';
+              if ($tmp_exclude{$a} == '0') $csv .= ',0';
             }
           } else {
-            if (!array_key_exists($q_id,$excluded)) $csv .= ',0';
+            //if (!array_key_exists($q_id,$excluded)) $csv .= ',0';
+            if ($tmp_exclude{0} == '0') $csv .= ',0';
           }
         }
       }

@@ -49,10 +49,11 @@ $pass_mark        = $propertyObj->get_pass_mark();
 $distinction_mark = $propertyObj->get_distinction_mark();
 $paper_type       = $propertyObj->get_paper_type();
 
-$percent  = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
-$ordering = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
-$absent   = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
-$sortby   = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
+$percent      = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
+$ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
+$absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
+$sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
+$studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 
 $user_results = compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
 $user_no = count($user_results);

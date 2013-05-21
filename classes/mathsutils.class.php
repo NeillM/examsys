@@ -104,6 +104,13 @@ Class MathsUtils {
     return $median;
   }
   
+  static function mean($arr) {
+    $total = array_sum($arr);
+    $no = count($arr);
+    
+    return $total / $no;
+  }
+
   /**
    * Returns a percentile from a list of numbers
    * @param array set of numbers to base the percentile on

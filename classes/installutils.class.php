@@ -1550,6 +1550,46 @@ QUERY;
       ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['cache_median_question_marks'] = <<<QUERY
+      CREATE TABLE `cache_median_question_marks` (
+        `paperID` mediumint(8) unsigned NOT NULL,
+        `questionID` int(10) unsigned NOT NULL DEFAULT '0',
+        `median` decimal(10,5) DEFAULT NULL,
+        `mean` decimal(10,5) DEFAULT NULL,
+        PRIMARY KEY (`paperID`,`questionID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['cache_paper_stats'] = <<<QUERY
+      CREATE TABLE `cache_paper_stats` (
+        `paperID` mediumint(8) unsigned NOT NULL,
+        `cached` int(10) unsigned DEFAULT NULL,
+        `max_mark` decimal(10,5) DEFAULT NULL,
+        `max_percent` decimal(10,5) DEFAULT NULL,
+        `min_mark` decimal(10,5) DEFAULT NULL,
+        `min_percent` decimal(10,5) DEFAULT NULL,
+        `q1` decimal(10,5) DEFAULT NULL,
+        `q2` decimal(10,5) DEFAULT NULL,
+        `q3` decimal(10,5) DEFAULT NULL,
+        `mean_mark` decimal(10,5) DEFAULT NULL,
+        `mean_percent` decimal(10,5) DEFAULT NULL,
+        `stdev_mark` decimal(10,5) DEFAULT NULL,
+        `stdev_percent` decimal(10,5) DEFAULT NULL,
+        UNIQUE KEY `paperID` (`paperID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['cache_student_paper_marks'] = <<<QUERY
+      CREATE TABLE `cache_student_paper_marks` (
+        `paperID` mediumint(8) unsigned NOT NULL,
+        `userID` int(10) unsigned NOT NULL DEFAULT '0',
+        `mark` decimal(10,5) DEFAULT NULL,
+        `percent` decimal(10,5) DEFAULT NULL,
+        PRIMARY KEY (`paperID`,`userID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+
     $this->tableList['class_totals_test_local'] = <<<QUERY
         CREATE TABLE `class_totals_test_local` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
