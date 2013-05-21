@@ -18,7 +18,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-07 14:45:44',104,'0','n','n','0',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2013-01-07 14:45:44',104,'0','n','n','0.00',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -44,7 +44,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2012-12-12 12:12:42',105,'0','n','n','100',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2012-12-12 12:12:42',105,'0','n','n','100.00',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -63,14 +63,14 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '12 out of 12');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100.00%');
   }
 
   public function testAllIncorrect() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2012-12-12 12:12:50',106,'0','n','n','-33',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2012-12-12 12:12:50',106,'0','n','n','-33.33',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -89,14 +89,14 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '-4 out of 12');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '-33%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '-33.33%');
   }
 
   public function testMixed() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2012-12-12 12:12:57',107,'0','n','n','42',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2012-12-12 12:12:57',107,'0','n','n','41.67',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -115,7 +115,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '5 out of 12');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '42%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '41.67%');
   }
 }
 ?>
