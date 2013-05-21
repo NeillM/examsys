@@ -916,7 +916,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testClassTotals() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20230215120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20230215120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
 
     $this->assertElementContainsText('//tr[@id="res7"]/td[5]', '0');
     $this->assertElementContainsText('//tr[@id="res7"]/td[6]', '0%');

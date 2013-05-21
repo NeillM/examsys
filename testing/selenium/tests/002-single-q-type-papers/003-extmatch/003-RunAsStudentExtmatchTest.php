@@ -1603,7 +1603,7 @@ class RunAsStudentExtmatchTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testClassTotals() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=3&startdate=20130102000000&enddate=20230117150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->open("/reports/class_totals.php?paperID=3&startdate=20130102000000&enddate=20230117150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
 
     // Individuals
     $this->assertElementContainsText('//tr[@id="res6"]/td[5]', '0');

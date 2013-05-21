@@ -17,7 +17,7 @@ class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testUnanswered() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
     $this->click("//span[@onclick=\"popMenu('2013-01-07 15:38:40',104,'0','n','n','-33',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
@@ -46,7 +46,7 @@ class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testAllCorrect() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
     $this->click("//span[@onclick=\"popMenu('2012-12-14 11:13:31',105,'0','n','n','100',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
@@ -75,7 +75,7 @@ class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testAllIncorrect() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
         $this->click("//span[@onclick=\"popMenu('2013-01-07 15:38:40',104,'0','n','n','-33',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
@@ -104,7 +104,7 @@ class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testMixed() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530217150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
     $this->click("//span[@onclick=\"popMenu('2012-12-14 11:39:48',107,'0','n','n','13',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
@@ -133,7 +133,7 @@ class ExamScrtiptMarksMRQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testPartialAnswers() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530218110000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->open("/reports/class_totals.php?paperID=2&startdate=20120113000000&enddate=20530218110000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
     $this->click("//span[@onclick=\"popMenu('2013-01-18 09:29:13',108,'0','n','n','-13',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");

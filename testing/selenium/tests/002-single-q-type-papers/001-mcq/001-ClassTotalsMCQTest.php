@@ -17,7 +17,7 @@ class ClassTotalsMCQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testResults() {
     do_staff_login($this);
 
-    $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113100000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&direction=asc");
+    $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113100000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
 
     // Individuals
     $this->assertElementContainsText('//tr[@id="res1"]/td[5]', '0');
