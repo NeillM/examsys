@@ -2450,7 +2450,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
       if (isset($_GET['percent'])) {
         $percent = $_GET['percent'];
       } else {
-        $percent = MathsUtils::formatNumber($user_mark / $total_marks);
+        $percent = MathsUtils::formatNumber(($user_mark / $total_marks) * 100);
         $gradetoret = $user_mark / $total_marks;
         if ($gradetoret < 0) $gradetoret = 0;
         if (isset($lit) and $lti->valid) {
