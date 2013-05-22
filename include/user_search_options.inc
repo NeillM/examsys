@@ -68,6 +68,10 @@ if (isset($_GET['calendar_year'])) {
     document.location.href='details.php?userID=' + getLastID(document.getElementById('userID').value);
   }
   
+  function viewOverviewReport() {
+    document.location.href='../reports/student_overview.php?userID=' + getLastID(document.getElementById('userID').value);
+  }
+  
   function deleteUser() {
     notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_user.php?id=" + document.getElementById('userID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
@@ -239,7 +243,8 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 <div class="submenuheading"><?php echo $string['currentusertasks']; ?></div>
 
 <table class="sidebar_tbl" id="menu2a">
-<tr><td><img src="../artwork/user_file_icon_grey_16.gif" width="16" height="16" alt="User Details" /></td><td class="greymenuitem"><?php echo $string['viewuserfile']; ?></td></tr>
+<tr><td><img src="../artwork/user_file_icon_grey_16.gif" width="16" height="16" alt="<?php echo $string['viewuserfile']; ?>" /></td><td class="greymenuitem"><?php echo $string['viewuserfile']; ?></td></tr>
+<tr><td><img src="../artwork/report_grey_16.png" width="16" height="16" alt="<?php echo $string['performsummary']; ?>" /></td><td class="greymenuitem"><?php echo $string['performsummary']; ?></td></tr>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="' . $string['createnewuser'] . '" /></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
@@ -252,6 +257,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 
 <table class="sidebar_tbl" style="display:none" id="menu2b">
 <tr><td class="ico"><a href="#" onclick="viewProfileSingle(); return false;"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="<?php echo $string['viewuserfile']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
+<tr><td class="ico"><a href="#" onclick="viewOverviewReport(); return false;"><img src="../artwork/report_16.png" width="16" height="16" alt="<?php echo $string['performsummary']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewOverviewReport(); return false;" href="#"><?php echo $string['performsummary']; ?></a></td></tr>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td class="ico"><img src="../artwork/small_user_icon_grey.gif" width="16" height="16" alt="' . $string['createnewuser'] . '" /></td><td class="greymenuitem">' . $string['createnewuser'] . '</td></tr>';
@@ -261,6 +267,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 
 <table class="sidebar_tbl" style="display:none" id="menu2c">
 <tr><td class="ico"><a onclick="viewProfileSingle(); return false;" href="#"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="<?php echo $string['viewuserfile']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
+<tr><td class="ico"><a href="#" onclick="viewOverviewReport(); return false;"><img src="../artwork/report_16.png" width="16" height="16" alt="<?php echo $string['performsummary']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewOverviewReport(); return false;" href="#"><?php echo $string['performsummary']; ?></a></td></tr>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="' . $string['createnewuser'] . '" /></a></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';

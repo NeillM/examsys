@@ -50,7 +50,7 @@ function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $u
   $moduleID = Paper_utils::get_modules($paperID, $mysqli);
   $moduleID_in = implode(',', array_keys($moduleID));
 
-  $results_cache = new ResultsCache($propertyObj, $percent, $absent, $mysqli);
+  $results_cache = new ResultsCache($mysqli);
   $exclusions    = new Exclusion($paperID, $mysqli);
 
   $marking       = $propertyObj->get_marking();
@@ -92,11 +92,13 @@ function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $u
 
   sort_results($percent, $ordering, $sortby, $user_results);                                          // Sort the whole array by the right column
 
-  $results_cache->save_paper_cache($stats);                                                           // Cache general paper stats
-  
-  $results_cache->save_student_mark_cache($user_results);                                             // Cache student/paper marks
-  
-  $results_cache->save_median_question_marks($q_medians);                                             // Cache the question/paper medians
+  if ($results_cache->should_cache($propertyObj, $percent, $absent, $percent, $absent, $paperID)) {
+    $results_cache->save_paper_cache($propertyObj, $percent, $absent, $stats, $paperID);                // Cache general paper stats
+    
+    $results_cache->save_student_mark_cache($propertyObj, $percent, $absent, $user_results, $paperID);  // Cache student/paper marks
+    
+    $results_cache->save_median_question_marks($propertyObj, $percent, $absent, $q_medians, $paperID);  // Cache the question/paper medians
+  }
   
   return $user_results;
 }
@@ -1162,10 +1164,10 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
     $log_query = $db->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObj->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
     $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
   } elseif ($paper_type == '5') {
-    $log_query =   $db->prepare("SELECT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
+    $log_query = $db->prepare("SELECT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$configObj->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
     $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
   } else {
-    $log_query = $db->prepare("SELECT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
+    $log_query = $db->prepare("SELECT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObj->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
     $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
   }
   $log_query->execute();

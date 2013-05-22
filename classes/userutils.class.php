@@ -573,6 +573,24 @@ Class UserUtils {
     }
     return $s;
   }
+  
+  static function load_student_modules($userID, $db) {
+    $studentModules = array();
+
+    // studentmodule year -> module ->decode
+    $result = $db->prepare("SELECT idMod, moduleID, calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
+    $result->bind_param('i', $userID);
+    $result->execute();
+
+    $result->bind_result($idMod, $moduleID, $calyear);
+    while ($result->fetch()) {
+      $studentModules[$calyear][$idMod] = $moduleID;
+    }
+    $result->close();
+
+    return $studentModules;
+  }
+
 
 }
 
