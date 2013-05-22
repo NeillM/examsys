@@ -77,7 +77,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[4]/table/tbody/tr[2]/td[2]', '0 out of 26');
     $this->assertElementContainsText('//div[4]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '0.0%');
+    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '0.00%');
   }
 
   public function testCompletePaperCorrect() {
@@ -132,7 +132,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[4]/table/tbody/tr[2]/td[2]', '26 out of 26');
     $this->assertElementContainsText('//div[4]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '100.0%');
+    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '100.00%');
   }
 
   public function testCompletePaperIncorrect() {
@@ -186,7 +186,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[4]/table/tbody/tr[2]/td[2]', '-8 out of 26');
     $this->assertElementContainsText('//div[4]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '-30.8%');
+    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '-30.77%');
   }
 
   public function testCompletePaperMixed1() {
@@ -238,7 +238,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[4]/table/tbody/tr[2]/td[2]', '3 out of 26');
     $this->assertElementContainsText('//div[4]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '11.5%');
+    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '11.54%');
   }
 
   public function testCompletePaperMixed2() {
@@ -290,7 +290,7 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[4]/table/tbody/tr[2]/td[2]', '0 out of 26');
     $this->assertElementContainsText('//div[4]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '0.0%');
+    $this->assertElementContainsText('//div[4]/table/tbody/tr[4]/td[2]', '0.00%');
   }
 
   public function testClassTotals() {
@@ -300,23 +300,23 @@ class RunAsStudentBlankTest extends PHPUnit_Extensions_SeleniumTestCase
 
     // Individuals
     $this->assertElementContainsText('//tr[@id="res6"]/td[5]', '0');
-    $this->assertElementContainsText('//tr[@id="res6"]/td[6]', '0%');
+    $this->assertElementContainsText('//tr[@id="res6"]/td[6]', '0.00%');
     $this->assertElementContainsText('//tr[@id="res6"]/td[7]', 'Fail');
 
     $this->assertElementContainsText('//tr[@id="res7"]/td[5]', '26');
-    $this->assertElementContainsText('//tr[@id="res7"]/td[6]', '100%');
+    $this->assertElementContainsText('//tr[@id="res7"]/td[6]', '100.00%');
     $this->assertElementContainsText('//tr[@id="res7"]/td[7]', 'Distinction');
 
     $this->assertElementContainsText('//tr[@id="res8"]/td[5]', '-8');
-    $this->assertElementContainsText('//tr[@id="res8"]/td[6]', '-31%');
+    $this->assertElementContainsText('//tr[@id="res8"]/td[6]', '-30.77%');
     $this->assertElementContainsText('//tr[@id="res8"]/td[7]', 'Fail');
 
     $this->assertElementContainsText('//tr[@id="res9"]/td[5]', '3');
-    $this->assertElementContainsText('//tr[@id="res9"]/td[6]', '12%');
+    $this->assertElementContainsText('//tr[@id="res9"]/td[6]', '11.54%');
     $this->assertElementContainsText('//tr[@id="res9"]/td[7]', 'Fail');
 
     $this->assertElementContainsText('//tr[@id="res10"]/td[5]', '0');
-    $this->assertElementContainsText('//tr[@id="res10"]/td[6]', '0%');
+    $this->assertElementContainsText('//tr[@id="res10"]/td[6]', '0.00%');
     $this->assertElementContainsText('//tr[@id="res10"]/td[7]', 'Fail');
   }
 }
