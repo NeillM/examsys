@@ -18,7 +18,7 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20530115120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-14 14:30:17',104,'0','n','n','0',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2013-01-14 14:30:17',104,'0','n','n','0.00',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -40,14 +40,14 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '0 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '0%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '0.00%');
   }
 
   public function testAllCorrect() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20530115120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-15 09:48:40',105,'0','n','n','100',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2013-01-15 09:48:40',105,'0','n','n','100.00',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -69,14 +69,14 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '18 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100.00%');
   }
 
   public function testAllCorrectWithTolerance() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20530115120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-15 09:53:30',106,'0','n','n','100',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2013-01-15 09:53:30',106,'0','n','n','100.00',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -113,14 +113,14 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '18 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100.00%');
   }
 
   public function testPartial() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20530115120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-15 09:58:08',107,'0','n','n','67',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2013-01-15 09:58:08',107,'0','n','n','66.67',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -160,14 +160,14 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '12 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '67%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '66.67%');
   }
 
   public function testAllIncorrect() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20530115120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-15 10:41:51',108,'0','n','n','-25',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2013-01-15 10:41:51',108,'0','n','n','-25.00',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -189,14 +189,14 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '-4.5 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '-25%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '-25.00%');
   }
 
   public function testMixed() {
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20530115120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-15 11:08:17',109,'0','n','n','50',event);\"]");
+    $this->click("//span[@onclick=\"popMenu('2013-01-15 11:08:17',109,'0','n','n','50.00',event);\"]");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -232,7 +232,7 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '9 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '50%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '50.00%');
   }
 }
 ?>
