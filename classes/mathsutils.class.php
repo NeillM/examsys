@@ -77,7 +77,8 @@ Class MathsUtils {
       if ($decimal_pos === false) {
         $number .= '.' . str_repeat('0', $decimals);
       } elseif (($strlength - $decimal_pos  - 1) < $decimals) {
-        $number .= str_repeat('0', (strpos($number, '.') - 1));
+        $target_length = $decimal_pos + $decimals + 1;
+        $number = str_pad($number, $target_length, '0');
       }
     }
     
