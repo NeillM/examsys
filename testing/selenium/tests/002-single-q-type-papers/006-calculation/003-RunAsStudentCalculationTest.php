@@ -196,7 +196,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '0 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '0.0%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '0.00%');
   }
 
   public function testCompletePaperCorrect() {
@@ -326,7 +326,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '18 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100.0%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100.00%');
   }
 
   public function testCompletePaperCorrectWithTolerance() {
@@ -473,7 +473,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '18 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100.0%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '100.00%');
   }
 
   public function testCompletePaperPartialMarks() {
@@ -629,7 +629,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '12 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '66.7%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '66.67%');
   }
 
   public function testCompletePaperIncorrect() {
@@ -763,7 +763,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '-4.5 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '-25.0%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '-25.00%');
   }
 
   public function testCompletePaperMixed() {
@@ -910,7 +910,7 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     // Overall Marks
     $this->assertElementContainsText('//div[5]/table/tbody/tr[2]/td[2]', '9 out of 18');
     $this->assertElementContainsText('//div[5]/table/tbody/tr[3]/td[2]', '40%');
-    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '50.0%');
+    $this->assertElementContainsText('//div[5]/table/tbody/tr[4]/td[2]', '50.00%');
   }
 
   public function testClassTotals() {
@@ -919,27 +919,27 @@ class RunAsStudentCalculationTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->open("/reports/class_totals.php?paperID=6&startdate=20130101000000&enddate=20230215120000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
 
     $this->assertElementContainsText('//tr[@id="res7"]/td[5]', '0');
-    $this->assertElementContainsText('//tr[@id="res7"]/td[6]', '0%');
+    $this->assertElementContainsText('//tr[@id="res7"]/td[6]', '0.00%');
     $this->assertElementContainsText('//tr[@id="res7"]/td[7]', 'Fail');
 
     $this->assertElementContainsText('//tr[@id="res8"]/td[5]', '18');
-    $this->assertElementContainsText('//tr[@id="res8"]/td[6]', '100%');
+    $this->assertElementContainsText('//tr[@id="res8"]/td[6]', '100.00%');
     $this->assertElementContainsText('//tr[@id="res8"]/td[7]', 'Distinction');
 
     $this->assertElementContainsText('//tr[@id="res9"]/td[5]', '18');
-    $this->assertElementContainsText('//tr[@id="res9"]/td[6]', '100%');
+    $this->assertElementContainsText('//tr[@id="res9"]/td[6]', '100.00%');
     $this->assertElementContainsText('//tr[@id="res9"]/td[7]', 'Distinction');
 
     $this->assertElementContainsText('//tr[@id="res10"]/td[5]', '12');
-    $this->assertElementContainsText('//tr[@id="res10"]/td[6]', '67%');
+    $this->assertElementContainsText('//tr[@id="res10"]/td[6]', '66.67%');
     $this->assertElementContainsText('//tr[@id="res10"]/td[7]', 'Pass');
 
     $this->assertElementContainsText('//tr[@id="res11"]/td[5]', '-4.5');
-    $this->assertElementContainsText('//tr[@id="res11"]/td[6]', '-25%');
+    $this->assertElementContainsText('//tr[@id="res11"]/td[6]', '-25.00%');
     $this->assertElementContainsText('//tr[@id="res11"]/td[7]', 'Fail');
 
     $this->assertElementContainsText('//tr[@id="res12"]/td[5]', '9');
-    $this->assertElementContainsText('//tr[@id="res12"]/td[6]', '50%');
+    $this->assertElementContainsText('//tr[@id="res12"]/td[6]', '50.00%');
     $this->assertElementContainsText('//tr[@id="res12"]/td[7]', 'Pass');
   }
 
