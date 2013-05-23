@@ -755,7 +755,7 @@ if ($language != 'en') {
     // Display summary -------------------------------------------------------------------------------------
     
     echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" style=\"font-size:85%; width:100%\">";
-    echo "<tr><td class=\"subheading\" style=\"width:50px\">" . $string['summary'] . "</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['deciles'] . "</td><td style=\"width:30%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">Quartiles</td><td style=\"width:100%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
+    echo "<tr><td class=\"subheading\" style=\"width:50px\">" . $string['summary'] . "</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['deciles'] . "</td><td style=\"width:30%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['quartiles'] . "</td><td style=\"width:100%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
     echo "<tr><td colspan=\"2\" style=\"width:33%\">";
     
     echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
@@ -763,9 +763,9 @@ if ($language != 'en') {
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
       if ($ordering == 'desc') {
-        echo ' (top ' . $_GET['percent'] . '%)';
+        echo ' ('.$string['top'].' ' . $_GET['percent'] . '%)';
       } else {
-        echo ' (bottom ' . $_GET['percent'] . '%)';
+        echo ' ('.$string['bottom'].' ' . $_GET['percent'] . '%)';
       }
     }
     
@@ -858,7 +858,9 @@ if ($language != 'en') {
     $suffix = array('', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th');
     echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
     for ($i=1; $i<10; $i++) {
-      echo "<tr><td style=\"width:40px\">" . $i . $suffix[$i] . "</td><td>" . MathsUtils::formatNumber($stats["decile$i"], $percent_decimals) . "%</td></tr>\n";
+      echo "<tr><td style=\"width:40px\">" . $i;
+			echo ($language == 'en')?$suffix[$i]:'.';
+			echo "</td><td>" . MathsUtils::formatNumber($stats["decile$i"], $percent_decimals) . "%</td></tr>\n";
     }
     echo "</table></td>\n";
     

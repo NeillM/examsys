@@ -44,6 +44,8 @@ $string['top15'] = 'Górne 15%';
 $string['top20'] = 'Górne 20%';
 $string['top25'] = 'Górne 25%';
 $string['bottom10'] = 'Dolne 10%';
+$string['top'] = 'górne';
+$string['bottom'] = 'dolne';
 $string['averagetime'] = 'Średni czas';
 $string['excludedquestions'] = 'Pytania wykluczone';
 $string['experimantalquestions'] = 'Pytania eksperymentalne';
@@ -76,7 +78,8 @@ $string['papernotes'] = 'Uwagi do arkusza';
 $string['distributionchart'] = 'Wykres rozkładu';
 $string['scatterplot'] = 'Wykres rozrzutowy';
 $string['summary'] = 'Podsumowanie';
-$string['deciles'] = 'Decyli';
+$string['deciles'] = 'Decyle';
+$string['quartiles'] = "Kwartyle";
 $string['examscript'] = 'Zapis egzaminu';
 $string['feedback'] = 'Odzew';
 $string['studentprofile'] = 'Profil studenta';
@@ -98,4 +101,5 @@ $string['unknown'] = '&nbsp;&lt;Nieznany&gt;';
 $string['markingnotcomplete'] = 'Punktacja nie zakończona';
 $string['of'] = ' z ';
 $string['percentofcohort'] = '% grupy';
+
 ?>

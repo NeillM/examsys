@@ -14,6 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['objectives'] = 'Objectives'; // Niko
-$string['noneabove'] = 'None of the Above';
-$string['noneabovemsg'] = 'Check here if the current question does not match any of the above objectives from %s.';
+$string['objectives'] = 'Cele'; 
+$string['noneabove'] = 'Żaden z powyższych';
+$string['noneabovemsg'] = 'Sprawdź tutaj, czy aktualnemu pytaniu nie odpowiada żaden z powyższych celów z %s.';

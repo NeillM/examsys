@@ -19,7 +19,7 @@ require '../lang/' . $language . '/include/titles.inc';
 
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
 $string['usersearch'] = 'Wyszukiwanie użytkowników';
-$string['performsummary'] = 'Performance Summary';
+$string['performsummary'] = 'Podsumowanie osiągnięć';
 
 $string['msg1']="<strong>Uwaga</strong>&nbsp;&nbsp;&nbsp;Nie zaznaczono żadnych kategorii wyszukiwania w sekcji 'Zaawansowane'.";
 $string['msg2']="Nie znaleziono żadnego użytkownika według tak określonych kryteriów";

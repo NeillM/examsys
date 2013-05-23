@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['performsummary'] = 'Performance Summary';
-$string['scale'] = 'scale';
-$string['boxplot'] = 'boxplot';
-$string['noresults'] = 'No exam results could be found.';
+$string['performsummary'] = 'Podsumowanie osiągnięć';
+$string['scale'] = 'skala';
+$string['boxplot'] = 'wykres pudełkowy';
+$string['noresults'] = 'nie znaleziono żadnych wyników egzaminów.';
 ?>
