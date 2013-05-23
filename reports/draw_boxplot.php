@@ -58,9 +58,6 @@ $ltamber = ImageColorAllocate($Image, 251, 198, 155);
 $font      = '../fonts/SourceSansPro-Regular.otf';
 $bold_font = '../fonts/SourceSansPro-Semibold.otf';
 
-$trans1 = 70;
-$trans2 = 20;  
-
 if ($_GET['part'] == '0') {   // Scale mode
   for ($label=1; $label<10; $label++) {
     imagettftext($Image, 10, 0, 25, 255 - ($label * $gap), $black, $font, 10 * $label);
@@ -85,8 +82,11 @@ if ($_GET['part'] == '0') {   // Scale mode
   $q2           = $_GET['q2'];
   $q3           = $_GET['q3'];
   $passmark     = $_GET['passmark'];
-  $exam = $_GET['exam'];
+  $exam         = $_GET['exam'];
   
+  $trans1 = 70;
+  $trans2 = 20;  
+
   if (strlen($exam) > 35) {
     $break = find_break($exam);
     $line1 = mb_convert_encoding(trim(substr($exam, 0, $break)), 'UTF-8','ISO-8859-2');
@@ -101,6 +101,12 @@ if ($_GET['part'] == '0') {   // Scale mode
     ImageLine($Image, 0, 250 - ($label * $gap), 115, 250 - ($label * $gap), $ltgrey);
   }		
   
+  // x axis
+  ImageLine($Image, 0, 250, 114, 250, $dkgrey);
+  imagettftext($Image, 10, 90, 21, 240, $black, $font, $line1);
+  imagettftext($Image, 10, 90, 35, 240, $black, $font, $line2);
+  ImageLine($Image, 114, 250, 114, 256, $dkgrey);
+  
   //box-and-whiskers
   ImageRectangle($Image, $trans1 - $trans2, 250 - (round($q1, 2) * $gap/10) , $trans1 + $trans2, 250 - (round($q3, 2) * $gap/10) , $blue);		
   ImageLine($Image, $trans1 - $trans2, 250 - (round($q2, 2) * $gap/10)  , $trans1 + $trans2, 250 - (round($q2, 2) * $gap/10), $blue);                // Median vertical
@@ -110,15 +116,8 @@ if ($_GET['part'] == '0') {   // Scale mode
   ImageLine($Image, $trans1 - $trans2, 250 - ($max_mark * $gap/10), $trans1 + $trans2, 250 - ($max_mark * $gap/10) , $blue);                // Max vertical
   ImageLine($Image, $trans1, 250 - ($max_mark * $gap/10), $trans1, 250 - (round($q3, 2) * $gap/10), $blue);   // Max whisker
 
-  // x axis
-  ImageLine($Image, 0, 250, 114, 250, $dkgrey);
-  imagettftext($Image, 10, 90, 21, 240, $black, $font, $line1);
-  imagettftext($Image, 10, 90, 35, 240, $black, $font, $line2);
-  ImageLine($Image, 114, 250, 114, 256, $dkgrey);
-
   //passmark
   $style = array($red, $red, $red, $red, $red, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
-  $style2 = array($red, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
   imagesetstyle($Image, $style);
   ImageLine($Image, $trans1-$trans2-7, 250 - ($passmark * $gap/10), $trans1+$trans2+7, 250 - ($passmark * $gap/10), IMG_COLOR_STYLED);
   

@@ -344,7 +344,14 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       }
     }
 
-    $(document).ready(updateAccessDemo);
+    $(document).ready(function() {
+      updateAccessDemo();
+      
+      document.getElementById('userID').value = ',<?php echo $_GET['userID']; ?>';
+      
+      document.getElementById('menu2a').style.display = 'none';
+      document.getElementById('menu2b').style.display = 'block';
+    });
   </script>
 </head>
 

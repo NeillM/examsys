@@ -69,7 +69,9 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function viewPerformanceSummary() {
-    document.location.href='../reports/performance_summary.php?userID=' + getLastID(document.getElementById('userID').value);
+    //document.location.href='../reports/performance_summary.php?userID=' + getLastID(document.getElementById('userID').value);
+    
+    window.open("../reports/performance_summary.php?userID=" + getLastID(document.getElementById('userID').value), "_blank");
   }
   
   function deleteUser() {
@@ -79,7 +81,14 @@ if (isset($_GET['calendar_year'])) {
       notice.focus();
     }
   }
-</script>
+  
+  function getLastID(IDs) {
+    var id_list = IDs.split(",");
+    last_elm = id_list.length - 1;
+
+    return id_list[last_elm];
+  }
+  </script>
 <?php
 if (isset($_GET['search_surname'])) {
   $search_surname = stripslashes($_GET['search_surname']);
