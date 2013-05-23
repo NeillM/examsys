@@ -94,12 +94,19 @@ echo "</table>\n<div style=\"margin:10px\">";
   
 $old_calendar_year = '';
 $plots_output = 0;
+$col = 0;
 
 foreach ($papers as $paper) {
   if ($paper['stats']['max_mark'] != '') {
     if ($old_calendar_year != $paper['calendar_year']) {
       echo "<h1>" . $paper['calendar_year'] . "</h1>\n";
       echo '<img src="draw_boxplot.php?part=0" width="51" height="265" alt="' . $string['scale'] . '" />';
+      $col = 0;
+    }
+  
+    if ($col == 10) {
+      echo '<br /><img src="draw_boxplot.php?part=0" width="51" height="265" alt="' . $string['scale'] . '" />';
+      $col = 0;
     }
   
     $q1 = $paper['stats']['q1'];
@@ -113,6 +120,7 @@ foreach ($papers as $paper) {
   
     echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark\" width=\"115\" height=\"265\" alt=\"" . $string['boxplot'] . "\" />";
     $plots_output++;
+    $col++;
     $old_calendar_year = $paper['calendar_year'];
   }
 }
