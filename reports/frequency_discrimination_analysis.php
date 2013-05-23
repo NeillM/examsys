@@ -31,10 +31,12 @@ require_once '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 require_once '../include/errors.inc';
+require_once '../include/class_totals.inc';
 
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/exclusion.class.php';
 require_once '../classes/results_cache.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
@@ -443,6 +445,9 @@ $d_no = 0;
 $d_total = 0;
 
 if (isset($_POST['submit'])) {
+  $old_exclusions = new Exclusion($_GET['paperID'], $mysqli);
+  $old_exclusions->load();
+
   // Clear the database of any past exclusions from the current paper.
   if ($result = $mysqli->prepare("DELETE FROM question_exclude WHERE q_paper = ?")) {
     $result->bind_param('i', $paperID);
@@ -483,9 +488,20 @@ if (isset($_POST['submit'])) {
     }
   }
   
-  // Invalidate the cache for the paper results.
-  $results_cache = new ResultsCache($mysqli);
-  $results_cache->invalidate_paper_cache($propertyObj, $_GET['percent'], $_GET['absent'], $paperID);
+  $new_exclusions = new Exclusion($_GET['paperID'], $mysqli);
+  $new_exclusions->load();
+  
+  // If there are any exclusion changes re-cacge summary statistics.
+  if ($old_exclusions->excluded !== $new_exclusions->excluded) {
+    $studentsonly = 1;
+    $percent = 100;
+    $ordering = 'asc';
+    $sortby = 'name';
+    $absent = 0;
+    $startdate = $_GET['startdate'];
+    $enddate = $_GET['enddate'];
+    $user_results = compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+  }
 
   header("location: ../paper/details.php?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
 }

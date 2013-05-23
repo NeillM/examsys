@@ -43,6 +43,8 @@ if (isset($_GET['period']) and $_GET['period'] != '') {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 2 YEAR)';
   } elseif ($_GET['period'] == '3year') {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 3 YEAR)';
+  } elseif ($_GET['period'] == '6year') {
+    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 6 YEAR)';
   }
 } else {
   $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 5 YEAR)';

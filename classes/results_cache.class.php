@@ -51,7 +51,6 @@ class ResultsCache {
     $result->close();
 
     if (isset($cached) and $cached != '') {
-      var_dump($paperID, $cached);
       $recache = false;
     }
 
@@ -69,6 +68,22 @@ class ResultsCache {
     $result->close();
     
     return $stats;
+  }
+  
+  public function get_student_mark_cache($userID) {
+    $marks = array();
+
+    $result = $this->db->prepare("SELECT paperID, percent FROM cache_student_paper_marks WHERE userID = ?");
+    $result->bind_param('i', $userID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($paperID, $percent);
+    while ($result->fetch()) {
+      $marks[$paperID] = $percent;
+    }
+    $result->close();
+    
+    return $marks;
   }
 
   public function save_paper_cache($propertyObj, $percent, $absent, $stats, $paperID) {

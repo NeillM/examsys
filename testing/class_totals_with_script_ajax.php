@@ -51,6 +51,8 @@ if (isset($_POST['period']) and $_POST['period'] != '') {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 2 YEAR)';
   } elseif ($_POST['period'] == '3year') {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 3 YEAR)';
+  } elseif ($_POST['period'] == '6year') {
+    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 6 YEAR)';
   }
 } else {
   $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 5 YEAR)';

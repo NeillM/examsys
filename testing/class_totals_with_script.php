@@ -118,6 +118,7 @@ $result->close();
         <option value="year">Last year</option>
         <option value="2year">Last 2 years</option>
         <option value="3year">Last 3 years</option>
+        <option value="6year">Last 6 years</option>
       </select>
     </dd>
     <dt><label for="paper">OR Select a paper</label></dt>

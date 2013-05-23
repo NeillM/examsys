@@ -101,14 +101,12 @@ $string['reset'] = 'Reset';
 $string['forcereset'] = 'Force Reset';
 $string['classifiedinfo'] = 'classified information';
 $string['custom'] = 'Custom';
-$string['Access Denied']='Access Denied';
-
+$string['Access Denied'] = 'Access Denied';
+$string['performsummary'] = 'Performance Summary';
 
 //Colour picker
 $string['colour'] = 'Colour';
 $string['themecolours'] = 'Theme Colours';
 $string['standardcolours'] = 'Standard Colours';
 $string['more'] = 'More...';
-$string['cancel'] = 'Cancel';
-$string['OK'] = 'OK';
 ?>
