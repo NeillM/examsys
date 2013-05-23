@@ -70,13 +70,12 @@ class ResultsCache {
     return $stats;
   }
   
-  public function get_student_mark_cache($userID) {
+  public function get_paper_marks_by_student($userID) {
     $marks = array();
 
     $result = $this->db->prepare("SELECT paperID, percent FROM cache_student_paper_marks WHERE userID = ?");
     $result->bind_param('i', $userID);
     $result->execute();
-    $result->store_result();
     $result->bind_result($paperID, $percent);
     while ($result->fetch()) {
       $marks[$paperID] = $percent;
@@ -85,7 +84,22 @@ class ResultsCache {
     
     return $marks;
   }
+  
+  public function get_paper_marks_by_paper($paperID)
+    $marks = array();
 
+    $result = $this->db->prepare("SELECT userID, percent FROM cache_student_paper_marks WHERE paperID = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($userID, $percent);
+    while ($result->fetch()) {
+      $marks[$userID] = $percent;
+    }
+    $result->close();
+    
+    return $marks;
+  }
+  
   public function save_paper_cache($propertyObj, $percent, $absent, $stats, $paperID) {
     $result = $this->db->prepare("REPLACE INTO cache_paper_stats (paperID, cached, max_mark, max_percent, min_mark, min_percent, q1, q2, q3, mean_mark, mean_percent, stdev_mark, stdev_percent) VALUES (?, UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $result->bind_param('iddddddddddd', $paperID, $stats['max_mark'], $stats['max_percent'], $stats['min_mark'], $stats['min_percent'], $stats['q1'], $stats['q2'], $stats['q3'], $stats['mean_mark'], $stats['mean_percent'], $stats['stddev_mark'], $stats['stddev_percent']);

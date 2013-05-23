@@ -64,7 +64,7 @@ function get_taken_papers($userID, $db) {
 $papers = get_taken_papers($userID, $mysqli);
 
 $results_cache = new ResultsCache($mysqli);
-$marks = $results_cache->get_student_mark_cache($userID);
+$marks = $results_cache->get_paper_marks_by_student($userID);
 
 ?>
 <html>
