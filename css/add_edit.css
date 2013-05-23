@@ -528,35 +528,6 @@ input[type=text] {
   width: 3%;
 }
 
-/* Mapping */
-.objectives li {
-	margin: 0;
-	list-style: none;
-  font-size: 90%;
-  margin-bottom: 8px;
-}
-
-.objectives .top a {
-  background: url('../artwork/plus.png') no-repeat 0px 2px;
-  padding-left: 16px;
-  margin-bottom: 6px;
-	color: #316AC5;
-	font-weight: bold;
-	text-decoration: none;
-}
-
-.objectives .top.open a {
-  background: url('../artwork/minus.png') no-repeat 0px 2px;
-}
-
-.objectives .top ul {
-	padding-left: 18px;
-}
-
-.objectives .top ul li {
-	margin: 0px;
-}
-
 #extmatch-options {
   margin-top: -30px;
   margin-right: -200px;

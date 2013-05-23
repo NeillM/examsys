@@ -400,6 +400,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/header.css" type="text/css" />
 <link rel="stylesheet" href="../../css/screen.css" type="text/css" />
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
+<link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
 <link rel="stylesheet" href="../../css/tipTip.css" type="text/css" />
 
@@ -418,6 +419,7 @@ echo $cfg_editor_javascript;
 <script type="text/javascript" src="../../js/staff_help.js"></script>
 <script type="text/javascript" src="../../js/jquery.touchstone.js"></script>
 <script type="text/javascript" src="../../js/jquery.addedit.js"></script>
+<script type="text/javascript" src="../../js/jquery.mappingform.js"></script>
 <script type="text/javascript" src="../../js/jquery.tipTip.minified.js"></script>
 <script type="text/javascript" src="../../js/jquery.formhelpers.js"></script>
 <?php

@@ -88,15 +88,16 @@ function display_q($db) {
   <title>Objective Mapping</title>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/mapping_tab.js"></script>
+  <script type="text/javascript" src="../js/jquery.mappingform.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" href="../css/mapping_form.css" type="text/css" />
   <style type="text/css">
     body {font-size:90%}
-    h1 {font-size:150%; font-weight:bold; color:#316AC5; margin-left:15px; padding-top:10px}
+    h2 {font-size:150%; font-weight:bold; color:#316AC5; margin-left:15px; padding-top:10px}
     p {margin-top:0px; padding-top:0px}
     .paper {margin-left:0px; font-size:180%; color:white; font-weight:bold}
     .q_no {width:40px; text-align:right; vertical-align:top}
@@ -110,7 +111,7 @@ function display_q($db) {
 
 if (isset($_POST['submit']) AND $_POST['submit'] == 'Save Changes') {
   // Write out curriculum mapping.
-  saveObjMappings($_POST['paperID'],$_POST['questionID'],$mysqli);
+  save_objective_mappings($mysqli, $_POST['objective_modules'], $_POST['paperID'], $_POST['questionID']);
   ?>
   <script language="JavaScript">
     window.opener.location = window.opener.location;
@@ -120,10 +121,12 @@ if (isset($_POST['submit']) AND $_POST['submit'] == 'Save Changes') {
 } else {
   display_q($mysqli);
 
-  echo "<div style=\"margin-left:10px\">\n";
+  echo "<div id=\"obj_form\">\n";
   echo "<form method=\"post\">";
-  echo displayObjectivesMappingForm($paperID, $mysqli, $configObject->get('cfg_root_path'));
+  echo render_objectives_mapping_form($mysqli, $paperID, $string);
   echo "<br />";
+  echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\" />\n";
+  echo "<input type=\"hidden\" name=\"questionID\" value=\"{$_GET['q_id']}\" />\n";
   echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"Save Changes\" />&nbsp;";
   echo "<input style=\"width:120px\" type=\"button\" value=\"Cancel\" onclick=\"window.close()\"/></div>";
 

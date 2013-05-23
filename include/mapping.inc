@@ -157,125 +157,14 @@ HTML;
   return $html;
 }
 
-function displayObjectivesMappingForm($paper_id, $db,$cfg_root_path2) {
-  global $vle_api_cache,$configObject;
-
-  //get module and session from paper id
-  $modules_array = array();
-  $query = <<<QUERY
-SELECT DISTINCT m.moduleid, pm.idMod, p.calendar_year, p.paper_type FROM properties p INNER JOIN properties_modules pm ON p.property_id=pm.property_id INNER JOIN modules m ON pm.idMod=m.id WHERE p.property_id=?
-QUERY;
-  $result = $db->prepare($query);
-  $result->bind_param('i', $paper_id);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($moduleId, $idMod, $session, $paper_type);
-  while($result->fetch()) {
-    $modules_array[$idMod] = $moduleId;
-  }
-  if ($result->num_rows == 0) {
-    return '';
-  }
-  $result->close();
-
-  if (isset($_GET['q_id'])) {
-    $q_id = $_GET['q_id'];
-  } else {
-    $q_id = '';
-  }
-
-  $objsByModuleSession = getObjectives($modules_array, $session, $paper_id, $q_id, $db);
-
-  if (isset($objsByModuleSession['none_of_the_above'])) {
-    $none_of_the_above = $objsByModuleSession['none_of_the_above'];
-    unset($objsByModuleSession['none_of_the_above']);
-  }
-
-  $html = '';
-  foreach ($objsByModuleSession as $moduleid => $objsBySession) {
-    $tmp = array_flip($modules_array);
-    $idmod = $tmp[$moduleid];
-
-    $html .= "<h1>$moduleid Objectives</h1>";
-    $old_mappings = '';
-    $objcount = 0;
-    foreach($objsBySession as $id => $class) {
-      if (isset($class['objectives']) and count($class['objectives']) > 0) {
-        $html .= "<div style=\"cursor:pointer; color:#316AC5; font-weight:bold; margin-top:6px\" onclick=\"showHide('$moduleid$id')\">";
-        if($class['mapped'] == 0) {
-          $html .= "<img id=\"img_$moduleid$id\" src='{$configObject->get('cfg_root_path')}/artwork/plus.png' />&nbsp;";
-          $display = 'none';
-        } else {
-          $html .= "<img id=\"img_$moduleid$id\" src='{$configObject->get('cfg_root_path')}/artwork/minus.png' />&nbsp;";
-          $display = 'block';
-        }
-
-        if ($class['class_code'] != '') {
-          $html .= $class['class_code'] . ' - ';
-        }
-        $html .= $class['title'];
-        if ($class['occurrance'] != '') {
-          $html .= '&nbsp;<span style="color:#808080; font-size:70%; font-weight:normal">' . $class['occurrance'] . '</span>';
-        }
-        $html .= "</div>\n<div id=\"div_$moduleid$id\" style=\"display:$display; font-size:90%\">\n";
-        //write out the objetives for this session
-        foreach ($class['objectives'] as $objectives) {
-          if ($objectives['mapped'] != 0) {
-            $checked = 'checked';
-            $old_mappings .= $objectives['id'] . ',';
-          } else {
-            $checked = '';
-          }
-          $html .= "\t<div style=\"margin-left:15px\"><input id=\"" . $idmod . "obj$objcount\" name=\"" . $idmod . "obj$objcount\" type=\"checkbox\" value=\"" . $objectives['id'] . "\" $checked />&nbsp;" . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . "</div>\n";
-          $objcount++;
-        }
-        $html .= "</div>\n";
-      } else {
-        $html .= "<div style=\"color:#808080; font-weight:bold; margin-top:6px\"><img src='{$configObject->get('cfg_root_path')}/artwork/grey_plus.gif' />&nbsp;";
-        if($class['class_code'] != '') {
-          $html .= $class['class_code'] . ' - ';
-        }
-        $html .= $class['title'];
-        if ($class['occurrance'] != '') {
-          $html .= '&nbsp;<span style="color:#808080; font-size:70%; font-weight:normal">' . $class['occurrance'] . '</span>';
-        }
-        $html .= "</div>\n";
-      }
-    }
-    $html .= "<input id=\"" . $idmod . "_objectiveCount\" name=\"" . $idmod . "_objectiveCount\" type=\"hidden\" value=\"$objcount\"/>\n";
-    $html .= "<input name=\"" . $idmod . "_session\" type=\"hidden\" value=\"$session\"/>\n";
-    $html .= "<input name=\"" . $idmod . "_old_mappings\" type=\"hidden\" value=\"$old_mappings\"/>\n";
-    $html .= "<input name=\"" . $idmod . "_vle_api\" type=\"hidden\" value=\"{$vle_api_cache[$idmod][$session]}\"/>\n";
-  }
-
-  //display none of the above !
-  $html .= "<hr noshade=\"noshade\" style=\"border:0px; height:1px; text-align:left; background-color:#C0C0C0; color:#C0C0C0; width:40%\" />";
-  $html .= "<div style=\"color:#800000\">";
-  $checked = '';
-  if(isset($none_of_the_above['mapped'])) $checked = ' checked';
-  $modules_str = implode(', ', array_values($modules_array));
-  $html .= "<input type=\"checkbox\" value =\"-1\" name=\"none_of_the_above\"$checked /> <strong>None of the Above</strong><br />Check here if the current question does not match any of the above objectives from $modules_str.";
-  $html .= "</div>";
-
-
-  $html .= "<input id=\"paperID\" name=\"paperID\" type=\"hidden\" value=\"$paper_id\" />\n";
-  if (isset($_GET['q_id'])) {
-    $html .= "<input id=\"questionID\" name=\"questionID\" type=\"hidden\" value=\"" . $_GET['q_id'] . "\" />\n";
-  } else {
-    $html .= "<input id=\"questionID\" name=\"questionID\" type=\"hidden\" value=\"\" />\n";
-  }
-  $html .= "<input id=\"modules\" name=\"modules\" type=\"hidden\" value=\"" . implode(',', array_keys($modules_array)) . "\" />\n";
-  return $html;
-}
-
 
 /**
- * This is function saveObjMappings it saves mappings to the relationships table in the Rogo database
+ * This is function save_objective_mappings it saves mappings to the relationships table in the Rogo database
  *
- * @param int $paper_id
- * @param int $question_id
- * @param object $db
- *
+ * @param mysqli          $db           Database link
+ * @param string          $modules      List of modules that are being mapped
+ * @param integer         $paper_id     ID of paper that is being mapped
+ * @param integer         $question_id  ID of question that is being mapped
  */
 function save_objective_mappings($db, $modules, $paper_id, $question_id) {
   if ($paper_id != '' and substr($paper_id,0,5) != 'find:') {
@@ -321,58 +210,6 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
     }
   }
 }
-
-/**
- * This is function saveObjMappings it saves mappings to the relationships table in the Rogo database
- *
- * @param int $paper_id
- * @param int $question_id
- * @param object $db
- *
- */
-function saveObjMappings($paper_id, $question_id, $db) {
-  if (isset($_POST['modules']) and $paper_id != '' and substr($paper_id,0,5) != 'find:') {
-    $modules = $_POST['modules'];
-    $modules = explode(',',$modules);
-    foreach ($modules as $idMod) {
-      if (isset($_POST[$idMod . '_session'])) {
-        $session = $_POST[$idMod . '_session'];
-        $objectiveCount = $_POST[$idMod . '_objectiveCount'];
-        $old_mappings = $_POST[$idMod . '_old_mappings'];
-        $vle_api = $_POST[$idMod . '_vle_api'];
-        $sql = array();
-        $new_mappings = '';
-        for ($i = 0; $i < $objectiveCount; $i++ ) {
-          if (isset($_POST[$idMod . 'obj' . $i])) {
-            $sql[] = "INSERT INTO relationships VALUES (NULL, '$idMod', $paper_id, $question_id, " . $_POST[$idMod . 'obj' . $i] . ", '$session', '$vle_api')";
-            $new_mappings .= $_POST[$idMod . 'obj' . $i] . ',';
-          }
-        }
-        //check for none of the above
-        if (isset($_POST['none_of_the_above']) and $_POST['none_of_the_above'] == -1 AND count($sql) == 0) {
-          $sql[] = "INSERT INTO relationships VALUES (NULL, '$idMod', $paper_id, $question_id, -1, '$session', '$vle_api')";
-          $new_mappings .= '-1,';
-        } else {
-          $old_mappings .= '-1,';
-        }
-
-        if ($new_mappings != $old_mappings) {
-          //preappend the delete
-          if ($old_mappings != '') {
-            $delete = "DELETE FROM relationships WHERE idMod={$idMod} AND paper_id = $paper_id AND question_id = $question_id AND calendar_year = '$session' AND vle_api= '$vle_api'";
-            array_unshift($sql, $delete);
-          }
-          foreach($sql as $query) {
-            if (!$result = $db->query($query)) {
-              echo "Question Mapping Error #1 " . $db->error . "<br/> $query <br/>";
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 
 /**
  * This is function getObjectives this function gets objectives to be mapped. It can Retrieve objectives from

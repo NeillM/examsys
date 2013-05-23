@@ -26,12 +26,6 @@ $(function () {
     $(this).parent().toggleClass('on');
   });
   
-  $('.objectives li a').click(function () {
-    $(this).nextAll('ul').slideToggle('fast');
-    $(this).parent('li').toggleClass('open');
-    return false;
-  });
-  
   $('.media-delete').click(function () {
     var id = $(this).attr('rel');
     $('#media' + id).slideUp('slow', function () {
@@ -65,8 +59,6 @@ $(function () {
   $('#addquestion').click(addQuestion);
 
   $(".tiptop").tipTip({defaultPosition: 'top'});
-
-  openMappedTabs();
 });
 
 function changeTab() {
@@ -236,14 +228,4 @@ function showMarksWarning(element) {
     }
   }
   return rval;
-}
-
-function openMappedTabs() {
-  $('ul.objectives li.top').each(function () {
-    var mappedObjs = $(this).find(':checkbox:checked').length;
-    if (mappedObjs > 0) {
-      $(this).addClass('open');
-      $(this).children('ul').show();
-    }
-  });
 }
