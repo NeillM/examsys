@@ -14,7 +14,9 @@ function sendTextToAS3(lang, q_no, mode, image, correct, user){
 }
 
 function doSend(q_no, toSend) {
-  try
+  var flash_fail = false;
+	
+	try
   {
     var flash1 = document.getElementById("externalinterface" + q_no + "_1");
     if (flash1) {
@@ -23,11 +25,22 @@ function doSend(q_no, toSend) {
   }
   catch(error)
   {
-    var flash2 = document.getElementById("externalinterface" + q_no + "_2");
-    if (flash2) {
-      flash2.sendTextFromJS(toSend);
-    }
+		flash_fail = true;
   }
+	
+	if (flash_fail) {
+		try
+		{
+			var flash2 = document.getElementById("externalinterface" + q_no + "_2");
+			if (flash2) {
+				flash2.sendTextFromJS(toSend);
+			}
+		}
+		catch(error)
+		{
+			flash_fail = true;
+		}
+	}
 }
 
 function receiveTextFromAS3(txt) {

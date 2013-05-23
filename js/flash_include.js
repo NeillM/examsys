@@ -17,7 +17,8 @@ function setUpFlash(num, flashId, lang, image, config, answer, extra, colour) {
   }
   if (colour != undefined) {
     swf.colourInfo(colour);
-  }}
+  }
+}
 
 function addLoadEvent(func, num, flashId, image, config, answer, extra, colour) {
   var oldonload = window.onload;
