@@ -36,8 +36,7 @@ class ResultsCache {
   public function should_cache($propertyObj, $percent, $absent, $percent, $absent, $paperID) {
     $paper_type = $propertyObj->get_paper_type();
 
-    if ($percent != 100 or $absent == 1 or $paper_type == 0 or $paper_type == 1) {
-      echo "False 1";
+    if ($percent != 100 or $absent == 1 or $paper_type == 0 or $paper_type == 1 or $paper_type == 3) {
       return false;
     }
     // TODO: add in a check for the past the end of the exam.
@@ -85,7 +84,7 @@ class ResultsCache {
     return $marks;
   }
   
-  public function get_paper_marks_by_paper($paperID)
+  public function get_paper_marks_by_paper($paperID) {
     $marks = array();
 
     $result = $this->db->prepare("SELECT userID, percent FROM cache_student_paper_marks WHERE paperID = ?");
@@ -129,12 +128,4 @@ class ResultsCache {
     }
     $result->close();
   }
-
-  public function invalidate_paper_cache($paperID) {
-    $result = $this->db->prepare("UPDATE cache_paper_stats SET cached = NULL WHERE paperID = ?");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->close();
-  }
-
 }
