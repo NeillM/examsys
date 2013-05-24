@@ -18,5 +18,7 @@ $string['hofstee'] = 'Hofstee plot';
 $string['integeronly'] = "only integer values";
 $string['cohort'] = 'Percent of Cohort';
 $string['correct'] = '% Mark';
+$string['passmark'] = "Pass mark";
+$string['distinction'] = "Distinction";
 
 ?>

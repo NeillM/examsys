@@ -18,4 +18,7 @@ $string['hofstee'] = 'Wykres Hofstee';
 $string['integeronly'] = "tylko wartości całkowite";
 $string['cohort'] = '% Grupy';
 $string['correct'] = '% Poprawnych';
+$string['passmark'] = 'Liczba punktów na zaliczenie';
+$string['distinction'] = 'Liczba punktów na wyróżnienie';
+
 ?>

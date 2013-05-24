@@ -37,8 +37,7 @@
 	var tx1,tx2,ty1,ty2,xs,ys;
 	var d_x = 40;
   var d_y = 200;
-	var x,y;
-	var i,j;
+	var x,y,i,j,delta;
 
 	//recalculating data
   var graph_data = [];
@@ -67,35 +66,6 @@
   
 	if (canvas && canvas.getContext){
 		context = canvas.getContext('2d');
-	}
-  
-	function setbound(elem) {
-		var target = -1;
-		switch(elem.name)
-			{
-			case 'x1':
-				target = 0
-				break;
-			case 'x2':
-				target = 1
-				break;
-			case 'y1':
-				target = 2
-				break;
-			case 'y2':
-				target = 3
-				break;
-			}
-		if (target != -1) {
-			var ev0 = boundaries[target];
-			var ev = Number(elem.value.replace('%',''));
-			if (isNaN(ev) || ev<0 || ev>100) ev = ev0;
-			boundaries[target] = ev;
-      if (boundaries[1]<boundaries[0]) boundaries[1] = [boundaries[0], boundaries[0] = boundaries[1]][0];
-      if (boundaries[3]<boundaries[2]) boundaries[3] = [boundaries[2], boundaries[2] = boundaries[3]][0];
-			redraw = true;
-			g_redraw_canvas;
-		}
 	}
 	
   function drawLine(cc,xx,yy,ww,hh) {
@@ -140,7 +110,8 @@
 				ty_old = ty;
       }
       context.stroke();
-			if (document.getElementById('checkbox').checked) {
+			delta=0.1; if (document.getElementById('checkbox').checked) delta = 1;
+			if (delta==1) {
 				for (i=0;i<4;i++) {
 					boundaries[i] = Math.round(boundaries[i]);
 				}
@@ -259,15 +230,15 @@
 			document.getElementById('ys').value = ys;
 	
       //drawing boundaries
-      var gap = 5;
+      var gap = 0;
       act(1);
-      drawLine('#900',Math.round(x1),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
+      drawLine('#c00000',Math.round(x1),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
       act(2);
-      drawLine('#900',Math.round(x2),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
+      drawLine('#c00000',Math.round(x2),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
       act(3);
-      drawLine('#900',graph_x+gap,Math.round(y3),graph_w-2*gap,0);
+      drawLine('#c00000',graph_x+gap,Math.round(y3),graph_w-2*gap,0);
       act(4);
-      drawLine('#900',graph_x+gap,Math.round(y4),graph_w-2*gap,0);
+      drawLine('#c00000',graph_x+gap,Math.round(y4),graph_w-2*gap,0);
 
     }
     redraw = false;
@@ -279,7 +250,6 @@
 	return testres;
 }
 
-	
   function g_mouseDragUp(e) {
     dragging = false;
 		if (testWithin(x,y,d_x-5,d_y-15+00,20,20)) {boundaries[0] = temp_boundaries[0];redraw = true;g_redraw_canvas;}
@@ -291,7 +261,7 @@
   function g_mouseDragDown(e) {
     dragging = true;
   }
-  
+	
   function g_mouseDragMove(e) {
     rect = canvas.getBoundingClientRect();
     loc_lft = rect.left;
@@ -337,3 +307,33 @@
       }
     }
   }
+	
+	function tfchange(event,keys) {
+		target = ((event.target.name[0]=='x')?0:2)+1*event.target.name[1]-1;
+		var ev0 = boundaries[target];
+		var ev = Number(event.target.value.replace('%',''));
+		if (isNaN(ev)) ev = ev0;
+		
+		if (keys) {
+			if (event.keyCode==37 || event.keyCode==40) ev-=delta;
+			if (event.keyCode==38 || event.keyCode==39) ev+=delta;
+		}
+		
+		if (ev<0) ev = 0;
+		if (ev>100) ev = 100;
+		boundaries[target] = ev;
+		if (boundaries[1]<boundaries[0]) boundaries[1] = [boundaries[0], boundaries[0] = boundaries[1]][0];
+		if (boundaries[3]<boundaries[2]) boundaries[3] = [boundaries[2], boundaries[2] = boundaries[3]][0];
+		
+		redraw = true;
+		g_redraw_canvas;	
+	}
+	
+	$(".tf").keypress(function(event) {
+		tfchange(event,true);
+	});
+		
+	$(".tf").blur(function(event) {
+		tfchange(event,false);
+	});
+	

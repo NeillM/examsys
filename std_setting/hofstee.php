@@ -53,13 +53,6 @@ require_once '../classes/results_cache.class.php';
 	$marks = $results_cache->get_paper_marks_by_paper($paperID);
 	sort($marks);
 	
-  $cols = 3;
-  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
-
-	echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
-	echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['hofstee'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-	echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\">";
-
 	echo "<div id='canvas_div'>\n";
 	echo "<canvas id='canvas_graph' width='800' height='600'></canvas><br>\n";
 	echo "<table style=\"font-size:85%;\"><tr><td width='200'>&nbsp;</td><td>&nbsp;</td>\n";
@@ -67,13 +60,16 @@ require_once '../classes/results_cache.class.php';
 	echo "</tr><tr><td>&nbsp;</td>\n";
 	echo "<td><input type='checkbox' name='checkbox' id='checkbox'>" . $string['integeronly'] . "
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
-	echo "<td><input type='text' size='5' name='x1' id='x1' onblur='setbound(this);'></td>\n";
-	echo "<td><input type='text' size='5' name='x2' id='x2' onblur='setbound(this);'></td>\n";
-	echo "<td><input type='text' size='5' name='y1' id='y1' onblur='setbound(this);'></td>\n";
-	echo "<td><input type='text' size='5' name='y2' id='y2' onblur='setbound(this);'></td>\n";
+	echo "<td><input type='text' size='5' name='x1' id='x1' class='tf'></td>\n";
+	echo "<td><input type='text' size='5' name='x2' id='x2' class='tf'></td>\n";
+	echo "<td><input type='text' size='5' name='y1' id='y1' class='tf'></td>\n";
+	echo "<td><input type='text' size='5' name='y2' id='y2' class='tf'></td>\n";
 	echo "<td><input type='text' size='5' name='xs' id='xs' readonly></td>\n";
 	echo "<td><input type='text' size='5' name='ys' id='ys' readonly></td>\n";
+	echo "</tr><tr>";
+	echo "<td></td><td colspan='7'><input type='button' value='".$string['passmark']."'>&nbsp;<input type='button' value='".$string['distinction']."'></td>";
 	echo "</tr></table>\n";
+	
 	echo "<script type='text/javascript'>
 		var lang_cohort = '".  $string['cohort'] . "';
 		var lang_correct = '".  $string['correct'] . "';			
@@ -81,8 +77,6 @@ require_once '../classes/results_cache.class.php';
 		</script>";
 	echo "<script type='text/javascript' src='../html5/hofstee.js'></script></div>\n";
 
-	echo "</td></tr>\n";
-	echo "</table>\n";    
 ?>
 </body>
 </html>
