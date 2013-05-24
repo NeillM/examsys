@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Anthony Brown, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -67,7 +67,7 @@ if (count($sess) == 0) {
 if (isset($_POST['Edit'])) {
   //save session
   $occurrence = $_POST['year'] . $_POST['month'] . $_POST['day'] . $_POST['time'];
- 
+
   //update session
   $stmt = $mysqli->prepare("UPDATE sessions SET title = ?,source_url = ?, occurrence = ? WHERE identifier = ? AND idMod = ? AND identifier = ? AND calendar_year = ?");
   $stmt->bind_param('ssssiss', $_POST['session_title'], $_POST['url'], $occurrence, $identifier, $moduleID, $identifier, $calendar_year);
@@ -143,9 +143,9 @@ if (isset($_POST['Edit'])) {
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-    
+
     <title>Rogō: <?php echo $string['manageobjectives'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-    
+
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
     <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -336,7 +336,7 @@ if (isset($sess['objectives'])) {
   foreach ($sess['objectives'] as $id => $obj) {
     echo "\t<li id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
     echo '<img src="./up_on.png" onclick="promote( \'li_' . $id . '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'li_' . $id . '\' )" />&nbsp';
-    echo "<input class='editBox' onfocus=\"clearTextbox('obj_" . $id . "');\" id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"" . htmlentities($obj, ENT_QUOTES) . "\" />";
+    echo "<input class='editBox' onfocus=\"clearTextbox('obj_" . $id . "');\" id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"" . htmlentities($obj, ENT_QUOTES, 'UTF-8') . "\" />";
     echo "</li>\n";
   }
 }
