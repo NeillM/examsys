@@ -25,6 +25,7 @@
 require '../include/staff_auth.inc';
 require '../include/survey_quantitative.inc.php';
 require '../include/errors.inc';
+require_once '../classes/stringutils.class.php';
 check_var('paperID', 'GET', true, false, false);
 
 header('Pragma: public');
@@ -52,9 +53,9 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
   $old_likert_scale = trim(strip_tags(str_replace('&amp;amp;','&amp;',$old_likert_scale)));
 
   //remove nasty non-utf8 chars
-  $theme = wordToUtf8($theme);
-  $scenario = wordToUtf8($scenario);
-  $leadin = wordToUtf8($leadin);
+  $theme = StringUtils::wordToUtf8($theme);
+  $scenario = StringUtils::wordToUtf8($scenario);
+  $leadin = StringUtils::wordToUtf8($leadin);
 
   if ($theme != '') {
     if ($table_on == 1) echo '</w:tbl>';
@@ -77,7 +78,7 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
           if ($log[$screen][$q_id][$i]['u'] == '') $log[$screen][$q_id][$i]['u'] = 0;
           if ($log[$screen][$q_id][$i]['t'] == '') $log[$screen][$q_id][$i]['t'] = 0;
           if ($log[$screen][$q_id][$i]['f'] == '') $log[$screen][$q_id][$i]['f'] = 0;
-          echo '<w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"/><w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="500"/><w:tab w:val="left" w:pos="550"/><w:tab w:val="decimal" w:pos="1450"/><w:tab w:val="left" w:pos="1500"/><w:tab w:val="left" w:pos="2400"/></w:tabs><w:ind w:left="2340" w:hanging="2340"/></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['t'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['t']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>' . $log[$screen][$q_id][$i]['f'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['f']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+          echo '<w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"/><w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="500"/><w:tab w:val="left" w:pos="550"/><w:tab w:val="decimal" w:pos="1450"/><w:tab w:val="left" w:pos="1500"/><w:tab w:val="left" w:pos="2400"/></w:tabs><w:ind w:left="2340" w:hanging="2340"/></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['t'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['t']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>' . $log[$screen][$q_id][$i]['f'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['f']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
         }
         //echo '</w:tbl>';
         echo '<w:p/>';
@@ -90,15 +91,15 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
         foreach ($options as $individual_option) {
           $i++;
           if ($log[$screen][$q_id][1][$i] == '') {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1][$i] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1][$i]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1][$i] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1][$i]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           }
         }
         if ($old_display_method == 'vertical_other') {
           echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . count($log[$screen][$q_id][1]['other']) . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round((count($log[$screen][$q_id][1]['other'])/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>Other:</w:t></w:r></w:p>';
           foreach ($log[$screen][$q_id][1]['other'] as $other_text) {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="2268"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="900" wx:tlc="none" wx:cTlc="19"/></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/></w:r><w:r><w:tab wx:wTab="1185" wx:tlc="none" wx:cTlc="25"/><w:t>' . wordToUtf8($other_text) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="2268"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="900" wx:tlc="none" wx:cTlc="19"/></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/></w:r><w:r><w:tab wx:wTab="1185" wx:tlc="none" wx:cTlc="25"/><w:t>' . StringUtils::wordToUtf8($other_text) . '</w:t></w:r></w:p>';
           }
         }
         if (!isset($log[$screen][$q_id][1]['u'])) {
@@ -166,15 +167,15 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
         foreach ($options as $individual_option) {
           $i++;
           if ($candidates == 0) {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['y'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['y']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['y'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['y']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           }
         }
         if ($old_display_method == 'other') {
           echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . count($log[$screen][$q_id][1]['other']) . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round((count($log[$screen][$q_id][1]['other'])/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>Other:</w:t></w:r></w:p>';
           foreach ($log[$screen][$q_id][1]['other'] as $other_text) {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="2268"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="900" wx:tlc="none" wx:cTlc="19"/></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/></w:r><w:r><w:tab wx:wTab="1185" wx:tlc="none" wx:cTlc="25"/><w:t>' . wordToUtf8($other_text) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="2268"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="900" wx:tlc="none" wx:cTlc="19"/></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/></w:r><w:r><w:tab wx:wTab="1185" wx:tlc="none" wx:cTlc="25"/><w:t>' . StringUtils::wordToUtf8($other_text) . '</w:t></w:r></w:p>';
           }
         }
         $table_on = 0;
@@ -188,7 +189,7 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
         }
         $i = 0;
         foreach ($options as $individual_option) {
-          echo "<w:p><w:r><w:t>" . wordToUtf8($individual_option) . "</w:t></w:r></w:p><w:p/>";
+          echo "<w:p><w:r><w:t>" . StringUtils::wordToUtf8($individual_option) . "</w:t></w:r></w:p><w:p/>";
           echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/></w:tblGrid>';
           for ($rank_position=1; $rank_position<=$rank_no; $rank_position++) {
             if (!isset($log[$screen][$q_id][$i][$rank_position])) $log[$screen][$q_id][$i][$rank_position] = 0;
@@ -260,15 +261,15 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
       foreach ($options as $individual_option) {
         if ($tmp_answers_array[$i-1] == $option_no) {
           if ($log[$screen][$q_id][$i][$option_no] == '') {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           }
         } else {
           if ($log[$screen][$q_id][$i][$option_no] == '') {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           }
         }
         $option_no++;
@@ -313,7 +314,7 @@ echo '</o:DocumentProperties><w:fonts><w:defaultFonts w:ascii="Times New Roman" 
 
 // Document body text here.
 echo '<w:body><wx:sect><wx:sub-section>';
-echo '<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>' . wordToUtf8($paper) . '</w:t></w:r></w:p>';
+echo '<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>' . StringUtils::wordToUtf8($paper) . '</w:t></w:r></w:p>';
 
 $log_array = array();
 $hits = get_quantitative_log_data($_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $exclude, $log_array, $mysqli);
@@ -452,38 +453,5 @@ if ($hits > 0) {
 
 if ($table_on == 1) echo '</w:tbl>';
 echo '<w:sectPr><w:hdr w:type="odd"><w:p><w:pPr><w:pStyle w:val="Header"/><w:tabs><w:tab w:val="clear" w:pos="8306"/><w:tab w:val="right" w:pos="9000"/></w:tabs></w:pPr><w:r><w:t>' . $paper . '</w:t></w:r><w:r><w:tab wx:wTab="1560" wx:tlc="none" wx:cTlc="34"/><w:t>' . date("d/m/Y") . '</w:t></w:r></w:p></w:hdr><w:ftr w:type="odd"><w:p><w:pPr><w:pStyle w:val="Footer"/><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:t>- </w:t></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:instrText> PAGE </w:instrText></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/><w:noProof/></w:rPr><w:t>1</w:t></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:t> -</w:t></w:r></w:p></w:ftr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1418" w:bottom="1134" w:left="1418" w:header="709" w:footer="709" w:gutter="0"/><w:cols w:space="708"/><w:docGrid w:line-pitch="360"/></w:sectPr></wx:sub-section></wx:sect></w:body></w:wordDocument>';
-
-function wordToUtf8($str) {
-  $wordChr = array(
-  "\\xe2\\x80\\xa6",        // ellipsis
-  "\\xe2\\x80\\x93",        // long dash
-  "\\xe2\\x80\\x94",        // long dash
-  "\x96",                    // long dash
-  "\x91",                    // single quote
-  "\x92",                    // single quote
-  "\\xe2\\x80\\x98",        // single quote opening
-  "\\xe2\\x80\\x99",        // single quote closing
-  "\\xe2\\x80\\x9c",        // double quote opening
-  "\\xe2\\x80\\x9d",        // double quote closing
-  "\\xe2\\x80\\xa2"        // dot used for bullet points
-  );
-
-  $utf8Chr = array(
-      '...',
-      '-',
-      '-',
-      '-',
-      '\'',
-      '\'',
-      '\'',
-      '\'',
-      '"',
-      '"',
-      '*'
-      );
-
-      return str_replace($wordChr,$utf8Chr,$str);
-
-}
 $mysqli->close();
 ?>

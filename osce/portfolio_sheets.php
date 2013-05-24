@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -26,6 +26,7 @@ require '../include/staff_auth.inc';
 require_once '../include/demo_replace.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/stringutils.class.php';
 require_once '../include/errors.inc';
 require_once './osce.inc';
 
@@ -44,11 +45,11 @@ function load_questions($db) {
   while ($result->fetch()) {
     $questions[$q_no]['theme']  = $theme;
     $questions[$q_no]['leadin'] = $leadin;
-  
+
     $q_no++;
   }
   $result->close();
-  
+
   return $questions;
 }
 
@@ -59,7 +60,7 @@ if (!$propertyObj) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $paper = $propertyObj->get_paper_title();
-  
+
 if ($userObject->has_role('Demo')) {
   $demo = true;
 } else {
@@ -109,7 +110,7 @@ function get_user_no($user_no, $user_results, $userID) {
       $match = $i;
     }
   }
-  
+
   return $match;
 }
 
@@ -124,18 +125,18 @@ while ($result->fetch()) {
   if ($old_userID != $userID) {
     $student_no++;
     $arrayID = get_user_no($user_no, $user_results, $userID);
-    
+
     $classification = $user_results[$arrayID]['classification'];
-    
+
     if ($old_userID != '') {
       echo '<w:p wsp:rsidR="00472B21" wsp:rsidRDefault="00472B21" wsp:rsidP="00472B21"><w:pPr><w:spacing w:after="0"/><w:rPr><w:b/></w:rPr></w:pPr></w:p><w:p wsp:rsidR="000E6B7A" wsp:rsidRPr="000E6B7A" wsp:rsidRDefault="00472B21" wsp:rsidP="00ED0EA8"><w:pPr><w:rPr><w:b/></w:rPr></w:pPr><w:r wsp:rsidRPr="000E6B7A"><w:rPr><w:b/></w:rPr><w:t>Feedback:</w:t></w:r></w:p>';
-      echo '<w:p wsp:rsidR="000E6B7A" wsp:rsidRPr="00A11D0F" wsp:rsidRDefault="00273482" wsp:rsidP="00ED0EA8"><w:r><w:t>' . wordToUtf8($old_feedback) . '</w:t></w:r></w:p>';
+      echo '<w:p wsp:rsidR="000E6B7A" wsp:rsidRPr="00A11D0F" wsp:rsidRDefault="00273482" wsp:rsidP="00ED0EA8"><w:r><w:t>' . StringUtils::wordToUtf8($old_feedback) . '</w:t></w:r></w:p>';
       echo '</w:tbl></wx:sub-section>';
     }
     echo '<wx:sub-section><w:p wsp:rsidR="00A8714C" wsp:rsidRDefault="00A8714C" wsp:rsidP="0005490A"><w:pPr><w:pStyle w:val="Heading1"/></w:pPr>';
     if ($student_no > 1) echo '<w:r><w:br w:type="page"/></w:r>';
     echo '<w:r><w:t>' . $title . ' ' . $surname . ', ' . $first_names . '</w:t></w:r></w:p>';
-    echo '<w:p wsp:rsidR="00687E9E" wsp:rsidRDefault="00687E9E" wsp:rsidP="00DB2E44"><w:pPr><w:tabs><w:tab w:val="left" w:pos="1534"/></w:tabs><w:spacing w:after="0"/><w:rPr><w:b/></w:rPr></w:pPr><w:r wsp:rsidRPr="00687E9E"><w:rPr><w:b/></w:rPr><w:t>' . $string['osce'] . '</w:t></w:r><w:r><w:rPr><w:b/></w:rPr><w:tab/></w:r><w:r wsp:rsidRPr="00DB2E44"><w:t>' . wordToUtf8($paper) .  '</w:t></w:r></w:p>';
+    echo '<w:p wsp:rsidR="00687E9E" wsp:rsidRDefault="00687E9E" wsp:rsidP="00DB2E44"><w:pPr><w:tabs><w:tab w:val="left" w:pos="1534"/></w:tabs><w:spacing w:after="0"/><w:rPr><w:b/></w:rPr></w:pPr><w:r wsp:rsidRPr="00687E9E"><w:rPr><w:b/></w:rPr><w:t>' . $string['osce'] . '</w:t></w:r><w:r><w:rPr><w:b/></w:rPr><w:tab/></w:r><w:r wsp:rsidRPr="00DB2E44"><w:t>' . StringUtils::wordToUtf8($paper) .  '</w:t></w:r></w:p>';
     echo '<w:p wsp:rsidR="00DB2E44" wsp:rsidRDefault="00DB2E44" wsp:rsidP="00DB2E44"><w:pPr><w:tabs><w:tab w:val="left" w:pos="1534"/></w:tabs><w:spacing w:after="0"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>' . $string['examiner'] . '</w:t></w:r><w:r><w:rPr><w:b/></w:rPr><w:tab/></w:r><w:r wsp:rsidRPr="00DB2E44"><w:t>' . $examiner_title . ' ' . $examiner_surname . '</w:t></w:r></w:p>';
     echo '<w:p wsp:rsidR="00687E9E" wsp:rsidRDefault="00687E9E" wsp:rsidP="00DB2E44"><w:pPr><w:tabs><w:tab w:val="left" w:pos="1534"/></w:tabs><w:spacing w:after="0"/><w:rPr><w:b/></w:rPr></w:pPr><w:r wsp:rsidRPr="00687E9E"><w:rPr><w:b/></w:rPr><w:t>' . $string['date'] . '</w:t></w:r><w:r><w:rPr><w:b/></w:rPr><w:tab/></w:r><w:r wsp:rsidRPr="00DB2E44"><w:t>' . $started . '</w:t></w:r></w:p>';
     echo '<w:p wsp:rsidR="00687E9E" wsp:rsidRDefault="00687E9E" wsp:rsidP="00DB2E44"><w:pPr><w:tabs><w:tab w:val="left" w:pos="1534"/></w:tabs><w:spacing w:after="0"/><w:rPr><w:b/></w:rPr></w:pPr><w:r wsp:rsidRPr="00687E9E"><w:rPr><w:b/></w:rPr><w:t>' . $string['classification'] . '</w:t></w:r><w:r><w:rPr><w:b/></w:rPr><w:tab/></w:r><w:r wsp:rsidRPr="00DB2E44"><w:t>' . $classification . '</w:t></w:r></w:p>';
@@ -144,7 +145,7 @@ while ($result->fetch()) {
   }
   if ($theme != '') {
     if ($table_open == 1) echo '</w:tbl>';
-    echo '<w:p wsp:rsidR="00A11D0F" wsp:rsidRPr="00687E9E" wsp:rsidRDefault="00A11D0F" wsp:rsidP="00687E9E"><w:pPr><w:pStyle w:val="Heading2"/></w:pPr><w:r wsp:rsidRPr="00687E9E"><w:t>' . wordToUtf8($theme) . '</w:t></w:r></w:p>';
+    echo '<w:p wsp:rsidR="00A11D0F" wsp:rsidRPr="00687E9E" wsp:rsidRDefault="00A11D0F" wsp:rsidP="00687E9E"><w:pPr><w:pStyle w:val="Heading2"/></w:pPr><w:r wsp:rsidRPr="00687E9E"><w:t>' . StringUtils::wordToUtf8($theme) . '</w:t></w:r></w:p>';
     $table_open = 0;
   }
   if ($table_open == 0) {
@@ -157,7 +158,7 @@ while ($result->fetch()) {
   // Lead-in
   echo '<w:tr wsp:rsidR="00A11D0F" wsp:rsidRPr="00A11D0F" wsp:rsidTr="00A11D0F">';
   echo '<w:tc>';
-  echo '<w:tcPr><w:tcW w:w="8755" w:type="dxa"/></w:tcPr><w:p>' . wordToUtf8(trim($leadin));
+  echo '<w:tcPr><w:tcW w:w="8755" w:type="dxa"/></w:tcPr><w:p>' . StringUtils::wordToUtf8(trim($leadin));
   echo '</w:p>';
   echo '</w:tc>';
 
@@ -176,42 +177,7 @@ $mysqli->close();
 
 if ($old_userID != '') {
   echo '<w:p wsp:rsidR="00472B21" wsp:rsidRDefault="00472B21" wsp:rsidP="00472B21"><w:pPr><w:spacing w:after="0"/><w:rPr><w:b/></w:rPr></w:pPr></w:p><w:p wsp:rsidR="000E6B7A" wsp:rsidRPr="000E6B7A" wsp:rsidRDefault="00472B21" wsp:rsidP="00ED0EA8"><w:pPr><w:rPr><w:b/></w:rPr></w:pPr><w:r wsp:rsidRPr="000E6B7A"><w:rPr><w:b/></w:rPr><w:t>Feedback:</w:t></w:r></w:p>';
-  echo '<w:p wsp:rsidR="000E6B7A" wsp:rsidRPr="00A11D0F" wsp:rsidRDefault="00273482" wsp:rsidP="00ED0EA8"><w:r><w:t>' . wordToUtf8($old_feedback) . '</w:t></w:r></w:p>';
+  echo '<w:p wsp:rsidR="000E6B7A" wsp:rsidRPr="00A11D0F" wsp:rsidRDefault="00273482" wsp:rsidP="00ED0EA8"><w:r><w:t>' . StringUtils::wordToUtf8($old_feedback) . '</w:t></w:r></w:p>';
   echo '</w:tbl></wx:sub-section>';
 }
 echo '<w:sectPr wsp:rsidR="0005490A" wsp:rsidRPr="0005490A" wsp:rsidSect="00A4626D"><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="708" w:footer="708" w:gutter="0"/><w:cols w:space="708"/><w:docGrid w:line-pitch="360"/></w:sectPr></w:body></w:wordDocument>';
-
-function wordToUtf8($str) {
-  $wordChr = array(
-    "\\xe2\\x80\\xa6",       // ellipsis
-    "\\xe2\\x80\\x93",       // long dash
-    "\\xe2\\x80\\x94",       // long dash
-    "\x96",                  // long dash
-    "\x91",                  // single quote
-    "\x92",                  // single quote
-    "\\xe2\\x80\\x98",       // single quote opening
-    "\\xe2\\x80\\x99",       // single quote closing
-    "\\xe2\\x80\\x9c",       // double quote opening
-    "\\xe2\\x80\\x9d",       // double quote closing
-    "\\xe2\\x80\\xa2",       // dot used for bullet points
-    "&"
-  );
-
-  $utf8Chr = array(
-      '...',
-      '-',
-      '-',
-      '-',
-      '\'',
-      '\'',
-      '\'',
-      '\'',
-      '"',
-      '"',
-      '*',
-      '&amp;'
-      );
-
-  return str_replace($wordChr, $utf8Chr, $str);
-}
-?>
