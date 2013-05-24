@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
 
-require '../include/staff_auth.inc';  
+require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
 $moduleID = check_var('module', 'REQUEST', true, false, true);
@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
         $obj_id = 123;
       }
       $result->close();
-      
+
       $identifier = 0;
       $result = $mysqli->prepare("SELECT MAX(identifier) AS largest FROM sessions");
       $result->execute();
@@ -54,14 +54,14 @@ if (isset($_POST['submit'])) {
       $result->fetch();
       $result->close();
       $identifier = $largest + 1;
-      
+
       $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
       foreach ($lines as $separate_line) {
-
+        $separate_line = mb_convert_encoding($separate_line, $configObject->get('cfg_page_charset'));
         if (substr($separate_line,0,1) == '#') {   // Sub-heading
-          $title = substr($separate_line,1);
+          $title = substr(trim($separate_line),1);
           $identifier++;
-     
+
           $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, '', ?, NOW())");
           $stmt->bind_param('siss', $identifier, $moduleID, $title, $session);
           $stmt->execute();
@@ -75,9 +75,10 @@ if (isset($_POST['submit'])) {
             $stmt->close();
             $session_flag = true;
           }
-        
+
+          $obj_text = trim($separate_line);
           $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param('isissi', $obj_id, $separate_line, $moduleID, $identifier, $session, $obj_id);
+          $stmt->bind_param('isissi', $obj_id, $obj_text, $moduleID, $identifier, $session, $obj_id);
           $stmt->execute();
           $stmt->close();
           $obj_id++;
@@ -85,7 +86,7 @@ if (isset($_POST['submit'])) {
       }
     }
   }
-  
+
   unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
   header("location: " . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $moduleID);
 } else {
@@ -149,7 +150,7 @@ if (isset($_POST['submit'])) {
   $startyear = ( date('Y') - 1 );
   for ($i = 0; $i < 2; $i++) {
     $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
-    $sel = ($tmp_session == date_utils::get_current_academic_year()) ? ' selected="selected"' : ''; 
+    $sel = ($tmp_session == date_utils::get_current_academic_year()) ? ' selected="selected"' : '';
     echo "<option value=\"$tmp_session\"$sel>$tmp_session</option>\n";
   }
   echo "</select></td>\n";
@@ -166,7 +167,7 @@ if (isset($_POST['submit'])) {
 
 </div>
 </div>
-<?php	
+<?php
 }
 $mysqli->close();
 ?>
