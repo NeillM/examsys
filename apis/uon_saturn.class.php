@@ -266,11 +266,11 @@ Class UON_SATURN extends SmsUtils {
             $current_users[$lookup_username]['delete'] = 0; // Mark as being legitimate
           } else {
             // Student missing from Rogo module
-            $student_data = $mysqli->prepare("SELECT id, yearofstudy, initials, grade, title, surname, first_names, roles, COALESCE(sid.student_id,'SID_ERROR') FROM users LEFT JOIN sid ON users.id = sid.userID WHERE username = ? LIMIT 1"); // Do they have a Rogo user record?
+            $student_data = $mysqli->prepare("SELECT id, yearofstudy, initials, grade, title, surname, first_names, roles, email, COALESCE(sid.student_id,'SID_ERROR') FROM users LEFT JOIN sid ON users.id = sid.userID WHERE username = ? LIMIT 1"); // Do they have a Rogo user record?
             $student_data->bind_param('s', $lookup_username);
             $student_data->execute();
             $student_data->store_result();
-            $student_data->bind_result($tmp_userID, $tmp_yearofstudy, $tmp_initials, $tmp_grade, $tmp_title, $tmp_surname, $tmp_first_names, $tmp_roles, $tmp_student_id);
+            $student_data->bind_result($tmp_userID, $tmp_yearofstudy, $tmp_initials, $tmp_grade, $tmp_title, $tmp_surname, $tmp_first_names, $tmp_roles, $tmp_email, $tmp_student_id);
             $student_data->fetch();
 
             if ($student_data->num_rows == 0) {
@@ -290,6 +290,7 @@ Class UON_SATURN extends SmsUtils {
               $current_users[$lookup_username]['first_names'] = $tmp_first_names;
               $current_users[$lookup_username]['initials'] = $initials;
               $current_users[$lookup_username]['roles'] = 'Student';
+              $current_users[$lookup_username]['email'] = $sms->Email;
               $current_users[$lookup_username]['year'] = $sms->YearofStudy;
               $current_users[$lookup_username]['student_id'] = $sms->StudentID;
               $current_users[$lookup_username]['delete'] = 0;
@@ -301,6 +302,7 @@ Class UON_SATURN extends SmsUtils {
               $current_users[$lookup_username]['first_names'] = $tmp_first_names;
               $current_users[$lookup_username]['initials'] = $tmp_initials;
               $current_users[$lookup_username]['roles'] = $tmp_roles;
+              $current_users[$lookup_username]['email'] = $tmp_email;
               $current_users[$lookup_username]['year'] = $tmp_yearofstudy;
               $current_users[$lookup_username]['student_id'] = $tmp_student_id;
               $current_users[$lookup_username]['delete'] = 0;
@@ -337,11 +339,19 @@ Class UON_SATURN extends SmsUtils {
               $tmp_initials .= $tmp_name[0];
             }
           }
-          if ($current_users[$lookup_username]['year'] != $sms->YearofStudy or $tmp_initials != $current_users[$lookup_username]['initials'] or $current_users[$lookup_username]['grade'] != $sms->CourseCode or $current_users[$lookup_username]['title'] != $sms->Title or $current_users[$lookup_username]['surname'] != $sms->Surname  or $current_users[$lookup_username]['first_names'] != $sms->Forename or $current_users[$lookup_username]['roles'] != $new_roles) {
-            $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ? WHERE username = ?");
-            $result->bind_param('isssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $lookup_username);
-            $result->execute();
-            $result->close();
+          if (  $current_users[$lookup_username]['year'] != $sms->YearofStudy or 
+                $tmp_initials != $current_users[$lookup_username]['initials'] or 
+                $current_users[$lookup_username]['grade'] != $sms->CourseCode or 
+                $current_users[$lookup_username]['title'] != $sms->Title or 
+                $current_users[$lookup_username]['surname'] != $sms->Surname  or 
+                $current_users[$lookup_username]['first_names'] != $sms->Forename or 
+                $current_users[$lookup_username]['roles'] != $new_roles or 
+                $current_users[$lookup_username]['email'] != $sms->Email  
+             ) {
+              $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email WHERE username = ?");
+              $result->bind_param('issssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $sms->Email, $lookup_username);
+              $result->execute();
+              $result->close();
           }
 
           // Check if SID needs updating - rare but could happen
