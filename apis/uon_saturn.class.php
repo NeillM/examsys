@@ -239,7 +239,7 @@ Class UON_SATURN extends SmsUtils {
     if ($returned_data !== false) {
       $xml = new SimpleXMLElement($returned_data);
     }
-    var_dump('<pre>',$xml,'</pre>');
+
     if (is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->ModuleError)) {
       foreach ($xml->Module->Membership->Student as $sms) {
         $sms->Title = trim($sms->Title);
