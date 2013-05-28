@@ -55,7 +55,7 @@ boundaries = [marks[0],marks[marks.length-1],100/marks.length,100];
 canvas = document.getElementById('canvas_graph');
 
 if (canvas && canvas.getContext){
-	canvas.onmouseup     = g_mouseDragUp;
+	canvas.onmouseup   = g_mouseDragUp;
 	canvas.onmousedown = g_mouseDragDown;
 	canvas.onmousemove = g_mouseDragMove;
 	var intervalID = window.setInterval(g_redraw_canvas, 10);
@@ -79,8 +79,12 @@ function drawLine(cc,xx,yy,ww,hh) {
 	
 function g_redraw_canvas() {
 	function act(line_nr) {
-		if (line_nr==active_line) {
-			context.shadowColor = '#F88';
+		if (line_nr == active_line) {
+      if (line_nr == 1 || line_nr == 2) {
+        context.shadowColor = '#D7E3BC';
+      } else {
+        context.shadowColor = '#F88';
+      }
 			context.shadowBlur = 5;
 		} else {
 			context.shadowColor = 'white';
@@ -232,13 +236,13 @@ function g_redraw_canvas() {
 		//drawing boundaries
 		var gap = 0;
 		act(1);
-		drawLine('#c00000',Math.round(x1),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
+		drawLine('#9BBB59',Math.round(x1),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
 		act(2);
-		drawLine('#c00000',Math.round(x2),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
+		drawLine('#9BBB59',Math.round(x2),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
 		act(3);
-		drawLine('#c00000',graph_x+gap,Math.round(y3),graph_w-2*gap,0);
+		drawLine('#C00000',graph_x+gap,Math.round(y3),graph_w-2*gap,0);
 		act(4);
-		drawLine('#c00000',graph_x+gap,Math.round(y4),graph_w-2*gap,0);
+		drawLine('#C00000',graph_x+gap,Math.round(y4),graph_w-2*gap,0);
 
 	}
 	redraw = false;

@@ -26,6 +26,7 @@ $string['method'] = 'Metoda';
 $string['aboutstandardssetting'] = 'O wyznaczaniu standardów';
 $string['createmodifiedangoff'] = 'Utwórz nowe dla modyfikowanej metody Angoffa';
 $string['createebelmethod'] = 'Utwórz nowe dla metody Ebla';
+$string['createhofsteemethod'] = 'Create new Hofstee method';
 $string['editrating'] = 'Edytuj zaszeregowanie';
 $string['delete'] = 'Usuń';
 $string['modifiedangoff'] = 'Modyfikowana metoda Angoffa';

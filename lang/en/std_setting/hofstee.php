@@ -15,10 +15,16 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['hofstee'] = 'Hofstee plot';
-$string['integeronly'] = "only integer values";
+$string['integeronly'] = 'whole numbers';
 $string['cohort'] = 'Percent of Cohort';
 $string['correct'] = '% Mark';
-$string['passmark'] = "Pass mark";
-$string['distinction'] = "Distinction";
-
+$string['passmark'] = 'Set Pass Mark';
+$string['distinction'] = 'Set Distinction';
+$string['minpass'] = 'Min Pass';
+$string['maxpass'] = 'Max Pass';
+$string['minfail'] = 'Min Fail';
+$string['maxfail'] = 'Max Fail';
+$string['cutscore'] = 'Cut Score';
+$string['cutpercent'] = 'Cut %';
+$string['standardssetting'] = 'Standards Setting';
 ?>

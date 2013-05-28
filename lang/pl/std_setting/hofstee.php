@@ -20,5 +20,11 @@ $string['cohort'] = '% Grupy';
 $string['correct'] = '% Poprawnych';
 $string['passmark'] = 'Liczba punktów na zaliczenie';
 $string['distinction'] = 'Liczba punktów na wyróżnienie';
-
+$string['minpass'] = 'Min Pass';
+$string['maxpass'] = 'Max Pass';
+$string['minfail'] = 'Min Fail';
+$string['maxfail'] = 'Max Fail';
+$string['cutscore'] = 'Cut Score';
+$string['cutpercent'] = 'Cut %';
+$string['standardssetting'] = 'Standards Setting';
 ?>

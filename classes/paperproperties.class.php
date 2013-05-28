@@ -292,6 +292,13 @@ class PaperProperties {
     $this->set_display_start_date();
     $this->set_display_end_date();
   }
+  
+  public function save() {
+    $editProperties = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, rubric = ?, calculator = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ? WHERE property_id = ?");
+    $editProperties->bind_param('ssssssssssiississsssssssi', $this->paper_title, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->rubric, $this->calculator, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->property_id);
+    $editProperties->execute();
+    $editProperties->close();
+  }
 
   private function load_summative_lock() {
     if ($this->start_date !== null and date("U", time()) >= $this->start_date and $this->paper_type == '2') {

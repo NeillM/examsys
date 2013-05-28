@@ -26,6 +26,7 @@ $string['method'] = 'Method';
 $string['aboutstandardssetting'] = 'About Standards Setting';
 $string['createmodifiedangoff'] = 'Create new Modified Angoff';
 $string['createebelmethod'] = 'Create new Ebel method';
+$string['createhofsteemethod'] = 'Create new Hofstee method';
 $string['editrating'] = 'Edit Rating';
 $string['delete'] = 'Delete';
 $string['modifiedangoff'] = 'Modified Angoff';
