@@ -84,10 +84,16 @@ class ResultsCache {
     return $marks;
   }
   
-  public function get_paper_marks_by_paper($paperID) {
+  public function get_paper_marks_by_paper($paperID, $sort_data = false) {
     $marks = array();
+    
+    if ($sort_data) {
+      $sql = 'SELECT userID, percent FROM cache_student_paper_marks WHERE paperID = ? ORDER BY percent';
+    } else {
+      $sql = 'SELECT userID, percent FROM cache_student_paper_marks WHERE paperID = ?';
+    }
 
-    $result = $this->db->prepare("SELECT userID, percent FROM cache_student_paper_marks WHERE paperID = ?");
+    $result = $this->db->prepare($sql);
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($userID, $percent);

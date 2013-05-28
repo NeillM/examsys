@@ -72,6 +72,7 @@ if (isset($_POST['passmark'])) {
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <style type="text/css">
+body {font-size:85%}
 .pass {color:#76923C}
 .fail {color:#C00000}
 </style>
@@ -84,10 +85,9 @@ if (isset($_POST['passmark'])) {
 <form action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>" method="post">
 <?php
 	$results_cache = new ResultsCache($mysqli);
-	$marks = $results_cache->get_paper_marks_by_paper($paperID);
-	sort($marks);
+	$marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
 	
-  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
+  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n";
   echo "<tr><th class=\"h\">";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
@@ -103,7 +103,7 @@ if (isset($_POST['passmark'])) {
 
 	echo "<div id=\"canvas_div\">\n";
 	echo "<canvas id=\"canvas_graph\" width=\"800\" height=\"600\"></canvas><br>\n";
-	echo "<table style=\"font-size:85%\"><tr><td style=\"width:200px\">&nbsp;</td><td>&nbsp;</td>\n";
+	echo "<table><tr><td style=\"width:200px\">&nbsp;</td><td>&nbsp;</td>\n";
 	echo "<td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td>". $string['cutscore'] . "</td><td>". $string['cutpercent'] . "</td>\n";
 	echo "</tr><tr><td>&nbsp;</td>\n";
 	echo "<td><input type='checkbox' name='checkbox' id='checkbox'>" . $string['integeronly'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
