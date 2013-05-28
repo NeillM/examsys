@@ -219,7 +219,7 @@ function drawTabs($current_tab) {
   
   $paper_no = 0;
   $paper_details = array();
-  if ($schools_sql != '' OR !isset($_GET['school']) OR (isset($_GET['school']) AND ($_GET['school'] == -1 OR $_GET['school'] == ''))) {
+  if ($schools_sql != '' or !isset($_GET['school']) or (isset($_GET['school']) and ($_GET['school'] == -1 or $_GET['school'] == ''))) {
     // Get papers running on various dates.
     $result = $mysqli->prepare("SELECT password, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%Y') AS cal_year, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND  properties_modules.idmod = modules.id AND start_date>=" . $current_year . "0101000000 AND end_date<=" . $current_year . "1231235959 AND paper_type='2' AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
     $result->execute();
@@ -229,7 +229,10 @@ function drawTabs($current_tab) {
       $paper_details[$property_id]['date']        = $main_date;
       $paper_details[$property_id]['start_day']   = $start_day;
       $paper_details[$property_id]['end_date']    = $end_date;
-      $paper_details[$property_id]['paper_title'] = $paper_title;
+      $paper_details[$property_id]['paper_title'] = str_replace('_', ' ' , $paper_title);
+      if (strlen($paper_details[$property_id]['paper_title']) > 50) {
+      $paper_details[$property_id]['paper_title'] = substr($paper_details[$property_id]['paper_title'], 0, 50) . '...';
+      }
       $paper_details[$property_id]['property_id'] = $property_id;
       $paper_details[$property_id]['month']       = $month;
       $paper_details[$property_id]['cal_year']    = $cal_year;
