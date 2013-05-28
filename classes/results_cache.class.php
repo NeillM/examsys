@@ -108,10 +108,11 @@ class ResultsCache {
 
   public function save_student_mark_cache($propertyObj, $percent, $absent, $user_results, $paperID) {
     $user_no = count($user_results);
+    
 
     $result = $this->db->prepare("REPLACE INTO cache_student_paper_marks (paperID, userID, mark, percent) VALUES (?, ?, ?, ?)");
     for ($i=0; $i<$user_no; $i++) {
-      $result->bind_param('iidd', $paperID, $user_results[$i]['tmp_userID'], $user_results[$i]['mark'], $user_results[$i]['adj_percent']);
+      $result->bind_param('iidd', $paperID, $user_results[$i]['userID'], $user_results[$i]['mark'], $user_results[$i]['adj_percent']);
       $result->execute();
     }
     $result->close();

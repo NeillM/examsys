@@ -38,7 +38,7 @@ require_once '../classes/mathsutils.class.php';
 require_once '../classes/results_cache.class.php';
 
 function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli) {
-  global $stats, $question_no, $log_late, $exclusions, $cohort_size, $random_q_ids, $paper_buffer, $student_cohort;
+  global $stats, $question_no, $log_late, $exclusions, $cohort_size, $random_q_ids, $paper_buffer, $student_cohort, $ss_pass, $ss_hon;
   
   $configObject = Config::get_instance();
   
@@ -53,10 +53,11 @@ function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $u
   $results_cache = new ResultsCache($mysqli);
   $exclusions    = new Exclusion($paperID, $mysqli);
 
-  $marking       = $propertyObj->get_marking();
-  $pass_mark     = $propertyObj->get_pass_mark();
-  $paper_type    = $propertyObj->get_paper_type();
-  $calendar_year = $propertyObj->get_calendar_year();
+  $marking          = $propertyObj->get_marking();
+  $pass_mark        = $propertyObj->get_pass_mark();
+  $distinction_mark = $propertyObj->get_distinction_mark();
+  $paper_type       = $propertyObj->get_paper_type();
+  $calendar_year    = $propertyObj->get_calendar_year();
 
   $exclusions->load();                                                                                // Get any questions to exclude.
 
@@ -86,7 +87,7 @@ function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $u
 
   add_absent_students($absent, $user_results, $student_cohort);                                       // Add any absent students into main dataset
 
-  $stats = get_stats($user_results, $question_no, $propertyObj);                                      // Generate the main statistics
+  $stats = get_stats($user_results, $question_no, $pass_mark, $distinction_mark);                     // Generate the main statistics
 
   writeStudentDeciles($user_results, $stats);                                                         // Add in deciles per student
 
@@ -296,7 +297,7 @@ function get_ss_pass($marking, $paperID, $exclusions, &$pass_score, &$distinctio
 
         $bad_bonus_mark = ($q_type == 'rank' and $score_method == 'Bonus Mark' and strpos($excluded, '1') !== false);
         if ((substr($excluded,$i,1) == 0) and !$bad_bonus_mark) {
-          if (in_array($individual_ratings[$i],$std_types)) $ebel_marks[$individual_ratings[$i]]++;
+          if (in_array($individual_ratings[$i], $std_types)) $ebel_marks[$individual_ratings[$i]]++;
         }
         $std_total += $individual_ratings[$i];
         $question_no++;
@@ -405,7 +406,7 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
 
   $master_array[$user_number]['started']          = $tmp['started'];
   $master_array[$user_number]['username']         = $tmp['username'];
-  $master_array[$user_number]['tmp_userID']       = $tmp['tmp_userID'];
+  $master_array[$user_number]['userID']           = $tmp['userID'];
   $master_array[$user_number]['student_grade']    = $tmp['grade'];
   $master_array[$user_number]['roles']            = $tmp['roles'];
   $master_array[$user_number]['module']           = $tmp['module'];
@@ -430,8 +431,8 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   // Add metadata
   if (!empty($met_array['types'])) {
     foreach ($met_array['types'] as $type) {
-      if (isset($smet_array['students'][$tmp['tmp_userID']][$type]) ) {
-        $master_array[$user_number]['meta_' . $type] = $met_array['students'][$tmp['tmp_userID']][$type];
+      if (isset($smet_array['students'][$tmp['userID']][$type]) ) {
+        $master_array[$user_number]['meta_' . $type] = $met_array['students'][$tmp['userID']][$type];
       } else {
         $master_array[$user_number]['meta_' . $type] = '';
       }
@@ -500,7 +501,7 @@ function extract_blank_correct($option_text, $display_method, $paper_buffer, $qu
   return $correct;
 }
 
-function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclusions, $status, &$tmp_mark, &$tmp_user_mark_array, $random_q_ids, $tmp_userID, &$q_medians) {
+function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclusions, $status, &$tmp_mark, &$tmp_user_mark_array, $random_q_ids, $userID, &$q_medians) {
   global $paper_buffer, $user_results, $tmp_array;
 
   $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
@@ -913,11 +914,11 @@ function get_log_late($startdate, $enddate, $paperID, $configObj, &$log_late, &$
   $result = $db->prepare("SELECT DISTINCT userID, title, surname, first_names, DATE_FORMAT(started, '$cfg_long_date_time') AS display_started, started FROM log_late, log_metadata, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND started >= ? AND started <= ? ORDER BY surname, initials");
   $result->bind_param('iss', $paperID, $startdate, $late_end);
   $result->execute();
-  $result->bind_result($tmp_userID, $title, $surname, $first_names, $display_started, $started);
+  $result->bind_result($userID, $title, $surname, $first_names, $display_started, $started);
   while ($result->fetch()) {
-    $log_late[$tmp_userID] = $title . ' ' .  $surname . ', ' . $first_names;
-    $log_late_missing_users[$tmp_userID]['display_started'] = $display_started;
-    $log_late_missing_users[$tmp_userID]['started'] = $started;
+    $log_late[$userID] = $title . ' ' .  $surname . ', ' . $first_names;
+    $log_late_missing_users[$userID]['display_started'] = $display_started;
+    $log_late_missing_users[$userID]['started'] = $started;
   }
   $result->close();
 }
@@ -962,10 +963,10 @@ function get_absent($moduleID_in, $paperID, $calendar_year, $demo, $db) {
     $result = $db->prepare( $sql );
     $result->bind_param('s', $calendar_year);
     $result->execute();
-    $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
+    $result->bind_result($userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
     while ($result->fetch()) {
       $student_cohort[$cohort_size]['username']      = $tmp_username;
-      $student_cohort[$cohort_size]['tmp_userID']    = $tmp_userID;
+      $student_cohort[$cohort_size]['userID']        = $userID;
       $student_cohort[$cohort_size]['name']          = trim(str_replace("'","",$surname) . ',' . $first_names);
       $student_cohort[$cohort_size]['title']         = $title;
       $student_cohort[$cohort_size]['surname']       = demo_replace($surname, $demo);
@@ -1000,10 +1001,10 @@ function get_users($moduleID_in, $paperID, $calendar_year, $db) {     // Get all
     $mod_query->bind_param('s', $calendar_year);
   }
   $mod_query->execute();
-  $mod_query->bind_result($idMod, $tmp_userID, $tmp_moduleid);
+  $mod_query->bind_result($idMod, $userID, $tmp_moduleid);
   $mod_query->store_result();
   while ($mod_query->fetch()) {
-    $user_modules[$tmp_userID]['idMod'] = $idMod;
+    $user_modules[$userID]['idMod'] = $idMod;
   }
   $mod_query->close();
   
@@ -1171,22 +1172,22 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
     $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
   }
   $log_query->execute();
-  $log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt);
+  $log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $username, $userID, $student_id, $user_answer, $q_type, $userID, $mark, $status, $attempt);
 
   while ($log_query->fetch() !== null) {
-    if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and !isset($user_modules[$tmp_userID]['idMod'])) {
+    if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and !isset($user_modules[$userID]['idMod'])) {
       continue; //this user is not on the module set in repmodule so dont put them in the array
     }
 
     // Check if user is in log late so that we can catch any users who ONLY have log_late records
-    if (in_array($tmp_userID, array_keys($log_late_missing_users))) {
-      unset($log_late_missing_users[$tmp_userID]);
+    if (in_array($userID, array_keys($log_late_missing_users))) {
+      unset($log_late_missing_users[$userID]);
     }
 
-    if ($old_screen != $screen or $old_userID != $tmp_userID or $old_started != $started) {
+    if ($old_screen != $screen or $old_userID != $userID or $old_started != $started) {
       $user_duration += $old_duration;
     }
-    if (($old_userID != $tmp_userID) or ($old_started != $started)) {
+    if (($old_userID != $userID) or ($old_started != $started)) {
       if ($old_userID != '') {
         writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $paper_buffer, $demo);
         $tmp_array['questions'] = 0;
@@ -1198,10 +1199,10 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
       $tmp_array = array();
       $tmp_array['started']    = $started;
       $tmp_array['username']   = $username;
-      $tmp_array['tmp_userID'] = $tmp_userID;
+      $tmp_array['userID']     = $userID;
 
-      if (isset($user_modules[$tmp_userID]['idMod'])) {
-        $tmp_array['module'] = $user_modules[$tmp_userID]['idMod'];
+      if (isset($user_modules[$userID]['idMod'])) {
+        $tmp_array['module'] = $user_modules[$userID]['idMod'];
       } else {
         $tmp_array['module'] = '';
       }
@@ -1231,7 +1232,7 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
       $tmp_array['duration']        = $user_duration;
       $tmp_array['paper_type']      = $paper_type;
     }
-    getUserMark($q_id, $user_answer, $mark, $exclusions, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID, $q_medians);
+    getUserMark($q_id, $user_answer, $mark, $exclusions, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $userID, $q_medians);
 
     if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
     if (isset($tmp_array['questions'])) {
@@ -1239,7 +1240,7 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
     } else {
       $tmp_array['questions'] = 1;
     }
-    $old_userID   = $tmp_userID;
+    $old_userID   = $userID;
     $old_started  = $started;
     $old_duration = $duration;
     $old_screen   = $screen;
@@ -1275,10 +1276,10 @@ SQL;
     $result = $db->prepare($sql);
     $result->execute();
     $result->store_result();
-    $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
+    $result->bind_result($userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
     while ($result->fetch()) {
       $late_cohort[$late_cohort_size]['username']         = $tmp_username;
-      $late_cohort[$late_cohort_size]['tmp_userID']       = $tmp_userID;
+      $late_cohort[$late_cohort_size]['userID']           = $userID;
       $late_cohort[$late_cohort_size]['name']             = trim(str_replace("'","",$surname) . ',' . $first_names);
       $late_cohort[$late_cohort_size]['title']            = $title;
       $late_cohort[$late_cohort_size]['surname']          = demo_replace($surname, $demo);
@@ -1288,8 +1289,8 @@ SQL;
       $late_cohort[$late_cohort_size]['grade']            = $grade;
       $late_cohort[$late_cohort_size]['module']           = $moduleid;
       $late_cohort[$late_cohort_size]['gender']           = $gender;
-      $late_cohort[$late_cohort_size]['display_started']  = $log_late_missing_users[$tmp_userID]['display_started'];
-      $late_cohort[$late_cohort_size]['started']          = $log_late_missing_users[$tmp_userID]['started'];
+      $late_cohort[$late_cohort_size]['display_started']  = $log_late_missing_users[$userID]['display_started'];
+      $late_cohort[$late_cohort_size]['started']          = $log_late_missing_users[$userID]['started'];
       $late_cohort[$late_cohort_size]['timer_started']    = false;
 
       $late_cohort_size++;
@@ -1359,7 +1360,7 @@ function add_late_students(&$user_results, $late_cohort, $paper_type) {
       $user_results[$user_no]['percent']          = 0;
       $user_results[$user_no]['started']          = '';
       $user_results[$user_no]['username']         = $late_user['username'];
-      $user_results[$user_no]['tmp_userID']       = $late_user['tmp_userID'];
+      $user_results[$user_no]['userID']           = $late_user['userID'];
       $user_results[$user_no]['student_grade']    = $late_user['grade'];
       $user_results[$user_no]['module']           = $late_user['module'];
       $user_results[$user_no]['year']             = '';
@@ -1401,7 +1402,7 @@ function add_absent_students($absent, &$user_results, $student_cohort) {
       $user_results[$user_no]['percent']          = 0;
       $user_results[$user_no]['started']          = '';
       $user_results[$user_no]['username']         = $student_cohort[$i]['username'];
-      $user_results[$user_no]['tmp_userID']       = $student_cohort[$i]['tmp_userID'];
+      $user_results[$user_no]['userID']           = $student_cohort[$i]['userID'];
       $user_results[$user_no]['student_grade']    = $student_cohort[$i]['grade'];
       $user_results[$user_no]['module']           = $student_cohort[$i]['module'];
       $user_results[$user_no]['year']             = '';
@@ -1449,7 +1450,7 @@ function convert_moduleIDs(&$user_results, $db) {
   }
 }
 
-function get_stats($user_results, $question_no, $propertyObj) {
+function get_stats($user_results, $question_no, $pass_mark, $distinction_mark) {
   // Generate summary statistics.
   $user_no                = count($user_results);
   $stats['sum_of_marks']  = 0;
@@ -1468,9 +1469,7 @@ function get_stats($user_results, $question_no, $propertyObj) {
   $median_mark_array      = array();
   $median_percent_array   = array();
   $marks_data             = array();
-  $pass_mark              = $propertyObj->get_pass_mark();
-  $distinction_mark       = $propertyObj->get_distinction_mark();
-
+  
   for ($i=0; $i<$user_no; $i++) {
     if (isset($user_results[$i]['adj_percent']) and $user_results[$i]['questions'] >= $question_no and $user_results[$i]['visible'] == 1) {
       $stats['completed_no']++;

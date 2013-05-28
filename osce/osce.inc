@@ -150,7 +150,7 @@ function getBlinePassmk($user_results, $user_no, $propertyObj) {
   
   for ($i=0; $i<$user_no; $i++) {
     if (isBorderline($user_results[$i]['rating'], $propertyObj)) {
-      $borderlines[] = $user_results[$i]['numeric_score'];
+      $borderlines[] = $user_results[$i]['adj_percent'];
     }
   }
   
@@ -162,11 +162,13 @@ function getBlinePassmk($user_results, $user_no, $propertyObj) {
 }
 
 // Get the students who are enrolled on the module/session.
-function load_results($propertyObj, $demo, $configObj, $db) {
+function load_osce_results($propertyObj, $demo, $configObj, $question_no, $db) {
 
   $modIDs = implode(',', array_keys(Paper_utils::get_modules($_GET['paperID'], $db)));
   $user_no = 0;
   $calendar_year = $propertyObj->get_calendar_year();
+  
+  $total_mark = $propertyObj->get_total_mark();
   
   if (!isset($_GET['absent']) or $_GET['absent'] == 0) {
     $result = $db->prepare("SELECT DISTINCT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'{$configObj->get('cfg_long_date_time')}') AS display_started, overall_rating, numeric_score, feedback, examiners.title, examiners.surname, examiners.initials FROM (users AS students, users AS examiners, sid, log4_overall) WHERE students.id = log4_overall.userID AND examiners.id = log4_overall.examinerID AND started >= ? AND started <= ? AND q_paper = ? AND students.id=sid.userID ORDER BY students.surname, students.initials");
@@ -184,8 +186,15 @@ function load_results($propertyObj, $demo, $configObj, $db) {
     $user_results[$user_no]['classification']   = '';
     $user_results[$user_no]['rating']           = $overall_rating;
     $user_results[$user_no]['numeric_score']    = $numeric_score;
+    $user_results[$user_no]['mark']             = $numeric_score;
+    if ($total_mark > 0) {
+      $user_results[$user_no]['adj_percent']    = ($numeric_score / $total_mark) * 100;
+    } else {
+      $user_results[$user_no]['adj_percent']    = 0;
+    }
     $user_results[$user_no]['grade']            = $grade;
     $user_results[$user_no]['started']          = $started;
+    $user_results[$user_no]['duration']         = 0;
     $user_results[$user_no]['userID']           = $userID;
     $user_results[$user_no]['student_grade']    = $grade;
     $user_results[$user_no]['year']             = $year;
@@ -199,6 +208,7 @@ function load_results($propertyObj, $demo, $configObj, $db) {
     $user_results[$user_no]['feedback']         = $feedback;
     $user_results[$user_no]['examiner']         = $examiner_title . ' ' . $examiner_initials . ' ' . $examiner_surname;
     $user_results[$user_no]['visible']          = 1;    // Default to visible unless switched off below.
+    $user_results[$user_no]['questions']        = $question_no;
 
     $user_no++;
   }
@@ -207,9 +217,25 @@ function load_results($propertyObj, $demo, $configObj, $db) {
   return $user_results;
 }
 
+function load_osce_medians($db) {
+  $q_medians = array();
+  
+  $result = $db->prepare("SELECT q_id, rating, userID FROM log4 WHERE started >= ? AND started <= ? AND q_paper = ?");
+  $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($q_id, $rating, $userID);
+  $user_results = array();
+  while ($result->fetch()) {
+    $q_medians[$q_id][] = (int)$rating;
+  }
+  $result->close();
+    
+  return $q_medians;
+}
+
 function set_classification(&$user_results, $passmark, $user_no, $string) {
   for ($i=0; $i<$user_no; $i++) {
-    if ($user_results[$i]['numeric_score'] >= $passmark) {
+    if ($user_results[$i]['adj_percent'] >= $passmark) {
       $user_results[$i]['classification'] = $string['pass'];
     } else {
       $user_results[$i]['classification'] = $string['fail'];

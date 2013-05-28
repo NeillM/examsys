@@ -27,10 +27,12 @@ require '../include/staff_auth.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
+require_once '../include/class_totals.inc';
 require_once './osce.inc';
 
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/results_cache.class.php';
 
 $demo = is_demo($userObject);
 $sortby = '';
@@ -40,8 +42,11 @@ $paperID   = check_var('paperID', 'GET', true, false, true);
 $startdate = check_var('startdate', 'GET', true, false, true);
 $enddate   = check_var('enddate', 'GET', true, false, true);
 
-if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
-if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
+$percent      = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
+$ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
+$absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
+$sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
+$studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
@@ -52,8 +57,16 @@ if (!$propertyObj) {
 $paper = $propertyObj->get_paper_title();
 $crypt_name = $propertyObj->get_crypt_name();
 
-$user_results = load_results($propertyObj, $demo, $configObject, $mysqli);
+$exclusions = new Exclusion($paperID, $mysqli);
+$exclusions->load();                                                                                  // Get any questions to exclude.
+
+$paper_buffer = load_answers($exclusions, $question_no, $mysqli);
+
+$user_results = load_osce_results($propertyObj, $demo, $configObject, $question_no, $mysqli);
 $user_no = count($user_results);
+
+$q_medians = load_osce_medians($mysqli);
+
 if ($propertyObj->get_pass_mark() == 101) {
   $borderline_method = true;
 } else {
@@ -62,11 +75,13 @@ if ($propertyObj->get_pass_mark() == 101) {
 
 if ($borderline_method) {
   $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
-} elseif ($propertyObj->get_pass_mark() != 102) {
-  $passmark = $propertyObj->get_pass_mark();
-} else {
+} elseif ($propertyObj->get_pass_mark() == 102) {
   $passmark = 'N/A';
+} else {
+  $passmark = $propertyObj->get_pass_mark();
 }
+$distinction_mark = $propertyObj->get_distinction_mark();
+
 
 set_classification($user_results, $passmark, $user_no, $string);
 $user_results = array_csort($user_results, $sortby, $ordering);
@@ -78,9 +93,20 @@ $classifications = array(''=>'', 1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 'ERROR'=>0);
 for ($i=0; $i<$user_no; $i++) {
   if ($user_results[$i]['started'] != '') {   // No attendance
     $classifications[$user_results[$i]['rating']]++;
-    $total_score += $user_results[$i]['numeric_score'];
+    $total_score += $user_results[$i]['mark'];
     $completed_no++;
   }
+}
+
+$stats = get_stats($user_results, $question_no, $passmark, $distinction_mark);                        // Generate the main statistics
+
+$results_cache = new ResultsCache($mysqli);
+if ($results_cache->should_cache($propertyObj, $percent, $absent, $percent, $absent, $paperID)) {
+  $results_cache->save_paper_cache($propertyObj, $percent, $absent, $stats, $paperID);                // Cache general paper stats
+  
+  $results_cache->save_student_mark_cache($propertyObj, $percent, $absent, $user_results, $paperID);  // Cache student/paper marks
+  
+  $results_cache->save_median_question_marks($propertyObj, $percent, $absent, $q_medians, $paperID);  // Cache the question/paper medians
 }
 
 rating_num_text($user_results, $user_no, $propertyObj, $string);
@@ -100,81 +126,13 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script language="JavaScript">
-    var ie  = document.all
-    var ns6 = document.getElementById&&!document.all
-    var isMenu  = false ;
-    var menuSelObj = null ;
-    var overpopupmenu = false;
-    function mouseSelect(e) {
-      var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;
-      if (isMenu) {
-        if (overpopupmenu == false) {
-          isMenu = false ;
-          overpopupmenu = false;
-          document.getElementById('menudiv').style.display = 'none';
-          return true ;
-        }
-        return true ;
-      }
-      return false;
-    }
-    // POP UP MENU
-    function popMenu(tmpStarted, currentUserID, e) {
-      if (!e) var e = window.event;
-      var currentX = e.clientX;
-      var currentY = e.clientY;
-      var scrOfX = $('body,html').scrollLeft();
-      var scrOfY = $('body,html').scrollTop();
-
+  <script type="text/javascript" src="../js/popup_menu.js"></script>
+  <script language="JavaScript">    
+    function setVars(tmpStarted, currentUserID) {
       document.getElementById('started').value = tmpStarted;
       document.getElementById('userID').value = currentUserID;
-
-      top_pos = currentY+scrOfY;
-      if (top_pos > ($(window).height() + scrOfY - 75)) {
-        top_pos = $(window).height() + scrOfY - 75;
-      }
-      document.getElementById('menudiv').style.left = e.clientX+scrOfX + 'px';
-      document.getElementById('menudiv').style.top = top_pos + 'px';
-
-      document.getElementById('menudiv').style.display = "block";
-      document.getElementById('item1b').style.backgroundColor = '#FFFFFF';
-      document.getElementById('item2b').style.backgroundColor = '#FFFFFF';
-      document.getElementById('item3b').style.backgroundColor = '#FFFFFF';
-      isMenu = true;
-      return false;
     }
     
-    function menuRowOn(rowID) {
-      // Left menu column
-      document.getElementById('item'+rowID+'a').style.backgroundColor = '#FFE7A2';
-      document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #FFBD69';
-      
-      // Right menu column
-      document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFE7A2';
-      document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFE7A2';
-    }
-    
-    function menuRowOff(rowID) {
-      // Left menu column
-      document.getElementById('item'+rowID+'a').style.backgroundColor = '#F1F5FB';
-      document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #F1F5FB';
-      document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #F1F5FB';
-      document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #F1F5FB';
-      
-      // Right menu column
-      document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFFFFF';
-      document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFFFFF';
-      document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFFFFF';
-      document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFFFFF';
-      document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFFFFF';
-    }    
-
     function viewScript() {
       document.getElementById('menudiv').style.display = 'none';
       var winwidth = 750;
@@ -222,17 +180,6 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
 </div>
 
 <?php
-  $startdate = '';
-  $enddate = '';
-  $percent = 100;
-  $absent = 0;
-  $direction = 'asc';
-  if (isset($_GET['startdate'])) $startdate = $_GET['startdate'];
-  if (isset($_GET['enddate'])) $enddate = $_GET['enddate'];
-  if (isset($_GET['percent'])) $percent = $_GET['percent'];
-  if (isset($_GET['absent'])) $absent = $_GET['absent'];
-  if (isset($_GET['direction'])) $direction = $_GET['direction'];
-  
   //output table heading
   if ($borderline_method) {
     $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'grade', $string['total']=>'numeric_score', $string['rating']=>'rating', $string['classification']=>'classification', $string['starttime']=>'started', $string['examiner']=>'examiner');
@@ -311,7 +258,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       echo "<tr><td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['userID'] . "', event);\" width=\"16\" height=\"16\" /></td>";
       echo '<td class="greyln';
       if ($sortby == 'name') echo ' ordered';
-      echo "\">&nbsp;<span style=\"cursor:hand\" onclick=\"popMenu('" . $user_results[$i]['started'] . "', '" . $user_results[$i]['userID'] . "', event);\">" . $user_results[$i]['title'] . " " . $user_results[$i]['surname'] . ", <span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></td>";
+      echo "\">&nbsp;<span style=\"cursor:hand\" onclick=\"popMenu(3, event); setVars('" . $user_results[$i]['started'] . "', '" . $user_results[$i]['userID'] . "');\">" . $user_results[$i]['title'] . " " . $user_results[$i]['surname'] . ", <span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></td>";
       echo '<td class="greyln';
       if ($sortby == 'student_id') echo ' ordered';
       echo "\">&nbsp;" . $user_results[$i]['student_id'] . "</td>";
@@ -320,7 +267,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       echo "\">&nbsp;" . $user_results[$i]['grade'] . "</td>";
       echo '<td class="greyln';
       if ($sortby == 'numeric_score') echo ' ordered';
-      echo "\">&nbsp;" . $user_results[$i]['numeric_score'] . "</td>";
+      echo "\">&nbsp;" . $user_results[$i]['mark'] . "</td>";
             
       if ($borderline_method) {
         echo '<td class="greyln';

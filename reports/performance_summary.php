@@ -27,6 +27,7 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
+require_once '../include/sort.inc';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/results_cache.class.php';
 
@@ -41,6 +42,8 @@ function get_taken_papers($userID, $db) {
   $papers = array();
 
   $i = 0;
+  
+  // Query for Summative and Offline papers
   $result = $db->prepare("SELECT DISTINCT paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name FROM log_metadata, properties WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? ORDER BY calendar_year DESC");
   $result->bind_param('i', $userID);
   $result->execute();
@@ -60,6 +63,31 @@ function get_taken_papers($userID, $db) {
     $i++;
   }
   $result->close();
+  
+  // Query for OSCE stations
+  $result = $db->prepare("SELECT DISTINCT q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name FROM log4_overall, properties WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? ORDER BY calendar_year DESC");
+  $result->bind_param('i', $userID);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name);
+  while ($result->fetch()) {
+    $papers[$i]['paperID']        = $paperID;
+    $papers[$i]['paper_title']    = $paper_title;
+    $papers[$i]['paper_type']     = $paper_type;
+    $papers[$i]['calendar_year']  = $calendar_year;
+    $papers[$i]['started']        = $started;
+    $papers[$i]['crypt_name']     = $crypt_name;
+    $papers[$i]['pass_mark']      = $pass_mark;
+    $results_cache = new ResultsCache($db);
+    $papers[$i]['stats']          = $results_cache->get_paper_cache($paperID);
+
+    $i++;
+  }
+  $result->close();
+  
+  $sortby = 'calendar_year';
+  $ordering = 'desc';
+  $papers = array_csort($papers, $sortby, $ordering);
 
   return $papers;
 }
@@ -70,7 +98,6 @@ $results_cache = new ResultsCache($mysqli);
 $marks = $results_cache->get_paper_marks_by_student($userID);
 
 $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -84,81 +111,20 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
   <style>
-    h1 {font-size:120%; padding:0px; margin-top:15px; margin-bottom:0px}
+    body {font-size:100%}
+    .subsect {margin-top:20px; font-size:80%}
+    .indent {margin-left:30px}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/popup_menu.js"></script>
   <script language="javascript">
-    var ie  = document.all
-    var ns6 = document.getElementById&&!document.all
-    var isMenu  = false ;
-    var menuSelObj = null ;
-    var overpopupmenu = false;
-    function mouseSelect(e) {
-      var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;
-      if (isMenu) {
-        if (overpopupmenu == false) {
-          isMenu = false ;
-          overpopupmenu = false;
-          document.getElementById('menudiv').style.display = 'none';
-          return true ;
-        }
-        return true ;
-      }
-      return false;
-    }
-    // POP UP MENU
-    function popMenu(paper_type, crypt_name, started, e) {
-      if (!e) var e = window.event;
-      var currentX = e.clientX;
-      var currentY = e.clientY;
-      var scrOfX = $('body,html').scrollLeft();
-      var scrOfY = $('body,html').scrollTop();
-
+    function setVars (paper_type, crypt_name, paperID, started) {
       document.getElementById('paper_type').value = paper_type;
       document.getElementById('crypt_name').value = crypt_name;
+      document.getElementById('paperID').value = paperID;
       document.getElementById('started').value = started;
-
-      top_pos = currentY+scrOfY;
-      document.getElementById('menudiv').style.left = e.clientX+scrOfX + 'px';
-      document.getElementById('menudiv').style.top = top_pos + 'px';
-
-      document.getElementById('menudiv').style.display = "block";
-      document.getElementById('item1b').style.backgroundColor = '#FFFFFF';
-      document.getElementById('item2b').style.backgroundColor = '#FFFFFF';
-      isMenu = true;
-      return false;
     }
-    
-    function menuRowOn(rowID) {
-      // Left menu column
-      document.getElementById('item'+rowID+'a').style.backgroundColor = '#FFE7A2';
-      document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #FFBD69';
-      
-      // Right menu column
-      document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFE7A2';
-      document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFBD69';
-      document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFE7A2';
-    }
-    
-    function menuRowOff(rowID) {
-      // Left menu column
-      document.getElementById('item'+rowID+'a').style.backgroundColor = '#F1F5FB';
-      document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #F1F5FB';
-      document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #F1F5FB';
-      document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #F1F5FB';
-      
-      // Right menu column
-      document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFFFFF';
-      document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFFFFF';
-      document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFFFFF';
-      document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFFFFF';
-      document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFFFFF';
-    }    
 
     function viewScript() {
       document.getElementById('menudiv').style.display = 'none';
@@ -172,6 +138,11 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
       window.open("../mapping/user_feedback.php?id=" + document.getElementById('crypt_name').value + "&userID=<?php echo $_GET['userID']; ?>&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    }
+    
+    function jumpToPaper() {
+      window.opener.location.href="../paper/details.php?paperID=" + document.getElementById('paperID').value;
+      self.close();
     }
 
     document.onmousedown = mouseSelect;
@@ -190,6 +161,12 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
       <tr>
         <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();">Objectives</td>
       </tr>
+      <tr>
+        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
+      </tr>
+      <tr>
+        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px">&nbsp;</td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="jumpToPaper();">Jump to Paper</td>
+      </tr>
     </table>
   </td></tr>
 </table>
@@ -198,12 +175,12 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 <?php
 $demo = is_demo($userObject);
 $student_details = UserUtils::get_user_details($_GET['userID'], $mysqli);
-$name = demo_replace($student_details['title'], $demo) . ' ' . demo_replace($student_details['surname'], $demo) . ', ' . demo_replace($student_details['first_names'], $demo);
+$name = demo_replace($student_details['title'], $demo) . ' ' . demo_replace($student_details['surname'], $demo) . ', ' . demo_replace($student_details['first_names'], $demo) . ' (' . demo_replace($student_details['student_id'], $demo) . ')';
 
 echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
 echo "<tr><th><div style=\"padding-left:10px; font-size:200%; font-weight:bold\">" . $string['performsummary'] . "</div><div style=\"padding-left:10px\">$name</div></th></tr>\n";
 echo '<tr><th class="bevel"></th></tr>';
-echo "</table>\n<div style=\"margin:10px\">";
+echo "</table>\n<div>";
   
 $old_calendar_year = '';
 $plots_output = 0;
@@ -212,13 +189,13 @@ $col = 0;
 foreach ($papers as $paper) {
   if ($paper['stats']['max_mark'] != '') {
     if ($old_calendar_year != $paper['calendar_year']) {
-      echo "<h1>" . $paper['calendar_year'] . "</h1>\n";
-      echo '<img src="draw_boxplot.php?part=0" width="51" height="265" alt="' . $string['scale'] . '" />';
+      echo '<table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
+      echo '<img src="draw_boxplot.php?part=0" width="51" height="265" alt="' . $string['scale'] . '" class="indent" />';
       $col = 0;
     }
   
-    if ($col == 10) {
-      echo '<br /><img src="draw_boxplot.php?part=0" width="51" height="265" alt="' . $string['scale'] . '" />';
+    if ($col == 8) {
+      echo '<br /><img src="draw_boxplot.php?part=0" width="51" height="265" alt="' . $string['scale'] . '" class="indent" />';
       $col = 0;
     }
   
@@ -231,7 +208,7 @@ foreach ($papers as $paper) {
     $mark = (isset($marks[$paper['paperID']])) ? $marks[$paper['paperID']] : '';
     $exam = $paper['paper_title'];
   
-    echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark\" width=\"115\" height=\"265\" onclick=\"popMenu(" . $paper['paper_type'] . ", '" . $paper['crypt_name'] . "', '" . $paper['started'] . "', event)\" alt=\"" . $string['boxplot'] . "\" />";
+    echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark\" width=\"115\" height=\"265\" onclick=\"popMenu(3, event); setVars(" . $paper['paper_type'] . ", '" . $paper['crypt_name'] . "', " . $paper['paperID'] . ", '" . $paper['started'] . "')\" alt=\"" . $string['boxplot'] . "\" />";
 
     $plots_output++;
     $col++;
@@ -243,6 +220,7 @@ if ($plots_output == 0) {
 }
 ?>
 <input type="hidden" id="crypt_name" />
+<input type="hidden" id="paperID" />
 <input type="hidden" id="started" />
 <input type="hidden" id="paper_type" />
 

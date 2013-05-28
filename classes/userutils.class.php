@@ -248,15 +248,27 @@ Class UserUtils {
     return $match;
   }
   
-  static function get_user_details($tmp_userID, $db) {
+  static function get_user_details($userID, $db) {
     $stmt = $db->prepare("SELECT title, surname, initials, first_names, email, roles FROM users WHERE id = ? LIMIT 1");
-    $stmt->bind_param('i', $tmp_userID);
+    $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->bind_result($title, $surname, $initials, $first_names, $email, $roles);
     $stmt->fetch();
     $stmt->close();
     
-    return array('title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles);
+    if (stripos($roles, 'Student') !== false) {
+      $stmt = $db->prepare("SELECT student_id FROM sid WHERE userID = ? LIMIT 1");
+      $stmt->bind_param('i', $userID);
+      $stmt->execute();
+      $stmt->bind_result($student_id);
+      $stmt->fetch();
+      $stmt->close();
+
+      return array('title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>$student_id);
+    } else {
+      return array('title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles);
+    }
+    
   }
 
   /**
