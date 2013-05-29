@@ -28,7 +28,6 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/results_cache.class.php';
 require_once '../classes/paperproperties.class.php';
-require_once '../classes/logger.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
@@ -36,7 +35,6 @@ if (!$properties) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
-$logger = new Logger($mysqli);
 
 if (isset($_POST['passmark'])) {
   $old_pass_mark = $properties->get_pass_mark();
@@ -44,20 +42,14 @@ if (isset($_POST['passmark'])) {
 
   $properties->set_pass_mark($new_pass_mark);
   $properties->save();
-
-  if ($new_pass_mark != $old_pass_mark) {
-    $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_pass_mark, $new_pass_mark, 'passmark');
-  }
-} elseif (isset($_POST['passmark'])) {
+  
+} elseif (isset($_POST['distinction'])) {
   $old_distinction_mark = $properties->get_distinction_mark();
   $new_distinction_mark = floor($_POST['xs']);
   
   $properties->set_distinction_mark($new_distinction_mark);
   $properties->save();
 
-  if ($new_distinction_mark != $old_distinction_mark) {
-    $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_distinction_mark, $new_distinction_mark, 'distinction');
-  }
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
