@@ -333,10 +333,15 @@ function tfchange(event,keys) {
 	g_redraw_canvas;	
 }
 
+$("#checkbox").change(function(event) {
+	redraw = true;
+	g_redraw_canvas;	
+});
+	
 $(".tf").keypress(function(event) {
 	if (event.keyCode<=40 && event.keyCode>=37) tfchange(event,true);
 });
-	
+
 $(".tf").blur(function(event) {
 	tfchange(event,false);
 });

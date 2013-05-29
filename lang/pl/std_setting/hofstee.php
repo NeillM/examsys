@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['hofstee'] = 'Wykres Hofstee';
-$string['integeronly'] = "tylko wartości całkowite";
-$string['cohort'] = '% Grupy';
-$string['correct'] = '% Poprawnych';
-$string['passmark'] = 'Liczba punktów na zaliczenie';
-$string['distinction'] = 'Liczba punktów na wyróżnienie';
-$string['minpass'] = 'Min Pass';
-$string['maxpass'] = 'Max Pass';
-$string['minfail'] = 'Min Fail';
-$string['maxfail'] = 'Max Fail';
-$string['cutscore'] = 'Cut Score';
-$string['cutpercent'] = 'Cut %';
-$string['standardssetting'] = 'Standards Setting';
+$string['hofstee'] = 'Metoda Hofstee';
+$string['integeronly'] = "Wartości całkowite";
+$string['cohort'] = 'Procent grupy';
+$string['correct'] = '% Ocen';
+$string['passmark'] = 'L.punkt. na zaliczenie';
+$string['distinction'] = 'L. punkt. na wyróżnienie';
+$string['minpass'] = 'Min Zalicz.';
+$string['maxpass'] = 'Maks Zalicz.';
+$string['minfail'] = 'Min Obl.';
+$string['maxfail'] = 'Maks Obl.';
+$string['cutscore'] = 'Ocena Gr.';
+$string['cutpercent'] = 'Granica grupy';
+$string['standardssetting'] = 'Wyznaczanie standardów';
 ?>
