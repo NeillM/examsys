@@ -97,13 +97,13 @@ body {font-size:85%}
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="index.php?paperID=' . $paperID . '&module=&folder=">' . $string['standardssetting'] . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>Hofstee Method</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['hofstee'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a></th></tr>\n";
   echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
   echo "</table>\n";
 
 	echo "<div id=\"canvas_div\">\n";
-	echo "<canvas id=\"canvas_graph\" width=\"800\" height=\"600\"></canvas><br>\n";
-	echo "<table><tr><td style=\"width:200px\">&nbsp;</td><td>&nbsp;</td>\n";
+	echo "<canvas id=\"canvas_graph\" width=\"650\" height=\"600\"></canvas><br>\n";
+	echo "<table><tr><td style=\"width:0px\">&nbsp;</td><td>&nbsp;</td>\n";
 	echo "<td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td>". $string['cutscore'] . "</td><td>". $string['cutpercent'] . "</td>\n";
 	echo "</tr><tr><td>&nbsp;</td>\n";
 	echo "<td><input type='checkbox' name='checkbox' id='checkbox'>" . $string['integeronly'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";

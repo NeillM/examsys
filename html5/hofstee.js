@@ -24,7 +24,7 @@
 // @package
 //
 
-var graph_x = 200;
+var graph_x = 70;
 var graph_y = 50;
 var graph_w = 500;
 var graph_h = 500;
@@ -151,20 +151,22 @@ function g_redraw_canvas() {
 		
 		//moving labels
 		context.font="13px Arial";
-		context.fillStyle = '#000';
 		context.textAlign="center";
+		context.fillStyle = '#76923C';
 		var divert = 0;
 		if (Math.abs(x1-x2)<50) divert = (50-Math.abs(x1-x2))/2;
 		if (divert > 15) divert = 15;
 		context.fillText(Math.round(boundaries[0]*10)/10+'%',x1,canvas.height-graph_y-graph_h-5);
 		context.fillText(Math.round(boundaries[1]*10)/10+'%',x2,canvas.height-graph_y-graph_h-5-divert);
 		context.textAlign="right";
+		context.fillStyle = '#C00000';
 		divert = 0;
 		if (Math.abs(y3-y4)<25) divert = -4*(25-Math.abs(y3-y4));
 		if (divert < -40) divert = -40;
 		context.fillText(Math.round(boundaries[2]*10)/10+'%',graph_x+graph_w+40,y3+5);
 		context.fillText(Math.round(boundaries[3]*10)/10+'%',graph_x+graph_w+40-divert,y4+5);      
 		
+		context.fillStyle = '#000';
 		//drawing cyan line
 		drawLine('#00C0C0',x1,y4,x2-x1,y3-y4);
 		
@@ -210,20 +212,6 @@ function g_redraw_canvas() {
 			tx2 = tx1;
 			ty2 = ty1;
 		}
-		
-		//displaying data 
-		context.strokeStyle = '#ddd';
-		context.strokeRect(d_x-20+0.5,d_y-25+0.5,100,150); 
-		
-		//outside labels
-		context.font="13px Arial";
-		context.textAlign="left";
-		context.fillText('x1 = '+Math.round(boundaries[0]*10)/10+'%',d_x,d_y+00);      
-		context.fillText('x2 = '+Math.round(boundaries[1]*10)/10+'%',d_x,d_y+20);      
-		context.fillText('y1 = '+Math.round(boundaries[2]*10)/10+'%',d_x,d_y+40);      
-		context.fillText('y2 = '+Math.round(boundaries[3]*10)/10+'%',d_x,d_y+60);      
-		context.fillText('xs = '+xs,d_x,d_y+90);
-		context.fillText('ys = '+ys,d_x,d_y+110);      
 		
 		//textboxes outside canvas
 		document.getElementById('x1').value = Math.round(boundaries[0]*10)/10+'%';
