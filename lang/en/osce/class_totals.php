@@ -46,4 +46,5 @@ $string['studentprofile'] = 'Student Profile';
 $string['unsatisfactory'] = 'Unsatisfactory';
 $string['competent'] = 'Competent';
 $string['passmark'] = 'Pass Mark';
+$string['borderlinemethod'] = 'borderline method';
 ?>

@@ -60,7 +60,7 @@ $crypt_name = $propertyObj->get_crypt_name();
 $exclusions = new Exclusion($paperID, $mysqli);
 $exclusions->load();                                                                                  // Get any questions to exclude.
 
-$paper_buffer = load_answers($exclusions, $question_no, $mysqli);
+$paper_buffer = load_answers($exclusions, $question_no, $paperID, $mysqli);
 
 $user_results = load_osce_results($propertyObj, $demo, $configObject, $question_no, $mysqli);
 $user_no = count($user_results);
@@ -117,7 +117,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō: <?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -294,7 +294,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   echo "<tr><td align=\"right\" style=\"width:110px\">" . $string['cohortsize'] . "</td><td style=\"text-align:right; width:40px\">" . $user_no . "</td></tr>\n";
   
   if ($borderline_method) {
-    echo "<tr><td align=\"right\">" . $string['passmark'] . "</td><td style=\"text-align:right\">" . round($passmark, 2) . "</td><td>% (borderline method)</td></tr>\n";
+    echo "<tr><td align=\"right\">" . $string['passmark'] . "</td><td style=\"text-align:right\">" . round($passmark, 2) . "</td><td>% (" . $string['borderlinemethod'] . ")</td></tr>\n";
   } elseif ($propertyObj->get_pass_mark() != 102) {  // Not the N/A option
     echo "<tr><td align=\"right\">" . $string['passmark'] . "</td><td style=\"text-align:right\">" . $propertyObj->get_pass_mark() . "</td><td>%</td></tr>\n";
   }

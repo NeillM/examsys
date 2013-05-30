@@ -46,4 +46,5 @@ $string['studentprofile'] = 'Profil studenta';
 $string['unsatisfactory'] = 'Niesatysfakcjonujący'; 
 $string['competent'] = 'Dostateczny';
 $string['passmark'] = 'Liczba punktów na zaliczenie';
+$string['borderlinemethod'] = 'borderline method';
 ?>
