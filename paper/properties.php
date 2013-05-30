@@ -27,6 +27,7 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
+require_once '../include/class_totals.inc';
 require_once '../include/load_config.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
@@ -249,43 +250,9 @@ function modulo($n,$b) {
 }
 
 if (isset($_POST['Submit'])) {
-  // Setup old details before updating database with new values
-  $old_paper_type = $properties->get_paper_type();
-  $old_labs = $properties->get_labs();
-  $old_paper_title = $properties->get_paper_title();
-  $old_calendar_year = $properties->get_calendar_year();
-  $old_timezone = $properties->get_timezone();
-  $old_password = $properties->get_password();
-  $old_exam_duration = $properties->get_exam_duration();
-  $old_start_date = $properties->get_start_date();
-  $old_end_date = $properties->get_end_date();
-  $old_fullscreen = $properties->get_fullscreen();
-  $old_bidirectional = $properties->get_bidirectional();
-  $old_paper_prologue = $properties->get_paper_prologue();
-  $old_paper_postscript = $properties->get_paper_postscript();
-  $old_rubric = $properties->get_rubric();
   $old_marking = $properties->get_marking();
-  $old_pass_mark = $properties->get_pass_mark();
-  $old_distinction_mark = $properties->get_distinction_mark();
-  $old_sound_demo = $properties->get_sound_demo();
-  $old_calculator = $properties->get_calculator();
-  $old_bgcolor = $properties->get_bgcolor();
-  $old_fgcolor = $properties->get_fgcolor();
-  $old_themecolor = $properties->get_themecolor();
-  $old_labelcolor = $properties->get_labelcolor();
-  $old_modules = array_keys(Paper_utils::get_modules($paperID, $mysqli));
-  sort($old_modules, SORT_NUMERIC);
-  $old_modules = implode(',', $old_modules);
   $old_externals = $properties->get_externals();
   $old_internals = $properties->get_internal_reviewers();
-  $old_external_review_deadline = $properties->get_external_review_deadline();
-  $old_internal_review_deadline = $properties->get_internal_review_deadline();
-  $old_display_students_response = $properties->get_display_students_response();
-  $old_display_question_mark = $properties->get_display_question_mark();
-  $old_hide_if_unanswered = $properties->get_hide_if_unanswered();
-  $old_display_correct_answer = $properties->get_display_correct_answer();
-  $old_display_feedback = $properties->get_display_feedback();
-  $old_folder = $properties->get_folder();
   
   // Check that the new paper name is not already used by any other paper (i.e. unique).
   $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ? LIMIT 1");
@@ -293,12 +260,10 @@ if (isset($_POST['Submit'])) {
   $result->execute();
   $result->bind_result($paper_title);
   $result->store_result();
-  if ($result->num_rows == 0 or $old_paper_title == $_POST['paper_title']) {
+  if ($result->num_rows == 0 or $properties->get_paper_title() == $_POST['paper_title']) {
     $properties->set_paper_title($_POST['paper_title']);
     if (isset($_POST['paper_type'])) {
-      $properties->set_paper_type($_POST['paper_type']);
-    } else {
-      $properties->set_paper_type($old_paper_type);
+      //$properties->set_paper_type($_POST['paper_type']);
     }
 
     if (isset($_POST['bidirectional']) and $_POST['bidirectional'] == 1) {
@@ -418,14 +383,12 @@ if (isset($_POST['Submit'])) {
     if (($_POST['ext_tmonth'] == '04' or $_POST['ext_tmonth'] == '06' or $_POST['ext_tmonth'] == '09' or $_POST['ext_tmonth'] == '11') and $_POST['ext_tday'] == '31') $_POST['ext_tday'] = '30';
 
     if ($_POST['ext_tyear'] == '' or $_POST['ext_tmonth'] == '' or $_POST['ext_tday'] == '') {
-      $external_review_deadline = NULL;
-      $ext_date = '';
+      $properties->set_external_review_deadline(NULL);
     } else {
-      $ext_date = new DateTime($_POST['ext_tyear'] . '-' . $_POST['ext_tmonth'] . '-' . $_POST['ext_tday']);
-      $external_deadline = $ext_date->format('Y-m-d');
-      $external_review_deadline = $ext_date->format('U');
+      $tmp_date = new DateTime($_POST['ext_tyear'] . '-' . $_POST['ext_tmonth'] . '-' . $_POST['ext_tday']);
+      $properties->set_external_review_deadline($tmp_date->format('Y-m-d'));
+      unset($tmp_date);
     }
-    unset($tmp_date);
 
     $leap = is_leap($_POST['int_tyear']);
     if ($leap == true and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '29';
@@ -433,12 +396,10 @@ if (isset($_POST['Submit'])) {
     if (($_POST['int_tmonth'] == '04' or $_POST['int_tmonth'] == '06' or $_POST['int_tmonth'] == '09' or $_POST['int_tmonth'] == '11') and $_POST['int_tday'] == '31') $_POST['int_tday'] = '30';
 
     if ($_POST['int_tyear'] == '' or $_POST['int_tmonth'] == '' or  $_POST['int_tday'] == '') {
-      $internal_review_deadline = NULL;
-      $int_date = '';
+      $properties->set_internal_review_deadline(NULL);
     } else {
-      $int_date = new DateTime($_POST['int_tyear'] . '-' . $_POST['int_tmonth'] . '-' . $_POST['int_tday']);
-      $internal_deadline = $int_date->format('Y-m-d');
-      $internal_review_deadline = $int_date->format('U');
+      $tmp_date = new DateTime($_POST['int_tyear'] . '-' . $_POST['int_tmonth'] . '-' . $_POST['int_tday']);
+      $properties->set_internal_review_deadline($tmp_date->format('Y-m-d'));
     }
 
     $paper_modules = array();
@@ -686,17 +647,18 @@ if (isset($_POST['Submit'])) {
       $editProperties->close();
 
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $existing_ref, '', 'referencematerial');
-    }
+    }    
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+    <meta http-equiv="pragma" content="no-cache" />
 
     <title><?php echo $string['edittitle']; ?></title>
 
-    <meta http-equiv="pragma" content="no-cache" />
+    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
     <script type="text/javascript">
       function closeWindow() {
         <?php
@@ -714,7 +676,23 @@ if (isset($_POST['Submit'])) {
           } else {
         ?>
             window.opener.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>";
-            window.close();
+        <?php
+        if ($properties->get_paper_type() != '0' and $properties->get_paper_type() != '1' and $properties->get_paper_type() != '3' and $old_marking != $properties->get_marking()) {
+          // Re-cache summary statistics because the marking method has changed.
+          $startdate = $properties->get_raw_start_date();
+          $enddate = $properties->get_raw_end_date();
+ 
+          echo "url = \"../reports/recache_class_totals.php?paperID=$paperID&startdate=$startdate&enddate=$enddate\";\n";
+        ?>
+          $.ajax({
+            type: 'POST',
+            url: '../reports/recache_class_totals.php',
+            data: {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $startdate; ?>', enddate: '<?php echo $enddate; ?>'}
+          });
+        <?php
+        }
+        ?>
+        var int = self.setInterval(function(){window.close()},200);
         <?php
           }
         ?>
@@ -1796,7 +1774,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $split_month = 0;
       $split_day = 0;
     } else {
-      $internal_review_deadline = DateTime::createFromFormat('U', $properties->get_internal_review_deadline(), $local_time);
+      $internal_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_internal_review_deadline(), $local_time);
       $internal_review_deadline->setTimezone($local_time);
 
       $split_year = $internal_review_deadline->format('Y');
@@ -1867,7 +1845,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $split_month = 0;
       $split_day = 0;
     } else {
-      $external_review_deadline = DateTime::createFromFormat('U', $properties->get_external_review_deadline(), $local_time);
+      $external_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_external_review_deadline(), $local_time);
       $external_review_deadline->setTimezone($local_time);
 
       $split_year = $external_review_deadline->format('Y');

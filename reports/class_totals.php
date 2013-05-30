@@ -54,8 +54,9 @@ $ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
 $absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
 $sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
+$repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 
-$user_results = compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+$user_results = compile_report(false, $studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
 $user_no = count($user_results);
 
 ob_start();

@@ -500,7 +500,8 @@ if (isset($_POST['submit'])) {
     $absent = 0;
     $startdate = $_GET['startdate'];
     $enddate = $_GET['enddate'];
-    $user_results = compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+    $repcourse = '%';
+    $user_results = compile_report(true, $studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
   }
 
   header("location: ../paper/details.php?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);

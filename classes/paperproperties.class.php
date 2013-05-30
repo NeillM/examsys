@@ -182,8 +182,8 @@ class PaperProperties {
     $sql = "SELECT
                   property_id,
                   paper_title,
-                  start_date AS raw_start_date,
-                  end_date AS raw_end_date,
+                  DATE_FORMAT(start_date, '%Y%m%d%h%i%s'),
+                  DATE_FORMAT(end_date, '%Y%m%d%h%i%s'),
                   UNIX_TIMESTAMP(start_date) AS start_date,
                   UNIX_TIMESTAMP(end_date) AS end_date,
                   timezone,
@@ -215,8 +215,8 @@ class PaperProperties {
                   display_feedback,
                   hide_if_unanswered,
                   calendar_year,
-                  UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline,
-                  UNIX_TIMESTAMP(internal_review_deadline) AS internal_review_deadline,
+                  DATE_FORMAT(external_review_deadline, '%Y-%m-%d'),
+                  DATE_FORMAT(internal_review_deadline, '%Y-%m-%d'),
                   sound_demo,
                   latex_needed,
                   password,
@@ -309,9 +309,9 @@ class PaperProperties {
   
     $this->load_summative_lock();
     
-    if ($this->summative_lock) {
-      $result = $this->db->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ? WHERE property_id = ?");
-      $result->bind_param('siiiiiii', $this->marking, $this->pass_mark, $this->distinction_mark, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->property_id);
+    if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
+      $result = $this->db->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, external_review_deadline = ?, internal_review_deadline = ? WHERE property_id = ?");
+      $result->bind_param('siiiiiissi', $this->marking, $this->pass_mark, $this->distinction_mark, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->external_review_deadline, $this->internal_review_deadline, $this->property_id);
     } elseif ($configObject->get('cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
       $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, rubric = ?, calculator = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ? WHERE property_id = ?");
       $result->bind_param('ssssssssssiississsssssssi', $this->paper_title, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->rubric, $this->calculator, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->property_id);
@@ -712,7 +712,7 @@ class PaperProperties {
     $this->paper_type = $paper_type;
     
     if ($old_paper_type != $paper_type) {
-      $this->changes[] = array('old'=>$old_timezone, 'new'=>$timezone, 'part'=>'papertype');
+      $this->changes[] = array('old'=>$old_paper_type, 'new'=>$paper_type, 'part'=>'papertype');
     }
   }
 

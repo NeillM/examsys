@@ -37,15 +37,23 @@ require_once '../classes/exclusion.class.php';
 require_once '../classes/mathsutils.class.php';
 require_once '../classes/results_cache.class.php';
 
-function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli) {
-  global $stats, $question_no, $log_late, $exclusions, $cohort_size, $random_q_ids, $paper_buffer, $student_cohort, $ss_pass, $ss_hon;
+function compile_report($recache, $studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli) {
+  global $stats, $question_no, $log_late, $exclusions, $cohort_size, $paper_buffer, $student_cohort, $ss_pass, $ss_hon;
   
   $configObject = Config::get_instance();
   
+  $paperID          = $propertyObj->get_property_id();
+  $marking          = $propertyObj->get_marking();
+  $pass_mark        = $propertyObj->get_pass_mark();
+  $distinction_mark = $propertyObj->get_distinction_mark();
+  $paper_type       = $propertyObj->get_paper_type();
+  $calendar_year    = $propertyObj->get_calendar_year();
+
   $demo = is_demo($userObject);
   $q_medians = array();
   $log_late = array();
   $log_late_missing_users = array();
+  $random_q_ids = array();
 
   $moduleID = Paper_utils::get_modules($paperID, $mysqli);
   $moduleID_in = implode(',', array_keys($moduleID));
@@ -53,52 +61,46 @@ function compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $u
   $results_cache = new ResultsCache($mysqli);
   $exclusions    = new Exclusion($paperID, $mysqli);
 
-  $marking          = $propertyObj->get_marking();
-  $pass_mark        = $propertyObj->get_pass_mark();
-  $distinction_mark = $propertyObj->get_distinction_mark();
-  $paper_type       = $propertyObj->get_paper_type();
-  $calendar_year    = $propertyObj->get_calendar_year();
-
   $exclusions->load();                                                                                // Get any questions to exclude.
 
-  $paper_buffer = load_answers($exclusions, $question_no, $mysqli);
+  $paper_buffer = load_answers($exclusions, $question_no, $paperID, $mysqli);
 
   get_log_late($startdate, $enddate, $paperID, $configObject, $log_late, $log_late_missing_users, $mysqli);
 
-  $student_cohort = get_absent($moduleID_in, $paperID, $calendar_year, $demo, $mysqli);
+  $student_cohort = get_absent($moduleID_in, $paperID, $calendar_year, $absent, $demo, $mysqli);
 
-  $user_modules = get_users($moduleID_in, $paperID, $calendar_year, $mysqli);                         // Get all the users on the module(s) the paper is on. 
+  $user_modules = get_users($moduleID_in, $paperID, $calendar_year, $mysqli);                                   // Get all the users on the module(s) the paper is on. 
 
-  $metadata_array = get_metadata($moduleID_in, $calendar_year, $mysqli);                              // Query for metadata
+  $metadata_array = get_metadata($moduleID_in, $calendar_year, $mysqli);                                        // Query for metadata
 
-  $user_results = load_results($studentsonly, $propertyObj, $demo, $configObject, $metadata_array, $log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $paper_buffer, $q_medians, $mysqli);  // Load the student results
+  $user_results = load_results($studentsonly, $propertyObj, $startdate, $enddate, $repcourse, $demo, $configObject, $metadata_array, $log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $paper_buffer, $q_medians, $student_cohort, $mysqli);  // Load the student
 
-  $late_cohort = load_late_cohort($log_late_missing_users, $demo, $mysqli);
+  $late_cohort = load_late_cohort($log_late_missing_users, $demo, $mysqli);                                     // Get any late users
   
-  adjust_marks($paper_buffer, $marking, $exclusions, $ss_pass, $ss_hon, $propertyObj, $user_results, $mysqli);
+  adjust_marks($paper_buffer, $marking, $exclusions, $ss_pass, $ss_hon, $propertyObj, $user_results, $mysqli);  // Scale marks (random marks or standards setting)
 
-  add_rank($user_results);                                                                            // Add in rank data.
+  add_rank($user_results);                                                                                      // Add in rank data.
 
-  convert_moduleIDs($user_results, $mysqli);                                                          // Convert Module IDs into codes
+  convert_moduleIDs($user_results, $mysqli);                                                                    // Convert Module IDs into codes
 
-  $cohort_size  = flag_subpart($user_results, $percent, $ordering, $absent);
+  $cohort_size  = flag_subpart($user_results, $percent, $ordering, $absent);                                    // Used to flag subsets of the cohort (i.e. top 33%)
 
-  add_late_students($user_results, $late_cohort, $paper_type);                                        // Add in late users into main dataset
+  add_late_students($user_results, $late_cohort, $paper_type);                                                  // Add in late users into main dataset
 
-  add_absent_students($absent, $user_results, $student_cohort);                                       // Add any absent students into main dataset
+  add_absent_students($absent, $user_results, $student_cohort);                                                 // Add any absent students into main dataset
 
-  $stats = get_stats($user_results, $question_no, $pass_mark, $distinction_mark);                     // Generate the main statistics
+  $stats = get_stats($user_results, $question_no, $pass_mark, $distinction_mark);                               // Generate the main statistics
 
-  writeStudentDeciles($user_results, $stats);                                                         // Add in deciles per student
+  writeStudentDeciles($user_results, $stats);                                                                   // Add in deciles per student
 
-  sort_results($percent, $ordering, $sortby, $user_results);                                          // Sort the whole array by the right column
+  sort_results($percent, $ordering, $sortby, $user_results);                                                    // Sort the whole array by the right column
 
-  if ($results_cache->should_cache($propertyObj, $percent, $absent, $percent, $absent, $paperID)) {
-    $results_cache->save_paper_cache($propertyObj, $percent, $absent, $stats, $paperID);                // Cache general paper stats
+  if ($recache or $results_cache->should_cache($propertyObj, $percent, $absent, $percent, $absent, $paperID)) {
+    $results_cache->save_paper_cache($propertyObj, $percent, $absent, $stats, $paperID);                        // Cache general paper stats
     
-    $results_cache->save_student_mark_cache($propertyObj, $percent, $absent, $user_results, $paperID);  // Cache student/paper marks
+    $results_cache->save_student_mark_cache($propertyObj, $percent, $absent, $user_results, $paperID);          // Cache student/paper marks
     
-    $results_cache->save_median_question_marks($propertyObj, $percent, $absent, $q_medians, $paperID);  // Cache the question/paper medians
+    $results_cache->save_median_question_marks($propertyObj, $percent, $absent, $q_medians, $paperID);          // Cache the question/paper medians
   }
   
   return $user_results;
@@ -145,12 +147,12 @@ function getRandomDetails($questionID, &$random_q_ids, $paper_buffer, $mysqli) {
   $old_q_media_height = '';
   $old_correct        = array();
   $old_option_text    = array();
-  $old_theme        = '';
-  $old_scenario     = '';
-  $old_leadin       = '';
-  $old_media        = '';
-  $old_type         = '';
-  $old_score_method = '';
+  $old_theme          = '';
+  $old_scenario       = '';
+  $old_leadin         = '';
+  $old_media          = '';
+  $old_type           = '';
+  $old_score_method   = '';
 
   $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, last_edited, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
   $result->bind_param('i', $questionID);
@@ -390,9 +392,7 @@ function crankMark($tmp_percent, $ss_pass, $ss_hon, $pass_mark, $distinction_mar
   return round($cranked);
 }
 
-function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp, $met_array, $paper_buffer, $demo) {
-  global $student_cohort;
-  
+function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp, $met_array, $paper_buffer, $demo, $student_cohort) {
   $master_array[$user_number]['name'] = $tmp['name'];
   $master_array[$user_number]['mark'] = round($tmp_user_mark,1);
   $master_array[$user_number]['mark_array'] = $tmp_user_mark_array;
@@ -501,9 +501,7 @@ function extract_blank_correct($option_text, $display_method, $paper_buffer, $qu
   return $correct;
 }
 
-function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclusions, $status, &$tmp_mark, &$tmp_user_mark_array, $random_q_ids, $userID, &$q_medians) {
-  global $paper_buffer, $user_results, $tmp_array;
-
+function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclusions, $status, &$tmp_mark, &$tmp_user_mark_array, $random_q_ids, $userID, &$q_medians, $paper_buffer, $tmp_array) {
   $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
   
   $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
@@ -790,7 +788,7 @@ function check_and_clear_cohort($student_cohort, $username) {
   return array_values($student_cohort);
 }
 
-function load_answers($exclusions, &$question_no, $db) {
+function load_answers($exclusions, &$question_no, $paperID, $db) {
   $question_no      = 0;
   $old_q_id         = 0;
   $stems            = 0;
@@ -806,7 +804,7 @@ function load_answers($exclusions, &$question_no, $db) {
   
   // Load the correct answers into 'paper_buffer' array.
   $result = $db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos FROM (papers, questions, options) WHERE papers.question = questions.q_id AND papers.paper = ? AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY screen, display_pos, id_num");
-  $result->bind_param('i', $_GET['paperID']);
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
   $result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $q_type, $correct, $score_method, $option_text, $status, $display_pos);
@@ -876,7 +874,7 @@ function load_answers($exclusions, &$question_no, $db) {
     $old_status           = $status;
   }
   $result->close();
-
+  
   if ($old_status != 'Experimental') {
     $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
@@ -923,11 +921,11 @@ function get_log_late($startdate, $enddate, $paperID, $configObj, &$log_late, &$
   $result->close();
 }
 
-function get_absent($moduleID_in, $paperID, $calendar_year, $demo, $db) {
+function get_absent($moduleID_in, $paperID, $calendar_year, $absent, $demo, $db) {
   $student_cohort = array();
   $cohort_size = 0;
 
-  if ($_GET['absent'] == 1) {
+  if ($absent == 1) {
     // Get students in the cohort.
 
     $sql = "SELECT DISTINCT
@@ -1032,8 +1030,7 @@ function get_metadata($moduleID_in, $calendar_year, $db) {
   return $metadata_array;
 }
 
-function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_array, &$log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $paper_buffer, &$q_medians, $db) {
-  //if (isset($_GET['studentsonly']) and $_GET['studentsonly'] == 0) {
+function load_results($studentsonly, $propertyObj, $startdate, $enddate, $repcourse, $demo, $configObj, $metadata_array, &$log_late_missing_users, $exclusions, $random_q_ids, $user_modules, $paper_buffer, &$q_medians, $student_cohort, $db) {
   if ($studentsonly == 0) {
     $roles_sql = '';
   } else {
@@ -1054,6 +1051,7 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
 
   // Get log data.
   $paper_type = $propertyObj->get_paper_type();
+  $paperID = $propertyObj->get_property_id();
   if ($paper_type == '0') {
     $sql = '(SELECT log0.q_id
                       , 0 AS paper_type
@@ -1160,16 +1158,16 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
                       , screen';
 
     $log_query = $db->prepare($sql);
-    $log_query->bind_param('isssisss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+    $log_query->bind_param('isssisss', $paperID, $repcourse, $startdate, $enddate, $paperID, $repcourse, $startdate, $enddate);
   } elseif ($paper_type == '2') {
     $log_query = $db->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObj->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
-    $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+    $log_query->bind_param('isss', $paperID, $repcourse, $startdate, $enddate);
   } elseif ($paper_type == '5') {
     $log_query = $db->prepare("SELECT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$configObj->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
-    $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+    $log_query->bind_param('isss', $paperID, $repcourse, $startdate, $enddate);
   } else {
     $log_query = $db->prepare("SELECT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$configObj->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
-    $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+    $log_query->bind_param('isss', $paperID, $repcourse, $startdate, $enddate);
   }
   $log_query->execute();
   $log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $username, $userID, $student_id, $user_answer, $q_type, $userID, $mark, $status, $attempt);
@@ -1189,7 +1187,7 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
     }
     if (($old_userID != $userID) or ($old_started != $started)) {
       if ($old_userID != '') {
-        writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $paper_buffer, $demo);
+        writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $paper_buffer, $demo, $student_cohort);
         $tmp_array['questions'] = 0;
         $tmp_mark = 0;
         $tmp_user_mark_array = array();
@@ -1232,7 +1230,7 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
       $tmp_array['duration']        = $user_duration;
       $tmp_array['paper_type']      = $paper_type;
     }
-    getUserMark($q_id, $user_answer, $mark, $exclusions, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $userID, $q_medians);
+    getUserMark($q_id, $user_answer, $mark, $exclusions, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $userID, $q_medians, $paper_buffer, $tmp_array);
 
     if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
     if (isset($tmp_array['questions'])) {
@@ -1249,11 +1247,10 @@ function load_results($studentsonly, $propertyObj, $demo, $configObj, $metadata_
 
   if (!empty($tmp_array)) {
     if (!isset($_GET['repmodule']) or $_GET['repmodule'] == '' or (isset($user_modules[$old_userID]['idMod']) and $user_modules[$old_userID]['idMod'] == $_GET['repmodule'])) {
-
       $user_duration += $old_duration;
       $log_query->free_result();
       $log_query->close();
-      writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $paper_buffer, $demo);
+      writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $paper_buffer, $demo, $student_cohort);
     }
   }
   
