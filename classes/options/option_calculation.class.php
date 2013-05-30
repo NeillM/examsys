@@ -24,7 +24,7 @@
  * @package
  */
 
-Class OptionCALCULATION extends Option {
+Class OptionCALCULATION extends OptionEdit {
   
   // Option level pseudo-properties for Calculation
   private $variable = '';

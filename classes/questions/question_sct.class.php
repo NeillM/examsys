@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionSCT extends Question {
+Class QuestionSCT extends QuestionEdit {
   
   protected $hypothesis = '';
   protected $new_information = '';

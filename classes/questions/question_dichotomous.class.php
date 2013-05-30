@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionDICHOTOMOUS extends Question {
+Class QuestionDICHOTOMOUS extends QuestionEdit {
   
   public $max_options = 15;
   protected $_answer_positive = 't';

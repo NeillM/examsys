@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionKEYWORD_BASED extends Question {
+Class QuestionKEYWORD_BASED extends QuestionEdit {
 
   public $max_options = 1;
   protected $_allow_change_marking_method = false;

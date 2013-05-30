@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionMATRIX extends Question {
+Class QuestionMATRIX extends QuestionEdit {
   
   protected $stems = array();  
   protected $_answer_negative = 0;

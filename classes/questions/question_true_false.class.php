@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionTRUE_FALSE extends Question {
+Class QuestionTRUE_FALSE extends QuestionEdit {
   
   public $max_options = 1;
   protected $_answer_positive = 't';

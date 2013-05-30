@@ -23,7 +23,7 @@
 */
 
 require_once '../../include/staff_auth.inc';
-require_once '../../classes/question.class.php';
+require_once '../../classes/questionEdit.class.php';
 require_once '../../classes/logger.class.php';
 require_once '../../classes/viewhelper.class.php';
 require_once '../../classes/stateutils.class.php';
@@ -59,11 +59,11 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
 
   if (!isset($_GET['type'])) {
     $critical_error = $string['typeundefined'];
-  } elseif (!in_array($_GET['type'], Question::$types)) {
+  } elseif (!in_array($_GET['type'], QuestionEdit::$types)) {
     $critical_error = sprintf($string['typeinvalid'], htmlentities($_GET['type']));
   } else {
     try {
-      $question = Question::question_factory($mysqli, $userObject, $string, $_GET['type']);
+      $question = QuestionEdit::question_factory($mysqli, $userObject, $string, $_GET['type']);
       $question->set_type($_GET['type']);
       $question->set_owner_id($userObject->get_user_ID());
       $question->set_teams(Paper_utils::get_modules($paper_id, $mysqli));
@@ -76,7 +76,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   $mode = $string['edit'];
 
   try {
-    $question = Question::question_factory($mysqli, $userObject, $string, $_REQUEST['q_id']);
+    $question = QuestionEdit::question_factory($mysqli, $userObject, $string, $_REQUEST['q_id']);
   } catch (Exception $ex) {
     $critical_error = $ex->getMessage();
   }
@@ -243,7 +243,7 @@ if ($critical_error == '') {
           $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
         } else {
           // Create new option if have required data
-          $option = Option::option_factory($mysqli, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
+          $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
 
           if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
             $correct_fb = (isset($_POST["option_correct_fback$option_no"])) ? $_POST["option_correct_fback$option_no"] : '';

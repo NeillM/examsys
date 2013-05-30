@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionBLANK extends Question {
+Class QuestionBLANK extends QuestionEdit {
   
   public $max_options = 1;
   protected $_answer_negative = null;

@@ -24,7 +24,7 @@
  * @package
  */
 
-Class OptionSCT extends Option {
+Class OptionSCT extends OptionEdit {
   
   public function save($option_number = 0) {
     if ($this->_question->get_max_experts() == 0) {

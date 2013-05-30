@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionEXTMATCH extends Question {
+Class QuestionEXTMATCH extends QuestionEdit {
   
   protected $stems = array();
   protected $all_media_names = array();

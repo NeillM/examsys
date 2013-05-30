@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionFLASH extends Question {
+Class QuestionFLASH extends QuestionEdit {
 
   public $max_options = 1;
   protected $_allow_correction = false;

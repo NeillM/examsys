@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionRANDOM extends Question {
+Class QuestionRANDOM extends QuestionEdit {
 
   public $max_options = 1000;  // Probably irrelevant
   protected $_allow_change_marking_method = false;

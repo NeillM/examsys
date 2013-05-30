@@ -24,7 +24,7 @@
  * @package
  */
 
-Class OptionAREA extends Option {
+Class OptionAREA extends OptionEdit {
   protected $_fields_required = array('question_id', 'marks_correct', 'correct');
 
   /**

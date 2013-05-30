@@ -24,7 +24,7 @@
  * @package
  */
 
-Class OptionEXTMATCH extends Option {
+Class OptionEXTMATCH extends OptionEdit {
   
   protected $all_corrects = array();
   protected $_fields_compound = array('correct' => 'integer');

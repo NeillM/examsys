@@ -24,7 +24,7 @@
  * @package
  */
 
-Class OptionMATRIX extends Option {
+Class OptionMATRIX extends OptionEdit {
   
   protected $all_corrects = array();
   protected $_fields_compound = array('correct' => 'raw');

@@ -26,7 +26,7 @@
 
 // TODO: deletion of layers - requires Flash change?
 
-Class QuestionHOTSPOT extends Question {
+Class QuestionHOTSPOT extends QuestionEdit {
   
   protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
       

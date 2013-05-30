@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionMCQ extends Question {
+Class QuestionMCQ extends QuestionEdit {
 
   protected $min_options = 2;
   protected $_allow_change_marking_method = false;

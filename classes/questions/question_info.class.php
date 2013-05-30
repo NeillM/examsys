@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionINFO extends Question {
+Class QuestionINFO extends QuestionEdit {
 
   protected $_allow_mapping = false;
   protected $_allow_correction = false;

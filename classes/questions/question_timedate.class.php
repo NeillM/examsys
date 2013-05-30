@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionTIMEDATE extends Question {
+Class QuestionTIMEDATE extends QuestionEdit {
   
   protected $correct = '';
   protected $format = '1';
@@ -245,7 +245,7 @@ Class QuestionTIMEDATE extends Question {
    */
   public function get_correct() {
     if (count($this->options) == 0) {
-      $option = new Option($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings);
+      $option = new OptionEdit($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings);
     } else {
       $option = reset($this->options);
     }
@@ -262,7 +262,7 @@ Class QuestionTIMEDATE extends Question {
    */
   public function set_correct($value) {
     if (count($this->options) == 0) {
-      $option = Option::option_factory($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings);
+      $option = OptionEdit::option_factory($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings);
       $this->options[] = $option;
     } else {
       $option = reset($this->options);

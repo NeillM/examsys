@@ -24,7 +24,7 @@
  * @package
  */
 
-Class OptionTEXTBOX extends Option {
+Class OptionTEXTBOX extends OptionEdit {
   
   /**
    * Check that the minimum set of fields exist in the given data to create a new option 

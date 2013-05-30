@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionLIKERT extends Question {
+Class QuestionLIKERT extends QuestionEdit {
   
   protected $scale_type = '';
   protected $not_applicable = 'false';

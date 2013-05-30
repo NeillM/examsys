@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionRANK extends Question {
+Class QuestionRANK extends QuestionEdit {
 
   protected $min_options = 2;
   protected $_answer_negative = 0;

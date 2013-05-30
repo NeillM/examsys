@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionTEXTBOX extends Question {
+Class QuestionTEXTBOX extends QuestionEdit {
 
   protected $columns = 80;
   protected $rows = 4;

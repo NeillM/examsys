@@ -24,7 +24,7 @@
  * @package
  */
 
-Class OptionTRUE_FALSE extends Option {
+Class OptionTRUE_FALSE extends OptionEdit {
   
   /**
    * Is this option blank?

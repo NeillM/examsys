@@ -24,7 +24,7 @@
  * @package
  */
 
-Class OptionINFO extends Option {
+Class OptionINFO extends OptionEdit {
     
   /**
    * Is this option blank?

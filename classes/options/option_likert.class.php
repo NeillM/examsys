@@ -24,7 +24,7 @@
  * @package
  */
 
-Class OptionLIKERT extends Option {
+Class OptionLIKERT extends OptionEdit {
     
   /**
    * Is this option blank?

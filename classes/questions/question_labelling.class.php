@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionLABELLING extends Question {
+Class QuestionLABELLING extends QuestionEdit {
   
   protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
       

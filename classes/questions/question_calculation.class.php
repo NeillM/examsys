@@ -24,7 +24,7 @@
  * @package
  */
 
-Class QuestionCALCULATION extends Question {
+Class QuestionCALCULATION extends QuestionEdit {
 
   protected $units = '';
   protected $answer_decimals = 0;
@@ -43,7 +43,6 @@ Class QuestionCALCULATION extends Question {
 
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
     parent::__construct($mysqli, $userObj, $lang_strings, $data);
-
     $this->_score_methods = array($this->_lang_strings['allowpartial']);
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
 
