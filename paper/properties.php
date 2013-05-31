@@ -680,9 +680,7 @@ if (isset($_POST['Submit'])) {
         if ($properties->get_paper_type() != '0' and $properties->get_paper_type() != '1' and $properties->get_paper_type() != '3' and $old_marking != $properties->get_marking()) {
           // Re-cache summary statistics because the marking method has changed.
           $startdate = $properties->get_raw_start_date();
-          $enddate = $properties->get_raw_end_date();
- 
-          echo "url = \"../reports/recache_class_totals.php?paperID=$paperID&startdate=$startdate&enddate=$enddate\";\n";
+          $enddate   = $properties->get_raw_end_date();
         ?>
           $.ajax({
             type: 'POST',
@@ -692,7 +690,6 @@ if (isset($_POST['Submit'])) {
         <?php
         }
         ?>
-        var int = self.setInterval(function(){window.close()},200);
         <?php
           }
         ?>

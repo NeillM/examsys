@@ -147,24 +147,21 @@ function getRandomDetails($questionID, &$random_q_ids, $paper_buffer, $mysqli) {
   $old_q_media_height = '';
   $old_correct        = array();
   $old_option_text    = array();
-  $old_theme          = '';
   $old_scenario       = '';
   $old_leadin         = '';
   $old_media          = '';
   $old_type           = '';
   $old_score_method   = '';
 
-  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, last_edited, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
+  $result = $mysqli->prepare("SELECT options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, last_edited, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
   $result->bind_param('i', $questionID);
   $result->execute();
   $result->store_result();
   if ($result->num_rows > 0) {
-    $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
+    $result->bind_result($q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
     while ($result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
         $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
-        if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
-        $random_questions[$old_q_id]['theme']               = $old_theme;
         $random_questions[$old_q_id]['q_id']                = $old_q_id;
         $random_questions[$old_q_id]['q_type']              = $old_q_type;
         $random_questions[$old_q_id]['leadin']              = $old_leadin;
@@ -182,7 +179,6 @@ function getRandomDetails($questionID, &$random_q_ids, $paper_buffer, $mysqli) {
         $old_option_text = array();
         $question_no++;
       }
-      $old_theme            = $theme;
       $old_q_id             = $q_id;
       $old_q_type           = $q_type;
       $old_leadin           = $leadin;
@@ -200,8 +196,6 @@ function getRandomDetails($questionID, &$random_q_ids, $paper_buffer, $mysqli) {
 
     // Write out the last question.
     $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
-    if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
-    $random_questions[$old_q_id]['theme']               = $old_theme;
     $random_questions[$old_q_id]['q_id']                = $old_q_id;
     $random_questions[$old_q_id]['q_type']              = $old_q_type;
     $random_questions[$old_q_id]['leadin']              = $old_leadin;
@@ -244,7 +238,7 @@ function checkDisplayExcluded(&$html, $exclude, $q_no) {
   
   if (strlen($exclude) > 1) {
     for ($i=0; $i<strlen($exclude); $i++) {
-      if (substr($exclude,$i,1) == '1') {
+      if ($exclude{$i} == '1') {
         if ($subpart == '') {
           $subpart = chr($i+97);
         } else {
@@ -298,7 +292,7 @@ function get_ss_pass($marking, $paperID, $exclusions, &$pass_score, &$distinctio
         $excluded = $exclusions->get_exclusions_by_qid($questionID);
 
         $bad_bonus_mark = ($q_type == 'rank' and $score_method == 'Bonus Mark' and strpos($excluded, '1') !== false);
-        if ((substr($excluded,$i,1) == 0) and !$bad_bonus_mark) {
+        if (($excluded{$i} == 0) and !$bad_bonus_mark) {
           if (in_array($individual_ratings[$i], $std_types)) $ebel_marks[$individual_ratings[$i]]++;
         }
         $std_total += $individual_ratings[$i];
@@ -622,11 +616,11 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclusions, $stat
       $count_question_correct = count($question['correct']);
       for ($a=0; $a<$count_question_correct; $a++) {
         if ($tmp_exclude{$a} == '0') {
-          if ($question['correct'][$a] == substr($tmp_user_answer,$a,1)) {
+          if ($question['correct'][$a] == $tmp_user_answer{$a}) {
             $tmp_mark += $question['marks_correct'];
             $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
           } else {
-            if (substr($tmp_user_answer, $a, 1) == 'a' or substr($tmp_user_answer,$a,1) == 'u') {
+            if ($tmp_user_answer{$a} == 'a' or $tmp_user_answer{$a} == 'u') {
               $tmp_user_mark_array[$q_id][] = 0;
             } else {
               $tmp_mark += $question['marks_incorrect'];

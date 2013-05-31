@@ -35,14 +35,15 @@ class ResultsCache {
 
   public function should_cache($propertyObj, $percent, $absent, $percent, $absent, $paperID) {
     $paper_type = $propertyObj->get_paper_type();
+    $end_date = $propertyObj->get_end_date();
 
-    if ($percent != 100 or $absent == 1 or $paper_type == 0 or $paper_type == 1 or $paper_type == 3) {
+    if ($percent != 100 or $absent == 1 or $paper_type == 0 or $paper_type == 1 or $paper_type == 3 or date('U') < $end_date) {
       return false;
     }
     // TODO: add in a check for the past the end of the exam.
     $recache = true;
 
-    $result = $this->db->prepare("SELECT cached FROM cache_paper_stats WHERE paperID = ? LIMIT 1");
+    $result = $this->db->prepare("SELECT cached FROM cache_paper_stats WHERE paperID = ? AND max_mark > 0 LIMIT 1");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($cached);
