@@ -49,9 +49,15 @@ for (i=0;i<marks.length;i++) {
 	graph_data[j] = [data,(i+1)*100/marks.length,i];
 	last_data =  data;
 	}	
-	
+
 temp_boundaries = [marks[0],marks[marks.length-1],100/marks.length,100];
 boundaries = [marks[0],marks[marks.length-1],100/marks.length,100];
+
+if (document.getElementById('x1').value!='') boundaries[0] = Number(document.getElementById('x1').value.replace('%',''));
+if (document.getElementById('x2').value!='') boundaries[1] = Number(document.getElementById('x2').value.replace('%',''));
+if (document.getElementById('y1').value!='') boundaries[2] = Number(document.getElementById('y1').value.replace('%',''));
+if (document.getElementById('y2').value!='') boundaries[3] = Number(document.getElementById('y2').value.replace('%',''));
+
 canvas = document.getElementById('canvas_graph');
 
 if (canvas && canvas.getContext){
