@@ -25,5 +25,4 @@ $string['notavailableselfenrollment'] = 'Ten moduł nie jest dostępny do samodz
 $string['notactive'] = 'Ten moduł nie jest aktualnie aktywny.';
 $string['icanaccess'] = 'Pokaż arkusze, do których mam dostęp';
 $string['enrolmentcompleted'] = 'Zapisywanie zakończone';
-$string['noaccountfound'] = 'Nie znaleziono konta w systemie zarządzania studentami';
 ?>
