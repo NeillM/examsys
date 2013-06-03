@@ -211,11 +211,11 @@ foreach ($lang_array as $lang) {
     $display_text = '';
     foreach ($strings_pl as $strings_key => $strings_data)
       if ($strings_data[0]==$strings_key) $display_text .= '<em>' . $strings_data[0] . '</em><br />';
-    echo '<h3>Missing files:</h3>';
+    echo '<h3>Missing files: <img border=0 src="../artwork/help_tip.png" title="A list of files in \'en\' with no corresponding files in \''. $lang.'\'"></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
     
-    //Strings in missing files
+    //Strings from missing files
     $last_key = '';
     $last_value = '';
     $display_text = '';
@@ -225,7 +225,7 @@ foreach ($lang_array as $lang) {
         if (isset($strings_pl[$data_path_elem])) display_this($strings_data, $data_path_key);
       }
     }
-    echo '<h3>Strings in missing files:</h3>';
+    echo '<h3>Strings from missing files: <img border=0 src="../artwork/help_tip.png" title="A list of strings taken from files in \'en\' that have no corresponding files in \''. $lang.'\'"></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 
@@ -233,10 +233,19 @@ foreach ($lang_array as $lang) {
     $last_key = '';
     $last_value = '';
     $display_text = '';
-    //var_dump($strings_en);
     foreach ($strings_en as $strings_key => $strings_data)
       if (!isset($strings_pl[$strings_key]) and (!isset($strings_pl[$strings_data[0]]))) display_this($strings_data, -1);
-    echo '<h3>Missing strings:</h3>';
+    echo '<h3>Missing strings: <img border=0 src="../artwork/help_tip.png" title="A list of strings from files in \'en\' missing from corresponding files in \''. $lang.'\' "></h3>';
+    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    echo '<table>'.$display_text.'</table>';
+
+    //Excessive strings
+    $last_key = '';
+    $last_value = '';
+    $display_text = '';
+    foreach ($strings_pl as $strings_key => $strings_data)
+      if (!isset($strings_en[$strings_key]) and (!isset($strings_pl[$strings_data[0]]))) display_this($strings_data, -1);
+    echo '<h3>Excessive strings: <img border=0 src="../artwork/help_tip.png" title="A list of strings from files in \''. $lang.'\' missing from from corresponding files in \'en\' "></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 
@@ -252,7 +261,7 @@ foreach ($lang_array as $lang) {
         display_this(Array(implode(", ", $data_path3), $strings_data[1], $strings_data[2], $strings_data[3]), -1);
       }
     }   
-    echo '<h3>Strings missing from file:</h3>';
+    echo '<h3>Strings missing from file: <img border=0 src="../artwork/help_tip.png" title="a list of strings existing in multiple files where the list of it\'s files from \'en\' is not the same as the list it\'s files from \''. $lang.'\'"></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 
@@ -268,7 +277,7 @@ foreach ($lang_array as $lang) {
         }
       }
     }
-    echo '<h3>Files with empty keys for the \'string\' array:</h3>';
+    echo '<h3>Files with empty keys for the \'string\' array: <img border=0 src="../artwork/help_tip.png" title="A list of strings from \''. $lang.'\' with empty keys for the \'string\' array"></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 
@@ -288,7 +297,7 @@ foreach ($lang_array as $lang) {
         }
       }
     }
-    echo '<h3>Duplicate strings in files:</h3>';
+    echo '<h3>Duplicate strings in files: <img border=0 src="../artwork/help_tip.png" title="a list of strings with the same key as other within the same file in \''. $lang.'\' "></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 
@@ -297,8 +306,8 @@ foreach ($lang_array as $lang) {
     $last_value = '';
     $display_text = '';
     foreach ($strings_en as $strings_key => $strings_data) 
-      if (isset($strings_pl[$strings_key]) and $strings_pl[$strings_key]==$strings_en[$strings_key] and strpos($strings_data[2],'&lt;&lt;&lt;')==-1) display_this($strings_data, -1);
-    echo '<h3>Identical texts:</h3>';
+      if (isset($strings_pl[$strings_key]) and $strings_pl[$strings_key]==$strings_en[$strings_key] and strpos($strings_data[2],'&lt;&lt;&lt;')===false) display_this($strings_data, -1);
+    echo '<h3>Identical texts: <img border=0 src="../artwork/help_tip.png" title="a list of not translated strings (identical in \'en\' and \''. $lang.'\')"></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 
@@ -319,7 +328,7 @@ foreach ($lang_array as $lang) {
         }
       }
     }
-    echo '<h3>Identical strings in files:</h3>';
+    echo '<h3>Identical strings in files: <img border=0 src="../artwork/help_tip.png" title="a list of not translated strings across the whole folder (identical in any of files in \'en\' and \''. $lang.'\')"></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
   }
