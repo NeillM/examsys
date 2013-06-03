@@ -26,7 +26,7 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../include/class_totals.inc';
+require_once '../classes/class_totals.class.php';
 require_once '../classes/folderutils.class.php';
 
 $displayDebug = false; //disable debug output in this script as it effects the output
@@ -56,7 +56,14 @@ $sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 $repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 
-$user_results = compile_report(false, $studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report->compile_report(false);
+
+$user_results = $report->get_user_results();
+$paper_buffer = $report->get_paper_buffer();
+$cohort_size  = $report->get_cohort_size();
+$stats        = $report->get_stats();
+
 $user_no = count($user_results);
 
 header('Pragma: public');
@@ -285,7 +292,7 @@ for ($i=0; $i<$user_no; $i++) {
       echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['rank'] . '</Data></Cell>';
       echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['decile'] . '</Data></Cell>';
       echo '<Cell><Data ss:Type="String">' . $user_results[$i]['display_started'] . '</Data></Cell>';
-      echo '<Cell><Data ss:Type="String">' . formatsec($user_results[$i]['duration']) . '</Data></Cell>';
+      echo '<Cell><Data ss:Type="String">' . $report->formatsec($user_results[$i]['duration']) . '</Data></Cell>';
       echo '<Cell><Data ss:Type="String">' . $user_results[$i]['ipaddress'] . '</Data></Cell>';
       if ($paper_type == '2') {
         echo '<Cell><Data ss:Type="String">' . $user_results[$i]['room'] . '</Data></Cell>';
@@ -357,7 +364,7 @@ echo '<Cell><Data ss:Type="Number">' . $stats['honours'] . '</Data></Cell>';
 echo '</Row>';
 echo '<Row>';
 echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['totalmarks'] . '</Data></Cell>';
-echo '<Cell><Data ss:Type="Number">' . $paper_buffer['total_marks'] . '</Data></Cell>';
+echo '<Cell><Data ss:Type="Number">' . $report->get_total_marks() . '</Data></Cell>';
 echo '</Row>';
 echo '<Row>';
 echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['passmark'] . '</Data></Cell>';
@@ -371,7 +378,7 @@ if ($marking == '0') {
 } elseif ($marking == '1') {
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['randommark'] . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="Number">' . number_format($paper_buffer['total_random_mark'], 2, '.', ',') . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="Number">' . number_format($report->get_total_random_mark(), 2, '.', ',') . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['meanmark'] . '</Data></Cell>';
@@ -380,11 +387,11 @@ if ($marking == '0') {
 } else {
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['ss'] . '</Data></Cell>';
-  echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . ($ss_pass/100) . '</Data></Cell>';
+  echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . ($report->get_ss_pass() / 100) . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['ssdistinction'] . '</Data></Cell>';
-  echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . ($ss_hon/100) . '</Data></Cell>';
+  echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . ($report->get_ss_hon() / 100) . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['meanmark'] . '</Data></Cell>';
@@ -428,18 +435,18 @@ for ($i=1; $i<10; $i++) {
 echo '<Row>';
 echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['averagetime'] . '</Data></Cell>';
 if ($stats['completed_no'] == 0) {
-  echo '<Cell><Data ss:Type="String">' . formatsec(0) . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="String">' . $report->formatsec(0) . '</Data></Cell>';
 } else {
-  echo '<Cell><Data ss:Type="String">' . formatsec(round($stats['total_time'] / $stats['completed_no'], 0)) . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="String">' . $report->formatsec(round($stats['total_time'] / $stats['completed_no'], 0)) . '</Data></Cell>';
 }
 echo '</Row>';
 echo '<Row>';
 echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['excludedquestions'] . '</Data></Cell>';
-echo '<Cell><Data ss:Type="String">' . $display_excluded . '</Data></Cell>';
+echo '<Cell><Data ss:Type="String">' . $report->get_display_excluded() . '</Data></Cell>';
 echo '</Row>';
 echo '<Row>';
 echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['experimantalquestions'] . '</Data></Cell>';
-echo '<Cell><Data ss:Type="String">' . $display_experimental . '</Data></Cell>';
+echo '<Cell><Data ss:Type="String">' . $report->get_display_experimental() . '</Data></Cell>';
 echo '</Row>';
 echo '  </Table>';
 echo '  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">';

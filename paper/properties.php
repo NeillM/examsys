@@ -27,7 +27,6 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
-require_once '../include/class_totals.inc';
 require_once '../include/load_config.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
@@ -682,16 +681,13 @@ if (isset($_POST['Submit'])) {
           $startdate = $properties->get_raw_start_date();
           $enddate   = $properties->get_raw_end_date();
         ?>
-          $.ajax({
-            type: 'POST',
-            url: '../reports/recache_class_totals.php',
-            data: {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $startdate; ?>', enddate: '<?php echo $enddate; ?>'}
-          });
+          $.post('../reports/recache_class_totals.php', {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $startdate; ?>', enddate: '<?php echo $enddate; ?>'});
         <?php
         }
         ?>
+        setTimeout("window.close()", 300);
         <?php
-          }
+        }
         ?>
       }
       function updateParent() {

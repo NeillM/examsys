@@ -24,7 +24,7 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../include/class_totals.inc';
+require_once '../classes/class_totals.class.php';
 
 $displayDebug = false; //disable debug output in this script as it effects the output
 
@@ -51,8 +51,15 @@ $ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
 $absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
 $sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
+$repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 
-$user_results = compile_report($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $paperID, $startdate, $enddate, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report->compile_report(false);
+
+$user_results = $report->get_user_results();
+$paper_buffer = $report->get_paper_buffer();
+$exclusions   = $report->get_exclusions();
+
 $user_no = count($user_results);
 
 header('Pragma: public');
@@ -84,12 +91,6 @@ function get_correct_labels($question, $tmp_exclude) {
 $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
 
 $csv = '';
-
-unset($paper_buffer['total_marks']);
-unset($paper_buffer['orig_total_marks']);
-unset($paper_buffer['total_random_mark']);
-unset($paper_buffer['display_experimental']);
-unset($paper_buffer['display_excluded']);
 
 $row_written = 0;
 foreach ($user_results as $individual) {

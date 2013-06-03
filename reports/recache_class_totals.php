@@ -26,18 +26,18 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require '../include/class_totals.inc';
+require_once '../classes/class_totals.class.php';
 require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'POST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
-
-// Re-cache summary statistics because the marking method has changed.
 $startdate = $_POST['startdate'];
 $enddate = $_POST['enddate'];
- 
-$user_results = compile_report(true, 1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', $mysqli);
+
+
+$report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', $mysqli);
+$report->compile_report(true);
 
 $mysqli->close();
 ?>

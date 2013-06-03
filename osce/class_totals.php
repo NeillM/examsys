@@ -27,9 +27,9 @@ require '../include/staff_auth.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
-require_once '../include/class_totals.inc';
 require_once './osce.inc';
 
+require_once '../classes/class_totals.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/results_cache.class.php';
@@ -47,6 +47,7 @@ $ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
 $absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
 $sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
+$repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
@@ -60,9 +61,14 @@ $crypt_name = $propertyObj->get_crypt_name();
 $exclusions = new Exclusion($paperID, $mysqli);
 $exclusions->load();                                                                                  // Get any questions to exclude.
 
-$paper_buffer = load_answers($exclusions, $question_no, $paperID, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report->load_answers();
+$paper_buffer = $report->get_paper_buffer();
+$question_no  = $report->get_question_no();
 
 $user_results = load_osce_results($propertyObj, $demo, $configObject, $question_no, $mysqli);
+$report->set_user_results($user_results);
+$report->generate_stats();
 $user_no = count($user_results);
 
 $q_medians = load_osce_medians($mysqli);
@@ -98,15 +104,15 @@ for ($i=0; $i<$user_no; $i++) {
   }
 }
 
-$stats = get_stats($user_results, $question_no, $passmark, $distinction_mark);                        // Generate the main statistics
+$stats = $report->get_stats();                        // Generate the main statistics
 
 $results_cache = new ResultsCache($mysqli);
-if ($results_cache->should_cache($propertyObj, $percent, $absent, $percent, $absent, $paperID)) {
-  $results_cache->save_paper_cache($propertyObj, $percent, $absent, $stats, $paperID);                // Cache general paper stats
+if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
+  $results_cache->save_paper_cache($propertyObj, $percent, $absent, $stats);                  // Cache general paper stats
   
-  $results_cache->save_student_mark_cache($propertyObj, $percent, $absent, $user_results, $paperID);  // Cache student/paper marks
+  $results_cache->save_student_mark_cache($propertyObj, $percent, $absent, $user_results);    // Cache student/paper marks
   
-  $results_cache->save_median_question_marks($propertyObj, $percent, $absent, $q_medians, $paperID);  // Cache the question/paper medians
+  $results_cache->save_median_question_marks($propertyObj, $percent, $absent, $q_medians);    // Cache the question/paper medians
 }
 
 rating_num_text($user_results, $user_no, $propertyObj, $string);

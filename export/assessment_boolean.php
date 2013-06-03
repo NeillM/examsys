@@ -25,9 +25,9 @@
 set_time_limit(0);
 
 require_once '../include/staff_auth.inc';
-require_once '../include/class_totals.inc';
 require_once '../include/errors.inc';
 
+require_once '../classes/class_totals.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 
@@ -54,7 +54,12 @@ $sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 $repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 
-$user_results = compile_report(false, $studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report->compile_report(false);
+
+$user_results = $report->get_user_results();
+$paper_buffer = $report->get_paper_buffer();
+
 $user_no = count($user_results);
 
 $demo = is_demo($userObject);
@@ -137,7 +142,7 @@ if ($paper_type == '0') {
 $result->execute();
 $result->bind_result($tmp_userID, $total_mark);
 $result->store_result();
-$user_no = round(($result->num_rows/100) * $_GET['percent']);
+$user_no = round(($result->num_rows/100) * $percent);
 $student_no = 0;
 while ($result->fetch() and $student_no < $user_no) {
   if ($student_list == '') {
@@ -213,21 +218,9 @@ foreach ($user_results as $individual) {
       $csv .= '"' . $string['gender'] . '","' . $string['course'] . '","' . $string['year'] . '","' . $string['submitted'] . '"';
     }
     $q_no = 1;
-    //var_dump($paper_buffer);
-    
-    unset($paper_buffer['total_marks']);
-    unset($paper_buffer['orig_total_marks']);
-    unset($paper_buffer['total_random_mark']);
-    unset($paper_buffer['display_excluded']);
-    unset($paper_buffer['display_experimental']);
-    
+        
     foreach ($paper_buffer as $q_id => $question) {
       $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
-      //if (array_key_exists($q_id, $excluded)) {
-      //  $tmp_exclude = $excluded[$q_id];
-      //} else {
-      //  $tmp_exclude = '0000000000000000000000000000000000000000';
-      //}
       // If a random question, get the first on the associated questions from the block. If none exist, output nothing
       $skip_random = false;
       if ($question['q_type'] == 'random') {
@@ -309,13 +302,8 @@ foreach ($user_results as $individual) {
     }
     
     foreach ($paper_buffer as $q_id => $question) {
-
       $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
-      //if (array_key_exists($q_id, $excluded)) {
-      //  $tmp_exclude = $excluded[$q_id];
-      //} else {
-      //  $tmp_exclude = '0000000000000000000000000000000000000000';
-      //}
+
       // If a random question, get the one that the user answered, otherwise just get the first and skip if none exist
       $skip_random = false;
       if ($question['q_type'] == 'random') {
@@ -343,9 +331,7 @@ foreach ($user_results as $individual) {
           if (is_array($individual['mark_array'][$q_id])) {
                          
             foreach ($individual['mark_array'][$q_id] as $mi => $tmp_mark) {
-            
-                // ----- parts (extmatch)-----
-                
+                // ----- parts (extmatch)-----                
                 $parts_test_fail = true;           
                 if ($question['q_type'] == 'extmatch' and isset($log_array[$row_written])) {
                   $extmatch_parts = explode('|', $question['correct'][0]);

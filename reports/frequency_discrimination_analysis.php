@@ -31,7 +31,6 @@ require_once '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 require_once '../include/errors.inc';
-require_once '../include/class_totals.inc';
 
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
@@ -487,23 +486,43 @@ if (isset($_POST['submit'])) {
     }
   }
   
-  $new_exclusions = new Exclusion($_GET['paperID'], $mysqli);
+  $new_exclusions = new Exclusion($paperID, $mysqli);
   $new_exclusions->load();
-  
-  // If there are any exclusion changes re-cacge summary statistics.
-  if ($old_exclusions->excluded !== $new_exclusions->excluded) {
-    $studentsonly = 1;
-    $percent = 100;
-    $ordering = 'asc';
-    $sortby = 'name';
-    $absent = 0;
-    $startdate = $_GET['startdate'];
-    $enddate = $_GET['enddate'];
-    $repcourse = '%';
-    $user_results = compile_report(true, $studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
-  }
+  ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+    <meta http-equiv="pragma" content="no-cache" />
 
-  header("location: ../paper/details.php?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+    <title><?php echo $string['frequencydiscrimination']; ?></title>
+
+    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        <?php
+          if ($old_exclusions->excluded !== $new_exclusions->excluded) {
+        ?>
+          $.ajax({
+            url: 'recache_class_totals.php',
+            type: 'post',
+            data: {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $_GET['startdate']; ?>', enddate: '<?php echo $_GET['enddate']; ?>'},
+            dataType: 'html',
+            async: true,
+          });
+        <?php
+          }
+        ?>
+        setTimeout("window.location = '../paper/details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>'", 200);
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
+  <?php
+  exit();
 }
 
 function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {

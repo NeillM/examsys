@@ -26,7 +26,7 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../include/class_totals.inc';
+require_once '../classes/class_totals.class.php';
 require_once '../classes/folderutils.class.php';
 
 $displayDebug = false; //disable debud output in this script as it effects the output
@@ -56,7 +56,18 @@ $sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 $repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 
-$user_results = compile_report(false, $studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report->compile_report(false);
+
+$user_results = $report->get_user_results();
+$paper_buffer = $report->get_paper_buffer();
+$cohort_size  = $report->get_cohort_size();
+$stats        = $report->get_stats();
+//$ss_pass      = $report->get_ss_pass();
+//$ss_hon       = $report->get_ss_hon();
+//$question_no  = $report->get_question_no();
+//$log_late     = $report->get_log_late();
+
 $user_no = count($user_results);
 
 header('Pragma: public');
@@ -122,7 +133,7 @@ if ($cohort_size > 0) {
             $csv .= '"' . $string['pass'] . '",';
           }
         }
-        $csv .= $user_results[$i]['rank'] . ',' . $user_results[$i]['decile'] . ',' . $user_results[$i]['display_started'] . ',' . formatsec($user_results[$i]['duration']) . ',' . $user_results[$i]['ipaddress'] . ',"' . $user_results[$i]['room'] . '"';
+        $csv .= $user_results[$i]['rank'] . ',' . $user_results[$i]['decile'] . ',' . $user_results[$i]['display_started'] . ',' . $report->formatsec($user_results[$i]['duration']) . ',' . $user_results[$i]['ipaddress'] . ',"' . $user_results[$i]['room'] . '"';
 
         // Display any associated metadata
         if (count($metadata_cols) > 0) {
@@ -154,13 +165,13 @@ if ($cohort_size > 0) {
   if (isset($ss_hon)) {
     $csv .= $string['distinctionno'] . "," . $stats['honours'] . ",(" . round($percent_honours) . "% of cohort),,,,,,,,,\n";
   }
-  $csv .= $string['totalmarks'] . "," . $paper_buffer['total_marks'] . ",,,,,,,,,,\n";
+  $csv .= $string['totalmarks'] . "," . $report->get_total_marks() . ",,,,,,,,,,\n";
   $csv .= $string['passmark'] . ",$pass_mark%,,,,,,,,,,\n";
   if ($marking == '1') {
-    $csv .= $string['randommark'] . "," . number_format($paper_buffer['total_random_mark'], 2, '.', ',') . ",,,,,,,,,,\n";
+    $csv .= $string['randommark'] . "," . number_format($report->get_total_random_mark(), 2, '.', ',') . ",,,,,,,,,,\n";
   } elseif (substr($marking,0,1) == '2') {
-    $csv .= $string['ss'] . "," . round($ss_pass,2) . ",,,,,,,,,,\n";
-    $csv .= $string['ssdistinction'] . "," . round($ss_hon,2) . ",,,,,,,,,,\n";
+    $csv .= $string['ss'] . "," . round($report->get_ss_pass(), 2) . ",,,,,,,,,,\n";
+    $csv .= $string['ssdistinction'] . "," . round($report->get_ss_hon(), 2) . ",,,,,,,,,,\n";
   }
   $csv .= $string['meanmark'] . "," . $stats['mean_mark'] . "," . $stats['mean_percent'] . "%,,,,,,,,,\n";
   $csv .= $string['medianmark'] . "," . $stats['median_mark'] . "," . $stats['median_percent'] . "%,,,,,,,,,\n";
@@ -168,12 +179,12 @@ if ($cohort_size > 0) {
   $csv .= $string['maxmark'] . "," . $stats['max_mark'] . "," . number_format($stats['max_percent']) . "%,,,,,,,,,\n";
   $csv .= $string['maxmark'] . "," . $stats['min_mark'] . "," . number_format($stats['min_percent']) . "%,,,,,,,,,\n";
   $csv .= $string['range'] . "," . ($stats['range']) . "," . ($stats['range_percent']) . "%,,,,,,,,,\n";
-  $avg_time = ($stats['completed_no'] > 0) ? formatsec(round($stats['total_time'] / $stats['completed_no'],0)) : 'n/a';
+  $avg_time = ($stats['completed_no'] > 0) ? $report->formatsec(round($stats['total_time'] / $stats['completed_no'],0)) : 'n/a';
   $csv .= $string['averagetime'] . "," . $avg_time . ",,,,,,,,,,\n";
-  $csv .= $string['excludedquestions'] . ",$display_excluded,,,,,,,,,,\n";
-  $csv .= $string['experimantalquestions'] . ",$display_experimental,,,,,,,,,,\n";
+  $csv .= $string['excludedquestions'] . "," . $report->get_display_excluded() . ",,,,,,,,,,\n";
+  $csv .= $string['experimantalquestions'] . "," . $report->get_display_experimental() . ",,,,,,,,,,\n";
 } else {
-  $csv .= strip_tags(sprintf($string['noattempts'], nicedate($_GET['startdate']), nicedate($_GET['enddate'])));
+  $csv .= strip_tags(sprintf($string['noattempts'], $report->nicedate($startdate), $report->nicedate($enddate)));
 }
 
 echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");

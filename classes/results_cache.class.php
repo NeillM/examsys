@@ -33,14 +33,14 @@ class ResultsCache {
   	$this->db = $db;
   }
 
-  public function should_cache($propertyObj, $percent, $absent, $percent, $absent, $paperID) {
+  public function should_cache($propertyObj, $percent, $absent) {
+    $paperID    = $propertyObj->get_property_id();
     $paper_type = $propertyObj->get_paper_type();
-    $end_date = $propertyObj->get_end_date();
+    $end_date   = $propertyObj->get_end_date();
 
     if ($percent != 100 or $absent == 1 or $paper_type == 0 or $paper_type == 1 or $paper_type == 3 or date('U') < $end_date) {
       return false;
     }
-    // TODO: add in a check for the past the end of the exam.
     $recache = true;
 
     $result = $this->db->prepare("SELECT cached FROM cache_paper_stats WHERE paperID = ? AND max_mark > 0 LIMIT 1");
@@ -106,16 +106,18 @@ class ResultsCache {
     return $marks;
   }
   
-  public function save_paper_cache($propertyObj, $percent, $absent, $stats, $paperID) {
+  public function save_paper_cache($propertyObj, $percent, $absent, $stats) {
+    $paperID = $propertyObj->get_property_id();
+  
     $result = $this->db->prepare("REPLACE INTO cache_paper_stats (paperID, cached, max_mark, max_percent, min_mark, min_percent, q1, q2, q3, mean_mark, mean_percent, stdev_mark, stdev_percent) VALUES (?, UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $result->bind_param('iddddddddddd', $paperID, $stats['max_mark'], $stats['max_percent'], $stats['min_mark'], $stats['min_percent'], $stats['q1'], $stats['q2'], $stats['q3'], $stats['mean_mark'], $stats['mean_percent'], $stats['stddev_mark'], $stats['stddev_percent']);
     $result->execute();
     $result->close();
   }
 
-  public function save_student_mark_cache($propertyObj, $percent, $absent, $user_results, $paperID) {
+  public function save_student_mark_cache($propertyObj, $percent, $absent, $user_results) {
     $user_no = count($user_results);
-    
+    $paperID = $propertyObj->get_property_id();
 
     $result = $this->db->prepare("REPLACE INTO cache_student_paper_marks (paperID, userID, mark, percent) VALUES (?, ?, ?, ?)");
     for ($i=0; $i<$user_no; $i++) {
@@ -125,7 +127,9 @@ class ResultsCache {
     $result->close();
   }
 
-  public function save_median_question_marks($propertyObj, $percent, $absent, $q_medians, $paperID) {
+  public function save_median_question_marks($propertyObj, $percent, $absent, $q_medians) {
+    $paperID = $propertyObj->get_property_id();
+
     $result = $this->db->prepare("REPLACE INTO cache_median_question_marks (paperID, questionID, median, mean) VALUES (?, ?, ?, ?)");
     foreach ($q_medians as $q_id=>$median_array) {
       $median = MathsUtils::median($median_array);
