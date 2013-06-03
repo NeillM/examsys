@@ -328,7 +328,7 @@ foreach ($lang_array as $lang) {
         }
       }
     }
-    echo '<h3>Identical strings in files: <img border=0 src="../artwork/help_tip.png" title="a list of not translated strings across the whole folder (identical in any of files in \'en\' and \''. $lang.'\')"></h3>';
+    echo '<h3>Identical strings across files: <img border=0 src="../artwork/help_tip.png" title="a list of not translated strings across the whole folder (identical in any of files in \'en\' and \''. $lang.'\')"></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
   }
@@ -351,7 +351,7 @@ foreach ($strings_en as $strings_key => $strings_data)	{
     }
   }
 }
-echo '<h3>Files with empty keys for the \'string\' array:</h3>';
+echo '<h3>Files with empty keys for the \'string\' array: <img border=0 src="../artwork/help_tip.png" title="a list of strings from \'en\' with empty keys for the \'string\' array"></h3>';
 	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 echo '<table>'.$display_text.'</table>';
 
@@ -371,7 +371,7 @@ foreach ($strings_en as $strings_key => $strings_data)	{
     }
   }
 }
-echo '<h3>Duplicate strings in files:</h3>';
+echo '<h3>Duplicate strings: <img border=0 src="../artwork/help_tip.png" title="a list of strings with the same key within the same file in \'en\'"></h3>';
 	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 echo '<table>'.$display_text.'</table>';
 
@@ -384,7 +384,7 @@ foreach ($strings_en as $strings_key => $strings_data)	{
 		display_this($strings_data, -1);
 	}
 }
-echo '<h3>Duplicate strings:</h3>';
+echo '<h3>Duplicate strings across files: <img border=0 src="../artwork/help_tip.png" title="a list of strings with the same key across the files in \'en\'"></h3>';
 	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 echo '<table>'.$display_text.'</table>';
 
