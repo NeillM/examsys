@@ -29,24 +29,23 @@ require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 require_once './osce.inc';
 
+require_once '../classes/class_totals.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 
-if ($userObject->has_role('Demo')) {
-  $demo = true;
-} else {
-  $demo = false;
-}
-
-$sortby = '';
-$ordering = '';
+$demo = is_demo($userObject);
 
 $paperID   = check_var('paperID', 'GET', true, false, true);
 $startdate = check_var('startdate', 'GET', true, false, true);
 $enddate   = check_var('enddate', 'GET', true, false, true);
 
-if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
-if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
+$percent      = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
+$ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
+$absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
+$sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
+$studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
+$repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
+$repmodule    = (isset($_GET['repmodule'])) ? $_GET['repmodule'] : '';
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
@@ -57,9 +56,21 @@ if (!$propertyObj) {
 $paper = $propertyObj->get_paper_title();
 $crypt_name = $propertyObj->get_crypt_name();
 
+$exclusions = new Exclusion($paperID, $mysqli);
+$exclusions->load();                                                                                  // Get any questions to exclude.
 
-$user_results = load_results($propertyObj, $demo, $configObject, $mysqli);
-$user_no = count($user_results);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report->load_answers();
+$paper_buffer = $report->get_paper_buffer();
+$question_no  = $report->get_question_no();
+
+$user_results = load_osce_results($propertyObj, $demo, $configObject, $question_no, $mysqli);
+$report->set_user_results($user_results);
+$report->generate_stats();
+$user_no = $report->get_user_no();
+
+$q_medians = load_osce_medians($mysqli);
+
 if ($propertyObj->get_pass_mark() == 101) {
   $borderline_method = true;
 } else {
@@ -68,15 +79,27 @@ if ($propertyObj->get_pass_mark() == 101) {
 
 if ($borderline_method) {
   $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
-} elseif ($properties->get_pass_mark() != 102) {
-  $passmark = $properties->get_pass_mark();
-} else {
+} elseif ($propertyObj->get_pass_mark() == 102) {
   $passmark = 'N/A';
+} else {
+  $passmark = $propertyObj->get_pass_mark();
 }
+$distinction_mark = $propertyObj->get_distinction_mark();
 
 set_classification($user_results, $passmark, $user_no, $string);
 rating_num_text($user_results, $user_no, $propertyObj, $string);
 $user_results = array_csort($user_results, $sortby, $ordering);
+
+$stats = $report->get_stats();                        // Generate the main statistics
+
+$results_cache = new ResultsCache($mysqli);
+if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
+  $results_cache->save_paper_cache($propertyObj, $percent, $absent, $stats);                  // Cache general paper stats
+  
+  $results_cache->save_student_mark_cache($propertyObj, $percent, $absent, $user_results);    // Cache student/paper marks
+  
+  $results_cache->save_median_question_marks($propertyObj, $percent, $absent, $q_medians);    // Cache the question/paper medians
+}
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");

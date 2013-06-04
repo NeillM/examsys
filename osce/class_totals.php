@@ -35,8 +35,6 @@ require_once '../classes/paperproperties.class.php';
 require_once '../classes/results_cache.class.php';
 
 $demo = is_demo($userObject);
-$sortby = '';
-$ordering = '';
 
 $paperID   = check_var('paperID', 'GET', true, false, true);
 $startdate = check_var('startdate', 'GET', true, false, true);
@@ -48,6 +46,7 @@ $absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
 $sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 $repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
+$repmodule    = (isset($_GET['repmodule'])) ? $_GET['repmodule'] : '';
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
@@ -61,7 +60,7 @@ $crypt_name = $propertyObj->get_crypt_name();
 $exclusions = new Exclusion($paperID, $mysqli);
 $exclusions->load();                                                                                  // Get any questions to exclude.
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
 $report->load_answers();
 $paper_buffer = $report->get_paper_buffer();
 $question_no  = $report->get_question_no();
@@ -69,7 +68,7 @@ $question_no  = $report->get_question_no();
 $user_results = load_osce_results($propertyObj, $demo, $configObject, $question_no, $mysqli);
 $report->set_user_results($user_results);
 $report->generate_stats();
-$user_no = count($user_results);
+$user_no = $report->get_user_no();
 
 $q_medians = load_osce_medians($mysqli);
 
@@ -90,6 +89,7 @@ $distinction_mark = $propertyObj->get_distinction_mark();
 
 
 set_classification($user_results, $passmark, $user_no, $string);
+$report->sort_results();
 $user_results = array_csort($user_results, $sortby, $ordering);
 
 $completed_no = 0;

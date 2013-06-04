@@ -55,8 +55,9 @@ $absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
 $sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
 $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 $repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
+$repmodule    = (isset($_GET['repmodule'])) ? $_GET['repmodule'] : '';
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
 $report->compile_report(false);
 
 $user_results = $report->get_user_results();
@@ -67,8 +68,7 @@ $ss_pass      = $report->get_ss_pass();
 $ss_hon       = $report->get_ss_hon();
 $question_no  = $report->get_question_no();
 $log_late     = $report->get_log_late();
-
-$user_no = count($user_results);
+$user_no      = $report->get_user_no();
 
 ob_start();
 ?>
@@ -467,7 +467,7 @@ if ($language != 'en') {
         $late_submissions = '';
         ?>
         <tr class="nonattend" id="res<?php echo $i+1 ?>"><td>&nbsp;</td>
-        <td class="padl" onclick="popMenu(5, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $adj_percent; ?>');<?php echo $onclick; ?>" />
+        <td class="padl" onclick="popMenu(5, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');<?php echo $onclick; ?>" />
         <?php echo "$title&nbsp;$surname ,&nbsp;"; ?><span class="grey"><?php echo $first_names ?></span>
         <?php
         if ($user_results[$i]['student_id'] == '') {
@@ -489,7 +489,7 @@ if ($language != 'en') {
           $class = 'redln';
         } else {
           $class = 'greyln';
-          $temp_location = $user_results[$i]['adj_percent'];
+          $temp_location = $user_results[$i]['percent'];
           if (isset($distribution[$temp_location])) {
             $distribution[$temp_location]++;
           } else {
@@ -503,7 +503,7 @@ if ($language != 'en') {
           $role_css = '';
         }
         if ($user_results[$i]['questions'] < $question_no) {
-          echo "><td class=\"$class $role_css\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['notcompleted'] . "\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign', '$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent'], $percent_decimals) . "');" . $onclick . "\" /></td>";
+          echo "><td class=\"$class $role_css\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['notcompleted'] . "\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign', '$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\" /></td>";
         } else {
           echo "><td class=\"$class $role_css\">";
           if (isset($log_late[$user_results[$i]['userID']])) {
@@ -519,7 +519,7 @@ if ($language != 'en') {
           } elseif ($user_results[$i]['paper_type'] == '5') {
             echo '<img src="../artwork/offline_16.gif" width="16" height="16" alt="' . $string['displaypaper'] . '"';
           }
-          echo " onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent'], $percent_decimals) . "');" . $onclick . "\" /></td>";
+          echo " onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\" /></td>";
         }
         if ($_GET['sortby'] == 'name') {
           $ordered = ' ordered';
@@ -527,9 +527,9 @@ if ($language != 'en') {
           $ordered = '';
         }
         if (strpos($user_results[$i]['username'], 'user') === 0) {
-          echo "<td class=\"$class$ordered padl tmpacc $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent'], $percent_decimals) . "');" . $onclick ."\">" . str_replace('User','Guest Account #',$user_results[$i]['surname']) . "</span>";
+          echo "<td class=\"$class$ordered padl tmpacc $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick ."\">" . str_replace('User','Guest Account #',$user_results[$i]['surname']) . "</span>";
         } else {
-          echo "<td class=\"$class$ordered padl $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['adj_percent'], $percent_decimals) . "');" . $onclick . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></span>";
+          echo "<td class=\"$class$ordered padl $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></span>";
         }
         if (isset($special_needs[$user_results[$i]['userID']]) and $special_needs[$user_results[$i]['userID']] == 'y') {
           echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" />';
@@ -567,22 +567,22 @@ if ($language != 'en') {
         } else {
           $ordered = '';
         }
-        if ($user_results[$i]['adj_percent'] < $pass_mark) {
+        if ($user_results[$i]['percent'] < $pass_mark) {
           echo "<td class=\"mk $class$ordered fail r $role_css\">";
           if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
           echo $user_results[$i]['mark'] . "</td>";
-          echo "<td class=\"$class fail r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['adj_percent'], $percent_decimals) . "%</td><td class=\"$class fail $role_css\">&nbsp;" . $string['fail'] . "</td>";
+          echo "<td class=\"$class fail r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class fail $role_css\">&nbsp;" . $string['fail'] . "</td>";
         } else {
-          if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
+          if ($user_results[$i]['percent'] >= $distinction_mark) {
             echo "<td class=\"mk $class$ordered dist r $role_css\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
-            echo "<td class=\"dist $class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['adj_percent'], $percent_decimals) . "%</td><td class=\"$class dist $role_css\">&nbsp;" . $string['distinction'] . "</td>";
+            echo "<td class=\"dist $class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class dist $role_css\">&nbsp;" . $string['distinction'] . "</td>";
           } else {
             echo "<td class=\"mk $class$ordered r $role_css\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
-            echo "<td class=\"$class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['adj_percent'], $percent_decimals) . "%</td><td class=\"$class $role_css\">&nbsp;" . $string['pass'] . "</td>";
+            echo "<td class=\"$class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class $role_css\">&nbsp;" . $string['pass'] . "</td>";
           }
         }
         // Rank column
@@ -866,7 +866,7 @@ if ($language != 'en') {
         $message = str_replace("{student-title}", $user_results[$i]['title'], $message);
         $message = str_replace("{student-last-name}", $user_results[$i]['surname'], $message);
         $message = str_replace("{student-mark}", $user_results[$i]['mark'], $message);
-        $message = str_replace("{student-percent}", $user_results[$i]['adj_percent'], $message);
+        $message = str_replace("{student-percent}", $user_results[$i]['percent'], $message);
         $message = str_replace("{total-paper-mark}", $report->get_total_marks(), $message);
         $message = str_replace("{student-time}", formatsec($user_results[$i]['duration']), $message);
         $message = str_replace("{class-mean-mark}", $stats['mean_mark'], $message);
