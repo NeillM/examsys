@@ -74,7 +74,7 @@ $exclusions->load();
 function check_duplicates($q_screens, $string) {
   foreach ($q_screens as $q_screen=>$qs) {
     if (count($qs) > 1) {
-      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>Duplicate questions:</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
+      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['Duplicate questions'] . ":</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
     }
   }
 }
@@ -1000,7 +1000,7 @@ $result->close();
     }
     foreach ($warning_types as $warning_type) {
       if (isset($paper_warnings[$warning_type]) and count($paper_warnings[$warning_type]) > 0) {
-        echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>The following questions are '$warning_type':</strong> ";
+        echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['following_questions'] . " '$warning_type':</strong> ";
         foreach ($paper_warnings[$warning_type] as $question_warning) {
           echo ' Q' . $question_warning;
         }

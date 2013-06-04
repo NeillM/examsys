@@ -16,7 +16,7 @@
 
 $string['standardssetting'] = 'Wyznaczanie standardu';
 $string['mark'] = 'punkt';
-$string['marks'] = 'punkty/ów';
+$string['marks'] = 'pkt.';
 $string['true'] = 'Prawda';
 $string['false'] = 'Fałsz';
 $string['yes'] = 'Tak';

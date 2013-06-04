@@ -305,7 +305,7 @@ function check_ebel_distinction_type($ebel) {
       document.questions.important_total.value = (EI + MI + HI) + ' <?php echo $string['marks']; ?>';
       document.questions.nice_total.value = (EN + MN + HN) + ' <?php echo $string['marks']; ?>';
 
-      document.questions.easy2_total.value = (EE + EI + EN) + '<?php echo $string['marks']; ?>';
+      document.questions.easy2_total.value = (EE + EI + EN) + ' <?php echo $string['marks']; ?>';
       document.questions.medium2_total.value = (ME + MI + MN) + ' <?php echo $string['marks']; ?>';
       document.questions.hard2_total.value = (HE + HI + HN) + ' <?php echo $string['marks']; ?>';
       document.questions.essential2_total.value = (EE + ME + HE) + ' <?php echo $string['marks']; ?>';

@@ -57,7 +57,6 @@ $string['error_random'] = 'ERROR: unable to find unique question for random ques
 $string['error_keywords'] = 'ERROR: unable to find unique question for supplied keywords';
 $string['error_paper'] = 'The requested paper cannot be found.';
 $string['error_qtype'] = 'No question type defined.';
-$string['other'] = 'Other';
 $string['holddownctrlkey'] = '(Hold down &lt;CTRL&gt; key, then click mouse to toggle options on/off)';
 $string['msgselectable1'] = 'Too many options selected!\n\nOnly';
 $string['msgselectable2'] = 'items can be selected in this question.';
