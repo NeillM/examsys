@@ -42,13 +42,15 @@
 
 
 //exclusion list
-$excluded = explode("|",  ".|..|.ds_store|.svn|.htaccess|help|js|media|tools|artwork|testing|exports|imports|lang|updates");
+$excluded = explode("|",  ".|..|.ds_store|.svn|.htaccess|help|media|tools|artwork|testing|exports|imports|lang|updates");
 
 //set of rules: type, short form, searched form, similar but other ....  position translation from short to long form, short form length, max length of option
 //spaces will be ignored
 $parts_table = Array(Array());$parts_index = 0;
 $common_parts = "{|$|sprintf|htmlentities|strip_tags|substr|mb_|number_format|get_string|formatsec|display_|demo_|str|round|0|1|2|3|4|5|6|7|8|9";
 $parts_table[$parts_index++] = Array(1, 'value', '="|=\'', '"|\'.$|<|;|t|f|true|false|high|#|\|'.$common_parts);
+$parts_table[$parts_index++] = Array(1, 'title', '="|=\'', '"|\'.$|<|;|t|f|true|false|high|#|\|'.$common_parts);
+
 $parts_table[$parts_index++] = Array(2, 'title', ' |>', '<?|Rog|\'\.$"|'.$common_parts);
 $parts_table[$parts_index++] = Array(2, 'div', ' |>', ''.$common_parts);
 $parts_table[$parts_index++] = Array(2, 'span', ' |>', ''.$common_parts);
@@ -58,9 +60,13 @@ $parts_table[$parts_index++] = Array(2, 'h2', ' |>', ''.$common_parts);
 $parts_table[$parts_index++] = Array(2, 'h3', ' |>', ''.$common_parts);
 $parts_table[$parts_index++] = Array(2, 'h4', ' |>', ''.$common_parts);
 $parts_table[$parts_index++] = Array(2, 'li', ' |>', ''.$common_parts);
+$parts_table[$parts_index++] = Array(2, 'option', ' |>', ''.$common_parts);
 $parts_table[$parts_index++] = Array(2, 'td', ' |>', ''.$common_parts);
 $parts_table[$parts_index++] = Array(2, 'strong', ' |>', ''.$common_parts);
 $parts_table[$parts_index++] = Array(2, 'em', ' |>', ''.$common_parts);
+
+$parts_table[$parts_index++] = Array(3, 'confirm', '(', 'lang[|tinyMCE|msg|'.$common_parts);
+$parts_table[$parts_index++] = Array(3, 'alert', '(', 'lang[|tinyMCE|msg|'.$common_parts);
 
 
 //calculate lengths
@@ -69,6 +75,7 @@ foreach($parts_table as $part_index => $part_element) {
 
   if ($parts_table[$part_index][0]==1) $parts_table[$part_index][5] = 0;
   if ($parts_table[$part_index][0]==2) $parts_table[$part_index][5] = 1;  
+  if ($parts_table[$part_index][0]==3) $parts_table[$part_index][5] = 0;  
 	
 	$parts_table[$part_index][6] = 0;
   foreach (explode('|',$part_element[3]) as $pp) {
@@ -148,6 +155,7 @@ foreach($files as $filename) {
 			foreach (explode('|',$part_element[2]) as $pp) {
 				if ($part_element[0]==1) $part_searched = $part_element[1].$pp;
 				if ($part_element[0]==2) $part_searched = '<'.$part_element[1];
+				if ($part_element[0]==3) $part_searched = $part_element[1].$pp;
 				$post0 = strpos($file_content,$part_searched,$pos1+1); 
 				if ($post0!=false && $post0<$post1) $post1 = $post0;
 			}
@@ -158,6 +166,7 @@ foreach($files as $filename) {
 				
 				if ($part_element[0]==1) $part_searched = '"';
 				if ($part_element[0]==2) $part_searched = '</'.$part_element[1];
+				if ($part_element[0]==3) $part_searched = ')';
 				$pos3 = strpos($file_content,$part_searched,$pos1+$trs);
 				if ($pos3!=false && $pos3<$pos2) $pos2 = $pos3;
 				
@@ -194,10 +203,26 @@ foreach($files as $filename) {
 					foreach (explode('|',$part_element[3]) as $pp2) 
 						if ($pot1=='' || strpos($pot1,$pp2)===0) $pop = false;
 				}
+				
+				//excluded forms for type 3
+				if ($part_element[0]==3) {
+					$pot0 = strip_tags(substr($pot0,strpos($pot0,'(')+1));
+					$pot1 = strip_tags(substr($pot1,strpos($pot1,'(')+1));
+					$pot1 = preg_replace('/\\\n/','',$pot1);
+					$pot1 = preg_replace('/\\\t/','',$pot1);
+					$pot1 = preg_replace('/&nbsp;/','',$pot1);
+					$pot1 = preg_replace('/[\["\';.?)(]/', '',$pot1);
+					$pot1 = preg_replace('/[\s]/','',$pot1);
+			
+					$trs = 1; 
+					foreach (explode('|',$part_element[3]) as $pp2) 
+						if ($pot1=='' || strpos($pot1,$pp2)===0) $pop = false;
+				}
+
 				if ($pop) {
 					//calculate the line number
 					$line_number = substr_count(substr($file_content,0,$pos1),'~')+1;
-					$diff_table[$diff_index++] = Array($part_index,$filename,$pos1,substr($pot0,$trs-1),$line_number,$part_element[1]);
+					$diff_table[$diff_index++] = Array($part_index,$filename,$pos1,substr($pot0,$trs-1),$line_number,$part_element[0],$part_element[1]);
 				}
 			}
     }
@@ -206,24 +231,24 @@ foreach($files as $filename) {
 
 //display results
 echo '<h2>'.$thispath.'</h2>';
-$all='all';foreach ($parts_table as $pt) $all.=';'.$pt[1];
+$all='all';foreach ($parts_table as $pt) $all.=';'.$pt[0].$pt[1];
 
 
 echo "<a id=\"hall\" href=\"#\" onClick=\"chide('".$all."'); return false;\">hide all</a> ";
 echo "<a id=\"sall\" style=\"display:none\" href=\"#\" onClick=\"cshow('".$all."'); return false;\">show all</a> ";
 
 foreach ($parts_table as $pt) {
-	echo "<a id=\"h".$pt[1]."\" href=\"#\" onClick=\"chide('".$pt[1]."'); return false;\"><strong>".$pt[1]."</strong></a> ";
-	echo "<a id=\"s".$pt[1]."\" style=\"display:none;text-decoration: line-through;\" href=\"#\" onClick=\"cshow('".$pt[1]."'); return false;\"><strong>".$pt[1]."</strong></a> ";
+	echo "<a id=\"h".$pt[0].$pt[1]."\" href=\"#\" onClick=\"chide('".$pt[0].$pt[1]."'); return false;\"><strong>".$pt[1]."</strong></a> ";
+	echo "<a id=\"s".$pt[0].$pt[1]."\" style=\"display:none;text-decoration: line-through;\" href=\"#\" onClick=\"cshow('".$pt[0].$pt[1]."'); return false;\"><strong>".$pt[1]."</strong></a> ";
 }
 echo '<ol>';
 foreach($diff_table as $df) {
   if (isset($df[0])) {
-    echo '<li class="'.$df[5].'">';
+    echo '<li class="'.$df[5].$df[6].'">';
     echo '<em>'.$df[1].'</em>';
     echo ' #'.$df[4];
     echo ' <strong>['.preg_replace('/</','&lt;',$df[3]).']</strong> ';
-    echo '<sup>'.preg_replace('/</','',$df[5]).'</sup>';
+    echo '<sup>'.preg_replace('/</','',$df[6]).'</sup>';
     echo '</li>';
   }
 }
