@@ -68,7 +68,7 @@ $log_type = check_var('log_type', 'POST', true, false, true);
   }
 
   if (time() < $end_date) {
-    echo "<p><strong>Warning</strong><p><p>Exam scripts cannot be reassigned mid exam.<br />Please wait until after the exam has finished</p>\n";
+    echo "<p><strong>".$string['warning']."</strong><p><p>".$string['msg2'] ."</p>\n";
     exit;
   }
 

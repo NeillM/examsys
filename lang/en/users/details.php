@@ -104,6 +104,16 @@ $string['custom'] = 'Custom';
 $string['Access Denied'] = 'Access Denied';
 $string['performsummary'] = 'Performance Summary';
 
+//demo
+$string['demo1'] = 'Cities';
+$string['demo2'] = 'Which of the following are European cities?';
+$string['demo3'] = 'True';
+$string['demo4'] = 'False';
+$string['demo5'] = 'London';
+$string['demo6'] = 'New York';
+$string['demo7'] = 'Paris';
+$string['demo8'] = '3 marks';
+
 //Colour picker
 $string['colour'] = 'Colour';
 $string['themecolours'] = 'Theme Colours';

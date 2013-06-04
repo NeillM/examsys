@@ -16,6 +16,7 @@
 
 $string['marks'] = 'marks';
 $string['saveexit'] = 'Save &amp; Exit';
+$string['nostudents'] = 'No students';
 $string['savecontinue'] = 'Save &amp; Continue';
 $string['noanswer'] = 'No answer provided';
 ?>

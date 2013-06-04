@@ -118,14 +118,14 @@ require_once '../classes/dateutils.class.php';
       $hours = ($parts[1] / 60 / 60);
       if ($hours < 1) {
         $hours = ($parts[1] / 60); 
-        $units = 'miniytes';
+        $units = 'minutes';
       } elseif ($hours < 24) {
         $units = 'hours';
       } else {
         $hours = ($hours / 24);
         $units = 'days';
       }
-      echo "<tr><td>" . $string[strtolower($parts[0])] . "</td><td style=\"text-align:right\">" . number_format($hours) . "</td><td colspan=\"2\">$units</td></tr>\n";
+      echo "<tr><td>" . $string[strtolower($parts[0])] . "</td><td style=\"text-align:right\">" . number_format($hours) . "</td><td colspan=\"2\">" . $string[$units] . "</td></tr>\n";
     } else if ($i < 7) {
       echo "<tr><td>" . $string[strtolower($parts[0])] . "</td><td style=\"text-align:right\">" . number_format($parts[1]) . "</td><td colspan=\"2\"></td></tr>\n";
     } else {
@@ -145,7 +145,7 @@ require_once '../classes/dateutils.class.php';
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
 <tr><td><?php echo $string['authentication']; ?></td><td><?php echo $authinfo; ?> <a href="./detailed_authentication_info.php"><?php echo $string['More details']; ?></a></td></tr>
-<tr><td>Session</td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
+<tr><td><?php echo $string['Session']; ?></td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 
 <tr><td colspan="2" class="sechead"><?php echo $string['serverinformation']; ?></td></tr>

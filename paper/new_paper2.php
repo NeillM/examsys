@@ -458,7 +458,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo '</optgroup></select></td></tr>';
   } else {
-    echo '<td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">Duration</td><td><select name="duration" id="duration">';
+    echo '<td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td><select name="duration" id="duration">';
     $minutes = array('15'=>'15','20'=>'20','25'=>'25','30'=>'30','35'=>'35','40'=>'40','45'=>'45','50'=>'50','55'=>'55','60'=>'60','65'=>'65','70'=>'70','75'=>'75','80'=>'80','85'=>'85','90'=>'90','95'=>'95','100'=>'100','110'=>'110','120'=>'120','150'=>'150','180'=>'180');
     echo "<option value=\"\"></option>\n";
     foreach ($minutes as $key => $value) {

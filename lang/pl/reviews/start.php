@@ -18,6 +18,7 @@ require '../lang/' . $language . '/paper/start.php';
 
 $string['modelanswer'] = 'Odpowiedź wzorcowa:';
 $string['notvisible'] = '<strong>Informacja:</strong> (niewidoczne dla kandydatów)';
+$string['other'] = 'Inne';
 $string['reviewermsg'] = 'To jest pytanie typu obliczeniowego. Zmienne są obliczane w czasie rzeczywistym i będą odmienne dla różnych kandydatów. Odpowiedź zaś opiera się na prostym wzorze. Kandydaci nie będą widzieli wyrażeń <strong>$A</strong> i podobnych, będą tylko widzieli losowo dobierane wartości.';
 $string['variable'] = 'Zmienna';
 $string['generated'] = 'Wygenerowana';

@@ -1007,18 +1007,18 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <td rowspan="11" style="font-size:110%">
 <div id="demo_paper_background" style="width:450px; height:300px; border:1px solid #EAEAEA; box-shadow: 3px 3px 4px #808080; padding:15px; float:right">
 
-<span id="demo_theme" style="font-size:150%; font-weight:bold; color:#316AC5">Cities</span>
+<span id="demo_theme" style="font-size:150%; font-weight:bold; color:#316AC5"><?php echo $string['demo1']; ?></span>
 
-<p>1. &nbsp;Which of the following are European cities?</p>
+<p>1. &nbsp;<?php echo $string['demo2']; ?></p>
 
 <table cellspacing="0" cellpadding="2" border="0" style="margin-left:30px; width:200px">
-<tr><td style="text-align:center; color:#C00000" id="demo_true_label">True</td><td style="text-align:center; color:#C00000" id="demo_false_label">False</td><td></td>
-<tr><td style="text-align:center"><input type="radio" name="q1" value="t" checked="checked" /></td><td style="text-align:center"><input type="radio" name="q1" value="f" /></td><td>London</td></tr>
-<tr><td style="text-align:center"><input type="radio" name="q2" value="t" /></td><td style="text-align:center"><input type="radio" name="q2" value="f" checked="checked" /></td><td>New York</td></tr>
-<tr id="demo_unanswered" style="background-color:#FFC0C0"><td style="text-align:center"><input type="radio" name="q3" value="t" /></td><td style="text-align:center"><input type="radio" name="q3" value="f" /></td><td>Paris</td></tr>
+<tr><td style="text-align:center; color:#C00000" id="demo_true_label"><?php echo $string['demo3']; ?></td><td style="text-align:center; color:#C00000" id="demo_false_label"><?php echo $string['demo4']; ?></td><td></td>
+<tr><td style="text-align:center"><input type="radio" name="q1" value="t" checked="checked" /></td><td style="text-align:center"><input type="radio" name="q1" value="f" /></td><td><?php echo $string['demo5']; ?></td></tr>
+<tr><td style="text-align:center"><input type="radio" name="q2" value="t" /></td><td style="text-align:center"><input type="radio" name="q2" value="f" checked="checked" /></td><td><?php echo $string['demo6']; ?></td></tr>
+<tr id="demo_unanswered" style="background-color:#FFC0C0"><td style="text-align:center"><input type="radio" name="q3" value="t" /></td><td style="text-align:center"><input type="radio" name="q3" value="f" /></td><td><?php echo $string['demo7']; ?></td></tr>
 </table>
 <br />
-<span id="demo_marks" style="font-size:90%; color:#808080">(3 marks)</span>
+<span id="demo_marks" style="font-size:90%; color:#808080">(<?php echo $string['demo8']; ?>)</span>
 
 </div>
 

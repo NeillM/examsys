@@ -104,6 +104,16 @@ $string['custom'] = 'Własna';
 $string['Access Denied']='Brak dostępu';
 $string['performsummary'] = 'Podsumowanie osiągnięć';
 
+//demo
+$string['demo1'] = 'Miasta';
+$string['demo2'] = 'Które z nastepujących jest europejskim miastem?';
+$string['demo3'] = 'Prawda';
+$string['demo4'] = 'Fałsz';
+$string['demo5'] = 'Londyn';
+$string['demo6'] = 'Nowy Jork';
+$string['demo7'] = 'Paryż';
+$string['demo8'] = '3 punkty';
+
 //Colour picker
 $string['colour'] = 'Kolor';
 $string['themecolours'] = 'Kolory motywu';

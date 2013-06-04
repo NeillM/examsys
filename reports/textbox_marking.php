@@ -227,7 +227,7 @@ SQL;
   $result->store_result();
   $result->bind_result($logtype, $id, $tmp_userID, $user_answer, $student_mark);
   if ($result->num_rows == 0) {
-    echo "<p>No students</p>";
+    echo "<p>" . $string['nostudents'] . "</p>";
   }
   while ($result->fetch()) {
     if ($phase == 1 or ($phase == 2 and in_array($tmp_userID, $second_mark))) {

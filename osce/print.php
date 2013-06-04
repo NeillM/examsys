@@ -105,7 +105,7 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
   
   <br /><div><strong><?php echo $string['overallclassification']; ?></strong></div>
   <br />
-  <div><?php echo $string['msg']; ?>Please circle the most appropriate grading</div>
+  <div><?php echo $string['msg']; ?></div>
   <br />
 
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">

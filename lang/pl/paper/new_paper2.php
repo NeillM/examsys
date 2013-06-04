@@ -30,7 +30,8 @@ $string['msg4'] = 'Nie wybrano żadnego modułu. Arkusze muszą być przypisane 
 $string['msg5'] = "Nazwa '%s' jest już wykorzystywana. Wybierz inny tytuł arkusza.";
 $string['msg6'] = 'To jest egzamin typu "closed-book", w czasie którego <em>niedozwolone jest</em> korzystanie ze środków i źródeł pomocniczych (także słowników) ani pomocy osób drugich. Niedozwolone jest też używanie urządzeń elektronicznych z wyjątkiem komputera egzaminacyjnego.';
 
-$string['barriersneeded'] = 'Potrzebne bariery';  
+$string['barriersneeded'] = 'Potrzebne bariery';
+$string['duration'] = 'Czas trwania';
 $string['daterequired'] = 'Wymagana data';
 $string['cohortsize'] = 'Rozmiar grupy';
 $string['wholecohort'] = 'cała grupa';

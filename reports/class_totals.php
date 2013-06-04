@@ -903,7 +903,7 @@ if ($language != 'en') {
           $headers .= "bcc: " . $_POST['bccaddress'] . "\n";
         }
         $message .= "</body>\n</html>\n";
-        mail ($to, $subject, $message, $headers) or print "<div>Could not send mail to <strong>$to</strong>.</div>";
+        mail ($to, $subject, $message, $headers) or print "<div>" . $string['couldnotsend'] . " <strong>$to</strong>.</div>";
       }
       echo '<p>' . $string['emailssent'] . '</p>';
     } else {

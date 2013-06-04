@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+//niko_HTML5
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require_once '../lang/' . $language . '/question/edit/area.txt';
+require_once 'hotspot_answer.txt';
+require_once 'hotspot_question.txt';
+require_once 'label_answer.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//niko_HTML5
+
 require_once '../lang/' . $language . '/include/months.inc';
 require_once '../lang/' . $language . '/question/sct_shared.php';
 require_once '../lang/' . $language . '/include/paper_security.inc';
@@ -31,6 +40,7 @@ $string['yes'] = 'Yes';
 $string['no'] = 'No';
 $string['abstain'] = 'Abstain';
 $string['na'] = 'N/A';
+$string['other'] = 'Other';
 $string['unanswered'] = 'Unanswered';
 $string['unansweredquestion'] = '= unanswered question';
 $string['negmarking'] = 'negative marking';
@@ -47,6 +57,7 @@ $string['error_random'] = 'ERROR: unable to find unique question for random ques
 $string['error_keywords'] = 'ERROR: unable to find unique question for supplied keywords';
 $string['error_paper'] = 'The requested paper cannot be found.';
 $string['error_qtype'] = 'No question type defined.';
+$string['other'] = 'Other';
 $string['holddownctrlkey'] = '(Hold down &lt;CTRL&gt; key, then click mouse to toggle options on/off)';
 $string['msgselectable1'] = 'Too many options selected!\n\nOnly';
 $string['msgselectable2'] = 'items can be selected in this question.';

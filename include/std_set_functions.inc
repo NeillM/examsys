@@ -144,7 +144,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       $scale_html = reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
       if ($options[0]['display_method'] == 'vertical' or $options[0]['display_method'] == 'vertical_other') {
         if ($options[0]['display_method'] == 'vertical_other') {
-          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
+          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
         }
         echo '</table></blockquote>';
         echo "<div>";
@@ -237,13 +237,13 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       if ($options[0]['score_method'] == 'other') {
         $part_id++;
         echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
-        echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"\" /></td></tr>\n";
+        echo "<td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"\" /></td></tr>\n";
       }
       echo '</table>';
       echo "<input type=\"hidden\" id=\"rank" . $question_no . "_options\" name=\"rank" . $question_no . "_options\" value=\"$part_id\" />\n";
       if ($options[0]['score_method'] == 'Bonus Mark') {
         $review_val = get_review($options[0]['q_type'], $std_method, $q_id, ($part_id+1), $tmp_reviews, $is_group);
-        echo "<br />\n<div>All items correct: ";
+        echo "<br />\n<div>" . $string['allitemscorrect'] . ": ";
         echo reviewScale($question_no, ($part_id+1), $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
         echo "</div>\n";
         echo "<input type=\"hidden\" id=\"rank" . $question_no . "_correct_no\" name=\"rank" . $question_no . "_correct_no\" value=\"". ($marks-1) . "\" />\n";

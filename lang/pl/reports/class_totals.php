@@ -52,6 +52,7 @@ $string['experimantalquestions'] = 'Pytania eksperymentalne';
 $string['warnings'] = 'Ostrzeżenia';
 $string['nolongerappear'] = 'Znaleziono odpowiedzi na pytania, które nie znajdują się już w arkuszu (IDs:';
 $string['emailssent'] = 'wysłanych Emaili.';
+$string['couldnotsend'] = 'Nie można było wysłać Emaila do';
 $string['emailclassmarks'] = 'wyślij Emaile z punktacją klasy';
 $string['title'] = 'Tytuł';
 $string['surname'] = 'Nazwisko';
