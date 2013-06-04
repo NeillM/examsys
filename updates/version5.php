@@ -398,8 +398,12 @@ if (!isset($_POST['update'])) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_median_question_marks TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);    
   }
- 
 
+    // 04/06/2013 (cczsa1) - Add permission to denied log for rogo_auth
+    if (!$updater_utils->has_grant($cfg_db_username, 'INSERT', 'denied_log', $cfg_db_host)) {
+      $sql = "GRANT INSERT ON " . $cfg_db_database . ".denied_log TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+      $updater_utils->execute_query($sql, true);
+    }
 
  
   /*
