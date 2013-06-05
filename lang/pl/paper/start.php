@@ -31,6 +31,7 @@ $string['yes'] = 'Tak';
 $string['no'] = 'Nie';
 $string['abstain'] = 'Wstrzymany';
 $string['na'] = 'Żadna';
+$string['other'] = 'Inne';
 $string['unanswered'] = 'Brak odpowiedzi';
 $string['unansweredquestion'] = '= pytanie bez odpowiedzi';
 $string['negmarking'] = 'ujemna punktacja';
