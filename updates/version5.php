@@ -361,29 +361,29 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_table_exist('cache_paper_stats')) {
     $sql = "CREATE TABLE cache_paper_stats (paperID mediumint(8) unsigned not null, cached int unsigned, max_mark decimal(10,5), max_percent decimal(10,5), min_mark decimal(10,5), min_percent decimal(10,5), q1 decimal(10,5), q2 decimal(10,5), q3 decimal(10,5), mean_mark decimal(10,5), mean_percent decimal(10,5), stdev_mark decimal(10,5), stdev_percent decimal(10,5), UNIQUE KEY `paperID` (`paperID`)) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
-    $updater_utils->execute_query($sql, true);    
+    $updater_utils->execute_query($sql, true);
   }
- 
+
   // 20/05/2013 (brzsw) - Add cache_student_paper_marks table
   if (!$updater_utils->does_table_exist('cache_student_paper_marks')) {
     $sql = "CREATE TABLE cache_student_paper_marks (paperID mediumint(8) unsigned not null, userID int(10) unsigned, mark decimal(10,5), percent decimal(10,5)) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = "ALTER TABLE cache_student_paper_marks ADD CONSTRAINT pk_paperID_userID PRIMARY KEY (paperID, userID)";
     $updater_utils->execute_query($sql, false);
-    
+
     $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.cache_student_paper_marks TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_student_paper_marks TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
-    $updater_utils->execute_query($sql, true);    
+    $updater_utils->execute_query($sql, true);
   }
- 
+
   // 20/05/2013 (brzsw) - Add cache_median_question_marks table
   if (!$updater_utils->does_table_exist('cache_median_question_marks')) {
     $sql = "CREATE TABLE cache_median_question_marks (paperID mediumint(8) unsigned not null, questionID int(10) unsigned, median decimal(10,5), mean decimal(10,5) ) ENGINE=InnoDB";
@@ -391,12 +391,12 @@ if (!isset($_POST['update'])) {
 
     $sql = "ALTER TABLE cache_median_question_marks ADD CONSTRAINT pk_paperID_questionID PRIMARY KEY (paperID, questionID)";
     $updater_utils->execute_query($sql, false);
-    
+
     $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.cache_median_question_marks TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_median_question_marks TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
-    $updater_utils->execute_query($sql, true);    
+    $updater_utils->execute_query($sql, true);
   }
 
     // 04/06/2013 (cczsa1) - Add permission to denied log for rogo_auth
@@ -405,7 +405,19 @@ if (!isset($_POST['update'])) {
       $updater_utils->execute_query($sql, true);
     }
 
- 
+  // 03/06/2013 - nazrji - add mapping level column to modules and relatiosnips tables
+  if (!$updater_utils->does_column_exist('modules', 'map_level')) {
+    $updater_utils->execute_query("ALTER TABLE modules ADD COLUMN map_level smallint(2) NOT NULL DEFAULT 0", true);
+  }
+  if (!$updater_utils->does_column_exist('relationships', 'map_level')) {
+    $updater_utils->execute_query("ALTER TABLE relationships ADD COLUMN map_level smallint(2) NOT NULL DEFAULT 0", true);
+  }
+
+  // 03/06/2013 - nazrji - Add VLE APIs to config file.
+  $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array();\n");
+  $target_line = '$cfg_password_expire';
+  $updater_utils->add_line('$vle_apis', $new_lines, 80, $cfg_web_root, $target_line, 1);
+
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */

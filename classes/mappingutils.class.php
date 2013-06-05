@@ -24,35 +24,41 @@
  * @package
  */
 
+require_once 'relationship.class.php';
+
 class MappingUtils {
+  /**
+   * Get the VLE API that is in effect for the given module and academic year
+   * either from the module itself or from existing relationships
+   * @param  integer $idMod         ID of the module
+   * @param  string  $session       Calendar year in the form YYYY/YY (e.g. 2012/13)
+   * @param  array   $vle_api_cache List of chached API references
+   * @param  mysqli  $db            DB link
+   * @return string                 Name of the VLE API that is in effect
+   */
   public static function get_vle_api($idMod, $session, &$vle_api_cache, $db) {
-  
- 
     if (!isset($vle_api_cache[$idMod][$session])) {
       // Are there any existing relationships for the module in this session?
-      $stmt = $db->prepare("SELECT vle_api FROM relationships WHERE idMod IN (" . $idMod . ") AND calendar_year = ? LIMIT 1");
-      $stmt->bind_param('s', $session);
-      $stmt->execute();
-      $stmt->store_result();
-      if ($stmt->num_rows > 0) {
-        $stmt->bind_result($vle_api);
-        $stmt->fetch();
-        $stmt->close();
+      $rels = Relationship::find($db, $idMod, $session, '', '', 1);
+      if ($rels !== false and count($rels) > 0) {
+        $vle_api = $rels[0]->get_vle_api();
+        $map_level = $rels[0]->get_map_level();
       } else {
         // No existing relationships. Use VLE API as defined in the module
-        $stmt = $db->prepare("SELECT vle_api FROM modules WHERE id=? LIMIT 1");
+        $stmt = $db->prepare("SELECT vle_api, map_level FROM modules WHERE id=? LIMIT 1");
         $stmt->bind_param('s', $idMod);
         $stmt->execute();
-        $stmt->bind_result($vle_api);
+        $stmt->bind_result($vle_api, $map_level);
         $stmt->fetch();
         $stmt->close();
       }
 
-      $vle_api_cache[$idMod][$session] = $vle_api;
+      $vle_api_data = array('api' => $vle_api, 'level' => $map_level);
+      $vle_api_cache[$idMod][$session] = $vle_api_data;
     } else {
-      $vle_api = $vle_api_cache[$idMod][$session];
+      $vle_api_data = $vle_api_cache[$idMod][$session];
     }
 
-    return $vle_api;
+    return $vle_api_data;
   }
 }

@@ -37,6 +37,7 @@ require_once $cfg_web_root . 'apis/VLEFactory.class.php';
 require_once $cfg_web_root . 'classes/dateutils.class.php';
 require_once $cfg_web_root . 'classes/mappingutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
+require_once $cfg_web_root . 'classes/relationship.class.php';
 
 function render_objectives_mapping_form($db, $paper_id, &$string) {
   global $vle_api_cache;
@@ -139,7 +140,8 @@ HTML;
     $html .= <<< HTML
     		<input name="{$idmod}_session" type="hidden" value="{$session}"/>
     		<input name="{$idmod}_old_mappings" type="hidden" value="{$old_mappings}" />
-        <input name="{$idmod}_vle_api" type="hidden" value="{$vle_api_cache[$idmod][$session]}"/>
+        <input name="{$idmod}_vle_api" type="hidden" value="{$vle_api_cache[$idmod][$session]['api']}"/>
+        <input name="{$idmod}_map_level" type="hidden" value="{$vle_api_cache[$idmod][$session]['level']}"/>
 
 HTML;
   }
@@ -172,23 +174,40 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
     $old_mappings = '';
     $new_mappings = '';
 
-    $sql = array();
+    $relationships = array();
 
     foreach ($modules as $idMod) {
       if (isset($_POST[$idMod . '_session'])) {
         $session = $_POST[$idMod . '_session'];
         $old_mappings = $_POST[$idMod . '_old_mappings'];
         $vle_api = $_POST[$idMod . '_vle_api'];
+        $map_level = $_POST[$idMod . '_map_level'];
         if (isset($_POST[$idMod . '_objectives'])) {
           foreach ($_POST[$idMod . '_objectives'] as $objective_id) {
-            $sql[] = "INSERT INTO relationships VALUES (NULL, $idMod, $paper_id, $question_id, $objective_id, '$session', '$vle_api')";
+            $data = array(
+              'idMod' => $idMod,
+              'paper_id' => $paper_id,
+              'question_id' => $question_id,
+              'objective_id' => $objective_id,
+              'calendar_year' => $session,
+              'vle_api' => $vle_api,
+              'map_level' => $map_level);
+            $relationships[] = new Relationship($db, $data);
             $new_mappings .= $objective_id . ',';
           }
         }
 
         //check for none of the above
-        if (isset($_POST['none_of_the_above']) and $_POST['none_of_the_above'] == -1 and count($sql) == 0) {
-          $sql[] = "INSERT INTO relationships VALUES (NULL, $idMod, $paper_id, $question_id, -1, '$session','$vle_api')";
+        if (isset($_POST['none_of_the_above']) and $_POST['none_of_the_above'] == -1 and count($relationships) == 0) {
+          $data = array(
+            'idMod' => $idMod,
+            'paper_id' => $paper_id,
+            'question_id' => $question_id,
+            'objective_id' => -1,
+            'calendar_year' => $session,
+            'vle_api' => $vle_api,
+            'map_level' => $map_level);
+          $relationships[] = new Relationship($db, $data);
           $new_mappings .= '-1,';
         } else {
           $old_mappings .= '-1,';
@@ -198,11 +217,15 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
           // prepend the delete
           if ($old_mappings != '') {
             $delete = "DELETE FROM relationships WHERE idMod = $idMod AND paper_id = $paper_id AND question_id = $question_id AND calendar_year = '$session' AND vle_api= '$vle_api'";
-            array_unshift($sql, $delete);
+            if (!$result = $db->query($delete)) {
+             echo "Question Mapping Error #1 " . $db->error . "<br/> $delete <br/>";
+            }
           }
-          foreach($sql as $query) {
-            if (!$result = $db->query($query)) {
-              echo "Question Mapping Error #1 " . $db->error . "<br/> $query <br/>";
+          foreach ($relationships as $rel) {
+            try {
+              $rel->save();
+            } catch (DatabaseException $ex) {
+              echo "Question Mapping Error #1 " . $ex->getMessage();
             }
           }
         }
@@ -233,17 +256,22 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
   $objsBySession = array();
 
   $module_list = $thisModuleid;
+
   if (!is_array($module_list)) {
     $module_list = array($thisModuleid);
   }
+
   foreach ($module_list as $thisidMod => $thisModuleid) {
     // Get which API to use to get the learning objectives
-    $vle_api = MappingUtils::get_vle_api($thisidMod, $session, $vle_api_cache, $db);
+    $vle_api_data = MappingUtils::get_vle_api($thisidMod, $session, $vle_api_cache, $db);
+    $vle_api = $vle_api_data['api'];
+    $map_level = $vle_api_data['level'];
 
     if ($vle_api != '') {
       // Get objectives from the VLE via REST request
       if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session]) or count($objsBySession_cache[$thisModuleid][$session]) == 0) {
         $vle = VLEFactory::GetVLEAPI($vle_api);
+        $vle->setMappingLevel($map_level);
         $resp = $vle->getObjectives($thisModuleid, $session);
         if ($resp != '') {
           $objsBySession_cache[$thisModuleid][$session] = $resp;
@@ -308,15 +336,11 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
   //START:: get the currently mapped objectives in Rogo.
   $mapped = array();
   if ($questionID != '') {
-    $original_thisModuleid_in = implode(',', array_keys($original_thisModuleid));
-    if ($result = $db->prepare("SELECT obj_id, question_id FROM relationships WHERE idMod IN ($original_thisModuleid_in) AND paper_id = ? AND calendar_year = ? AND question_id IN ($questionID) AND vle_api = ?")) {
-      $result->bind_param('iss', $paperID, $session, $vle_api);
-      $result->execute();
-      $result->bind_result($obj_id, $question_id);
-      while ($result->fetch()) {
-        $mapped[$obj_id][] = $question_id;
+    $rels = Relationship::find($db, array_keys($original_thisModuleid), $session, $paperID, explode(',', $questionID));
+    if ($rels !== false and is_array($rels)) {
+      foreach ($rels as $rel) {
+        $mapped[$rel->get_objective_id()][] = $rel->get_question_id();
       }
-      $result->close();
     } else {
       echo "Error: " . $db->error;
     }

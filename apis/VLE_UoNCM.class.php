@@ -28,9 +28,11 @@ require_once 'VLEAPI.if.php';
 require_once $configObject->get('cfg_web_root') . 'webServices/RestRequest.class';
 
 class VLE_UoNCM implements iVLEAPI {
-  private $_root_url = 'http://curriculum.nottingham.ac.uk/%s/index.php/';
+  private $_root_url = 'http://cm.rji.ac.uk/%s/index.php/';
+//  private $_root_url = 'http://curriculum.nottingham.ac.uk/%s/index.php/';
   private $_sess_year;
   private $_module_id;
+  private $_mapping_level = self::LEVEL_SESSION;
 
   private $_moodle_base_url = 'http://moodle.nottingham.ac.uk/local/uonlib/findcourse.php?m=%s&y=%s&nid=%s';
 
@@ -49,16 +51,44 @@ class VLE_UoNCM implements iVLEAPI {
 
     $res = $req->getResponseBody();
 
-    return $this->transformCMResponse($res, $session);
+    switch ($this->_mapping_level) {
+      case self::LEVEL_MODULE:
+        $objectives = $this->transformCMResponseModule($res, $session);
+        break;
+      default:
+        $objectives = $this->transformCMResponse($res, $session);
+        break;
+    }
+    return $objectives;
   }
 
   /**
    * Get a friendly name for the source system, with the indefinite article if required
-   * @param bool $a
-   * @return string
+   * @param bool $a     Include the definite article?
+   * @param bool $long  Return the long form of the name?
+   * @return string     The name in the required format
    */
-  public function getFriendlyName($a = false) {
+  public function getFriendlyName($a = false, $long = false) {
     return ($a) ? 'a Curriculum Map' : 'Curriculum Map';
+  }
+
+  /**
+   * Get the levels of mapping that are supported by this class
+   * @return array Array of mapping levels supported
+   */
+  public function getMappingLevels() {
+    return array(self::LEVEL_SESSION, self::LEVEL_MODULE);
+  }
+
+  /**
+   * Set the mapping level at which the class should work
+   * @param integer $level Mapping level
+   */
+  public function setMappingLevel($level) {
+    if (!in_array($level, $this->getMappingLevels())) {
+      throw new UnsupportedMappingLevelException();
+    }
+    $this->_mapping_level = $level;
   }
 
   /**
@@ -87,6 +117,30 @@ class VLE_UoNCM implements iVLEAPI {
         } else {
           foreach ($input['cmapi']['module']['learning_act'] as $learning_act) {
             $this->process_learning_act($sessions, $learning_act, $calendar_year, $i);
+          }
+        }
+      }
+
+      $output = array($mod_id => $sessions);
+
+      return $output;
+    } else {
+      return array();
+    }
+  }
+
+  private function transformCMResponseModule($input, $calendar_year) {
+    if (isset($input['cmapi']['module'])) {
+      $mod_id = $input['cmapi']['module']['code'];
+      $sessions = array();
+
+      $i = 0;
+      if (isset($input['cmapi']['module']['objectives']) and isset($input['cmapi']['module']['objectives']['group'])) {
+        if (isset($input['cmapi']['module']['objectives']['group']['@attributes'])) {
+          $this->process_group($sessions, $input['cmapi']['module']['objectives']['group'], $calendar_year, $i);
+        } else {
+          foreach ($input['cmapi']['module']['objectives']['group'] as $group) {
+            $this->process_group($sessions, $group, $calendar_year, $i);
           }
         }
       }
@@ -182,6 +236,51 @@ class VLE_UoNCM implements iVLEAPI {
         }
       }
       $sessions[$learning_act['@attributes']['id']] = $act_data;
+    }
+  }
+
+  /**
+   * Process objective groups for module level mapping
+   * @param  array   $sessions      Sessions extracted from group data
+   * @param  array   $group         Array of outcome groups
+   * @param  string  $calendar_year Academic year in the format YYYY/YY, e.g. 2012/13
+   * @param  integer $count         Count of sessions created
+   */
+  private function process_group(&$sessions, $group, $calendar_year, &$count) {
+    // If no objectives don't bother showing the session
+    if (is_array($group['outcome_module'])) {
+      $sess_data = array(
+        'identifier' => $group['@attributes']['id'],
+        'GUID' => $group['@attributes']['id'],
+        'class_code' => '',
+        'title' => ($group['group_title'] == '') ? 'No group' : $group['group_title'],
+        'occurrance' => '',
+        'calendar_year' => $calendar_year,
+        'VLE' => 'UoNCM',
+        'source_url' => '',   // TODO
+        // 'source_url' => sprintf($this->_moodle_base_url, $this->_module_id, $this->_sess_year, $session['@attributes']['id']) . '&ses=' . $session['code'],
+        'mapped' => 0,
+        'objectives' => array()
+      );
+
+      $obs = $group['outcome_module'];
+      if (isset($obs['@attributes'])) {
+        $obj_data = array(
+          'content' => (isset($obs['title']) and $obs['title'] != '') ? $obs['title'] : $obs['content'],
+          'id' => $obs['@attributes']['id']
+        );
+        $sess_data['objectives'][++$count] = $obj_data;
+      } else {
+        foreach ($obs as $objective) {
+          $obj_data = array(
+            'content' => (isset($objective['title']) and $objective['title'] != '') ? $objective['title'] : $objective['content'],
+            'id' => $objective['@attributes']['id'],
+            'mapped' => 0
+          );
+          $sess_data['objectives'][++$count] = $obj_data;
+        }
+      }
+      $sessions[$group['@attributes']['id']] = $sess_data;
     }
   }
 }
