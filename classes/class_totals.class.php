@@ -237,17 +237,13 @@ class ClassTotals {
 
     if ($this->marking == '1') {                              // Monkey mark
       for ($i=0; $i<$user_no; $i++) {
-        //if (isset($this->user_results[$i]['adj_percent'])) {
-          $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
-        //}
+        $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
       }
     } elseif ($this->marking{0} == '2') {                     // Standards Setting
       $this->set_ss_pass();
 
       for ($i=0; $i<$user_no; $i++) {
-        //if (isset($this->user_results[$i]['adj_percent'])) {
-          $this->user_results[$i]['percent'] = $this->crankMark($this->user_results[$i]['percent']);
-        //}
+        $this->user_results[$i]['percent'] = $this->crankMark($this->user_results[$i]['percent']);
       }
     }  
   }
@@ -569,8 +565,9 @@ class ClassTotals {
 
   private function find_random_question($q_id, &$tmp_q) {
     $tmp_q_id = -1;
-
-    foreach ($this->random_q_ids as $rnd_id) {
+    
+    $randomIDs = $this->random_q_ids;
+    foreach ($randomIDs as $rnd_id) {
       if (isset($this->paper_buffer[$rnd_id]) and isset($this->paper_buffer[$rnd_id]['random_questions']) and count($this->paper_buffer[$rnd_id]['random_questions']) > 0) {
         if (in_array($q_id, array_keys($this->paper_buffer[$rnd_id]['random_questions']))) {
           $tmp_q_id = $q_id;
@@ -619,14 +616,13 @@ class ClassTotals {
     $skip_random = false;
     if (!isset($this->paper_buffer[$q_id])) {
       $tmp_q = array();
-      $tmp_q_id = find_random_question($q_id, $this->random_q_ids, $tmp_q);
+      $tmp_q_id = $this->find_random_question($q_id, $tmp_q);
       if ($tmp_q_id == -1) {
         $skip_random = true;
       } else {
         $question = $tmp_q;
-
         if ($question['q_type'] == 'blank') {
-          $question['correct'] = extract_blank_correct($question['option_text'][0], $question['display_method'], $tmp_q_id);
+          $question['correct'] = $this->extract_blank_correct($question['option_text'][0], $question['display_method'], $tmp_q_id);
         }
       }
     } else {
