@@ -1,3 +1,3 @@
 <?php
-$string['percent'] = '%';
+$string['percent'] = '%'; //cognate
 ?>
