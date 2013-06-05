@@ -284,7 +284,7 @@ foreach ($user_results as $individual) {
   }
 
   // Write out the raw data.
-  if ($individual['visible'] == 1) {
+  if ($individual['visible']) {
     if ($paper_type < 3) {
       $csv .= '"' . $individual['gender'] . '","' . $individual['title'] . '","' . $individual['surname'] . '","' . $individual['first_names'] . '","' . $individual['student_id'] . '","' .$individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
     } else {

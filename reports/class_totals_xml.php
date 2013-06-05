@@ -272,17 +272,17 @@ for ($i=0; $i<$user_no; $i++) {
       echo '</Row>';
       $absent_no++;
     } else {
-      $temp_percent = $user_results[$i]['adj_percent'];
+      $temp_percent = $user_results[$i]['percent'];
       if ($temp_percent < $pass_mark) {
         echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . $user_results[$i]['mark'] . '</Data></Cell>';
       } else {
         echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['mark'] . '</Data></Cell>';
       }
-      if ($user_results[$i]['adj_percent'] < $pass_mark) {
+      if ($user_results[$i]['percent'] < $pass_mark) {
         echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent, $percent_decimals) . '</Data></Cell>';
         echo '<Cell ss:StyleID="s25"><Data ss:Type="String">' . $string['fail'] . '</Data></Cell>';
       } else {
-        if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
+        if ($user_results[$i]['percent'] >= $distinction_mark) {
           echo '<Cell ss:StyleID="s31"><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent, $percent_decimals) . '</Data></Cell>';
           echo '<Cell ss:StyleID="s31"><Data ss:Type="String">' . $string['distinction'] . '</Data></Cell>';
         } else {

@@ -500,37 +500,26 @@ class ClassTotals {
   }
 
   private function writeUserResults($tmp, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp) {
-    $this->user_results[$user_number]['name'] = $tmp['name'];
-    $this->user_results[$user_number]['mark'] = round($tmp_user_mark,1);
+    $this->user_results[$user_number] = $tmp;
+    
+    $this->user_results[$user_number]['mark'] = round($tmp_user_mark, 1);
     $this->user_results[$user_number]['mark_array'] = $tmp_user_mark_array;
     if ($this->total_marks == 0) {
       $this->user_results[$user_number]['percent'] = 0;
     } else {
       $this->user_results[$user_number]['percent'] = ($tmp_user_mark / $this->total_marks) * 100;
     }
-
-    $this->user_results[$user_number]['started']          = $tmp['started'];
-    $this->user_results[$user_number]['username']         = $tmp['username'];
-    $this->user_results[$user_number]['userID']           = $tmp['userID'];
-    $this->user_results[$user_number]['student_grade']    = $tmp['grade'];
-    $this->user_results[$user_number]['roles']            = $tmp['roles'];
-    $this->user_results[$user_number]['module']           = $tmp['module'];
-    $this->user_results[$user_number]['attempt']          = $tmp['attempt'];
-    $this->user_results[$user_number]['year']             = $tmp['year'];
-    $this->user_results[$user_number]['display_started']  = $tmp['display_started'];
-    $this->user_results[$user_number]['title']            = $tmp['title'];
-    $this->user_results[$user_number]['surname']          = demo_replace($tmp['surname'], $this->demo);
-    $this->user_results[$user_number]['initials']         = demo_replace($tmp['initials'], $this->demo);
-    $this->user_results[$user_number]['first_names']      = demo_replace($tmp['first_names'], $this->demo);
-    $this->user_results[$user_number]['email']            = demo_replace($tmp['email'], $this->demo);
-    $this->user_results[$user_number]['student_id']       = demo_replace_number($tmp['student_id'], $this->demo);
-    $this->user_results[$user_number]['gender']           = $tmp['gender'];
-    $this->user_results[$user_number]['ipaddress']        = $tmp['ipaddress'];
     $this->user_results[$user_number]['duration']         = $tmp_user_duration;
-    $this->user_results[$user_number]['questions']        = $tmp['questions'];
-    $this->user_results[$user_number]['paper_type']       = $tmp['paper_type'];
-    $this->user_results[$user_number]['room']             = $tmp['room'];
+    $this->user_results[$user_number]['marking_complete'] = $marking_comp;
     $this->user_results[$user_number]['visible']          = true;    // Default to visible unless switched off below.
+    
+    if ($this->demo) {
+      $this->user_results[$user_number]['surname']     = demo_replace($tmp['surname'], $this->demo);
+      $this->user_results[$user_number]['initials']    = demo_replace($tmp['initials'], $this->demo);
+      $this->user_results[$user_number]['first_names'] = demo_replace($tmp['first_names'], $this->demo);
+      $this->user_results[$user_number]['email']       = demo_replace($tmp['email'], $this->demo);
+      $this->user_results[$user_number]['student_id']  = demo_replace_number($tmp['student_id'], $this->demo);
+    }
 
     // Add metadata
     if (!empty($this->metadata_array['types'])) {
@@ -558,7 +547,6 @@ class ClassTotals {
     if (isset($this->student_cohort)) {
       $this->check_and_clear_cohort($tmp['username']);
     }
-    $this->user_results[$user_number]['marking_complete'] = $marking_comp;
 
     $user_number++;
   }
@@ -1074,7 +1062,7 @@ class ClassTotals {
         $this->student_cohort[$i]['first_names']   = demo_replace($first_names, $this->demo);
         $this->student_cohort[$i]['initials']      = demo_replace($initials, $this->demo);
         $this->student_cohort[$i]['student_id']    = demo_replace_number($student_id, $this->demo);
-        $this->student_cohort[$i]['grade']         = $grade;
+        $this->student_cohort[$i]['student_grade'] = $grade;
         $this->student_cohort[$i]['module']        = $moduleid;
         $this->student_cohort[$i]['gender']        = $gender;
 
@@ -1299,9 +1287,8 @@ class ClassTotals {
         }
 
         $tmp_array['attempt']         = $attempt;
-        $tmp_array['grade']           = $grade;
+        $tmp_array['student_grade']   = $grade;
         $tmp_array['roles']           = $tmp_roles;
-        $tmp_array['year']            = $year;
         $tmp_array['display_started'] = $display_started;
         $tmp_array['title']           = $title;
         $tmp_array['name']            = trim(str_replace("'","",$surname) . ',' . $first_names);
@@ -1365,7 +1352,7 @@ SQL;
         $this->late_cohort[$i]['first_names']      = demo_replace($first_names, $this->demo);
         $this->late_cohort[$i]['initials']         = demo_replace($initials, $this->demo);
         $this->late_cohort[$i]['student_id']       = demo_replace_number($student_id, $this->demo);
-        $this->late_cohort[$i]['grade']            = $grade;
+        $this->late_cohort[$i]['student_grade']    = $grade;
         $this->late_cohort[$i]['module']           = $moduleid;
         $this->late_cohort[$i]['gender']           = $gender;
         $this->late_cohort[$i]['display_started']  = $this->log_late_missing_users[$userID]['display_started'];
@@ -1436,7 +1423,6 @@ SQL;
         $this->user_results[$user_no]['userID']           = $late_user['userID'];
         $this->user_results[$user_no]['student_grade']    = $late_user['grade'];
         $this->user_results[$user_no]['module']           = $late_user['module'];
-        $this->user_results[$user_no]['year']             = '';
         $this->user_results[$user_no]['display_started']  = $late_user['display_started'];
         $this->user_results[$user_no]['started']          = $late_user['started'];
         $this->user_results[$user_no]['attempt']          = 1;
@@ -1476,7 +1462,6 @@ SQL;
         $this->user_results[$user_no]['userID']           = $this->student_cohort[$i]['userID'];
         $this->user_results[$user_no]['student_grade']    = $this->student_cohort[$i]['grade'];
         $this->user_results[$user_no]['module']           = $this->student_cohort[$i]['module'];
-        $this->user_results[$user_no]['year']             = '';
         $this->user_results[$user_no]['display_started']  = '';
         $this->user_results[$user_no]['title']            = $this->student_cohort[$i]['title'];
         $this->user_results[$user_no]['surname']          = $this->student_cohort[$i]['surname'];

@@ -123,12 +123,12 @@ if ($cohort_size > 0) {
         // If room is unknown then it will contain HTML that we want to discard
         $user_results[$i]['room'] = (strpos($user_results[$i]['room'], 'unknown') !== false) ? 'unknown' : $user_results[$i]['room'];
 
-        $csv .= $user_results[$i]['student_grade'] . ',"' . $user_results[$i]['module'] . '",' . $user_results[$i]['mark'] . ',' . MathsUtils::formatNumber($user_results[$i]['adj_percent'], $percent_decimals) . '%,';
+        $csv .= $user_results[$i]['student_grade'] . ',"' . $user_results[$i]['module'] . '",' . $user_results[$i]['mark'] . ',' . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . '%,';
 
-        if ($user_results[$i]['adj_percent'] < $pass_mark) {
+        if ($user_results[$i]['percent'] < $pass_mark) {
           $csv .= '"' . $string['fail'] . '",';
         } else {
-          if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
+          if ($user_results[$i]['percent'] >= $distinction_mark) {
             $csv .= '"' . $string['distinction'] . '",';
           } else {
             $csv .= '"' . $string['pass'] . '",';
