@@ -49,7 +49,7 @@ Class UpdaterUtils {
 
     return true;
   }
-  
+
   public function does_column_type_value_exist($table_name, $column_name, $column_type_value) {
     $result = $this->mysqli->prepare('SELECT column_type FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ? AND column_type = ?');
     $result->bind_param('ssss', $this->db_name, $table_name, $column_name, $column_type_value);
@@ -81,7 +81,7 @@ Class UpdaterUtils {
 
     return true;
   }
-  
+
   public function does_index_exist($table_name, $index_name) {
     $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ?");
     $result->bind_param('s', $index_name);
@@ -120,20 +120,20 @@ Class UpdaterUtils {
 
     return true;
   }
-  
+
   public function has_grant($user, $grant, $table, $host) {
     $found_grant = '';
-    
+
     $result = $this->mysqli->query("SHOW GRANTS FOR '$user'@'$host'");
     echo $this->mysqli->error;
-    
+
     while ($existing_grant = $result->fetch_array()) {
       if (stripos($existing_grant[0], ".`$table` TO") !== false) {
         $found_grant = $existing_grant[0];
       }
     }
     $result->close();
-    
+
     if ($found_grant != '') {
       $parts = explode(' ON ', $found_grant);
       $found_grant = $parts[0];
@@ -146,11 +146,11 @@ Class UpdaterUtils {
       return false;
     }
   }
-  
+
   public function execute_query($sql, $update_display) {
     $this->mysqli->query($sql);
-    
-    if ($this->mysqli->errno == 0) {      
+
+    if ($this->mysqli->errno == 0) {
       if ($update_display) {
         echo "<li>$sql</li>\n";
         ob_flush();
@@ -175,7 +175,7 @@ Class UpdaterUtils {
       }
     }
   }
-  
+
   public function update_version($version, $string, $cfg_web_root) {
     $cfg_new = array();
     $cfg = file($cfg_web_root . 'config/config.inc.php');
@@ -192,7 +192,7 @@ Class UpdaterUtils {
       return true;
     }
   }
-  
+
   public function add_line($search, $new_lines, $default_line, $cfg_web_root, $target_line = '', $offset = 1) {
     $cfg = file($cfg_web_root . 'config/config.inc.php');
     $found = false;
@@ -218,13 +218,26 @@ Class UpdaterUtils {
       flush();
     }
   }
-  
+
   public function backup_file($cfg_web_root, $old_version) {
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       copy($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.' . $old_version . '.php');
     }
   }
 
+  public function get_company($cfg_web_root) {
+    $cfg_company = '';
+
+    $cfg = file($cfg_web_root . 'config/config.inc.php');
+    foreach ($cfg as $line) {
+      if (strpos($line, 'cfg_company') !== false) {
+        eval($line);
+        break;
+      }
+    }
+
+    return $cfg_company;
+  }
 }
 
 

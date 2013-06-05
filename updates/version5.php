@@ -414,7 +414,11 @@ if (!isset($_POST['update'])) {
   }
 
   // 03/06/2013 - nazrji - Add VLE APIs to config file.
-  $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array();\n");
+  if ($updater_utils->get_company($cfg_web_root) == 'University of Nottingham') {
+    $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array('UoNCM' => '', 'NLE' => '');\n");
+  } else {
+    $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array();\n");
+  }
   $target_line = '$cfg_password_expire';
   $updater_utils->add_line('$vle_apis', $new_lines, 80, $cfg_web_root, $target_line, 1);
 
