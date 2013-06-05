@@ -47,9 +47,10 @@ $excluded = explode("|",  ".|..|.ds_store|.svn|.htaccess|help|media|tools|artwor
 //set of rules: type, short form, searched form, similar but other ....  position translation from short to long form, short form length, max length of option
 //spaces will be ignored
 $parts_table = Array(Array());$parts_index = 0;
-$common_parts = "{|$|sprintf|htmlentities|strip_tags|substr|mb_|number_format|get_string|formatsec|display_|demo_|str|round|0|1|2|3|4|5|6|7|8|9";
-$parts_table[$parts_index++] = Array(1, 'value', '="|=\'', '"|\'.$|<|;|t|f|true|false|high|#|\|'.$common_parts);
+$common_parts = "{|*|$|sprintf|htmlentities|strip_tags|substr|mb_|number_format|get_string|formatsec|display_|demo_|str|round|0|1|2|3|4|5|6|7|8|9";
+$parts_table[$parts_index++] = Array(1, 'value', '="|=\'', '"|\'.$|<|;|t|f|true|false|opaque|showall|allways|high|#|\|'.$common_parts);
 $parts_table[$parts_index++] = Array(1, 'title', '="|=\'', '"|\'.$|<|;|t|f|true|false|high|#|\|'.$common_parts);
+$parts_table[$parts_index++] = Array(1, 'echo', ' "| \'', ''.$common_parts);
 
 $parts_table[$parts_index++] = Array(2, 'title', ' |>', '<?|Rog|\'\.$"|'.$common_parts);
 $parts_table[$parts_index++] = Array(2, 'div', ' |>', ''.$common_parts);
@@ -168,7 +169,7 @@ foreach($files as $filename) {
 				if ($part_element[0]==2) $part_searched = '</'.$part_element[1];
 				if ($part_element[0]==3) $part_searched = ')';
 				$pos3 = strpos($file_content,$part_searched,$pos1+$trs);
-				if ($pos3!=false && $pos3<$pos2) $pos2 = $pos3;
+  			if ($pos3!=false && $pos3<$pos2) $pos2 = $pos3;
 				
 				//cut out the existing string to compare
 				$pot0 = mb_substr($file_content,$pos1,$pos2-$pos1);
@@ -179,14 +180,20 @@ foreach($files as $filename) {
 				
 				$pop = false;
 				//included forms
-				foreach (explode('|',$part_element[2]) as $pp1) 
-					if (strpos($pot1,$part_element[1].$pp1)>-1) $pop = true;
+				foreach (explode('|',$part_element[2]) as $pp1) {
+					if (strpos($pot1,preg_replace('/ /','',$part_element[1].$pp1))>-1) $pop = true;
+				}
 				
 				//excluded forms for type 1
 				if ($part_element[0]==1) {
 					foreach (explode('|',$part_element[2]) as $pp1) 
 						foreach (explode('|',$part_element[3]) as $pp2) 
-							if (strpos($pot1,$part_element[1].$pp1.$pp2)>-1) $pop = false;
+							if (strpos($pot1,$part_element[1].$pp1.$pp2)>-1) $pop = false;					
+  			
+				$pot0 = strip_tags($pot0);
+				$pot1 = strip_tags($pot1);
+				$pot1 = preg_replace('/[\["\';.?)(]/', '',$pot1);
+				if (substr($pot1,$trs-1)=='') $pop = false;					
 				}
 
 				//excluded forms for type 2				
