@@ -234,6 +234,27 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
 
   $result->close();
   
+  // Look up any Hofstee settings
+  $result = $mysqli->prepare("SELECT setterID, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, pass_score, distinction, title, initials, surname FROM hofstee, users WHERE hofstee.setterID = users.id AND paperID = ?");
+  $result->bind_param('i', $paperID);
+  $result->execute();
+  $result->bind_result($setterID, $std_set, $display_date, $pass_score, $distinction, $title, $initials, $surname);
+  while ($result->fetch()) {
+    $reviews[] = array(
+    	'group_review' => 'No',
+    	'review_total' => $total_marks, 
+    	'total_marks' => $total_marks, 
+    	'setter_id' => $setterID,
+    	'review_no' => 0,
+    	'date' => $std_set,
+      'display_date' => $display_date,
+    	'method' => 'Hofstee',
+      'distinction_score' => $distinction,
+      'pass_score' => $pass_score,
+      'name' => "$title $initials $surname");
+  }
+  $result->close();
+  
   return $reviews;
 }
 

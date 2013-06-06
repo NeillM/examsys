@@ -36,20 +36,38 @@ if (!$properties) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+$pass_mark = NULL;
+$distinction_mark = NULL;
+
 if (isset($_POST['passmark'])) {
-  $old_pass_mark = $properties->get_pass_mark();
-  $new_pass_mark = floor($_POST['xs']);
+  $pass_mark = floor($_POST['xs']);
 
-  $properties->set_pass_mark($new_pass_mark);
-  $properties->save();
-  
+  if (isset($_POST['insertID'])) {
+    $result = $mysqli->prepare("UPDATE hofstee SET pass_score = ? WHERE id = ?");
+    $result->bind_param('ii', $pass_mark, $_POST['insertID']);
+    $result->execute();
+    $result->close();
+  }
 } elseif (isset($_POST['distinction'])) {
-  $old_distinction_mark = $properties->get_distinction_mark();
-  $new_distinction_mark = floor($_POST['xs']);
+  $distinction = floor($_POST['xs']);
   
-  $properties->set_distinction_mark($new_distinction_mark);
-  $properties->save();
+  if (isset($_POST['insertID'])) {
+    $result = $mysqli->prepare("UPDATE hofstee SET distinction = ? WHERE id = ?");
+    $result->bind_param('ii', $distinction, $_POST['insertID']);
+    $result->execute();
+    $result->close();
+  }
+}
 
+if ((isset($_POST['passmark']) or isset($_POST['distinction'])) and !isset($_POST['insertID'])) {
+  $userID = $userObject->get_user_ID();
+  
+  $result = $mysqli->prepare("INSERT INTO hofstee VALUES (NULL, ?, ?, NOW(), ?, ?)");
+  $result->bind_param('iiii', $userID, $paperID, $pass_mark, $distinction_mark);
+  $result->execute();
+  $result->close();
+  
+  $insertID = $mysqli->insert_id;
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -123,6 +141,9 @@ body {font-size:85%}
 		var marks = ".  json_encode($marks) . ";
 		</script>";
 	echo "<script type=\"text/javascript\" src=\"../html5/hofstee.js\"></script></div>\n";
+  if (isset($insertID)) {
+    echo "<input type=\"hidden\" name=\"insertID\" value=\"$insertID\" />\n";
+  }
 
 ?>
 </form>

@@ -1296,33 +1296,52 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        }
 
       // Look for any Standard Setting reviews for the paper.
-      $std_set_details = $mysqli->prepare("SELECT DISTINCT title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, group_review FROM standards_setting, users WHERE standards_setting.setterID=users.id AND paperID=? ORDER BY std_set DESC");
+      $std_set_array = array();
+      $i = 0;
+      
+      // Get Modified Angoff and Ebel
+      $std_set_details = $mysqli->prepare("SELECT DISTINCT title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, group_review FROM standards_setting, users WHERE standards_setting.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
       $std_set_details->bind_param('i', $_GET['paperID']);
       $std_set_details->execute();
-      $std_set_details->store_result();
-      if ($std_set_details->num_rows > 0) {
+      $std_set_details->bind_result($std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $std_set_date, $group_review);
+      while ($std_set_details->fetch()) {
+        $std_set_array[$i] = array('title'=>$std_set_title, 'surname'=>$std_set_surname, 'initials'=>$std_set_initials, 'reviewer'=>$std_set_reviewer, 'display_date'=>$std_set_display_date, 'set_date'=>$std_set_date, 'group_review'=>$group_review);
+        $i++;
+      }
+      $std_set_details->close();
+
+      // Get Hofstee
+      $std_set_details = $mysqli->prepare("SELECT title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set FROM hofstee, users WHERE hofstee.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
+      $std_set_details->bind_param('i', $_GET['paperID']);
+      $std_set_details->execute();
+      $std_set_details->bind_result($std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $std_set_date);
+      while ($std_set_details->fetch()) {
+        $std_set_array[$i] = array('title'=>$std_set_title, 'surname'=>$std_set_surname, 'initials'=>$std_set_initials, 'reviewer'=>$std_set_reviewer, 'display_date'=>$std_set_display_date, 'set_date'=>$std_set_date, 'group_review'=>'No');
+        $i++;
+      }
+      $std_set_details->close();
+
+      if (count($std_set_array) > 0) {
         echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\"";
         if (substr($properties->get_marking(), 0, 1) == '2') echo ' checked';
         echo " />";
         echo $string['stdset'] . ' <select name="std_set">';
-        $std_set_details->bind_result($std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $std_set_date, $group_review);
-        while ($std_set_details->fetch()) {
-          if ($group_review == 'No') {
-            if ($properties->get_marking() == "2,$std_set_reviewer,$std_set_date") {
-              echo "<option value=\"2,$std_set_reviewer,$std_set_date\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
-            } else {
-              echo "<option value=\"2,$std_set_reviewer,$std_set_date\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
-            }
+        foreach ($std_set_array as $std_set_line) {
+          $std_set_title = $std_set_line['title'];
+          $std_set_surname = $std_set_line['surname'];
+          $std_set_initials = $std_set_line['initials'];
+          $std_set_reviewer = $std_set_line['reviewer'];
+          $std_set_date = $std_set_line['set_date'];
+          $std_set_display_date = $std_set_line['display_date'];
+
+          if ($properties->get_marking() == "2,$std_set_reviewer,$std_set_date") {
+            echo "<option value=\"2,$std_set_reviewer,$std_set_date\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           } else {
-            if ($properties->get_marking() == "2,$std_set_reviewer,$std_set_date") {
-              echo "<option value=\"2,$std_set_reviewer,$std_set_date\" selected>Group Review - $std_set_display_date</option>";
-            } else {
-              echo "<option value=\"2,$std_set_reviewer,$std_set_date\">Group Review - $std_set_display_date</option>";
-            }
+            echo "<option value=\"2,$std_set_reviewer,$std_set_date\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           }
+          
         }
         echo "</select>\n";
-        $std_set_details->close();
       } else {
         echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\" disabled />";
         echo '<span style="color:#808080">' . $string['stdset'] . '</span>';

@@ -399,11 +399,11 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query($sql, true);
   }
 
-    // 04/06/2013 (cczsa1) - Add permission to denied log for rogo_auth
-    if (!$updater_utils->has_grant($cfg_db_username, 'INSERT', 'denied_log', $cfg_db_host)) {
-      $sql = "GRANT INSERT ON " . $cfg_db_database . ".denied_log TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
-      $updater_utils->execute_query($sql, true);
-    }
+  // 04/06/2013 (cczsa1) - Add permission to denied log for rogo_auth
+  if (!$updater_utils->has_grant($cfg_db_username, 'INSERT', 'denied_log', $cfg_db_host)) {
+    $sql = "GRANT INSERT ON " . $cfg_db_database . ".denied_log TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+    $updater_utils->execute_query($sql, true);
+  }
 
   // 03/06/2013 - nazrji - add mapping level column to modules and relatiosnips tables
   if (!$updater_utils->does_column_exist('modules', 'map_level')) {
@@ -421,6 +421,15 @@ if (!isset($_POST['update'])) {
   }
   $target_line = '$cfg_password_expire';
   $updater_utils->add_line('$vle_apis', $new_lines, 80, $cfg_web_root, $target_line, 1);
+
+  // 06/06/2013 (brzsw) - Add hofstee table
+  if (!$updater_utils->does_table_exist('hofstee')) {
+    $sql = "CREATE TABLE hofstee (id int unsigned not null primary key auto_increment, setterID int(10) unsigned not null, paperID mediumint(8) unsigned not null, std_set datetime, pass_score tinyint unsigned, distinction tinyint unsigned) ENGINE=InnoDB";
+    $updater_utils->execute_query($sql, true);
+
+    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.hofstee TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+  }
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
