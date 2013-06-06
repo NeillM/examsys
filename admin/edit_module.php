@@ -98,11 +98,19 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   } else {
     $new_add_team_members = 0;
   }
-  $new_map_level = $_POST['map_level'];
+  $vle_data = $_POST['vle_api'];
+  if ($vle_data == '') {
+    $new_map_level = 0;
+    $vle_api = '';
+  } else {
+    $vle_parts = explode('~', $vle_data);
+    $new_vle_api = $vle_parts[0];
+    $new_map_level = $vle_parts[1];
+  }
 
   if ($new_modulecode != '' and $new_fullname != '' and $_POST['schoolid'] != '') {
     $result = $mysqli->prepare("UPDATE modules SET moduleid = ?, fullname = ?, active = ?, sms = ?, vle_api = ?, checklist = ?, selfenroll = ?, schoolid = ?, neg_marking = ?, ebel_grid_template = ?, timed_exams = ?, exam_q_feedback = ?, add_team_members = ?, map_level = ? WHERE id = ?");
-    $result->bind_param('ssisssiiiiiiiii', $new_modulecode, $new_fullname, $new_active, $_POST['sms_api'], $_POST['vle_api'], $new_checklist, $new_selfenroll, $_POST['schoolid'], $new_neg_marking, $_POST['ebel_grid_template'], $new_timed_exams, $new_exam_q_feedback, $new_add_team_members, $new_map_level, $_GET['moduleid']);
+    $result->bind_param('ssisssiiiiiiiii', $new_modulecode, $new_fullname, $new_active, $_POST['sms_api'], $new_vle_api, $new_checklist, $new_selfenroll, $_POST['schoolid'], $new_neg_marking, $_POST['ebel_grid_template'], $new_timed_exams, $new_exam_q_feedback, $new_add_team_members, $new_map_level, $_GET['moduleid']);
     $result->execute();
     $result->close();
   }
@@ -113,7 +121,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if ($fullname != $new_fullname)                         $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $fullname, $new_fullname, $string['name']);
   if ($schoolid != $_POST['schoolid'])                    $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $schoolid, $_POST['schoolid'], $string['school']);
   if ($sms != $_POST['sms_api'])                          $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $sms, $_POST['sms_api'], $string['smsapi']);
-  if ($vle_api != $_POST['vle_api'])                      $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $vle_api, $_POST['vle_api'], $string['objapi']);
+  if ($vle_api != $new_vle_api)                           $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $vle_api, $_POST['vle_api'], $string['objapi']);
   if ($checklist != $new_checklist)                       $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $checklist, $new_checklist, $string['summativechecklist']);
   if ($active != $new_active)                             $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $active, $new_active, $string['active']);
   if ($selfenroll != $new_selfenroll)                     $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $selfenroll, $new_selfenroll, $string['allowselfenrol']);
@@ -154,16 +162,13 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.editmodule.js"></script>
   <script language="JavaScript">
 <?php
   $vle_apis = $configObject->get('vle_apis');
   $mu = module_utils::get_instance();
-  echo $mu->get_mapping_js($vle_apis);
+  $vle_apis = $mu->get_vle_api_data($vle_apis);
+  $map_levels = array(iVLEAPI::LEVEL_SESSION => $string['session'], iVLEAPI::LEVEL_MODULE => $string['module']);
 ?>
-    var mapLevels = ['<?php echo $string['session'] ?>', '<?php echo $string['module'] ?>'];
-    var currMapLevel = <?php echo $map_level ?>;
-
     $(function () {
       $('#module_form').validate({
         messages: {
@@ -285,14 +290,16 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select id="vle_api" name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option>
   <?php
     foreach ($vle_apis as $vle_name => $vle_api_data) {
-      $selected = ($vle_api == $vle_name) ? ' selected="selected"' : '';
+      foreach ($vle_api_data['levels'] as $api_level) {
+        $selected = ($vle_api == $vle_name and $map_level == $api_level) ? ' selected="selected"' : '';
+
   ?>
-      <option value="<?php echo $vle_name; ?>"<?php echo $selected; ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ')'; ?></option>
+        <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected; ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level']; ?></option>
   <?php
+      }
     }
   ?>
     </select>
-    <div id="map_level_holder"></div>
     </td></tr>
     <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked="checked"'; ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
     <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked="checked"'; ?> /></td></tr>

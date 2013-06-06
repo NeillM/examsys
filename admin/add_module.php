@@ -74,7 +74,17 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['stdset']))    $stdset = true;
   if (isset($_POST['mapping']))   $mapping = true;
   if (isset($_POST['schoolid']))  $schoolid = $_POST['schoolid'];
-  if (isset($_POST['vle_api']))   $vle_api = $_POST['vle_api'];
+  if (isset($_POST['vle_api'])) {
+    $vle_data = $_POST['vle_api'];
+    if ($vle_data == '') {
+      $map_level = 0;
+      $vle_api = '';
+    } else {
+      $vle_parts = explode('~', $vle_data);
+      $vle_api = $vle_parts[0];
+      $map_level = $vle_parts[1];
+    }
+  }
   if (isset($_POST['sms_api']))   $sms_api = $_POST['sms_api'];
 
   $sms_import = 1;
@@ -94,7 +104,6 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   } else {
     $add_team_members = 0;
   }
-  $map_level = $_POST['map_level'];
 
   $ebel_grid_template = $_POST['ebel_grid_template'];
 
@@ -124,16 +133,14 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.editmodule.js"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script language="JavaScript">
 <?php
   $vle_apis = $configObject->get('vle_apis');
   $mu = module_utils::get_instance();
-  echo $mu->get_mapping_js($vle_apis);
+  $vle_apis = $mu->get_vle_api_data($vle_apis);
+  $map_levels = array(iVLEAPI::LEVEL_SESSION => $string['session'], iVLEAPI::LEVEL_MODULE => $string['module']);
 ?>
-    var mapLevels = ['<?php echo $string['session'] ?>', '<?php echo $string['module'] ?>'];
-    var currMapLevel = <?php echo $map_level ?>;
 
     $(function () {
       $('#module_form').validate({
@@ -207,14 +214,17 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   echo '</select></td></tr>';
 ?>
     <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select id="vle_api" name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option>
-  <?php
-    foreach ($vle_apis as $vle_name => $vle_api_data) {
-      $selected = ($vle_api == $vle_name) ? ' selected="selected"' : '';
-  ?>
-      <option value="<?php echo $vle_name; ?>"<?php echo $selected; ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ')'; ?></option>
-  <?php
+<?php
+  foreach ($vle_apis as $vle_name => $vle_api_data) {
+    foreach ($vle_api_data['levels'] as $api_level) {
+      $selected = ($vle_api == $vle_name and $map_level == $api_level) ? ' selected="selected"' : '';
+
+    ?>
+      <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected; ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level']; ?></option>
+    <?php
     }
-  ?>
+  }
+?>
     </select>
     <div id="map_level_holder"></div>
     </td></tr>

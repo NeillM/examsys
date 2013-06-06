@@ -319,9 +319,8 @@ Class module {
     return $allow_timing;
   }
 
-  public static function get_mapping_js(&$vle_apis) {
+  public static function get_vle_api_data($vle_apis) {
     // Set up mapping APIs
-    $mapping_js = "var vle_apis = [];\n";
     $configObject = Config::get_instance();
     if (is_array($vle_apis)) {
       foreach (array_keys($vle_apis) as $vle_api_id) {
@@ -330,15 +329,9 @@ Class module {
         $api = new $classname();
         $vle_apis[$vle_api_id]['name'] = $api->getFriendlyName(false, true);
         $vle_apis[$vle_api_id]['levels'] = $api->getMappingLevels();
-        $mapping_js .= "  vle_apis['{$vle_api_id}'] = [";
-        foreach ($vle_apis[$vle_api_id]['levels'] as $level) {
-          $mapping_js .= $level . ',';
-        }
-        $mapping_js = rtrim($mapping_js, ',');
-        $mapping_js .= "];\n";
       }
-      return $mapping_js;
     }
+    return $vle_apis;
   }
 }
 ?>

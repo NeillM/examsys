@@ -47,4 +47,5 @@ $string['addteammembers'] = 'Dodaj członków zespołu';
 $string['maplevel'] = 'Mapping level'; // Niko
 $string['session'] = 'Session'; // Niko
 $string['module'] = 'Module'; // Niko
+$string['level'] = 'level'; // Niko
 ?>
