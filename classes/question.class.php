@@ -22,9 +22,21 @@
  * @package
  */
 
+
+require_once('question.interface.php');
+define('QUESTION_ERROR', -1);
+
+define('Q_MARKING_EXACT', 1);
+define('Q_MARKING_FULL_TOL', 2);
+define('Q_MARKING_PART_TOL', 3);
+define('Q_MARKING_WRONG', 0);
+define('Q_MARKING_UNMARKED', -1);
+
+
 Class Question {
-  
+
   public $id = -1;
+  protected $excluded = '';
   protected $type = null;
   protected $theme = '';
   protected $scenario = '';
@@ -53,7 +65,34 @@ Class Question {
   protected $status = 'Normal';
   protected $settings = '';
   public $options = array();
-  
+
+  public $error;
+  public $useranswer = null;
+
+  public $markinfo = null;
+  public $qmark = null;
+
+  function setsettings($settings) {
+    $this->settings = $settings;
+  }
+
+  function load($array) {
+
+    foreach ($array as $key => $value) {
+     // if (isset($this->$key) ) {
+      if (property_exists($this,$key) ) {
+        $this->$key = $value;
+      }
+      if ($key == 'q_id') {
+        $this->id = $value;
+      }
+    }
+
+
+    if (!is_array($this->options)) {
+      //convert to objects!
+    }
+  }
 }
 
 ?>

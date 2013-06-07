@@ -76,6 +76,10 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
               $incomplete_screens[$i] = 1;
             }
             break;
+          case 'enhancedcalc':
+            //TODO need more modular function for incomplete
+
+            break;
           case 'dichotomous':
             if (strpos($current_answer, 'u') !== false) {
               $incomplete_screens[$i] = 1;
@@ -348,7 +352,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
       $li_set = 1;
       if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
-      if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'calculation') echo $question['leadin'];
+      if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'calculation' and $question['q_type'] != 'enhancedcalc') echo $question['leadin'];
     }
   }
   if ($question['q_type'] == 'info') {
@@ -370,6 +374,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   switch ($question['q_type']) {
     case 'calculation':
       $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
+      break;
+    case 'enhancedcalc':
+      if(isset($user_answers[$current_screen][$q_id])) {
+        $d=array();
+        $d['useranswer']=$user_answers[$current_screen][$q_id];
+        $question['object']->load($d);
+      }
+      $question['object']->render_paper();
       break;
     case 'dichotomous':
       echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -657,6 +669,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             }
           }
         }
+
+        break;
+      case 'enhancedcalc':
+        // no options for enhanced calc now stored in settings
 
         break;
       case 'likert':

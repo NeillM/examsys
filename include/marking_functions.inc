@@ -424,6 +424,14 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         $saved_response .= '|' . $answer . '|' . $question_variables;
         $totalpos = $marks_correct;
         break;
+      case 'enhancedcalc':
+        //DO NOTHING EXCEPT SAVE DATA
+        require_once('../question/enhancedcalculation.class.php');
+        $mark = null;
+        $totalpos = null;
+        $saved_response = EnhancedCalculation::processUserAnswer($_POST['qid'][$log_id], $_SESSION['qid'][$log_id]);
+        //unset($_SESSION['qid'][$log_id]);
+        break;
       case 'dichotomous':
         $qid = 'q' . $question_no . '_' . $question_part;
         if (isset($_POST[$qid])) {
@@ -814,7 +822,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         } else {
           $saved_response = '';
         }
-        $mark = NULL;
+        $mark = null;
         $totalpos += $marks_correct;
         break;
       case 'hotspot':

@@ -1072,6 +1072,14 @@ if ($css != '') {
         $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
       }
     }
+    if($question['q_type']=='enhancedcalc') {
+      require_once('../question/enhancedcalculation.class.php');
+      if(!isset($configObj)) {
+      $configObj = Config::get_instance();
+      }
+      $question['object']=new EnhancedCalculation($configObj);
+      $question['object']->load($question);
+    }
     $questions_array[] = $question;
   }
   unset($tmp_questions_array);

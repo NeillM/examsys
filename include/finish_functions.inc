@@ -708,6 +708,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         echo "</td></tr>\n</table>\n";
         if ($tmp_fback != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\" style=\"margin-left:17px\">&nbsp;$tmp_fback</div>\n";
         break;
+
+      case 'enhancedcalc':
+        print "";
+        break;
       case 'dichotomous':
         // Check to see if the user has answered any options.
         $answered = false;

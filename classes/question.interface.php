@@ -25,11 +25,11 @@
 interface questionInterface  {
   
   /*
-   * Mark the users awnser 
+   * Mark the users answer
    * 
    *  This Must handle exclusions
    */
-  public function caculateUserMark($userawnser);
+  public function caculateUserMark();
   
   /*
    * caulate how many marks is this question worth form its options 
