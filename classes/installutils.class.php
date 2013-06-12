@@ -1332,7 +1332,7 @@ require \$root . '/include/path_functions.inc.php';
   date_default_timezone_set(\$cfg_timezone);
 
 //Reports
-  $percent_decimals = 2;
+  \$percent_decimals = 2;
 
 // SMS Imports
   \$cfg_sms_api = '';
