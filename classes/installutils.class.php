@@ -1075,7 +1075,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     if (!is_writable(self::$rogo_path . '/config/config.inc.php')) {
       if (!is_writable(self::$rogo_path . '/config')) {
-        $errors['901'] = sprintf($string['errors16'], self::$rogo_path);
+        $errors['901'] = sprintf($string['errors16'], self::$rogo_path, self::$rogo_path);
       }
     }
 
