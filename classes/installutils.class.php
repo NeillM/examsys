@@ -1075,7 +1075,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     if (!is_writable(self::$rogo_path . '/config/config.inc.php')) {
       if (!is_writable(self::$rogo_path . '/config')) {
-        $errors['901'] = sprintf($string['errors16'], self::$rogo_path);
+        $errors['901'] = sprintf($string['errors16'], self::$rogo_path, self::$rogo_path);
       }
     }
 
@@ -1332,7 +1332,7 @@ require \$root . '/include/path_functions.inc.php';
   date_default_timezone_set(\$cfg_timezone);
 
 //Reports
-  $percent_decimals = 2;
+  \$percent_decimals = 2;
 
 // SMS Imports
   \$cfg_sms_api = '';
