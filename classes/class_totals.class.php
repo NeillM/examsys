@@ -82,7 +82,7 @@ class ClassTotals {
 
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db) {
     $userObject = UserObject::get_instance();
-    
+
   	$this->db = $db;
     $this->demo                   = is_demo($userObject);
     $this->paperID                = $propertyObj->get_property_id();
@@ -114,7 +114,7 @@ class ClassTotals {
   public function get_user_results() {
     return $this->user_results;
   }
-  
+
   public function set_user_results($user_results) {
     $this->user_results = $user_results;
   }
@@ -122,11 +122,11 @@ class ClassTotals {
   public function get_paper_buffer() {
     return $this->paper_buffer;
   }
-  
+
   public function get_stats() {
     return $this->stats;
   }
-  
+
   public function get_cohort_size() {
     return $this->cohort_size;
   }
@@ -138,15 +138,15 @@ class ClassTotals {
   public function get_ss_hon() {
     return $this->ss_hon;
   }
-  
+
   public function get_student_cohort() {
     return $this->student_cohort;
   }
-  
+
   public function get_question_no() {
     return $this->question_no;
   }
-  
+
   public function get_log_late() {
     return $this->log_late;
   }
@@ -154,33 +154,33 @@ class ClassTotals {
   public function get_total_marks() {
     return $this->total_marks;
   }
-  
+
   public function get_orig_total_marks() {
     return $this->orig_total_marks;
   }
-  
+
   public function get_total_random_mark() {
     return $this->total_random_mark;
   }
-  
+
   public function get_display_excluded() {
     return $this->display_excluded;
   }
-  
+
   public function get_display_experimental() {
     return $this->display_experimental;
   }
-  
+
   public function get_exclusions() {
     return $this->exclusions;
   }
-  
+
   public function get_user_no() {
     return $this->user_no;
   }
 
   public function compile_report($recache) {
-  
+
     $moduleID = Paper_utils::get_modules($this->paperID, $this->db);
     $this->moduleID_in = implode(',', array_keys($moduleID));
 
@@ -192,14 +192,14 @@ class ClassTotals {
 
     $this->load_absent();
 
-    $this->find_users();                                                                                      // Get all the users on the module(s) the paper is on. 
+    $this->find_users();                                                                                      // Get all the users on the module(s) the paper is on.
 
     $this->load_metadata();                                                                                   // Query for metadata
 
     $this->load_results();                                                                                    // Load the student data
 
     $this->load_late_cohort();                                                                                // Get any late users
-    
+
     $this->adjust_marks();                                                                                    // Scale marks (random marks or standards setting)
 
     $this->add_rank();                                                                                        // Add in rank data.
@@ -221,13 +221,13 @@ class ClassTotals {
     $results_cache = new ResultsCache($this->db);
     if ($recache or $results_cache->should_cache($this->propertyObj, $this->percent, $this->absent)) {
       $results_cache->save_paper_cache($this->propertyObj, $this->percent, $this->absent, $this->stats);                  // Cache general paper stats
-      
+
       $results_cache->save_student_mark_cache($this->propertyObj, $this->percent, $this->absent, $this->user_results);    // Cache student/paper marks
-      
+
       $results_cache->save_median_question_marks($this->propertyObj, $this->percent, $this->absent, $this->q_medians);    // Cache the question/paper medians
     }
   }
-  
+
   public function nicedate($original) {
     return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
   }
@@ -245,7 +245,7 @@ class ClassTotals {
       for ($i=0; $i<$user_no; $i++) {
         $this->user_results[$i]['percent'] = $this->crankMark($this->user_results[$i]['percent']);
       }
-    }  
+    }
   }
 
   private function getRandomDetails($questionID) {
@@ -345,7 +345,7 @@ class ClassTotals {
 
   private function checkDisplayExcluded($exclude, $q_no) {
     $subpart = '';
-    
+
     if (strlen($exclude) > 1) {
       for ($i=0; $i<strlen($exclude); $i++) {
         if ($exclude{$i} == '1') {
@@ -376,7 +376,7 @@ class ClassTotals {
 
   private function set_ss_pass() {
     $mark_parts = explode(',', $this->marking);
-    
+
     $ebel_marks = array();
     $ebel_percents = array();
 
@@ -499,7 +499,7 @@ class ClassTotals {
 
   private function writeUserResults($tmp, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp) {
     $this->user_results[$user_number] = $tmp;
-    
+
     $this->user_results[$user_number]['mark'] = round($tmp_user_mark, 1);
     $this->user_results[$user_number]['mark_array'] = $tmp_user_mark_array;
     if ($this->total_marks == 0) {
@@ -510,7 +510,7 @@ class ClassTotals {
     $this->user_results[$user_number]['duration']         = $tmp_user_duration;
     $this->user_results[$user_number]['marking_complete'] = $marking_comp;
     $this->user_results[$user_number]['visible']          = true;    // Default to visible unless switched off below.
-    
+
     if ($this->demo) {
       $this->user_results[$user_number]['surname']     = demo_replace($tmp['surname'], $this->demo);
       $this->user_results[$user_number]['initials']    = demo_replace($tmp['initials'], $this->demo);
@@ -541,7 +541,7 @@ class ClassTotals {
       }
       $i++;
     }
-    
+
     if (isset($this->student_cohort)) {
       $this->check_and_clear_cohort($tmp['username']);
     }
@@ -551,7 +551,7 @@ class ClassTotals {
 
   private function find_random_question($q_id, &$tmp_q) {
     $tmp_q_id = -1;
-    
+
     $randomIDs = $this->random_q_ids;
     foreach ($randomIDs as $rnd_id) {
       if (isset($this->paper_buffer[$rnd_id]) and isset($this->paper_buffer[$rnd_id]['random_questions']) and count($this->paper_buffer[$rnd_id]['random_questions']) > 0) {
@@ -594,9 +594,9 @@ class ClassTotals {
 
   private function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $status, &$tmp_mark, &$tmp_user_mark_array, $userID, $tmp_array) {
     $tmp_exclude = $this->exclusions->get_exclusions_by_qid($q_id);
-    
+
     $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
-    
+
     if ($status == 'Experimental') $exclude[$q_id] = '1111111111111111111111111111111111111111';
 
     $skip_random = false;
@@ -779,7 +779,7 @@ class ClassTotals {
         if ($tmp_user_answer != '') {
           $user_split1 = explode(';', $tmp_user_answer);
           $user_split2 = explode('$', $user_split1[1]);
-          
+
           $i = 0;
           $correct = 0;
           $count_user_split2 = count($user_split2)-3;
@@ -804,7 +804,7 @@ class ClassTotals {
             }
           }
         }
-        
+
         if (isset($tmp_user_mark_array[$q_id])) ksort($tmp_user_mark_array[$q_id]);
         //create shortened array
         $i = 0;
@@ -823,10 +823,10 @@ class ClassTotals {
             $tmp_user_mark_array[$q_id][] = 0;
           }
         }
-        
+
         $question['correct_labels'] = $correct_labels_exc;
       }
-      
+
       $this->q_medians[$q_id][] = $tmp_user_mark;
     } else {
       // Marking per Question, or all other question types, simply return the original mark.
@@ -835,9 +835,9 @@ class ClassTotals {
         $tmp_mark += $round_tmp_user_mark;
         $tmp_user_mark_array[$q_id] = $round_tmp_user_mark;
       }
-      
+
       $this->q_medians[$q_id][] = $tmp_user_mark;
-    }  
+    }
   }
 
   public function formatsec($seconds) {
@@ -884,13 +884,13 @@ class ClassTotals {
     $stems            = 0;
     $old_correct      = array();
     $old_option_text  = array();
-    
+
     $this->total_marks = 0;
     $this->orig_total_marks = 0;
     $this->total_random_mark = 0;
     $this->display_excluded = '';
     $this->display_experimental = '';
-    
+
     // Load the correct answers into 'paper_buffer' array.
     $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos FROM (papers, questions, options) WHERE papers.question = questions.q_id AND papers.paper = ? AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY screen, display_pos, id_num");
     $result->bind_param('i', $this->paperID);
@@ -963,7 +963,7 @@ class ClassTotals {
       $old_status           = $status;
     }
     $result->close();
-    
+
     if ($old_status != 'Experimental') {
       $tmp_exclude = $this->exclusions->get_exclusions_by_qid($old_q_id);
 
@@ -989,7 +989,7 @@ class ClassTotals {
     } else {
       $this->displayExperimental($question_no);
     }
-    
+
     $this->question_no = $question_no;
   }
 
@@ -1016,7 +1016,7 @@ class ClassTotals {
 
       $this->student_cohort = array();
       $i = 0;
-      
+
       $sql = "SELECT DISTINCT
                              users.id
                            , users.username
@@ -1095,7 +1095,7 @@ class ClassTotals {
 
   private function load_metadata() {
     $this->metadata_array = array();
-    
+
     if ($this->calendar_year == '') {
       $stmt = $this->db->prepare("SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN ($this->moduleID_in)");
     } else {
@@ -1117,7 +1117,7 @@ class ClassTotals {
     } else {
       $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
     }
-    
+
     $user_no              = 0;
     $tmp_mark             = 0;
     $user_duration        = 0;
@@ -1324,7 +1324,7 @@ class ClassTotals {
     }
   }
 
-  private function load_late_cohort() {  
+  private function load_late_cohort() {
     $this->late_cohort = array();
     $i = 0;
     if (count($this->log_late_missing_users) > 0) {
@@ -1367,13 +1367,13 @@ SQL;
     $sortby = 'mark';
     $ordering = 'desc';
     $this->user_results = array_csort($this->user_results, $sortby, $ordering, SORT_NUMERIC);
-    
+
     $display_rank = 1;
     $global_rank  = 1;
     $old_mark     = 0;
-    
+
     $result_no = count($this->user_results);
-    
+
     for ($i=0; $i<$result_no; $i++) {
       if ($this->user_results[$i]['mark'] != $old_mark) {
         $display_rank = $global_rank;
@@ -1391,7 +1391,7 @@ SQL;
       $sortby = 'mark';
       $this->user_results = array_csort($this->user_results, $sortby, $this->ordering, SORT_NUMERIC);
       $this->cohort_size = round(($user_no/100) * $this->percent);
-      
+
       // Set visible/invisible flag where necessary.
       for ($i=0; $i<$user_no; $i++) {
         if ($i >= $this->cohort_size) {
@@ -1419,7 +1419,7 @@ SQL;
         $this->user_results[$user_no]['started']          = '';
         $this->user_results[$user_no]['username']         = $late_user['username'];
         $this->user_results[$user_no]['userID']           = $late_user['userID'];
-        $this->user_results[$user_no]['student_grade']    = $late_user['grade'];
+        $this->user_results[$user_no]['student_grade']    = $late_user['student_grade'];
         $this->user_results[$user_no]['module']           = $late_user['module'];
         $this->user_results[$user_no]['display_started']  = $late_user['display_started'];
         $this->user_results[$user_no]['started']          = $late_user['started'];
@@ -1450,7 +1450,7 @@ SQL;
     if ($this->absent == 1) {
       // Add in students in cohort who haven't taken the exam.
       $count_student_cohort = count($this->student_cohort);
-      
+
       for ($i=0; $i < $count_student_cohort; $i++) {
         $this->user_results[$user_no]['name']             = $this->student_cohort[$i]['name'];
         $this->user_results[$user_no]['mark']             = 0;
@@ -1458,7 +1458,7 @@ SQL;
         $this->user_results[$user_no]['started']          = '';
         $this->user_results[$user_no]['username']         = $this->student_cohort[$i]['username'];
         $this->user_results[$user_no]['userID']           = $this->student_cohort[$i]['userID'];
-        $this->user_results[$user_no]['student_grade']    = $this->student_cohort[$i]['grade'];
+        $this->user_results[$user_no]['student_grade']    = $this->student_cohort[$i]['student_grade'];
         $this->user_results[$user_no]['module']           = $this->student_cohort[$i]['module'];
         $this->user_results[$user_no]['display_started']  = '';
         $this->user_results[$user_no]['title']            = $this->student_cohort[$i]['title'];
@@ -1484,7 +1484,7 @@ SQL;
   private function convert_moduleIDs() {
     $result_no = count($this->user_results);
     $moduleIDs = array();
-    
+
     // Build up an array of IDs to module codes.
     for ($i=0; $i<$result_no; $i++) {
       $id = $this->user_results[$i]['module'];
@@ -1494,7 +1494,7 @@ SQL;
         }
       }
     }
-    
+
     // Loop around the results array and convert to codes.
     for ($i=0; $i<$result_no; $i++) {
       if (isset($moduleIDs[$this->user_results[$i]['module']])) {
@@ -1502,7 +1502,7 @@ SQL;
       }
     }
   }
-    
+
   private function set_user_no() {
     $this->user_no = count($this->user_results);
   }
@@ -1512,7 +1512,7 @@ SQL;
     $this->set_user_no();
     $mark_total    = 0;
     $percent_total = 0;
-    
+
     $this->stats['sum_of_marks']  = 0;
     $this->stats['out_of_range']  = 0;
     $this->stats['completed_no']  = 0;
@@ -1524,11 +1524,11 @@ SQL;
     $this->stats['min_mark']      = 9999;
     $this->stats['max_percent']   = 0;
     $this->stats['min_percent']   = 100;
-    
+
     $median_mark_array    = array();
     $median_percent_array = array();
     $marks_data           = array();
-    
+
     for ($i=0; $i<$this->user_no; $i++) {
       if (isset($this->user_results[$i]['percent']) and $this->user_results[$i]['questions'] >= $this->question_no and $this->user_results[$i]['visible']) {
         $this->stats['completed_no']++;
@@ -1551,7 +1551,7 @@ SQL;
         if ($this->user_results[$i]['mark'] > $this->stats['max_mark']) $this->stats['max_mark'] = $this->user_results[$i]['mark'];
         $this->stats['sum_of_marks'] += $this->user_results[$i]['mark'];
       }
-      
+
       if ($this->user_results[$i]['visible']) {
         $this->stats['total_time'] += $this->user_results[$i]['duration'];
       } else {
@@ -1591,7 +1591,7 @@ SQL;
       $this->stats['median_mark']    = 0;
       $this->stats['median_percent'] = 0;
     }
-    
+
 
     $this->stats['q1'] = MathsUtils::percentile($marks_data, 0.75);
     $this->stats['q2'] = MathsUtils::percentile($marks_data, 0.50);
@@ -1605,7 +1605,7 @@ SQL;
   private function add_deciles() {
     for ($student=0; $student<$this->user_no; $student++) {
       $this->user_results[$student]['decile'] = 10;  // Set all to 10 as a baseline
-      
+
       for ($i=9; $i>0; $i--) {
         if ($this->user_results[$student]['percent'] >= $this->stats["decile$i"]) {
           $this->user_results[$student]['decile'] = $i;
