@@ -66,11 +66,20 @@ Class Question {
   protected $settings = '';
   public $options = array();
 
+  //below are for support in question display etc
+
   public $error;
   public $useranswer = null;
 
   public $markinfo = null;
   public $qmark = null;
+
+  public $q_media = '';
+  public $q_media_height = '';
+  public $q_media_width = '';
+
+
+  public $std;
 
   function setsettings($settings) {
     $this->settings = $settings;
@@ -85,7 +94,10 @@ Class Question {
       }
       if ($key == 'q_id') {
         $this->id = $value;
+      } elseif($key=='user_answer') {
+        $this->useranswer=$value;
       }
+
     }
 
 

@@ -263,6 +263,15 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     $old_q_media_height = $q_media_height;
     $old_status = $status;
     $old_marks_correct = $marks_correct;
+
+/*    if ($paper[$q_no]['q_type'] == 'enhancedcalc') {
+      require_once('../question/enhancedcalculation.class.php');
+      if (!isset($configObj)) {
+        $configObj = Config::get_instance();
+      }
+      $paper[$q_no]['object'] = new EnhancedCalculation($configObj);
+      $paper[$q_no]['object']->load($paper[$q_no]);
+    }*/
   }
   $answer_data->close();
   if (isset($excluded[$old_q_id])) {
@@ -359,6 +368,14 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             if ($correct != 0) $correct_no++;
           }
           $stems++;
+/*          if ($paper[$i]['q_type'] == 'enhancedcalc') {
+            require_once('../question/enhancedcalculation.class.php');
+            if (!isset($configObj)) {
+              $configObj = Config::get_instance();
+            }
+            $paper[$i]['object'] = new EnhancedCalculation($configObj);
+            $paper[$i]['object']->load($paper[$i]);
+          }*/
         }
         $question_data->close();
       } else {
@@ -394,6 +411,15 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $paper[$tmp_q_no]['user_answer'] = $user_answer;
           $paper[$tmp_q_no]['mark'] = $mark;
           $paper[$tmp_q_no]['option_order'] = $option_order;
+          $paper[$tmp_q_no]['metaid']=$metadataid;
+/*          if ($paper[$tmp_q_no]['q_type'] == 'enhancedcalc') {
+            require_once('../question/enhancedcalculation.class.php');
+            if (!isset($configObj)) {
+              $configObj = Config::get_instance();
+            }
+            $paper[$tmp_q_no]['object'] = new EnhancedCalculation($configObj);
+            $paper[$tmp_q_no]['object']->load($paper[$tmp_q_no]);
+          }*/
           break;
         }
       }
@@ -402,6 +428,26 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   } else {
     display_error($string['useranswererror'], $mysqlidb->error);
   }
+
+  for ($question=1; $question<=$q_no; $question++) {
+    if ($paper_type != '2' and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
+      require_once('../question/enhancedcalculation.class.php');
+      if (!isset($configObj)) {
+        $configObj = Config::get_instance();
+      }
+      $enhancedcalc= new EnhancedCalculation($configObj);
+      $enhancedcalc->load($paper[$question]);
+      $returnarray = $enhancedcalc->caculateUserMark();
+
+      if ($returnarray[0] !== Q_MARKING_UNMARKED) {
+        //TODO
+        //save the extra data back into the log record.
+      }
+
+      $paper[$i]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
+      $total_random_mark += qRandomMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height']);
+    }
+ }
 
   if ($preview_q_id == null) {
   ?>
@@ -710,7 +756,14 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         break;
 
       case 'enhancedcalc':
-        print "";
+        require_once('../question/enhancedcalculation.class.php');
+        if (!isset($configObj)) {
+          $configObj = Config::get_instance();
+        }
+        $paper[$question]['object'] = new EnhancedCalculation($configObj);
+        $paper[$question]['object']->load($paper[$question]);
+        $paper[$question]['object']->render_feedback(array('tmp_exclude' => $tmp_exclude, 'hide_if_unanswered' => $hide_if_unanswered, 'tmp_display_correct_answer' => $tmp_display_correct_answer, 'tmp_display_students_response' => $tmp_display_students_response, 'question' => $question, 'tmp_fback' => $tmp_fback, 'tmp_display_feedback' => $tmp_display_feedback));
+
         break;
       case 'dichotomous':
         // Check to see if the user has answered any options.

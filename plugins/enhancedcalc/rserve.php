@@ -46,12 +46,16 @@ class enhancedcalc_rserve {
   }
 
   function calculate(&$useranswer, &$settings) {
-
+$useransweradd=array();
     //useranswer contains the variable values and the answer supplied by user
     //settings contains the formula as well as tolerances etc.
 
     if (!isset($this->cnx)) {
-      $this->cnx = new Rserve_Connection($this->config['host'], $this->config['port']);
+      try {
+      $this->cnx = @new Rserve_Connection($this->config['host'], $this->config['port']);
+      } catch(exception $except) {
+        return array(Q_MARKING_UNMARKED,array());
+      }
     } else {
       //reset connection
       $result = $this->cnx->evalString('rm(list=ls(all=TRUE))');
@@ -71,16 +75,18 @@ class enhancedcalc_rserve {
 
     $pos = strpos($correctanswer, ' ');
 
-    $useranswer['cans'] = substr($correctanswer, $pos + 1);
+    $useransweradd['cans'] = substr($correctanswer, $pos + 1);
+    $useranswer['cans']=$useransweradd['cans'];
     $uans = $useranswer['uans'];
+
 
 
     if ($this->cnx->evalString("ANS == $uans") === true) {
       //correct
-      return Q_MARKING_EXACT;
+      return array(Q_MARKING_EXACT,$useransweradd);
     }
 
-    return Q_MARKING_WRONG;
+    return array(Q_MARKING_WRONG,$useransweradd);
   }
 
 }
