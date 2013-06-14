@@ -52,13 +52,13 @@ $useransweradd=array();
 
     if (!isset($this->cnx)) {
       try {
-      $this->cnx = @new Rserve_Connection($this->config['host'], $this->config['port']);
+      self::$cnx = @new Rserve_Connection($this->config['host'], $this->config['port']);
       } catch(exception $except) {
         return array(Q_MARKING_UNMARKED,array());
       }
     } else {
       //reset connection
-      $result = $this->cnx->evalString('rm(list=ls(all=TRUE))');
+      $result = self::$cnx->evalString('rm(list=ls(all=TRUE))');
     }
 
 
@@ -69,9 +69,9 @@ $useransweradd=array();
     $varvalue = array_values($useranswer['vars']);
     $formula = str_replace($varname, $varvalue, $formula);
 
-    $op = $this->cnx->evalString("ANS = $formula");
+    $op = self::$cnx->evalString("ANS = $formula");
 
-    $correctanswer = $this->cnx->evalString("paste(capture.output(print((ANS))),collapse='\\n');");
+    $correctanswer = self::$cnx->evalString("paste(capture.output(print((ANS))),collapse='\\n');");
 
     $pos = strpos($correctanswer, ' ');
 
@@ -79,13 +79,18 @@ $useransweradd=array();
     $useranswer['cans']=$useransweradd['cans'];
     $uans = $useranswer['uans'];
 
+    var_dump($useransweradd);
+    var_dump($useranswer);
+    var_dump($uans);
 
 
-    if ($this->cnx->evalString("ANS == $uans") === true) {
+    $status=self::$cnx->evalString("ANS == $uans");
+    if ($status === true) {
       //correct
+      $ddd=0;
       return array(Q_MARKING_EXACT,$useransweradd);
     }
-
+    $ddd=0;
     return array(Q_MARKING_WRONG,$useransweradd);
   }
 

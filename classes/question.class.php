@@ -73,6 +73,8 @@ Class Question {
 
   public $markinfo = null;
   public $qmark = null;
+  public $totalpos = null;
+
 
   public $q_media = '';
   public $q_media_height = '';
@@ -85,17 +87,43 @@ Class Question {
     $this->settings = $settings;
   }
 
+  function exportsave(&$array) {
+    $classvar = get_object_vars($this);
+    foreach ($classvar as $key => $value) {
+      if ($key == 'useranswer') {
+        $key = 'user_answer';
+      } elseif ($key == 'options') {
+        $key = 'DONOTUSE';
+      }
+      if ($key != 'DONOTUSE') {
+        $array[$key] = $value;
+      }
+      if ($key == 'qmark') {
+        $array['mark'] = $value;
+      }
+    }
+    if (isset($this->settings['m_correct'])) {
+      $array['marks_correct'] = $this->settings['m_correct'];
+    }
+    if (isset($this->settings['m_partial'])) {
+      $array['marks_partial'] = $this->settings['m_partial'];
+    }
+    if (isset($this->settings['m_incorrect'])) {
+      $array['marks_incorrect'] = $this->settings['m_incorrect'];
+    }
+  }
+
   function load($array) {
 
     foreach ($array as $key => $value) {
-     // if (isset($this->$key) ) {
-      if (property_exists($this,$key) ) {
+      // if (isset($this->$key) ) {
+      if (property_exists($this, $key)) {
         $this->$key = $value;
       }
       if ($key == 'q_id') {
         $this->id = $value;
-      } elseif($key=='user_answer') {
-        $this->useranswer=$value;
+      } elseif ($key == 'user_answer') {
+        $this->useranswer = $value;
       }
 
     }

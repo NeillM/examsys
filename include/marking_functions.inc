@@ -151,10 +151,10 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
   $random_on        = false;
 
   if (isset($preview_q_id)) {
-    $questions = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions, options WHERE paper=? AND questions.q_id=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+    $questions = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions LEFT JOIN options ON questions.q_id=options.o_id WHERE paper=? AND questions.q_id=? AND papers.question=questions.q_id ORDER BY display_pos, id_num");
     $questions->bind_param('ii', $paper_id, $preview_q_id);
   } else {
-    $questions = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+    $questions = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions LEFT JOIN options ON questions.q_id=options.o_id WHERE paper=? AND screen=? AND papers.question=questions.q_id  ORDER BY display_pos, id_num");
     $questions->bind_param('ii', $paper_id, $screen_no);
   }
   $questions->execute();
@@ -172,7 +172,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
       if ($random_on == false and count($selected_q_id) > 0) {
         foreach ($selected_q_id as &$used_qid) {
 	        // Look up database.
-          $random_data = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct FROM questions, options WHERE q_id = ? AND questions.q_id = options.o_id ORDER BY id_num");
+          $random_data = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct FROM questions LEFT JOIN, options ON questions.q_id = options.o_id WHERE q_id = ?  ORDER BY id_num");
           $random_data->bind_param('i', $used_qid);
           $random_data->execute();
           $random_data->store_result();

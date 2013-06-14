@@ -69,25 +69,27 @@ class EnhancedCalculation extends Question implements questionInterface {
     $returnarray = $enhancedcalcObj->calculate($this->useranswer, $this->settings);
 
 
-    $return=$returnarray[0];
-
+    $return = $returnarray[0];
 
 
     if ($return === Q_MARKING_WRONG) {
       $this->qmark = $this->settings['m_incorrect'];
       $this->markinfo = Q_MARKING_WRONG;
+      $this->totalpos = $this->settings['m_correct'];
     } elseif ($return === Q_MARKING_EXACT or $return === Q_MARKING_FULL_TOL) {
       $this->qmark = $this->settings['m_correct'];
       $this->markinfo = Q_MARKING_EXACT;
+      $this->totalpos = $this->settings['m_correct'];
     } elseif ($return === Q_MARKING_PART_TOL) {
       $this->qmark = $this->settings['m_partial'];
       $this->markinfo = Q_MARKING_PART_TOL;
+      $this->totalpos = $this->settings['m_correct'];
     } else {
       $this->qmark = null;
       $this->markinfo = Q_MARKING_UNMARKED;
     }
 
-    return array($return,$returnarray[1]);
+    return array($return, $returnarray[1]);
   }
 
   static public function processUserAnswer(&$postdata, &$session) {
@@ -137,7 +139,6 @@ class EnhancedCalculation extends Question implements questionInterface {
     print "ENHANCED CALC QUESTION FEEDBACK";
 
 
-
     //make sure data is arrays not encoded
     if (!is_array($this->useranswer)) {
       $this->useranswer = json_decode($this->useranswer, true);
@@ -146,10 +147,13 @@ class EnhancedCalculation extends Question implements questionInterface {
       $this->settings = json_decode($this->settings, true);
     }
     //
-
-    $varname = array_keys($this->useranswer['vars']);
-    $varvalue = array_values($this->useranswer['vars']);
-
+    if (isset($this->useranswer['vars'])) {
+      $varname = array_keys($this->useranswer['vars']);
+      $varvalue = array_values($this->useranswer['vars']);
+    } else {
+      $varname = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K');
+      $varvalue = array('ERROR', 'ERROR', 'ERROR', 'ERROR', 'ERROR', 'ERROR', 'ERROR', 'ERROR', 'ERROR', 'ERROR', 'ERROR');
+    }
 
     $leadin = str_ireplace($varname, $varvalue, $this->leadin);
 
@@ -171,18 +175,13 @@ class EnhancedCalculation extends Question implements questionInterface {
     $tmp_fback = $this->correct_fback;
 
 
-
-
     //echo_content($tmp_leadin);
-
-
-
 
 
     echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";
     if ($extra['tmp_display_correct_answer'] == '1') {
       echo '<td>';
-      if(isset($this->std[0])) echo display_std($this->std[0]);
+      if (isset($this->std[0])) echo display_std($this->std[0]);
       echo '</td>';
     } else {
       echo '<td></td>';
@@ -195,7 +194,7 @@ class EnhancedCalculation extends Question implements questionInterface {
 
     } else {
       echo '<td>';
-      if ($extra['tmp_exclude'] == '1')  echo '<span class="exclude">';
+      if ($extra['tmp_exclude'] == '1') echo '<span class="exclude">';
 
 
       if (isset($this->useranswer['status']) and ($this->useranswer['status'] == Q_MARKING_EXACT or $this->useranswer['status'] == Q_MARKING_FULL_TOL)) {
@@ -210,16 +209,15 @@ class EnhancedCalculation extends Question implements questionInterface {
       echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uans'] . '" />' . $this->settings['units'];
     }
     if ($extra['tmp_display_correct_answer'] == '1') {
-      if(!isset($this->useranswer['status'])) {
+      if (!isset($this->useranswer['status'])) {
         echo ' <strong>(<span style="color:#C00000">NOT MARKED YET!</span>)</strong>';
-      }
-        elseif (!isset($this->useranswer['cans'])) {
-          echo ' <strong>(<span style="color:#C00000">error!</span>)</strong>';
-        } else {
-          echo ' <strong>(' . $this->useranswer['cans'] . ')';
-            if ($this->settings['units'] != '') echo ' ' . $this->settings['units'];
+      } elseif (!isset($this->useranswer['cans'])) {
+        echo ' <strong>(<span style="color:#C00000">error!</span>)</strong>';
+      } else {
+        echo ' <strong>(' . $this->useranswer['cans'] . ')';
+        if ($this->settings['units'] != '') echo ' ' . $this->settings['units'];
         echo '</strong>';
-        }
+      }
     } else {
       echo ' ';
     }
@@ -235,19 +233,17 @@ class EnhancedCalculation extends Question implements questionInterface {
       }
     }
 
-    if ($extra['tmp_exclude'] == '1')  echo '</span>';
+    if ($extra['tmp_exclude'] == '1') echo '</span>';
     echo "</td></tr>\n</table>\n";
     if ($tmp_fback != '' and $extra['tmp_display_feedback'] == '1') echo "<div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $tmp_fback . "</div>\n";
   }
-
-
 
 
   public function render_paper($extra = array()) {
 
     global $string;
     // display question on paper
-    $screen_pre_submitted=null;
+    $screen_pre_submitted = null;
     if (isset($extra['screen_pre_submitted'])) {
       $screen_pre_submitted = $extra['screen_pre_submitted'];
     }
@@ -293,7 +289,7 @@ class EnhancedCalculation extends Question implements questionInterface {
       if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
         echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"calc-answer\" />" . $this->settings['units'] . "</div>\n";
       } else {
-        if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != ''))  {//or $screen_pre_submitted == 0
+        if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { //or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];
 
 
