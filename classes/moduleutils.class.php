@@ -15,6 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
+require_once $cfg_web_root . 'classes/schoolutils.class.php';
+require_once $cfg_web_root . 'classes/logger.class.php';
+require_once $cfg_web_root . 'classes/userobject.class.php';
 
 /**
  *
@@ -88,6 +91,138 @@ Class module {
 
     return $idMod;
   }
+  
+  /**
+   * Update any part of a modules db record 
+   * 
+   * @param type $moduleid - the code of the module to update
+   * @param type $updateData - an array of key value pairs to update e.g 'fullname'=>'New full Name'
+   * @param type $db
+   * @return boolean
+   */
+  public function update_module_by_code($orig_moduleid, $updateData, $db) {
+    global $string;
+    
+    if($orig_moduleid == '') {
+      return false;
+    }
+    
+    $orig_modinfo = $modinfo = module_utils::get_full_details_by_name($orig_moduleid, $db);
+    
+    if($modinfo === false) {
+      //the module must exist to update it !
+      return false;
+    }
+    
+    $orig_school_name = $modinfo['school'];
+    $orig_school_id = $modinfo['schoolid'];
+    
+    $changed = false; 
+    foreach($updateData as $key => $val) {
+      $key = strtolower($key);
+      if ($key == 'idmod') {
+        //never change the id :-)
+        continue;
+      }
+      if($modinfo[$key] != $val) {
+        $modinfo[$key] = $val;
+        $changed = true;
+      }
+    }
+    
+    if(!$changed) {
+      // nothing has changed return
+      return true;
+    }
+    
+    //check mandatory fields
+    if ($modinfo['moduleid'] == '' and $modinfo['fullname'] == '') {
+      return false;
+    }
+    
+    if($orig_school_name != $modinfo['school']) {
+      //we have updated the school so we need to get the new id from the schools table
+      if($orig_school_id != $modinfo['schoolid']) {
+        //do nothing as the id has already been updated
+      } else {
+        //lookup the schoolID 
+        $modinfo['schoolid'] = SchoolUtils::get_school_id_by_name($modinfo['school'], $db);
+        if($modinfo['schoolid'] === false) {
+          //school not found ERROR
+          return false;
+        }
+      }
+    }
+    
+    $sql = "UPDATE modules SET 
+               moduleid = ?,
+               fullname = ?,
+               active = ?, 
+               vle_api = ?, 
+               checklist = ?, 
+               sms = ?, 
+               selfenroll = ?, 
+               schoolid = ?, 
+               neg_marking = ?, 
+               ebel_grid_template = ?, 
+               timed_exams = ?, 
+               exam_q_feedback = ?, 
+               add_team_members = ?,
+               map_level = ? 
+            WHERE 
+              id = ?
+            LIMIT 1
+            ";
+    
+    $result = $db->prepare($sql);
+    echo $db->error;
+    $result->bind_param('ssisssiiiiiiiii', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'], 
+                                        $modinfo['checklist'], $modinfo['sms'], $modinfo['selfenroll'], $modinfo['schoolid'], 
+                                        $modinfo['neg_marking'], $modinfo['ebel_grid_template'], $modinfo['timed_exams'], 
+                                        $modinfo['exam_q_feedback'], $modinfo['add_team_members'],$modinfo['map_level'],$modinfo['idMod']);
+    $res = $result->execute();
+    
+    //an array to convert db feilds to lang strings argghhh!!!!
+    $lang_mappings = array(
+                        'moduleid' => 'moduleid',
+                        'fullname' => 'name',
+                        'schoolid' => 'school',
+                        'active' => 'active',
+                        'vle_api' => 'objapi',
+                        'checklist' => 'summativechecklist',
+                        'sms' => 'smsapi',
+                        'selfenroll' => 'allowselfenrol',
+                        'neg_marking' => 'negativemarking',
+                        'ebel_grid_template' => 'ebelgrid',
+                        'timed_exams' => 'timedexams',
+                        'exam_q_feedback' => 'questionbasedfeedback',
+                        'add_team_members' => 'addteammembers',
+                        );
+    
+    if($res === true ) {
+      // Log any changes
+      $logger = new Logger($db);
+      $userObject = UserObject::get_instance();
+      foreach($modinfo as $key => $val) {
+        $key = strtolower($key);
+        if ($key == 'idmod') {
+          continue;
+        }
+        if($orig_modinfo[$key] != $val) {
+           
+          $logger->track_change( 'Module', 
+                                  $modinfo['idMod'], 
+                                  $userObject->get_user_ID(), 
+                                  $orig_modinfo[$key], 
+                                  $modinfo[$key], 
+                                  $string[$lang_mappings[$key]]
+                               );
+        }
+      }
+    }
+    
+    return true;
+  }
 
   /**
    * Check if a module with the given code already exists
@@ -137,11 +272,49 @@ Class module {
    * Get the full details of a module given its ID
    * @param  integer $modID Database ID of the module
    * @param  mysqli $db     Database link class
-   * @return array          Associative array containing the details of the module
+   * @return array e.g  'idMod' => int 291
+   *                     'moduleid' => string '001' (length=3)
+   *                     'fullname' => string 'This is a test module 22' (length=24)
+   *                     'school' => string 'Training' (length=8)
+   *                     'active' => int 1
+   *                     'vle_api' => string '' (length=0)
+   *                     'checklist' => string '' (length=0)
+   *                     'sms' => string '' (length=0)
+   *                     'selfenroll' => int 0
+   *                     'schoolid' => int 42
+   *                     'neg_marking' => int 1
+   *                     'ebel_grid_template' => int 0
+   *                     'timed_exams' => int 0
+   *                     'exam_q_feedback' => int 1
+   *                     'add_team_members' => int 1
+   *                     'map_level ' => int 1
    */
   public function get_full_details_by_ID($modID, $db) {
     // returns false if not self enrol else returns needed data;
-    $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist, timed_exams, exam_q_feedback, add_team_members FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ? AND mod_deleted IS NULL");
+    $result = $db->prepare("SELECT 
+                              modules.id,
+                              moduleid, 
+                              fullname, 
+                              school, 
+                              active, 
+                              vle_api,
+                              checklist, 
+                              sms,
+                              selfenroll, 
+                              schoolid,
+                              neg_marking,
+                              ebel_grid_template,
+                              timed_exams, 
+                              exam_q_feedback, 
+                              add_team_members,
+                              map_level 
+                            FROM 
+                              modules, schools 
+                            WHERE 
+                               modules.schoolid = schools.id AND 
+                               modules.id = ? AND 
+                               mod_deleted IS NULL
+                            ");
     if ($db->error) {
       try {
         throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
@@ -154,15 +327,22 @@ Class module {
     $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
-    $result->bind_result($moduleid, $fullname, $school, $active, $selfenroll, $checklist, $timed_exams, $exam_q_feedback, $add_team_members);
+    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level);
+    
     $result->fetch();
     if ($result->num_rows == 0) {
       $result->close();
       return false;
     }
     $result->close();
-
-    return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist, 'timed_exams'=>$timed_exams, 'exam_q_feedback'=>$exam_q_feedback, 'add_team_members'=>$add_team_members);
+    
+    return array( 'idMod'=>$idMod, 'moduleid'=>$moduleid, 'fullname'=>$fullname, 
+                  'school'=>$school, 'active'=>$active, 'vle_api'=>$vle_api, 
+                  'checklist'=>$checklist, 'sms'=>$sms, 'selfenroll'=>$selfenroll, 
+                  'schoolid'=>$schoolid, 'neg_marking'=>$neg_marking, 
+                  'ebel_grid_template'=>$ebel_grid_template, 'timed_exams'=>$timed_exams, 
+                  'exam_q_feedback'=>$exam_q_feedback, 'add_team_members'=>$add_team_members,
+                  'map_level'=>$map_level);
   }
 
   /**

@@ -29,109 +29,82 @@ require_once '../classes/logger.class.php';
 
 check_var('moduleid', 'GET', true, false, false);
 
-if (!module_utils::get_moduleid_from_id($_GET['moduleid'], $mysqli)) {
+$module = module_utils::get_full_details_by_ID($_GET['moduleid'], $mysqli);
+
+if ($module === false) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$stmt = $mysqli->prepare("SELECT moduleid, fullname, active, schools.id, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template, timed_exams, exam_q_feedback, add_team_members, map_level FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id = ?");
-$stmt->bind_param('i', $_GET['moduleid']);
-$stmt->execute();
-$stmt->bind_result($modulecode, $fullname, $active, $schoolid, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking, $current_ebel_grid, $timed_exams, $exam_q_feedback, $add_team_members, $map_level);
-$stmt->fetch();
-$stmt->close();
-
-$unique_moduleid = true;
+$moduleid_in_use = false;
 if (isset($_POST['submit']) and $_POST['modulecode'] != $_POST['old_modulecode']) {
   // Check for unique moduleid
   $new_modulecode = trim($_POST['modulecode']);
-  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid = ?");
-  $result->bind_param('s', $new_modulecode);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($new_modulecode);
-  $result->fetch();
-  if ($result->num_rows > 0) $unique_moduleid = false;
-  $result->free_result();
-  $result->close();
+  $moduleid_in_use = module_utils::module_exists($new_modulecode, $mysqli);
 }
-
-if (isset($_POST['submit']) and $unique_moduleid == true) {
+if (isset($_POST['submit']) and $moduleid_in_use == false) {
   if (isset($_POST['active'])) {
-    $new_active = 1;
+    $module['active'] = 1;
   } else {
-    $new_active = 0;
+    $module['active'] = 0;
   }
+  
   if (isset($_POST['selfenroll'])) {
-    $new_selfenroll = 1;
+    $module['selfenroll'] = 1;
   } else {
-    $new_selfenroll = 0;
+    $module['selfenroll'] = 0;
   }
+  
   if (isset($_POST['neg_marking'])) {
-    $new_neg_marking = 1;
+    $module['neg_marking'] = 1;
   } else {
-    $new_neg_marking = 0;
+    $module['neg_marking'] = 0;
   }
-  $new_checklist = '';
-  if (isset($_POST['peer']))     $new_checklist .= ',peer';
-  if (isset($_POST['external'])) $new_checklist .= ',external';
-  if (isset($_POST['stdset']))   $new_checklist .= ',stdset';
-  if (isset($_POST['mapping']))  $new_checklist .= ',mapping';
+  
+  $module['checklist'] = '';
+  if (isset($_POST['peer']))     $module['checklist'] .= ',peer';
+  if (isset($_POST['external'])) $module['checklist'] .= ',external';
+  if (isset($_POST['stdset']))   $module['checklist'] .= ',stdset';
+  if (isset($_POST['mapping']))  $module['checklist'] .= ',mapping';
+  $module['checklist'] = substr($module['checklist'], 1);
 
   // Update the properties of the module.
-  $new_modulecode = trim($_POST['modulecode']);
-  $new_fullname = trim($_POST['fullname']);
-  $new_checklist = substr($new_checklist, 1);
+  $module['moduleid'] = trim($_POST['modulecode']);
+  $module['fullname'] = trim($_POST['fullname']);
+  
 
   if (isset($_POST['timed_exams'])) {
-    $new_timed_exams = 1;
+    $module['timed_exams'] = 1;
   } else {
-    $new_timed_exams = 0;
+    $module['timed_exams'] = 0;
   }
   if (isset($_POST['exam_q_feedback'])) {
-    $new_exam_q_feedback = 1;
+    $module['exam_q_feedback'] = 1;
   } else {
-    $new_exam_q_feedback = 0;
+    $module['exam_q_feedback'] = 0;
   }
   if (isset($_POST['add_team_members'])) {
-    $new_add_team_members = 1;
+    $module['add_team_members'] = 1;
   } else {
-    $new_add_team_members = 0;
+    $module['add_team_members'] = 0;
   }
+  
   $vle_data = $_POST['vle_api'];
   if ($vle_data == '') {
-    $new_map_level = 0;
-    $vle_api = '';
+    $module['map_level'] = 0;
+    $module['vle_api'] = '';
   } else {
     $vle_parts = explode('~', $vle_data);
-    $new_vle_api = $vle_parts[0];
-    $new_map_level = $vle_parts[1];
+    $module['vle_api'] = $vle_parts[0];
+    $module['map_level'] = $vle_parts[1];
   }
+  
+  $module['sms'] = $_POST['sms_api'];
+  $module['schoolid'] = $_POST['schoolid']; 
+  $module['ebel_grid_template'] = $_POST['ebel_grid_template'];
 
-  if ($new_modulecode != '' and $new_fullname != '' and $_POST['schoolid'] != '') {
-    $result = $mysqli->prepare("UPDATE modules SET moduleid = ?, fullname = ?, active = ?, sms = ?, vle_api = ?, checklist = ?, selfenroll = ?, schoolid = ?, neg_marking = ?, ebel_grid_template = ?, timed_exams = ?, exam_q_feedback = ?, add_team_members = ?, map_level = ? WHERE id = ?");
-    $result->bind_param('ssisssiiiiiiiii', $new_modulecode, $new_fullname, $new_active, $_POST['sms_api'], $new_vle_api, $new_checklist, $new_selfenroll, $_POST['schoolid'], $new_neg_marking, $_POST['ebel_grid_template'], $new_timed_exams, $new_exam_q_feedback, $new_add_team_members, $new_map_level, $_GET['moduleid']);
-    $result->execute();
-    $result->close();
-  }
-
-  // Log any changes
-  $logger = new Logger($mysqli);
-  if ($modulecode != $new_modulecode)                     $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $modulecode, $new_modulecode, $string['moduleid']);
-  if ($fullname != $new_fullname)                         $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $fullname, $new_fullname, $string['name']);
-  if ($schoolid != $_POST['schoolid'])                    $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $schoolid, $_POST['schoolid'], $string['school']);
-  if ($sms != $_POST['sms_api'])                          $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $sms, $_POST['sms_api'], $string['smsapi']);
-  if ($vle_api != $new_vle_api)                           $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $vle_api, $_POST['vle_api'], $string['objapi']);
-  if ($checklist != $new_checklist)                       $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $checklist, $new_checklist, $string['summativechecklist']);
-  if ($active != $new_active)                             $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $active, $new_active, $string['active']);
-  if ($selfenroll != $new_selfenroll)                     $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $selfenroll, $new_selfenroll, $string['allowselfenrol']);
-  if ($neg_marking != $new_neg_marking)                   $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $neg_marking, $new_neg_marking, $string['negativemarking']);
-  if ($timed_exams != $new_timed_exams)                   $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $timed_exams, $new_timed_exams, $string['timedexams']);
-  if ($exam_q_feedback != $new_exam_q_feedback)           $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $exam_q_feedback, $new_exam_q_feedback, $string['questionbasedfeedback']);
-  if ($add_team_members != $new_add_team_members)         $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $add_team_members, $new_add_team_members, $string['addteammembers']);
-  if ($map_level != $new_map_level)                       $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $map_level, $new_map_level, $string['maplevel']);
-  if ($current_ebel_grid != $_POST['ebel_grid_template']) $logger->track_change('Module', $_GET['moduleid'], $userObject->get_user_ID(), $current_ebel_grid, $_POST['ebel_grid_template'], $string['ebelgrid']);
-
+  module_utils::update_module_by_code($_POST['old_modulecode'], $module, $mysqli);
+  
   $mysqli->close();
   header("location: list_modules.php");
   exit;
@@ -167,7 +140,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $vle_apis = $configObject->get('vle_apis');
   $mu = module_utils::get_instance();
   $vle_apis = $mu->get_vle_api_data($vle_apis);
-  $map_levels = array(iVLEAPI::LEVEL_SESSION => $string['session'], iVLEAPI::LEVEL_MODULE => $string['module']);
+  if(count($vle_apis) > 0) {
+    $map_levels = array(iVLEAPI::LEVEL_SESSION => $string['session'], iVLEAPI::LEVEL_MODULE => $string['module']);
+  } else {
+    $map_levels = array();
+  }
 ?>
     $(function () {
       $('#module_form').validate({
@@ -178,10 +155,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         }
       });
 <?php
-  if ($unique_moduleid == false) {
+  if ($moduleid_in_use == true) {
 ?>
       $('#modulecode').addClass('error');
-
 <?php
   }
 ?>
@@ -204,7 +180,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $(document).ready(setSidebarMenu);
 
   <?php
-  if ($unique_moduleid == false) {
+  if ($moduleid_in_use == true) {
   ?>
   function moduleWarning() {
     alert("<?php echo sprintf($string['moduleidinuse'], $new_modulecode); ?>");
@@ -215,7 +191,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   </script>
   </head>
   <?php
-  if ($unique_moduleid == false) {
+  if ($moduleid_in_use == true) {
     echo "<body onload=\"moduleWarning()\">\n";
   } else {
     echo "<body>\n";
@@ -233,8 +209,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <div align="center">
   <form id="module_form" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?moduleid=<?php echo $_GET['moduleid']; ?>">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
-    <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" id="modulecode" name="modulecode" value="<?php echo $modulecode ?>" class="required" /></td></tr>
-    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php echo $fullname ?>" class="required" /></td></tr>
+    <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" id="modulecode" name="modulecode" value="<?php echo $module['moduleid'] ?>" class="required" /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php echo $module['fullname'] ?>" class="required" /></td></tr>
   <?php
     $old_faculty = '';
     echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select id=\"schoolid\" name=\"schoolid\" class=\"required\">\n<option value=\"\"></option>\n";
@@ -246,7 +222,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         if ($old_faculty != '') echo "</optgroup>\n";
         echo "<optgroup label=\"$faculty\">\n";
       }
-      if ($school == $list_school) {
+      if ($module['schoolid'] == $id) {
         echo "<option value=\"$id\" selected>$list_school</option>\n";
       } else {
         echo "<option value=\"$id\">$list_school</option>\n";
@@ -256,22 +232,22 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $result->close();
     echo "</optgroup>\n</select></td></tr>\n";
 
-    if (strpos($checklist, 'peer') !== false) {
+    if (strpos($module['checklist'], 'peer') !== false) {
       $peer = 1;
     } else {
       $peer = 0;
     }
-    if (strpos($checklist, 'external') !== false) {
+    if (strpos($module['checklist'], 'external') !== false) {
       $external = 1;
     } else {
       $external = 0;
     }
-    if (strpos($checklist, 'stdset') !== false) {
+    if (strpos($module['checklist'], 'stdset') !== false) {
       $stdset = 1;
     } else {
       $stdset = 0;
     }
-    if (strpos($checklist, 'mapping') !== false) {
+    if (strpos($module['checklist'], 'mapping') !== false) {
       $mapping = 1;
     } else {
       $mapping = 0;
@@ -279,7 +255,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
     echo '<tr><td class="field">' . $string['smsapi'] . '</td><td><select name="sms_api">';
     foreach ($cfg_sms_sources as $key=>$value) {
-      if ($sms == $value) {
+      if ($module['sms'] == $value) {
         echo "<option value=\"$value\" selected>$key</option>\n";
       } else {
         echo "<option value=\"$value\">$key</option>\n";
@@ -287,11 +263,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     echo '</select></td></tr>';
   ?>
-    <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select id="vle_api" name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option>
+        <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select id="vle_api" name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option>
   <?php
     foreach ($vle_apis as $vle_name => $vle_api_data) {
       foreach ($vle_api_data['levels'] as $api_level) {
-        $selected = ($vle_api == $vle_name and $map_level == $api_level) ? ' selected="selected"' : '';
+        $selected = ($module['vle_api'] == $vle_name and $module['map_level'] == $api_level) ? ' selected="selected"' : '';
 
   ?>
         <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected; ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level']; ?></option>
@@ -302,12 +278,12 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     </select>
     </td></tr>
     <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked="checked"'; ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
-    <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking"<?php if ($neg_marking == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['timedexams']; ?></td><td><input type="checkbox" name="timed_exams"<?php if ($timed_exams == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['questionbasedfeedback']; ?></td><td><input type="checkbox" name="exam_q_feedback"<?php if ($exam_q_feedback == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['addteammembers']; ?></td><td><input type="checkbox" name="add_team_members"<?php if ($add_team_members == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($module['active'] == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll"<?php if ($module['selfenroll'] == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking"<?php if ($module['neg_marking'] == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['timedexams']; ?></td><td><input type="checkbox" name="timed_exams"<?php if ($module['timed_exams'] == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['questionbasedfeedback']; ?></td><td><input type="checkbox" name="exam_q_feedback"<?php if ($module['exam_q_feedback'] == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['addteammembers']; ?></td><td><input type="checkbox" name="add_team_members"<?php if ($module['add_team_members'] == 1) echo ' checked="checked"'; ?> /></td></tr>
     <tr id="ebelgrid" style="display:<?php
     if ($stdset == 1) {
       echo 'table-row';
@@ -319,7 +295,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $result->execute();
     $result->bind_result($id, $name);
     while ($result->fetch()) {
-      if ($id == $current_ebel_grid) {
+      if ($id == $module['ebel_grid_template']) {
         echo "<option value=\"$id\" selected>$name</option>\n";
       } else {
         echo "<option value=\"$id\">$name</option>\n";
@@ -329,7 +305,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     ?></select></td></tr>
   <?php
     echo "</table>\n";
-    echo "<input type=\"hidden\" name=\"old_modulecode\" value=\"" . $modulecode . "\" />\n";
+    echo "<input type=\"hidden\" name=\"old_modulecode\" value=\"" . $module['moduleid'] . "\" />\n";
   ?>
     <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
   </form>
