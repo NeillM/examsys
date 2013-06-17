@@ -80,6 +80,7 @@ Class Question {
   public $q_media_height = '';
   public $q_media_width = '';
 
+  public $uniqid;
 
   public $std;
 

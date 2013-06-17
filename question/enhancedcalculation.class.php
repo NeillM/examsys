@@ -70,7 +70,7 @@ class EnhancedCalculation extends Question implements questionInterface {
 
 
     $return = $returnarray[0];
-
+    $this->useranswer = $returnarray[1];
 
     if ($return === Q_MARKING_WRONG) {
       $this->qmark = $this->settings['m_incorrect'];
@@ -89,7 +89,11 @@ class EnhancedCalculation extends Question implements questionInterface {
       $this->markinfo = Q_MARKING_UNMARKED;
     }
 
-    return array($return, $returnarray[1]);
+    return $return;
+  }
+
+  public function useranswer_to_string() {
+    return json_encode($this->useranswer);
   }
 
   static public function processUserAnswer(&$postdata, &$session) {

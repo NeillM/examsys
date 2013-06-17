@@ -395,15 +395,15 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   // Add the user's log data into the above array.
   $tmp_q_id = 1;
   if ($paper_type == '5') {
-    $answer_data = $mysqlidb->prepare("SELECT 1 AS screen, q_id, NULL AS user_answer, mark, NULL AS option_order FROM log5 WHERE metadataID = ? ORDER BY id");
+    $answer_data = $mysqlidb->prepare("SELECT 1 AS screen, q_id, NULL AS user_answer, mark, NULL AS option_order, id FROM log5 WHERE metadataID = ? ORDER BY id");
   } else {
-    $answer_data = $mysqlidb->prepare("SELECT screen, q_id, user_answer, mark, option_order FROM log$log_type WHERE metadataID = ? ORDER BY screen, id");
+    $answer_data = $mysqlidb->prepare("SELECT screen, q_id, user_answer, mark, option_order, id FROM log$log_type WHERE metadataID = ? ORDER BY screen, id");
   }
   if ($answer_data) {
     $answer_data->bind_param('i', $metadataid);
     $answer_data->execute();
     $answer_data->store_result();
-    $answer_data->bind_result($screen, $q_id, $user_answer, $mark, $option_order);
+    $answer_data->bind_result($screen, $q_id, $user_answer, $mark, $option_order, $uniqid);
     while ($answer_data->fetch()) {
       // Skip over missing screens;
       foreach ($paper as $tmp_q_no => $question) {
@@ -412,6 +412,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $paper[$tmp_q_no]['mark'] = $mark;
           $paper[$tmp_q_no]['option_order'] = $option_order;
           $paper[$tmp_q_no]['metaid']=$metadataid;
+          $paper[$tmp_q_no]['uniqid']=$uniqid;
 /*          if ($paper[$tmp_q_no]['q_type'] == 'enhancedcalc') {
             require_once('../question/enhancedcalculation.class.php');
             if (!isset($configObj)) {
@@ -429,22 +430,23 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     display_error($string['useranswererror'], $mysqlidb->error);
   }
 
-  for ($question=1; $question<=$q_no; $question++) {
+  for ($question = 1; $question <= $q_no; $question++) {
     if ($paper_type != '2' and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
       require_once('../question/enhancedcalculation.class.php');
       if (!isset($configObj)) {
         $configObj = Config::get_instance();
       }
-      $enhancedcalc= new EnhancedCalculation($configObj);
+      $enhancedcalc = new EnhancedCalculation($configObj);
       $enhancedcalc->load($paper[$question]);
       $returnarray = $enhancedcalc->caculateUserMark();
 
-      if ($returnarray[0] !== Q_MARKING_UNMARKED) {
-        //TODO
-        $enhancedcalc->exportsave($paper[$question]);
-
-        var_dump($paper[$question]);
+      if ($returnarray !== Q_MARKING_UNMARKED) {
         //save the extra data back into the log record.
+        $sql = "UPDATE log$paper_type set mark=?, totalpos=?, user_answer=? WHERE id=? LIMIT 1";
+        $storemark = $mysqlidb->prepare($sql);
+        $storemark->bind_param('ddsi', $enhancedcalc->qmark, $enhancedcalc->totalpos, $enhancedcalc->useranswer_to_string(), $paper[$question]['uniqid']);
+        $storemark->execute();
+        $enhancedcalc->exportsave($paper[$question]);
       }
 
       $paper[$i]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
@@ -911,7 +913,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         break;
       case 'info':
         echo "<tr><td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">";
-        if ($paper[$question]['q_media'] != '' and $paper[$question]['q_media'] != NULL) {
+        if ($paper[$question]['q_media'] != '' and $paper[$question]['q_media'] != null) {
           echo '<p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
         }
         echo $paper[$question]['leadin'];
