@@ -824,7 +824,7 @@ class ClassTotals {
           }
         }
 
-        $question['correct_labels'] = $correct_labels_exc;
+        $this->paper_buffer[$q_id]['correct_labels'] = $correct_labels_exc;
       }
 
       $this->q_medians[$q_id][] = $tmp_user_mark;
@@ -1287,6 +1287,7 @@ class ClassTotals {
         $tmp_array['attempt']         = $attempt;
         $tmp_array['student_grade']   = $grade;
         $tmp_array['roles']           = $tmp_roles;
+        $tmp_array['year']            = $year;
         $tmp_array['display_started'] = $display_started;
         $tmp_array['title']           = $title;
         $tmp_array['name']            = trim(str_replace("'","",$surname) . ',' . $first_names);
@@ -1355,6 +1356,7 @@ SQL;
         $this->late_cohort[$i]['gender']           = $gender;
         $this->late_cohort[$i]['display_started']  = $this->log_late_missing_users[$userID]['display_started'];
         $this->late_cohort[$i]['started']          = $this->log_late_missing_users[$userID]['started'];
+        $this->late_cohort[$i]['year']             = '';
 
         $i++;
       }
@@ -1439,6 +1441,7 @@ SQL;
         $this->user_results[$user_no]['visible']          = true;    // Default to visible unless switched off below.
         $this->user_results[$user_no]['roles']            = 'Student';
         $this->user_results[$user_no]['rank']             = 99999999999;
+        $this->user_results[$user_no]['year']             = '';
         $user_no++;
       }
     }

@@ -33,7 +33,7 @@ require_once('../rserve/Connection.php');
 class enhancedcalc_rserve {
 
   protected $impliments_api_calc_version = 1;
-  static protected $cnx;
+  static protected $cnx = false;
 
   protected $config;
   protected $configObj;
@@ -45,29 +45,46 @@ class enhancedcalc_rserve {
     $this->config = $this->configObj->getbyref('enhancedcalculation');
   }
 
-  function calculate(&$useranswer, &$settings) {
+  function calculate($useranswer, &$settings) {
+    //self::$cnx=false;
 
+    $useransweradd = array();
     //useranswer contains the variable values and the answer supplied by user
     //settings contains the formula as well as tolerances etc.
 
-    if (!isset($this->cnx)) {
-      $this->cnx = new Rserve_Connection($this->config['host'], $this->config['port']);
-    } else {
-      //reset connection
-      $result = $this->cnx->evalString('rm(list=ls(all=TRUE))');
+    if(is_null(self::$cnx)) {
+      //connection failed
+      return array(Q_MARKING_UNMARKED,array());
     }
 
 
+    // if the box isnt on this timeout is ignored and is likely to be different
+    if(!isset($this->config['timeout'])) {
+      $timeoutarray=array('seconds'=>5,'milliseconds'=>1);
+    } else {
+      $timeoutarray=array('seconds'=>$this->config['timeout'],'milliseconds'=>1);
+    }
+
+    if (self::$cnx===false) {
+      try {
+        self::$cnx = @new Rserve_Connection($this->config['host'], $this->config['port'],$timeoutarray);
+      } catch (exception $except) {
+        self::$cnx=null;
+        return array(Q_MARKING_UNMARKED, array());
+      }
+    } else {
+      //reset connection
+      $result = self::$cnx->evalString('rm(list=ls(all=TRUE))');
+    }
+
     $formula = $settings['formula'];
-
-
     $varname = array_keys($useranswer['vars']);
     $varvalue = array_values($useranswer['vars']);
     $formula = str_replace($varname, $varvalue, $formula);
 
-    $op = $this->cnx->evalString("ANS = $formula");
+    $op = self::$cnx->evalString("ANS = $formula");
 
-    $correctanswer = $this->cnx->evalString("paste(capture.output(print((ANS))),collapse='\\n');");
+    $correctanswer = self::$cnx->evalString("paste(capture.output(print((ANS))),collapse='\\n');");
 
     $pos = strpos($correctanswer, ' ');
 
@@ -75,12 +92,104 @@ class enhancedcalc_rserve {
     $uans = $useranswer['uans'];
 
 
-    if ($this->cnx->evalString("ANS == $uans") === true) {
+    $status = self::$cnx->evalString("ANS == $uans");
+    if ($status === true) {
       //correct
-      return Q_MARKING_EXACT;
+      $useranswer['exactstatus'] = Q_MARKING_EXACT;
+    } else {
+      $useranswer['exactstatus'] = Q_MARKING_WRONG;
     }
 
-    return Q_MARKING_WRONG;
+    if (isset($settings['fulltol'])) {
+      if (!isset($settings['negfulltol'])) {
+        $settings['negfulltol'] = $settings['fulltol'];
+        $settings['negfulltoltyp'] = $settings['fulltoltyp'];
+      }
+      switch ($settings['fulltoltyp']) {
+        case "%":
+          $op = self::$cnx->evalString("FULLTOL = ANS * (" . $settings['fulltol'] . "/100)");
+          $fulltol = self::$cnx->evalString("paste(capture.output(print((FULLTOL))),collapse='\\n');");
+          $pos = strpos($fulltol, ' ');
+          $useranswer['fulltol'] = substr($fulltol, $pos + 1);
+          $op = self::$cnx->evalString("FULLTOLANS = ANS + FULLTOL");
+          $fulltolans = self::$cnx->evalString("paste(capture.output(print((FULLTOLANS))),collapse='\\n');");
+          $pos = strpos($fulltolans, ' ');
+          $useranswer['fulltolans'] = substr($fulltolans, $pos + 1);
+          break;
+        case "#":
+          $op = self::$cnx->evalString("FULLTOLANS =  " . $settings['fulltol']);
+          $fulltol = self::$cnx->evalString("paste(capture.output(print((FULLTOLANS))),collapse='\\n');");
+          $pos = strpos($fulltol, ' ');
+          $useranswer['fulltol'] = substr($fulltol, $pos + 1);
+          $op = self::$cnx->evalString("FULLTOLANS = ANS + FULLTOL");
+          $fulltolans = self::$cnx->evalString("paste(capture.output(print((FULLTOLANS))),collapse='\\n');");
+          $pos = strpos($fulltolans, ' ');
+          $useranswer['fulltolans'] = substr($fulltolans, $pos + 1);
+          break;
+        case "sf":
+          $fulltolans = self::$cnx->evalString("FULLTOLANS =  signif(ANS," . $settings['fulltol'] . ")");
+          $pos = strpos($fulltolans, ' ');
+          $useranswer['fulltolans'] = substr($fulltolans, $pos + 1);
+          break;
+      }
+      switch ($settings['fulltolnegtyp']) {
+        case "%":
+          $op = self::$cnx->evalString("FULLTOLNEG = abs(ANS * (" . $settings['fulltolneg'] . "/100))");
+          $fulltolneg = self::$cnx->evalString("paste(capture.output(print((FULLTOLNEG))),collapse='\\n');");
+          $neg = strpos($fulltolneg, ' ');
+          $useranswer['fulltolnegans'] = substr($fulltolneg, $neg + 1);
+          $op = self::$cnx->evalString("FULLTOLNEGANS = ANS - FULLTOLNEG");
+          $fulltolnegans = self::$cnx->evalString("paste(capture.output(print((FULLTOLNEGANS))),collapse='\\n');");
+          $neg = strpos($fulltolnegans, ' ');
+          $useranswer['fulltolneg'] = substr($fulltolnegans, $neg + 1);
+          break;
+        case "#":
+          $op = self::$cnx->evalString("FULLTOLNEGANS =  " . $settings['fulltolneg']);
+          $fulltolneg = self::$cnx->evalString("paste(capture.output(print((FULLTOLNEGANS))),collapse='\\n');");
+          $neg = strpos($fulltolneg, ' ');
+          $useranswer['fulltolnegans'] = substr($fulltolneg, $neg + 1);
+          $op = self::$cnx->evalString("FULLTOLNEGANS = ANS - FULLTOLNEG");
+          $fulltolnegans = self::$cnx->evalString("paste(capture.output(print((FULLTOLNEGANS))),collapse='\\n');");
+          $neg = strpos($fulltolnegans, ' ');
+          $useranswer['fulltolneg'] = substr($fulltolnegans, $neg + 1);
+          break;
+        case "sf":
+          $fulltolnegans = self::$cnx->evalString("FULLTOLNEGANS =  signif(ANS," . $settings['fulltolneg'] . ")");
+          $neg = strpos($fulltolnegans, ' ');
+          $useranswer['fulltolnegans'] = substr($fulltolnegans, $neg + 1);
+          break;
+      }
+      switch ($settings['fulltoltyp']) {
+        case "sf":
+          $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['fulltol'] . ")");
+          $status = self::$cnx->evalString("UANSSF ==  FULLTOLANS");
+          if ($status === true) {
+            //correct
+            $useranswer['fulltolstatus'] = Q_MARKING_EXACT;
+          } else {
+            $useranswer['fulltolstatus'] = Q_MARKING_WRONG;
+          }
+          break;
+        case "%":
+        case "#":
+          $status = self::$cnx->evalString("FULLTOLANSNEG <= $uans");
+          $status1 = self::$cnx->evalString("$uans <= FULLTOLANS");
+
+          if ($status === true and $status1 === true) {
+            //correct
+            $useranswer['fulltolstatus'] = Q_MARKING_EXACT;
+          } else {
+            $useranswer['fulltolstatus'] = Q_MARKING_WRONG;
+          }
+          break;
+      }
+
+
+
+
+    }
+
+    return array(Q_MARKING_WRONG, $useranswer);
   }
 
 }

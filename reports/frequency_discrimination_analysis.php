@@ -137,7 +137,7 @@ function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i,
   $bottom_key_value = 0;
 
   if (!is_array($keys)) $keys = array($keys);
-
+  
   foreach($keys as $key) {
     if (isset($top_log_q_id[$i][$key])) {
       $top_key_value += $top_log_q_id[$i][$key];
@@ -710,7 +710,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
             $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_word);
           } else {
-            foreach ($blank_options as $blank_option) {
+            $unique_blank_options = array_intersect_key($blank_options, array_unique(array_map('strtolower', $blank_options)));
+            $unique_blank_options = array_map('strtolower', $unique_blank_options);
+                     
+            foreach ($unique_blank_options as $blank_option) {
               $blank_option = strtolower(trim($blank_option));
               if (isset($freq_log[$q_id][$i+1][$blank_option])) {
                 $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_option];
@@ -722,7 +725,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 $tmp_bottom_no += $bottom_log[$q_id][$i+1][$blank_option];
               }
             }
-            $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_options);
+            $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $unique_blank_options);
 
           }
           $t = number_format(($tmp_correct_no/$user_total)*100,0);
@@ -762,6 +765,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             }
           }
           echo "$html</td>";
+
           if ($display_method == 'textboxes') {
             echo "<td><a href=\"#\" onclick=\"return manCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
           }
@@ -1849,8 +1853,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $bottom_log_array = array();
   $top_log_array = array();
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT username, log_metadata.userID, log0.q_id, user_answer, q_type, score_method, display_method, mark, totalpos, option_order, started FROM log0, log_metadata, questions, users WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? $student_modules_sql) UNION ALL (SELECT username, log_metadata.userID, log1.q_id, user_answer, q_type, score_method, display_method, mark, totalpos, option_order, started FROM log1, log_metadata, questions,  users WHERE log1.metadataID = log_metadata.id AND log1.q_id=questions.q_id AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? " . str_replace('log0', 'log1', $student_modules_sql) . ")");
-    $result->bind_param('isssiss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $startdate, $enddate);
+    $result = $mysqli->prepare("(SELECT username, log_metadata.userID, log0.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log0, log_metadata, questions, users WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? $student_modules_sql) UNION ALL (SELECT username, log_metadata.userID, log1.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log1, log_metadata, questions,  users WHERE log1.metadataID = log_metadata.id AND log1.q_id=questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? " . str_replace('log0', 'log1', $student_modules_sql) . ")");
+    $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);
   } else {
     $result = $mysqli->prepare("SELECT username, log_metadata.userID, log$paper_type.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log$paper_type, log_metadata, questions, users WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? $student_modules_sql");
     $result->bind_param('isss', $paperID, $_GET['repcourse'], $startdate, $enddate);

@@ -78,7 +78,7 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
 
   if ($unique) {
     // Look up selected question and overwrite data.
-    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options on questions.q_id=options.o_id  WHERE q_id=? ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
     $question_data->execute();
     $question_data->store_result();
@@ -170,7 +170,7 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_q
 
   if ($unique) {
     // Look up selected question and overwrite the question data.
-    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id = ? AND questions.q_id = options.o_id ORDER BY id_num");
+    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options on questions.q_id = options.o_id  WHERE q_id = ? ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
     $question_data->execute();
     $question_data->store_result();
@@ -964,12 +964,11 @@ if ($css != '') {
                                           display_pos,
                                           q_option_order
                                       FROM
-                                          papers, questions, options
+                                          papers, questions LEFT JOIN options ON questions.q_id = options.o_id
                                       WHERE
                                         paper=? AND
                                         q_id=? AND
-                                        papers.question=questions.q_id AND
-                                        questions.q_id = options.o_id
+                                        papers.question=questions.q_id
                                       ORDER BY
                                       display_pos,
                                       id_num");
@@ -1000,11 +999,10 @@ if ($css != '') {
                                             display_pos,
                                             q_option_order
                                         FROM
-                                            papers, questions, options
+                                            papers, questions LEFT JOIN options ON questions.q_id = options.o_id
                                         WHERE
                                           paper=? AND
-                                          papers.question=questions.q_id AND
-                                          questions.q_id = options.o_id
+                                          papers.question=questions.q_id
                                         ORDER BY
                                         display_pos,
                                         id_num");
@@ -1072,12 +1070,12 @@ if ($css != '') {
         $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
       }
     }
-    if($question['q_type']=='enhancedcalc') {
+    if ($question['q_type'] == 'enhancedcalc') {
       require_once('../question/enhancedcalculation.class.php');
-      if(!isset($configObj)) {
-      $configObj = Config::get_instance();
+      if (!isset($configObj)) {
+        $configObj = Config::get_instance();
       }
-      $question['object']=new EnhancedCalculation($configObj);
+      $question['object'] = new EnhancedCalculation($configObj);
       $question['object']->load($question);
     }
     $questions_array[] = $question;

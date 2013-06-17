@@ -29,13 +29,23 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/logger.class.php';
+require_once '../classes/paperproperties.class.php';
 
-check_var('q_id', 'GET', true, false, false);
-check_var('paperID', 'GET', true, false, false);
+$q_id     = check_var('q_id', 'GET', true, false, true);
+$paperID  = check_var('paperID', 'GET', true, false, true);
+
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
+
+if (!$propertyObj) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+$paper_type = $propertyObj->get_paper_type();
 
 // Read whole question from database.
 $result = $mysqli->prepare("SELECT option_text FROM options WHERE o_id = ?");
-$result->bind_param('i', $_GET['q_id']);
+$result->bind_param('i', $q_id);
 $result->execute();
 $result->bind_result($option_text);
 $result->fetch();
@@ -43,7 +53,7 @@ $result->close();
 
 // Read user properties from questions.
 $result = $mysqli->prepare("SELECT score_method, marks_correct, marks_incorrect FROM questions, options WHERE questions.q_id = options.o_id AND q_id = ?");
-$result->bind_param('i', $_GET['q_id']);
+$result->bind_param('i', $q_id);
 $result->execute();
 $result->bind_result($score_method, $marks_correct, $marks_incorrect);
 $result->fetch();
@@ -51,12 +61,17 @@ $result->close();
 
 // Read user answers from log.
 $log_answers = array();
-$result = $mysqli->prepare("SELECT l.id, l.user_answer FROM log2 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
-$result->bind_param('iiss', $_GET['q_id'], $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
+if ($paper_type == '0') {
+  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.user_answer FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.user_answer FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
+  $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
+} else {
+  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.user_answer FROM log$paper_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
+  $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
+}
 $result->execute();
-$result->bind_result($id, $user_answer);
+$result->bind_result($type, $id, $user_answer);
 while ($result->fetch()) {
-  $log_answers[$id] = $user_answer;
+  $log_answers[$type][$id] = $user_answer;
 }
 $result->close();
 
@@ -98,12 +113,12 @@ if (isset($_POST['submit'])) {
 
   // Save the new option text back to the Questions table.
   $result = $mysqli->prepare("UPDATE options SET option_text = ? WHERE o_id = ?");
-  $result->bind_param('si', $new_option_text, $_GET['q_id']);
+  $result->bind_param('si', $new_option_text, $q_id);
   $result->execute();
   $result->close();
 
   $logger = new Logger($mysqli);
-  $success = $logger->track_change('Post-Exam Blank correction', $_GET['q_id'], $userObject->get_user_ID(), $option_text, $new_option_text, 'Question/Stem');
+  $success = $logger->track_change('Post-Exam Blank correction', $q_id, $userObject->get_user_ID(), $option_text, $new_option_text, 'Question/Stem');
 
   // Remark student answers
   $blank_details = explode("[blank", $new_option_text);
@@ -115,30 +130,33 @@ if (isset($_POST['submit'])) {
     $answer_list[] = explode(',',$blank_details[$i]);
   }
 
-  foreach ($log_answers as $id=>$log_answer) {
-    $mark = 0;
-    $user_parts = explode('|', $log_answer);
+  //foreach ($log_answers as $id=>$log_answer) {
+  foreach ($log_answers as $log_type) {
+    foreach ($log_type as $id=>$log_answer) {
+      $mark = 0;
+      $user_parts = explode('|', $log_answer);
 
-    for ($i=1; $i<=$no_answers; $i++) {
-      $match = false;
-      if ($user_parts[$i] != 'u') {
-        foreach ($answer_list[$i-1] as $alternative) {
-          if (trim($user_parts[$i]) == trim($alternative)) {
-            $match = true;
+      for ($i=1; $i<=$no_answers; $i++) {
+        $match = false;
+        if ($user_parts[$i] != 'u') {
+          foreach ($answer_list[$i-1] as $alternative) {
+            if (trim($user_parts[$i]) == trim($alternative)) {
+              $match = true;
+            }
+          }
+          if ($match) {
+            $mark += $marks_correct;
+          } else {
+            $mark -= $marks_incorrect;
           }
         }
-        if ($match) {
-          $mark += $marks_correct;
-        } else {
-          $mark -= $marks_incorrect;
-        }
       }
+      // Update log2 with new student marks.
+      $result = $mysqli->prepare("UPDATE log$log_type SET mark = ? WHERE id = ?");
+      $result->bind_param('ii', $mark, $id);
+      $result->execute();
+      $result->close();
     }
-    // Update log2 with new student marks.
-    $result = $mysqli->prepare("UPDATE log2 SET mark=? WHERE id=?");
-    $result->bind_param('ii', $mark, $id);
-    $result->execute();
-    $result->close();
   }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -146,7 +164,7 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Remark</title>
+  <title><?php echo $string['remark'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <script type="text/javascript">
     function reload() {
       window.opener.location = window.opener.location;
@@ -240,16 +258,18 @@ if (isset($_POST['submit'])) {
 // given them as an answer
 $unique_list = array_fill_keys($blanks, 0);
 
-foreach ($log_answers as $id=>$log_answer) {
-  $parts = explode('|', $log_answer);
+foreach ($log_answers as $log_type) {
+  foreach ($log_type as $id=>$log_answer) {
+    $parts = explode('|', $log_answer);
 
-  $word = strtolower(trim($parts[$_GET['blank']]));
+    $word = strtolower(trim($parts[$_GET['blank']]));
 
-  if ($word != 'u') {
-    if (isset($unique_list[$word])) {
-      $unique_list[$word]++;
-    } else {
-      $unique_list[$word] = 1;
+    if ($word != 'u') {
+      if (isset($unique_list[$word])) {
+        $unique_list[$word]++;
+      } else {
+        $unique_list[$word] = 1;
+      }
     }
   }
 }

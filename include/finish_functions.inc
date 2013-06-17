@@ -188,10 +188,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   $user_mark = 0;
 
   if (isset($preview_q_id)) {
-    $answer_data = $mysqlidb->prepare("SELECT 1, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper = ? AND questions.q_id=options.o_id AND questions.q_id = ? ORDER BY screen, display_pos, id_num");
+    $answer_data = $mysqlidb->prepare("SELECT 1, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question=questions.q_id AND paper =  ? AND questions.q_id = ? ORDER BY screen, display_pos, id_num");
     $answer_data->bind_param('ii', $paperID, $preview_q_id);
   } else {
-    $answer_data = $mysqlidb->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper = ? AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
+    $answer_data = $mysqlidb->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question=questions.q_id AND paper =  ? ORDER BY screen, display_pos, id_num");
     $answer_data->bind_param('i', $paperID);
   }
   $answer_data->execute();
@@ -263,6 +263,15 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     $old_q_media_height = $q_media_height;
     $old_status = $status;
     $old_marks_correct = $marks_correct;
+
+/*    if ($paper[$q_no]['q_type'] == 'enhancedcalc') {
+      require_once('../question/enhancedcalculation.class.php');
+      if (!isset($configObj)) {
+        $configObj = Config::get_instance();
+      }
+      $paper[$q_no]['object'] = new EnhancedCalculation($configObj);
+      $paper[$q_no]['object']->load($paper[$q_no]);
+    }*/
   }
   $answer_data->close();
   if (isset($excluded[$old_q_id])) {
@@ -305,7 +314,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
       // Look up selected question and overwrite data.
       if (isset($selected_q_id) and $selected_q_id > 0) {
         $stems = 0;
-        $question_data = $mysqlidb->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, status FROM (questions, options) WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+        $question_data = $mysqlidb->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, status FROM (questions) LEFT JOIN options on questions.q_id=options.o_id WHERE q_id=? ORDER BY id_num");
         $question_data->bind_param('i', $selected_q_id);
         $question_data->execute();
         $question_data->store_result();
@@ -359,6 +368,14 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             if ($correct != 0) $correct_no++;
           }
           $stems++;
+/*          if ($paper[$i]['q_type'] == 'enhancedcalc') {
+            require_once('../question/enhancedcalculation.class.php');
+            if (!isset($configObj)) {
+              $configObj = Config::get_instance();
+            }
+            $paper[$i]['object'] = new EnhancedCalculation($configObj);
+            $paper[$i]['object']->load($paper[$i]);
+          }*/
         }
         $question_data->close();
       } else {
@@ -378,15 +395,15 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   // Add the user's log data into the above array.
   $tmp_q_id = 1;
   if ($paper_type == '5') {
-    $answer_data = $mysqlidb->prepare("SELECT 1 AS screen, q_id, NULL AS user_answer, mark, NULL AS option_order FROM log5 WHERE metadataID = ? ORDER BY id");
+    $answer_data = $mysqlidb->prepare("SELECT 1 AS screen, q_id, NULL AS user_answer, mark, NULL AS option_order, id FROM log5 WHERE metadataID = ? ORDER BY id");
   } else {
-    $answer_data = $mysqlidb->prepare("SELECT screen, q_id, user_answer, mark, option_order FROM log$log_type WHERE metadataID = ? ORDER BY screen, id");
+    $answer_data = $mysqlidb->prepare("SELECT screen, q_id, user_answer, mark, option_order, id FROM log$log_type WHERE metadataID = ? ORDER BY screen, id");
   }
   if ($answer_data) {
     $answer_data->bind_param('i', $metadataid);
     $answer_data->execute();
     $answer_data->store_result();
-    $answer_data->bind_result($screen, $q_id, $user_answer, $mark, $option_order);
+    $answer_data->bind_result($screen, $q_id, $user_answer, $mark, $option_order, $uniqid);
     while ($answer_data->fetch()) {
       // Skip over missing screens;
       foreach ($paper as $tmp_q_no => $question) {
@@ -394,6 +411,16 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $paper[$tmp_q_no]['user_answer'] = $user_answer;
           $paper[$tmp_q_no]['mark'] = $mark;
           $paper[$tmp_q_no]['option_order'] = $option_order;
+          $paper[$tmp_q_no]['metaid']=$metadataid;
+          $paper[$tmp_q_no]['uniqid']=$uniqid;
+/*          if ($paper[$tmp_q_no]['q_type'] == 'enhancedcalc') {
+            require_once('../question/enhancedcalculation.class.php');
+            if (!isset($configObj)) {
+              $configObj = Config::get_instance();
+            }
+            $paper[$tmp_q_no]['object'] = new EnhancedCalculation($configObj);
+            $paper[$tmp_q_no]['object']->load($paper[$tmp_q_no]);
+          }*/
           break;
         }
       }
@@ -402,6 +429,30 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   } else {
     display_error($string['useranswererror'], $mysqlidb->error);
   }
+
+  for ($question = 1; $question <= $q_no; $question++) {
+    if ($paper_type != '2' and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
+      require_once('../question/enhancedcalculation.class.php');
+      if (!isset($configObj)) {
+        $configObj = Config::get_instance();
+      }
+      $enhancedcalc = new EnhancedCalculation($configObj);
+      $enhancedcalc->load($paper[$question]);
+      $returnarray = $enhancedcalc->caculateUserMark();
+
+      if ($returnarray !== Q_MARKING_UNMARKED) {
+        //save the extra data back into the log record.
+        $sql = "UPDATE log$paper_type set mark=?, totalpos=?, user_answer=? WHERE id=? LIMIT 1";
+        $storemark = $mysqlidb->prepare($sql);
+        $storemark->bind_param('ddsi', $enhancedcalc->qmark, $enhancedcalc->totalpos, $enhancedcalc->useranswer_to_string(), $paper[$question]['uniqid']);
+        $storemark->execute();
+        $enhancedcalc->exportsave($paper[$question]);
+      }
+
+      $paper[$i]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
+      $total_random_mark += qRandomMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height']);
+    }
+ }
 
   if ($preview_q_id == null) {
   ?>
@@ -710,7 +761,14 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         break;
 
       case 'enhancedcalc':
-        print "";
+        require_once('../question/enhancedcalculation.class.php');
+        if (!isset($configObj)) {
+          $configObj = Config::get_instance();
+        }
+        $paper[$question]['object'] = new EnhancedCalculation($configObj);
+        $paper[$question]['object']->load($paper[$question]);
+        $paper[$question]['object']->render_feedback(array('tmp_exclude' => $tmp_exclude, 'hide_if_unanswered' => $hide_if_unanswered, 'tmp_display_correct_answer' => $tmp_display_correct_answer, 'tmp_display_students_response' => $tmp_display_students_response, 'question' => $question, 'tmp_fback' => $tmp_fback, 'tmp_display_feedback' => $tmp_display_feedback));
+
         break;
       case 'dichotomous':
         // Check to see if the user has answered any options.
@@ -855,7 +913,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         break;
       case 'info':
         echo "<tr><td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">";
-        if ($paper[$question]['q_media'] != '' and $paper[$question]['q_media'] != NULL) {
+        if ($paper[$question]['q_media'] != '' and $paper[$question]['q_media'] != null) {
           echo '<p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
         }
         echo $paper[$question]['leadin'];
@@ -1943,8 +2001,8 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $answer_options = array();
           $answer_options = explode("[/blank]",substr($blank_details[$blank_count],(strpos($blank_details[$blank_count],']') + 1)));
           $answer_list = array();
-          $answer_list = explode(',',$answer_options[0]);
-          $exclude_mod = (substr($tmp_exclude,$blank_count-1,1) == '1') ? ' class="exclude"' : '';
+          $answer_list = explode(',', $answer_options[0]);
+          $exclude_mod = (substr($tmp_exclude, $blank_count-1, 1) == '1') ? ' class="exclude"' : '';
           if ($paper[$question]['display_method'] == 'textboxes') {             // Textboxes
             $correct_flag = false;
             foreach ($answer_list as $individual_answer) {
@@ -1961,7 +2019,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               echo display_response($tmp_display_students_response, 'tick');
             } else {
               if ($user_choices[$blank_count] == 'u') {
-                  echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" style=\"color: #808080\"$exclude_mod />";
+                echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" style=\"color: #808080\"$exclude_mod />";
               } else {
                 if (substr($tmp_exclude,$blank_count-1,1) == '0') {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
@@ -1981,7 +2039,6 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               }
             }
           } else {                                                                // Dropdown menus
-            //echo '</span>';
             if ($tmp_display_correct_answer == '1') {
               if (isset($paper[$question]['std'][$blank_count-1])) echo display_std($paper[$question]['std'][$blank_count-1],0);
             }

@@ -126,7 +126,8 @@ class Rserve_Connection {
         }
     //cczsa1 added next block to shorten timeout on sockect connection
     if(!is_null($options)) {
-      socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $options['seconds'], 'usec' => $options['milliseconds']));
+      $valur=socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $options['seconds'], 'usec' => $options['milliseconds']));
+      $valur=socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $options['seconds'], 'usec' => $options['milliseconds']));
     }
 
 
