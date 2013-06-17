@@ -1943,8 +1943,8 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $answer_options = array();
           $answer_options = explode("[/blank]",substr($blank_details[$blank_count],(strpos($blank_details[$blank_count],']') + 1)));
           $answer_list = array();
-          $answer_list = explode(',',$answer_options[0]);
-          $exclude_mod = (substr($tmp_exclude,$blank_count-1,1) == '1') ? ' class="exclude"' : '';
+          $answer_list = explode(',', $answer_options[0]);
+          $exclude_mod = (substr($tmp_exclude, $blank_count-1, 1) == '1') ? ' class="exclude"' : '';
           if ($paper[$question]['display_method'] == 'textboxes') {             // Textboxes
             $correct_flag = false;
             foreach ($answer_list as $individual_answer) {
@@ -1961,7 +1961,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               echo display_response($tmp_display_students_response, 'tick');
             } else {
               if ($user_choices[$blank_count] == 'u') {
-                  echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" style=\"color: #808080\"$exclude_mod />";
+                echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" style=\"color: #808080\"$exclude_mod />";
               } else {
                 if (substr($tmp_exclude,$blank_count-1,1) == '0') {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
@@ -1981,7 +1981,6 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               }
             }
           } else {                                                                // Dropdown menus
-            //echo '</span>';
             if ($tmp_display_correct_answer == '1') {
               if (isset($paper[$question]['std'][$blank_count-1])) echo display_std($paper[$question]['std'][$blank_count-1],0);
             }
