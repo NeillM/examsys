@@ -261,8 +261,8 @@ if (isset($_POST['Submit'])) {
   $result->store_result();
   if ($result->num_rows == 0 or $properties->get_paper_title() == $_POST['paper_title']) {
     $properties->set_paper_title($_POST['paper_title']);
-    if (isset($_POST['paper_type'])) {
-      //$properties->set_paper_type($_POST['paper_type']);
+    if (isset($_POST['paper_type']) and ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1')) {
+      $properties->set_paper_type($_POST['paper_type']);
     }
 
     if (isset($_POST['bidirectional']) and $_POST['bidirectional'] == 1) {
