@@ -72,41 +72,6 @@ function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_user
 HTML;
   return $html;
 }
-
-if (isset($_POST['submit']) or isset($_POST['continue'])) {
-  $paper_type = $_POST['paper_type'];
-
-  // Delete previous records from the marks table.
-  $result = $mysqli->prepare("DELETE FROM textbox_marking WHERE paperID=? AND q_id = ? AND phase = ?");
-  $result->bind_param('iii', $paperID, $q_id, $phase);
-  $result->execute();
-  $result->close();
-
-  // Write in the new marks.
-  $comments = '';
-  for ($i=1; $i<=$_POST['answer_no']; $i++) {
-    if ($_POST["mark$i"] != 'NULL') {
-      $result = $mysqli->prepare("INSERT INTO textbox_marking VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
-      $result->bind_param('iiiidsiis', $paperID, $q_id, $_POST["logrec$i"], $userObject->get_user_ID(), $_POST["mark$i"], $comments, $phase, $_POST["log$i"], $_POST["username$i"]);
-      $result->execute();
-      $result->close();
-    }
-  }
-
-  if (isset($_POST['submit'])) {
-    $mysqli->close();
-    ?>
-    <html>
-    <body>
-    <script language="JavaScript">
-      window.top.location = "textbox_select_q.php?paperID=<?php echo $paperID; ?>&q_id=<?php echo $_GET['q_id']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&ws=<?php echo $ws; ?>&phase=<?php echo $phase; ?>&action=mark&repcourse=%";
-    </script>
-    </body>
-    </html>
-    <?php
-    exit;
-  }
-}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
