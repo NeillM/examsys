@@ -48,7 +48,7 @@ if (!QuestionUtils::question_exists($q_id, $mysqli)) {
 }
 
 function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username, $marks, $string) {
-  $html = '<select name="mark' . $id . '" class="tbmark"><option value="NULL"></option>';
+  $html = '<select id="mark' . $id . '" name="mark' . $id . '" class="tbmark"><option value="NULL"></option>';
   $inc = 1;
   if ($halfmarks == true) $inc = 0.5;
   for ($i=0; $i<=$marks; $i+=$inc) {
@@ -122,6 +122,16 @@ if (isset($_POST['submit']) or isset($_POST['continue'])) {
     body {font-size:90%}
     td {line-height:150%; text-align:justify}
     .heading {background-color:#EBEADB; color:black}
+    #answers {
+      width: 100%;
+      margin-right:10px
+    }
+    .number {
+      vertical-align:top;
+      text-align:right;
+      border-bottom:1px solid #CBC7B8;
+      width: 30px;
+    }
   <?php
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
     echo ".marked {color:#808080;display:none}\n";
@@ -131,6 +141,7 @@ if (isset($_POST['submit']) or isset($_POST['continue'])) {
   ?>
   </style>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
   <script type="text/javascript" src="../js/jquery.textbox.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript">
@@ -184,7 +195,7 @@ if ($phase == 2) {
 
 $half_marks = true;
 ?>
-<table cellpadding="4" cellspacing="0" border="0" style="margin-right:10px">
+<table id="answers" cellpadding="4" cellspacing="0" border="0">
 <?php
   if ($paper_type == '0') {
 
@@ -245,7 +256,7 @@ SQL;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
            $style = ' class="marked"';
         }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
+        echo "<tr id=\"ans_" . $answer_no . "\"" . $style . "><td class=\"number\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
       } else {
         $answer_no++;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.

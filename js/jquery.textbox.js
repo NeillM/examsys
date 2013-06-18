@@ -1,16 +1,18 @@
 $(function () {
-//  $.ajaxSetup({ timeout: 3000 });
-//  $('#content').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
-//    doError();
-//  });
+ $.ajaxSetup({ timeout: 3000 });
+ $('#content').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
+   doError();
+ });
 
   $('.tbmark').change(updateMark);
 });
 
+var id;
+
 function updateMark() {
   var mark = $(this).val();
   var name = $(this).attr('name');
-  var id = name.replace('mark', '');
+  id = name.replace('mark', '');
 
   $.post('../ajax/reports/save_textbox_marks.php',
     {
@@ -33,7 +35,12 @@ function doSuccess(data) {
     return false;
   }
 
-  // Do highlighting stuff
+  if ($('#mark' + id).val() == 'NULL') {
+    $('#ans_' + id).removeClass('marked').effect("highlight", {}, 1500);;
+  } else {
+    $('#ans_' + id).addClass('marked').effect("highlight", {}, 1500);;
+  }
+
 }
 
 function doError() {
