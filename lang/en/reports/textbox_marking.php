@@ -19,4 +19,5 @@ $string['saveexit'] = 'Save &amp; Exit';
 $string['nostudents'] = 'No students';
 $string['savecontinue'] = 'Save &amp; Continue';
 $string['noanswer'] = 'No answer provided';
+$string['saveerror'] = 'Error saving mark. Please try again';
 ?>
