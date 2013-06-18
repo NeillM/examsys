@@ -19,4 +19,5 @@ $string['saveexit'] = 'Zapisz i zamknij';
 $string['nostudents'] = 'Żadnych studentów';
 $string['savecontinue'] = 'Zapisz i kontynuuj';
 $string['noanswer'] = 'Nie udzielono odpowiedzi!';
+$string['saveerror'] = 'Error saving mark. Please try again'; // Niko
 ?>

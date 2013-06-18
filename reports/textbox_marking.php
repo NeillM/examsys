@@ -48,7 +48,7 @@ if (!QuestionUtils::question_exists($q_id, $mysqli)) {
 }
 
 function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username, $marks, $string) {
-  $html = '<select name="mark' . $id . '"><option value="NULL"></option>';
+  $html = '<select id="mark' . $id . '" name="mark' . $id . '" class="tbmark"><option value="NULL"></option>';
   $inc = 1;
   if ($halfmarks == true) $inc = 0.5;
   for ($i=0; $i<=$marks; $i+=$inc) {
@@ -66,46 +66,11 @@ function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_user
   }
   $html .= <<< HTML
 </select>&nbsp;<span style="color:black">{$string['marks']}</span><br />&nbsp;
-<input type="hidden" name="logrec{$id}" value="{$log_record_id}">
-<input type="hidden" name="log{$id}" value="{$log}">
-<input type="hidden" name="username{$id}" value="{$tmp_username}">
+<input type="hidden" id="logrec{$id}" name="logrec{$id}" value="{$log_record_id}">
+<input type="hidden" id="log{$id}" name="log{$id}" value="{$log}">
+<input type="hidden" id="username{$id}" name="username{$id}" value="{$tmp_username}">
 HTML;
   return $html;
-}
-
-if (isset($_POST['submit']) or isset($_POST['continue'])) {
-  $paper_type = $_POST['paper_type'];
-
-  // Delete previous records from the marks table.
-  $result = $mysqli->prepare("DELETE FROM textbox_marking WHERE paperID=? AND q_id = ? AND phase = ?");
-  $result->bind_param('iii', $paperID, $q_id, $phase);
-  $result->execute();
-  $result->close();
-
-  // Write in the new marks.
-  $comments = '';
-  for ($i=1; $i<=$_POST['answer_no']; $i++) {
-    if ($_POST["mark$i"] != 'NULL') {
-      $result = $mysqli->prepare("INSERT INTO textbox_marking VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
-      $result->bind_param('iiiidsiis', $paperID, $q_id, $_POST["logrec$i"], $userObject->get_user_ID(), $_POST["mark$i"], $comments, $phase, $_POST["log$i"], $_POST["username$i"]);
-      $result->execute();
-      $result->close();
-    }
-  }
-
-  if (isset($_POST['submit'])) {
-    $mysqli->close();
-    ?>
-    <html>
-    <body>
-    <script language="JavaScript">
-      window.top.location = "textbox_select_q.php?paperID=<?php echo $paperID; ?>&q_id=<?php echo $_GET['q_id']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&ws=<?php echo $ws; ?>&phase=<?php echo $phase; ?>&action=mark&repcourse=%";
-    </script>
-    </body>
-    </html>
-    <?php
-    exit;
-  }
 }
 ?>
 
@@ -122,6 +87,16 @@ if (isset($_POST['submit']) or isset($_POST['continue'])) {
     body {font-size:90%}
     td {line-height:150%; text-align:justify}
     .heading {background-color:#EBEADB; color:black}
+    #answers {
+      width: 100%;
+      margin-right:10px
+    }
+    .number {
+      vertical-align:top;
+      text-align:right;
+      border-bottom:1px solid #CBC7B8;
+      width: 30px;
+    }
   <?php
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
     echo ".marked {color:#808080;display:none}\n";
@@ -131,11 +106,20 @@ if (isset($_POST['submit']) or isset($_POST['continue'])) {
   ?>
   </style>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.textbox.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
+  <script type="text/javascript">
+    langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
+  </script>
 </head>
 
 <body style="margin:0px">
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&q_id=<?php echo $_GET['q_id']; ?>&startdate=<?php echo $startdate; ?>&enddate=<?php echo $enddate; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&ws=<?php echo $ws; ?>&phase=<?php echo $phase; ?>&action=mark" method="post">
+<form id="content" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id']; ?>&amp;startdate=<?php echo $startdate; ?>&amp;enddate=<?php echo $enddate; ?>&amp;module=<?php echo $_GET['module']; ?>&amp;folder=<?php echo $_GET['folder']; ?>&amp;ws=<?php echo $ws; ?>&amp;phase=<?php echo $phase; ?>&amp;action=mark" method="post">
+<input type="hidden" id="marker_id" name="marker_id" value="<?php echo $userObject->get_user_ID(); ?>" />
+<input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID; ?>" />
+<input type="hidden" id="q_id" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
+<input type="hidden" id="phase" name="phase" value="<?php echo $phase; ?>" />
 <?php
 // Get some paper properties
 if ($result = $mysqli->prepare("SELECT paper_type FROM properties WHERE property_id=?")) {
@@ -176,7 +160,7 @@ if ($phase == 2) {
 
 $half_marks = true;
 ?>
-<table cellpadding="4" cellspacing="0" border="0" style="margin-right:10px">
+<table id="answers" cellpadding="4" cellspacing="0" border="0">
 <?php
   if ($paper_type == '0') {
 
@@ -237,7 +221,7 @@ SQL;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
            $style = ' class="marked"';
         }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
+        echo "<tr id=\"ans_" . $answer_no . "\"" . $style . "><td class=\"number\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
       } else {
         $answer_no++;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
@@ -254,14 +238,8 @@ SQL;
 <div align="center"><input type="hidden" name="answer_no" value="<?php echo $answer_no; ?>" />
 <input type="hidden" name="paper_type" value="<?php echo $paper_type; ?>" />
 <table cellpadding="0" cellspacing="0" border="0">
-<tr><td style="text-align:center; color:#808080">ALT + S</td><td style="text-align:center; color:#808080">ALT + C</td><td></td><td></td></tr>
-
 <?php
-  if ($answer_no == 0) {
-    echo '<tr><td><input type="submit" name="submit" value="' . $string['saveexit'] . '" accesskey="S" style="width:160px" disabled /></td><td><input type="submit" name="continue" value="' . $string['savecontinue'] . '" accesskey="C" style="width:160px" disabled /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.top.location=\'./textbox_select_q.php?paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&ws=1&phase=' . $phase . '&action=mark&repcourse=%\'" type="button" name="cancel" value="' . $string['cancel'] . '" style="width:90px" /></td></tr>';
-  } else {
-    echo '<tr><td><input type="submit" name="submit" value="' . $string['saveexit'] . '" accesskey="S" style="width:160px" /></td><td><input type="submit" name="continue" value="' . $string['savecontinue'] . '" accesskey="C" style="width:160px" /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.top.location=\'./textbox_select_q.php?paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&ws=1&phase=' . $phase . '&action=mark&repcourse=%\'" type="button" name="cancel" value="' . $string['cancel'] . '" style="width:90px" /></td></tr>';
-  }
+  echo '<tr><td><input onclick="javascript:window.top.location=\'./textbox_select_q.php?paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&ws=1&phase=' . $phase . '&action=mark&repcourse=%\'" type="button" name="cancel" value="' . $string['ok'] . '" style="width:90px" /></td></tr>';
 ?>
 </table>
 </div>
