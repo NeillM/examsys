@@ -29,53 +29,51 @@ require '../../include/errors.inc';
 
 $status = 'ERROR';
 
-$paperID = (isset($_POST['paper_id'])) ? $_POST['paper_id'] : false;
-$q_id = (isset($_POST['q_id'])) ? $_POST['q_id'] : false;
-$log_id = (isset($_POST['log_id'])) ? $_POST['log_id'] : false;
-$marker_id = (isset($_POST['marker_id'])) ? $_POST['marker_id'] : false;
-$mark = (isset($_POST['mark'])) ? $_POST['mark'] : false;
-$phase = (isset($_POST['phase'])) ? $_POST['phase'] : false;
-$log = (isset($_POST['log'])) ? $_POST['log'] : false;
-$user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : false;
+$paperID = check_var('paper_id', 'POST', true, false, true);
+$q_id = check_var('q_id', 'POST', true, false, true);
+$log_id = check_var('log_id', 'POST', true, false, true);
+$marker_id = check_var('marker_id', 'POST', true, false, true);
+$mark = check_var('mark', 'POST', true, false, true);
+$phase = check_var('phase', 'POST', true, false, true);
+$log = check_var('log', 'POST', true, false, true);
+$user_id = check_var('user_id', 'POST', true, false, true);
 
-if ($paperID !== false and $q_id !== false and $log_id !== false and $marker_id !== false and $mark !== false and $phase !== false and $log !== false and $user_id !== false) {
-  if ($mark != 'NULL') {
-    $sql = <<< QUERY
+if ($mark != 'NULL') {
+  $sql = <<< QUERY
 INSERT INTO textbox_marking (paperID, q_id, answer_id, markerID, mark, comments, date, phase, logtype, student_userID)
 VALUES (?, ?, ?, ?, ?, '', NOW(), ?, ?, ?) ON DUPLICATE KEY UPDATE
 markerID = ?, mark = ?, date = NOW()
 QUERY;
 
-    try {
-      $result = $mysqli->prepare($sql);
-      if ($result) {
-        $result->bind_param('iiiidiiiid', $paperID, $q_id, $log_id, $marker_id, $mark, $phase, $log, $user_id, $marker_id, $mark);
-        $result2 = $result->execute();
-        if ($result !== false) {
-          $status = 'OK';
-        }
-        $result->close();
+  try {
+    $result = $mysqli->prepare($sql);
+    if ($result) {
+      $result->bind_param('iiiidiiiid', $paperID, $q_id, $log_id, $marker_id, $mark, $phase, $log, $user_id, $marker_id, $mark);
+      $result2 = $result->execute();
+      if ($result !== false) {
+        $status = 'OK';
       }
-    } catch (exception $ex) {
-      // No need to do anything
+      $result->close();
     }
-  } else {
-    $sql = <<< QUERY
+  } catch (exception $ex) {
+    // No need to do anything
+  }
+} else {
+  $sql = <<< QUERY
 DELETE FROM textbox_marking WHERE answer_id = ? AND phase = ?
 QUERY;
-    try {
-      $result = $mysqli->prepare($sql);
-      if ($result) {
-        $result->bind_param('ii', $log_id, $phase);
-        $result2 = $result->execute();
-        if ($result !== false) {
-          $status = 'OK';
-        }
-        $result->close();
+  try {
+    $result = $mysqli->prepare($sql);
+    if ($result) {
+      $result->bind_param('ii', $log_id, $phase);
+      $result2 = $result->execute();
+      if ($result !== false) {
+        $status = 'OK';
       }
-    } catch (exception $ex) {
-      // No need to do anything
+      $result->close();
     }
+  } catch (exception $ex) {
+    // No need to do anything
   }
 }
 
