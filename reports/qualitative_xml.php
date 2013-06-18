@@ -23,19 +23,26 @@
 */
 
   require '../include/staff_auth.inc';
+  require_once '../include/errors.inc';
   require_once '../classes/stringutils.class.php';
+  require_once '../classes/paperproperties.class.php';
 
+  $paperID = check_var('paperID', 'GET', true, false, true);
+
+  // Get some paper properties
+  $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+
+  if (!$propertyObj) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
+  
   header('Pragma: public');
   header('Content-disposition: attachment; filename=report.xml');
   header('Content-type: text/xml');
   set_time_limit(0);
 
-  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($paper);
-  $result->fetch();
-  $result->close();
+  $paper = str_replace('&', '&amp;', $propertyObj->get_paper_title());
 
   echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
   echo '<?mso-application progid="Word.Document"?><w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:st1="urn:schemas-microsoft-com:office:smarttags" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve"><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="City"/><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="place"/><o:DocumentProperties><o:Title>';
@@ -53,11 +60,11 @@
   echo '<w:body><wx:sect><wx:sub-section>';
   echo '<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>' . StringUtils::wordToUtf8($paper) . '</w:t></w:r></w:p>';
 
-  $result = $mysqli->prepare("SELECT question FROM papers, questions WHERE papers.question=questions.q_id AND q_type!='info' AND paper=? ORDER BY screen, display_pos");
+  $result = $mysqli->prepare("SELECT question FROM papers, questions WHERE papers.question = questions.q_id AND q_type != 'info' AND paper = ? ORDER BY screen, display_pos");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($question);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $paper_structure[] = $question;
   }
   $result->close();
@@ -79,16 +86,16 @@ INNER JOIN users u ON lm.userID = u.id
 WHERE p.paper = ?
 AND lm.student_grade LIKE ?
 AND lm.year LIKE ?
-AND q.q_type='textbox'
+AND q.q_type = 'textbox'
 AND lm.started >= ? AND lm.started <= ?
-AND (u.roles = 'Student' OR u.roles = 'graduate')
+AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
 ORDER BY l.screen, p.display_pos
 SQL;
   $result = $mysqli->prepare($sql);
   $result->bind_param('issss', $_GET['paperID'], $_GET['repcourse'], $_GET['repyear'], $startdate, $enddate);
   $result->execute();
   $result->bind_result($screen, $theme, $tmp_username, $q_id, $leadin, $user_answer);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($old_q_id != $q_id or $old_screen < $screen) {
       $comment_flag = 0;
 

@@ -23,10 +23,22 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/survey_quantitative.inc.php';
-require '../include/errors.inc';
+require_once '../include/survey_quantitative.inc.php';
+require_once '../include/errors.inc';
 require_once '../classes/stringutils.class.php';
-check_var('paperID', 'GET', true, false, false);
+require_once '../classes/paperproperties.class.php';
+
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$startdate  = check_var('startdate', 'GET', true, false, true);
+$enddate     = check_var('enddate', 'GET', true, false, true);
+
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+
+if (!$propertyObj) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 header('Pragma: public');
 header('Content-disposition: attachment; filename=report.xml');
@@ -90,7 +102,7 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
         $i = 0;
         foreach ($options as $individual_option) {
           $i++;
-          if ($log[$screen][$q_id][1][$i] == '') {
+          if (!isset($log[$screen][$q_id][1][$i]) or $log[$screen][$q_id][1][$i] == '') {
             echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           } else {
             echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1][$i] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1][$i]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
@@ -278,20 +290,13 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
   }
 }
 
-$result = $mysqli->prepare("SELECT COUNT(question) AS question_no, paper_title FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND papers.question=questions.q_id AND q_type!='info' AND paper=? GROUP BY property_id");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->bind_result($number_of_questions, $paper);
-$result->fetch();
-$result->close();
-
 $exclude = '';
 if ($_GET['complete'] == 1) {
-  $result = $mysqli->prepare("SELECT userID, COUNT(id) AS answer_no FROM log3 WHERE q_paper=? AND started>=? AND started<=? GROUP BY userID");
-  $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
+  $result = $mysqli->prepare("SELECT userID, COUNT(id) AS answer_no FROM log3 WHERE q_paper = ? AND started >= ? AND started <= ? GROUP BY userID");
+  $result->bind_param('iss', $paperID, $startdate, $enddate);
   $result->execute();
   $result->bind_result($tmp_username, $answer_no);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
       $exclude .= ' AND log3.userID != "' . $tmp_username . '"';
     }
@@ -299,12 +304,15 @@ if ($_GET['complete'] == 1) {
   $result->close();
 }
 
+$paper = str_replace('&', '&amp;', $propertyObj->get_paper_title());
+$number_of_questions = $propertyObj->get_question_no();
+
 echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 echo '<?mso-application progid="Word.Document"?>
 <w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:st1="urn:schemas-microsoft-com:office:smarttags" xmlns:wsp="http://schemas.microsoft.com/office/word/2003/wordml/sp2" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve"><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="City"/><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="place"/><o:DocumentProperties><o:Title>';
 echo $paper;
-$tmp_start = substr($_GET['startdate'], 6, 2) . '/' . substr($_GET['startdate'], 4, 2) . '/' . substr($_GET['startdate'], 0, 4) . ' ' . substr($_GET['startdate'], 8, 2) . ':' . substr($_GET['startdate'], 10, 2);
-$tmp_end = substr($_GET['enddate'], 6, 2) . '/' . substr($_GET['enddate'], 4, 2) . '/' . substr($_GET['enddate'], 0, 4) . ' ' . substr($_GET['enddate'], 8, 2) . ':' . substr($_GET['enddate'], 10, 2);
+$tmp_start = substr($startdate, 6, 2) . '/' . substr($startdate, 4, 2) . '/' . substr($startdate, 0, 4) . ' ' . substr($startdate, 8, 2) . ':' . substr($startdate, 10, 2);
+$tmp_end = substr($enddate, 6, 2) . '/' . substr($enddate, 4, 2) . '/' . substr($enddate, 0, 4) . ' ' . substr($enddate, 8, 2) . ':' . substr($enddate, 10, 2);
 echo '</o:Title><o:Author>Rogo ' . $configObject->get('rogo_version') . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end .'.</o:Description><o:LastAuthor>Rogo ' . $configObject->get('rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
 echo '</o:Created><o:LastSaved>';
@@ -317,7 +325,7 @@ echo '<w:body><wx:sect><wx:sub-section>';
 echo '<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>' . StringUtils::wordToUtf8($paper) . '</w:t></w:r></w:p>';
 
 $log_array = array();
-$hits = get_quantitative_log_data($_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $exclude, $log_array, $mysqli);
+$hits = get_quantitative_log_data($paperID, $_GET['repcourse'], $startdate, $enddate, $exclude, $log_array, $mysqli);
 
 $table_on = 0;
 
@@ -332,11 +340,11 @@ if ($hits > 0) {
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, q_media, q_media_width, q_media_height, correct FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, q_media, q_media_width, q_media_height, correct FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $q_media, $q_media_width, $q_media_height, $correct);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $theme = str_replace('&nbsp;',' ',$theme);
     $scenario = str_replace('&nbsp;',' ',$scenario);
     $leadin = str_replace('&nbsp;',' ',$leadin);
