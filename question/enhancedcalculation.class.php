@@ -54,12 +54,17 @@ class EnhancedCalculation extends Question implements questionInterface {
       $this->settings = json_decode($this->settings, true);
     }
 
+    if ($this->useranswer['uans'] == '') {
+      $this->qmark = 0;
 
-    if(!isset($this->useranswer['uansunit'])) {
-      $pattern='/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
-      $out=preg_match($pattern,$inp,$matches);
-      $sz=strlen($matches[0]);
-      $units=trim(substr($inp,$sz));
+      return Q_MARKING_NOTANS;
+    }
+
+    if (!isset($this->useranswer['uansunit'])) {
+      $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
+      $out = preg_match($pattern, $this->useranswer['uans'], $matches);
+      $sz = strlen($matches[0]);
+      $units = trim(substr($this->useranswer['uans'], $sz));
 
       $this->useranswer['uansunit'] = $units;
       $this->useranswer['uansnumb'] = $matches[0];
@@ -76,6 +81,15 @@ class EnhancedCalculation extends Question implements questionInterface {
       $enhancedcalcObj = new enhancedcalc_rserve($this->configObj);
     }
 
+    $this->useranswer['ans']['units'] = $this->settings['units'];
+    $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
+
+    if ($this->useranswer['uansunit'] == $this->settings['units']) {
+      $this->useranswer['status']['units'] = true;
+    } else {
+      $this->useranswer['status']['units'] = false;
+    }
+
     $returnarray = $enhancedcalcObj->calculate($this->useranswer, $this->settings);
 
     $return = $returnarray[0];
@@ -83,13 +97,83 @@ class EnhancedCalculation extends Question implements questionInterface {
 
     var_dump($this->useranswer);
 
-    if($return!==true) {
+    if ($return !== true) {
       // not marked
-      return Q_MARKING_UNMARKED;
+      $returnstatus = Q_MARKING_UNMARKED;
+      $this->useranswer['status']['overall'] = $returnstatus;
+
+      return $returnstatus;
     }
 
-    if(!isset($this->settings['markruleset']) or (isset($this->settings['markruleset']) and $this->settings['markruleset'] = 0)) {
+
+    if (!isset($this->settings['markruleset']) or (isset($this->settings['markruleset']) and $this->settings['markruleset'] = 0)) {
       //default rules for marking
+
+      //check for strict first
+
+      //check strict dp
+      if ((isset($this->settings['strictdp']) and $this->settings['strictdp'] === true and !($this->useranswer['status']['strictdp'] === true and $this->useranswer['status']['strictdpsize'] === true))) {
+        $this->qmark = $this->settings['m_incorrect'];
+
+        $returnstatus = Q_MARKING_WRONG;
+        $this->useranswer['status']['overall'] = $returnstatus;
+
+        return $returnstatus;
+      }
+      //check for strict sf
+      if ((isset($this->settings['strictsf']) and $this->settings['strictsf'] === true and isset($this->useranswer['status']['strictsf']) and $this->useranswer['status']['strictsf'] !== true)) {
+        $this->qmark = $this->settings['m_incorrect'];
+
+
+        $returnstatus = Q_MARKING_WRONG;
+        $this->useranswer['status']['overall'] = $returnstatus;
+
+        return $returnstatus;
+      }
+
+      //check strict units
+      if (isset($this->settings['strictunits']) and $this->settings['strictunits'] === true and $this->useranswer['status']['units'] !== true) {
+        $this->qmark = $this->settings['m_incorrect'];
+
+        $returnstatus = Q_MARKING_WRONG;
+        $this->useranswer['status']['overall'] = $returnstatus;
+
+        return $returnstatus;
+      }
+
+      $returnstatus = Q_MARKING_WRONG;
+
+      //part tolerance range
+      if (isset($this->useranswer['status']['parttol']) and $this->useranswer['status']['parttol'] === true) {
+        $this->qmark = $this->settings['m_partial'];
+        $returnstatus = Q_MARKING_PART_TOL;
+      }
+
+      //full tolerance range
+      if (isset($this->useranswer['status']['fulltol']) and $this->useranswer['status']['fulltol'] === true) {
+        $this->qmark = $this->settings['m_correct'];
+        $returnstatus = Q_MARKING_FULL_TOL;
+      }
+
+      //exact answer
+      if (isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === true) {
+        $this->qmark = $this->settings['m_correct'];
+        $returnstatus = Q_MARKING_EXACT;
+      }
+
+
+
+
+      //remove marks for incorrect unit
+      if ((isset($this->settings['wrongunit']) and $this->settings['wrongunit'] != 0) and $this->useranswer['status']['units'] !== true) {
+        $this->qmark = $this->qmark - $this->settings['wrongunit'];
+        $returnstatus = Q_MARKING_PART_TOL;
+      }
+
+
+      $this->useranswer['status']['overall'] = $returnstatus;
+
+      return $returnstatus;
     }
 
 
@@ -205,11 +289,11 @@ class EnhancedCalculation extends Question implements questionInterface {
       if ($extra['tmp_exclude'] == '1') echo '<span class="exclude">';
 
 
-      if (isset($this->useranswer['status']) and ($this->useranswer['status'] == Q_MARKING_EXACT or $this->useranswer['status'] == Q_MARKING_FULL_TOL)) {
+      if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_EXACT or $this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
         echo display_response($extra['tmp_display_students_response'], 'tick');
-      } elseif (isset($this->useranswer['status']) and $this->useranswer['status'] == Q_MARKING_PART_TOL) {
+      } elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
         echo display_response($extra['tmp_display_students_response'], 'half');
-      } elseif (isset($this->useranswer['status']) and $this->useranswer['status'] == Q_MARKING_WRONG) {
+      } elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_WRONG) {
         echo display_response($extra['tmp_display_students_response'], 'cross');
       } else {
         echo display_response($extra['tmp_display_students_response'], 'unmarked');
@@ -222,22 +306,22 @@ class EnhancedCalculation extends Question implements questionInterface {
       } elseif (!isset($this->useranswer['cans'])) {
         echo ' <strong>(<span style="color:#C00000">error!</span>)</strong>';
       } else {
-        echo ' <strong>(' . $this->useranswer['cans'] . ')';
+        echo ' <strong>(' . $this->useranswer['cans'] . ' ';
         if ($this->settings['units'] != '') echo ' ' . $this->settings['units'];
-        echo '</strong>';
+        echo ')</strong>';
       }
     } else {
       echo ' ';
     }
 
     if (isset($this->useranswer['cans'])) {
-      if (isset($this->useranswer['status']) and ($this->useranswer['status'] == Q_MARKING_FULL_TOL)) {
-        echo ' ' . $string['withatoleranceof'] . ' ' . $settings['tolerance_full'];
-        if (StringUtils::ends_with($settings['tolerance_full'], '%')) echo " (" . (round($tmp_answer[1], $decimals) - $tolerance_full) . " - " . (round($tmp_answer[1], $decimals) + $tolerance_full) . ")";
+      if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
+        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['fulltoll'].$this->settings['fulltoltyp'];
+        if ($this->settings['fultoltyp']=='%') echo " (" . $this->useranswer['ans']['parttolnegans'] . " - " . $this->useranswer['ans']['parttolans'] . ")";
       }
-      if (isset($this->useranswer['status']) and $this->useranswer['status'] == Q_MARKING_PART_TOL) {
-        echo ' ' . $string['withatoleranceof'] . ' ' . $settings['tolerance_partial'];
-        if (StringUtils::ends_with($settings['tolerance_partial'], '%')) echo " (" . (round($tmp_answer[1], $decimals) - $tolerance_partial) . " - " . (round($tmp_answer[1], $decimals) + $tolerance_partial) . ")";
+      if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
+        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['parttol'].$this->settings['parttoltyp'];
+        if ($this->settings['parttoltyp']=='%') echo " (" . $this->useranswer['ans']['parttolnegans'] . " - " . $this->useranswer['ans']['parttolans'] . ")";
       }
     }
 
