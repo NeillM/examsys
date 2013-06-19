@@ -55,6 +55,16 @@ class EnhancedCalculation extends Question implements questionInterface {
     }
 
 
+    if(!isset($this->useranswer['uansunit'])) {
+      $pattern='/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
+      $out=preg_match($pattern,$inp,$matches);
+      $sz=strlen($matches[0]);
+      $units=trim(substr($inp,$sz));
+
+      $this->useranswer['uansunit'] = $units;
+      $this->useranswer['uansnumb'] = $matches[0];
+    }
+
     $enhancedcalcType = $this->configObj->get('enhancedcalc_type');
     if (!is_null($enhancedcalcType)) {
       require_once '../plugins/enhancedcalc/' . $enhancedcalcType . '.php';
@@ -68,28 +78,22 @@ class EnhancedCalculation extends Question implements questionInterface {
 
     $returnarray = $enhancedcalcObj->calculate($this->useranswer, $this->settings);
 
-
     $return = $returnarray[0];
     $this->useranswer = $returnarray[1];
 
-    if ($return === Q_MARKING_WRONG) {
-      $this->qmark = $this->settings['m_incorrect'];
-      $this->markinfo = Q_MARKING_WRONG;
-      $this->totalpos = $this->settings['m_correct'];
-    } elseif ($return === Q_MARKING_EXACT or $return === Q_MARKING_FULL_TOL) {
-      $this->qmark = $this->settings['m_correct'];
-      $this->markinfo = Q_MARKING_EXACT;
-      $this->totalpos = $this->settings['m_correct'];
-    } elseif ($return === Q_MARKING_PART_TOL) {
-      $this->qmark = $this->settings['m_partial'];
-      $this->markinfo = Q_MARKING_PART_TOL;
-      $this->totalpos = $this->settings['m_correct'];
-    } else {
-      $this->qmark = null;
-      $this->markinfo = Q_MARKING_UNMARKED;
+    var_dump($this->useranswer);
+
+    if($return!==true) {
+      // not marked
+      return Q_MARKING_UNMARKED;
     }
 
-    return $return;
+    if(!isset($this->settings['markruleset']) or (isset($this->settings['markruleset']) and $this->settings['markruleset'] = 0)) {
+      //default rules for marking
+    }
+
+
+    return Q_MARKING_UNMARKED;
   }
 
   public function useranswer_to_string() {
