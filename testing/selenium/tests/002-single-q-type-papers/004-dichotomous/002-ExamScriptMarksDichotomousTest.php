@@ -18,7 +18,7 @@ class ExamScrtiptMarksDichotomousTest extends PHPUnit_Extensions_SeleniumTestCas
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=4&startdate=20130101000000&enddate=20530108160000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-08 10:06:23',104,'0','n','n','0.00',event);\"]");
+    $this->click("css=tr#res1 td.greyln img");
     $this->click("id=item1a");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -84,7 +84,7 @@ class ExamScrtiptMarksDichotomousTest extends PHPUnit_Extensions_SeleniumTestCas
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=4&startdate=20130101000000&enddate=20530108160000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-08 12:08:11',105,'0','n','n','100.00',event);\"]");
+    $this->click("css=tr#res2 td.greyln img");
     $this->click("css=#item1a > img");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -149,7 +149,7 @@ class ExamScrtiptMarksDichotomousTest extends PHPUnit_Extensions_SeleniumTestCas
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=4&startdate=20130101000000&enddate=20530108160000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-08 13:37:14',106,'0','n','n','-32.14',event);\"]");
+    $this->click("css=tr#res3 td.greyln img");
     $this->click("css=#item1a > img");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -214,7 +214,7 @@ class ExamScrtiptMarksDichotomousTest extends PHPUnit_Extensions_SeleniumTestCas
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=4&startdate=20130101000000&enddate=20530108160000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-08 14:43:09',107,'0','n','n','30.06',event);\"]");
+    $this->click("css=tr#res4 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -279,7 +279,7 @@ class ExamScrtiptMarksDichotomousTest extends PHPUnit_Extensions_SeleniumTestCas
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=4&startdate=20130101000000&enddate=20530209160000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-08 17:01:11',108,'0','n','n','4.17',event);\"]");
+    $this->click("css=tr#res5 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -344,7 +344,7 @@ class ExamScrtiptMarksDichotomousTest extends PHPUnit_Extensions_SeleniumTestCas
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=4&startdate=20130101000000&enddate=20530209160000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-18 16:36:04',109,'0','n','n','10.42',event);\"]");
+    $this->click("css=tr#res6 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");

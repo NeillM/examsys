@@ -18,7 +18,7 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530110170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 12:19:53',104,'0','n','n','0.00',event);\"]");
+    $this->click("css=tr#res1 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -43,7 +43,7 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 13:18:16',105,'0','n','n','100.00',event);\"]");
+    $this->click("css=tr#res2 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -68,7 +68,7 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 13:57:35',106,'0','n','n','-30.77',event);\"]");
+    $this->click("css=tr#res3 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -93,7 +93,7 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 15:05:39',107,'0','n','n','11.54',event);\"]");
+    $this->click("css=tr#res4 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -118,7 +118,7 @@ class ExamScrtiptMarksBlankTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=5&startdate=20130101000000&enddate=20530210170000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-10 15:14:20',108,'0','n','n','0.00',event);\"]");
+    $this->click("css=tr#res5 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");

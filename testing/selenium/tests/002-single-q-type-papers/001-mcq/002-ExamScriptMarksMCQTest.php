@@ -18,7 +18,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2013-01-07 14:45:44',104,'0','n','n','0.00',event);\"]");
+    $this->click("css=tr#res1 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -44,7 +44,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2012-12-12 12:12:42',105,'0','n','n','100.00',event);\"]");
+    $this->click("css=tr#res2 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -70,7 +70,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2012-12-12 12:12:50',106,'0','n','n','-33.33',event);\"]");
+    $this->click("css=tr#res3 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -96,7 +96,7 @@ class ExamScrtiptMarksMCQTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
 
     $this->open("/reports/class_totals.php?paperID=1&startdate=20120111000000&enddate=20530113150000&repmodule=&repcourse=%&sortby=name&module=3&folder=&percent=100&absent=0&studentsonly=1&ordering=asc");
-    $this->click("//span[@onclick=\"popMenu('2012-12-12 12:12:57',107,'0','n','n','41.67',event);\"]");
+    $this->click("css=tr#res4 td.greyln img");
     $this->click("id=item1b");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
