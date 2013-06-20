@@ -30,7 +30,7 @@ require_once '../classes/moduleutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $SMS = SMSutils::GetSmsUtils();
-$cfg_sms_sources = array();
+$cfg_sms_sources = array($string['nolookup'] => '');
 if (is_object($SMS)) {
   $cfg_sms_sources =  $SMS->getModuleSources();
 }
@@ -207,7 +207,6 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   echo "</optgroup>\n</select></td></tr>\n";
 
   echo '<tr><td class="field">' . $string['smsapi'] . '</td><td><select name="sms_api">';
-  echo '<option value="">' . $string['nolookup'] . '</option>';
   foreach ($cfg_sms_sources as $key=>$value) {
     echo "<option value=\"$value\">$key</option>\n";
   }

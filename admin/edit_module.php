@@ -48,19 +48,19 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   } else {
     $module['active'] = 0;
   }
-  
+
   if (isset($_POST['selfenroll'])) {
     $module['selfenroll'] = 1;
   } else {
     $module['selfenroll'] = 0;
   }
-  
+
   if (isset($_POST['neg_marking'])) {
     $module['neg_marking'] = 1;
   } else {
     $module['neg_marking'] = 0;
   }
-  
+
   $module['checklist'] = '';
   if (isset($_POST['peer']))     $module['checklist'] .= ',peer';
   if (isset($_POST['external'])) $module['checklist'] .= ',external';
@@ -71,7 +71,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   // Update the properties of the module.
   $module['moduleid'] = trim($_POST['modulecode']);
   $module['fullname'] = trim($_POST['fullname']);
-  
+
 
   if (isset($_POST['timed_exams'])) {
     $module['timed_exams'] = 1;
@@ -88,7 +88,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   } else {
     $module['add_team_members'] = 0;
   }
-  
+
   $vle_data = $_POST['vle_api'];
   if ($vle_data == '') {
     $module['map_level'] = 0;
@@ -98,13 +98,13 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     $module['vle_api'] = $vle_parts[0];
     $module['map_level'] = $vle_parts[1];
   }
-  
+
   $module['sms'] = $_POST['sms_api'];
-  $module['schoolid'] = $_POST['schoolid']; 
+  $module['schoolid'] = $_POST['schoolid'];
   $module['ebel_grid_template'] = $_POST['ebel_grid_template'];
 
   module_utils::update_module_by_code($_POST['old_modulecode'], $module, $mysqli);
-  
+
   $mysqli->close();
   header("location: list_modules.php");
   exit;
@@ -112,7 +112,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   require_once '../classes/smsutils.class.php';
 
   $SMS = SMSutils::GetSmsUtils();
-  $cfg_sms_sources = array();
+  $cfg_sms_sources = array($string['nolookup'] => '');
   if (is_object($SMS)) {
     $cfg_sms_sources =  $SMS->getModuleSources();
   }
