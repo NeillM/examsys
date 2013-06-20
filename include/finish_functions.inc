@@ -444,12 +444,17 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         //save the extra data back into the log record.
         $sql = "UPDATE log$paper_type set mark=?, totalpos=?, user_answer=? WHERE id=? LIMIT 1";
         $storemark = $mysqlidb->prepare($sql);
-        $storemark->bind_param('ddsi', $enhancedcalc->qmark, $enhancedcalc->totalpos, $enhancedcalc->useranswer_to_string(), $paper[$question]['uniqid']);
+        $new_useranswerstring = $enhancedcalc->useranswer_to_string();
+        $storemark->bind_param('ddsi', $enhancedcalc->qmark, $enhancedcalc->totalpos, $new_useranswerstring, $paper[$question]['uniqid']);
         $storemark->execute();
         $enhancedcalc->exportsave($paper[$question]);
+        print "EnhancedCalc<br>";
+        var_dump($enhancedcalc);
+        print "Question<br>";
+        var_dump($paper[$question]);
       }
 
-      $paper[$i]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
+      $paper[$question]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
       $total_random_mark += qRandomMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height']);
     }
  }
@@ -2464,7 +2469,10 @@ function display_question_mark($tmp_display_question_mark, &$paper, $q_type, $qu
     } elseif ($q_type == 'textbox') {
       // Unmarked textbox questions.
       $html .= '<p class="mkpad"><span class="usermk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
-    } else {
+    } elseif (is_null($paper[$question]['mark'])) {
+      $html .= '<p class="mkpad"><span class="usermk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+    } else
+     {
       // User has skipped over question.
       $html .= '<p class="mkpad"><span class="usermk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
     }

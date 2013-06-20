@@ -300,7 +300,7 @@ class enhancedcalc_rserve {
         //correct
         $useranswer['status']['strictdp'] = true;
       } else {
-        $useranswer['status']['strixtdp'] = false;
+        $useranswer['status']['strictdp'] = false;
       }
       if ($dps == $settings['dp']) {
         //correct
