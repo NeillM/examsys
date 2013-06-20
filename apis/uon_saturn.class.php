@@ -161,7 +161,7 @@ Class UON_SATURN extends SmsUtils {
   }
 
   function getModuleSources() {
-    return array('&lt;No lookup&gt;' => '', 'UK' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=uk', 'Malaysia' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia', 'China' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china');
+    return array('UK' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=uk', 'Malaysia' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia', 'China' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china');
   }
 
 
@@ -322,7 +322,7 @@ Class UON_SATURN extends SmsUtils {
 
             $student_data->close();
           }
-          
+
           // Check to see if any details of the user account need updating.
           if (strtoupper(substr($sms->ReasonForLeaving,0,3)) == 'W/D') {
             $new_roles = 'left';
@@ -339,14 +339,14 @@ Class UON_SATURN extends SmsUtils {
               $tmp_initials .= $tmp_name[0];
             }
           }
-          if (  $current_users[$lookup_username]['year'] != $sms->YearofStudy or 
-                $tmp_initials != $current_users[$lookup_username]['initials'] or 
-                $current_users[$lookup_username]['grade'] != $sms->CourseCode or 
-                $current_users[$lookup_username]['title'] != $sms->Title or 
-                $current_users[$lookup_username]['surname'] != $sms->Surname  or 
-                $current_users[$lookup_username]['first_names'] != $sms->Forename or 
-                $current_users[$lookup_username]['roles'] != $new_roles or 
-                $current_users[$lookup_username]['email'] != $sms->Email  
+          if (  $current_users[$lookup_username]['year'] != $sms->YearofStudy or
+                $tmp_initials != $current_users[$lookup_username]['initials'] or
+                $current_users[$lookup_username]['grade'] != $sms->CourseCode or
+                $current_users[$lookup_username]['title'] != $sms->Title or
+                $current_users[$lookup_username]['surname'] != $sms->Surname  or
+                $current_users[$lookup_username]['first_names'] != $sms->Forename or
+                $current_users[$lookup_username]['roles'] != $new_roles or
+                $current_users[$lookup_username]['email'] != $sms->Email
              ) {
               $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email WHERE username = ?");
               $result->bind_param('issssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $sms->Email, $lookup_username);

@@ -112,10 +112,11 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   require_once '../classes/smsutils.class.php';
 
   $SMS = SMSutils::GetSmsUtils();
-  $cfg_sms_sources = array($string['nolookup'] => '');
+  $cfg_sms_sources = array();
   if (is_object($SMS)) {
     $cfg_sms_sources =  $SMS->getModuleSources();
   }
+  $cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
 ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>

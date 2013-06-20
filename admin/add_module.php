@@ -30,10 +30,11 @@ require_once '../classes/moduleutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $SMS = SMSutils::GetSmsUtils();
-$cfg_sms_sources = array($string['nolookup'] => '');
+$cfg_sms_sources = array();
 if (is_object($SMS)) {
   $cfg_sms_sources =  $SMS->getModuleSources();
 }
+$cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
 
 $unique_moduleid = true;
 $tmp_modulecode = '';
