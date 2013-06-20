@@ -397,16 +397,20 @@ class ClassTotals {
     while ($result->fetch()) {
       if ($status != 'Experimental') {
         $individual_ratings = explode(',', $rating);
-        $count_individual_ratings = count($individual_ratings);
+        $excluded = $this->exclusions->get_exclusions_by_qid($questionID);
+        if ($q_type == 'mrq' and $excluded != '0000000000000000000000000000000000000000') {
+          $count_individual_ratings = strlen($excluded);
+        } else {
+          $count_individual_ratings = count($individual_ratings);
+        }
         for ($i=0; $i<$count_individual_ratings; $i++) {
-          $excluded = $this->exclusions->get_exclusions_by_qid($questionID);
-
           $bad_bonus_mark = ($q_type == 'rank' and $score_method == 'Bonus Mark' and strpos($excluded, '1') !== false);
           if (($excluded{$i} == 0) and !$bad_bonus_mark) {
             if (in_array($individual_ratings[$i], $std_types)) $ebel_marks[$individual_ratings[$i]]++;
+          
+            $std_total += $individual_ratings[$i];
+            $question_no++;
           }
-          $std_total += $individual_ratings[$i];
-          $question_no++;
         }
       }
     }
