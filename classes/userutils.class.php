@@ -256,7 +256,7 @@ Class UserUtils {
     $stmt->fetch();
     $stmt->close();
     
-    if (stripos($roles, 'Student') !== false) {
+    if (stripos($roles, 'Student') !== false or stripos($roles, 'Graduate') !== false) {
       $stmt = $db->prepare("SELECT student_id FROM sid WHERE userID = ? LIMIT 1");
       $stmt->bind_param('i', $userID);
       $stmt->execute();
@@ -266,7 +266,7 @@ Class UserUtils {
 
       return array('title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>$student_id);
     } else {
-      return array('title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles);
+      return array('title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>'');
     }
     
   }
