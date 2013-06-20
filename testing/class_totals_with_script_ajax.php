@@ -117,7 +117,7 @@ function parseRawMarks($data) {
     if (strpos($row,'Display exam script') !== false) {
       $cols = explode('<td', $row);
       
-      $tmp_parts = explode("popMenu('", $cols[2]);
+      $tmp_parts = explode("setVars('", $cols[2]);
       $started = substr($tmp_parts[1], 0, 19);
       
       $tmp_parts2 = explode(',', $tmp_parts[1]);
