@@ -31,6 +31,7 @@ define('Q_MARKING_FULL_TOL', 2);
 define('Q_MARKING_PART_TOL', 3);
 define('Q_MARKING_WRONG', 0);
 define('Q_MARKING_UNMARKED', -1);
+define('Q_MARKING_NOTANS',-2);
 
 
 Class Question {
