@@ -317,7 +317,7 @@ class EnhancedCalculation extends Question implements questionInterface {
     if (isset($this->useranswer['cans'])) {
       if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
         echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['fulltol'].$this->settings['fulltoltyp'];
-        if ($this->settings['fultoltyp']=='%') echo " (" . $this->useranswer['ans']['parttolnegans'] . " - " . $this->useranswer['ans']['parttolans'] . ")";
+        if ($this->settings['fulltoltyp']=='%') echo " (" . $this->useranswer['ans']['fulltolnegans'] . " - " . $this->useranswer['ans']['fulltolans'] . ")";
       }
       if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
         echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['parttol'].$this->settings['parttoltyp'];

@@ -292,9 +292,10 @@ class enhancedcalc_rserve {
       $useranswer['ans']['strictpos1'] = $strpos1;
       $op = self::$cnx->evalString("STRICTDP = format(round($uans," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
       $dpans = self::$cnx->evalString("paste(capture.output(print((STRICTDP))),collapse='\\n');");
+      $dpans = str_replace('"', '', $dpans);
       $pos = strpos($dpans, ' ');
       $useranswer['ans']['strictdp'] = substr($dpans, $pos + 1);
-      $status = self::$cnx->evalString("$uans == STRICTDP");
+      $status = self::$cnx->evalString("$uans == " . $useranswer['ans']['strictdp']);
 
       if ($status === true) {
         //correct
@@ -322,9 +323,10 @@ class enhancedcalc_rserve {
       $useranswer['ans']['pos1'] = $strpos1;
       $op = self::$cnx->evalString("DP = format(round(ANS," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
       $dpans = self::$cnx->evalString("paste(capture.output(print((DP))),collapse='\\n');");
+      $dpans = str_replace('"', '', $dpans);
       $pos = strpos($dpans, ' ');
       $useranswer['ans']['dp'] = substr($dpans, $pos + 1);
-      $status = self::$cnx->evalString("$uans == DP");
+      $status = self::$cnx->evalString("$uans == " . $useranswer['ans']['dp']);
 
       if ($status === true) {
         //correct
