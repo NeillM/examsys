@@ -210,6 +210,16 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
       $correct_no = 0;
       $old_marks_correct = 0;
       $q_no++;
+
+      if ($q_type == 'enhancedcalc') {
+        if (!is_array($settings)) {
+          $settings = json_decode($settings, true);
+        }
+        $marks_correct = $settings['m_correct'];
+        $marks_incorrect = $settings['m_incorrect'];
+        $marks_partial = $settings['m_partial'];
+      }
+
       $paper[$q_no]['q_id'] = $q_id;
       $paper[$q_no]['screen'] = $screen;
       $paper[$q_no]['display_pos'] = $display_pos;
