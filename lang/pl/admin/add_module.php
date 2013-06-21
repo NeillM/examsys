@@ -44,8 +44,8 @@ $string['ebelgrid'] = 'Szablon siatki metody Ebel';
 $string['timedexams'] = 'Egzaminy odmierzane czasowo';
 $string['questionbasedfeedback'] = 'Odzew na bazie pytania';
 $string['addteammembers'] = 'Dodaj członków zespołu';
-$string['maplevel'] = 'Mapping level'; // Niko
-$string['session'] = 'Session'; // Niko
-$string['module'] = 'Module'; // Niko
-$string['level'] = 'level'; // Niko
+$string['maplevel'] = 'Poziom mapowania'; 
+$string['session'] = 'Sesja';
+$string['module'] = 'Moduł'; 
+$string['level'] = 'poziom'; 
 ?>
