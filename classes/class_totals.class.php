@@ -592,12 +592,16 @@ class ClassTotals {
     return $correct;
   }
 
-  private function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $status, &$tmp_mark, &$tmp_user_mark_array, $userID, $tmp_array) {
+  private function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, &$tmp_user_mark_array) {
+    $tmp_mark = 0;
+  
     $tmp_exclude = $this->exclusions->get_exclusions_by_qid($q_id);
 
     $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
-
-    if ($status == 'Experimental') $exclude[$q_id] = '1111111111111111111111111111111111111111';
+    
+    if ($this->paper_buffer[$q_id]['status'] == 'Experimental') {
+      $tmp_exclude = '1111111111111111111111111111111111111111';
+    }
 
     $skip_random = false;
     if (!isset($this->paper_buffer[$q_id])) {
@@ -827,7 +831,6 @@ class ClassTotals {
         $this->paper_buffer[$q_id]['correct_labels'] = $correct_labels_exc;
       }
 
-      $this->q_medians[$q_id][] = $tmp_user_mark;
     } else {
       // Marking per Question, or all other question types, simply return the original mark.
       if ($tmp_exclude{0} == '0') {
@@ -836,8 +839,11 @@ class ClassTotals {
         $tmp_user_mark_array[$q_id] = $round_tmp_user_mark;
       }
 
-      $this->q_medians[$q_id][] = $tmp_user_mark;
     }
+
+    $this->q_medians[$q_id][] = $tmp_mark;
+    
+    return $tmp_mark;
   }
 
   public function formatsec($seconds) {
@@ -937,6 +943,7 @@ class ClassTotals {
         $this->paper_buffer[$question_id]['display_method']   = $display_method;
         $this->paper_buffer[$question_id]['marks_correct']    = $marks_correct;
         $this->paper_buffer[$question_id]['marks_incorrect']  = $marks_incorrect;
+        $this->paper_buffer[$question_id]['status']           = $status;
 
         if ($q_type == 'blank') {
           $this->paper_buffer[$question_id]['correct'] = $this->extract_blank_correct($option_text, $score_method, $question_id);
@@ -1157,7 +1164,6 @@ class ClassTotals {
                         , q_type
                         , log_metadata.userID
                         , mark
-                        , status
                         , attempt
                       FROM
                           log0, log_metadata, questions, users
@@ -1207,7 +1213,6 @@ class ClassTotals {
                         , q_type
                         , log_metadata.userID
                         , mark
-                        , status
                         , attempt
                       FROM
                         (log1, log_metadata, questions, users)
@@ -1239,17 +1244,17 @@ class ClassTotals {
       $log_query = $this->db->prepare($sql);
       $log_query->bind_param('isssisss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate, $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
     } elseif ($this->paper_type == '2') {
-      $log_query = $this->db->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
+      $log_query = $this->db->prepare("SELECT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, attempt FROM (log2, log_metadata, questions, users ) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
       $log_query->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
     } elseif ($this->paper_type == '5') {
-      $log_query = $this->db->prepare("SELECT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, status, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
+      $log_query = $this->db->prepare("SELECT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, 1 AS attempt FROM (log5, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
       $log_query->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
     } else {
-      $log_query = $this->db->prepare("SELECT log$this->paper_type.q_id, $this->paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, status, attempt FROM (log$this->paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$this->paper_type.metadataID = log_metadata.id AND log$this->paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
+      $log_query = $this->db->prepare("SELECT log$this->paper_type.q_id, $this->paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, attempt FROM (log$this->paper_type, log_metadata, questions, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$this->paper_type.metadataID = log_metadata.id AND log$this->paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
       $log_query->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
     }
     $log_query->execute();
-    $log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $username, $userID, $student_id, $user_answer, $q_type, $userID, $mark, $status, $attempt);
+    $log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $username, $userID, $student_id, $user_answer, $q_type, $userID, $mark, $attempt);
 
     while ($log_query->fetch() !== null) {
       if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
@@ -1305,7 +1310,7 @@ class ClassTotals {
         $tmp_array['duration']        = $user_duration;
         $tmp_array['paper_type']      = $paper_type;
       }
-      $this->getUserMark($q_id, $user_answer, $mark, $status, $tmp_mark, $tmp_user_mark_array, $userID, $tmp_array);
+      $tmp_mark += $this->getUserMark($q_id, $user_answer, $mark, $tmp_user_mark_array);
 
       if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
       $tmp_array['questions']++;

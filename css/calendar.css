@@ -1,0 +1,114 @@
+body {
+  font-size:80%
+}
+table {
+  margin:0px;
+  padding:0px;
+  font-size:100%;
+  border-spacing:0px;
+}
+select {
+  margin-top:3px
+}
+.month {
+  margin-left:8px;
+  margin-right:8px;
+  font-size:140%;
+}
+.monthgrid {
+  border-spacing:7px;
+  background-color:#E3EFFF;
+  width:98%;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:left;
+}
+.time {
+  color:#294C7A;
+  text-align:right;
+  width:36px;
+  vertical-align:top;
+  padding-right:4px
+}
+.timewarn {
+  color:#294C7A;
+  background-color:yellow;
+  text-align:right;
+  width:36px;
+  vertical-align:top;
+  padding-right:4px
+}
+a.lab {
+  color:#FF6300
+}
+.month {
+  border-spacing:7px;
+  background-color:#E3EFFF;
+  width:98%;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:left;
+}
+.dtext {
+  border-left:1px solid #5D8CC9;
+  text-align:center; color:#6593CF; background-color:#E3EFFF;
+}
+.dhead {
+  padding:0px;
+  height:17px;
+  background-image:url('../artwork/cal_box_gradient.png');
+  background-repeat:repeat-x;
+  border-top:1px solid #5D8CC9;
+  border-left:1px solid #5D8CC9;
+  border-bottom:1px solid #5D8CC9;
+  padding-left:5px;
+  font-weight:bold
+}
+.dheadtoday {
+  padding:0px;
+  height:17px;
+  background-image:url('../artwork/cal_box_gradient_on.png');
+  background-repeat:repeat-x;
+  border-top:1px solid #EE9311;
+  border-left:1px solid #EE9311;
+  border-bottom:1px solid #EE9311;
+  padding-left:5px;
+  font-weight:bold
+}
+.dheadnomonth {
+  padding:0px;
+  height:17px;
+  background-image:url('../artwork/cal_box_gradient.png');
+  background-repeat:repeat-x;
+  border-top:1px solid #5D8CC9;
+  border-left:1px solid #5D8CC9;
+  border-bottom:1px solid #5D8CC9
+}
+.daynomonth {
+  width:20%;
+  background-color:#A5BFE1;
+  border-left:1px solid #5D8CC9;
+  border-bottom:1px solid #5D8CC9
+}
+.day {
+  text-align:left;
+  vertical-align:top;
+  width:20%;
+  padding-top:5px;
+  padding-bottom:5px;
+  padding-left:0px;
+  padding-right:0px;
+  background-color:white;
+  border-left:1px solid #5D8CC9;
+  border-bottom:1px solid #5D8CC9
+}
+.daycur {
+  text-align:left;
+  vertical-align:top;
+  width:20%;
+  padding_top:5px;
+  padding-bottom:5px;
+  background-color:white;
+  border-left:1px solid #EE9311;
+  border-bottom:1px solid #EE9311
+}
