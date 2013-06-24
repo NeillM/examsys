@@ -125,10 +125,10 @@ if ($cohort_size > 0) {
 
         $csv .= $user_results[$i]['student_grade'] . ',"' . $user_results[$i]['module'] . '",' . $user_results[$i]['mark'] . ',' . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . '%,';
 
-        if ($user_results[$i]['percent'] < $pass_mark) {
+        if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
           $csv .= '"' . $string['fail'] . '",';
         } else {
-          if ($user_results[$i]['percent'] >= $distinction_mark) {
+          if (round($user_results[$i]['percent'], $percent_decimals) >= $distinction_mark) {
             $csv .= '"' . $string['distinction'] . '",';
           } else {
             $csv .= '"' . $string['pass'] . '",';

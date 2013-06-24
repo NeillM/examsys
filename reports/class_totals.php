@@ -567,13 +567,13 @@ if ($language != 'en') {
         } else {
           $ordered = '';
         }
-        if ($user_results[$i]['percent'] < $pass_mark) {
+        if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
           echo "<td class=\"mk $class$ordered fail r $role_css\">";
           if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
           echo $user_results[$i]['mark'] . "</td>";
           echo "<td class=\"$class fail r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class fail $role_css\">&nbsp;" . $string['fail'] . "</td>";
         } else {
-          if ($user_results[$i]['percent'] >= $distinction_mark) {
+          if (round($user_results[$i]['percent'], $percent_decimals) >= $distinction_mark) {
             echo "<td class=\"mk $class$ordered dist r $role_css\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";

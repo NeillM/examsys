@@ -278,11 +278,11 @@ for ($i=0; $i<$user_no; $i++) {
       } else {
         echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['mark'] . '</Data></Cell>';
       }
-      if ($user_results[$i]['percent'] < $pass_mark) {
+      if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
         echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent, $percent_decimals) . '</Data></Cell>';
         echo '<Cell ss:StyleID="s25"><Data ss:Type="String">' . $string['fail'] . '</Data></Cell>';
       } else {
-        if ($user_results[$i]['percent'] >= $distinction_mark) {
+        if (round($user_results[$i]['percent'], $percent_decimals) >= $distinction_mark) {
           echo '<Cell ss:StyleID="s31"><Data ss:Type="Number">' . MathsUtils::formatNumber($temp_percent, $percent_decimals) . '</Data></Cell>';
           echo '<Cell ss:StyleID="s31"><Data ss:Type="String">' . $string['distinction'] . '</Data></Cell>';
         } else {
