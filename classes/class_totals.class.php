@@ -592,7 +592,9 @@ class ClassTotals {
     return $correct;
   }
 
-  private function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, &$tmp_mark, &$tmp_user_mark_array) {
+  private function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, &$tmp_user_mark_array) {
+    $tmp_mark = 0;
+  
     $tmp_exclude = $this->exclusions->get_exclusions_by_qid($q_id);
 
     $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
@@ -829,7 +831,6 @@ class ClassTotals {
         $this->paper_buffer[$q_id]['correct_labels'] = $correct_labels_exc;
       }
 
-      $this->q_medians[$q_id][] = $tmp_user_mark;
     } else {
       // Marking per Question, or all other question types, simply return the original mark.
       if ($tmp_exclude{0} == '0') {
@@ -838,8 +839,12 @@ class ClassTotals {
         $tmp_user_mark_array[$q_id] = $round_tmp_user_mark;
       }
 
-      $this->q_medians[$q_id][] = $tmp_user_mark;
     }
+
+    //$this->q_medians[$q_id][] = $tmp_user_mark;
+    $this->q_medians[$q_id][] = $tmp_mark;
+    
+    return $tmp_mark;
   }
 
   public function formatsec($seconds) {
@@ -1306,7 +1311,7 @@ class ClassTotals {
         $tmp_array['duration']        = $user_duration;
         $tmp_array['paper_type']      = $paper_type;
       }
-      $this->getUserMark($q_id, $user_answer, $mark, $tmp_mark, $tmp_user_mark_array);
+      $tmp_mark += $this->getUserMark($q_id, $user_answer, $mark, $tmp_user_mark_array);
 
       if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
       $tmp_array['questions']++;
