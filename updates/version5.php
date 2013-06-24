@@ -431,6 +431,11 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query($sql, true);
   }
 
+  // 24/06/2013 - nazrji - add new calculation question type to enum
+  if (!$updater_utils->does_column_type_value_exist('questions', 'q_type', "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area','enhancedcalc')")) {
+    $updater_utils->execute_query("ALTER TABLE questions CHANGE q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area','enhancedcalc') DEFAULT NULL", true);
+  }
+
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */

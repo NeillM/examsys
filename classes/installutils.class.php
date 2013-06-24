@@ -2325,7 +2325,7 @@ QUERY;
     $this->tableList['questions'] = <<<QUERY
         CREATE TABLE `questions` (
           `q_id` int(4) NOT NULL auto_increment,
-          `q_type` enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area') default NULL,
+          `q_type` enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area','enhancedcalc') default NULL,
           `theme` text,
           `scenario` text,
           `leadin` text,
