@@ -24,13 +24,17 @@
 
 require '../include/sysadmin_auth.inc';
 
-$result = $mysqli->prepare("SELECT question_exclude.id, question_exclude.q_id, COUNT(o_id), parts FROM questions, question_exclude, options WHERE question_exclude.q_id = questions.q_id AND (q_type = 'mrq' OR q_type = 'rank') AND questions.q_id = options.o_id GROUP BY questions.q_id");
+$result = $mysqli->prepare("SELECT question_exclude.id, question_exclude.q_id, COUNT(o_id), q_type FROM questions, question_exclude, options WHERE question_exclude.q_id = questions.q_id AND (q_type = 'mrq' OR q_type = 'rank') AND questions.q_id = options.o_id GROUP BY questions.q_id");
 $result->execute();
-$result->bind_result($id, $q_id, $option_no, $parts);
+$result->bind_result($id, $q_id, $option_no, $q_type);
 $result->store_result();
 while ($result->fetch()) {
 
   $parts = str_repeat('1', $option_no);
+  
+  if ($q_type == 'rank') {
+    $parts .= '1';  // Add an extra 1 for bonus marks.
+  }
 
   $update = $mysqli->prepare("UPDATE question_exclude SET parts = ? WHERE id = ?");
   $update->bind_param('si', $parts, $id);
