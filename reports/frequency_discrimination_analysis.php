@@ -1221,17 +1221,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($individual_correct > $rank_no and $individual_correct != 0) $rank_no = $individual_correct;
         }
         $i = 0;
-<<<<<<< HEAD
-        if ($score_method == 'Bonus Mark') {
-          $no_marks_available = $rank_no + 1;
-        } elseif ($score_method == 'AllItemsCorrect') {
-          $no_marks_available = 1;
-        } else {
-          //$no_marks_available = $rank_no;
-          $no_marks_available = count($correct_buf);
-        }
-=======
->>>>>>> develop
         if (isset($excluded[$q_id])) {
           $tmp_exclude = $excluded[$q_id];
         } else {
