@@ -1159,20 +1159,13 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . pStats($tmp_correct_no/$user_total, $q_id, 1) . "</td><td colspan=\"2\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
       case 'mrq':
-        $tmp_parts = 0;
-        $i=0;
-        foreach ($options as $individual_option) {
-          $i++;
-          if ($correct_buf[$i-1] == 'y') $tmp_parts++;
-        }
         if (isset($excluded[$q_id])) {
           $tmp_exclude = $excluded[$q_id];
         } else {
           $tmp_exclude = '';
         }
-        echo "<tr><td colspan=\"3\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), $tmp_parts) . "</td></tr>\n";
+        echo "<tr><td colspan=\"3\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), count($options)) . "</td></tr>\n";
         $i = 0;
-        $tmp_parts = 0;
         $std_part = 0;
         foreach ($options as $individual_option) {
           $i++;
@@ -1228,6 +1221,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($individual_correct > $rank_no and $individual_correct != 0) $rank_no = $individual_correct;
         }
         $i = 0;
+<<<<<<< HEAD
         if ($score_method == 'Bonus Mark') {
           $no_marks_available = $rank_no + 1;
         } elseif ($score_method == 'AllItemsCorrect') {
@@ -1236,12 +1230,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           //$no_marks_available = $rank_no;
           $no_marks_available = count($correct_buf);
         }
+=======
+>>>>>>> develop
         if (isset($excluded[$q_id])) {
           $tmp_exclude = $excluded[$q_id];
         } else {
           $tmp_exclude = '';
         }
-        echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), $no_marks_available) . "</td></tr>\n";
+        echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), count($options) + 1) . "</td></tr>\n";
         foreach ($options as $individual_option) {
           echo "<tr><td id=\"q_" . $ex_no . "_" . ($i+1) . "\" colspan=\"6\"";
           if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
