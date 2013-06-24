@@ -431,6 +431,12 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query($sql, true);
   }
 
+
+  // 24/06/2013 - nazrji - add new calculation question type to enum
+  if (!$updater_utils->does_column_type_value_exist('questions', 'q_type', "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area','enhancedcalc')")) {
+    $updater_utils->execute_query("ALTER TABLE questions CHANGE q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area','enhancedcalc') DEFAULT NULL", true);
+  }
+
   // 25/06/2013 (brzsw) - add adjmark field to log tables.
   if (!$updater_utils->does_column_exist('log0', 'adjmark')) {
     $updater_utils->execute_query("ALTER TABLE log0 ADD COLUMN adjmark float AFTER mark", true);
@@ -460,9 +466,6 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE log5 ADD COLUMN adjmark float AFTER mark", true);
     $updater_utils->execute_query("UPDATE log5 SET adjmark = mark", false);
   }
-
-
-
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
