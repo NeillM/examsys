@@ -528,11 +528,11 @@ if (isset($_POST['submit'])) {
 function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {
   $buttonID++;
   if (strpos($status,'1') !== false) {
-    $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
+    $html = "<input type=\"text\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '1';
     $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_on.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
   } else {
-    $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
+    $html = "<input type=\"text\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '0';
     $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
   }
@@ -1228,12 +1228,13 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($individual_correct > $rank_no and $individual_correct != 0) $rank_no = $individual_correct;
         }
         $i = 0;
-        if ($score_method == 'BonusMark') {
+        if ($score_method == 'Bonus Mark') {
           $no_marks_available = $rank_no + 1;
         } elseif ($score_method == 'AllItemsCorrect') {
           $no_marks_available = 1;
         } else {
-          $no_marks_available = $rank_no;
+          //$no_marks_available = $rank_no;
+          $no_marks_available = count($correct_buf);
         }
         if (isset($excluded[$q_id])) {
           $tmp_exclude = $excluded[$q_id];

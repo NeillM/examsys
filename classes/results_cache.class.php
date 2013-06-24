@@ -85,6 +85,39 @@ class ResultsCache {
     return $marks;
   }
   
+  public function get_question_marks_by_student($userID) {
+  }
+  
+  public function get_median_question_marks_by_paper($paperID) {
+    $marks = array();
+
+    $result = $this->db->prepare("SELECT questionID, median FROM cache_median_question_marks WHERE paperID = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($questionID, $median);
+    while ($result->fetch()) {
+      $marks[$questionID] = $median;
+    }
+    $result->close();
+    
+    return $marks;
+  }
+  
+  public function get_student_question_marks_by_paper($userID, $log_type, $paperID) {
+    $marks = array();
+
+    $result = $this->db->prepare("SELECT q_id, mark FROM log$log_type, log_metadata WHERE log$log_type.metadataID = log_metadata.id AND userID = ? AND paperID = ?");
+    $result->bind_param('ii', $userID, $paperID);
+    $result->execute();
+    $result->bind_result($q_id, $mark);
+    while ($result->fetch()) {
+      $marks[$q_id] = $mark;
+    }
+    $result->close();
+    
+    return $marks;
+  }
+  
   public function get_paper_marks_by_paper($paperID, $sort_data = false) {
     $marks = array();
     

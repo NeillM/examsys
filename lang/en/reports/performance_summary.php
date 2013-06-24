@@ -18,4 +18,9 @@ $string['performsummary'] = 'Performance Summary';
 $string['scale'] = 'scale';
 $string['boxplot'] = 'boxplot';
 $string['noresults'] = 'No exam results could be found.';
+
+$string['examscript'] = 'Exam Script';
+$string['objectives'] = 'Objectives';
+$string['personalcohortperformance'] = 'Personal/Cohort Performance';
+$string['jumptopaper'] = 'Jump to Paper';
 ?>
