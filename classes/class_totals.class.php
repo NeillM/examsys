@@ -398,11 +398,7 @@ class ClassTotals {
       if ($status != 'Experimental') {
         $individual_ratings = explode(',', $rating);
         $excluded = $this->exclusions->get_exclusions_by_qid($questionID);
-        if ($q_type == 'mrq' and $excluded != '0000000000000000000000000000000000000000') {
-          $count_individual_ratings = strlen($excluded);
-        } else {
-          $count_individual_ratings = count($individual_ratings);
-        }
+        $count_individual_ratings = count($individual_ratings);
         for ($i=0; $i<$count_individual_ratings; $i++) {
           $bad_bonus_mark = ($q_type == 'rank' and $score_method == 'Bonus Mark' and strpos($excluded, '1') !== false);
           if (($excluded{$i} == 0) and !$bad_bonus_mark) {

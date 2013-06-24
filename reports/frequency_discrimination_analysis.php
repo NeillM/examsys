@@ -528,11 +528,11 @@ if (isset($_POST['submit'])) {
 function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {
   $buttonID++;
   if (strpos($status,'1') !== false) {
-    $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
+    $html = "<input type=\"text\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '1';
     $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_on.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
   } else {
-    $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
+    $html = "<input type=\"text\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '0';
     $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
   }
@@ -1159,20 +1159,13 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . pStats($tmp_correct_no/$user_total, $q_id, 1) . "</td><td colspan=\"2\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
       case 'mrq':
-        $tmp_parts = 0;
-        $i=0;
-        foreach ($options as $individual_option) {
-          $i++;
-          if ($correct_buf[$i-1] == 'y') $tmp_parts++;
-        }
         if (isset($excluded[$q_id])) {
           $tmp_exclude = $excluded[$q_id];
         } else {
           $tmp_exclude = '';
         }
-        echo "<tr><td colspan=\"3\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), $tmp_parts) . "</td></tr>\n";
+        echo "<tr><td colspan=\"3\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), count($options)) . "</td></tr>\n";
         $i = 0;
-        $tmp_parts = 0;
         $std_part = 0;
         foreach ($options as $individual_option) {
           $i++;
@@ -1228,19 +1221,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($individual_correct > $rank_no and $individual_correct != 0) $rank_no = $individual_correct;
         }
         $i = 0;
-        if ($score_method == 'BonusMark') {
-          $no_marks_available = $rank_no + 1;
-        } elseif ($score_method == 'AllItemsCorrect') {
-          $no_marks_available = 1;
-        } else {
-          $no_marks_available = $rank_no;
-        }
         if (isset($excluded[$q_id])) {
           $tmp_exclude = $excluded[$q_id];
         } else {
           $tmp_exclude = '';
         }
-        echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), $no_marks_available) . "</td></tr>\n";
+        echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), count($options) + 1) . "</td></tr>\n";
         foreach ($options as $individual_option) {
           echo "<tr><td id=\"q_" . $ex_no . "_" . ($i+1) . "\" colspan=\"6\"";
           if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
