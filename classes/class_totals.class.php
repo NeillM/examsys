@@ -343,10 +343,10 @@ class ClassTotals {
     }
   }
 
-  private function checkDisplayExcluded($exclude, $q_no) {
+  private function checkDisplayExcluded($exclude, $q_no, $q_type) {
     $subpart = '';
 
-    if (strlen($exclude) > 1) {
+    if ($q_type != 'mrq' and $q_type != 'rank' and strlen($exclude) > 1) {
       for ($i=0; $i<strlen($exclude); $i++) {
         if ($exclude{$i} == '1') {
           if ($subpart == '') {
@@ -357,6 +357,7 @@ class ClassTotals {
         }
       }
     }
+    
     if (strpos($exclude, '1') !== false) {
       if ($this->display_excluded == '') {
         $this->display_excluded = 'Q' . $q_no . $subpart;
@@ -925,7 +926,7 @@ class ClassTotals {
               $this->total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
               $this->orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
               $this->total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-              $this->checkDisplayExcluded($tmp_exclude, $question_no);
+              $this->checkDisplayExcluded($tmp_exclude, $question_no, $old_q_type);
             }
           } else {
             $this->displayExperimental($question_no);
@@ -991,7 +992,7 @@ class ClassTotals {
         $this->total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
         $this->orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
         $this->total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-        $this->checkDisplayExcluded($tmp_exclude, $question_no);
+        $this->checkDisplayExcluded($tmp_exclude, $question_no, $old_q_type);
       }
     } else {
       $this->displayExperimental($question_no);
