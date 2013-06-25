@@ -22,5 +22,6 @@ function showUM() {
 }
 
 function hideUM() {
-  document.getElementById('user_menu').style.display = 'none';
+  // document.getElementById('user_menu').style.display = 'none';
+  $('#user_menu').hide();
 }
