@@ -247,4 +247,6 @@ $string['markchangewarning'] = 'Warning: changing mark allocations post-exam sho
 $string['percenttolerance'] = 'Tolerances may now be expressed as percentages (e.g. 5%) as well as absolute numbers';
 $string['answercorrect'] = 'Answer Correct';
 $string['marks'] = 'Marks';
-?>
+// Extended calc
+// TODO: add to Polish
+$string['addanswers'] = 'Add More Answers...';

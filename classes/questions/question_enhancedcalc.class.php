@@ -39,6 +39,8 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $formulae = array();
   protected $formula_units = array();
   protected $score_method = 'Allow partial Marks';
+  protected $show_units = true;
+  protected $marks_unit = 0;
   public $max_options = 10;
   public $max_answers = 5;
   protected $variable_labels = array();
@@ -153,6 +155,44 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    */
   public function get_variable_labels() {
     return $this->variable_labels;
+  }
+
+  /**
+   * Get whether to display units for the question
+   * @return integer
+   */
+  public function get_show_units() {
+    return $this->show_units;
+  }
+
+  /**
+   * Set whether to display units for the question
+   * @param boolean $value
+   */
+  public function set_show_units($value) {
+    if ($value != $this->show_units) {
+      $this->set_modified_field('show_units', $this->show_units);
+      $this->show_units = $value;
+    }
+  }
+
+  /**
+   * Get the marks adjustment for units for the question
+   * @return integer
+   */
+  public function get_marks_unit() {
+    return $this->marks_unit;
+  }
+
+  /**
+   * Set the marks adjustment for units for the question
+   * @param mixed $value
+   */
+  public function set_marks_unit($value) {
+    if ($value != $this->marks_unit) {
+      $this->set_modified_field('marks_unit', $this->marks_unit);
+      $this->marks_unit = $value;
+    }
   }
 
   /**
