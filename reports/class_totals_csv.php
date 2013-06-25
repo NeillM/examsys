@@ -64,10 +64,10 @@ $user_results = $report->get_user_results();
 $paper_buffer = $report->get_paper_buffer();
 $cohort_size  = $report->get_cohort_size();
 $stats        = $report->get_stats();
-//$ss_pass      = $report->get_ss_pass();
-//$ss_hon       = $report->get_ss_hon();
-//$question_no  = $report->get_question_no();
-//$log_late     = $report->get_log_late();
+$ss_pass      = $report->get_ss_pass();
+$ss_hon       = $report->get_ss_hon();
+$question_no  = $report->get_question_no();
+$log_late     = $report->get_log_late();
 
 $user_no = count($user_results);
 
