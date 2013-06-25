@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Multiple Response questions
+ * Class for Area questions
  *
  * @author Rob Ingram
  * @version 1.0
@@ -24,14 +24,24 @@
  * @package
  */
 
-Class QuestionCALCULATION extends QuestionEdit {
+require_once __DIR__ . '/../calculation_var.class.php';
+
+Class QuestionENHANCEDCALC extends QuestionEdit {
 
   protected $units = '';
-  protected $answer_decimals = 0;
-  protected $tolerance_full = 0;
-  protected $tolerance_partial = 0;
+  protected $dp = 0;
+  protected $strictdp = false;
+  protected $fulltol = 0;
+  protected $fulltoltyp = '#';
+  protected $parttol = 0;
+  protected $parttoltyp = '#';
+  protected $variables = array();
+  protected $formulae = array();
+  protected $formula_units = array();
   protected $score_method = 'Allow partial Marks';
   public $max_options = 10;
+  public $max_answers = 5;
+  protected $variable_labels = array();
   protected $_allow_partial_marks = true;
   protected $_allow_change_marking_method = false;
 
@@ -39,7 +49,7 @@ Class QuestionCALCULATION extends QuestionEdit {
   protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'answer_decimals', 'tolerance_full', 'tolerance_partial');
   protected $_fields_settings = array('units', 'answer_decimals', 'tolerance_full', 'tolerance_partial');
 
-  private $_variables = null;
+  private $_variable_map = array();
 
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
     parent::__construct($mysqli, $userObj, $lang_strings, $data);
@@ -47,7 +57,7 @@ Class QuestionCALCULATION extends QuestionEdit {
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
 
     // Convert the max number of options into a list of variables
-    $this->_variables = range('A', chr(64 + $this->max_options));
+    $this->variable_labels = range('A', chr(64 + $this->max_options));
     $this->option_order = 'display order';
   }
 
@@ -58,7 +68,7 @@ Class QuestionCALCULATION extends QuestionEdit {
    * @return integer
    */
   public function get_variables() {
-    return $this->_variables;
+    return $this->variables;
   }
 
   /**
@@ -136,5 +146,42 @@ Class QuestionCALCULATION extends QuestionEdit {
       $this->tolerance_partial = $value;
     }
   }
-}
 
+  /**
+   * Get the possible labels for variables
+   * @return arar List of variable labels
+   */
+  public function get_variable_labels() {
+    return $this->variable_labels;
+  }
+
+  /**
+   * Unpack JSON string containing extra data into local fields
+   */
+  protected function unserialize_settings() {
+    $extra = json_decode($this->settings, true);
+
+    if (is_array($extra)) {
+      foreach ($extra as $field => $value) {
+        if (is_array($value)) {
+          $func = "unserialize_$field";
+          $this->$func($value);
+        } else {
+          $this->$field = $value;
+        }
+      }
+    }
+  }
+
+  /**
+   * Parse the data for the variables
+   * @param  array $data Data describing the variables indexed by the variable label
+   */
+  private function unserialize_vars($data) {
+    foreach ($data as $label => $fields) {
+      $var = new CalculationVar($label, $fields['min'], $fields['max'], $fields['dec'], $fields['inc']);
+      $this->variables[] = $var;
+      $this->_variable_map[$label] = $var;
+    }
+  }
+}
