@@ -24,9 +24,13 @@
 
 $vars = $question->get_variables();
 $num_vars = count($vars);
+$answers = $question->get_answers();
+$num_answers = count($answers);
 $decimals = array('', 0, 1, 2, 3, 4, 5, 6, 7, 8);
 $increments = array('', 0.0001, 0.001, 0.02, 0.01, 0.5, 0.2, 0.1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100, 1000);
 $unit_marks = array('0' => 'N/A', 'invalidate' => 'Award zero for question', '-0.25' => '-0.25', '-0.5' => '-0.5', '-1' => '-1', '-2' => '-2', '-3' => '-3', '-4' => '-4', '-5' => '-5', '-6' => '-6', '-7' => '-7', '-8' => '-8', '-9' => '-9', '-10' => '-10');
+$decimal_opts = array('1dp', '2dp', '3dp', '4dp', '5dp');
+$sf_opts = array('1sf', '2sf', '3sf', '4sf', '5sf');
 $labels = $question->get_variable_labels();
 if (count($question->options) > 0) {
   $first = reset($question->options);
@@ -103,7 +107,15 @@ if($question->get_locked() == '') {
             </tr>
           </thead>
 <?php
-for ($i = 0; $i < $question->max_answers; $i++) {
+$index = 1;
+
+foreach ($answers as $answer) {
+  include 'options/ans_extendedcalc.php';
+  $index++;
+}
+
+for ($index = $num_answers + 1; $index <= $question->max_answers; $index++) {
+  $answer = new CalculationAnswer('', '');
   include 'options/ans_extendedcalc.php';
 }
 ?>
@@ -131,6 +143,42 @@ $sel_mod = ($question->get_show_units()) ? ' checked' : '';
 echo ViewHelper::render_options($unit_marks, $question->get_marks_unit(), 3);
 ?>
                 </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="form">
+          <h2 class="midblue_header">Display precision</h2>
+        </div>
+        <table class="form" summary="Edit question display precision">
+          <tbody>
+            <tr>
+              <th>Display answer to</th>
+              <td>
+                <select name="answer_decimals" id="answer_decimals">
+                  <optgroup label="Decimals">
+<?php
+echo ViewHelper::render_options($decimal_opts, $question->get_marks_unit(), 4);
+?>
+                    <option value="1dp">1 decimal</option>
+                    <option value="2dp">2 decimals</option>
+                    <option value="3dp">3 decimals</option>
+                    <option value="4dp">4 decimals</option>
+                    <option value="5dp">5 decimals</option>
+                  </optgroup>
+                  <optgroup label="Significant figures">
+                    <option value="1sf">1 significant figure</option>
+                    <option value="2sf">2 significant figures</option>
+                    <option value="3sf">3 significant figures</option>
+                    <option value="4sf">4 significant figures</option>
+                    <option value="5sf">5 significant figures</option>
+                  </optgroup>
+                </select>
+              </td>
+              <td>
+                <input type="checkbox" name="answer_strict" id="answer_strict"> <label for="answer_strict">Enforce precision of student answer</label></input>
+                <span id="trailing_zeros" class="disabled indent"><input type="checkbox" name="answer_strict_trailing" id="answer_strict_trailing" disabled> <label for="answer_strict_trailing">Including trailing 0s</label></input></span>
               </td>
             </tr>
           </tbody>

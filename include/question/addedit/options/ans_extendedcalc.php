@@ -1,9 +1,45 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
+
+$classes = array();
+if ($index %2 == 0) {
+  $classes[] = 'alt';
+}
+if ((count($answers) == 0 and $index > 2) or $index > count($answers)) {
+  $classes[] = 'hide';
+}
+$class_mod = (count($classes) > 0) ? ' class="' . implode(' ', $classes) . '"' : '';
+
+$spaced = ($index > 1) ? ' spaced-top spaced-bottom' : ' spaced-bottom';
+$disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
+?>
           <tbody class="answer">
-            <tr>
+            <tr<?php echo $class_mod ?>>
               <th>&nbsp;</th>
               <td>
-                <input type="text" id="option_correct" name="option_correct" class="form-med" value="$A*(9.81-$B)">
+                <input type="text" id="option_formula<?php echo $index ?>" name="option_formula<?php echo $index ?>" class="form-med" value="<?php echo $answer->get_formula() ?>">
               </td>
-              <td class="align-top"><input type="text" name="option_units1" id="option_units1" class="form-small" /></td>
+              <td class="align-top"><input type="text" name="option_units<?php echo $index ?>" id="option_units<?php echo $index ?>" class="form-small" value="<?php echo $answer->get_units() ?>" /></td>
             </tr>
           </tbody>

@@ -25,6 +25,7 @@
  */
 
 require_once __DIR__ . '/../calculation_var.class.php';
+require_once __DIR__ . '/../calculation_answer.class.php';
 
 Class QuestionENHANCEDCALC extends QuestionEdit {
 
@@ -36,8 +37,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $parttol = 0;
   protected $parttoltyp = '#';
   protected $variables = array();
-  protected $formulae = array();
-  protected $formula_units = array();
+  protected $answers = array();
   protected $score_method = 'Allow partial Marks';
   protected $show_units = true;
   protected $marks_unit = 0;
@@ -71,6 +71,14 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    */
   public function get_variables() {
     return $this->variables;
+  }
+
+  /**
+   * Get the answers for the question
+   * @return integer
+   */
+  public function get_answers() {
+    return $this->answers;
   }
 
   /**
@@ -210,6 +218,17 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
           $this->$field = $value;
         }
       }
+    }
+  }
+
+  /**
+   * Parse the data for the answers
+   * @param  array $data Data describing the answers in the form of a formula and associated units
+   */
+  private function unserialize_answers($data) {
+    foreach ($data as $fields) {
+      $answer = new CalculationAnswer($fields['formula'], $fields['units']);
+      $this->answers[] = $answer;
     }
   }
 
