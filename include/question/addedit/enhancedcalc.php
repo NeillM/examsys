@@ -29,8 +29,8 @@ $num_answers = count($answers);
 $decimals = array('', 0, 1, 2, 3, 4, 5, 6, 7, 8);
 $increments = array('', 0.0001, 0.001, 0.02, 0.01, 0.5, 0.2, 0.1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100, 1000);
 $unit_marks = array('0' => 'N/A', 'invalidate' => 'Award zero for question', '-0.25' => '-0.25', '-0.5' => '-0.5', '-1' => '-1', '-2' => '-2', '-3' => '-3', '-4' => '-4', '-5' => '-5', '-6' => '-6', '-7' => '-7', '-8' => '-8', '-9' => '-9', '-10' => '-10');
-$decimal_opts = array('1dp', '2dp', '3dp', '4dp', '5dp');
-$sf_opts = array('1sf', '2sf', '3sf', '4sf', '5sf');
+$decimal_opts = array('1 dp' => '1 decimal', '2 dp' => '2 decimals', '3 dp' => '3 decimals', '4 dp' => '4 decimals', '5 dp' => '5 decimals');
+$sf_opts = array('1 sf' => '1 significant figure', '2 sf' => '2 significant figures', '3 sf' => '3 significant figures', '4 sf' => '4 significant figures', '5 sf' => '5 significant figures');
 $labels = $question->get_variable_labels();
 if (count($question->options) > 0) {
   $first = reset($question->options);
@@ -159,26 +159,31 @@ echo ViewHelper::render_options($unit_marks, $question->get_marks_unit(), 3);
                 <select name="answer_decimals" id="answer_decimals">
                   <optgroup label="Decimals">
 <?php
-echo ViewHelper::render_options($decimal_opts, $question->get_marks_unit(), 4);
+echo ViewHelper::render_options($decimal_opts, $question->get_answer_precision(), 4);
 ?>
-                    <option value="1dp">1 decimal</option>
-                    <option value="2dp">2 decimals</option>
-                    <option value="3dp">3 decimals</option>
-                    <option value="4dp">4 decimals</option>
-                    <option value="5dp">5 decimals</option>
                   </optgroup>
                   <optgroup label="Significant figures">
-                    <option value="1sf">1 significant figure</option>
-                    <option value="2sf">2 significant figures</option>
-                    <option value="3sf">3 significant figures</option>
-                    <option value="4sf">4 significant figures</option>
-                    <option value="5sf">5 significant figures</option>
+<?php
+echo ViewHelper::render_options($sf_opts, $question->get_answer_precision(), 4);
+?>
                   </optgroup>
                 </select>
               </td>
               <td>
-                <input type="checkbox" name="answer_strict" id="answer_strict"> <label for="answer_strict">Enforce precision of student answer</label></input>
-                <span id="trailing_zeros" class="disabled indent"><input type="checkbox" name="answer_strict_trailing" id="answer_strict_trailing" disabled> <label for="answer_strict_trailing">Including trailing 0s</label></input></span>
+<?php
+if ($question->get_strict_display()) {
+  $checked = ' checked';
+  $disabled = '';
+} else {
+  $checked = '';
+  $disabled = ' disabled';
+}
+?>
+                <input type="checkbox" name="answer_strict" id="answer_strict"<?php echo $checked ?>> <label for="answer_strict">Enforce precision of student answer</label></input>
+<?php
+$checked = ($question->get_strict_zeros()) ? ' checked' : '';
+?>
+                <span id="trailing_zeros" class="indent<?php echo $disabled ?>"><input type="checkbox" name="answer_strict_trailing" id="answer_strict_trailing"<?php echo $checked.$disabled ?>> <label for="answer_strict_trailing">Including trailing 0s</label></input></span>
               </td>
             </tr>
           </tbody>

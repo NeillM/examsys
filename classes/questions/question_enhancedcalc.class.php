@@ -31,7 +31,9 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
 
   protected $units = '';
   protected $dp = 0;
-  protected $strictdp = false;
+  protected $sf = 0;
+  protected $strictdisplay = false;
+  protected $strictzeros = false;
   protected $fulltol = 0;
   protected $fulltoltyp = '#';
   protected $parttol = 0;
@@ -101,23 +103,81 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   }
 
   /**
-   * Get the number of decimal places for the question
+   * Get the number of decimal places or significant figures for the question
    * @return integer
    */
-  public function get_answer_decimals() {
-    return $this->answer_decimals;
+  public function get_answer_precision() {
+    $rval = 0;
+    $rtype = 'dp';
+    if ($this->dp != 0) {
+      $rval = $this->dp;
+    } elseif ($this->sf != 0) {
+      $rval = $this->sf;
+      $rtype = 'sf';
+    }
+    return $rval . ' ' . $rtype;
   }
 
   /**
    * Set the number of decimal places for the question
-   * @param unknown_type $value
+   * @param string $value
    */
-  public function set_answer_decimals($value) {
-    if ($value != $this->answer_decimals) {
-      $this->set_modified_field('answer_decimals', $this->answer_decimals);
-      $this->answer_decimals = $value;
+  public function set_answer_precision($value) {
+    list($val, $type) = explode(' ', $value);
+
+    if ($type == 'sf') {
+      $dpval = 0;
+      $sfval = $val;
+    } else {
+      $dpval = $val;
+      $sfval = 0;
+    }
+    if ($dpval != $this->dp) {
+      $this->set_modified_field('answer_decimals', $this->dp);
+      $this->dp = $dpval;
+    }
+    if ($sfval != $this->sf) {
+      $this->set_modified_field('answer_decimals', $this->sf);
+      $this->sf = $sfval;
     }
   }
+
+  /**
+   * Get whether the question requires answers to stricly match the display precision
+   * @return boolean
+   */
+  public function get_strict_display() {
+    return $this->strictdisplay;
+  }
+
+  /**
+   * Set whether the question requires answers to stricly match the display precision
+   */
+  public function set_strict_display($value) {
+    if ($value != $this->strictdisplay) {
+      $this->set_modified_field('strict_display', $this->strictdisplay);
+      $this->strictdisplay = $value;
+    }
+  }
+
+  /**
+   * Get whether trailing zeros should be taken into account when calculating the display precision
+   * @return boolean
+   */
+  public function get_strict_zeros() {
+    return $this->strictzeros;
+  }
+
+  /**
+   * Set whether trailing zeros should be taken into account when calculating the display precision
+   */
+  public function set_strict_zeros($value) {
+    if ($value != $this->strictzeros) {
+      $this->set_modified_field('strict_zeros', $this->strictzeros);
+      $this->strictzeros = $value;
+    }
+  }
+
 
   /**
    * Get the full marks tolerance for the question
