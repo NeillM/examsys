@@ -3,7 +3,7 @@ $(function () {
 });
 
 function addHelpLinks() {
-  $('.help-link').each(function () {
+  $('.help-link').each(function (e) {
     var rel = 0;
     if ($(this).attr('rel') != undefined) {
       rel = $(this).attr('rel');
