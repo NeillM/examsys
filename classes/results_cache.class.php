@@ -106,12 +106,12 @@ class ResultsCache {
   public function get_student_question_marks_by_paper($userID, $log_type, $paperID) {
     $marks = array();
 
-    $result = $this->db->prepare("SELECT q_id, mark FROM log$log_type, log_metadata WHERE log$log_type.metadataID = log_metadata.id AND userID = ? AND paperID = ?");
+    $result = $this->db->prepare("SELECT q_id, adjmark FROM log$log_type, log_metadata WHERE log$log_type.metadataID = log_metadata.id AND userID = ? AND paperID = ?");
     $result->bind_param('ii', $userID, $paperID);
     $result->execute();
-    $result->bind_result($q_id, $mark);
+    $result->bind_result($q_id, $adjmark);
     while ($result->fetch()) {
-      $marks[$q_id] = $mark;
+      $marks[$q_id] = $adjmark;
     }
     $result->close();
     

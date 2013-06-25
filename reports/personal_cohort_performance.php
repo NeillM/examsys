@@ -46,12 +46,9 @@ $log_type = $propertyObj->get_paper_type();
 
 $results_cache = new ResultsCache($mysqli);
 
-$medians        = $results_cache->get_median_question_marks_by_paper($paperID);
+$medians       = $results_cache->get_median_question_marks_by_paper($paperID);
 
-$student_marks  = $results_cache->get_student_question_marks_by_paper($userID, $log_type, $paperID);
-
-
-//qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $correct, $display_method, $score_method);
+$student_marks = $results_cache->get_student_question_marks_by_paper($userID, $log_type, $paperID);
 
 $old_q_id           = 0;
 $old_display_pos    = -1;

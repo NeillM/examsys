@@ -504,13 +504,7 @@ if (isset($_POST['submit'])) {
         <?php
           if ($old_exclusions->excluded !== $new_exclusions->excluded) {
         ?>
-          $.ajax({
-            url: 'recache_class_totals.php',
-            type: 'post',
-            data: {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $_GET['startdate']; ?>', enddate: '<?php echo $_GET['enddate']; ?>'},
-            dataType: 'html',
-            async: true,
-          });
+            $.post('../reports/recache_class_totals.php', {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $_GET['startdate']; ?>', enddate: '<?php echo $_GET['enddate']; ?>'});
         <?php
           }
         ?>
@@ -2061,9 +2055,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
     // Clear previous performance stats
     $id_list = array();
-    $result = $mysqli->prepare("SELECT id FROM performance_main WHERE paperID=?");
+    $result = $mysqli->prepare("SELECT id FROM performance_main WHERE paperID = ?");
     echo $mysqli->error;
-    $result->bind_param('i', $_GET['paperID']);
+    $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($id);
     while ($result->fetch()) {
@@ -2073,8 +2067,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
     // Remove records from performance_main
     $date_started = substr($started, 0, 10);
-    $remove = $mysqli->prepare("DELETE FROM performance_main WHERE paperID=? AND taken=?");
-    $remove->bind_param('is', $_GET['paperID'], $date_started);
+    $remove = $mysqli->prepare("DELETE FROM performance_main WHERE paperID = ? AND taken = ?");
+    $remove->bind_param('is', $paperID, $date_started);
     $remove->execute();
     $remove->close();
 
@@ -2106,7 +2100,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       }
       $params .= 'iiiis';
       $variables[] = $qid;
-      $variables[] = $_GET['paperID'];
+      $variables[] = $paperID;
       $variables[] = $tmp_percent;
       $variables[] = $user_total;
       $variables[] = $date_started;
@@ -2128,7 +2122,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     $q_rec_ids = array();
     // First a quick query to get the IDs from performance_main to use in performance_details
     $result = $mysqli->prepare("SELECT id, q_id FROM performance_main WHERE paperID = ? AND taken = ?");
-    $result->bind_param('is', $_GET['paperID'], $date_started);
+    $result->bind_param('is', $paperID, $date_started);
     $result->execute();
     $result->bind_result($id, $tmp_q_id);
     while ($result->fetch()) {

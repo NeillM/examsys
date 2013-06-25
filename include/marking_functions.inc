@@ -95,11 +95,11 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
     if (count($log_ids) > 0) {
       $log_id = $log_ids[$response['q_id']];
       // prepare to update old records
-      $save_answers = $db->prepare("UPDATE log$paper_type SET mark = ?, user_answer = ?, duration = ?, updated = NOW(), dismiss = ? WHERE id = ?");
-      $save_answers->bind_param('dsisi', $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss'], $log_id);
+      $save_answers = $db->prepare("UPDATE log$paper_type SET mark = ?, adjmark = ?, user_answer = ?, duration = ?, updated = NOW(), dismiss = ? WHERE id = ?");
+      $save_answers->bind_param('ddsisi', $response['mark'], $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss'], $log_id);
     } else {
-      $save_answers = $db->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) ON DUPLICATE KEY UPDATE mark = ?, user_answer = ?, duration = ?, updated = NOW(), dismiss = ? ");
-      $save_answers->bind_param('idisiissidsis', $response['q_id'], $response['mark'], $response['totalpos'], $response['saved_response'], $response['screen_no'], $response['tmp_duration'], $response['dismiss'], $response['option_order'], $metadataID, $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss']);
+      $save_answers = $db->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) ON DUPLICATE KEY UPDATE mark = ?, user_answer = ?, duration = ?, updated = NOW(), dismiss = ? ");
+      $save_answers->bind_param('iddisiissidsis', $response['q_id'], $response['mark'], $response['mark'], $response['totalpos'], $response['saved_response'], $response['screen_no'], $response['tmp_duration'], $response['dismiss'], $response['option_order'], $metadataID, $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss']);
     }
     $res = $save_answers->execute(); // Save to the database.
     if ($res === false or $save_answers->affected_rows == 0) {
