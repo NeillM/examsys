@@ -32,14 +32,6 @@ $unit_marks = array('0' => 'N/A', 'invalidate' => 'Award zero for question', '-0
 $decimal_opts = array('1 dp' => '1 decimal', '2 dp' => '2 decimals', '3 dp' => '3 decimals', '4 dp' => '4 decimals', '5 dp' => '5 decimals');
 $sf_opts = array('1 sf' => '1 significant figure', '2 sf' => '2 significant figures', '3 sf' => '3 significant figures', '4 sf' => '4 significant figures', '5 sf' => '5 significant figures');
 $labels = $question->get_variable_labels();
-if (count($question->options) > 0) {
-  $first = reset($question->options);
-  $formula = $first->get_correct();
-  $marks = $first->get_marks_correct();
-} else {
-  $formula = '';
-  $marks = 1;
-}
 ?>
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
