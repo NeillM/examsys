@@ -1319,6 +1319,18 @@ QUERY;
     $this->_comments = $value;
   }
 
+  /**
+   * Get the source of marks data for this question, usually the first option
+   * @return mixed The source of marks or false if none has yet been defined
+   */
+  public function get_marks_source() {
+    if (count($this->options) > 0) {
+      return reset($this->options);
+    } else {
+      return false;
+    }
+  }
+
   // STATIC METHODS
 
   /**

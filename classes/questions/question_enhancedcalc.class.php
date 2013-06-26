@@ -42,6 +42,9 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $answers = array();
   protected $score_method = 'Allow partial Marks';
   protected $show_units = true;
+  protected $marks_correct = 1;
+  protected $marks_incorrect = 0;
+  protected $marks_partial = 0;
   protected $marks_unit = 0;
   public $max_options = 10;
   public $max_answers = 5;
@@ -260,6 +263,76 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     if ($value != $this->marks_unit) {
       $this->set_modified_field('marks_unit', $this->marks_unit);
       $this->marks_unit = $value;
+    }
+  }
+
+  /**
+   * Get the question marks for correct answers
+   * @return string
+   */
+  public function get_marks_correct() {
+    return $this->marks_correct;
+  }
+
+  /**
+   * Set the question marks for correct answers
+   * @param string $value
+   */
+  public function set_marks_correct($value, $log_change=true) {
+    if($log_change and $value != $this->marks_correct and !in_array('marks_correct', array_keys($this->_question->get_unified_fields()))) {
+      $this->set_modified_field('marks_correct', $this->marks_correct);
+    }
+    $this->marks_correct = $value;
+  }
+
+  /**
+   * Get the question marks for incorrect answers
+   * @return string
+   */
+  public function get_marks_incorrect() {
+    return $this->marks_incorrect;
+  }
+
+  /**
+   * Set the question marks for incorrect answers
+   * @param string $value
+   */
+  public function set_marks_incorrect($value, $log_change=true) {
+    if($log_change and $value != $this->marks_incorrect and !in_array('marks_incorrect', array_keys($this->_question->get_unified_fields()))) {
+      $this->set_modified_field('marks_incorrect', $this->marks_incorrect);
+    }
+    $this->marks_incorrect = $value;
+  }
+
+    /**
+   * Get the question marks for partially correct answers
+   * @return string
+   */
+  public function get_marks_partial() {
+    return $this->marks_partial;
+  }
+
+  /**
+   * Set the question marks for partially correct answers
+   * @param string $value
+   */
+  public function set_marks_partial($value) {
+    if($value != $this->marks_partial and !in_array('marks_partial', array_keys($this->_question->get_unified_fields()))) {
+      $this->set_modified_field('marks_partial', $this->marks_partial);
+    }
+    $this->marks_partial = $value;
+  }
+
+  /**
+   * Get the source of marks data for this question, usually the first option
+   * @return mixed The source of marks or false if none has yet been defined
+   */
+  public function get_marks_source() {
+    // For this question type this object will provide the marks data
+    if (count($this->id) != -1) {
+      return $this;
+    } else {
+      return false;
     }
   }
 

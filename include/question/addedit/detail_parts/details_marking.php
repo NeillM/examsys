@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -25,11 +25,10 @@
 $marks_positive = range(1, 20);
 $marks_negative = array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10);
 $marks_partial = array_merge(range(0, 1, 0.1), range(2, 5));
-if (count($question->options) > 0) {
-  $option = reset($question->options);
-  $mark_correct = $option->get_marks_correct();
-  $mark_incorrect = $option->get_marks_incorrect();
-  $mark_partial = $option->get_marks_partial();
+if ($marks_source = $question->get_marks_source()) {
+  $mark_correct = $marks_source->get_marks_correct();
+  $mark_incorrect = $marks_source->get_marks_incorrect();
+  $mark_partial = $marks_source->get_marks_partial();
   $mark_partial = ($mark_partial != '') ? number_format($mark_partial, 1) : 0;
 } else {
   $mark_correct = 1;
@@ -44,7 +43,7 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
             <tr>
               <th><label for="score_method" class="heavy"><?php echo $string['markingmethod'] ?></label></th>
               <td>
-                
+
                 <select id="score_method" name="score_method" class="spaced-right-large"<?php echo $allow_change_method ?>>
 <?php
 echo ViewHelper::render_options($question->get_score_methods(), $question->get_score_method('int'), 3, true);
