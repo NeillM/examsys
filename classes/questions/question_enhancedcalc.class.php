@@ -53,10 +53,13 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $_allow_partial_marks = true;
   protected $_allow_change_marking_method = false;
 
-  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_decimals', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
-  protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'answer_decimals', 'tolerance_full', 'tolerance_partial');
-  protected $_fields_settings = array('units', 'answer_decimals', 'tolerance_full', 'tolerance_partial');
+  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'strictdisplay', 'strictzeros', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
+  protected $_fields_change = array('marks_correct', 'marks_incorrect', 'marks_partial', 'answer_precision', 'tolerance_full', 'tolerance_partial');
+  protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units');
+  protected $_fields_force = array('show_units');
 
+  protected $_answer_negative = false;
+  
   private $_variable_map = array();
 
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
@@ -137,11 +140,11 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
       $sfval = 0;
     }
     if ($dpval != $this->dp) {
-      $this->set_modified_field('answer_decimals', $this->dp);
+      $this->set_modified_field('answer_precision', $this->dp);
       $this->dp = $dpval;
     }
     if ($sfval != $this->sf) {
-      $this->set_modified_field('answer_decimals', $this->sf);
+      $this->set_modified_field('answer_precision', $this->sf);
       $this->sf = $sfval;
     }
   }
@@ -241,7 +244,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @param string $value
    */
   public function set_marks_correct($value, $log_change=true) {
-    if($log_change and $value != $this->marks_correct and !in_array('marks_correct', array_keys($this->_question->get_unified_fields()))) {
+    if($log_change and $value != $this->marks_correct) {
       $this->set_modified_field('marks_correct', $this->marks_correct);
     }
     $this->marks_correct = $value;
@@ -260,7 +263,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @param string $value
    */
   public function set_marks_incorrect($value, $log_change=true) {
-    if($log_change and $value != $this->marks_incorrect and !in_array('marks_incorrect', array_keys($this->_question->get_unified_fields()))) {
+    if($log_change and $value != $this->marks_incorrect) {
       $this->set_modified_field('marks_incorrect', $this->marks_incorrect);
     }
     $this->marks_incorrect = $value;
@@ -279,7 +282,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @param string $value
    */
   public function set_marks_partial($value) {
-    if($value != $this->marks_partial and !in_array('marks_partial', array_keys($this->_question->get_unified_fields()))) {
+    if($value != $this->marks_partial) {
       $this->set_modified_field('marks_partial', $this->marks_partial);
     }
     $this->marks_partial = $value;
@@ -396,4 +399,30 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
       $val_target = $value;
     }
   }
+
+  /**
+   * Validate the question object before saving
+   * @return Mixed <boolean, string>
+   */
+  protected function validate() {
+    $rval = true;
+
+    // If there are errors return an appropriate message
+
+    // Required fields
+    $missing_fields = '';
+    foreach($this->_fields_required as $req) {
+      if (empty($this->$req)) $missing_fields .= $this->_pretty_names[$req] . ', ';
+    }
+    if ($missing_fields != '') {
+      $rval = $this->_lang_strings['missingfieldserror'] . ' ' . rtrim($missing_fields, ', ');
+    }
+
+    // TODO: Number of variables
+
+    // TODO: Number of answers
+
+    return $rval;
+  }
+
 }
