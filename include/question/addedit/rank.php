@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -32,7 +32,7 @@ $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
               <th><label for="option_order"><?php echo $string['optionorder'] ?></label></th>
               <td>
                 <select id="option_order" name="option_order"<?php echo $disabled ?>>
-<?php 
+<?php
 echo ViewHelper::render_options($question->get_option_orders(), $question->get_option_order(), 3);
 ?>
                 </select>
@@ -47,11 +47,11 @@ $label_correct = $string['fbcorrect'] . '<br /><span class="note warning-severe"
 $show_incorrect = true;
 require_once 'detail_parts/details_general_feedback.php';
 ?>
-        
+
         <div class="form">
           <h2 class="midblue_header"><?php echo $string['options'] ?></h2><div class="note"><?php echo $string['optionsmsg'] ?></div>
         </div>
-        
+
         <table id="q-options" class="form" summary="<?php echo $string['oeditsummary'] ?>">
           <thead>
             <tr>
@@ -73,16 +73,16 @@ for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
 
 if($question->get_locked() == '') {
 ?>
-          <tbody id="add-option-holder">
+          <tbody class="add-option-holder">
             <tr>
               <th>&nbsp;</th>
               <td colspan="2">
-                <input id="next-option" value="<?php echo $string['addoptions'] ?>" type="button" />
+                <input class="next-option" value="<?php echo $string['addoptions'] ?>" type="button" />
               </td>
             </tr>
           </tbody>
 <?php
 }
-?>          
+?>
         </table>
 

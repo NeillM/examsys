@@ -29,13 +29,13 @@ if ($index %2 == 0) {
 if ((count($vars) == 0 and $index > 5) or $index > count($vars)) {
   $classes[] = 'hide';
 }
-$class_mod = (count($classes) > 0) ? ' class="' . implode(' ', $classes) . '"' : '';
+$class_mod = (count($classes) > 0) ? ' ' . implode(' ', $classes) : '';
 
 $spaced = ($index > 1) ? ' spaced-top spaced-bottom' : ' spaced-bottom';
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 ?>
-          <tbody class="option">
-            <tr<?php echo $class_mod ?>>
+          <tbody class="option<?php echo $class_mod ?>">
+            <tr>
               <th class="<?php echo $spaced ?>"><?php echo $variable->get_label() ?></th>
               <td class="align-left<?php echo $spaced ?>">
                 <label for="option_min<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['minimum'];?></label>
