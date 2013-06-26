@@ -32,6 +32,7 @@ $unit_marks = array('0' => 'N/A', 'invalidate' => 'Award zero for question', '-0
 $decimal_opts = array('1 dp' => '1 decimal', '2 dp' => '2 decimals', '3 dp' => '3 decimals', '4 dp' => '4 decimals', '5 dp' => '5 decimals');
 $sf_opts = array('1 sf' => '1 significant figure', '2 sf' => '2 significant figures', '3 sf' => '3 significant figures', '4 sf' => '4 significant figures', '5 sf' => '5 significant figures');
 $labels = $question->get_variable_labels();
+$mark_prefix = '';
 ?>
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
@@ -121,11 +122,11 @@ for ($index = $num_answers + 1; $index <= $question->max_answers; $index++) {
           </tbody>
           <tbody>
             <tr>
-              <th class="spaced-top"><label for="display_units" style="padding:0">Display units for question</label></th>
+              <th class="spaced-top"><label for="show_units" style="padding:0">Display units for question</label></th>
 <?php
 $sel_mod = ($question->get_show_units()) ? ' checked' : '';
 ?>
-              <td class="spaced-top"><input type="checkbox" name="display_units" id="display_units"<?php echo $sel_mod ?>></td>
+              <td class="spaced-top"><input type="checkbox" name="show_units" id="show_units"<?php echo $sel_mod ?>></td>
             </tr>
             <tr>
               <th class="spaced-top"><label for="unit_marks">Unit marking</label></th>

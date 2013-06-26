@@ -1500,7 +1500,7 @@ QUERY;
    * Validate the question object before saving
    * @return Mixed <boolean, string>
    */
-  private function validate() {
+  protected function validate() {
     $rval = true;
 
     // If there are errors return an appropriate message

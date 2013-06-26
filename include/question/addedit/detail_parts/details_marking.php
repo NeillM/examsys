@@ -37,6 +37,10 @@ if ($marks_source = $question->get_marks_source()) {
 }
 $allow_neg = $question->allow_negative_marks($module);
 $allow_change_method = ($question->allow_change_marking_method() and $dis_class == '') ? '' : ' disabled="disabled"';
+
+if (!isset($mark_prefix)) {
+  $mark_prefix = 'option_';
+}
 ?>
         <table id="q-marking" class="form" summary="<?php echo $string['qeditsummary'] ?>">
           <tbody>
@@ -50,7 +54,7 @@ echo ViewHelper::render_options($question->get_score_methods(), $question->get_s
 ?>
                 </select>
                 <label for="option_marks_correct" class="heavy"><?php echo $string['markscorrect']?></label>
-                <select id="option_marks_correct" name="option_marks_correct" class="spaced-right-large">
+                <select id="option_marks_correct" name="<?php echo $mark_prefix ?>marks_correct" class="spaced-right-large">
 <?php
 echo ViewHelper::render_options($marks_positive, $mark_correct, 3);
 ?>
@@ -62,7 +66,7 @@ if ($question->allow_partial_marks()):
 ?>
                 <span class="marks-partial<?php echo $show_partial ?>">
                   <label for="option_marks_partial" class="heavy"><?php echo $string['markspartial']?></label>
-                  <select id="option_marks_partial" name="option_marks_partial" class="spaced-right-large">
+                  <select id="option_marks_partial" name="<?php echo $mark_prefix ?>marks_partial" class="spaced-right-large">
 <?php
 echo ViewHelper::render_options($marks_partial, $mark_partial, 3);
 ?>
@@ -73,7 +77,7 @@ endif;
 if ($allow_neg or $mark_incorrect != 0):
 ?>
                 <label for="option_marks_incorrect" class="heavy"><?php echo $string['marksincorrect']?></label>
-                <select id="option_marks_incorrect" name="option_marks_incorrect">
+                <select id="option_marks_incorrect" name="<?php echo $mark_prefix ?>marks_incorrect">
 <?php
 echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
 ?>
@@ -81,7 +85,7 @@ echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
 <?php
 else:
 ?>
-                <input type="hidden" id="option_marks_incorrect" name="option_marks_incorrect" value="<?php echo $mark_incorrect ?>" />
+                <input type="hidden" id="option_marks_incorrect" name="<?php echo $mark_prefix ?>marks_incorrect" value="<?php echo $mark_incorrect ?>" />
 <?php
 endif;
 ?>
