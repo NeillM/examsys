@@ -59,7 +59,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $_fields_force = array('show_units');
 
   protected $_answer_negative = false;
-  
+
   private $_variable_map = array();
 
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
@@ -130,7 +130,10 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @param string $value
    */
   public function set_answer_precision($value) {
+    list($cur_val, $cur_type) = explode(' ', $this->get_answer_precision());
     list($val, $type) = explode(' ', $value);
+
+    $changed = ($val != $cur_val or $type != $cur_type);
 
     if ($type == 'sf') {
       $dpval = 0;
@@ -139,12 +142,15 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
       $dpval = $val;
       $sfval = 0;
     }
+
+    if ($changed) {
+      $this->set_modified_field('answer_precision', $this->get_answer_precision());
+    }
+
     if ($dpval != $this->dp) {
-      $this->set_modified_field('answer_precision', $this->dp);
       $this->dp = $dpval;
     }
     if ($sfval != $this->sf) {
-      $this->set_modified_field('answer_precision', $this->sf);
       $this->sf = $sfval;
     }
   }
@@ -392,11 +398,12 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
       $val = $value;
       $type = '#';
     }
+
     if ($val != $val_target or $type != $type_target) {
+      $old_type = ($type_target == '#') ? '' : $type_target;
       $type_target = $type;
-      if ($type == '#') $type = '';
-      $this->set_modified_field($type_string, $val_target . $type);
-      $val_target = $value;
+      $this->set_modified_field($type_string, $val_target . $old_type);
+      $val_target = $val;
     }
   }
 

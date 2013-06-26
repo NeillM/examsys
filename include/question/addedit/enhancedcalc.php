@@ -29,7 +29,7 @@ $num_answers = count($answers);
 $decimals = array('', 0, 1, 2, 3, 4, 5, 6, 7, 8);
 $increments = array('', 0.0001, 0.001, 0.02, 0.01, 0.5, 0.2, 0.1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100, 1000);
 $marks_unit = array('0' => 'N/A', 'invalidate' => 'Award zero for question', '-0.25' => '-0.25', '-0.5' => '-0.5', '-1' => '-1', '-2' => '-2', '-3' => '-3', '-4' => '-4', '-5' => '-5', '-6' => '-6', '-7' => '-7', '-8' => '-8', '-9' => '-9', '-10' => '-10');
-$decimal_opts = array('1 dp' => '1 decimal', '2 dp' => '2 decimals', '3 dp' => '3 decimals', '4 dp' => '4 decimals', '5 dp' => '5 decimals');
+$decimal_opts = array('0 dp' => '0 decimals', '1 dp' => '1 decimal', '2 dp' => '2 decimals', '3 dp' => '3 decimals', '4 dp' => '4 decimals', '5 dp' => '5 decimals');
 $sf_opts = array('1 sf' => '1 significant figure', '2 sf' => '2 significant figures', '3 sf' => '3 significant figures', '4 sf' => '4 significant figures', '5 sf' => '5 significant figures');
 $labels = $question->get_variable_labels();
 $mark_prefix = '';
@@ -162,7 +162,7 @@ echo ViewHelper::render_options($marks_unit, $question->get_marks_unit(), 3);
             <tr>
               <th>Display answer to</th>
               <td>
-                <select name="answer_decimals" id="answer_decimals">
+                <select name="answer_precision" id="answer_precision">
                   <optgroup label="Decimals">
 <?php
 echo ViewHelper::render_options($decimal_opts, $question->get_answer_precision(), 4);
