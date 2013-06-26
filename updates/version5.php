@@ -431,6 +431,39 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query($sql, true);
   }
 
+  // 25/06/2013 (brzsw) - add adjmark field to log tables.
+  if (!$updater_utils->does_column_exist('log0', 'adjmark')) {
+    $updater_utils->execute_query("ALTER TABLE log0 ADD COLUMN adjmark float AFTER mark", true);
+    $updater_utils->execute_query("UPDATE log0 SET adjmark = mark", false);
+  }
+  if (!$updater_utils->does_column_exist('log0_deleted', 'adjmark')) {
+    $updater_utils->execute_query("ALTER TABLE log0_deleted ADD COLUMN adjmark float AFTER mark", true);
+    $updater_utils->execute_query("UPDATE log0_deleted SET adjmark = mark", false);
+  }
+  if (!$updater_utils->does_column_exist('log1', 'adjmark')) {
+    $updater_utils->execute_query("ALTER TABLE log1 ADD COLUMN adjmark float AFTER mark", true);
+    $updater_utils->execute_query("UPDATE log1 SET adjmark = mark", false);
+  }
+  if (!$updater_utils->does_column_exist('log1_deleted', 'adjmark')) {
+    $updater_utils->execute_query("ALTER TABLE log1_deleted ADD COLUMN adjmark float AFTER mark", true);
+    $updater_utils->execute_query("UPDATE log1_deleted SET adjmark = mark", false);
+  }
+  if (!$updater_utils->does_column_exist('log2', 'adjmark')) {
+    $updater_utils->execute_query("ALTER TABLE log2 ADD COLUMN adjmark float AFTER mark", true);
+    $updater_utils->execute_query("UPDATE log2 SET adjmark = mark", false);
+  }
+  if (!$updater_utils->does_column_exist('log3', 'adjmark')) {
+    $updater_utils->execute_query("ALTER TABLE log3 ADD COLUMN adjmark float AFTER mark", true);
+    $updater_utils->execute_query("UPDATE log3 SET adjmark = mark", false);
+  }
+  if (!$updater_utils->does_column_exist('log5', 'adjmark')) {
+    $updater_utils->execute_query("ALTER TABLE log5 ADD COLUMN adjmark float AFTER mark", true);
+    $updater_utils->execute_query("UPDATE log5 SET adjmark = mark", false);
+  }
+
+
+
+
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */

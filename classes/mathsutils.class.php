@@ -70,6 +70,8 @@ Class MathsUtils {
   static function formatNumber($number, $decimals = 2) {
     $number = (string) round($number, $decimals);
     
+    $number = round($number, $decimals);
+    
     if ($decimals > 0) {
       $strlength = strlen($number);
       $decimal_pos = strpos($number, '.');
