@@ -141,6 +141,19 @@ echo ViewHelper::render_options($unit_marks, $question->get_marks_unit(), 3);
         </table>
 
         <div class="form">
+          <h2 class="midblue_header">Tolerance</h2>
+        </div>
+        <table id="q-options" class="form" summary="Edit question tolerances">
+          <tbody>
+            <tr>
+              <th class="spaced-top"><img src="../../artwork/information_icon.gif" width="16" height="16" alt="Information" title="<?php echo $string['percenttolerance'] ?>" class="tiptop" /> <?php echo $string['tolerance'] ?></th>
+              <td class="spaced-top"><label for="tolerance_full" class="spaced-right"><strong><?php echo $string['tolerance_full'] ?></strong></label><input type="text" id="tolerance_full" name="tolerance_full" value="<?php echo $question->get_tolerance_full() ?>" /></td>
+              <td class="spaced-top"><span class="marks-partial<?php echo $show_partial ?>"><label for="tolerance_partial" class="spaced-right"><strong><?php echo $string['tolerance_partial'] ?></strong></label><input type="text" id="tolerance_partial" name="tolerance_partial" value="<?php echo $question->get_tolerance_partial() ?>" /></span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="form">
           <h2 class="midblue_header">Display precision</h2>
         </div>
         <table class="form" summary="Edit question display precision">
@@ -177,42 +190,6 @@ $checked = ($question->get_strict_zeros()) ? ' checked' : '';
 ?>
                 <span id="trailing_zeros" class="indent<?php echo $disabled ?>"><input type="checkbox" name="answer_strict_trailing" id="answer_strict_trailing"<?php echo $checked.$disabled ?>> <label for="answer_strict_trailing">Including trailing 0s</label></input></span>
               </td>
-            </tr>
-          </tbody>
-        </table>
-<hr>
-
-
-
-
-
-        <table id="q-options" class="form" summary="Edit question variables">
-          <tbody>
-            <tr>
-              <th>
-                <label for="option_correct"><span class="mandatory">*</span><?php echo $string['formula'] ?></label><br />
-                <span class="note"><a href="#" class="help-link" rel="68"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['onlinehelp'] ?>" border="0" /></a>&nbsp;<a href="#" class="help-link" rel="68"><?php echo $string['suppfunctions'] ?></a></span>
-              </th>
-              <td colspan="2">
-                <textarea id="option_correct" name="option_correct" cols="100" rows="3" class="form-large"><?php echo $formula ?></textarea>
-              </td>
-            </tr>
-            <tr>
-              <th class="spaced-top"><label for="units"><?php echo $string['units'] ?></label></th>
-              <td class="spaced-top"><input type="text" id="units" name="units" value="<?php echo $question->get_units() ?>" /></td>
-              <td class="spaced-top">
-                <label for="answer_decimals" class="spaced-right"><strong><?php echo $string['decimals'] ?></strong></label>
-                <select id="answer_decimals" name="answer_decimals">
-<?php
-echo ViewHelper::render_options($decimals, $question->get_answer_decimals(), 3);
-?>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th class="spaced-top"><img src="../../artwork/information_icon.gif" width="16" height="16" alt="Information" title="<?php echo $string['percenttolerance'] ?>" class="tiptop" /> <?php echo $string['tolerance'] ?></th>
-              <td class="spaced-top"><label for="tolerance_full" class="spaced-right"><strong><?php echo $string['tolerance_full'] ?></strong></label><input type="text" id="tolerance_full" name="tolerance_full" value="<?php echo $question->get_tolerance_full() ?>" /></td>
-              <td class="spaced-top"><span class="marks-partial<?php echo $show_partial ?>"><label for="tolerance_partial" class="spaced-right"><strong><?php echo $string['tolerance_partial'] ?></strong></label><input type="text" id="tolerance_partial" name="tolerance_partial" value="<?php echo $question->get_tolerance_partial() ?>" /></span></td>
             </tr>
           </tbody>
         </table>
