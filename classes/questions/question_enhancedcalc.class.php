@@ -26,6 +26,7 @@
 
 require_once __DIR__ . '/../calculation_var.class.php';
 require_once __DIR__ . '/../calculation_answer.class.php';
+require_once __DIR__ . '/../stringutils.class.php';
 
 Class QuestionENHANCEDCALC extends QuestionEdit {
 
@@ -34,9 +35,9 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $sf = 0;
   protected $strictdisplay = false;
   protected $strictzeros = false;
-  protected $fulltol = 0;
+  protected $tolerance_full = 0;
+  protected $tolerance_partial = 0;
   protected $fulltoltyp = '#';
-  protected $parttol = 0;
   protected $parttoltyp = '#';
   protected $variables = array();
   protected $answers = array();
@@ -181,45 +182,6 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     }
   }
 
-
-  /**
-   * Get the full marks tolerance for the question
-   * @return integer
-   */
-  public function get_tolerance_full() {
-    return $this->tolerance_full;
-  }
-
-  /**
-   * Set the full marks tolerance for the question
-   * @param unknown_type $value
-   */
-  public function set_tolerance_full($value) {
-    if ($value != $this->tolerance_full) {
-      $this->set_modified_field('tolerance_full', $this->tolerance_full);
-      $this->tolerance_full = $value;
-    }
-  }
-
-  /**
-   * Get the partial marks tolerance for the question
-   * @return integer
-   */
-  public function get_tolerance_partial() {
-    return $this->tolerance_partial;
-  }
-
-  /**
-   * Set the partial marks tolerance for the question
-   * @param unknown_type $value
-   */
-  public function set_tolerance_partial($value) {
-    if ($value != $this->tolerance_partial) {
-      $this->set_modified_field('tolerance_partial', $this->tolerance_partial);
-      $this->tolerance_partial = $value;
-    }
-  }
-
   /**
    * Get the possible labels for variables
    * @return arar List of variable labels
@@ -324,6 +286,44 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   }
 
   /**
+   * Get the full marks tolerance for the question
+   * @return integer
+   */
+  public function get_tolerance_full() {
+    if ($this->fulltoltyp == '%') {
+      return $this->tolerance_full . $this->fulltoltyp;
+    }
+    return $this->tolerance_full;
+  }
+
+  /**
+   * Set the full marks tolerance for the question
+   * @param unknown_type $value
+   */
+  public function set_tolerance_full($value) {
+    $this->set_tolerance_value($value, 'tolerance_full', $this->tolerance_full, $this->fulltoltyp);
+  }
+
+  /**
+   * Get the partial marks tolerance for the question
+   * @return integer
+   */
+  public function get_tolerance_partial() {
+    if ($this->parttoltyp == '%') {
+      return $this->tolerance_partial . $this->parttoltyp;
+    }
+    return $this->tolerance_partial;
+  }
+
+  /**
+   * Set the partial marks tolerance for the question
+   * @param unknown_type $value
+   */
+  public function set_tolerance_partial($value) {
+    $this->set_tolerance_value($value, 'tolerance_partial', $this->tolerance_partial, $this->parttoltyp);
+  }
+
+  /**
    * Get the source of marks data for this question, usually the first option
    * @return mixed The source of marks or false if none has yet been defined
    */
@@ -374,6 +374,26 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
       $var = new CalculationVar($label, $fields['min'], $fields['max'], $fields['dec'], $fields['inc']);
       $this->variables[] = $var;
       $this->_variable_map[$label] = $var;
+    }
+  }
+
+  /**
+   * Set the full marks tolerance for the question
+   * @param unknown_type $value
+   */
+  private function set_tolerance_value($value, $type_string, &$val_target, &$type_target) {
+    if (StringUtils::ends_with($value, '%')) {
+      $val = rtrim($value, '%');
+      $type = '%';
+    } else {
+      $val = $value;
+      $type = '#';
+    }
+    if ($val != $val_target or $type != $type_target) {
+      $type_target = $type;
+      if ($type == '#') $type = '';
+      $this->set_modified_field($type_string, $val_target . $type);
+      $val_target = $value;
     }
   }
 }
