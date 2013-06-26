@@ -111,9 +111,10 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
   <style>
-    body {font-size:100%}
+    body {font-size:90%}
     .subsect {margin-top:20px; font-size:80%}
     .indent {margin-left:30px}
+    .label {position:relative; left:171px; padding:0; margin:0; width:132px; height:11px}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -155,21 +156,34 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 
 <body>
 
+<div style="position:relative; width:300px; height:173px; border: 1px solid #808080; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); z-index:10; float:right; top:10px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:white; color:#404040">
+<img src="../artwork/boxplot_key.png" width="170" height="173" alt="Key" />
+<div style="top:-175px" class="label"><?php echo $string['maximumscore']; ?></div>
+<div style="top:-163px" class="label"><?php echo $string['studentsposition']; ?></div>
+<div style="top:-154px" class="label"><?php echo $string['topquartile']; ?></div>
+<div style="top:-145px" class="label"><?php echo $string['median']; ?></div>
+<div style="top:-138px" class="label"><?php echo $string['lowerquartile']; ?></div>
+<div style="top:-128px" class="label"><?php echo $string['passmark']; ?></div>
+<div style="top:-118px" class="label"><?php echo $string['minimumscore']; ?></div>
+<div style="top:-111px" class="label"><?php echo $string['examname']; ?></div>
+<div style="top:-105px" class="label"><?php echo $string['studentsmark']; ?></div>
+</div>
+
 <div id="menudiv" class="popupmenu" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
 <table width="250" cellspacing="2" cellpadding="0" border="0" style="font-size:90%; background-color:white">
   <tr><td>
     <table width="250" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
       <tr>
-        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/osce_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
+        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/osce_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
       </tr>
       <tr>
-        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['objectives']; ?></td>
+        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['objectives']; ?></td>
       </tr>
       <tr>
-        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/personal_cohort.gif" width="16" height="16" alt="" border="0" /></td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewPersonalCohort();"><?php echo $string['personalcohortperformance']; ?></td>
+        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/personal_cohort.gif" width="16" height="16" alt="" /></td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewPersonalCohort();"><?php echo $string['personalcohortperformance']; ?></td>
       </tr>
       <tr>
-        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
+        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
       </tr>
       <tr>
         <td id="item4a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px">&nbsp;</td><td id="item4b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="jumpToPaper();"><?php echo $string['jumptopaper']; ?></td>
@@ -181,14 +195,18 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 
 <?php
 $demo = is_demo($userObject);
-$student_details = UserUtils::get_user_details($_GET['userID'], $mysqli);
+$student_details = UserUtils::get_user_details($userID, $mysqli);
 $name = demo_replace($student_details['title'], $demo) . ' ' . demo_replace($student_details['surname'], $demo) . ', ' . demo_replace($student_details['first_names'], $demo) . ' (' . demo_replace($student_details['student_id'], $demo) . ')';
+?>
 
-echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
+
+<div style="position:absolute; top:0px; left:0px; width:100%">
+<?php
+echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
 echo "<tr><th><div style=\"padding-left:10px; font-size:200%; font-weight:bold\">" . $string['performsummary'] . "</div><div style=\"padding-left:10px\">$name</div></th></tr>\n";
 echo '<tr><th class="bevel"></th></tr>';
 echo "</table>\n<div>";
-  
+
 $old_calendar_year = '';
 $plots_output = 0;
 $col = 0;
@@ -197,12 +215,11 @@ foreach ($papers as $paper) {
   if ($paper['stats']['max_mark'] != '') {
     if ($old_calendar_year != $paper['calendar_year']) {
       echo '<table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
-      echo '<img src="draw_boxplot.php?part=0" width="51" height="265" alt="' . $string['scale'] . '" class="indent" />';
       $col = 0;
     }
   
     if ($col == 8) {
-      echo '<br /><img src="draw_boxplot.php?part=0" width="51" height="265" alt="' . $string['scale'] . '" class="indent" />';
+      echo '<br />';
       $col = 0;
     }
   
@@ -215,10 +232,16 @@ foreach ($papers as $paper) {
     $mark = (isset($marks[$paper['paperID']])) ? $marks[$paper['paperID']] : '';
     $exam = $paper['paper_title'];
   
-    echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark\" width=\"115\" height=\"265\" onclick=\"popMenu(3, event); setVars(" . $paper['paper_type'] . ", '" . $paper['crypt_name'] . "', " . $paper['paperID'] . ", '" . $paper['started'] . "')\" alt=\"" . $string['boxplot'] . "\" />";
-
-    $plots_output++;
-    $col++;
+    if ($mark != '') {  // Do not plot if there is no student mark.
+      if ($col == 0) {
+        echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=1\" width=\"166\" height=\"265\" onclick=\"popMenu(3, event); setVars(" . $paper['paper_type'] . ", '" . $paper['crypt_name'] . "', " . $paper['paperID'] . ", '" . $paper['started'] . "')\" alt=\"" . $string['boxplot'] . "\" class=\"indent\" />";
+      } else {
+        echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=0\" width=\"115\" height=\"265\" onclick=\"popMenu(3, event); setVars(" . $paper['paper_type'] . ", '" . $paper['crypt_name'] . "', " . $paper['paperID'] . ", '" . $paper['started'] . "')\" alt=\"" . $string['boxplot'] . "\" />";
+      }
+      
+      $plots_output++;
+      $col++;
+    }
     $old_calendar_year = $paper['calendar_year'];
   }
 }
@@ -230,6 +253,8 @@ if ($plots_output == 0) {
 <input type="hidden" id="paperID" />
 <input type="hidden" id="started" />
 <input type="hidden" id="paper_type" />
+
+</div>
 
 </div>
 </body>

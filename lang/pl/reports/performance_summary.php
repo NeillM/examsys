@@ -18,4 +18,19 @@ $string['performsummary'] = 'Podsumowanie osiągnięć';
 $string['scale'] = 'skala';
 $string['boxplot'] = 'wykres pudełkowy';
 $string['noresults'] = 'nie znaleziono żadnych wyników egzaminów.';
+
+$string['examscript'] = 'Exam Script';
+$string['objectives'] = 'Objectives';
+$string['personalcohortperformance'] = 'Personal/Cohort Performance';
+$string['jumptopaper'] = 'Jump to Paper';
+
+$string['maximumscore'] = 'Max score';
+$string['studentsposition'] = 'Student\'s position';
+$string['topquartile'] = 'Q3';
+$string['median'] = 'Q2 (Median)';
+$string['lowerquartile'] = 'Q1';
+$string['passmark'] = 'Pass mark';
+$string['minimumscore'] = 'Min score';
+$string['examname'] = 'Exam Name';
+$string['studentsmark'] = 'Student\'s percentage';
 ?>
