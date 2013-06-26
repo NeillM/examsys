@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -56,7 +56,7 @@ for ($i = 0; $i < $question->max_stems; $i++) {
           <dl id="extended-option-list">
 <?php
   $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
- 
+
   for ($index = 0; $index < $question->max_options; $index++) {
     $mandatory = ($index < 3) ? '<span class="mandatory">*</span> ' : '';
     if ($index < $num_options) {
@@ -90,7 +90,7 @@ require_once 'detail_parts/details_leadin.php';
               <th><label for="option_order"><?php echo $string['optionorder'] ?></label></th>
               <td>
                 <select id="option_order" name="option_order"<?php echo $disabled ?>>
-<?php 
+<?php
 echo ViewHelper::render_options($question->get_option_orders(), $question->get_option_order(), 3);
 ?>
                 </select>
@@ -98,7 +98,7 @@ echo ViewHelper::render_options($question->get_option_orders(), $question->get_o
             </tr>
 					</tbody>
 				</table>
-        
+
 <?php
 require_once 'detail_parts/details_marking.php';
 
@@ -109,7 +109,7 @@ for ($index = 1; $index <= $question->max_stems; $index++):
           <div class="form">
             <h2 class="midblue_header"><?php echo $string['scenario'] . ' ' . $numerals[$index-1] ?>.</h2>
           </div>
-          
+
           <table id="q-options" class="form" summary="Edit scenario <?php echo $numerals[$index-1] ?>.">
 <?php
   include 'options/opt_extmatch.php';
@@ -124,17 +124,17 @@ endfor;
 if ($question->get_locked() == '') {
 ?>
         <table id="q-option-add" class="form" summary="Add more options">
-          <tbody id="add-option-holder">
+          <tbody class="add-option-holder">
             <tr>
               <th>&nbsp;</th>
               <td colspan="2">
-                <input id="next-option" value="<?php echo $string['addoptions'] ?>" type="button" />
+                <input class="next-option" value="<?php echo $string['addoptions'] ?>" type="button" />
               </td>
             </tr>
           </tbody>
         </table>
 <?php
 }
-?>          
+?>
 
-        
+

@@ -29,13 +29,13 @@ if ($index %2 == 0) {
 if ((count($answers) == 0 and $index > 2) or $index > count($answers)) {
   $classes[] = 'hide';
 }
-$class_mod = (count($classes) > 0) ? ' class="' . implode(' ', $classes) . '"' : '';
+$class_mod = (count($classes) > 0) ? ' ' . implode(' ', $classes) : '';
 
 $spaced = ($index > 1) ? ' spaced-top spaced-bottom' : ' spaced-bottom';
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 ?>
-          <tbody class="answer">
-            <tr<?php echo $class_mod ?>>
+          <tbody class="answer<?php echo $class_mod ?>">
+            <tr>
               <th>&nbsp;</th>
               <td>
                 <input type="text" id="option_formula<?php echo $index ?>" name="option_formula<?php echo $index ?>" class="form-med" value="<?php echo $answer->get_formula() ?>">
