@@ -329,7 +329,7 @@ class ClassTotals {
     $result->close();
 
     $this->paper_buffer[$questionID]['random_questions'] = $random_questions;
-
+    
     return $old_q_id;
   }
 
@@ -605,10 +605,6 @@ class ClassTotals {
     $tmp_exclude = $this->exclusions->get_exclusions_by_qid($q_id);
 
     $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
-    
-    if ($this->paper_buffer[$q_id]['status'] == 'Experimental') {
-      $tmp_exclude = '1111111111111111111111111111111111111111';
-    }
 
     $skip_random = false;
     if (!isset($this->paper_buffer[$q_id])) {
@@ -624,6 +620,10 @@ class ClassTotals {
       }
     } else {
       $question = $this->paper_buffer[$q_id];
+    }
+    
+    if ($question['status'] == 'Experimental') {
+      $tmp_exclude = '1111111111111111111111111111111111111111';
     }
 
     if (!$skip_random and $question['score_method'] != 'Mark per Question' and isset($multi_part_qns[$question['q_type']])) {
