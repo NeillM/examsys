@@ -26,6 +26,7 @@ $vars = $question->get_variables();
 $num_vars = count($vars);
 $answers = $question->get_answers();
 $num_answers = count($answers);
+$max_opt_ids = max(array($num_vars, $num_answers));
 $decimals = array('', 0, 1, 2, 3, 4, 5, 6, 7, 8);
 $increments = array('', 0.0001, 0.001, 0.02, 0.01, 0.5, 0.2, 0.1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100, 1000);
 $marks_unit = array('0' => 'N/A', 'invalidate' => 'Award zero for question', '-0.25' => '-0.25', '-0.5' => '-0.5', '-1' => '-1', '-2' => '-2', '-3' => '-3', '-4' => '-4', '-5' => '-5', '-6' => '-6', '-7' => '-7', '-8' => '-8', '-9' => '-9', '-10' => '-10');
@@ -53,23 +54,23 @@ require_once 'detail_parts/details_general_feedback.php';
           <thead>
             <tr>
               <th>&nbsp;</th>
-              <th class="align-left"><?php echo $string['min'] ?></th>
-              <th class="align-left"><?php echo $string['max'] ?></th>
-              <th class="align-left"><?php echo $string['decimals'] ?></th>
-              <th class="align-left"><?php echo $string['increment'] ?></th>
+              <th class="align-left auto"><?php echo $string['min'] ?></th>
+              <th class="align-left auto"><?php echo $string['max'] ?></th>
+              <th class="align-left auto"><?php echo $string['decimals'] ?></th>
+              <th class="align-left auto"><?php echo $string['increment'] ?></th>
             </tr>
           </thead>
 <?php
 $index = 1;
 
 foreach ($vars as $variable) {
-  include 'options/opt_extendedcalc.php';
+  include 'options/opt_enhancedcalc.php';
   $index++;
 }
 
 for ($index = $num_vars + 1; $index <= count($labels); $index++) {
   $variable = new CalculationVar('$' . $labels[$index-1], '', '', '', '');
-  include 'options/opt_extendedcalc.php';
+  include 'options/opt_enhancedcalc.php';
 }
 
 if($question->get_locked() == '') {
@@ -103,13 +104,13 @@ if($question->get_locked() == '') {
 $index = 1;
 
 foreach ($answers as $answer) {
-  include 'options/ans_extendedcalc.php';
+  include 'options/ans_enhancedcalc.php';
   $index++;
 }
 
-for ($index = $num_answers + 1; $index <= $question->max_answers; $index++) {
+for ($index = $num_answers + 1; $index <= $question->max_options; $index++) {
   $answer = new CalculationAnswer('', '');
-  include 'options/ans_extendedcalc.php';
+  include 'options/ans_enhancedcalc.php';
 }
 ?>
           <tbody class="add-option-holder">

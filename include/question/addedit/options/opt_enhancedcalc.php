@@ -26,10 +26,11 @@ $classes = array();
 if ($index %2 == 0) {
   $classes[] = 'alt';
 }
-if ((count($vars) == 0 and $index > 5) or $index > count($vars)) {
+if ((count($vars) == 0 and $index > 5) or (count($vars) > 0 and $index > count($vars))) {
   $classes[] = 'hide';
 }
 $class_mod = (count($classes) > 0) ? ' ' . implode(' ', $classes) : '';
+$opt_id = ($index <= $max_opt_ids) ? $index : '-1';
 
 $spaced = ($index > 1) ? ' spaced-top spaced-bottom' : ' spaced-bottom';
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
@@ -41,6 +42,7 @@ $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
                 <label for="option_min<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['minimum'];?></label>
                 <input type="text" id="option_min<?php echo $index ?>" name="option_min<?php echo $index ?>" value="<?php echo $variable->get_min() ?>" class="calc-min form-tiny<?php echo $dis_class ?>"<?php echo $dis_readonly ?> />
                 <a href="#" class="variable-link<?php echo $dis_class ?>" rel="option_min<?php echo $index ?>"><img id="minicon<?php echo $index ?>" src="../../artwork/variable_link_off.png" width="23" height="22" alt="Link" class="form-img" /></a>
+                <input name="optionid<?php echo $index ?>" value="<?php echo $opt_id ?>" type="hidden" />
               </td>
               <td class="align-left<?php echo $spaced ?>">
                 <label for="option_max<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['maximum'];?></label>

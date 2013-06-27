@@ -220,67 +220,67 @@ if ($critical_error == '') {
 
       $unified_part_names = $question->get_unified_fields();
 
-      // for ($option_no = 1; $option_no <= $question->max_options; $option_no++) {
-      //   $option = null;
+      for ($option_no = 1; $option_no <= $question->max_options; $option_no++) {
+        $option = null;
 
-      //   if (isset($_POST["optionid$option_no"]) and $_POST["optionid$option_no"] != -1) {
-      //     // Editing existing option
-      //     $option = $question->options[$_POST["optionid$option_no"]];
-      //     $part_names = $option->get_editable_fields();
+        if (isset($_POST["optionid$option_no"]) and $_POST["optionid$option_no"] != -1) {
+          // Editing existing option
+          $option = $question->options[$_POST["optionid$option_no"]];
+          $part_names = $option->get_editable_fields();
 
-      //     // Build arrays for compound fields
-      //     $compound_fields = $option->get_compound_fields();
-      //     if (!isset($existing_values)) $existing_values = array();
-      //     $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
+          // Build arrays for compound fields
+          $compound_fields = $option->get_compound_fields();
+          if (!isset($existing_values)) $existing_values = array();
+          $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
 
-      //     // Save editable fields that aren't unified
-      //     $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
+          // Save editable fields that aren't unified
+          $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
 
-      //     // Save fields that are the same across options
-      //     $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
-      //   } else {
-      //     // Create new option if have required data
-      //     $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
+          // Save fields that are the same across options
+          $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
+        } else {
+          // Create new option if have required data
+          $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
 
-      //     if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
-      //       $correct_fb = (isset($_POST["option_correct_fback$option_no"])) ? $_POST["option_correct_fback$option_no"] : '';
-      //       $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
+          if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
+            $correct_fb = (isset($_POST["option_correct_fback$option_no"])) ? $_POST["option_correct_fback$option_no"] : '';
+            $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
 
-      //       $part_names = $option->get_editable_fields();
+            $part_names = $option->get_editable_fields();
 
-      //       // Build arrays for compound fields
-      //       $compound_fields = $option->get_compound_fields();
-      //       if (!isset($existing_values)) $existing_values = array();
-      //       $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
+            // Build arrays for compound fields
+            $compound_fields = $option->get_compound_fields();
+            if (!isset($existing_values)) $existing_values = array();
+            $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
 
-      //       // Save editable fields that aren't unified
-      //       $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
+            // Save editable fields that aren't unified
+            $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
 
-      //       // Save fields that are the same across options
-      //       $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_', false);
+            // Save fields that are the same across options
+            $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_', false);
 
-      //       $question->options[] = $option;
-      //     }
-      //   }
+            $question->options[] = $option;
+          }
+        }
 
-      //   if ($option != null and !in_array('media', $question->get_compound_fields())) {
-      //     // Handle changes in media
-      //     $old_media = $option->get_media();
-      //     if (isset($_FILES["option_media$option_no"]) and $_FILES["option_media$option_no"]['name'] != $old_media['filename'] and ($_FILES["option_media$option_no"]['name'] != 'none' and $_FILES["option_media$option_no"]['name'] != '')) {
-      //       if ($old_media['filename'] != '') {
-      //         deleteMedia($old_media['filename']);
-      //       }
-      //       $option->set_media(uploadFile("option_media$option_no"));
-      //     } else {
-      //       // Delete existing media if asked
-      //       if (isset($_POST["delete_media$option_no"]) AND $_POST["delete_media$option_no"] == 'on') {
-      //         deleteMedia($old_media['filename']);
-      //         $option->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
-      //       }
-      //     }
-      //   }
+        if ($option != null and !in_array('media', $question->get_compound_fields())) {
+          // Handle changes in media
+          $old_media = $option->get_media();
+          if (isset($_FILES["option_media$option_no"]) and $_FILES["option_media$option_no"]['name'] != $old_media['filename'] and ($_FILES["option_media$option_no"]['name'] != 'none' and $_FILES["option_media$option_no"]['name'] != '')) {
+            if ($old_media['filename'] != '') {
+              deleteMedia($old_media['filename']);
+            }
+            $option->set_media(uploadFile("option_media$option_no"));
+          } else {
+            // Delete existing media if asked
+            if (isset($_POST["delete_media$option_no"]) AND $_POST["delete_media$option_no"] == 'on') {
+              deleteMedia($old_media['filename']);
+              $option->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
+            }
+          }
+        }
 
-      // }
+      }
 
       $do_save = true;
     }

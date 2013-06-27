@@ -48,7 +48,6 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $marks_partial = 0;
   protected $marks_unit = 0;
   public $max_options = 10;
-  public $max_answers = 5;
   protected $variable_labels = array();
   protected $_allow_partial_marks = true;
   protected $_allow_change_marking_method = false;
