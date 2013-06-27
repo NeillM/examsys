@@ -64,7 +64,7 @@ require_once 'detail_parts/details_general_feedback.php';
           </thead>
 <?php
 for ($index = 1; $index <= $num_vars; $index++) {
-  $var = $question->options[$index];
+  $variable = $question->options[$index];
   include 'options/opt_enhancedcalc.php';
 }
 
@@ -104,7 +104,7 @@ if($question->get_locked() == '') {
 <?php
 for ($index = 1; $index <= $num_answers; $index++) {
   $answer = $question->options[$index];
-  include 'options/opt_enhancedcalc.php';
+  include 'options/ans_enhancedcalc.php';
 }
 
 for ($index = $num_answers + 1; $index <= $question->max_options; $index++) {
