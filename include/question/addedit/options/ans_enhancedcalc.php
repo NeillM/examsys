@@ -26,7 +26,7 @@ $classes = array();
 if ($index %2 == 0) {
   $classes[] = 'alt';
 }
-if ((count($answers) == 0 and $index > 2) or $index > count($answers)) {
+if ((count($answers) == 0 and $index > 2) or (count($answers) > 0 and $index > count($answers))) {
   $classes[] = 'hide';
 }
 $class_mod = (count($classes) > 0) ? ' ' . implode(' ', $classes) : '';
