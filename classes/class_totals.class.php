@@ -226,11 +226,11 @@ class ClassTotals {
     $this->sort_results();                                                                                    // Sort the whole array by the right column
 
     if ($this->recache) {
-      $results_cache->save_paper_cache($this->propertyObj, $this->percent, $this->absent, $this->stats);                  // Cache general paper stats
+      $results_cache->save_paper_cache($this->paperID, $this->percent, $this->absent, $this->stats);                      // Cache general paper stats
 
-      $results_cache->save_student_mark_cache($this->propertyObj, $this->percent, $this->absent, $this->user_results);    // Cache student/paper marks
+      $results_cache->save_student_mark_cache($this->paperID, $this->percent, $this->absent, $this->user_results);    // Cache student/paper marks
 
-      $results_cache->save_median_question_marks($this->propertyObj, $this->percent, $this->absent, $this->q_medians);    // Cache the question/paper medians
+      $results_cache->save_median_question_marks($this->paperID, $this->percent, $this->absent, $this->q_medians);    // Cache the question/paper medians
     }
   }
 
@@ -1362,6 +1362,7 @@ class ClassTotals {
       $log_query->close();
       
       $this->db->commit();
+      $this->db->autocommit(true);
     }
     
   }

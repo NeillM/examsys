@@ -139,29 +139,31 @@ class ResultsCache {
     return $marks;
   }
   
-  public function save_paper_cache($propertyObj, $percent, $absent, $stats) {
-    $paperID = $propertyObj->get_property_id();
-  
+  public function save_paper_cache($paperID, $percent, $absent, $stats) {
     $result = $this->db->prepare("REPLACE INTO cache_paper_stats (paperID, cached, max_mark, max_percent, min_mark, min_percent, q1, q2, q3, mean_mark, mean_percent, stdev_mark, stdev_percent) VALUES (?, UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $result->bind_param('iddddddddddd', $paperID, $stats['max_mark'], $stats['max_percent'], $stats['min_mark'], $stats['min_percent'], $stats['q1'], $stats['q2'], $stats['q3'], $stats['mean_mark'], $stats['mean_percent'], $stats['stddev_mark'], $stats['stddev_percent']);
     $result->execute();
     $result->close();
   }
 
-  public function save_student_mark_cache($propertyObj, $percent, $absent, $user_results) {
+  public function save_student_mark_cache($paperID, $percent, $absent, $user_results) {
     $user_no = count($user_results);
-    $paperID = $propertyObj->get_property_id();
 
+    $this->db->autocommit(false);
+   
     $result = $this->db->prepare("REPLACE INTO cache_student_paper_marks (paperID, userID, mark, percent) VALUES (?, ?, ?, ?)");
     for ($i=0; $i<$user_no; $i++) {
       $result->bind_param('iidd', $paperID, $user_results[$i]['userID'], $user_results[$i]['mark'], $user_results[$i]['percent']);
       $result->execute();
     }
     $result->close();
+      
+    $this->db->commit();
+    $this->db->autocommit(true);
   }
 
-  public function save_median_question_marks($propertyObj, $percent, $absent, $q_medians) {
-    $paperID = $propertyObj->get_property_id();
+  public function save_median_question_marks($paperID, $percent, $absent, $q_medians) {
+    $this->db->autocommit(false);
 
     $result = $this->db->prepare("REPLACE INTO cache_median_question_marks (paperID, questionID, median, mean) VALUES (?, ?, ?, ?)");
     foreach ($q_medians as $q_id=>$median_array) {
@@ -172,5 +174,8 @@ class ResultsCache {
       $result->execute();
     }
     $result->close();
+      
+    $this->db->commit();
+    $this->db->autocommit(true);
   }
 }

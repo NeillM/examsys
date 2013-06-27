@@ -112,11 +112,16 @@ body {font-size:85%}
   echo "</table>\n";
 
 	echo "<div id=\"canvas_div\">\n";
-	echo "<canvas id=\"canvas_graph\" width=\"650\" height=\"600\"></canvas><br>\n";
+	echo "<canvas id=\"canvas_graph\" width=\"650\" height=\"600\"></canvas><br />\n";
 	echo "<table><tr><td style=\"width:0px\">&nbsp;</td><td>&nbsp;</td>\n";
 	echo "<td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td>". $string['cutscore'] . "</td><td>". $string['cutpercent'] . "</td>\n";
 	echo "</tr><tr><td>&nbsp;</td>\n";
-	echo "<td><input type='checkbox' name='checkbox' id='checkbox'>" . $string['integeronly'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+  if (isset($_POST['checkbox'])) {
+    $checked = ' checked="checked"';
+  } else {
+    $checked = '';
+  }
+	echo "<td><input type=\"checkbox\" name=\"checkbox\" id=\"checkbox\"$checked />" . $string['integeronly'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
 	echo "<td><input type=\"text\" size=\"5\" name=\"x1\" id=\"x1\" class=\"tf\" ";
 		if (isset($_POST['x1'])) echo "value=\"" . $_POST['x1'] . "\" ";
 		echo "/></td>\n";
