@@ -22,6 +22,8 @@
 * @package
 */
 
+require_once $cfg_web_root . 'classes/options/option_enhancedcalc.class.php';
+
 $vars = $question->get_variables();
 $num_vars = count($vars);
 $answers = $question->get_answers();
@@ -61,15 +63,14 @@ require_once 'detail_parts/details_general_feedback.php';
             </tr>
           </thead>
 <?php
-$index = 1;
-
-foreach ($vars as $variable) {
+for ($index = 1; $index <= $num_vars; $index++) {
+  $var = $question->options[$index];
   include 'options/opt_enhancedcalc.php';
-  $index++;
 }
 
 for ($index = $num_vars + 1; $index <= count($labels); $index++) {
-  $variable = new CalculationVar('$' . $labels[$index-1], '', '', '', '');
+  $variable = new OptionENHANCEDCALC($mysqli, $userObject->get_user_ID(), $question, $index, $string, array());
+  $variable->set_variable('$' . $labels[$index-1]);
   include 'options/opt_enhancedcalc.php';
 }
 
@@ -101,15 +102,13 @@ if($question->get_locked() == '') {
             </tr>
           </thead>
 <?php
-$index = 1;
-
-foreach ($answers as $answer) {
-  include 'options/ans_enhancedcalc.php';
-  $index++;
+for ($index = 1; $index <= $num_answers; $index++) {
+  $answer = $question->options[$index];
+  include 'options/opt_enhancedcalc.php';
 }
 
 for ($index = $num_answers + 1; $index <= $question->max_options; $index++) {
-  $answer = new CalculationAnswer('', '');
+  $answer = new OptionENHANCEDCALC($mysqli, $userObject->get_user_ID(), $question, $index, $string, array());
   include 'options/ans_enhancedcalc.php';
 }
 ?>
