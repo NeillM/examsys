@@ -66,20 +66,32 @@ dd {
 
 /* General classes */
 .hide {
-	display: none;
+  display: none;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.disabled {
+  color: #999;
 }
 
 .clearfix:after {
-    content: ".";
-    display: block;
-    height: 0;
-    font-size: 0;
-    clear: both;
-    visibility: hidden;
+  content: ".";
+  display: block;
+  height: 0;
+  font-size: 0;
+  clear: both;
+  visibility: hidden;
 }
 
 .heavy {
 	font-weight: bold;
+}
+
+.indent {
+  padding-left: 2em;
 }
 
 .align-top {
@@ -375,6 +387,10 @@ div.form {
 
 .form-fixed {
   resize: none;
+}
+
+.auto {
+  width: auto!important;
 }
 
 .sct-option {
