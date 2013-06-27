@@ -367,9 +367,18 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @param  array $data Data describing the answers in the form of a formula and associated units
    */
   private function unserialize_answers($data) {
+    $i = 1;
+
     foreach ($data as $fields) {
-      $answer = new CalculationAnswer($fields['formula'], $fields['units']);
-      $this->answers[] = $answer;
+      if (!isset($this->options[$i])) {
+        $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('formula' => $fields['formula'], 'units' => $fields['units']));
+        $this->options[$i] = $opt;
+      } else {
+        $opt = $this->options[$i];
+        $opt->set_formula($fields['formula']);
+        $opt->set_units($fields['units']);
+      }
+      $this->answers[] = $i;
     }
   }
 
@@ -378,10 +387,21 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @param  array $data Data describing the variables indexed by the variable label
    */
   private function unserialize_vars($data) {
-    foreach ($data as $label => $fields) {
-      $var = new CalculationVar($label, $fields['min'], $fields['max'], $fields['dec'], $fields['inc']);
-      $this->variables[] = $var;
-      $this->_variable_map[$label] = $var;
+    $i = 1;
+
+    foreach ($data as $fields) {
+      if (!isset($this->options[$i])) {
+        $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('variable' => $label, 'min' => $fields['min'], 'max' => $fields['max'], 'decimals' => $fields['dec'], 'increment' => $fields['inc']));
+        $this->options[$i] = $opt;
+      } else {
+        $opt = $this->options[$i];
+        $opt->set_min($fields['min']);
+        $opt->set_max($fields['max']);
+        $opt->set_decimals($fields['decimals']);
+        $opt->set_increment($fields['increment']);
+      }
+      $this->variables[] = $i;
+      $this->_variable_map[$label] = $i;
     }
   }
 

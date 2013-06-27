@@ -37,7 +37,7 @@ $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 ?>
           <tbody class="option<?php echo $class_mod ?>">
             <tr>
-              <th class="<?php echo $spaced ?>"><?php echo $variable->get_label() ?></th>
+              <th class="<?php echo $spaced ?>"><?php echo $variable->get_variable() ?></th>
               <td class="align-left<?php echo $spaced ?>">
                 <label for="option_min<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['minimum'];?></label>
                 <input type="text" id="option_min<?php echo $index ?>" name="option_min<?php echo $index ?>" value="<?php echo $variable->get_min() ?>" class="calc-min form-tiny<?php echo $dis_class ?>"<?php echo $dis_readonly ?> />
