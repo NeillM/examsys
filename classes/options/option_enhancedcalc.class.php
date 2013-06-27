@@ -42,6 +42,8 @@ Class OptionENHANCEDCALC extends OptionEdit {
    * @return integer
    */
   public function save($option_number = 0) {
+    $logger = new Logger($this->_mysqli);
+    $this->save_changes($logger, $this->_number);
     return true;
   }
 

@@ -37,7 +37,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $tolerance_partial = 0;
   protected $fulltoltyp = '#';
   protected $parttoltyp = '#';
-  protected $variables = array();
+  protected $vars = array();
   protected $answers = array();
   protected $score_method = 'Allow partial Marks';
   protected $show_units = true;
@@ -52,7 +52,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
 
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'strict_display', 'strict_zeros', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
   protected $_fields_change = array('marks_correct', 'marks_incorrect', 'marks_partial', 'answer_precision', 'tolerance_full', 'tolerance_partial');
-  protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units');
+  protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units', 'answers', 'vars');
   protected $_fields_force = array('show_units', 'strict_display', 'strict_zeros');
 
   protected $_answer_negative = false;
@@ -69,6 +69,19 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     $this->option_order = 'display order';
   }
 
+  /**
+   * Persist the object to the database
+   * @return boolean Success or failure of the save operation
+   * @throws ValidationException
+   */
+  public function save($clear_checkout = true) {
+    // Extract options into arrays fro JSON encoding
+    $this->extract_answers();
+    $this->extract_vars();
+
+    return parent::save($clear_checkout);
+  }
+
   // ACCESSORS
 
   /**
@@ -76,7 +89,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @return integer
    */
   public function get_variables() {
-    return $this->variables;
+    return $this->vars;
   }
 
   /**
@@ -400,9 +413,38 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
         $opt->set_decimals($fields['dec']);
         $opt->set_increment($fields['inc']);
       }
-      $this->variables[] = $i;
+      $this->vars[] = $i;
       $this->_variable_map[$label] = $i;
       $i++;
+    }
+  }
+
+  private function extract_answers() {
+    $this->answers = array();
+
+    foreach ($this->options as $index => $option) {
+      $formula = $option->get_formula();
+      $units = $option->get_units();
+
+      if ($formula != '') {
+        $this->answers[] = array('formula' => $formula, 'units' => $units);
+      }
+    }
+  }
+
+  private function extract_vars() {
+    $this->vars = array();
+
+    foreach ($this->options as $index => $option) {
+      $label = $option->get_variable();
+      $min = $option->get_min();
+      $max = $option->get_max();
+      $decimals = $option->get_decimals();
+      $increment = $option->get_increment();
+
+      if ($min != '') {
+        $this->vars[$label] = array('min' => $min, 'max' => $max, 'inc' => $increment, 'dec' => $decimals);
+      }
     }
   }
 
