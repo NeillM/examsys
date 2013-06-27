@@ -58,7 +58,7 @@ $(function () {
   
   $('#addquestion').click(addQuestion);
 
-  $('#answer_strict').change(toggleTrailingZeros);
+  $('#strict_display').change(toggleTrailingZeros);
 
   $('.display_units').change(toggleDisplayUnits);
 
@@ -244,10 +244,10 @@ function showMarksWarning(element) {
 
 function toggleTrailingZeros() {
   $('#trailing_zeros').toggleClass('disabled');
-  if ($('#answer_strict_trailing').attr('disabled')) {
-    $('#answer_strict_trailing').removeAttr('disabled');
+  if ($('#strict_zeros').attr('disabled')) {
+    $('#strict_zeros').removeAttr('disabled');
   } else {
-    $('#answer_strict_trailing').attr('disabled', 'disabled');
+    $('#strict_zeros').attr('disabled', 'disabled');
   }
 }
 

@@ -185,11 +185,11 @@ if ($question->get_strict_display()) {
   $disabled = ' disabled';
 }
 ?>
-                <input type="checkbox" name="answer_strict" id="answer_strict"<?php echo $checked ?>> <label for="answer_strict">Enforce precision of student answer</label></input>
+                <input type="checkbox" name="strict_display" id="strict_display"<?php echo $checked ?>> <label for="strict_display">Enforce precision of student answer</label></input>
 <?php
 $checked = ($question->get_strict_zeros()) ? ' checked' : '';
 ?>
-                <span id="trailing_zeros" class="indent<?php echo $disabled ?>"><input type="checkbox" name="answer_strict_trailing" id="answer_strict_trailing"<?php echo $checked.$disabled ?>> <label for="answer_strict_trailing">Including trailing 0s</label></input></span>
+                <span id="trailing_zeros" class="indent<?php echo $disabled ?>"><input type="checkbox" name="strict_zeros" id="strict_zeros"<?php echo $checked.$disabled ?>> <label for="strict_zeros">Including trailing 0s</label></input></span>
               </td>
             </tr>
           </tbody>

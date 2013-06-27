@@ -53,10 +53,10 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $_allow_partial_marks = true;
   protected $_allow_change_marking_method = false;
 
-  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'strictdisplay', 'strictzeros', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
+  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'strict_display', 'strict_zeros', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
   protected $_fields_change = array('marks_correct', 'marks_incorrect', 'marks_partial', 'answer_precision', 'tolerance_full', 'tolerance_partial');
   protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units');
-  protected $_fields_force = array('show_units');
+  protected $_fields_force = array('show_units', 'strict_display', 'strict_zeros');
 
   protected $_answer_negative = false;
 
