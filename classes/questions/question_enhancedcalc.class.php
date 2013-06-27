@@ -23,9 +23,7 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-
-require_once __DIR__ . '/../calculation_var.class.php';
-require_once __DIR__ . '/../calculation_answer.class.php';
+require_once __DIR__ . '/../options/option_enhancedcalc.class.php';
 require_once __DIR__ . '/../stringutils.class.php';
 
 Class QuestionENHANCEDCALC extends QuestionEdit {
@@ -379,6 +377,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
         $opt->set_units($fields['units']);
       }
       $this->answers[] = $i;
+      $i++;
     }
   }
 
@@ -389,19 +388,21 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   private function unserialize_vars($data) {
     $i = 1;
 
-    foreach ($data as $fields) {
+    foreach ($data as $label => $fields) {
       if (!isset($this->options[$i])) {
         $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('variable' => $label, 'min' => $fields['min'], 'max' => $fields['max'], 'decimals' => $fields['dec'], 'increment' => $fields['inc']));
         $this->options[$i] = $opt;
       } else {
         $opt = $this->options[$i];
+        $opt->set_variable($label);
         $opt->set_min($fields['min']);
         $opt->set_max($fields['max']);
-        $opt->set_decimals($fields['decimals']);
-        $opt->set_increment($fields['increment']);
+        $opt->set_decimals($fields['dec']);
+        $opt->set_increment($fields['inc']);
       }
       $this->variables[] = $i;
       $this->_variable_map[$label] = $i;
+      $i++;
     }
   }
 
