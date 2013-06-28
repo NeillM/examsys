@@ -129,8 +129,11 @@ $sel_mod = ($question->get_show_units()) ? ' checked' : '';
               <td class="spaced-top"><input type="checkbox" name="show_units" id="show_units"<?php echo $sel_mod ?>></td>
             </tr>
             <tr>
-              <th class="spaced-top"><label for="marks_unit">Unit marking</label></th>
-              <td class="spaced-top" colspan="2">
+              <th class="spaced-top">
+                <label for="marks_unit">Unit marking</label><br>
+                <span class="note">(if incorrect)</span>
+              </th>
+              <td class="spaced-top align-top" colspan="2">
                 <select name="marks_unit" id="marks_unit">
 <?php
 echo ViewHelper::render_options($marks_unit, $question->get_marks_unit(), 3);
