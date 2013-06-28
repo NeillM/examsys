@@ -39,5 +39,5 @@ $string['sct_short'] = 'Test scenariusza';
 $string['textbox'] = 'Pytanie półotwarte';
 $string['true_false'] = 'Pytanie typu Prawda/Fałsz'; 
 $string['area'] = 'Pytanie na obrys obszaru';
-$string['enhancedcalc'] = 'Enhanced Calculation'; //TODO Niko
+$string['enhancedcalc'] = 'Rozszerzone pytanie obliczeniowe';
 ?>

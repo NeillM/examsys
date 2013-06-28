@@ -96,6 +96,7 @@ body {font-size:85%}
 <?php
 	$results_cache = new ResultsCache($mysqli);
 	$marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
+	$stats = array_values($results_cache->get_paper_cache($paperID));
 	
   echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n";
   echo "<tr><th class=\"h\">";
@@ -112,7 +113,7 @@ body {font-size:85%}
   echo "</table>\n";
 
 	echo "<div id=\"canvas_div\">\n";
-	echo "<canvas id=\"canvas_graph\" width=\"650\" height=\"600\"></canvas><br />\n";
+	echo "<canvas id=\"canvas_graph\" width=\"800\" height=\"600\" style='border:1px solid white;'></canvas><br />\n";
 	echo "<table><tr><td style=\"width:0px\">&nbsp;</td><td>&nbsp;</td>\n";
 	echo "<td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td>". $string['cutscore'] . "</td><td>". $string['cutpercent'] . "</td>\n";
 	echo "</tr><tr><td>&nbsp;</td>\n";
@@ -142,8 +143,14 @@ body {font-size:85%}
 	
 	echo "<script type='text/javascript'>
 		var lang_cohort = '".  $string['cohort'] . "';
-		var lang_correct = '".  $string['correct'] . "';			
+		var lang_correct = '".  $string['correct'] . "';
+		var lang_maximumscore = '".  $string['maximumscore'] . "';
+		var lang_topquartile = '".  $string['topquartile'] . "';
+		var lang_median = '".  $string['median'] . "';
+		var lang_lowerquartile = '".  $string['lowerquartile'] . "';
+		var lang_minimumscore = '".  $string['minimumscore'] . "';
 		var marks = ".  json_encode($marks) . ";
+		var stats = ".  json_encode($stats) . ";
 		</script>";
 	echo "<script type=\"text/javascript\" src=\"../html5/hofstee.js\"></script></div>\n";
   if (isset($insertID)) {

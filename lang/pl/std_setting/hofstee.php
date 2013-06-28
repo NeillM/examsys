@@ -27,4 +27,10 @@ $string['maxfail'] = 'Maks Obl.';
 $string['cutscore'] = 'Ocena Gr.';
 $string['cutpercent'] = 'Granica grupy';
 $string['standardssetting'] = 'Wyznaczanie standardów';
+
+$string['maximumscore'] = 'Najlepszy wynik';
+$string['topquartile'] = 'Q3 (Górny kwartyl)';
+$string['median'] = 'Q2 (Mediana)';
+$string['lowerquartile'] = 'Q1 (Dolny kwartyl)';
+$string['minimumscore'] = 'Najgorszy wynik';
 ?>

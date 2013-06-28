@@ -25,7 +25,7 @@
 //
 
 var graph_x = 70;
-var graph_y = 50;
+var graph_y = 40;
 var graph_w = 500;
 var graph_h = 500;
 var dragging = false;
@@ -50,8 +50,8 @@ for (i=0;i<marks.length;i++) {
 	last_data =  data;
 	}	
 
-temp_boundaries = [marks[0],marks[marks.length-1],100/marks.length,100];
-boundaries = [marks[0],marks[marks.length-1],100/marks.length,100];
+temp_boundaries = [marks[0],marks[marks.length-1],0,100];
+boundaries = [marks[0],marks[marks.length-1],0,100];
 
 if (document.getElementById('x1').value!='') boundaries[0] = Number(document.getElementById('x1').value.replace('%',''));
 if (document.getElementById('x2').value!='') boundaries[1] = Number(document.getElementById('x2').value.replace('%',''));
@@ -176,6 +176,70 @@ function g_redraw_canvas() {
 		//drawing cyan line
 		drawLine('#00C0C0',x1,y4,x2-x1,y3-y4);
 		
+		//boxplot
+		
+		//max_mark, max_percent, min_mark, min_percent, q1, q2, q3, mean_mark, mean_percent, stdev_mark, stdev_percent
+		var box1=5,box2=20,box3=box1+box2/2;
+		drawLine('#00C0C0',Math.round(graph_x+5*stats[3]),box1,0,box2); 
+		drawLine('#00C0C0',Math.round(graph_x+5*stats[1]),box1,0,box2);
+		drawLine('#00C0C0',Math.round(graph_x+5*stats[3]),box3,Math.round(5*(stats[4]-stats[3])),0);
+		drawLine('#00C0C0',Math.round(graph_x+5*stats[6]),box3,Math.round(5*(stats[1]-stats[6])),0);
+		
+		drawLine('#00C0C0',Math.round(graph_x+5*stats[4]),box1,0,box2);
+		drawLine('#00C0C0',Math.round(graph_x+5*stats[8]),box1,0,box2);
+		drawLine('#00C0C0',Math.round(graph_x+5*stats[6]),box1,0,box2);		
+		drawLine('#00C0C0',Math.round(graph_x+5*stats[4]),box1,Math.round(5*(stats[6]-stats[4])),0);
+		drawLine('#00C0C0',Math.round(graph_x+5*stats[4]),box1+box2,Math.round(5*(stats[6]-stats[4])),0);
+		
+		/*
+		context.font="11px Arial";
+		context.textAlign="left";
+		context.fillStyle = '#C00000';
+		context.strokeStyle = '#C00000';
+		context.save();
+		context.rotate(-Math.PI/2);
+		context.fillText('100',-90,100);
+		context.fillText(Math.round(stats[3]*10)/10+'%',-box1+5,Math.round(graph_x+5*stats[3])+2);
+		context.fillText(Math.round(stats[1]*10)/10+'%',-box1+5,Math.round(graph_x+5*stats[1])+2);
+		context.fillText(Math.round(stats[8]*100)/100+'%',-box1+5,Math.round(graph_x+5*stats[8])+2);
+		context.fillText(Math.round(stats[4]*100)/100+'%',-box1+5,Math.round(graph_x+5*stats[4])+2);
+		context.fillText(Math.round(stats[6]*100)/100+'%',-box1+5,Math.round(graph_x+5*stats[6])+2);
+		context.restore();
+		*/
+		
+		//legend
+		context.font="11px Arial";
+		context.textAlign="left";
+		var leg1=graph_w+130,leg2=10,leg3=10,leg4=15;
+		
+		context.fillText(lang_maximumscore,leg1+leg3+0.5,leg2+1*leg4+0.5);
+		context.fillText(lang_topquartile,leg1+leg3+0.5,leg2+2*leg4+0.5);
+		context.fillText(lang_median,leg1+leg3+0.5,leg2+3*leg4+0.5);
+		context.fillText(lang_lowerquartile,leg1+leg3+0.5,leg2+4*leg4+0.5);
+		context.fillText(lang_minimumscore,leg1+leg3+0.5,leg2+5*leg4+0.5);
+		
+		function max_text_len(max,text){
+			var metrics = this.context.measureText(text);
+			var textWidth = metrics.width;
+			if (max<textWidth) max=textWidth;
+			return max;
+		}
+		
+		var max_len=0;
+		max_len = max_text_len(max_len,lang_maximumscore);
+		max_len = max_text_len(max_len,lang_topquartile);
+		max_len = max_text_len(max_len,lang_median);
+		max_len = max_text_len(max_len,lang_lowerquartile);
+		max_len = max_text_len(max_len,lang_minimumscore);
+		
+		context.fillText('- '+Math.round(stats[1]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+1*leg4+0.5);		
+		context.fillText('- '+Math.round(stats[6]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+2*leg4+0.5);		
+		context.fillText('- '+Math.round(stats[8]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+3*leg4+0.5);		
+		context.fillText('- '+Math.round(stats[4]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+4*leg4+0.5);		
+		context.fillText('- '+Math.round(stats[3]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+5*leg4+0.5);		
+		
+		context.strokeRect(leg1+0.5,leg2+0.5,max_len+leg3+60,85);
+
 		//searching for intersection
 		//a and b for the first line
 		a1=0;b1=x2;

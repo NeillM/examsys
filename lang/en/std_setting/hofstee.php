@@ -27,4 +27,10 @@ $string['maxfail'] = 'Max Fail';
 $string['cutscore'] = 'Cut Score';
 $string['cutpercent'] = 'Cut %';
 $string['standardssetting'] = 'Standards Setting';
+
+$string['maximumscore'] = 'Max score';
+$string['topquartile'] = 'Q3';
+$string['median'] = 'Q2 (Median)';
+$string['lowerquartile'] = 'Q1';
+$string['minimumscore'] = 'Min score';
 ?>

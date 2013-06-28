@@ -19,18 +19,18 @@ $string['scale'] = 'skala';
 $string['boxplot'] = 'wykres pudełkowy';
 $string['noresults'] = 'nie znaleziono żadnych wyników egzaminów.';
 
-$string['examscript'] = 'Exam Script';
-$string['objectives'] = 'Objectives';
-$string['personalcohortperformance'] = 'Personal/Cohort Performance';
-$string['jumptopaper'] = 'Jump to Paper';
+$string['examscript'] = 'Zapis egazminu';
+$string['objectives'] = 'Cele';
+$string['personalcohortperformance'] = 'Osiągnięcia Osobiste/Grupowe';
+$string['jumptopaper'] = 'Przejdź do arkusza';
 
-$string['maximumscore'] = 'Max score';
-$string['studentsposition'] = 'Student\'s position';
-$string['topquartile'] = 'Q3';
-$string['median'] = 'Q2 (Median)';
-$string['lowerquartile'] = 'Q1';
-$string['passmark'] = 'Pass mark';
-$string['minimumscore'] = 'Min score';
-$string['examname'] = 'Exam Name';
-$string['studentsmark'] = 'Student\'s percentage';
+$string['maximumscore'] = 'Najlepszy wynik';
+$string['studentsposition'] = 'Miejsce studenta na liście';
+$string['topquartile'] = 'Q3 (Górny kwartyl)';
+$string['median'] = 'Q2 (Mediana)';
+$string['lowerquartile'] = 'Q1 (Dolny kwartyl)';
+$string['passmark'] = 'Wynik zaliczający';
+$string['minimumscore'] = 'Najgorszy wynik';
+$string['examname'] = 'Nazwa egzaminu';
+$string['studentsmark'] = 'Wynik studenta';
 ?>
