@@ -116,14 +116,3 @@ function requiresIncrement(index) {
   }
   return rval;
 }
-
-function checkHasOption() {
-  var hasVal = false;
-  $('.calc-min').each(function () {
-    if ($(this).val() != '') hasVal = true;
-  });
-  if (!hasVal) {
-    $('#option_min1').val('0');
-    $('#option_increment1').val('1');
-  }
-}

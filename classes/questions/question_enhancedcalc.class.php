@@ -437,7 +437,8 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   private function extract_vars() {
     $this->vars = array();
 
-    foreach ($this->options as $index => $option) {
+    $index = 1;
+    foreach ($this->options as $dummy => $option) {
       $label = '$' . chr(64 + $index);
       $min = $option->get_min();
       $max = $option->get_max();
@@ -447,6 +448,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
       if ($min != '') {
         $this->vars[$label] = array('min' => $min, 'max' => $max, 'inc' => $increment, 'dec' => $decimals);
       }
+      $index++;
     }
   }
 
@@ -489,9 +491,18 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
       $rval = $this->_lang_strings['missingfieldserror'] . ' ' . rtrim($missing_fields, ', ');
     }
 
-    // TODO: Number of variables
-
-    // TODO: Number of answers
+    // Number of answers
+    $have_formula = false;
+    foreach ($this->options as $option) {
+      if ($option->get_formula() != '') {
+        $have_formula = true;
+        break;
+      }
+    }
+    if ($have_formula == false) {
+      if ($rval !== true) $rval .= '<br />';
+      $rval .= $this->_lang_strings['enterformula'];
+    }
 
     return $rval;
   }
