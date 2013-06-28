@@ -26,6 +26,9 @@ $classes = array();
 if ($index %2 == 0) {
   $classes[] = 'alt';
 }
+if ($index == 1) {
+  $classes[] = 'required';
+}
 if ((count($answers) == 0 and $index > 2) or (count($answers) > 0 and $index > count($answers))) {
   $classes[] = 'hide';
 }
@@ -38,7 +41,7 @@ $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
             <tr>
               <th>&nbsp;</th>
               <td>
-                <input type="text" id="option_formula<?php echo $index ?>" name="option_formula<?php echo $index ?>" class="form-med" value="<?php echo $answer->get_formula() ?>">
+                <input type="text" id="option_formula<?php echo $index ?>" name="option_formula<?php echo $index ?>" class="formula form-med" value="<?php echo $answer->get_formula() ?>">
               </td>
               <td class="align-top"><input type="text" name="option_units<?php echo $index ?>" id="option_units<?php echo $index ?>" class="form-small" value="<?php echo $answer->get_units() ?>" /></td>
             </tr>

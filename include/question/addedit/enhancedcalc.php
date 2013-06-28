@@ -28,7 +28,6 @@ $vars = $question->get_variables();
 $num_vars = count($vars);
 $answers = $question->get_answers();
 $num_answers = count($answers);
-$max_opt_ids = max(array($num_vars, $num_answers));
 $decimals = array('', 0, 1, 2, 3, 4, 5, 6, 7, 8);
 $increments = array('', 0.0001, 0.001, 0.02, 0.01, 0.5, 0.2, 0.1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100, 1000);
 $marks_unit = array('0' => 'N/A', 'invalidate' => 'Award zero for question', '-0.25' => '-0.25', '-0.5' => '-0.5', '-1' => '-1', '-2' => '-2', '-3' => '-3', '-4' => '-4', '-5' => '-5', '-6' => '-6', '-7' => '-7', '-8' => '-8', '-9' => '-9', '-10' => '-10');
@@ -63,9 +62,10 @@ require_once 'detail_parts/details_general_feedback.php';
             </tr>
           </thead>
 <?php
-for ($index = 1; $index <= $num_vars; $index++) {
-  $variable = $question->options[$index];
+$index = 1;
+foreach ($question->options as $variable) {
   include 'options/opt_enhancedcalc.php';
+  $index++;
 }
 
 for ($index = $num_vars + 1; $index <= count($labels); $index++) {
@@ -102,9 +102,10 @@ if($question->get_locked() == '') {
             </tr>
           </thead>
 <?php
-for ($index = 1; $index <= $num_answers; $index++) {
-  $answer = $question->options[$index];
+$index = 1;
+foreach ($question->options as $answer) {
   include 'options/ans_enhancedcalc.php';
+  $index++;
 }
 
 for ($index = $num_answers + 1; $index <= $question->max_options; $index++) {
