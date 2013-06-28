@@ -36,14 +36,40 @@ Class OptionENHANCEDCALC extends OptionEdit {
   protected $units = '';
 
   protected $_fields_editable = array('min', 'max', 'decimals', 'increment', 'formula', 'units');
+  private $_fields_var = array('min', 'max', 'decimals', 'increment');
+  private $_fields_ans = array('formula', 'units');
 
   /**
    * This option is not directly persisted
-   * @return integer
+   * @param int $option_number Index of this option
+   * @return boolean
    */
   public function save($option_number = 0) {
     $logger = new Logger($this->_mysqli);
-    $this->save_changes($logger, $this->_number);
+
+    if ($this->is_new($this->_fields_var)) {
+      $this->track_new_var($logger, $option_number);
+      $this->clear_mods($this->_fields_var);
+    }
+
+    if ($this->is_new($this->_fields_ans)) {
+      $this->track_new_ans($logger, $option_number);
+      $this->clear_mods($this->_fields_ans);
+    }
+
+    if ($this->is_deleted(array('min'))) {
+      $this->track_delete_var($logger, $option_number);
+      $this->clear_mods($this->_fields_var);
+    }
+
+    if ($this->is_deleted(array('formula'))) {
+      $this->track_delete_ans($logger, $option_number);
+      $this->clear_mods($this->_fields_ans);
+    }
+
+    // Log any remaining changes
+    $this->save_changes($logger, $option_number);
+
     return true;
   }
 
@@ -203,17 +229,30 @@ Class OptionENHANCEDCALC extends OptionEdit {
 
 
   /**
-   * Track the addition of a new option.
-   * @param Logger $option_number
+   * Track the addition of a new variable.
+   * @param Logger $logger
    * @param integer $option_number
    */
-  protected function track_new($logger, $option_number) {
-    $logger->track_change('New Variable', $this->question_id, $this->_user_id, '', $this->min . ',' . $this->max, 'Variable $' . chr(64 + $option_number));
+  protected function track_new_var($logger, $option_number) {
+    if ($this->min != '') {
+      $logger->track_change('New Variable', $this->question_id, $this->_user_id, '', $this->min . ',' . $this->max, 'Variable $' . chr(64 + $option_number));
+    }
+  }
+
+  /**
+   * Track the addition of a new answer.
+   * @param Logger $logger
+   * @param integer $option_number
+   */
+  protected function track_new_ans($logger, $option_number) {
+    if ($this->formula != '') {
+      $logger->track_change('New Answer', $this->question_id, $this->_user_id, '', $this->formula . ',' . $this->units, 'Answer ' . $option_number);
+    }
   }
 
   /**
    * Track the change of an option.  The message may be different in other question types so allow this method to be overridden
-   * @param Logger $option_number
+   * @param Logger $logger
    * @param integer $option_number
    * @param mixed $old
    * @param mixed $new
@@ -225,11 +264,62 @@ Class OptionENHANCEDCALC extends OptionEdit {
 
   /**
    * Track the deletion of an option
-   * @param Logger $option_number
+   * @param Logger $logger
    * @param integer $option_number
    */
-  protected function track_delete($logger, $option_number) {
+  protected function track_delete_var($logger, $option_number) {
     $logger->track_change('Deleted Variable', $this->question_id, $this->_user_id, '', '', 'Variable $' . chr(64 + $option_number));
+  }
+
+  /**
+   * Track the deletion of an option
+   * @param Logger $logger
+   * @param integer $option_number
+   */
+  protected function track_delete_ans($logger, $option_number) {
+    $logger->track_change('Deleted Answer', $this->question_id, $this->_user_id, '', '', 'Answer ' . $option_number);
+  }
+
+  /**
+   * Check if this is a new variable or answer by comparing the old values of the relevant fields
+   * @param array $fields Fields to compare
+   * @return bool
+   */
+  private function is_new($fields) {
+    foreach ($fields as $varfield) {
+      if (!isset($this->_modified_fields[$varfield]) or $this->_modified_fields[$varfield]['value'] != '') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Check if this is a new variable or answer by comparing the old values of the relevant fields
+   * @param array $fields Fields to compare
+   * @return bool
+   */
+  private function is_deleted($fields) {
+    foreach ($fields as $varfield) {
+      if (!isset($this->_modified_fields[$varfield]) or $this->_modified_fields[$varfield]['value'] == '' or $this->$varfield != '') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Clear the modification records for the given fields. Used when we have a new variable or answer
+   * @param array $fields Fields to clear
+   */
+  private function clear_mods($fields) {
+    foreach ($fields as $varfield) {
+      if (isset($this->_modified_fields[$varfield])) {
+        unset($this->_modified_fields[$varfield]);
+      }
+    }
   }
 }
 

@@ -385,10 +385,12 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
         $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('formula' => $fields['formula'], 'units' => $fields['units']));
         $this->options[$i] = $opt;
       } else {
-        $opt = $this->options[$i];
-        $opt->set_formula($fields['formula']);
-        $opt->set_units($fields['units']);
+        $old_opt = $this->options[$i];
+        $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('formula' => $old_opt->get_formula(), 'units' => $old_opt->get_units(), 'min' => $old_opt->get_min(), 'max' => $old_opt->get_max(), 'decimals' => $old_opt->get_decimals(), 'increment' => $old_opt->get_increment()));
+        $opt->set_variable($old_opt->get_variable());
+        $this->options[$i] = $opt;
       }
+      $opt->id = $i;
       $this->answers[] = $i;
       $i++;
     }
@@ -403,16 +405,16 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
 
     foreach ($data as $label => $fields) {
       if (!isset($this->options[$i])) {
-        $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('variable' => $label, 'min' => $fields['min'], 'max' => $fields['max'], 'decimals' => $fields['dec'], 'increment' => $fields['inc']));
+        $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('min' => $fields['min'], 'max' => $fields['max'], 'decimals' => $fields['dec'], 'increment' => $fields['inc']));
+        $opt->set_variable($label);
         $this->options[$i] = $opt;
       } else {
-        $opt = $this->options[$i];
+        $old_opt = $this->options[$i];
+        $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('formula' => $old_opt->get_formula(), 'units' => $old_opt->get_units(), 'min' => $fields['min'], 'max' => $fields['max'], 'decimals' => $fields['dec'], 'increment' => $fields['inc']));
         $opt->set_variable($label);
-        $opt->set_min($fields['min']);
-        $opt->set_max($fields['max']);
-        $opt->set_decimals($fields['dec']);
-        $opt->set_increment($fields['inc']);
+        $this->options[$i] = $opt;
       }
+      $opt->id = $i;
       $this->vars[] = $i;
       $this->_variable_map[$label] = $i;
       $i++;
@@ -436,7 +438,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     $this->vars = array();
 
     foreach ($this->options as $index => $option) {
-      $label = $option->get_variable();
+      $label = '$' . chr(64 + $index);
       $min = $option->get_min();
       $max = $option->get_max();
       $decimals = $option->get_decimals();
