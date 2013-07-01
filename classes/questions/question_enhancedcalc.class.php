@@ -29,8 +29,8 @@ require_once __DIR__ . '/../stringutils.class.php';
 Class QuestionENHANCEDCALC extends QuestionEdit {
 
   protected $units = '';
-  protected $dp = 0;
-  protected $sf = 0;
+  protected $dp = null;
+  protected $sf = null;
   protected $strictdisplay = false;
   protected $strictzeros = false;
   protected $tolerance_full = 0;
@@ -127,9 +127,9 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   public function get_answer_precision() {
     $rval = 0;
     $rtype = 'dp';
-    if ($this->dp != 0) {
+    if (isset($this->dp)) {
       $rval = $this->dp;
-    } elseif ($this->sf != 0) {
+    } elseif (isset($this->sf)) {
       $rval = $this->sf;
       $rtype = 'sf';
     }
@@ -147,23 +147,19 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     $changed = ($val != $cur_val or $type != $cur_type);
 
     if ($type == 'sf') {
-      $dpval = 0;
+      $dpval = null;
       $sfval = $val;
     } else {
       $dpval = $val;
-      $sfval = 0;
+      $sfval = null;
     }
 
     if ($changed) {
       $this->set_modified_field('answer_precision', $this->get_answer_precision());
     }
 
-    if ($dpval != $this->dp) {
-      $this->dp = $dpval;
-    }
-    if ($sfval != $this->sf) {
-      $this->sf = $sfval;
-    }
+    $this->dp = $dpval;
+    $this->sf = $sfval;
   }
 
   /**

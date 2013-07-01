@@ -1550,7 +1550,9 @@ QUERY;
     $extra = array();
 
     foreach ($this->_fields_settings as $field) {
-      $extra[$field] = $this->$field;
+      if (isset($this->$field)) {
+        $extra[$field] = $this->$field;
+      }
     }
 
     $this->settings = json_encode($extra);
