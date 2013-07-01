@@ -101,13 +101,40 @@ class ENHANCEDCALCCorrector {
     }
 
 
-    // TODO: parse answers
+    // Parse answers
+    $opts = $this->_question->options;
+    for ($i = 1; $i <= $this->_question->max_options; $i++) {
+      if (isset($opts[$i])) {
+        $ans = $opts[$i]->get_formula();
+        $units = $opts[$i]->get_units();
 
+        if ($new_correct['option_formula'][$i - 1] == '') {
+          $opts[$i]->set_formula('');
+          $opts[$i]->set_units('');
+          $changes = true;
+          $this->_question->add_unified_field_modification('Deleted Answer ' . $i, 'Deleted Answer ' . $i, $ans . ', ' . $units, '', $this->_lang_strings['postexamchange']);
+        } else {
+          if ($ans != $new_correct['option_formula'][$i - 1]) {
+            $opts[$i]->set_formula($new_correct['option_formula'][$i - 1]);
+            $changes = true;
+            $this->_question->add_unified_field_modification('option_formula' . $i, 'option_formula' . $i, $ans, $new_correct['option_formula'][$i - 1], $this->_lang_strings['postexamchange']);
+          }
 
-
+          if ($units != $new_correct['option_units'][$i - 1]) {
+            $opts[$i]->set_units($new_correct['option_units'][$i - 1]);
+            $changes = true;
+            $this->_question->add_unified_field_modification('option_units' . $i, 'option_units' . $i, $units, $new_correct['option_units'][$i - 1], $this->_lang_strings['postexamchange']);
+          }
+        }
+      } elseif ($new_correct['option_formula'][$i - 1] != '') {
+        // Complete new answer
+        $changes = true;
+        $userObj = UserObject::get_instance();
+        $this->_question->options[$i] = new OptionENHANCEDCALC($this->_mysqli, $userObj->get_user_ID(), $this->_question, $i, $this->_lang_strings, array('formula' => $new_correct['option_formula'][$i - 1], 'units' => $new_correct['option_units'][$i - 1]));
+        $this->_question->add_unified_field_modification('New Answer ' . $i, 'New Answer ' . $i, '', $new_correct['option_formula'][$i - 1] . ', ' . $new_correct['option_units'][$i - 1], $this->_lang_strings['postexamchange']);
+      }
+    }
 
     return $errors;
   }
-
-
 }

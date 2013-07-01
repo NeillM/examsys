@@ -38,6 +38,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
   protected $_fields_editable = array('min', 'max', 'decimals', 'increment', 'formula', 'units');
   private $_fields_var = array('min', 'max', 'decimals', 'increment');
   private $_fields_ans = array('formula', 'units');
+  protected $_fields_compound = array('correct');
 
   /**
    * This option is not directly persisted

@@ -46,12 +46,13 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $marks_partial = 0;
   protected $marks_unit = 0;
   public $max_options = 10;
+  public $max_stems = 10;
   protected $variable_labels = array();
   protected $_allow_partial_marks = true;
   protected $_allow_change_marking_method = false;
 
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'strict_display', 'strict_zeros', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
-  protected $_fields_change = array('marks_correct', 'marks_incorrect', 'marks_partial', 'answer_precision', 'strict_display', 'strict_zeros', 'marks_unit', 'tolerance_full', 'tolerance_partial');
+  protected $_fields_change = array('option_formula', 'option_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'answer_precision', 'strict_display', 'strict_zeros', 'marks_unit', 'tolerance_full', 'tolerance_partial');
   protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units', 'answers', 'vars');
   protected $_fields_force = array('show_units', 'strict_display', 'strict_zeros');
 
@@ -62,7 +63,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
     parent::__construct($mysqli, $userObj, $lang_strings, $data);
     $this->_score_methods = array($this->_lang_strings['allowpartial']);
-    $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
+    $this->_fields_unified = array('option_formula' => 'Formula', 'option_units' => 'Units');
 
     // Convert the max number of options into a list of variables
     $this->variable_labels = range('A', chr(64 + $this->max_options));
