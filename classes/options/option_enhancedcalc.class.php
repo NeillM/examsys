@@ -236,7 +236,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
    */
   protected function track_new_var($logger, $option_number) {
     if ($this->min != '') {
-      $logger->track_change('New Variable', $this->question_id, $this->_user_id, '', $this->min . ',' . $this->max, 'Variable $' . chr(64 + $option_number));
+      $logger->track_change($this->_lang_strings['newvariable'], $this->question_id, $this->_user_id, '', $this->min . ',' . $this->max, $this->_lang_strings['variable'] . chr(64 + $option_number));
     }
   }
 
@@ -247,7 +247,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
    */
   protected function track_new_ans($logger, $option_number) {
     if ($this->formula != '') {
-      $logger->track_change('New Answer', $this->question_id, $this->_user_id, '', $this->formula . ',' . $this->units, 'Answer ' . $option_number);
+      $logger->track_change($this->_lang_strings['newanswer'], $this->question_id, $this->_user_id, '', $this->formula . ',' . $this->units, $this->_lang_strings['answer'] . ' ' . $option_number);
     }
   }
 
@@ -260,7 +260,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
    * @param string $field
    */
   protected function track_change($logger, $option_number, $old, $new, $field) {
-    $logger->track_change('Edit ' . ucwords($field), $this->question_id, $this->_user_id, $old, $new, 'Variable $' . chr(64 + $option_number));
+    $logger->track_change($this->_lang_strings['edit'] + ' ' . ucwords($field), $this->question_id, $this->_user_id, $old, $new, $this->_lang_strings['variable'] . chr(64 + $option_number));
   }
 
   /**
@@ -269,7 +269,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
    * @param integer $option_number
    */
   protected function track_delete_var($logger, $option_number) {
-    $logger->track_change('Deleted Variable', $this->question_id, $this->_user_id, '', '', 'Variable $' . chr(64 + $option_number));
+    $logger->track_change($this->_lang_strings['deletedvar'], $this->question_id, $this->_user_id, '', '', $this->_lang_strings['variable'] . chr(64 + $option_number));
   }
 
   /**
@@ -278,7 +278,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
    * @param integer $option_number
    */
   protected function track_delete_ans($logger, $option_number) {
-    $logger->track_change('Deleted Answer', $this->question_id, $this->_user_id, '', '', 'Answer ' . $option_number);
+    $logger->track_change($this->_lang_strings['deletedanswer'], $this->question_id, $this->_user_id, '', '', $this->_lang_strings['answer'] . ' ' . $option_number);
   }
 
   /**

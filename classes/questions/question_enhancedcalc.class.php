@@ -63,7 +63,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
     parent::__construct($mysqli, $userObj, $lang_strings, $data);
     $this->_score_methods = array($this->_lang_strings['allowpartial']);
-    $this->_fields_unified = array('option_formula' => 'Formula', 'option_units' => 'Units');
+    $this->_fields_unified = array('option_formula' => $this->_lang_strings['formula'], 'option_units' => $this->_lang_strings['units']);
 
     // Convert the max number of options into a list of variables
     $this->variable_labels = range('A', chr(64 + $this->max_options));

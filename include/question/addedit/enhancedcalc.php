@@ -97,8 +97,8 @@ if($question->get_locked() == '') {
           <thead>
             <tr>
               <th>&nbsp;</th>
-              <th class="align-left auto">Formula <span class="note indent"><a href="#" class="help-link" rel="68"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['onlinehelp'] ?>" border="0" /></a>&nbsp;<a href="#" class="help-link" rel="68"><?php echo $string['suppfunctions'] ?></a></span></th>
-              <th class="align-left auto">Units</th>
+              <th class="align-left auto"><?php echo $string['formula'] ?> <span class="note indent"><a href="#" class="help-link" rel="68"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['onlinehelp'] ?>" border="0" /></a>&nbsp;<a href="#" class="help-link" rel="68"><?php echo $string['suppfunctions'] ?></a></span></th>
+              <th class="align-left auto"><?php echo $string['units'] ?></th>
             </tr>
           </thead>
 <?php
@@ -123,7 +123,7 @@ for ($index = $num_answers + 1; $index <= $question->max_options; $index++) {
           </tbody>
           <tbody>
             <tr>
-              <th class="spaced-top"><label for="show_units" style="padding:0">Display units for question</label></th>
+              <th class="spaced-top"><label for="show_units" style="padding:0"><?php echo $string['displayunits'] ?></label></th>
 <?php
 $sel_mod = ($question->get_show_units()) ? ' checked' : '';
 $disabled_mod = ($question->get_locked() == '') ? '' : ' disabled';
@@ -132,8 +132,8 @@ $disabled_mod = ($question->get_locked() == '') ? '' : ' disabled';
             </tr>
             <tr>
               <th class="spaced-top">
-                <label for="marks_unit">Unit marking</label><br>
-                <span class="note">(if incorrect)</span>
+                <label for="marks_unit"><?php echo $string['unitmarking'] ?></label><br>
+                <span class="note"><?php echo $string['ifincorrect'] ?></span>
               </th>
               <td class="spaced-top align-top" colspan="2">
                 <select name="marks_unit" id="marks_unit">
@@ -147,7 +147,7 @@ echo ViewHelper::render_options($marks_unit, $question->get_marks_unit(), 3);
         </table>
 
         <div class="form">
-          <h2 class="midblue_header">Tolerance</h2>
+          <h2 class="midblue_header"><?php echo $string['tolerance'] ?></h2>
         </div>
         <table id="q-options" class="form" summary="Edit question tolerances">
           <tbody>
@@ -160,20 +160,20 @@ echo ViewHelper::render_options($marks_unit, $question->get_marks_unit(), 3);
         </table>
 
         <div class="form">
-          <h2 class="midblue_header">Display precision</h2>
+          <h2 class="midblue_header"><?php echo $string['displayprecision'] ?></h2>
         </div>
         <table class="form" summary="Edit question display precision">
           <tbody>
             <tr>
-              <th>Display answer to</th>
+              <th><?php echo $string['displayto'] ?></th>
               <td>
                 <select name="answer_precision" id="answer_precision">
-                  <optgroup label="Decimals">
+                  <optgroup label="<?php echo $string['decimals'] ?>">
 <?php
 echo ViewHelper::render_options($decimal_opts, $question->get_answer_precision(), 4);
 ?>
                   </optgroup>
-                  <optgroup label="Significant figures">
+                  <optgroup label="<?php echo $string['sigfigures'] ?>">
 <?php
 echo ViewHelper::render_options($sf_opts, $question->get_answer_precision(), 4);
 ?>
@@ -190,11 +190,11 @@ if ($question->get_strict_display()) {
   $disabled = ' disabled';
 }
 ?>
-                <input type="checkbox" name="strict_display" id="strict_display"<?php echo $checked ?>> <label for="strict_display">Enforce precision of student answer</label></input>
+                <input type="checkbox" name="strict_display" id="strict_display"<?php echo $checked ?>> <label for="strict_display"><?php echo $string['enforcedisplay'] ?></label></input>
 <?php
 $checked = ($question->get_strict_zeros()) ? ' checked' : '';
 ?>
-                <span id="trailing_zeros" class="indent<?php echo $disabled ?>"><input type="checkbox" name="strict_zeros" id="strict_zeros"<?php echo $checked.$disabled ?>> <label for="strict_zeros">Including trailing 0s</label></input></span>
+                <span id="trailing_zeros" class="indent<?php echo $disabled ?>"><input type="checkbox" name="strict_zeros" id="strict_zeros"<?php echo $checked.$disabled ?>> <label for="strict_zeros"><?php echo $string['includetrailing0'] ?></label></input></span>
               </td>
             </tr>
           </tbody>
