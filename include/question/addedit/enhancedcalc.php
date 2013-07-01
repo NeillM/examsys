@@ -126,8 +126,9 @@ for ($index = $num_answers + 1; $index <= $question->max_options; $index++) {
               <th class="spaced-top"><label for="show_units" style="padding:0">Display units for question</label></th>
 <?php
 $sel_mod = ($question->get_show_units()) ? ' checked' : '';
+$disabled_mod = ($question->get_locked() == '') ? '' : ' disabled';
 ?>
-              <td class="spaced-top"><input type="checkbox" name="show_units" id="show_units"<?php echo $sel_mod ?>></td>
+              <td class="spaced-top"><input type="checkbox" name="show_units" id="show_units"<?php echo $sel_mod . $disabled_mod ?>></td>
             </tr>
             <tr>
               <th class="spaced-top">
