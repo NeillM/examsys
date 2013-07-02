@@ -1,0 +1,89 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+*
+* @author Simon Wilkinson
+* @version 1.0
+* @copyright Copyright (c) 2013 The University of Nottingham
+* @package
+*/
+
+require '../include/sysadmin_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/logger.class.php';
+
+$status = (isset($_POST['status'])) ? $_POST['status'] : '';
+$em_checked = (isset($_POST['exclude_marking'])) ? ' checked="checked"' : '';
+$es_checked = (isset($_POST['exclude_search'])) ? ' checked="checked"' : '';
+$default_checked = (isset($_POST['default'])) ? ' checked="checked"' : '';
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html>
+  <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php echo $string['addstatus'] . " " . $configObject->get('cfg_install_type') ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    .admin-form {
+      width: auto;
+      margin: 16px auto;
+    }
+    td {text-align:left}
+    .admin-form th {text-align:right; padding-right:10px}
+    .form-error {
+      width: 468px;
+      margin: 18px auto;
+      padding: 16px;
+      background-color: #FFD9D9;
+      color: #800000;
+      border: 2px solid #800000
+    }
+    .align-center {
+      text-align: center;
+    }
+  </style>
+  </head>
+<body>
+<?php
+  require '../include/status_options.inc.php';
+?>
+  <div id="content" class="content">
+    <table class="header">
+    <tr>
+      <th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_statuses.php"><?php echo $string['statuses'] ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['addstatus'] ?></th>
+      <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th>
+    </tr>
+    <tr><th colspan="2" class="bevel"></th></tr>
+    </table>
+
+    <form name="edit_status" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+      <table class="admin-form">
+        <tr><th><label for="status"><?php echo $string['name'] ?></label></td><td><input type="text" size="70" id="status" name="status" value="<?php echo $status; ?>" /></th></tr>
+        <tr><th><label for="exclude_marking"><?php echo $string['excludemarking'] ?></label></td><td><input type="checkbox" id="exclude_marking" name="exclude_marking" <?php echo $em_checked; ?> /></th></tr>
+        <tr><th><label for="exclude_search"><?php echo $string['excludesearch'] ?></label></td><td><input type="checkbox" id="exclude_search" name="exclude_search" <?php echo $es_checked; ?> /></th></tr>
+        <tr><th><label for="default"><?php echo $string['default'] ?></label></td><td><input type="checkbox" id="default" name="default" <?php echo $default_checked; ?> /></th></tr>
+        <tr>
+          <td colspan="2" class="align-center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save'] ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" /></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</body>
+</html>

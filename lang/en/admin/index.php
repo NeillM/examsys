@@ -27,6 +27,7 @@ $string['ebelgridtemplates'] = 'Ebel Grid Templates';
 $string['faculties'] = 'Faculties';
 $string['modules'] = 'Modules';
 $string['optimizetables'] = 'Optimize Tables';
+$string['questionstatuses'] = 'Question statuses';
 $string['schools'] = 'Schools';
 $string['smsimports'] = 'SMS Imports';
 $string['summativeexamstats'] = 'Summative Exam Stats';
