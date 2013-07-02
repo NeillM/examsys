@@ -25,13 +25,11 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-$setterID = check_var('setterID', 'POST', true, false, true);
-$dateID   = check_var('dateID', 'POST', true, false, true);
-$paperID  = check_var('paperID', 'POST', true, false, true);
+$set_setID = check_var('set_setID', 'POST', true, false, true);
 
 $row_no = 0;
-$result = $mysqli->prepare("SELECT id FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
-$result->bind_param('iis', $paperID, $setterID, $dateID);
+$result = $mysqli->prepare("SELECT id FROM std_set WHERE id = ?");
+$result->bind_param('i', $set_setID);
 $result->execute();  
 $result->store_result();
 $row_no = $result->num_rows;
@@ -42,15 +40,28 @@ if ($row_no == 0) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-// Delete from standards setting table.
-$result = $mysqli->prepare("DELETE FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
-$result->bind_param('iis', $paperID, $setterID, $dateID);
+// Delete main std_set record.
+$result = $mysqli->prepare("DELETE FROM std_set WHERE id = ?");
+$result->bind_param('i', $set_setID);
+$result->execute();  
+$result->close();
+
+// Delete from sthe std_set_questions table.
+$result = $mysqli->prepare("DELETE FROM std_set_questions WHERE std_setID = ?");
+$result->bind_param('i', $set_setID);
 $result->execute();  
 $result->close();
 
 // Delete from ebel table.
-$result = $mysqli->prepare("DELETE FROM ebel WHERE setterID = ? and date_set = ?");
-$result->bind_param('is', $setterID, $dateID);
+$result = $mysqli->prepare("DELETE FROM ebel WHERE std_setID = ?");
+$result->bind_param('i', $set_setID);
+$result->execute();
+$result->close();
+
+// Clear any dangling properties
+$old_marking = '2,' . $set_setID;
+$result = $mysqli->prepare("UPDATE properties SET marking = '0' WHERE marking = ?");
+$result->bind_param('s', $old_marking);
 $result->execute();
 $result->close();
 ?>

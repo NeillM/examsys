@@ -549,11 +549,11 @@ if ($properties->get_paper_type() == '2') {
   $standard_set = 0;
   $standards_set = 0;
   if (strpos($checklist, 'stdset') !== false) {
-    $stmt = $mysqli->prepare("SELECT COUNT(id), setterID FROM standards_setting WHERE paperID = ? GROUP BY setterID");
+    $stmt = $mysqli->prepare("SELECT COUNT(std_set.id), setterID FROM std_set_questions, std_set WHERE std_set_questions.std_setID = std_set.id AND paperID = ? GROUP BY setterID");
     $stmt->bind_param('i', $_GET['paperID']);
     $stmt->execute();
     $stmt->bind_result($set_set_records, $setterID);
-    while ($row = $stmt->fetch()) {
+    while ($stmt->fetch()) {
       if ($set_set_records >= $properties->get_question_no() and $standard_set == 0) {
         $standards_set = 1;
       } elseif ($set_set_records < $properties->get_question_no() and ($standard_set == 0 or $standard_set == 1)) {

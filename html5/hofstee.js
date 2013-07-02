@@ -25,12 +25,12 @@
 //
 
 function hofstee_plot(canvas_id,result_type) {
-	var scale_x = 3;
-	var scale_y = 5;
+	var scale_x = 3.5;
+	var scale_y = 3.5;
 	var graph_w = scale_x*100;
 	var graph_h = scale_y*100;
 	var graph_x = 70;
-	var graph_y = 540-graph_h;
+	var graph_y = 400-graph_h;
 	var dragging = false;
 	var redraw = true;
 	var boundaries = [];
@@ -138,8 +138,8 @@ function hofstee_plot(canvas_id,result_type) {
 			var y4 = canvas.height-graph_y-graph_h/100*boundaries[3];
 											 
 			//standing labels
-			context.font="bold 13px Arial";
-			context.textAlign="center";
+			context.font = "bold 13px Arial";
+			context.textAlign = "center";
 			context.fillText(lang_correct,graph_x+graph_w/2,canvas.height-graph_y+35);
 			context.save();
 			context.rotate(-Math.PI/2);
@@ -147,28 +147,28 @@ function hofstee_plot(canvas_id,result_type) {
 			context.restore();
 			
 			//graph ticks and labels
-			context.font="11px Arial";
-			context.textAlign="right";
+			context.font = "11px Arial";
+			context.textAlign = "right";
 			for (i=0;i<=10;i++) {
 				drawLine('#000',graph_x,canvas.height-graph_y-scale_y*10*i,-5,0);
 				context.fillText(i*10+'%',graph_x-10,canvas.height-graph_y-scale_y*10*i+3);
 			}
-			context.textAlign="center";
+			context.textAlign = "center";
 			for (i=0;i<=10;i++) {
 				drawLine('#000',graph_x+scale_x*10*i,canvas.height-graph_y,0,5);
 				context.fillText(i*10+'%',graph_x+scale_x*10*i+5,canvas.height-graph_y+15);
 			}
 			
 			//moving labels
-			context.font="13px Arial";
-			context.textAlign="center";
+			context.font = "13px Arial";
+			context.textAlign = "center";
 			context.fillStyle = '#76923C';
 			var divert = 0;
 			if (Math.abs(x1-x2)<50) divert = (50-Math.abs(x1-x2))/2;
 			if (divert > 15) divert = 15;
 			context.fillText(Math.round(boundaries[0]*10)/10+'%',x1,canvas.height-graph_y-graph_h-5);
 			context.fillText(Math.round(boundaries[1]*10)/10+'%',x2,canvas.height-graph_y-graph_h-5-divert);
-			context.textAlign="right";
+			context.textAlign = "right";
 			context.fillStyle = '#C00000';
 			divert = 0;
 			if (Math.abs(y3-y4)<25) divert = -4*(25-Math.abs(y3-y4));
@@ -194,55 +194,7 @@ function hofstee_plot(canvas_id,result_type) {
 			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[4]),box1,Math.round(scale_x*(stats[6]-stats[4])),0);
 			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[4]),box1+box2,Math.round(scale_x*(stats[6]-stats[4])),0);
 			
-			/*
-			labels for boxplot
-			context.font="11px Arial";
-			context.textAlign="left";
-			context.fillStyle = '#C00000';
-			context.strokeStyle = '#C00000';
-			context.save();
-			context.rotate(-Math.PI/2);
-			context.fillText('100',-90,100);
-			context.fillText(Math.round(stats[3]*10)/10+'%',-box1+5,Math.round(graph_x+5*stats[3])+2);
-			context.fillText(Math.round(stats[1]*10)/10+'%',-box1+5,Math.round(graph_x+5*stats[1])+2);
-			context.fillText(Math.round(stats[8]*100)/100+'%',-box1+5,Math.round(graph_x+5*stats[8])+2);
-			context.fillText(Math.round(stats[4]*100)/100+'%',-box1+5,Math.round(graph_x+5*stats[4])+2);
-			context.fillText(Math.round(stats[6]*100)/100+'%',-box1+5,Math.round(graph_x+5*stats[6])+2);
-			context.restore();
-			*/
-			
-			//legend
-			context.font="11px Arial";
-			context.textAlign="left";
-			var leg1=graph_w+130,leg2=10,leg3=10,leg4=15;
-			
-			context.fillText(lang_maximumscore,leg1+leg3+0.5,leg2+1*leg4+0.5);
-			context.fillText(lang_topquartile,leg1+leg3+0.5,leg2+2*leg4+0.5);
-			context.fillText(lang_median,leg1+leg3+0.5,leg2+3*leg4+0.5);
-			context.fillText(lang_lowerquartile,leg1+leg3+0.5,leg2+4*leg4+0.5);
-			context.fillText(lang_minimumscore,leg1+leg3+0.5,leg2+5*leg4+0.5);
-			
-			function max_text_len(max,text){
-				var metrics = context.measureText(text);
-				var textWidth = metrics.width;
-				if (max<textWidth) max=textWidth;
-				return max;
-			}
-			
-			var max_len=0;
-			max_len = max_text_len(max_len,lang_maximumscore);
-			max_len = max_text_len(max_len,lang_topquartile);
-			max_len = max_text_len(max_len,lang_median);
-			max_len = max_text_len(max_len,lang_lowerquartile);
-			max_len = max_text_len(max_len,lang_minimumscore);
-			
-			context.fillText('- '+Math.round(stats[1]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+1*leg4+0.5);		
-			context.fillText('- '+Math.round(stats[6]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+2*leg4+0.5);		
-			context.fillText('- '+Math.round(stats[8]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+3*leg4+0.5);		
-			context.fillText('- '+Math.round(stats[4]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+4*leg4+0.5);		
-			context.fillText('- '+Math.round(stats[3]*10)/10+'%',leg1+leg3+max_len+10.5,leg2+5*leg4+0.5);		
-			
-			context.strokeRect(leg1+0.5,leg2+0.5,max_len+leg3+60,85);
+
 
 			//searching for intersection
 			//a and b for the first line

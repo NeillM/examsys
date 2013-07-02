@@ -22,23 +22,79 @@
 * @package
 */
 
+require_once '../classes/standard_setting.class.php';
+
+function updateDB($review, $db) {
+  $update = $db->prepare("UPDATE std_set SET pass_score = ?, distinction_score = ? WHERE id = ?");
+  $update->bind_param('ddi', $review['pass_score'], $review['distinction_score'], $review['std_setID']);
+  $update->execute();
+  $update->close();
+}
+
+function load_ebel_percents($id, $mysqli) {
+  $percents = array();
+
+  $result = $mysqli->prepare("SELECT category, percentage FROM ebel WHERE std_setID = ?");
+  $result->bind_param('i', $id);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($category, $percentage);
+  while ($result->fetch()) {
+    $percents[$category] = round($percentage, 2);
+  }
+  $result->close();
+  
+  return $percents;
+}
+
+function load_question_ratings($id, $mysqli) {
+  $ratings = array();
+  
+  $result = $mysqli->prepare("SELECT q_type, questionID, rating FROM std_set_questions, questions WHERE std_set_questions.questionID = questions.q_id AND std_setID = ?");
+  $result->bind_param('i', $id);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($q_type, $questionID, $rating);
+  while ($result->fetch()) {
+    $ratings[] = array('q_type'=>$q_type, 'questionID'=>$questionID, 'rating'=>$rating);
+  }
+  $result->close();
+  
+  return $ratings;
+}
+
 function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
   $configObject = Config::get_instance();
   
   $configObject->get('cfg_long_date_time');
   $reviews = array();
   
-  if ($mode == 'index') {
-    $result = $mysqli->prepare("SELECT q_type, questionID, category, percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, paper_title FROM (standards_setting, properties, questions, users) LEFT JOIN ebel ON (standards_setting.setterID=ebel.setterID AND standards_setting.std_set=ebel.date_set) WHERE standards_setting.questionID=questions.q_id AND standards_setting.paperID=properties.property_id AND standards_setting.setterID=users.id AND paperID=? ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
-  } else {
-    $result = $mysqli->prepare("SELECT '' AS q_type, questionID, '' AS category, 0 AS percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, '' AS paper_title FROM standards_setting, users WHERE standards_setting.setterID=users.id AND paperID=? ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
-  }
+  $standard_setting = new StandardSetting($mysqli);
+  
+  $result = $mysqli->prepare("SELECT std_set.id, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, method, group_review, title, initials, surname, setterID FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($q_type, $questionID, $category, $percentage, $group_review, $std_set, $display_date, $rating, $setterID, $method, $tmp_title, $tmp_initials, $tmp_surname, $paper_title);
+  $result->bind_result($std_setID, $std_set, $display_date, $method, $group_review, $title, $initials, $surname, $setterID);
+  while($result->fetch()) {
+    $reviews[] = array(
+    	'std_setID' => $std_setID,
+    	'group_review' => $group_review,
+    	'review_total' => 0, 
+    	'total_marks' => 0, 
+    	'setter_id' => $setterID,
+    	'review_no' => 0,
+    	'date' => $std_set,
+      'display_date' => $display_date,
+    	'method' => $method,
+      'distinction_score' => 0,
+      'pass_score' => 0,
+      'name' => "$title $initials $surname");
+  }
+  $result->close();
   
-  if ($result->num_rows > 0) {
+  $review_no = count($reviews);
+  for ($i=0 ; $i<$review_no; $i++) {
     // Get any questions to exclude.
     $exclude = array();
 
@@ -56,87 +112,31 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     $marks_array = array();
     ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
     
-    $old_date = '';
-    $old_title = '';
-    $old_initials = '';
-    $old_surname = '';
-    $old_questionID = 0;
-    $old_q_type = '';
-    $question_no = 0;
-    $std_total = 0;
-    $review_no = 0;
-    $ebel_percents = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
-    $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
-    $angoff_review_marks = 0;
-  
-    $reviews = array();
+    if ($reviews[$i]['method'] == 'Ebel') {
+      $ebel_percents = load_ebel_percents($reviews[$i]['std_setID'], $mysqli);
+    }
     
-    while ($result->fetch()) {
-      if ($old_date != $std_set and $old_date != '') {     // New review date
-        $review_no++;
-        if ($old_method == 'Modified Angoff') {
-          // $question_no can be 0 in some cases if questions have been excluded
-          $pass_score = ($question_no > 0) ? round($std_total/$question_no) : 0;
-          $review_total = $angoff_review_marks;
-          $distinction_score = 'n/a';
-        } elseif ($old_method == 'Ebel') {
-          $cut_marks = 0.0;
-          $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
-          $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
-          $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
-          $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
-          $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
-          $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
-          $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
-          $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
-          $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
-          $review_total = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
-           
-          $pass_score = ($total_marks == 0) ? $total_marks : ($cut_marks / ($total_marks  * 100)) * 100;
-          $pass_score = round($pass_score,1);
-  
-          $cut_marks2 = 0.0;
-          $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
-          $cut_marks2 += $ebel_marks['EI'] * $ebel_percents['EI2'] * 100;
-          $cut_marks2 += $ebel_marks['EN'] * $ebel_percents['EN2'] * 100;
-          $cut_marks2 += $ebel_marks['ME'] * $ebel_percents['ME2'] * 100;
-          $cut_marks2 += $ebel_marks['MI'] * $ebel_percents['MI2'] * 100;
-          $cut_marks2 += $ebel_marks['MN'] * $ebel_percents['MN2'] * 100;
-          $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
-          $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
-          $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
-          $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
-          $distinction_score = round($distinction_score,1);
-        }
-        if ($old_group_review == 'No') $no_reviews++;
-        $reviews[] = array(
-        	'group_review' => $old_group_review,
-        	'review_total' => $review_total, 
-        	'total_marks' => $total_marks, 
-        	'setter_id' => $old_setterID,
-        	'review_no' => $review_no,
-        	'date' => $old_date,
-          'display_date' => $old_display_date,
-        	'method' => $old_method,
-          'distinction_score' => $distinction_score,
-          'pass_score' => $pass_score,
-          'name' => "$old_title $old_initials $old_surname");
-        $ebel_percents = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
-        $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
-        $question_no = 0;
-        $std_total = 0;
-        $angoff_review_marks = 0;
-      }
+    $angoff_review_marks = 0;
+    $std_total = 0;
+    $question_no = 0;
+    $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
+    
+    $ratings = load_question_ratings($reviews[$i]['std_setID'], $mysqli);
+    $rating_no = count($ratings);
+    
+    if ($reviews[$i]['method'] == 'Modified Angoff' or $reviews[$i]['method'] == 'Ebel') {
+      for ($x=0; $x<$rating_no; $x++) {  // Loop around the questions
+        $questionID = $ratings[$x]['questionID'];
+        $rating = $ratings[$x]['rating'];
+        $q_type = $ratings[$x]['q_type'];
       
-      $ebel_percents[$category] = round($percentage, 2);
-      if ($old_questionID != $questionID) {
         if (array_key_exists($questionID, $exclude)) {
           $tmp_exclude = $exclude[$questionID];
         } else {
           $tmp_exclude = '0000000000000000000000000000000000000000';
         }
         $partID = 0;
-  
+
         if ($rating != '') {
           $rating_array = explode(',', $rating);
           foreach ($rating_array as $individual_rating) {
@@ -151,45 +151,35 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
             $partID++;
           }
         }
-      }
-  
-      if ($rating != '') {
-        $q_sections = explode(',', $rating);
-        $tmp_part = 0;
-        foreach ($q_sections as $part) {
-          if (substr($tmp_exclude,$tmp_part,1) == '0') {
-            if ($q_type == 'textbox') {
-              $std_total += $part * (count($q_sections) - $tmp_part);
-            } else {
-              $std_total += $part;
+    
+        if ($rating != '') {
+          $q_sections = explode(',', $rating);
+          $tmp_part = 0;
+          foreach ($q_sections as $part) {
+            if (substr($tmp_exclude,$tmp_part,1) == '0') {
+              if ($q_type == 'textbox') {
+                $std_total += $part * (count($q_sections) - $tmp_part);
+              } else {
+                $std_total += $part;
+              }
+              if ($q_type != 'mrq' or $part != '') $question_no++;
             }
-            if ($q_type != 'mrq' or $part != '') $question_no++;
+            $tmp_part++;
           }
-          $tmp_part++;
         }
       }
-      $old_date = $std_set;
-      $old_display_date = $display_date;
-      $old_method = $method;
-      $old_title = $tmp_title;
-      $old_initials = $tmp_initials;
-      $old_surname = $tmp_surname;
-      $old_setterID = $setterID;
-      $old_group_review = $group_review;
-      $old_questionID = $questionID;
-      $old_q_type = $q_type;
-    }  // End while loop
-  
-    $review_no++;
-    if ($old_method == 'Modified Angoff') {
-      if ($question_no > 0) {
-        $pass_score = round($std_total/$question_no);
-      } else {
-        $pass_score = 0;
-      }
-      $review_total = $angoff_review_marks;
-      $distinction_score = 'n/a';
-    } elseif ($old_method == 'Ebel') {
+    }
+    
+    if ($reviews[$i]['method'] == 'Modified Angoff') {
+      $reviews[$i]['pass_score'] = ($question_no > 0) ? round($std_total/$question_no) : 0;
+      $reviews[$i]['review_total'] = $angoff_review_marks;
+      $reviews[$i]['distinction_score'] = 'n/a';
+    } elseif ($reviews[$i]['method'] == 'Hofstee') {
+      $reviews[$i]['review_total'] = $total_marks;
+      $results = $standard_setting->get_pass_distinction($reviews[$i]['std_setID']);
+      $reviews[$i]['pass_score'] = round($results['pass_score'], 1);
+      $reviews[$i]['distinction_score'] = round($results['distinction_score'], 1);
+    } elseif ($reviews[$i]['method'] == 'Ebel') {
       $cut_marks = 0.0;
       $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
       $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
@@ -200,64 +190,30 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
       $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
       $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
-      $review_total = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
-      $pass_score = ($total_marks == 0) ? $total_marks : (($cut_marks / ($total_marks * 100)) * 100);
-      $pass_score = round($pass_score,1);
-  
-      $cut_marks2 = 0.0;
-      $cut_marks2 += $ebel_marks['EE2'] * $ebel_percents['EE2'] * 100;
-      $cut_marks2 += $ebel_marks['EI2'] * $ebel_percents['EI2'] * 100;
-      $cut_marks2 += $ebel_marks['EN2'] * $ebel_percents['EN2'] * 100;
-      $cut_marks2 += $ebel_marks['ME2'] * $ebel_percents['ME2'] * 100;
-      $cut_marks2 += $ebel_marks['MI2'] * $ebel_percents['MI2'] * 100;
-      $cut_marks2 += $ebel_marks['MN2'] * $ebel_percents['MN2'] * 100;
-      $cut_marks2 += $ebel_marks['HE2'] * $ebel_percents['HE2'] * 100;
-      $cut_marks2 += $ebel_marks['HI2'] * $ebel_percents['HI2'] * 100;
-      $cut_marks2 += $ebel_marks['HN2'] * $ebel_percents['HN2'] * 100;
-      $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
-      $distinction_score = round($distinction_score,1);
-    }
-    if ($old_group_review == 'No') $no_reviews++;
-    $reviews[] = array(
-    	'group_review' => $old_group_review,
-    	'review_total' => $review_total, 
-    	'total_marks' => $total_marks, 
-    	'setter_id' => $old_setterID,
-    	'review_no' => $review_no,
-    	'date' => $old_date,
-      'display_date' => $old_display_date,
-    	'method' => $old_method,
-      'distinction_score' => $distinction_score,
-      'pass_score' => $pass_score,
-      'name' => "$old_title $old_initials $old_surname");
-  }
+      $reviews[$i]['review_total'] = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
+       
+      $pass_score = ($total_marks == 0) ? $total_marks : ($cut_marks / ($total_marks  * 100)) * 100;
+      $reviews[$i]['pass_score'] = round($pass_score,1);
 
-  $result->close();
-  
-  // Look up any Hofstee settings
-  $result = $mysqli->prepare("SELECT setterID, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, pass_score, distinction, title, initials, surname FROM hofstee, users WHERE hofstee.setterID = users.id AND paperID = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($setterID, $std_set, $display_date, $pass_score, $distinction, $title, $initials, $surname);
-  while ($result->fetch()) {
-    $reviews[] = array(
-    	'group_review' => 'No',
-    	'review_total' => $total_marks, 
-    	'total_marks' => $total_marks, 
-    	'setter_id' => $setterID,
-    	'review_no' => 0,
-    	'date' => $std_set,
-      'display_date' => $display_date,
-    	'method' => 'Hofstee',
-      'distinction_score' => $distinction,
-      'pass_score' => $pass_score,
-      'name' => "$title $initials $surname");
+      $cut_marks2 = 0.0;
+      $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
+      $cut_marks2 += $ebel_marks['EI'] * $ebel_percents['EI2'] * 100;
+      $cut_marks2 += $ebel_marks['EN'] * $ebel_percents['EN2'] * 100;
+      $cut_marks2 += $ebel_marks['ME'] * $ebel_percents['ME2'] * 100;
+      $cut_marks2 += $ebel_marks['MI'] * $ebel_percents['MI2'] * 100;
+      $cut_marks2 += $ebel_marks['MN'] * $ebel_percents['MN2'] * 100;
+      $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
+      $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
+      $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
+      $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
+      
+      $reviews[$i]['distinction_score'] = round($distinction_score,1);
+    }
+    $reviews[$i]['total_marks'] = $total_marks;
   }
-  $result->close();
   
   return $reviews;
 }
-
 
 function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
   $partID = 0;
@@ -266,6 +222,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
   $correct_no = 0;
   $old_score_method = '';
   
+  var_dump("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = $paper_id AND papers.question = questions.q_id AND q_type != 'info' ORDER BY q_id, o_id, id_num");
   $result = $mysqli->prepare("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY q_id, o_id, id_num");
   $result->bind_param('i', $paper_id);
   $result->execute();

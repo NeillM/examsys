@@ -28,8 +28,10 @@ require '../include/reviews.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
 require '../config/start.inc';
+
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/standard_setting.class.php';
 
 check_var('id', 'GET', true, false, false);
 //session_start();
@@ -46,7 +48,7 @@ if (isset($_GET['no_screens'])) {
   $surname = $_GET['surname'];
 }
 
-$stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs, users WHERE users.id=special_needs.userID AND special_needs=1 AND users.id=?");
+$stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs, users WHERE users.id = special_needs.userID AND special_needs = 1 AND users.id = ?");
 $stmt->bind_param('i', $userObject->get_user_ID());
 $stmt->execute();
 $stmt->store_result();
@@ -90,25 +92,19 @@ $stmt->free_result();
 $stmt->close();
 
 //get the paper properties
-  $propertyObj = PaperProperties::get_paper_properties_by_id($property_id, $mysqli);
-  if ($propertyObj == false) {  // No properties found, this crypt_name
-    $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);    //this will exit php
-  }
-  $marking = $propertyObj->get_marking();
+$propertyObj = PaperProperties::get_paper_properties_by_id($property_id, $mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);    //this will exit php
+}
+$marking = $propertyObj->get_marking();
 
 // Get standards setting data
-if (substr($marking,0,1) == '2')
-{
+if ($marking{0} == '2') {
   $standards_setting = array();
   $tmp_parts = explode(',', $marking);
-  $stmt = $mysqli->prepare("SELECT questionID, rating FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
-  $stmt->bind_param('iis', $property_id, $tmp_parts[1], $tmp_parts[2]);
-  $stmt->execute();
-  $stmt->bind_result($questionID, $rating);
-  while ($row = $stmt->fetch()) {
-    $standards_setting[$questionID] = $rating;
-  }
-  $stmt->close();
+  
+  $standard_setting = new StandardSetting($mysqli);
+  $standards_setting = $standard_setting->get_ratings_by_question($tmp_parts[1]);
 } else {
   $standards_setting = array();
 }
@@ -117,7 +113,7 @@ if (substr($marking,0,1) == '2')
 $reference_materials = array();
 $ref_no = 0;
 $max_ref_width = 0;
-$stmt = $mysqli->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id=reference_papers.refID AND paperID=?");
+$stmt = $mysqli->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?");
 $stmt->bind_param('i', $property_id);
 $stmt->execute();
 $stmt->bind_result($reference_title, $reference_material, $reference_width);

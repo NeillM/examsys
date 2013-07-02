@@ -47,19 +47,27 @@ if (isset($_GET['group']) and $_GET['group'] == 'true' and isset($_POST['review_
   $group_review = 'No';
 }
 
-if ($_POST['setterID'] != '') {
-  $std_query = "DELETE FROM standards_setting WHERE paperID = $paperID AND setterID = " . $_POST['setterID'] . " AND std_set='" . $_POST['dateID'] . "'";
-  if (!$mysqli->query($std_query)) {
-    display_error('Error deleting previous settings', $mysqli->error, true, true);
-    $mysqli->close();
-    exit;
-  }
-  $std_query = "DELETE FROM ebel WHERE setterID = " . $_POST['setterID'] . " AND date_set = '" . $_POST['dateID'] . "'";
-  if (!$mysqli->query($std_query)) {
-    display_error('Error deleting previous settings', $mysqli->error, true, true);
-    $mysqli->close();
-    exit;
-  }
+if (isset($_POST['std_setID']) and $_POST['std_setID'] != '') {
+  $std_query = $mysqli->prepare("DELETE FROM std_set_questions WHERE std_setID = ?");
+  $std_query->bind_param('i', $_POST['std_setID']);
+  $std_query->execute();
+  $std_query->close();
+  
+  $std_query = $mysqli->prepare("DELETE FROM ebel WHERE std_setID = ?");
+  $std_query->bind_param('i', $_POST['std_setID']);
+  $std_query->execute();
+  $std_query->close();
+  
+  $std_setID = $_POST['std_setID'];
+} else {
+  $setterID = $userObject->get_user_ID();
+
+  $std_query = $mysqli->prepare("INSERT INTO std_set VALUES(NULL, ?, ?, NOW(), ?, ?, NULL, NULL)");
+  $std_query->bind_param('iiss', $setterID, $paperID, $tmp_method, $group_review);
+  $std_query->execute();
+  $std_query->close();
+  
+  $std_setID = $mysqli->insert_id;
 }
 
 $last_question = 0;
@@ -96,15 +104,11 @@ while ($result->fetch()) {
         $total_parts++;
       }
 
-      $std_query = $mysqli->prepare("INSERT INTO standards_setting (`id`, `setterID`, `questionID`, `std_set`, `rating`, `paperID`, `method`, `group_review`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
-      $std_query->bind_param('iississ', $userObject->get_user_ID(), $log_id, $now, $rating, $paperID, $tmp_method, $group_review);
+      $std_query = $mysqli->prepare("INSERT INTO std_set_questions VALUES (NULL, ?, ?, ?)");
+      $std_query->bind_param('iis', $std_setID, $log_id, $rating);
       $std_query->execute();
       $std_query->close();
-      if ($mysqli->error) {
-        display_error('Error writing to standards_setting table', $mysqli->error, true, true);
-        $mysqli->close();
-        exit;
-      }
+
       if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
         $std_query = $mysqli->prepare("UPDATE questions SET std = ? WHERE q_id = ?");
         $std_query->bind_param('si', $rating, $log_id);
@@ -404,17 +408,11 @@ if ($old_type == 'rank' and $old_score_method == 'Bonus Mark') {
     $total_rating += $_POST["$qid"];
   }
 }
-$std_query = "INSERT INTO standards_setting (`id`, `setterID`, `questionID`, `std_set`, `rating`, `paperID`, `method`, `group_review`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
-$result = $mysqli->prepare($std_query);
-$result->bind_param('iississ', $userObject->get_user_ID(), $log_id, $now, $rating, $paperID, $tmp_method, $group_review);
-$result->execute();
-$result->close();
-if ($mysqli->error) {
-  echo "<p>Error writing to standards_setting table: " . $mysqli->error . "</p>\n";
-  echo "<p>Query: $std_query</p>\n";
-  $mysqli->close();
-  exit;
-}
+
+$std_query = $mysqli->prepare("INSERT INTO std_set_questions VALUES (NULL, ?, ?, ?)");
+$std_query->bind_param('iis', $std_setID, $log_id, $rating);
+$std_query->execute();
+$std_query->close();
 
 if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
   $std_query = "UPDATE questions SET std = ? WHERE q_id = ?";
@@ -431,28 +429,32 @@ if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
 
 if ($tmp_method == "Ebel") {
   $id_array = array('EE','EI','EN','ME','MI','MN','HE','HI','HN','EE2','EI2','EN2','ME2','MI2','MN2','HE2','HI2','HN2');
-  foreach($id_array as $individualID) {
+  foreach ($id_array as $individualID) {
     if (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '3') {
       if ($individualID == 'EE2' or $individualID == 'EI2' or $individualID == 'EN2' or $individualID == 'ME2' or $individualID == 'MI2' or $individualID == 'MN2' or $individualID == 'HE2' or $individualID == 'HI2' or $individualID == 'HN2') {
-        $std_query = "INSERT INTO ebel VALUES (NULL," .$userObject->get_user_ID() . ",'$now','$individualID',NULL)"; //todo fix sql to prepared state
+        $category = $individualID;
+        $percentage = NULL;
       } else {
-        $std_query = "INSERT INTO ebel VALUES (NULL," .$userObject->get_user_ID() .",'$now','$individualID'," . $_POST[$individualID] . ")"; //todo fix sql to prepared state
+        $category = $individualID;
+        $percentage = $_POST[$individualID];
       }
     } elseif (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '2') {
       if ($individualID == 'EE2' or $individualID == 'EI2' or $individualID == 'EN2' or $individualID == 'ME2' or $individualID == 'MI2' or $individualID == 'MN2' or $individualID == 'HE2' or $individualID == 'HI2' or $individualID == 'HN2') {
-        $std_query = "INSERT INTO ebel VALUES (NULL,". $userObject->get_user_ID().",'$now','$individualID',0)"; //todo fix sql to prepared state
+        $category = $individualID;
+        $percentage = 0;
       } else {
-        $std_query = "INSERT INTO ebel VALUES (NULL,". $userObject->get_user_ID(). ",'$now','$individualID'," . $_POST[$individualID] . ")";//todo fix sql to prepared state
+        $category = $individualID;
+        $percentage = $_POST[$individualID];
       }
     } else {
-      $std_query = "INSERT INTO ebel VALUES (NULL," . $userObject->get_user_ID() . ",'$now','$individualID'," . $_POST[$individualID] . ")";//todo fix sql to prepared state
+      $category = $individualID;
+      $percentage = $_POST[$individualID];
     }
-    if (!$mysqli->query($std_query)) {
-      echo "<p>Error writing to ebel table: ". $mysqli->error . "</p>\n";
-      echo "<p>Query: $std_query</p>\n";
-      $mysqli->close();
-      exit;
-    }
+    
+    $std_query = $mysqli->prepare("INSERT INTO ebel VALUES (?, ?, ?)");
+    $std_query->bind_param('isd', $std_setID, $category, $percentage);
+    $std_query->execute();
+    $std_query->close();
   }
 }
 
@@ -468,23 +470,14 @@ if (isset($_POST['alterpassmark']) and $_POST['alterpassmark'] == 1) {
   }
 }
 
-// Update std set part of paper properties.
-$now = str_replace(' ', '', $now);
-$now = str_replace('-', '', $now);
-$now = str_replace(':', '', $now);
-$new_marking = '2,' . $userObject->get_user_ID() . ',' . $now;
-$old_marking = '2,' . $_POST['setterID'] . ',' . $_POST['dateID'];
-$std_query = $mysqli->prepare("UPDATE properties SET marking = ? WHERE property_id = ? AND marking = ?");
-$std_query->bind_param('sis', $new_marking, $paperID, $old_marking);
-$std_query->execute();
-$std_query->close();
-
 $module = (isset($_GET['module'])) ? $_GET['module'] : '';
 $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
+$mysqli->close();
 if (isset($_POST['continue'])) {
-  header("location: individual_review.php?&paperID=$paperID&method=" . $_GET['method'] . "&setterID=" . $userObject->get_user_ID() ."&dateID=$now&module=$module&folder=$folder#$last_question");
+  header("location: individual_review.php?&paperID=$paperID&std_setID=$std_setID&method=" . $_GET['method'] . "&module=$module&folder=$folder#$last_question");
+  exit;
 } else {
   header("location: index.php?paperID=$paperID&module=$module&folder=$folder");
+  exit;
 }
-$mysqli->close();
 ?>

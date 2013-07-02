@@ -1738,6 +1738,21 @@ QUERY;
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['hofstee'] = <<<QUERY
+        CREATE TABLE `hofstee` (
+          `std_setID` int(10) unsigned NOT NULL,
+          `whole_numbers` tinyint(4) DEFAULT NULL,
+          `x1_pass` tinyint(4) DEFAULT NULL,
+          `x2_pass` tinyint(4) DEFAULT NULL,
+          `y1_pass` tinyint(4) DEFAULT NULL,
+          `y2_pass` tinyint(4) DEFAULT NULL,
+          `x1_distinction` tinyint(4) DEFAULT NULL,
+          `x2_distinction` tinyint(4) DEFAULT NULL,
+          `y1_distinction` tinyint(4) DEFAULT NULL,
+          `y2_distinction` tinyint(4) DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['ip_addresses'] = <<<QUERY
         CREATE TABLE `ip_addresses` (
           `id` int(11) NOT NULL auto_increment,
@@ -2568,20 +2583,27 @@ QUERY;
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['standards_setting'] = <<<QUERY
-        CREATE TABLE `standards_setting` (
-          `id` int(11) NOT NULL auto_increment,
-          `setterID` int(10) unsigned default NULL,
-          `questionID` int(11) default NULL,
-          `std_set` datetime default NULL,
-          `rating` text,
-          `paperID` mediumint(8) unsigned DEFAULT NULL,
-          `method` enum('Modified Angoff','Angoff (Yes/No)','Ebel') default NULL,
+    $this->tableList['std_set'] = <<<QUERY
+        CREATE TABLE `std_set` (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `setterID` int(10) unsigned NOT NULL,
+          `paperID` mediumint(8) unsigned NOT NULL,
+          `std_set` datetime DEFAULT NULL,
+          `method` enum('Modified Angoff','Angoff (Yes/No)','Ebel','Hofstee') DEFAULT NULL,
           `group_review` text,
-          PRIMARY KEY (`id`),
-          KEY `paperID` (`paperID`),
-          KEY `idx_std_set` (`std_set`),
-          KEY `idx_setterID` (`setterID`)
+          `pass_score` decimal(10,6) DEFAULT NULL,
+          `distinction_score` decimal(10,6) DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['std_set_questions'] = <<<QUERY
+        CREATE TABLE `std_set_questions` (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `std_setID` int(10) unsigned NOT NULL,
+          `questionID` int(11) unsigned NOT NULL,
+          `rating` text,
+          PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 

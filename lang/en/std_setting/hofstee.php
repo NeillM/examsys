@@ -16,8 +16,8 @@
 
 $string['hofstee'] = 'Hofstee method';
 $string['integeronly'] = 'whole numbers';
-$string['cohort'] = 'Percent of Cohort';
-$string['correct'] = '% Mark';
+$string['cohort'] = 'Cumulative % students';
+$string['correct'] = "Students\' grades (%)";
 $string['passmark'] = 'Set Pass Mark';
 $string['distinction'] = 'Set Distinction';
 $string['minpass'] = 'Min Pass';
@@ -27,10 +27,11 @@ $string['maxfail'] = 'Max Fail';
 $string['cutscore'] = 'Cut Score';
 $string['cutpercent'] = 'Cut %';
 $string['standardssetting'] = 'Standards Setting';
-
+$string['cohortsize'] = 'Cohort Size';
 $string['maximumscore'] = 'Max score';
 $string['topquartile'] = 'Q3';
 $string['median'] = 'Q2 (Median)';
 $string['lowerquartile'] = 'Q1';
 $string['minimumscore'] = 'Min score';
+$string['savemarks'] = 'Save Marks';
 ?>

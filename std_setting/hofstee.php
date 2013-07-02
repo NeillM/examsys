@@ -36,39 +36,81 @@ if (!$properties) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$pass_mark = NULL;
-$distinction_mark = NULL;
 
-if (isset($_POST['passmark'])) {
-  $pass_mark = floor($_POST['xs']);
-
-  if (isset($_POST['insertID'])) {
-    $result = $mysqli->prepare("UPDATE hofstee SET pass_score = ? WHERE id = ?");
-    $result->bind_param('ii', $pass_mark, $_POST['insertID']);
-    $result->execute();
-    $result->close();
-  }
-} elseif (isset($_POST['distinction'])) {
-  $distinction = floor($_POST['xs']);
-  
-  if (isset($_POST['insertID'])) {
-    $result = $mysqli->prepare("UPDATE hofstee SET distinction = ? WHERE id = ?");
-    $result->bind_param('ii', $distinction, $_POST['insertID']);
-    $result->execute();
-    $result->close();
-  }
-}
-
-if ((isset($_POST['passmark']) or isset($_POST['distinction'])) and !isset($_POST['insertID'])) {
+if (isset($_POST['submit'])) {
+  $pass_mark = str_replace('%', '', $_POST['xs_pass']);
+  $distinction_score = str_replace('%', '', $_POST['xs_distinction']);
   $userID = $userObject->get_user_ID();
+
+  if (isset($_POST['insertID'])) {
+    $result = $mysqli->prepare("UPDATE std_set SET pass_score = ?, distinction_score = ? WHERE id = ?");
+    $result->bind_param('ddi', $pass_mark, $distinction_score, $_POST['insertID']);
+    $result->execute();
+    $result->close();
+
+    $insertID = $_POST['insertID'];
+
+    $result = $mysqli->prepare("UPDATE hofstee SET whole_numbers = ?, x1_pass = ?, x2_pass = ?, y1_pass = ?, y2_pass = ?, x1_distinction = ?, x2_distinction = ?, y1_distinction = ?, y2_distinction = ? WHERE std_setID = ?");
+    $result->bind_param('iddddddddi', $_POST['whole_numbers'], $_POST['x1_pass'], $_POST['x2_pass'], $_POST['y1_pass'], $_POST['y2_pass'], $_POST['x1_distinction'], $_POST['x2_distinction'], $_POST['y1_distinction'], $_POST['y2_distinction'], $insertID);
+    $result->execute();
+    $result->close();
+  } else {
+    $result = $mysqli->prepare("INSERT INTO std_set VALUES (NULL, ?, ?, NOW(), 'Hofstee', 'No', ?, ?)");
+    $result->bind_param('iidd', $userID, $paperID, $pass_mark, $distinction_score);
+    $result->execute();
+    $result->close();
+    
+    $insertID = $mysqli->insert_id;
+    
+    $result = $mysqli->prepare("INSERT INTO hofstee VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $result->bind_param('iidddddddd', $insertID, $_POST['whole_numbers'], $_POST['x1_pass'], $_POST['x2_pass'], $_POST['y1_pass'], $_POST['y2_pass'], $_POST['x1_distinction'], $_POST['x2_distinction'], $_POST['y1_distinction'], $_POST['y2_distinction']);
+    $result->execute();
+    $result->close();
+  }
   
-  $result = $mysqli->prepare("INSERT INTO hofstee VALUES (NULL, ?, ?, NOW(), ?, ?)");
-  $result->bind_param('iiii', $userID, $paperID, $pass_mark, $distinction_mark);
+  if (isset($_POST['whole_numbers'])) {
+    $checked = ' checked="checked"';
+  } else {
+    $checked = '';
+  }
+  $x1_pass = $_POST['x1_pass'];
+  $x2_pass = $_POST['x2_pass'];
+  $y1_pass = $_POST['y1_pass'];
+  $y2_pass = $_POST['y2_pass'];
+  $x1_distinction = $_POST['x1_distinction'];
+  $x2_distinction = $_POST['x2_distinction'];
+  $y1_distinction = $_POST['y1_distinction'];
+  $y2_distinction = $_POST['y2_distinction'];
+  
+} elseif (isset($_GET['std_setID'])) {
+  $insertID = $_GET['std_setID'];
+  
+  $result = $mysqli->prepare("SELECT whole_numbers, x1_pass, x2_pass, y1_pass, y2_pass, x1_distinction, x2_distinction, y1_distinction, y2_distinction FROM hofstee WHERE std_setID = ?");
+  $result->bind_param('i', $insertID);
   $result->execute();
+  $result->bind_result($whole_numbers, $x1_pass, $x2_pass, $y1_pass, $y2_pass, $x1_distinction, $x2_distinction, $y1_distinction, $y2_distinction);
+  $result->fetch();
   $result->close();
   
-  $insertID = $mysqli->insert_id;
+  if ($whole_numbers == 1) {
+    $checked = ' checked="checked"';
+  } else {
+    $checked = '';
+  }
+  
+} else {
+  // Default values no POST and no editing existing review
+  $checked = '';
+  $x1_pass = 10;
+  $x2_pass = 10;
+  $y1_pass = 90;
+  $y2_pass = 90;
+  $x1_distinction = 10;
+  $x2_distinction = 10;
+  $y1_distinction = 90;
+  $y2_distinction = 90;
 }
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -83,6 +125,7 @@ if ((isset($_POST['passmark']) or isset($_POST['distinction'])) and !isset($_POS
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <style type="text/css">
 body {font-size:85%}
+h1 {margin-left:10px; font-size:140%}
 .pass {color:#76923C}
 .fail {color:#C00000}
 </style>
@@ -97,7 +140,7 @@ body {font-size:85%}
 	$results_cache = new ResultsCache($mysqli);
 	$marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
 	$stats = array_values($results_cache->get_paper_cache($paperID));
-	
+  
   echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n";
   echo "<tr><th class=\"h\">";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
@@ -111,53 +154,76 @@ body {font-size:85%}
   echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['hofstee'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a></th></tr>\n";
   echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
   echo "</table>\n";
+  
+  echo "<table style=\"margin:10px\">";
+  echo "<tr><td style=\"min-width:150px\">" . $string['cohortsize'] . "</td><td>" . count($marks) . "</td></tr>\n";
+  echo "<tr><td>" . $string['maximumscore'] . "</td><td>" . round($stats[1], 1) . "%</td></tr>\n";
+  echo "<tr><td>".  $string['topquartile'] . "</td><td>" . round($stats[6], 1) . "%</td></tr>\n";
+  echo "<tr><td>".  $string['median'] . "</td><td>" . round($stats[5], 1) . "%</td></tr>\n";
+  echo "<tr><td>".  $string['lowerquartile'] . "</td><td>" . round($stats[4], 1) . "%</td></tr>\n";
+  echo "<tr><td>".  $string['minimumscore'] . "</td><td>" . round($stats[3], 1) . "%</td></tr>\n";
+  echo "</table>\n";
 
-	echo "<div id=\"canvas_div\">\n";
-	echo "<canvas id=\"canvas_graph\" width=\"800\" height=\"600\" style='border:1px solid white;'></canvas><br />\n";
-	echo "<table><tr><td style=\"width:0px\">&nbsp;</td><td>&nbsp;</td>\n";
-	echo "<td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td>". $string['cutscore'] . "</td><td>". $string['cutpercent'] . "</td>\n";
-	echo "</tr><tr><td>&nbsp;</td>\n";
+	echo "<div id=\"canvas_div_pass\" style=\"float:left\">\n";
+	echo "<h1>Pass Mark</h1>\n";
+  echo "<canvas id=\"canvas_graph_pass\" width=\"480\" height=\"450\"></canvas>\n";
+	echo "<table style=\"margin-left:auto; margin-right:auto\">\n";
+	echo "<tr><td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td><strong>". $string['cutscore'] . "</strong></td></tr>\n";
+	echo "<tr>\n";
+  if (isset($_POST['whole_numbers'])) {
+    $checked = ' checked="checked"';
+  } else {
+    $checked = '';
+  }
+	echo "<td><input type=\"text\" size=\"5\" name=\"x1_pass\" id=\"x1_pass\" class=\"tf\" value=\"" . $x1_pass . "\" /></td>\n";
+	echo "<td><input type=\"text\" size=\"5\" name=\"x2_pass\" id=\"x2_pass\" class=\"tf\" value=\"" . $x2_pass . "\" /></td>\n";
+	echo "<td><input type=\"text\" size=\"5\" name=\"y1_pass\" id=\"y1_pass\" class=\"tf\" value=\"" . $y1_pass . "\" /></td>\n";
+	echo "<td><input type=\"text\" size=\"5\" name=\"y2_pass\" id=\"y2_pass\" class=\"tf\" value=\"" . $y2_pass . "\" /></td>\n";
+	echo "<td><input type=\"text\" size=\"5\" name=\"xs_pass\" id=\"xs_pass\" readonly /><input type=\"hidden\" size=\"5\" name=\"ys_pass\" id=\"ys_pass\" readonly /></td>\n";
+	echo "</tr>";
+  echo "<tr><td colspan=\"5\"><input type=\"checkbox\" name=\"whole_numbers\" id=\"checkbox\"$checked />" . $string['integeronly'] . "</td></tr>";
+	echo "</table>\n</div>\n";
+	
+	echo "<script type=\"text/javascript\" src=\"../html5/hofstee.js\"></script>\n";
+	echo "<script type='text/javascript'>
+		var lang_cohort = '".  $string['cohort'] . "';
+		var lang_correct = '".  $string['correct'] . "';
+		var marks = ".  json_encode($marks) . ";
+		var stats = ".  json_encode($stats) . ";
+    hofstee_plot('canvas_graph_pass','pass');
+		</script>";
+  
+	echo "<div id=\"canvas_div_distinction\" style=\"float:left\">\n";
+	echo "<h1>Distinction Mark</h1>\n";
+	echo "<canvas id=\"canvas_graph_distinction\" width=\"480\" height=\"450\"></canvas><br />\n";
+	echo "<table style=\"margin-left:auto; margin-right:auto\">\n";
+	echo "<tr><td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td><strong>". $string['cutscore'] . "</strong></td></tr>\n";
+	echo "<tr>\n";
   if (isset($_POST['checkbox'])) {
     $checked = ' checked="checked"';
   } else {
     $checked = '';
   }
-	echo "<td><input type=\"checkbox\" name=\"checkbox\" id=\"checkbox\"$checked />" . $string['integeronly'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
-	echo "<td><input type=\"text\" size=\"5\" name=\"x1\" id=\"x1\" class=\"tf\" ";
-		if (isset($_POST['x1'])) echo "value=\"" . $_POST['x1'] . "\" ";
-		echo "/></td>\n";
-	echo "<td><input type=\"text\" size=\"5\" name=\"x2\" id=\"x2\" class=\"tf\" ";
-		if (isset($_POST['x2'])) echo "value=\"" . $_POST['x2'] . "\" ";
-		echo "/></td>\n";
-	echo "<td><input type=\"text\" size=\"5\" name=\"y1\" id=\"y1\" class=\"tf\" ";
-		if (isset($_POST['y1'])) echo "value=\"" . $_POST['y1'] . "\" ";
-		echo "/></td>\n";
-	echo "<td><input type=\"text\" size=\"5\" name=\"y2\" id=\"y2\" class=\"tf\" ";
-		if (isset($_POST['y2'])) echo "value=\"" . $_POST['y2'] . "\" ";
-		echo "/></td>\n";
-	echo "<td><input type=\"text\" size=\"5\" name=\"xs\" id=\"xs\" readonly /></td>\n";
-	echo "<td><input type=\"text\" size=\"5\" name=\"ys\" id=\"ys\" readonly /></td>\n";
-	echo "</tr><tr>";
-	echo "<td></td><td colspan=\"7\" style=\"text-align:center; padding-top:10px\"><input type=\"submit\" name=\"passmark\" value=\"" . $string['passmark'] . "\" style=\"width:150px\" />&nbsp;<input type=\"submit\" name=\"distinction\" value=\"" . $string['distinction'] . "\" style=\"width:150px\" /></td>";
-	echo "</tr></table>\n";
+	echo "<td><input type=\"text\" size=\"5\" name=\"x1_distinction\" id=\"x1_distinction\" class=\"tf\" value=\"" . $x1_distinction . "\" /></td>\n";
+	echo "<td><input type=\"text\" size=\"5\" name=\"x2_distinction\" id=\"x2_distinction\" class=\"tf\" value=\"" . $x2_distinction . "\" /></td>\n";
+	echo "<td><input type=\"text\" size=\"5\" name=\"y1_distinction\" id=\"y1_distinction\" class=\"tf\" value=\"" . $y1_distinction . "\" /></td>\n";
+	echo "<td><input type=\"text\" size=\"5\" name=\"y2_distinction\" id=\"y2_distinction\" class=\"tf\" value=\"" . $y2_distinction . "\" /></td>\n";
+	echo "<td><input type=\"text\" size=\"5\" name=\"xs_distinction\" id=\"xs_distinction\" readonly /><input type=\"hidden\" size=\"5\" name=\"ys_distinction\" id=\"ys_distinction\" readonly /></td>\n";
+	echo "</tr>";
+  echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
+	echo "</table>\n</div>\n";
 	
 	echo "<script type='text/javascript'>
-		var lang_cohort = '".  $string['cohort'] . "';
-		var lang_correct = '".  $string['correct'] . "';
-		var lang_maximumscore = '".  $string['maximumscore'] . "';
-		var lang_topquartile = '".  $string['topquartile'] . "';
-		var lang_median = '".  $string['median'] . "';
-		var lang_lowerquartile = '".  $string['lowerquartile'] . "';
-		var lang_minimumscore = '".  $string['minimumscore'] . "';
-		var marks = ".  json_encode($marks) . ";
-		var stats = ".  json_encode($stats) . ";
+    hofstee_plot('canvas_graph_distinction','distinction');
 		</script>";
-	echo "<script type=\"text/javascript\" src=\"../html5/hofstee.js\"></script></div>\n";
+  
   if (isset($insertID)) {
     echo "<input type=\"hidden\" name=\"insertID\" value=\"$insertID\" />\n";
   }
 
 ?>
+<br clear="all" />
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savemarks']; ?>" /></div>
 </form>
 </body>
 </html>

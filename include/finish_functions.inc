@@ -165,21 +165,21 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   $old_q_id = 0;
 
   // Get standards setting data
-  if (substr($marking,0,1) == '2') {
+  if ($marking{0} == '2') {
     $standards_setting = array();
     $tmp_parts = explode(',', $marking);
-    $std_data = $mysqlidb->prepare("SELECT questionID, rating FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
-    $std_data->bind_param('iis', $paperID, $tmp_parts[1], $tmp_parts[2]);
+    $std_data = $mysqlidb->prepare("SELECT questionID, rating FROM std_set_questions WHERE std_setID = ?");
+    $std_data->bind_param('i', $tmp_parts[1]);
     $std_data->execute();
     $std_data->bind_result($questionID, $rating);
-    while ($row = $std_data->fetch()) {
+    while ($std_data->fetch()) {
       $standards_setting[$questionID] = $rating;
     }
     $std_data->close();
   } else {
     $standards_setting = array();
   }
-
+  
   // Capture the structure of the paper into an array.
   $paper = array();
   $std_used = false;

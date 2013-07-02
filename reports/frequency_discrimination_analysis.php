@@ -37,6 +37,7 @@ require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/exclusion.class.php';
 require_once '../classes/results_cache.class.php';
+require_once '../classes/standard_setting.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -522,11 +523,11 @@ if (isset($_POST['submit'])) {
 function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {
   $buttonID++;
   if (strpos($status,'1') !== false) {
-    $html = "<input type=\"text\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
+    $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '1';
     $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_on.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
   } else {
-    $html = "<input type=\"text\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
+    $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '0';
     $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
   }
@@ -1755,19 +1756,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $result->close();
 
   // Get the standards setting
-  if (substr($marking,0,1) == '2') {
+  if ($marking{0} == '2') {
     $tmp_parts = explode(',', $marking);
-
-    $std_set_array = array();
-
-    $result = $mysqli->prepare("SELECT questionID, rating FROM standards_setting WHERE setterID = ? AND std_set = ?");
-    $result->bind_param('is', $tmp_parts[1], $tmp_parts[2]);
-    $result->execute();
-    $result->bind_result($questionID, $rating);
-    while ($result->fetch()) {
-      $std_set_array[$questionID] = $rating;
-    }
-    $result->close();
+    
+    $standard_setting = new StandardSetting($mysqli);
+    $std_set_array = $standard_setting->get_ratings_by_question($tmp_parts[1]);
   }
 
   // Get all the users on the module(s) the paper is on.
@@ -1829,9 +1822,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $result->close();
 
   // Capture the log data first.
-  $freq_array = array();
+  $freq_array       = array();
   $bottom_log_array = array();
-  $top_log_array = array();
+  $top_log_array    = array();
+  
   if ($paper_type == '0') {
     $result = $mysqli->prepare("(SELECT username, log_metadata.userID, log0.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log0, log_metadata, questions, users WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? $student_modules_sql) UNION ALL (SELECT username, log_metadata.userID, log1.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log1, log_metadata, questions,  users WHERE log1.metadataID = log_metadata.id AND log1.q_id=questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? " . str_replace('log0', 'log1', $student_modules_sql) . ")");
     $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);

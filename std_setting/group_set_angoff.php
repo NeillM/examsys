@@ -26,6 +26,7 @@ require '../include/staff_auth.inc';
 require '../include/media.inc';
 require '../include/std_set_functions.inc';
 require_once '../include/errors.inc';
+require_once '../classes/exclusion.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
@@ -75,21 +76,20 @@ if (isset($_GET['reviewers'])) {
 $reviews = array();
 $review_string = substr($review_string,1);
 
-if ($setterID != '') {
-  $result = $mysqli->prepare("SELECT std_set, rating, questionID FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
-  $result->bind_param('iis', $paperID, $setterID, $dateID);
+$setterID = '';
+if (isset($_GET['std_setID'])) {
+  $result = $mysqli->prepare("SELECT rating, questionID FROM std_set_questions WHERE std_setID = ?");
+  $result->bind_param('i', $_GET['std_setID']);
   $result->execute();
-  $result->bind_result($std_set, $rating, $questionID);
+  $result->bind_result($rating, $questionID);
   while ($result->fetch()) {
-    $questionID = $questionID;
     $reviews[$questionID] = $rating;
   }
   $result->close();
 }
 
-if ($rater_query != '') {
-  $stmt = $mysqli->prepare("SELECT rating, setterID, method, title, surname, questionID FROM (standards_setting, users) WHERE standards_setting.setterID = users.id AND paperID = ? $rater_query) ORDER BY std_set, setterID");
-  $stmt->bind_param('i', $paperID);
+if (isset($_GET['reviewers']) and $_GET['reviewers'] != '') {
+  $stmt = $mysqli->prepare("SELECT rating, setterID, method, title, surname, questionID FROM (std_set, std_set_questions, users) WHERE std_set.setterID = users.id AND std_set.id = std_set_questions.std_setID AND std_set.id IN (" . $_GET['reviewers'] . ") ORDER BY std_set, setterID");
   $stmt->execute();
   $stmt->bind_result($rating, $setter_id, $method, $title, $surname, $questionID);
   while($stmt->fetch()) {
@@ -177,6 +177,10 @@ if (count($rater_names) > count($reviews['user'])) {
 <?php
 }
 // Get any questions to exclude.
+$exclusions = new Exclusion($paperID, $mysqli);
+$exclusions->load();
+
+/*
 $excluded = array();
 $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");  // FIXME
 $result->bind_param('i', $paperID);
@@ -186,6 +190,7 @@ while ($result->fetch()) {
   $excluded[$q_id] = $parts;
 }
 $result->close();
+*/
 
 $old_leadin       = '';
 $old_q_type       = '';
@@ -216,6 +221,7 @@ while ($stmt->fetch()) {
     $li_set = 0;
     if ($old_leadin != '') {
       if ($li_set == 1) echo "</td></tr>\n";
+      $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
       display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
       
       if ($old_screen != $screen) {
@@ -279,6 +285,7 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 // Print the options for the last question on the screen.
+$excluded = $exclusions->get_exclusions_by_qid($old_q_id);
 display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
 
 echo '</td></tr></table></td></tr>';
