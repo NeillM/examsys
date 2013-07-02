@@ -2367,7 +2367,7 @@ QUERY;
           `name` VARCHAR(255) NOT NULL ,
           `exclude_marking` TINYINT NOT NULL DEFAULT 0 ,
           `exclude_search` TINYINT NOT NULL DEFAULT 0 ,
-          `default` TINYINT NOT NULL DEFAULT 0 ,
+          `is_default` TINYINT NOT NULL DEFAULT 0 ,
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
