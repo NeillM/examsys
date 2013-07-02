@@ -20,7 +20,7 @@ $(function () {
 
   $('.tabs li a').click(changeTab);
 
-  $('#next-option').click(showNextOption);
+  $('.next-option').click(showNextOption);
   
   $('label.fullwidth input').click(function (e) {
     $(this).parent().toggleClass('on');
@@ -58,6 +58,10 @@ $(function () {
   
   $('#addquestion').click(addQuestion);
 
+  $('#strict_display').change(toggleTrailingZeros);
+
+  $('.display_units').change(toggleDisplayUnits);
+
   $(".tiptop").tipTip({defaultPosition: 'top'});
 });
 
@@ -78,11 +82,19 @@ function changeTab() {
   return false;
 }
 
-function showNextOption() {
-  var hiddenOptions = $('.option.hide');
+function showNextOption(e) {
+  e.preventDefault();
+
+  var elClass = 'option';
+
+  if (typeof $(this).data('target') != 'undefined') {
+    elClass = $(this).data('target');
+  }
+
+  var hiddenOptions = $('.' + elClass + '.hide');
   if (hiddenOptions.length > 0) {
     if (hiddenOptions.length == 1) {
-      $('#add-option-holder').fadeOut('fast');
+      $(this).parents('.add-option-holder').eq(0).fadeOut('fast');
     }
     hiddenOptions.eq(0).removeClass('hide');
   }
@@ -228,4 +240,30 @@ function showMarksWarning(element) {
     }
   }
   return rval;
+}
+
+function toggleTrailingZeros() {
+  $('#trailing_zeros').toggleClass('disabled');
+  if ($('#strict_zeros').attr('disabled')) {
+    $('#strict_zeros').removeAttr('disabled');
+  } else {
+    $('#strict_zeros').attr('disabled', 'disabled');
+  }
+}
+
+function toggleDisplayUnits(e) {
+  e.preventDefault();
+  
+  $('.display_units').each(function () {
+      toggleChecked($(this));
+  });
+  toggleChecked($(this));
+}
+
+function toggleChecked(el) {
+  if (el.is(':checked')) {
+    el.attr('checked', false);
+  } else {
+    el.attr('checked', true);
+  }
 }

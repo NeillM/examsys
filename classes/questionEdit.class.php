@@ -32,7 +32,7 @@ require_once 'logger.class.php';
 require_once 'questionutils.class.php';
 
 Class QuestionEdit extends RogoObject {
-  
+
   public $id = -1;
   protected $type = null;
   protected $theme = '';
@@ -62,7 +62,7 @@ Class QuestionEdit extends RogoObject {
   protected $status = 'Normal';
   protected $settings = '';
   public $options = array();
-  
+
   public $max_options = 20;
   protected $min_options = 1;
   public $max_stems = 0;
@@ -111,7 +111,7 @@ Class QuestionEdit extends RogoObject {
   protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
   protected $_change_field_map;
   protected $_pretty_names;
-  public static $types = array('blank', 'calculation', 'dichotomous', 'extmatch', 'flash', 'hotspot', 'info', 'keyword_based', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'random', 'rank', 'sct', 'textbox', 'true_false', 'area');
+  public static $types = array('blank', 'calculation', 'dichotomous', 'extmatch', 'flash', 'hotspot', 'info', 'keyword_based', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'random', 'rank', 'sct', 'textbox', 'true_false', 'area', 'enhancedcalc');
 
   // Always store English values in the database so need to look up score method against English version
   protected $_score_methods_db;
@@ -1319,6 +1319,18 @@ QUERY;
     $this->_comments = $value;
   }
 
+  /**
+   * Get the source of marks data for this question, usually the first option
+   * @return mixed The source of marks or false if none has yet been defined
+   */
+  public function get_marks_source() {
+    if (count($this->options) > 0) {
+      return reset($this->options);
+    } else {
+      return false;
+    }
+  }
+
   // STATIC METHODS
 
   /**
@@ -1370,7 +1382,7 @@ QUERY;
       $result->bind_param('i', $tmp_data);
       $result->execute();
       $result->bind_result($type);
-      
+
       if ($result->fetch()) {
         $result->close();
         $classname = 'Question' . strtoupper($type);
@@ -1406,7 +1418,7 @@ QUERY;
    * Get the actual data for the question and its options
    */
   private function get_question() {
-        
+
     // Get the question
     $found = 0;
     $success = false;
@@ -1488,7 +1500,7 @@ QUERY;
    * Validate the question object before saving
    * @return Mixed <boolean, string>
    */
-  private function validate() {
+  protected function validate() {
     $rval = true;
 
     // If there are errors return an appropriate message
@@ -1538,7 +1550,9 @@ QUERY;
     $extra = array();
 
     foreach ($this->_fields_settings as $field) {
-      $extra[$field] = $this->$field;
+      if (isset($this->$field)) {
+        $extra[$field] = $this->$field;
+      }
     }
 
     $this->settings = json_encode($extra);

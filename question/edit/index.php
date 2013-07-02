@@ -113,9 +113,6 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
 if ($critical_error == '') {
   $question->add_default_correction_behaviours($cfg_web_root);
 
-  if ($mode == 'Edit') $q_no = $question->get_question_number($paper_id);
-
-
   if ($mode == 'Edit') {
     $q_no = $question->get_question_number($paper_id);
     // If existing question, check how many summative papers it is on
@@ -388,7 +385,7 @@ if ($critical_error == '') {
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -440,7 +437,7 @@ endif;
 var qType = '<?php if (isset($question)) echo $question->get_type() ?>';
 var lang = {
 <?php
-$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'enterdescription', 'showmore', 'hidemore', 'enteroption', 'enteroptionshort', 'enteroption_kw', 'mrqconvert', 'entervignette', 'enteroptiontext', 'selectarea', 'randomenterquestion', 'mappingwarning', 'markchangewarning');
+$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'enterdescription', 'showmore', 'hidemore', 'enteroption', 'enterformula', 'enteroptionshort', 'enteroption_kw', 'mrqconvert', 'entervignette', 'enteroptiontext', 'selectarea', 'randomenterquestion', 'mappingwarning', 'markchangewarning');
 $first = true;
 foreach ($langstrings as $langstring) {
   if (!$first) {

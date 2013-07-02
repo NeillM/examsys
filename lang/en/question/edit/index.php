@@ -247,4 +247,18 @@ $string['markchangewarning'] = 'Warning: changing mark allocations post-exam sho
 $string['percenttolerance'] = 'Tolerances may now be expressed as percentages (e.g. 5%) as well as absolute numbers';
 $string['answercorrect'] = 'Answer Correct';
 $string['marks'] = 'Marks';
-?>
+// Extended calc
+$string['addanswers'] = 'Add More Answers...';
+$string['newvariable'] = 'New Variable';
+$string['variable'] = 'Variable $';
+$string['newanswer'] = 'New Answer';
+$string['deletedvar'] = 'Deleted Variable';
+$string['deletedanswer'] = 'Deleted Answer';
+$string['displayunits'] = 'Display units for question';
+$string['unitmarking'] = 'Unit marking';
+$string['ifincorrect'] = '(if incorrect)';
+$string['displayprecision'] = 'Display precision';
+$string['displayto'] = 'Display answer to';
+$string['sigfigures'] = 'Significant figures';
+$string['enforcedisplay'] = 'Enforce precision of student answer';
+$string['includetrailing0'] = 'Including trailing 0s';
