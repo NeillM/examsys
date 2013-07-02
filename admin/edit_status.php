@@ -25,11 +25,31 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/logger.class.php';
+require_once '../classes/question_status.class.php';
 
-$status = (isset($_POST['status'])) ? $_POST['status'] : '';
-$em_checked = (isset($_POST['exclude_marking'])) ? ' checked="checked"' : '';
-$es_checked = (isset($_POST['exclude_search'])) ? ' checked="checked"' : '';
-$default_checked = (isset($_POST['default'])) ? ' checked="checked"' : '';
+$data = array();
+if (isset($_POST['submit'])) {
+  $data['name'] = $_POST['name'];
+  $data['exclude_marking'] = (isset($_POST['exclude_marking'])) ? true : false;
+  $data['exclude_search'] = (isset($_POST['exclude_search'])) ? true : false;
+  $data['default'] = (isset($_POST['default'])) ? true : false;
+
+  $q_status = new QuestionStatus($mysqli, $string, $data);
+
+  if ($q_status->save()) {
+    header("location: list_statuses.php");
+    exit;
+  } else {
+    $em_checked = ($data['exclude_marking']) ? ' checked="checked"' : '';
+    $es_checked = ($data['exclude_search']) ? ' checked="checked"' : '';
+    $default_checked = ($data['default']) ? ' checked="checked"' : '';
+  }
+} else {
+  $data['name'] = '';
+  $em_checked = '';
+  $es_checked = '';
+  $default_checked = '';
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
@@ -75,7 +95,7 @@ $default_checked = (isset($_POST['default'])) ? ' checked="checked"' : '';
 
     <form name="edit_status" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
       <table class="admin-form">
-        <tr><th><label for="status"><?php echo $string['name'] ?></label></td><td><input type="text" size="70" id="status" name="status" value="<?php echo $status; ?>" /></th></tr>
+        <tr><th><label for="name"><?php echo $string['name'] ?></label></td><td><input type="text" size="70" id="name" name="name" value="<?php echo $data['name']; ?>" /></th></tr>
         <tr><th><label for="exclude_marking"><?php echo $string['excludemarking'] ?></label></td><td><input type="checkbox" id="exclude_marking" name="exclude_marking" <?php echo $em_checked; ?> /></th></tr>
         <tr><th><label for="exclude_search"><?php echo $string['excludesearch'] ?></label></td><td><input type="checkbox" id="exclude_search" name="exclude_search" <?php echo $es_checked; ?> /></th></tr>
         <tr><th><label for="default"><?php echo $string['default'] ?></label></td><td><input type="checkbox" id="default" name="default" <?php echo $default_checked; ?> /></th></tr>
