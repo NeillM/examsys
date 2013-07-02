@@ -85,7 +85,7 @@ function getData($url) {
 
   $output = curl_exec($ch);
   curl_close($ch);
-  if(strpos($output,'<title>Log In</title>') !== false) {
+  if (strpos($output,'<title>Log In</title>') !== false) {
     //V4.4 needing authentication
     $output=null;
   }

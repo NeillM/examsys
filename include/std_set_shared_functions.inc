@@ -22,6 +22,15 @@
 * @package
 */
 
+require_once '../classes/standard_setting.class.php';
+
+function updateDB($review, $db) {
+  $update = $db->prepare("UPDATE std_set SET pass_score = ?, distinction_score = ? WHERE id = ?");
+  $update->bind_param('ddi', $review['pass_score'], $review['distinction_score'], $review['std_setID']);
+  $update->execute();
+  $update->close();
+}
+
 function load_ebel_percents($id, $mysqli) {
   $percents = array();
 
@@ -54,23 +63,13 @@ function load_question_ratings($id, $mysqli) {
   return $ratings;
 }
 
-function get_hofstee_data($id, $questionID, $mysqli) {
-  $result = $mysqli->prepare("SELECT rating FROM std_set_questions WHERE std_setID = ? AND questionID = ?");
-  $result->bind_param('ii', $id, $questionID);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($rating);
-  $result->fetch();
-  $result->close();
-  
-  return $rating;
-}
-
 function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
   $configObject = Config::get_instance();
   
   $configObject->get('cfg_long_date_time');
   $reviews = array();
+  
+  $standard_setting = new StandardSetting($mysqli);
   
   $result = $mysqli->prepare("SELECT std_set.id, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, method, group_review, title, initials, surname, setterID FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set");
   $result->bind_param('i', $paperID);
@@ -177,8 +176,9 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $reviews[$i]['distinction_score'] = 'n/a';
     } elseif ($reviews[$i]['method'] == 'Hofstee') {
       $reviews[$i]['review_total'] = $total_marks;
-      $reviews[$i]['pass_score'] = get_hofstee_data($reviews[$i]['std_setID'], 0, $mysqli);
-      $reviews[$i]['distinction_score'] = get_hofstee_data($reviews[$i]['std_setID'], 1, $mysqli);
+      $results = $standard_setting->get_pass_distinction($reviews[$i]['std_setID']);
+      $reviews[$i]['pass_score'] = round($results['pass_score'], 1);
+      $reviews[$i]['distinction_score'] = round($results['distinction_score'], 1);
     } elseif ($reviews[$i]['method'] == 'Ebel') {
       $cut_marks = 0.0;
       $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
@@ -222,6 +222,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
   $correct_no = 0;
   $old_score_method = '';
   
+  var_dump("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = $paper_id AND papers.question = questions.q_id AND q_type != 'info' ORDER BY q_id, o_id, id_num");
   $result = $mysqli->prepare("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY q_id, o_id, id_num");
   $result->bind_param('i', $paper_id);
   $result->execute();

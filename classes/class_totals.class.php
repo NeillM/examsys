@@ -227,7 +227,7 @@ class ClassTotals {
     $this->sort_results();                                                                                    // Sort the whole array by the right column
 
     if ($this->recache) {
-      $results_cache->save_paper_cache($this->paperID, $this->percent, $this->absent, $this->stats);                      // Cache general paper stats
+      $results_cache->save_paper_cache($this->paperID, $this->percent, $this->absent, $this->stats);                  // Cache general paper stats
 
       $results_cache->save_student_mark_cache($this->paperID, $this->percent, $this->absent, $this->user_results);    // Cache student/paper marks
 
@@ -420,7 +420,7 @@ class ClassTotals {
       }
     } else {
       if ($percent < $this->ss_pass) {
-        $cranked = $pass_mark  - ($this->pass_mark - 0) * (($this->ss_pass - $percent) / ($this->ss_pass - 0));
+        $cranked = $this->pass_mark  - ($this->pass_mark - 0) * (($this->ss_pass - $percent) / ($this->ss_pass - 0));
       } else {
         $cranked = 100 - (100 - $this->pass_mark) * ((100 - $percent) / (100 - $this->ss_pass));
       }

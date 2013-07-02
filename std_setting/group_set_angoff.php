@@ -76,19 +76,6 @@ if (isset($_GET['reviewers'])) {
 $reviews = array();
 $review_string = substr($review_string,1);
 
-/*
-if ($setterID != '') {
-  $result = $mysqli->prepare("SELECT std_set, rating, questionID FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
-  $result->bind_param('iis', $paperID, $setterID, $dateID);
-  $result->execute();
-  $result->bind_result($std_set, $rating, $questionID);
-  while ($result->fetch()) {
-    $questionID = $questionID;
-    $reviews[$questionID] = $rating;
-  }
-  $result->close();
-}
-*/
 $setterID = '';
 if (isset($_GET['std_setID'])) {
   $result = $mysqli->prepare("SELECT rating, questionID FROM std_set_questions WHERE std_setID = ?");
@@ -100,21 +87,6 @@ if (isset($_GET['std_setID'])) {
   }
   $result->close();
 }
-
-/*
-if ($rater_query != '') {
-  $stmt = $mysqli->prepare("SELECT rating, setterID, method, title, surname, questionID FROM (standards_setting, users) WHERE standards_setting.setterID = users.id AND paperID = ? $rater_query) ORDER BY std_set, setterID");
-  $stmt->bind_param('i', $paperID);
-  $stmt->execute();
-  $stmt->bind_result($rating, $setter_id, $method, $title, $surname, $questionID);
-  while($stmt->fetch()) {
-    $tmp_userID = $setter_id;
-    $reviews['user'][$tmp_userID][$questionID] = $rating;
-    $reviews['user'][$tmp_userID]['name'] = $title . ' ' . $surname;
-  }
-  $stmt->close();
-}
-*/
 
 if (isset($_GET['reviewers']) and $_GET['reviewers'] != '') {
   $stmt = $mysqli->prepare("SELECT rating, setterID, method, title, surname, questionID FROM (std_set, std_set_questions, users) WHERE std_set.setterID = users.id AND std_set.id = std_set_questions.std_setID AND std_set.id IN (" . $_GET['reviewers'] . ") ORDER BY std_set, setterID");

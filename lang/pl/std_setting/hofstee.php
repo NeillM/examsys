@@ -16,8 +16,8 @@
 
 $string['hofstee'] = 'Metoda Hofstee';
 $string['integeronly'] = "Wartości całkowite";
-$string['cohort'] = 'Procent grupy';
-$string['correct'] = '% Ocen';
+$string['cohort'] = 'Cumulative % students';
+$string['correct'] = "Students\' grades (%)";
 $string['passmark'] = 'L.punkt. na zaliczenie';
 $string['distinction'] = 'L. punkt. na wyróżnienie';
 $string['minpass'] = 'Min Zalicz.';
@@ -27,10 +27,11 @@ $string['maxfail'] = 'Maks Obl.';
 $string['cutscore'] = 'Ocena Gr.';
 $string['cutpercent'] = 'Granica grupy';
 $string['standardssetting'] = 'Wyznaczanie standardów';
-
+$string['cohortsize'] = 'Cohort Size';
 $string['maximumscore'] = 'Najlepszy wynik';
 $string['topquartile'] = 'Q3 (Górny kwartyl)';
 $string['median'] = 'Q2 (Mediana)';
 $string['lowerquartile'] = 'Q1 (Dolny kwartyl)';
 $string['minimumscore'] = 'Najgorszy wynik';
+$string['savemarks'] = 'Save Marks';
 ?>

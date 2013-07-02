@@ -172,7 +172,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     $std_data->bind_param('i', $tmp_parts[1]);
     $std_data->execute();
     $std_data->bind_result($questionID, $rating);
-    while ($row = $std_data->fetch()) {
+    while ($std_data->fetch()) {
       $standards_setting[$questionID] = $rating;
     }
     $std_data->close();

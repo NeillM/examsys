@@ -27,7 +27,8 @@ require_once '../classes/installutils.class.php';
 require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
 require_once '../classes/lang.class.php';
-require_once $cfg_web_root . 'classes/dbutils.class.php';
+require_once '../classes/dbutils.class.php';
+require_once '../include/std_set_shared_functions.inc';
 
 $version = '5.1';
 
@@ -567,14 +568,12 @@ if (!isset($_POST['update'])) {
     $mysqli->commit();
     
     // Clear up a table.
-    /*
     if ($updater_utils->does_table_exist('standards_setting')) {
       $sql = "DROP TABLE standards_setting";
       $updater_utils->execute_query($sql, true);
     }
     $mysqli->commit();
-    */
-
+    
     // Clear up some columns
     if ($updater_utils->does_column_exist('ebel', 'id')) {
       $sql = "ALTER TABLE ebel DROP COLUMN id";
@@ -597,8 +596,6 @@ if (!isset($_POST['update'])) {
       $updater_utils->execute_query($sql, true);
     }
     $mysqli->commit();
-  }
-  
   
     // Query and then populate 'std_set' table.
     $result = $mysqli->prepare("SELECT id, setterID, std_set FROM std_set WHERE method = 'Modified Angoff'");
@@ -638,9 +635,32 @@ if (!isset($_POST['update'])) {
           
     }
     $result->close();
+    $mysqli->commit();
+    
+    echo "<li>Updating standard_setting values in the properties table</li>\n";
+    ob_flush();
+    flush();
 
+    // Call the standard_setting list page to populate the results in std_set table.
+    $result = $mysqli->prepare("SELECT DISTINCT property_id, total_mark FROM properties WHERE marking LIKE '2,%'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($property_id, $total_mark);
+    while ($result->fetch()) {
+      $no_reviews = 0;
+      $reviews = get_reviews($mysqli, 'index', $property_id, $total_mark, $no_reviews);
+      foreach ($reviews as $review) {
+        if ($review['method'] != 'Hofstee') {
+          updateDB($review, $mysqli);
+        }
+      }
+      
+    }
+    $result->close();
 
-  /*
+  }
+
+   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */
 

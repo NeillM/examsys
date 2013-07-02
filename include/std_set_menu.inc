@@ -34,14 +34,20 @@
   }
   function editReview() {
     var methodType = '';
-    if (document.StdSetMenu.method.value == 'Modified Angoff') {
+    if (document.getElementById('method').value == 'Modified Angoff') {
       methodType = 'modified_angoff';
-    } else {
+    } else if (document.getElementById('method').value == 'Ebel') {
       methodType = 'ebel';
-    }  
+    } else {
+      methodType = 'hofstee';
+    }
 
     if (groupReview == 'No') {
-      window.location.href = "individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + document.getElementById('std_setID').value + "&method=" + methodType;
+      if (methodType == 'hofstee') {
+        window.location.href = "hofstee.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + document.getElementById('std_setID').value + "&method=" + methodType;
+      } else {
+        window.location.href = "individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + document.getElementById('std_setID').value + "&method=" + methodType;
+      }
     } else {
       window.location.href = "group_set_angoff.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + document.getElementById('std_setID').value + "&reviewers=" + document.StdSetMenu.setterID.value + "&module=<?php echo $_GET['module']; ?>&method=" + methodType;
     }
