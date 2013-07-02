@@ -377,24 +377,26 @@ function hofstee_plot(canvas_id,result_type) {
 	}
 
 	function tfchange(event,keys) {
-		target = ((event.target.name[0]=='x')?0:2)+1*event.target.name[1]-1;
-		var ev0 = boundaries[target];
-		var ev = Number(event.target.value.replace('%',''));
-		if (isNaN(ev)) ev = ev0;
-		
-		if (keys) {
-			if (event.keyCode==37 || event.keyCode==40) ev-=delta;
-			if (event.keyCode==38 || event.keyCode==39) ev+=delta;
+		if (result_type == event.target.name.substr(3)) {
+			target = ((event.target.name[0]=='x')?0:2)+1*event.target.name[1]-1;
+			var ev0 = boundaries[target];
+			var ev = Number(event.target.value.replace('%',''));
+			if (isNaN(ev)) ev = ev0;
+			
+			if (keys) {
+				if (event.keyCode==37 || event.keyCode==40) ev-=delta;
+				if (event.keyCode==38 || event.keyCode==39) ev+=delta;
+			}
+			
+			if (ev<0) ev = 0;
+			if (ev>100) ev = 100;
+			boundaries[target] = ev;
+			if (boundaries[1]<boundaries[0]) boundaries[1] = [boundaries[0], boundaries[0] = boundaries[1]][0];
+			if (boundaries[3]<boundaries[2]) boundaries[3] = [boundaries[2], boundaries[2] = boundaries[3]][0];
+			
+			redraw = true;
+			g_redraw_canvas;
 		}
-		
-		if (ev<0) ev = 0;
-		if (ev>100) ev = 100;
-		boundaries[target] = ev;
-		if (boundaries[1]<boundaries[0]) boundaries[1] = [boundaries[0], boundaries[0] = boundaries[1]][0];
-		if (boundaries[3]<boundaries[2]) boundaries[3] = [boundaries[2], boundaries[2] = boundaries[3]][0];
-		
-		redraw = true;
-		g_redraw_canvas;	
 	}
 
 	$("#checkbox").change(function(event) {
