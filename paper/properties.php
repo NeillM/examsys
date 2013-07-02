@@ -1299,24 +1299,12 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $std_set_array = array();
       $i = 0;
       
-      // Get Modified Angoff and Ebel
-      $std_set_details = $mysqli->prepare("SELECT DISTINCT title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, group_review FROM standards_setting, users WHERE standards_setting.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
+      $std_set_details = $mysqli->prepare("SELECT std_set.id, title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, group_review FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
       $std_set_details->bind_param('i', $_GET['paperID']);
       $std_set_details->execute();
-      $std_set_details->bind_result($std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $std_set_date, $group_review);
+      $std_set_details->bind_result($std_setID, $std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $group_review);
       while ($std_set_details->fetch()) {
-        $std_set_array[$i] = array('title'=>$std_set_title, 'surname'=>$std_set_surname, 'initials'=>$std_set_initials, 'reviewer'=>$std_set_reviewer, 'display_date'=>$std_set_display_date, 'set_date'=>$std_set_date, 'group_review'=>$group_review);
-        $i++;
-      }
-      $std_set_details->close();
-
-      // Get Hofstee
-      $std_set_details = $mysqli->prepare("SELECT title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set FROM hofstee, users WHERE hofstee.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
-      $std_set_details->bind_param('i', $_GET['paperID']);
-      $std_set_details->execute();
-      $std_set_details->bind_result($std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $std_set_date);
-      while ($std_set_details->fetch()) {
-        $std_set_array[$i] = array('title'=>$std_set_title, 'surname'=>$std_set_surname, 'initials'=>$std_set_initials, 'reviewer'=>$std_set_reviewer, 'display_date'=>$std_set_display_date, 'set_date'=>$std_set_date, 'group_review'=>'No');
+        $std_set_array[$i] = array('std_setID'=>$std_setID, 'title'=>$std_set_title, 'surname'=>$std_set_surname, 'initials'=>$std_set_initials, 'reviewer'=>$std_set_reviewer, 'display_date'=>$std_set_display_date, 'group_review'=>$group_review);
         $i++;
       }
       $std_set_details->close();
@@ -1331,13 +1319,13 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
           $std_set_surname = $std_set_line['surname'];
           $std_set_initials = $std_set_line['initials'];
           $std_set_reviewer = $std_set_line['reviewer'];
-          $std_set_date = $std_set_line['set_date'];
+          $std_setID = $std_set_line['std_setID'];
           $std_set_display_date = $std_set_line['display_date'];
 
-          if ($properties->get_marking() == "2,$std_set_reviewer,$std_set_date") {
-            echo "<option value=\"2,$std_set_reviewer,$std_set_date\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
+          if ($properties->get_marking() == "2,$std_setID") {
+            echo "<option value=\"2,$std_setID\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           } else {
-            echo "<option value=\"2,$std_set_reviewer,$std_set_date\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
+            echo "<option value=\"2,$std_setID\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           }
           
         }

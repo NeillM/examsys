@@ -25,11 +25,16 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/media.inc';
 require_once '../include/std_set_functions.inc';
-require_once '../classes/stateutils.class.php';
-require_once '../classes/paperproperties.class.php';
 require_once '../include/errors.inc';
 
+require_once '../classes/stateutils.class.php';
+require_once '../classes/folderutils.class.php';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/exclusion.class.php';
+require_once '../classes/standard_setting.class.php';
+
 $paperID = check_var('paperID', 'GET', true, false, true);
+check_var('method', 'GET', true, false, false);
 
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
@@ -41,7 +46,6 @@ $paper_title = $propertyObj->get_paper_title();
 $paper_type = $propertyObj->get_paper_type();
 $paper_prologue = $propertyObj->get_paper_prologue();
 $marking = $propertyObj->get_marking();
-
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
@@ -87,16 +91,9 @@ function check_ebel_distinction_type($ebel) {
   <title>Standards Setting<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
   <?php
   // Get any questions to exclude.
-  $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($q_id, $parts);
-  while ($result->fetch()) {
-    $excluded[$q_id] = $parts;
-  }
-  $result->close();
-
+  $exclusions = new Exclusion($paperID, $mysqli);
+  $exclusions->load();
+  
   $current_screen = 1;
   ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -362,17 +359,12 @@ function check_ebel_distinction_type($ebel) {
   } else {
     $module = '';
   }
-
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+  if (isset($_GET['folder'])) {
     $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
+  } else {
+    $folder = '';
   }
+
 
   if ($_GET['method'] == 'ebel') {
     echo "<body onload=\"recountCategories();\">\n";
@@ -384,19 +376,11 @@ function check_ebel_distinction_type($ebel) {
   echo "<form method=\"post\" name=\"questions\" action=\"record_review.php?paperID=$paperID&method=" . $_GET['method'] . "&module=$module&folder=$folder\">\n";
 
   $reviews = array();
-  $setterID = (!empty($_GET['setterID'])) ? $_GET['setterID'] : '';
-  $date_id = (!empty($_GET['dateID'])) ? $_GET['dateID'] : '';
-
-  if ($setterID != '') {
-    $tmp_date_id = $date_id;
-    $result = $mysqli->prepare("SELECT std_set, rating, questionID FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
-    $result->bind_param('iss', $_GET['paperID'], $setterID, $tmp_date_id);
-    $result->execute();
-    $result->bind_result($std_set, $rating, $questionID);
-    while ($result->fetch()) {
-      $reviews[$questionID] = $rating;
-    }
-    $result->close();
+  
+  $setterID = '';
+  if (isset($_GET['std_setID'])) {
+    $standard_setting = new StandardSetting($mysqli);
+    $reviews = $standard_setting->get_ratings_by_question($_GET['std_setID']);
   }
 
   // Load default setting from the Questions table and save to reviews array if no existing data
@@ -405,7 +389,7 @@ function check_ebel_distinction_type($ebel) {
   $result->execute();
   $result->bind_result($questionID, $std);
   while ($result->fetch()) {
-    if ($setterID == '') $reviews[$questionID] = $std;
+    if (!isset($_GET['std_setID'])) $reviews[$questionID] = $std;
     echo "<input type=\"hidden\" name=\"old" . $questionID . "\" value=\"$std\" />\n";
   }
   $result->close();
@@ -417,10 +401,10 @@ function check_ebel_distinction_type($ebel) {
   echo "\n<table class=\"header\" style=\"font-size:90%\">\n";
   echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
   if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     $module_code = module_utils::get_moduleid_from_id($module, $mysqli);
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">" . $string['standardssetting'] . "</a></div>";
   if ($_GET['method'] == 'modified_angoff') {
@@ -478,6 +462,7 @@ function check_ebel_distinction_type($ebel) {
       $li_set = 0;
       if ($old_leadin != '') {
         if ($li_set == 1) echo "</td></tr>\n";
+        $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
         if (count($options_array) > 0) display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
         if ($old_screen != $screen) {
           echo '<tr><td colspan="2">';
@@ -542,6 +527,7 @@ function check_ebel_distinction_type($ebel) {
   $result->close();
 
   // Print the options for the last question on the screen.
+  $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
   if (count($options_array) > 0) display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
 
   echo '</td></tr></table></td></tr>';
@@ -626,8 +612,9 @@ function check_ebel_distinction_type($ebel) {
   echo '<input type="hidden" name="module" value="' . $module . '" />';
   echo '<input type="hidden" name="folder" value="' . $folder . '" />';
   echo '<input type="hidden" name="paperID" value="' . $paperID . '" />';
-  echo '<input type="hidden" name="setterID" value="' . $setterID . '" />';
-  echo '<input type="hidden" name="dateID" value="' . $date_id . '" />';
+  if (isset($_GET['std_setID'])) {
+    echo '<input type="hidden" name="std_setID" value="' . $_GET['std_setID'] . '" />';
+  }
   echo '<input type="hidden" name="stdIDNo" value="' . $stdID . '" />';
 ?>
 <div align="center">

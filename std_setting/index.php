@@ -36,6 +36,13 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+function updateDB($review, $db) {
+  $update = $db->prepare("UPDATE std_set SET pass_score = ?, distinction_score = ? WHERE id = ?");
+  $update->bind_param('ddi', $review['pass_score'], $review['distinction_score'], $review['std_setID']);
+  $update->execute();
+  $update->close();
+}
+
 function displayReview($review, $userObj) {
   $setter_id = $review['setter_id'];
   
@@ -50,14 +57,14 @@ function displayReview($review, $userObj) {
   }
   if ($review['group_review'] != 'No') {
     $icon = '../artwork/small_users_icon.png';
-    $setter_id = $review['setter_id'] . ',' . $review['date'] . ';' . $review['group_review'];
+    $setter_id = $review['group_review'];
   }
   
   $html = '';
   if ($setter_id == $userObj->get_user_ID() or $userObj->has_role('SysAdmin')) {
-    $html .= "<tr id=\"review{$review['review_no']}\" style=\"cursor:hand\" onmouseover=\"highlight({$review['review_no']})\" onmouseout=\"unhighlight({$review['review_no']})\" onclick=\"selReview('$setter_id','{$review['date']}',{$review['review_no']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" border=\"0\" /></td><td>&nbsp;";
+    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" style=\"cursor:hand\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
   } else {
-    $html .= "<tr id=\"review{$review['review_no']}\" style=\"cursor:hand\" onmouseover=\"highlight({$review['review_no']})\" onmouseout=\"unhighlight({$review['review_no']})\" onclick=\"selReview('$setter_id','{$review['date']}',{$review['review_no']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" border=\"0\" /></td><td>&nbsp;";
+    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" style=\"cursor:hand\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
   }
   if ($review['distinction_score'] != 'n/a') $review['distinction_score'] .= '%';
   if ($review['group_review'] != 'No') {
@@ -85,15 +92,16 @@ function displayReview($review, $userObj) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="JavaScript">
     var groupReview;
 
-    function selReview(setterID, dateID, reviewID, methodType, menuID, group, evt) {
+    function selReview(std_setID, setterID, reviewID, methodType, menuID, group, evt) {
       groupReview = group;
 
-      tmp_ID = document.StdSetMenu.oldReviewID.value;
+      tmp_ID = document.getElementById('oldReviewID').value;
       if (tmp_ID != '') {
         document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
         document.getElementById('review' + tmp_ID).style.color = 'black';
@@ -103,13 +111,13 @@ function displayReview($review, $userObj) {
       document.getElementById('menu2c').style.display = 'none';
       document.getElementById(menuID).style.display = 'block';
 
-      document.StdSetMenu.setterID.value = setterID;
-      document.StdSetMenu.dateID.value = dateID;
-      document.StdSetMenu.method.value = methodType;
+      document.getElementById('std_setID').value = std_setID;
+      document.getElementById('setterID').value = setterID;
+      document.getElementById('method').value = methodType;
 
       document.getElementById('review' + reviewID).style.backgroundColor = '#316AC5';
       document.getElementById('review' + reviewID).style.color = 'white';
-      document.StdSetMenu.oldReviewID.value = reviewID;
+      document.getElementById('oldReviewID').value = reviewID;
       evt.cancelBubble = true;
     }
 
@@ -117,22 +125,10 @@ function displayReview($review, $userObj) {
       document.getElementById('menu2a').style.display = 'block';
       document.getElementById('menu2b').style.display = 'none';
       document.getElementById('menu2c').style.display = 'none';
-      tmp_ID = document.StdSetMenu.oldReviewID.value;
+      tmp_ID = document.getElementById('oldReviewID').value;
       if (tmp_ID != '') {
         document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
         document.getElementById('review' + tmp_ID).style.color = 'black';
-      }
-    }
-
-    function highlight(lineID) {
-      if (lineID != document.StdSetMenu.oldReviewID.value) {
-        document.getElementById('review' + lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function unhighlight(lineID) {
-      if (lineID != document.StdSetMenu.oldReviewID.value) {
-        document.getElementById('review' + lineID).style.backgroundColor = '';
       }
     }
 
@@ -179,6 +175,7 @@ $reviews = get_reviews($mysqli, 'index', $paperID, $total_mark, $no_reviews);
 
 foreach ($reviews as $review) {
   $reviews_html .= displayReview($review, $userObject);
+  updateDB($review, $mysqli);
 }
 require '../include/std_set_menu.inc';
 ?>

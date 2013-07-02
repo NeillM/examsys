@@ -341,7 +341,7 @@ if (!isset($_POST['update'])) {
       $parts = explode('x', $display_method);
       $extra = array('columns' => $parts[0], 'rows' => $parts[1]);
       $extra_json = json_encode($extra);
-      $sql2 = "UPDATE questions SET display_method='', settings = ? WHERE q_id = ?";
+      $sql2 = "UPDATE questions SET display_method = '', settings = ? WHERE q_id = ?";
       $area_upd = $mysqli->prepare($sql2);
       $area_upd->bind_param('si', $extra_json, $q_id);
       $area_upd->execute();
@@ -355,7 +355,6 @@ if (!isset($_POST['update'])) {
 
     echo '</ul></li>';
   }
-
 
   // 17/05/2013 (brzsw) - Add cache_paper_stats table
   if (!$updater_utils->does_table_exist('cache_paper_stats')) {
@@ -422,15 +421,6 @@ if (!isset($_POST['update'])) {
   $target_line = '$cfg_password_expire';
   $updater_utils->add_line('$vle_apis', $new_lines, 80, $cfg_web_root, $target_line, 1);
 
-  // 06/06/2013 (brzsw) - Add hofstee table
-  if (!$updater_utils->does_table_exist('hofstee')) {
-    $sql = "CREATE TABLE hofstee (id int unsigned not null primary key auto_increment, setterID int(10) unsigned not null, paperID mediumint(8) unsigned not null, std_set datetime, pass_score tinyint unsigned, distinction tinyint unsigned) ENGINE=InnoDB";
-    $updater_utils->execute_query($sql, true);
-
-    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.hofstee TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
-    $updater_utils->execute_query($sql, true);
-  }
-
 
   // 24/06/2013 - nazrji - add new calculation question type to enum
   if (!$updater_utils->does_column_type_value_exist('questions', 'q_type', "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area','enhancedcalc')")) {
@@ -467,11 +457,197 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("UPDATE log5 SET adjmark = mark", false);
   }
 
+  // 28/06/2013 (brzsw) - chaning the standards setting tables
+  if (!$updater_utils->does_table_exist('std_set')) {
+    $sql = "CREATE TABLE std_set (id int unsigned not null primary key auto_increment, setterID int(10) unsigned not null, paperID mediumint(8) unsigned not null, std_set datetime, method enum('Modified Angoff','Angoff (Yes/No)','Ebel','Hofstee'), group_review text, pass_score decimal(10,6), distinction_score decimal(10,6)) ENGINE=InnoDB";
+    $updater_utils->execute_query($sql, true);
+  
+    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+
+    $sql = "CREATE TABLE std_set_questions (id int unsigned not null primary key auto_increment, std_setID int unsigned not null, questionID int(11) unsigned not null, rating text) ENGINE=InnoDB";
+    $updater_utils->execute_query($sql, true);
+    
+    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+
+    // Query and then populate 'std_set' table.
+    $insert_ids = array();
+    $i = 0;
+    $result = $mysqli->prepare("SELECT DISTINCT setterID, std_set, paperID, method, group_review FROM standards_setting");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($setterID, $std_set, $paperID, $method, $group_review);
+    while ($result->fetch()) {
+      $update = $mysqli->prepare("INSERT INTO std_set VALUES (NULL, $setterID, $paperID, '$std_set', '$method', '$group_review', NULL, NULL)");
+      $update->execute();
+      $update->close();
+      
+      $insert_id = $mysqli->insert_id;
+    
+      $insert_ids[$setterID . $std_set . $paperID] = $insert_id;
+      $ebel_ids[$setterID . $std_set] = $insert_id;
+      $i++;    
+    }
+    $result->close();
+    
+    $mysqli->commit();
+    
+    // Query and then populate 'std_set_questions' table.
+    $result = $mysqli->prepare("SELECT setterID, std_set, paperID, questionID, rating FROM standards_setting");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($setterID, $std_set, $paperID, $questionID, $rating);
+    while ($result->fetch()) {
+      $std_setID = $insert_ids[$setterID.$std_set.$paperID];
+    
+      $update = $mysqli->prepare("INSERT INTO std_set_questions VALUES (NULL, $std_setID, $questionID, '$rating')");
+      $update->execute();
+      $update->close();
+    }
+    $result->close();
+    
+    $mysqli->commit();
+    
+    // Update the 'ebel' table.
+    if (!$updater_utils->does_column_exist('ebel', 'std_setID')) {
+      $updater_utils->execute_query("ALTER TABLE ebel ADD COLUMN std_setID int unsigned not null AFTER id", true);
+    }
+    $mysqli->commit();
+    $result = $mysqli->prepare("SELECT DISTINCT setterID, date_set FROM ebel");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($setterID, $date_set);
+    while ($result->fetch()) {
+      if (isset($ebel_ids[$setterID . $date_set])) {
+        $std_setID = $ebel_ids[$setterID . $date_set];
+      
+        $update = $mysqli->prepare("UPDATE ebel SET std_setID = $std_setID WHERE setterID = $setterID AND date_set = '$date_set'");
+        $update->execute();
+        $update->close();
+      }
+    }
+    $result->close();
+    $mysqli->commit();
+    
+    // Update the 'properties' table.
+    $result = $mysqli->prepare("SELECT property_id, marking FROM properties WHERE marking LIKE '2,%'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($property_id, $marking);
+    while ($result->fetch()) {
+      $parts = explode(',', $marking);
+      
+      $parts[2] = str_replace('-', '', $parts[2]);
+      $parts[2] = str_replace(' ', '', $parts[2]);
+      $parts[2] = str_replace(':', '', $parts[2]);
+      
+      $tmp_date = substr($parts[2],0,4) . '-' . substr($parts[2],4,2) . '-' . substr($parts[2],6,2) . ' ' . substr($parts[2],8,2) . ':' . substr($parts[2],10,2) . ':' . substr($parts[2],12,2);
+      
+      $search_date = $parts[1] . $tmp_date;
+      
+      if (isset($ebel_ids[$search_date])) {
+        $std_setID = $ebel_ids[$search_date];
+        
+        $update = $mysqli->prepare("UPDATE properties SET marking = '2,$std_setID' WHERE property_id = $property_id");
+        $update->execute();
+        $update->close();
+      } else {
+        $update = $mysqli->prepare("UPDATE properties SET marking = '0' WHERE property_id = $property_id");
+        $update->execute();
+        $update->close();
+      }
+    
+    }
+    $result->close();
+    
+    $mysqli->commit();
+    
+    // Clear up a table.
+    /*
+    if ($updater_utils->does_table_exist('standards_setting')) {
+      $sql = "DROP TABLE standards_setting";
+      $updater_utils->execute_query($sql, true);
+    }
+    $mysqli->commit();
+    */
+
+    // Clear up some columns
+    if ($updater_utils->does_column_exist('ebel', 'id')) {
+      $sql = "ALTER TABLE ebel DROP COLUMN id";
+      $updater_utils->execute_query($sql, true);
+    }
+    if ($updater_utils->does_column_exist('ebel', 'setterID')) {
+      $sql = "ALTER TABLE ebel DROP COLUMN setterID";
+      $updater_utils->execute_query($sql, true);
+    }
+    if ($updater_utils->does_column_exist('ebel', 'date_set')) {
+      $sql = "ALTER TABLE ebel DROP COLUMN date_set";
+      $updater_utils->execute_query($sql, true);
+    }
+    
+    if (!$updater_utils->does_table_exist('hofstee')) {
+      $sql = "CREATE TABLE hofstee (std_setID int unsigned not null, whole_numbers tinyint, x1_pass tinyint, x2_pass tinyint, y1_pass tinyint, y2_pass tinyint, x1_distinction tinyint, x2_distinction tinyint, y1_distinction tinyint, y2_distinction tinyint) ENGINE=InnoDB";
+      $updater_utils->execute_query($sql, true);
+    
+      $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.hofstee TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+      $updater_utils->execute_query($sql, true);
+    }
+    $mysqli->commit();
+  }
+  
+  
+    // Query and then populate 'std_set' table.
+    $result = $mysqli->prepare("SELECT id, setterID, std_set FROM std_set WHERE method = 'Modified Angoff'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id, $setterID, $std_set);
+    while ($result->fetch()) {
+      $ebel_ids[$setterID . $std_set] = $id;    
+    }
+    $result->close();
+
+    // Update the 'group_review' column in std_set.
+    $result = $mysqli->prepare("SELECT id, group_review FROM std_set WHERE group_review != 'no' AND group_review != 'yes'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id, $group_review);
+    while ($result->fetch()) {
+      $ID_list = '';
+      $reviews = explode(';', $group_review);
+      foreach ($reviews as $review) {      
+        $parts = explode(',', $review);
+                
+        $tmp_date = substr($parts[1],0,4) . '-' . substr($parts[1],4,2) . '-' . substr($parts[1],6,2) . ' ' . substr($parts[1],8,2) . ':' . substr($parts[1],10,2) . ':' . substr($parts[1],12,2);
+        
+        $search_date = $parts[0] . $tmp_date;
+        
+        if ($ID_list == '') {
+          $ID_list = $ebel_ids[$search_date];
+        } else {
+          $ID_list .= ',' . $ebel_ids[$search_date];
+        }
+      }
+    
+      $update = $mysqli->prepare("UPDATE std_set SET group_review = '$ID_list' WHERE id = $id");
+      $update->execute();
+      $update->close();
+          
+    }
+    $result->close();
+
+
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */
 
   // End of updates -----------------------------------------------------------------
+
+  $mysqli->commit();
+  $mysqli->autocommit(false);
 
   // Final housekeeping activities - put all updates above this line
   $updated = $updater_utils->update_version($version, $string, $cfg_web_root);

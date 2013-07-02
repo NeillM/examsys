@@ -39,36 +39,39 @@ if (!$properties) {
 $pass_mark = NULL;
 $distinction_mark = NULL;
 
-if (isset($_POST['passmark'])) {
-  $pass_mark = floor($_POST['xs']);
+$userID = $userObject->get_user_ID();
+
+if (isset($_POST['submit'])) {
 
   if (isset($_POST['insertID'])) {
-    $result = $mysqli->prepare("UPDATE hofstee SET pass_score = ? WHERE id = ?");
-    $result->bind_param('ii', $pass_mark, $_POST['insertID']);
+    $result = $mysqli->prepare("UPDATE std_set SET pass_score = ?, distinction_score = ? WHERE id = ?");
+    $result->bind_param('ddi', $pass_mark, $distinction_score, $_POST['insertID']);
+    $result->execute();
+    $result->close();
+
+    $insertID = $_POST['insertID'];
+
+    $result = $mysqli->prepare("UPDATE hofstee SET whole_numbers = ?, x1_pass = ?, x2_pass = ?, y1_pass = ?, y2_pass = ?, x1_distinction = ?, x2_distinction = ?, y1_distinction = ?, y2_distinction = ? WHERE std_setID = ?");
+    $result->bind_param('iddddddddi', $whole_numbers, $x1_pass, $x2_pass, $y1_pass, $y2_pass, $x1_distinction, $x2_distinction, $y1_distinction, $y2_distinction, $insertID);
+    $result->execute();
+    $result->close();
+  } else {
+    $result = $mysqli->prepare("INSERT INTO std_set VALUES (NULL, ?, ?, NOW(), 'Hofstee', 'No', ?, ?");
+    $result->bind_param('iidd', $userID, $paperID, $pass_mark, $distinction_score);
+    $result->execute();
+    $result->close();
+    
+    $insertID = $mysqli->insert_id;
+
+    $result = $mysqli->prepare("INSERT INTO hofstee VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $result->bind_param('iidddddddd', $insertID, $whole_numbers, $x1_pass, $x2_pass, $y1_pass, $y2_pass, $x1_distinction, $x2_distinction, $y1_distinction, $y2_distinction);
     $result->execute();
     $result->close();
   }
-} elseif (isset($_POST['distinction'])) {
-  $distinction = floor($_POST['xs']);
-  
-  if (isset($_POST['insertID'])) {
-    $result = $mysqli->prepare("UPDATE hofstee SET distinction = ? WHERE id = ?");
-    $result->bind_param('ii', $distinction, $_POST['insertID']);
-    $result->execute();
-    $result->close();
-  }
+} elseif (isset($_GET['insertID'])) {
+  $insertID = $_GET['insertID'];
 }
 
-if ((isset($_POST['passmark']) or isset($_POST['distinction'])) and !isset($_POST['insertID'])) {
-  $userID = $userObject->get_user_ID();
-  
-  $result = $mysqli->prepare("INSERT INTO hofstee VALUES (NULL, ?, ?, NOW(), ?, ?)");
-  $result->bind_param('iiii', $userID, $paperID, $pass_mark, $distinction_mark);
-  $result->execute();
-  $result->close();
-  
-  $insertID = $mysqli->insert_id;
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -152,7 +155,10 @@ body {font-size:85%}
 		var marks = ".  json_encode($marks) . ";
 		var stats = ".  json_encode($stats) . ";
 		</script>";
-	echo "<script type=\"text/javascript\" src=\"../html5/hofstee.js\"></script></div>\n";
+	echo "<script type=\"text/javascript\" src=\"../html5/hofstee.js\">\nhofstee_plot('canvas_graph','pass');\n</script></div>\n";
+  
+  
+  
   if (isset($insertID)) {
     echo "<input type=\"hidden\" name=\"insertID\" value=\"$insertID\" />\n";
   }

@@ -36,6 +36,7 @@ require_once '../classes/paperproperties.class.php';
 require_once '../classes/exclusion.class.php';
 require_once '../classes/mathsutils.class.php';
 require_once '../classes/results_cache.class.php';
+require_once '../classes/standard_setting.class.php';
 
 class ClassTotals {
 
@@ -383,94 +384,17 @@ class ClassTotals {
 
   private function set_ss_pass() {
     $mark_parts = explode(',', $this->marking);
-
-    $ebel_marks = array();
-    $ebel_percents = array();
-
-    $std_types = array('EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2');
-    foreach ($std_types as $std_type) {
-      $ebel_marks[$std_type] = 0;
-      $ebel_percents[$std_type] = 0;
-    }
-
-    $std_total = 0;
-    $question_no = 0;
-
-    // Get question ratings.
-    $result = $this->db->prepare("SELECT questionID, rating, method, status, q_type, score_method FROM standards_setting, questions WHERE standards_setting.questionID = questions.q_id AND paperID = ? AND setterID = ? AND std_set = ?");
-    $result->bind_param('iis', $this->paperID, $mark_parts[1], $mark_parts[2]);
-    $result->execute();
-    $result->bind_result($questionID, $rating, $method, $status, $q_type, $score_method);
-    while ($result->fetch()) {
-      if ($status != 'Experimental') {
-        $individual_ratings = explode(',', $rating);
-        $excluded = $this->exclusions->get_exclusions_by_qid($questionID);
-        $count_individual_ratings = count($individual_ratings);
-        for ($i=0; $i<$count_individual_ratings; $i++) {
-          $bad_bonus_mark = ($q_type == 'rank' and $score_method == 'Bonus Mark' and strpos($excluded, '1') !== false);
-          if (($excluded{$i} == 0) and !$bad_bonus_mark) {
-            if (in_array($individual_ratings[$i], $std_types)) $ebel_marks[$individual_ratings[$i]]++;
-          
-            $std_total += $individual_ratings[$i];
-            $question_no++;
-          }
-        }
-      }
-    }
-    $result->close();
-
-    // Get the Ebel grid.
-    if ($method == 'Ebel') {
-      $result = $this->db->prepare("SELECT category, percentage FROM ebel WHERE setterID = ? AND date_set = ?");
-      $result->bind_param('is', $mark_parts[1], $mark_parts[2]);
-      $result->execute();
-      $result->bind_result($category, $percentage);
-      while ($result->fetch()) {
-        $ebel_percents[$category] = round($percentage, 2);
-      }
-      $result->close();
-
-      $cut_marks = 0.0;
-      $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
-      $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
-      $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
-      $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
-      $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
-      $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
-      $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
-      $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
-      $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
-      $this->ss_pass = ($cut_marks / ($this->total_marks  * 100)) * 100;
-      $this->ss_pass = round($this->ss_pass, 1);
-
-      if ($ebel_percents['EE2'] === NULL) {
-        $distinction_score = -1;
-      } else {
-        $cut_marks2 = 0.0;
-        $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
-        $cut_marks2 += $ebel_marks['EI'] * $ebel_percents['EI2'] * 100;
-        $cut_marks2 += $ebel_marks['EN'] * $ebel_percents['EN2'] * 100;
-        $cut_marks2 += $ebel_marks['ME'] * $ebel_percents['ME2'] * 100;
-        $cut_marks2 += $ebel_marks['MI'] * $ebel_percents['MI2'] * 100;
-        $cut_marks2 += $ebel_marks['MN'] * $ebel_percents['MN2'] * 100;
-        $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
-        $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
-        $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
-        $this->distinction_score = (($cut_marks2 / ($this->total_marks * 100)) * 100);
-        $this->distinction_score = round($this->distinction_score, 1);
-      }
-    } else {
-      // Modified Angoff method.
-      if ($question_no > 0) {
-        $this->ss_pass = round($std_total / $question_no, 1);
-      } else {
-        $this->ss_pass = 0;
-      }
-    }
-
-    if ($this->distinction_score == 0) {
+ 
+    $standard_setting = new StandardSetting($this->db);
+    $percents = $standard_setting->get_pass_distinction($mark_parts[1]);
+    
+    $this->ss_pass = $percents['pass_score'];
+    
+    if ($percents['distinction_score'] == 0) {   // If zero set to top 20% of cohort performance.
       $this->set_ss_hon();
       $this->distinction_score = $this->ss_hon;
+    } else {
+      $this->distinction_score = $percents['distinction_score'];
     }
   }
 

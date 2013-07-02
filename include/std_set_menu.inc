@@ -26,7 +26,7 @@
 <br />
 <script language="JavaScript">
   function deleteReview() {
-    notice=window.open("../delete/check_delete_review.php?setterID=" + document.StdSetMenu.setterID.value + "&paperID=<?php echo $_GET['paperID']; ?>&dateID=" + document.StdSetMenu.dateID.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_review.php?std_setID=" + document.getElementById('std_setID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -41,9 +41,9 @@
     }  
 
     if (groupReview == 'No') {
-      window.location.href = "individual_review.php?setterID=" + document.StdSetMenu.setterID.value + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&dateID=" + document.StdSetMenu.dateID.value + "&method=" + methodType;
+      window.location.href = "individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + document.getElementById('std_setID').value + "&method=" + methodType;
     } else {
-      window.location.href = "group_set_angoff.php?reviewers=" + document.StdSetMenu.setterID.value + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&dateID=" + document.StdSetMenu.dateID.value + "&method=" + methodType;
+      window.location.href = "group_set_angoff.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + document.getElementById('std_setID').value + "&reviewers=" + document.StdSetMenu.setterID.value + "&module=<?php echo $_GET['module']; ?>&method=" + methodType;
     }
   }
 </script>
@@ -109,10 +109,10 @@ if(isset($no_reviews) and $no_reviews > 1) {
 </td></tr>
 </table>
 
-<input type="hidden" name="setterID" value="" />
-<input type="hidden" name="dateID" value="" />
-<input type="hidden" name="reviewID" value="" />
-<input type="hidden" name="oldReviewID" value="" />
-<input type="hidden" name="method" value="" />
+<input type="hidden" name="std_setID" id="std_setID" value="" />
+<input type="hidden" name="setterID" id="setterID" value="" />
+<input type="hidden" name="reviewID" id="reviewID" value="" />
+<input type="hidden" name="oldReviewID" id="oldReviewID" value="" />
+<input type="hidden" name="method" id="method" value="" />
 </form>
 </div>

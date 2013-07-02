@@ -25,15 +25,15 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-$setterID = check_var('setterID', 'GET', true, false, true);
-$dateID   = check_var('dateID', 'GET', true, false, true);
-$paperID  = check_var('paperID', 'GET', true, false, true);
+$std_setID = check_var('std_setID', 'GET', true, false, true);
 
 $row_no = 0;
-$result = $mysqli->prepare("SELECT id FROM standards_setting WHERE paperID = ? AND setterID = ? AND std_set = ?");
-$result->bind_param('iis', $paperID, $setterID, $dateID);
+$result = $mysqli->prepare("SELECT id, DATE_FORMAT(std_set, '" . $configObject->get('cfg_long_date_time') . "') AS std_set_date FROM std_set WHERE id = ? LIMIT 1");
+$result->bind_param('i', $std_setID);
 $result->execute();  
 $result->store_result();
+$result->bind_result($id, $std_set_date);
+$result->fetch();
 $row_no = $result->num_rows;
 $result->close();
 
@@ -43,10 +43,6 @@ if ($row_no == 0) {
 }
   
 $mysqli->close();
-
-function niceDate($tmp_date) {
-  return substr($tmp_date,6,2) . '/' . substr($tmp_date,4,2) . '/' . substr($tmp_date,0,4) . ' ' . substr($tmp_date,8,2) . ':' . substr($tmp_date,10,2);
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -66,13 +62,11 @@ function niceDate($tmp_date) {
 <tr>
 <td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
-<td><p><?php printf($string['confirmmsg'], niceDate($_GET['dateID'])); ?></p>
+<td><p><?php printf($string['confirmmsg'], $std_set_date); ?></p>
 
 <div style="text-align: right">
 <form action="do_delete_review.php" method="post">
-<input type="hidden" name="setterID" value="<?php echo $_GET['setterID']; ?>" />
-<input type="hidden" name="dateID" value="<?php echo $_GET['dateID']; ?>" />
-<input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
+<input type="hidden" name="std_setID" value="<?php echo $std_setID; ?>" />
 <input type="submit" name="submit" value="<?php echo $string['deletereview']; ?>" />&nbsp;
 <input type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
 </form>
