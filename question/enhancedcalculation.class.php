@@ -81,6 +81,17 @@ class EnhancedCalculation extends Question implements questionInterface {
       $enhancedcalcObj = new enhancedcalc_rserve($this->configObj);
     }
 
+    // create array of units and functions
+    if ((isset($this->settings['answersexp']) and !is_array($this->settings['answersexp'])) or (!isset($this->settings['answersexp']))) {
+      foreach ($this->settings['answers'] as $key => $value) {
+        $units = explode(',', $value['units']);
+        foreach ($units as $value1) {
+          $value1 = trim($value1);
+          $this->settings['answersexp'][$value1] = $value['formula'];
+        }
+      }
+    }
+    
     $this->useranswer['ans']['units'] = $this->settings['units'];
     $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
 
@@ -160,8 +171,6 @@ class EnhancedCalculation extends Question implements questionInterface {
         $this->qmark = $this->settings['m_correct'];
         $returnstatus = Q_MARKING_EXACT;
       }
-
-
 
 
       //remove marks for incorrect unit
@@ -316,12 +325,12 @@ class EnhancedCalculation extends Question implements questionInterface {
 
     if (isset($this->useranswer['cans'])) {
       if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
-        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['fulltol'].$this->settings['fulltoltyp'];
-        if ($this->settings['fulltoltyp']=='%') echo " (" . $this->useranswer['ans']['fulltolnegans'] . " - " . $this->useranswer['ans']['fulltolans'] . ")";
+        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['fulltol'] . $this->settings['fulltoltyp'];
+        if ($this->settings['fulltoltyp'] == '%') echo " (" . $this->useranswer['ans']['fulltolnegans'] . " - " . $this->useranswer['ans']['fulltolans'] . ")";
       }
       if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
-        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['parttol'].$this->settings['parttoltyp'];
-        if ($this->settings['parttoltyp']=='%') echo " (" . $this->useranswer['ans']['parttolnegans'] . " - " . $this->useranswer['ans']['parttolans'] . ")";
+        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['parttol'] . $this->settings['parttoltyp'];
+        if ($this->settings['parttoltyp'] == '%') echo " (" . $this->useranswer['ans']['parttolnegans'] . " - " . $this->useranswer['ans']['parttolans'] . ")";
       }
     }
 
@@ -332,6 +341,7 @@ class EnhancedCalculation extends Question implements questionInterface {
 
 
   public function render_paper($extra = array()) {
+
 
     global $string;
     // display question on paper
@@ -346,6 +356,17 @@ class EnhancedCalculation extends Question implements questionInterface {
     }
     if (!is_array($this->settings)) {
       $this->settings = json_decode($this->settings, true);
+    }
+
+    // create array of units and functions
+    if ((isset($this->settings['answersexp']) and !is_array($this->settings['answersexp'])) or (!isset($this->settings['answersexp']))) {
+      foreach ($this->settings['answers'] as $key => $value) {
+        $units = explode(',', $value['units']);
+        foreach ($units as $value1) {
+          $value1 = trim($value1);
+          $this->settings['answersexp'][$value1] = $value['formula'];
+        }
+      }
     }
 
     //check to see if variables have been previously generated if not generate them
@@ -369,6 +390,25 @@ class EnhancedCalculation extends Question implements questionInterface {
 
     $leadin = str_ireplace($varname, $varvalue, $this->leadin);
 
+    $this->settings['show_units'] = true;
+
+    $dispunits = '';
+    if ($this->settings['show_units'] === true) {
+      if (count($this->settings['answersexp']) > 1) {
+        //make drop down of units
+        $dispunits = "&nbsp;&nbsp;<select name='qid[" . $this->id . "][uansunit]'>";
+        foreach ($this->settings['answersexp'] as $key => $value) {
+          $dispunits = $dispunits . "<option value='$key'>$key</option>";
+        }
+        $dispunits = $dispunits . '</select>';
+      } else {
+        $dispunits = array_keys($this->settings['answersexp']);
+        $dispunits = "&nbsp;&nbsp;" . $dispunits[0];
+      }
+    }
+
+    var_dump($this->settings);
+
     //deal with the failed variables
 
     if ($this->scenario != '') echo "<p>" . $this->scenario . "</p>\n";
@@ -376,10 +416,10 @@ class EnhancedCalculation extends Question implements questionInterface {
 
     echo $leadin;
     if (in_array('ERROR', $varvalue, true)) {
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled />" . $this->settings['units'] . "</p>\n";
+      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled />" . $dispunits . "</p>\n";
     } else {
       if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
-        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"calc-answer\" />" . $this->settings['units'] . "</div>\n";
+        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"calc-answer\" />" . $dispunits . "</div>\n";
       } else {
         if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { //or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];
@@ -387,13 +427,13 @@ class EnhancedCalculation extends Question implements questionInterface {
 
           echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"calc-answer\" />" . $this->settings['units'] . "</div>\n";
         } else {
-          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"unans calc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $this->settings['units'] . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"unans calc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . "</div>\n";
           $unanswered = true;
         }
       }
     }
 
-    $marks = $this->settings['m_correct'];
+    $marks = $this->settings['marks_correct'];
 
 
   }
