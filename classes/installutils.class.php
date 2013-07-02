@@ -2361,6 +2361,17 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['question_statuses'] = <<<QUERY
+        CREATE  TABLE `question_statuses` (
+          `id` INT NOT NULL AUTO_INCREMENT ,
+          `name` VARCHAR(255) NOT NULL ,
+          `exclude_marking` TINYINT NOT NULL DEFAULT 0 ,
+          `exclude_search` TINYINT NOT NULL DEFAULT 0 ,
+          `default` TINYINT NOT NULL DEFAULT 0 ,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['questions'] = <<<QUERY
         CREATE TABLE `questions` (
           `q_id` int(4) NOT NULL auto_increment,
