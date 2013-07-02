@@ -458,10 +458,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $storemark->bind_param('ddsi', $enhancedcalc->qmark, $enhancedcalc->totalpos, $new_useranswerstring, $paper[$question]['uniqid']);
         $storemark->execute();
         $enhancedcalc->exportsave($paper[$question]);
-        print "EnhancedCalc<br>";
+/*        print "EnhancedCalc<br>";
         var_dump($enhancedcalc);
         print "Question<br>";
-        var_dump($paper[$question]);
+        var_dump($paper[$question]);*/
       }
 
       $paper[$question]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
