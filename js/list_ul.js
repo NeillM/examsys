@@ -30,7 +30,6 @@ var deselLine = function () {
   .unbind("click")
   .click(function (e) { 
     e.preventDefault(); 
-    alert('hi');
   });
 }
 

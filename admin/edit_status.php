@@ -28,28 +28,39 @@ require_once '../classes/logger.class.php';
 require_once '../classes/question_status.class.php';
 
 $data = array();
+
+$s_id = (isset($_REQUEST['id'])) ? $_REQUEST['id'] : -1;
+
+if ($s_id != -1) {
+  $q_status = new QuestionStatus($mysqli, $string, $s_id);
+} else {
+  $q_status = new QuestionStatus($mysqli, $string, array());
+}
+
 if (isset($_POST['submit'])) {
   $data['name'] = $_POST['name'];
   $data['exclude_marking'] = (isset($_POST['exclude_marking'])) ? true : false;
   $data['exclude_search'] = (isset($_POST['exclude_search'])) ? true : false;
   $data['is_default'] = (isset($_POST['is_default'])) ? true : false;
 
-  $q_status = new QuestionStatus($mysqli, $string, $data);
+  if (isset($q_status)) {
+    $q_status->set_name($data['name']);
+    $q_status->set_exclude_marking($data['exclude_marking']);
+    $q_status->set_exclude_search($data['exclude_search']);
+    $q_status->set_is_default($data['is_default']);
+  } else {
+    $q_status = new QuestionStatus($mysqli, $string, $data);
+  }
 
   if ($q_status->save()) {
     header("location: list_statuses.php");
     exit;
-  } else {
-    $em_checked = ($data['exclude_marking']) ? ' checked="checked"' : '';
-    $es_checked = ($data['exclude_search']) ? ' checked="checked"' : '';
-    $default_checked = ($data['is_default']) ? ' checked="checked"' : '';
   }
-} else {
-  $data['name'] = '';
-  $em_checked = '';
-  $es_checked = '';
-  $default_checked = '';
 }
+
+$em_checked = ($q_status->get_exclude_marking()) ? ' checked="checked"' : '';
+$es_checked = ($q_status->get_exclude_search()) ? ' checked="checked"' : '';
+$default_checked = ($q_status->get_is_default()) ? ' checked="checked"' : '';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
@@ -96,12 +107,15 @@ if (isset($_POST['submit'])) {
 
     <form name="edit_status" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
       <table class="admin-form">
-        <tr><th><label for="name"><?php echo $string['name'] ?></label></td><td><input type="text" size="70" id="name" name="name" value="<?php echo $data['name']; ?>" /></th></tr>
+        <tr><th><label for="name"><?php echo $string['name'] ?></label></td><td><input type="text" size="70" id="name" name="name" value="<?php echo $q_status->get_name(); ?>" /></th></tr>
         <tr><th><label for="exclude_marking"><?php echo $string['excludemarking'] ?></label></td><td><input type="checkbox" id="exclude_marking" name="exclude_marking" <?php echo $em_checked; ?> /></th></tr>
         <tr><th><label for="exclude_search"><?php echo $string['excludesearch'] ?></label></td><td><input type="checkbox" id="exclude_search" name="exclude_search" <?php echo $es_checked; ?> /></th></tr>
         <tr><th><label for="is_default"><?php echo $string['default'] ?></label></td><td><input type="checkbox" id="is_default" name="is_default" <?php echo $default_checked; ?> /></th></tr>
         <tr>
-          <td colspan="2" class="align-center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save'] ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" /></td>
+          <td colspan="2" class="align-center">
+            <input type="hidden" name="id" value="<?php echo $s_id ?>" />
+            <input type="submit" style="width:100px" name="submit" value="<?php echo $string['save'] ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" />
+          </td>
         </tr>
       </table>
     </form>
