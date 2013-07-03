@@ -45,11 +45,25 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("css=#status_1");
     $this->click("link=Edit Status");
     $this->waitForPageToLoad("30000");
+
+    $this->assertElementValueContains("id=name", "Short Lived Status");
+
     $this->type("id=name", "Short Lived Status2");
     $this->click("name=submit");
     $this->waitForPageToLoad("30000");
 
     $this->assertTextPresent('Short Lived Status2');
+
+    $this->doubleClick("css=#status_1");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertElementValueContains("id=name", "Short Lived Status2");
+
+    $this->type("id=name", "Short Lived Status3");
+    $this->click("name=submit");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertTextPresent('Short Lived Status3');
   }
 
   // /**

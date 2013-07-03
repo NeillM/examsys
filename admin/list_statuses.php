@@ -44,7 +44,7 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
 
   <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script src="../js/list.js" type="text/javascript"></script>
+  <script src="../js/list_ul.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -65,12 +65,12 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
       <tr><th colspan="3" class="bevel"></th></tr>
       </table>
 
-      <ul>
+      <ul id="statuses" class="selectlist">
 <?php
 $i = 1;
 foreach ($statuses as $status) {
 ?>
-        <li id="status_<?php echo $i ?>"><?php echo $status->get_name() ?></li>
+        <li id="status_<?php echo $i ?>" class="selectable" data-id="<?php echo $status->id ?>"><?php echo $status->get_name() ?></li>
 <?php
 }
 ?>

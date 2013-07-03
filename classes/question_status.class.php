@@ -164,14 +164,14 @@ Class QuestionStatus {
   public static function get_all_statuses($db, $lang_strings) {
     $statuses = array();
 
-    $sql = "SELECT name, exclude_marking, exclude_search, is_default FROM question_statuses ORDER BY display_order";
+    $sql = "SELECT id, name, exclude_marking, exclude_search, is_default FROM question_statuses ORDER BY display_order";
 
     $result = $db->prepare($sql);
     $result->execute();
     $result->store_result();
-    $result->bind_result($name, $exclude_marking, $exclude_search, $is_default);
+    $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default);
     while ($result->fetch()) {
-      $data = array('name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default);
+      $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default);
       $statuses[] = new QuestionStatus($db, $lang_strings, $data);
     }
     $result->close();

@@ -18,3 +18,11 @@
   background: transparent url('../artwork/screen_icon_grey.png') no-repeat left center;
 }
 
+#statuses {
+	list-style: none;
+	padding-left: 0;
+}
+
+.selectable {
+	padding: 2px 20px;
+}
