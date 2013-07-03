@@ -2362,12 +2362,13 @@ QUERY;
 QUERY;
 
     $this->tableList['question_statuses'] = <<<QUERY
-        CREATE  TABLE `question_statuses` (
-          `id` INT NOT NULL AUTO_INCREMENT ,
-          `name` VARCHAR(255) NOT NULL ,
-          `exclude_marking` TINYINT NOT NULL DEFAULT 0 ,
-          `exclude_search` TINYINT NOT NULL DEFAULT 0 ,
-          `is_default` TINYINT NOT NULL DEFAULT 0 ,
+        CREATE TABLE `question_statuses` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `name` varchar(255) NOT NULL,
+          `exclude_marking` tinyint(4) NOT NULL DEFAULT '0',
+          `exclude_search` tinyint(4) NOT NULL DEFAULT '0',
+          `is_default` tinyint(4) NOT NULL DEFAULT '0',
+          `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
