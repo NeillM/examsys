@@ -30,7 +30,7 @@ function hofstee_plot(canvas_id,result_type) {
 	var graph_w = scale_x*100;
 	var graph_h = scale_y*100;
 	var graph_x = 70;
-	var graph_y = 400-graph_h;
+	var graph_y = 50;
 	var dragging = false;
 	var redraw = true;
 	var boundaries = [];
@@ -61,7 +61,7 @@ function hofstee_plot(canvas_id,result_type) {
 	if (document.getElementById('x2_'+result_type).value!='') boundaries[1] = Number(document.getElementById('x2_'+result_type).value.replace('%',''));
 	if (document.getElementById('y1_'+result_type).value!='') boundaries[2] = Number(document.getElementById('y1_'+result_type).value.replace('%',''));
 	if (document.getElementById('y2_'+result_type).value!='') boundaries[3] = Number(document.getElementById('y2_'+result_type).value.replace('%',''));
-
+	
 	canvas = document.getElementById(canvas_id);
 
 	if (canvas && canvas.getContext){
@@ -171,17 +171,15 @@ function hofstee_plot(canvas_id,result_type) {
 			context.textAlign = "right";
 			context.fillStyle = '#C00000';
 			divert = 0;
-			if (Math.abs(y3-y4)<25) divert = -4*(25-Math.abs(y3-y4));
-			if (divert < -40) divert = -40;
-			context.fillText(Math.round(boundaries[2]*10)/10+'%',graph_x+graph_w+40,y3+5);
-			context.fillText(Math.round(boundaries[3]*10)/10+'%',graph_x+graph_w+40-divert,y4+5);      
+			if ((y3-y4)<15) divert = (15-(y3-y4))/2;
+			context.fillText(Math.round(boundaries[2]*10)/10+'%',graph_x+graph_w+40,y3+5+divert);
+			context.fillText(Math.round(boundaries[3]*10)/10+'%',graph_x+graph_w+40,y4+5-divert);
 			
 			context.fillStyle = '#000';
 			//drawing cyan line
 			drawLine('#00C0C0',x1,y4,x2-x1,y3-y4);
 			
 			//boxplot
-			//stats: max_mark, max_percent, min_mark, min_percent, q1, q2, q3, mean_mark, mean_percent, stdev_mark, stdev_percent
 			var box1=5,box2=20,box3=box1+box2/2;
 			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[3]),box1,0,box2); 
 			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[1]),box1,0,box2);

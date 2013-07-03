@@ -101,14 +101,16 @@ if (isset($_POST['submit'])) {
 } else {
   // Default values no POST and no editing existing review
   $checked = '';
-  $x1_pass = 10;
-  $x2_pass = 10;
-  $y1_pass = 90;
+  
+	$x1_pass = 10;
+  $x2_pass = 90;
+  $y1_pass = 10;
   $y2_pass = 90;
   $x1_distinction = 10;
-  $x2_distinction = 10;
-  $y1_distinction = 90;
+  $x2_distinction = 90;
+  $y1_distinction = 10;
   $y2_distinction = 90;
+	
 }
 
 ?>
