@@ -27,15 +27,16 @@ require_once 'exceptions.inc.php';
 Class QuestionStatus {
 
   public $id = -1;
+  protected $name = '';
   protected $exclude_marking = false;
   protected $exclude_search = false;
-  protected $default = false;
+  protected $is_default = false;
 
-  private $_mysqli;
+  private $_db;
   private $_lang_strings;
 
-  function __construct($mysqli, $lang_strings, $data) {
-    $this->_mysqli = $mysqli;
+  function __construct($db, $lang_strings, $data) {
+    $this->_db = $db;
     $this->_lang_strings = $lang_strings;
 
     // Check the type of $data
@@ -64,11 +65,11 @@ Class QuestionStatus {
     $success = false;
 
     $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default) VALUES(?, ?, ?, ?)";
-    $result = $this->_mysqli->prepare($sql);
-    $result->bind_param('siii', $this->name, $this->exclude_marking, $this->exclude_search, $this->default);
+    $result = $this->_db->prepare($sql);
+    $result->bind_param('siii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default);
     if ($result->execute()) {
       $success = true;
-      $this->id = $this->_mysqli->insert_id;
+      $this->id = $this->_db->insert_id;
     }
     $result->close();
 
@@ -82,19 +83,100 @@ Class QuestionStatus {
   private function get_question_status() {
     $success = false;
 
-    $sql = "SELECT name, exclude_marking, exclude_search, default FROM question_statuses WHERE id = ?";
+    $sql = "SELECT name, exclude_marking, exclude_search, is_default FROM question_statuses WHERE id = ?";
 
-    $result = $this->_mysqli->prepare($sql);
+    $result = $this->_db->prepare($sql);
     $result->bind_param('i', $this->id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->default);
+    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->is_default);
     if ($result->fetch()) {
       $success = true;
     }
     $result->close();
 
     return $success;
+  }
+
+
+  /**
+   * @param string $name
+   */
+  public function set_name($name) {
+    $this->name = $name;
+  }
+
+  /**
+   * @return string
+   */
+  public function get_name() {
+    return $this->name;
+  }
+
+  /**
+   * @param boolean $exclude_marking
+   */
+  public function set_exclude_marking($exclude_marking) {
+    $this->exclude_marking = $exclude_marking;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function get_exclude_marking() {
+    return $this->exclude_marking;
+  }
+
+  /**
+   * @param boolean $exclude_search
+   */
+  public function set_exclude_search($exclude_search) {
+    $this->exclude_search = $exclude_search;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function get_exclude_search() {
+    return $this->exclude_search;
+  }
+
+  /**
+   * @param boolean $is_default
+   */
+  public function set_is_default($is_default) {
+    $this->is_default = $is_default;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function get_is_default() {
+    return $this->is_default;
+  }
+
+  /**
+   * Get an array containing all existing statuses
+   * @param  mysqli $db             Database link
+   * @param  array $lang_strings    Language Strings
+   * @return array[QuestionStatus]  Existing statuses
+   */
+  public static function get_all_statuses($db, $lang_strings) {
+    $statuses = array();
+
+    $sql = "SELECT name, exclude_marking, exclude_search, is_default FROM question_statuses ORDER BY display_order";
+
+    $result = $db->prepare($sql);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($name, $exclude_marking, $exclude_search, $is_default);
+    while ($result->fetch()) {
+      $data = array('name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default);
+      $statuses[] = new QuestionStatus($db, $lang_strings, $data);
+    }
+    $result->close();
+
+    return $statuses;
   }
 }
 

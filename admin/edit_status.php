@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
   $data['name'] = $_POST['name'];
   $data['exclude_marking'] = (isset($_POST['exclude_marking'])) ? true : false;
   $data['exclude_search'] = (isset($_POST['exclude_search'])) ? true : false;
-  $data['default'] = (isset($_POST['default'])) ? true : false;
+  $data['is_default'] = (isset($_POST['is_default'])) ? true : false;
 
   $q_status = new QuestionStatus($mysqli, $string, $data);
 
@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
   } else {
     $em_checked = ($data['exclude_marking']) ? ' checked="checked"' : '';
     $es_checked = ($data['exclude_search']) ? ' checked="checked"' : '';
-    $default_checked = ($data['default']) ? ' checked="checked"' : '';
+    $default_checked = ($data['is_default']) ? ' checked="checked"' : '';
   }
 } else {
   $data['name'] = '';
@@ -98,7 +98,7 @@ if (isset($_POST['submit'])) {
         <tr><th><label for="name"><?php echo $string['name'] ?></label></td><td><input type="text" size="70" id="name" name="name" value="<?php echo $data['name']; ?>" /></th></tr>
         <tr><th><label for="exclude_marking"><?php echo $string['excludemarking'] ?></label></td><td><input type="checkbox" id="exclude_marking" name="exclude_marking" <?php echo $em_checked; ?> /></th></tr>
         <tr><th><label for="exclude_search"><?php echo $string['excludesearch'] ?></label></td><td><input type="checkbox" id="exclude_search" name="exclude_search" <?php echo $es_checked; ?> /></th></tr>
-        <tr><th><label for="default"><?php echo $string['default'] ?></label></td><td><input type="checkbox" id="default" name="default" <?php echo $default_checked; ?> /></th></tr>
+        <tr><th><label for="is_default"><?php echo $string['default'] ?></label></td><td><input type="checkbox" id="is_default" name="is_default" <?php echo $default_checked; ?> /></th></tr>
         <tr>
           <td colspan="2" class="align-center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save'] ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" /></td>
         </tr>

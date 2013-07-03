@@ -26,10 +26,10 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Add Status' . $this->install_type);
 
-    $this->type('id=status', 'Short Lived Status');
+    $this->type('id=name', 'Short Lived Status');
     $this->click('id=exclude_marking');
     $this->click('id=exclude_search');
-    $this->click('id=default');
+    $this->click('id=is_default');
     $this->click('name=submit');
     $this->waitForPageToLoad('30000');
     $this->assertTextPresent('Short Lived Status');

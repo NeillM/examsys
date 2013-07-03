@@ -22,14 +22,11 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
+require '../include/sysadmin_auth.inc';
+require_once '../classes/question_status.class.php';
 
 // Check if we have any faculties
-$result = $mysqli->prepare("SELECT COUNT(id) FROM faculty");
-$result->execute();
-$result->bind_result($faculties);
-$result->fetch();
-$result->close();
+$statuses = QuestionStatus::get_all_statuses($mysqli, $string);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -53,9 +50,29 @@ $result->close();
 <?php
   require '../include/status_options.inc.php';
 ?>
-<div id="content" class="content">
+  <div id="content" class="content">
+    <table class="header">
+      <tr>
+        <th colspan="2">
+          <div class="breadcrumb">
+            <a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>
+          </div>
+          <div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['questionstatuses']; ?></div>
+        </th>
+        <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
+      </tr>
+      <tr><th colspan="3" class="bevel"></th></tr>
+      </table>
 
-</div>
-
+      <ul>
+<?php
+foreach ($statuses as $status) {
+?>
+        <li><?php echo $status->get_name() ?></li>
+<?php
+}
+?>
+      </ul>
+  </div>
 </body>
 </html>
