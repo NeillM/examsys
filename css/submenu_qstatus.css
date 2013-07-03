@@ -1,0 +1,20 @@
+.menu_list {
+	margin-top: 20px;
+}
+
+.greymenuitem a {
+	cursor: text!important;
+}
+
+#new_status {
+  background: transparent url('../artwork/screen_icon.png') no-repeat left center;
+}
+
+#edit_status {
+  background: transparent url('../artwork/screen_icon.png') no-repeat left center;
+}
+
+#edit_status.greymenuitem {
+  background: transparent url('../artwork/screen_icon_grey.png') no-repeat left center;
+}
+

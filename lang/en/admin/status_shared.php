@@ -16,6 +16,7 @@
 
 $string['questionstatuses'] = 'Question Statuses';
 $string['createstatus'] = 'Create new Status';
+$string['editstatus'] = 'Edit Status';
 $string['addstatus'] = 'Add Status';
 $string['administrativetools'] = 'Administrative Tools';
 $string['statuses'] = 'Statuses';

@@ -39,6 +39,7 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu_qstatus.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
   <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
@@ -66,9 +67,10 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
 
       <ul>
 <?php
+$i = 1;
 foreach ($statuses as $status) {
 ?>
-        <li><?php echo $status->get_name() ?></li>
+        <li id="status_<?php echo $i ?>"><?php echo $status->get_name() ?></li>
 <?php
 }
 ?>

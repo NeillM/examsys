@@ -35,21 +35,22 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('Short Lived Status');
   }
 
-  // /**
-  //  * @depends testCreateSchool
-  //  */
-  // public function testEditSchool() {
-  //   do_admin_login($this);
+  /**
+   * @depends testCreateStatus
+   */
+  public function testEditStatus() {
+    do_admin_login($this);
 
-  //   $this->open("/admin/list_schools.php");
-  //   $this->doubleClick("css=#4 > td > div.col30");
-  //   $this->waitForPageToLoad("30000");
-  //   $this->type("id=school", "School of Short Lived2");
-  //   $this->click("name=submit");
-  //   $this->waitForPageToLoad("30000");
+    $this->open("/admin/list_statuses.php");
+    $this->click("css=#status_1");
+    $this->click("link=Edit Status");
+    $this->waitForPageToLoad("30000");
+    $this->type("id=name", "Short Lived Status2");
+    $this->click("name=submit");
+    $this->waitForPageToLoad("30000");
 
-  //   $this->assertTextPresent('School of Short Lived2');
-  // }
+    $this->assertTextPresent('Short Lived Status2');
+  }
 
   // /**
   //  * @depends testCreateSchool

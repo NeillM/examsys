@@ -25,12 +25,8 @@
 ?>
 
 <div id="left-sidebar" class="sidebar">
-<form name="myform">
-<br />
-
-
-<table class="sidebar_tbl" id="menu1a">
-  <tr><td class="ico"><a href="edit_status.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createstatus']; ?>" border="0" /></a></td><td class="menuitem"><a href="edit_status.php"><?php echo $string['createstatus']; ?></a></td></tr>
-</table>
-</form>
+  <ul class="menu_list">
+    <li id="new_status" class="menuitem"><a href="edit_status.php"><?php echo $string['createstatus']; ?></a></li>
+    <li id="edit_status" class="greymenuitem"><a href="#"><?php echo $string['editstatus']; ?></a></li>
+  </ul>
 </div>

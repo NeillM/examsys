@@ -231,13 +231,6 @@ a.greylink:hover {
   width: 120px;
   font-size: 90%;
   margin: 0;
-}
-
-#break_controls {
-  list-style: none;
-}
-
-#break_controls li {
   height: 16px;
   margin-bottom: 6px;
 }
