@@ -39,7 +39,7 @@ $(function () {
   $('.selectable').click(selLine);
   $('.selectable').dblclick(function () {
     $(this).trigger('click');
-    $('.menu_list .edit a').trigger('click');
+    $('.menu_list .default a').trigger('click');
   });
   
   deselLine();
