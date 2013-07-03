@@ -58,7 +58,11 @@ $repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 $repmodule    = (isset($_GET['repmodule'])) ? $_GET['repmodule'] : '';
 
 $report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
-$report->compile_report(false);
+if (isset($_GET['recache']) and $_GET['recache'] == '1') {
+  $report->compile_report(true);  // Force a re-cache
+} else {
+  $report->compile_report(false);
+}
 
 $user_results = $report->get_user_results();
 $paper_buffer = $report->get_paper_buffer();
