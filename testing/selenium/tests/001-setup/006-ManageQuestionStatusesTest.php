@@ -73,6 +73,27 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementPresent('css=.selectable.default');
   }
 
+  public function testShouldChangeDefault() {
+    do_admin_login($this);
+
+    $this->open("/admin/list_statuses.php");
+    $this->click("css=#status_2");
+    $this->click("link=Edit Status");
+    $this->waitForPageToLoad("30000");
+
+    $this->click('id=is_default');
+    $this->click("name=submit");
+    $this->waitForPageToLoad("30000");
+    $this->assertElementPresent('css=#status_2.default');
+
+    $this->doubleClick("css=#status_1");
+    $this->waitForPageToLoad("30000");
+    $this->click('id=is_default');
+    $this->click("name=submit");
+    $this->waitForPageToLoad("30000");
+    $this->assertElementPresent('css=#status_1.default');
+  }
+
   public function testShouldBeOnlyOneDefault() {
     do_admin_login($this);
 
