@@ -114,13 +114,13 @@ Class QuestionStatus {
   private function get_question_status() {
     $success = false;
 
-    $sql = "SELECT name, exclude_marking, exclude_search, is_default FROM question_statuses WHERE id = ?";
+    $sql = "SELECT name, exclude_marking, exclude_search, is_default, display_order FROM question_statuses WHERE id = ?";
 
     $result = $this->_db->prepare($sql);
     $result->bind_param('i', $this->id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->is_default);
+    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->display_order);
     if ($result->fetch()) {
       $success = true;
     }
@@ -129,6 +129,42 @@ Class QuestionStatus {
     return $success;
   }
 
+  /**
+   * Remove a status from the database
+   * @return boolean True if status was successfully deleted
+   */
+  public function delete() {
+    $success = false;
+
+    // Close any gaps in the display order
+    $sql = "UPDATE question_statuses SET display_order = display_order - 1 WHERE display_order > ?";
+    $result = $this->_db->prepare($sql);
+    $result->bind_param('i', $this->display_order);
+    if ($result->execute()) {
+      $success = true;
+    }
+    $result->close();
+
+    $sql = "DELETE FROM question_statuses where id = ?";
+    $result = $this->_db->prepare($sql);
+    $result->bind_param('i', $this->id);
+    if ($result->execute()) {
+      $success = true;
+    }
+    $result->close();
+
+    // Make the first status default if this object was previously
+    if ($this->is_default) {
+      $sql = "UPDATE question_statuses SET is_default = true WHERE display_order = 0";
+      $result = $this->_db->prepare($sql);
+      if ($result->execute()) {
+        $success = true;
+      }
+      $result->close();
+    }
+
+    return $success;
+  }
 
   /**
    * @param string $name

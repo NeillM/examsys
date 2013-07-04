@@ -14,7 +14,11 @@ var selLine = function (e) {
     e.preventDefault();
     var url = $(this).attr('href');
     url += '?id=' + id;
-    window.location.href = url;
+    if ($(this).hasClass('launchwin')) {
+      launchWindow(url);
+    } else {
+      window.location.href = url;
+    }
   });
 
   $(this).addClass('highlight');
@@ -31,6 +35,14 @@ var deselLine = function () {
   .click(function (e) { 
     e.preventDefault(); 
   });
+}
+
+var launchWindow = function (url) {
+  notice=window.open(url, "deleteitem", "width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+  notice.moveTo(screen.width/2-210,screen.height/2-85);
+  if (window.focus) {
+    notice.focus();
+  }
 }
 
 $(function () {

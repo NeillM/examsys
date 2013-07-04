@@ -33,6 +33,7 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click('name=submit');
     $this->waitForPageToLoad('30000');
     $this->assertTextPresent('Short Lived Status');
+    $this->assertCssCount('css=.selectable', 6);
   }
 
   /**
@@ -141,24 +142,54 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertText('css=#statuses li:first-child', 'Normal');
   }
 
-  // /**
-  //  * @depends testCreateSchool
-  //  */
-  // public function testDeleteSchool() {
-  //   do_admin_login($this);
+  public function testDeleteStatus() {
+    do_admin_login($this);
 
-  //   $this->open("/admin/list_schools.php");
-  //   $this->click("css=#4 > td > div.col30");
-  //   $this->click("link=Delete School");
-  //   $this->waitForPopUp("schools", "30000");
-  //   $this->selectWindow("name=schools");
-  //   $this->click("name=submit");
-  //   $this->selectWindow('null');
+    $this->open("/admin/list_statuses.php");
+    $this->waitForPageToLoad("30000");
+    $this->click("css=#status_6");
+    $this->click("link=Delete Status");
+    $this->waitForPopUp("deleteitem", "30000");
+    $this->selectWindow("name=deleteitem");
+    $this->click("name=submit");
+    $this->selectWindow('null');
 
-  //   $this->open("/admin/list_schools.php");
-  //   $this->waitForPageToLoad("30000");
-  //   $this->assertTextNotPresent('School of Short Lived2');
-  // }
+    $this->open("/admin/list_statuses.php");
+    $this->waitForPageToLoad("30000");
+    $this->assertTextNotPresent('Short Lived Status3');
+  }
+
+  public function testDeleteReassignsDefault() {
+    do_admin_login($this);
+
+    $this->open("/admin/list_statuses.php");
+    $this->waitForPageToLoad("30000");
+    $this->click("link=Create new Status");
+    $this->waitForPageToLoad("30000");
+
+    $this->type('id=name', 'Short Lived Status');
+    $this->click('id=is_default');
+    $this->click('name=submit');
+    $this->waitForPageToLoad('30000');
+    $this->assertTextPresent('Short Lived Status');
+    $this->assertCssCount('css=.selectable', 6);
+
+    $this->click("css=#status_6");
+    $this->click("link=Delete Status");
+    $this->waitForPopUp("deleteitem", "30000");
+    $this->selectWindow("name=deleteitem");
+    $this->click("name=submit");
+    $this->selectWindow('null');
+
+    $this->open("/admin/list_statuses.php");
+    $this->waitForPageToLoad("30000");
+    $this->assertElementPresent('css=#statuses li:first-child.default');
+  }
+
+  /**
+   * @depends testCreateStatus
+   */
+
 
   // public function testCantCreateDuplicateSchool() {
   //   do_admin_login($this);

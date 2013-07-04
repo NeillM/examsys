@@ -28,5 +28,6 @@
   <ul class="menu_list">
     <li id="new_status" class="menuitem"><a href="edit_status.php"><?php echo $string['createstatus']; ?></a></li>
     <li id="edit_status" class="reactive default greymenuitem"><a href="edit_status.php"><?php echo $string['editstatus']; ?></a></li>
+    <li id="delete_status" class="reactive greymenuitem"><a href="../delete/check_delete_status.php" class="launchwin"><?php echo $string['deletestatus']; ?></a></li>
   </ul>
 </div>
