@@ -26,6 +26,7 @@ require_once $cfg_web_root . 'classes/userutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/schoolutils.class.php';
 require_once $cfg_web_root . 'classes/facultyutils.class.php';
+require_once $cfg_web_root . 'classes/question_status.class.php';
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'classes/configobject.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/timezones.inc';
@@ -629,6 +630,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties_modules TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".question_exclude TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".question_statuses TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_material TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_modules TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_papers TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
@@ -684,6 +686,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".papers TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".question_statuses TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_material TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_modules TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_papers TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
@@ -753,6 +756,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".properties_modules TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".question_exclude TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".questions TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".question_statuses TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".questions_metadata TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".questions_modules TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".recent_papers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
@@ -804,6 +808,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".papers TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".question_statuses TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions_metadata TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sct_reviews TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
@@ -837,6 +842,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".modules TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".papers TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".question_statuses TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".student_notes TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".sid TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
@@ -973,6 +979,20 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                                 1
                              );
     self::$db->commit();
+
+    // Create default question statuses
+    $statuses = array(
+      array('name' => 'Normal', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => true, 'display_order' => 1),
+      array('name' => 'Retired', 'exclude_marking' => false, 'exclude_search' => true, 'is_default' => false, 'display_order' => 2),
+      array('name' => 'Incomplete', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'display_order' => 3),
+      array('name' => 'Experimental', 'exclude_marking' => true, 'exclude_search' => false, 'is_default' => false, 'display_order' => 4),
+      array('name' => 'Beta', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'display_order' => 5)
+    );
+
+    foreach ($statuses as $data) {
+      $qs = new QuestionStatus(self::$db, $string, $data);
+      $qs->save();
+    }
 
     //FLUSH PRIVILEGES
     self::$db->query("FLUSH PRIVILEGES");
