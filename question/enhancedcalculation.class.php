@@ -101,9 +101,11 @@ class EnhancedCalculation extends Question implements questionInterface {
       if (count($unitlist) > 1) {
         $this->useranswer['status']['units'] = true;
         $this->useranswer['ans']['units'] = $this->useranswer['uansunit'];
+        $this->settings['units'] = $this->useranswer['ans']['units'];
         $tmnp = $this->useranswer['uansunit'];
         $this->settings['formula'] = $this->settings['answersexp'][$tmnp];
       } else {
+        $this->settings['units'] = $unitlist[0];
         $this->useranswer['status']['units'] = true;
         $this->useranswer['ans']['units'] = $unitlist[0];
         $this->settings['formula'] = $this->settings['answersexp'][$unitlist[0]];
@@ -111,11 +113,14 @@ class EnhancedCalculation extends Question implements questionInterface {
     } else {
       if (count($unitlist) > 1) {
         //
+        $this->settings['units'] = $unitlist[0];
+        $this->useranswer['ans']['units'] = $unitlist[0];
         $this->useranswer['status']['units'] = false;
         $this->settings['formula'] = $this->settings['answersexp'][$unitlist[0]];
         $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
-        foreach ($unitlist as $unite => $form) {
-          if (strcmp($this->useranswer['uansunit'], $unite) === true) {
+        foreach ($this->settings['answersexp'] as $unite => $form) {
+          if (strcmp($this->useranswer['uansunit'], $unite) === 0) {
+            $this->settings['units'] = $unite;
             $this->settings['formula'] = $form;
             $this->useranswer['status']['units'] = true;
             $this->useranswer['ans']['units'] = $unite;
@@ -125,9 +130,10 @@ class EnhancedCalculation extends Question implements questionInterface {
       } else {
         // only 1 unit
         $this->settings['formula'] = $this->settings['answersexp'][$unitlist[0]];
+        $this->settings['units'] = $unitlist[0];
         $this->useranswer['ans']['units'] = $unitlist[0];
         $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
-        if (strcmp($this->useranswer['uansunit'], $unitlist[0]) === true) {
+        if (strcmp($this->useranswer['uansunit'], $unitlist[0]) === 0) {
           //units match
           $this->useranswer['status']['units'] = true;
         } else {
@@ -165,7 +171,7 @@ class EnhancedCalculation extends Question implements questionInterface {
 
 
       //if invalidate set for unit mark then if units not right question is wrong and dont bother with anything else
-      if($this->settings['marks_unit'] == 'invalidate' and  $this->useranswer['status']['units'] === false ) {
+      if ($this->settings['marks_unit'] == 'invalidate' and  $this->useranswer['status']['units'] === false) {
         $this->qmark = $this->settings['marks_incorrect'];
 
         $returnstatus = Q_MARKING_WRONG;
@@ -177,7 +183,7 @@ class EnhancedCalculation extends Question implements questionInterface {
       //check for strict first
 
       //check strict dp
-      if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']) and !($this->settings['strictzeros'] === true  and $this->useranswer['status']['strictdp'] === true and $this->useranswer['status']['strictdpsize'] === true))) {
+      if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']) and !(isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true  and $this->useranswer['status']['strictdp'] === true and $this->useranswer['status']['strictdpsize'] === true))) {
         $this->qmark = $this->settings['marks_incorrect'];
 
         $returnstatus = Q_MARKING_WRONG;
@@ -197,14 +203,14 @@ class EnhancedCalculation extends Question implements questionInterface {
       }
 
       //check strict units
-/*      if (isset($this->settings['strictunits']) and $this->settings['strictunits'] === true and $this->useranswer['status']['units'] !== true) {
-        $this->qmark = $this->settings['marks_incorrect'];
+      /*      if (isset($this->settings['strictunits']) and $this->settings['strictunits'] === true and $this->useranswer['status']['units'] !== true) {
+              $this->qmark = $this->settings['marks_incorrect'];
 
-        $returnstatus = Q_MARKING_WRONG;
-        $this->useranswer['status']['overall'] = $returnstatus;
+              $returnstatus = Q_MARKING_WRONG;
+              $this->useranswer['status']['overall'] = $returnstatus;
 
-        return $returnstatus;
-      }*/
+              return $returnstatus;
+            }*/
 
       $returnstatus = Q_MARKING_WRONG;
 
@@ -228,7 +234,7 @@ class EnhancedCalculation extends Question implements questionInterface {
 
 
       //remove marks for incorrect unit
-      if ((isset($this->settings['unit_marks']) and !($this->settings['unit_marks'] == 0 or $this->settings['unit_marks']=='invalidate')) and $this->useranswer['status']['units'] !== true) {
+      if ((isset($this->settings['unit_marks']) and !($this->settings['unit_marks'] == 0 or $this->settings['unit_marks'] == 'invalidate')) and $this->useranswer['status']['units'] !== true) {
         $this->qmark = $this->qmark - $this->settings['unit_marks'];
         $returnstatus = Q_MARKING_PART_TOL;
       }
@@ -343,12 +349,13 @@ class EnhancedCalculation extends Question implements questionInterface {
     }
 
     $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-
-    if(!isset($this->settings['units'])) {
-      $this->settings['units']='ERROR UNSET';
-    }
+    /*
+        if (!isset($this->settings['units'])) {
+          $this->settings['units'] = $this->useranswer['ans']['units'];
+        }
+        */
     if ($this->useranswer['uans'] == '') {
-      echo "<td>" . display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $this->settings['units'];
+      echo "<td>" . display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $this->useranswer['ans']['units'];
 
     } else {
       echo '<td>';
@@ -364,7 +371,7 @@ class EnhancedCalculation extends Question implements questionInterface {
       } else {
         echo display_response($extra['tmp_display_students_response'], 'unmarked');
       }
-      echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uans'] . '" />' . $this->settings['units'];
+      echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'] . '" />'; //. $this->settings['units'];
     }
     if ($extra['tmp_display_correct_answer'] == '1') {
       if (!isset($this->useranswer['status'])) {
@@ -373,7 +380,7 @@ class EnhancedCalculation extends Question implements questionInterface {
         echo ' <strong>(<span style="color:#C00000">error!</span>)</strong>';
       } else {
         echo ' <strong>(' . $this->useranswer['cans'] . ' ';
-        if ($this->settings['units'] != '') echo ' ' . $this->settings['units'];
+        if ($this->useranswer['ans']['units'] != '') echo ' ' . $this->useranswer['ans']['units'];
         echo ')</strong>';
       }
     } else {
@@ -382,12 +389,12 @@ class EnhancedCalculation extends Question implements questionInterface {
 
     if (isset($this->useranswer['cans'])) {
       if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
-        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . $this->settings['tolerance_fulltyp'];
-        if ($this->settings['tolerance_fulltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_fullnegans'] . " - " . $this->useranswer['ans']['tolerance_fullans'] . ")";
+        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . $this->settings['fulltoltyp'];
+        if ($this->settings['fulltoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_fullnegans'] . " - " . $this->useranswer['ans']['tolerance_fullans'] . ")";
       }
       if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
-        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . $this->settings['tolerance_partialtyp'];
-        if ($this->settings['tolerance_partialtyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_partialnegans'] . " - " . $this->useranswer['ans']['tolerance_partialans'] . ")";
+        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . $this->settings['parttoltyp'];
+        if ($this->settings['parttoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_partialnegans'] . " - " . $this->useranswer['ans']['tolerance_partialans'] . ")";
       }
     }
 
@@ -447,8 +454,6 @@ class EnhancedCalculation extends Question implements questionInterface {
 
     $leadin = str_ireplace($varname, $varvalue, $this->leadin);
 
-    $this->settings['show_units'] = true;
-
     $dispunits = '';
     if ($this->settings['show_units'] === true) {
       if (count($this->settings['answersexp']) > 1) {
@@ -465,7 +470,6 @@ class EnhancedCalculation extends Question implements questionInterface {
     }
 
 
-
     //deal with the failed variables
 
     if ($this->scenario != '') echo "<p>" . $this->scenario . "</p>\n";
@@ -476,15 +480,15 @@ class EnhancedCalculation extends Question implements questionInterface {
       echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled />" . $dispunits . "</p>\n";
     } else {
       if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
-        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"calc-answer\" />" . $dispunits . "</div>\n";
+        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"ecalc-answer\" />" . $dispunits . "</div>\n";
       } else {
         if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { //or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];
 
 
-          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"calc-answer\" />" . $this->settings['units'] . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $this->settings['units'] . "</div>\n";
         } else {
-          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"unans calc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . "</div>\n";
           $unanswered = true;
         }
       }

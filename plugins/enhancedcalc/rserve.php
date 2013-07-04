@@ -280,7 +280,7 @@ class enhancedcalc_rserve {
     }
 
     //dp display
-    if (isset($settings['strictdp']) and $settings['strictdp'] === true and isset($settings['dp'])) {
+    if (isset($settings['strictdisplay']) and $settings['strictdisplay'] === true and isset($settings['dp'])) {
       $strpos = strpos($uans, '.');
       $strpos1 = stripos($uans, 'e', $strpos);
       if ($strpos1 === false) {
@@ -342,7 +342,48 @@ class enhancedcalc_rserve {
       }
     }
 
-    if (isset($settings['strictsf']) and $settings['strictsf'] === true and isset($setttings['sf'])) {
+    $correctdataanswrs = array(&$useranswer['cans'], &$useranswer['ans']['tolerance_full'], &$useranswer['ans']['tolerance_fullans'], &$useranswer['ans']['tolerance_fullneg'], &$useranswer['ans']['tolerance_fullnegans'], &$useranswer['ans']['tolerance_partial'], &$useranswer['ans']['tolerance_partialans'], &$useranswer['ans']['tolerance_partialneg'], &$useranswer['ans']['tolerance_partialnegans']);
+
+
+    // if dp set then make all answers in that formating
+    if (isset($settings['dp'])) {
+      // saved answers need to be corrected to correct dp
+      if (isset($settings['strictzeros']) and $settings['strictzeros'] === true) {
+        //trailing 0s needed
+        foreach ($correctdataanswrs as $key => $value) {
+          $op = self::$cnx->evalString("DPDISP = format(round(" . $value . "," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
+          $dpform = self::$cnx->evalString("paste(capture.output(print((DPDISP))),collapse='\\n');");
+          $dpform = str_replace('"', '', $dpform);
+          $pos = strpos($dpform, ' ');
+          $correctdataanswrs[$key] = substr($dpform, $pos + 1);
+        }
+      } else {
+        //no trailing 0s needed
+        foreach ($correctdataanswrs as $key => $value) {
+          $op = self::$cnx->evalString("DPDISP = round(" . $value . "," . $settings['dp'] . ")");
+          $dpform = self::$cnx->evalString("paste(capture.output(print((DPDISP))),collapse='\\n');");
+          $dpform = str_replace('"', '', $dpform);
+          $pos = strpos($dpform, ' ');
+          $correctdataanswrs[$key] = substr($dpform, $pos + 1);
+        }
+      }
+    }
+
+    if (isset($settings['sf'])) {
+      // saved answers need to be corrected to correct sf
+
+        foreach ($correctdataanswrs as $key => $value) {
+          $op = self::$cnx->evalString("SFDISP = signif(" . $value . "," . $settings['sf'] . ")");
+          $sfform = self::$cnx->evalString("paste(capture.output(print((SFDISP))),collapse='\\n');");
+          $sfform = str_replace('"', '', $sfform);
+          $pos = strpos($sfform, ' ');
+          $correctdataanswrs[$key] = substr($sfform, $pos + 1);
+
+      }
+    }
+
+
+    if (isset($settings['strictdisplay']) and $settings['strictdisplay'] === true and isset($setttings['sf'])) {
       $op = self::$cnx->evalString("STRICTSF = signif($uans," . $settings['sf'] . ")");
       $sfans = self::$cnx->evalString("paste(capture.output(print((STRICTSF))),collapse='\\n');");
       $pos = strpos($sfans, ' ');
