@@ -18,4 +18,5 @@ $string['confirmstatusdelete'] = 'Confirm Status Delete';
 $string['recyclebin'] = 'Recycle Bin';
 $string['msg'] = 'Are you sure you wish to delete this status?';
 $string['delete'] = 'Delete';
+$string['questionassigned'] = 'Cannot delete a question status to which questions are assigned';
 ?>

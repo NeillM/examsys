@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Utility class for question related functions
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -60,7 +60,7 @@ Class QuestionUtils {
     $stmt->bind_result($ownerID);
     $stmt->fetch();
     $stmt->close();
-    
+
     return $ownerID;
   }
 
@@ -79,7 +79,7 @@ Class QuestionUtils {
     $stmt->fetch();
     $leadin = ($stmt->num_rows == 0) ? '' : $leadin;
     $stmt->close();
-    
+
     return $leadin;
   }
 
@@ -102,7 +102,7 @@ Class QuestionUtils {
   }
 
   /**
-   * returns an array of id/keywords that the question is on 
+   * returns an array of id/keywords that the question is on
    * @param intager $q_id the id of the questions
    * @param resource $db
    * @return array of keywords
@@ -118,19 +118,19 @@ Class QuestionUtils {
       $keywords[$keywordID] = $keyword;
     }
     $stmt->close();
-    
+
     return $keywords;
   }
 
   /**
-   * returns an array of question IDs/module IDs 
+   * returns an array of question IDs/module IDs
    * @param array $q_ids list of questions to check
    * @param resource $db
    * @return array of modules keyed on q_id
    */
   static function multi_get_modules($q_ids, $db) {
     $modules = array();
-    
+
     $stmt = $db->prepare("SELECT q_id, idMod FROM questions_modules WHERE q_id IN (" . implode(',', $q_ids) . ")");
     $stmt->execute();
     $stmt->bind_result($q_id, $idMod);
@@ -138,19 +138,19 @@ Class QuestionUtils {
       $modules[$q_id][$idMod] = $idMod;
     }
     $stmt->close();
-    
+
     return $modules;
   }
 
   /**
-   * returns an array of modules/teams that the question is on 
+   * returns an array of modules/teams that the question is on
    * @param integer $q_id the id of the questions
    * @param resource $db
    * @return array of modules keyed on idMod
    */
   static function get_modules($q_id, $db) {
     $modules = array();
-    
+
     $stmt = $db->prepare("SELECT idMod, moduleID FROM questions_modules, modules WHERE q_id = ? AND questions_modules.idMod = modules.id");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
@@ -159,25 +159,25 @@ Class QuestionUtils {
       $modules[$idMod] = $moduleID;
     }
     $stmt->close();
-    
+
     return $modules;
   }
 
   /**
-  * Update the modules for a question bast on the modules that the papers it is part of are on 
+  * Update the modules for a question bast on the modules that the papers it is part of are on
   * @param $modules an array of modules keyed on idMod
   * @param $q_id the id of the questions
-  * @return void 
+  * @return void
   */
   static function update_modules_from_papers($q_id, $db) {
 
     $sql = <<<SQL
-      SELECT DISTINCT idMod 
-      FROM papers, properties, properties_modules 
-      WHERE properties.property_id = properties_modules.property_id 
-      AND properties.property_id = paper 
-      AND question = ? 
-      AND deleted is NULL 
+      SELECT DISTINCT idMod
+      FROM papers, properties, properties_modules
+      WHERE properties.property_id = properties_modules.property_id
+      AND properties.property_id = paper
+      AND question = ?
+      AND deleted is NULL
 SQL;
     $update = $db->prepare($sql);
     $update->bind_param('i', $q_id);
@@ -194,7 +194,7 @@ SQL;
     $update->bind_param('i', $q_id);
     $update->execute();
     $update->close();
-    
+
     QuestionUtils::add_modules($on_idMod, $q_id, $db);
 
   }
@@ -203,11 +203,11 @@ SQL;
   * updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
   * @param $modules an array of modules keyed on idMod
   * @param $q_id the id of the question
-  * @return void 
+  * @return void
   */
   static function update_modules($modules, $q_id, $db, $userObj) {
     if ($userObj->has_role('SysAdmin')) {
-      //sysadmin 
+      //sysadmin
       $user_can_delete = ''; //no restrictions
     } else {
       $user_can_delete = "AND idMod IN (" . implode(',', array_keys($userObj->get_staff_modules())) . ")"; //users can only remove modules if they are on the team
@@ -217,15 +217,15 @@ SQL;
     $editProperties->bind_param('i', $q_id);
     $editProperties->execute();
     $editProperties->close();
-    
+
     QuestionUtils::add_modules($modules, $q_id, $db);
   }
 
   /**
-  * add modules to a question ignoring any duplicates  
+  * add modules to a question ignoring any duplicates
   * @param $modules an array of modules keyed on idMod
   * @param $q_id the id of the question
-  * @return void 
+  * @return void
   */
   static function add_modules($modules, $q_id, $db) {
     $update = $db->prepare("INSERT INTO questions_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod = idMod");
@@ -233,14 +233,14 @@ SQL;
       $update->bind_param('ii', $q_id, $idMod);
       $update->execute();
     }
-    $update->close();  
+    $update->close();
   }
 
   /**
-  * add keywords to a question  
+  * add keywords to a question
   * @param $keywords an array of keywords keyed on IDs
   * @param $q_id the id of the question
-  * @return void 
+  * @return void
   */
   static function add_keywords($keywords, $q_id, $db) {
     $update = $db->prepare("INSERT INTO keywords_question VALUES (?, ?)");
@@ -252,10 +252,10 @@ SQL;
   }
 
   /**
-  * remove a module from a question  
+  * remove a module from a question
   * @param $idMod an array of modules to remove keyed on idMod
   * @param $q_id the id of the question or property_id
-  * @return void 
+  * @return void
   */
   static function remove_modules($modules, $q_id, $db) {
     $update = $db->prepare("DELETE FROM questions_modules WHERE q_id = ? AND idMod = ?");
@@ -267,10 +267,10 @@ SQL;
   }
 
 /**
-  * remove a question from rogo (N.B sets the deleted field we don't actuality delete the row form the questions table)  
+  * remove a question from rogo (N.B sets the deleted field we don't actuality delete the row form the questions table)
   * @param $idMod an array of modules to remove keyed on idMod
   * @param $q_id the id of the question or property_id
-  * @return void 
+  * @return void
   */
   static function delete_question($q_id, $db) {
     $delete = $db->prepare("UPDATE questions SET deleted = NOW() WHERE q_id = ?");
@@ -284,6 +284,23 @@ SQL;
     $lock->bind_param('i', $q_id);
     $lock->execute();
     $lock->close();
+  }
+
+  /**
+   * Get the number of questions assigned to a given status
+   * @param  integer $status_id Status ID
+   * @param  mysqli $db        DB link
+   * @return integer           Number of questions assigned to the status
+   */
+  static function get_question_count_by_status($status_id, $db) {
+    $query = $db->prepare("SELECT count(q_id) FROM questions WHERE status = ?");
+    $query->bind_param('i', $status_id);
+    $query->execute();
+    $query->bind_result($count);
+    $query->fetch();
+    $query->close();
+
+    return $count;
   }
 }
 ?>
