@@ -72,6 +72,7 @@ foreach ($statuses as $status) {
 ?>
         <li id="status_<?php echo $i ?>" class="selectable" data-id="<?php echo $status->id ?>"><?php echo $status->get_name() ?></li>
 <?php
+  $i++;
 }
 ?>
       </ul>

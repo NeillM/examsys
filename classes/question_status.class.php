@@ -65,7 +65,7 @@ Class QuestionStatus {
     $success = false;
 
     if ($this->id == -1) {
-      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default) VALUES(?, ?, ?, ?)";
+      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, display_order) SELECT ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
       $result = $this->_db->prepare($sql);
       $result->bind_param('siii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default);
       if ($result->execute()) {

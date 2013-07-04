@@ -42,7 +42,7 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     do_admin_login($this);
 
     $this->open("/admin/list_statuses.php");
-    $this->click("css=#status_1");
+    $this->click("css=#status_6");
     $this->click("link=Edit Status");
     $this->waitForPageToLoad("30000");
 
@@ -54,7 +54,7 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
 
     $this->assertTextPresent('Short Lived Status2');
 
-    $this->doubleClick("css=#status_1");
+    $this->doubleClick("css=#status_6");
     $this->waitForPageToLoad("30000");
 
     $this->assertElementValueContains("id=name", "Short Lived Status2");
