@@ -69,8 +69,9 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
 <?php
 $i = 1;
 foreach ($statuses as $status) {
+  $def_mod = ($status->get_is_default()) ? ' default' : '';
 ?>
-        <li id="status_<?php echo $i ?>" class="selectable" data-id="<?php echo $status->id ?>"><?php echo $status->get_name() ?></li>
+        <li id="status_<?php echo $i ?>" class="selectable<?php echo $def_mod ?>" data-id="<?php echo $status->id ?>"><?php echo $status->get_name() ?></li>
 <?php
   $i++;
 }

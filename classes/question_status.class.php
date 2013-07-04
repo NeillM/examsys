@@ -64,24 +64,45 @@ Class QuestionStatus {
   public function save() {
     $success = false;
 
-    if ($this->id == -1) {
-      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, display_order) SELECT ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
+    $this->_db->autocommit(false);
+
+    if ($this->is_default) {
+      $sql = "UPDATE question_statuses SET is_default = false";
       $result = $this->_db->prepare($sql);
-      $result->bind_param('siii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default);
-      if ($result->execute()) {
-        $success = true;
-        $this->id = $this->_db->insert_id;
-      }
-      $result->close();
-    } else {
-      $sql = "UPDATE question_statuses SET name = ?, exclude_marking = ?, exclude_search = ?, is_default = ? where id = ?";
-      $result = $this->_db->prepare($sql);
-      $result->bind_param('siiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->id);
       if ($result->execute()) {
         $success = true;
       }
       $result->close();
     }
+
+    if (!$this->is_default or $success) {
+      if ($this->id == -1) {
+        $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, display_order) SELECT ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
+        $result = $this->_db->prepare($sql);
+        $result->bind_param('siii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default);
+        if ($result->execute()) {
+          $success = true;
+          $this->id = $this->_db->insert_id;
+        }
+        $result->close();
+      } else {
+        $sql = "UPDATE question_statuses SET name = ?, exclude_marking = ?, exclude_search = ?, is_default = ? where id = ?";
+        $result = $this->_db->prepare($sql);
+        $result->bind_param('siiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->id);
+        if ($result->execute()) {
+          $success = true;
+        }
+        $result->close();
+      }
+    }
+
+    if (!$success) {
+      $this->_db->rollback();
+    } else {
+      $this->_db->commit();
+    }
+
+    $this->_db->autocommit(true);
 
     return $success;
   }

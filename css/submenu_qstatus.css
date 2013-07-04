@@ -24,5 +24,9 @@
 }
 
 .selectable {
-	padding: 2px 20px;
+	padding: 2px 32px;
+}
+
+.selectable.default {
+  background: transparent url('../artwork/icon_star_16.png') no-repeat 6px 1px;
 }

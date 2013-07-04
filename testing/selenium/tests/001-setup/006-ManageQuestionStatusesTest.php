@@ -14,57 +14,85 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testCreateStatus() {
-    do_admin_login($this);
+  // public function testCreateStatus() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/index.php");
-    $this->click("css=#14 > tbody > tr > td > img");
-    $this->waitForPageToLoad("30000");
-    $this->assertTitle('Question Statuses' . $this->install_type);
+  //   $this->open("/admin/index.php");
+  //   $this->click("css=#14 > tbody > tr > td > img");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertTitle('Question Statuses' . $this->install_type);
 
-    $this->click("link=Create new Status");
-    $this->waitForPageToLoad("30000");
-    $this->assertTitle('Add Status' . $this->install_type);
+  //   $this->click("link=Create new Status");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertTitle('Add Status' . $this->install_type);
 
-    $this->type('id=name', 'Short Lived Status');
-    $this->click('id=exclude_marking');
-    $this->click('id=exclude_search');
-    $this->click('id=is_default');
-    $this->click('name=submit');
-    $this->waitForPageToLoad('30000');
-    $this->assertTextPresent('Short Lived Status');
-  }
+  //   $this->type('id=name', 'Short Lived Status');
+  //   $this->click('id=exclude_marking');
+  //   $this->click('id=exclude_search');
+  //   $this->click('id=is_default');
+  //   $this->click('name=submit');
+  //   $this->waitForPageToLoad('30000');
+  //   $this->assertTextPresent('Short Lived Status');
+  // }
 
-  /**
-   * @depends testCreateStatus
-   */
-  public function testEditStatus() {
+  // /**
+  //  * @depends testCreateStatus
+  //  */
+  // public function testEditStatus() {
+  //   do_admin_login($this);
+
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->click("css=#status_6");
+  //   $this->click("link=Edit Status");
+  //   $this->waitForPageToLoad("30000");
+
+  //   $this->assertElementValueContains("id=name", "Short Lived Status");
+
+  //   $this->type("id=name", "Short Lived Status2");
+  //   $this->click("name=submit");
+  //   $this->waitForPageToLoad("30000");
+
+  //   $this->assertTextPresent('Short Lived Status2');
+
+  //   $this->doubleClick("css=#status_6");
+  //   $this->waitForPageToLoad("30000");
+
+  //   $this->assertElementValueContains("id=name", "Short Lived Status2");
+
+  //   $this->type("id=name", "Short Lived Status3");
+  //   $this->click("name=submit");
+  //   $this->waitForPageToLoad("30000");
+
+  //   $this->assertTextPresent('Short Lived Status3');
+  // }
+
+  public function testShouldShowDefault() {
     do_admin_login($this);
 
     $this->open("/admin/list_statuses.php");
-    $this->click("css=#status_6");
+    $this->assertElementPresent('css=.selectable.default');
+  }
+
+  public function testShouldBeOnlyOneDefault() {
+    do_admin_login($this);
+
+    $this->open("/admin/list_statuses.php");
+    $this->click("css=#status_2");
     $this->click("link=Edit Status");
     $this->waitForPageToLoad("30000");
 
-    $this->assertElementValueContains("id=name", "Short Lived Status");
-
-    $this->type("id=name", "Short Lived Status2");
+    $this->click('id=is_default');
     $this->click("name=submit");
     $this->waitForPageToLoad("30000");
+    $this->assertCssCount('css=.selectable.default', 1);
 
-    $this->assertTextPresent('Short Lived Status2');
-
-    $this->doubleClick("css=#status_6");
+    $this->doubleClick("css=#status_1");
     $this->waitForPageToLoad("30000");
-
-    $this->assertElementValueContains("id=name", "Short Lived Status2");
-
-    $this->type("id=name", "Short Lived Status3");
+    $this->click('id=is_default');
     $this->click("name=submit");
     $this->waitForPageToLoad("30000");
-
-    $this->assertTextPresent('Short Lived Status3');
-  }
+    $this->assertCssCount('css=.selectable.default', 1);
+}
 
   // /**
   //  * @depends testCreateSchool
