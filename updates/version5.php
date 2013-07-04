@@ -357,6 +357,7 @@ if (!isset($_POST['update'])) {
     echo '</ul></li>';
   }
 
+
   // 17/05/2013 (brzsw) - Add cache_paper_stats table
   if (!$updater_utils->does_table_exist('cache_paper_stats')) {
     $sql = "CREATE TABLE cache_paper_stats (paperID mediumint(8) unsigned not null, cached int unsigned, max_mark decimal(10,5), max_percent decimal(10,5), min_mark decimal(10,5), min_percent decimal(10,5), q1 decimal(10,5), q2 decimal(10,5), q3 decimal(10,5), mean_mark decimal(10,5), mean_percent decimal(10,5), stdev_mark decimal(10,5), stdev_percent decimal(10,5), UNIQUE KEY `paperID` (`paperID`)) ENGINE=InnoDB";
@@ -660,14 +661,40 @@ if (!isset($_POST['update'])) {
 
   }
 
-   /*
-   *****   NOW UPDATE THE INSTALLER SCRIPT   *****
-   */
+
+    // 04/07/2013 - cczsa1 - enhanced question type config
+
+    $new_lines = array("\n// Enhanced Calculation question config\n", "\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5);\n");
+
+    $target_line = '$cfg_password_expire';
+    $updater_utils->add_line('$enhancedcalculation', $new_lines, 80, $cfg_web_root, $target_line, 1);
+
+
+    // 04/07/2013 - cczsa1 - add new field to logs to indicate an error state
+    if (!$updater_utils->does_column_exist('log0', 'errorstate')) {
+      $updater_utils->execute_query("ALTER TABLE log0 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+    }
+    if (!$updater_utils->does_column_exist('log0_deleted', 'errorstate')) {
+      $updater_utils->execute_query("ALTER TABLE log0_deleted ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+    }
+    if (!$updater_utils->does_column_exist('log1', 'errorstate')) {
+      $updater_utils->execute_query("ALTER TABLE log1 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+    }
+    if (!$updater_utils->does_column_exist('log1_deleted', 'errorstate')) {
+      $updater_utils->execute_query("ALTER TABLE log1_deleted ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+    }
+    if (!$updater_utils->does_column_exist('log2', 'errorstate')) {
+      $updater_utils->execute_query("ALTER TABLE log2 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+    }
+    if (!$updater_utils->does_column_exist('log3', 'errorstate')) {
+      $updater_utils->execute_query("ALTER TABLE log3 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+    }
+
+    /*
+     *****   NOW UPDATE THE INSTALLER SCRIPT   *****
+     */
 
   // End of updates -----------------------------------------------------------------
-
-  $mysqli->commit();
-  $mysqli->autocommit(false);
 
   // Final housekeeping activities - put all updates above this line
   $updated = $updater_utils->update_version($version, $string, $cfg_web_root);

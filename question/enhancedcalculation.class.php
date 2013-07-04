@@ -151,15 +151,24 @@ class EnhancedCalculation extends Question implements questionInterface {
       $return = $returnarray[0];
       $this->useranswer = $returnarray[1];
     } catch (Exception $e) {
-      $return = false;
+
+      $returnstatus = Q_MARKING_WRONG;
+      $this->useranswer['status']['error'] = true;
+      $this->useranswer['ans']['error'] = 'Error in formula';
+      $this->useranswer['status']['overall'] = $returnstatus;
+
+      return $returnstatus;
     }
 
-    var_dump($this->settings);
-    var_dump($this->useranswer);
+    //  var_dump($this->settings);
+    //  var_dump($this->useranswer);
 
     if ($return !== true) {
       // not marked
+
       $returnstatus = Q_MARKING_UNMARKED;
+      $this->useranswer['status']['error'] = true;
+      $this->useranswer['ans']['error'] = 'Couldnt connect';
       $this->useranswer['status']['overall'] = $returnstatus;
 
       return $returnstatus;
@@ -371,7 +380,11 @@ class EnhancedCalculation extends Question implements questionInterface {
       } else {
         echo display_response($extra['tmp_display_students_response'], 'unmarked');
       }
-      echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'] . '" />'; //. $this->settings['units'];
+      if ((isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_UNMARKED) or !isset($this->useranswer['status']['overall'])) {
+        echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="UNMARKED">';
+      } else {
+        echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'] . '" />'; //. $this->settings['units'];
+      }
     }
     if ($extra['tmp_display_correct_answer'] == '1') {
       if (!isset($this->useranswer['status'])) {
