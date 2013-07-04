@@ -1780,7 +1780,7 @@ CREATE TABLE `question_statuses` (
 
 LOCK TABLES `question_statuses` WRITE;
 /*!40000 ALTER TABLE `question_statuses` DISABLE KEYS */;
-INSERT INTO `question_statuses` VALUES (1,'Normal',0,0,1,1),(2,'Retired',0,1,0,2),(3,'Incomplete',0,0,0,3),(4,'Experimental',1,0,0,4),(5,'Beta',0,0,0,5);
+INSERT INTO `question_statuses` VALUES (1,'Normal',0,0,1,0),(2,'Retired',0,1,0,1),(3,'Incomplete',0,0,0,2),(4,'Experimental',1,0,0,3),(5,'Beta',0,0,0,4);
 /*!40000 ALTER TABLE `question_statuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2630,4 +2630,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-04  9:38:38
+-- Dump completed on 2013-07-04 14:49:27
