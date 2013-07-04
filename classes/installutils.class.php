@@ -982,11 +982,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     // Create default question statuses
     $statuses = array(
-      array('name' => 'Normal', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => true, 'display_order' => 1),
-      array('name' => 'Retired', 'exclude_marking' => false, 'exclude_search' => true, 'is_default' => false, 'display_order' => 2),
-      array('name' => 'Incomplete', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'display_order' => 3),
-      array('name' => 'Experimental', 'exclude_marking' => true, 'exclude_search' => false, 'is_default' => false, 'display_order' => 4),
-      array('name' => 'Beta', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'display_order' => 5)
+      array('name' => 'Normal', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => true, 'display_order' => 0),
+      array('name' => 'Retired', 'exclude_marking' => false, 'exclude_search' => true, 'is_default' => false, 'display_order' => 1),
+      array('name' => 'Incomplete', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'display_order' => 2),
+      array('name' => 'Experimental', 'exclude_marking' => true, 'exclude_search' => false, 'is_default' => false, 'display_order' => 3),
+      array('name' => 'Beta', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'display_order' => 4)
     );
 
     foreach ($statuses as $data) {

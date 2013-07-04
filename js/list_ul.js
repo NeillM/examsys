@@ -1,5 +1,5 @@
 var selLine = function (e) {
-  e.stopPropagation();
+  // e.stopPropagation();
   
   $('.highlight').removeClass('highlight');
 
