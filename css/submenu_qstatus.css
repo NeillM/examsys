@@ -30,3 +30,7 @@
 .selectable.default {
   background: transparent url('../artwork/icon_star_16.png') no-repeat 6px 1px;
 }
+
+.ui-sortable-helper {
+	background-color:#B3C8E8
+}
