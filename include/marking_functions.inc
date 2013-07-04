@@ -439,8 +439,8 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
           $settings = json_decode($settings, true);
 
         }
-        if (isset($settings['m_correct'])) {
-          $totalpos = $settings['m_correct'];
+        if (isset($settings['marks_correct'])) {
+          $totalpos = $settings['marks_correct'];
         } else {
           $totalpos = null;
         }

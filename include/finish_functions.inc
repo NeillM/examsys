@@ -215,9 +215,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         if (!is_array($settings)) {
           $settings = json_decode($settings, true);
         }
-        $marks_correct = $settings['m_correct'];
-        $marks_incorrect = $settings['m_incorrect'];
-        $marks_partial = $settings['m_partial'];
+        $marks_correct = $settings['marks_correct'];
+        $marks_incorrect = $settings['marks_incorrect'];
+        $marks_partial = $settings['marks_partial'];
       }
 
       $paper[$q_no]['q_id'] = $q_id;
@@ -458,10 +458,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $storemark->bind_param('ddsi', $enhancedcalc->qmark, $enhancedcalc->totalpos, $new_useranswerstring, $paper[$question]['uniqid']);
         $storemark->execute();
         $enhancedcalc->exportsave($paper[$question]);
-        print "EnhancedCalc<br>";
+/*        print "EnhancedCalc<br>";
         var_dump($enhancedcalc);
         print "Question<br>";
-        var_dump($paper[$question]);
+        var_dump($paper[$question]);*/
       }
 
       $paper[$question]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);

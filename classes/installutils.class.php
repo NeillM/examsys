@@ -1350,6 +1350,8 @@ require \$root . '/include/path_functions.inc.php';
 );
 \$cfg_password_expire = 30;    // Set in days
 
+\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5);
+
 //Lookup settings
 \$lookup = array(
   {cfg_lookup_arrays}
@@ -1806,6 +1808,7 @@ QUERY;
           `adjmark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
           `user_answer` text,
+          `errorstate` tinyint unsigned NOT NULL DEFAULT '0',
           `screen` tinyint(3) unsigned DEFAULT NULL,
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
@@ -1825,6 +1828,7 @@ QUERY;
           `adjmark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
           `user_answer` text,
+          `errorstate` tinyint unsigned NOT NULL DEFAULT '0',
           `screen` tinyint(3) unsigned DEFAULT NULL,
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
@@ -1842,6 +1846,7 @@ QUERY;
           `adjmark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
           `user_answer` text,
+          `errorstate` tinyint unsigned NOT NULL DEFAULT '0',
           `screen` tinyint(3) unsigned DEFAULT NULL,
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
@@ -1861,6 +1866,7 @@ QUERY;
           `adjmark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
           `user_answer` text,
+          `errorstate` tinyint unsigned NOT NULL DEFAULT '0',
           `screen` tinyint(3) unsigned DEFAULT NULL,
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
@@ -1878,6 +1884,7 @@ QUERY;
           `adjmark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
           `user_answer` text,
+          `errorstate` tinyint unsigned NOT NULL DEFAULT '0',
           `screen` tinyint(3) unsigned DEFAULT NULL,
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
@@ -1897,6 +1904,7 @@ QUERY;
           `adjmark` float DEFAULT NULL,
           `totalpos` tinyint(4) DEFAULT NULL,
           `user_answer` text,
+          `errorstate` tinyint unsigned NOT NULL DEFAULT '0',
           `screen` tinyint(3) unsigned DEFAULT NULL,
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,

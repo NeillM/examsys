@@ -105,174 +105,174 @@ class enhancedcalc_rserve {
       $useranswer['status']['exact'] = false;
     }
 
-    if (isset($settings['fulltol'])) {
-      if (!isset($settings['fulltolneg'])) {
-        $settings['fulltolneg'] = $settings['fulltol'];
-        $settings['fulltolnegtyp'] = $settings['fulltoltyp'];
+    if (isset($settings['tolerance_full'])) {
+      if (!isset($settings['tolerance_fullneg'])) {
+        $settings['tolerance_fullneg'] = $settings['tolerance_full'];
+        $settings['tolerance_fullnegtyp'] = $settings['fulltoltyp'];
       }
       switch ($settings['fulltoltyp']) {
         case "%":
-          $op = self::$cnx->evalString("FULLTOL = ANS * (" . $settings['fulltol'] . "/100)");
-          $fulltol = self::$cnx->evalString("paste(capture.output(print((FULLTOL))),collapse='\\n');");
-          $pos = strpos($fulltol, ' ');
-          $useranswer['ans']['fulltol'] = substr($fulltol, $pos + 1);
-          $op = self::$cnx->evalString("FULLTOLANS = ANS + FULLTOL");
-          $fulltolans = self::$cnx->evalString("paste(capture.output(print((FULLTOLANS))),collapse='\\n');");
-          $pos = strpos($fulltolans, ' ');
-          $useranswer['ans']['fulltolans'] = substr($fulltolans, $pos + 1);
+          $op = self::$cnx->evalString("tolerance_full = ANS * (" . $settings['tolerance_full'] . "/100)");
+          $tolerance_full = self::$cnx->evalString("paste(capture.output(print((tolerance_full))),collapse='\\n');");
+          $pos = strpos($tolerance_full, ' ');
+          $useranswer['ans']['tolerance_full'] = substr($tolerance_full, $pos + 1);
+          $op = self::$cnx->evalString("tolerance_fullANS = ANS + tolerance_full");
+          $tolerance_fullans = self::$cnx->evalString("paste(capture.output(print((tolerance_fullANS))),collapse='\\n');");
+          $pos = strpos($tolerance_fullans, ' ');
+          $useranswer['ans']['tolerance_fullans'] = substr($tolerance_fullans, $pos + 1);
           break;
         case "#":
-          $op = self::$cnx->evalString("FULLTOLANS =  " . $settings['fulltol']);
-          $fulltol = self::$cnx->evalString("paste(capture.output(print((FULLTOLANS))),collapse='\\n');");
-          $pos = strpos($fulltol, ' ');
-          $useranswer['ans']['fulltol'] = substr($fulltol, $pos + 1);
-          $op = self::$cnx->evalString("FULLTOLANS = ANS + FULLTOL");
-          $fulltolans = self::$cnx->evalString("paste(capture.output(print((FULLTOLANS))),collapse='\\n');");
-          $pos = strpos($fulltolans, ' ');
-          $useranswer['ans']['fulltolans'] = substr($fulltolans, $pos + 1);
+          $op = self::$cnx->evalString("tolerance_fullANS =  " . $settings['tolerance_full']);
+          $tolerance_full = self::$cnx->evalString("paste(capture.output(print((tolerance_fullANS))),collapse='\\n');");
+          $pos = strpos($tolerance_full, ' ');
+          $useranswer['ans']['tolerance_full'] = substr($tolerance_full, $pos + 1);
+          $op = self::$cnx->evalString("tolerance_fullANS = ANS + tolerance_full");
+          $tolerance_fullans = self::$cnx->evalString("paste(capture.output(print((tolerance_fullANS))),collapse='\\n');");
+          $pos = strpos($tolerance_fullans, ' ');
+          $useranswer['ans']['tolerance_fullans'] = substr($tolerance_fullans, $pos + 1);
           break;
         case "sf":
-          $fulltolans = self::$cnx->evalString("FULLTOLANS =  signif(ANS," . $settings['fulltol'] . ")");
-          $pos = strpos($fulltolans, ' ');
-          $useranswer['ans']['fulltolans'] = substr($fulltolans, $pos + 1);
+          $tolerance_fullans = self::$cnx->evalString("tolerance_fullANS =  signif(ANS," . $settings['tolerance_full'] . ")");
+          $pos = strpos($tolerance_fullans, ' ');
+          $useranswer['ans']['tolerance_fullans'] = substr($tolerance_fullans, $pos + 1);
           break;
       }
-      switch ($settings['fulltolnegtyp']) {
+      switch ($settings['tolerance_fullnegtyp']) {
         case "%":
-          $op = self::$cnx->evalString("FULLTOLNEG = abs(ANS * (" . $settings['fulltolneg'] . "/100))");
-          $fulltolneg = self::$cnx->evalString("paste(capture.output(print((FULLTOLNEG))),collapse='\\n');");
-          $neg = strpos($fulltolneg, ' ');
-          $useranswer['ans']['fulltolneg'] = substr($fulltolneg, $neg + 1);
-          $op = self::$cnx->evalString("FULLTOLNEGANS = ANS - FULLTOLNEG");
-          $fulltolnegans = self::$cnx->evalString("paste(capture.output(print((FULLTOLNEGANS))),collapse='\\n');");
-          $neg = strpos($fulltolnegans, ' ');
-          $useranswer['ans']['fulltolnegans'] = substr($fulltolnegans, $neg + 1);
+          $op = self::$cnx->evalString("tolerance_fullNEG = abs(ANS * (" . $settings['tolerance_fullneg'] . "/100))");
+          $tolerance_fullneg = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEG))),collapse='\\n');");
+          $neg = strpos($tolerance_fullneg, ' ');
+          $useranswer['ans']['tolerance_fullneg'] = substr($tolerance_fullneg, $neg + 1);
+          $op = self::$cnx->evalString("tolerance_fullNEGANS = ANS - tolerance_fullNEG");
+          $tolerance_fullnegans = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEGANS))),collapse='\\n');");
+          $neg = strpos($tolerance_fullnegans, ' ');
+          $useranswer['ans']['tolerance_fullnegans'] = substr($tolerance_fullnegans, $neg + 1);
           break;
         case "#":
-          $op = self::$cnx->evalString("FULLTOLNEGANS =  " . $settings['fulltolneg']);
-          $fulltolneg = self::$cnx->evalString("paste(capture.output(print((FULLTOLNEGANS))),collapse='\\n');");
-          $neg = strpos($fulltolneg, ' ');
-          $useranswer['ans']['fulltolneg'] = substr($fulltolneg, $neg + 1);
-          $op = self::$cnx->evalString("FULLTOLNEGANS = ANS - FULLTOLNEG");
-          $fulltolnegans = self::$cnx->evalString("paste(capture.output(print((FULLTOLNEGANS))),collapse='\\n');");
-          $neg = strpos($fulltolnegans, ' ');
-          $useranswer['ans']['fulltolnegans'] = substr($fulltolnegans, $neg + 1);
+          $op = self::$cnx->evalString("tolerance_fullNEGANS =  " . $settings['tolerance_fullneg']);
+          $tolerance_fullneg = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEGANS))),collapse='\\n');");
+          $neg = strpos($tolerance_fullneg, ' ');
+          $useranswer['ans']['tolerance_fullneg'] = substr($tolerance_fullneg, $neg + 1);
+          $op = self::$cnx->evalString("tolerance_fullNEGANS = ANS - tolerance_fullNEG");
+          $tolerance_fullnegans = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEGANS))),collapse='\\n');");
+          $neg = strpos($tolerance_fullnegans, ' ');
+          $useranswer['ans']['tolerance_fullnegans'] = substr($tolerance_fullnegans, $neg + 1);
           break;
         case "sf":
-          $fulltolnegans = self::$cnx->evalString("FULLTOLNEGANS =  signif(ANS," . $settings['fulltolneg'] . ")");
-          $neg = strpos($fulltolnegans, ' ');
-          $useranswer['ans']['fulltolnegans'] = substr($fulltolnegans, $neg + 1);
+          $tolerance_fullnegans = self::$cnx->evalString("tolerance_fullNEGANS =  signif(ANS," . $settings['tolerance_fullneg'] . ")");
+          $neg = strpos($tolerance_fullnegans, ' ');
+          $useranswer['ans']['tolerance_fullnegans'] = substr($tolerance_fullnegans, $neg + 1);
           break;
       }
       switch ($settings['fulltoltyp']) {
         case "sf":
-          $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['fulltol'] . ")");
-          $status = self::$cnx->evalString("UANSSF ==  FULLTOLANS");
+          $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['tolerance_full'] . ")");
+          $status = self::$cnx->evalString("UANSSF ==  tolerance_fullANS");
           if ($status === true) {
             //correct
-            $useranswer['status']['fulltol'] = true;
+            $useranswer['status']['tolerance_full'] = true;
           } else {
-            $useranswer['status']['fulltol'] = false;
+            $useranswer['status']['tolerance_full'] = false;
           }
           break;
         case "%":
         case "#":
           //    self::$cnx->evalString("greaterequal -< function(x,y) x < y");
-          $string = "FULLTOLANSNEG <= $uans";
-          //   $status = self::$cnx->evalString("FULLTOLNEGANS <= $uans");
-          $status = self::$cnx->evalString("FULLTOLNEGANS <= $uans");
-          $status1 = self::$cnx->evalString("$uans <= FULLTOLANS");
+          $string = "tolerance_fullANSNEG <= $uans";
+          //   $status = self::$cnx->evalString("tolerance_fullNEGANS <= $uans");
+          $status = self::$cnx->evalString("tolerance_fullNEGANS <= $uans");
+          $status1 = self::$cnx->evalString("$uans <= tolerance_fullANS");
 
           if ($status === true and $status1 === true) {
             //correct
-            $useranswer['status']['fulltol'] = true;
+            $useranswer['status']['tolerance_full'] = true;
           } else {
-            $useranswer['status']['fulltol'] = false;
+            $useranswer['status']['tolerance_full'] = false;
           }
           break;
       }
 
     }
-    if (isset($settings['parttol'])) {
-      if (!isset($settings['parttolneg'])) {
-        $settings['parttolneg'] = $settings['parttol'];
-        $settings['parttolnegtyp'] = $settings['parttoltyp'];
+    if (isset($settings['tolerance_partial'])) {
+      if (!isset($settings['tolerance_partialneg'])) {
+        $settings['tolerance_partialneg'] = $settings['tolerance_partial'];
+        $settings['tolerance_partialnegtyp'] = $settings['parttoltyp'];
       }
       switch ($settings['parttoltyp']) {
         case "%":
-          $op = self::$cnx->evalString("PARTTOL = ANS * (" . $settings['parttolneg'] . "/100)");
-          $parttol = self::$cnx->evalString("paste(capture.output(print((PARTTOL))),collapse='\\n');");
-          $pos = strpos($parttol, ' ');
-          $useranswer['ans']['parttol'] = substr($parttol, $pos + 1);
-          $op = self::$cnx->evalString("PARTTOLANS = ANS + PARTTOL");
-          $parttolans = self::$cnx->evalString("paste(capture.output(print((PARTTOLANS))),collapse='\\n');");
-          $pos = strpos($parttolans, ' ');
-          $useranswer['ans']['parttolans'] = substr($parttolans, $pos + 1);
+          $op = self::$cnx->evalString("tolerance_partial = ANS * (" . $settings['tolerance_partialneg'] . "/100)");
+          $tolerance_partial = self::$cnx->evalString("paste(capture.output(print((tolerance_partial))),collapse='\\n');");
+          $pos = strpos($tolerance_partial, ' ');
+          $useranswer['ans']['tolerance_partial'] = substr($tolerance_partial, $pos + 1);
+          $op = self::$cnx->evalString("tolerance_partialANS = ANS + tolerance_partial");
+          $tolerance_partialans = self::$cnx->evalString("paste(capture.output(print((tolerance_partialANS))),collapse='\\n');");
+          $pos = strpos($tolerance_partialans, ' ');
+          $useranswer['ans']['tolerance_partialans'] = substr($tolerance_partialans, $pos + 1);
           break;
         case "#":
-          $op = self::$cnx->evalString("PARTTOLANS =  " . $settings['parttolneg']);
-          $parttol = self::$cnx->evalString("paste(capture.output(print((PARTTOLANS))),collapse='\\n');");
-          $pos = strpos($parttol, ' ');
-          $useranswer['ans']['parttol'] = substr($parttol, $pos + 1);
-          $op = self::$cnx->evalString("PARTTOLANS = ANS + PARTTOL");
-          $parttolans = self::$cnx->evalString("paste(capture.output(print((PARTTOLANS))),collapse='\\n');");
-          $pos = strpos($parttolans, ' ');
-          $useranswer['ans']['parttolans'] = substr($parttolans, $pos + 1);
+          $op = self::$cnx->evalString("tolerance_partialANS =  " . $settings['tolerance_partialneg']);
+          $tolerance_partial = self::$cnx->evalString("paste(capture.output(print((tolerance_partialANS))),collapse='\\n');");
+          $pos = strpos($tolerance_partial, ' ');
+          $useranswer['ans']['tolerance_partial'] = substr($tolerance_partial, $pos + 1);
+          $op = self::$cnx->evalString("tolerance_partialANS = ANS + tolerance_partial");
+          $tolerance_partialans = self::$cnx->evalString("paste(capture.output(print((tolerance_partialANS))),collapse='\\n');");
+          $pos = strpos($tolerance_partialans, ' ');
+          $useranswer['ans']['tolerance_partialans'] = substr($tolerance_partialans, $pos + 1);
           break;
         case "sf":
-          $parttolans = self::$cnx->evalString("PARTTOLANS =  signif(ANS," . $settings['parttol'] . ")");
-          $pos = strpos($parttolans, ' ');
-          $useranswer['ans']['parttolans'] = substr($parttolans, $pos + 1);
+          $tolerance_partialans = self::$cnx->evalString("tolerance_partialANS =  signif(ANS," . $settings['tolerance_partial'] . ")");
+          $pos = strpos($tolerance_partialans, ' ');
+          $useranswer['ans']['tolerance_partialans'] = substr($tolerance_partialans, $pos + 1);
           break;
       }
-      switch ($settings['parttolnegtyp']) {
+      switch ($settings['tolerance_partialnegtyp']) {
         case "%":
-          $op = self::$cnx->evalString("PARTTOLNEG = abs(ANS * (" . $settings['parttolneg'] . "/100))");
-          $parttolneg = self::$cnx->evalString("paste(capture.output(print((PARTTOLNEG))),collapse='\\n');");
-          $neg = strpos($parttolneg, ' ');
-          $useranswer['ans']['parttolneg'] = substr($parttolneg, $neg + 1);
-          $op = self::$cnx->evalString("PARTTOLNEGANS = ANS - PARTTOLNEG");
-          $parttolnegans = self::$cnx->evalString("paste(capture.output(print((PARTTOLNEGANS))),collapse='\\n');");
-          $neg = strpos($parttolnegans, ' ');
-          $useranswer['ans']['parttolnegans'] = substr($parttolnegans, $neg + 1);
+          $op = self::$cnx->evalString("tolerance_partialNEG = abs(ANS * (" . $settings['tolerance_partialneg'] . "/100))");
+          $tolerance_partialneg = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEG))),collapse='\\n');");
+          $neg = strpos($tolerance_partialneg, ' ');
+          $useranswer['ans']['tolerance_partialneg'] = substr($tolerance_partialneg, $neg + 1);
+          $op = self::$cnx->evalString("tolerance_partialNEGANS = ANS - tolerance_partialNEG");
+          $tolerance_partialnegans = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEGANS))),collapse='\\n');");
+          $neg = strpos($tolerance_partialnegans, ' ');
+          $useranswer['ans']['tolerance_partialnegans'] = substr($tolerance_partialnegans, $neg + 1);
           break;
         case "#":
-          $op = self::$cnx->evalString("PARTTOLNEGANS =  " . $settings['parttolneg']);
-          $parttolneg = self::$cnx->evalString("paste(capture.output(print((PARTTOLNEGANS))),collapse='\\n');");
-          $neg = strpos($parttolneg, ' ');
-          $useranswer['ans']['parttolneg'] = substr($parttolneg, $neg + 1);
-          $op = self::$cnx->evalString("PARTTOLNEGANS = ANS - PARTTOLNEG");
-          $parttolnegans = self::$cnx->evalString("paste(capture.output(print((PARTTOLNEGANS))),collapse='\\n');");
-          $neg = strpos($parttolnegans, ' ');
-          $useranswer['ans']['parttolnegans'] = substr($parttolnegans, $neg + 1);
+          $op = self::$cnx->evalString("tolerance_partialNEGANS =  " . $settings['tolerance_partialneg']);
+          $tolerance_partialneg = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEGANS))),collapse='\\n');");
+          $neg = strpos($tolerance_partialneg, ' ');
+          $useranswer['ans']['tolerance_partialneg'] = substr($tolerance_partialneg, $neg + 1);
+          $op = self::$cnx->evalString("tolerance_partialNEGANS = ANS - tolerance_partialNEG");
+          $tolerance_partialnegans = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEGANS))),collapse='\\n');");
+          $neg = strpos($tolerance_partialnegans, ' ');
+          $useranswer['ans']['tolerance_partialnegans'] = substr($tolerance_partialnegans, $neg + 1);
           break;
         case "sf":
-          $parttolnegans = self::$cnx->evalString("PARTTOLNEGANS =  signif(ANS," . $settings['parttolneg'] . ")");
-          $neg = strpos($parttolnegans, ' ');
-          $useranswer['ans']['parttolnegans'] = substr($parttolnegans, $neg + 1);
+          $tolerance_partialnegans = self::$cnx->evalString("tolerance_partialNEGANS =  signif(ANS," . $settings['tolerance_partialneg'] . ")");
+          $neg = strpos($tolerance_partialnegans, ' ');
+          $useranswer['ans']['tolerance_partialnegans'] = substr($tolerance_partialnegans, $neg + 1);
           break;
       }
       switch ($settings['parttoltyp']) {
         case "sf":
-          $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['parttol'] . ")");
-          $status = self::$cnx->evalString("UANSSF ==  PARTTOLANS");
+          $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['tolerance_partial'] . ")");
+          $status = self::$cnx->evalString("UANSSF ==  tolerance_partialANS");
           if ($status === true) {
             //correct
-            $useranswer['status']['parttol'] = true;
+            $useranswer['status']['tolerance_partial'] = true;
           } else {
-            $useranswer['status']['parttol'] = false;
+            $useranswer['status']['tolerance_partial'] = false;
           }
           break;
         case "%":
         case "#":
-          $status = self::$cnx->evalString("PARTTOLNEGANS <= $uans");
-          $status1 = self::$cnx->evalString("$uans <= PARTTOLANS");
+          $status = self::$cnx->evalString("tolerance_partialNEGANS <= $uans");
+          $status1 = self::$cnx->evalString("$uans <= tolerance_partialANS");
 
           if ($status === true and $status1 === true) {
             //correct
-            $useranswer['status']['parttol'] = true;
+            $useranswer['status']['tolerance_partial'] = true;
           } else {
-            $useranswer['status']['parttol'] = false;
+            $useranswer['status']['tolerance_partial'] = false;
           }
           break;
       }
@@ -280,7 +280,7 @@ class enhancedcalc_rserve {
     }
 
     //dp display
-    if (isset($settings['strictdp']) and $settings['strictdp'] === true and isset($settings['dp'])) {
+    if (isset($settings['strictdisplay']) and $settings['strictdisplay'] === true and isset($settings['dp'])) {
       $strpos = strpos($uans, '.');
       $strpos1 = stripos($uans, 'e', $strpos);
       if ($strpos1 === false) {
@@ -342,7 +342,48 @@ class enhancedcalc_rserve {
       }
     }
 
-    if (isset($settings['strictsf']) and $settings['strictsf'] === true and isset($setttings['sf'])) {
+    $correctdataanswrs = array(&$useranswer['cans'], &$useranswer['ans']['tolerance_full'], &$useranswer['ans']['tolerance_fullans'], &$useranswer['ans']['tolerance_fullneg'], &$useranswer['ans']['tolerance_fullnegans'], &$useranswer['ans']['tolerance_partial'], &$useranswer['ans']['tolerance_partialans'], &$useranswer['ans']['tolerance_partialneg'], &$useranswer['ans']['tolerance_partialnegans']);
+
+
+    // if dp set then make all answers in that formating
+    if (isset($settings['dp'])) {
+      // saved answers need to be corrected to correct dp
+      if (isset($settings['strictzeros']) and $settings['strictzeros'] === true) {
+        //trailing 0s needed
+        foreach ($correctdataanswrs as $key => $value) {
+          $op = self::$cnx->evalString("DPDISP = format(round(" . $value . "," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
+          $dpform = self::$cnx->evalString("paste(capture.output(print((DPDISP))),collapse='\\n');");
+          $dpform = str_replace('"', '', $dpform);
+          $pos = strpos($dpform, ' ');
+          $correctdataanswrs[$key] = substr($dpform, $pos + 1);
+        }
+      } else {
+        //no trailing 0s needed
+        foreach ($correctdataanswrs as $key => $value) {
+          $op = self::$cnx->evalString("DPDISP = round(" . $value . "," . $settings['dp'] . ")");
+          $dpform = self::$cnx->evalString("paste(capture.output(print((DPDISP))),collapse='\\n');");
+          $dpform = str_replace('"', '', $dpform);
+          $pos = strpos($dpform, ' ');
+          $correctdataanswrs[$key] = substr($dpform, $pos + 1);
+        }
+      }
+    }
+
+    if (isset($settings['sf'])) {
+      // saved answers need to be corrected to correct sf
+
+        foreach ($correctdataanswrs as $key => $value) {
+          $op = self::$cnx->evalString("SFDISP = signif(" . $value . "," . $settings['sf'] . ")");
+          $sfform = self::$cnx->evalString("paste(capture.output(print((SFDISP))),collapse='\\n');");
+          $sfform = str_replace('"', '', $sfform);
+          $pos = strpos($sfform, ' ');
+          $correctdataanswrs[$key] = substr($sfform, $pos + 1);
+
+      }
+    }
+
+
+    if (isset($settings['strictdisplay']) and $settings['strictdisplay'] === true and isset($setttings['sf'])) {
       $op = self::$cnx->evalString("STRICTSF = signif($uans," . $settings['sf'] . ")");
       $sfans = self::$cnx->evalString("paste(capture.output(print((STRICTSF))),collapse='\\n');");
       $pos = strpos($sfans, ' ');
