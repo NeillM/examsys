@@ -33,8 +33,10 @@ $s_id = (isset($_REQUEST['id'])) ? $_REQUEST['id'] : -1;
 
 if ($s_id != -1) {
   $q_status = new QuestionStatus($mysqli, $string, $s_id);
+  $title = $string['edit'] . ' ' . $string['status'];
 } else {
   $q_status = new QuestionStatus($mysqli, $string, array());
+  $title = $string['add'] . ' ' . $string['status'];
 }
 
 if (isset($_POST['submit'])) {
@@ -52,9 +54,13 @@ if (isset($_POST['submit'])) {
     $q_status = new QuestionStatus($mysqli, $string, $data);
   }
 
-  if ($q_status->save()) {
-    header("location: list_statuses.php");
-    exit;
+  try {
+    if ($q_status->save()) {
+      header("location: list_statuses.php");
+      exit;
+    }
+  } catch (ItemExistsException $ex) {
+    $error = 'duplicate';
   }
 }
 
@@ -67,7 +73,7 @@ $default_checked = ($q_status->get_is_default()) ? ' checked="checked"' : '';
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['addstatus'] . " " . $configObject->get('cfg_install_type') ?></title>
+  <title><?php echo $title . " " . $configObject->get('cfg_install_type') ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -91,7 +97,22 @@ $default_checked = ($q_status->get_is_default()) ? ' checked="checked"' : '';
       text-align: center;
     }
   </style>
-  </head>
+
+  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
+  <script language="JavaScript">
+    $(function () {
+      checkForm = function () {
+        if ($('#name').val() == "") {
+          alert ("<?php echo $string['enternameofstatus']; ?>");
+          return false;
+        }
+      }
+
+      $('#status_form').submit(checkForm);
+    });
+
+  </script>
+</head>
 <body>
 <?php
   require '../include/status_options.inc.php';
@@ -99,13 +120,20 @@ $default_checked = ($q_status->get_is_default()) ? ' checked="checked"' : '';
   <div id="content" class="content">
     <table class="header">
     <tr>
-      <th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_statuses.php"><?php echo $string['statuses'] ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['addstatus'] ?></th>
+      <th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_statuses.php"><?php echo $string['statuses'] ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $title ?></th>
       <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th>
     </tr>
     <tr><th colspan="2" class="bevel"></th></tr>
     </table>
 
-    <form name="edit_status" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <form id="status_form" name="status_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+<?php
+  if (isset($error) and $error = 'duplicate') {
+?>
+      <div class="form-error"><?php echo $string['duplicateerror'] ?></div>
+<?php
+  }
+?>
       <table class="admin-form">
         <tr><th><label for="name"><?php echo $string['name'] ?></label></td><td><input type="text" size="70" id="name" name="name" value="<?php echo $q_status->get_name(); ?>" /></th></tr>
         <tr><th><label for="exclude_marking"><?php echo $string['excludemarking'] ?></label></td><td><input type="checkbox" id="exclude_marking" name="exclude_marking" <?php echo $em_checked; ?> /></th></tr>

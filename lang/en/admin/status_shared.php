@@ -16,8 +16,9 @@
 
 $string['questionstatuses'] = 'Question Statuses';
 $string['createstatus'] = 'Create new Status';
-$string['editstatus'] = 'Edit Status';
-$string['addstatus'] = 'Add Status';
+$string['edit'] = 'Edit';
+$string['add'] = 'Add';
+$string['status'] = 'Status';
 $string['deletestatus'] = 'Delete Status';
 $string['administrativetools'] = 'Administrative Tools';
 $string['statuses'] = 'Statuses';
@@ -25,3 +26,6 @@ $string['name'] = 'Name';
 $string['excludemarking'] = 'Exclude from marking';
 $string['excludesearch'] = 'Exclude from default search';
 $string['default'] = 'Default';
+$string['default'] = 'Default';
+$string['enternameofstatus'] = 'Please enter name for the status.';
+$string['duplicateerror'] = 'Status names must be unique';

@@ -66,34 +66,48 @@ Class QuestionStatus {
 
     $this->_db->autocommit(false);
 
-    if ($this->is_default) {
-      $sql = "UPDATE question_statuses SET is_default = false";
+    if ($this->id == -1) {
+      $sql = "SELECT count(id) FROM question_statuses WHERE name = ?";
       $result = $this->_db->prepare($sql);
+      $result->bind_param('s', $this->name);
+      $result->execute();
+      $result->bind_result($count);
+      $result->fetch();
+      $result->close();
+
+      if ($count > 0) {
+        $this->_db->autocommit(true);
+        throw new ItemExistsException();
+      }
+
+      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, display_order) SELECT ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
+      $result = $this->_db->prepare($sql);
+      $result->bind_param('siii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default);
+      if ($result->execute()) {
+        $success = true;
+        $this->id = $this->_db->insert_id;
+      }
+      $result->close();
+    } else {
+      $sql = "UPDATE question_statuses SET name = ?, exclude_marking = ?, exclude_search = ?, is_default = ? where id = ?";
+      $result = $this->_db->prepare($sql);
+      $result->bind_param('siiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->id);
       if ($result->execute()) {
         $success = true;
       }
       $result->close();
     }
 
-    if (!$this->is_default or $success) {
-      if ($this->id == -1) {
-        $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, display_order) SELECT ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
-        $result = $this->_db->prepare($sql);
-        $result->bind_param('siii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default);
-        if ($result->execute()) {
-          $success = true;
-          $this->id = $this->_db->insert_id;
-        }
-        $result->close();
-      } else {
-        $sql = "UPDATE question_statuses SET name = ?, exclude_marking = ?, exclude_search = ?, is_default = ? where id = ?";
-        $result = $this->_db->prepare($sql);
-        $result->bind_param('siiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->id);
-        if ($result->execute()) {
-          $success = true;
-        }
-        $result->close();
+    if ($success and $this->is_default) {
+      $success = false;
+
+      $sql = "UPDATE question_statuses SET is_default = false WHERE id != ?";
+      $result = $this->_db->prepare($sql);
+      $result->bind_param('i', $this->id);
+      if ($result->execute()) {
+        $success = true;
       }
+      $result->close();
     }
 
     if (!$success) {
