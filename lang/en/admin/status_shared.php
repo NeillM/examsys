@@ -26,6 +26,6 @@ $string['name'] = 'Name';
 $string['excludemarking'] = 'Exclude from marking';
 $string['excludesearch'] = 'Exclude from default search';
 $string['default'] = 'Default';
-$string['default'] = 'Default';
+$string['setlocked'] = 'Can set for locked questions';
 $string['enternameofstatus'] = 'Please enter name for the status.';
 $string['duplicateerror'] = 'Status names must be unique';

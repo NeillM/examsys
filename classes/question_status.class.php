@@ -31,6 +31,7 @@ Class QuestionStatus {
   protected $exclude_marking = false;
   protected $exclude_search = false;
   protected $is_default = false;
+  protected $change_locked = true;
 
   private $_db;
   private $_lang_strings;
@@ -80,18 +81,18 @@ Class QuestionStatus {
         throw new ItemExistsException();
       }
 
-      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, display_order) SELECT ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
+      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, change_locked, display_order) SELECT ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
       $result = $this->_db->prepare($sql);
-      $result->bind_param('siii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default);
+      $result->bind_param('siiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked);
       if ($result->execute()) {
         $success = true;
         $this->id = $this->_db->insert_id;
       }
       $result->close();
     } else {
-      $sql = "UPDATE question_statuses SET name = ?, exclude_marking = ?, exclude_search = ?, is_default = ? where id = ?";
+      $sql = "UPDATE question_statuses SET name = ?, exclude_marking = ?, exclude_search = ?, is_default = ?, change_locked = ? where id = ?";
       $result = $this->_db->prepare($sql);
-      $result->bind_param('siiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->id);
+      $result->bind_param('siiiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked, $this->id);
       if ($result->execute()) {
         $success = true;
       }
@@ -128,13 +129,13 @@ Class QuestionStatus {
   private function get_question_status() {
     $success = false;
 
-    $sql = "SELECT name, exclude_marking, exclude_search, is_default, display_order FROM question_statuses WHERE id = ?";
+    $sql = "SELECT name, exclude_marking, exclude_search, is_default, change_locked, display_order FROM question_statuses WHERE id = ?";
 
     $result = $this->_db->prepare($sql);
     $result->bind_param('i', $this->id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->display_order);
+    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked, $this->display_order);
     if ($result->fetch()) {
       $success = true;
     }
@@ -237,6 +238,20 @@ Class QuestionStatus {
   }
 
   /**
+   * @param boolean $change_locked
+   */
+  public function set_change_locked($change_locked) {
+    $this->change_locked = $change_locked;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function get_change_locked() {
+    return $this->change_locked;
+  }
+
+  /**
    * Get an array containing all existing statuses
    * @param  mysqli $db             Database link
    * @param  array $lang_strings    Language Strings
@@ -245,14 +260,14 @@ Class QuestionStatus {
   public static function get_all_statuses($db, $lang_strings) {
     $statuses = array();
 
-    $sql = "SELECT id, name, exclude_marking, exclude_search, is_default FROM question_statuses ORDER BY display_order";
+    $sql = "SELECT id, name, exclude_marking, exclude_search, is_default, change_locked FROM question_statuses ORDER BY display_order";
 
     $result = $db->prepare($sql);
     $result->execute();
     $result->store_result();
-    $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default);
+    $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default, $change_locked);
     while ($result->fetch()) {
-      $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default);
+      $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default, 'change_locked' => $change_locked);
       $statuses[] = new QuestionStatus($db, $lang_strings, $data);
     }
     $result->close();
