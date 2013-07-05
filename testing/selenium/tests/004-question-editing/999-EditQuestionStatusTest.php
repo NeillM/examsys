@@ -116,4 +116,19 @@ class EditQuestionStatusTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementValueContains('id=status_4', 'off');
     $this->assertElementValueContains('id=status_5', 'off');
   }
+
+  public function testNewQuestionShouldSHowDefaultStatus() {
+    do_staff_login($this);
+
+    $this->open("/paper/details.php?paperID=1&module=&folder=&scrOfY=0");
+    $this->click("link=Create new Question");
+    $this->click("id=4_13");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertElementValueContains('id=status_1', 'on');
+    $this->assertElementValueContains('id=status_2', 'off');
+    $this->assertElementValueContains('id=status_3', 'off');
+    $this->assertElementValueContains('id=status_4', 'off');
+    $this->assertElementValueContains('id=status_5', 'off');
+  }
 }

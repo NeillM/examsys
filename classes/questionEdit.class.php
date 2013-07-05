@@ -59,7 +59,7 @@ Class QuestionEdit extends RogoObject {
   protected $last_edited = null;
   protected $locked = null;
   protected $deleted = null;
-  protected $status = 'Normal';
+  protected $status = -1;
   protected $settings = '';
   public $options = array();
 
