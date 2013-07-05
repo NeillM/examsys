@@ -50,6 +50,8 @@ function drawTabs($tab_array, $current_tab) {
 
 $sessions_with_papers = array();
 
+$performance_summary_years = array();
+
 if ($userObject->has_role('Student')) {
   $logger = new Logger($mysqli);
   $logger->record_access($userObject->get_user_ID(), 'Student homepage', '/students/');  
@@ -69,7 +71,7 @@ if ($userObject->has_role('Student')) {
   // Get modules
   $modules = array();
   $i = 0;
-  if ($stmt = $mysqli->prepare("SELECT DISTINCT idMod, m.moduleid, m.fullname, sm.calendar_year FROM modules m INNER JOIN modules_student sm ON m.id = sm.idMod WHERE sm.userID = ? AND m.active = 1 AND mod_deleted IS NULL ORDER BY sm.calendar_year ASC, m.moduleid ASC")) {
+  if ($stmt = $mysqli->prepare("SELECT DISTINCT idMod, m.moduleid, m.fullname, sm.calendar_year FROM modules m INNER JOIN modules_student sm ON m.id = sm.idMod WHERE sm.userID = ? AND m.active = 1 AND mod_deleted IS NULL AND calendar_year != '' ORDER BY sm.calendar_year ASC, m.moduleid ASC")) {
     $stmt->bind_param('i', $userObject->get_user_ID());
     $stmt->execute();
     $stmt->bind_result($idMod, $moduleID, $module_name, $module_year);
@@ -173,8 +175,12 @@ QUERY;
       $stmt->store_result();
       while ($stmt->fetch()) {
         if (in_array($paper_id, $papers_taken)) {
-          $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'original_type' => $paper_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name, 'password' => $password);
-          $papers++;
+          if ($feedback_type == 'objectives' or $feedback_type == 'questions') {
+            $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'original_type' => $paper_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name, 'password' => $password);
+            $papers++;
+          } elseif ($feedback_type == 'cohort_performance') {
+            $performance_summary_years[$calendar_year] = true;
+          }
 
           if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
             $sessions_with_papers[] = $modules[$i]['year'];
@@ -270,7 +276,7 @@ if (!$userObject->has_role('Student')) {
   if ($papers > 0) {
   	$last_session = '';
 
-  	foreach($modules as $module) {
+  	foreach ($modules as $module) {
   	  $mod_id = $module['id'];
   		if (!empty($module['papers'])) {
 
@@ -289,12 +295,17 @@ if (!$userObject->has_role('Student')) {
 		<div id="papers-<?php echo str_replace('/', '-', $module['year']) ?>"<?php echo $visibility; ?>>
 <?php
   				$last_session = $module['year'];
-  			}
+          
+          if (isset($performance_summary_years[$module['year']])) {
+            echo "<div style=\"margin-top:4px; margin-left:10px\"><a href=\"performance_summary.php#" . $module['year'] . "\"><img src=\"../artwork/link.png\" width=\"16\" height=\"16\" alt=\"arrow\" /></a>&nbsp;<a href=\"performance_summary.php#" . $module['year'] . "\">Performance Summary</a></div>";
+          }
+        }
 ?>
-			<br clear="all" /><table border="0" style="margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287"><tr><td><nobr><?php echo("<strong>{$mod_id}</strong>: {$module['name']} (".count($module['papers']).")"); ?></nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>
+			
+      <br clear="all" /><table border="0" style="margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287"><tr><td><nobr><?php echo("<strong>{$mod_id}</strong>: {$module['name']} (".count($module['papers']).")"); ?></nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>
 			<br />
 <?php
-  			foreach($module['papers'] as $paper) {
+  			foreach ($module['papers'] as $paper) {
           if ($paper['type'] == '6') {
             $script_name = '../peer_review/form.php?id=' . $paper['crypt_name'];
           } elseif ($paper['type'] == 'objectives') {

@@ -523,6 +523,24 @@ if (isset($_POST['Submit'])) {
 
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Question-based Feedback', 'feedback');
     }
+    
+    // Release cohort performance feedback
+    if (isset($_POST['old_cohort_performance']) and $_POST['old_cohort_performance'] != '' and isset($_POST['cohort_performance']) and $_POST['cohort_performance'] == '0') {
+      $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'cohort_performance'");
+      $editProperties->bind_param('i', $paperID);
+      $editProperties->execute();
+      $editProperties->close();
+
+      $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Cohort Performance Feedback', '', 'feedback');
+    }
+    if (isset($_POST['old_cohort_performance']) and $_POST['old_cohort_performance'] == '' and isset($_POST['cohort_performance']) and $_POST['cohort_performance'] == '1') {
+      $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'cohort_performance')");
+      $editProperties->bind_param('i', $paperID);
+      $editProperties->execute();
+      $editProperties->close();
+
+      $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Cohort Performance Feedback', 'feedback');
+    }
 
     if ($properties->get_paper_type() != '2' and $properties->get_paper_type() != '4') {    // Update textual feedback if not a summative paper or OSCE station.
       // Get old settings
@@ -1702,6 +1720,28 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        if ($properties->get_paper_type() == '2') echo '<span style="color:#C00000">' . $string['feedbackwarning'] . '</span></br />';
        echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
      }
+
+     if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
+       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+       echo '<tr><td><img src="../artwork/cohort_performance_icon.png" width="48" height="48" />';
+       // Cohort performance-based Feedback
+       $q_feedback_release = '';
+       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'cohort_performance'");
+       $feedback_details->bind_param('i', $_GET['paperID']);
+       $feedback_details->execute();
+       $feedback_details->store_result();
+       $feedback_details->fetch();
+       $cohort_feedback_release = ($feedback_details->num_rows > 0) ? '1' : '';
+       echo "<td><input type=\"hidden\" name=\"old_cohort_performance\" value=\"$cohort_feedback_release\" />";
+       if ($cohort_feedback_release == '') {
+         echo "<input type=\"radio\" name=\"cohort_performance\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"cohort_performance\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
+       } else {
+         echo "<input type=\"radio\" name=\"cohort_performance\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"cohort_performance\" value=\"0\" />" . $string['off'] . "</td>";
+       }
+       $feedback_details->close();
+
+       echo "<td>" . $string['cohortperformancefeedback'] . "</td></tr>\n";
+      }
 
      echo "</table>\n";
 

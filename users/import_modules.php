@@ -115,7 +115,7 @@ require_once '../classes/userutils.class.php';
           if ($student_databaseID !== false) {
             $students[$student['sid']]['dbID'] = $student_databaseID;
 
-            $result = $mysqli->prepare("SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND  userID=? AND calendar_year=?");
+            $result = $mysqli->prepare("SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND  userID = ? AND calendar_year = ?");
             $result->bind_param('is', $student_databaseID, $student['session']);
             $result->execute();
             $result->store_result();
@@ -152,8 +152,10 @@ require_once '../classes/userutils.class.php';
               }
               if ($require_insert) {
                 if (isset($students[$sid]['dbID'])) {
-                  UserUtils::add_student_to_module($students[$sid]['dbID'], $module_list[$module], $attempt, $session, $mysqli);
-                  $modulesAdded++;
+                  $success = UserUtils::add_student_to_module($students[$sid]['dbID'], $module_list[$module], $attempt, $session, $mysqli);
+                  if ($success) {
+                    $modulesAdded++;
+                  }
                 } else {
                   $missing_users[$sid]['module'][] = $module;
                 }

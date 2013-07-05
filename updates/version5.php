@@ -658,41 +658,46 @@ if (!isset($_POST['update'])) {
       
     }
     $result->close();
-
   }
 
 
-    // 04/07/2013 - cczsa1 - enhanced question type config
+  // 04/07/2013 (cczsa1) - enhanced question type config
+  $new_lines = array("\n// Enhanced Calculation question config\n", "\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5);\n");
 
-    $new_lines = array("\n// Enhanced Calculation question config\n", "\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5);\n");
-
-    $target_line = '$cfg_password_expire';
-    $updater_utils->add_line('$enhancedcalculation', $new_lines, 80, $cfg_web_root, $target_line, 1);
+  $target_line = '$cfg_password_expire';
+  $updater_utils->add_line('$enhancedcalculation', $new_lines, 80, $cfg_web_root, $target_line, 1);
 
 
-    // 04/07/2013 - cczsa1 - add new field to logs to indicate an error state
-    if (!$updater_utils->does_column_exist('log0', 'errorstate')) {
-      $updater_utils->execute_query("ALTER TABLE log0 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
-    }
-    if (!$updater_utils->does_column_exist('log0_deleted', 'errorstate')) {
-      $updater_utils->execute_query("ALTER TABLE log0_deleted ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
-    }
-    if (!$updater_utils->does_column_exist('log1', 'errorstate')) {
-      $updater_utils->execute_query("ALTER TABLE log1 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
-    }
-    if (!$updater_utils->does_column_exist('log1_deleted', 'errorstate')) {
-      $updater_utils->execute_query("ALTER TABLE log1_deleted ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
-    }
-    if (!$updater_utils->does_column_exist('log2', 'errorstate')) {
-      $updater_utils->execute_query("ALTER TABLE log2 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
-    }
-    if (!$updater_utils->does_column_exist('log3', 'errorstate')) {
-      $updater_utils->execute_query("ALTER TABLE log3 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
-    }
+  // 04/07/2013 (cczsa1) - add new field to logs to indicate an error state
+  if (!$updater_utils->does_column_exist('log0', 'errorstate')) {
+    $updater_utils->execute_query("ALTER TABLE log0 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+  }
+  if (!$updater_utils->does_column_exist('log0_deleted', 'errorstate')) {
+    $updater_utils->execute_query("ALTER TABLE log0_deleted ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+  }
+  if (!$updater_utils->does_column_exist('log1', 'errorstate')) {
+    $updater_utils->execute_query("ALTER TABLE log1 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+  }
+  if (!$updater_utils->does_column_exist('log1_deleted', 'errorstate')) {
+    $updater_utils->execute_query("ALTER TABLE log1_deleted ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+  }
+  if (!$updater_utils->does_column_exist('log2', 'errorstate')) {
+    $updater_utils->execute_query("ALTER TABLE log2 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+  }
+  if (!$updater_utils->does_column_exist('log3', 'errorstate')) {
+    $updater_utils->execute_query("ALTER TABLE log3 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
+  }
 
-    /*
-     *****   NOW UPDATE THE INSTALLER SCRIPT   *****
-     */
+  // 05/07/2013 (brzsw) - add new type of feedback
+  if (!$updater_utils->does_column_type_value_exist('feedback_release', 'type', "enum('objectives','questions','cohort_performance')")) {
+    $updater_utils->execute_query("ALTER TABLE feedback_release CHANGE type type enum('objectives','questions','cohort_performance') DEFAULT NULL", true);
+  }
+
+
+
+  /*
+   *****   NOW UPDATE THE INSTALLER SCRIPT   *****
+   */
 
   // End of updates -----------------------------------------------------------------
 
