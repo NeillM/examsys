@@ -81,7 +81,7 @@ Class QuestionStatus {
         throw new ItemExistsException();
       }
 
-      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, change_locked, display_order) SELECT ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
+      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, change_locked, display_order) SELECT ?, ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
       $result = $this->_db->prepare($sql);
       $result->bind_param('siiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked);
       if ($result->execute()) {

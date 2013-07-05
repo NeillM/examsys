@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -25,40 +25,38 @@
   require_once '../../classes/searchutils.class.php';
   require_once '../../classes/schoolutils.class.php';
   require_once '../../classes/logger.class.php';
-  
-  function render_metadata($mysqlidb, $question, $bloom_on, $module, $disabled, &$string, $userObj) {
+
+  function render_metadata($db, $question, $bloom_on, $module, $disabled, &$string, $userObj) {
     global $staff_modules, $faculty;
-  
-    $configObject = Config::get_instance(); 
-    $current_status = ($question->get_status() == '') ? $string['normal'] : $question->get_status();
-    
+
+    $configObject = Config::get_instance();
+
     $html = <<< META
           <table id="q-metadata-basic" class="form" summary="{$string['qmetasummary']}">
             <tbody>
               <tr>
                 <th>{$string['status']}</th>
                 <td>
-                  <ul class="radio-list horizontal">
+                  <ul id="status_list" class="radio-list horizontal">
 
 META;
 
-    $status_array = array($string['normal'], $string['retired'], $string['incomplete'], $string['experimental'], $string['beta']);
+    $status_array = QuestionStatus::get_all_statuses($db, $string);
     foreach ($status_array as $status) {
-      $checked = ($current_status == $status) ? ' checked="checked"' : '';
-      if ($disabled != '' and $status != $string['normal'] and $status != $string['retired']) {
+      $checked = ($question->get_status() == $status->id) ? ' checked="checked"' : '';
+      if ($disabled != '' and !$status->get_change_locked()) {
         $disabled_mod = ' disabled="disabled"';
         $disabled_class = ' class="disabled"';
       } else {
         $disabled_mod = $disabled_class = '';
       }
-      
-      $status_str = strtolower($status);
+
       $html .= <<< STATUS
-										<li><input id="status-{$status_str}" name="status" value="{$status}"{$checked} type="radio"{$disabled_mod} /> <label for="status-{$status_str}"{$disabled_class}>{$status}</label></li>
+                    <li><input id="status_{$status->id}" name="status" value="{$status->id}"{$checked} type="radio"{$disabled_mod} /> <label for="status_{$status->id}"{$disabled_class}>{$status->get_name()}</label></li>
 
 STATUS;
     }
-    
+
     $html .= <<< META
                   </ul>
                 </td>
@@ -66,7 +64,7 @@ STATUS;
 
 META;
 
-    
+
     if ($bloom_on) {
       $html .= <<< META
               <tr>
@@ -92,14 +90,14 @@ BLOOM;
 
 META;
     }
-    
+
     $html .= <<< META
   					</tbody>
   				</table>
 
 META;
-    
-    
+
+
     // Teams - staff_modules
     if (!is_array($module) or count($module) == 0) {
       $module = $question->get_teams();
@@ -113,7 +111,7 @@ META;
       // No teams passed in, use all teams the current user is on.
       $module = $staff_modules;
     }
-    
+
     $html .= <<< META
           <div class="form">
             <div id="keyword-select" class="select-area">
@@ -123,9 +121,9 @@ META;
 META;
 
     if (count($module) > 0) {
-      $keywords = search_utils::get_keywords($mysqlidb, $module, $userObj->get_user_ID());
+      $keywords = search_utils::get_keywords($db, $module, $userObj->get_user_ID());
       $question_keywords = $question->get_keywords();
-      
+
       $i = 0;
       if (count($keywords['team']) > 0) {
         $prev_heading = '';
@@ -137,7 +135,7 @@ META;
 
 META;
             }
-          
+
             $html .= <<< META
       					<h4><span class="opaque">{$keyword['module_id']}</span></h4>
                 <ul class="radio-list clearfix">
@@ -145,8 +143,8 @@ META;
 META;
             $prev_heading = $keyword['module_id'];
           }
-          
-          $checked = $on = ''; 
+
+          $checked = $on = '';
           if(in_array($keyword['keyword_id'], $question_keywords)) {
             $checked = ' checked="checked"';
             $on = ' on';
@@ -158,13 +156,13 @@ META;
 META;
           $i++;
         }
-              
+
         $html .= <<< META
       					</ul>
 
 META;
       }
-      
+
       if (count($keywords['personal']) > 0) {
         $html .= <<< META
                 <h4><span class="opaque">{$string['keywords']}</span></h4>
@@ -173,7 +171,7 @@ META;
 META;
 
         foreach ($keywords['personal'] as $keyword) {
-          $checked = $on = ''; 
+          $checked = $on = '';
           if(in_array($keyword['keyword_id'], $question_keywords)) {
             $checked = ' checked="checked"';
             $on = ' on';
@@ -181,24 +179,24 @@ META;
           $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, $configObject->get('cfg_page_charset'));
           $html .= <<< META
       						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$enc_keyword}</label></li>
-          
+
 META;
           $i++;
         }
-        
+
         $html .= <<< META
           			</ul>
 
 META;
       }
-      
+
       $html .= <<< META
               </div>
       			</div>
 
 META;
     }
-      
+
     $html .= <<< META
         		<div id="team-select" class="select-area">
               <h3>{$string['teams']}</h3>
@@ -227,14 +225,14 @@ META;
 HEADING;
         $prev_heading = $individual_team['school'];
       }
-      
+
       // Selected if: in existing teams for the question OR we have a module ID passed and the user is on that team (or is sysadmin)
       $checked = $on = '';
       if (in_array($team_name, $current_teams) or $team_name == $module) {
         $checked = ' checked="checked"';
         $on = ' on';
       }
-            
+
       $enc_name = htmlentities($fullname, ENT_COMPAT, $configObject->get('cfg_page_charset'));
       $html .= <<< META
                 	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_idMod}" type="checkbox"{$checked} /> {$team_name}: {$enc_name}</label></li>
@@ -243,25 +241,25 @@ META;
 
       $i++;
     }
-    
+
 
     $html .= <<< META
       					</ul>
               </div>
             </div>
           </div>
-    
+
 META;
-    
+
     return $html;
   }
-  
-  function keyword_id_to_text($list, $mysqlidb) {
+
+  function keyword_id_to_text($list, $db) {
     $keywordIDs = implode(',', $list);
-    
+
     $keyword_text = '';
     if ($keywordIDs != '') {
-      $result = $mysqlidb->prepare("SELECT keyword FROM keywords_user WHERE id IN ($keywordIDs)");
+      $result = $db->prepare("SELECT keyword FROM keywords_user WHERE id IN ($keywordIDs)");
       $result->execute();
       $result->bind_result($keyword);
       while ($result->fetch()) {
@@ -273,10 +271,10 @@ META;
       }
       $result->close();
     }
-    
+
     return $keyword_text;
   }
-  
+
   function getKeywords() {
     $keywords = '';
     $tmp_list = array();
@@ -287,25 +285,25 @@ META;
     }
     return $tmp_list;
   }
-  
-  function save_keywords($question, $userID, $edit, $mysqlidb, &$string) {
+
+  function save_keywords($question, $userID, $edit, $db, &$string) {
     $keyword_changes = false;
     $updated_list = (isset($_POST['keywords'])) ? $_POST['keywords'] : array();
-    
+
     if ($edit == true) {
       $existing_list = $question->get_keywords();
     } else {
       $existing_list = array();
     }
-    
+
     // First go through the list of updated keywords looking for new ones to add.
     foreach ($updated_list as $updated) {
       if (!in_array($updated, $existing_list)) {
-        $query = $mysqlidb->prepare("INSERT INTO keywords_question VALUES (?, ?)");
+        $query = $db->prepare("INSERT INTO keywords_question VALUES (?, ?)");
         $query->bind_param('ii', $question->id, $updated);
         $query->execute();
         $query->close();
-        
+
         $keyword_changes = true;
       }
     }
@@ -314,24 +312,24 @@ META;
       // Next go through the list of old keywords looking for ones to delete.
       foreach ($existing_list as $existing) {
         if (!in_array($existing, $updated_list) and $existing != '') {
-          $query = $mysqlidb->prepare("DELETE FROM keywords_question WHERE q_id=? AND keywordID=?");
+          $query = $db->prepare("DELETE FROM keywords_question WHERE q_id=? AND keywordID=?");
           $query->bind_param('ii', $question->id, $existing);
           $query->execute();
           $query->close();
-          
+
           $keyword_changes = true;
         }
       }
-      
+
       if ($keyword_changes == true) {
-        $logger = new Logger($mysqlidb);
-        $logger->track_change($string['editquestion'], $question->id, $userID, keyword_id_to_text($existing_list, $mysqlidb), keyword_id_to_text($updated_list, $mysqlidb), 'keywords');
+        $logger = new Logger($db);
+        $logger->track_change($string['editquestion'], $question->id, $userID, keyword_id_to_text($existing_list, $db), keyword_id_to_text($updated_list, $db), 'keywords');
 
         $question->set_keywords($updated_list);
       }
     }
   }
-    
+
   function getDefaultTeam() {
     $team = '';
     for ($i=0; $i<$_POST['team_no']; $i++) {
@@ -341,5 +339,5 @@ META;
     }
     return $team;
   }
-  
+
 ?>
