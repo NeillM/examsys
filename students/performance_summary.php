@@ -58,7 +58,7 @@ function get_taken_papers($userID, $db) {
   $i = 0;
   
   // Query for Summative and Offline papers
-  $result = $db->prepare("SELECT DISTINCT paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? AND type = 'cohort_performance' ORDER BY calendar_year DESC");
+  $result = $db->prepare("SELECT DISTINCT paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? ORDER BY calendar_year DESC");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
@@ -80,7 +80,7 @@ function get_taken_papers($userID, $db) {
   $result->close();
   
   // Query for OSCE stations
-  $result = $db->prepare("SELECT DISTINCT q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? AND type = 'cohort_performance' ORDER BY calendar_year DESC");
+  $result = $db->prepare("SELECT DISTINCT q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? ORDER BY calendar_year DESC");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
