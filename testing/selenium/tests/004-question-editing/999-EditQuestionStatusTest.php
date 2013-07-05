@@ -47,4 +47,73 @@ class EditQuestionStatusTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertEquals($val, '5');
     $this->assertText('css=#status_list li:nth-child(5) label', 'Beta');
   }
+
+  public function testCorrectStatusSouldBeSelected() {
+    do_staff_login($this);
+
+    $this->open("/paper/details.php?paperID=1&folder=&module=3");
+    $this->click("css=td.l");
+    $this->click("link=Edit Question");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertElementValueContains('id=status_1', 'on');
+    $this->assertElementValueContains('id=status_2', 'off');
+    $this->assertElementValueContains('id=status_3', 'off');
+    $this->assertElementValueContains('id=status_4', 'off');
+    $this->assertElementValueContains('id=status_5', 'off');
+  }
+
+  public function testCanChangeStatus() {
+    do_staff_login($this);
+
+    $this->open("/paper/details.php?paperID=1&folder=&module=3");
+    $this->click("css=td.l");
+    $this->click("link=Edit Question");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertElementValueContains('id=status_1', 'on');
+    $this->assertElementValueContains('id=status_2', 'off');
+    $this->assertElementValueContains('id=status_3', 'off');
+    $this->assertElementValueContains('id=status_4', 'off');
+    $this->assertElementValueContains('id=status_5', 'off');
+
+    $this->click("id=status_2");
+    $this->click("id=submit-save");
+    $this->waitForPageToLoad("30000");
+    $this->click("css=td.l");
+    $this->click("link=Edit Question");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertElementValueContains('id=status_1', 'off');
+    $this->assertElementValueContains('id=status_2', 'on');
+    $this->assertElementValueContains('id=status_3', 'off');
+    $this->assertElementValueContains('id=status_4', 'off');
+    $this->assertElementValueContains('id=status_5', 'off');
+
+    $this->click("id=status_4");
+    $this->click("id=submit-save");
+    $this->waitForPageToLoad("30000");
+    $this->click("css=td.l");
+    $this->click("link=Edit Question");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertElementValueContains('id=status_1', 'off');
+    $this->assertElementValueContains('id=status_2', 'off');
+    $this->assertElementValueContains('id=status_3', 'off');
+    $this->assertElementValueContains('id=status_4', 'on');
+    $this->assertElementValueContains('id=status_5', 'off');
+
+    $this->click("id=status_1");
+    $this->click("id=submit-save");
+    $this->waitForPageToLoad("30000");
+    $this->click("css=td.l");
+    $this->click("link=Edit Question");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertElementValueContains('id=status_1', 'on');
+    $this->assertElementValueContains('id=status_2', 'off');
+    $this->assertElementValueContains('id=status_3', 'off');
+    $this->assertElementValueContains('id=status_4', 'off');
+    $this->assertElementValueContains('id=status_5', 'off');
+  }
 }
