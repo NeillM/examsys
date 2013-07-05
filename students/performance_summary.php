@@ -58,11 +58,11 @@ function get_taken_papers($userID, $db) {
   $i = 0;
   
   // Query for Summative and Offline papers
-  $result = $db->prepare("SELECT DISTINCT paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? ORDER BY calendar_year DESC");
+  $result = $db->prepare("SELECT DISTINCT paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? ORDER BY calendar_year DESC");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release);
+  $result->bind_result($paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
   while ($result->fetch()) {
     $papers[$i]['paperID']        = $paperID;
     $papers[$i]['paper_title']    = $paper_title;
@@ -74,17 +74,18 @@ function get_taken_papers($userID, $db) {
     $results_cache = new ResultsCache($db);
     $papers[$i]['stats']          = $results_cache->get_paper_cache($paperID);
     $papers[$i]['idfeedback_release'] = $idfeedback_release;
+    $papers[$i]['feedback_type'] = $feedback_type;
 
     $i++;
   }
   $result->close();
   
   // Query for OSCE stations
-  $result = $db->prepare("SELECT DISTINCT q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? ORDER BY calendar_year DESC");
+  $result = $db->prepare("SELECT DISTINCT q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? ORDER BY calendar_year DESC");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release);
+  $result->bind_result($paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
   while ($result->fetch()) {
     $papers[$i]['paperID']        = $paperID;
     $papers[$i]['paper_title']    = $paper_title;
@@ -96,6 +97,7 @@ function get_taken_papers($userID, $db) {
     $results_cache = new ResultsCache($db);
     $papers[$i]['stats']          = $results_cache->get_paper_cache($paperID);
     $papers[$i]['idfeedback_release'] = $idfeedback_release;
+    $papers[$i]['feedback_type'] = $feedback_type;
 
     $i++;
   }
@@ -243,7 +245,7 @@ foreach ($papers as $paper) {
   if ($paper['stats']['max_mark'] == '') {
     $display_paper = false;
   }
-  if ($userObject->has_role('Student') and $paper['idfeedback_release'] == '') {
+  if ($userObject->has_role('Student') and $paper['feedback_type'] != 'cohort_performance') {
     $display_paper = false;
   }
 
