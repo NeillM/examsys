@@ -18,6 +18,14 @@
   background: transparent url('../artwork/edit_grey.png') no-repeat left center;
 }
 
+#delete_status {
+  background: transparent url('../artwork/red_cross.png') no-repeat left center;
+}
+
+#delete_status.greymenuitem {
+  background: transparent url('../artwork/red_cross_grey.png') no-repeat left center;
+}
+
 #statuses {
 	list-style: none;
 	padding-left: 0;

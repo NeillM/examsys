@@ -219,7 +219,7 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("link=Delete Status");
     $this->waitForPopUp("deleteitem", "30000");
     $this->selectWindow("name=deleteitem");
-    $this->assertTextPresent('Cannot delete a question status to which questions are assigned');
+    $this->assertTextPresent('You cannot delete a question status to which questions are assigned');
   }
 
   public function testCantCreateDuplicateStatus() {
