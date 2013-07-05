@@ -46,6 +46,9 @@ class EditQuestionStatusTest extends PHPUnit_Extensions_SeleniumTestCase
     $val = $this->getAttribute('id=status_5@value');
     $this->assertEquals($val, '5');
     $this->assertText('css=#status_list li:nth-child(5) label', 'Beta');
+
+    $this->click("id=submit-cancel");
+    $this->waitForPageToLoad("30000");
   }
 
   public function testCorrectStatusSouldBeSelected() {
@@ -61,6 +64,9 @@ class EditQuestionStatusTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementValueContains('id=status_3', 'off');
     $this->assertElementValueContains('id=status_4', 'off');
     $this->assertElementValueContains('id=status_5', 'off');
+
+    $this->click("id=submit-cancel");
+    $this->waitForPageToLoad("30000");
   }
 
   public function testCanChangeStatus() {
@@ -115,6 +121,9 @@ class EditQuestionStatusTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementValueContains('id=status_3', 'off');
     $this->assertElementValueContains('id=status_4', 'off');
     $this->assertElementValueContains('id=status_5', 'off');
+
+    $this->click("id=submit-cancel");
+    $this->waitForPageToLoad("30000");
   }
 
   public function testNewQuestionShouldSHowDefaultStatus() {
@@ -130,5 +139,8 @@ class EditQuestionStatusTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertElementValueContains('id=status_3', 'off');
     $this->assertElementValueContains('id=status_4', 'off');
     $this->assertElementValueContains('id=status_5', 'off');
+
+    $this->click("id=submit-cancel");
+    $this->waitForPageToLoad("30000");
   }
 }

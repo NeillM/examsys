@@ -257,7 +257,7 @@ Class QuestionStatus {
    * @param  array $lang_strings    Language Strings
    * @return array[QuestionStatus]  Existing statuses
    */
-  public static function get_all_statuses($db, $lang_strings) {
+  public static function get_all_statuses($db, $lang_strings, $with_index = false) {
     $statuses = array();
 
     $sql = "SELECT id, name, exclude_marking, exclude_search, is_default, change_locked FROM question_statuses ORDER BY display_order";
@@ -268,7 +268,12 @@ Class QuestionStatus {
     $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default, $change_locked);
     while ($result->fetch()) {
       $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default, 'change_locked' => $change_locked);
-      $statuses[] = new QuestionStatus($db, $lang_strings, $data);
+      $qs = new QuestionStatus($db, $lang_strings, $data);
+      if (!$with_index) {
+        $statuses[] = $qs;
+      } else {
+        $statuses[$id] = $qs;
+      }
     }
     $result->close();
 

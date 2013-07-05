@@ -446,7 +446,7 @@ echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['excludedquestio
 echo '<Cell><Data ss:Type="String">' . $report->get_display_excluded() . '</Data></Cell>';
 echo '</Row>';
 echo '<Row>';
-echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['experimantalquestions'] . '</Data></Cell>';
+echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['skippedquestions'] . '</Data></Cell>';
 echo '<Cell><Data ss:Type="String">' . $report->get_display_experimental() . '</Data></Cell>';
 echo '</Row>';
 echo '  </Table>';
