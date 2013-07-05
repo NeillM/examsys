@@ -982,11 +982,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     // Create default question statuses
     $statuses = array(
-      array('name' => 'Normal', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => true, 'display_order' => 0),
-      array('name' => 'Retired', 'exclude_marking' => false, 'exclude_search' => true, 'is_default' => false, 'display_order' => 1),
-      array('name' => 'Incomplete', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'display_order' => 2),
-      array('name' => 'Experimental', 'exclude_marking' => true, 'exclude_search' => false, 'is_default' => false, 'display_order' => 3),
-      array('name' => 'Beta', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'display_order' => 4)
+      array('name' => 'Normal', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => true, 'change_locked' => true, 'display_order' => 0),
+      array('name' => 'Retired', 'exclude_marking' => false, 'exclude_search' => true, 'is_default' => false, 'change_locked' => true, 'display_order' => 1),
+      array('name' => 'Incomplete', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'display_order' => 2),
+      array('name' => 'Experimental', 'exclude_marking' => true, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'display_order' => 3),
+      array('name' => 'Beta', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'display_order' => 4)
     );
 
     foreach ($statuses as $data) {
@@ -2385,9 +2385,10 @@ QUERY;
         CREATE TABLE `question_statuses` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `name` varchar(255) NOT NULL,
-          `exclude_marking` tinyint(4) NOT NULL DEFAULT '0',
-          `exclude_search` tinyint(4) NOT NULL DEFAULT '0',
-          `is_default` tinyint(4) NOT NULL DEFAULT '0',
+          `exclude_marking` tinyint(3) NOT NULL DEFAULT '0',
+          `exclude_search` tinyint(3) NOT NULL DEFAULT '0',
+          `is_default` tinyint(3) NOT NULL DEFAULT '0',
+          `change_locked` tinyint(3) NOT NULL DEFAULT '1',
           `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -2418,7 +2419,7 @@ QUERY;
           `deleted` datetime default NULL,
           `locked` datetime default NULL,
           `std` varchar(100) default NULL,
-          `status` enum('Normal','Retired','Incomplete','Experimental','Beta') default NULL,
+          `status` tinyint(3) NOT NULL,
           `q_option_order` enum('display order','alphabetic','random') default NULL,
           `score_method` enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark') default NULL,
           `settings` text,

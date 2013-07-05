@@ -30,212 +30,213 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click('id=exclude_marking');
     $this->click('id=exclude_search');
     $this->click('id=is_default');
+    $this->click('id=change_locked');
     $this->click('name=submit');
     $this->waitForPageToLoad('30000');
     $this->assertTextPresent('Short Lived Status');
     $this->assertCssCount('css=.selectable', 6);
   }
 
-  public function testCantCreateStatusWithoutName() {
-    do_admin_login($this);
+  // public function testCantCreateStatusWithoutName() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
-    $this->waitForPageToLoad("30000");
-    $this->click("link=Create new Status");
-    $this->waitForPageToLoad("30000");
-    $this->assertTitle('Add Status' . $this->install_type);
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->click("link=Create new Status");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertTitle('Add Status' . $this->install_type);
 
-    $this->click('id=exclude_marking');
-    $this->click('id=exclude_search');
-    $this->click('id=is_default');
-    $this->click('name=submit');
-    $this->assertEquals("Please enter name for the status.", $this->getAlert());
+  //   $this->click('id=exclude_marking');
+  //   $this->click('id=exclude_search');
+  //   $this->click('id=is_default');
+  //   $this->click('name=submit');
+  //   $this->assertEquals("Please enter name for the status.", $this->getAlert());
 
-    $this->type("id=name", "");
-    $this->click("name=submit");
-    $this->assertEquals("Please enter name for the status.", $this->getAlert());
-  }
+  //   $this->type("id=name", "");
+  //   $this->click("name=submit");
+  //   $this->assertEquals("Please enter name for the status.", $this->getAlert());
+  // }
 
-  /**
-   * @depends testCreateStatus
-   */
-  public function testEditStatus() {
-    do_admin_login($this);
+  // /**
+  //  * @depends testCreateStatus
+  //  */
+  // public function testEditStatus() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
-    $this->click("css=#status_6");
-    $this->click("link=Edit Status");
-    $this->waitForPageToLoad("30000");
-    $this->assertTitle('Edit Status' . $this->install_type);
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->click("css=#status_6");
+  //   $this->click("link=Edit Status");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertTitle('Edit Status' . $this->install_type);
 
-    $this->assertElementValueContains("id=name", "Short Lived Status");
+  //   $this->assertElementValueContains("id=name", "Short Lived Status");
 
-    $this->type("id=name", "Short Lived Status2");
-    $this->click("name=submit");
-    $this->waitForPageToLoad("30000");
+  //   $this->type("id=name", "Short Lived Status2");
+  //   $this->click("name=submit");
+  //   $this->waitForPageToLoad("30000");
 
-    $this->assertTextPresent('Short Lived Status2');
+  //   $this->assertTextPresent('Short Lived Status2');
 
-    $this->doubleClick("css=#status_6");
-    $this->waitForPageToLoad("30000");
+  //   $this->doubleClick("css=#status_6");
+  //   $this->waitForPageToLoad("30000");
 
-    $this->assertElementValueContains("id=name", "Short Lived Status2");
+  //   $this->assertElementValueContains("id=name", "Short Lived Status2");
 
-    $this->type("id=name", "Short Lived Status3");
-    $this->click("name=submit");
-    $this->waitForPageToLoad("30000");
+  //   $this->type("id=name", "Short Lived Status3");
+  //   $this->click("name=submit");
+  //   $this->waitForPageToLoad("30000");
 
-    $this->assertTextPresent('Short Lived Status3');
-  }
+  //   $this->assertTextPresent('Short Lived Status3');
+  // }
 
-  public function testShouldShowDefault() {
-    do_admin_login($this);
+  // public function testShouldShowDefault() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
-    $this->assertElementPresent('css=.selectable.default');
-  }
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->assertElementPresent('css=.selectable.default');
+  // }
 
-  public function testShouldChangeDefault() {
-    do_admin_login($this);
+  // public function testShouldChangeDefault() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
-    $this->click("css=#status_2");
-    $this->click("link=Edit Status");
-    $this->waitForPageToLoad("30000");
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->click("css=#status_2");
+  //   $this->click("link=Edit Status");
+  //   $this->waitForPageToLoad("30000");
 
-    $this->click('id=is_default');
-    $this->click("name=submit");
-    $this->waitForPageToLoad("30000");
-    $this->assertElementPresent('css=#status_2.default');
+  //   $this->click('id=is_default');
+  //   $this->click("name=submit");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertElementPresent('css=#status_2.default');
 
-    $this->doubleClick("css=#status_1");
-    $this->waitForPageToLoad("30000");
-    $this->click('id=is_default');
-    $this->click("name=submit");
-    $this->waitForPageToLoad("30000");
-    $this->assertElementPresent('css=#status_1.default');
-  }
+  //   $this->doubleClick("css=#status_1");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->click('id=is_default');
+  //   $this->click("name=submit");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertElementPresent('css=#status_1.default');
+  // }
 
-  public function testShouldBeOnlyOneDefault() {
-    do_admin_login($this);
+  // public function testShouldBeOnlyOneDefault() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
-    $this->click("css=#status_2");
-    $this->click("link=Edit Status");
-    $this->waitForPageToLoad("30000");
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->click("css=#status_2");
+  //   $this->click("link=Edit Status");
+  //   $this->waitForPageToLoad("30000");
 
-    $this->click('id=is_default');
-    $this->click("name=submit");
-    $this->waitForPageToLoad("30000");
-    $this->assertCssCount('css=.selectable.default', 1);
+  //   $this->click('id=is_default');
+  //   $this->click("name=submit");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertCssCount('css=.selectable.default', 1);
 
-    $this->doubleClick("css=#status_1");
-    $this->waitForPageToLoad("30000");
-    $this->click('id=is_default');
-    $this->click("name=submit");
-    $this->waitForPageToLoad("30000");
-    $this->assertCssCount('css=.selectable.default', 1);
-  }
+  //   $this->doubleClick("css=#status_1");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->click('id=is_default');
+  //   $this->click("name=submit");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertCssCount('css=.selectable.default', 1);
+  // }
 
-  public function testShouldPerformReorder() {
-    do_admin_login($this);
+  // public function testShouldPerformReorder() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
+  //   $this->open("/admin/list_statuses.php");
 
-    $this->mouseDownAt('css=#status_2', '5,8');
-    $this->mouseMoveAt('css=#status_1', '5,8');
-    $this->mouseUpAt('css=#status_1', '');
+  //   $this->mouseDownAt('css=#status_2', '5,8');
+  //   $this->mouseMoveAt('css=#status_1', '5,8');
+  //   $this->mouseUpAt('css=#status_1', '');
 
-    usleep(200000);
+  //   usleep(200000);
 
-    $this->open("/admin/list_statuses.php");
-    $this->waitForPageToLoad("30000");
-    $this->assertText('css=#statuses li:first-child', 'Retired');
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertText('css=#statuses li:first-child', 'Retired');
 
-    $this->mouseDownAt('css=#status_1', '5,8');
-    $this->mouseMoveAt('css=#status_2', '5,8');
-    $this->mouseUpAt('css=#status_2', '');
+  //   $this->mouseDownAt('css=#status_1', '5,8');
+  //   $this->mouseMoveAt('css=#status_2', '5,8');
+  //   $this->mouseUpAt('css=#status_2', '');
 
-    usleep(200000);
+  //   usleep(200000);
 
-    $this->open("/admin/list_statuses.php");
-    $this->waitForPageToLoad("30000");
-    $this->assertText('css=#statuses li:first-child', 'Normal');
-  }
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertText('css=#statuses li:first-child', 'Normal');
+  // }
 
-  /**
-   * @depends testCreateStatus
-   */
-  public function testDeleteStatus() {
-    do_admin_login($this);
+  // /**
+  //  * @depends testCreateStatus
+  //  */
+  // public function testDeleteStatus() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
-    $this->waitForPageToLoad("30000");
-    $this->click("css=#status_6");
-    $this->click("link=Delete Status");
-    $this->waitForPopUp("deleteitem", "30000");
-    $this->selectWindow("name=deleteitem");
-    $this->click("name=submit");
-    $this->selectWindow('null');
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->click("css=#status_6");
+  //   $this->click("link=Delete Status");
+  //   $this->waitForPopUp("deleteitem", "30000");
+  //   $this->selectWindow("name=deleteitem");
+  //   $this->click("name=submit");
+  //   $this->selectWindow('null');
 
-    $this->open("/admin/list_statuses.php");
-    $this->waitForPageToLoad("30000");
-    $this->assertTextNotPresent('Short Lived Status3');
-  }
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertTextNotPresent('Short Lived Status3');
+  // }
 
-  public function testDeleteReassignsDefault() {
-    do_admin_login($this);
+  // public function testDeleteReassignsDefault() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
-    $this->waitForPageToLoad("30000");
-    $this->click("link=Create new Status");
-    $this->waitForPageToLoad("30000");
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->click("link=Create new Status");
+  //   $this->waitForPageToLoad("30000");
 
-    $this->type('id=name', 'Short Lived Status');
-    $this->click('id=is_default');
-    $this->click('name=submit');
-    $this->waitForPageToLoad('30000');
-    $this->assertTextPresent('Short Lived Status');
-    $this->assertCssCount('css=.selectable', 6);
+  //   $this->type('id=name', 'Short Lived Status');
+  //   $this->click('id=is_default');
+  //   $this->click('name=submit');
+  //   $this->waitForPageToLoad('30000');
+  //   $this->assertTextPresent('Short Lived Status');
+  //   $this->assertCssCount('css=.selectable', 6);
 
-    $this->click("css=#status_7");
-    $this->click("link=Delete Status");
-    $this->waitForPopUp("deleteitem", "30000");
-    $this->selectWindow("name=deleteitem");
-    $this->click("name=submit");
-    $this->selectWindow('null');
+  //   $this->click("css=#status_7");
+  //   $this->click("link=Delete Status");
+  //   $this->waitForPopUp("deleteitem", "30000");
+  //   $this->selectWindow("name=deleteitem");
+  //   $this->click("name=submit");
+  //   $this->selectWindow('null');
 
-    $this->open("/admin/list_statuses.php");
-    $this->waitForPageToLoad("30000");
-    $this->assertElementPresent('css=#statuses li:first-child.default');
-  }
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertElementPresent('css=#statuses li:first-child.default');
+  // }
 
-  public function testCannotDeleteAssignedStatus() {
-    do_admin_login($this);
+  // public function testCannotDeleteAssignedStatus() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
-    $this->waitForPageToLoad("30000");
-    $this->click("css=#status_1");
-    $this->click("link=Delete Status");
-    $this->waitForPopUp("deleteitem", "30000");
-    $this->selectWindow("name=deleteitem");
-    $this->assertTextPresent('You cannot delete a question status to which questions are assigned');
-  }
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->click("css=#status_1");
+  //   $this->click("link=Delete Status");
+  //   $this->waitForPopUp("deleteitem", "30000");
+  //   $this->selectWindow("name=deleteitem");
+  //   $this->assertTextPresent('You cannot delete a question status to which questions are assigned');
+  // }
 
-  public function testCantCreateDuplicateStatus() {
-    do_admin_login($this);
+  // public function testCantCreateDuplicateStatus() {
+  //   do_admin_login($this);
 
-    $this->open("/admin/list_statuses.php");
-    $this->waitForPageToLoad("30000");
-    $this->click("link=Create new Status");
-    $this->waitForPageToLoad("30000");
-    $this->assertTitle('Add Status' . $this->install_type);
+  //   $this->open("/admin/list_statuses.php");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->click("link=Create new Status");
+  //   $this->waitForPageToLoad("30000");
+  //   $this->assertTitle('Add Status' . $this->install_type);
 
-    $this->type('id=name', 'Normal');
-    $this->click('name=submit');
-    $this->waitForPageToLoad('30000');
-    $this->assertTextPresent('Status names must be unique');
-    $this->assertLocation($this->page_root . '/admin/edit_status.php');
-  }
+  //   $this->type('id=name', 'Normal');
+  //   $this->click('name=submit');
+  //   $this->waitForPageToLoad('30000');
+  //   $this->assertTextPresent('Status names must be unique');
+  //   $this->assertLocation($this->page_root . '/admin/edit_status.php');
+  // }
 }
 ?>
