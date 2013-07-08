@@ -130,6 +130,7 @@ $string['on'] = 'Wł.';
 $string['off'] = 'Wył.';
 $string['objectivesreport'] = 'Odzew dot. celów';
 $string['questionfeedback'] = 'Odzew dot. pytań';
+$string['cohortperformancefeedback'] = 'Cohort Performance Report';
 $string['textualfeedback'] = 'Odzew tekstowy';
 $string['above'] = 'Powyżej';
 $string['message'] = 'Wiadomość';  

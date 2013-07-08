@@ -37,6 +37,7 @@ $string['back'] = 'Back';
 $string['search'] = 'Search';
 $string['currentusertasks'] = 'Current User Tasks';
 $string['viewuserfile'] = 'View user file';
+$string['performsummary'] = 'Performance Summary';
 $string['createnewuser'] = 'Create new user';
 $string['emailuser'] = 'Email User';
 $string['cohorttasks'] = 'Cohort Tasks';

@@ -37,6 +37,7 @@ $string['back'] = 'Wstecz';
 $string['search'] = 'Szukaj';
 $string['currentusertasks'] = 'Działania dot. aktualnego użytkownika';
 $string['viewuserfile'] = 'Podgląd plików użytkownika';
+$string['performsummary'] = 'Podsumowanie osiągnięć';
 $string['createnewuser'] = 'Utwórz nowego użytkownika';
 $string['emailuser'] = 'Wyślij Email do użytkownika';//???
 $string['cohorttasks'] = 'Działania grupowe';

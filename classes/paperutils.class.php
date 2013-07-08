@@ -392,6 +392,8 @@ Class PaperUtils {
       case 'questions':
         $html = "<img src=\"../artwork/question_release_icon.png\" width=\"48\" height=\"48\" alt=\"Questions Feedback\" />";
         break;
+       default:
+         var_dump($paper_type);
     }
     return $html;
   }

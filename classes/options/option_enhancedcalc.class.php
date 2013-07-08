@@ -38,7 +38,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
   protected $_fields_editable = array('min', 'max', 'decimals', 'increment', 'formula', 'units');
   private $_fields_var = array('min', 'max', 'decimals', 'increment');
   private $_fields_ans = array('formula', 'units');
-  protected $_fields_compound = array('correct');
+  protected $_fields_compound = array('correct' => 'integer');
 
   /**
    * This option is not directly persisted
@@ -224,6 +224,51 @@ Class OptionENHANCEDCALC extends OptionEdit {
       $this->set_modified_field('units', $this->units);
       $this->units = $value;
     }
+  }
+
+  /**
+   * Dummy method for required settings for corrector
+   * @return array
+   */
+  public function get_all_corrects() {
+    return array();
+  }
+
+  /**
+   * Dummy method for required settings for corrector
+   */
+  public function set_all_corrects() {
+    // Do nothing
+  }
+
+  /**
+   * Dummy method for required settings for corrector
+   * @return string
+   */
+  public function get_option_formula() {
+    return '';
+  }
+
+  /**
+   * Dummy method for required settings for corrector
+   */
+  public function set_option_formula() {
+    // Do nothing
+  }
+
+  /**
+   * Dummy method for required settings for corrector
+   * @return string
+   */
+  public function get_option_units() {
+    return '';
+  }
+
+  /**
+   * Dummy method for required settings for corrector
+   */
+  public function set_option_units() {
+    // Do nothing
   }
 
   // PRIVATE / PROTECTED METHODS

@@ -69,9 +69,7 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function viewPerformanceSummary() {
-    //document.location.href='../reports/performance_summary.php?userID=' + getLastID(document.getElementById('userID').value);
-    
-    window.open("../reports/performance_summary.php?userID=" + getLastID(document.getElementById('userID').value), "_blank");
+    window.open("../students/performance_summary.php?userID=" + getLastID(document.getElementById('userID').value), "_blank");
   }
   
   function deleteUser() {

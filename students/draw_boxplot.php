@@ -24,7 +24,7 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
+require '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 
 $scale        = check_var('scale', 'GET', true, false, true);

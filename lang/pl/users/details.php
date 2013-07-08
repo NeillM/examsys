@@ -102,7 +102,6 @@ $string['forcereset'] = 'Wymuś reset';
 $string['classifiedinfo'] = 'informacja zastrzeżona';
 $string['custom'] = 'Własna';
 $string['Access Denied']='Brak dostępu';
-$string['performsummary'] = 'Podsumowanie osiągnięć';
 
 //demo
 $string['demo1'] = 'Miasta';
