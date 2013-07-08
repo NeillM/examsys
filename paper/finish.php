@@ -132,16 +132,16 @@ if ($userObject->has_role('Student')) {
 }
 
 //are we in a staff test and preview mode?
-$is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
+$is_preview_mode = ($userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview');
 $is_summative_preview_mode = ($is_preview_mode and $propertyObj->get_paper_type() == '2');
 
 //are we in a staff test and preview mode and on the first screen?
-$is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
+$is_preview_mode_first_launch = ($is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview');
 
 //are we in a staff single question testmode
-$is_question_preview_mode = ( isset($_GET['q_id']) );
+$is_question_preview_mode = (isset($_GET['q_id']));
 
-$is_exam_review_mode        = ( $userObject->has_role('Staff') and isset($_GET['userid']) and $_GET['userid'] != $userObject->get_user_ID() );
+$is_exam_review_mode = ($userObject->has_role('Staff') and isset($_GET['userid']) and $_GET['userid'] != $userObject->get_user_ID());
 
 if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_mode) {
   // Turn on all feedback if staff and a student exam script is being reviewed.
@@ -151,12 +151,6 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
   $display_feedback           = 1;
   $hide_if_unanswered         = 0;
   $is_exam_review_mode        = true;
-}
-
-if (isset($_GET['previous'])) {
-  $previous = $_GET['previous'];
-} else {
-  $previous = '';
 }
 
 if (isset($_GET['userid'])) {
@@ -173,8 +167,13 @@ if (!$is_exam_review_mode and !$is_question_preview_mode) {
   //only update log metadata if we are ending an exam
   $log_metadata->set_completed_to_now();
 }
-$log_metadata->get_record($previous);
-$metadataid = $log_metadata->get_metadata_id();
+if (isset($_GET['metadataID'])) {
+  $log_metadata->get_record($_GET['metadataID']);
+  $metadataid = $_GET['metadataID'];
+} else {
+  $log_metadata->get_record();
+  $metadataid = $log_metadata->get_metadata_id();
+}
 
 if (isset($_GET['type'])) $log_type = $_GET['type'];
 
@@ -276,8 +275,9 @@ require '../config/finish.inc';
   }
   $old_q_id = 0;
   $old_screen = 0;
-  if (isset($_GET['previous'])) {
-    $sessionid = $_GET['previous'];
+  if (isset($_GET['metadataID'])) {
+    //$sessionid = $_GET['previous'];
+    $sessionid = $log_metadata->get_session_id();
     $log_type = $_GET['log_type'];
   } else {
     $sessionid = $_POST['sessionid'];

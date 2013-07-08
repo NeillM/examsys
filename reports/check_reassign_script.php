@@ -28,16 +28,14 @@ require_once '../include/staff_auth.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../include/errors.inc';
 
-$paperID  = check_var('paperID', 'GET', true, false, true);
-$userID   = check_var('userID', 'GET', true, false, true);
-$started  = check_var('started', 'GET', true, false, true);
-$log_type = check_var('log_type', 'GET', true, false, true);
+$paperID = check_var('paperID', 'GET', true, false, true);
+$userID  = check_var('userID', 'GET', true, false, true);
 
 function getModules($userID, $mysqlidb) {
   $modules = array();
   $session = date_utils::get_current_academic_year();
 
-  $result = $mysqlidb->prepare("SELECT idmod FROM modules_student WHERE calendar_year=? AND userID=?");
+  $result = $mysqlidb->prepare("SELECT idmod FROM modules_student WHERE calendar_year = ? AND userID = ?");
   $result->bind_param('si', $session, $userID);
   $result->execute();
   $result->bind_result($moduleid);
@@ -169,7 +167,7 @@ if ($target_userID == '') {
   $first_names = trim($temp_first_names) . '%';
   $temp_surname = trim($temp_surname);
   $temp_title = trim($temp_title);
-  $result = $mysqli->prepare("SELECT id, surname, first_names, title, gender, student_id FROM users LEFT JOIN sid ON users.id=sid.userID WHERE surname=? AND first_names LIKE ? AND (roles LIKE '%staff%' OR roles = 'student')");
+  $result = $mysqli->prepare("SELECT id, surname, first_names, title, gender, student_id FROM users LEFT JOIN sid ON users.id = sid.userID WHERE surname=? AND first_names LIKE ? AND (roles LIKE '%staff%' OR roles = 'student')");
   $result->bind_param('ss', $temp_surname, $first_names);
   $result->execute();
   $result->store_result();
@@ -185,7 +183,7 @@ if ($target_userID == '') {
   $result->close();
 }
 
-echo "<p style=\"color:#0033BC\">" . str_replace('user','Temporary Account ',$temp_username) . " " . $string['msg3'] . ":</p>\n<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&paperID=$paperID&started=$started&log_type=$log_type\">\n<table border=\"0\" style=\"width:100%\">\n";
+echo "<p style=\"color:#0033BC\">" . str_replace('user','Temporary Account ',$temp_username) . " " . $string['msg3'] . ":</p>\n<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&paperID=$paperID\">\n<table border=\"0\" style=\"width:100%\">\n";
 echo "<tr><th>" . $string['Title'] . "</th><th>" . $string['Last Name'] . "</th><th>" . $string['First Names'] . "</th><th>" . $string['Student ID'] . "</th><th></th></tr>\n";
 echo "<tr><td><input type=\"text\" name=\"title\" value=\"$temp_title\" size=\"5\" /></td><td><input type=\"text\" name=\"surname\" value=\"$temp_surname\" size=\"15\" /></td><td><input type=\"text\" name=\"first_names\" value=\"$temp_first_names\" size=\"15\" /></td><td><input type=\"text\" name=\"student_id\" value=\"$temp_student_id\" size=\"6\" /></td><td><input type=\"submit\" name=\"submit\" value=\"" . $string['search'] . "\" style=\"width:80px\" /></tr>\n";
 echo "</table>\n</form>\n";
@@ -206,7 +204,7 @@ if (count($target_student) == 0) {
     } else {
       $user_icon = 'user_female_64.png';
     }
-    echo "<div style=\"border:1px solid white; cursor:hand\" onclick=\"doReassign($individualID)\" onmouseover=\"lon($individualID)\" onmouseout=\"loff($individualID)\" id=\"$individualID\"><table border=\"0\"><tr><td><img src=\"../artwork/$user_icon\" width=\"64\" height=\"64\" alt=\"user\" border=\"0\" /></td><td>" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
+    echo "<div style=\"border:1px solid white; cursor:hand\" onclick=\"doReassign($individualID)\" onmouseover=\"lon($individualID)\" onmouseout=\"loff($individualID)\" id=\"$individualID\"><table border=\"0\"><tr><td><img src=\"../artwork/$user_icon\" width=\"64\" height=\"64\" alt=\"user\" /></td><td>" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
     echo implode(', ',$individual['modules']);
     echo "</td></tr></table></div>";
   }

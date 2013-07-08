@@ -52,7 +52,7 @@ function time_to_seconds($seconds) {
  * @param int $p_id rogo paper id
  * @param mixed $paper_log_type the current type of the paper 1,2,3,4,5,6 or _late
  * @param int $sreen_no the screen of interest
- * @param string $sessionid the id of the session of interest
+ * @param string $metadataID the id of the session of interest
  * @param MySQLi $db an open database connection
  *
  * @return array of database id q_id mappings

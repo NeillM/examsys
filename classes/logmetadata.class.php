@@ -71,13 +71,13 @@ class LogMetadata {
    * Gets last log metadata record for this userID on this paperID
    * @return DateTime
    */
-  public function get_record($timedate = '') {
-    if ($timedate == '') {
+  public function get_record($metadataID = '') {
+    if ($metadataID == '') {
       $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID = ? AND paperID = ? ORDER BY id DESC LIMIT 1');
       $stmt->bind_param('ii', $this->userid, $this->paper_id);
     } else {
-      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID = ? AND paperID = ? AND started = ? ORDER BY id DESC LIMIT 1');
-      $stmt->bind_param('iis', $this->userid, $this->paper_id, $timedate);
+      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID = ? AND id = ?');  // Add userID check for security reasons.
+      $stmt->bind_param('ii', $this->userid, $metadataID);
     }
     $stmt->execute();
     $stmt->store_result();

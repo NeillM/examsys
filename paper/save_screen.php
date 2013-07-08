@@ -51,7 +51,7 @@ if ( isset($_GET['retry']) and is_numeric($_GET['retry']) and $_GET['retry'] > 0
 //kill this request if it is taking to long the javascript will retry if it can
 set_time_limit($configObject->get('cfg_autosave_settimeout') + $extra_time);
 
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'],$mysqli);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
   $notice->access_denied($mysqli, $string, $string['error_paper'], false);
   //this will exit php
@@ -106,7 +106,7 @@ $is_preview = (isset($_POST['mode']) and $_POST['mode'] == 'preview');
 
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
-  $log_lab_end_time   = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli );
+  $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli );
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
@@ -128,7 +128,7 @@ try {
   $ret = false;
 }
 
-if($ret === true) {
+if ($ret === true) {
   //everthing worked ;-) 
   echo $_POST['randomPageID'];
 } else {

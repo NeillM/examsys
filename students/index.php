@@ -280,7 +280,6 @@ if (!$userObject->has_role('Student')) {
   	  $mod_id = $module['id'];
   		if (!empty($module['papers'])) {
 
-
   			if ($module['year'] != $last_session) {
   				$visibility = 'style="display: none"';
   				if ($module['year'] == $default_session) {
@@ -309,7 +308,7 @@ if (!$userObject->has_role('Student')) {
           if ($paper['type'] == '6') {
             $script_name = '../peer_review/form.php?id=' . $paper['crypt_name'];
           } elseif ($paper['type'] == 'objectives') {
-            $script_name = '../mapping/user_feedback.php?id=' . $paper['crypt_name'];
+            $script_name = 'objectives_feedback.php?id=' . $paper['crypt_name'];
           } elseif ($paper['type'] == 'questions') {
             if ($paper['original_type'] == '4') {
               $script_name = '../osce/view_form.php?id=' . $paper['crypt_name'];

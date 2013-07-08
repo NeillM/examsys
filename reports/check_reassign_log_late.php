@@ -25,10 +25,10 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-$paperID  = check_var('paperID', 'GET', true, false, true);
-$userID   = check_var('userID', 'GET', true, false, true);
-$started  = check_var('started', 'GET', true, false, true);
-$log_type = check_var('log_type', 'GET', true, false, true);
+$paperID    = check_var('paperID', 'GET', true, false, true);
+$userID     = check_var('userID', 'GET', true, false, true);
+$metadataID = check_var('metadataID', 'GET', true, false, true);
+$log_type   = check_var('log_type', 'GET', true, false, true);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -124,8 +124,8 @@ $log_type = check_var('log_type', 'GET', true, false, true);
   $missing = array();
   $missing_no = 0;
   $row_no = 0;
-  $result = $mysqli->prepare("SELECT l.q_id, l.screen, DATE_FORMAT(l.updated,'%d/%m/%Y %T'), lm.ipaddress FROM log_late l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.started = ? ORDER BY l.screen");
-  $result->bind_param('iis', $userID, $paperID, $started);
+  $result = $mysqli->prepare("SELECT l.q_id, l.screen, DATE_FORMAT(l.updated,'%d/%m/%Y %T'), lm.ipaddress FROM log_late l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.id = ? ORDER BY l.screen");
+  $result->bind_param('iis', $userID, $paperID, $metadataID);
   $result->execute();
   $result->bind_result($q_id, $screen, $updated, $ipaddress);
   $result->store_result();
@@ -142,7 +142,7 @@ $log_type = check_var('log_type', 'GET', true, false, true);
 
   if ($row_no == 0) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $notice->display_notice_and_exit($mysqli, '1'.$string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
 
   // Display which records are in log_late for the current student.
@@ -163,7 +163,7 @@ $log_type = check_var('log_type', 'GET', true, false, true);
   echo "<div style=\"text-align:center\">\n";
 
   echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['accept'] . "\" onclick=\"document.myform.button_pressed.value='Accept';\" style=\"width:100px\" />&nbsp;<input type=\"submit\" name=\"submit\" value=\"" . $string['reject'] . "\" onclick=\"document.myform.button_pressed.value='Reject';\" style=\"width:100px\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"" . $string['Cancel'] . "\" style=\"width:100px\" onclick=\"window.close();\" /></div>";
-  echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /><input type=\"hidden\" name=\"paperID\" value=\"$paperID\" /><input type=\"hidden\" name=\"started\" value=\"$started\" /><input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . "\" />";
+  echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /><input type=\"hidden\" name=\"paperID\" value=\"$paperID\" /><input type=\"hidden\" name=\"metadataID\" value=\"$metadataID\" /><input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . "\" />";
 
   $mysqli->close();
 ?>

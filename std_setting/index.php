@@ -165,7 +165,6 @@ $reviews_html .= <<< TABLEHEADER
 TABLEHEADER;
 
 $no_reviews = 0;
-var_dump($total_mark);
 $reviews = get_reviews($mysqli, 'index', $paperID, $total_mark, $no_reviews);
 
 foreach ($reviews as $review) {

@@ -93,15 +93,15 @@ ob_start();
 <script type="text/javascript" src="../js/staff_help.js"></script>
 <script type="text/javascript" src="../js/popup_menu.js"></script>
 <script language="JavaScript">
-  function setVars(tmpStarted, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
-    document.getElementById('started').value = tmpStarted;
+  function setVars(tmpMetadataID, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
+    document.getElementById('metadataID').value = tmpMetadataID;
     document.getElementById('userID').value = tmpUserID;
     document.getElementById('log_type').value = tmpLogType;
     document.getElementById('reassign').value = tmpReassign;
     document.getElementById('loglate').value = tmpLogLate;
     document.getElementById('percent').value = tmpPercent;
     
-    if (tmpStarted == '') {
+    if (tmpMetadataID == '') {
       document.getElementById('item1b').style.color = '#C0C0C0';
       document.getElementById('item2b').style.color = '#C0C0C0';
     } else {
@@ -143,19 +143,19 @@ ob_start();
 
   function viewScript() {
     document.getElementById('menudiv').style.display = 'none';
-    if (document.getElementById('started').value != '') {
+    if (document.getElementById('metadataID').value != '') {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("../paper/finish.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&previous=" + document.getElementById('started').value + "&userid=" + document.getElementById('userID').value + "&log_type=" +document.getElementById('log_type').value+ "&percent=" +document.getElementById('percent').value+ "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../paper/finish.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&metadataID=" + document.getElementById('metadataID').value + "&log_type=" +document.getElementById('log_type').value+ "&percent=" +document.getElementById('percent').value+ "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
   }
 
   function viewFeedback() {
     document.getElementById('menudiv').style.display = 'none';
-    if (document.getElementById('started').value != '') {
+    if (document.getElementById('metadataID').value != '') {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("../mapping/user_feedback.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + document.getElementById('userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../mapping/user_feedback.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + document.getElementById('userID').value + "&metadataID=" + document.getElementById('metadataID').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
   }
 
@@ -177,7 +177,7 @@ ob_start();
   function reassignScript() {
     document.getElementById('menudiv').style.display = 'none';
     if (document.getElementById('reassign').value == 'y') {
-      reassign = window.open("check_reassign_script.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>&started=" + document.getElementById('started').value + "&log_type=" + document.getElementById('log_type').value + "","reassign","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      reassign = window.open("check_reassign_script.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>","reassign","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         reassign.focus();
       }
@@ -187,7 +187,7 @@ ob_start();
   function reassignLogLate() {
     document.getElementById('menudiv').style.display = 'none';
     if (document.getElementById('loglate').value == 'y') {
-      loglate = window.open("check_reassign_log_late.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>&started=" + document.getElementById('started').value + "&log_type=" + document.getElementById('log_type').value + "","reassign","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      loglate = window.open("check_reassign_log_late.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>&metadataID=" + document.getElementById('metadataID').value + "&log_type=" + document.getElementById('log_type').value + "","reassign","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         reassign.focus();
       }
@@ -482,7 +482,7 @@ if ($language != 'en') {
         echo "<td class=\"padl\">" . $user_results[$i]['student_grade'] . "</td><td colspan=\"" . (9 + count($metadata_cols)) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
         $absent_no++;
       } else {
-        if (isset($log_late[$user_results[$i]['userID']])) {
+        if (isset($log_late[$user_results[$i]['metadataID']])) {
           $late_submissions = 'y';
         } else {
           $late_submissions = 'n';
@@ -506,34 +506,38 @@ if ($language != 'en') {
         } else {
           $role_css = '';
         }
-        if ($user_results[$i]['questions'] < $question_no) {
-          echo "><td class=\"$class $role_css\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['notcompleted'] . "\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign', '$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\" /></td>";
-        } else {
-          echo "><td class=\"$class $role_css\">";
-          if (isset($log_late[$user_results[$i]['userID']])) {
-            echo '<img src="../artwork/log_late_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '"';
-          } elseif ($user_results[$i]['paper_type'] == 0) {
-            echo '<img src="../artwork/formative_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '"';
-          } elseif ($user_results[$i]['paper_type'] == '1') {
-            echo '<img src="../artwork/progress_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '"';
-          } elseif ($user_results[$i]['paper_type'] == '2') {
-            echo '<img src="../artwork/summative_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . '"';
-          } elseif ($user_results[$i]['paper_type'] == '3') {
-            echo '<img src="../artwork/survey_16.gif" width="16" height="16" alt="' . $string['displaysurvey'] . '"';
-          } elseif ($user_results[$i]['paper_type'] == '5') {
-            echo '<img src="../artwork/offline_16.gif" width="16" height="16" alt="' . $string['displaypaper'] . '"';
-          }
-          echo " onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\" /></td>";
+        if (isset($log_late[$user_results[$i]['metadataID']])) {
+          $icon = 'log_late_16.gif';
+          $alt = $string['displayexamscript'];
+        } elseif ($user_results[$i]['questions'] < $question_no) {
+          $icon = 'incomplete_paper_icon.gif';
+          $alt = $string['notcompleted'];
+        } elseif ($user_results[$i]['paper_type'] == '0') {
+          $icon = 'formative_16.gif';
+          $alt = $string['displayexamscript'];
+        } elseif ($user_results[$i]['paper_type'] == '1') {
+          $icon = 'progress_16.gif';
+          $alt = $string['displayexamscript'];
+        } elseif ($user_results[$i]['paper_type'] == '2') {
+          $icon = 'summative_16.gif';
+          $alt = $string['displayexamscript'];
+        } elseif ($user_results[$i]['paper_type'] == '3') {
+          $icon = 'survey_16.gif';
+          $alt = $string['displaysurvey'];
+        } elseif ($user_results[$i]['paper_type'] == '5') {
+          $icon = 'offline_16.gif';
+          $alt = $string['displaypaper'];
         }
+        echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" width=\"16\" height=\"16\" alt=\"\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\" /></td>";
         if ($_GET['sortby'] == 'name') {
           $ordered = ' ordered';
         } else {
           $ordered = '';
         }
         if (strpos($user_results[$i]['username'], 'user') === 0) {
-          echo "<td class=\"$class$ordered padl tmpacc $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick ."\">" . str_replace('User','Guest Account #',$user_results[$i]['surname']) . "</span>";
+          echo "<td class=\"$class$ordered padl tmpacc $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick ."\">" . str_replace('User','Guest Account #',$user_results[$i]['surname']) . "</span>";
         } else {
-          echo "<td class=\"$class$ordered padl $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['started'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></span>";
+          echo "<td class=\"$class$ordered padl $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></span>";
         }
         if (isset($special_needs[$user_results[$i]['userID']]) and $special_needs[$user_results[$i]['userID']] == 'y') {
           echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" />';
@@ -931,6 +935,6 @@ if ($language != 'en') {
   echo "</table>\n";
   $mysqli->close();
 ?>
-<input type="hidden" id="started" value="" /><input type="hidden" id="userID" value="" /><input type="hidden" id="log_type" value="" /><input type="hidden" id="reassign" value="" /><input type="hidden" id="loglate" value="" /><input type="hidden" id="percent" value="" />
+<input type="hidden" id="metadataID" value="" /><input type="hidden" id="userID" value="" /><input type="hidden" id="log_type" value="" /><input type="hidden" id="reassign" value="" /><input type="hidden" id="loglate" value="" /><input type="hidden" id="percent" value="" />
 </body>
 </html>

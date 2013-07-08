@@ -1677,70 +1677,54 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
      echo "<table cellspacing=\"0\" cellpadding=\"6\" border=\"0\" style=\"margin:15px\">\n";
 
+     $feedback_reports = array('objectives'=>'', 'questions'=>'', 'cohort_performance'=>'');
+     
+     $feedback_details = $mysqli->prepare("SELECT idfeedback_release, type FROM feedback_release WHERE paper_id = ?");
+     $feedback_details->bind_param('i', $_GET['paperID']);
+     $feedback_details->execute();
+     $feedback_details->bind_result($idfeedback_release, $type);
+     $feedback_details->store_result();
+     while ($feedback_details->fetch()) {
+      $feedback_reports[$type] = 1;
+     }
+     $feedback_details->close();
+     
      if (in_array($properties->get_paper_type(), array('0', '1', '2', '4', '5'))) {
        echo '<tr><td><img src="../artwork/feedback_release_icon.png" width="48" height="48" />';
-       // Objectives-based Feedback
-       $idfeedback_release = '';
-       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
-       $feedback_details->bind_param('i', $_GET['paperID']);
-       $feedback_details->execute();
-       $feedback_details->store_result();
-       $feedback_details->fetch();
-       $ob_feedback_release = ($feedback_details->num_rows > 0) ? '1' : '';
-       echo "<td><input type=\"hidden\" name=\"old_objectives_report\" value=\"$ob_feedback_release\" />";
-       if ($ob_feedback_release == '') {
+       echo "<td><input type=\"hidden\" name=\"old_objectives_report\" value=\"" . $feedback_reports['objectives'] . "\" />";
+       if ($feedback_reports['objectives'] === '') {
          echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
        } else {
          echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" checked=\"checked\" />". $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" />" . $string['off'] . "</td>";
        }
-       $feedback_details->close();
-
-       echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
+       echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
      }
      if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '4', '5'))) {
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
        echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
        // Question-based Feedback
-       $q_feedback_release = '';
-       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
-       $feedback_details->bind_param('i', $_GET['paperID']);
-       $feedback_details->execute();
-       $feedback_details->store_result();
-       $feedback_details->fetch();
-       $q_feedback_release = ($feedback_details->num_rows > 0) ? '1' : '';
-       echo "<td><input type=\"hidden\" name=\"old_questions_report\" value=\"$q_feedback_release\" />";
-       if ($q_feedback_release == '') {
+       echo "<td><input type=\"hidden\" name=\"old_questions_report\" value=\"" . $feedback_reports['questions'] . "\" />";
+       if ($feedback_reports['questions'] === '') {
          echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
        } else {
          echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" />" . $string['off'] . "</td>";
        }
-       $feedback_details->close();
-
        echo "<td>" . $string['questionfeedback'] . "<br />";
        if ($properties->get_paper_type() == '2') echo '<span style="color:#C00000">' . $string['feedbackwarning'] . '</span></br />';
-       echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
+       echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
      }
 
      if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
        echo '<tr><td><img src="../artwork/cohort_performance_icon.png" width="48" height="48" />';
        // Cohort performance-based Feedback
-       $q_feedback_release = '';
-       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'cohort_performance'");
-       $feedback_details->bind_param('i', $_GET['paperID']);
-       $feedback_details->execute();
-       $feedback_details->store_result();
-       $feedback_details->fetch();
-       $cohort_feedback_release = ($feedback_details->num_rows > 0) ? '1' : '';
-       echo "<td><input type=\"hidden\" name=\"old_cohort_performance\" value=\"$cohort_feedback_release\" />";
-       if ($cohort_feedback_release == '') {
+       echo "<td><input type=\"hidden\" name=\"old_cohort_performance\" value=\"" . $feedback_reports['cohort_performance'] . "\" />";
+       if ($feedback_reports['cohort_performance'] === '') {
          echo "<input type=\"radio\" name=\"cohort_performance\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"cohort_performance\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
        } else {
          echo "<input type=\"radio\" name=\"cohort_performance\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"cohort_performance\" value=\"0\" />" . $string['off'] . "</td>";
        }
-       $feedback_details->close();
-
-       echo "<td>" . $string['cohortperformancefeedback'] . "</td></tr>\n";
+       echo "<td>" . $string['cohortperformancefeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/performance_summary.php\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/performance_summary.php</a></td></tr>\n";
       }
 
      echo "</table>\n";

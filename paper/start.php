@@ -228,7 +228,6 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_q
   return $question;
 }
 
-if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
@@ -241,7 +240,7 @@ $paperID = $propertyObj->get_property_id();
 
 /*
  *
- * Setup som feature related flags
+ * Setup some feature related flags
  *
  */
 //are we in a staff test and preview mode?
@@ -252,6 +251,8 @@ $is_first_launch = !isset($_POST['current_screen']);
 $is_preview_mode_first_launch = ($is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview');
 //are we in a staff single question testmode
 $is_question_preview_mode = (isset($_GET['q_id']));
+
+if (!$is_first_launch) require '../include/marking_functions.inc';
 
 // Get how many screens make up the question paper.
 $screen_data = array();
@@ -353,7 +354,6 @@ if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
 * Set the default state
 */
 $log_metadata = null;
-$sessionid = false;
 $current_screen = 1;
 $is_fire_alarm = ( isset($_POST['fire_alarm']) and $_POST['fire_alarm'] == '1' );
 $summative_exam_session_started = false; //lab timing stated by invigilators
@@ -362,7 +362,7 @@ $allow_timing = false;
 /*
 * Extract the posted variables.
 */
-if (isset($_POST['sessionid'])) {
+if (!$is_first_launch) {
   if ($_POST['button_pressed'] == 'next') {
     $current_screen = $_POST['current_screen'];
   } elseif ($_POST['button_pressed'] == 'prevous') {
@@ -374,7 +374,7 @@ if (isset($_POST['sessionid'])) {
   }
 }
 
-//lookup previous sessionid from log_metadata.started property_id
+// Set up new metadata record or get existing one.
 $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 
 if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)) {
@@ -386,9 +386,7 @@ if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)
   //we have no log_metadata record so make one
   $log_metadata->create_new_record($current_ip_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 }
-
-$sessionid = $log_metadata->get_session_id();
-$metadataid = $log_metadata->get_metadata_id();
+$metadataID = $log_metadata->get_metadata_id();
 
 // Only allow timing if ALL the modules of the paper allow
 $allow_timing = module_utils::modules_allow_timing($modIDs, $mysqli);
@@ -417,8 +415,8 @@ if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($p
 *                                with dont_record set to true so this is not executed
 */
 if ($is_question_preview_mode == false) {
-  if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
-    record_marks($paperID, $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles, $metadataid);
+  if (!$is_first_launch and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
+    record_marks($paperID, $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles, $metadataID);
   }
 }
 
@@ -432,56 +430,56 @@ if ($is_question_preview_mode == false) {
 $user_answers = array();
 $previous_duration = 0;
 $screen_pre_submitted = 0;
-if ($sessionid !== false or $is_fire_alarm == true) {
-  // Get users previous answers from the log.
-  if ($propertyObj->get_paper_type() == '_late') {
-    //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
-    $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE metadataID = ?");
-    $log_data->bind_param('i', $metadataid);
-    $log_data->execute();
-    $log_data->store_result();
-    $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-    $user_answers = array();
-    $used_questions[$log_q_id] = $log_q_id;
-    while ($log_data->fetch()) {
-      $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-      $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-      $user_order[$log_screen][$log_q_id] = $option_order;
-      // Bump up the current screen if restarting
-      if ($do_restart and $log_screen > $current_screen) {
-        $current_screen = $log_screen;
-      }
-      if ($log_screen == $current_screen) {
-        $previous_duration = $log_duration;
-        $screen_pre_submitted = 1;
-      }
-    }
-    $log_data->close();
-  }
-  //get user answers from whichever log is pointed to by log$paper_type
-  $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
-  $log_data->bind_param('i', $metadataid);
+
+// Get users previous answers from the log.
+if ($propertyObj->get_paper_type() == '_late') {
+  //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
+  $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE metadataID = ?");
+  $log_data->bind_param('i', $metadataID);
   $log_data->execute();
   $log_data->store_result();
   $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-  if ($log_data->num_rows > 0) {
-    while ($log_data->fetch()) {
-      $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-      $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-      $user_order[$log_screen][$log_q_id] = $option_order;
-      $used_questions[$log_q_id] = $log_q_id;
-      // Bump up the current screen if restarting
-      if ($do_restart and $log_screen > $current_screen) {
-        $current_screen = $log_screen;
-      }
-      if ($log_screen == $current_screen) {
-        $previous_duration = $log_duration;
-        $screen_pre_submitted = 1;
-      }
+  $user_answers = array();
+  $used_questions[$log_q_id] = $log_q_id;
+  while ($log_data->fetch()) {
+    $user_answers[$log_screen][$log_q_id] = $log_user_answer;
+    $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
+    $user_order[$log_screen][$log_q_id] = $option_order;
+    // Bump up the current screen if restarting
+    if ($do_restart and $log_screen > $current_screen) {
+      $current_screen = $log_screen;
+    }
+    if ($log_screen == $current_screen) {
+      $previous_duration = $log_duration;
+      $screen_pre_submitted = 1;
     }
   }
   $log_data->close();
 }
+//get user answers from whichever log is pointed to by log$paper_type
+$log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
+$log_data->bind_param('i', $metadataID);
+$log_data->execute();
+$log_data->store_result();
+$log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
+if ($log_data->num_rows > 0) {
+  while ($log_data->fetch()) {
+    $user_answers[$log_screen][$log_q_id] = $log_user_answer;
+    $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
+    $user_order[$log_screen][$log_q_id] = $option_order;
+    $used_questions[$log_q_id] = $log_q_id;
+    // Bump up the current screen if restarting
+    if ($do_restart and $log_screen > $current_screen) {
+      $current_screen = $log_screen;
+    }
+    if ($log_screen == $current_screen) {
+      $previous_duration = $log_duration;
+      $screen_pre_submitted = 1;
+    }
+  }
+}
+$log_data->close();
+
 
 /*
 *
@@ -1200,7 +1198,7 @@ if ($css != '') {
   echo "<col width=\"40\"><col>\n";
   //display the questions
   $calculator = $propertyObj->get_calculator(); //GLABAL NEEDS FIXING
-  foreach($questions_array as &$question) {
+  foreach ($questions_array as &$question) {
     if ($question['screen'] == $current_screen) {
       if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span class=\"unans\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
       if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $propertyObj->get_paper_prologue() . '</td></tr>';
@@ -1215,7 +1213,6 @@ if ($css != '') {
 
   $current_screen++;
   echo "<input type=\"hidden\" name=\"current_screen\" value=\"$current_screen\" />\n";
-  echo "<input type=\"hidden\" name=\"sessionid\" value=\"$sessionid\" />\n";
   echo "<input type=\"hidden\" name=\"page_start\" value=\"" . date("YmdHis", time()) . "\" />\n";
   echo "<input type=\"hidden\" name=\"old_screen\" value=\"" . ($current_screen - 1) . "\" />\n";
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
@@ -1240,7 +1237,7 @@ if ($css != '') {
     }
   }
 
-  echo '<div id="saveError"><img alt="Warning" src="/artwork/no_save.png" /> <div><strong>' .  $string['savefailed'] . '</strong><br />' . $string['tryagain'] . '</div></div>';
+  echo '<div id="saveError"><img src="/artwork/no_save.png" width="48" height="48" alt="Warning" /> <div><strong>' .  $string['savefailed'] . '</strong><br />' . $string['tryagain'] . '</div></div>';
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
     echo "&nbsp;&nbsp;<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />\n";

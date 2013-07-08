@@ -25,10 +25,10 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-$paperID  = check_var('paperID', 'POST', true, false, true);
-$userID   = check_var('userID', 'POST', true, false, true);
-$started  = check_var('started', 'POST', true, false, true);
-$log_type = check_var('log_type', 'POST', true, false, true);
+$paperID    = check_var('paperID', 'POST', true, false, true);
+$userID     = check_var('userID', 'POST', true, false, true);
+$metadataID = check_var('metadataID', 'POST', true, false, true);
+$log_type   = check_var('log_type', 'POST', true, false, true);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -75,13 +75,13 @@ $log_type = check_var('log_type', 'POST', true, false, true);
   // Get questions that are already in the standard log
   $row_no = 0;
   $logged_qns = array();
-  $log_check = $mysqli->prepare("SELECT lm.id, l.id, l.q_id FROM log_metadata lm LEFT JOIN log$log_type l ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.started = ?");
-  $log_check->bind_param('iis', $userID, $paperID, $started);
+  $log_check = $mysqli->prepare("SELECT lm.id, l.id, l.q_id FROM log_metadata lm LEFT JOIN log$log_type l ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.id = ?");
+  $log_check->bind_param('iis', $userID, $paperID, $metadataID);
   $log_check->execute();
   $log_check->store_result();
   $log_check->bind_result($log_metadata_id, $log_id, $log_q_id);
   $row_no = $log_check->num_rows;
-  while($log_check->fetch()) {
+  while ($log_check->fetch()) {
     $logged_qns[$log_q_id] = $log_id;
   }
   $log_check->close();
