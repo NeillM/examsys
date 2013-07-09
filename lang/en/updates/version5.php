@@ -35,4 +35,5 @@ $string['warning4'] = 'Please chown the file to the webserver and chomod it 744'
 $string['updatefromversion'] = 'Update from version';
 $string['home'] = 'Home';
 $string['startingupdate'] = 'Starting Update';
+$string['addinglines'] = 'Adding lines to %s file:';
 ?>

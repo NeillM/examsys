@@ -193,8 +193,9 @@ Class UpdaterUtils {
     }
   }
 
-  public function add_line($search, $new_lines, $default_line, $cfg_web_root, $target_line = '', $offset = 1) {
-    $cfg = file($cfg_web_root . 'config/config.inc.php');
+  public function add_line($string, $search, $new_lines, $default_line, $cfg_web_root, $target_line = '', $offset = 1) {
+    $file_path = $cfg_web_root . 'config/config.inc.php';
+    $cfg = file($file_path);
     $found = false;
     $line_no = 0;
     foreach ($cfg as $line) {
@@ -213,7 +214,11 @@ Class UpdaterUtils {
       if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
         echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
       }
-      //echo "<li>Adding line to config file: $default_text</li>\n";
+      echo "<li>" . sprintf($string['addinglines'], $file_path) . "<br />\n";
+      foreach ($new_lines as $new_line) {
+        echo highlight_string($new_line, true) . "\n";
+      }
+      echo "</li>\n";
       ob_flush();
       flush();
     }

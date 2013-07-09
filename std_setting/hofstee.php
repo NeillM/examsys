@@ -36,6 +36,20 @@ if (!$properties) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+$results_cache = new ResultsCache($mysqli);
+$marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
+$stats = array_values($results_cache->get_paper_cache($paperID));
+
+function check_values($num, $stats) {
+  $num = str_replace('median', $stats[5], $num);
+  $num = str_replace('q1', $stats[4], $num);
+  $num = str_replace('q2', $stats[5], $num);
+  $num = str_replace('q3', $stats[6], $num);
+  $num = str_replace('max', $stats[1], $num);
+  $num = str_replace('min', $stats[3], $num);
+
+  return $num;
+}
 
 if (isset($_POST['submit'])) {
   $pass_mark = str_replace('%', '', $_POST['xs_pass']);
@@ -102,15 +116,16 @@ if (isset($_POST['submit'])) {
   // Default values no POST and no editing existing review
   $checked = '';
   
-	$x1_pass = 10;
-  $x2_pass = 90;
-  $y1_pass = 10;
-  $y2_pass = 90;
-  $x1_distinction = 10;
-  $x2_distinction = 90;
-  $y1_distinction = 10;
-  $y2_distinction = 90;
-	
+  $defaults = $configObject->get('hofstee_defaults');
+  
+	$x1_pass = check_values($defaults['pass'][0], $stats);
+  $x2_pass = check_values($defaults['pass'][1], $stats);
+  $y1_pass = check_values($defaults['pass'][2], $stats);
+  $y2_pass = check_values($defaults['pass'][3], $stats);
+  $x1_distinction = check_values($defaults['distinction'][0], $stats);
+  $x2_distinction = check_values($defaults['distinction'][1], $stats);
+  $y1_distinction = check_values($defaults['distinction'][2], $stats);
+  $y2_distinction = check_values($defaults['distinction'][3], $stats);	
 }
 
 ?>
@@ -128,6 +143,7 @@ if (isset($_POST['submit'])) {
 <style type="text/css">
 body {font-size:85%}
 h1 {margin-left:10px; font-size:140%}
+input[type="text"] {border: 1px solid #C0C0C0}
 .pass {color:#76923C}
 .fail {color:#C00000}
 </style>
@@ -172,21 +188,25 @@ h1 {margin-left:10px; font-size:140%}
 	echo "<table style=\"margin-left:auto; margin-right:auto\">\n";
 	echo "<tr><td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td><strong>". $string['cutscore'] . "</strong></td></tr>\n";
 	echo "<tr>\n";
-  if (isset($_POST['whole_numbers'])) {
-    $checked = ' checked="checked"';
-  } else {
-    $checked = '';
-  }
 	echo "<td><input type=\"text\" size=\"5\" name=\"x1_pass\" id=\"x1_pass\" class=\"tf\" value=\"" . $x1_pass . "\" /></td>\n";
 	echo "<td><input type=\"text\" size=\"5\" name=\"x2_pass\" id=\"x2_pass\" class=\"tf\" value=\"" . $x2_pass . "\" /></td>\n";
 	echo "<td><input type=\"text\" size=\"5\" name=\"y1_pass\" id=\"y1_pass\" class=\"tf\" value=\"" . $y1_pass . "\" /></td>\n";
 	echo "<td><input type=\"text\" size=\"5\" name=\"y2_pass\" id=\"y2_pass\" class=\"tf\" value=\"" . $y2_pass . "\" /></td>\n";
 	echo "<td><input type=\"text\" size=\"5\" name=\"xs_pass\" id=\"xs_pass\" readonly /><input type=\"hidden\" size=\"5\" name=\"ys_pass\" id=\"ys_pass\" readonly /></td>\n";
 	echo "</tr>";
+  if (isset($_POST['whole_numbers'])) {
+    $checked = ' checked="checked"';
+  } else {
+    if ($configObject->get('hofstee_whole_numbers') == true) {
+      $checked = ' checked="checked"';
+    } else {
+      $checked = '';
+    }
+  }
   echo "<tr><td colspan=\"5\"><input type=\"checkbox\" name=\"whole_numbers\" id=\"checkbox\"$checked />" . $string['integeronly'] . "</td></tr>";
 	echo "</table>\n</div>\n";
 	
-	echo "<script type=\"text/javascript\" src=\"../html5/hofstee.js\"></script>\n";
+	echo "<script type=\"text/javascript\" src=\"../js/hofstee.js\"></script>\n";
 	echo "<script type='text/javascript'>
 		var lang_cohort = '".  $string['cohort'] . "';
 		var lang_correct = '".  $string['correct'] . "';
@@ -201,11 +221,6 @@ h1 {margin-left:10px; font-size:140%}
 	echo "<table style=\"margin-left:auto; margin-right:auto\">\n";
 	echo "<tr><td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td><strong>". $string['cutscore'] . "</strong></td></tr>\n";
 	echo "<tr>\n";
-  if (isset($_POST['checkbox'])) {
-    $checked = ' checked="checked"';
-  } else {
-    $checked = '';
-  }
 	echo "<td><input type=\"text\" size=\"5\" name=\"x1_distinction\" id=\"x1_distinction\" class=\"tf\" value=\"" . $x1_distinction . "\" /></td>\n";
 	echo "<td><input type=\"text\" size=\"5\" name=\"x2_distinction\" id=\"x2_distinction\" class=\"tf\" value=\"" . $x2_distinction . "\" /></td>\n";
 	echo "<td><input type=\"text\" size=\"5\" name=\"y1_distinction\" id=\"y1_distinction\" class=\"tf\" value=\"" . $y1_distinction . "\" /></td>\n";
@@ -225,7 +240,7 @@ h1 {margin-left:10px; font-size:140%}
 
 ?>
 <br clear="all" />
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savemarks']; ?>" /></div>
+<div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['savemarks']; ?>" /></div>
 </form>
 </body>
 </html>

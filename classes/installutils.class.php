@@ -1331,8 +1331,12 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
 
-//Reports
+// Reports
   \$percent_decimals = 2;
+
+// Standard Setting
+  \$hofstee_defaults = array('pass'=>array(0, 'median', 0, 100), 'distinction'=>array('median', 100, 0, 100));
+  \$hofstee_whole_numbers = true;
 
 // SMS Imports
   \$cfg_sms_api = '';

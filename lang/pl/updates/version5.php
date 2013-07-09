@@ -34,5 +34,6 @@ $string['warning3'] = 'Ta aktualizacja wymaga aby katalog /config był zapisywal
 $string['warning4'] = 'Przypisz plik do webserwera (chown) i zmień jego atrybuty na 744 (chmod)';
 $string['updatefromversion'] = 'Aktualizacja z wersji';
 $string['home'] = 'Strona główna';
-$string['startingupdate'] = 'Rozpoczynanie aktualizacji'; 
+$string['startingupdate'] = 'Rozpoczynanie aktualizacji';
+$string['addinglines'] = 'Adding lines to %s file:';
 ?>

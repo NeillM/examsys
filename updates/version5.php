@@ -234,7 +234,7 @@ if (!isset($_POST['update'])) {
   // 02/05/2013 - Add password expire config file.
   $new_lines = array("\$cfg_password_expire = 30;    // Set in days\n");
   $target_line = '$authentication = array';
-  $updater_utils->add_line('$percent_decimals', $new_lines, 80, $cfg_web_root, $target_line, 7);
+  $updater_utils->add_line($string, '$percent_decimals', $new_lines, 80, $cfg_web_root, $target_line, 7);
 
 
   // 08/05/2013 (uiznm) - Add permission for external examiners to see standards setting values
@@ -272,7 +272,7 @@ if (!isset($_POST['update'])) {
 
   // 15/05/2013 (brzsw) - Add in new variable to control number of decimals for percentages.
   $new_lines = array("//Reports\n", "  \$percent_decimals = 0;\n");
-  $updater_utils->add_line('$percent_decimals', $new_lines, 60, $cfg_web_root);
+  $updater_utils->add_line($string, '$percent_decimals', $new_lines, 60, $cfg_web_root);
 
   // 17/05/2013 - nazrji -Add options column to questions
   if (!$updater_utils->does_column_exist('questions', 'settings')) {
@@ -421,7 +421,7 @@ if (!isset($_POST['update'])) {
     $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array();\n");
   }
   $target_line = '$cfg_password_expire';
-  $updater_utils->add_line('$vle_apis', $new_lines, 80, $cfg_web_root, $target_line, 1);
+  $updater_utils->add_line($string, '$vle_apis', $new_lines, 80, $cfg_web_root, $target_line, 1);
 
 
   // 24/06/2013 - nazrji - add new calculation question type to enum
@@ -660,13 +660,11 @@ if (!isset($_POST['update'])) {
     $result->close();
   }
 
-
   // 04/07/2013 (cczsa1) - enhanced question type config
   $new_lines = array("\n// Enhanced Calculation question config\n", "\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5);\n");
 
   $target_line = '$cfg_password_expire';
-  $updater_utils->add_line('$enhancedcalculation', $new_lines, 80, $cfg_web_root, $target_line, 1);
-
+  $updater_utils->add_line($string, '$enhancedcalculation', $new_lines, 80, $cfg_web_root, $target_line, 1);
 
   // 04/07/2013 (cczsa1) - add new field to logs to indicate an error state
   if (!$updater_utils->does_column_exist('log0', 'errorstate')) {
@@ -693,6 +691,10 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE feedback_release CHANGE type type enum('objectives','questions','cohort_performance') DEFAULT NULL", true);
   }
 
+  // 09/07/2013 - Add hofstee default settings.
+  $new_lines = array("// Standard Setting\n", "  \$hofstee_defaults = array('pass'=>array(0, 'median', 0, 100), 'distinction'=>array('median', 100, 0, 100));\n", "  \$hofstee_whole_numbers = true;\n");
+  $target_line = '$percent_decimals';
+  $updater_utils->add_line($string, '$hofstee_defaults', $new_lines, 64, $cfg_web_root, $target_line, 1);
 
 
   /*
