@@ -82,13 +82,13 @@ function get_taken_papers($userID, $db) {
   $result->close();
   
   // Query for OSCE stations
-  $result = $db->prepare("SELECT DISTINCT q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? ORDER BY calendar_year DESC");
+  $result = $db->prepare("SELECT DISTINCT log4_overall.id, q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? ORDER BY calendar_year DESC");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
+  $result->bind_result($metadataID, $paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
   while ($result->fetch()) {
-    $papers[$i]['metadataID']     = null;
+    $papers[$i]['metadataID']     = $metadataID;
     $papers[$i]['paperID']        = $paperID;
     $papers[$i]['paper_title']    = $paper_title;
     $papers[$i]['paper_type']     = $paper_type;

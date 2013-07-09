@@ -696,6 +696,35 @@ if (!isset($_POST['update'])) {
   $target_line = '$percent_decimals';
   $updater_utils->add_line($string, '$hofstee_defaults', $new_lines, 64, $cfg_web_root, $target_line, 1);
 
+  // 09/07/2013 (brzsw) - Add new log4_overallID field into the log4 table.
+  if (!$updater_utils->does_column_exist('log4', 'log4_overallID')) {
+    $updater_utils->execute_query("ALTER TABLE log4 ADD COLUMN log4_overallID int(11) unsigned", true);
+
+    $mysqli->autocommit(false);
+    $result = $mysqli->prepare("SELECT DISTINCT m.id, l.userID, l.q_paper, l.started FROM log4 l, log4_overall m WHERE l.userID = m.userID AND l.q_paper = m.q_paper AND l.started = m.started");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id, $userID, $paperID, $started);
+    while ($result->fetch()) {
+      if ($paperID > 0) {
+        $updater_utils->execute_query("UPDATE log4 SET log4_overallID = $id WHERE userID = $userID AND q_paper = $paperID AND started = '$started'", false);
+      }
+    }
+    $result->free_result();
+    $result->close();
+    $mysqli->commit();
+    $mysqli->autocommit(true);
+
+
+    // Remove the indexes for speed.
+    $updater_utils->execute_query("DROP INDEX q_paper ON log$tableNo", false);
+    $updater_utils->execute_query("DROP INDEX username ON log$tableNo", false);
+    $updater_utils->execute_query("DROP INDEX started ON log$tableNo", false);
+
+    // Drop columns we no longer need.
+    $updater_utils->execute_query("ALTER TABLE log4 DROP q_paper, DROP userID, DROP started", true);
+  }
+
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****

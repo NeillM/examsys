@@ -97,7 +97,7 @@ $total_score = 0;
 $classifications = array(''=>'', 1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 'ERROR'=>0);
 
 for ($i=0; $i<$user_no; $i++) {
-  if ($user_results[$i]['started'] != '') {   // No attendance
+  if ($user_results[$i]['metadataID'] != '') {   // No attendance
     $classifications[$user_results[$i]['rating']]++;
     $total_score += $user_results[$i]['mark'];
     $completed_no++;
@@ -108,11 +108,11 @@ $stats = $report->get_stats();                        // Generate the main stati
 
 $results_cache = new ResultsCache($mysqli);
 if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
-  $results_cache->save_paper_cache($propertyObj, $percent, $absent, $stats);                  // Cache general paper stats
+  $results_cache->save_paper_cache($paperID, $percent, $absent, $stats);                  // Cache general paper stats
   
-  $results_cache->save_student_mark_cache($propertyObj, $percent, $absent, $user_results);    // Cache student/paper marks
+  $results_cache->save_student_mark_cache($paperID, $percent, $absent, $user_results);    // Cache student/paper marks
   
-  $results_cache->save_median_question_marks($propertyObj, $percent, $absent, $q_medians);    // Cache the question/paper medians
+  $results_cache->save_median_question_marks($paperID, $percent, $absent, $q_medians);    // Cache the question/paper medians
 }
 
 rating_num_text($user_results, $user_no, $propertyObj, $string);
@@ -134,28 +134,28 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
   <script language="JavaScript">    
-    function setVars(tmpStarted, currentUserID) {
-      document.getElementById('started').value = tmpStarted;
-      document.getElementById('userID').value = currentUserID;
+    function setVars(metadataID, currentUserID) {
+      $('#metadataID').val(metadataID);
+      $('#userID').val(currentUserID);
     }
     
     function viewScript() {
-      document.getElementById('menudiv').style.display = 'none';
+      $('#menudiv').hide();
       var winwidth = 750;
       var winheight = screen.height-80;
-      window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + document.getElementById('userID').value + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
     
     function viewFeedback() {
-      document.getElementById('menudiv').style.display = 'none';
+      $('#menudiv').hide();
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("/mapping/user_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + document.getElementById('userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../students/objectives_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
     
     function viewProfile() {
-      document.getElementById('menudiv').style.display = 'none';
-      window.top.location = '/users/details.php?userID=' + document.getElementById('userID').value;
+      $('#menudiv').hide();
+      window.top.location = '../users/details.php?userID=' + $('#userID').val();
     }
     
     document.onmousedown = mouseSelect;
@@ -264,7 +264,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       echo "<tr><td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['userID'] . "', event);\" width=\"16\" height=\"16\" /></td>";
       echo '<td class="greyln';
       if ($sortby == 'name') echo ' ordered';
-      echo "\">&nbsp;<span style=\"cursor:hand\" onclick=\"popMenu(3, event); setVars('" . $user_results[$i]['started'] . "', '" . $user_results[$i]['userID'] . "');\">" . $user_results[$i]['title'] . " " . $user_results[$i]['surname'] . ", <span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></td>";
+      echo "\">&nbsp;<span style=\"cursor:hand\" onclick=\"popMenu(3, event); setVars('" . $user_results[$i]['metadataID'] . "', '" . $user_results[$i]['userID'] . "');\">" . $user_results[$i]['title'] . " " . $user_results[$i]['surname'] . ", <span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></td>";
       echo '<td class="greyln';
       if ($sortby == 'student_id') echo ' ordered';
       echo "\">&nbsp;" . $user_results[$i]['student_id'] . "</td>";
@@ -317,6 +317,6 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   $mysqli->close();
 ?>
 <input type="hidden" id="userID" value="" />
-<input type="hidden" id="started" value="" />
+<input type="hidden" id="metadataID" value="" />
 </body>
 </html>

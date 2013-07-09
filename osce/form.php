@@ -56,20 +56,31 @@ $number_of_qs = $propertyObj->get_question_no();
 
 if (isset($_POST['submit'])) {
   if ($_POST['userID'] != '') {
-    $started = DATE('YmdHis');
-    $total_score = 0;
-
-    // Delete any Log4 previous submissions for this student.
-    $result = $mysqli->prepare("DELETE FROM log4 WHERE q_paper = ? AND userID = ?");
+    $result = $mysqli->prepare("SELECT id FROM log4_overall WHERE q_paper = ? AND userID = ? LIMIT 1");
     $result->bind_param('ii', $paperID, $userID);
     $result->execute();
-
-    // Delete any Log4_overall record for this student.
-    $result = $mysqli->prepare("DELETE FROM log4_overall WHERE q_paper = ? AND userID = ?");
-    $result->bind_param('ii', $paperID, $userID);
-    $result->execute();
+    $result->bind_result($insertID);
+    $result->fetch();
+    $result->close();
+  
+    if (isset($insertID)) {
+      // Delete any Log4 previous submissions for this student.
+      $result = $mysqli->prepare("DELETE FROM log4 WHERE log4_overallID = ?");
+      $result->bind_param('i', $insertID);
+      $result->execute();
+    } else {
+      // Write summary information into Log4_overall.
+      $started = DATE('YmdHis');
+      $result = $mysqli->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, NULL, ?, ?, ?, 'electronic', ?)");
+      $result->bind_param('isisssii', $userID, $started, $paperID, $_POST['overall_val'], $_POST['fback'], $_POST['grade'], $userObject->get_user_ID(), $_POST['year']);
+      $result->execute();
+      $result->close();
+      
+      $insertID = $mysqli->insert_id;
+    }
 
     // Write individual ratings into Log4.
+    $numeric_score = 0;
     for ($question = 1; $question <= $number_of_qs; $question++) {
       $tmp_val = ($_POST['q' . $question . '_val'] - 1);
       if (isset( $_POST[$_POST['q' . $question . '_id'] . '_parts'] )) {
@@ -77,25 +88,16 @@ if (isset($_POST['submit'])) {
       } else {
         $q_parts = '';
       }
-      $result = $mysqli->prepare("INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?, ?, ?)");
-      $result->bind_param('isssss', $userID, $started, $paperID, $_POST['q' . $question . '_id'], $tmp_val, $q_parts);
+      $result = $mysqli->prepare("INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?)");
+      $result->bind_param('issi', $_POST['q' . $question . '_id'], $tmp_val, $q_parts, $insertID);
       $result->execute();
       $result->close();
-      $total_score += ($_POST['q' . $question . '_val'] - 1);
+      $numeric_score += ($_POST['q' . $question . '_val'] - 1);
     }
 
-    // Write summary information into Log4_overall.
-    if ($marking == '5') {
-      if ($total_score < 12) {
-        $overall_val = '1';
-      } else {
-        $overall_val = '2';
-      }
-    } else {
-      $overall_val = $_POST['overall_val'];
-    }
-    $result = $mysqli->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'electronic', ?)");
-    $result->bind_param('isisissii', $userID, $started, $paperID, $overall_val, $total_score, $_POST['fback'], $_POST['grade'], $userObject->get_user_ID(), $_POST['year']);
+    // Update Log4_overall with the overall score.
+    $result = $mysqli->prepare("UPDATE log4_overall SET numeric_score = ? WHERE id = ?");
+    $result->bind_param('ii', $numeric_score, $insertID);
     $result->execute();
     $result->close();
   }
@@ -167,23 +169,23 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function ans(q_id, rating) {
-      document.getElementById('q' + q_id + '_val').value = rating;
+      $('#q' + q_id + '_val').val(rating);
       if (rating == 1) {
-        document.getElementById('c' + q_id + '_1').style.backgroundColor = '#D99594';
-        document.getElementById('c' + q_id + '_2').style.backgroundColor = '';
+        $('#c' + q_id + '_1').css('background-color', '#D99594');
+        $('#c' + q_id + '_2').css('background-color', '');
         if (document.getElementById('c' + q_id + '_3')) {
-          document.getElementById('c' + q_id + '_3').style.backgroundColor = '';
+          $('#c' + q_id + '_3').css('background-color', '');
         }
       } else if (rating == 2) {
-        document.getElementById('c' + q_id + '_2').style.backgroundColor = '#FABF8F';
-        document.getElementById('c' + q_id + '_1').style.backgroundColor = '';
+        $('#c' + q_id + '_2').css('background-color', '#FABF8F');
+        $('#c' + q_id + '_1').css('background-color', '');
         if (document.getElementById('c' + q_id + '_3')) {
-          document.getElementById('c' + q_id + '_3').style.backgroundColor = '';
+          $('#c' + q_id + '_3').css('background-color', '');
         }
       } else if (rating == 3) {
-        document.getElementById('c' + q_id + '_3').style.backgroundColor = '#C2D69B';
-        document.getElementById('c' + q_id + '_1').style.backgroundColor = '';
-        document.getElementById('c' + q_id + '_2').style.backgroundColor = '';
+        $('#c' + q_id + '_3').css('background-color', '#C2D69B');
+        $('#c' + q_id + '_1').css('background-color', '');
+        $('#c' + q_id + '_2').css('background-color', '');
       }
 
       checkTotals();
@@ -195,25 +197,25 @@ if (isset($_POST['submit'])) {
       var borderlines = 0;
       var passes = 0;
       for (i=1; i<=<?php echo $number_of_qs; ?>; i++) {
-        if (document.getElementById('q' + i + '_val').value == '1') {
+        if ($('#q' + i + '_val').val() == '1') {
           fails++;
-        } else if (document.getElementById('q' + i + '_val').value == '2') {
+        } else if ($('#q' + i + '_val').val() == '2') {
           borderlines++;
-        } else if (document.getElementById('q' + i + '_val').value == '3') {
+        } else if ($('#q' + i + '_val').val() == '3') {
           passes++;
         }
       }
       rated = fails + borderlines + passes;
 
-      document.getElementById('fails').value = fails;
-      document.getElementById('borderlines').value = borderlines;
-      document.getElementById('passes').value = passes;
+      $('#fails').val(fails);
+      $('#borderlines').val(borderlines);
+      $('#passes').val(passes);
 
    <?php
      if ($marking == '5') {
-       echo "if (rated == document.getElementById('q_no').value) {\n";
+       echo "if (rated == $('#q_no').val()) {\n";
      } else {
-       echo "if (rated == document.getElementById('q_no').value && document.getElementById('overall_val').value != '0') {\n";
+       echo "if (rated == $('#q_no').val() && $('#overall_val').val() != '0') {\n";
      }
    ?>
         document.osceform.submit.disabled = false;
@@ -250,12 +252,12 @@ if (isset($_POST['submit'])) {
 
       for (i=1; i<colors.length; i++) {
         if (i == rating) {
-          document.getElementById('overall' + i).style.backgroundColor = colors[i];
+          $('#overall' + i).css('background-color', colors[i]);
         } else {
-          document.getElementById('overall' + i).style.backgroundColor = '';
+          $('#overall' + i).css('background-color', '');
         }
       }
-      document.getElementById('overall_val').value = rating;
+      $('#overall_val').val(rating);
       checkTotals();
     }
     
@@ -277,28 +279,21 @@ if (isset($_POST['submit'])) {
   if ($test == false) {
     // Query Log4 just in case form has already been submitted for this user.
     $stored_results = array();
-    $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE q_paper = ? AND userID = ?");
+    $result = $mysqli->prepare("SELECT q_id, rating, q_parts, feedback, overall_rating FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND q_paper = ? AND userID = ?");
     $result->bind_param('ii', $paperID, $userID);
     $result->execute();
-    $result->bind_result($q_id, $rating, $q_parts);
+    $result->bind_result($q_id, $rating, $q_parts, $feedback, $overall_rating);
     while ($result->fetch()) {
       $stored_results[$q_id] = $rating;
       $stored_q_parts[$q_id] = $q_parts;
     }
-    $result->close();
-
-    $result = $mysqli->prepare("SELECT feedback, overall_rating FROM log4_overall WHERE q_paper = ? AND userID = ?");
-    $result->bind_param('ii', $paperID, $userID);
-    $result->execute();
-    $result->bind_result($feedback, $overall_rating);
-    $result->fetch();
     $result->close();
   }
 
   // Get the questions.
   $question_no = 1;
   $cell_colors = array('#D99594','#FABF8F','#C2D69B');
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question=questions.q_id ORDER BY display_pos");
+  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
@@ -312,7 +307,7 @@ if (isset($_POST['submit'])) {
 
     echo "<tr><td class=\"q\">";
     if (trim($notes) != '') {
-      echo "<span style=\"color:" . $propertyObj->get_labelcolor() . "\"><img src=\"../artwork/small_note_icon.png\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+      echo "<span style=\"color:" . $propertyObj->get_labelcolor() . "\"><img src=\"../artwork/small_note_icon.png\" width=\"14\" height=\"14\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
     echo strip_tags($leadin, '<b><i><strong><em><br><br />');
     if (isset($stored_results[$q_id])) {

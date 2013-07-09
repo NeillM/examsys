@@ -155,7 +155,7 @@ ob_start();
     if ($('#metadataID').val() != '') {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("../mapping/user_feedback.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../students/objectives_feedback.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
   }
 
@@ -176,7 +176,7 @@ ob_start();
 
   function reassignScript() {
     $('#menudiv').hide();
-    if (document.getElementById('reassign').value == 'y') {
+    if ($('#reassign').val() == 'y') {
       reassign = window.open("check_reassign_script.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>","reassign","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         reassign.focus();

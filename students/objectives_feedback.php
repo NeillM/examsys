@@ -205,12 +205,13 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   */
   $metadataID_SQL = '';
   if (isset($_GET['metadataID'])) {
-    $metadataID_SQL = ' AND metadataID = "' . $_GET['metadataID'] . '"';;
+    $metadataID_SQL = ' AND log4_overallID = "' . $_GET['metadataID'] . '"';;
   }
 
   if ($paper_type == '0' or $paper_type == '1') {
     $sql = "SELECT q_id, mark, totalpos, started FROM log0, log_metadata WHERE log0.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $startedSQL UNION SELECT q_id, mark, totalpos, started FROM log1, log_metadata WHERE log1.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $metadataID_SQL ORDER BY q_id, started";
   } elseif ($paper_type == '4') {
+    $metadataID_SQL = ' AND metadataID = "' . $_GET['metadataID'] . '"';;
     $sql = "SELECT q_id, rating, NULL, NULL AS totalpos FROM log4 WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND userID = ? AND q_paper = ? $metadataID_SQL ORDER BY q_id, started";
   } else {
     $sql = "SELECT q_id, mark, totalpos, NULL FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $metadataID_SQL ORDER BY q_id, started";
