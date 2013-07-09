@@ -58,12 +58,13 @@ function get_taken_papers($userID, $db) {
   $i = 0;
   
   // Query for Summative and Offline papers
-  $result = $db->prepare("SELECT DISTINCT paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? ORDER BY calendar_year DESC");
+  $result = $db->prepare("SELECT DISTINCT log_metadata.id, paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? ORDER BY calendar_year DESC");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
+  $result->bind_result($metadataID, $paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
   while ($result->fetch()) {
+    $papers[$i]['metadataID']     = $metadataID;
     $papers[$i]['paperID']        = $paperID;
     $papers[$i]['paper_title']    = $paper_title;
     $papers[$i]['paper_type']     = $paper_type;
@@ -87,6 +88,7 @@ function get_taken_papers($userID, $db) {
   $result->store_result();
   $result->bind_result($paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
   while ($result->fetch()) {
+    $papers[$i]['metadataID']     = null;
     $papers[$i]['paperID']        = $paperID;
     $papers[$i]['paper_title']    = $paper_title;
     $papers[$i]['paper_type']     = $paper_type;
@@ -140,33 +142,35 @@ $marks = $results_cache->get_paper_marks_by_student($userID);
 if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 ?>
   <script language="javascript">
-    function setVars (paper_type, crypt_name, paperID, started) {
-      document.getElementById('paper_type').value = paper_type;
-      document.getElementById('crypt_name').value = crypt_name;
-      document.getElementById('paperID').value = paperID;
-      document.getElementById('started').value = started;
+    function setVars (paper_type, crypt_name, paperID, metadataID) {
+      $('#paper_type').val(paper_type);
+      $('#crypt_name').val(crypt_name);
+      $('#paperID').val(paperID);
+      $('#metadataID').val(metadataID);
     }
 
     function viewScript() {
-      document.getElementById('menudiv').style.display = 'none';
-      var winwidth = 750;
-      var winheight = screen.height-80;
-      window.open("../paper/finish.php?id=" + document.getElementById('crypt_name').value + "&userid=<?php echo $userID; ?>&previous=" + document.getElementById('started').value + "&log_type=" + document.getElementById('paper_type').value + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      $('#menudiv').hide();
+      if ($('#metadataID').val() != '') {
+        var winwidth = screen.width-80;
+        var winheight = screen.height-80;
+        window.open("../paper/finish.php?id=" + $('#crypt_name').val() + "&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#paper_type').val() + "&percent=" + $('#percent').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      }
     }
     
     function viewFeedback() {
-      document.getElementById('menudiv').style.display = 'none';
+      $('#menudiv').hide();
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("../mapping/user_feedback.php?id=" + document.getElementById('crypt_name').value + "&userID=<?php echo $userID; ?>&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../mapping/user_feedback.php?id=" + $('#crypt_name').val() + "&userID=<?php echo $userID; ?>&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
     
     function viewPersonalCohort() {
-      window.location.href="../reports/personal_cohort_performance.php?paperID=" + document.getElementById('paperID').value + "&userID=<?php echo $userID; ?>";
+      window.location.href="../reports/personal_cohort_performance.php?paperID=" + $('#paperID').val() + "&userID=<?php echo $userID; ?>";
     }
     
     function jumpToPaper() {
-      window.opener.location.href="../paper/details.php?paperID=" + document.getElementById('paperID').value;
+      window.opener.location.href="../paper/details.php?paperID=" + $('#paperID').val();
       self.close();
     }
 
@@ -221,7 +225,6 @@ if (!$userObject->has_role('Student')) {  // Do not create popup menu if student
 <?php
 }
 
-
 $demo = is_demo($userObject);
 $student_details = UserUtils::get_user_details($userID, $mysqli);
 $name = demo_replace($student_details['title'], $demo) . ' ' . demo_replace($student_details['surname'], $demo) . ', ' . demo_replace($student_details['first_names'], $demo) . ' (' . demo_replace($student_details['student_id'], $demo) . ')';
@@ -272,7 +275,7 @@ foreach ($papers as $paper) {
     if ($userObject->has_role('Student')) {
       $onclick = '';
     } else {
-      $onclick = " onclick=\"popMenu(3, event); setVars(" . $paper['paper_type'] . ", '" . $paper['crypt_name'] . "', " . $paper['paperID'] . ", '" . $paper['started'] . "')\"";
+      $onclick = " onclick=\"popMenu(3, event); setVars(" . $paper['paper_type'] . ", '" . $paper['crypt_name'] . "', " . $paper['paperID'] . ", '" . $paper['metadataID'] . "')\"";
     }
     
     if ($mark != '') {  // Do not plot if there is no student mark.
@@ -296,12 +299,13 @@ if (!$userObject->has_role('Student')) {  // Do not show hidden fields if a stud
 ?>
 <input type="hidden" id="crypt_name" />
 <input type="hidden" id="paperID" />
-<input type="hidden" id="started" />
+<input type="hidden" id="metadataID" />
 <input type="hidden" id="paper_type" />
 <?php
 }
 ?>
 </div>
+<br />
 
 </div>
 </body>

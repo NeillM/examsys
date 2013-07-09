@@ -94,35 +94,35 @@ ob_start();
 <script type="text/javascript" src="../js/popup_menu.js"></script>
 <script language="JavaScript">
   function setVars(tmpMetadataID, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
-    document.getElementById('metadataID').value = tmpMetadataID;
-    document.getElementById('userID').value = tmpUserID;
-    document.getElementById('log_type').value = tmpLogType;
-    document.getElementById('reassign').value = tmpReassign;
-    document.getElementById('loglate').value = tmpLogLate;
-    document.getElementById('percent').value = tmpPercent;
+    $('#metadataID').val(tmpMetadataID);
+    $('#userID').val(tmpUserID);
+    $('#log_type').val(tmpLogType);
+    $('#reassign').val(tmpReassign);
+    $('#loglate').val(tmpLogLate);
+    $('#percent').val(tmpPercent);
     
     if (tmpMetadataID == '') {
-      document.getElementById('item1b').style.color = '#C0C0C0';
-      document.getElementById('item2b').style.color = '#C0C0C0';
+      $('#item1b').css('color', '#C0C0C0');
+      $('#item2b').css('color', '#C0C0C0');
     } else {
-      document.getElementById('item1b').style.color = '#000000';
-      document.getElementById('item2b').style.color = '#000000';
+      $('#item1b').css('color', '#000000');
+      $('#item2b').css('color', '#000000');
     }
 
     if (tmpReassign == 'y') {
-      document.getElementById('item3b').style.color = '#C0C0C0';
-      document.getElementById('item5b').style.color = '#000000';
+      $('#item3b').css('color', '#C0C0C0');
+      $('#item5b').css('color', '#000000');
     } else {
-      document.getElementById('item3b').style.color = '#000000';
-      document.getElementById('item5b').style.color = '#C0C0C0';
+      $('#item3b').css('color', '#000000');
+      $('#item5b').css('color', '#C0C0C0');
     }
 
     if (tmpLogLate == 'y') {
-      document.getElementById('item6b').style.color = '#000000';
-      document.getElementById('log_late_icon').style.display = 'block';
+      $('#item6b').css('color', '#000000');
+      $('#log_late_icon').show();
     } else {
-      document.getElementById('item6b').style.color = '#C0C0C0';
-      document.getElementById('log_late_icon').style.display = 'none';
+      $('#item6b').css('color', '#C0C0C0');
+      $('#log_late_icon').hide();
     }
   }
 
@@ -142,42 +142,42 @@ ob_start();
   }
 
   function viewScript() {
-    document.getElementById('menudiv').style.display = 'none';
-    if (document.getElementById('metadataID').value != '') {
+    $('#menudiv').hide();
+    if ($('#metadataID').val() != '') {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("../paper/finish.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&metadataID=" + document.getElementById('metadataID').value + "&log_type=" +document.getElementById('log_type').value+ "&percent=" +document.getElementById('percent').value+ "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../paper/finish.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#log_type').val() + "&percent=" + $('#percent').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
   }
 
   function viewFeedback() {
-    document.getElementById('menudiv').style.display = 'none';
-    if (document.getElementById('metadataID').value != '') {
+    $('#menudiv').hide();
+    if ($('#metadataID').val() != '') {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("../mapping/user_feedback.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + document.getElementById('userID').value + "&metadataID=" + document.getElementById('metadataID').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../mapping/user_feedback.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
   }
 
   function viewProfile() {
-    document.getElementById('menudiv').style.display = 'none';
+    $('#menudiv').hide();
     if (document.getElementById('reassign').value == 'n') {
-      window.top.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + document.getElementById('userID').value;
+      window.top.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + $('#userID').val();
     }
   }
 
   function newStudentNote() {
-    document.getElementById('menudiv').style.display = 'none';
-    note = window.open("../users/new_student_note.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>&calling=class_totals","note","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    $('#menudiv').hide();
+    note = window.open("../users/new_student_note.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>&calling=class_totals","note","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       note.focus();
     }
   }
 
   function reassignScript() {
-    document.getElementById('menudiv').style.display = 'none';
+    $('#menudiv').hide();
     if (document.getElementById('reassign').value == 'y') {
-      reassign = window.open("check_reassign_script.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>","reassign","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      reassign = window.open("check_reassign_script.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>","reassign","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         reassign.focus();
       }
@@ -185,9 +185,9 @@ ob_start();
   }
 
   function reassignLogLate() {
-    document.getElementById('menudiv').style.display = 'none';
-    if (document.getElementById('loglate').value == 'y') {
-      loglate = window.open("check_reassign_log_late.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>&metadataID=" + document.getElementById('metadataID').value + "&log_type=" + document.getElementById('log_type').value + "","reassign","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    $('#menudiv').hide();
+    if ($('#loglate').val() == 'y') {
+      loglate = window.open("check_reassign_log_late.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#log_type').val() + "","reassign","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         reassign.focus();
       }
@@ -198,14 +198,14 @@ ob_start();
     if (!e) var e = window.event;
 	  var currentX = e.clientX;
 	  var currentY = e.clientY;
-    var scrOfX = $('body,html').scrollLeft();
-    var scrOfY = $('body,html').scrollTop();
+    var scrOfX = $(document).scrollLeft();
+    var scrOfY = $(document).scrollTop();
 	  
     dataSource = "getNote.php?paperID=<?php echo $paperID; ?>&userID=" + userID;
     
-    $("#noteMsg").load(dataSource,function(responseTxt,statusTxt,xhr) {
-      if (statusTxt=="success") {
-        $("#noteDiv").css('display', 'block');
+    $("#noteMsg").load(dataSource, function(responseTxt, statusTxt, xhr) {
+      if (statusTxt == "success") {
+        $("#noteDiv").show();
         $("#noteDiv").css('left', currentX + scrOfX + 16 + 'px');
 
         top_pos = currentY+scrOfY-16;

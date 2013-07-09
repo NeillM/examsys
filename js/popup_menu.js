@@ -10,7 +10,7 @@ function mouseSelect(e) {
     if (overpopupmenu == false) {
       isMenu = false ;
       overpopupmenu = false;
-      document.getElementById('menudiv').style.display = 'none';
+      $('#menudiv').hide();
       return true ;
     }
     return true ;
@@ -23,21 +23,21 @@ function popMenu(option_no, e) {
   if (!e) var e = window.event;
   var currentX = e.clientX;
   var currentY = e.clientY;
-  var scrOfX = $('body,html').scrollLeft();
-  var scrOfY = $('body,html').scrollTop();
+  var scrOfX = $(document).scrollLeft();
+  var scrOfY = $(document).scrollTop();
   
-  document.getElementById('menudiv').style.display = 'block';
+  $('#menudiv').show();
   for (i=1; i<=option_no; i++) {
-    document.getElementById('item'+i+'b').style.backgroundColor = '#FFFFFF';
+    $('#item'+i+'b').css('background-color', '#FFFFFF');
   }
   
   top_pos = currentY + scrOfY;
-  div_height = document.getElementById('menudiv').clientHeight + 4;
+  div_height = $('#menudiv').height() + 6;
   if (top_pos > ($(window).height() + scrOfY - div_height)) {
     top_pos = $(window).height() + scrOfY - div_height;
   }
-  document.getElementById('menudiv').style.left = e.clientX + scrOfX + 'px';
-  document.getElementById('menudiv').style.top = top_pos + 'px';
+  $('#menudiv').css('left', e.clientX + scrOfX);
+  $('#menudiv').css('top', top_pos);
   
   isMenu = true;
   return false;
@@ -45,31 +45,31 @@ function popMenu(option_no, e) {
 
 function menuRowOn(rowID) {
   // Left menu column
-  document.getElementById('item'+rowID+'a').style.backgroundColor = '#FFE7A2';
-  document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #FFBD69';
-  document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #FFBD69';
-  document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #FFBD69';
+  $('#item'+rowID+'a').css('background-color', '#FFE7A2');
+  $('#item'+rowID+'a').css('border-top', '1px solid #FFBD69');
+  $('#item'+rowID+'a').css('border-bottom', '1px solid #FFBD69');
+  $('#item'+rowID+'a').css('border-left', '1px solid #FFBD69');
   
   // Right menu column
-  document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFE7A2';
-  document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFBD69';
-  document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFBD69';
-  document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFBD69';
-  document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFE7A2';
+  $('#item'+rowID+'b').css('background-color', '#FFE7A2');
+  $('#item'+rowID+'b').css('border-top', '1px solid #FFBD69');
+  $('#item'+rowID+'b').css('border-bottom', '1px solid #FFBD69');
+  $('#item'+rowID+'b').css('border-left', '1px solid #FFE7A2');
+  $('#item'+rowID+'b').css('border-right', '1px solid #FFBD69');
 }
 
 function menuRowOff(rowID) {
   // Left menu column
-  document.getElementById('item'+rowID+'a').style.backgroundColor = '#F1F5FB';
-  document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #F1F5FB';
-  document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #F1F5FB';
-  document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #F1F5FB';
+  $('#item'+rowID+'a').css('background-color', '#F1F5FB');
+  $('#item'+rowID+'a').css('border-top', '1px solid #F1F5FB');
+  $('#item'+rowID+'a').css('border-bottom', '1px solid #F1F5FB');
+  $('#item'+rowID+'a').css('border-left', '1px solid #F1F5FB');
   
   // Right menu column
-  document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFFFFF';
-  document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFFFFF';
-  document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFFFFF';
-  document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFFFFF';
-  document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFFFFF';
+  $('#item'+rowID+'b').css('background-color', '#FFFFFF');
+  $('#item'+rowID+'b').css('border-top', '1px solid #FFFFFF');
+  $('#item'+rowID+'b').css('border-bottom', '1px solid #FFFFFF');
+  $('#item'+rowID+'b').css('border-left', '1px solid #FFFFFF');
+  $('#item'+rowID+'b').css('border-right', '1px solid #FFFFFF');
 }    
 
