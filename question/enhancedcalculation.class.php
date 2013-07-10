@@ -192,7 +192,8 @@ class EnhancedCalculation extends Question implements questionInterface {
       //check for strict first
 
       //check strict dp
-      if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']) and !(isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true  and $this->useranswer['status']['strictdp'] === true and $this->useranswer['status']['strictdpsize'] === true))) {
+  if(false === true) {
+  //    if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']) and !(isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true  and $this->useranswer['status']['strictdp'] === true and $this->useranswer['status']['strictdpsize'] === true))) {
         $this->qmark = $this->settings['marks_incorrect'];
 
         $returnstatus = Q_MARKING_WRONG;
