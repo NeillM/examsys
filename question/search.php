@@ -45,10 +45,10 @@ set_time_limit(0);
   <style type="text/css">
     .o {color:#A5A5A5}
     .l {padding-left:6px; vertical-align:top}
-    .retired {color:#808080}
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
     .qline:hover {background-color:#eee}
     .qline.highlight {background-color:#B3C8E8}
+    .retired {color:#808080}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -145,11 +145,19 @@ set_time_limit(0);
 if (isset($_POST['submit'])) {
   $error = '';
 
+  if (!isset($status_array)) {
+    $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+  }
+
   if (!isset($_POST['theme']) and !isset($_POST['scenario']) and !isset($_POST['leadin']) and !isset($_POST['options']) and !isset($_POST['keywords'])) {
     $error = $string['notickedfields'];
   }
 
-  if ($_POST['searchterm'] == '' and $_POST['owner'] == '' and  $_POST['status'] == '%' and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['status'] == '%' and $_POST['module'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
+  if (!isset($_POST['status'])) {
+    $error = $string['notickedstatus'];
+  }
+
+  if (($_POST['searchterm'] == '' or $_POST['searchterm'] == '%') and $_POST['owner'] == '' and  (isset($_POST['status']) and count($_POST['status']) == count($status_array)) and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['module'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
     $error = $string['narrowyoursearch'];
   }
 
@@ -243,14 +251,8 @@ if (isset($_POST['submit'])) {
     }
   }
 
-  if (isset($_POST['status']) and $_POST['status'] != '%') {
-    if ($_POST['status'] == 'nonretired') {
-      $status_string = " AND questions.status != 'retired'";
-    } else {
-      $status_string = ' AND questions.status=?';
-      $variables[] = $_POST['status'];
-      $params .= 's';
-    }
+  if (isset($_POST['status'])) {
+    $status_string = " AND questions.status IN (" . implode(',', $_POST['status']) . ")";
   } else {
     $status_string = '';
   }
@@ -348,7 +350,7 @@ if (isset($_POST['submit'])) {
 <?php
   while ($result->fetch()) {
     echo '<tr class="qline';
-    if ($status == 'Retired') {
+    if ($status_array[$status]->get_exclude_search()) {
       echo ' retired';
     }
     if ($locked != '') {

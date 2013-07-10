@@ -165,45 +165,23 @@ Class search_utils {
    * Display a dropdown menu of status options for a question.
    * @return string HTML of the status dropdown menu
    */
-  static function display_status_dropdown() {
+  static function display_status_dropdown($status_array) {
     global $string, $state, $mysqli;
 
     $stored_statuses = (isset($state['status'])) ? explode(',', $state['status']) : array();
 
     $html = '';
 
-    $html .= <<<STATUS
-<input type="checkbox" id="status_any" name="status" value="%" />
-<label for="status_any">{$string['anystatus']}</label><br />\n
-
-STATUS;
-
-    $status_array = QuestionStatus::get_all_statuses($mysqli, $string);
     echo "<br />\n";
     foreach ($status_array as $individual_status) {
       $sel_mod = ($individual_status->get_exclude_search()) ? '' : ' checked';
       $html .= <<<STATUS
-<input type="checkbox" id="status{$individual_status->id}" name="status" value="{$individual_status->id}"{$sel_mod} />
+<input type="checkbox" id="status{$individual_status->id}" name="status[]" value="{$individual_status->id}" class="chk"{$sel_mod} />
 <label for="status{$individual_status->id}">{$individual_status->get_name()}</label><br />\n
 
 STATUS;
     }
     echo $html;
-
-    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'status')\" name=\"status\">\n";
-    echo "<option value=\"nonretired\">" . $string['anynonretiredstatus'] . "</option>\n";
-    if (isset($state['status']) and $state['status'] == '%') {
-      echo "<option value=\"%\" selected>" . $string['anystatus'] . "</option>\n";
-    } else {
-      echo "<option value=\"%\">" . $string['anystatus'] . "</option>\n";
-    }
-    $status_array = QuestionStatus::get_all_statuses($mysqli, $string);
-    foreach ($status_array as $individual_status) {
-      $sel_mod = (isset($state['status']) and $state['status'] == $individual_status) ? ' selected' : '';
-      echo "<option value=\"$individual_status->id\" $sel_mod>" . $individual_status->get_name() . "</option>";
-    }
-    echo "</select>\n";
-
   }
 
   /**
