@@ -163,6 +163,7 @@ Class search_utils {
 
   /**
    * Display a dropdown menu of status options for a question.
+   * @param array $status_array Array of question statuses
    * @return string HTML of the status dropdown menu
    */
   static function display_status_dropdown($status_array) {
@@ -170,11 +171,25 @@ Class search_utils {
 
     $stored_statuses = (isset($state['status'])) ? explode(',', $state['status']) : array();
 
+    $have_state = false;
+    foreach (array_keys($state) as $s) {
+      if (preg_match('/status[0-9]+/', $s) == 1) {
+        $have_state = true;
+        break;
+      }
+    }
+
     $html = '';
 
     echo "<br />\n";
     foreach ($status_array as $individual_status) {
-      $sel_mod = ($individual_status->get_exclude_search()) ? '' : ' checked';
+      if (isset($state['status' . $individual_status->id])) {
+        $state_check = $state['status' . $individual_status->id] === 'true';
+      } else {
+        $state_check = (!$individual_status->get_exclude_search());
+      }
+      $sel_mod = ($state_check) ? ' checked' : '';
+
       $html .= <<<STATUS
 <input type="checkbox" id="status{$individual_status->id}" name="status[]" value="{$individual_status->id}" class="chk"{$sel_mod} />
 <label for="status{$individual_status->id}">{$individual_status->get_name()}</label><br />\n
