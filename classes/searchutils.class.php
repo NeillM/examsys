@@ -171,14 +171,6 @@ Class search_utils {
 
     $stored_statuses = (isset($state['status'])) ? explode(',', $state['status']) : array();
 
-    $have_state = false;
-    foreach (array_keys($state) as $s) {
-      if (preg_match('/status[0-9]+/', $s) == 1) {
-        $have_state = true;
-        break;
-      }
-    }
-
     $html = '';
 
     echo "<br />\n";
