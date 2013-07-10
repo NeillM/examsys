@@ -717,9 +717,9 @@ if (!isset($_POST['update'])) {
 
 
     // Remove the indexes for speed.
-    $updater_utils->execute_query("DROP INDEX q_paper ON log$tableNo", false);
-    $updater_utils->execute_query("DROP INDEX username ON log$tableNo", false);
-    $updater_utils->execute_query("DROP INDEX started ON log$tableNo", false);
+    $updater_utils->execute_query("DROP INDEX q_paper ON log4", false);
+    $updater_utils->execute_query("DROP INDEX username ON log4", false);
+    $updater_utils->execute_query("DROP INDEX started ON log4", false);
 
     // Drop columns we no longer need.
     $updater_utils->execute_query("ALTER TABLE log4 DROP q_paper, DROP userID, DROP started", true);
