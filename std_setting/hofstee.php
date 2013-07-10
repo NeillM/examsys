@@ -18,7 +18,7 @@
 *
 * Hofstee plot
 *
-* @author Nikodem Miranowicz
+* @author Nikodem Miranowicz, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
@@ -28,6 +28,7 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/results_cache.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/class_totals.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
@@ -36,9 +37,27 @@ if (!$properties) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+// Check if the exam could still be going on.
+if (time() < $properties->get_end_date()) {
+  $notice->display_notice($string['examnotfinished'], $string['notfinishedmsg'], '../artwork/clock48.png', '#C00000', true, true);
+  exit;
+}
+
 $results_cache = new ResultsCache($mysqli);
 $marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
+
+if (count($marks) == 0) {  // If there are no marks, re-cache off class totals.
+  $startdate = $properties->get_raw_start_date();
+  $enddate   = $properties->get_raw_end_date();
+  
+  $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', '', $mysqli);
+  $report->compile_report(true);
+
+  $marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
+}
 $stats = array_values($results_cache->get_paper_cache($paperID));
+
+$marking = 0;
 
 function check_values($num, $stats) {
   $num = str_replace('median', $stats[5], $num);
@@ -64,8 +83,8 @@ if (isset($_POST['submit'])) {
 
     $insertID = $_POST['insertID'];
 
-    $result = $mysqli->prepare("UPDATE hofstee SET whole_numbers = ?, x1_pass = ?, x2_pass = ?, y1_pass = ?, y2_pass = ?, x1_distinction = ?, x2_distinction = ?, y1_distinction = ?, y2_distinction = ? WHERE std_setID = ?");
-    $result->bind_param('iddddddddi', $_POST['whole_numbers'], $_POST['x1_pass'], $_POST['x2_pass'], $_POST['y1_pass'], $_POST['y2_pass'], $_POST['x1_distinction'], $_POST['x2_distinction'], $_POST['y1_distinction'], $_POST['y2_distinction'], $insertID);
+    $result = $mysqli->prepare("UPDATE hofstee SET whole_numbers = ?, x1_pass = ?, x2_pass = ?, y1_pass = ?, y2_pass = ?, x1_distinction = ?, x2_distinction = ?, y1_distinction = ?, y2_distinction = ?, marking = ? WHERE std_setID = ?");
+    $result->bind_param('iddddddddii', $_POST['whole_numbers'], $_POST['x1_pass'], $_POST['x2_pass'], $_POST['y1_pass'], $_POST['y2_pass'], $_POST['x1_distinction'], $_POST['x2_distinction'], $_POST['y1_distinction'], $_POST['y2_distinction'], $_POST['marking'], $insertID);
     $result->execute();
     $result->close();
   } else {
@@ -76,8 +95,8 @@ if (isset($_POST['submit'])) {
     
     $insertID = $mysqli->insert_id;
     
-    $result = $mysqli->prepare("INSERT INTO hofstee VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('iidddddddd', $insertID, $_POST['whole_numbers'], $_POST['x1_pass'], $_POST['x2_pass'], $_POST['y1_pass'], $_POST['y2_pass'], $_POST['x1_distinction'], $_POST['x2_distinction'], $_POST['y1_distinction'], $_POST['y2_distinction']);
+    $result = $mysqli->prepare("INSERT INTO hofstee VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $result->bind_param('iiddddddddi', $insertID, $_POST['whole_numbers'], $_POST['x1_pass'], $_POST['x2_pass'], $_POST['y1_pass'], $_POST['y2_pass'], $_POST['x1_distinction'], $_POST['x2_distinction'], $_POST['y1_distinction'], $_POST['y2_distinction'], $_POST['marking']);
     $result->execute();
     $result->close();
   }
@@ -96,13 +115,27 @@ if (isset($_POST['submit'])) {
   $y1_distinction = $_POST['y1_distinction'];
   $y2_distinction = $_POST['y2_distinction'];
   
+  if ($_POST['marking'] == '1') {
+    if ($pass_mark != '') $properties->set_pass_mark($pass_mark);
+    if ($distinction_score != '') $properties->set_distinction_mark($distinction_score);
+    $properties->set_marking('0');
+    $properties->save();
+  } elseif ($_POST['marking'] == '2') {
+    $properties->set_marking('2,' . $insertID);
+    $properties->save();  
+  }
+  $marking = $_POST['marking'];
+  
+  header("location:index.php?paperID=$paperID&module=&folder=");
+  exit;
+
 } elseif (isset($_GET['std_setID'])) {
   $insertID = $_GET['std_setID'];
   
-  $result = $mysqli->prepare("SELECT whole_numbers, x1_pass, x2_pass, y1_pass, y2_pass, x1_distinction, x2_distinction, y1_distinction, y2_distinction FROM hofstee WHERE std_setID = ?");
+  $result = $mysqli->prepare("SELECT whole_numbers, x1_pass, x2_pass, y1_pass, y2_pass, x1_distinction, x2_distinction, y1_distinction, y2_distinction, marking FROM hofstee WHERE std_setID = ?");
   $result->bind_param('i', $insertID);
   $result->execute();
-  $result->bind_result($whole_numbers, $x1_pass, $x2_pass, $y1_pass, $y2_pass, $x1_distinction, $x2_distinction, $y1_distinction, $y2_distinction);
+  $result->bind_result($whole_numbers, $x1_pass, $x2_pass, $y1_pass, $y2_pass, $x1_distinction, $x2_distinction, $y1_distinction, $y2_distinction, $marking);
   $result->fetch();
   $result->close();
   
@@ -110,8 +143,7 @@ if (isset($_POST['submit'])) {
     $checked = ' checked="checked"';
   } else {
     $checked = '';
-  }
-  
+  }  
 } else {
   // Default values no POST and no editing existing review
   $checked = '';
@@ -183,7 +215,7 @@ input[type="text"] {border: 1px solid #C0C0C0}
   echo "</table>\n";
 
 	echo "<div id=\"canvas_div_pass\" style=\"float:left\">\n";
-	echo "<h1>Pass Mark</h1>\n";
+	echo "<h1>" . $string['passmark'] . "</h1>\n";
   echo "<canvas id=\"canvas_graph_pass\" width=\"480\" height=\"450\"></canvas>\n";
 	echo "<table style=\"margin-left:auto; margin-right:auto\">\n";
 	echo "<tr><td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td><strong>". $string['cutscore'] . "</strong></td></tr>\n";
@@ -216,7 +248,7 @@ input[type="text"] {border: 1px solid #C0C0C0}
 		</script>";
   
 	echo "<div id=\"canvas_div_distinction\" style=\"float:left\">\n";
-	echo "<h1>Distinction Mark</h1>\n";
+	echo "<h1>" . $string['distinction'] . "</h1>\n";
 	echo "<canvas id=\"canvas_graph_distinction\" width=\"480\" height=\"450\"></canvas><br />\n";
 	echo "<table style=\"margin-left:auto; margin-right:auto\">\n";
 	echo "<tr><td class=\"pass\">". $string['minpass'] . "</td><td class=\"pass\">". $string['maxpass'] . "</td><td class=\"fail\">". $string['minfail'] . "</td><td class=\"fail\">". $string['maxfail'] . "</td><td><strong>". $string['cutscore'] . "</strong></td></tr>\n";
@@ -240,7 +272,19 @@ input[type="text"] {border: 1px solid #C0C0C0}
 
 ?>
 <br clear="all" />
-<div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['savemarks']; ?>" /></div>
+<div style="margin-left:320px">
+<?php
+for ($i=0; $i<3; $i++) {
+  if ($marking == $i) {
+    echo "<input type=\"radio\" name=\"marking\" value=\"$i\" checked=\"checked\" />&nbsp;" . $string["marking$i"] . "<br />\n";
+  } else {
+    echo "<input type=\"radio\" name=\"marking\" value=\"$i\" />&nbsp;" . $string["marking$i"] . "<br />\n";
+  }
+}
+?>
+</div>
+<br />
+<div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" /></div>
 </form>
 </body>
 </html>

@@ -1755,7 +1755,8 @@ QUERY;
           `x1_distinction` tinyint(4) DEFAULT NULL,
           `x2_distinction` tinyint(4) DEFAULT NULL,
           `y1_distinction` tinyint(4) DEFAULT NULL,
-          `y2_distinction` tinyint(4) DEFAULT NULL
+          `y2_distinction` tinyint(4) DEFAULT NULL,
+          `marking` tinyint(4) DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 

@@ -88,6 +88,7 @@ function displayReview($review, $userObj) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="JavaScript">
     var groupReview;
@@ -95,34 +96,34 @@ function displayReview($review, $userObj) {
     function selReview(std_setID, setterID, reviewID, methodType, menuID, group, evt) {
       groupReview = group;
 
-      tmp_ID = document.getElementById('oldReviewID').value;
+      tmp_ID = $('#oldReviewID').val();
       if (tmp_ID != '') {
-        document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
-        document.getElementById('review' + tmp_ID).style.color = 'black';
+        $('#review' + tmp_ID).css('background-color', 'white');
+        $('#review' + tmp_ID).css('color', 'black');
       }
-      document.getElementById('menu2a').style.display = 'none';
-      document.getElementById('menu2b').style.display = 'none';
-      document.getElementById('menu2c').style.display = 'none';
-      document.getElementById(menuID).style.display = 'block';
+      $('#menu2a').hide();
+      $('#menu2b').hide();
+      $('#menu2c').hide();
+      $('#' + menuID).show();
 
-      document.getElementById('std_setID').value = std_setID;
-      document.getElementById('setterID').value = setterID;
-      document.getElementById('method').value = methodType;
+      $('#std_setID').val(std_setID);
+      $('#setterID').val(setterID);
+      $('#method').val(methodType);
 
-      document.getElementById('review' + reviewID).style.backgroundColor = '#316AC5';
-      document.getElementById('review' + reviewID).style.color = 'white';
-      document.getElementById('oldReviewID').value = reviewID;
+      $('#review' + reviewID).css('background-color', '#316AC5');
+      $('#review' + reviewID).css('color', 'white');
+      $('#oldReviewID').val(reviewID);
       evt.cancelBubble = true;
     }
 
     function reviewOff() {
-      document.getElementById('menu2a').style.display = 'block';
-      document.getElementById('menu2b').style.display = 'none';
-      document.getElementById('menu2c').style.display = 'none';
-      tmp_ID = document.getElementById('oldReviewID').value;
+      $('#menu2a').show();
+      $('#menu2b').hide();
+      $('#menu2c').hide();
+      tmp_ID = $('#oldReviewID').val();
       if (tmp_ID != '') {
-        document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
-        document.getElementById('review' + tmp_ID).style.color = 'black';
+        $('#review' + tmp_ID).css('background-color', 'white');
+        $('#review' + tmp_ID).css('color', 'black');
       }
     }
 

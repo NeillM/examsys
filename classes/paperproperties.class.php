@@ -182,8 +182,8 @@ class PaperProperties {
     $sql = "SELECT
                   property_id,
                   paper_title,
-                  DATE_FORMAT(start_date, '%Y%m%d%h%i%s'),
-                  DATE_FORMAT(end_date, '%Y%m%d%h%i%s'),
+                  DATE_FORMAT(start_date, '%Y%m%d%H%i%s'),
+                  DATE_FORMAT(end_date, '%Y%m%d%H%i%s'),
                   UNIX_TIMESTAMP(start_date) AS start_date,
                   UNIX_TIMESTAMP(end_date) AS end_date,
                   timezone,

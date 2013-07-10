@@ -590,7 +590,7 @@ if (!isset($_POST['update'])) {
     }
     
     if (!$updater_utils->does_table_exist('hofstee')) {
-      $sql = "CREATE TABLE hofstee (std_setID int unsigned not null, whole_numbers tinyint, x1_pass tinyint, x2_pass tinyint, y1_pass tinyint, y2_pass tinyint, x1_distinction tinyint, x2_distinction tinyint, y1_distinction tinyint, y2_distinction tinyint) ENGINE=InnoDB";
+      $sql = "CREATE TABLE hofstee (std_setID int unsigned not null, whole_numbers tinyint, x1_pass tinyint, x2_pass tinyint, y1_pass tinyint, y2_pass tinyint, x1_distinction tinyint, x2_distinction tinyint, y1_distinction tinyint, y2_distinction tinyint, marking tinyint) ENGINE=InnoDB";
       $updater_utils->execute_query($sql, true);
     
       $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.hofstee TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
@@ -725,6 +725,10 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query("ALTER TABLE log4 DROP q_paper, DROP userID, DROP started", true);
   }
 
+  // 10/07/2013 (brzsw) - Add new marking column to hofstee.
+  if (!$updater_utils->does_column_exist('hofstee', 'marking')) {
+    $updater_utils->execute_query("ALTER TABLE hofstee ADD COLUMN marking tinyint DEFAULT NULL", true);
+  }
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****

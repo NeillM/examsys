@@ -1275,7 +1275,7 @@ class ClassTotals {
       }
     }
     
-    if ($this->recache) {
+    if ($this->recache and count($log_data) > 0) {
       $this->db->autocommit(false);
 
       $log_query = $this->db->prepare("UPDATE log$paper_type SET adjmark = ? WHERE id = ?");
