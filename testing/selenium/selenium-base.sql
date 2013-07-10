@@ -1772,6 +1772,7 @@ CREATE TABLE `question_statuses` (
   `exclude_search` tinyint(4) NOT NULL DEFAULT '0',
   `is_default` tinyint(4) NOT NULL DEFAULT '0',
   `change_locked` tinyint(3) NOT NULL DEFAULT '1',
+  `validate` tinyint(3) NOT NULL DEFAULT '1',
   `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
@@ -1783,7 +1784,7 @@ CREATE TABLE `question_statuses` (
 
 LOCK TABLES `question_statuses` WRITE;
 /*!40000 ALTER TABLE `question_statuses` DISABLE KEYS */;
-INSERT INTO `question_statuses` VALUES (1,'Normal',0,0,1,1,0),(2,'Retired',0,1,0,1,1),(3,'Incomplete',0,0,0,0,2),(4,'Experimental',1,0,0,0,3),(5,'Beta',0,0,0,0,4);
+INSERT INTO `question_statuses` VALUES (1,'Normal',0,0,1,1,1,0),(2,'Retired',0,1,0,1,0,1),(3,'Incomplete',0,0,0,0,0,2),(4,'Experimental',1,0,0,0,1,3),(5,'Beta',0,0,0,0,1,4);
 /*!40000 ALTER TABLE `question_statuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2655,4 +2656,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-05 14:04:43
+-- Dump completed on 2013-07-10 16:56:09
