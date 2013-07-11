@@ -72,7 +72,7 @@ if (!isset($_POST['create'])) {
 </script>
   <form id="create_form" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <p><?php echo $string['msg1']; ?></p>
-      <div><label for="tag"><?php echo $string['tag']; ?></label> <input type="text" value="" name="tag" class="required" minlength="2" /></div>
+      <div><label for="tag"><?php echo $string['tag']; ?></label> <input type="text" value="" id="tag" name="tag" class="required" minlength="2" /></div>
 
       <div class="submit"><input type="submit" name="create" value="<?php echo $string['create']; ?>"/></div>
   </form>
