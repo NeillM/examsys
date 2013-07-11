@@ -25,7 +25,7 @@
 ?>
 <script language="JavaScript">
   function viewDetails() {
-    window.location = "scheduling_details.php?paperID=" + document.getElementById('lineID').value;
+    window.location = "scheduling_details.php?paperID=" + $('#lineID').val();
   }
 </script>
 

@@ -26,11 +26,11 @@
 ?>
 <script language="JavaScript">
   function editLTIkeys() {
-    window.location.href = './edit_LTIkeys.php?LTIkeysid=' + document.getElementById('lineID').value;
+    window.location.href = './edit_LTIkeys.php?LTIkeysid=' + $('#lineID').val();
   }
 
   function deleteLTIkeys() {
-    notice = window.open("../delete/check_delete_LTIkeys.php?LTIkeysID=" + document.getElementById('lineID').value + "", "LTIkeyss", "width=520,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("../delete/check_delete_LTIkeys.php?LTIkeysID=" + $('#lineID').val() + "", "LTIkeyss", "width=520,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width / 2 - 270, screen.height / 2 - 85);
     if (window.focus) {
       notice.focus();

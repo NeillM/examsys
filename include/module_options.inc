@@ -29,7 +29,7 @@ $session = date_utils::get_current_academic_year();
 ?>
 <script language="JavaScript">
   function editModule() {
-    window.location.href='./edit_module.php?moduleid=' + document.getElementById('lineID').value;
+    window.location.href='./edit_module.php?moduleid=' + $('#lineID').val();
   }
 
   function jumpToModule() {
@@ -41,7 +41,7 @@ $session = date_utils::get_current_academic_year();
   }
 
   function deleteModule() {
-    notice=window.open("../delete/check_delete_module.php?idMod=" + document.getElementById('lineID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_module.php?idMod=" + $('#lineID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();

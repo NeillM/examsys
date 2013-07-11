@@ -236,15 +236,17 @@ if (isset($_GET['paperID'])) {
   <script language="JavaScript">
     function addUserID(ID, clearall) {
       if (clearall) {
-        document.getElementById('userID').value = ',' + ID;
+        $('#userID').val(',' + ID);
       } else {
-        document.getElementById('userID').value = document.getElementById('userID').value + ',' + ID;
+        cur_value = $('#userID').val() + ',' + ID;
+        $('#userID').val(cur_value);
       }
     }
 
     function subUserID(ID) {
       var tmpuserID = ',' + ID;
-      document.getElementById('userID').value = document.getElementById('userID').value.replace(tmpuserID, '');
+      new_value = $('#userID').val().replace(tmpuserID, '');
+      $('#userID').val(new_value);
     }
 
     function clearAll() {
@@ -252,8 +254,8 @@ if (isset($_GET['paperID'])) {
     }
 
     function selUser(userID, lineID, menuID, evt) {
-      document.getElementById('menu2a').style.display = 'none';
-      document.getElementById('menu' + menuID).style.display = 'block';
+      $('#menu2a').hide();
+      $('#menu' + menuID).show();
 
       if (evt.ctrlKey == false) {
         clearAll();
@@ -271,9 +273,9 @@ if (isset($_GET['paperID'])) {
     }
 
     function userOff() {
-      document.getElementById('menu2a').style.display = 'block';
-      document.getElementById('menu2b').style.display = 'none';
-      document.getElementById('menu2c').style.display = 'none';
+      $('#menu2a').show();
+      $('#menu2b').hide();
+      $('#menu2c').hide();
 
       clearAll();
     }
