@@ -671,7 +671,7 @@ $result->close();
     }
     $old_marks          = $marks_correct;
     
-    if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
+    if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash', 'enhancedcalc'))) $options++;
   }
   $result->close();
 

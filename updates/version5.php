@@ -28,9 +28,11 @@ require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
 require_once '../classes/lang.class.php';
 require_once '../classes/dbutils.class.php';
+require_once '../classes/stringutils.class.php';
 require_once '../include/std_set_shared_functions.inc';
 
 $version = '5.1';
+$migration_path = 'version5';
 
 set_time_limit(0);
 
@@ -160,7 +162,6 @@ if (!isset($_POST['update'])) {
 
   // Backup the config file before proceeding.
   $updater_utils->backup_file($cfg_web_root, $old_version);
-
 
   // Avoid repeated method calls
   $cfg_db_database      = $configObject->get('cfg_db_database');
@@ -463,7 +464,7 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_table_exist('std_set')) {
     $sql = "CREATE TABLE std_set (id int unsigned not null primary key auto_increment, setterID int(10) unsigned not null, paperID mediumint(8) unsigned not null, std_set datetime, method enum('Modified Angoff','Angoff (Yes/No)','Ebel','Hofstee'), group_review text, pass_score decimal(10,6), distinction_score decimal(10,6)) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
-  
+
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
 
@@ -472,7 +473,7 @@ if (!isset($_POST['update'])) {
 
     $sql = "CREATE TABLE std_set_questions (id int unsigned not null primary key auto_increment, std_setID int unsigned not null, questionID int(11) unsigned not null, rating text) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
-    
+
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
 
@@ -487,17 +488,17 @@ if (!isset($_POST['update'])) {
       $update = $mysqli->prepare("INSERT INTO std_set VALUES (NULL, $setterID, $paperID, '$std_set', '$method', '$group_review', NULL, NULL)");
       $update->execute();
       $update->close();
-      
+
       $insert_id = $mysqli->insert_id;
-    
+
       $insert_ids[$setterID . $std_set . $paperID] = $insert_id;
       $ebel_ids[$setterID . $std_set] = $insert_id;
-      $i++;    
+      $i++;
     }
     $result->close();
-    
+
     $mysqli->commit();
-    
+
     // Query and then populate 'std_set_questions' table.
     $result = $mysqli->prepare("SELECT setterID, std_set, paperID, questionID, rating FROM standards_setting");
     $result->execute();
@@ -505,15 +506,15 @@ if (!isset($_POST['update'])) {
     $result->bind_result($setterID, $std_set, $paperID, $questionID, $rating);
     while ($result->fetch()) {
       $std_setID = $insert_ids[$setterID.$std_set.$paperID];
-    
+
       $update = $mysqli->prepare("INSERT INTO std_set_questions VALUES (NULL, $std_setID, $questionID, '$rating')");
       $update->execute();
       $update->close();
     }
     $result->close();
-    
+
     $mysqli->commit();
-    
+
     // Update the 'ebel' table.
     if (!$updater_utils->does_column_exist('ebel', 'std_setID')) {
       $updater_utils->execute_query("ALTER TABLE ebel ADD COLUMN std_setID int unsigned not null AFTER id", true);
@@ -526,7 +527,7 @@ if (!isset($_POST['update'])) {
     while ($result->fetch()) {
       if (isset($ebel_ids[$setterID . $date_set])) {
         $std_setID = $ebel_ids[$setterID . $date_set];
-      
+
         $update = $mysqli->prepare("UPDATE ebel SET std_setID = $std_setID WHERE setterID = $setterID AND date_set = '$date_set'");
         $update->execute();
         $update->close();
@@ -534,7 +535,7 @@ if (!isset($_POST['update'])) {
     }
     $result->close();
     $mysqli->commit();
-    
+
     // Update the 'properties' table.
     $result = $mysqli->prepare("SELECT property_id, marking FROM properties WHERE marking LIKE '2,%'");
     $result->execute();
@@ -542,18 +543,18 @@ if (!isset($_POST['update'])) {
     $result->bind_result($property_id, $marking);
     while ($result->fetch()) {
       $parts = explode(',', $marking);
-      
+
       $parts[2] = str_replace('-', '', $parts[2]);
       $parts[2] = str_replace(' ', '', $parts[2]);
       $parts[2] = str_replace(':', '', $parts[2]);
-      
+
       $tmp_date = substr($parts[2],0,4) . '-' . substr($parts[2],4,2) . '-' . substr($parts[2],6,2) . ' ' . substr($parts[2],8,2) . ':' . substr($parts[2],10,2) . ':' . substr($parts[2],12,2);
-      
+
       $search_date = $parts[1] . $tmp_date;
-      
+
       if (isset($ebel_ids[$search_date])) {
         $std_setID = $ebel_ids[$search_date];
-        
+
         $update = $mysqli->prepare("UPDATE properties SET marking = '2,$std_setID' WHERE property_id = $property_id");
         $update->execute();
         $update->close();
@@ -562,19 +563,19 @@ if (!isset($_POST['update'])) {
         $update->execute();
         $update->close();
       }
-    
+
     }
     $result->close();
-    
+
     $mysqli->commit();
-    
+
     // Clear up a table.
     if ($updater_utils->does_table_exist('standards_setting')) {
       $sql = "DROP TABLE standards_setting";
       $updater_utils->execute_query($sql, true);
     }
     $mysqli->commit();
-    
+
     // Clear up some columns
     if ($updater_utils->does_column_exist('ebel', 'id')) {
       $sql = "ALTER TABLE ebel DROP COLUMN id";
@@ -588,23 +589,23 @@ if (!isset($_POST['update'])) {
       $sql = "ALTER TABLE ebel DROP COLUMN date_set";
       $updater_utils->execute_query($sql, true);
     }
-    
+
     if (!$updater_utils->does_table_exist('hofstee')) {
       $sql = "CREATE TABLE hofstee (std_setID int unsigned not null, whole_numbers tinyint, x1_pass tinyint, x2_pass tinyint, y1_pass tinyint, y2_pass tinyint, x1_distinction tinyint, x2_distinction tinyint, y1_distinction tinyint, y2_distinction tinyint, marking tinyint) ENGINE=InnoDB";
       $updater_utils->execute_query($sql, true);
-    
+
       $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.hofstee TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
       $updater_utils->execute_query($sql, true);
     }
     $mysqli->commit();
-  
+
     // Query and then populate 'std_set' table.
     $result = $mysqli->prepare("SELECT id, setterID, std_set FROM std_set WHERE method = 'Modified Angoff'");
     $result->execute();
     $result->store_result();
     $result->bind_result($id, $setterID, $std_set);
     while ($result->fetch()) {
-      $ebel_ids[$setterID . $std_set] = $id;    
+      $ebel_ids[$setterID . $std_set] = $id;
     }
     $result->close();
 
@@ -616,28 +617,28 @@ if (!isset($_POST['update'])) {
     while ($result->fetch()) {
       $ID_list = '';
       $reviews = explode(';', $group_review);
-      foreach ($reviews as $review) {      
+      foreach ($reviews as $review) {
         $parts = explode(',', $review);
-                
+
         $tmp_date = substr($parts[1],0,4) . '-' . substr($parts[1],4,2) . '-' . substr($parts[1],6,2) . ' ' . substr($parts[1],8,2) . ':' . substr($parts[1],10,2) . ':' . substr($parts[1],12,2);
-        
+
         $search_date = $parts[0] . $tmp_date;
-        
+
         if ($ID_list == '') {
           $ID_list = $ebel_ids[$search_date];
         } else {
           $ID_list .= ',' . $ebel_ids[$search_date];
         }
       }
-    
+
       $update = $mysqli->prepare("UPDATE std_set SET group_review = '$ID_list' WHERE id = $id");
       $update->execute();
       $update->close();
-          
+
     }
     $result->close();
     $mysqli->commit();
-    
+
     echo "<li>Updating standard_setting values in the properties table</li>\n";
     ob_flush();
     flush();
@@ -655,7 +656,7 @@ if (!isset($_POST['update'])) {
           updateDB($review, $mysqli);
         }
       }
-      
+
     }
     $result->close();
   }
@@ -729,6 +730,23 @@ if (!isset($_POST['update'])) {
   if (!$updater_utils->does_column_exist('hofstee', 'marking')) {
     $updater_utils->execute_query("ALTER TABLE hofstee ADD COLUMN marking tinyint DEFAULT NULL", true);
   }
+
+
+
+  /*
+   *****   ALL UPDATES SHOULD NOW BE PLACED IN DATESTAMPED FILES IN THE version5 FOLDER   *****
+   *
+   *****   UPDATE FILES CAN BE CREATED BY RUNNING /updates/create_update.php
+   */
+
+  // Run individual update files
+  $files = scandir($migration_path);
+  foreach ($files as $file) {
+    if (StringUtils::ends_with($file, '.php')) {
+      include $migration_path . '/' . $file;
+    }
+  }
+
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
