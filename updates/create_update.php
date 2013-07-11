@@ -109,6 +109,7 @@ TEMPLATE;
 
   if (file_put_contents($filename, $template) !== false) {
     printf('<p>' . $string['success'] . '</p>', $filename);
+    echo "<p><a href=\"version5.php\">{$string['runupdate']}</a></p>\n";
   } else {
     echo "<p>{$string['createerror']}</p>";
   }

@@ -19,3 +19,4 @@ $string['tag'] = 'Tag';
 $string['create'] = 'Create';
 $string['success'] = 'Update file %s created';
 $string['createerror'] = 'Error creating update file';
+$string['runupdate'] = 'Run update';
