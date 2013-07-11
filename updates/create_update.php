@@ -83,6 +83,7 @@ if (!isset($_POST['create'])) {
 } else {
   $template = <<<TEMPLATE
 <?php
+
 // Your code here
 
 /*
