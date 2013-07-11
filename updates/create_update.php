@@ -38,7 +38,7 @@ $old_version = $configObject->get('rogo_version');
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-    <title>Rog&#333; <?php echo $configObject->get('rogo_version') ?> update Script</title>
+    <title>Rog&#333; <?php echo $configObject->get('rogo_version') ?> update creation</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css"/>
     <link rel="stylesheet" type="text/css" href="../css/header.css"/>
@@ -71,21 +71,8 @@ if (!isset($_POST['create'])) {
   });
 </script>
   <form id="create_form" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-      <div><?php echo $string['msg1']; ?></div>
-      <table class="h">
-          <tr>
-              <td>
-                  <nobr><?php echo $string['tag']; ?></nobr>
-              </td>
-              <td class="line">
-                  <hr/>
-              </td>
-          </tr>
-      </table>
-      <br/>
-
+      <p><?php echo $string['msg1']; ?></p>
       <div><label for="tag"><?php echo $string['tag']; ?></label> <input type="text" value="" name="tag" class="required" minlength="2" /></div>
-      </div>
 
       <div class="submit"><input type="submit" name="create" value="<?php echo $string['create']; ?>"/></div>
   </form>
