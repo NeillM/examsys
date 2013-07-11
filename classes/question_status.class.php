@@ -32,6 +32,7 @@ Class QuestionStatus {
   protected $exclude_search = false;
   protected $is_default = false;
   protected $change_locked = true;
+  protected $validate = true;
 
   private $_db;
   private $_lang_strings;
@@ -129,13 +130,13 @@ Class QuestionStatus {
   private function get_question_status() {
     $success = false;
 
-    $sql = "SELECT name, exclude_marking, exclude_search, is_default, change_locked, display_order FROM question_statuses WHERE id = ?";
+    $sql = "SELECT name, exclude_marking, exclude_search, is_default, change_locked, validate, display_order FROM question_statuses WHERE id = ?";
 
     $result = $this->_db->prepare($sql);
     $result->bind_param('i', $this->id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked, $this->display_order);
+    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked, $this->validate, $this->display_order);
     if ($result->fetch()) {
       $success = true;
     }
@@ -249,6 +250,20 @@ Class QuestionStatus {
    */
   public function get_change_locked() {
     return $this->change_locked;
+  }
+
+  /**
+   * @param boolean $validate
+   */
+  public function set_validate($validate) {
+    $this->validate = $validate;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function get_validate() {
+    return $this->validate;
   }
 
   /**

@@ -31,6 +31,7 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click('id=exclude_search');
     $this->click('id=is_default');
     $this->click('id=change_locked');
+    $this->click('id=validate');
     $this->click('name=submit');
     $this->waitForPageToLoad('30000');
     $this->assertTextPresent('Short Lived Status');

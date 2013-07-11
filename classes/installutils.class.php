@@ -982,11 +982,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     // Create default question statuses
     $statuses = array(
-      array('name' => 'Normal', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => true, 'change_locked' => true, 'display_order' => 0),
-      array('name' => 'Retired', 'exclude_marking' => false, 'exclude_search' => true, 'is_default' => false, 'change_locked' => true, 'display_order' => 1),
-      array('name' => 'Incomplete', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'display_order' => 2),
-      array('name' => 'Experimental', 'exclude_marking' => true, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'display_order' => 3),
-      array('name' => 'Beta', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'display_order' => 4)
+      array('name' => 'Normal', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_order' => 0),
+      array('name' => 'Retired', 'exclude_marking' => false, 'exclude_search' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_order' => 1),
+      array('name' => 'Incomplete', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'validate' => false, 'display_order' => 2),
+      array('name' => 'Experimental', 'exclude_marking' => true, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_order' => 3),
+      array('name' => 'Beta', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_order' => 4)
     );
 
     foreach ($statuses as $data) {
@@ -2389,6 +2389,7 @@ QUERY;
           `exclude_search` tinyint(3) NOT NULL DEFAULT '0',
           `is_default` tinyint(3) NOT NULL DEFAULT '0',
           `change_locked` tinyint(3) NOT NULL DEFAULT '1',
+          `validate` tinyint(3) NOT NULL DEFAULT '1',
           `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}

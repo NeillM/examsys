@@ -756,18 +756,19 @@ CREATE TABLE `question_statuses` (
   `exclude_search` tinyint(4) NOT NULL DEFAULT '0',
   `is_default` tinyint(4) NOT NULL DEFAULT '0',
   `change_locked` tinyint(3) NOT NULL DEFAULT '1',
+  `validate` tinyint(3) NOT NULL DEFAULT '1',
   `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
   PRIMARY KEY (`id`));
 QUERY;
     $updater_utils->execute_query($sql, true);
 
     $sql = <<<QUERY
-INSERT INTO question_statuses (name, exclude_marking, exclude_search, is_default, change_locked, display_order) VALUES
-('Normal', false, false, true, true, 0),
-('Retired', false, true, false, true, 1),
-('Incomplete', false, false, false, false, 2),
-('Experimental', true, false, false, false, 3),
-('Beta', false, false, false, false, 4)
+INSERT INTO question_statuses (name, exclude_marking, exclude_search, is_default, change_locked, validate, display_order) VALUES
+('Normal', false, false, true, true, true, 0),
+('Retired', false, true, false, true, false, 1),
+('Incomplete', false, false, false, false, false, 2),
+('Experimental', true, false, false, false, true, 3),
+('Beta', false, false, false, false, true, 4)
 QUERY;
     $updater_utils->execute_query($sql, true);
 
