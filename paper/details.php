@@ -38,6 +38,7 @@ require_once '../classes/userutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/exclusion.class.php';
 require_once '../classes/moduleutils.class.php';
+require_once '../classes/question_status.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -79,9 +80,10 @@ function check_duplicates($q_screens, $string) {
   }
 }
 
-function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string) {
+function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string, $db) {
 
-  if (!isset($tmp_excluded) and ($status == 'Normal' or $status == 'Experimental' or $status == 'Beta')) {
+  $status_array = QuestionStatus::get_all_statuses($db, $string, true);
+  if (!isset($tmp_excluded) and $status_array[$status]->get_validate()) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
     } elseif ($q_type == 'dichotomous') {
@@ -96,7 +98,7 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
       $matching_scenarios = explode('|', $scenario);
       $matching_media     = explode('|', $q_media);
       $matching_correct   = explode('|', $correct_array[0]);
-      
+
       $text_scenarios = 0;
       for ($part_id=0; $part_id<count($matching_scenarios); $part_id++) {
         if (trim(strip_tags($matching_scenarios[$part_id])) != '') $text_scenarios++;
@@ -106,12 +108,12 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
         if ($matching_media[$part_id] != '') $media_scenarios++;
       }
       $scenario_no = max($text_scenarios, $media_scenarios);
-      
+
       $correct_answers = 0;
       for ($part_id=0; $part_id<count($matching_correct); $part_id++) {
         if ($matching_correct[$part_id] != '') $correct_answers++;
       }
-      
+
       if ($score_method == 'Mark per Option' and $correct_answers < $scenario_no) $temp_array[$row_no]['warnings'] = $string['answermissing'];
     } elseif ($q_type == 'labelling') {
       if (!have_valid_labels($temp_array[$row_no]['correct'])) {
@@ -613,7 +615,7 @@ $result->close();
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $tmp_exclude, $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string);
+        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $tmp_exclude, $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $mysqli);
       }
       $old_correct      = array();
       $old_option_text  = array();
@@ -670,7 +672,7 @@ $result->close();
       $old_o_media[]    = $o_media;
     }
     $old_marks          = $marks_correct;
-    
+
     if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash', 'enhancedcalc'))) $options++;
   }
   $result->close();
@@ -709,7 +711,7 @@ $result->close();
     if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
-    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string);
+    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $mysqli);
 
     // If we had random questions on paper need to check if they need LaTeX
     if ($latex == 0 and count($rnd_q_ids) > 0) {
@@ -744,7 +746,7 @@ $result->close();
     reset($paper_modules);
     $moduleID = key($paper_modules);
     $module_code = $paper_modules[$moduleID];
-    
+
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $moduleID . '">' . $module_code . '</a>';
   }
   echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';

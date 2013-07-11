@@ -275,14 +275,14 @@ Class QuestionStatus {
   public static function get_all_statuses($db, $lang_strings, $with_index = false) {
     $statuses = array();
 
-    $sql = "SELECT id, name, exclude_marking, exclude_search, is_default, change_locked FROM question_statuses ORDER BY display_order";
+    $sql = "SELECT id, name, exclude_marking, exclude_search, is_default, change_locked, validate FROM question_statuses ORDER BY display_order";
 
     $result = $db->prepare($sql);
     $result->execute();
     $result->store_result();
-    $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default, $change_locked);
+    $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default, $change_locked, $validate);
     while ($result->fetch()) {
-      $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default, 'change_locked' => $change_locked);
+      $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default, 'change_locked' => $change_locked, 'validate' => $validate);
       $qs = new QuestionStatus($db, $lang_strings, $data);
       if (!$with_index) {
         $statuses[] = $qs;
