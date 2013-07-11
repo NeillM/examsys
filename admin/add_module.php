@@ -138,9 +138,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <script language="JavaScript">
 <?php
   $vle_apis = $configObject->get('vle_apis');
-  $mu = module_utils::get_instance();
-  $vle_apis = $mu->get_vle_api_data($vle_apis);
-  $map_levels = array(iVLEAPI::LEVEL_SESSION => $string['session'], iVLEAPI::LEVEL_MODULE => $string['module']);
+  if (count($vle_apis) > 0) {
+    $mu = module_utils::get_instance();
+    $vle_apis = $mu->get_vle_api_data($vle_apis);
+    $map_levels = array(iVLEAPI::LEVEL_SESSION => $string['session'], iVLEAPI::LEVEL_MODULE => $string['module']);
+  }
 ?>
 
     $(function () {

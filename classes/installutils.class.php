@@ -1361,6 +1361,10 @@ require \$root . '/include/path_functions.inc.php';
   {cfg_lookup_arrays}
 );
 
+// Objectives mapping
+\$vle_apis = array();
+
+
 // Institutional email domains
 // If using external authentication (e.g. LDAP) list the domains that will authenticate against the external system
 // This will allow you to change the password of any users that do not match against those domains (e.g. external examiners)
