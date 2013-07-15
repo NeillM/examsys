@@ -363,7 +363,7 @@ CREATE TABLE `feedback_release` (
   `idfeedback_release` int(11) NOT NULL AUTO_INCREMENT,
   `paper_id` mediumint(8) unsigned DEFAULT NULL,
   `date` datetime NOT NULL,
-  `type` enum('objectives','questions') DEFAULT NULL,
+  `type` enum('objectives','questions','cohort_performance') DEFAULT NULL,
   PRIMARY KEY (`idfeedback_release`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -523,6 +523,7 @@ CREATE TABLE `hofstee` (
   `std_set` datetime DEFAULT NULL,
   `pass_score` tinyint(3) unsigned DEFAULT NULL,
   `distinction` tinyint(3) unsigned DEFAULT NULL,
+  `marking` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -860,16 +861,11 @@ DROP TABLE IF EXISTS `log4`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `log4` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userID` int(10) unsigned DEFAULT NULL,
-  `started` datetime DEFAULT NULL,
-  `q_paper` mediumint(8) unsigned DEFAULT NULL,
   `q_id` int(11) DEFAULT NULL,
   `rating` text,
   `q_parts` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `q_paper` (`q_paper`),
-  KEY `username` (`userID`),
-  KEY `started` (`started`)
+  `log4_overallID` int(11) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1773,6 +1769,8 @@ CREATE TABLE `question_statuses` (
   `is_default` tinyint(4) NOT NULL DEFAULT '0',
   `change_locked` tinyint(3) NOT NULL DEFAULT '1',
   `validate` tinyint(3) NOT NULL DEFAULT '1',
+  `colour` char(7) DEFAULT '#000000',
+  `display_warning` tinyint(3) DEFAULT '0',
   `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
@@ -1784,7 +1782,7 @@ CREATE TABLE `question_statuses` (
 
 LOCK TABLES `question_statuses` WRITE;
 /*!40000 ALTER TABLE `question_statuses` DISABLE KEYS */;
-INSERT INTO `question_statuses` VALUES (1,'Normal',0,0,1,1,1,0),(2,'Retired',0,1,0,1,0,1),(3,'Incomplete',0,0,0,0,0,2),(4,'Experimental',1,0,0,0,1,3),(5,'Beta',0,0,0,0,1,4);
+INSERT INTO `question_statuses` VALUES (1,'Normal',0,0,1,1,1,'#000000',0,0),(2,'Retired',0,1,0,1,0,'#000000',0,1),(3,'Incomplete',0,0,0,0,0,'#000000',0,2),(4,'Experimental',1,0,0,0,1,'#000000',0,3),(5,'Beta',0,0,0,0,1,'#000000',0,4);
 /*!40000 ALTER TABLE `question_statuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2656,4 +2654,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-10 16:56:09
+-- Dump completed on 2013-07-15 14:49:49
