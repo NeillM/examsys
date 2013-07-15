@@ -587,6 +587,9 @@ $result->close();
       $neg_marking = true;
     }
 
+    // Check for status that's excluded from marking
+    $do_marking = (($old_q_type == 'random' or $row_no2 > 0) and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
+
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
       if ($old_display_pos != -1) {
         $temp_array[$row_no2]['options'] = $options;
@@ -600,7 +603,7 @@ $result->close();
       $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
       if ($old_q_type == 'random') {
         $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
-        if (!$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) {
+        if ($do_marking) {
           $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
           if (count($temp_array[$row_no2]['random']) > 0) {
             $total_random_mark += $temp_array[$row_no2]['random'][0]['random_mark'];
@@ -608,12 +611,12 @@ $result->close();
         }
       } else {
         $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-        if ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) {
+        if ($do_marking) {
           $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
           $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         }
       }
-      if ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) $total_marks += $temp_array[$row_no2]['marks'];
+      if ($do_marking) $total_marks += $temp_array[$row_no2]['marks'];
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
@@ -697,20 +700,24 @@ $result->close();
     $temp_array[$row_no]['options'] = $options;
     $temp_array[$row_no]['o_media'] = $old_o_media;
     $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+
+    // Check for status that's excluded from marking
+    $do_marking = !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking();
+
     if ($old_q_type == 'random') {
       $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
-      if (!$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) {
+      if ($do_marking) {
         $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
         $total_random_mark += isset($temp_array[$row_no2]['random'][0]['random_mark']) ?  $temp_array[$row_no2]['random'][0]['random_mark'] : 0;
       }
     } else {
       $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-      if (!$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) {
+      if ($do_marking) {
         $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
         $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
       }
     }
-    if (!$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) $total_marks += $temp_array[$row_no2]['marks'];
+    if ($do_marking) $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
     if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
