@@ -28,6 +28,7 @@ $string['excludesearch'] = 'Exclude from default search';
 $string['default'] = 'Default';
 $string['setlocked'] = 'Can set for locked questions';
 $string['validate'] = 'Validate';
+$string['displaywarning'] = 'Display warnings';
 $string['colour'] = 'Colour';
 $string['enternameofstatus'] = 'Please enter name for the status.';
 $string['duplicateerror'] = 'Status names must be unique';

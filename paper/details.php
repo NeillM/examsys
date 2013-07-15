@@ -42,6 +42,9 @@ require_once '../classes/question_status.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+
 // Unlock code - emergency use only!
 if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role('SysAdmin')) {
   $tmp_date = new DateTime();
@@ -80,9 +83,8 @@ function check_duplicates($q_screens, $string) {
   }
 }
 
-function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string, $db) {
+function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string, $status_array, $db) {
 
-  $status_array = QuestionStatus::get_all_statuses($db, $string, true);
   if (!isset($tmp_excluded) and $status_array[$status]->get_validate()) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
@@ -341,6 +343,9 @@ $result->close();
     }
   </style>
   <![endif]-->
+  <style type="text/css">
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
+  </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -511,9 +516,6 @@ $result->close();
     exit;
   }
 
-  // Promoting/Demoting questions
-  $q_highlight = 0;
-
   // Log the hit in recent_papers.
   $result = $mysqli->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE accessed = NOW();");
   $result->bind_param('ii', $userObject->get_user_ID(), $paperID);
@@ -615,7 +617,7 @@ $result->close();
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $tmp_exclude, $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $mysqli);
+        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $tmp_exclude, $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
       }
       $old_correct      = array();
       $old_option_text  = array();
@@ -711,7 +713,7 @@ $result->close();
     if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
-    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $mysqli);
+    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
 
     // If we had random questions on paper need to check if they need LaTeX
     if ($latex == 0 and count($rnd_q_ids) > 0) {
@@ -843,25 +845,8 @@ $result->close();
     }
     $old_screen = $temp_array[$x]['screen'];
 
-    if ($q_highlight == $temp_array[$x]['display_pos']) {
-      echo "<script defer language=\"JavaScript\">\n";
-      echo "document.getElementById('menu2a').style.display = 'none';\n";
-      echo "document.getElementById('menu2c').style.display = 'none';\n";
-      echo "document.getElementById('menu2b').style.display = 'block';\n";
-      echo "document.PapersMenu.questionNo.value = '" . ($question_number+1) . "';\n";
-      echo "document.PapersMenu.questionID.value = '" . $temp_array[$x]['q_id'] . "';\n";
-      echo "document.PapersMenu.qType.value = '" . $temp_array[$x]['q_type'] . "';\n";
-      echo "document.PapersMenu.screenNo.value = '" . $temp_array[$x]['screen'] . "';\n";
-      echo "document.PapersMenu.pID.value = '" . $temp_array[$x]['p_id'] . "';\n";
-      echo "document.PapersMenu.current_pos.value = " . $temp_array[$x]['display_pos'] . ";\n";
-      echo "document.PapersMenu.oldQuestionID.value = '$x';\n";
-      echo "</script>\n";
-    }
-
     $higlight_class = '';
-    if ($temp_array[$x]['status'] == 'Experimental' or $temp_array[$x]['status'] == 'Retired') {
-      $higlight_class = ' experimental';
-    } elseif ($temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
+    if ($temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
       $higlight_class = ' excluded';
     }
 
@@ -872,12 +857,9 @@ $result->close();
       $theme_str = "<h4 class=\"theme\">" . trim($temp_array[$x]['theme']) . "</h4>\n";
     }
 
-    echo "<tr id=\"link_$x\" class=\"link_$x qline{$theme_class}";
-    if ($q_highlight == $temp_array[$x]['display_pos']) {
-      echo '; background-color:#B3C8E8';
-    } else {
-      echo $higlight_class;
-    }
+    $status_class = ' status' . $temp_array[$x]['status'];
+
+    echo "<tr id=\"link_$x\" class=\"link_$x qline{$theme_class}{$status_class}{$higlight_class}";
 
     $prevous_screen = '';
     $next_screen = '';

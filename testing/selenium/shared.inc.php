@@ -4,7 +4,7 @@ require_once '../../config/selenium.inc.php';
 
 
 function get_root_url() {
-  return (defined('SELENIUM_HOST')) ? SELENIUM_HOST : 'http://rogo.local/';
+  return (defined('SELENIUM_HOST')) ? SELENIUM_HOST : 'https://rogo.local/';
 }
 
 function get_install_type() {

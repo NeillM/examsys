@@ -33,6 +33,7 @@ Class QuestionStatus {
   protected $is_default = false;
   protected $change_locked = true;
   protected $validate = true;
+  protected $display_warning = true;
   protected $colour = '#000000';
 
   private $_db;
@@ -83,18 +84,18 @@ Class QuestionStatus {
         throw new ItemExistsException();
       }
 
-      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, change_locked, display_order) SELECT ?, ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
+      $sql = "INSERT INTO question_statuses(name, exclude_marking, exclude_search, is_default, change_locked, validate, display_warning, colour, display_order) SELECT ?, ?, ?, ?, ?, ?, ?, ?, max(display_order) + 1 FROM question_statuses";
       $result = $this->_db->prepare($sql);
-      $result->bind_param('siiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked);
+      $result->bind_param('siiiiiis', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked, $this->validate, $this->display_warning, $this->colour);
       if ($result->execute()) {
         $success = true;
         $this->id = $this->_db->insert_id;
       }
       $result->close();
     } else {
-      $sql = "UPDATE question_statuses SET name = ?, exclude_marking = ?, exclude_search = ?, is_default = ?, change_locked = ? where id = ?";
+      $sql = "UPDATE question_statuses SET name = ?, exclude_marking = ?, exclude_search = ?, is_default = ?, change_locked = ?, validate = ?, display_warning = ?, colour = ? where id = ?";
       $result = $this->_db->prepare($sql);
-      $result->bind_param('siiiii', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked, $this->id);
+      $result->bind_param('siiiiiisi', $this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked, $this->validate, $this->display_warning, $this->colour, $this->id);
       if ($result->execute()) {
         $success = true;
       }
@@ -131,13 +132,13 @@ Class QuestionStatus {
   private function get_question_status() {
     $success = false;
 
-    $sql = "SELECT name, exclude_marking, exclude_search, is_default, change_locked, validate, display_order FROM question_statuses WHERE id = ?";
+    $sql = "SELECT name, exclude_marking, exclude_search, is_default, change_locked, validate, display_warning, colour, display_order FROM question_statuses WHERE id = ?";
 
     $result = $this->_db->prepare($sql);
     $result->bind_param('i', $this->id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked, $this->validate, $this->display_order);
+    $result->bind_result($this->name, $this->exclude_marking, $this->exclude_search, $this->is_default, $this->change_locked, $this->validate, $this->display_warning, $this->colour, $this->display_order);
     if ($result->fetch()) {
       $success = true;
     }
@@ -268,6 +269,20 @@ Class QuestionStatus {
   }
 
   /**
+   * @param boolean $display_warning
+   */
+  public function set_display_warning($display_warning) {
+    $this->display_warning = $display_warning;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function get_display_warning() {
+    return $this->display_warning;
+  }
+
+  /**
    * @param string $colour
    */
   public function set_colour($colour) {
@@ -275,7 +290,7 @@ Class QuestionStatus {
   }
 
   /**
-   * @returnstring
+   * @return string
    */
   public function get_colour() {
     return $this->colour;
@@ -290,14 +305,14 @@ Class QuestionStatus {
   public static function get_all_statuses($db, $lang_strings, $with_index = false) {
     $statuses = array();
 
-    $sql = "SELECT id, name, exclude_marking, exclude_search, is_default, change_locked, validate FROM question_statuses ORDER BY display_order";
+    $sql = "SELECT id, name, exclude_marking, exclude_search, is_default, change_locked, validate, colour FROM question_statuses ORDER BY display_order";
 
     $result = $db->prepare($sql);
     $result->execute();
     $result->store_result();
-    $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default, $change_locked, $validate);
+    $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default, $change_locked, $validate, $colour);
     while ($result->fetch()) {
-      $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default, 'change_locked' => $change_locked, 'validate' => $validate);
+      $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default, 'change_locked' => $change_locked, 'validate' => $validate, 'colour' => $colour);
       $qs = new QuestionStatus($db, $lang_strings, $data);
       if (!$with_index) {
         $statuses[] = $qs;
@@ -308,6 +323,28 @@ Class QuestionStatus {
     $result->close();
 
     return $statuses;
+  }
+
+  /**
+   * Generate a CSS string for the colours for all status contained in array
+   * @param  array[mixed] $statuses Statuses
+   * @return string                 CSS for colour definitions for statuses
+   */
+  public static function generate_status_css($statuses) {
+    $css = '';
+
+    foreach ($statuses as $status) {
+      if ($status->id != -1) {
+        $css .= <<<CSS
+  .status{$status->id}, .status{$status->id} td {
+    color: {$status->get_colour()}!important;
+  }
+
+CSS;
+      }
+    }
+
+    return $css;
   }
 }
 
