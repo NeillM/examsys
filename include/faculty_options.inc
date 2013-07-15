@@ -32,14 +32,14 @@
   }
 
   function editFaculty() {
-    facultywin=window.open("/admin/edit_faculty.php?facultyID=" + document.getElementById('lineID').value + "","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    facultywin=window.open("/admin/edit_faculty.php?facultyID=" + $('#lineID').val() + "","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       facultywin.focus();
     }
   }
   
   function deleteFaculty() {
-    notice=window.open("../delete/check_delete_faculty.php?facultyID=" + document.getElementById('lineID').value + "","faculties","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_faculty.php?facultyID=" + $('#lineID').val() + "","faculties","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();

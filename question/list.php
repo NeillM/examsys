@@ -97,9 +97,9 @@ if (isset($_GET['checked'])) {
       var content = $(thisObj).is(':checked');
       <?php
       $qs = '';
-      if(isset($_GET['type'])) $qs .= "&type={$_GET['type']}";
-      if(isset($_GET['keyword'])) $qs .= "&keyword={$_GET['keyword']}";
-      if(isset($_GET['module'])) $qs .= "&module={$_GET['module']}";
+      if (isset($_GET['type']))     $qs .= "&type={$_GET['type']}";
+      if (isset($_GET['keyword']))  $qs .= "&keyword={$_GET['keyword']}";
+      if (isset($_GET['module']))   $qs .= "&module={$_GET['module']}";
       ?>
       window.location = 'list.php?type=<?php echo $qs; ?>&checked=' + content;
     }
@@ -131,13 +131,7 @@ if (isset($_GET['checked'])) {
   }
   $staff_modules_sql = '';
   if ($module != '') {
-    //if (in_array($module, $staff_modules)) {
-    //  $idMod = module_utils::get_idMod($module, $mysqli);
-      $module_sql = "idMod = " . $_GET['module'];
-    //} else {
-    //  echo "<tr><td colspan=\"4\">" . $string['notinteam'] . "</td></tr>\n</body>\n</html>\n";
-    //  exit;
-    //}
+    $module_sql = "idMod = " . $_GET['module'];
   } else {
     if (count($staff_modules) > 0) {
       $staff_modules_sql = implode(',', array_keys($staff_modules));

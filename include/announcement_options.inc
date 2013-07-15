@@ -24,11 +24,11 @@
 ?>
 <script language="JavaScript">
   function editAnnouncement() {
-    window.location.href='./edit_announcement.php?announcementid=' + document.getElementById('lineID').value;
+    window.location.href='./edit_announcement.php?announcementid=' + $('lineID').value;
   }
   
   function deleteAnnouncement() {
-    notice=window.open("../delete/check_delete_announcement.php?announcementID=" + document.getElementById('lineID').value + "","announcements","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_announcement.php?announcementID=" + $('#lineID').val() + "","announcements","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();

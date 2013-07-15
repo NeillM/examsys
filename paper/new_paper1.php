@@ -38,61 +38,62 @@ require '../include/staff_auth.inc';
     .icon {color:#001687; padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; height:74px; font-size:8pt; background-repeat:no-repeat}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
     function over(id) {
-      if (id != document.getElementById('paper_type').value) {
-        document.getElementById(id).style.backgroundImage = "url('../artwork/over.png')";
+      if (id != $('#paper_type').val()) {
+        $('#' + id).css('background-image', 'url("../artwork/over.png")');
       }
       switch (id) {
         case 'formative':
-          document.getElementById('description').innerHTML = '<?php echo $string['description0']; ?>';
+          $('#description').html("<?php echo $string['description0']; ?>");
           break;
         case 'progress':
-          document.getElementById('description').innerHTML = '<?php echo $string['description1']; ?>';
+          $('#description').html("<?php echo $string['description1']; ?>");
           break;
         case 'summative':
-          document.getElementById('description').innerHTML = '<?php echo $string['description2']; ?>';
+          $('#description').html("<?php echo $string['description2']; ?>");
           break;
         case 'survey':
-          document.getElementById('description').innerHTML = '<?php echo $string['description3']; ?>';
+          $('#description').html("<?php echo $string['description3']; ?>");
           break;
         case 'osce':
-          document.getElementById('description').innerHTML = '<?php echo $string['description4']; ?>';
+          $('#description').html("<?php echo $string['description4']; ?>");
           break;
         case 'offline':
-          document.getElementById('description').innerHTML = '<?php echo $string['description5']; ?>';
+          $('#description').html("<?php echo $string['description5']; ?>");
           break;
         case 'peer_review':
-          document.getElementById('description').innerHTML = '<?php echo $string['description6']; ?>';
+          $('#description').html("<?php echo $string['description6']; ?>");
           break;
       }
     }
 
     function out(id) {
-      if (id != document.getElementById('paper_type').value) {
-        document.getElementById(id).style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+      if (id != $('#paper_type').val()) {
+        $('#' + id).css('background-image', 'url("../artwork/blank_tick_cross.gif")');
       }
     }
 
     function activate(id) {
-      document.getElementById('formative').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('progress').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('summative').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('survey').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('osce').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('offline').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+      $('#formative').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#progress').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#summative').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#survey').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#osce').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#offline').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
 
-      document.getElementById(id).style.backgroundImage = "url('../artwork/on.png')";
-      document.getElementById('paper_type').value = id;
+      $('#' + id).css('background-image', 'url("../artwork/on.png")');
+      $('#paper_type').val(id);
     }
 
     function checkForm() {
-      if (document.theform.paper_type.value == '') {
+      if ($('#paper_type').val() == '') {
         alert("<?php echo $string['msg1']; ?>");
         return false;
       }
       
-      if (document.theform.paper_name.value == '') {
+      if ($('#paper_name').val() == '') {
         alert("<?php echo $string['msg2']; ?>");
         return false;
       }
@@ -108,13 +109,13 @@ require '../include/staff_auth.inc';
 <td colspan="8" style="text-align:left; font-weight:bold; background-color:#DDE7EE; color:#001687; border-bottom:1px solid #C5C5C5; padding:4px">&nbsp;<?php echo $string['papertype']; ?></td>
 </tr>
 <tr>
-<td class="icon" onclick="activate('formative')" onmouseover="over('formative')" onmouseout="out('formative')" id="formative"><img src="../artwork/formative.png" width="48" height="48" border="0" alt="Formative Self-Assessment" /><br /><?php echo $string['formative self-assessment']; ?></td>
-<td class="icon" onclick="activate('progress')" onmouseover="over('progress')" onmouseout="out('progress')" id="progress"><img src="../artwork/progress.png" width="48" height="48" border="0" alt="Progress Test" /><br /><?php echo $string['progress test']; ?></td>
-<td class="icon" onclick="activate('summative')" onmouseover="over('summative')" onmouseout="out('summative')" id="summative"><img src="../artwork/summative.png" width="48" height="48" border="0" alt="Summative Exam" /><br /><?php echo $string['summative exam']; ?></td>
-<td class="icon" onclick="activate('survey')" onmouseover="over('survey')" onmouseout="out('survey')" id="survey"><img src="../artwork/survey.png" width="48" height="48" border="0" alt="Survey" /><br /><?php echo $string['survey']; ?></td>
-<td class="icon" onclick="activate('osce')" onmouseover="over('osce')" onmouseout="out('osce')" id="osce"><img src="../artwork/osce.png" width="48" height="48" border="0" alt="OSCE" /><br /><?php echo $string['osce station']; ?></td>
-<td class="icon" onclick="activate('offline')" onmouseover="over('offline')" onmouseout="out('offline')" id="offline"><img src="../artwork/offline.png" width="48" height="48" border="0" alt="Offline" /><br /><?php echo $string['offline paper']; ?></td>
-<td class="icon" onclick="activate('peer_review')" onmouseover="over('peer_review')" onmouseout="out('peer_review')" id="peer_review"><img src="../artwork/peer_review.png" width="48" height="48" border="0" alt="Peer Review" /><br /><?php echo $string['peer review']; ?></td>
+<td class="icon" onclick="activate('formative')" onmouseover="over('formative')" onmouseout="out('formative')" id="formative"><img src="../artwork/formative.png" width="48" height="48" alt="Formative Self-Assessment" /><br /><?php echo $string['formative self-assessment']; ?></td>
+<td class="icon" onclick="activate('progress')" onmouseover="over('progress')" onmouseout="out('progress')" id="progress"><img src="../artwork/progress.png" width="48" height="48" alt="Progress Test" /><br /><?php echo $string['progress test']; ?></td>
+<td class="icon" onclick="activate('summative')" onmouseover="over('summative')" onmouseout="out('summative')" id="summative"><img src="../artwork/summative.png" width="48" height="48" alt="Summative Exam" /><br /><?php echo $string['summative exam']; ?></td>
+<td class="icon" onclick="activate('survey')" onmouseover="over('survey')" onmouseout="out('survey')" id="survey"><img src="../artwork/survey.png" width="48" height="48" alt="Survey" /><br /><?php echo $string['survey']; ?></td>
+<td class="icon" onclick="activate('osce')" onmouseover="over('osce')" onmouseout="out('osce')" id="osce"><img src="../artwork/osce.png" width="48" height="48" alt="OSCE" /><br /><?php echo $string['osce station']; ?></td>
+<td class="icon" onclick="activate('offline')" onmouseover="over('offline')" onmouseout="out('offline')" id="offline"><img src="../artwork/offline.png" width="48" height="48" alt="Offline" /><br /><?php echo $string['offline paper']; ?></td>
+<td class="icon" onclick="activate('peer_review')" onmouseover="over('peer_review')" onmouseout="out('peer_review')" id="peer_review"><img src="../artwork/peer_review.png" width="48" height="48" alt="Peer Review" /><br /><?php echo $string['peer review']; ?></td>
 <td>&nbsp;</td>
 </tr>
 <tr>
