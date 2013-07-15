@@ -25,11 +25,11 @@
 ?>
 <script language="JavaScript">
   function editTemplate() {
-    document.location.href='<?php echo $configObject->get('cfg_root_path') ?>/admin/edit_ebel_grid.php?id=' + document.getElementById('lineID').value;
+    document.location.href='<?php echo $configObject->get('cfg_root_path') ?>/admin/edit_ebel_grid.php?id=' + $('#lineID').val();
   }
   
   function deleteTemplate() {
-    notice=window.open("../delete/check_delete_ebel_template.php?gridID=" + document.getElementById('lineID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_ebel_template.php?gridID=" + $('#lineID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();

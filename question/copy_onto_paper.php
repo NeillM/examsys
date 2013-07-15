@@ -156,15 +156,24 @@ if (!isset($_POST['submit'])) {
   $q_IDs = explode(',', $_GET['q_id']);
 
   for ($i=1; $i<count($q_IDs); $i++) {
-    $result = $mysqli->prepare("SELECT * FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+    $result = $mysqli->prepare("SELECT * FROM questions WHERE q_id=?");
     $result->bind_param('i', $q_IDs[$i]);
     $result->execute();
     $result->store_result();
-    $result->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
-    $line = 0;
+    $result->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings);
+
+    $save_ok = true;
+
     while ($result->fetch()) {
+
+      $o_result = $mysqli->prepare("SELECT * FROM options WHERE o_id=? ORDER BY id_num");
+      $o_result->bind_param('i', $q_IDs[$i]);
+      $o_result->execute();
+      $o_result->store_result();
+      $o_result->bind_result($o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
+
       // Question data
-      if ($q_media != '' and $q_media != 'NULL' and $line == 0) {
+      if ($q_media != '' and $q_media != 'NULL') {
         $media_array = array();
         $media_array = explode("|", $q_media);
         $new_q_media = '';
@@ -187,38 +196,63 @@ if (!isset($_POST['submit'])) {
         }
       }
 
-      // Option data
-      $o_id = $q_IDs[$i];
-      if ($o_media != '') {
-        $media_array = array();
-        $media_array = explode("|",$o_media);
-        $new_o_media = '';
-        foreach ($media_array as $individual_media) {
-          if ($individual_media != '' and $individual_media != 'NULL') {
-            $new_media_name = unique_filename($individual_media);
-            if (file_exists("../media/$individual_media")){
-              if (!copy("../media/$individual_media","../media/$new_media_name")) {
-                display_error('File Copy Error 2', sprintf($string['error2'], $new_media_name, $individual_media));
+      $mysqli->autocommit(false);
+
+      $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?, ?)");
+      $addQuestion->bind_param('ssssssssissssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method, $settings);
+      $res = $addQuestion->execute();
+      if ($res === false) {
+        $save_ok = false;
+      } else {
+        $question_id = $mysqli->insert_id;
+      }
+      $addQuestion->close();
+
+      $o_medias = array();
+      while ($save_ok and $o_result->fetch()) {
+        if ($o_media != '') {
+          $media_array = array();
+          $media_array = explode("|",$o_media);
+          $new_o_media = '';
+          foreach ($media_array as $individual_media) {
+            if ($individual_media != '' and $individual_media != 'NULL') {
+              $new_media_name = unique_filename($individual_media);
+              if (file_exists("../media/$individual_media")){
+                if (!copy("../media/$individual_media","../media/$new_media_name")) {
+                  display_error('File Copy Error 2', sprintf($string['error2'], $new_media_name, $individual_media));
+                }
+              } else {
+                display_error('File Copy Error 4', sprintf($string['error3'], $new_media_name));
               }
-            } else {
-              display_error('File Copy Error 4', sprintf($string['error3'], $new_media_name));
-            }
-            if ($new_o_media == '') {
-              $new_o_media = $new_media_name;
-            } else {
-              $new_o_media .= '|' . $new_media_name;
+              if ($new_o_media == '') {
+                $new_o_media = $new_media_name;
+              } else {
+                $new_o_media .= '|' . $new_media_name;
+              }
             }
           }
         }
+
+        $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+        $addOption->bind_param('isssssssddd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+        $res = $addOption->execute();
+        if ($res === false) {
+          $save_ok = false;
+        }
+        $addOption->close();
       }
 
-      if ($line == 0) {  // First record - write out the question, all the rest are options.
-        $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
-        $addQuestion->bind_param('ssssssssisssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
-        $addQuestion->execute();
-        $question_id = $mysqli->insert_id;
-        $addQuestion->close();
+      if ($save_ok === false) {
+        //NO - rollback
+        $mysqli->rollback();
+      } else {
+        //YES - commit the updates to the tables
+        $mysqli->commit();
+      }
+      //turn auto commit back on so future queries function as before
+      $mysqli->autocommit(true);
 
+      if ($save_ok) {
         // Create a track changes record to say where question came from.
         $question_id = intval($question_id);
         $success = $logger->track_change('Copied Question', $question_id, $userObject->get_user_ID(), $q_IDs[$i], $question_id, 'Copied Question');
@@ -230,23 +264,21 @@ if (!isset($_POST['submit'])) {
         // Lookup modules
         $modules = QuestionUtils::get_modules($q_IDs[$i], $mysqli);
         QuestionUtils::add_modules($modules, $question_id, $mysqli);
-
       }
-      $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
-      $addOption->bind_param('isssssssddd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
-      $addOption->execute();
-      $addOption->close();
-      $line++;
     }
     $result->free_result();
     $result->close();
 
-    //- Add the question to the paper ------------------------------------------------------------------------------------------------------------------------------
-    Paper_utils::add_question($property_id, $question_id, $screen, $display_pos, $mysqli);
+    if ($save_ok) {
+      //- Add the question to the paper ------------------------------------------------------------------------------------------------------------------------------
+      Paper_utils::add_question($property_id, $question_id, $screen, $display_pos, $mysqli);
 
-    // Create a track changes record to say new question added.
-    $success = $logger->track_change('Paper', $property_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
-  }
+      // Create a track changes record to say new question added.
+      $success = $logger->track_change('Paper', $property_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
+    } else {
+      display_error($string['qcopyerrorno'], sprintf($string['qcopyerror'], $q_id));
+    }
+}
 
   echo "<p>" . sprintf($string['success'], Paper_utils::get_title($property_id, $mysqli)) . "</p>\n";
   echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.close();\" /></p>\n";

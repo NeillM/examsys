@@ -25,11 +25,11 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-$set_setID = check_var('set_setID', 'POST', true, false, true);
+$std_setID = check_var('std_setID', 'POST', true, false, true);
 
 $row_no = 0;
 $result = $mysqli->prepare("SELECT id FROM std_set WHERE id = ?");
-$result->bind_param('i', $set_setID);
+$result->bind_param('i', $std_setID);
 $result->execute();  
 $result->store_result();
 $row_no = $result->num_rows;
@@ -42,24 +42,30 @@ if ($row_no == 0) {
 
 // Delete main std_set record.
 $result = $mysqli->prepare("DELETE FROM std_set WHERE id = ?");
-$result->bind_param('i', $set_setID);
+$result->bind_param('i', $std_setID);
 $result->execute();  
 $result->close();
 
 // Delete from sthe std_set_questions table.
 $result = $mysqli->prepare("DELETE FROM std_set_questions WHERE std_setID = ?");
-$result->bind_param('i', $set_setID);
+$result->bind_param('i', $std_setID);
 $result->execute();  
 $result->close();
 
 // Delete from ebel table.
 $result = $mysqli->prepare("DELETE FROM ebel WHERE std_setID = ?");
-$result->bind_param('i', $set_setID);
+$result->bind_param('i', $std_setID);
+$result->execute();
+$result->close();
+
+// Delete from hofstee table.
+$result = $mysqli->prepare("DELETE FROM hofstee WHERE std_setID = ?");
+$result->bind_param('i', $std_setID);
 $result->execute();
 $result->close();
 
 // Clear any dangling properties
-$old_marking = '2,' . $set_setID;
+$old_marking = '2,' . $std_setID;
 $result = $mysqli->prepare("UPDATE properties SET marking = '0' WHERE marking = ?");
 $result->bind_param('s', $old_marking);
 $result->execute();

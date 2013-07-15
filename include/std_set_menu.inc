@@ -21,22 +21,33 @@
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
+
+if (isset($_GET['module'])) {
+  $module = $_GET['module'];
+} else {
+  $module = '';
+}
+if (isset($_GET['folder'])) {
+  $folder = $_GET['folder'];
+} else {
+  $folder = '';
+}
 ?>
 <div id="left-sidebar" class="sidebar">
 <br />
 <script language="JavaScript">
   function deleteReview() {
-    notice=window.open("../delete/check_delete_review.php?std_setID=" + document.getElementById('std_setID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    notice=window.open("../delete/check_delete_review.php?std_setID=" + $('#std_setID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-210, screen.height/2-85);
     if (window.focus) {
       notice.focus();
     }
   }
   function editReview() {
     var methodType = '';
-    if (document.getElementById('method').value == 'Modified Angoff') {
+    if ($('#method').val() == 'Modified Angoff') {
       methodType = 'modified_angoff';
-    } else if (document.getElementById('method').value == 'Ebel') {
+    } else if ($('#method').val() == 'Ebel') {
       methodType = 'ebel';
     } else {
       methodType = 'hofstee';
@@ -44,12 +55,12 @@
 
     if (groupReview == 'No') {
       if (methodType == 'hofstee') {
-        window.location.href = "hofstee.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + document.getElementById('std_setID').value + "&method=" + methodType;
+        window.location.href = "hofstee.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + $('#std_setID').val() + "&method=" + methodType + "&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>";
       } else {
-        window.location.href = "individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + document.getElementById('std_setID').value + "&method=" + methodType;
+        window.location.href = "individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + $('#std_setID').val() + "&method=" + methodType;
       }
     } else {
-      window.location.href = "group_set_angoff.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + document.getElementById('std_setID').value + "&reviewers=" + document.StdSetMenu.setterID.value + "&module=<?php echo $_GET['module']; ?>&method=" + methodType;
+      window.location.href = "group_set_angoff.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + $('#std_setID').val() + "&reviewers=" + $('#setterID').val() + "&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&method=" + methodType;
     }
   }
 </script>
@@ -59,10 +70,10 @@
 <tr><td style="font-weight:bold"><?php echo $string['individualrating']; ?></td></tr>
 <tr><td style="margin:4px">
 <table cellpadding="3" cellspacing="0" border="0" id="menu1" style="margin-left:7px; font-size:90%">
-<tr><td width="16"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td><td class="menuitem"><a href="#" onclick="launchHelp(97); return false;"><?php echo $string['aboutstandardssetting']; ?></a></td></tr>
-<tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Angoff Method" border="0" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><?php echo $string['createmodifiedangoff']; ?></a></td></tr>
-<tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Ebel Method" border="0" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><?php echo $string['createebelmethod']; ?></a></td></tr>
-<tr><td><a href="hofstee.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Ebel Method" border="0" /></a></td><td class="menuitem"><a href="hofstee.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><?php echo $string['createhofsteemethod']; ?></a></td></tr>
+<tr><td width="16"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" /></a></td><td class="menuitem"><a href="#" onclick="launchHelp(97); return false;"><?php echo $string['aboutstandardssetting']; ?></a></td></tr>
+<tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Angoff Method" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><?php echo $string['createmodifiedangoff']; ?></a></td></tr>
+<tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Ebel Method" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><?php echo $string['createebelmethod']; ?></a></td></tr>
+<tr><td><a href="hofstee.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Ebel Method" /></a></td><td class="menuitem"><a href="hofstee.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><?php echo $string['createhofsteemethod']; ?></a></td></tr>
 </table>
 </td></tr>
 </table>
