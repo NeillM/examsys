@@ -178,7 +178,7 @@ Class search_utils {
       if (isset($state['status' . $individual_status->id])) {
         $state_check = $state['status' . $individual_status->id] === 'true';
       } else {
-        $state_check = (!$individual_status->get_exclude_search());
+        $state_check = (!$individual_status->get_retired());
       }
       $sel_mod = ($state_check) ? ' checked' : '';
 

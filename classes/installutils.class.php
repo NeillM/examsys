@@ -982,11 +982,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     // Create default question statuses
     $statuses = array(
-      array('name' => 'Normal', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_warning' => 0, 'colour' => '#000000', 'display_order' => 0),
-      array('name' => 'Retired', 'exclude_marking' => false, 'exclude_search' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_warning' => 1, 'colour' => '#808080', 'display_order' => 1),
-      array('name' => 'Incomplete', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'validate' => false, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 2),
-      array('name' => 'Experimental', 'exclude_marking' => true, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 0, 'colour' => '#808080', 'display_order' => 3),
-      array('name' => 'Beta', 'exclude_marking' => false, 'exclude_search' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 4)
+      array('name' => 'Normal', 'exclude_marking' => false, 'retired' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_warning' => 0, 'colour' => '#000000', 'display_order' => 0),
+      array('name' => 'Retired', 'exclude_marking' => false, 'retired' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_warning' => 1, 'colour' => '#808080', 'display_order' => 1),
+      array('name' => 'Incomplete', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => false, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 2),
+      array('name' => 'Experimental', 'exclude_marking' => true, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 0, 'colour' => '#808080', 'display_order' => 3),
+      array('name' => 'Beta', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 4)
     );
 
     foreach ($statuses as $data) {
@@ -2386,7 +2386,7 @@ QUERY;
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `name` varchar(255) NOT NULL,
           `exclude_marking` tinyint(3) NOT NULL DEFAULT '0',
-          `exclude_search` tinyint(3) NOT NULL DEFAULT '0',
+          `retired` tinyint(3) NOT NULL DEFAULT '0',
           `is_default` tinyint(3) NOT NULL DEFAULT '0',
           `change_locked` tinyint(3) NOT NULL DEFAULT '1',
           `validate` tinyint(3) NOT NULL DEFAULT '1',

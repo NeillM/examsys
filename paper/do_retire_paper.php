@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -25,6 +25,7 @@
 require '../include/staff_auth.inc';
 require_once  '../include/errors.inc';
 require_once '../classes/logger.class.php';
+require_once '../classes/question_status.class.php';
 
 $paperID = check_var('paperID', 'POST', true, false, true);
 
@@ -36,27 +37,44 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
 $logger = new Logger($mysqli);
 
 if (isset($_POST['questions'])) {
-  // Look up and retire the questions
-  $result = $mysqli->prepare("SELECT question FROM papers WHERE paper = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($question_id);
-  while ($result->fetch()) {
-    $stmt = $mysqli->prepare("UPDATE questions SET status='Retired' WHERE q_id = ?");
-    $stmt->bind_param('i', $question_id);
-    $stmt->execute();
-    $stmt->close();
-    
-    $logger->track_change('Retire question', $question_id, $userObject->get_user_ID(), '', '', 'retired');
+  $status_array = QuestionStatus::get_all_statuses($mysqli, $string);
+  $retired_status_id = -1;
+  // TODO: ask which retired status to use if there is more than one?
+  foreach ($status_array as $status) {
+    if ($status->get_retired()) {
+      $retired_status_id = $status->id;
+      break;
+    }
   }
-  $result->close();   
+
+  if ($retired_status_id != -1) {
+    $mysqli->autocommit(false);
+
+    // Look up and retire the questions
+    $result = $mysqli->prepare("SELECT question FROM papers WHERE paper = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($question_id);
+    while ($result->fetch()) {
+      $stmt = $mysqli->prepare("UPDATE questions SET status=? WHERE q_id = ?");
+      $stmt->bind_param('ii', $retired_status_id, $question_id);
+      $stmt->execute();
+      $stmt->close();
+
+      $logger->track_change('Retire question', $question_id, $userObject->get_user_ID(), '', '', 'retired');
+    }
+    $result->close();
+
+    $mysqli->commit();
+    $mysqli->autocommit(true);
+  }
 }
 
 // Retire the paper itself
 $result = $mysqli->prepare("UPDATE properties SET retired=NOW() WHERE property_id = ?");
 $result->bind_param('i', $paperID);
-$result->execute();  
+$result->execute();
 $result->close();
 
 $logger->track_change('paper', $paperID, $userObject->get_user_ID(), '', '', 'retired');
@@ -69,15 +87,15 @@ $mysqli->close();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['paperretired'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
   <script language="JavaScript">
     function closeWindow() {
-      window.opener.location.reload(true);
-      window.close();
+      // window.opener.location.reload(true);
+      // window.close();
     }
   </script>
 </head>

@@ -350,7 +350,7 @@ if (isset($_POST['submit'])) {
 <?php
   while ($result->fetch()) {
     echo '<tr class="qline';
-    if ($status_array[$status]->get_exclude_search()) {
+    if ($status_array[$status]->get_retired()) {
       echo ' retired';
     }
     if ($locked != '') {
