@@ -321,7 +321,7 @@ class enhancedcalc_rserve {
       $useranswer['ans']['dps'] = $dps;
       $useranswer['ans']['pos'] = $strpos;
       $useranswer['ans']['pos1'] = $strpos1;
-      $op = self::$cnx->evalString("DP = format(round(ANS," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
+      $op = self::$cnx->evalString("DP = format(round(" . $uans ."," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
       $dpans = self::$cnx->evalString("paste(capture.output(print((DP))),collapse='\\n');");
       $dpans = str_replace('"', '', $dpans);
       $pos = strpos($dpans, ' ');
