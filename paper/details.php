@@ -852,8 +852,11 @@ $result->close();
     $old_screen = $temp_array[$x]['screen'];
 
     $higlight_class = '';
+    $status_class = '';
     if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
       $higlight_class = ' excluded';
+    } else {
+      $status_class = ' status' . $temp_array[$x]['status'];
     }
 
     $theme_class = '';
@@ -862,8 +865,6 @@ $result->close();
       $theme_class = ' q_theme';
       $theme_str = "<h4 class=\"theme\">" . trim($temp_array[$x]['theme']) . "</h4>\n";
     }
-
-    $status_class = ' status' . $temp_array[$x]['status'];
 
     echo "<tr id=\"link_$x\" class=\"link_$x qline{$theme_class}{$status_class}{$higlight_class}";
 
