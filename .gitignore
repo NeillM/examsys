@@ -16,6 +16,7 @@
 # /config/
 /config/config.inc.*
 /config/integration
+/config/selenium.inc.php
 
 # /email_templates/
 /email_templates/*.txt
