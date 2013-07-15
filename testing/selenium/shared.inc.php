@@ -4,11 +4,11 @@ require_once '../../config/selenium.inc.php';
 
 
 function get_root_url() {
-  return (defined(SELENIUM_HOST)) ? SELENIUM_HOST : 'http://rogo.local/';
+  return (defined('SELENIUM_HOST')) ? SELENIUM_HOST : 'http://rogo.local/';
 }
 
 function get_install_type() {
-  return (defined(SELENIUM_INSTALL_TYPE)) ? SELENIUM_INSTALL_TYPE : ' \(local\)';
+  return (defined('SELENIUM_INSTALL_TYPE')) ? SELENIUM_INSTALL_TYPE : ' \(local\)';
 }
 
 function do_admin_login($browser) {
