@@ -78,7 +78,7 @@ class enhancedcalc_rserve {
       $result = self::$cnx->evalString('rm(list=ls(all=TRUE))');
     }
 
-    $formula = $settings['formula'];
+    $formula = $useranswer['ans']['formula_used'];
     $varname = array_keys($useranswer['vars']);
     $varvalue = array_values($useranswer['vars']);
     $formula = str_replace($varname, $varvalue, $formula);
@@ -96,13 +96,20 @@ class enhancedcalc_rserve {
     } else {
       $uans = $useranswer['uans'];
     }
-
-    $status = self::$cnx->evalString("ANS == $uans");
-    if ($status === true) {
-      //correct
-      $useranswer['status']['exact'] = true;
-    } else {
+    
+    $answered = true; 
+    if($uans == '') {
+      //no ans provided so we cant check it 
       $useranswer['status']['exact'] = false;
+      $answered = false; 
+    } else {
+      $status = self::$cnx->evalString("ANS == $uans");
+      if ($status === true) {
+        //correct
+        $useranswer['status']['exact'] = true;
+      } else {
+        $useranswer['status']['exact'] = false;
+      }
     }
 
     if (isset($settings['tolerance_full'])) {
@@ -122,8 +129,8 @@ class enhancedcalc_rserve {
           $useranswer['ans']['tolerance_fullans'] = substr($tolerance_fullans, $pos + 1);
           break;
         case "#":
-          $op = self::$cnx->evalString("tolerance_fullANS =  " . $settings['tolerance_full']);
-          $tolerance_full = self::$cnx->evalString("paste(capture.output(print((tolerance_fullANS))),collapse='\\n');");
+          $op = self::$cnx->evalString("tolerance_full =  " . $settings['tolerance_full']);
+          $tolerance_full = self::$cnx->evalString("paste(capture.output(print((tolerance_full))),collapse='\\n');");
           $pos = strpos($tolerance_full, ' ');
           $useranswer['ans']['tolerance_full'] = substr($tolerance_full, $pos + 1);
           $op = self::$cnx->evalString("tolerance_fullANS = ANS + tolerance_full");
@@ -149,8 +156,8 @@ class enhancedcalc_rserve {
           $useranswer['ans']['tolerance_fullnegans'] = substr($tolerance_fullnegans, $neg + 1);
           break;
         case "#":
-          $op = self::$cnx->evalString("tolerance_fullNEGANS =  " . $settings['tolerance_fullneg']);
-          $tolerance_fullneg = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEGANS))),collapse='\\n');");
+          $op = self::$cnx->evalString("tolerance_fullNEG =  " . $settings['tolerance_fullneg']);
+          $tolerance_fullneg = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEG))),collapse='\\n');");
           $neg = strpos($tolerance_fullneg, ' ');
           $useranswer['ans']['tolerance_fullneg'] = substr($tolerance_fullneg, $neg + 1);
           $op = self::$cnx->evalString("tolerance_fullNEGANS = ANS - tolerance_fullNEG");
@@ -166,8 +173,11 @@ class enhancedcalc_rserve {
       }
       switch ($settings['fulltoltyp']) {
         case "sf":
-          $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['tolerance_full'] . ")");
-          $status = self::$cnx->evalString("UANSSF ==  tolerance_fullANS");
+          $status = false;
+          if($answered) {
+            $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['tolerance_full'] . ")");
+            $status = self::$cnx->evalString("UANSSF ==  tolerance_fullANS");
+          }
           if ($status === true) {
             //correct
             $useranswer['status']['tolerance_full'] = true;
@@ -177,12 +187,11 @@ class enhancedcalc_rserve {
           break;
         case "%":
         case "#":
-          //    self::$cnx->evalString("greaterequal -< function(x,y) x < y");
-          $string = "tolerance_fullANSNEG <= $uans";
-          //   $status = self::$cnx->evalString("tolerance_fullNEGANS <= $uans");
-          $status = self::$cnx->evalString("tolerance_fullNEGANS <= $uans");
-          $status1 = self::$cnx->evalString("$uans <= tolerance_fullANS");
-
+          $status = false;
+          if($answered) {
+            $status = self::$cnx->evalString("tolerance_fullNEGANS <= $uans");
+            $status1 = self::$cnx->evalString("$uans <= tolerance_fullANS");
+          }
           if ($status === true and $status1 === true) {
             //correct
             $useranswer['status']['tolerance_full'] = true;
@@ -210,8 +219,8 @@ class enhancedcalc_rserve {
           $useranswer['ans']['tolerance_partialans'] = substr($tolerance_partialans, $pos + 1);
           break;
         case "#":
-          $op = self::$cnx->evalString("tolerance_partialANS =  " . $settings['tolerance_partialneg']);
-          $tolerance_partial = self::$cnx->evalString("paste(capture.output(print((tolerance_partialANS))),collapse='\\n');");
+          $op = self::$cnx->evalString("tolerance_partial =  " . $settings['tolerance_partialneg']);
+          $tolerance_partial = self::$cnx->evalString("paste(capture.output(print((tolerance_partial))),collapse='\\n');");
           $pos = strpos($tolerance_partial, ' ');
           $useranswer['ans']['tolerance_partial'] = substr($tolerance_partial, $pos + 1);
           $op = self::$cnx->evalString("tolerance_partialANS = ANS + tolerance_partial");
@@ -237,8 +246,8 @@ class enhancedcalc_rserve {
           $useranswer['ans']['tolerance_partialnegans'] = substr($tolerance_partialnegans, $neg + 1);
           break;
         case "#":
-          $op = self::$cnx->evalString("tolerance_partialNEGANS =  " . $settings['tolerance_partialneg']);
-          $tolerance_partialneg = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEGANS))),collapse='\\n');");
+          $op = self::$cnx->evalString("tolerance_partialNEG =  " . $settings['tolerance_partialneg']);
+          $tolerance_partialneg = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEG))),collapse='\\n');");
           $neg = strpos($tolerance_partialneg, ' ');
           $useranswer['ans']['tolerance_partialneg'] = substr($tolerance_partialneg, $neg + 1);
           $op = self::$cnx->evalString("tolerance_partialNEGANS = ANS - tolerance_partialNEG");
@@ -254,8 +263,11 @@ class enhancedcalc_rserve {
       }
       switch ($settings['parttoltyp']) {
         case "sf":
-          $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['tolerance_partial'] . ")");
-          $status = self::$cnx->evalString("UANSSF ==  tolerance_partialANS");
+          $status = false;
+          if($answered) {
+            $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['tolerance_partial'] . ")");
+            $status = self::$cnx->evalString("UANSSF ==  tolerance_partialANS");
+          }
           if ($status === true) {
             //correct
             $useranswer['status']['tolerance_partial'] = true;
@@ -265,9 +277,11 @@ class enhancedcalc_rserve {
           break;
         case "%":
         case "#":
-          $status = self::$cnx->evalString("tolerance_partialNEGANS <= $uans");
-          $status1 = self::$cnx->evalString("$uans <= tolerance_partialANS");
-
+          $status = false;
+          if($answered) {
+            $status = self::$cnx->evalString("tolerance_partialNEGANS <= $uans");
+            $status1 = self::$cnx->evalString("$uans <= tolerance_partialANS");
+          }
           if ($status === true and $status1 === true) {
             //correct
             $useranswer['status']['tolerance_partial'] = true;
@@ -281,64 +295,75 @@ class enhancedcalc_rserve {
 
     //dp display
     if (isset($settings['strictdisplay']) and $settings['strictdisplay'] === true and isset($settings['dp'])) {
-      $strpos = strpos($uans, '.');
-      $strpos1 = stripos($uans, 'e', $strpos);
-      if ($strpos1 === false) {
-        $strpos1 = strlen($uans);
-      }
-      $dps = $strpos1 - $strpos - 1;
-      $useranswer['ans']['strictdps'] = $dps;
-      $useranswer['ans']['strictpos'] = $strpos;
-      $useranswer['ans']['strictpos1'] = $strpos1;
-      $op = self::$cnx->evalString("STRICTDP = format(round($uans," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
-      $dpans = self::$cnx->evalString("paste(capture.output(print((STRICTDP))),collapse='\\n');");
-      $dpans = str_replace('"', '', $dpans);
-      $pos = strpos($dpans, ' ');
-      $useranswer['ans']['strictdp'] = substr($dpans, $pos + 1);
-      $status = self::$cnx->evalString("$uans == " . $useranswer['ans']['strictdp']);
+      
+      if(!$answered) {
+       $useranswer['status']['strictdp'] = false;
+       $useranswer['status']['strictdpsize'] = false;
+      } else {
+        $strpos = strpos($uans, '.');
+        $strpos1 = stripos($uans, 'e', $strpos);
+        if ($strpos1 === false) {
+          $strpos1 = strlen($uans);
+        }
+        $dps = $strpos1 - $strpos - 1;
+        $useranswer['ans']['strictdps'] = $dps;
+        $useranswer['ans']['strictpos'] = $strpos;
+        $useranswer['ans']['strictpos1'] = $strpos1;
+        $op = self::$cnx->evalString("STRICTDP = format(round($uans," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
+        $dpans = self::$cnx->evalString("paste(capture.output(print((STRICTDP))),collapse='\\n');");
+        $dpans = str_replace('"', '', $dpans);
+        $pos = strpos($dpans, ' ');
+        $useranswer['ans']['strictdp'] = substr($dpans, $pos + 1);
+        $status = self::$cnx->evalString("$uans == " . $useranswer['ans']['strictdp']);
 
-      if ($status === true) {
-        //correct
-        $useranswer['status']['strictdp'] = true;
-      } else {
-        $useranswer['status']['strictdp'] = false;
-      }
-      if ($dps == $settings['dp']) {
-        //correct
-        $useranswer['status']['strictdpsize'] = true;
-      } else {
-        $useranswer['status']['strictdpsize'] = false;
+        if ($status === true) {
+          //correct
+          $useranswer['status']['strictdp'] = true;
+        } else {
+          $useranswer['status']['strictdp'] = false;
+        }
+        if ($dps == $settings['dp']) {
+          //correct
+          $useranswer['status']['strictdpsize'] = true;
+        } else {
+          $useranswer['status']['strictdpsize'] = false;
+        }
       }
     }
 
     if (isset($settings['dp'])) {
-      $strpos = strpos($uans, '.');
-      $strpos1 = stripos($uans, 'e', $strpos);
-      if ($strpos1 === false) {
-        $strpos1 = strlen($uans);
-      }
-      $dps = $strpos1 - $strpos - 1;
-      $useranswer['ans']['dps'] = $dps;
-      $useranswer['ans']['pos'] = $strpos;
-      $useranswer['ans']['pos1'] = $strpos1;
-      $op = self::$cnx->evalString("DP = format(round(" . $uans ."," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
-      $dpans = self::$cnx->evalString("paste(capture.output(print((DP))),collapse='\\n');");
-      $dpans = str_replace('"', '', $dpans);
-      $pos = strpos($dpans, ' ');
-      $useranswer['ans']['dp'] = substr($dpans, $pos + 1);
-      $status = self::$cnx->evalString("$uans == " . $useranswer['ans']['dp']);
+      if(!$answered)  {
+       $useranswer['status']['dp'] = false;
+       $useranswer['status']['dpsize'] = false;
+      } else {
+        $strpos = strpos($uans, '.');
+        $strpos1 = stripos($uans, 'e', $strpos);
+        if ($strpos1 === false) {
+          $strpos1 = strlen($uans);
+        }
+        $dps = $strpos1 - $strpos - 1;
+        $useranswer['ans']['dps'] = $dps;
+        $useranswer['ans']['pos'] = $strpos;
+        $useranswer['ans']['pos1'] = $strpos1;
+        $op = self::$cnx->evalString("DP = format(round(" . $uans ."," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
+        $dpans = self::$cnx->evalString("paste(capture.output(print((DP))),collapse='\\n');");
+        $dpans = str_replace('"', '', $dpans);
+        $pos = strpos($dpans, ' ');
+        $useranswer['ans']['dp'] = substr($dpans, $pos + 1);
+        $status = self::$cnx->evalString("$uans == " . $useranswer['ans']['dp']);
 
-      if ($status === true) {
-        //correct
-        $useranswer['status']['dp'] = true;
-      } else {
-        $useranswer['status']['dp'] = false;
-      }
-      if ($dps == $settings['dp']) {
-        //correct
-        $useranswer['status']['dpsize'] = true;
-      } else {
-        $useranswer['status']['dpsize'] = false;
+        if ($status === true) {
+          //correct
+          $useranswer['status']['dp'] = true;
+        } else {
+          $useranswer['status']['dp'] = false;
+        }
+        if ($dps == $settings['dp']) {
+          //correct
+          $useranswer['status']['dpsize'] = true;
+        } else {
+          $useranswer['status']['dpsize'] = false;
+        }
       }
     }
 
