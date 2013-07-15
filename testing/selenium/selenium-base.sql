@@ -1769,8 +1769,8 @@ CREATE TABLE `question_statuses` (
   `is_default` tinyint(4) NOT NULL DEFAULT '0',
   `change_locked` tinyint(3) NOT NULL DEFAULT '1',
   `validate` tinyint(3) NOT NULL DEFAULT '1',
-  `colour` char(7) DEFAULT '#000000',
   `display_warning` tinyint(3) DEFAULT '0',
+  `colour` char(7) DEFAULT '#000000',
   `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
@@ -1782,7 +1782,7 @@ CREATE TABLE `question_statuses` (
 
 LOCK TABLES `question_statuses` WRITE;
 /*!40000 ALTER TABLE `question_statuses` DISABLE KEYS */;
-INSERT INTO `question_statuses` VALUES (1,'Normal',0,0,1,1,1,'#000000',0,0),(2,'Retired',0,1,0,1,0,'#000000',0,1),(3,'Incomplete',0,0,0,0,0,'#000000',0,2),(4,'Experimental',1,0,0,0,1,'#000000',0,3),(5,'Beta',0,0,0,0,1,'#000000',0,4);
+INSERT INTO `question_statuses` VALUES (1,'Normal',0,0,1,1,1,0,'#000000',0),(2,'Retired',0,1,0,1,0,0,'#000000',1),(3,'Incomplete',0,0,0,0,0,0,'#000000',2),(4,'Experimental',1,0,0,0,1,0,'#000000',3),(5,'Beta',0,0,0,0,1,0,'#000000',4);
 /*!40000 ALTER TABLE `question_statuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2287,6 +2287,38 @@ INSERT INTO `staff_help` VALUES (1,'About Rogo','<table style=\"width: 100%;\" b
 UNLOCK TABLES;
 
 --
+-- Table structure for table `standards_setting`
+--
+
+DROP TABLE IF EXISTS `standards_setting`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `standards_setting` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `setterID` int(10) unsigned DEFAULT NULL,
+  `questionID` int(11) DEFAULT NULL,
+  `std_set` datetime DEFAULT NULL,
+  `rating` text,
+  `paperID` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `method` enum('Modified Angoff','Angoff (Yes/No)','Ebel') DEFAULT NULL,
+  `group_review` text,
+  PRIMARY KEY (`id`),
+  KEY `paperID` (`paperID`),
+  KEY `idx_std_set` (`std_set`),
+  KEY `idx_setterID` (`setterID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `standards_setting`
+--
+
+LOCK TABLES `standards_setting` WRITE;
+/*!40000 ALTER TABLE `standards_setting` DISABLE KEYS */;
+/*!40000 ALTER TABLE `standards_setting` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `state`
 --
 
@@ -2654,4 +2686,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-15 14:49:49
+-- Dump completed on 2013-07-15 15:14:28
