@@ -600,7 +600,7 @@ $result->close();
       $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
       if ($old_q_type == 'random') {
         $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
-        if ($temp_array[$row_no2]['status'] != 'Experimental') {
+        if (!$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) {
           $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
           if (count($temp_array[$row_no2]['random']) > 0) {
             $total_random_mark += $temp_array[$row_no2]['random'][0]['random_mark'];
@@ -608,12 +608,12 @@ $result->close();
         }
       } else {
         $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-        if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') {
+        if ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) {
           $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
           $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         }
       }
-      if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
+      if ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) $total_marks += $temp_array[$row_no2]['marks'];
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
@@ -699,18 +699,18 @@ $result->close();
     $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
     if ($old_q_type == 'random') {
       $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
-      if ($temp_array[$row_no2]['status'] != 'Experimental') {
+      if (!$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) {
         $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
         $total_random_mark += isset($temp_array[$row_no2]['random'][0]['random_mark']) ?  $temp_array[$row_no2]['random'][0]['random_mark'] : 0;
       }
     } else {
       $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-      if ($temp_array[$row_no2]['status'] != 'Experimental') {
+      if (!$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) {
         $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
         $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
       }
     }
-    if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
+    if (!$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking()) $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
     if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
@@ -846,7 +846,7 @@ $result->close();
     $old_screen = $temp_array[$x]['screen'];
 
     $higlight_class = '';
-    if ($temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
+    if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
       $higlight_class = ' excluded';
     }
 
@@ -934,19 +934,19 @@ $result->close();
     } elseif ($temp_array[$x]['q_type'] == 'info' or $temp_array[$x]['q_type'] == 'keyword_based') {
       echo '<td>&nbsp;</td>';
     } else {
-      if ($temp_array[$x]['status'] !== 'Experimental' and $temp_array[$x]['marks'] === 'ERR') {
+      if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] === 'ERR') {
         // Only ever get in here for random questions
         if (count($temp_array[$x]['marks']) > 0) {
           echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" title="' . $string['variablenomarks'] . '" alt="' . $string['variablenomarks'] . '" /></td>';
         }
         $marks_incorrect_error = true;
-      } elseif ($temp_array[$x]['status'] === 'Experimental') {
+      } elseif ($status_array[$temp_array[$x]['status']]->get_exclude_marking()) {
         echo '<td style="text-align:right; vertical-align:top">' . $string['na'] . '</td>';
       } else {
         echo '<td class="m">' . $temp_array[$x]['marks'] . '</td>';
       }
     }
-    if ($temp_array[$x]['status'] !== 'Experimental') {
+    if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking()) {
     	$screen_marks += $temp_array[$x]['marks'];
     }
     echo '<td class="d">' . $temp_array[$x]['display_last_edited'] . '</td>';
