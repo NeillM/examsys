@@ -33,6 +33,7 @@ Class QuestionStatus {
   protected $is_default = false;
   protected $change_locked = true;
   protected $validate = true;
+  protected $colour = '#000000';
 
   private $_db;
   private $_lang_strings;
@@ -264,6 +265,20 @@ Class QuestionStatus {
    */
   public function get_validate() {
     return $this->validate;
+  }
+
+  /**
+   * @param string $colour
+   */
+  public function set_colour($colour) {
+    $this->colour = $colour;
+  }
+
+  /**
+   * @returnstring
+   */
+  public function get_colour() {
+    return $this->colour;
   }
 
   /**

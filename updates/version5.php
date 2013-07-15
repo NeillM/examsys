@@ -732,20 +732,6 @@ if (!isset($_POST['update'])) {
   }
 
 
-
-  /*
-   *****   ALL UPDATES SHOULD NOW BE PLACED IN DATESTAMPED FILES IN THE version5 FOLDER   *****
-   *
-   *****   UPDATE FILES CAN BE CREATED BY RUNNING /updates/create_update.php
-   */
-
-  // Run individual update files
-  $files = scandir($migration_path);
-  foreach ($files as $file) {
-    if (StringUtils::ends_with($file, '.php')) {
-      include $migration_path . '/' . $file;
-    }
-
   // 02/07/2013 - nazrji - Add table for question statuses
   if (!$updater_utils->does_table_exist('question_statuses')) {
     $sql = <<< QUERY
@@ -802,6 +788,21 @@ QUERY;
 
     $sql = 'ALTER TABLE questions MODIFY COLUMN status tinyint(3) NOT NULL';
     $updater_utils->execute_query($sql, true);
+  }
+
+
+  /*
+   *****   ALL UPDATES SHOULD NOW BE PLACED IN DATESTAMPED FILES IN THE version5 FOLDER   *****
+   *
+   *****   UPDATE FILES CAN BE CREATED BY RUNNING /updates/create_update.php
+   */
+
+  // Run individual update files
+  $files = scandir($migration_path);
+  foreach ($files as $file) {
+    if (StringUtils::ends_with($file, '.php')) {
+      include $migration_path . '/' . $file;
+    }
   }
 
   /*
