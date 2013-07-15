@@ -30,9 +30,21 @@ class EnhancedCalculation extends Question implements questionInterface {
   protected $configObj;
   protected $db;
 
+  public $alluseranswers;
 
   public function __construct($configObj) {
     $this->configObj = $configObj;
+  }
+
+//splits number off front of numb/unit or just number
+  function splitnumbunit($input) {
+    $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
+    $out = preg_match($pattern, $input, $matches);
+    $sz = strlen($matches[0]);
+    $units = trim(substr($input, $sz));
+    $numb = $matches[0];
+
+    return array($numb, $units);
   }
 
   /*
@@ -61,16 +73,14 @@ class EnhancedCalculation extends Question implements questionInterface {
       return Q_MARKING_NOTANS;
     }
 
-    if ((isset($this->settings['show_units']) and $this->settings['show_units'] !== true) or (!isset($this->settings['show_units']))) {
-      $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
-      $out = preg_match($pattern, $this->useranswer['uans'], $matches);
-      $sz = strlen($matches[0]);
-      $units = trim(substr($this->useranswer['uans'], $sz));
 
-      $this->useranswer['uansunit'] = $units;
-      $this->useranswer['uansnumb'] = $matches[0];
+    $return = $this->splitnumbunit($this->useranswer['uans']);
+    if (!is_null($return[1])) {
+      $this->useranswer['uansunit'] = $return[0];
+      $this->useranswer['uansnumb'] = $return[1];
     } else {
-      $this->useranswer['uansnumb'] = $this->useranswer['uans'];
+      $this->useranswer['uansnumb'] = $return[0];
+
     }
 
     $enhancedcalcType = $this->configObj->get('enhancedcalc_type');
@@ -192,8 +202,8 @@ class EnhancedCalculation extends Question implements questionInterface {
       //check for strict first
 
       //check strict dp
-  if(false === true) {
-  //    if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']) and !(isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true  and $this->useranswer['status']['strictdp'] === true and $this->useranswer['status']['strictdpsize'] === true))) {
+      if (false === true) {
+        //    if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']) and !(isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true  and $this->useranswer['status']['strictdp'] === true and $this->useranswer['status']['strictdpsize'] === true))) {
         $this->qmark = $this->settings['marks_incorrect'];
 
         $returnstatus = Q_MARKING_WRONG;
@@ -418,6 +428,56 @@ class EnhancedCalculation extends Question implements questionInterface {
   }
 
 
+  function load_all_user_answers(&$all_user_answers) {
+    $this->alluseranswers = $all_user_answers;
+  }
+
+  function variable_substitution($inputVal, $user_answers) {
+    if (substr($inputVal, 0, 3) == 'ans') {
+      //its a question reference get previous user answer
+      $find_qid = intval(substr($inputVal, 3));
+      $pre_user_answers = '';
+      foreach ($user_answers as $screen => $answers) {
+        foreach ($answers as $pre_qid => $ans) {
+          if ($pre_qid == $find_qid) {
+            try {
+              $uansarray = json_decode($ans, true);
+            } catch (exception $e) {
+              return 'ERROR';
+            }
+            break 2;
+          }
+        }
+      }
+      if (!isset($uansarray['uans'])) return 'ERROR';
+      $return = $this->splitnumbunit($uansarray['uans']);
+      $inputVal = $return[0];
+    } elseif (substr($inputVal, 0, 3) == 'var') {
+      //its a var refrance from a previous question
+      $find_var = substr($inputVal, 3, 1);
+      $find_qid = intval(substr($inputVal, 4));
+      $pre_var_val = '';
+      foreach ($user_answers as $screen => $answers) {
+        foreach ($answers as $pre_qid => $ans) {
+          if ($pre_qid == $find_qid) {
+            try {
+              $variables = json_decode($ans, true);
+            } catch (exception $e) {
+              return 'ERROR';
+            }
+            break 2;
+          }
+        }
+      }
+      if (!isset($variables['vars']['$' . $find_var])) return 'ERROR';
+      $inputVal = $variables['vars']['$' . $find_var]; //str_replace('var' . substr($inputVal, 3, 1) . $find_qid, $pre_var_val, $inputVal);
+    }
+
+    //eval("\$inputVal = $inputVal;");
+
+    return $inputVal;
+  }
+
   public function render_paper($extra = array()) {
 
 
@@ -447,15 +507,26 @@ class EnhancedCalculation extends Question implements questionInterface {
       }
     }
 
+    $calculatevars = false;
     //check to see if variables have been previously generated if not generate them
     if (!isset($this->useranswer['vars'])) {
+      $calculatevars = true;
+    } else {
+      foreach ($this->useranswer['vars'] as $value) {
+        if ($value == 'ERROR') {
+          $calculatevars = true;
+        }
+      }
+    }
+
+    if ($calculatevars === true) {
       //need to generate variables
       //TODO handle the link variables
       foreach ($this->settings['vars'] as $key => $value) {
-        $min = $value['min'];
-        $max = $value['max'];
-        $inc = $value['inc'];
-        $dec = $value['dec'];
+        $min = $this->variable_substitution($value['min'], $this->alluseranswers);
+        $max = $this->variable_substitution($value['max'], $this->alluseranswers);
+        $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
+        $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
         $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
       }
       $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
