@@ -33,7 +33,7 @@ Class QuestionStatus {
   protected $is_default = false;
   protected $change_locked = true;
   protected $validate = true;
-  protected $display_warning = true;
+  protected $display_warning = false;
   protected $colour = '#000000';
 
   private $_db;
@@ -305,14 +305,14 @@ Class QuestionStatus {
   public static function get_all_statuses($db, $lang_strings, $with_index = false) {
     $statuses = array();
 
-    $sql = "SELECT id, name, exclude_marking, exclude_search, is_default, change_locked, validate, colour FROM question_statuses ORDER BY display_order";
+    $sql = "SELECT id, name, exclude_marking, exclude_search, is_default, change_locked, validate, display_warning, colour FROM question_statuses ORDER BY display_order";
 
     $result = $db->prepare($sql);
     $result->execute();
     $result->store_result();
-    $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default, $change_locked, $validate, $colour);
+    $result->bind_result($id, $name, $exclude_marking, $exclude_search, $is_default, $change_locked, $validate, $display_warning, $colour);
     while ($result->fetch()) {
-      $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default, 'change_locked' => $change_locked, 'validate' => $validate, 'colour' => $colour);
+      $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'exclude_search' => $exclude_search, 'is_default' => $is_default, 'change_locked' => $change_locked, 'validate' => $validate, 'display_warning' => $display_warning, 'colour' => $colour);
       $qs = new QuestionStatus($db, $lang_strings, $data);
       if (!$with_index) {
         $statuses[] = $qs;

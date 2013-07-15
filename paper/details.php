@@ -826,10 +826,9 @@ $result->close();
   $marks_incorrect_error = false;
   $paper_warnings = array();
   for ($x=1; $x<=$row_no; $x++) {
+    $status = $status_array[$temp_array[$x]['status']];
     if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0) $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
-    if ($temp_array[$x]['status'] == 'Incomplete') $paper_warnings['Incomplete'][] = $question_number + 1;
-    if ($temp_array[$x]['status'] == 'Beta') $paper_warnings['Beta'][] = $question_number + 1;
-    if ($temp_array[$x]['status'] == 'Retired') $paper_warnings['Retired'][] = $question_number + 1;
+    if ($status->get_display_warning()) $paper_warnings['status'][$status->get_name()][] = $question_number + 1;
     if ($old_screen != $temp_array[$x]['screen']) {
       if ($old_screen > 0) {
         $tmp_screen_mean = ($total_marks == 0) ? 0 : ($screen_marks / $total_marks);
@@ -985,19 +984,17 @@ $result->close();
 
   // Final paper warnings.
   if ($properties->get_paper_type() == '2') {
-    if ($properties->get_summative_lock()) {
-      $warning_types = array('Incomplete', 'Beta');
-    } else {
-      $warning_types = array('Incomplete', 'Beta', 'Retired');
-    }
-    foreach ($warning_types as $warning_type) {
-      if (isset($paper_warnings[$warning_type]) and count($paper_warnings[$warning_type]) > 0) {
-        echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['following_questions'] . " '$warning_type':</strong> ";
-        foreach ($paper_warnings[$warning_type] as $question_warning) {
-          echo ' Q' . $question_warning;
+    if (isset($paper_warnings['status']) and count($paper_warnings['status']) > 0) {
+      $first = true;
+      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['following_questions'] . ":</strong> ";
+      foreach ($paper_warnings['status'] as $name => $warn_qs) {
+        if (!$first) {
+          echo ', ';
         }
-        echo "</td></tr>\n";
+        echo "<strong>'$name'</strong> Q" . implode(', Q', $warn_qs) ;
+        $first = false;
       }
+      echo "</td></tr>\n";
     }
   }
 
