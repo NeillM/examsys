@@ -749,12 +749,12 @@ QUERY;
     $updater_utils->execute_query($sql, true);
 
     $sql = <<<QUERY
-INSERT INTO question_statuses (name, exclude_marking, exclude_search, is_default, change_locked, validate, display_warning, colour, display_order) VALUES
-('Normal', false, false, true, true, true, false, '#000000', 0),
-('Retired', false, true, false, true, false, true, '#808080', 1),
-('Incomplete', false, false, false, false, false, true, '#000000', 2),
-('Experimental', true, false, false, false, true, false, '#808080', 3),
-('Beta', false, false, false, false, true, true, '#000000', 4)
+INSERT INTO question_statuses (name, exclude_marking, exclude_search, is_default, change_locked, validate, display_order) VALUES
+('Normal', false, false, true, true, true, 0),
+('Retired', false, true, false, true, false, 1),
+('Incomplete', false, false, false, false, false, 2),
+('Experimental', true, false, false, false, true, 3),
+('Beta', false, false, false, false, true, 4)
 QUERY;
     $updater_utils->execute_query($sql, true);
 
