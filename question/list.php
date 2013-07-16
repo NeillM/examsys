@@ -91,6 +91,8 @@ if (isset($_GET['checked'])) {
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
     .qline:hover {background-color:#eee}
     .qline.highlight {background-color:#B3C8E8}
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -161,9 +163,9 @@ if (isset($_GET['checked'])) {
   $display_no = 0;
 
   $retired_in = array();
-  foreach ($status_array as $status) {
-    if ($status->get_retired()) {
-      $retired_in[] = $status->id;
+  foreach ($status_array as $q_status) {
+    if ($q_status->get_retired()) {
+      $retired_in[] = $q_status->id;
     }
   }
   $retired_in = implode(',', $retired_in);
@@ -195,7 +197,8 @@ if (isset($_GET['checked'])) {
   echo "<tr><th class=\"bevel\" colspan=\"5\"></th></tr>\n";
 
   while ($search_results->fetch()) {
-    echo '<tr class="qline"';
+    $status_class = ' status' . $status;
+    echo '<tr class="qline' . $status_class . '"';
     if ($locked != '') {
       echo " id=\"link_$display_no\" onclick=\"selQ($q_id,$display_no,'$q_type','2c',event)\" ondblclick=\"editQ(); return false;\">";
       echo "<td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"Question Locked\" /></td>";
