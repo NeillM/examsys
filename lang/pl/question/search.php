@@ -61,5 +61,6 @@ $string['locked'] = 'zablokowane';
 $string['noquestionsfound'] = 'Nie znaleziono żadnego pytania spełniającego podane kryteria.';
 $string['narrowyoursearch'] = 'Należy zawęzić wyszukiwania przez dobór odpowiedniego słowa, typu pytania, daty zmian lub metadanych';
 $string['notickedfields'] = 'Nie zaznaczono żadnych pól do wyszukiwania';
+$string['notickedstatus'] = 'You have not ticked any status to search for'; // Niko
 $string['entersearchterm'] = 'Podaj szukane słowo lub frazę.';
 ?>
