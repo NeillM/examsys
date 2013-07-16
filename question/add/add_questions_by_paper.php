@@ -26,6 +26,7 @@ require '../../include/staff_auth.inc';
 require '../../include/errors.inc';
 require '../../include/question_types.inc';
 require_once '../../classes/questionutils.class.php';
+require_once '../../classes/question_status.class.php';
 
 $question_paper = check_var('question_paper', 'GET', true, false, true);
 
@@ -33,6 +34,9 @@ if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }
+
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <html>
 <head>
@@ -49,6 +53,8 @@ if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
     .s {padding-left:6px}
     .q_no {text-align:right; width:35px}
     .mee { display: inline; }
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
@@ -90,10 +96,10 @@ if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
   echo "<tr><th colspan=\"7\" class=\"bevel\"></th></tr>\n";
 
   // Get the questions in order off the paper.
-  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts, status FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
   $stmt->bind_param('i', $question_paper);
   $stmt->execute();
-  $stmt->bind_result($q_id, $leadin, $leadin_plain, $q_type, $screen, $last_edited, $locked, $parts);
+  $stmt->bind_result($q_id, $leadin, $leadin_plain, $q_type, $screen, $last_edited, $locked, $parts, $status);
   $old_screen = 0;
   $question_no = 0;
   while ($stmt->fetch()) {
@@ -105,7 +111,8 @@ if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
     if ($q_type == 'info') {
       echo "<tr><td class=\"q_no\"><img src=\"../artwork/black_white_info_icon.png\" width=\"6\" height=\"12\" alt=\"Info\" />&nbsp;</td><td>";
     } else {
-      echo "<tr><td class=\"q_no\">$question_no.</td><td>";
+    $status_class = 'status' . $status;
+    echo "<tr class=\"{$status_class}\"><td class=\"q_no\">$question_no.</td><td>";
     }
     if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="Locked" />';
     echo "</td><td style=\"width:25px\"><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" id=\"$q_id\" value=\"$q_id\" /></td>";
