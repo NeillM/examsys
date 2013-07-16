@@ -36,6 +36,8 @@ Class QuestionStatus {
   protected $display_warning = false;
   protected $colour = '#000000';
 
+  private $was_default = false;
+
   private $_db;
   private $_lang_strings;
 
@@ -122,6 +124,9 @@ Class QuestionStatus {
 
     $this->_db->autocommit(true);
 
+    // Ensure we have a default set
+    $this->reset_default();
+
     return $success;
   }
 
@@ -172,13 +177,10 @@ Class QuestionStatus {
     $result->close();
 
     // Make the first status default if this object was previously
-    if ($this->is_default) {
-      $sql = "UPDATE question_statuses SET is_default = true WHERE display_order = 0";
-      $result = $this->_db->prepare($sql);
-      if ($result->execute()) {
-        $success = true;
+    if ($success and $this->is_default) {
+      if (!$this->reset_default()) {
+        $success = false;
       }
-      $result->close();
     }
 
     return $success;
@@ -294,6 +296,38 @@ Class QuestionStatus {
    */
   public function get_colour() {
     return $this->colour;
+  }
+
+  /**
+   * Reset the default status to be the first in the database if none set
+   * @return bool True if update was successful
+   */
+  private function reset_default() {
+    $success = false;
+
+    $this->_db->autocommit(false);
+
+    $sql = "SELECT count(id) FROM question_statuses WHERE is_default = 1";
+    $result = $this->_db->prepare($sql);
+    $result->execute();
+    $result->bind_result($count);
+    $result->fetch();
+    $do_reset = ($count == 0);
+    $result->close();
+
+    if ($do_reset) {
+      $sql2 = "UPDATE question_statuses SET is_default = true WHERE display_order = 0";
+      $result = $this->_db->prepare($sql2);
+      if ($result->execute()) {
+        $success = true;
+      }
+      $result->close();
+    }
+
+    $this->_db->commit();
+    $this->_db->autocommit(true);
+
+    return $success;
   }
 
   /**

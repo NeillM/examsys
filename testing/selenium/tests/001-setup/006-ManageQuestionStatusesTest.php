@@ -30,9 +30,7 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click('id=exclude_marking');
     $this->click('id=retired');
     $this->click('id=is_default');
-    // $this->click('id=change_locked');
-    // $this->click('id=validate');
-    // $this->click('id=display_warning');
+    $this->click('id=display_warning');
     $this->type('id=colour', '#00ff00');
     $this->click('name=submit');
     $this->waitForPageToLoad('30000');
@@ -107,6 +105,8 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     do_admin_login($this);
 
     $this->open("/admin/list_statuses.php");
+    $this->waitForPageToLoad("30000");
+    sleep(5);
     $this->assertElementPresent('css=.selectable.default');
   }
 
@@ -250,7 +250,7 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click('name=submit');
     $this->waitForPageToLoad('30000');
     $this->assertTextPresent('Status names must be unique');
-    $this->assertLocation($this->page_root . '/admin/edit_status.php');
+    $this->assertLocation($this->page_root . 'admin/edit_status.php');
   }
 }
 ?>
