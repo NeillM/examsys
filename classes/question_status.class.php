@@ -346,6 +346,22 @@ CSS;
 
     return $css;
   }
+
+  /**
+   * Get the IDs of all statuses that are flagged as 'retired'
+   * @param  array $statuses       An array of the existing statuses
+   * @return array[integer]        Array of status IDs
+   */
+  public static function get_retired_status_ids($statuses) {
+    $retired_in = array();
+    foreach ($statuses as $status) {
+      if ($status->get_retired()) {
+        $retired_in[] = $status->id;
+      }
+    }
+
+    return $retired_in;
+  }
 }
 
 ?>

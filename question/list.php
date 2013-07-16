@@ -162,13 +162,7 @@ if (isset($_GET['checked'])) {
   $hits = 0;
   $display_no = 0;
 
-  $retired_in = array();
-  foreach ($status_array as $q_status) {
-    if ($q_status->get_retired()) {
-      $retired_in[] = $q_status->id;
-    }
-  }
-  $retired_in = implode(',', $retired_in);
+  $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
 
   $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, status FROM (users, questions, questions_modules)";
   if ($keyword != '%' and $keyword != '') {
