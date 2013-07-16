@@ -30,6 +30,7 @@ require_once '../classes/question_status.class.php';
 
 set_time_limit(0);
 
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -49,6 +50,8 @@ set_time_limit(0);
     .qline:hover {background-color:#eee}
     .qline.highlight {background-color:#B3C8E8}
     .retired {color:#808080}
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -144,10 +147,6 @@ set_time_limit(0);
 
 if (isset($_POST['submit'])) {
   $error = '';
-
-  if (!isset($status_array)) {
-    $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
-  }
 
   if (!isset($_POST['theme']) and !isset($_POST['scenario']) and !isset($_POST['leadin']) and !isset($_POST['options']) and !isset($_POST['keywords'])) {
     $error = $string['notickedfields'];
@@ -349,10 +348,8 @@ if (isset($_POST['submit'])) {
   </tr>
 <?php
   while ($result->fetch()) {
-    echo '<tr class="qline';
-    if ($status_array[$status]->get_retired()) {
-      echo ' retired';
-    }
+    $status_class = ' status' . $status_array[$status]->id;
+    echo '<tr class="qline' . $status_class;
     if ($locked != '') {
       echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2c',event); return false;\" ondblclick=\"editQ(); return false;\"><td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['locked'] . "\" /></td>";
     } else {

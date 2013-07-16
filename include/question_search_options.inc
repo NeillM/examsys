@@ -350,8 +350,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:none\">\n";
   }
 
-//TODO this area similar to the question_list_options file
-$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+if (!isset($status_array)) {
+  $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+}
 ?>
   <tr><td>
   <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
