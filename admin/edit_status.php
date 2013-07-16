@@ -126,7 +126,8 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
       }
 
       $('#status_form').submit(checkForm);
-      $('#span_colour').click(function (e) { showPicker('colour', e); });
+      $('#span_colour').click(function (e) { e.stopPropagation(); showPicker('colour', e); });
+      $('html').click(hidePicker);
     });
 
   </script>
@@ -180,5 +181,6 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
       </table>
     </form>
   </div>
+  <div style="clear: both;"></div>
 </body>
 </html>
