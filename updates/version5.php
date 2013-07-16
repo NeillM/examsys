@@ -732,6 +732,64 @@ if (!isset($_POST['update'])) {
   }
 
 
+  // 02/07/2013 - nazrji - Add table for question statuses
+  if (!$updater_utils->does_table_exist('question_statuses')) {
+    $sql = <<< QUERY
+CREATE TABLE `question_statuses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `exclude_marking` tinyint(4) NOT NULL DEFAULT '0',
+  `exclude_search` tinyint(4) NOT NULL DEFAULT '0',
+  `is_default` tinyint(4) NOT NULL DEFAULT '0',
+  `change_locked` tinyint(3) NOT NULL DEFAULT '1',
+  `validate` tinyint(3) NOT NULL DEFAULT '1',
+  `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
+  PRIMARY KEY (`id`));
+QUERY;
+    $updater_utils->execute_query($sql, true);
+
+    $sql = <<<QUERY
+INSERT INTO question_statuses (name, exclude_marking, exclude_search, is_default, change_locked, validate, display_order) VALUES
+('Normal', false, false, true, true, true, 0),
+('Retired', false, true, false, true, false, 1),
+('Incomplete', false, false, false, false, false, 2),
+('Experimental', true, false, false, false, true, 3),
+('Beta', false, false, false, false, true, 4)
+QUERY;
+    $updater_utils->execute_query($sql, true);
+
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $updater_utils->execute_query($sql, true);
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $updater_utils->execute_query($sql, true);
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $updater_utils->execute_query($sql, true);
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $updater_utils->execute_query($sql, true);
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $configObject->get('cfg_db_sct_user') . "'@'" . $cfg_db_host . "'";
+    $updater_utils->execute_query($sql, true);
+
+    // Update existing statuses
+    $statuses = array('Normal' => 1, 'Retired' => 2, 'Incomplete' => 3, 'Experimental' => 4, 'Beta' => 5);
+    $count = 0;
+
+    $sql = 'ALTER TABLE questions MODIFY COLUMN status varchar(40) NULL';
+    $updater_utils->execute_query($sql, true);
+
+    foreach ($statuses as $name => $id) {
+      $sql = 'UPDATE questions SET status = ? WHERE status = ?';
+      $status_upd = $mysqli->prepare($sql);
+      $status_upd->bind_param('ss', $id, $name);
+      $status_upd->execute();
+      if ($mysqli->affected_rows > 0) $count++;
+      $status_upd->close();
+    }
+    echo '<li>Updated question statuses</li>';
+
+    $sql = 'ALTER TABLE questions MODIFY COLUMN status tinyint(3) NOT NULL';
+    $updater_utils->execute_query($sql, true);
+  }
+
 
   /*
    *****   ALL UPDATES SHOULD NOW BE PLACED IN DATESTAMPED FILES IN THE version5 FOLDER   *****
@@ -746,7 +804,6 @@ if (!isset($_POST['update'])) {
       include $migration_path . '/' . $file;
     }
   }
-
 
   /*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****

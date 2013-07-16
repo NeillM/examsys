@@ -26,6 +26,7 @@ require '../../include/staff_auth.inc';
 require_once '../../include/errors.inc';
 require_once '../../classes/questionutils.class.php';
 require_once '../../classes/moduleutils.class.php';
+require_once '../../classes/question_status.class.php';
 
 $teamID = check_var('teamID', 'GET', true, false, true);
 
@@ -34,6 +35,8 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -48,6 +51,8 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
   <style type="text/css">
     body {font-size:80%}
     .mee { display: inline; }
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
@@ -60,7 +65,7 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
     function populateTicks() {
       q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
       for (i=0; i<q_array.length; i++) {
-        if (q_array[i]!='') { 
+        if (q_array[i]!='') {
           var obj = document.getElementById(q_array[i]);
           if (obj != null) {
             obj.checked = true;
@@ -119,17 +124,18 @@ if (!module_utils::get_moduleid_from_id($teamID, $mysqli)) {
   $id = 0;
   if ($order == 'leadin') $order = 'leadin_plain';
 
-  $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited, '" . $configObject->get('cfg_short_date') . "') AS display_date, locked FROM (questions, questions_modules) WHERE questions.q_id=questions_modules.q_id AND idMod=? AND deleted IS NULL ORDER BY $order $direction");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited, '" . $configObject->get('cfg_short_date') . "') AS display_date, locked, status FROM (questions, questions_modules) WHERE questions.q_id=questions_modules.q_id AND idMod=? AND deleted IS NULL ORDER BY $order $direction");
   $stmt->bind_param('i', $teamID);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked);
+  $stmt->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked, $status);
   if ($stmt->num_rows > 0) {
     while ($stmt->fetch()) {
       $tmp_leadin = QuestionUtils::clean_leadin($leadin);
       if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
 
-      echo "<tr><td>";
+      $status_class = 'status' . $status;
+      echo "<tr class=\"$status_class\"><td>";
       if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
       echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td></tr>\n";
     }

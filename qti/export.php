@@ -34,6 +34,14 @@ require_once 'include/inc.php';
 require_once 'local/local_load.php';
 require_once 'qti12/qti12_save.php';
 require_once 'qti20/qti20_save.php';
+require_once '../classes/question_status.class.php';
+
+// Get question statuses
+$status_tmp = QuestionStatus::get_all_statuses($mysqli, $string, true);
+$statuses = array();
+foreach ($status_tmp as $sid => $status) {
+  $statuses[$sid] = $status->get_name();
+}
 
 $ob = new OB();
 
@@ -70,6 +78,7 @@ $load_params->type = $type;
 $load_params->ids = explode(",", $ids);
 $paperID = $load_params->ids[0];
 $import = new IE_Local_Load();
+$import->setStatuses($statuses);
 
 if ($dest == "qti12") {
   $export = new IE_QTI12_Save();
@@ -87,7 +96,7 @@ $save_params = new stdClass();
 $save_params->dir = $dir;
 $save_params->base_dir = $base_dir;
 
-$load_params->dir = $dir; 
+$load_params->dir = $dir;
 $load_params->base_dir = $base_dir;
 
 ///////////////////////

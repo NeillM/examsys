@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Custom exception classes
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -37,3 +37,5 @@ class ClassNotFoundException extends Exception { }
 class MethodNotImplementedException extends Exception { }
 
 class RandomQuestionNotFound extends Exception { }
+
+class ItemExistsException extends Exception { }

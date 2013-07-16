@@ -183,7 +183,7 @@ if ($cohort_size > 0) {
   $avg_time = ($stats['completed_no'] > 0) ? $report->formatsec(round($stats['total_time'] / $stats['completed_no'],0)) : 'n/a';
   $csv .= $string['averagetime'] . "," . $avg_time . ",,,,,,,,,,\n";
   $csv .= $string['excludedquestions'] . "," . $report->get_display_excluded() . ",,,,,,,,,,\n";
-  $csv .= $string['experimantalquestions'] . "," . $report->get_display_experimental() . ",,,,,,,,,,\n";
+  $csv .= $string['skippedquestions'] . "," . $report->get_display_experimental() . ",,,,,,,,,,\n";
 } else {
   $csv .= strip_tags(sprintf($string['noattempts'], $report->nicedate($startdate), $report->nicedate($enddate)));
 }

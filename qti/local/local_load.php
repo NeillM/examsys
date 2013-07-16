@@ -39,10 +39,11 @@ class IE_Local_Load extends IE_Main {
   var $q_ids = array();
   var $p_ids = array();
   var $params;
+  var $statuses = array();
 
   function QuickInfo($params) {
     /*$result['impexp_type'] = $params->type;
-    		
+
      $db = new Database();
      $db->SetTable('questions');
      $db->AddField(array('q_id', 'q_type', 'theme', 'leadin'));
@@ -109,7 +110,7 @@ class IE_Local_Load extends IE_Main {
     $paper_row = array();
     $prop_rows = array();
 
-    // retrieve question row from database	
+    // retrieve question row from database
     $db = new Database();
     $db->SetTable('properties');
     $db->AddField('*');
@@ -152,7 +153,7 @@ class IE_Local_Load extends IE_Main {
     $q_row = array();
     $o_rows = array();
 
-    // retrieve question row from database	
+    // retrieve question row from database
     $db = new Database();
     $db->SetTable('questions');
     $db->AddField('*');
@@ -200,7 +201,7 @@ class IE_Local_Load extends IE_Main {
 
       $db->InsertRow("track_changes", "id", $track);
     }
-    // return question	
+    // return question
     return $store;
   }
 
@@ -241,7 +242,7 @@ class IE_Local_Load extends IE_Main {
     // standard media, gets cleared for extmatch
     $this->AddMedia($store, $q_row['q_media'], $q_row['q_media_width'], $q_row['q_media_height']);
 
-    $store->status = $q_row['status'];
+    $store->status = $this->statuses[$q_row['status']];
   }
 
   function LoadQuestionBlank($store, $q_row, $o_rows) {
@@ -285,11 +286,11 @@ class IE_Local_Load extends IE_Main {
           // create new option
           $curopt = new STQ_Blank_Option();
           $curopt->display = $opt;
-          
+
           $curopt->marks_correct = $o_rows[0]['marks_correct'];
           $curopt->marks_incorrect = $o_rows[0]['marks_incorrect'];
           $curopt->marks_partial = $o_rows[0]['marks_partial'];
- 
+
 
           // if display mode is dropdown, only first is correct answer
           if ($store->displaymode == "dropdown") {
@@ -320,7 +321,7 @@ class IE_Local_Load extends IE_Main {
     $store->scenario = $q_row['scenario'];
     $store->feedback = $q_row['correct_fback'];
     $store->formula = $o_rows[0]['correct'];
-    
+
     list($store->decimals, $store->tolerance, $store->units) = explode(",", $q_row['display_method']);
 
     $calcvar = 0;
@@ -328,13 +329,13 @@ class IE_Local_Load extends IE_Main {
       $calcvarletter = chr(ord('A') + $calcvar);
       $var = new STQ_Calc_Vars();
       list($var->min, $var->max, $var->inc, $var->dec) = explode(",", $o_row['option_text']);
-      $store->variables[$calcvarletter] = $var; 
-      
+      $store->variables[$calcvarletter] = $var;
+
       $store->marks_correct = $o_row['marks_correct'];
       $store->marks_incorrect = $o_row['marks_incorrect'];
       $store->marks_partial = $o_row['marks_partial'];
-      
-   
+
+
       $calcvar++;
     }
   }
@@ -357,10 +358,10 @@ class IE_Local_Load extends IE_Main {
       if (!$options->fb_incorrect) $options->fb_incorrect = $options->fb_correct;
 
       $this->AddMedia($options, $o_row['o_media'], $o_row['o_media_width'], $o_row['o_media_height']);
-      
+
       $options->marks_correct = $o_row['marks_correct'];
       $options->marks_incorrect = $o_row['marks_incorrect'];
-     
+
       $store->options[$optionno] = $options;
       $optionno++;
     }
@@ -391,7 +392,7 @@ class IE_Local_Load extends IE_Main {
         $scenarios[] = $s;
       }
     }
-    
+
     $correct = explode("|", $o_rows[0]['correct']);
 
     // for all the arrays made, create scenarios
@@ -399,13 +400,13 @@ class IE_Local_Load extends IE_Main {
     for ($i = 0; $i < count($scenarios); $i++) {
       $ems = new STQ_Extm_Scenario();
       $ems->stem = $scenarios[$i];
-      
+
       if(isset($medias[$i + 1])) $this->AddMedia($ems, $medias[$i + 1], $media_widths[$i + 1], $media_heights[$i + 1]);
-      
+
       $ems->marks_correct = $o_rows[0]['marks_correct'];
       $ems->marks_incorrect = $o_rows[0]['marks_incorrect'];
       $ems->marks_partial = $o_rows[0]['marks_partial'];
-      
+
       $ems->feedback = (empty($feedbacks[$i])) ? '' : $feedbacks[$i];
       $ems->correctans = explode("$", $correct[$i]);
 
@@ -497,16 +498,16 @@ class IE_Local_Load extends IE_Main {
 
     $store->scenario = $q_row['scenario'];
     $store->feedback = $q_row['correct_fback'];
-    
+
     $store->marks_correct = $o_rows[0]['marks_correct'];
     $store->marks_incorrect = $o_rows[0]['marks_incorrect'];
     $store->marks_partial = $o_rows[0]['marks_partial'];
-    
+
     $data = $o_rows[0]['correct'];
     $store->raw_option = $data;
 
     $data = explode(";", $data);
-    
+
     $store->line_color = $data[0];
     $store->line_thickness = $line_thicknesses[$data[1]];
     $store->box_color = $data[2];
@@ -520,7 +521,7 @@ class IE_Local_Load extends IE_Main {
 
     for ($i = 11; $i < count($data); $i++) {
       if (empty($data[$i])) continue;
-      
+
       $chunk = $data[$i];
       $data3 = explode("$", $data[$i]);
       $arrow = new STQ_Labelling_Arrow();
@@ -541,9 +542,9 @@ class IE_Local_Load extends IE_Main {
       if (empty($label[4])) continue;
       //echo $label[0] . " - " .$label[1] . " - " .$label[2] . " - " .$label[3] . " - " .$label[4] . "<br>";
       $lc = new STQ_Labelling_Label();
-      
+
       $tag = explode('~',$label[4]);
- 
+
       if(count($tag) == 1) {
         $lc->tag = $tag[0];
         $lc->type = 'text';
@@ -563,7 +564,7 @@ class IE_Local_Load extends IE_Main {
 
 
       $store->labels[$label[0]] = $lc;
-      
+
     }
   }
 
@@ -627,7 +628,7 @@ class IE_Local_Load extends IE_Main {
     $store->fb_incorrect = $q_row['incorrect_fback'];
     if (!$store->fb_incorrect) $store->fb_incorrect = $store->fb_correct;
     $store->correct = $o_rows[0]['correct'];
-    
+
     // for each of the options create an STQ_Mcq_Option
     $optionno = 1;
     foreach ($o_rows as $o_row) {
@@ -688,11 +689,11 @@ class IE_Local_Load extends IE_Main {
       $option->fb_correct = $o_row['feedback_right'];
       $option->fb_incorrect = $o_row['feedback_wrong'];
       if ($option->fb_incorrect == "") $option->fb_incorrect = $option->fb_correct;
-      
+
       $option->marks_correct = $o_row['marks_correct'];
       $option->marks_incorrect = $o_row['marks_incorrect'];
       $option->marks_partial = $o_row['marks_partial'];
-      
+
       $this->AddMedia($option, $o_row['o_media'], $o_row['o_media_width'], $o_row['o_media_height']);
       $store->options[$optionno] = $option;
       $optionno++;
@@ -769,8 +770,12 @@ class IE_Local_Load extends IE_Main {
       //echo "Copied /var/www/media/" . $filename . " to " . $this->params->base_dir . $this->params->dir."/".$filename . "<br>";
       copy($cfg_web_root . 'media/'. $filename, $this->params->base_dir . $this->params->dir . "/" . $filename);
     } else {
-      //echo "File $filename doesnt exist in media directory<br>";	
+      //echo "File $filename doesnt exist in media directory<br>";
       }
+  }
+
+  public function setStatuses($statuses) {
+    $this->statuses = $statuses;
   }
 }
 ?>

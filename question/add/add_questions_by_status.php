@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -23,14 +23,18 @@
 */
 
 require '../../include/staff_auth.inc';
+require_once '../../classes/question_status.class.php';
+
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['bystatus']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
     body {font-size:90%}
@@ -44,11 +48,12 @@ require '../../include/staff_auth.inc';
 
 <body>
 <br />
-<div class="f"><a href="add_questions_list_status.php?status=Normal"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Normal"><?php echo $string['normal']; ?></a></div>
-<div class="f"><a href="add_questions_list_status.php?status=Retired"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Retired"><?php echo $string['retired']; ?></a></div>
-<div class="f"><a href="add_questions_list_status.php?status=Incomplete"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Incomplete"><?php echo $string['incomplete']; ?></a></div>
-<div class="f"><a href="add_questions_list_status.php?status=Experimental"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Experimental"><?php echo $string['experimental']; ?></a></div>
-<div class="f"><a href="add_questions_list_status.php?status=Beta"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Beta"><?php echo $string['beta']; ?></a></div>
-
+<?php
+foreach ($status_array as $sid => $status) {
+?>
+<div class="f"><a href="add_questions_list_status.php?status=<?php echo $sid ?>"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=<?php echo $sid ?>"><?php echo $status->get_name(); ?></a></div>
+<?php
+}
+?>
 </body>
 </html>
