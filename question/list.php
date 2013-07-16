@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -26,8 +26,12 @@ require_once '../include/staff_auth.inc';
 require_once '../lang/' . $language . '/include/question_types.inc';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/moduleutils.class.php';
+require_once '../classes/question_status.class.php';
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
+
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 $typeSQL = '';
 $type = '';
@@ -75,7 +79,7 @@ if (isset($_GET['checked'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogo: <?php echo $string['questionbank'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -88,7 +92,7 @@ if (isset($_GET['checked'])) {
     .qline:hover {background-color:#eee}
     .qline.highlight {background-color:#B3C8E8}
   </style>
-  
+
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
@@ -118,7 +122,7 @@ if (isset($_GET['checked'])) {
   $display_no = 0;
   $bank_type = '';
   $module_sql = '';
-  
+
   if ($keyword != '%' and $keyword != '' and $type == '%') {
     $parts = explode(';',$keyword);
     $bank_type = ": '" . $parts[1] . "'";
@@ -142,10 +146,10 @@ if (isset($_GET['checked'])) {
       $staff_modules_sql .= "AND users.id=" . $userObject->get_user_ID() . " ";
     }
   }
-  
+
   if ($module_sql != '') {
     $module_sql = 'AND (' . $module_sql .')';
-  } 
+  }
 
   if ($keyword != '%' and $keyword != '') {
     $keyword = ' AND keywordID=' . $parts[0];
@@ -155,15 +159,23 @@ if (isset($_GET['checked'])) {
 
   $hits = 0;
   $display_no = 0;
-  
+
+  $retired_in = array();
+  foreach ($status_array as $status) {
+    if ($status->get_retired()) {
+      $retired_in[] = $status->id;
+    }
+  }
+  $retired_in = implode(',', $retired_in);
+
   $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, status FROM (users, questions, questions_modules)";
   if ($keyword != '%' and $keyword != '') {
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }
   if ($state_checked == 'true') {
-    $query_string .= " WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql AND users.id=questions.ownerID AND ownerID=" . $userObject->get_user_ID() . " $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql AND users.id=questions.ownerID AND ownerID=" . $userObject->get_user_ID() . " $typeSQL $keyword AND status NOT IN ($retired_in) AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   } else {
-    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND users.id=questions.ownerID $module_sql $staff_modules_sql $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND users.id=questions.ownerID $module_sql $staff_modules_sql $typeSQL $keyword AND status NOT IN ($retired_in) AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   }
   $search_results = $mysqli->prepare($query_string);
   $search_results->execute();
@@ -192,7 +204,7 @@ if (isset($_GET['checked'])) {
       echo "<td></td>";
     }
     $tmp_leadin = $leadin;
-    
+
     if (strpos($tmp_leadin,'class="mee"') === false) {
       $tmp_leadin = strip_tags($tmp_leadin);                                     // No equation, strip all tags
       if (strlen($tmp_leadin) > 160) {
@@ -202,7 +214,7 @@ if (isset($_GET['checked'])) {
       $tmp_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($tmp_leadin,"<div>,<span>"))));
       $tmp_leadin = preg_replace('/ style="[\w-,:; \']*"/i', '', $tmp_leadin);   // Equation present, strip some formatting
     }
-    
+
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';
     if ($userObject->has_role('Demo')) {
       $owner = 'Dr J, Bloggs';
@@ -212,7 +224,7 @@ if (isset($_GET['checked'])) {
     echo "<td class=\"d\">$tmp_leadin <span class=\"owner\">($owner)</span></td>";
     echo "<td class=\"d\" onclick=\"qOff()\"><nobr>" . $string[$q_type] . "</nobr></td>";
     echo "<td class=\"d\" onclick=\"qOff()\">$last_edited</td>\n";
-    echo "<td class=\"d\" onclick=\"qOff()\">" . $string[strtolower($status)] . "</td></tr>\n";
+    echo "<td class=\"d\" onclick=\"qOff()\">" . $status_array[$status]->get_name() . "</td></tr>\n";
     $display_no++;
   }
   $search_results->close();
