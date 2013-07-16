@@ -165,6 +165,17 @@ if (!isset($_POST['submit'])) {
 
     $save_ok = true;
 
+    // Get question statuses
+    $default_status = -1;
+    $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+    // Set copies of retired questions to default statuses
+    foreach ($status_array as $tmp_status) {
+      if ($tmp_status->get_is_default()) {
+        $default_status = $tmp_status->id;
+        break;
+      }
+    }
+
     while ($result->fetch()) {
 
       $o_result = $mysqli->prepare("SELECT * FROM options WHERE o_id=? ORDER BY id_num");
@@ -197,17 +208,8 @@ if (!isset($_POST['submit'])) {
         }
       }
 
-      // Get question statuses
-      $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       if ($status_array[$status]->get_retired()) {
-        $new_status = -1;
-        // Set copies of retired questions to default statuses
-        foreach ($status_array as $tmp_status) {
-          if ($tmp_status->get_is_default()) {
-            $new_status = $tmp_status->id;
-            break;
-          }
-        }
+        $new_status = $default_status;
       } else {
         $new_status = $status;
       }
