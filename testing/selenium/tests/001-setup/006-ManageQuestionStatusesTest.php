@@ -31,7 +31,6 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click('id=retired');
     $this->click('id=is_default');
     $this->click('id=display_warning');
-    $this->type('id=colour', '#00ff00');
     $this->click('name=submit');
     $this->waitForPageToLoad('30000');
     $this->assertTextPresent('Short Lived Status');
@@ -72,7 +71,6 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
 
     $this->assertElementValueContains("id=name", "Short Lived Status");
     $this->assertCssCount('css=input[@type="checkbox"]:checked', 6);
-    $this->assertElementValueContains('id=colour', '#00ff00');
 
     $this->type("id=name", "Short Lived Status2");
     $this->click('id=exclude_marking');
@@ -81,7 +79,6 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click('id=change_locked');
     $this->click('id=validate');
     $this->click('id=display_warning');
-    $this->type('id=colour', '#ff0000');
     $this->click("name=submit");
     $this->waitForPageToLoad("30000");
 
@@ -92,7 +89,6 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
 
     $this->assertElementValueContains("id=name", "Short Lived Status2");
     $this->assertCssCount('css=input[@type="checkbox"]:checked', 0);
-    $this->assertElementValueContains('id=colour', '#ff0000');
 
     $this->type("id=name", "Short Lived Status3");
     $this->click("name=submit");

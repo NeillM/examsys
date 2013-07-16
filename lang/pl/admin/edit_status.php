@@ -15,3 +15,11 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/admin/status_shared.php';
+
+//Colour picker
+$string['colour'] = 'Colour';
+$string['themecolours'] = 'Theme Colours';
+$string['standardcolours'] = 'Standard Colours';
+$string['more'] = 'More...';
+$string['cancel'] = 'Cancel';
+$string['OK'] = 'OK';
