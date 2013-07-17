@@ -45,4 +45,6 @@ $string['secs'] = 'sec.';
 $string['papernotfound'] = 'Nie odnaleziono arkusza';
 $string['requestedpaper'] = 'Wybrany arkusz nie jest dostępny.';
 $string['guestaccount'] = 'Konto gościa';
+$string['metadata_msg'] = "Your '%s' does not match '%s'.";
+$string['timeexpired'] = 'Remaining time has now expired.';
 ?>

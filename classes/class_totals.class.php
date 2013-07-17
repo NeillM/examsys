@@ -206,8 +206,6 @@ class ClassTotals {
 
     $this->load_results();                                                                                    // Load the student data
 
-    $this->load_late_cohort();                                                                                // Get any late users
-
     $this->adjust_marks();                                                                                    // Scale marks (random marks or standards setting)
 
     $this->add_rank();                                                                                        // Add in rank data.
@@ -215,8 +213,6 @@ class ClassTotals {
     $this->convert_moduleIDs();                                                                               // Convert Module IDs into codes
 
     $this->flag_subpart();                                                                                    // Used to flag subsets of the cohort (i.e. top 33%)
-
-    $this->add_late_students();                                                                               // Add in late users into main dataset
 
     $this->add_absent_students();                                                                             // Add any absent students into main dataset
 
@@ -428,9 +424,7 @@ class ClassTotals {
     return $cranked;
   }
 
-  private function writeUserResults($tmp, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp) {
-    $this->user_results[$user_number] = $tmp;
-
+  private function writeUserResults($user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp) {
     $this->user_results[$user_number]['mark'] = round($tmp_user_mark, 1);
     $this->user_results[$user_number]['mark_array'] = $tmp_user_mark_array;
     if ($this->total_marks == 0) {
@@ -443,18 +437,19 @@ class ClassTotals {
     $this->user_results[$user_number]['visible']          = true;    // Default to visible unless switched off below.
 
     if ($this->demo) {
-      $this->user_results[$user_number]['surname']     = demo_replace($tmp['surname'], $this->demo);
-      $this->user_results[$user_number]['initials']    = demo_replace($tmp['initials'], $this->demo);
-      $this->user_results[$user_number]['first_names'] = demo_replace($tmp['first_names'], $this->demo);
-      $this->user_results[$user_number]['email']       = demo_replace($tmp['email'], $this->demo);
-      $this->user_results[$user_number]['student_id']  = demo_replace_number($tmp['student_id'], $this->demo);
+      $this->user_results[$user_number]['surname']     = demo_replace($this->user_results[$user_number]['surname']);
+      $this->user_results[$user_number]['initials']    = demo_replace($this->user_results[$user_number]['initials']);
+      $this->user_results[$user_number]['first_names'] = demo_replace($this->user_results[$user_number]['first_names']);
+      $this->user_results[$user_number]['email']       = demo_replace($this->user_results[$user_number]['email']);
+      $this->user_results[$user_number]['student_id']  = demo_replace_number($this->user_results[$user_number]['student_id']);
     }
 
     // Add metadata
+    $userID = $this->user_results[$user_number]['userID'];
     if (!empty($this->metadata_array['types'])) {
       foreach ($this->metadata_array['types'] as $type) {
-        if (isset($this->metadata_array['students'][$tmp['userID']][$type]) ) {
-          $this->user_results[$user_number]['meta_' . $type] = $this->metadata_array['students'][$tmp['userID']][$type];
+        if (isset($this->metadata_array['students'][$userID][$type]) ) {
+          $this->user_results[$user_number]['meta_' . $type] = $this->metadata_array['students'][$userID][$type];
         } else {
           $this->user_results[$user_number]['meta_' . $type] = '';
         }
@@ -472,12 +467,10 @@ class ClassTotals {
       }
       $i++;
     }
-
+    
     if (isset($this->student_cohort)) {
-      $this->check_and_clear_cohort($tmp['username']);
+      $this->check_and_clear_cohort($this->user_results[$user_number]['username']);
     }
-
-    $user_number++;
   }
 
   private function find_random_question($q_id, &$tmp_q) {
@@ -546,7 +539,7 @@ class ClassTotals {
       $question = $this->paper_buffer[$q_id];
     }
     
-    if ($question['status'] == 'Experimental') {
+    if (isset($question['status']) and $question['status'] == 'Experimental') {
       $tmp_exclude = '1111111111111111111111111111111111111111';
     }
 
@@ -774,6 +767,10 @@ class ClassTotals {
 
     $this->q_medians[$q_id][] = $tmp_mark;
     
+    if ($q_id == 102394) {
+      var_dump($tmp_mark);
+    }
+    
     return $tmp_mark;
   }
 
@@ -941,10 +938,7 @@ class ClassTotals {
     $result->execute();
     $result->bind_result($metadataID, $userID, $title, $surname, $first_names, $display_started, $started);
     while ($result->fetch()) {
-      //$this->log_late[$userID] = $title . ' ' .  $surname . ', ' . $first_names;
       $this->log_late[$metadataID] = $title . ' ' .  $surname . ', ' . $first_names;
-      $this->log_late_missing_users[$userID]['display_started'] = $display_started;
-      $this->log_late_missing_users[$userID]['started'] = $started;
     }
     $result->close();
   }
@@ -1057,225 +1051,111 @@ class ClassTotals {
       $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
     }
 
+    $data_array = array();
+    $metadataids = array();
+    
+    // Load started records from 'log_metadata'.
+    if ($this->paper_type == '2') {
+      $result = $this->db->prepare("SELECT log_metadata.id, users.id, username, roles, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, student_id, attempt, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, student_grade FROM log_metadata, users LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
+    } else {
+      $result = $this->db->prepare("SELECT log_metadata.id, users.id, username, roles, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, student_id, attempt, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, student_grade FROM log_metadata, users LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND paperID = ? AND grade LIKE ? $roles_sql AND started >= ? AND started <= ?");
+    }
+    $result->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
+    $result->execute();
+    $result->bind_result($metadataID, $userID, $username, $roles, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $student_id, $attempt, $display_started, $student_grade);
+    while ($result->fetch()) {
+      $tmp_name = trim(str_replace("'","",$surname) . ',' . $first_names);
+      if ($lab_name == '') {
+        $room = '<span style="color:#808080">&lt;unknown&gt;</span>';
+      } else {
+        $room = $lab_name;
+      }
+      $this->user_results[$metadataID] = array('metadataID'=>$metadataID, 'userID'=>$userID, 'username'=>$username, 'roles'=>$roles, 'year'=>$year, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'name'=>$tmp_name, 'email'=>$email, 'gender'=>$gender, 'ipaddress'=>$ipaddress, 'room'=>$room, 'student_id'=>$student_id, 'attempt'=>$attempt, 'visible'=>true, 'display_started'=>$display_started, 'student_grade'=>$student_grade, 'mark'=>0, 'percent'=>0, 'questions'=>0, 'duration'=>0, 'marking_complete'=>true, 'module'=>'', 'paper_type'=>$this->paper_type);
+      $metadataids[] = $metadataID;
+    }
+    $result->close();
+    
+    unset($metadataID);
+    
     $i                    = 0;
-    $user_no              = 0;
-    $tmp_mark             = 0;
-    $user_duration        = 0;
-    $marking_complete     = 1;
     $old_screen           = 0;
     $old_duration         = 0;
-    $old_userID           = '';
-    $old_started          = '';
+    $old_metadataID       = 0;
+    $user_duration        = 0;
+    $marking_complete     = 1;
+    $tmp_mark             = 0;
     $tmp_user_mark_array  = array();
-    $tmp_array            = array();
-    $this->user_results   = array();
     $log_data             = array();
-
-    // Get log data.
-    if ($this->paper_type == '0') {
-      $sql = '(SELECT log0.id
-                        , log0.q_id
-                        , 0 AS paper_type
-                        , grade
-                        , roles
-                        , screen
-                        , duration
-                        , started AS order_started
-                        , user_answer
-                        , DATE_FORMAT(started, "' . $this->config->get('cfg_long_date_time') . '") AS display_started
-                        , year
-                        , title
-                        , surname
-                        , initials
-                        , first_names
-                        , email
-                        , gender
-                        , ipaddress
-                        , lab_name
-                        , username
-                        , users.id
-                        , student_id
-                        , user_answer
-                        , q_type
-                        , log_metadata.userID
-                        , mark
-                        , attempt
-                        , metadataID
-                      FROM
-                          log0, log_metadata, questions, users
-                      LEFT JOIN
-                          sid
-                      ON
-                          users.id = sid.userID
-                      WHERE
-                          log_metadata.userID = users.id
-                      AND
-                          log0.metadataID = log_metadata.id
-                      AND
-                          log0.q_id    = questions.q_id
-                      AND
-                          paperID = ?
-                      AND
-                          grade LIKE ?
-                      ' . $roles_sql . '
-                      AND
-                          started >= ?
-                      AND
-                          started <= ? )
-                UNION ALL
-                    ( SELECT
-                          log1.id
-                        , log1.q_id
-                        , 1 AS paper_type
-                        , grade
-                        , roles
-                        , screen
-                        , duration
-                        , started AS order_started
-                        , user_answer
-                        , DATE_FORMAT(started, "' . $this->config->get('cfg_long_date_time') . '" ) AS display_started
-                        , log_metadata.year
-                        , title
-                        , surname
-                        , initials
-                        , first_names
-                        , email
-                        , gender
-                        , ipaddress
-                        , lab_name
-                        , username
-                        , users.id
-                        , student_id
-                        , user_answer
-                        , q_type
-                        , log_metadata.userID
-                        , mark
-                        , attempt
-                        , metadataID
-                      FROM
-                        (log1, log_metadata, questions, users)
-                      LEFT JOIN
-                            sid
-                      ON
-                            users.id = sid.userID
-                      WHERE
-                            log_metadata.userID = users.id
-                      AND
-                            log1.metadataID = log_metadata.id
-                      AND
-                            log1.q_id    = questions.q_id
-                      AND
-                            paperID = ?
-                      AND
-                            grade LIKE ?
-                      '. $roles_sql . '
-                      AND
-                          started >= ?
-                      AND
-                          started <= ?
-                        )
-                      ORDER BY
-                          userID
-                        , order_started
-                        , screen';
-
-      $log_query = $this->db->prepare($sql);
-      $log_query->bind_param('isssisss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate, $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
-    } elseif ($this->paper_type == '2') {
-      $log_query = $this->db->prepare("SELECT log2.id, log2.q_id, 2 AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, attempt, metadataID FROM (log2, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND log2.metadataID = log_metadata.id AND log2.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
-      $log_query->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
+    $tmp_array            = array();
+    
+    // Load 'logx' data.
+    if ($this->paper_type == '0' or $this->paper_type == '1') {
+      $result = $this->db->prepare("(SELECT log0.id, metadataID, 0 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log0, questions WHERE log0.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")) UNION ALL (SELECT log1.id, metadataID, 1 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log1, questions WHERE log1.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . "))");
     } elseif ($this->paper_type == '5') {
-      $log_query = $this->db->prepare("SELECT log5.id, log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, started, NULL AS user_answer, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, NULL AS ipaddress, lab_name, username, users.id, student_id, NULL AS user_answer, q_type, log_metadata.userID, mark, 1 AS attempt, metadataID FROM (log5, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log5.metadataID = log_metadata.id AND log5.q_id = questions.q_id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY userID, started, screen");
-      $log_query->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
+      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, 1 AS screen, 0 AS duration, NULL AS user_answer, q_type, mark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
     } else {
-      $log_query = $this->db->prepare("SELECT log$this->paper_type.id, log$this->paper_type.q_id, $this->paper_type AS paper_type, grade, roles, screen, duration, started, user_answer, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, username, users.id, student_id, user_answer, q_type, log_metadata.userID, mark, attempt, metadataID FROM (log$this->paper_type, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = users.id AND log$this->paper_type.metadataID = log_metadata.id AND log$this->paper_type.q_id = questions.q_id AND paperID = ? AND users.id=log_metadata.userID AND grade LIKE ? $roles_sql AND started>=? AND started<=? ORDER BY userID, started, screen");
-      $log_query->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
+      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
     }
-    $log_query->execute();
-    $log_query->store_result();
-    $log_query->bind_result($log_id, $q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $username, $userID, $student_id, $user_answer, $q_type, $userID, $mark, $attempt, $metadataID);
-
-    while ($log_query->fetch() !== null) {
+    $result->execute();
+    $result->bind_result($log_id, $metadataID, $paper_type, $q_id, $screen, $duration, $user_answer, $q_type, $mark);
+    while ($result->fetch()) {
+      $userID = $this->user_results[$metadataID]['userID'];
       if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
         continue; //this user is not on the module set in repmodule so dont put them in the array
       }
-
-      // Check if user is in log late so that we can catch any users who ONLY have log_late records
-      if (in_array($userID, array_keys($this->log_late_missing_users))) {
-        unset($this->log_late_missing_users[$userID]);
-      }
-
-      if ($old_screen != $screen or $old_userID != $userID or $old_started != $started) {
+      
+      if ($old_screen != $screen or $old_metadataID != $metadataID) {
         $user_duration += $old_duration;
       }
-      if (($old_userID != $userID) or ($old_started != $started)) {
-        if ($old_userID != '') {
-          $this->writeUserResults($tmp_array, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
-          $tmp_mark = 0;
-          $tmp_user_mark_array = array();
-          $user_duration = 0;
-          $marking_complete = 1;
-        }
-        $tmp_array = array();
-        $tmp_array['started']   = $started;
-        $tmp_array['username']  = $username;
-        $tmp_array['userID']    = $userID;
-        $tmp_array['questions'] = 0;
-
+      if ($old_metadataID != $metadataID and $old_metadataID != 0) {
         if (isset($this->user_modules[$userID]['idMod'])) {
-          $tmp_array['module'] = $this->user_modules[$userID]['idMod'];
+          $this->user_results[$old_metadataID]['module'] = $this->user_modules[$userID]['idMod'];
         } else {
-          $tmp_array['module'] = '';
+          $this->user_results[$old_metadataID]['module'] = '';
         }
-
-        $tmp_array['metadataID']      = $metadataID;
-        $tmp_array['attempt']         = $attempt;
-        $tmp_array['student_grade']   = $grade;
-        $tmp_array['roles']           = $tmp_roles;
-        $tmp_array['year']            = $year;
-        $tmp_array['display_started'] = $display_started;
-        $tmp_array['title']           = $title;
-        $tmp_array['name']            = trim(str_replace("'","",$surname) . ',' . $first_names);
-        $tmp_array['surname']         = $surname;
-        $tmp_array['initials']        = $initials;
-        $tmp_array['first_names']     = $first_names;
-        $tmp_array['email']           = $email;
-        $tmp_array['student_id']      = $student_id;
-        $tmp_array['gender']          = $gender;
-        $tmp_array['ipaddress']       = $ipaddress;
-        $tmp_array['room']            = $lab_name;
-        if ($tmp_array['room'] == '') {
-          $tmp_array['room'] = '<span style="color:#808080">&lt;unknown&gt;</span>';
-        }
-        $tmp_array['duration']        = $user_duration;
-        $tmp_array['paper_type']      = $paper_type;
+     
+        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
+        $tmp_mark = 0;
+        $tmp_user_mark_array = array();
+        $user_duration = 0;
+        $marking_complete = 1;
       }
+      
+      $this->user_results[$metadataID]['questions']++;
+      $this->user_results[$metadataID]['paper_type'] = $paper_type;
+
       $single_mark = $this->getUserMark($q_id, $user_answer, $mark, $tmp_user_mark_array);
       $tmp_mark += $single_mark;
       
+      if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
+      $old_duration   = $duration;
+      $old_screen     = $screen;
+      $old_metadataID = $metadataID;
+
       $log_data[$i]['paper_type'] = $paper_type;
       $log_data[$i]['adjmark']    = $single_mark;
       $log_data[$i]['id']         = $log_id;
       $i++;
-
-      if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
-      $tmp_array['questions']++;
-      $old_userID   = $userID;
-      $old_started  = $started;
-      $old_duration = $duration;
-      $old_screen   = $screen;
     }
-
-    if (!empty($tmp_array)) {
-      if ($this->repmodule == '' or (isset($this->user_modules[$old_userID]['idMod']) and $this->user_modules[$old_userID]['idMod'] == $this->repmodule)) {
+    $result->close();
+    
+    if ($old_metadataID != 0) {
+      if ($this->repmodule == '' or (isset($this->user_modules[$userID]['idMod']) and $this->user_modules[$userID]['idMod'] == $this->repmodule)) {
         $user_duration += $old_duration;
-        $log_query->free_result();
-        $log_query->close();
-        $this->writeUserResults($tmp_array, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
+        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
       }
     }
     
-    if ($this->recache and count($log_data) > 0) {
+    // Re-index the array.
+    $tmp_array = $this->user_results;
+    unset($this->user_results);
+    $i = 0;
+    foreach ($tmp_array as $metID=>$row) {
+      $this->user_results[$i] = $row;
+      $i++;
+    }
+    
+   if ($this->recache and count($log_data) > 0) {
       $this->db->autocommit(false);
 
       $log_query = $this->db->prepare("UPDATE log$paper_type SET adjmark = ? WHERE id = ?");
@@ -1292,48 +1172,8 @@ class ClassTotals {
       $this->db->commit();
       $this->db->autocommit(true);
     }
-    
   }
-
-  private function load_late_cohort() {
-    $this->late_cohort = array();
-    $i = 0;
-    if (count($this->log_late_missing_users) > 0) {
-      // Get students who don't have records in main log
-      $late_id_list = implode(',', array_keys($this->log_late_missing_users));
-
-      $sql = <<< SQL
-    SELECT DISTINCT u.id, u.username, u.title, u.surname, u.first_names, u.initials, sid.student_id, u.grade, '', u.gender
-    FROM users u INNER JOIN sid ON u.id = sid.userID
-    WHERE u.id IN ($late_id_list)
-SQL;
-
-      $result = $this->db->prepare($sql);
-      $result->execute();
-      $result->store_result();
-      $result->bind_result($userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
-      while ($result->fetch()) {
-        $this->late_cohort[$i]['username']         = $tmp_username;
-        $this->late_cohort[$i]['userID']           = $userID;
-        $this->late_cohort[$i]['name']             = trim(str_replace("'","",$surname) . ',' . $first_names);
-        $this->late_cohort[$i]['title']            = $title;
-        $this->late_cohort[$i]['surname']          = demo_replace($surname, $this->demo);
-        $this->late_cohort[$i]['first_names']      = demo_replace($first_names, $this->demo);
-        $this->late_cohort[$i]['initials']         = demo_replace($initials, $this->demo);
-        $this->late_cohort[$i]['student_id']       = demo_replace_number($student_id, $this->demo);
-        $this->late_cohort[$i]['student_grade']    = $grade;
-        $this->late_cohort[$i]['module']           = $moduleid;
-        $this->late_cohort[$i]['gender']           = $gender;
-        $this->late_cohort[$i]['display_started']  = $this->log_late_missing_users[$userID]['display_started'];
-        $this->late_cohort[$i]['started']          = $this->log_late_missing_users[$userID]['started'];
-        $this->late_cohort[$i]['year']             = '';
-
-        $i++;
-      }
-      $result->close();
-    }
-  }
-
+  
   private function add_rank() {
     // Put the whole array in marks order.
     $sortby = 'mark';
@@ -1372,48 +1212,6 @@ SQL;
       }
     } else {
       $this->cohort_size = $user_no;
-    }
-  }
-
-  private function add_late_students() {
-    $user_no = count($this->user_results);
-
-    $late_cohort_size = count($this->late_cohort);
-    if ($late_cohort_size > 0) {
-      for ($i=0; $i < $late_cohort_size; $i++) {
-        $late_user = $this->late_cohort[$i];
-        if ($this->absent == 1) {
-          //check_and_clear_cohort($late_user['username']);
-        }
-        $this->user_results[$user_no]['name']             = $late_user['name'];
-        $this->user_results[$user_no]['mark']             = 0;
-        $this->user_results[$user_no]['percent']          = 0;
-        $this->user_results[$user_no]['started']          = '';
-        $this->user_results[$user_no]['username']         = $late_user['username'];
-        $this->user_results[$user_no]['userID']           = $late_user['userID'];
-        $this->user_results[$user_no]['student_grade']    = $late_user['student_grade'];
-        $this->user_results[$user_no]['module']           = $late_user['module'];
-        $this->user_results[$user_no]['display_started']  = $late_user['display_started'];
-        $this->user_results[$user_no]['started']          = $late_user['started'];
-        $this->user_results[$user_no]['attempt']          = 1;
-        $this->user_results[$user_no]['marking_complete'] = 0;
-        $this->user_results[$user_no]['title']            = $late_user['title'];
-        $this->user_results[$user_no]['surname']          = $late_user['surname'];
-        $this->user_results[$user_no]['initials']         = $late_user['initials'];
-        $this->user_results[$user_no]['first_names']      = $late_user['first_names'];
-        $this->user_results[$user_no]['student_id']       = $late_user['student_id'];
-        $this->user_results[$user_no]['gender']           = $late_user['gender'];
-        $this->user_results[$user_no]['ipaddress']        = '';
-        $this->user_results[$user_no]['duration']         = 0;
-        $this->user_results[$user_no]['questions']        = '';
-        $this->user_results[$user_no]['paper_type']       = $this->paper_type;
-        $this->user_results[$user_no]['room']             = '';
-        $this->user_results[$user_no]['visible']          = true;    // Default to visible unless switched off below.
-        $this->user_results[$user_no]['roles']            = 'Student';
-        $this->user_results[$user_no]['rank']             = 99999999999;
-        $this->user_results[$user_no]['year']             = '';
-        $user_no++;
-      }
     }
   }
 

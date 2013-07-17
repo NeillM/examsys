@@ -45,4 +45,6 @@ $string['secs'] = 'secs';
 $string['papernotfound'] = 'Paper not Found';
 $string['requestedpaper'] = 'The requested paper cannot be found.';
 $string['guestaccount'] = 'Guest Account';
+$string['metadata_msg'] = "Your '%s' does not match '%s'.";
+$string['timeexpired'] = 'Remaining time has now expired.';
 ?>

@@ -39,8 +39,8 @@ function is_demo($userObj) {
 * @return the string obscured as 'Abcde' for as long as the original string was
 *
 */
-function demo_replace($text, $demo_on, $capitalise=true) {
-  if ($demo_on == true) {
+function demo_replace($text, $demo_on=true, $capitalise=true) {
+  if ($demo_on) {
     $new_text = '';
     if ($capitalise) {
       $upper_flag = true;
@@ -73,8 +73,8 @@ function demo_replace($text, $demo_on, $capitalise=true) {
 * @return the number obscured as '12345678'
 *
 */
-function demo_replace_number($number, $demo_on) {
-  if ($demo_on == true) {
+function demo_replace_number($number, $demo_on=true) {
+  if ($demo_on) {
     return '12345678';
   } else {
     return $number;
@@ -90,8 +90,8 @@ function demo_replace_number($number, $demo_on) {
 * @return the string obscured as a number of hashes
 *
 */
-function demo_replace_username($username, $demo_on) {
-  if ($demo_on == true) {
+function demo_replace_username($username, $demo_on=true) {
+  if ($demo_on) {
     $split_username = explode('@',$username);
     $username = '#######';
     

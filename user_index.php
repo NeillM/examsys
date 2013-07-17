@@ -41,6 +41,75 @@ require_once './classes/paperproperties.class.php';
 
 check_var('id', 'GET', true, false, false);
 
+function load_attempts($test_type, $paperID, $userObj, $db) {
+  $prev_attempts = array();
+
+  $result = $db->prepare("SELECT MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, ? AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log_metadata lm LEFT JOIN log$test_type l ON l.metadataID = lm.id WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
+  $result->bind_param('iii', $test_type, $paperID, $userObj->get_user_ID());
+  $result->execute();
+  $result->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
+  while ($result->fetch()) {
+    $prev_attempts[$log_started] = array('max_screen'=>$log_max_screen, 'max_mark'=>$log_mark, 'paper_type'=>$log_paper_type, 'temp_date'=>$log_temp_date);
+  }
+  $result->close();
+  
+  if ($test_type == '0') {
+    // If type is Formative query the Progress Test log table as well and add into array if max screen is not blank.
+    $result = $db->prepare("SELECT MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
+    $result->bind_param('ii', $paperID, $userObj->get_user_ID());
+    $result->execute();
+    $result->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
+    while ($result->fetch()) {
+      if ($log_max_screen > 0) {
+        $prev_attempts[$log_started] = array('max_screen'=>$log_max_screen, 'max_mark'=>$log_mark, 'paper_type'=>$log_paper_type, 'temp_date'=>$log_temp_date);
+      }
+    }
+    $result->close();
+  }
+
+  return $prev_attempts;
+}
+
+function is_timedate_ok($startdate, $enddate) {
+  if (time() < $startdate or time() > $enddate) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function is_timedate_ok_and_within_15min($startdate, $enddate) {
+  if ((time()+(15*60)) < $startdate or time() > $enddate) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function has_time_remaining($propertyObj, $remaining_time) {
+  if ($propertyObj->get_exam_duration() === null) {
+    return true;
+  }
+  
+  if ($remaining_time === false) {
+    return true;
+  }
+  
+  if ((int)$remaining_time === 0) {
+    return false;
+  }
+  
+  return true;
+}
+
+function have_previously_started($attempts) {
+  if (count($attempts) == 0) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 function display_duration($normal, $extra_time_mins, $special_needs_percentage) {
   $mins = $normal;
   if ($extra_time_mins != NULL) $mins .= ' + ' . $extra_time_mins;
@@ -249,7 +318,8 @@ if ($exam_duration !== null) {
     }
     document.getElementById('start').value = '<?php echo $string['restart']; ?>';
   }
-  function reviewPaper(started,type) {
+  
+  function reviewPaper(started, type) {
     exam = window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       exam.focus();
@@ -315,11 +385,13 @@ if ($textsize > 120) {
 
   // Display any metadata
   $metadata_security = true;
+  $metadata_msg = '';
   $metadata = Paper_utils::get_metadata($property_id, $mysqli);
   foreach ($metadata as $security_type=>$security_value) {
     $html = '';
     if (!$userObject->has_metadata($modIDs, $security_type, $security_value)) {
       $metadata_security = false;
+      $metadata_msg = sprintf($string['metadata_msg'], $security_type, $security_value);
       $html = ' class="warn"';
     }
     echo "<tr><td class=\"f\">$security_type</td><td$html>$security_value</td><td></td><td></td></tr>\n";
@@ -353,7 +425,13 @@ if ($textsize > 120) {
        <td></td>
        <td></td>
        <td class="f"><?php echo $string['timeremaining'] ?></td>
-       <td><?php echo $remaining_minutes .' '. $string['mins'] . ' ' . $remaining_seconds  .' '. $string['secs']?></td>
+       <?php
+       if ($remaining_time == 0) {
+         echo '<td><span style="background-color:#C00000; color:white">&nbsp;' . $remaining_minutes .' '. $string['mins'] . ' ' . $remaining_seconds  .' '. $string['secs'] . '&nbsp;</span></td>';
+       } else {
+         echo '<td>' . $remaining_minutes .' '. $string['mins'] . ' ' . $remaining_seconds  .' '. $string['secs'] . '</td>';
+       }
+       ?>
     </tr>
 
     <?php
@@ -367,8 +445,51 @@ if ($textsize > 120) {
     echo "</object></td></tr>\n";
   }
 
+  $prev_attempts = load_attempts($test_type, $property_id, $userObject, $mysqli);
+
+  if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+    $start_available = false;
+    $remaining_available = false;
+    $start_label = $string['start'];
+    
+    switch ($test_type) {
+      case '0':
+       $start_available = is_timedate_ok($paper_start, $paper_end);
+       $remaining_available = true;
+       break;
+      case '1':
+       if (have_previously_started($prev_attempts)) {
+         $start_label = $string['restart'];
+       }
+       $start_available = is_timedate_ok($paper_start, $paper_end);
+       $remaining_available = has_time_remaining($propertyObj, $remaining_time);
+       break;
+      case '2':
+       if (have_previously_started($prev_attempts)) {
+         $start_label = $string['restart'];
+       }
+       $start_available = is_timedate_ok_and_within_15min($paper_start, $paper_end);
+       $remaining_available = has_time_remaining($propertyObj, $remaining_time);
+       break;
+      case '3':
+       $start_available = is_timedate_ok($paper_start, $paper_end);
+       $remaining_available = has_time_remaining($propertyObj, $remaining_time);
+       break;
+    }
+  }
+
   echo '<tr><td style="text-align:center" colspan="4"><br />';
-  if ($test_type == 2) echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
+  
+  if ($start_available === false) {
+    echo "<div style=\"color:#C00000;font-size:90%\">" . $string['papernotavailable'] . "</div>\n";
+  } elseif ($remaining_available === false) {
+    echo "<div style=\"color:#C00000;font-size:90%\">" . $string['timeexpired'] . "</div>\n";
+  } elseif ($metadata_security === false) {
+    echo "<div style=\"color:#C00000;font-size:90%\">$metadata_msg</div>\n";
+  } else {
+    echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
+  }
+  
   echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['help'] . "\" name=\"help\" onclick=\"launchHelp(31);\" onkeypress=\"launchHelp(31);\" />\n";
   if ($test_type == 2) {
     $paper_utils = Paper_utils::get_instance();
@@ -378,62 +499,35 @@ if ($textsize > 120) {
   }
 
   $display_date = '';
-
-  if ($test_type == 0) {
-    $log_info = $mysqli->prepare("SELECT l.screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, 0 AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.paperID = ? AND lm.userID = ? GROUP BY started DESC, l.screen UNION SELECT l.screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.paperID = ? AND lm.userID = ? GROUP BY started DESC, l.screen");
-    $log_info->bind_param('iiii', $property_id, $userObject->get_user_ID(), $property_id, $userObject->get_user_ID());
-  } else {
-    $log_info = $mysqli->prepare("SELECT MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, ? AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log$test_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
-    $log_info->bind_param('iii', $test_type, $property_id, $userObject->get_user_ID());
-  }
-  $log_info->execute();
-  $log_info->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
-  $log_info->store_result();
+  
   if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
     echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
     if (time() < $paper_start or time() > $paper_end) {
       echo '<div style="font-size:90%;color:#C00000"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailablestudents'] . '</div>';
     }
   } else {
-    $hide_restart = true;
-
-    if (($navigation == 1 and time() < $paper_end) or ($navigation == 0 and $paper_screens > $log_max_screen)) {
-      $hide_restart = false;
-    }
-
-    // Has the student run out of time or clicked the 'Finish' button?
-    $no_time_left = ($display_remaining_time === true and (int)$remaining_time === 0);
-
-    if ($no_time_left) {
-      $hide_restart = true;
-    }
-
-    if ($hide_restart == true or $metadata_security == false) {
-      $disabled = "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" disabled />\n";
-      echo $disabled;
-    } elseif ($test_type > 0 and $log_info->num_rows > 0) {
-      echo "<input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
-    } elseif ($test_type != 2 and (time() < $paper_start or time() > $paper_end)) {
-      echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
-      echo '<br /><div class="w"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailable'] . '</div>';
-    } elseif ($test_type == 2 and (time()+(15*60)) < $paper_start or time() > $paper_end) {
-      echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
-      echo '<br /><div class="w"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailable'] . '</div>';
+    if ($start_available and $remaining_available and $metadata_security) {
+      echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
     } else {
-      echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
+      echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
     }
   }
   echo '<br />&nbsp;';
 
-  if ($test_type != 2) {
+  if ($test_type != '2') {
     // Display previous attempts
-    $old_started = '';
-    $old_screen = 0;
-    $temp_no = 0;
-    $mark_total = 0;
-    $adj_percent = 0;
-    if ($log_info->num_rows > 0) {
-      while ($log_info->fetch()) {
+    if (count($prev_attempts) > 0) {
+      $old_started = '';
+      $old_screen = 0;
+      $temp_no = 0;
+      $mark_total = 0;
+      $adj_percent = 0;
+      
+      foreach ($prev_attempts as $log_started=>$prev_details) {
+        $log_max_screen = $prev_details['max_screen'];
+        $log_mark       = $prev_details['max_mark'];
+        $log_paper_type = $prev_details['paper_type'];
+        $log_temp_date  = $prev_details['temp_date'];
         if ($temp_no == 0) {
           $old_started = $log_started;
           echo '<hr />';
@@ -462,7 +556,6 @@ if ($textsize > 120) {
         $rerun_date = $log_started;
         $paper_type = $log_paper_type;
       }
-      $log_info->close();
 
       if ($test_type == 0) {
         displayPrevTake($mark_total, $adj_percent, $total_random_mark, $marking, $display_date, $paper_type);

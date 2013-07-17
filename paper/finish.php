@@ -85,8 +85,11 @@ $password                   = $propertyObj->get_password();
 
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
-$log_type = $paper_type;
-$original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
+if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and isset($_GET['type'])) {
+  $log_type = $_GET['type'];  // Override from the GET if member of staff.
+} else {
+  $log_type = $paper_type;    // Use current paper type.
+}
 $low_bandwidth = 0;
 
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
@@ -141,7 +144,7 @@ $is_preview_mode_first_launch = ($is_preview_mode == true and isset($_GET['mode'
 //are we in a staff single question testmode
 $is_question_preview_mode = (isset($_GET['q_id']));
 
-$is_exam_review_mode = ($userObject->has_role('Staff') and isset($_GET['userid']) and $_GET['userid'] != $userObject->get_user_ID());
+$is_exam_review_mode = ($userObject->has_role('Staff') and isset($_GET['userID']) and $_GET['userID'] != $userObject->get_user_ID());
 
 if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_mode) {
   // Turn on all feedback if staff and a student exam script is being reviewed.
@@ -153,19 +156,15 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
   $is_exam_review_mode        = true;
 }
 
-if (isset($_GET['userid'])) {
+if (isset($_GET['userID'])) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
-    $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
+    $log_metadata = new LogMetadata($_GET['userID'], $paperID, $mysqli);
   } else {   // Student is hacking the userid parameter
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
 } else {
   $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
-}
-if (!$is_exam_review_mode and !$is_question_preview_mode) {
-  //only update log metadata if we are ending an exam
-  $log_metadata->set_completed_to_now();
 }
 if (isset($_GET['metadataID'])) {
   $log_metadata->get_record($_GET['metadataID']);
@@ -175,8 +174,10 @@ if (isset($_GET['metadataID'])) {
   $metadataid = $log_metadata->get_metadata_id();
 }
 
-if (isset($_GET['type'])) $log_type = $_GET['type'];
-
+if (!$is_exam_review_mode and !$is_question_preview_mode) {
+  //only update log metadata if we are ending an exam
+  $log_metadata->set_completed_to_now();
+}
 require '../config/finish.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -257,10 +258,10 @@ require '../config/finish.inc';
     record_marks($paperID, $mysqli, $userObject->get_user_ID(), $paper_type, $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $metadataid, $preview_q_id);
   }
 
-  if (isset($_GET['userid'])) {
-    $temp_userID = $_GET['userid'];
+  if (isset($_GET['userID'])) {
+    $temp_userID = $_GET['userID'];
     $result = $mysqli->prepare("SELECT title, initials, surname, student_id FROM users LEFT JOIN sid ON users.id = sid.userID WHERE id = ? LIMIT 1");
-    $result->bind_param('i', $_GET['userid']);
+    $result->bind_param('i', $_GET['userID']);
     $result->execute();
     $result->store_result();
     $result->bind_result($tmp_title, $tmp_initials, $tmp_surname, $tmp_student_id);
@@ -275,13 +276,6 @@ require '../config/finish.inc';
   }
   $old_q_id = 0;
   $old_screen = 0;
-  if (isset($_GET['metadataID'])) {
-    //$sessionid = $_GET['previous'];
-    $sessionid = $log_metadata->get_session_id();
-    $log_type = $_GET['log_type'];
-  } else {
-    $sessionid = $_POST['sessionid'];
-  }
 
   if (!isset($_GET['q_id'])) {
     echo $top_table_html;
@@ -290,7 +284,7 @@ require '../config/finish.inc';
       echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
       $tmp_student_name = $tmp_title . ' ' . demo_replace($tmp_surname, $demo) . ', ' . demo_replace($tmp_initials, $demo);
       $tmp_student_id = demo_replace_number($tmp_student_id, $demo);
-      if (isset($_GET['userid'])) {
+      if (isset($_GET['userID'])) {
         echo " for $tmp_student_name ($tmp_student_id)";
       }
       echo '</span>';
@@ -312,7 +306,7 @@ require '../config/finish.inc';
   }
 
   if ($show_feedback) {
-    display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $metadataid, $mysqli, $preview_q_id);
+    display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $metadataid, $mysqli, $preview_q_id);
 
     // Record the fact that the script has been viewed.
     $logger = new Logger($mysqli);

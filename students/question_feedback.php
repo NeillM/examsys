@@ -73,10 +73,9 @@ if (isset($_GET['userid'])) {
   $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 }
 $log_metadata->get_record();
-$sessionid = $log_metadata->get_session_id();
 $metadataid = $log_metadata->get_metadata_id();
 
-if ($sessionid === null) {
+if ($metadataid === null) {
   $notice->access_denied($mysqli, $string, $string['nottaken'], true, true);
 }
 
@@ -182,7 +181,7 @@ require '../config/finish.inc';
   echo $logo_html;
   echo '</table>';
   
-  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $metadataid, $mysqli, $preview_q_id);
+  display_feedback($temp_userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $metadataid, $mysqli, $preview_q_id);
 
   echo "</body>\n</html>";
   $mysqli->close();
