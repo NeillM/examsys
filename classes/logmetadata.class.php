@@ -97,6 +97,7 @@ class LogMetadata {
 
     $stmt->fetch();
     $stmt->close();
+
     $this->populate_start_date_time();
 
     return true;
@@ -113,6 +114,7 @@ class LogMetadata {
     $this->attempt = $attempt;
     $this->lab_name = $lab_name;
     $this->populate_start_date_time();
+    
     $this->save();
 
     return true;
@@ -134,8 +136,8 @@ class LogMetadata {
    * Set time at which the paper was completed for the current user
    */
   public function set_completed_to_now() {
-    $result = $this->db->prepare('UPDATE log_metadata SET completed = NOW() WHERE userID = ? AND paperID = ?');
-    $result->bind_param('ii', $this->userid, $this->paper_id);
+    $result = $this->db->prepare('UPDATE log_metadata SET completed = NOW() WHERE id = ?');
+    $result->bind_param('i', $this->id);
     $result->execute();
     $result->close();
   }
@@ -144,8 +146,18 @@ class LogMetadata {
    * Remove indication that the paper has been completed for the current user
    */
   public function set_completed_to_null() {
-    $result = $this->db->prepare('UPDATE log_metadata SET completed = NULL WHERE userID = ? AND paperID = ?');
-    $result->bind_param('ii', $this->userid, $this->paper_id);
+    $result = $this->db->prepare('UPDATE log_metadata SET completed = NULL WHERE id = ?');
+    $result->bind_param('i', $this->id);
+    $result->execute();
+    $result->close();
+  }
+
+  /**
+   * Set the start time/date to null. Can be used to allow another student attempt on timed papers.
+   */
+  public function set_started_to_null() {
+    $result = $this->db->prepare('UPDATE log_metadata SET started = NULL, completed = NULL WHERE id = ?');
+    $result->bind_param('i', $this->id);
     $result->execute();
     $result->close();
   }
@@ -154,7 +166,7 @@ class LogMetadata {
    * Indicate if the current user has completed the paper
    * @return boolean Has the current user completed the paper
    */
-  public function  is_users_paper_completed() {
+  public function is_users_paper_completed() {
     if (is_null($this->completed)) {
       return false;
     } else {
@@ -176,14 +188,14 @@ class LogMetadata {
     // with the front end javascript timer than Mysql server's NOW()
 
     if ($this->id != null) {
-      //update
-      $query = 'UPDATE log_metadata set ipaddress = ?, attempt = ?, completed = ?, lab_name = ? WHERE id = ?';
+      // Update existing record
+      $query = 'UPDATE log_metadata SET ipaddress = ?, started = ?, attempt = ?, completed = ?, lab_name = ? WHERE id = ?';
       $stmt = $this->db->prepare($query);
-      $stmt->bind_param('sissi', $this->ipaddress, $this->attempt, $this->completed, $this->lab_name, $this->id);
+      $stmt->bind_param('ssissi', $this->ipaddress, $this->session_id, $this->attempt, $this->completed, $this->lab_name, $this->id);
       $stmt->execute();
       $stmt->close();
     } else {
-      //insert
+      // Insert new record
       $query = 'INSERT INTO log_metadata (id, userID, paperID, started, ipaddress, student_grade, year, attempt, completed, lab_name) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
       $stmt = $this->db->prepare($query);
       $stmt->bind_param('iisssiiss', $this->userid, $this->paper_id, $this->session_id, $this->ipaddress, $this->student_grade, $this->year, $this->attempt, $this->completed, $this->lab_name);
@@ -208,6 +220,8 @@ class LogMetadata {
       $this->start_datetime = new DateTime;
       $this->session_id = $this->start_datetime->format('YmdHis');
       $this->start_datetime->format('Y-m-d H:i:s');
+      
+      $this->save();  // Make sure started is updated in the DB.
     }
   }
 

@@ -638,7 +638,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".schools TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".sid TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".sessions TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".standards_setting TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set_questions TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".state TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_help TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
@@ -692,6 +693,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_papers TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".review_comments TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set_questions TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".staff_help TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_help TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
@@ -726,6 +729,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".help_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".help_searches TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".help_tutorial_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".hofstee TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".keywords_question TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".keywords_user TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log0 TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
@@ -770,7 +774,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sid TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sms_imports TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".special_needs TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".standards_setting TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".std_set TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".std_set_questions TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".state TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".student_notes TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".temp_users TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
@@ -1659,13 +1664,9 @@ QUERY;
 
     $this->tableList['ebel'] = <<<QUERY
           CREATE TABLE `ebel` (
-            `id` int(11) NOT NULL auto_increment,
-            `setterID` int(10) unsigned default NULL,
-            `date_set` datetime default NULL,
+            `std_setID` int(10) unsigned NOT NULL,
             `category` char(3) default NULL,
-            `percentage` float default NULL,
-            PRIMARY KEY (`id`),
-            KEY `SETTER_AND_DATE` (`setterID`,`date_set`)
+            `percentage` float default NULL
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1948,16 +1949,11 @@ QUERY;
     $this->tableList['log4'] = <<<QUERY
         CREATE TABLE `log4` (
           `id` int NOT NULL auto_increment,
-          `userID` int(10) unsigned DEFAULT NULL,
-          `started` datetime DEFAULT NULL,
-          `q_paper` mediumint(8) unsigned DEFAULT NULL,
           `q_id` int(11) DEFAULT NULL,
           `rating` text,
           `q_parts` varchar(50) DEFAULT NULL,
-          PRIMARY KEY (`id`),
-          KEY `q_paper` (`q_paper`),
-          KEY `username` (`userID`),
-          KEY `started` (`started`)
+          `log4_overallID` int(11) unsigned DEFAULT NULL,          
+          PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1991,7 +1987,7 @@ QUERY;
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
           UNIQUE KEY `idx_metadataID_qid` (`metadataID`,`q_id`)
-       ) ENGINE=InnoDB AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
+       ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log6'] = <<<QUERY
@@ -2005,7 +2001,7 @@ QUERY;
           `rating` tinyint(4) default NULL,
           PRIMARY KEY (`id`),
           KEY `started` (`started`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log_extra_time'] = <<<QUERY
@@ -2018,7 +2014,7 @@ QUERY;
           `extra_time` int(10) unsigned NOT NULL,
           PRIMARY KEY (`id`),
           UNIQUE KEY `key_lab_id_paper_id_user_id` (`labID`,`paperID`,`userID`)
-        ) ENGINE=InnoDB DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log_lab_end_time'] = <<<QUERY
@@ -2031,7 +2027,7 @@ QUERY;
           `end_time` int(10) unsigned NOT NULL,
           PRIMARY KEY (`id`),
           UNIQUE KEY `key_lab_paper_invig_time` (`labID`,`paperID`,`invigilatorID`,`end_time`)
-        ) ENGINE=InnoDB DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log_late'] = <<<QUERY
@@ -2049,7 +2045,7 @@ QUERY;
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
           UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log_metadata'] = <<<QUERY
@@ -2154,7 +2150,7 @@ QUERY;
           KEY `guideid` (`moduleid`),
           KEY `idx_moduleid_deleted` (`moduleid`,`mod_deleted`),
           KEY `idx_schoolid_deleted` (`schoolid`,`mod_deleted`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['modules_staff'] = <<<QUERY
@@ -2212,7 +2208,7 @@ QUERY;
           `marks_partial` float default NULL,
           PRIMARY KEY (`id_num`),
           KEY `o_id` (`o_id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['paper_feedback'] = <<<QUERY
@@ -2222,7 +2218,7 @@ QUERY;
           `boundary` tinyint(3) unsigned NOT NULL,
           `msg` text,
           PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['paper_metadata_security'] = <<<QUERY
@@ -2259,7 +2255,7 @@ QUERY;
           KEY `question_idx` (`question`),
           KEY `screen` (`screen`),
           KEY `paper_2` (`paper`,`display_pos`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['password_tokens'] = <<<QUERY
@@ -2279,7 +2275,7 @@ QUERY;
           `p` tinyint(4) DEFAULT NULL,
           `d` tinyint(4) DEFAULT NULL,
           KEY `idx_perform_id` (`perform_id`)
-          ) ENGINE=InnoDB DEFAULT CHARSET={$charset};
+          ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['performance_main']  = <<<QUERY
@@ -2292,7 +2288,7 @@ QUERY;
           `taken` date DEFAULT NULL,
           PRIMARY KEY (`id`),
           KEY `idx_q_id` (`q_id`)
-          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset};
+          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['properties'] = <<<QUERY
@@ -2364,7 +2360,7 @@ QUERY;
           PRIMARY KEY (`id`),
           KEY `idx_paperID` (`paperID`),
           KEY `idx_type` (`type`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['question_exclude'] = <<<QUERY
@@ -2429,7 +2425,7 @@ QUERY;
           PRIMARY KEY (`q_id`),
           KEY `idx_owner_deleted` (`ownerID`,`deleted`),
           KEY `idx_deleted` (`deleted`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
 $this->tableList['questions_metadata'] = <<<QUERY
@@ -2797,7 +2793,7 @@ QUERY;
           PRIMARY KEY (`id`),
           KEY `username_index` (`username`),
           KEY `idx_roles` (`roles`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['users_metadata'] = <<<QUERY

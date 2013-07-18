@@ -47,19 +47,19 @@ class Timer {
   /**
    * @return DateTime
    */
-  public function start(){
+  public function start() {
     return $this->log_start_time->insert();
   }
 
   /**
    * @return bool
    */
-  public function is_started(){
-    return ( $this->get_start_time() !== null );
+  public function is_started() {
+    return ($this->get_start_time() !== null);
   }
 
 
-  public function reset(){
+  public function reset() {
     $this->log_start_time->delete();
     $this->start_datetime = null;
   }
@@ -69,17 +69,17 @@ class Timer {
    */
   public function calculate_remaining_time() {
 
-    $exam_duration_mins  = $this->exam_duration;
-    $exam_duration_secs  = $exam_duration_mins * 60;
+    $exam_duration_mins = $this->exam_duration;
+    $exam_duration_secs = $exam_duration_mins * 60;
 
     if ($this->special_needs_percentage > 0) {
       $exam_duration_secs += $exam_duration_secs * $this->special_needs_percentage/100;
     }
 
     // get existing start time or create a new one
-    $start_datetime      = $this->get_start_datetime();
+    $start_datetime = $this->get_start_datetime();
 
-    if($start_datetime === null or $start_datetime === false){
+    if ($start_datetime === null or $start_datetime === false) {
       $remaining_time_secs = $exam_duration_secs;
     } else {
       $start_timestamp     = $start_datetime->getTimestamp();
@@ -89,7 +89,7 @@ class Timer {
       $remaining_time_secs = $exam_duration_secs - $time_elapsed_secs;
     }
 
-    if( $remaining_time_secs < 1 ){
+    if ($remaining_time_secs < 1) {
       $remaining_time_secs = 0;
     }
 
@@ -100,9 +100,9 @@ class Timer {
   /**
    * @return DateTime
    */
-  public  function get_start_datetime(){
+  public function get_start_datetime(){
 
-    if( $this->start_datetime == null ){
+    if ($this->start_datetime == null) {
       $this->start_datetime = $this->log_start_time->get_start_datetime();
     }
 

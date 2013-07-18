@@ -468,6 +468,9 @@ if (!isset($_POST['update'])) {
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
 
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
 
@@ -475,6 +478,12 @@ if (!isset($_POST['update'])) {
     $updater_utils->execute_query($sql, true);
 
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
+    $updater_utils->execute_query($sql, true);
+
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
     $updater_utils->execute_query($sql, true);
 
     // Query and then populate 'std_set' table.

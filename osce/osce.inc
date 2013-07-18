@@ -221,7 +221,7 @@ function load_osce_results($propertyObj, $demo, $configObj, $question_no, $db) {
 function load_osce_medians($db) {
   $q_medians = array();
   
-  $result = $db->prepare("SELECT q_id, rating, userID FROM log4 WHERE started >= ? AND started <= ? AND q_paper = ?");
+  $result = $db->prepare("SELECT q_id, rating, userID FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND started >= ? AND started <= ? AND q_paper = ?");
   $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
   $result->execute();
   $result->bind_result($q_id, $rating, $userID);

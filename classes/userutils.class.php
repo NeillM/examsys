@@ -254,9 +254,15 @@ Class UserUtils {
     $stmt = $db->prepare("SELECT title, surname, initials, first_names, email, roles FROM users WHERE id = ? LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
+    $stmt->store_result();
     $stmt->bind_result($title, $surname, $initials, $first_names, $email, $roles);
+    $exists = ($stmt->num_rows > 0);
     $stmt->fetch();
     $stmt->close();
+    
+    if (!$exists) {  // Return false if no record found for passed ID.
+      return false;
+    }
     
     if (stripos($roles, 'Student') !== false or stripos($roles, 'Graduate') !== false) {
       $stmt = $db->prepare("SELECT student_id FROM sid WHERE userID = ? LIMIT 1");
