@@ -409,13 +409,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
       self::$db->multi_query($query);
       if (self::$db->error) {
-       self::$db->rollback();
         try {
           throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
         }
+        self::$db->rollback();
       }
 
       if (self::$db->errno != 0) {
@@ -425,13 +425,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       while (self::$db->more_results()) {
         self::$db->next_result();
         if (self::$db->error) {
-          self::$db->rollback();
           try {
             throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
           } catch (Exception $e) {
             echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
             echo nl2br($e->getTraceAsString());
           }
+          self::$db->rollback();
         }
       }
     } else {
@@ -446,12 +446,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::$db->multi_query($query);
       if (self::$db->error) {
         try {
-          self::$db->rollback();
           throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
         }
+        self::$db->rollback();
       }
       if (self::$db->errno != 0) {
         self::logWarning(array('503' => $string['logwarning3'] . self::$db->error));
@@ -459,13 +459,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         while (self::$db->more_results()) {
           self::$db->next_result();
           if (self::$db->error) {
-            self::$db->rollback();
             try {
               throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
             } catch (Exception $e) {
               echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
               echo nl2br($e->getTraceAsString());
             }
+            self::$db->rollback();
           }
         }
       }
@@ -516,7 +516,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       @ob_flush();
       @flush();
       if (self::$db->errno != 0) {
-        self::$db->rollback();
         self::displayError(array('012' => $string['displayerror3'] . self::$db->error . "<br /> $sql"));
         try {
           $err=self::$db->error;
@@ -525,6 +524,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         }
+        self::$db->rollback();
       }
     }
    self::$db->commit();
@@ -553,7 +553,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$db->query("CREATE USER '" . self::$cfg_db_username . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'");
     if (self::$db->errno != 0) {
       //echo "CREATE USER  '" . self::$cfg_db_username . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'" . '<br />';
-      self::logWarning(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated']));
+      self::logWarning(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_username . "'@'" . self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".admin_access TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
@@ -582,8 +582,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
-       self::$db->rollback();
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_username . $string['wnotpermission']));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_username . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::$db->rollback();
       }
     }
    self::$db->commit();
@@ -593,7 +593,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user student user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_student_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotcreated']));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . self::$db->error));
     }
    //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".announcements TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
@@ -654,8 +654,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
-       self::$db->rollback();
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotpermission']));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::$db->rollback();
       }
     }
    self::$db->commit();
@@ -663,7 +663,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user external user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotcreated']));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . self::$db->error));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".help_log TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
@@ -702,8 +702,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         @ob_flush();
         @flush();
       if (self::$db->errno != 0) {
-       self::$db->rollback();
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotpermission']));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::$db->rollback();
       }
     }
    self::$db->commit();
@@ -712,7 +712,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user staff user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_staff_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotcreated']));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . self::$db->error));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".* TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
@@ -785,8 +785,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       @ob_flush();
       @flush();
       if (self::$db->errno != 0) {
-       self::$db->rollback();
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotpermission']));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::$db->rollback();
       }
     }
    self::$db->commit();
@@ -795,7 +795,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user SCT user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotcreated']));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . self::$db->error));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".options TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
@@ -811,8 +811,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
-       self::$db->rollback();
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotpermission']));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::$db->rollback();
       }
     }
     self::$db->commit();
@@ -821,7 +821,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user Invigilator user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotcreated']));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . self::$db->error));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".ip_addresses TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
@@ -850,8 +850,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       @ob_flush();
       @flush();
       if (self::$db->errno != 0) {
-       self::$db->rollback();
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotpermission']));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::$db->rollback();
       }
     }
     self::$db->commit();
@@ -860,7 +860,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user sysadmin user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotcreated']));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . self::$db->error));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $dbname . ".* TO '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_db_host . "'";
@@ -870,9 +870,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       @ob_flush();
       @flush();
       if (self::$db->errno != 0) {
-       self::$db->rollback();
-	    echo self::$db->error . "<br />";
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotpermission']));
+        echo self::$db->error . "<br />";
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::$db->rollback();
       }
     }
     self::$db->commit();
@@ -2172,7 +2172,7 @@ QUERY;
           `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL DEFAULT '2008/09',
           `sequence` int(11) default NULL,
           PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
-          KEY `idx_identifier_calendar_year_objective300_sequence` (`identifier`,`calendar_year`,`objective`(300),`sequence`)
+          KEY `idx_identifier_calendar_year_objective300_sequence` (`identifier`,`calendar_year`,`sequence`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
