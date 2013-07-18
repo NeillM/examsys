@@ -37,36 +37,36 @@
     .foldername {float:left; width:380px; height:60px; padding-left:22px; font-size:90%}
   </style>
 
+  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script language="javascript">
     function selLab(labID,labNo,evt) {
-      tmp_ID = document.labform.oldLabNo.value;
+      tmp_ID = $('#oldLabNo').val();
       if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-        document.getElementById(tmp_ID).style.color = 'black';
+        $('#' + tmp_ID).css('background-color', 'white');
+        $('#' + tmp_ID).css('color', 'black');
       }
-      document.getElementById(labNo).style.backgroundColor = '#316AC5';
-      document.getElementById(labNo).style.color = 'white';
+      $('#' + labNo).css('background-color', '#316AC5');
+      $('#' + labNo).css('color', 'white');
 
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
-
+      $('#menu1a').hide();
+      $('#menu1b').show();
     
-      document.getElementById('labID').value = labID;
-      document.getElementById('labNo').value = labNo;
-      document.getElementById('oldLabNo').value = labNo;
+      $('#labID').val(labID);
+      $('#labNo').val(labNo);
+      $('#oldLabNo').val(labNo);
     
       evt.cancelBubble = true;
     }
     
     function deselLab() {
-      tmp_ID = document.getElementById('oldLabNo').value;
+      tmp_ID = $('#oldLabNo').val();
       if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-        document.getElementById(tmp_ID).style.color = 'black';
+        $('#' + tmp_ID).css('background-color', 'white');
+        $('#' + tmp_ID).css('color', 'black');
       }  
-      document.getElementById('menu1a').style.display = 'block';
-      document.getElementById('menu1b').style.display = 'none';
+      $('#menu1a').show();
+      $('#menu1b').hide();
 
     }
   </script>

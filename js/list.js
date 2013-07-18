@@ -5,9 +5,9 @@ $(function () {
 function selLine(lineID, evt) {
   $('.highlight').removeClass('highlight');
 
-  document.getElementById('menu1a').style.display = 'none';
-  document.getElementById('menu1b').style.display = 'block';
-  document.getElementById('lineID').value = lineID;
+  $('#menu1a').hide();
+  $('#menu1b').show();
+  $('#lineID').val(lineID);
      
   $('#' + lineID).addClass('highlight');
   evt.cancelBubble = true;
@@ -16,7 +16,7 @@ function selLine(lineID, evt) {
 function deselLine() {
   $('.highlight').removeClass('highlight');
   
-  document.getElementById('lineID').value = '';
-  document.getElementById('menu1b').style.display = 'none';
-  document.getElementById('menu1a').style.display = 'block';
+  $('#lineID').val();
+  $('#menu1b').hide();
+  $('#menu1a').show();
 }

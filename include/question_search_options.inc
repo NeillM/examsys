@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Sidebar menu with question search options.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -36,60 +36,60 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   function getLastID(IDs) {
     var id_list = IDs.split(",");
     last_elm = id_list.length - 1;
-    
+
     return id_list[last_elm];
   }
 
   function checkForm() {
-    if (PapersMenu.searchterm.value == "") {
+    if ($('#searchterm').val() == "") {
       alert ("<?php echo $string['entersearchterm'];?>");
       return false;
     }
   }
-  
+
    function editQ() {
-    var loc = '../question/edit/index.php?q_id=' + getLastID(document.PapersMenu.questionID.value) + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
-    if (document.PapersMenu.qType.value == 'random' || document.PapersMenu.qType.value == 'keyword_based') {
-      loc += '&type=' + document.PapersMenu.qType.value;
+    var loc = '../question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
+    if ($('#qType').val() == 'random' || $('#qType').val() == 'keyword_based') {
+      loc += '&type=' + $('#qType').val();
     }
     document.location = loc;
   }
 
   function deleteQuestion() {
-    notice=window.open("../delete/check_delete_q_original.php?q_id=" + document.PapersMenu.questionID.value + "&divID=" + document.PapersMenu.oldQuestionID.value + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-250,screen.height/2-100);
+    notice=window.open("../delete/check_delete_q_original.php?q_id=" + $('#questionID').val() + "&divID=" + $('#oldQuestionID').val() + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-250, screen.height/2-100);
     if (window.focus) {
       notice.focus();
     }
   }
 
   function questionInfo() {
-    notice=window.open("../question/info.php?q_id=" + getLastID(document.PapersMenu.questionID.value) + "","question_info","width=700,height=600,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-250,screen.height/2-250);
+    notice=window.open("../question/info.php?q_id=" + getLastID($('#questionID').val()) + "","question_info","width=700,height=600,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-250, screen.height/2-250);
     if (window.focus) {
       notice.focus();
     }
   }
 
   function copyToPaper() {
-    notice=window.open("../question/copy_onto_paper.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-300,10);
+    notice=window.open("../question/copy_onto_paper.php?q_id=" + $('#questionID').val() + "","notice","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-300, 10);
     if (window.focus) {
       notice.focus();
     }
   }
 
   function linkToPaper() {
-    notice=window.open("../question/link_to_paper.php?q_id=" + document.PapersMenu.questionID.value + "","linktopaper","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-    notice.moveTo(screen.width/2-300,10);
+    notice=window.open("../question/link_to_paper.php?q_id=" + $('#questionID').val() + "","linktopaper","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    notice.moveTo(screen.width/2-300, 10);
     if (window.focus) {
       notice.focus();
     }
   }
-  
+
   function updateMenu(ID) {
     current = (document.getElementById('menu' + ID).style.display == 'block') ? 'none' : 'block';
-    document.getElementById('menu' + ID).style.display = current;
+    $('#menu' + ID).toggle();
 
     <?php
       echo "icon = (document.getElementById('icon' + ID).getAttribute('src').indexOf('down_arrow_icon.gif')!=-1) ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
@@ -97,15 +97,15 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
     document.getElementById('icon' + ID).setAttribute('src',icon);
     document.getElementById('icon' + ID).setAttribute('alt',alttag);
-    
+
     updateState('menu' + ID, current);
   }
 
   function updateDropdownState(mySel, NameOfState) {
     setting = mySel.options[mySel.selectedIndex].value;
-    updateState(NameOfState, setting);    
+    updateState(NameOfState, setting);
   }
-  
+
   function selectDateRadio() {
     document.getElementById('question_date5').checked = true;
   }
@@ -119,7 +119,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 <table cellpadding="4" cellspacing="0" border="0" width="185">
 <tr><td style="margin:4px">
-<div style="font-size:110%"><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" size="25" style="width:98%" value="<?php if (isset($_POST['searchterm'])) echo $_POST['searchterm']; ?>" /></div>
+<div style="font-size:110%"><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_POST['searchterm'])) echo $_POST['searchterm']; ?>" /></div>
 <div style="font-size:110%"><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype">
 <option value="%"><?php echo $string['alltypes']; ?></option>
 <?php
@@ -201,7 +201,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:none\">\n";
   }
-  
+
   $date_options = array("dont remember"=>$string['dont remember'], "week"=>$string['week'], "month"=>$string['month'], "year"=>$string['year'], "specify"=>$string['specify']);
   $i = 1;
   foreach ($date_options as $date_value=>$date_label) {
@@ -350,14 +350,16 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:none\">\n";
   }
 
-//TODO this area similar to the question_list_options file
+if (!isset($status_array)) {
+  $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+}
 ?>
   <tr><td>
   <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
   <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', 100); ?></div>
-  <div style="margin-left:4px"><?php echo $string['status'].': '; search_utils::display_status_dropdown(); ?></div>
+  <div style="margin-left:4px"><?php echo $string['status'].': '; search_utils::display_status_dropdown($status_array); ?></div>
   <div style="margin-left:4px"><?php echo $string['blooms'].': '; search_utils::display_blooms_dropdown(); ?></div>
-  
+
   <div style="margin-left:4px"><?php echo $string['keyword'].': '; ?> <select style="width:175px" name="keywordID"><br />
   <option value=""></option>
 <?php
@@ -379,7 +381,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
   if ($stmt->num_rows > 0) echo "</optgroup>\n";
   $stmt->close();
-  
+
   echo "<optgroup label=\"Personal Keywords\">\n";
   $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID=? ORDER BY keyword");
   $stmt->bind_param('i', $userObject->get_user_ID());
@@ -443,10 +445,10 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Delete" /></td><td class="greymenuitem"><?php echo $string['deletequestion']; ?></td></tr>
 </table>
 
-<input type="hidden" name="questionID" value="" />
-<input type="hidden" name="qType" value="" />
-<input type="hidden" name="screenNo" value="" />
-<input type="hidden" name="oldQuestionID" value="" />
+<input type="hidden" name="questionID" id="questionID" value="" />
+<input type="hidden" name="qType" id="qType" value="" />
+<input type="hidden" name="screenNo" id="screenNo" value="" />
+<input type="hidden" name="oldQuestionID" id="oldQuestionID" value="" />
 
 </form>
 </div>

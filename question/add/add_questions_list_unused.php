@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -24,19 +24,25 @@
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.inc';
+require_once '../../classes/question_status.class.php';
+
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
     body {font-size:80%}
     a {text-decoration:none}
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
@@ -65,7 +71,7 @@ require '../../include/errors.inc';
   } else {
     $display_pos = 1;
   }
-  
+
   if (isset($_GET['order'])) {
     $order = $_GET['order'];
     $direction = $_GET['direction'];
@@ -92,25 +98,29 @@ require '../../include/errors.inc';
     echo "<tr><th>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=desc\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   } elseif ($order == 'last_edited' and $direction == 'desc') {
     echo "<tr><th>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
-  }  
+  }
   echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
-  
+
   $id = 0;
   if ($order == 'leadin') $order = 'leadin_plain';
   if ($order == 'q_type') $order = 'CAST(q_type AS CHAR)';
-  
+
+  $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
+
   $question_array = array();
-  $result = $mysqli->prepare("SELECT question, q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date FROM papers RIGHT JOIN questions ON papers.question=questions.q_id WHERE questions.ownerID=? AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction");
+
+  $result = $mysqli->prepare("SELECT question, q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, status FROM papers RIGHT JOIN questions ON papers.question=questions.q_id WHERE questions.ownerID=? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $order $direction");
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
-  $result->bind_result($question, $q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date);
+  $result->bind_result($question, $q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $status);
   while ($result->fetch()) {
     if ($question == NULL) {
       $tmp_leadin = strip_tags($leadin,'<div>,<span>');
       if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin, 0, 160) . '...';
       if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
-      
-      echo "<tr><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"" . $q_id . "\" id=\"" . $q_id . "\" value=\"" . $q_id . "\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview(" . $q_id . ")\">$tmp_leadin</td><td>&nbsp;<nobr>" . $string[$q_type] . "</nobr></td><td>&nbsp;" . $display_date . "</td></tr>\n";
+
+      $status_class = 'status' . $status;
+      echo "<tr class=\"$status_class\"><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"" . $q_id . "\" id=\"" . $q_id . "\" value=\"" . $q_id . "\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview(" . $q_id . ")\">$tmp_leadin</td><td>&nbsp;<nobr>" . $string[$q_type] . "</nobr></td><td>&nbsp;" . $display_date . "</td></tr>\n";
     }
   }
   $result->close();

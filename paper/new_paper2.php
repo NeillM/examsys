@@ -58,51 +58,50 @@ require '../lang/' . $language. '/include/timezones.inc';
 
   <script type="text/javascript">
     function over(id) {
-      if (id != document.getElementById('paper_type').value) {
-        document.getElementById(id).style.backgroundImage = "url('../artwork/over.png')";
+      if (id != $('#paper_type').val()) {
+        $('#' + id).css('background-image', 'url("../artwork/over.png")');
       }
       switch (id) {
         case 'formative':
-          document.getElementById('description').innerHTML = '<?php echo $string['description0']; ?>';
+          $('#description').html("<?php echo $string['description0']; ?>");
           break;
         case 'progress':
-          document.getElementById('description').innerHTML = '<?php echo $string['description1']; ?>';
+          $('#description').html("<?php echo $string['description1']; ?>");
           break;
         case 'summative':
-          document.getElementById('description').innerHTML = '<?php echo $string['description2']; ?>';
+          $('#description').html("<?php echo $string['description2']; ?>");
           break;
         case 'survey':
-          document.getElementById('description').innerHTML = '<?php echo $string['description3']; ?>';
+          $('#description').html("<?php echo $string['description3']; ?>");
           break;
         case 'osce':
-          document.getElementById('description').innerHTML = '<?php echo $string['description4']; ?>';
+          $('#description').html("<?php echo $string['description4']; ?>");
           break;
         case 'offline':
-          document.getElementById('description').innerHTML = '<?php echo $string['description5']; ?>';
+          $('#description').html("<?php echo $string['description5']; ?>");
           break;
         case 'peer_review':
-          document.getElementById('description').innerHTML = '<?php echo $string['description6']; ?>';
+          $('#description').html("<?php echo $string['description6']; ?>");
           break;
       }
     }
 
     function out(id) {
-      if (id != document.getElementById('paper_type').value) {
-        document.getElementById(id).style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+      if (id != $('#paper_type').val()) {
+        $('#' + id).css('background-image', 'url("../artwork/blank_tick_cross.gif")');
       }
     }
 
     function activate(id) {
-      document.getElementById('formative').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('progress').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('summative').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('survey').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('osce').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('offline').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
-      document.getElementById('peer_review').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+      $('#formative').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#progress').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#summative').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#survey').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#osce').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#offline').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
 
-      document.getElementById(id).style.backgroundImage = "url('../artwork/on.png');";
-      document.getElementById('paper_type').value = id;
+      $('#' + id).css('background-image', 'url("../artwork/on.png")');
+      $('#paper_type').val(id);
     }
 
     function warning() {
@@ -231,24 +230,24 @@ require '../lang/' . $language. '/include/timezones.inc';
 <script language="JavaScript">
   function toggle(objectID) {
     if (document.getElementById(objectID).style.backgroundColor == 'white') {
-      document.getElementById(objectID).style.backgroundColor = 'highlight';
-      document.getElementById(objectID).style.color = 'white';
+      $('#' + objectID).css('background-color', 'highlight');
+      $('#' + objectID).css('color', 'white');
     } else {
-      document.getElementById(objectID).style.backgroundColor = 'white';
-      document.getElementById(objectID).style.color = 'black';
+      $('#' + objectID).css('background-color', 'white');
+      $('#' + objectID).css('color', 'black');
     }
   }
 
   function checkForm() {
-    var module_no = document.getElementById('module_no').value;
+    var module_no = $('#module_no').val();
     var moduleList = '';
     for (var i = 0; i < module_no; i++) {
       objectID = 'module' + i;
       if (document.getElementById(objectID).checked == true) {
         if (moduleList == '') {
-          moduleList = document.getElementById(objectID).value;
+          moduleList = $('#' + objectID).val();
         } else {
-          moduleList += ',' + document.getElementById(objectID).value;
+          moduleList += ',' + $('#' + objectID).val();
         }
       }
     }
@@ -277,7 +276,7 @@ require '../lang/' . $language. '/include/timezones.inc';
       return false;
     }
 
-    var module_no = document.getElementById('module_no').value;
+    var module_no = $('#module_no').val();
     var moduleList = '';
     for (var i = 0; i < module_no; i++) {
       objectID = 'module' + i;

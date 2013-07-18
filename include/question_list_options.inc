@@ -44,17 +44,19 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
     return id_list[last_elm];
   }
 
-  function addQID(qID,clearall) {
+  function addQID(qID, clearall) {
     if (clearall) {
-      document.PapersMenu.questionID.value = ',' + qID;
+      $('#questionID').val(',' + qID);
     } else {
-      document.PapersMenu.questionID.value = document.PapersMenu.questionID.value + ',' + qID;
+      new_value = $('#questionID').val() + ',' + qID;
+      $('#questionID').val(new_value);
     }
   }
 
   function subQID(qID) {
     var tmpq = ',' + qID;
-    document.PapersMenu.questionID.value = document.PapersMenu.questionID.value.replace(tmpq, '');
+    new_value = $('#questionID').val().replace(tmpq, '');
+    $('#questionID').val(new_value);
   }
   
   function clearAll() {
@@ -62,10 +64,10 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
   }
   
   function selQ(questionID, lineID, qType, menuID, evt) {
-    document.getElementById('menu2a').style.display = 'none';
-    document.getElementById('menu2b').style.display = 'none';
-    document.getElementById('menu2c').style.display = 'none';
-    document.getElementById('menu' + menuID).style.display = 'block';
+    $('#menu2a').hide();
+    $('#menu2b').hide();
+    $('#menu2c').hide();
+    $('#menu' + menuID).show();
 
     if (evt.ctrlKey == false) {
       clearAll();
@@ -82,15 +84,15 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
     }
     <?php 
     if (isset($_GET['type']) and $_GET['type'] == '%') {
-      echo "document.PapersMenu.qType.value = '%';\n";
+      echo "$('#qType').val('%');\n";
     } else {
-      echo "document.PapersMenu.qType.value = qType;\n";
+      echo "$('#qType').val(qType);\n";
     }
     ?>
   }
   
   function editQ() {
-    var url = '<?php echo $configObject->get('cfg_root_path') ?>/question/edit/index.php?q_id=' + getLastID(document.PapersMenu.questionID.value) + '&paperID=list:' + document.PapersMenu.qType.value + '&calling=list';
+    var url = '<?php echo $configObject->get('cfg_root_path') ?>/question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&paperID=list:' + $('#qType').val() + '&calling=list';
     <?php 
       if (isset($_GET['team']) and $_GET['team'] != '') {
           echo "url = url + '&team=" . $_GET['team'] . "';\n";
@@ -103,42 +105,42 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
   }
 
   function deleteQuestion() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_q_original.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-250,screen.height/2-100);
+    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_q_original.php?q_id=" + $('#questionID').val() + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-250, screen.height/2-100);
     if (window.focus) {
       notice.focus();
     }
   }
 
   function questionInfo() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/info.php?q_id=" + getLastID(document.PapersMenu.questionID.value) + "","question_info","width=700,height=600,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-250,screen.height/2-250);
+    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/info.php?q_id=" + getLastID($('#questionID').val()) + "","question_info","width=700,height=600,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-250, screen.height/2-250);
     if (window.focus) {
       notice.focus();
     }
   }
 
   function copyToPaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/copy_onto_paper.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-300,20);
+    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/copy_onto_paper.php?q_id=" + $('#questionID').val() + "","notice","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-300, 20);
     if (window.focus) {
       notice.focus();
     }
   }
 
   function linkToPaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/link_to_paper.php?q_id=" + document.PapersMenu.questionID.value + "","properties","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-300,20);
+    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/link_to_paper.php?q_id=" + $('#questionID').val() + "","properties","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-300, 20);
     if (window.focus) {
       notice.focus();
     }
   }
 
   function qOff() {
-    document.getElementById('menu2a').style.display = 'block';
-    document.getElementById('menu2b').style.display = 'none';
-    document.getElementById('menu2c').style.display = 'none';
-    document.PapersMenu.questionID.value = '';
+    $('#menu2a').show();
+    $('#menu2b').hide();
+    $('#menu2c').hide();
+    $('#questionID').val();
     clearAll();
   }
 </script>
@@ -194,10 +196,10 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 <tr><td class="ico"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" width="16" height="16" alt="Delete" border="0" /></td><td class="greymenuitem"><?php echo $string['deletequestion']; ?></td></tr>
 </table>
 
-<input type="hidden" name="questionID" value="" />
-<input type="hidden" name="qType" value="" />
-<input type="hidden" name="oldQuestionID" value="" />
-<input type="hidden" name="team" value="<?php if(isset($_GET['team'])) echo $_GET['team'];?>" />
+<input type="hidden" name="questionID" id="questionID" value="" />
+<input type="hidden" name="qType" id="qType" value="" />
+<input type="hidden" name="oldQuestionID" id="oldQuestionID" value="" />
+<input type="hidden" name="team" id="team" value="<?php if(isset($_GET['team'])) echo $_GET['team'];?>" />
 </form>
 
 </div>

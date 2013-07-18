@@ -26,8 +26,11 @@
 
 require '../include/staff_auth.inc';
 require_once '../classes/questionutils.class.php';
+require_once '../classes/question_status.class.php';
+
 set_time_limit(0);
 
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -43,10 +46,12 @@ set_time_limit(0);
   <style type="text/css">
     .o {color:#A5A5A5}
     .l {padding-left:6px; vertical-align:top}
-    .retired {color:#808080}
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
     .qline:hover {background-color:#eee}
     .qline.highlight {background-color:#B3C8E8}
+    .retired {color:#808080}
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -70,10 +75,10 @@ set_time_limit(0);
     }
 
     function selQ(questionID, qType, menuID, evt) {
-      document.getElementById('menu2a').style.display = 'none';
-      document.getElementById('menu2b').style.display = 'none';
-      document.getElementById('menu2c').style.display = 'none';
-      document.getElementById('menu' + menuID).style.display = 'block';
+      $('#menu2a').hide();
+      $('#menu2b').hide();
+      $('#menu2c').hide();
+      $('#menu' + menuID).show();
 
       lineID = questionID;
 
@@ -90,8 +95,8 @@ set_time_limit(0);
           addQID(questionID, false);
         }
       }
-      document.PapersMenu.qType.value = qType;
-      document.PapersMenu.oldQuestionID.value = lineID;
+      $('#qType').val(qType);
+      $('#oldQuestionID').val(lineID);
 
       if (evt != null) {
         evt.cancelBubble = true;
@@ -100,12 +105,12 @@ set_time_limit(0);
     }
 
     function qOff() {
-      document.getElementById('menu2a').style.display = 'block';
-      document.getElementById('menu2b').style.display = 'none';
-      document.getElementById('menu2c').style.display = 'none';
-      tmp_ID = document.PapersMenu.oldQuestionID.value;
+      $('#menu2a').show();
+      $('#menu2b').hide();
+      $('#menu2c').hide();
+      tmp_ID = $('#oldQuestionID').val();
       if (tmp_ID != '') {
-        document.getElementById('link_' + tmp_ID).style.backgroundColor = 'white';
+        $('#link_' + tmp_ID).css('background-color', 'white');
       }
     }
   </script>
@@ -147,7 +152,11 @@ if (isset($_POST['submit'])) {
     $error = $string['notickedfields'];
   }
 
-  if ($_POST['searchterm'] == '' and $_POST['owner'] == '' and  $_POST['status'] == '%' and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['status'] == '%' and $_POST['module'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
+  if (!isset($_POST['status'])) {
+    $error = $string['notickedstatus'];
+  }
+
+  if (($_POST['searchterm'] == '' or $_POST['searchterm'] == '%') and $_POST['owner'] == '' and  (isset($_POST['status']) and count($_POST['status']) == count($status_array)) and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['module'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
     $error = $string['narrowyoursearch'];
   }
 
@@ -241,14 +250,8 @@ if (isset($_POST['submit'])) {
     }
   }
 
-  if (isset($_POST['status']) and $_POST['status'] != '%') {
-    if ($_POST['status'] == 'nonretired') {
-      $status_string = " AND questions.status != 'retired'";
-    } else {
-      $status_string = ' AND questions.status=?';
-      $variables[] = $_POST['status'];
-      $params .= 's';
-    }
+  if (isset($_POST['status'])) {
+    $status_string = " AND questions.status IN (" . implode(',', $_POST['status']) . ")";
   } else {
     $status_string = '';
   }
@@ -322,8 +325,8 @@ if (isset($_POST['submit'])) {
   $hits = $result->num_rows;
 
   // Empty first line to fix widths
-  echo "<tr><th style=\"width: 18px\"></th><th></th><th style=\"width: 150px\"></th><th style=\"width: 80px\"></th></tr>";
-  echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
+  echo "<tr><th style=\"width: 18px\"></th><th></th><th style=\"width: 150px\"></th><th style=\"width: 80px\"></th><th style=\"width: 80px\"></th></tr>";
+  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
   if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
     echo "'" . $_POST['searchterm'] . "'";
   } elseif (isset($_POST['searchtype']) and $_POST['searchtype'] != '%') {
@@ -338,18 +341,17 @@ if (isset($_POST['submit'])) {
     <th class="vert_div">&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
     <th class="vert_div">&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
     <th class="vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['status']; ?>&nbsp;</th>
   </tr>
   <tr>
-    <th colspan="4" class="bevel"></th>
+    <th colspan="5" class="bevel"></th>
   </tr>
 <?php
   while ($result->fetch()) {
-    echo '<tr class="qline';
-    if ($status == 'Retired') {
-      echo ' retired';
-    }
+    $status_class = ' status' . $status_array[$status]->id;
+    echo '<tr class="qline' . $status_class;
     if ($locked != '') {
-      echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2c',event); return false;\" ondblclick=\"editQ(); return false;\"><td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $string['locked'] . "\" /></td>";
+      echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2c',event); return false;\" ondblclick=\"editQ(); return false;\"><td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['locked'] . "\" /></td>";
     } else {
       echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2b',event); return false;\" ondblclick=\"editQ(); return false;\"><td></td>";
     }
@@ -359,7 +361,8 @@ if (isset($_POST['submit'])) {
 
     echo "<td class=\"l\">$tmp_leadin <span class=\"o\">($title $initials $surname)</span></td>";
     echo '<td class="l"><nobr>' . $string[$q_type] . '</nobr></td>';
-    echo '<td class="l">' . $last_edited . '</td></tr>';
+    echo '<td class="l">' . $last_edited . '</td>';
+    echo '<td class="l">' . $status . '</td></tr>';
   }
   $result->close();
 

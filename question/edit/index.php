@@ -29,6 +29,7 @@ require_once '../../classes/viewhelper.class.php';
 require_once '../../classes/stateutils.class.php';
 require_once '../../classes/moduleutils.class.php';
 require_once '../../classes/questioninfo.class.php';
+require_once '../../classes/question_status.class.php';
 require_once '../../classes/paperutils.class.php';
 require_once '../../include/edit.inc';
 require_once '../../include/media.inc';

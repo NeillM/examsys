@@ -50,8 +50,7 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function updateMenu(ID) {
-    current = (document.getElementById('menu' + ID).style.display == 'block') ? 'none' : 'block';
-    document.getElementById('menu' + ID).style.display = current;
+    $('#menu' + ID).toggle();
 
     <?php
       echo "icon = (document.getElementById('icon' + ID).getAttribute('src').indexOf('down_arrow_icon.gif')!=-1) ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
@@ -65,16 +64,16 @@ if (isset($_GET['calendar_year'])) {
   }
 
   function viewProfileSingle() {
-    document.location.href='details.php?userID=' + getLastID(document.getElementById('userID').value);
+    document.location.href='details.php?userID=' + getLastID($('#userID').val());
   }
   
   function viewPerformanceSummary() {
-    window.open("../students/performance_summary.php?userID=" + getLastID(document.getElementById('userID').value), "_blank");
+    window.open("../students/performance_summary.php?userID=" + getLastID($('#userID').val()), "_blank");
   }
   
   function deleteUser() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_user.php?id=" + document.getElementById('userID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_user.php?id=" + $('#userID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-210, screen.height/2-85);
     if (window.focus) {
       notice.focus();
     }

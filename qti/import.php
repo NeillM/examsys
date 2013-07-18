@@ -20,6 +20,18 @@ require_once 'qti/qti_load.php';
 require_once 'qti12/qti12_load.php';
 require_once 'qti20/qti20_load.php';
 require_once 'local/local_save.php';
+require_once '../classes/question_status.class.php';
+
+// Get question statuses
+$status_tmp = QuestionStatus::get_all_statuses($mysqli, $string, true);
+$statuses = array();
+$default_status = -1;
+foreach ($status_tmp as $sid => $status) {
+  $statuses[$sid] = $status->get_name();
+  if ($status->get_is_default()) {
+    $default_status = $sid;
+  }
+}
 
 $max_screen = 0;
 
@@ -99,6 +111,8 @@ $export = new IE_Local_Save();
 $save_params->paper = $paper;
 $save_params->sourcefile = $file;
 $save_params->original_filename = $_FILES["file"]["name"];
+$export->setStatuses(array_flip($statuses));
+$export->setDefaultStatus($default_status);
 
 // perform operation
 $result = array();

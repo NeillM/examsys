@@ -26,6 +26,7 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/media.inc';
 require_once '../include/mapping.inc';
+require_once '../classes/question_status.class.php';
 
 require_once '../classes/paperutils.class.php';
 require_once '../classes/logger.class.php';
@@ -128,6 +129,17 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   // Copy the properties (properties table)
   $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
 
+  // Get question statuses
+  $default_status = -1;
+  $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+  // Set copies of retired questions to default statuses
+  foreach ($status_array as $tmp_status) {
+    if ($tmp_status->get_is_default()) {
+      $default_status = $tmp_status->id;
+      break;
+    }
+  }
+
   // Copy the question and option data (questions and options tables)
   $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper = ? ORDER BY display_pos");
   $result->bind_param('i', $paperid);
@@ -143,7 +155,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
     $qData->bind_param('i', $question);
     $qData->execute();
     $qData->store_result();
-    $qData->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
+    $qData->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
     while ($qData->fetch()) {
       $old_qids[$question] = $question;
       // Question data
@@ -212,7 +224,14 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
       if ($marks_correct == '') $marks_correct = 1;
       if ($line == 0) {  // First record - write out the question, all the rest are options.
         $bloom = (empty($bloom)) ? NULL : $bloom;
-        $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
+
+        if ($status_array[$status]->get_retired()) {
+          $new_status = $default_status;
+        } else {
+          $new_status = $status;
+        }
+
+        $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?)");
 
         if ($mysqli->error) {
           try {
@@ -224,7 +243,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
           }
         }
 
-        $addQuestion->bind_param('ssssssssisssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
+        $addQuestion->bind_param('ssssssssisssssssisss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings);
         $addQuestion->execute();
         $new_qids[] = $question_id = $mysqli->insert_id;
         if ($q_type == 'calculation') $caculation_qid_map[$q_id] = $question_id;

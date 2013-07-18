@@ -77,9 +77,9 @@ require '../include/sysadmin_auth.inc';
       echo '<th class="vert_div">&nbsp;';
     }
     if ($sortby == $key and $ordering == 'asc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div></th>";
+      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" />&nbsp;</div></th>";
     } elseif ($sortby == $key and $ordering == 'desc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div></th>";
+      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" />&nbsp;</div></th>";
     } else {
       echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;</div></th>";
     }
@@ -99,7 +99,7 @@ while ($result->fetch()) {
   $announcements[$announce_no]['title'] = $title;
   $announcements[$announce_no]['icon'] = $icon;
   $announcements[$announce_no]['startdate_display'] = $startdate_display;
-  $announcements[$announce_no]['enddate_display'] = $startdate_display;
+  $announcements[$announce_no]['enddate_display'] = $enddate_display;
   $announcements[$announce_no]['deleted'] = $deleted;
   
   $announce_no++;

@@ -715,6 +715,8 @@ class UserObject extends RogoStaticSingleton {
   function db_user_change() {
     global $db_errors, $string;
 
+    $configObject = Config::get_instance();
+
     $getback = array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd', 'cfg_db_admin_user', 'cfg_db_admin_passwd', 'cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd', 'cfg_db_external_user', 'cfg_db_external_passwd', 'cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
 
     $arr = $this->configObj->get($getback);
@@ -737,18 +739,26 @@ class UserObject extends RogoStaticSingleton {
       $result = false;
       // new security routine
 
-      $notice=UserNotices::get_instance();
+      $notice = UserNotices::get_instance();
       $notice->access_denied($this->db, $string, sprintf($string['denied_role'], implode(',',array_keys($this->roles))), true, true);
     }
-    if($result==false) {
-      $notice=UserNotices::get_instance();
-      $notice->display_notice('CHANGE USER FAILED','THIS SHOULDN\'T EVER APPEAR CONTACT SUPPORT','../artwork/software_64.png');
+    if ($result == false) {
+      $msg = 'This should never appear, please contact support';
+      $support_email = $configObject->get('support_email');
+
+      if ($support_email != '') {
+        $msg .= " (<a href=\"$support_email\">$support_email</a>)";
+      }
+      $msg .= '.';
+      $notice = UserNotices::get_instance();
+      $notice->display_notice('Change DB user failed', $msg, '../artwork/exclamation_64.png', '#C00000', true, false);
       if ($this->db->error) {
         try {
-          throw new Exception("MySQL error ".$this->db->error ."<br> ", $this->db->errno);
+          throw new Exception("MySQL error " . $this->db->error ."<br /> ", $this->db->errno);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo "<p>Error No: " . $e->getCode() . " - " . $e->getMessage() . "</p>";
+          echo '<p>' . nl2br($e->getTraceAsString()) . '</p>';
+          echo "<body>\n</html>";
           exit();
         }
       }

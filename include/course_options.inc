@@ -25,12 +25,12 @@
 ?>
 <script language="JavaScript">
   function editCourse() {
-    document.location.href='./edit_course.php?courseID=' + document.getElementById('lineID').value;
+    document.location.href='./edit_course.php?courseID=' + $('#lineID').val();
   }
 
   function deleteCourse() {
-    notice=window.open("../delete/check_delete_course.php?courseID=" + document.getElementById('lineID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    notice=window.open("../delete/check_delete_course.php?courseID=" + $('#lineID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-210, screen.height/2-85);
     if (window.focus) {
       notice.focus();
     }

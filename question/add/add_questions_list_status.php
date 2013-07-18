@@ -25,7 +25,10 @@
 require '../../include/staff_auth.inc';
 require '../../include/errors.inc';
 require_once '../../classes/questionutils.class.php';
+require_once '../../classes/question_status.class.php';
 
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <html>
 <head>
@@ -39,6 +42,8 @@ require_once '../../classes/questionutils.class.php';
   <style type="text/css">
     body {font-size:80%}
     .mee { display: inline; }
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
@@ -82,7 +87,7 @@ require_once '../../classes/questionutils.class.php';
   <input type="hidden" name="screen" value="1" />
   <table class="header">
   <?php
-  echo "<tr><th colspan=\"5\" style=\"font-size:160%; font-weight:bold\">&nbsp;" . $string[strtolower($_GET['status'])] . "</th></tr>\n";
+  echo "<tr><th colspan=\"5\" style=\"font-size:160%; font-weight:bold\">&nbsp;" . $status_array[$_GET['status']]->get_name() . "</th></tr>\n";
   if ($order == 'leadin' and $direction == 'asc') {
     echo "<tr><th>&nbsp;</th><th>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?status=" . $_GET['status'] . "&order=leadin&direction=desc\">" . $string['question'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?status=" . $_GET['status'] . "&order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?status=" . $_GET['status'] . "&order=last_edited&direction=asc\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
   } elseif ($order == 'leadin' and $direction == 'desc') {
@@ -105,16 +110,17 @@ require_once '../../classes/questionutils.class.php';
   $teams = $userObject->get_staff_modules();
   $module_id_list = implode(',', array_keys($teams));
 
-  $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions, questions_modules, modules) WHERE questions.q_id=questions_modules.q_id AND questions_modules.idMod=modules.id AND status=? AND (ownerID=? OR modules.id IN ($module_id_list)) AND deleted IS NULL ORDER BY $order $direction");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status FROM (questions, questions_modules, modules) WHERE questions.q_id=questions_modules.q_id AND questions_modules.idMod=modules.id AND status=? AND (ownerID=? OR modules.id IN ($module_id_list)) AND deleted IS NULL ORDER BY $order $direction");
   $stmt->bind_param('si', $_GET['status'], $userObject->get_user_ID());
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked);
+  $stmt->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked, $status);
   while ($stmt->fetch()) {
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
 
-    echo '<tr>';
+    $status_class = 'status' . $status;
+    echo '<tr class="' . $status_class . '">';
     if ($locked != '') {
       echo '<td><img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" /></td>';
     } else {
