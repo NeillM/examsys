@@ -36,6 +36,7 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/logger.class.php';
+require_once '../classes/question_status.class.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -73,10 +74,9 @@ if (isset($_GET['userid'])) {
   $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 }
 $log_metadata->get_record();
-$sessionid = $log_metadata->get_session_id();
 $metadataid = $log_metadata->get_metadata_id();
 
-if ($sessionid === null) {
+if ($metadataid === null) {
   $notice->access_denied($mysqli, $string, $string['nottaken'], true, true);
 }
 
@@ -169,11 +169,22 @@ require '../config/finish.inc';
 <?php
   $current_screen = 1;
 
-  if (isset($_GET['userid'])) {
-    $temp_userID = $_GET['userid'];
+  if (isset($_GET['userID'])) {
+    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+      if ($_GET['userID'] != '') {
+        $userID = $_GET['userID'];
+      } else {
+        display_error($string['idmissing'], $string['idmissing_msg'], false, true, false);
+      }
+    } else {  // Student is trying to hack into another students userID on the URL.
+      header("HTTP/1.0 404 Not Found");
+      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    }
   } else {
-    $temp_userID = $userObject->get_user_ID();
+    $userID = $userObject->get_user_ID();
   }
+  
   $old_q_id = 0;
   $old_screen = 0;
   
@@ -182,7 +193,8 @@ require '../config/finish.inc';
   echo $logo_html;
   echo '</table>';
   
-  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $metadataid, $mysqli, $preview_q_id);
+  $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+  display_feedback($userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $metadataid, $mysqli, $status_array, $preview_q_id);
 
   echo "</body>\n</html>";
   $mysqli->close();

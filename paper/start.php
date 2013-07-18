@@ -228,7 +228,6 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_q
   return $question;
 }
 
-
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
@@ -262,8 +261,8 @@ if ($is_question_preview_mode) {
                               (papers, questions)
                             WHERE
                               papers.paper = ? AND
-                              papers.question=questions.q_id AND
-                              questions.q_id=?
+                              papers.question = questions.q_id AND
+                              questions.q_id = ?
                               ORDER BY
                                 screen
                             ");
@@ -275,7 +274,7 @@ if ($is_question_preview_mode) {
                               (papers, questions)
                             WHERE
                               papers.paper = ? AND
-                              papers.question=questions.q_id
+                              papers.question = questions.q_id
                             ORDER BY
                               screen, display_pos");
   $stmt->bind_param('i', $paperID);
@@ -345,7 +344,7 @@ if ($userObject->has_role('Student')) {
 
 //get lab info used in log metadata
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)) {
   $lab_name = $lab_object->get_name();
   $lab_id = $lab_object->get_id();
 }
@@ -355,7 +354,7 @@ if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
 */
 $log_metadata = null;
 $current_screen = 1;
-$is_fire_alarm = ( isset($_POST['fire_alarm']) and $_POST['fire_alarm'] == '1' );
+$is_fire_alarm = (isset($_POST['fire_alarm']) and $_POST['fire_alarm'] == '1');
 $summative_exam_session_started = false; //lab timing stated by invigilators
 $allow_timing = false;
 

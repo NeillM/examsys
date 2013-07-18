@@ -118,10 +118,10 @@ ob_start();
     }
 
     if (tmpLogLate == 'y') {
-      $('#item6b').css('color', '#000000');
+      $('#item7b').css('color', '#000000');
       $('#log_late_icon').show();
     } else {
-      $('#item6b').css('color', '#C0C0C0');
+      $('#item7b').css('color', '#C0C0C0');
       $('#log_late_icon').hide();
     }
   }
@@ -146,7 +146,7 @@ ob_start();
     if ($('#metadataID').val() != '') {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
-      window.open("../paper/finish.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#log_type').val() + "&percent=" + $('#percent').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../paper/finish.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#log_type').val() + "&percent=" + $('#percent').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
   }
 
@@ -161,7 +161,7 @@ ob_start();
 
   function viewProfile() {
     $('#menudiv').hide();
-    if (document.getElementById('reassign').value == 'n') {
+    if ($('#reassign').val() == 'n') {
       window.top.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + $('#userID').val();
     }
   }
@@ -183,6 +183,20 @@ ob_start();
       }
     }
   }
+  
+<?php
+  if ($paper_type == '0' or $paper_type == '1') {   // Do not allow reset of timer for Summative exams.
+?>
+  function resetTimer() {
+    $('#menudiv').hide();
+    reassign = window.open("check_reset_timer.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>&metadataID=" + $('#metadataID').val() + "","reassign","width=550,height=200,left="+(screen.width/2-275)+",top="+(screen.height/2-100)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    if (window.focus) {
+      reassign.focus();
+    }
+  }
+<?php
+  }
+?>
 
   function reassignLogLate() {
     $('#menudiv').hide();
@@ -257,7 +271,7 @@ if ($language != 'en') {
       </tr>
       <tr>
         <td id="item4a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();">
-        <img src="../artwork/notes_icon.gif" width="14" height="14" alt="" border="0" />
+        <img src="../artwork/notes_icon.gif" width="14" height="14" alt="" />
         </td>
         <td id="item4b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();">
         <?php echo $string['newnote']; ?>
@@ -265,19 +279,34 @@ if ($language != 'en') {
       </tr>
       <tr>
         <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right">
-        <img src="../artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
+        <img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
       </tr>
       <tr>
         <td id="item5a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">
-        <img src="../artwork/guest_account_16.png" width="16" height="16" alt="" border="0" />
+        <img src="../artwork/guest_account_16.png" width="16" height="16" alt="" />
         </td>
         <td id="item5b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">
         <?php echo $string['reassigntouser']; ?></td>
       </tr>
       <tr>
-        <td id="item6a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignLogLate();">
-        <img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" border="0" /></td>
-        <td id="item6b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignLogLate();">
+      <?php
+        if ($paper_type == '1') {   // Do not allow reset of timer for Summative exams.
+          $action = 'resetTimer();';
+          $text_color = 'black';
+        } else {
+          $action = '$(\'#menudiv\').hide()';
+          $text_color = '#C0C0C0';
+        }
+      ?>
+        <td id="item6a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="<?php echo $action; ?>">
+        </td>
+        <td id="item6b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; color:<?php echo $text_color; ?>; cursor:default" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="<?php echo $action; ?>">
+        <?php echo $string['resettimer']; ?></td>
+      </tr>
+      <tr>
+        <td id="item7a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('7');" onmouseout="menuRowOff('7');" onclick="reassignLogLate();">
+        <img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" /></td>
+        <td id="item7b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('7');" onmouseout="menuRowOff('7');" onclick="reassignLogLate();">
         <?php echo $string['latesubmissions']; ?>
         </td>
       </tr>
@@ -441,15 +470,7 @@ if ($language != 'en') {
             <td>
 
 <?php
-    $html = $string['latesubmissionsmsg'] . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>): ";
-    foreach ($log_late as $student_userID => $student_name) {
-      if ($html == '') {
-        $html = $student_name;
-      } else {
-        $html .= ', ' . $student_name;
-      }
-    }
-    echo "$html.</td></tr></table></td></tr>\n";
+    echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>)</td></tr></table></td></tr>\n"; 
   }
 
   $percent_decimals = $configObject->get('percent_decimals');
@@ -471,7 +492,7 @@ if ($language != 'en') {
         $late_submissions = '';
         ?>
         <tr class="nonattend" id="res<?php echo $i+1 ?>"><td>&nbsp;</td>
-        <td class="padl" onclick="popMenu(5, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');<?php echo $onclick; ?>" />
+        <td class="padl" onclick="popMenu(6, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');<?php echo $onclick; ?>" />
         <?php echo "$title&nbsp;$surname ,&nbsp;"; ?><span class="grey"><?php echo $first_names ?></span>
         <?php
         if ($user_results[$i]['student_id'] == '') {
@@ -621,8 +642,8 @@ if ($language != 'en') {
           $ordered = '';
         }
         echo "<td class=\"$class$ordered padl $role_css\">" . $report->formatsec($user_results[$i]['duration']);
-        if (isset($log_late[$user_results[$i]['userID']])) {
-          echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" border="0" />';
+        if ($late_submissions == 'y') {
+          echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" />';
         }
         echo "</td>";
 
@@ -649,7 +670,11 @@ if ($language != 'en') {
             } else {
               $ordered = '';
             }
-            echo "<td class=\"$class$ordered $role_css\">&nbsp;" . $user_results[$i][$type] . "</td>";
+            if (isset($user_results[$i][$type])) {
+              echo "<td class=\"$class$ordered $role_css\">&nbsp;" . $user_results[$i][$type] . "</td>";
+            } else {
+              echo "<td class=\"$class$ordered $role_css\">&nbsp;</td>";
+            }
           }
         }
         echo "</tr>\n";

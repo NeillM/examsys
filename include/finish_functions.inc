@@ -131,7 +131,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
   return $value;
 }
 
-function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $metadataid, $mysqlidb, $status_array, $preview_q_id = null) {
+function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $metadataid, $mysqlidb, $status_array, $preview_q_id = null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $strong_on, $strong_off;
   $configObject = Config::get_instance();
   $strong_on = '';
@@ -982,7 +982,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
                 if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
                 echo $strong_on . $paper[$question]['option_text'][$tmp_part_id] . $strong_off;
                 if (substr($tmp_exclude,0,1) == '1') echo '</span>';
-                echo '<br />';
+                //echo '<br />';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
                 echo '&nbsp;<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" border="0" />';
