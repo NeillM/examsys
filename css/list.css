@@ -18,8 +18,8 @@
   cursor:pointer;
   background-color:#eee
 }
-.l.highlight {
-  background-color:#B3C8E8
+.highlight {
+  background-color:#B3C8E8!important
 }
 .deleted {
   color:#808080

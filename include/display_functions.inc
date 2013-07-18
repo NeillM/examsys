@@ -381,6 +381,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $d['useranswer']=$user_answers[$current_screen][$q_id];
         $question['object']->load($d);
       }
+      $question['object']->load_all_user_answers($user_answers);
       $question['object']->render_paper();
       break;
     case 'dichotomous':
@@ -674,6 +675,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       case 'enhancedcalc':
         // no options for enhanced calc now stored in settings
 
+        $question['object']->load_all_user_answers($user_answers);
         break;
       case 'likert':
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {

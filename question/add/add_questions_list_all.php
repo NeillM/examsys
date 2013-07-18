@@ -24,6 +24,10 @@
 
 require '../../include/staff_auth.inc';
 require_once '../../classes/questionutils.class.php';
+require_once '../../classes/question_status.class.php';
+
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <html>
 <head>
@@ -38,6 +42,8 @@ require_once '../../classes/questionutils.class.php';
     body {font-size:80%}
     a {text-decoration:none}
     .mee { display: inline; }
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
@@ -103,15 +109,18 @@ require_once '../../classes/questionutils.class.php';
 
   $question_array = array();
 
-  $result = $mysqli->prepare("SELECT q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM questions WHERE ownerID=? AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction");
+  $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
+
+  $result = $mysqli->prepare("SELECT q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status FROM questions WHERE ownerID=? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $order $direction");
   $result->bind_param('i',$userObject->get_user_ID());
   $result->execute();
-  $result->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked);
+  $result->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked, $status);
   while ($result->fetch()) {
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
 
-    echo "<tr><td>";
+    $status_class = 'status' . $status;
+    echo "<tr class=\"$status_class\"><td>";
     if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
     echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"" . $q_id . "\" id=\"" . $q_id . "\" value=\"" . $q_id . "\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview(" . $q_id . ")\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;" . $display_date . "</td></tr>\n";
   }

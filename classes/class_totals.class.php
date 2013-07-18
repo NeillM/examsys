@@ -37,6 +37,7 @@ require_once '../classes/exclusion.class.php';
 require_once '../classes/mathsutils.class.php';
 require_once '../classes/results_cache.class.php';
 require_once '../classes/standard_setting.class.php';
+require_once '../classes/question_status.class.php';
 
 class ClassTotals {
 
@@ -81,6 +82,7 @@ class ClassTotals {
   private $propertyObj;
   private $user_no;
   private $recache;
+  private $question_statuses;
 
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db) {
     $userObject = UserObject::get_instance();
@@ -111,6 +113,8 @@ class ClassTotals {
     $this->exclusions             = new Exclusion($this->paperID, $this->db);
     $this->display_excluded       = '';
     $this->user_no                = 0;
+
+    $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
   }
 
   public function get_user_results() {
@@ -170,7 +174,13 @@ class ClassTotals {
   }
 
   public function get_display_experimental() {
-    return $this->display_experimental;
+    $rval = '';
+    
+    foreach ($this->display_experimental as $status => $questions) {
+      $rval .= $status . ': ';
+      $rval .= implode(', ', $questions) . '<br />';
+    }
+    return $rval;
   }
 
   public function get_exclusions() {
@@ -188,7 +198,7 @@ class ClassTotals {
     } else {
       $this->recache = false;
     }
-    
+
     $moduleID = Paper_utils::get_modules($this->paperID, $this->db);
     $this->moduleID_in = implode(',', array_keys($moduleID));
 
@@ -326,7 +336,7 @@ class ClassTotals {
     $result->close();
 
     $this->paper_buffer[$questionID]['random_questions'] = $random_questions;
-    
+
     return $old_q_id;
   }
 
@@ -360,7 +370,7 @@ class ClassTotals {
         }
       }
     }
-    
+
     if (strpos($exclude, '1') !== false) {
       if ($this->display_excluded == '') {
         $this->display_excluded = 'Q' . $q_no . $subpart;
@@ -370,22 +380,22 @@ class ClassTotals {
     }
   }
 
-  private function displayExperimental($q_no) {
-    if ($this->display_experimental == '') {
-      $this->display_experimental = 'Q' . $q_no;
+  private function displayExperimental($q_no, $status) {
+    if (!isset($this->display_experimental[$status])) {
+      $this->display_experimental[$status] = array('Q' . $q_no);
     } else {
-      $this->display_experimental .= ', Q' . $q_no;
+      $this->display_experimental[$status][] = 'Q' . $q_no;
     }
   }
 
   private function set_ss_pass() {
     $mark_parts = explode(',', $this->marking);
- 
+
     $standard_setting = new StandardSetting($this->db);
     $percents = $standard_setting->get_pass_distinction($mark_parts[1]);
-    
+
     $this->ss_pass = $percents['pass_score'];
-    
+
     if ($percents['distinction_score'] == 0) {   // If zero set to top 20% of cohort performance.
       $this->set_ss_hon();
       $this->distinction_score = $this->ss_hon;
@@ -518,7 +528,7 @@ class ClassTotals {
 
   private function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, &$tmp_user_mark_array) {
     $tmp_mark = 0;
-  
+
     $tmp_exclude = $this->exclusions->get_exclusions_by_qid($q_id);
 
     $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
@@ -538,8 +548,9 @@ class ClassTotals {
     } else {
       $question = $this->paper_buffer[$q_id];
     }
-    
-    if (isset($question['status']) and $question['status'] == 'Experimental') {
+
+    $curr_status = $this->question_statuses[$question['status']];
+    if ($curr_status->get_exclude_marking()) {
       $tmp_exclude = '1111111111111111111111111111111111111111';
     }
 
@@ -767,10 +778,6 @@ class ClassTotals {
 
     $this->q_medians[$q_id][] = $tmp_mark;
     
-    if ($q_id == 102394) {
-      var_dump($tmp_mark);
-    }
-    
     return $tmp_mark;
   }
 
@@ -823,7 +830,7 @@ class ClassTotals {
     $this->orig_total_marks = 0;
     $this->total_random_mark = 0;
     $this->display_excluded = '';
-    $this->display_experimental = '';
+    $this->display_experimental = array();
 
     // Load the correct answers into 'paper_buffer' array.
     $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos FROM (papers, questions, options) WHERE papers.question = questions.q_id AND papers.paper = ? AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY screen, display_pos, id_num");
@@ -834,7 +841,8 @@ class ClassTotals {
     while ($result->fetch()) {
       if ($q_id != $old_q_id or $old_display_pos != $display_pos) {
         if ($old_q_id != 0) {
-          if ($old_status != 'Experimental') {
+          $old_status_obj = $this->question_statuses[$old_status];
+          if (!$old_status_obj->get_exclude_marking()) {
             $tmp_exclude = $this->exclusions->get_exclusions_by_qid($old_q_id);
             if ($old_q_type == 'random') {
               $tmp_id = $this->getRandomDetails($old_q_id);
@@ -856,7 +864,7 @@ class ClassTotals {
               $this->checkDisplayExcluded($tmp_exclude, $question_no, $old_q_type);
             }
           } else {
-            $this->displayExperimental($question_no);
+            $this->displayExperimental($question_no, $old_status_obj->get_name());
           }
           $stems = 0;
           $old_marks_correct = 0;
@@ -899,7 +907,8 @@ class ClassTotals {
     }
     $result->close();
 
-    if ($old_status != 'Experimental') {
+    $old_status_obj = $this->question_statuses[$old_status];
+    if (!$old_status_obj->get_exclude_marking()) {
       $tmp_exclude = $this->exclusions->get_exclusions_by_qid($old_q_id);
 
       if ($old_q_type == 'random') {
@@ -922,7 +931,7 @@ class ClassTotals {
         $this->checkDisplayExcluded($tmp_exclude, $question_no, $old_q_type);
       }
     } else {
-      $this->displayExperimental($question_no);
+      $this->displayExperimental($question_no, $old_status_obj->get_name());
     }
 
     $this->question_no = $question_no;
@@ -1126,7 +1135,7 @@ class ClassTotals {
 
       $single_mark = $this->getUserMark($q_id, $user_answer, $mark, $tmp_user_mark_array);
       $tmp_mark += $single_mark;
-      
+
       if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
       $old_duration   = $duration;
       $old_screen     = $screen;
@@ -1145,7 +1154,7 @@ class ClassTotals {
         $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
       }
     }
-    
+
     // Re-index the array.
     $tmp_array = $this->user_results;
     unset($this->user_results);
@@ -1161,17 +1170,18 @@ class ClassTotals {
       $log_query = $this->db->prepare("UPDATE log$paper_type SET adjmark = ? WHERE id = ?");
       foreach($log_data as $individual_log_data) {
         $paper_type = $individual_log_data['paper_type'];
-        $adjmark = $individual_log_data['adjmark']; 
-        $log_id = $individual_log_data['id']; 
-      
+        $adjmark = $individual_log_data['adjmark'];
+        $log_id = $individual_log_data['id'];
+
         $log_query->bind_param('di', $adjmark, $log_id);
         $log_query->execute();
       }
       $log_query->close();
-      
+
       $this->db->commit();
       $this->db->autocommit(true);
     }
+
   }
   
   private function add_rank() {

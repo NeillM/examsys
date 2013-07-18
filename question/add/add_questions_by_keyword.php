@@ -25,6 +25,10 @@
 require '../../include/staff_auth.inc';
 require '../../include/question_types.inc';
 require_once '../../classes/questionutils.class.php';
+require_once '../../classes/question_status.class.php';
+
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -42,6 +46,8 @@ require_once '../../classes/questionutils.class.php';
     .f {padding-left:2px}
     .n {text-align:right; padding-right:2px}
     .mee { display: inline; }
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
@@ -132,12 +138,14 @@ require_once '../../classes/questionutils.class.php';
 
   $teams = $userObject->get_staff_modules();
 
+  $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
+
   if (count($teams) == 0) {
-    $sql = "SELECT questions.q_id, leadin, leadin_plain, q_type, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, parts FROM (questions, keywords_question) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE questions.q_id=keywords_question.q_id AND keywords_question.keywordID IN ($keyword_ids) AND ownerID=? AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction, questions.q_id";
+    $sql = "SELECT questions.q_id, leadin, leadin_plain, q_type, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, parts, status FROM (questions, keywords_question) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE questions.q_id=keywords_question.q_id AND keywords_question.keywordID IN ($keyword_ids) AND ownerID=? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $order $direction, questions.q_id";
   } else {
 
     $sql = "SELECT
-              questions.q_id, leadin, leadin_plain, q_type, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, parts
+              questions.q_id, leadin, leadin_plain, q_type, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, parts, status
             FROM
               (questions)
             LEFT JOIN
@@ -145,7 +153,7 @@ require_once '../../classes/questionutils.class.php';
             WHERE
               questions.q_id IN (SELECT q_id from keywords_question WHERE keywords_question.keywordID IN ($keyword_ids))  AND
               (ownerID=? OR questions.q_id IN (SELECT q_id from questions_modules where idMod IN (" . implode(',', array_keys($teams)) . "))) AND
-              status != 'retired' AND deleted IS NULL
+              status NOT IN ($retired_in) AND deleted IS NULL
             ORDER BY
               $order $direction, questions.q_id";
   }
@@ -159,9 +167,10 @@ require_once '../../classes/questionutils.class.php';
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->store_result();
-  $result->bind_result($q_id, $leadin, $leadin_plain, $q_type, $display_date, $locked, $parts);
+  $result->bind_result($q_id, $leadin, $leadin_plain, $q_type, $display_date, $locked, $parts, $status);
   while($result->fetch()) {
-    echo "<tr><td style=\"width:20px\">";
+    $status_class = ' status' . $status;
+    echo "<tr class=\"$status_class\"><td style=\"width:20px\">";
     if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="Locked" />';
     echo "</td><td style=\"width:25px\"><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" id=\"$q_id\" name=\"$q_id\" value=\"$q_id\" /></td>";
     if ($parts == '') {

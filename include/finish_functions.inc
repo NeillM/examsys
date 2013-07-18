@@ -131,7 +131,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
   return $value;
 }
 
-function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $metadataid, $mysqlidb, $preview_q_id = null) {
+function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $metadataid, $mysqlidb, $status_array, $preview_q_id = null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $strong_on, $strong_off;
   $configObject = Config::get_instance();
   $strong_on = '';
@@ -179,7 +179,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   } else {
     $standards_setting = array();
   }
-  
+
   // Capture the structure of the paper into an array.
   $paper = array();
   $std_used = false;
@@ -2411,9 +2411,9 @@ echo '</script>';
     echo display_mapped_objectives($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $question, $q_type, $string, $mysqlidb);
 
     // Write out the marks for the question
-    echo display_question_mark($tmp_display_question_mark, $paper, $q_type, $question, $string);
+    echo display_question_mark($tmp_display_question_mark, $paper, $q_type, $question, $string, $status_array);
 
-    if ($paper[$question]['status'] != 'Experimental') {
+    if (!$status_array[$paper[$question]['status']]->get_exclude_marking()) {
       $total_marks += $paper[$question]['totalpos'];
       if (isset($paper[$question]['mark'])) $user_mark += round($paper[$question]['mark'], 2);
     }
@@ -2463,13 +2463,14 @@ function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $
   return $html;
 }
 
-function display_question_mark($tmp_display_question_mark, &$paper, $q_type, $question, $string) {
+function display_question_mark($tmp_display_question_mark, &$paper, $q_type, $question, $string, $status_array) {
   $html = '';
 
   if ($tmp_display_question_mark == '1' and $q_type != 'info' and $q_type != 'likert') {
     if (isset($paper[$question]['mark']) and is_numeric($paper[$question]['mark'])) {
-      if ($paper[$question]['status'] == 'Experimental') {
-        $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0 - Experimental Question&nbsp;</span></p>';
+      $q_status = $status_array[$paper[$question]['status']];
+      if ($q_status->get_exclude_marking()) {
+        $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0 - ' . $q_status->get_name() . ' Question&nbsp;</span></p>';
       } elseif ($paper[$question]['totalpos'] == 0) {
         $paper[$question]['mark'] = 0;
         $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0&nbsp;</span></p>';

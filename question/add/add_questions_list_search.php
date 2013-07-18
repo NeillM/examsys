@@ -27,6 +27,10 @@ require '../../include/errors.inc';
 require '../../include/media.inc';
 require_once '../../classes/searchutils.class.php';
 require_once '../../classes/questionutils.class.php';
+require_once '../../classes/question_status.class.php';
+
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <html>
 <head>
@@ -41,6 +45,8 @@ require_once '../../classes/questionutils.class.php';
     body {font-size:80%}
     p, td {font-size:90%}
     .mee { display: inline; }
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
@@ -164,19 +170,20 @@ require_once '../../classes/questionutils.class.php';
 
     if ($_GET['owner'] == '') {
       $teams = array_keys($userObject->get_staff_modules());
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions_modules, questions, options) WHERE questions.q_id=questions_modules.q_id AND (idMod IN (" . implode(',', $teams) . ") OR questions.ownerID=?) AND questions.q_id=options.o_id AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, questions.q_id");
+      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status FROM (questions_modules, questions, options) WHERE questions.q_id=questions_modules.q_id AND (idMod IN (" . implode(',', $teams) . ") OR questions.ownerID=?) AND questions.q_id=options.o_id AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, questions.q_id");
       $result->bind_param('issssss', $userObject->get_user_ID(), $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
     } else {
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions, options) WHERE questions.q_id=options.o_id AND questions.ownerID=? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
+      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status FROM (questions, options) WHERE questions.q_id=options.o_id AND questions.ownerID=? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
       $result->bind_param('issssss', $_GET['owner'], $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
     }
     $result->execute();
-    $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked);
+    $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $status);
     while ($result->fetch()) {
       $tmp_leadin = QuestionUtils::clean_leadin($leadin);
       if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
 
-      echo "<tr><td style=\"width:16px\">";
+      $status_class = 'status' . $status;
+      echo "<tr class=\"$status_class\"><td style=\"width:16px\">";
       if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
       echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td></tr>\n";
     }

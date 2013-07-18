@@ -38,8 +38,12 @@ require_once '../classes/userutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/exclusion.class.php';
 require_once '../classes/moduleutils.class.php';
+require_once '../classes/question_status.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
+
+// Get question statuses
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 // Unlock code - emergency use only!
 if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role('SysAdmin')) {
@@ -79,9 +83,9 @@ function check_duplicates($q_screens, $string) {
   }
 }
 
-function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string) {
+function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string, $status_array, $db) {
 
-  if (!isset($tmp_excluded) and ($status == 'Normal' or $status == 'Experimental' or $status == 'Beta')) {
+  if (!isset($tmp_excluded) and $status_array[$status]->get_validate()) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
     } elseif ($q_type == 'dichotomous') {
@@ -96,7 +100,7 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
       $matching_scenarios = explode('|', $scenario);
       $matching_media     = explode('|', $q_media);
       $matching_correct   = explode('|', $correct_array[0]);
-      
+
       $text_scenarios = 0;
       for ($part_id=0; $part_id<count($matching_scenarios); $part_id++) {
         if (trim(strip_tags($matching_scenarios[$part_id])) != '') $text_scenarios++;
@@ -106,12 +110,12 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
         if ($matching_media[$part_id] != '') $media_scenarios++;
       }
       $scenario_no = max($text_scenarios, $media_scenarios);
-      
+
       $correct_answers = 0;
       for ($part_id=0; $part_id<count($matching_correct); $part_id++) {
         if ($matching_correct[$part_id] != '') $correct_answers++;
       }
-      
+
       if ($score_method == 'Mark per Option' and $correct_answers < $scenario_no) $temp_array[$row_no]['warnings'] = $string['answermissing'];
     } elseif ($q_type == 'labelling') {
       if (!have_valid_labels($temp_array[$row_no]['correct'])) {
@@ -339,6 +343,9 @@ $result->close();
     }
   </style>
   <![endif]-->
+  <style type="text/css">
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
+  </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -509,9 +516,6 @@ $result->close();
     exit;
   }
 
-  // Promoting/Demoting questions
-  $q_highlight = 0;
-
   // Log the hit in recent_papers.
   $result = $mysqli->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE accessed = NOW();");
   $result->bind_param('ii', $userObject->get_user_ID(), $paperID);
@@ -583,6 +587,9 @@ $result->close();
       $neg_marking = true;
     }
 
+    // Check for status that's excluded from marking
+    $do_marking = (($old_q_type == 'random' or $row_no2 > 0) and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
+
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
       if ($old_display_pos != -1) {
         $temp_array[$row_no2]['options'] = $options;
@@ -596,7 +603,7 @@ $result->close();
       $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
       if ($old_q_type == 'random') {
         $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
-        if ($temp_array[$row_no2]['status'] != 'Experimental') {
+        if ($do_marking) {
           $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
           if (count($temp_array[$row_no2]['random']) > 0) {
             $total_random_mark += $temp_array[$row_no2]['random'][0]['random_mark'];
@@ -604,16 +611,16 @@ $result->close();
         }
       } else {
         $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-        if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') {
+        if ($do_marking) {
           $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
           $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         }
       }
-      if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
+      if ($do_marking) $total_marks += $temp_array[$row_no2]['marks'];
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $tmp_exclude, $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string);
+        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $tmp_exclude, $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
       }
       $old_correct      = array();
       $old_option_text  = array();
@@ -670,7 +677,7 @@ $result->close();
       $old_o_media[]    = $o_media;
     }
     $old_marks          = $marks_correct;
-    
+
     if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash', 'enhancedcalc'))) $options++;
   }
   $result->close();
@@ -693,23 +700,27 @@ $result->close();
     $temp_array[$row_no]['options'] = $options;
     $temp_array[$row_no]['o_media'] = $old_o_media;
     $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+
+    // Check for status that's excluded from marking
+    $do_marking = !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking();
+
     if ($old_q_type == 'random') {
       $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
-      if ($temp_array[$row_no2]['status'] != 'Experimental') {
+      if ($do_marking) {
         $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
         $total_random_mark += isset($temp_array[$row_no2]['random'][0]['random_mark']) ?  $temp_array[$row_no2]['random'][0]['random_mark'] : 0;
       }
     } else {
       $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-      if ($temp_array[$row_no2]['status'] != 'Experimental') {
+      if ($do_marking) {
         $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
         $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
       }
     }
-    if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
+    if ($do_marking) $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
-    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string);
+    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
 
     // If we had random questions on paper need to check if they need LaTeX
     if ($latex == 0 and count($rnd_q_ids) > 0) {
@@ -744,7 +755,7 @@ $result->close();
     reset($paper_modules);
     $moduleID = key($paper_modules);
     $module_code = $paper_modules[$moduleID];
-    
+
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $moduleID . '">' . $module_code . '</a>';
   }
   echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';
@@ -822,10 +833,9 @@ $result->close();
   $marks_incorrect_error = false;
   $paper_warnings = array();
   for ($x=1; $x<=$row_no; $x++) {
+    $status = $status_array[$temp_array[$x]['status']];
     if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0) $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
-    if ($temp_array[$x]['status'] == 'Incomplete') $paper_warnings['Incomplete'][] = $question_number + 1;
-    if ($temp_array[$x]['status'] == 'Beta') $paper_warnings['Beta'][] = $question_number + 1;
-    if ($temp_array[$x]['status'] == 'Retired') $paper_warnings['Retired'][] = $question_number + 1;
+    if ($status->get_display_warning()) $paper_warnings['status'][$status->get_name()][] = $question_number + 1;
     if ($old_screen != $temp_array[$x]['screen']) {
       if ($old_screen > 0) {
         $tmp_screen_mean = ($total_marks == 0) ? 0 : ($screen_marks / $total_marks);
@@ -841,26 +851,12 @@ $result->close();
     }
     $old_screen = $temp_array[$x]['screen'];
 
-    if ($q_highlight == $temp_array[$x]['display_pos']) {
-      echo "<script defer language=\"JavaScript\">\n";
-      echo "document.getElementById('menu2a').style.display = 'none';\n";
-      echo "document.getElementById('menu2c').style.display = 'none';\n";
-      echo "document.getElementById('menu2b').style.display = 'block';\n";
-      echo "document.PapersMenu.questionNo.value = '" . ($question_number+1) . "';\n";
-      echo "document.PapersMenu.questionID.value = '" . $temp_array[$x]['q_id'] . "';\n";
-      echo "document.PapersMenu.qType.value = '" . $temp_array[$x]['q_type'] . "';\n";
-      echo "document.PapersMenu.screenNo.value = '" . $temp_array[$x]['screen'] . "';\n";
-      echo "document.PapersMenu.pID.value = '" . $temp_array[$x]['p_id'] . "';\n";
-      echo "document.PapersMenu.current_pos.value = " . $temp_array[$x]['display_pos'] . ";\n";
-      echo "document.PapersMenu.oldQuestionID.value = '$x';\n";
-      echo "</script>\n";
-    }
-
     $higlight_class = '';
-    if ($temp_array[$x]['status'] == 'Experimental' or $temp_array[$x]['status'] == 'Retired') {
-      $higlight_class = ' experimental';
-    } elseif ($temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
+    $status_class = '';
+    if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
       $higlight_class = ' excluded';
+    } else {
+      $status_class = ' status' . $temp_array[$x]['status'];
     }
 
     $theme_class = '';
@@ -870,12 +866,7 @@ $result->close();
       $theme_str = "<h4 class=\"theme\">" . trim($temp_array[$x]['theme']) . "</h4>\n";
     }
 
-    echo "<tr id=\"link_$x\" class=\"link_$x qline{$theme_class}";
-    if ($q_highlight == $temp_array[$x]['display_pos']) {
-      echo '; background-color:#B3C8E8';
-    } else {
-      echo $higlight_class;
-    }
+    echo "<tr id=\"link_$x\" class=\"link_$x qline{$theme_class}{$status_class}{$higlight_class}";
 
     $prevous_screen = '';
     $next_screen = '';
@@ -950,19 +941,19 @@ $result->close();
     } elseif ($temp_array[$x]['q_type'] == 'info' or $temp_array[$x]['q_type'] == 'keyword_based') {
       echo '<td>&nbsp;</td>';
     } else {
-      if ($temp_array[$x]['status'] !== 'Experimental' and $temp_array[$x]['marks'] === 'ERR') {
+      if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] === 'ERR') {
         // Only ever get in here for random questions
         if (count($temp_array[$x]['marks']) > 0) {
           echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" title="' . $string['variablenomarks'] . '" alt="' . $string['variablenomarks'] . '" /></td>';
         }
         $marks_incorrect_error = true;
-      } elseif ($temp_array[$x]['status'] === 'Experimental') {
+      } elseif ($status_array[$temp_array[$x]['status']]->get_exclude_marking()) {
         echo '<td style="text-align:right; vertical-align:top">' . $string['na'] . '</td>';
       } else {
         echo '<td class="m">' . $temp_array[$x]['marks'] . '</td>';
       }
     }
-    if ($temp_array[$x]['status'] !== 'Experimental') {
+    if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking()) {
     	$screen_marks += $temp_array[$x]['marks'];
     }
     echo '<td class="d">' . $temp_array[$x]['display_last_edited'] . '</td>';
@@ -1001,19 +992,17 @@ $result->close();
 
   // Final paper warnings.
   if ($properties->get_paper_type() == '2') {
-    if ($properties->get_summative_lock()) {
-      $warning_types = array('Incomplete', 'Beta');
-    } else {
-      $warning_types = array('Incomplete', 'Beta', 'Retired');
-    }
-    foreach ($warning_types as $warning_type) {
-      if (isset($paper_warnings[$warning_type]) and count($paper_warnings[$warning_type]) > 0) {
-        echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['following_questions'] . " '$warning_type':</strong> ";
-        foreach ($paper_warnings[$warning_type] as $question_warning) {
-          echo ' Q' . $question_warning;
+    if (isset($paper_warnings['status']) and count($paper_warnings['status']) > 0) {
+      $first = true;
+      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['following_questions'] . ":</strong> ";
+      foreach ($paper_warnings['status'] as $name => $warn_qs) {
+        if (!$first) {
+          echo ', ';
         }
-        echo "</td></tr>\n";
+        echo "<strong>'$name'</strong> Q" . implode(', Q', $warn_qs) ;
+        $first = false;
       }
+      echo "</td></tr>\n";
     }
   }
 

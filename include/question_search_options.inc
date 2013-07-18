@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Sidebar menu with question search options.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -36,7 +36,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   function getLastID(IDs) {
     var id_list = IDs.split(",");
     last_elm = id_list.length - 1;
-    
+
     return id_list[last_elm];
   }
 
@@ -46,7 +46,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
       return false;
     }
   }
-  
+
    function editQ() {
     var loc = '../question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
     if ($('#qType').val() == 'random' || $('#qType').val() == 'keyword_based') {
@@ -86,7 +86,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
       notice.focus();
     }
   }
-  
+
   function updateMenu(ID) {
     current = (document.getElementById('menu' + ID).style.display == 'block') ? 'none' : 'block';
     $('#menu' + ID).toggle();
@@ -97,15 +97,15 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
     document.getElementById('icon' + ID).setAttribute('src',icon);
     document.getElementById('icon' + ID).setAttribute('alt',alttag);
-    
+
     updateState('menu' + ID, current);
   }
 
   function updateDropdownState(mySel, NameOfState) {
     setting = mySel.options[mySel.selectedIndex].value;
-    updateState(NameOfState, setting);    
+    updateState(NameOfState, setting);
   }
-  
+
   function selectDateRadio() {
     document.getElementById('question_date5').checked = true;
   }
@@ -201,7 +201,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:none\">\n";
   }
-  
+
   $date_options = array("dont remember"=>$string['dont remember'], "week"=>$string['week'], "month"=>$string['month'], "year"=>$string['year'], "specify"=>$string['specify']);
   $i = 1;
   foreach ($date_options as $date_value=>$date_label) {
@@ -350,14 +350,16 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:none\">\n";
   }
 
-//TODO this area similar to the question_list_options file
+if (!isset($status_array)) {
+  $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+}
 ?>
   <tr><td>
   <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
   <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', 100); ?></div>
-  <div style="margin-left:4px"><?php echo $string['status'].': '; search_utils::display_status_dropdown(); ?></div>
+  <div style="margin-left:4px"><?php echo $string['status'].': '; search_utils::display_status_dropdown($status_array); ?></div>
   <div style="margin-left:4px"><?php echo $string['blooms'].': '; search_utils::display_blooms_dropdown(); ?></div>
-  
+
   <div style="margin-left:4px"><?php echo $string['keyword'].': '; ?> <select style="width:175px" name="keywordID"><br />
   <option value=""></option>
 <?php
@@ -379,7 +381,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
   if ($stmt->num_rows > 0) echo "</optgroup>\n";
   $stmt->close();
-  
+
   echo "<optgroup label=\"Personal Keywords\">\n";
   $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID=? ORDER BY keyword");
   $stmt->bind_param('i', $userObject->get_user_ID());

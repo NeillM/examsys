@@ -29,6 +29,7 @@ require '../classes/dateutils.class.php';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/logger.class.php';
+require_once '../classes/question_status.class.php';
 
 check_var('q_id', 'GET', true, false, false);
 
@@ -164,6 +165,17 @@ if (!isset($_POST['submit'])) {
 
     $save_ok = true;
 
+    // Get question statuses
+    $default_status = -1;
+    $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+    // Set copies of retired questions to default statuses
+    foreach ($status_array as $tmp_status) {
+      if ($tmp_status->get_is_default()) {
+        $default_status = $tmp_status->id;
+        break;
+      }
+    }
+
     while ($result->fetch()) {
 
       $o_result = $mysqli->prepare("SELECT * FROM options WHERE o_id=? ORDER BY id_num");
@@ -196,10 +208,16 @@ if (!isset($_POST['submit'])) {
         }
       }
 
+      if ($status_array[$status]->get_retired()) {
+        $new_status = $default_status;
+      } else {
+        $new_status = $status;
+      }
+
       $mysqli->autocommit(false);
 
-      $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?, ?)");
-      $addQuestion->bind_param('ssssssssissssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method, $settings);
+      $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?)");
+      $addQuestion->bind_param('ssssssssisssssssisss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings);
       $res = $addQuestion->execute();
       if ($res === false) {
         $save_ok = false;

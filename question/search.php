@@ -26,8 +26,11 @@
 
 require '../include/staff_auth.inc';
 require_once '../classes/questionutils.class.php';
+require_once '../classes/question_status.class.php';
+
 set_time_limit(0);
 
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -43,10 +46,12 @@ set_time_limit(0);
   <style type="text/css">
     .o {color:#A5A5A5}
     .l {padding-left:6px; vertical-align:top}
-    .retired {color:#808080}
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
     .qline:hover {background-color:#eee}
     .qline.highlight {background-color:#B3C8E8}
+    .retired {color:#808080}
+
+<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -147,7 +152,11 @@ if (isset($_POST['submit'])) {
     $error = $string['notickedfields'];
   }
 
-  if ($_POST['searchterm'] == '' and $_POST['owner'] == '' and  $_POST['status'] == '%' and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['status'] == '%' and $_POST['module'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
+  if (!isset($_POST['status'])) {
+    $error = $string['notickedstatus'];
+  }
+
+  if (($_POST['searchterm'] == '' or $_POST['searchterm'] == '%') and $_POST['owner'] == '' and  (isset($_POST['status']) and count($_POST['status']) == count($status_array)) and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['module'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
     $error = $string['narrowyoursearch'];
   }
 
@@ -241,14 +250,8 @@ if (isset($_POST['submit'])) {
     }
   }
 
-  if (isset($_POST['status']) and $_POST['status'] != '%') {
-    if ($_POST['status'] == 'nonretired') {
-      $status_string = " AND questions.status != 'retired'";
-    } else {
-      $status_string = ' AND questions.status=?';
-      $variables[] = $_POST['status'];
-      $params .= 's';
-    }
+  if (isset($_POST['status'])) {
+    $status_string = " AND questions.status IN (" . implode(',', $_POST['status']) . ")";
   } else {
     $status_string = '';
   }
@@ -345,10 +348,8 @@ if (isset($_POST['submit'])) {
   </tr>
 <?php
   while ($result->fetch()) {
-    echo '<tr class="qline';
-    if ($status == 'Retired') {
-      echo ' retired';
-    }
+    $status_class = ' status' . $status_array[$status]->id;
+    echo '<tr class="qline' . $status_class;
     if ($locked != '') {
       echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2c',event); return false;\" ondblclick=\"editQ(); return false;\"><td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['locked'] . "\" /></td>";
     } else {

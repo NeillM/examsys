@@ -38,6 +38,7 @@ require_once '../classes/logmetadata.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/mathsutils.class.php';
 require_once '../classes/log_lab_end_time.class.php';
+require_once '../classes/question_status.class.php';
 require_once '../include/demo_replace.inc';
 
 check_var('id', 'GET', true, false, false);
@@ -305,8 +306,9 @@ require '../config/finish.inc';
     }
   }
 
+  $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   if ($show_feedback) {
-    display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $metadataid, $mysqli, $preview_q_id);
+    display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $metadataid, $mysqli, $status_array, $preview_q_id);
 
     // Record the fact that the script has been viewed.
     $logger = new Logger($mysqli);

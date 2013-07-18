@@ -34,6 +34,7 @@ class IE_Local_Save extends IE_Main {
   var $o_rows = array();
   var $o_row = array();
   var $db;
+  var $statuses = array();
 
   // Rogo save parameters:
   // for saving questions
@@ -142,7 +143,7 @@ class IE_Local_Save extends IE_Main {
       $this->q_row['last_edited'] = date("Y-m-d H:i:s");
       $this->q_row['q_type'] = $question->type;
 
-      $this->q_row['status'] = $question->status;
+      $this->q_row['status'] = isset($this->statuses[$question->status]) ? $this->statuses[$question->status] : $this->default_status;
 
       $this->q_row['theme'] = $question->theme;
       $this->q_row['notes'] = $question->notes;
@@ -769,7 +770,7 @@ class IE_Local_Save extends IE_Main {
           if(!in_array($u_kwds[$i]['id'], $user_keywords[$u_kwds[$i]['keyword']]))
           {
             $user_keywords[$u_kwds[$i]['keyword']][] = $u_kwds[$i]['id'];
-          } 
+          }
         }
       }
     }*/
@@ -821,5 +822,13 @@ class IE_Local_Save extends IE_Main {
 
 
     return $new_keywords;
+  }
+
+  public function setStatuses($statuses) {
+    $this->statuses = $statuses;
+  }
+
+  public function setDefaultStatus($sid) {
+    $this->default_status = $sid;
   }
 }

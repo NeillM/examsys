@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Utility class for search related functionality
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -26,7 +26,7 @@
 
 
 Class search_utils {
- 
+
   /**
    * Get an array with staff modules information the current user has access to.
    * @return array of staff module information
@@ -35,7 +35,7 @@ Class search_utils {
     trigger_error("get_staff_modules:: Called and it has been removed", E_USER_WARNING);
     return array();
   }
-  
+
   /**
    * Get a list of personal and group keywords for the current user.
    * @param object $db database connection
@@ -45,7 +45,7 @@ Class search_utils {
    */
   static function get_keywords($db, $teams, $user_id) {
     $keywords = array('team' => array(), 'personal' => array());
-    
+
     $teams = (is_array($teams)) ? implode("','", $teams) : $teams;
     $result = $db->prepare("SELECT m.moduleid, k.keyword, k.id FROM keywords_user k INNER JOIN modules m ON k.userID = m.id WHERE k.keyword_type = 'team' AND m.moduleid IN ('$teams') ORDER BY m.moduleid, k.keyword");
     $result->execute();
@@ -54,7 +54,7 @@ Class search_utils {
       $keywords['team'][] = array('module_id' => $moduleID, 'keyword_id' => $keywordID, 'keyword' => $keyword);
     }
     $result->close();
-    
+
     $result = $db->prepare("SELECT DISTINCT keyword, id FROM keywords_user WHERE userID = ? AND keyword_type = 'personal' ORDER BY keyword");
     $result->bind_param('i', $user_id);
     $result->execute();
@@ -63,7 +63,7 @@ Class search_utils {
       $keywords['personal'][] = array('keyword_id' => $keywordID, 'keyword' => $keyword);
     }
     $result->close();
-    
+
     return $keywords;
   }
 
@@ -75,12 +75,12 @@ Class search_utils {
    */
   static function display_staff_modules_dropdown($userObj, $db) {
     global $string;
-    
+
     $staff_modules = $userObj->get_staff_accessable_modules();
-    
+
     echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'module')\" name=\"module\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
-    
+
     $old_school = '';
     foreach ($staff_modules as $module) {
       if ($module['school'] != $old_school) {
@@ -96,7 +96,7 @@ Class search_utils {
     }
     echo "</optgroup>\n</select>\n";
   }
-  
+
   /**
    * Get a list of names for people in the current user teams.
    * @param array $teams teams the current user is on
@@ -121,7 +121,7 @@ Class search_utils {
       $owners[$id]['surname'] = $surname;
     }
     $stmt->close();
-    
+
     return $owners;
   }
 
@@ -135,7 +135,7 @@ Class search_utils {
   static function display_owners_dropdown($userObj, $db, $type, $font_size = 90) {
     global $string, $state;
     $owners = self::get_owners($userObj, $db);
-    
+
     echo "<select style=\"width:175px; font-size:$font_size%\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\">\n";
     echo "<option value=\"\">" . $string['anyowner']. "</option>\n";
     if ($type == 'questions') {
@@ -144,7 +144,7 @@ Class search_utils {
       echo "<option value=\"{$userObj->get_user_ID()}\">" . $string['mypaperssonly']. "</option>\n";
     }
     //echo "<option value=\"%\" style=\"background-color:#ECE9D8\"></option>\n";
-    
+
     $old_letter = '';
     foreach ($owners as $ownerID=>$details) {
       if ($old_letter != strtoupper(substr($details['surname'],0,1))) {
@@ -160,31 +160,35 @@ Class search_utils {
     }
     echo "</optgroup>\n</select>\n";
   }
-  
+
   /**
    * Display a dropdown menu of status options for a question.
+   * @param array $status_array Array of question statuses
    * @return string HTML of the status dropdown menu
    */
-  static function display_status_dropdown() {
-    global $string, $state;
-    
-    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'status')\" name=\"status\">\n";
-    echo "<option value=\"nonretired\">" . $string['anynonretiredstatus'] . "</option>\n";
-    if (isset($state['status']) and $state['status'] == '%') {
-      echo "<option value=\"%\" selected>" . $string['anystatus'] . "</option>\n";
-    } else {
-      echo "<option value=\"%\">" . $string['anystatus'] . "</option>\n";
-    }
-    $status_array = array('Normal', 'Retired', 'Incomplete', 'Experimental', 'Beta');
+  static function display_status_dropdown($status_array) {
+    global $string, $state, $mysqli;
+
+    $stored_statuses = (isset($state['status'])) ? explode(',', $state['status']) : array();
+
+    $html = '';
+
+    echo "<br />\n";
     foreach ($status_array as $individual_status) {
-      if (isset($state['status']) and $state['status'] == $individual_status) {
-        echo "<option value=\"$individual_status\" selected>" . $string[strtolower($individual_status)] . "</option>"; 
+      if (isset($state['status' . $individual_status->id])) {
+        $state_check = $state['status' . $individual_status->id] === 'true';
       } else {
-        echo "<option value=\"$individual_status\">" . $string[strtolower($individual_status)] . "</option>"; 
+        $state_check = (!$individual_status->get_retired());
       }
+      $sel_mod = ($state_check) ? ' checked' : '';
+
+      $html .= <<<STATUS
+<input type="checkbox" id="status{$individual_status->id}" name="status[]" value="{$individual_status->id}" class="chk"{$sel_mod} />
+<label for="status{$individual_status->id}">{$individual_status->get_name()}</label><br />\n
+
+STATUS;
     }
-    echo "</select>\n";    
-    
+    echo $html;
   }
 
   /**
@@ -193,16 +197,16 @@ Class search_utils {
    */
   static function display_blooms_dropdown() {
     global $string, $state;
-    
+
     echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'bloom')\" name=\"bloom\">\n";
     echo "<option value=\"%\">" . $string['alllevels'] . "</option>\n";
 
     $blooms_array = array('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation');
     foreach ($blooms_array as $individual_bloom) {
       if (isset($state['bloom']) and $state['bloom'] == $individual_bloom) {
-        echo "<option value=\"$individual_bloom\" selected>" . $string[strtolower($individual_bloom)] . "</option>"; 
+        echo "<option value=\"$individual_bloom\" selected>" . $string[strtolower($individual_bloom)] . "</option>";
       } else {
-        echo "<option value=\"$individual_bloom\">" . $string[strtolower($individual_bloom)] . "</option>"; 
+        echo "<option value=\"$individual_bloom\">" . $string[strtolower($individual_bloom)] . "</option>";
       }
     }
     echo "</select>\n";
