@@ -2385,11 +2385,13 @@ QUERY;
         CREATE TABLE `question_statuses` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `name` varchar(255) NOT NULL,
-          `exclude_marking` tinyint(3) NOT NULL DEFAULT '0',
-          `retired` tinyint(3) NOT NULL DEFAULT '0',
-          `is_default` tinyint(3) NOT NULL DEFAULT '0',
+          `exclude_marking` tinyint(4) NOT NULL DEFAULT '0',
+          `retired` tinyint(3) NOT NULL,
+          `is_default` tinyint(4) NOT NULL DEFAULT '0',
           `change_locked` tinyint(3) NOT NULL DEFAULT '1',
           `validate` tinyint(3) NOT NULL DEFAULT '1',
+          `display_warning` tinyint(3) DEFAULT '0',
+          `colour` char(7) DEFAULT '#000000',
           `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
