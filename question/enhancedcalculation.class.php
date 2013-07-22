@@ -40,13 +40,13 @@ class EnhancedCalculation extends Question implements questionInterface {
   function splitnumbunit($input) {
     $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
     $out = preg_match($pattern, $input, $matches);
-    if(is_array($matches) and isset($matches[0])) {
+    if(is_array($matches) and isset($matches[1])) {
       $sz = strlen($matches[0]);
       $units = trim(substr($input, $sz));
       $numb = $matches[0];
       return array($numb, $units);
     } else {
-      return array($input, '');
+      return array($input, $this->useranswer['uansunit']);
     }
   }
 
@@ -192,17 +192,21 @@ class EnhancedCalculation extends Question implements questionInterface {
       
       $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans']);
       
-      $this->useranswer['status']['tolerance_full']     = $enhancedcalcObj->is_useranswer_within_tolerance(
-                                                                                                            $this->useranswer['uansnumb'], 
-                                                                                                            $this->useranswer['ans']['tolerance_fullansneg'], 
-                                                                                                            $this->useranswer['ans']['tolerance_fullans']
-                                                                                                          );
-      
-      $this->useranswer['status']['tolerance_partial']  = $enhancedcalcObj->is_useranswer_within_tolerance(
-                                                                                                            $this->useranswer['uansnumb'], 
-                                                                                                            $this->useranswer['ans']['tolerance_partialansneg'], 
-                                                                                                            $this->useranswer['ans']['tolerance_partialans']
-                                                                                                          );
+      if($this->useranswer['status']['exact'] === false) {
+        $this->useranswer['status']['tolerance_full']     = $enhancedcalcObj->is_useranswer_within_tolerance(
+                                                                                                              $this->useranswer['uansnumb'], 
+                                                                                                              $this->useranswer['ans']['tolerance_fullansneg'], 
+                                                                                                              $this->useranswer['ans']['tolerance_fullans']
+                                                                                                            );
+        
+        if($this->useranswer['status']['tolerance_full'] === false) {
+          $this->useranswer['status']['tolerance_partial']  = $enhancedcalcObj->is_useranswer_within_tolerance(
+                                                                                                                $this->useranswer['uansnumb'], 
+                                                                                                                $this->useranswer['ans']['tolerance_partialansneg'], 
+                                                                                                                $this->useranswer['ans']['tolerance_partialans']
+                                                                                                              );
+        }
+      }
       //strict dp marking
       if ( $this->is_strict_dp_enabled() ) {
         
@@ -352,8 +356,6 @@ class EnhancedCalculation extends Question implements questionInterface {
   public function render_feedback($extra = array()) {
     global $string, $tmp_fback;
     print "ENHANCED CALC QUESTION FEEDBACK";
-    //var_dump($this->settings);
-    var_dump($this->useranswer);
 
     //make sure data is arrays not encoded
     if (!is_array($this->useranswer)) {

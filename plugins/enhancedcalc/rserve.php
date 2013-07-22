@@ -111,7 +111,7 @@ class enhancedcalc_rserve {
     $res['tolerance'] = $tolerance_full;
 
     $tolerance_fullans = $this->evalString("$correctanswer + $tolerance_full");
-    $res['toleranceans'] = $tolerance_fullans;
+    $res['tolerance_ans'] = $tolerance_fullans;
 
     $tolerance_fullansneg = $this->evalString("$correctanswer - $tolerance_full");
     $res['tolerance_ansneg'] = $tolerance_fullansneg;

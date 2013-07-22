@@ -90,6 +90,10 @@ Class Question {
   function setsettings($settings) {
     $this->settings = $settings;
   }
+  
+  function setuseranswer($useranswer) {
+    $this->useranswer = $useranswer;
+  }
 
   function exportsave(&$array) {
     $classvar = get_object_vars($this);
