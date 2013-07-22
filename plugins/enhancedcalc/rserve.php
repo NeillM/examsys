@@ -18,17 +18,15 @@
 
 /**
  *
- * The already logged in authentication class
+ * R based maths functions  for calculation  questions
  *
- * @author Simon Atack
+ * @author Simon Atack, Anthony Brown
  * @version 1.0
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
 
-
 require_once('../rserve/Connection.php');
-
 
 class enhancedcalc_rserve {
 
@@ -36,27 +34,24 @@ class enhancedcalc_rserve {
   static protected $cnx = false;
 
   protected $config;
-  protected $configObj;
   protected $db;
-
+  
+  public $error = false;
+  public $error_msg = '';
 
   function __construct($configObj) {
-    $this->configObj = $configObj;
-    $this->config = $this->configObj->getbyref('enhancedcalculation');
+    $this->config = $configObj->getbyref('enhancedcalculation');
   }
-
-  function calculate($useranswer, &$settings) {
-    //self::$cnx=false;
-
-    $useransweradd = array();
-    //useranswer contains the variable values and the answer supplied by user
-    //settings contains the formula as well as tolerances etc.
-
+  
+  function connect() {
+   
+    $this->reset_error();
+    
     if (is_null(self::$cnx)) {
       //connection failed
-      return array(Q_MARKING_UNMARKED, array());
+      $this->set_error("Can Not Connect"); 
+      return false;
     }
-
 
     // if the box isnt on this timeout is ignored and is likely to be different
     if (!isset($this->config['timeout'])) {
@@ -70,375 +65,191 @@ class enhancedcalc_rserve {
         self::$cnx = @new Rserve_Connection($this->config['host'], $this->config['port'], $timeoutarray);
       } catch (exception $except) {
         self::$cnx = null;
-
-        return array(Q_MARKING_UNMARKED, array());
+        $this->set_error("Can Not Connect");
+        return false;
       }
+      return true;
     } else {
-      //reset connection
-      $result = self::$cnx->evalString('rm(list=ls(all=TRUE))');
+      //We are connected
+      return true;
     }
-
-    $formula = $useranswer['ans']['formula_used'];
-    $varname = array_keys($useranswer['vars']);
-    $varvalue = array_values($useranswer['vars']);
-    $formula = str_replace($varname, $varvalue, $formula);
-
-    $op = self::$cnx->evalString("ANS = $formula");
-
-    $correctanswer = self::$cnx->evalString("paste(capture.output(print((ANS))),collapse='\\n');");
-
-    $pos = strpos($correctanswer, ' ');
-
-    $useranswer['cans'] = substr($correctanswer, $pos + 1);
-
-    if (isset($useranswer['uansnumb'])) {
-      $uans = $useranswer['uansnumb'];
-    } else {
-      $uans = $useranswer['uans'];
+  }
+  
+  function caculate_correct_ans($vars,$formula) {
+    
+    if(!$this->connect()) {
+      return false;
     }
     
-    $answered = true; 
-    if($uans == '') {
-      //no ans provided so we cant check it 
-      $useranswer['status']['exact'] = false;
-      $answered = false; 
-    } else {
-      $status = self::$cnx->evalString("ANS == $uans");
-      if ($status === true) {
-        //correct
-        $useranswer['status']['exact'] = true;
-      } else {
-        $useranswer['status']['exact'] = false;
-      }
-    }
-
-    if (isset($settings['tolerance_full'])) {
-      if (!isset($settings['tolerance_fullneg'])) {
-        $settings['tolerance_fullneg'] = $settings['tolerance_full'];
-        $settings['tolerance_fullnegtyp'] = $settings['fulltoltyp'];
-      }
-      switch ($settings['fulltoltyp']) {
-        case "%":
-          $op = self::$cnx->evalString("tolerance_full = ANS * (" . $settings['tolerance_full'] . "/100)");
-          $tolerance_full = self::$cnx->evalString("paste(capture.output(print((tolerance_full))),collapse='\\n');");
-          $pos = strpos($tolerance_full, ' ');
-          $useranswer['ans']['tolerance_full'] = substr($tolerance_full, $pos + 1);
-          $op = self::$cnx->evalString("tolerance_fullANS = ANS + tolerance_full");
-          $tolerance_fullans = self::$cnx->evalString("paste(capture.output(print((tolerance_fullANS))),collapse='\\n');");
-          $pos = strpos($tolerance_fullans, ' ');
-          $useranswer['ans']['tolerance_fullans'] = substr($tolerance_fullans, $pos + 1);
-          break;
-        case "#":
-          $op = self::$cnx->evalString("tolerance_full =  " . $settings['tolerance_full']);
-          $tolerance_full = self::$cnx->evalString("paste(capture.output(print((tolerance_full))),collapse='\\n');");
-          $pos = strpos($tolerance_full, ' ');
-          $useranswer['ans']['tolerance_full'] = substr($tolerance_full, $pos + 1);
-          $op = self::$cnx->evalString("tolerance_fullANS = ANS + tolerance_full");
-          $tolerance_fullans = self::$cnx->evalString("paste(capture.output(print((tolerance_fullANS))),collapse='\\n');");
-          $pos = strpos($tolerance_fullans, ' ');
-          $useranswer['ans']['tolerance_fullans'] = substr($tolerance_fullans, $pos + 1);
-          break;
-        case "sf":
-          $tolerance_fullans = self::$cnx->evalString("tolerance_fullANS =  signif(ANS," . $settings['tolerance_full'] . ")");
-          $pos = strpos($tolerance_fullans, ' ');
-          $useranswer['ans']['tolerance_fullans'] = substr($tolerance_fullans, $pos + 1);
-          break;
-      }
-      switch ($settings['tolerance_fullnegtyp']) {
-        case "%":
-          $op = self::$cnx->evalString("tolerance_fullNEG = abs(ANS * (" . $settings['tolerance_fullneg'] . "/100))");
-          $tolerance_fullneg = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEG))),collapse='\\n');");
-          $neg = strpos($tolerance_fullneg, ' ');
-          $useranswer['ans']['tolerance_fullneg'] = substr($tolerance_fullneg, $neg + 1);
-          $op = self::$cnx->evalString("tolerance_fullNEGANS = ANS - tolerance_fullNEG");
-          $tolerance_fullnegans = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEGANS))),collapse='\\n');");
-          $neg = strpos($tolerance_fullnegans, ' ');
-          $useranswer['ans']['tolerance_fullnegans'] = substr($tolerance_fullnegans, $neg + 1);
-          break;
-        case "#":
-          $op = self::$cnx->evalString("tolerance_fullNEG =  " . $settings['tolerance_fullneg']);
-          $tolerance_fullneg = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEG))),collapse='\\n');");
-          $neg = strpos($tolerance_fullneg, ' ');
-          $useranswer['ans']['tolerance_fullneg'] = substr($tolerance_fullneg, $neg + 1);
-          $op = self::$cnx->evalString("tolerance_fullNEGANS = ANS - tolerance_fullNEG");
-          $tolerance_fullnegans = self::$cnx->evalString("paste(capture.output(print((tolerance_fullNEGANS))),collapse='\\n');");
-          $neg = strpos($tolerance_fullnegans, ' ');
-          $useranswer['ans']['tolerance_fullnegans'] = substr($tolerance_fullnegans, $neg + 1);
-          break;
-        case "sf":
-          $tolerance_fullnegans = self::$cnx->evalString("tolerance_fullNEGANS =  signif(ANS," . $settings['tolerance_fullneg'] . ")");
-          $neg = strpos($tolerance_fullnegans, ' ');
-          $useranswer['ans']['tolerance_fullnegans'] = substr($tolerance_fullnegans, $neg + 1);
-          break;
-      }
-      switch ($settings['fulltoltyp']) {
-        case "sf":
-          $status = false;
-          if($answered) {
-            $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['tolerance_full'] . ")");
-            $status = self::$cnx->evalString("UANSSF ==  tolerance_fullANS");
-          }
-          if ($status === true) {
-            //correct
-            $useranswer['status']['tolerance_full'] = true;
-          } else {
-            $useranswer['status']['tolerance_full'] = false;
-          }
-          break;
-        case "%":
-        case "#":
-          $status = false;
-          if($answered) {
-            $status = self::$cnx->evalString("tolerance_fullNEGANS <= $uans");
-            $status1 = self::$cnx->evalString("$uans <= tolerance_fullANS");
-          }
-          if ($status === true and $status1 === true) {
-            //correct
-            $useranswer['status']['tolerance_full'] = true;
-          } else {
-            $useranswer['status']['tolerance_full'] = false;
-          }
-          break;
-      }
-
-    }
-    if (isset($settings['tolerance_partial'])) {
-      if (!isset($settings['tolerance_partialneg'])) {
-        $settings['tolerance_partialneg'] = $settings['tolerance_partial'];
-        $settings['tolerance_partialnegtyp'] = $settings['parttoltyp'];
-      }
-      switch ($settings['parttoltyp']) {
-        case "%":
-          $op = self::$cnx->evalString("tolerance_partial = ANS * (" . $settings['tolerance_partialneg'] . "/100)");
-          $tolerance_partial = self::$cnx->evalString("paste(capture.output(print((tolerance_partial))),collapse='\\n');");
-          $pos = strpos($tolerance_partial, ' ');
-          $useranswer['ans']['tolerance_partial'] = substr($tolerance_partial, $pos + 1);
-          $op = self::$cnx->evalString("tolerance_partialANS = ANS + tolerance_partial");
-          $tolerance_partialans = self::$cnx->evalString("paste(capture.output(print((tolerance_partialANS))),collapse='\\n');");
-          $pos = strpos($tolerance_partialans, ' ');
-          $useranswer['ans']['tolerance_partialans'] = substr($tolerance_partialans, $pos + 1);
-          break;
-        case "#":
-          $op = self::$cnx->evalString("tolerance_partial =  " . $settings['tolerance_partialneg']);
-          $tolerance_partial = self::$cnx->evalString("paste(capture.output(print((tolerance_partial))),collapse='\\n');");
-          $pos = strpos($tolerance_partial, ' ');
-          $useranswer['ans']['tolerance_partial'] = substr($tolerance_partial, $pos + 1);
-          $op = self::$cnx->evalString("tolerance_partialANS = ANS + tolerance_partial");
-          $tolerance_partialans = self::$cnx->evalString("paste(capture.output(print((tolerance_partialANS))),collapse='\\n');");
-          $pos = strpos($tolerance_partialans, ' ');
-          $useranswer['ans']['tolerance_partialans'] = substr($tolerance_partialans, $pos + 1);
-          break;
-        case "sf":
-          $tolerance_partialans = self::$cnx->evalString("tolerance_partialANS =  signif(ANS," . $settings['tolerance_partial'] . ")");
-          $pos = strpos($tolerance_partialans, ' ');
-          $useranswer['ans']['tolerance_partialans'] = substr($tolerance_partialans, $pos + 1);
-          break;
-      }
-      switch ($settings['tolerance_partialnegtyp']) {
-        case "%":
-          $op = self::$cnx->evalString("tolerance_partialNEG = abs(ANS * (" . $settings['tolerance_partialneg'] . "/100))");
-          $tolerance_partialneg = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEG))),collapse='\\n');");
-          $neg = strpos($tolerance_partialneg, ' ');
-          $useranswer['ans']['tolerance_partialneg'] = substr($tolerance_partialneg, $neg + 1);
-          $op = self::$cnx->evalString("tolerance_partialNEGANS = ANS - tolerance_partialNEG");
-          $tolerance_partialnegans = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEGANS))),collapse='\\n');");
-          $neg = strpos($tolerance_partialnegans, ' ');
-          $useranswer['ans']['tolerance_partialnegans'] = substr($tolerance_partialnegans, $neg + 1);
-          break;
-        case "#":
-          $op = self::$cnx->evalString("tolerance_partialNEG =  " . $settings['tolerance_partialneg']);
-          $tolerance_partialneg = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEG))),collapse='\\n');");
-          $neg = strpos($tolerance_partialneg, ' ');
-          $useranswer['ans']['tolerance_partialneg'] = substr($tolerance_partialneg, $neg + 1);
-          $op = self::$cnx->evalString("tolerance_partialNEGANS = ANS - tolerance_partialNEG");
-          $tolerance_partialnegans = self::$cnx->evalString("paste(capture.output(print((tolerance_partialNEGANS))),collapse='\\n');");
-          $neg = strpos($tolerance_partialnegans, ' ');
-          $useranswer['ans']['tolerance_partialnegans'] = substr($tolerance_partialnegans, $neg + 1);
-          break;
-        case "sf":
-          $tolerance_partialnegans = self::$cnx->evalString("tolerance_partialNEGANS =  signif(ANS," . $settings['tolerance_partialneg'] . ")");
-          $neg = strpos($tolerance_partialnegans, ' ');
-          $useranswer['ans']['tolerance_partialnegans'] = substr($tolerance_partialnegans, $neg + 1);
-          break;
-      }
-      switch ($settings['parttoltyp']) {
-        case "sf":
-          $status = false;
-          if($answered) {
-            $uanssf = self::$cnx->evalString("UANSSF =  signif($uans," . $settings['tolerance_partial'] . ")");
-            $status = self::$cnx->evalString("UANSSF ==  tolerance_partialANS");
-          }
-          if ($status === true) {
-            //correct
-            $useranswer['status']['tolerance_partial'] = true;
-          } else {
-            $useranswer['status']['tolerance_partial'] = false;
-          }
-          break;
-        case "%":
-        case "#":
-          $status = false;
-          if($answered) {
-            $status = self::$cnx->evalString("tolerance_partialNEGANS <= $uans");
-            $status1 = self::$cnx->evalString("$uans <= tolerance_partialANS");
-          }
-          if ($status === true and $status1 === true) {
-            //correct
-            $useranswer['status']['tolerance_partial'] = true;
-          } else {
-            $useranswer['status']['tolerance_partial'] = false;
-          }
-          break;
-      }
-
-    }
-
-    //dp display
-    if (isset($settings['strictdisplay']) and $settings['strictdisplay'] === true and isset($settings['dp'])) {
+    $varname = array_keys($vars);
+    $varvalue = array_values($vars);
+    $formula_vars_subed = str_replace($varname, $varvalue, $formula);
+    
+    //old caculation fomula use pow() - define a function in R for backward compatibility
+    $this->evalString("POW <- pow <- function(a,b) { return(a^b) } ");
+    
+    $correctanswer = $this->evalString($formula_vars_subed);
+   
+    return $correctanswer;
+  }
+  
+  function is_useranswer_correct($useranswer, $correctanswer) {
+    
+    $status = $this->evalString("$correctanswer == $useranswer");
       
-      if(!$answered) {
-       $useranswer['status']['strictdp'] = false;
-       $useranswer['status']['strictdpsize'] = false;
-      } else {
-        $strpos = strpos($uans, '.');
-        $strpos1 = stripos($uans, 'e', $strpos);
-        if ($strpos1 === false) {
-          $strpos1 = strlen($uans);
-        }
-        $dps = $strpos1 - $strpos - 1;
-        $useranswer['ans']['strictdps'] = $dps;
-        $useranswer['ans']['strictpos'] = $strpos;
-        $useranswer['ans']['strictpos1'] = $strpos1;
-        $op = self::$cnx->evalString("STRICTDP = format(round($uans," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
-        $dpans = self::$cnx->evalString("paste(capture.output(print((STRICTDP))),collapse='\\n');");
-        $dpans = str_replace('"', '', $dpans);
-        $pos = strpos($dpans, ' ');
-        $useranswer['ans']['strictdp'] = substr($dpans, $pos + 1);
-        $status = self::$cnx->evalString("$uans == " . $useranswer['ans']['strictdp']);
-
-        if ($status === true) {
-          //correct
-          $useranswer['status']['strictdp'] = true;
-        } else {
-          $useranswer['status']['strictdp'] = false;
-        }
-        if ($dps == $settings['dp']) {
-          //correct
-          $useranswer['status']['strictdpsize'] = true;
-        } else {
-          $useranswer['status']['strictdpsize'] = false;
-        }
-      }
+    if ($status === true) {
+      return true;
+    } else {
+      return false;
     }
+    
+  }
+  
+  function caculate_tolerance_percent($correctanswer,$percentage) {
+   
+    $tolerance_full = $this->evalString("$correctanswer * (" . $percentage . "/100)");
+    $res['tolerance'] = $tolerance_full;
 
-    if (isset($settings['dp'])) {
-      if(!$answered)  {
-       $useranswer['status']['dp'] = false;
-       $useranswer['status']['dpsize'] = false;
-      } else {
-        $strpos = strpos($uans, '.');
-        $strpos1 = stripos($uans, 'e', $strpos);
-        if ($strpos1 === false) {
-          $strpos1 = strlen($uans);
-        }
-        $dps = $strpos1 - $strpos - 1;
-        $useranswer['ans']['dps'] = $dps;
-        $useranswer['ans']['pos'] = $strpos;
-        $useranswer['ans']['pos1'] = $strpos1;
-        $op = self::$cnx->evalString("DP = format(round(" . $uans ."," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
-        $dpans = self::$cnx->evalString("paste(capture.output(print((DP))),collapse='\\n');");
-        $dpans = str_replace('"', '', $dpans);
-        $pos = strpos($dpans, ' ');
-        $useranswer['ans']['dp'] = substr($dpans, $pos + 1);
-        $status = self::$cnx->evalString("$uans == " . $useranswer['ans']['dp']);
+    $tolerance_fullans = $this->evalString("$correctanswer + $tolerance_full");
+    $res['toleranceans'] = $tolerance_fullans;
 
-        if ($status === true) {
-          //correct
-          $useranswer['status']['dp'] = true;
-        } else {
-          $useranswer['status']['dp'] = false;
-        }
-        if ($dps == $settings['dp']) {
-          //correct
-          $useranswer['status']['dpsize'] = true;
-        } else {
-          $useranswer['status']['dpsize'] = false;
-        }
-      }
+    $tolerance_fullansneg = $this->evalString("$correctanswer - $tolerance_full");
+    $res['tolerance_ansneg'] = $tolerance_fullansneg;
+
+    return $res;
+  }
+  
+  function caculate_tolerance_absolute($correctanswer,$value) {
+    
+    $res['tolerance'] = $value;
+    
+    $tolerance_fullans = $this->evalString("$correctanswer + $value");
+    $res['tolerance_ans'] = $tolerance_fullans;
+    
+    $tolerance_fullansneg = $this->evalString("$correctanswer - $value");
+    $res['tolerance_ansneg'] = $tolerance_fullansneg;
+  
+    return $res;
+  }
+  
+  /*function caculate_tolerance_significant_figures($correctanswer,$sf) {
+    
+    $res['tolerance'] = $sf;
+    
+    $tolerance_fullans = $this->evalString("signif($correctanswer, $sf)");
+    $res['tolerance_ans'] = $tolerance_fullans;
+    
+    $tolerance_fullnegans = $this->evalString("signif($tolerance_fullans, $sf)");
+    $res['tolerance_negans'] = $tolerance_fullnegans;
+    
+    return $res;
+  }*/
+  
+  function is_useranswer_within_tolerance($useranswer, $min, $max) {
+        
+    $status = $this->evalString("$useranswer <= $max");
+    $status1 = $this->evalString("$useranswer >= $min");
+    
+    if ($status === true and $status1 === true) {
+      //correct
+      return true;
+    } else {
+      return false;
     }
-
-    $correctdataanswrs = array(&$useranswer['cans'], &$useranswer['ans']['tolerance_full'], &$useranswer['ans']['tolerance_fullans'], &$useranswer['ans']['tolerance_fullneg'], &$useranswer['ans']['tolerance_fullnegans'], &$useranswer['ans']['tolerance_partial'], &$useranswer['ans']['tolerance_partialans'], &$useranswer['ans']['tolerance_partialneg'], &$useranswer['ans']['tolerance_partialnegans']);
-
-
-    // if dp set then make all answers in that formating
-    if (isset($settings['dp'])) {
-      // saved answers need to be corrected to correct dp
-      if (isset($settings['strictzeros']) and $settings['strictzeros'] === true) {
-        //trailing 0s needed
-        foreach ($correctdataanswrs as $key => $value) {
-          $op = self::$cnx->evalString("DPDISP = format(round(" . $value . "," . $settings['dp'] . "), nsmall = " . $settings['dp'] . ")");
-          $dpform = self::$cnx->evalString("paste(capture.output(print((DPDISP))),collapse='\\n');");
-          $dpform = str_replace('"', '', $dpform);
-          $pos = strpos($dpform, ' ');
-          $correctdataanswrs[$key] = substr($dpform, $pos + 1);
-        }
-      } else {
-        //no trailing 0s needed
-        foreach ($correctdataanswrs as $key => $value) {
-          $op = self::$cnx->evalString("DPDISP = round(" . $value . "," . $settings['dp'] . ")");
-          $dpform = self::$cnx->evalString("paste(capture.output(print((DPDISP))),collapse='\\n');");
-          $dpform = str_replace('"', '', $dpform);
-          $pos = strpos($dpform, ' ');
-          $correctdataanswrs[$key] = substr($dpform, $pos + 1);
-        }
-      }
+  }
+  
+  function is_useranswer_within_tolerance_significant_figures($useranswer, $sf, $tolerance_fullANS) {
+    
+    $uanssf = $this->evalString("signif($useranswer," . $sf . ")");
+    $status = $this->evalString("$uanssf ==  $tolerance_fullANS");
+    if ($status === true) {
+      //correct
+      $useranswer['status']['tolerance_full'] = true;
+    } else {
+      $useranswer['status']['tolerance_full'] = false;
     }
+  }
+  
+  function is_useranswer_correct_decimal_places($useranswer, $dp) {
+    $dpans =  $this->evalString("format(round($useranswer," . $dp . "), nsmall = " . $dp . ")");
+    $status = $this->evalString("$useranswer == $dpans");
 
-    if (isset($settings['sf'])) {
-      // saved answers need to be corrected to correct sf
-
-        foreach ($correctdataanswrs as $key => $value) {
-          $op = self::$cnx->evalString("SFDISP = signif(" . $value . "," . $settings['sf'] . ")");
-          $sfform = self::$cnx->evalString("paste(capture.output(print((SFDISP))),collapse='\\n');");
-          $sfform = str_replace('"', '', $sfform);
-          $pos = strpos($sfform, ' ');
-          $correctdataanswrs[$key] = substr($sfform, $pos + 1);
-
-      }
+    if ($status === true) {
+      return true;
+    } else {
+      return false;
     }
-
-
-    if (isset($settings['strictdisplay']) and $settings['strictdisplay'] === true and isset($setttings['sf'])) {
-      $op = self::$cnx->evalString("STRICTSF = signif($uans," . $settings['sf'] . ")");
-      $sfans = self::$cnx->evalString("paste(capture.output(print((STRICTSF))),collapse='\\n');");
-      $pos = strpos($sfans, ' ');
-      $useranswer['ans']['strictsf'] = substr($sfans, $pos + 1);
-      $status = self::$cnx->evalString("$uans == STRICTSF");
-
-      if ($status === true) {
-        //correct
-        $useranswer['status']['strictsf'] = true;
-      } else {
-        $useranswer['status']['strictsf'] = false;
-      }
+  }
+  
+  function is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp) {
+    
+    $status = $this->is_useranswer_correct_decimal_places($useranswer, $dp);
+    
+    if (!$status) {
+      return false;
     }
-    if (isset($settings['sf'])) {
-      $op = self::$cnx->evalString("SF = signif(ANS, " . $settings['sf'] . ")");
-      $sfans = self::$cnx->evalString("paste(capture.output(print((SF))),collapse='\\n');");
-      $pos = strpos($sfans, ' ');
-      $useranswer['ans']['sf'] = substr($sfans, $pos + 1);
-      $status = self::$cnx->evalString("$uans == SF");
-
-      if ($status === true) {
-        //correct
-        $useranswer['status']['sf'] = true;
-      } else {
-        $useranswer['status']['sf'] = false;
-      }
+    
+    $strpos = strpos($useranswer, '.');
+    $strpos1 = stripos($useranswer, 'e', $strpos);
+    if ($strpos1 === false) {
+      $strpos1 = strlen($useranswer);
     }
+    
+    $dps = $strpos1 - $strpos - 1;
+    //$useranswer['ans']['strictdps'] = $dps;
+    //$useranswer['ans']['strictpos'] = $strpos;
+    //$useranswer['ans']['strictpos1'] = $strpos1;
 
-    return array(true, $useranswer);
-
+    if ($dps == $dp) {
+      return true;
+    } else {
+      return false;
+    }
+    
+  }
+  
+  function format_number_dp($num,$dp) {
+    return $this->evalString("round(" . $num . "," . $dp . ")");
+  }
+  
+  function format_number_dp_strict_zeros($num,$dp) {
+    
+    return $this->evalString("format(round(" . $num . "," . $dp . "), nsmall = " . $dp . ")");
+  }
+  
+  function format_number_sf($num,$sf) {
+    return $this->evalString("signif(" . $num . "," . $sf . ")");
+  }
+  
+  private function evalString($val) {
+    if(!$this->connect()) {
+      return false;
+    }
+    return $this->extract_value(self::$cnx->evalString("paste(capture.output(print((" . $val . "))),collapse='\\n');"));
+  }
+  
+  private function extract_value($R_rreturn_string) {
+    
+    if($R_rreturn_string == '[1] TRUE') {
+      return true;
+    }
+    
+    if($R_rreturn_string == '[1] FALSE') {
+      return false;
+    }
+    
+    $R_rreturn_string = str_replace('"', '', $R_rreturn_string);
+    $pos = strpos($R_rreturn_string, ' ');
+    return substr($R_rreturn_string, $pos + 1);
   }
 
+  private function set_error($msg) {
+    $this->error = true;
+    $this->mesage = $msg;
+  }
+  
+  private function reset_error() {
+    $this->error = false;
+    $this->mesage = '';
+  }
 }
