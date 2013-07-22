@@ -177,6 +177,36 @@ class EnhancedCalculation extends Question implements questionInterface {
       
       /*
        * 
+       * FORMAT CACULATED ANS
+       * 
+       */
+      if($this->settings['strictdisplay'] == 'on') {
+        
+        if(isset($this->settings['dp'])) {
+          $function = 'format_number_dp';
+          $arg = $this->settings['dp'];
+          if($this->settings['strictzeros'] == 'on') {
+            $function = 'format_number_dp_strict_zeros';
+          }
+        }
+        if(isset($this->settings['sf'])) {
+          $function = 'format_number_sf';
+          $arg = $this->settings['sf'];
+        }
+        
+        $this->useranswer['cans'] = $enhancedcalcObj->$function($this->useranswer['cans'], $arg);
+                
+        $this->useranswer['ans']['tolerance_full'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_full'], $arg);
+        $this->useranswer['ans']['tolerance_fullans'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullans'], $arg);
+        $this->useranswer['ans']['tolerance_fullansneg'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullansneg'], $arg);
+   
+        $this->useranswer['ans']['tolerance_partial'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partial'], $arg);
+        $this->useranswer['ans']['tolerance_partialans'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialans'], $arg);
+        $this->useranswer['ans']['tolerance_partialansneg'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialansneg'], $arg);
+      }
+      
+      /*
+       * 
        *  
        * MARKING
        * 
