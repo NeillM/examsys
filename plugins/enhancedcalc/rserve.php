@@ -34,13 +34,16 @@ class enhancedcalc_rserve {
   static protected $cnx = false;
 
   protected $config;
-  protected $db;
+  protected $toStrDefined;
+  protected $powDefined;
   
   public $error = false;
   public $error_msg = '';
 
   function __construct($configObj) {
     $this->config = $configObj->getbyref('enhancedcalculation');
+    $this->toStrDefined = false;
+    $this->powDefined = false;
   }
   
   function connect() {
@@ -86,7 +89,15 @@ class enhancedcalc_rserve {
     $formula_vars_subed = str_replace($varname, $varvalue, $formula);
     
     //old caculation fomula use pow() - define a function in R for backward compatibility
-    $this->evalString("POW <- pow <- function(a,b) { return(a^b) } ");
+    if (stripos($formula,'pow(') === true and $this->powDefined === false) {
+      self::$cnx->evalString("POW <- pow <- function(a,b) { return(a^b) }");
+      $this->powDefined = true;
+    }
+    
+    if($this->toStrDefined === false) {
+      self::$cnx->evalString("toStr <- function(V) { return(paste(capture.output(print(V)),collapse='\\n')) }");
+      $this->toStrDefined = true;
+    }
     
     $correctanswer = $this->evalString($formula_vars_subed);
    
@@ -94,6 +105,10 @@ class enhancedcalc_rserve {
   }
   
   function is_useranswer_correct($useranswer, $correctanswer) {
+    
+    if($useranswer == '') {
+      return false;
+    }
     
     $status = $this->evalString("$correctanswer == $useranswer");
       
@@ -106,51 +121,41 @@ class enhancedcalc_rserve {
   }
   
   function caculate_tolerance_percent($correctanswer,$percentage) {
-   
-    $tolerance_full = $this->evalString("$correctanswer * (" . $percentage . "/100)");
-    $res['tolerance'] = $tolerance_full;
-
-    $tolerance_fullans = $this->evalString("$correctanswer + $tolerance_full");
-    $res['tolerance_ans'] = $tolerance_fullans;
-
-    $tolerance_fullansneg = $this->evalString("$correctanswer - $tolerance_full");
-    $res['tolerance_ansneg'] = $tolerance_fullansneg;
+    $cmd[] = "$correctanswer * (" . $percentage . "/100)";
+    $cmd[] = "$correctanswer + ($correctanswer * (" . $percentage . "/100))";
+    $cmd[] = "$correctanswer - ($correctanswer * (" . $percentage . "/100))";
+    
+    $result = $this->evalStringMulti($cmd);
+    $res['tolerance'] = $result[0];
+    $res['tolerance_ans'] = $result[1];
+    $res['tolerance_ansneg'] = $result[2];
 
     return $res;
   }
   
   function caculate_tolerance_absolute($correctanswer,$value) {
     
+    $cmd[] = "$correctanswer + $value";
+    $cmd[] = "$correctanswer - $value";
+
+    $result = $this->evalStringMulti($cmd);
+
     $res['tolerance'] = $value;
-    
-    $tolerance_fullans = $this->evalString("$correctanswer + $value");
-    $res['tolerance_ans'] = $tolerance_fullans;
-    
-    $tolerance_fullansneg = $this->evalString("$correctanswer - $value");
-    $res['tolerance_ansneg'] = $tolerance_fullansneg;
+    $res['tolerance_ans'] = $result[0];
+    $res['tolerance_ansneg'] = $result[1];
   
     return $res;
   }
   
-  /*function caculate_tolerance_significant_figures($correctanswer,$sf) {
-    
-    $res['tolerance'] = $sf;
-    
-    $tolerance_fullans = $this->evalString("signif($correctanswer, $sf)");
-    $res['tolerance_ans'] = $tolerance_fullans;
-    
-    $tolerance_fullnegans = $this->evalString("signif($tolerance_fullans, $sf)");
-    $res['tolerance_negans'] = $tolerance_fullnegans;
-    
-    return $res;
-  }*/
-  
   function is_useranswer_within_tolerance($useranswer, $min, $max) {
-        
-    $status = $this->evalString("$useranswer <= $max");
-    $status1 = $this->evalString("$useranswer >= $min");
     
-    if ($status === true and $status1 === true) {
+    if($useranswer == '') {
+      return false;
+    }
+    
+    $status = $this->evalString("$useranswer <= $max & $useranswer >= $min");
+    
+    if ($status === true) {
       //correct
       return true;
     } else {
@@ -160,8 +165,11 @@ class enhancedcalc_rserve {
   
   function is_useranswer_within_tolerance_significant_figures($useranswer, $sf, $tolerance_fullANS) {
     
-    $uanssf = $this->evalString("signif($useranswer," . $sf . ")");
-    $status = $this->evalString("$uanssf ==  $tolerance_fullANS");
+    if($useranswer == '') {
+      return false;
+    }
+    
+    $status = $this->evalString("signif($useranswer," . $sf . ") ==  $tolerance_fullANS");
     if ($status === true) {
       //correct
       $useranswer['status']['tolerance_full'] = true;
@@ -171,9 +179,12 @@ class enhancedcalc_rserve {
   }
   
   function is_useranswer_correct_decimal_places($useranswer, $dp) {
-    $dpans =  $this->evalString("format(round($useranswer," . $dp . "), nsmall = " . $dp . ")");
-    $status = $this->evalString("$useranswer == $dpans");
-
+    
+    if($useranswer == '') {
+      return false;
+    }
+    
+    $status = $this->evalString("format(round($useranswer," . $dp . "), nsmall = " . $dp . ") == \"$useranswer\"");
     if ($status === true) {
       return true;
     } else {
@@ -182,6 +193,10 @@ class enhancedcalc_rserve {
   }
   
   function is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp) {
+    
+    if($useranswer == '') {
+      return false;
+    }
     
     $status = $this->is_useranswer_correct_decimal_places($useranswer, $dp);
     
@@ -196,9 +211,6 @@ class enhancedcalc_rserve {
     }
     
     $dps = $strpos1 - $strpos - 1;
-    //$useranswer['ans']['strictdps'] = $dps;
-    //$useranswer['ans']['strictpos'] = $strpos;
-    //$useranswer['ans']['strictpos1'] = $strpos1;
 
     if ($dps == $dp) {
       return true;
@@ -225,22 +237,50 @@ class enhancedcalc_rserve {
     if(!$this->connect()) {
       return false;
     }
-    return $this->extract_value(self::$cnx->evalString("paste(capture.output(print((" . $val . "))),collapse='\\n');"));
+    return $this->extract_value(self::$cnx->evalString("toStr(" . $val . ")"));
   }
   
-  private function extract_value($R_rreturn_string) {
-    
-    if($R_rreturn_string == '[1] TRUE') {
-      return true;
-    }
-    
-    if($R_rreturn_string == '[1] FALSE') {
+  private function evalStringMulti($val) {
+    if(!$this->connect()) {
       return false;
     }
+    $cmd = 'c(';
+    foreach($val as $v) {
+      $cmd .= "toStr(" . $v . "),";
+    }
+    $cmd = rtrim($cmd, ",");
+    $cmd .= ')';
+    return $this->extract_value(self::$cnx->evalString($cmd));
+  }
+  
+  private function extract_value($R_rreturn) {
     
-    $R_rreturn_string = str_replace('"', '', $R_rreturn_string);
-    $pos = strpos($R_rreturn_string, ' ');
-    return substr($R_rreturn_string, $pos + 1);
+    if(!is_array($R_rreturn)) {
+      $R_rreturn = explode("\n",$R_rreturn);
+    }
+    
+    $ret = array();
+    foreach($R_rreturn as $key => $val) {
+      $val = trim($val);
+      if($val == '') {
+        continue;
+      } 
+      if($val == '[1] TRUE') {
+        $ret[] = true;
+      } else if($val == '[1] FALSE') {
+        $ret[] =  false;
+      } else {
+        $val = str_replace('"', '', $val);
+        $pos = strpos($val, ' ');
+        $ret[] = substr($val, $pos + 1);
+      }
+    }
+    
+    if(count($ret) == 1) {
+      return $ret[0];
+    } else {
+      return $ret;
+    }
   }
 
   private function set_error($msg) {

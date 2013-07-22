@@ -40,7 +40,7 @@ class EnhancedCalculation extends Question implements questionInterface {
   function splitnumbunit($input) {
     $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
     $out = preg_match($pattern, $input, $matches);
-    if(is_array($matches) and isset($matches[1])) {
+    if(is_array($matches) and isset($matches[0])) {
       $sz = strlen($matches[0]);
       $units = trim(substr($input, $sz));
       $numb = $matches[0];

@@ -26,10 +26,10 @@ $mtime = $mtime[1] + $mtime[0];
 $starttime = $mtime; 
 
 $i = 0;
-while($i <= 1000 ) {
+while($i <= 300 ) {
   $q->setuseranswer($uans[array_rand($uans)]);
   $q->caculateUserMark();
-  echo "$i ::" . $q->qmark . "<br/>";
+  echo "<br/> $i ::" . $q->qmark . "<br/>";
   $i++;
 }
 
