@@ -76,7 +76,6 @@ class ClassTotals {
   private $display_excluded;
   private $display_experimental;
   private $q_medians;
-  private $log_late_missing_users;
   private $random_q_ids;
   private $config;
   private $propertyObj;
@@ -87,32 +86,31 @@ class ClassTotals {
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db) {
     $userObject = UserObject::get_instance();
 
-  	$this->db = $db;
-    $this->demo                   = is_demo($userObject);
-    $this->paperID                = $propertyObj->get_property_id();
-    $this->paper_type             = $propertyObj->get_paper_type();
-    $this->calendar_year          = $propertyObj->get_calendar_year();
-    $this->startdate              = $startdate;
-    $this->enddate                = $enddate;
-    $this->absent                 = $absent;
-    $this->studentsonly           = $studentsonly;
-    $this->marking                = $propertyObj->get_marking();
-    $this->percent                = $percent;
-    $this->ordering               = $ordering;
-    $this->sortby                 = $sortby;
-    $this->repcourse              = $repcourse;
-    $this->repmodule              = $repmodule;
-    $this->pass_mark              = $propertyObj->get_pass_mark();
-    $this->distinction_mark       = $propertyObj->get_distinction_mark();
-    $this->log_late               = array();
-    $this->q_medians              = array();
-    $this->log_late_missing_users = array();
-    $this->random_q_ids           = array();
-    $this->config                 = Config::get_instance();
-    $this->propertyObj            = $propertyObj;
-    $this->exclusions             = new Exclusion($this->paperID, $this->db);
-    $this->display_excluded       = '';
-    $this->user_no                = 0;
+  	$this->db               = $db;
+    $this->demo             = is_demo($userObject);
+    $this->paperID          = $propertyObj->get_property_id();
+    $this->paper_type       = $propertyObj->get_paper_type();
+    $this->calendar_year    = $propertyObj->get_calendar_year();
+    $this->startdate        = $startdate;
+    $this->enddate          = $enddate;
+    $this->absent           = $absent;
+    $this->studentsonly     = $studentsonly;
+    $this->marking          = $propertyObj->get_marking();
+    $this->percent          = $percent;
+    $this->ordering         = $ordering;
+    $this->sortby           = $sortby;
+    $this->repcourse        = $repcourse;
+    $this->repmodule        = $repmodule;
+    $this->pass_mark        = $propertyObj->get_pass_mark();
+    $this->distinction_mark = $propertyObj->get_distinction_mark();
+    $this->log_late         = array();
+    $this->q_medians        = array();
+    $this->random_q_ids     = array();
+    $this->config           = Config::get_instance();
+    $this->propertyObj      = $propertyObj;
+    $this->exclusions       = new Exclusion($this->paperID, $this->db);
+    $this->display_excluded = '';
+    $this->user_no          = 0;
 
     $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
   }
@@ -287,18 +285,18 @@ class ClassTotals {
       while ($result->fetch()) {
         if ($old_q_id != $q_id and $old_q_id != '') {
           $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
-          $random_questions[$old_q_id]['q_id']                = $old_q_id;
-          $random_questions[$old_q_id]['q_type']              = $old_q_type;
-          $random_questions[$old_q_id]['leadin']              = $old_leadin;
-          $random_questions[$old_q_id]['scenario']            = $old_scenario;
-          $random_questions[$old_q_id]['correct']             = $old_correct;
-          $random_questions[$old_q_id]['display_method']      = $old_display_method;
-          $random_questions[$old_q_id]['score_method']        = $old_score_method;
-          $random_questions[$old_q_id]['status']              = $old_status;
-          $random_questions[$old_q_id]['marks_correct']       = $old_marks_correct;
-          $random_questions[$old_q_id]['marks_incorrect']     = $old_marks_incorrect;
-          $random_questions[$old_q_id]['random_mark']         = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-          $random_questions[$old_q_id]['option_text']         = $old_option_text;
+          $random_questions[$old_q_id]['q_id']            = $old_q_id;
+          $random_questions[$old_q_id]['q_type']          = $old_q_type;
+          $random_questions[$old_q_id]['leadin']          = $old_leadin;
+          $random_questions[$old_q_id]['scenario']        = $old_scenario;
+          $random_questions[$old_q_id]['correct']         = $old_correct;
+          $random_questions[$old_q_id]['display_method']  = $old_display_method;
+          $random_questions[$old_q_id]['score_method']    = $old_score_method;
+          $random_questions[$old_q_id]['status']          = $old_status;
+          $random_questions[$old_q_id]['marks_correct']   = $old_marks_correct;
+          $random_questions[$old_q_id]['marks_incorrect'] = $old_marks_incorrect;
+          $random_questions[$old_q_id]['random_mark']     = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+          $random_questions[$old_q_id]['option_text']     = $old_option_text;
           $old_correct     = array();
           $old_option_text = array();
           $this->question_no++;
@@ -320,18 +318,18 @@ class ClassTotals {
 
       // Write out the last question.
       $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
-      $random_questions[$old_q_id]['q_id']                = $old_q_id;
-      $random_questions[$old_q_id]['q_type']              = $old_q_type;
-      $random_questions[$old_q_id]['leadin']              = $old_leadin;
-      $random_questions[$old_q_id]['scenario']            = $old_scenario;
-      $random_questions[$old_q_id]['correct']             = $old_correct;
-      $random_questions[$old_q_id]['display_method']      = $old_display_method;
-      $random_questions[$old_q_id]['score_method']        = $old_score_method;
-      $random_questions[$old_q_id]['status']              = $old_status;
-      $random_questions[$old_q_id]['marks_correct']       = $old_marks_correct;
-      $random_questions[$old_q_id]['marks_incorrect']     = $old_marks_incorrect;
-      $random_questions[$old_q_id]['random_mark']         = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-      $random_questions[$old_q_id]['option_text']         = $old_option_text;
+      $random_questions[$old_q_id]['q_id']            = $old_q_id;
+      $random_questions[$old_q_id]['q_type']          = $old_q_type;
+      $random_questions[$old_q_id]['leadin']          = $old_leadin;
+      $random_questions[$old_q_id]['scenario']        = $old_scenario;
+      $random_questions[$old_q_id]['correct']         = $old_correct;
+      $random_questions[$old_q_id]['display_method']  = $old_display_method;
+      $random_questions[$old_q_id]['score_method']    = $old_score_method;
+      $random_questions[$old_q_id]['status']          = $old_status;
+      $random_questions[$old_q_id]['marks_correct']   = $old_marks_correct;
+      $random_questions[$old_q_id]['marks_incorrect'] = $old_marks_incorrect;
+      $random_questions[$old_q_id]['random_mark']     = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+      $random_questions[$old_q_id]['option_text']     = $old_option_text;
     }
     $result->close();
 
@@ -1065,10 +1063,11 @@ class ClassTotals {
     
     // Load started records from 'log_metadata'.
     if ($this->paper_type == '2') {
-      $result = $this->db->prepare("SELECT log_metadata.id, users.id, username, roles, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, student_id, attempt, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, student_grade FROM log_metadata, users LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
+      $time_int = 2;
     } else {
-      $result = $this->db->prepare("SELECT log_metadata.id, users.id, username, roles, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, student_id, attempt, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, student_grade FROM log_metadata, users LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND paperID = ? AND grade LIKE ? $roles_sql AND started >= ? AND started <= ?");
+      $time_int = 0;
     }
+    $result = $this->db->prepare("SELECT log_metadata.id, users.id, username, roles, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, student_id, attempt, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, student_grade FROM log_metadata, users LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ?");
     $result->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
     $result->execute();
     $result->bind_result($metadataID, $userID, $username, $roles, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $student_id, $attempt, $display_started, $student_grade);

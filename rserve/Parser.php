@@ -284,6 +284,12 @@ class Rserve_Parser {
                 $a = NULL;
             break;
             
+            case 18: // unimplemented type in Rserve
+                $uit = int32($r, $i);
+                // echo "Note: result contains type #$uit unsupported by Rserve.<br/>";
+                $a = NULL;
+            break;
+          
             default:
                 echo 'Warning: type '.$ra.' is currently not implemented in the PHP client.';
                 $a = NULL;

@@ -446,11 +446,15 @@ if ($textsize > 120) {
   }
 
   $prev_attempts = load_attempts($test_type, $property_id, $userObject, $mysqli);
-
-  if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+  
+  $start_label = $string['start'];
+  if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+    $start_available      = true;
+    $remaining_available  = true;
+    $metadata_security    = true;
+  } else {
     $start_available = false;
     $remaining_available = false;
-    $start_label = $string['start'];
     
     switch ($test_type) {
       case '0':
@@ -500,18 +504,12 @@ if ($textsize > 120) {
 
   $display_date = '';
   
-  if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-    echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
-    if (time() < $paper_start or time() > $paper_end) {
-      echo '<div style="font-size:90%;color:#C00000"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailablestudents'] . '</div>';
-    }
-  } else {
     if ($start_available and $remaining_available and $metadata_security) {
-      echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
-    } else {
-      echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
-    }
+    echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
+  } else {
+    echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
   }
+
   echo '<br />&nbsp;';
 
   if ($test_type != '2') {

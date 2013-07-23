@@ -197,15 +197,9 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   $qid_list = '';
   $question_data = array();
 
-  /*
-  $startedSQL = '';
-  if (isset($_GET['started'])) {
-    $startedSQL = ' AND started = "' . $_GET['started'] . '"';;
-  }
-  */
   $metadataID_SQL = '';
   if (isset($_GET['metadataID'])) {
-    $metadataID_SQL = ' AND log4_overallID = "' . $_GET['metadataID'] . '"';;
+    $metadataID_SQL = ' AND log_metadata.id = ' . $_GET['metadataID'];
   }
 
   if ($paper_type == '0' or $paper_type == '1') {
@@ -352,12 +346,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     } else {
       $comparison = $comparison;
     }
-    /*
-    if ($obj_data['session']['source_url'] != '') {
-      $session_string = "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $obj_data['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" /></a>&nbsp;<a target=\"_blank\" href=\"" . $obj_data['session']['source_url'] . "\">" . $obj_data['session']['sessiontitle'] . "</a>";
-    }
-    */
-
+    
     echo "<tr><td class=\"symbol\"><img src=\"$img_src\" width=\"16\" height=\"16\" /></td><td></td><td class=\"r\">" . $obj_data['mark_sum'] . "</td><td>&nbsp;" . $string['outof'] . "&nbsp;</td><td>" . $obj_data['totalpos_sum'] . "</td><td></td><td class=\"r\">$comparison</td><td></td><td class=\"c\">" . $obj_data['questions'] . "</td><td></td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
   }
   echo "</table>\n";

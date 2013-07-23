@@ -29,9 +29,11 @@ define('QUESTION_ERROR', -1);
 define('Q_MARKING_EXACT', 1);
 define('Q_MARKING_FULL_TOL', 2);
 define('Q_MARKING_PART_TOL', 3);
+define('Q_MARKING_PART_UNITS_WRONG', 4);
 define('Q_MARKING_WRONG', 0);
 define('Q_MARKING_UNMARKED', -1);
 define('Q_MARKING_NOTANS',-2);
+define('Q_MARKING_ERROR',-3);
 
 
 Class Question {
@@ -87,6 +89,10 @@ Class Question {
 
   function setsettings($settings) {
     $this->settings = $settings;
+  }
+  
+  function setuseranswer($useranswer) {
+    $this->useranswer = $useranswer;
   }
 
   function exportsave(&$array) {
