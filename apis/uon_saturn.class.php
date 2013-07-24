@@ -212,13 +212,13 @@ Class UON_SATURN extends SmsUtils {
 
     // Get the currently enrolled students in Rogo for the module.
     $current_users = array();
-    $student_data = $mysqli->prepare("SELECT modules_student.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (modules_student, users) LEFT JOIN sid ON users.id = sid.userID WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? AND auto_update = 1");
+    $student_data = $mysqli->prepare("SELECT modules_student.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (modules_student, users) LEFT JOIN sid ON users.id = sid.userID WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ?");
     $student_data->bind_param('si', $session, $idMod);
     $student_data->execute();
     $student_data->store_result();
     $student_data->bind_result($sm_id, $uid, $username, $grade, $title, $surname, $first_names, $initials, $roles, $year, $auto_update, $student_id);
     while ($student_data->fetch()) {
-      $current_users[$username]['delete'] = 1; // Set all users to be deleted, set otherwise lower down after checking with SMS
+      $current_users[$username]['delete'] = $auto_update; // Set users to be deleted if added via SATURN, set otherwise lower down after checking with SMS
       $current_users[$username]['smID'] = $sm_id;
       $current_users[$username]['userID'] = $uid;
       $current_users[$username]['grade'] = $grade;
