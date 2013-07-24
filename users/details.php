@@ -236,15 +236,15 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     }
 
     function showTab(tabID) {
-      document.getElementById('Log_tab').style.display = 'none';
-      document.getElementById('Modules_tab').style.display = 'none';
-      document.getElementById('Admin_tab').style.display = 'none';
-      document.getElementById('Notes_tab').style.display = 'none';
-      document.getElementById('Accessibility_tab').style.display = 'none';
-      document.getElementById('Teams_tab').style.display = 'none';
-      document.getElementById('Metadata_tab').style.display = 'none';
+      $('#Log_tab').hide();
+      $('#Modules_tab').hide();
+      $('#Admin_tab').hide();
+      $('#Notes_tab').hide();
+      $('#Accessibility_tab').hide();
+      $('#Teams_tab').hide();
+      $('#Metadata_tab').hide();
 
-      document.getElementById(tabID).style.display = '';
+      $('#' + tabID).show();
     }
 
     function newStudentNote() {
@@ -291,66 +291,64 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
     function updateAccessDemo() {
 
-      var e = document.getElementById("textsize");
-      var textsize = e.options[e.selectedIndex].text;
+      var textsize = $('select[name="textsize"] option:selected').text();
       if (textsize == '<default>') {
         textsize = '100%';
       }
-      document.getElementById('demo_paper_background').style.fontSize = textsize;
+      $('#demo_paper_background').css('font-size', textsize);
 
-      e = document.getElementById("font");
-      var font = e.options[e.selectedIndex].text;
+      var font = $('select[name="font"] option:selected').text();
       if (font == '<default>') {
         font = 'Arial';
       }
-      document.getElementById('demo_paper_background').style.fontFamily = font;
+      $('#demo_paper_background').css('font-family', font);
 
-      if (document.getElementById("bg_radio_on").checked) {
-        document.getElementById('demo_paper_background').style.backgroundColor = document.getElementById('span_background').style.backgroundColor;
+      if ($("#bg_radio_on").attr('checked')) {
+        $('#demo_paper_background').css('background-color', $('#span_background').css('background-color'));
       } else {
-        document.getElementById('demo_paper_background').style.backgroundColor = '#FFFFFF';
+        $('#demo_paper_background').css('background-color', '#FFFFFF');
       }
 
-      if (document.getElementById("fg_radio_on").checked) {
-        document.getElementById('demo_paper_background').style.color = document.getElementById('span_foreground').style.backgroundColor;
+      if ($("#fg_radio_on").attr('checked')) {
+        $('#demo_paper_background').css('color', $('#span_foreground').css('background-color'));
       } else {
-        document.getElementById('demo_paper_background').style.color = '#000000';
+        $('#demo_paper_background').css('color', '#000000');
       }
 
-      if (document.getElementById("theme_radio_on").checked) {
-        document.getElementById('demo_theme').style.color = document.getElementById('span_themecolor').style.backgroundColor;
+      if ($("#theme_radio_on").attr('checked')) {
+        $('#demo_theme').css('color', $('#span_themecolor').css('background-color'));
       } else {
-        document.getElementById('demo_theme').style.color = '#316AC5';
+        $('#demo_theme').css('color', '#316AC5');
       }
 
-      if (document.getElementById("labels_radio_on").checked) {
-        document.getElementById('demo_true_label').style.color = document.getElementById('span_labelcolor').style.backgroundColor;
-        document.getElementById('demo_false_label').style.color = document.getElementById('span_labelcolor').style.backgroundColor;
+      if ($("#labels_radio_on").attr('checked')) {
+        $('#demo_true_label').css('color', $('#span_labelcolor').css('background-color'));
+        $('#demo_false_label').css('color', $('#span_labelcolor').css('background-color'));
       } else {
-        document.getElementById('demo_true_label').style.color = '#C00000';
-        document.getElementById('demo_false_label').style.color = '#C00000';
+        $('#demo_true_label').css('color', '#C00000');
+        $('#demo_false_label').css('color', '#C00000');
       }
 
-      if (document.getElementById("unanswered_radio_on").checked) {
-        document.getElementById('demo_unanswered').style.backgroundColor = document.getElementById('span_unansweredcolor').style.backgroundColor;
+      if ($("#unanswered_radio_on").attr('checked')) {
+        $('#demo_unanswered').css('background-color', $('#span_unansweredcolor').css('background-color'));
       } else {
-        document.getElementById('demo_unanswered').style.backgroundColor = '#FFC0C0';
+        $('#demo_unanswered').css('background-color', '#FFC0C0');
       }
 
-      if (document.getElementById("marks_radio_on").checked) {
-        document.getElementById('demo_marks').style.color = document.getElementById('span_marks_color').style.backgroundColor;
+      if ($("#marks_radio_on").attr('checked')) {
+        $('#demo_marks').css('color', $('#span_marks_color').css('background-color'));
       } else {
-        document.getElementById('demo_marks').style.color = '#808080';
+        $('#demo_marks').css('color', '#808080');
       }
     }
 
     $(document).ready(function() {
       updateAccessDemo();
       
-      document.getElementById('userID').value = ',<?php echo $_GET['userID']; ?>';
+      $('#userID').val(',<?php echo $_GET['userID']; ?>');
       
-      document.getElementById('menu2a').style.display = 'none';
-      document.getElementById('menu2b').style.display = 'block';
+      $('#menu2a').hide();
+      $('#menu2b').show();
     });
   </script>
 </head>
@@ -642,129 +640,132 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
   $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
 
-  if (stripos($tmp_roles, 'External Examiner') !== false) {      // Get the papers the External is down to review.
-    $external_array = array();
+  if ($log_viewable) {
+    if (stripos($tmp_roles, 'External Examiner') !== false) {      // Get the papers the External is down to review.
+      $external_array = array();
 
-    $stmt = $mysqli->prepare("SELECT DISTINCT crypt_name, paper_title, property_id, paper_type FROM properties LEFT JOIN review_comments ON property_id=review_comments.q_paper AND reviewer=? WHERE deleted IS NULL AND externals LIKE ? AND reviewed IS NULL ORDER BY paper_title");
-    $tmp_id_like = '%' . $tmp_id . '%';
-    $stmt->bind_param('is', $tmp_id, $tmp_id_like);
-    $stmt->execute();
-    $stmt->bind_result($crypt_name, $paper_title, $property_id, $paper_type);
-    while ($stmt->fetch()) {
-      $paper[$results_no]['crypt_name'] = $crypt_name;
-      $paper[$results_no]['q_paper'] = $paper_title;
-      $paper[$results_no]['id'] = $property_id;
-      $paper[$results_no]['paper_type'] = '2';
-      $paper[$results_no]['started'] = '';
-      $paper[$results_no]['display_started'] = '';
-      $paper[$results_no]['duration'] = '';
-      $paper[$results_no]['mark'] = '';
-      $paper[$results_no]['totalpos'] = '';
-      $paper[$results_no]['ipaddress'] = '';
-      $results_no++;
-    }
-    $stmt->close();
-
-    $stmt = $mysqli->prepare("SELECT crypt_name, paper_title, paper_type, q_paper, DATE_FORMAT(reviewed,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(reviewed,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM (properties, review_comments) WHERE properties.property_id=review_comments.q_paper AND reviewer=? ORDER BY q_paper, started, screen");
-    $stmt->bind_param('i', $tmp_id);
-  } elseif ($log_viewable) {
-    // Only allow Admin/SysAdmin or current user to view this information
-    $queries = array();
-    $queries[] = "SELECT crypt_name, paper_title, 0 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log0, log_metadata WHERE log0.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
-    $queries[] = "SELECT crypt_name, paper_title, 1 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log1, log_metadata WHERE log1.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
-    $queries[] = "SELECT crypt_name, paper_title, 2 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log2, log_metadata WHERE log2.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
-    $queries[] = "SELECT crypt_name, paper_title, 3 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log3, log_metadata WHERE log3.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
-    $queries[] = "SELECT crypt_name, paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log4_overall WHERE properties.property_id = log4_overall.q_paper AND userID = ? ORDER BY started, screen";
-    $queries[] = "SELECT crypt_name, paper_title, 5 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log5, log_metadata WHERE log5.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
-    $queries[] = "SELECT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log6 WHERE properties.property_id = log6.paperID AND reviewerID = ? ORDER BY started, screen";
-
-    foreach ($queries as $query_sql) {
-      $stmt = $mysqli->prepare($query_sql);
+      //$stmt = $mysqli->prepare("SELECT DISTINCT crypt_name, paper_title, property_id, paper_type FROM properties LEFT JOIN review_comments ON property_id=review_comments.q_paper AND reviewer=? WHERE deleted IS NULL AND externals LIKE ? AND reviewed IS NULL ORDER BY paper_title");
+      $stmt = $mysqli->prepare("SELECT DISTINCT crypt_name, paper_title, property_id, paper_type, reviewed, DATE_FORMAT(reviewed,'{$configObject->get('cfg_long_date_time')}') AS display_started FROM (properties, properties_reviewers) LEFT JOIN review_comments ON properties.property_id=review_comments.q_paper WHERE properties.property_id=properties_reviewers.paperID AND reviewerID=? AND deleted IS NULL ORDER BY paper_title");
+      //$stmt = $mysqli->prepare("SELECT DISTINCT crypt_name, paper_title, property_id, paper_type FROM properties, properties_reviewers WHERE properties.property_id=properties_reviewers.paperID AND reviewerID=? AND deleted IS NULL ORDER BY paper_title");
       $stmt->bind_param('i', $tmp_id);
       $stmt->execute();
-      $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $duration, $screen, $ipaddress);
+      $stmt->bind_result($crypt_name, $paper_title, $property_id, $paper_type, $reviewed, $display_started);
       while ($stmt->fetch()) {
-        if ($old_q_paper != $q_paper or $old_started != $started) {
-          if ($old_q_paper != '') {
-            $paper[$results_no]['crypt_name']       = $old_crypt_name;
-            $paper[$results_no]['q_paper']          = $old_paper_title;
-            $paper[$results_no]['id']               = $old_q_paper;
-            $paper[$results_no]['type']             = $old_paper_type;
-            $paper[$results_no]['paper_type']       = $paper_types[$old_paper_type];
-            $paper[$results_no]['started']          = $old_started;
-            $paper[$results_no]['display_started']  = $old_display_started;
-            $paper[$results_no]['duration']         = $old_duration;
-            $paper[$results_no]['ipaddress']        = $old_ipaddress;
-            $results_no++;
+        $paper[$results_no]['crypt_name'] = $crypt_name;
+        $paper[$results_no]['q_paper'] = $paper_title;
+        $paper[$results_no]['id'] = $property_id;
+        $paper[$results_no]['type'] = '2';
+        $paper[$results_no]['paper_type'] = '2';
+        $paper[$results_no]['started'] = $reviewed;
+        $paper[$results_no]['display_started'] = $display_started;
+        $paper[$results_no]['duration'] = '';
+        $paper[$results_no]['mark'] = '';
+        $paper[$results_no]['totalpos'] = '';
+        $paper[$results_no]['ipaddress'] = '';
+        $results_no++;
+      }
+      $stmt->close();
+
+      //$stmt = $mysqli->prepare("SELECT crypt_name, paper_title, paper_type, q_paper, DATE_FORMAT(reviewed,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(reviewed,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM (properties, review_comments) WHERE properties.property_id=review_comments.q_paper AND reviewer=? ORDER BY q_paper, started, screen");
+      //$stmt->bind_param('i', $tmp_id);
+    } else {
+      // Only allow Admin/SysAdmin or current user to view this information
+      $queries = array();
+      $queries[] = "SELECT crypt_name, paper_title, 0 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log0, log_metadata WHERE log0.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+      $queries[] = "SELECT crypt_name, paper_title, 1 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log1, log_metadata WHERE log1.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+      $queries[] = "SELECT crypt_name, paper_title, 2 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log2, log_metadata WHERE log2.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+      $queries[] = "SELECT crypt_name, paper_title, 3 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, duration, screen, ipaddress FROM properties, log3, log_metadata WHERE log3.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+      $queries[] = "SELECT crypt_name, paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log4_overall WHERE properties.property_id = log4_overall.q_paper AND userID = ? ORDER BY started, screen";
+      $queries[] = "SELECT crypt_name, paper_title, 5 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log5, log_metadata WHERE log5.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started, screen";
+      $queries[] = "SELECT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log6 WHERE properties.property_id = log6.paperID AND reviewerID = ? ORDER BY started, screen";
+
+      foreach ($queries as $query_sql) {
+        $stmt = $mysqli->prepare($query_sql);
+        $stmt->bind_param('i', $tmp_id);
+        $stmt->execute();
+        $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $duration, $screen, $ipaddress);
+        while ($stmt->fetch()) {
+          if ($old_q_paper != $q_paper or $old_started != $started) {
+            if ($old_q_paper != '') {
+              $paper[$results_no]['crypt_name']       = $old_crypt_name;
+              $paper[$results_no]['q_paper']          = $old_paper_title;
+              $paper[$results_no]['id']               = $old_q_paper;
+              $paper[$results_no]['type']             = $old_paper_type;
+              $paper[$results_no]['paper_type']       = $paper_types[$old_paper_type];
+              $paper[$results_no]['started']          = $old_started;
+              $paper[$results_no]['display_started']  = $old_display_started;
+              $paper[$results_no]['duration']         = $old_duration;
+              $paper[$results_no]['ipaddress']        = $old_ipaddress;
+              $results_no++;
+            }
+            $old_screen   = 0;
+            $old_duration = 0;
           }
-          $old_screen   = 0;
-          $old_duration = 0;
+          if ($old_screen != $screen) {
+            $old_duration += $duration;
+          }
+          $old_crypt_name       = $crypt_name;
+          $old_q_paper          = $q_paper;
+          $old_started          = $started;
+          $old_display_started  = $display_started;
+          $old_paper_type       = $paper_type;
+          $old_screen           = $screen;
+          $old_paper_title      = $paper_title;
+          $old_ipaddress        = $ipaddress;
         }
-        if ($old_screen != $screen) {
-          $old_duration += $duration;
-        }
-        $old_crypt_name       = $crypt_name;
-        $old_q_paper          = $q_paper;
-        $old_started          = $started;
-        $old_display_started  = $display_started;
-        $old_paper_type       = $paper_type;
-        $old_screen           = $screen;
-        $old_paper_title      = $paper_title;
-        $old_ipaddress        = $ipaddress;
+        $stmt->close();
+      }
+
+      if ($old_q_paper != '') {
+        $paper[$results_no]['crypt_name']       = $old_crypt_name;
+        $paper[$results_no]['q_paper']          = $old_paper_title;
+        $paper[$results_no]['id']               = $old_q_paper;
+        $paper[$results_no]['type']             = $old_paper_type;
+        $paper[$results_no]['paper_type']       = $paper_types[$old_paper_type];
+        $paper[$results_no]['started']          = $old_started;
+        $paper[$results_no]['display_started']  = $old_display_started;
+        $paper[$results_no]['duration']         = $old_duration;
+        $paper[$results_no]['ipaddress']        = $old_ipaddress;
+        $results_no++;
+      }
+
+      // Add in feedback
+      $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(accessed, '%Y%m%d%H%i%s') AS accessed, DATE_FORMAT(accessed,'{$configObject->get('cfg_long_date_time')}') AS display_started, crypt_name, type, paper_title FROM access_log, properties WHERE access_log.page = properties.property_id AND userID = ?");
+      $stmt->bind_param('i', $_GET['userID']);
+      $stmt->execute();
+      $stmt->bind_result($page, $ipaddress, $accessed, $display_started, $crypt_name, $type, $paper_title);
+      while ($stmt->fetch()) {
+        $paper[$results_no]['crypt_name']       = $crypt_name;
+        $paper[$results_no]['q_paper']          = $paper_title;
+        $paper[$results_no]['id']               = $page;
+        $paper[$results_no]['type']             = $type;
+        $paper[$results_no]['paper_type']       = $type;
+        $paper[$results_no]['started']          = $accessed;
+        $paper[$results_no]['display_started']  = $display_started;
+        $paper[$results_no]['duration']         = 'N/A';
+        $paper[$results_no]['ipaddress']        = $ipaddress;
+        $results_no++;
+      }
+      $stmt->close();
+
+      // Add in any access denied warnings
+      $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(tried, '%Y%m%d%H%i%s') AS tried, DATE_FORMAT(tried,'{$configObject->get('cfg_long_date_time')}') AS display_started, title FROM denied_log WHERE userID = ?");
+      $stmt->bind_param('i', $_GET['userID']);
+      $stmt->execute();
+      $stmt->bind_result($page, $ipaddress, $tried, $display_started, $title);
+      while ($stmt->fetch()) {
+        $paper[$results_no]['crypt_name']       = '';
+        $paper[$results_no]['q_paper']          = '/' . $page;
+        $paper[$results_no]['type']             = $title;
+        $paper[$results_no]['paper_type']       = $title;
+        $paper[$results_no]['started']          = $tried;
+        $paper[$results_no]['display_started']  = $display_started;
+        $paper[$results_no]['duration']         = 'N/A';
+        $paper[$results_no]['ipaddress']        = $ipaddress;
+        $results_no++;
       }
       $stmt->close();
     }
-
-    if ($old_q_paper != '') {
-      $paper[$results_no]['crypt_name']       = $old_crypt_name;
-      $paper[$results_no]['q_paper']          = $old_paper_title;
-      $paper[$results_no]['id']               = $old_q_paper;
-      $paper[$results_no]['type']             = $old_paper_type;
-      $paper[$results_no]['paper_type']       = $paper_types[$old_paper_type];
-      $paper[$results_no]['started']          = $old_started;
-      $paper[$results_no]['display_started']  = $old_display_started;
-      $paper[$results_no]['duration']         = $old_duration;
-      $paper[$results_no]['ipaddress']        = $old_ipaddress;
-      $results_no++;
-    }
-
-    // Add in feedback
-    $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(accessed, '%Y%m%d%H%i%s') AS accessed, DATE_FORMAT(accessed,'{$configObject->get('cfg_long_date_time')}') AS display_started, crypt_name, type, paper_title FROM access_log, properties WHERE access_log.page = properties.property_id AND userID = ?");
-    $stmt->bind_param('i', $_GET['userID']);
-    $stmt->execute();
-    $stmt->bind_result($page, $ipaddress, $accessed, $display_started, $crypt_name, $type, $paper_title);
-    while ($stmt->fetch()) {
-      $paper[$results_no]['crypt_name']       = $crypt_name;
-      $paper[$results_no]['q_paper']          = $paper_title;
-      $paper[$results_no]['id']               = $page;
-      $paper[$results_no]['type']             = $type;
-      $paper[$results_no]['paper_type']       = $type;
-      $paper[$results_no]['started']          = $accessed;
-      $paper[$results_no]['display_started']  = $display_started;
-      $paper[$results_no]['duration']         = 'N/A';
-      $paper[$results_no]['ipaddress']        = $ipaddress;
-      $results_no++;
-    }
-    $stmt->close();
-
-    // Add in any access denied warnings
-    $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(tried, '%Y%m%d%H%i%s') AS tried, DATE_FORMAT(tried,'{$configObject->get('cfg_long_date_time')}') AS display_started, title FROM denied_log WHERE userID = ?");
-    $stmt->bind_param('i', $_GET['userID']);
-    $stmt->execute();
-    $stmt->bind_result($page, $ipaddress, $tried, $display_started, $title);
-    while ($stmt->fetch()) {
-      $paper[$results_no]['crypt_name']       = '';
-      $paper[$results_no]['q_paper']          = '/' . $page;
-      $paper[$results_no]['type']             = $title;
-      $paper[$results_no]['paper_type']       = $title;
-      $paper[$results_no]['started']          = $tried;
-      $paper[$results_no]['display_started']  = $display_started;
-      $paper[$results_no]['duration']         = 'N/A';
-      $paper[$results_no]['ipaddress']        = $ipaddress;
-      $results_no++;
-    }
-    $stmt->close();
-
     if ($results_no > 0) {
       $paper = array_csort($paper, $sortby, $ordering);
     }

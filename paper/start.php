@@ -37,6 +37,7 @@ require_once '../classes/log_lab_end_time.class.php';
 require_once '../classes/summativetimer.class.php';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/exam_announcements.class.php';
 
 $userObject = UserObject::get_instance();
 
@@ -1191,6 +1192,13 @@ if ($css != '') {
     echo $logo_html;
   } else {
     echo '<tr><td>';
+  }
+  
+  $midexam_clarification = $configObject->get('midexam_clarification');
+ 
+  if (in_array('students', $midexam_clarification)) {
+    $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli);
+    echo $exam_announcementObj->display_student_announcements();
   }
 
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
