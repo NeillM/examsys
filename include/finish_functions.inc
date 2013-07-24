@@ -149,7 +149,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   }
   $exclude_query->close();
 
-  if ($paper_type == '2' and ($userObj->has_role(array('Staff', 'SysAdmin')))) {
+  if ($paper_type == '2' and ($userObj->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
     if (!isset($_GET['userid']) and !isset($_GET['q_id'])) {
       $tmp_string = sprintf($string['thankyoumsg'], $paper_title);
       echo '<blockquote><p style="font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p><p>' . $tmp_string . '</p>';
@@ -273,15 +273,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     $old_q_media_height = $q_media_height;
     $old_status = $status;
     $old_marks_correct = $marks_correct;
-
-/*    if ($paper[$q_no]['q_type'] == 'enhancedcalc') {
-      require_once('../question/enhancedcalculation.class.php');
-      if (!isset($configObj)) {
-        $configObj = Config::get_instance();
-      }
-      $paper[$q_no]['object'] = new EnhancedCalculation($configObj);
-      $paper[$q_no]['object']->load($paper[$q_no]);
-    }*/
   }
   $answer_data->close();
   if (isset($excluded[$old_q_id])) {
@@ -324,7 +315,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
       // Look up selected question and overwrite data.
       if (isset($selected_q_id) and $selected_q_id > 0) {
         $stems = 0;
-        $question_data = $mysqlidb->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, status FROM (questions) LEFT JOIN options on questions.q_id=options.o_id WHERE q_id=? ORDER BY id_num");
+        $question_data = $mysqlidb->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, status FROM (questions) LEFT JOIN options on questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
         $question_data->bind_param('i', $selected_q_id);
         $question_data->execute();
         $question_data->store_result();
@@ -378,14 +369,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
             if ($correct != 0) $correct_no++;
           }
           $stems++;
-/*          if ($paper[$i]['q_type'] == 'enhancedcalc') {
-            require_once('../question/enhancedcalculation.class.php');
-            if (!isset($configObj)) {
-              $configObj = Config::get_instance();
-            }
-            $paper[$i]['object'] = new EnhancedCalculation($configObj);
-            $paper[$i]['object']->load($paper[$i]);
-          }*/
         }
         $question_data->close();
       } else {
@@ -423,14 +406,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           $paper[$tmp_q_no]['option_order'] = $option_order;
           $paper[$tmp_q_no]['metaid']=$metadataid;
           $paper[$tmp_q_no]['uniqid']=$uniqid;
-/*          if ($paper[$tmp_q_no]['q_type'] == 'enhancedcalc') {
-            require_once('../question/enhancedcalculation.class.php');
-            if (!isset($configObj)) {
-              $configObj = Config::get_instance();
-            }
-            $paper[$tmp_q_no]['object'] = new EnhancedCalculation($configObj);
-            $paper[$tmp_q_no]['object']->load($paper[$tmp_q_no]);
-          }*/
           break;
         }
       }
@@ -443,25 +418,19 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   for ($question = 1; $question <= $q_no; $question++) {
     if ($paper_type != '2' and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
       require_once('../question/enhancedcalculation.class.php');
-      if (!isset($configObj)) {
-        $configObj = Config::get_instance();
-      }
+      
       $enhancedcalc = new EnhancedCalculation($configObj);
       $enhancedcalc->load($paper[$question]);
       $returnarray = $enhancedcalc->caculateUserMark();
 
       if ($returnarray !== Q_MARKING_UNMARKED) {
         //save the extra data back into the log record.
-        $sql = "UPDATE log$paper_type set mark=?, totalpos=?, user_answer=? WHERE id=? LIMIT 1";
+        $sql = "UPDATE log$paper_type set mark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
         $storemark = $mysqlidb->prepare($sql);
         $new_useranswerstring = $enhancedcalc->useranswer_to_string();
         $storemark->bind_param('ddsi', $enhancedcalc->qmark, $enhancedcalc->totalpos, $new_useranswerstring, $paper[$question]['uniqid']);
         $storemark->execute();
         $enhancedcalc->exportsave($paper[$question]);
-/*        print "EnhancedCalc<br>";
-        var_dump($enhancedcalc);
-        print "Question<br>";
-        var_dump($paper[$question]);*/
       }
 
       $paper[$question]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
@@ -489,6 +458,19 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     </div>
     <br />
   <?php
+  }
+  
+  $midexam_clarification = $configObject->get('midexam_clarification');
+ 
+  if ($paper_type == '2') {
+    if (in_array('students', $midexam_clarification) or $userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+      $midexam_clarification = $configObject->get('midexam_clarification');
+     
+      if (in_array('students', $midexam_clarification)) {
+        $exam_announcementObj = new ExamAnnouncements($paperID, $mysqlidb);
+        echo $exam_announcementObj->display_student_announcements();
+      }
+    }
   }
 
   // Process the array for display.

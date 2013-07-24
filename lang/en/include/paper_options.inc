@@ -39,6 +39,7 @@ $string['currentquestiontasks'] = 'Current Question Tasks';
 $string['editquestion'] = 'Edit Question';
 $string['previewquestion'] = 'Preview Question';
 $string['information'] = 'Information';
+$string['midexamclarification'] = 'Mid-Exam Clarification';
 $string['copyontopaperx'] = 'Copy onto Paper X...';
 $string['linktopaper'] = 'Link to paper';
 $string['moveup'] = 'Move up';
