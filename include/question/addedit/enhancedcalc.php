@@ -103,7 +103,8 @@ if($question->get_locked() == '') {
           </thead>
 <?php
 $index = 1;
-foreach ($question->options as $answer) {
+foreach ($answers as $answer_ix) {
+  $answer = $question->options[$answer_ix];
   include 'options/ans_enhancedcalc.php';
   $index++;
 }
