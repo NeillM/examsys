@@ -253,7 +253,7 @@ if (isset($_GET['paperID'])) {
       $('.highlight').removeClass('highlight');
     }
 
-    function selUser(userID, lineID, menuID, evt) {
+    function selUser(userID, lineID, menuID, roles, evt) {
       $('#menu2a').hide();
       $('#menu' + menuID).show();
 
@@ -270,6 +270,8 @@ if (isset($_GET['paperID'])) {
           addUserID(userID, false);
         }
       }
+      $('#roles').val(roles);
+      checkRoles();
     }
 
     function userOff() {
@@ -432,14 +434,14 @@ if ($sortby == 'title') {
     }
 
     if ($userObject->has_role('SysAdmin')) {
-      echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2c',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
+      echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2c','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
       if (file_exists($cfg_web_root . 'users/photos/' . $tmp_username . '.jpg')) {
         echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
       } else {
         echo '<td></td>';
       }
       if (array_key_exists($tmp_id, $needs_array)) {
-        echo "<td>" . $string[mb_strtolower($tmp_title)] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>$tmp_surname, ";
+        echo "<td>" . $string[mb_strtolower($tmp_title)] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" /></td><td>$tmp_surname, ";
         if ($tmp_first_names != '') {
           echo '<span class="fn">' . $tmp_first_names . '</span>';
         } else {
@@ -461,14 +463,14 @@ if ($sortby == 'title') {
         echo "</td><td>$tmp_username</td>";
       }
     } else {
-      echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2b',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
+      echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2b','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
       if (file_exists($cfg_web_root . '/users/photos/' . $tmp_username . '.jpg')) {
         echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
       } else {
         echo '<td></td>';
       }
       if (array_key_exists($tmp_id, $needs_array)) {
-        echo "<td>&nbsp;" . $tmp_title . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>$tmp_surname, ";
+        echo "<td>&nbsp;" . $tmp_title . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" /></td><td>$tmp_surname, ";
         if ($tmp_first_names != '') {
           echo '<span class="fn">' . $tmp_first_names . '</span>';
         } else {

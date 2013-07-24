@@ -62,13 +62,27 @@ if (isset($_GET['calendar_year'])) {
     updateState('advanced', current);
     
   }
+  
+  function checkRoles() {
+    if (  $('#roles').val().search("Student") == -1  ) {
+      $('#performancesummary2b').css('color', '#808080');
+      $('#performancesummary2c').css('color', '#808080');
+    } else {
+      $('#performancesummary2b').css('color', '#black');
+      $('#performancesummary2c').css('color', '#black');
+    }
+  }
 
   function viewProfileSingle() {
     document.location.href='details.php?userID=' + getLastID($('#userID').val());
   }
   
   function viewPerformanceSummary() {
-    window.open("../students/performance_summary.php?userID=" + getLastID($('#userID').val()), "_blank");
+    if (  $('#roles').val().search("Student") == -1  ) {
+      alert("You have selected a non-student user.");
+    } else {
+      window.open("../students/performance_summary.php?userID=" + getLastID($('#userID').val()), "_blank");
+    }
   }
   
   function deleteUser() {
@@ -250,7 +264,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 
 <table class="sidebar_tbl" id="menu2a">
 <tr><td><img src="../artwork/user_file_icon_grey_16.gif" width="16" height="16" alt="<?php echo $string['viewuserfile']; ?>" /></td><td class="greymenuitem"><?php echo $string['viewuserfile']; ?></td></tr>
-<tr><td><img src="../artwork/report_grey_16.png" width="16" height="16" alt="<?php echo $string['performsummary']; ?>" /></td><td class="greymenuitem"><?php echo $string['performsummary']; ?></td></tr>
+<tr><td><img src="../artwork/report_grey_16.png" width="16" height="16" alt="<?php echo $string['performsummary']; ?>" /></td><td id="performancesummary2a" class="greymenuitem"><?php echo $string['performsummary']; ?></td></tr>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="' . $string['createnewuser'] . '" /></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
@@ -263,7 +277,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 
 <table class="sidebar_tbl" style="display:none" id="menu2b">
 <tr><td class="ico"><a href="#" onclick="viewProfileSingle(); return false;"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="<?php echo $string['viewuserfile']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
-<tr><td class="ico"><a href="#" onclick="viewPerformanceSummary(); return false;"><img src="../artwork/report_16.png" width="16" height="16" alt="<?php echo $string['performsummary']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewPerformanceSummary(); return false;" href="#"><?php echo $string['performsummary']; ?></a></td></tr>
+<tr><td class="ico"><a href="#" onclick="viewPerformanceSummary(); return false;"><img src="../artwork/report_16.png" width="16" height="16" alt="<?php echo $string['performsummary']; ?>" /></a></td><td class="menuitem"><a id="performancesummary2b" onclick="viewPerformanceSummary(); return false;" href="#"><?php echo $string['performsummary']; ?></a></td></tr>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td class="ico"><img src="../artwork/small_user_icon_grey.gif" width="16" height="16" alt="' . $string['createnewuser'] . '" /></td><td class="greymenuitem">' . $string['createnewuser'] . '</td></tr>';
@@ -272,8 +286,8 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 </table>
 
 <table class="sidebar_tbl" style="display:none" id="menu2c">
-<tr><td class="ico"><a onclick="viewProfileSingle(); return false;" href="#"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="<?php echo $string['viewuserfile']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
-<tr><td class="ico"><a href="#" onclick="viewPerformanceSummary(); return false;"><img src="../artwork/report_16.png" width="16" height="16" alt="<?php echo $string['performsummary']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewPerformanceSummary(); return false;" href="#"><?php echo $string['performsummary']; ?></a></td></tr>
+<tr><td class="ico"><a href="#" onclick="viewProfileSingle(); return false;"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="<?php echo $string['viewuserfile']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
+<tr><td class="ico"><a href="#" onclick="viewPerformanceSummary(); return false;"><img src="../artwork/report_16.png" width="16" height="16" alt="<?php echo $string['performsummary']; ?>" /></a></td><td class="menuitem"><a id="performancesummary2c" onclick="viewPerformanceSummary(); return false;" href="#"><?php echo $string['performsummary']; ?></a></td></tr>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="' . $string['createnewuser'] . '" /></a></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
@@ -297,5 +311,6 @@ if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
 ?>
 
 <input type="hidden" id="userID" name="userID" value="" />
+<input type="hidden" id="roles" name="roles" value="" />
 </form>
 </div>
