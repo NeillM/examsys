@@ -62,7 +62,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
               <?php echo $string['name']; ?>
             </th>
 
-            <th width="200px">
+            <th>
               <?php echo $string['endtime']; ?>
             </th>
 
@@ -110,7 +110,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
       $results->close();
 
       foreach( $student_object as $student_id => $student_obj) {
-          process_student_list($log_lab_end_time, $log_extra_time, $student_obj, $property_object, $configObject, $notes_array, $allow_timing, $string, $db);
+        process_student_list($log_lab_end_time, $log_extra_time, $student_obj, $property_object, $configObject, $notes_array, $allow_timing, $string, $db);
       }
 
       ?>
@@ -211,14 +211,12 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
   ?>
 <tr class="<?php echo $class; ?>">
     <td style="cursor:hand" onclick="popMenu('<?php echo $tmp_userID ?>', '<?php echo $paperID ?>', <?php echo $allow_timing ? 'true' : 'false'; ?>, event);"/>
+    <?php echo $surname ?><span style="color:#808080">, <?php echo $first_names . ' ' . $title; ?></span>
   <?php
   if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == true) {
-    ?>
-      <img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" border="0"/>
-    <?php
+    echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />';
   }
   ?>
-    <?php echo $surname ?><span style="color:#808080">, <?php echo $first_names . ' ' . $title; ?></span>
     </td>
 
     <td style="text-align:center">
@@ -230,8 +228,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
       <?php
       if ($special_needs_extra_time_mins != '') {
         ?>
-          <img src="../artwork/accessibility_16.png" width="16" height="16"
-               alt="<?php echo $string['extratime'] . '\\'; ?>" border="0"/>
+          <img src="../artwork/accessibility_16.png" width="16" height="16" alt="<?php echo $string['extratime'] . '\\'; ?>" />
           <span style=""><?php echo $special_needs_extra_time_mins ?></span>
         <?php
       }
@@ -240,8 +237,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
       }
       if ($extra_time_mins != '') {
         ?>
-          <img src="../artwork/clock_16.png" width="16" height="16" alt="<?php echo $string['extratime'] . '\\'; ?>"
-               border="0"/>
+          <img src="../artwork/clock_16.png" width="16" height="16" alt="<?php echo $string['extratime'] . '\\'; ?>" />
           <span style=""><?php echo $extra_time_mins; ?></span>
         <?php
       }
@@ -252,13 +248,11 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
 }
 
 
-function emergencyNumbers($support_numbers) {
-  global $string;
-
-  echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px\">\n";
+function emergencyNumbers($support_numbers, $string, $margin = 10) {
+  echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:" . $margin . "px\">\n";
   echo "<tr><td colspan=\"3\" style=\"border-bottom: 1px solid #C0C0C0; font-weight:bold\">" . $string['emergencynumbers'] . "</td></tr>\n";
   foreach ($support_numbers as $number => $contact) {
-    echo "<tr><td><img src=\"../artwork/call_icon.png\" width=\"53\" height=\"25\" alt=\"call\" border=\"0\" /></td><td>$number</td><td>$contact</td></tr>\n";
+    echo "<tr><td><img src=\"../artwork/phone.png\" width=\"32\" height=\"32\" alt=\"call\" /></td><td><strong>$number</strong><br />$contact</td></tr>\n";
   }
   echo "</table>\n";
 }
@@ -292,75 +286,15 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-<title>Rogo: <?php echo $string['invigilatoraccess']; ?></title>
+<title>Rog&#333;: <?php echo $string['invigilatoraccess']; ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css"/>
 <link rel="stylesheet" type="text/css" href="../css/header.css"/>
 <link rel="stylesheet" type="text/css" href="../css/warnings.css"/>
-<style type="text/css">
-    body {
-        color: #000040
-    }
-    fieldset {
-      border: none;
-      padding: 0;
-    }
-    .exam-button {
-      width: 100%;
-      height: 34px;
-      font-size: 120%;
-      font-weight: bold;
-      /*border: none;*/
-      border-top: 2px solid #eee;
-      border-left: 2px solid #eee;
-      border-bottom: 2px solid #999;
-      border-right: 2px solid #999;
-      cursor: pointer;
-    }
-    #start_exam_button {
-      background-color: #26A61E;
-      color: #fff;
-    }
-    #end_exam_button {
-      background-color: #ff8901;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-    .cohortlist {
-        border: 1px solid #95AEC8
-    }
-    #menudiv ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    #menudiv li {
-      padding: 3px 0 3px 32px;
-      border: 1px solid #fff;
-    }
-    #menudiv li:hover {
-      background-color: #FFE7A2;
-      border: 1px solid #FFBD69;
-    }
-    .menu-time {
-      background: #fff url('../artwork/clock_16.png') no-repeat 6px 4px;
-    }
-    .menu-note {
-      background: #fff url('../artwork/notes_icon.gif') no-repeat 6px 4px;
-    }
-    .tight {
-      margin: 4px 0 2px 0;
-    }
-    .notice {
-      border: 1px solid #C00000;
-      padding: 0 6px;
-      margin-bottom: 6px;
-    }
-    .notice h1 {
-      font-size: 140%;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="../css/invigilator.css"/>
+
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
 <script type="text/javascript">
 
   var ie = document.all;
@@ -370,16 +304,16 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   var overpopupmenu = false;
 
   function mouseSelect(e) {
-      var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;
-      if (isMenu) {
-          if (overpopupmenu == false) {
-              isMenu = false;
-              overpopupmenu = false;
-              document.getElementById('menudiv').style.display = 'none';
-              return true;
-          }
-          return true;
+    var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;
+    if (isMenu) {
+      if (overpopupmenu == false) {
+        isMenu = false;
+        overpopupmenu = false;
+        $('#menudiv').hide();
+        return true;
       }
+      return true;
+    }
   }
 
   function popMenu(tmpUserID, paperID, showExtension, e) {
@@ -395,7 +329,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
     top_pos = currentY + scrOfY;
 
     if (top_pos > ($(window).height() + scrOfY - 130)) {
-        top_pos = $(window).height() + scrOfY - 130;
+      top_pos = $(window).height() + scrOfY - 130;
     }
 
     if (showExtension) {
@@ -453,9 +387,9 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
       clockID = 0;
     }
     var tDate = new Date();
-    document.getElementById('theTime').value = "<?php echo $string['currenttime']; ?> " + ((tDate.getHours() < 10) ? "0" : "") + tDate.getHours() +
+    $('#theTime').val("<?php echo $string['currenttime']; ?> " + ((tDate.getHours() < 10) ? "0" : "") + tDate.getHours() +
             ((tDate.getMinutes() < 10) ? ":0" : ":") + tDate.getMinutes() +
-            ((tDate.getSeconds() < 10) ? ":0" : ":") + tDate.getSeconds();
+            ((tDate.getSeconds() < 10) ? ":0" : ":") + tDate.getSeconds());
     clockID = setTimeout("UpdateClock()", 1000);
   }
 
@@ -471,17 +405,12 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   }
 
   function newStudentNote() {
-    var paperID = document.getElementById('paperID').value;
-    var userID = document.getElementById('userID').value;
-
-    studentnote = window.open("new_student_note.php?userID=" + userID + "&paperID=" + paperID + "", "studentnote", "width=650,height=430,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    studentnote = window.open("new_student_note.php?userID=" + $('#userID').val() + "&paperID=" + $('#paperID').val() + "", "studentnote", "width=650,height=430,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
 
     if (window.focus) {
       studentnote.focus();
     }
   }
-
-
 
   function newPaperNote(paperID) {
     papernote = window.open("new_paper_note.php?paperID=" + paperID + "","papernote","width=650,height=410,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
@@ -491,10 +420,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   }
 
   function extendTime() {
-    var paperID = document.getElementById('paperID').value;
-    var userID = document.getElementById('userID').value;
-
-    papernote = window.open("extend_time.php?paperID=" + paperID + "&userID=" + userID, "extendtime", "width=250,height=150,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    papernote = window.open("extend_time.php?paperID=" + $('#paperID').val() + "&userID=" + $('#userID').val(), "extendtime", "width=250,height=150,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
 
     if (window.focus) {
       papernote.focus();
@@ -524,6 +450,22 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
     }
   }
 
+  function clarifyMethod() {
+  <?php
+    foreach ($properties_list as $property_object) {
+      $paperID = $property_object->get_property_id();
+  ?>
+    $.get("check_exam_announcements.php", {paperID:"<?php echo $paperID; ?>"}, function(data) {
+      if ($('#msg<?php echo $paperID; ?>').html() != data) {
+        $('#msg<?php echo $paperID; ?>').html(data);
+        $('#msg<?php echo $paperID; ?>').effect("highlight", {}, 20000);
+      }
+    });
+  <?php
+      }
+  ?>
+  }
+  
   document.onmousedown = mouseSelect;
 
   // Register the events we need
@@ -534,7 +476,13 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
     resizeLists();
     $(window).unload(KillClock);
     $(window).resize(resizeLists);
-  });
+    
+<?php
+  if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
+    echo "var clarificationCall = setInterval(clarifyMethod, 1000);\n";
+  }
+?>
+ });
 </script>
 
 </head>
@@ -578,28 +526,21 @@ if ($language != 'en') {
             <div style="padding-left:10px; font-size:10pt; font-weight:bold"><?php echo $string['invigilatoraccess']; ?></div>
         </th>
         <th style="text-align:right">
-            <input type="text"
-                   style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold"
-                   id="theTime"/>
+            <input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theTime" />
           <?php
           // Only display this if there is the one exam
           if (count($properties_list) < 2) {
             ?>
-              <input type="text"
-                     style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold"
-                     id="theEndTime"/>
+              <input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theEndTime" />
             <?php
           }
-          ?>
-
-            &nbsp;
+          ?>&nbsp;
         </th>
     </tr>
     <tr>
         <th colspan="2" class="bevel"></th>
     </tr>
 </table>
-<br/>
 <?php
 
 if ($properties_list !== false and count($properties_list) > 0) {
@@ -612,11 +553,11 @@ if ($properties_list !== false and count($properties_list) > 0) {
 
   foreach ($properties_list as $property_object) {
 
-    $title = $property_object->get_paper_title();
-    $property_id = $property_object->get_property_id();
-    $exam_duration = $property_object->get_exam_duration();
-    $start_date = $property_object->get_display_start_date();
-    $calendar_year = $property_object->get_calendar_year();
+    $title          = $property_object->get_paper_title();
+    $property_id    = $property_object->get_property_id();
+    $exam_duration  = $property_object->get_exam_duration();
+    $start_date     = $property_object->get_display_start_date();
+    $calendar_year  = $property_object->get_calendar_year();
 
     // Get modules for this paper and check if timing is allowed
     $timed_modules = $all_modules = 0;
@@ -659,11 +600,9 @@ if ($properties_list !== false and count($properties_list) > 0) {
     $disptimezone = new DateTimeZone($property_object->get_timezone());
 
     if ($allow_timing and isset($_POST['start_exam_form'])) {
-
       $paper_id = (int)$_POST['paper_id'];
 
       // Does the submitted paperID correspond it to the currently iterated paper?
-
       if ($paper_id == (int)$property_id) {
         $invigilator_id = $userObject->get_user_ID();
         $end_datetime = $log_lab_end_time->save($invigilator_id);
@@ -708,7 +647,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
       ?>
 
         <script language="JavaScript" type="text/javascript">
-            document.getElementById('theEndTime').value = "<?php echo $string['end'] ?> <?php echo $end_time; ?>";
+            $('#theEndTime').val("<?php echo $string['end'] ?> <?php echo $end_time; ?>");
         </script>
 
       <?php
@@ -716,12 +655,19 @@ if ($properties_list !== false and count($properties_list) > 0) {
 
     ?>
           <div style="display:inline">
-              <img src="../artwork/summative.png" align="left" width="48" height="48" alt="paper icon" border="0"/>
+          <?php
+            if ($allow_timing) {
+              echo '<img src="../artwork/summative_timed.png" align="left" width="48" height="48" alt="paper icon" />';
+            } else {
+              echo '<img src="../artwork/summative.png" align="left" width="48" height="48" alt="paper icon" />';
+            }
+          ?>
+              
           </div>
 
           <div style="margin-left:52px; display:block">
               <strong><?php echo $title ?></strong>
-              <table style="width: 100%">
+              <table style="width: 100%; line-height:150%" cellpadding="0" cellspacing="0">
 
                   <tr>
                       <td>
@@ -730,17 +676,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
                       <td>
                         <?php echo $start_date ?>
                       </td>
-                      <td><strong><?php if ($allow_timing) echo $string['timedexam']; ?></strong></td>
-                  </tr>
-
-                  <tr>
-                      <td>
-                        <?php echo $string['end']; ?>:
-                      </td>
-                      <td>
-                        <?php echo $end_date;   ?>
-                      </td>
-                      <td rowspan="2" style="width: 45%; vertical-align: top">
+                      <td rowspan="3" style="width: 45%; vertical-align: top">
                         <?php
                         if ($allow_timing) {
                         ?>
@@ -774,7 +710,16 @@ if ($properties_list !== false and count($properties_list) > 0) {
                         ?>
                       </td>
                   </tr>
+
                   <tr>
+                      <td>
+                        <?php echo $string['end']; ?>:
+                      </td>
+                      <td>
+                        <?php echo $end_date;   ?>
+                      </td>
+                  </tr>
+                  <tr style="line-height:150%">
                       <td>
                         <?php echo $string['duration']; ?>:
                       </td>
@@ -800,9 +745,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
             }
             ?>
           </div>
-          <hr style="border:0px; height:1px" noshade="noshade" size="1"/>
-
-
+          <div id="msg<?php echo $property_id; ?>" class="clarifymsg"><span style="color:#C0C0C0; font-size:200%; font-weight:bold">Exam question clarifications</span></div>
         <?php
         $modules = implode('\',\'', $modules);
 
@@ -822,16 +765,16 @@ if ($properties_list !== false and count($properties_list) > 0) {
   ?>
     <br/>
   <?php
-  emergencyNumbers($configObject->get('emergency_support_numbers'));
+  emergencyNumbers($configObject->get('emergency_support_numbers'), $string);
   echo "</td></tr>\n</table>\n";
 } else {
-  echo "<p style=\"font-weight:bold; color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;" . $string['nopapersfound'] . "</p>";
-  emergencyNumbers($configObject->get('emergency_support_numbers'));
+  echo "<p><img src=\"../artwork/page_not_found.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['nopapersfound'] . "</span><br /><br />" . $string['nopapersfoundmsg'] . "</p><br clear=\"all\" />";
+  emergencyNumbers($configObject->get('emergency_support_numbers'), $string, 68);
 }
 
 $mysqli->close();
 ?>
-    <input type="hidden" id="userID" value=""/>
-    <input type="hidden" id="paperID" value=""/>
+  <input type="hidden" id="userID" value="" />
+  <input type="hidden" id="paperID" value="" />
 </body>
 </html>

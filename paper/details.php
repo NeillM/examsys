@@ -39,6 +39,7 @@ require_once '../classes/paperproperties.class.php';
 require_once '../classes/exclusion.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/question_status.class.php';
+require_once '../classes/exam_announcements.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -358,19 +359,19 @@ $result->close();
 
   function addQID(qID, pID, clearall) {
     if (clearall) {
-      document.PapersMenu.questionID.value = ',' + qID;
-      document.PapersMenu.pID.value = ',' + pID;
+      $('#questionID').val(',' + qID);
+      $('#pID').val(',' + pID);
     } else {
-      document.PapersMenu.questionID.value = document.PapersMenu.questionID.value + ',' + qID;
-      document.PapersMenu.pID.value = document.PapersMenu.pID.value + ',' + pID;
+      $('#questionID').val($('#questionID').val() + ',' + qID);
+      $('#pID').val($('#pID').val() + ',' + pID);
     }
   }
 
   function subQID(qID, pID) {
     var tmpq = ',' + qID;
     var tmpp = ',' + pID;
-    document.PapersMenu.questionID.value = document.PapersMenu.questionID.value.replace(tmpq, '');
-    document.PapersMenu.pID.value = document.PapersMenu.pID.value.replace(tmpp, '');
+    $('#questionID').val($('#questionID').val().replace(tmpq, ''));
+    $('#pID').val($('#pID').val().replace(tmpp, ''));
   }
 
   function clearAll() {
@@ -378,18 +379,18 @@ $result->close();
   }
 
   function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, menuID, subparts, evt) {
-    document.getElementById('menu2a').style.display = 'none';
+    $('#menu2a').hide();
     if (menuID == '2b') {
-      document.getElementById('menu2c').style.display = 'none';
+      $('#menu2c').hide();
     } else {
-      document.getElementById('menu2b').style.display = 'none';
+      $('#menu2b').hide();
     }
-    document.getElementById('menu' + menuID).style.display = 'block';
+    $('#menu' + menuID).show();
 
-    document.PapersMenu.questionNo.value = questionNo;
-    document.PapersMenu.qType.value = qType;
-    document.PapersMenu.screenNo.value = screenNo;
-    document.PapersMenu.current_pos.value = current_pos;
+    $('#questionNo').val(questionNo);
+    $('#qType').val(qType);
+    $('#screenNo').val(screenNo);
+    $('#current_pos').val(current_pos);
 
     if (evt.ctrlKey == false) {
       clearAll();
@@ -418,9 +419,9 @@ $result->close();
     }
     hideMenus();
 
-    document.getElementById('stats_menu').style.display = 'none';
-    document.getElementById('copy_submenu').style.display = 'none';
-    document.getElementById('change_screen_submenu').style.display = 'none';
+    $('#stats_menu').hide();
+    $('#copy_submenu').hide();
+    $('#change_screen_submenu').hide();
 
     if (evt != null) {
       evt.cancelBubble = true;
@@ -439,7 +440,7 @@ $result->close();
   }
 
   function edQ(questionNo, questionID, qType) {
-    var loc = "../question/edit/index.php?q_id=" + questionID + "&paperID=<?php echo $paperID; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if(isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper&scrOfY=" + document.getElementById('scrOfY').value;
+    var loc = "../question/edit/index.php?q_id=" + questionID + "&paperID=<?php echo $paperID; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if(isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper&scrOfY=" + $('#scrOfY').val();
     if (qType == 'random' || qType == 'keyword_based') {
       loc += '&type=' + qType;
     }
@@ -447,14 +448,14 @@ $result->close();
   }
 
   function qOff() {
-    document.getElementById('menu2a').style.display = 'block';
-    document.getElementById('menu2b').style.display = 'none';
-    document.getElementById('menu2c').style.display = 'none';
+    $('#menu2a').show();
+    $('#menu2b').hide();
+    $('#menu2c').hide();
     clearAll();
 
-    document.getElementById('stats_menu').style.display = 'none';
-    document.getElementById('copy_submenu').style.display = 'none';
-    document.getElementById('change_screen_submenu').style.display = 'none';
+    $('#stats_menu').hide();
+    $('#copy_submenu').hide();
+    $('#change_screen_submenu').hide();
 
     hideMenus();
 
@@ -465,7 +466,7 @@ $result->close();
   }
 
   function scrollXY() {
-    document.getElementById('scrOfY').value = $('body,html').scrollTop();
+    $('#scrOfY').val($('body,html').scrollTop());
   }
 </script>
 <?php
@@ -740,6 +741,9 @@ $result->close();
 <div id="content" class="content" style="font-size:80%">
 
 <?php
+  $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli);
+  $exam_announcements = $exam_announcementObj->get_announcements();
+    
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
 
   //blank row to preserve table layout when using table-layout: fixed - needed to increase ie8 latex rendering speed
@@ -911,6 +915,7 @@ $result->close();
     } elseif ($temp_array[$x]['leadin'] != '') {
       echo $temp_array[$x]['leadin'];
       if ($excluded[$temp_array[$x]['q_id']] != NULL) echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
+      if (isset($exam_announcements[$temp_array[$x]['q_id']])) echo ' <img src="../artwork/comment_14_11.png" width="14" height="11" alt="Exam Clarification" />';
       if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['warning'] . '" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
     } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
       echo "<img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" />";

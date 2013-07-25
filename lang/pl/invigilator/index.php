@@ -18,6 +18,7 @@ $string['invigilatoraccess'] = 'Dostęp osoby nadzorującej';
 $string['lab'] = 'Pracownia:';
 $string['unknownlab'] = ' - nieznana pracownia';
 $string['nopapersfound'] = 'Nie znaleziono arkuszy!';
+$string['nopapersfoundmsg'] = 'No assessments can be found for the current lab at this time.';
 $string['emergencynumbers'] = 'Numery awaryjne';
 $string['name'] = 'Nazwa';
 $string['extension_mins']  = 'Przedłużenie (min)';

@@ -193,17 +193,17 @@ pre {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FEFEFE', endColorstr='#D0D0D0');
 }
 #next {
-  width:120px
+  width:120px;
 }
 #finish {
   width:120px;
-  font-weight:bold
+  font-weight:bold;
 }
 #prevous {
   width:120px
 }
 #savemsg {
-  margin-right:5px
+  margin-right:5px;
 }
 #saveError {
   display:none;
@@ -219,7 +219,7 @@ pre {
 }
 #saveError img {
   margin-top:6px;
-  margin-left:16px
+  margin-left:16px;
 }
 #saveError div { 
   font-size:110%;
@@ -228,5 +228,34 @@ pre {
   height:60px;
   width: 80%;
   text-align: left;
-  line-height:150%
+  line-height:150%;
+}
+.exam_announcement_box {
+  width:80%;
+  margin-left:10%;
+  margin-right:10%;
+  margin-top:10px;
+  margin-bottom:10px;
+  padding:5px;
+  background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
+  background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
+  background-image: -ms-linear-gradient(top, #FFF6BD 0%, #FFEC82 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FEF5EC', endColorstr='#FBD7B1');
+  border:1px solid #F18103;
+  border-radius:4px;
+  box-shadow: 3px 3px 5px #C0C0C0;
+}
+.exam_announcement_box ul {
+  margin:0px;
+  padding:0px;
+}
+.exam_announce_icon {
+  width:56px;
+  vertical-align:top;
+}
+.exam_announce_title {
+  color:#F18204;
+  font-weight:bold;
+  font-size:120%;
+  padding-bottom:10px;
 }

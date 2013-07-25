@@ -110,4 +110,12 @@ td {
 .warn-icon {
   font-size: 90%;
 }
-
+.q_no {
+  padding-left:15px;
+  font-weight:bold;
+  vertical-align:top;
+  text-align:right;
+}
+.q_msg {
+  padding-bottom:10px;
+}

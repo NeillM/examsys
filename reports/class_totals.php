@@ -30,6 +30,7 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/class_totals.class.php';
 require_once '../classes/folderutils.class.php';
+require_once '../classes/exam_announcements.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -695,7 +696,7 @@ if ($language != 'en') {
     echo "<tr><td colspan=\"" . ($cols) . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . ($cols) . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . ($cols) . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['papernotes'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-    $result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i'), note_workstation FROM paper_notes WHERE paper_id = ?");
+    $result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'" . $configObject->get('cfg_long_date_time') . "'), note_workstation FROM paper_notes WHERE paper_id = ?");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->store_result();
@@ -715,6 +716,22 @@ if ($language != 'en') {
     }
     echo "</td></tr>";
     $result->close();
+    
+    $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli);
+    $exam_announcements = $exam_announcementObj->get_announcements();
+    echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>Mid-Exam Clarifications</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"" . $cols . "\" height=\"9\"><table cellspacing=\"0\" cellpadding=\"2\">\n";
+    foreach ($exam_announcements as $exam_announcement) {
+      $msg = $exam_announcement['msg'];
+      if (substr_count($msg, '<p>')) {
+        $msg = str_replace('<p>', '', $msg);
+        $msg = str_replace('</p>', '', $msg);
+      }
+      
+      echo "<tr><td class=\"q_no\">Q" . $exam_announcement['q_number'] . "</td><td class=\"q_msg\">(" . $exam_announcement['created'] .")<br />" . $msg . "</td></tr>\n";
+    }
+    echo "</table></td></tr>\n";
 
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
