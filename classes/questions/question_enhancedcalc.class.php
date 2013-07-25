@@ -382,7 +382,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
         $this->options[$i] = $opt;
       } else {
         $old_opt = $this->options[$i];
-        $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('formula' => $old_opt->get_formula(), 'units' => $old_opt->get_units(), 'min' => $old_opt->get_min(), 'max' => $old_opt->get_max(), 'decimals' => $old_opt->get_decimals(), 'increment' => $old_opt->get_increment()));
+        $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('formula' => $fields['formula'], 'units' =>  $fields['units'], 'min' => $old_opt->get_min(), 'max' => $old_opt->get_max(), 'decimals' => $old_opt->get_decimals(), 'increment' => $old_opt->get_increment()));
         $opt->set_variable($old_opt->get_variable());
         $this->options[$i] = $opt;
       }

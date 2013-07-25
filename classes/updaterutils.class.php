@@ -34,6 +34,15 @@ Class UpdaterUtils {
     $this->db_name = $db_name;
   }
 
+  public function count_rows($sql) {
+    $result  = $this->mysqli->prepare($sql);
+    $result->execute();
+    $result->store_result();
+    $num_rows = $result->num_rows;
+
+    return $num_rows;
+  }
+
   public function does_table_exist($table_name) {
     $result  = $this->mysqli->prepare('SELECT table_name FROM information_schema.tables WHERE table_schema = ? AND table_name = ?');
     $result->bind_param('ss', $this->db_name, $table_name);
