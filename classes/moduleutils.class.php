@@ -199,7 +199,7 @@ Class module {
                         'add_team_members' => 'addteammembers',
                         );
     
-    if($res === true ) {
+    if ($res === true ) {
       // Log any changes
       $logger = new Logger($db);
       $userObject = UserObject::get_instance();

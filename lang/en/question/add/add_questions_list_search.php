@@ -22,6 +22,7 @@ $string['search'] = 'Search';
 $string['question'] = 'Question';
 $string['type'] = 'Type';
 $string['modified'] = 'Modified';
+$string['status'] = 'Status';
 $string['warningnoleadin'] = 'WARNING: no question lead-in!';
 $string['locked'] = 'Locked';
 $string['anyowner'] = '(any owner)';

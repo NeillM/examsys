@@ -87,8 +87,8 @@ if (isset($_GET['scrOfY'])) {
   while ($result->fetch()) {
     echo '<div class="foldername">';
     echo '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:66px" align="center">';
-    echo '  <a href="add_questions_by_team.php?teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '"><img src="../../artwork/user_accounts_icon.png" width="48" height="48" alt="' . $module_name . '" border="0"  /></a><td>';
-    echo '  <td width="290"><a href="add_questions_by_team.php?teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '">' . $moduleid . ': ' . $module_name . '</a><br />';
+    echo '  <a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '"><img src="../../artwork/user_accounts_icon.png" width="48" height="48" alt="' . $module_name . '" /></a><td>';
+    echo '  <td width="290"><a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '">' . $moduleid . ': ' . $module_name . '</a><br />';
     echo '  <span style="color:#808080">' . $count_no . ' ' . $string['members'] . '</span></td></tr></table>';
     echo "</div>\n";
   }

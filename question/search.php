@@ -38,7 +38,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō: <?php echo $string['questionsearch'] . " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: <?php echo $string['questionsearch'] . " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -59,15 +59,15 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <script type="text/javascript">
     function addQID(qID, clearall) {
       if (clearall) {
-        document.PapersMenu.questionID.value = ',' + qID;
+        $('#questionID').val(',' + qID);
       } else {
-        document.PapersMenu.questionID.value = document.PapersMenu.questionID.value + ',' + qID;
+        $('#questionID').val($('#questionID').val() + ',' + qID);
       }
     }
 
     function subQID(qID) {
       var tmpq = ',' + qID;
-      document.PapersMenu.questionID.value = document.PapersMenu.questionID.value.replace(tmpq, '');
+      $('#questionID').val($('#questionID').val().replace(tmpq, ''));
     }
 
     function clearAll() {
@@ -306,9 +306,9 @@ if (isset($_POST['submit'])) {
   }
 
   if ($keywordsSQL == '') {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status FROM (questions, users, options) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status, name FROM (questions, question_statuses, users, options) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE questions.status = question_statuses.id AND questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
   } else {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status, name FROM (questions, question_statuses, users, keywords_question, options) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE questions.status = question_statuses.id AND questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
   }
   $result = $mysqli->prepare($sql);
   if (count($variables) > 0) {
@@ -320,7 +320,7 @@ if (isset($_POST['submit'])) {
   }
   $result->execute();
   $result->store_result();
-  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $leadin, $last_edited, $ownerID, $locked, $status);
+  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $leadin, $last_edited, $ownerID, $locked, $status, $status_name);
 
   $hits = $result->num_rows;
 
@@ -362,7 +362,7 @@ if (isset($_POST['submit'])) {
     echo "<td class=\"l\">$tmp_leadin <span class=\"o\">($title $initials $surname)</span></td>";
     echo '<td class="l"><nobr>' . $string[$q_type] . '</nobr></td>';
     echo '<td class="l">' . $last_edited . '</td>';
-    echo '<td class="l">' . $status . '</td></tr>';
+    echo '<td class="l">' . $status_name . '</td></tr>';
   }
   $result->close();
 

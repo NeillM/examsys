@@ -42,7 +42,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
-    body {font-size:80%}
+    body {font-size:90%}
     p, td {font-size:90%}
     .mee { display: inline; }
 
@@ -88,7 +88,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   ?>
   <table class="header">
   <tr>
-  <th colspan="5">
+  <th colspan="6">
   <form name="search" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>">
   &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input type="text" size="30" name="searchterm" <?php if (isset($_GET['searchterm'])) echo 'value="' . $_GET['searchterm'] . '" '; ?>/> <strong><?php echo $string['in']; ?></strong>
   <select name="searchtype">
@@ -134,14 +134,42 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   } else {
     $searchtype = '';
   }
-  if (isset($_GET['order'])) {
-    $order = $_GET['order'];
-    $direction = $_GET['direction'];
+  if (isset($_GET['sortby'])) {
+    $sortby = $_GET['sortby'];
+    $ordering = $_GET['ordering'];
   } else {
-    $order = 'leadin_plain';
-    $direction = 'asc';
+    $sortby = 'leadin_plain';
+    $ordering = 'asc';
   }
 
+  echo '<tr>';
+  $table_order = array('1'=>'', '2'=>'', $string['question']=>'leadin', $string['type']=>'q_type', $string['modified']=>'last_edited', $string['status']=>'status');
+  foreach ($table_order as $display => $key) {
+    if ($key == '') {
+      echo "<th></th>";
+    } else {
+      if ($key == 'last_edited' or $key == 'status') {
+        echo '<th class="vert_div" style="width:120px">';
+      } else {
+        echo '<th class="vert_div">';
+      }
+      echo '&nbsp;';
+      
+      $params = "sortby=$key&owner=$owner&searchterm=$searchterm&searchtype=$searchtype";
+      
+      if ($sortby == $key and $ordering == 'asc') {
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=desc\">$display</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" /></th>";
+      } elseif ($sortby == $key and $ordering == 'desc') {
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" /></th>";
+      } else {
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a>&nbsp;</th>";
+      }
+    }
+  }
+  echo '</tr>';
+
+
+  /*
   echo "<tr><th>&nbsp;</th><th>&nbsp;</th><th class=\"vert_div\">&nbsp;";
   if ($order == 'leadin_plain' and $direction == 'asc') {
     echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=desc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
@@ -156,28 +184,29 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   } elseif ($order == 'last_edited' and $direction == 'desc') {
     echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   }
+  */
 ?>
-  <tr><th colspan="5" class="bevel"></th></tr>
+  <tr><th colspan="6" class="bevel"></th></tr>
 <?php
   echo "<form name=\"theform\" method=\"post\" action=\"\">\n";
   echo '<input type="hidden" name="screen" value="1" />';
 
-  if (isset($_GET['search']) or isset($_GET['order'])) {
+  if (isset($_GET['search']) or isset($_GET['sortby'])) {
     $old_id = 0;
     $searchterm = '%' . $_GET['searchterm'] . '%';
 
-    if ($order == 'q_type') $order = 'CAST(q_type AS CHAR)';
+    if ($sortby == 'q_type') $sortby = 'CAST(q_type AS CHAR)';
 
     if ($_GET['owner'] == '') {
       $teams = array_keys($userObject->get_staff_modules());
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status FROM (questions_modules, questions, options) WHERE questions.q_id=questions_modules.q_id AND (idMod IN (" . implode(',', $teams) . ") OR questions.ownerID=?) AND questions.q_id=options.o_id AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, questions.q_id");
+      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name FROM (questions_modules, questions, question_statuses, options) WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id AND (idMod IN (" . implode(',', $teams) . ") OR questions.ownerID=?) AND questions.q_id=options.o_id AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $sortby $ordering, questions.q_id");
       $result->bind_param('issssss', $userObject->get_user_ID(), $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
     } else {
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status FROM (questions, options) WHERE questions.q_id=options.o_id AND questions.ownerID=? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
+      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name FROM (questions, question_statuses, options) WHERE questions.status = question_statuses.id AND questions.q_id = options.o_id AND questions.ownerID = ? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $sortby $ordering, q_id");
       $result->bind_param('issssss', $_GET['owner'], $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
     }
     $result->execute();
-    $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $status);
+    $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $status, $status_name);
     while ($result->fetch()) {
       $tmp_leadin = QuestionUtils::clean_leadin($leadin);
       if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
@@ -185,7 +214,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       $status_class = 'status' . $status;
       echo "<tr class=\"$status_class\"><td style=\"width:16px\">";
       if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
-      echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td></tr>\n";
+      echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td><td>$status_name</td></tr>\n";
     }
     $result->close();
   }

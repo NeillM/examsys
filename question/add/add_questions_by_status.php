@@ -51,7 +51,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <?php
 foreach ($status_array as $sid => $status) {
 ?>
-<div class="f"><a href="add_questions_list_status.php?status=<?php echo $sid ?>"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=<?php echo $sid ?>"><?php echo $status->get_name(); ?></a></div>
+<div class="f"><a href="add_questions_list.php?type=status&status=<?php echo $sid ?>"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list.php?type=status&status=<?php echo $sid ?>"><?php echo $status->get_name(); ?></a></div>
 <?php
 }
 ?>

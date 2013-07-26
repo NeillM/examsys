@@ -48,7 +48,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
-    body {font-size:90%}
+    body {font-size:80%}
     .divider {font-size:80%; font-weight:bold; padding-left:6px}
     .s {padding-left:6px}
     .q_no {text-align:right; width:35px}
@@ -92,11 +92,11 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   echo "<input type=\"hidden\" name=\"screen\" value=\"1\" />\n";
   echo "<table class=\"header\">\n";
   echo "<tr><th colspan=\"7\" style=\"font-size:160%; font-weight:bold\">&nbsp;$paper_title</th></tr>\n";
-  echo "<tr><th></th><th></th><th>&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['question'] . "&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['type'] . "&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['modified'] . "&nbsp;</th></tr>\n";
+  echo "<tr><th></th><th></th><th>&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['question'] . "&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['type'] . "&nbsp;</th><th style=\"width:90px\" class=\"vert_div\">&nbsp;" . $string['modified'] . "&nbsp;</th><th class=\"vert_div\" style=\"width:90px\">&nbsp;" . $string['status'] . "&nbsp;</th></tr>\n";
   echo "<tr><th colspan=\"7\" class=\"bevel\"></th></tr>\n";
 
   // Get the questions in order off the paper.
-  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts, status FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts, status FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id = question_exclude.q_id WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos");
   $stmt->bind_param('i', $question_paper);
   $stmt->execute();
   $stmt->bind_result($q_id, $leadin, $leadin_plain, $q_type, $screen, $last_edited, $locked, $parts, $status);
@@ -105,11 +105,11 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   while ($stmt->fetch()) {
     if ($q_type != 'info') $question_no++;
     if ($screen > $old_screen) {
-      echo '<tr><td colspan="6" style="height:10px"></td></tr>';
-      echo '<tr><td colspan="6"><table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $string['screen'] . ' ' . $screen . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
+      echo '<tr><td colspan="7" style="height:10px"></td></tr>';
+      echo '<tr><td colspan="7"><table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $string['screen'] . ' ' . $screen . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
     }
     if ($q_type == 'info') {
-      echo "<tr><td class=\"q_no\"><img src=\"../artwork/black_white_info_icon.png\" width=\"6\" height=\"12\" alt=\"Info\" />&nbsp;</td><td>";
+      echo "<tr><td class=\"q_no\"><img src=\"../../artwork/black_white_info_icon.png\" width=\"6\" height=\"12\" alt=\"Info\" />&nbsp;</td><td>";
     } else {
     $status_class = 'status' . $status;
     echo "<tr class=\"{$status_class}\"><td class=\"q_no\">$question_no.</td><td>";
@@ -122,7 +122,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       echo '<td style="color:red; text-decoration:line-through" onclick="Qpreview(' . $q_id . ')">';
     }
     $leadin = QuestionUtils::clean_leadin($leadin);
-    echo $leadin . "</td><td class=\"s\">" . fullQuestionType($q_type, $string) . "</td><td class=\"s\">$last_edited</td></tr>\n";
+    echo $leadin . "</td><td class=\"s\"><nobr>" . fullQuestionType($q_type, $string) . "</nobr></td><td class=\"s\">$last_edited</td><td>" . $status_array[$status]->get_name() . "</td></tr>\n";
     $old_screen = $screen;
   }
   $stmt->close();

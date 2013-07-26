@@ -97,6 +97,7 @@ Class QuestionUtils {
     } else {
       $leadin = trim(str_replace('&nbsp;',' ', $leadin));
     }
+    $leadin = trim($leadin);
 
     return $leadin;
   }

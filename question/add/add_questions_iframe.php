@@ -40,7 +40,7 @@ require '../../include/staff_auth.inc';
 
 <body>
 
-<iframe src="add_questions_list_unused.php" name="iframeurl" width="100%" height="60%" style="border:1px solid #95AEC8" frameborder="0">
+<iframe src="add_questions_list.php?type=unused" name="iframeurl" width="100%" height="60%" style="border:1px solid #95AEC8" frameborder="0">
   <p><?php echo $string['browsererr'];?></p>
 </iframe>
 
