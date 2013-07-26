@@ -479,7 +479,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
     
 <?php
   if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
-    echo "var clarificationCall = setInterval(clarifyMethod, 1000);\n";
+    echo "var clarificationCall = setInterval(clarifyMethod, 10000);\n";
   }
 ?>
  });
