@@ -1069,7 +1069,7 @@ if ($css != '') {
       }
     }
     if ($question['q_type'] == 'enhancedcalc') {
-      require_once('../question/enhancedcalculation.class.php');
+      require_once('../plugins/questions/enhancedcalculation/enhancedcalculation.class.php');
       if (!isset($configObj)) {
         $configObj = Config::get_instance();
       }

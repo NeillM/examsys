@@ -432,7 +432,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         break;
       case 'enhancedcalc':
         //DO NOTHING EXCEPT SAVE DATA
-        require_once('../question/enhancedcalculation.class.php');
+        require_once('../plugins/questions/enhancedcalculation/enhancedcalculation.class.php');
         $mark = null;
 
         if (!is_array($settings)) {
