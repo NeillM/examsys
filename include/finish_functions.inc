@@ -417,9 +417,9 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
   for ($question = 1; $question <= $q_no; $question++) {
     if ($paper_type != '2' and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
-      require_once('../question/enhancedcalculation.class.php');
-      
-      $enhancedcalc = new EnhancedCalculation($configObj);
+      require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+      $configObj = Config::get_instance();
+      $enhancedcalc = new enhancedcalc($configObj);
       $enhancedcalc->load($paper[$question]);
       $returnarray = $enhancedcalc->caculateUserMark();
 
@@ -758,11 +758,11 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         break;
 
       case 'enhancedcalc':
-        require_once('../question/enhancedcalculation.class.php');
+        require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
         if (!isset($configObj)) {
           $configObj = Config::get_instance();
         }
-        $paper[$question]['object'] = new EnhancedCalculation($configObj);
+        $paper[$question]['object'] = new enhancedcalc($configObj);
         $paper[$question]['object']->load($paper[$question]);
         $paper[$question]['object']->render_feedback(array('tmp_exclude' => $tmp_exclude, 'hide_if_unanswered' => $hide_if_unanswered, 'tmp_display_correct_answer' => $tmp_display_correct_answer, 'tmp_display_students_response' => $tmp_display_students_response, 'question' => $question, 'tmp_fback' => $tmp_fback, 'tmp_display_feedback' => $tmp_display_feedback));
 

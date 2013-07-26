@@ -1069,11 +1069,11 @@ if ($css != '') {
       }
     }
     if ($question['q_type'] == 'enhancedcalc') {
-      require_once('../question/enhancedcalculation.class.php');
+      require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
       if (!isset($configObj)) {
         $configObj = Config::get_instance();
       }
-      $question['object'] = new EnhancedCalculation($configObj);
+      $question['object'] = new enhancedcalc($configObj);
       $question['object']->load($question);
     }
     $questions_array[] = $question;

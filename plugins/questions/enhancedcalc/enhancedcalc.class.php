@@ -25,7 +25,7 @@
 
 require_once '../classes/mathsutils.class.php';
 require_once('../classes/question.class.php');
-class EnhancedCalculation extends Question implements questionInterface {
+class enhancedcalc extends Question implements questionInterface {
 
   protected $configObj;
   protected $db;
@@ -122,12 +122,11 @@ class EnhancedCalculation extends Question implements questionInterface {
     
     $enhancedcalcType = $this->configObj->get('enhancedcalc_type');
     if (!is_null($enhancedcalcType)) {
-      require_once '../plugins/enhancedcalc/' . $enhancedcalcType . '.php';
+      require_once $enhancedcalcType . '.php';
       $name = 'enhancedcalc_' . $enhancedcalcType;
       $enhancedcalcObj = new $name($this->configObj);
-
     } else {
-      require_once '../plugins/enhancedcalc/rserve.php';
+      require_once 'rserve.php';
       $enhancedcalcObj = new enhancedcalc_rserve($this->configObj);
     }
     

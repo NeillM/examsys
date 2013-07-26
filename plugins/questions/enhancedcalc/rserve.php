@@ -26,7 +26,7 @@
  * @package
  */
 
-require_once('../rserve/Connection.php');
+require_once('rserve/Connection.php');
 
 class enhancedcalc_rserve {
 
