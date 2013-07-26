@@ -58,6 +58,8 @@ class ExamAnnouncements {
   public function display_student_announcements() {
     $exam_announcements = $this->get_announcements();
     
+    if (count($exam_announcements) == 0) return '';
+    
     $html = '';
     
     $html .= "<table class=\"exam_announcement_box\">\n";
