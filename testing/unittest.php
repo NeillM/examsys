@@ -44,6 +44,7 @@ if(!isset($_GET['test'])) {
 		<ul>
 			<?php
 			echo '<li><a href="./unittest.php?test=all"><strong>All</strong></a></li>';
+			echo '<li><a href="./unittest.php?test=questions"><strong>Questions</strong></a></li>';
 			$test = scandir('./unit_tests');
 			foreach($test as $t) {
 				if(!is_dir("./unit_tests/$t") OR $t == '' OR $t == '.' OR $t == '..') {
@@ -79,6 +80,7 @@ if(!isset($_GET['test'])) {
 	switch($_GET['test']) {
 		case 'all':
 			\Enhance\Core::discoverTests('./unit_tests/');
+			\Enhance\Core::discoverTests('../plugins/');
 			$run = TRUE;
 			break;
 		case 'one':
@@ -87,6 +89,17 @@ if(!isset($_GET['test'])) {
 					\Enhance\Core::discoverTests($path);
 					$run = TRUE;
 				}
+			break;
+      case 'questions':
+        $folder = opendir("../plugins/questions");
+        while (($entry = readdir($folder)) != "") {
+          if($entry == '.' or $entry == '..') {
+            continue;
+          }
+          \Enhance\Core::discoverTests('../plugins/questions/' + $entry);
+        }
+        $folder = closedir($folder);
+        $run = TRUE;
 			break;
 		default:
 			$path = realpath('./unit_tests/' . $_GET['test']);

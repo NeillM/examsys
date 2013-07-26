@@ -25,7 +25,7 @@
 
 require_once '../classes/mathsutils.class.php';
 require_once('../classes/question.class.php');
-class EnhancedCalculation extends Question implements questionInterface {
+class enhancedcalc extends Question implements questionInterface {
 
   protected $configObj;
   protected $db;

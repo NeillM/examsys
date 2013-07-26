@@ -432,7 +432,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         break;
       case 'enhancedcalc':
         //DO NOTHING EXCEPT SAVE DATA
-        require_once('../plugins/questions/enhancedcalculation/enhancedcalculation.class.php');
+        require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
         $mark = null;
 
         if (!is_array($settings)) {
@@ -444,7 +444,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         } else {
           $totalpos = null;
         }
-        $saved_response = EnhancedCalculation::processUserAnswer($_POST['qid'][$log_id], $_SESSION['qid'][$log_id]);
+        $saved_response = enhancedcalc::processUserAnswer($_POST['qid'][$log_id], $_SESSION['qid'][$log_id]);
         //unset($_SESSION['qid'][$log_id]);
         break;
       case 'dichotomous':

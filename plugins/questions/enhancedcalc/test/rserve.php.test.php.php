@@ -25,16 +25,16 @@
 */
 
 global $cfg_web_root;
-require 'EnhancedCalculation.class.php';
+require 'enhancedcalc_rserve.class.php';
 
-class CaculationTests extends \Enhance\TestFixture
+class RserveTests extends \Enhance\TestFixture
 {
 
   private $res;    
 
   // SetUp
   public function setUp() {
-    $this->res = \Enhance\Core::getCodeCoverageWrapper('EnhancedCalculation');
+    $this->res = \Enhance\Core::getCodeCoverageWrapper('enhancedcalc_rserve');
   }
 
   // TearDown
@@ -43,7 +43,7 @@ class CaculationTests extends \Enhance\TestFixture
   }
   
   #
-  # Random number generation
+  # 
   #
 }
 ?>

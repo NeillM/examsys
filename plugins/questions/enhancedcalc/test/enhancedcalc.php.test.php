@@ -25,9 +25,9 @@
 */
 
 global $cfg_web_root;
-require 'EnhancedCalculation.class.php';
+require 'enhancedcalc.class.php';
 
-class CaculationTests extends \Enhance\TestFixture
+class EnhancedCalcTests extends \Enhance\TestFixture
 {
 
   private $res;    
@@ -42,8 +42,5 @@ class CaculationTests extends \Enhance\TestFixture
   
   }
   
-  #
-  # Random number generation
-  #
 }
 ?>
