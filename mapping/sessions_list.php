@@ -55,30 +55,31 @@ if (!$module) {
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
     function selSession(divID, identifier, session, VLE, evt) {
       hideSessCopyMenu(evt);
-      tmp_ID = document.myform.oldDivID.value;
+      tmp_ID = $('#oldDivID').val();
       if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+        $('#' + tmp_ID).css('background-color', 'white');
       }
 
       if (VLE != '') {
-        document.getElementById('menu1a').style.display = 'none';
-        document.getElementById('menu1c').style.display = 'block';
+        $('#menu1a').hide();
+        $('#menu1c').show();
       } else {
-        document.getElementById('menu1a').style.display = 'none';
-        document.getElementById('menu1b').style.display = 'block';
+        $('#menu1a').hide();
+        $('#menu1b').show();
       }
 
-      document.myform.oldDivID.value = divID;
-      document.myform.divID.value = divID;
+      $('#oldDivID').val(divID);
+      $('#divID').val(divID);
 
-      document.myform.identifier.value = identifier;
-      document.myform.session.value = session;
-      document.myform.VLE.value = VLE;
+      $('#identifier').val(identifier);
+      $('#session').val(session);
+      $('#VLE').val(VLE);
 
-      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      $('#' + divID).css('background-color', '#B3C8E8');
       evt.cancelBubble = true;
     }
 
@@ -87,14 +88,14 @@ if (!$module) {
     }
 
     function highlight(lineID) {
-      if (lineID != document.myform.oldDivID.value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      if (lineID != $('#oldDivID').val()) {
+        $('#' + lineID).css('background-color', '#EEEEEE');
       }
     }
 
     function unhighlight(lineID) {
-      if (lineID != document.myform.oldDivID.value) {
-        document.getElementById(lineID).style.backgroundColor = '';
+      if (lineID != $('#oldDivID').val()) {
+        $('#' + lineID).css('background-color', '');
       }
     }
 

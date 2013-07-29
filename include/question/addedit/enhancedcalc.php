@@ -131,6 +131,10 @@ $disabled_mod = ($question->get_locked() == '') ? '' : ' disabled';
 ?>
               <td class="spaced-top"><input type="checkbox" name="show_units" id="show_units"<?php echo $sel_mod . $disabled_mod ?>></td>
             </tr>
+<?php
+/*
+Removed until we can reconcile how it may work with multiple formulae
+?>
             <tr>
               <th class="spaced-top">
                 <label for="marks_unit"><?php echo $string['unitmarking'] ?></label><br>
@@ -144,6 +148,9 @@ echo ViewHelper::render_options($marks_unit, $question->get_marks_unit(), 3);
                 </select>
               </td>
             </tr>
+<?php
+*/
+?>
           </tbody>
         </table>
 

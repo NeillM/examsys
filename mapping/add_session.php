@@ -95,25 +95,27 @@ if (isset($_POST['Save'])) {
     .field {text-align:right; font-weight:bold}
     .note {width:90%}
   </style>
+
   <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
       function checkForm() {
-        if (document.getElementById('session_title').value == '' || document.getElementById('session_title').value == ' ') {
+        if ($('#session_title').val() == '' || $('#session_title').val() == ' ') {
           alert("<?php echo $string['msg2'];?>");
           return false;
         }
       }
 
     function clearTextbox(objectName) {
-      if (document.getElementById(objectName).value == '<?php echo $string['msg1']; ?>') {
-        document.getElementById(objectName).value = '';
-        document.getElementById(objectName).style.color = 'black';
+      if ($('#' + objectName).val() == '<?php echo $string['msg1']; ?>') {
+        $('#' + objectName).val('');
+        $('#' + objectName).css('color', 'black');
       }
     }
 
     var ObjCount = 0;
     function addNew(ulId) {
-      ul = document.getElementById( ulId );
+      ul = document.getElementById(ulId);
       li = document.createElement("li");
       li.id = 'li_' + ulId + ObjCount;
       li.style.margin = '0.5em';
@@ -124,7 +126,7 @@ if (isset($_POST['Save'])) {
     }
 
     function demote(liId) {
-      li = document.getElementById( liId );
+      li = document.getElementById(liId);
       ul = li.parentNode;
       var i = 0;
       while(ul.childNodes[i].id != liId) {

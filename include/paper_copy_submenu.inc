@@ -29,17 +29,17 @@ require_once '../classes/dateutils.class.php';
 <script language="JavaScript">
   function changeButton() {
     if ($("#paper_type").val() == '2') {
-      document.getElementById('next_button').style.display = 'Block';
-      document.getElementById('submit_button').style.display = 'None';
+      $('#next_button').show();
+      $('#submit_button').hide();
     } else {
-      document.getElementById('submit_button').style.display = 'Block';
-      document.getElementById('next_button').style.display = 'None';
+      $('#submit_button').show();
+      $('#next_button').hide();
     }
   }
   
   function nextTable() {
-    document.getElementById('table1div').style.display = 'None';
-    document.getElementById('table2div').style.display = 'Block';
+    $('#table1div').hide();
+    $('#table2div').show();
   }
   
   function checkCopyForm() {

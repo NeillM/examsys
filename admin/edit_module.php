@@ -165,16 +165,16 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     });
 
     function showHideGrid() {
-      if (document.getElementById('stdset').checked) {
-        document.getElementById('ebelgrid').style.display = 'table-row';
+      if ($('#stdset').attr('checked')) {
+       $('#ebelgrid').show();
       } else {
-        document.getElementById('ebelgrid').style.display = 'none';
+        $('#ebelgrid').hide();
       }
     }
 
     function setSidebarMenu() {
-      $('#menu1a').css('display','none');
-      $('#menu1b').css('display','block');
+      $('#menu1a').hide();
+      $('#menu1b').show();
       $('#lineID').val('<?php echo $_GET['moduleid']; ?>');
     }
 

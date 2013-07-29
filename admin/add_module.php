@@ -163,10 +163,10 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     });
 
     function showHideGrid() {
-      if (document.getElementById('stdset').checked) {
-        document.getElementById('ebelgrid').style.display = 'block';
+      if ($('#stdset').attr('checked')) {
+        $('#ebelgrid').show();
       } else {
-        document.getElementById('ebelgrid').style.display = 'none';
+        $('#ebelgrid').hide();
       }
     }
   </script>
