@@ -100,7 +100,7 @@ function hideMenuScript($menu_no) {
   echo "<script language=\"JavaScript\">\n";
   echo "function hideMenus(evt) {\n";
   for ($i=0; $i<$menu_no; $i++) {
-    echo "document.getElementById('popup$i').style.display = 'none';\n";
+    echo "$('#popup$i').hide();\n";
   }
   echo "}\n";
   echo "</script>\n";

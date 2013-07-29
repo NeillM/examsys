@@ -25,7 +25,7 @@
 ?>
 <script language="JavaScript">
   function restoreItem() {
-    document.location.href='restore_item.php?item_id=' + document.PapersMenu.itemID.value;
+    document.location.href='restore_item.php?item_id=' + $('#itemID').val();
   }
 </script>
 
@@ -43,6 +43,6 @@
 <tr><td><a id="restore" onclick="restoreItem(); return false;" href="#"><img src="../artwork/restore.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a id="restore" onclick="restoreItem(); return false;" href="#"><?php echo $string['restorethisitem']; ?></a></td></tr>
 </table>
 
-<input type="hidden" name="itemID" value="" />
+<input type="hidden" id="itemID" name="itemID" value="" />
 </form>
 </div>

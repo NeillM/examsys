@@ -64,32 +64,25 @@ if (isset($_POST['submit'])) {
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
     input[type=checkbox] {margin-right:8px}
+    .r1 {background-color:white}
+    .r2 {background-color:#B3C8E8}
   </style>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
-      if (document.getElementById(objectID).style.backgroundColor == 'white') {
-        document.getElementById(objectID).style.backgroundColor = '#B3C8E8';
+      if ($('#' + objectID).hasClass('r2')) {
+        $('#' + objectID).addClass('r1');
+        $('#' + objectID).removeClass('r2');
       } else {
-        document.getElementById(objectID).style.backgroundColor = 'white';
+        $('#' + objectID).addClass('r2');
+        $('#' + objectID).removeClass('r1');
       }
     }
     
     function resizeList() {
-      var winW = 630, winH = 460;
-      if (document.body && document.body.offsetWidth) {
-        winW = document.body.offsetWidth;
-        winH = document.body.offsetHeight;
-      }
-      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-        winW = document.documentElement.offsetWidth;
-        winH = document.documentElement.offsetHeight;
-      }
-      if (window.innerWidth && window.innerHeight) {
-        winW = window.innerWidth;
-        winH = window.innerHeight;
-      }
-      winH -= 105;
-      document.getElementById('list').style.height = winH + 'px';
+      winH = $(window).height() - 105;
+
+      $('#list').css('height', winH + 'px');
     }
   </script>
 </head>
@@ -124,9 +117,9 @@ if (isset($_POST['submit'])) {
     }
    
     if (isset($user_modules[$idMod])) {
-      echo "<div style=\"background-color:#B3C8E8\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" checked />";
+      echo "<div class=\"r2\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" checked />";
     } else {
-      echo "<div style=\"background-color:white\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" />";
+      echo "<div class=\"r1\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" />";
     }
     echo "<label for=\"mod$mod_no\">$moduleid: $fullname</label></div>\n";
     $old_school = $school;

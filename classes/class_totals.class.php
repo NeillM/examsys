@@ -1083,7 +1083,10 @@ class ClassTotals {
     }
     $result->close();
     
-    unset($metadataID);
+    if (count($metadataID) == 0) {
+      $this->user_results = array();
+      return false;
+    }
     
     $i                    = 0;
     $old_screen           = 0;
@@ -1095,7 +1098,7 @@ class ClassTotals {
     $tmp_user_mark_array  = array();
     $log_data             = array();
     $tmp_array            = array();
-    
+
     // Load 'logx' data.
     if ($this->paper_type == '0' or $this->paper_type == '1') {
       $result = $this->db->prepare("(SELECT log0.id, metadataID, 0 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log0, questions WHERE log0.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")) UNION ALL (SELECT log1.id, metadataID, 1 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log1, questions WHERE log1.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . "))");
@@ -1184,6 +1187,9 @@ class ClassTotals {
   }
   
   private function add_rank() {
+    $result_no = count($this->user_results);
+    if ($result_no == 0) return;
+
     // Put the whole array in marks order.
     $sortby = 'mark';
     $ordering = 'desc';
@@ -1192,8 +1198,6 @@ class ClassTotals {
     $display_rank = 1;
     $global_rank  = 1;
     $old_mark     = 0;
-
-    $result_no = count($this->user_results);
 
     for ($i=0; $i<$result_no; $i++) {
       if ($this->user_results[$i]['mark'] != $old_mark) {
@@ -1207,6 +1211,9 @@ class ClassTotals {
 
   private function flag_subpart() {
     $user_no = count($this->user_results);
+
+    if ($user_no == 0) return;
+
     if ($this->percent < 100) {
       // Sort by mark order.
       $sortby = 'mark';
@@ -1395,6 +1402,8 @@ class ClassTotals {
   }
 
   public function sort_results() {
+    if (count($this->user_results) == 0) return;
+
     $tmp_sort = ($this->sortby != 'result' and $this->sortby != 'percent') ? $this->sortby : 'percent';
     if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
     if ($tmp_sort == 'classification') $tmp_sort = 'mark';

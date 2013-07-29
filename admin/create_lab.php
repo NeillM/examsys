@@ -29,8 +29,7 @@ require '../config/campuses.inc';
 $bad_addresses = array();
 if (isset($_POST['submit'])) {
   // Insert into Lab table.
-  $result = $mysqli->prepare("INSERT INTO labs VALUES (NULL,?,?,?,?,?,?,?)");
-  
+
   $lab_name = $_POST['lab_name'];
   $campus = $_POST['campus'];
   $building = $_POST['building'];
@@ -38,8 +37,9 @@ if (isset($_POST['submit'])) {
   $timetabling = $_POST['timetabling'];
   $it_support = $_POST['it_support'];
   $plagarism = $_POST['plagarism'];
-  
-  $result->bind_param('sssssss', $lab_name,$campus,$building,$room_no,$timetabling,$it_support,$plagarism);
+
+  $result = $mysqli->prepare("INSERT INTO labs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+  $result->bind_param('sssssss', $lab_name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
   $result->execute();  
   $labID = $mysqli->insert_id;
   $result->close();
@@ -79,15 +79,21 @@ if (isset($_POST['submit'])) {
     input, textarea {line-height:140%}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function clearName() {
-      document.getElementById("lab_name").value = '';
-      document.getElementById("lab_name").style.color = 'black';    
+      $('#lab_name').val('');
+      $('#lab_name').css('color', 'black');
     }
     
     function checkForm() {
-      if (document.getElementById('addresses').value == '') {
+      if ($('#addresses').val() == '') {
         alert('<?php echo $string['noipaddresses']; ?>');
+        return false;
+      }
+
+      if ($('#lab_name').val() == '') {
+        alert('<?php echo $string['nolabname']; ?>');
         return false;
       }
     }
@@ -129,7 +135,7 @@ if (count($bad_addresses) > 0) {
 <textarea cols="20" rows="28" style="width:200px; height:590px" name="addresses" id="addresses"></textarea></td><td style="width:50px"></td><td style="vertical-align:top">
 
 <div><strong><?php echo $string['name']; ?></strong></div>
-<div><input type="text" size="40" name="lab_name" value="" /></div>
+<div><input type="text" size="40" name="lab_name" id="lab_name" value="" /></div>
 <?php
   echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n<option value=\"\"></option>\n";
   foreach ($cfg_campus_list as $choice) {

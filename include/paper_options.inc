@@ -173,19 +173,19 @@ if (count($moduleIDs) > 0) {
   }
 
   function changeScreen(screenNo) {
-    window.location='<?php echo $configObject->get('cfg_root_path') ?>/paper/change_screen_no.php?questionID=' + $('#pID').val() + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.current_pos.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value;
+    window.location='<?php echo $configObject->get('cfg_root_path') ?>/paper/change_screen_no.php?questionID=' + $('#pID').val() + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + $('#current_pos').val() + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + $('#scrOfY').val();
   }
 
   function incScreen() {
     screenNo = $('#screenNo').val();
     screenNo++;
-    window.location='<?php echo $configObject->get('cfg_root_path') ?>/paper/change_screen_no.php?questionID=' + getLastID($('#pID').val()) + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.current_pos.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value;
+    window.location='<?php echo $configObject->get('cfg_root_path') ?>/paper/change_screen_no.php?questionID=' + getLastID($('#pID').val()) + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.current_pos.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + $('#scrOfY').val();
   }
 
   function addQuestions(display, screen_no) {
     winH = screen.height - 80
     winW = screen.width - 80
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/add/add_questions_frame.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&scrOfY=" + document.getElementById('scrOfY').value + "&display_pos=" + display + "&max_screen=" + screen_no + "","notice","width=" + winW + ",height=" + winH + ",left=40,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/add/add_questions_frame.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&scrOfY=" + $('#scrOfY').val() + "&display_pos=" + display + "&max_screen=" + screen_no + "","notice","width=" + winW + ",height=" + winH + ",left=40,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
@@ -660,9 +660,9 @@ if ($properties->get_paper_type() == '2') {
   makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php',$string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php',$string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['studentcohort']=>$configObject->get('cfg_root_path') . '/users/search.php?paperID=' . $_GET['paperID']));
 
   if ($properties->get_summative_lock()) {
-    $params = "&scrOfY=' + document.getElementById('scrOfY').value + '";
+    $params = "&scrOfY=' + $('#scrOfY').val() + '";
   } else {
-    $params = "&scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=" . $module. "&calling=paper";
+    $params = "&scrOfY=' + $('#scrOfY').val() + '&paperID=$paperID&folder=$folder&module=" . $module. "&calling=paper";
   }
 
   if ($properties->get_paper_type() == '6') {

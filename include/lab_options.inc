@@ -25,13 +25,13 @@
 ?>
 <script language="JavaScript">
   function viewDetails() {
-    document.location.href='./lab_details.php?labID=' + document.getElementById('labID').value;  
-    document.getElementById('menu1a').style.display = 'block';
-    document.getElementById('menu1b').style.display = 'none';
+    document.location.href='./lab_details.php?labID=' + $('#labID').val();
+    $('#menu1a').show();
+    $('#menu1b').hide();
   }
   
   function deleteLab() {
-    notice=window.open("../delete/check_delete_lab.php?labID=" + document.getElementById('labID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_lab.php?labID=" + $('#labID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
