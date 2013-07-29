@@ -25,11 +25,11 @@
 ?>
 <script language="JavaScript">
   function editSchool() {
-    window.location.href='./edit_school.php?schoolid=' + document.getElementById('lineID').value;
+    window.location.href='./edit_school.php?schoolid=' + $('#lineID').val();
   }
   
   function deleteSchool() {
-    notice=window.open("../delete/check_delete_school.php?schoolID=" + document.getElementById('lineID').value + "","schools","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_school.php?schoolID=" + $('#lineID').val() + "","schools","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -46,23 +46,23 @@
 <?php
 if ($faculties > 0) {
 ?>
-  <tr><td class="ico"><a href="add_school.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_school.php"><?php echo $string['createschool']; ?></a></td></tr>
+  <tr><td class="ico"><a href="add_school.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" /></a></td><td class="menuitem"><a href="add_school.php"><?php echo $string['createschool']; ?></a></td></tr>
 <?php
 } else {
 ?>
-  <tr><td class="ico"><img src="../artwork/school_icon_16_grey.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['createschool']; ?></td></tr>
+  <tr><td class="ico"><img src="../artwork/school_icon_16_grey.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" /></td><td class="greymenuitem"><?php echo $string['createschool']; ?></td></tr>
 <?php
 }
 ?>
 
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['editschool']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deleteschool']; ?></td></tr>
+<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" /></td><td class="greymenuitem"><?php echo $string['editschool']; ?></td></tr>
+<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['deleteschool']; ?></td></tr>
 </table>
 
 <table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="add_school.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_school.php"><?php echo $string['createschool']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editSchool()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" border="0" /></td><td class="menuitem"><a href="" onclick="editSchool(); return false;"><?php echo $string['editschool']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteSchool()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteSchool(); return false;"><?php echo $string['deleteschool']; ?></a></td></tr>
+<tr><td class="ico"><a href="add_school.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" /></a></td><td class="menuitem"><a href="add_school.php"><?php echo $string['createschool']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="editSchool()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" /></td><td class="menuitem"><a href="" onclick="editSchool(); return false;"><?php echo $string['editschool']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="deleteSchool()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteSchool(); return false;"><?php echo $string['deleteschool']; ?></a></td></tr>
 </table>
 </td></tr>
 </table>

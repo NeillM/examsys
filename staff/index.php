@@ -63,6 +63,7 @@ require_once '../include/staff_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script language="JavaScript">

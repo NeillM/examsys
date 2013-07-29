@@ -45,18 +45,19 @@
 </style>
 
 <?php echo $configObject->get('cfg_js_root') ?>
+<script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
 <script language="JavaScript" src="../js/sidebar.js"></script>
 <script language="JavaScript">
-  function highlightResource(resourceID,highlightColor) {
-    document.getElementById(resourceID).style.borderColor = '#316AC5';
-    document.getElementById('text' + resourceID).style.backgroundColor = highlightColor;
-    document.getElementById('text' + resourceID).style.color = 'white';
+  function highlightResource(resourceID, highlightColor) {
+    $('#' + resourceID).css('border-color', '#316AC5');
+    $('#text' + resourceID).css('background-color', highlightColor);
+    $('#text' + resourceID).css('color', 'white');
   }
 
   function unhighlightResource(resourceID) {
-    document.getElementById(resourceID).style.borderColor = '#EEEEEE';
-    document.getElementById('text' + resourceID).style.backgroundColor = 'white';
-    document.getElementById('text' + resourceID).style.color = 'black';
+    $('#' + resourceID).css('border-color', '#EEEEEE');
+    $('#text' + resourceID).css('background-color', 'white');
+    $('#text' + resourceID).css('color', 'black');
   }
 
   function callPage(targetPage) {

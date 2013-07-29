@@ -60,7 +60,7 @@ if ($vle_api != '') {
   }
 
   function editSession() {
-    document.location.href='./edit_session.php?identifier=' + document.myform.identifier.value + '&module=<?php echo $_GET['module']; ?>&calendar_year=' + document.myform.session.value;
+    document.location.href='./edit_session.php?identifier=' + document.myform.identifier.value + '&module=<?php echo $_GET['module']; ?>&calendar_year=' + $('#session').val();
   }
 
   function editVLESession() {
@@ -74,7 +74,7 @@ if ($vle_api != '') {
   }
 
   function deleteSession() {
-    notice=window.open("../delete/check_delete_session.php?moduleID=<?php echo $_GET['module']; ?>&session=" + document.myform.session.value + "&identifier=" + document.myform.identifier.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_session.php?moduleID=<?php echo $_GET['module']; ?>&session=" + $('#session').val() + "&identifier=" + $('#identifier').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -93,14 +93,14 @@ if ($vle_api != '') {
 
   function updateMenu(ID) {
     current = (document.getElementById('menu' + ID).style.display == 'block') ? 'none' : 'block';
-    document.getElementById('menu' + ID).style.display = current;
+    $('#menu' + ID).toggle();
 
     <?php
       echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
     ?>
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
-    document.getElementById('icon' + ID).setAttribute('src',icon);
-    document.getElementById('icon' + ID).setAttribute('alt',alttag);
+    $('#icon' + ID).attr('src', icon);
+    $('#icon' + ID).attr('alt', alttag);
 
     var ExpireDate = new Date ();
     expiredays = 100;
@@ -110,17 +110,17 @@ if ($vle_api != '') {
   }
 
   function jumpTo() {
-    window.top.location = '<?php echo $configObject->get('cfg_root_path'); ?>/paper_frame.php?paperID=' + document.releaseform.paperID.value;
+    window.top.location = '<?php echo $configObject->get('cfg_root_path'); ?>/paper_frame.php?paperID=' + $('paperID').val();
   }
 
   function showSessCopyMenu(e) {
-    document.getElementById('session_copy_menu').style.display='block';
+    $('#session_copy_menu').show();
     if (!e) var e = window.event;
     e.cancelBubble = true;
   }
 
   function hideSessCopyMenu(e) {
-    document.getElementById('session_copy_menu').style.display='none';
+    $('#session_copy_menu').hide();
   }
 </script>
 
@@ -191,11 +191,11 @@ else {
 ?>
 </table>
 
-<input type="hidden" name="session" value="" /><br />
-<input type="hidden" name="identifier" value="" /><br />
-<input type="hidden" name="divID" value="" /><br />
-<input type="hidden" name="oldDivID" value="" />
-<input type="hidden" name="VLE" value="" />
+<input type="hidden" id="session" name="session" value="" /><br />
+<input type="hidden" id="identifier" name="identifier" value="" /><br />
+<input type="hidden" id="divID" name="divID" value="" /><br />
+<input type="hidden" id="oldDivID" name="oldDivID" value="" />
+<input type="hidden" id="VLE" name="VLE" value="" />
 </form>
 </div>
 <?php

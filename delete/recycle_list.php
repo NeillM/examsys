@@ -82,8 +82,8 @@ if (isset($_GET['folder'])) {
     }
   
     function selQ(lineID, itemID, evt) {
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
+      $('#menu1a').hide();
+      $('#menu1b').show();
 
       if (evt.ctrlKey == false) {
         clearAll();
@@ -99,20 +99,16 @@ if (isset($_GET['folder'])) {
         }
       }
 
-      document.PapersMenu.oldLineNo.value = lineID;
-      document.PapersMenu.lineNo.value = lineID;
-
       if (evt != null) {
         evt.cancelBubble = true;
       }
     }
 
     function qOff() {
-      document.getElementById('menu1a').style.display = 'block';
-      document.getElementById('menu1b').style.display = 'none';
+      $('#menu1a').show();
+      $('#menu1b').hide();
       clearAll();
-      document.PapersMenu.itemID.value = '';
-      document.PapersMenu.lineNo.value = '';
+      $('#itemID').val('');
     }
   </script>
 </head>

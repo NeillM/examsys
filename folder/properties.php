@@ -60,6 +60,7 @@ if (isset($_POST['moduleID'])) {
   <title><?php echo $string['folderproperties']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <style type="text/css">
     body {background-color:#F1F5FB}
     td {font-size:90%}
@@ -67,15 +68,15 @@ if (isset($_POST['moduleID'])) {
 
   <script language="JavaScript">
     function toggle(objectID) {
-      if (document.getElementById(objectID).style.backgroundColor == 'white') {
-        document.getElementById(objectID).style.backgroundColor = '#B3C8E8';
+      if ($('#' + objectID).css('background-color') == 'white') {
+        $('#' + objectID).css('background-color', '#B3C8E8');
       } else {
-        document.getElementById(objectID).style.backgroundColor = 'white';
+        $('#' + objectID).css('background-color', 'white');
       }
     }
 
     function checkForm() {
-      if (edit_form.folder.value == "") {
+      if ($('#folder').val() == "") {
         alert ("<?php echo $string['enteraname']; ?>");
         return false;
       }    
@@ -235,7 +236,7 @@ if ($unique_name) {
       if (!$unique_name) {
         echo ' style="color:#800000; background-color:#FFC0C0; border:1px solid #400000"';
       }
-      echo " type=\"text\" size=\"50\" maxlength=\"255\" value=\"$current_folder\" name=\"folder\" onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"hidden\" name=\"old_folder\" value=\"$full_path\"><input type=\"hidden\" name=\"old_prefix\" value=\"$prefix\"></td></tr>\n";
+      echo " type=\"text\" size=\"50\" maxlength=\"255\" value=\"$current_folder\" id=\"folder\" name=\"folder\" onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"hidden\" name=\"old_folder\" value=\"$full_path\"><input type=\"hidden\" name=\"old_prefix\" value=\"$prefix\"></td></tr>\n";
       echo "<input type=\"hidden\" name=\"folderID\" value=\"" . $_GET['folder'] . "\" />";
       echo "<tr><td align=\"right\" valign=\"middle\">" . $string['colour'] . "&nbsp;</td><td>";
       echo "<input type=\"radio\" name=\"color\" value=\"yellow\"";

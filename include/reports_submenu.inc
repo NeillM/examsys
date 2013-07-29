@@ -30,7 +30,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   if ($properties->get_paper_type() == '3') {
 ?>
   function go(url, evt) {
-    document.getElementById('stats_menu').style.display='none';
+    $('#stats_menu').hide();
     if (document.getElementById('completerpt').checked) {
       completerpt = 1;
     } else {
@@ -46,12 +46,12 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   function go(url, evt) {
     var extra_data = '';
 
-    for (i=1; i<document.getElementById('meta_no').value; i++) {
+    for (i=1; i<$('#meta_no').val(); i++) {
       meta_ref = 'meta' + i;
-      extra_data += '&meta' + i + '=' + document.getElementById(meta_ref).value;
+      extra_data += '&meta' + i + '=' +$('#' + meta_ref).val();
     }
 
-    document.getElementById('stats_menu').style.display='none';
+    $('#stats_menu').hide();
     window.location.href = url + "paperID=" + document.stats_menu.paperID.value + "&startdate=" + document.stats_menu.start_year.value + document.stats_menu.start_month.value + document.stats_menu.start_day.value + document.stats_menu.start_time.value + "&enddate=" + document.stats_menu.end_year.value + document.stats_menu.end_month.value + document.stats_menu.end_day.value + document.stats_menu.end_time.value + "&repmodule=" + document.stats_menu.repmodule.value + "&repcourse=" + document.stats_menu.repcourse.value + extra_data + "&module=<?php echo $module_list[0]; ?>";
   }
   <?php
@@ -62,11 +62,11 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 
     for (i=1; i<document.getElementById('meta_no').value; i++) {
       meta_ref = 'meta' + i;
-      extra_data += '&meta' + i + '=' + document.getElementById(meta_ref).value;
+      extra_data += '&meta' + i + '=' + $('#' + meta_ref).val();
     }
     
-    document.getElementById('stats_menu').style.display = 'none';
-    if (document.getElementById('absent').checked == true) {
+    $('#stats_menu').hide();
+    if ($('#absent').attr('checked')) {
       absent = '&absent=1';
     } else {
       absent = '&absent=0';
@@ -76,7 +76,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     } else {
       studentsonly = '&studentsonly=0';
     }
-    window.location.href = url + "paperID=" + document.stats_menu.paperID.value + "&startdate=" + document.stats_menu.start_year.value + document.stats_menu.start_month.value + document.stats_menu.start_day.value + document.stats_menu.start_time.value + "&enddate=" + document.stats_menu.end_year.value + document.stats_menu.end_month.value + document.stats_menu.end_day.value + document.stats_menu.end_time.value + "&repmodule=" + document.stats_menu.repmodule.value + "&repcourse=" + document.stats_menu.repcourse.value + "&sortby=name&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&percent=" + document.stats_menu.percent.value + absent + studentsonly + "&ordering=" + document.stats_menu.direction.value + extra_data;
+    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_time').val() + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_time').val() + "&repmodule=" + $('#repmodule').val() + "&repcourse=" + $('#repcourse').val() + "&sortby=name&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&percent=" + $('#percent').val() + absent + studentsonly + "&ordering=" + $('#direction').val() + extra_data;
     
     evt.cancelBubble = true;
     return false;
@@ -146,7 +146,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 
   echo "<tr><td>" . $string['dates'] . "</td><td>";
   // Start Day
-  echo "<select name=\"start_day\">\n";
+  echo "<select name=\"start_day\" id=\"start_day\">\n";
   for ($i=1; $i<=31; $i++) {
     echo "<option value=\"";
     if ($i < 10) {
@@ -179,7 +179,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     $start_min = $date_array['minutes'];
   }
   
-  echo "<select name=\"start_month\">\n";
+  echo "<select name=\"start_month\" id=\"start_month\">\n";
 
   for ($i=0; $i<12; $i++) {
     if ($i == (intval($start_month) - 1)) {
@@ -190,7 +190,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
   echo "</select>";
   // Start Year
-  echo "<select name=\"start_year\">\n";
+  echo "<select name=\"start_year\" id=\"start_year\">\n";
   for ($i=2001; $i<=($date_array['year'] + 1); $i++) {
     if ($i == intval($start_year)) {
       echo "<option value=\"$i\" selected>$i</option>\n";
@@ -200,7 +200,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
   echo "</select>";
   // Start Time
-  echo "<select name=\"start_time\">\n";
+  echo "<select name=\"start_time\" id=\"start_time\">\n";
   $times = array('000000'=>'00:00','003000'=>'00:30','010000'=>'01:00','013000'=>'01:30','020000'=>'02:00','023000'=>'02:30','030000'=>'03:00','033000'=>'03:30','040000'=>'04:00','043000'=>'04:30','050000'=>'05:00','053000'=>'05:30','060000'=>'06:00','063000'=>'06:30','070000'=>'07:00','073000'=>'07:30','080000'=>'08:00','083000'=>'08:30','090000'=>'09:00','093000'=>'09:30','100000'=>'10:00','103000'=>'10:30','110000'=>'11:00','113000'=>'11:30','120000'=>'12:00','123000'=>'12:30','130000'=>'13:00','133000'=>'13:30','140000'=>'14:00','143000'=>'14:30','150000'=>'15:00','153000'=>'15:30','160000'=>'16:00','163000'=>'16:30','170000'=>'17:00','173000'=>'17:30','180000'=>'18:00','183000'=>'18:30','190000'=>'19:00','193000'=>'19:30','200000'=>'20:00','203000'=>'20:30','210000'=>'21:00','213000'=>'21:30','220000'=>'22:00','223000'=>'22:30','230000'=>'23:00','233000'=>'23:30');
   foreach ($times as $key => $value) {
     if ($key == intval($start_time)) {
@@ -214,7 +214,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   // ---------------------------------------------------------------------------------
   echo " ".$string['to']." ";
   // End Day
-  echo "<select name=\"end_day\">\n";
+  echo "<select name=\"end_day\" id=\"end_day\">\n";
   for ($i=1; $i<=31; $i++) {
     echo "<option value=\"";
     if ($i < 10) {
@@ -261,7 +261,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
       $end_time = $target_hours . '0000';
     }
   }
-  echo "<select name=\"end_month\">\n";
+  echo "<select name=\"end_month\" id=\"end_month\">\n";
   for ($i=0; $i<12; $i++) {
     if ($i == (intval($end_month) - 1)) {
       echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
@@ -271,7 +271,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
   echo "</select>";
   // End Year
-  echo "<select name=\"end_year\">\n";
+  echo "<select name=\"end_year\" id=\"end_year\">\n";
   for ($i=2001; $i<=($date_array['year']); $i++) {
     if ($i == intval($end_year)) {
       echo "<option value=\"$i\" selected>$i</option>\n";
@@ -281,7 +281,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
   echo "</select>";
   // End Time
-  echo "<select name=\"end_time\">\n";
+  echo "<select name=\"end_time\" id=\"end_time\">\n";
   $times = array('000000'=>'00:00','003000'=>'00:30','010000'=>'01:00','013000'=>'01:30','020000'=>'02:00','023000'=>'02:30','030000'=>'03:00','033000'=>'03:30','040000'=>'04:00','043000'=>'04:30','050000'=>'05:00','053000'=>'05:30','060000'=>'06:00','063000'=>'06:30','070000'=>'07:00','073000'=>'07:30','080000'=>'08:00','083000'=>'08:30','090000'=>'09:00','093000'=>'09:30','100000'=>'10:00','103000'=>'10:30','110000'=>'11:00','113000'=>'11:30','120000'=>'12:00','123000'=>'12:30','130000'=>'13:00','133000'=>'13:30','140000'=>'14:00','143000'=>'14:30','150000'=>'15:00','153000'=>'15:30','160000'=>'16:00','163000'=>'16:30','170000'=>'17:00','173000'=>'17:30','180000'=>'18:00','183000'=>'18:30','190000'=>'19:00','193000'=>'19:30','200000'=>'20:00','203000'=>'20:30','210000'=>'21:00','213000'=>'21:30','220000'=>'22:00','223000'=>'22:30','230000'=>'23:00','233000'=>'23:30');
   foreach ($times as $key => $value) {
     if ($key == intval($end_time)) {
@@ -292,7 +292,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
   echo "</select>\n</td></tr>\n";
   
-  echo "<tr><td>" . $string['course'] . "</td><td><select name=\"repcourse\" style=\"width:375px\">\n";
+  echo "<tr><td>" . $string['course'] . "</td><td><select name=\"repcourse\" id=\"repcourse\" style=\"width:375px\">\n";
   echo "<option value=\"%\">" . $string['anycourse'] . "</option>\n";
   $result = $mysqli->prepare("SELECT DISTINCT student_grade, description FROM log_metadata, courses WHERE log_metadata.student_grade=courses.name AND paperID=? ORDER BY student_grade");
   $result->bind_param('i', $_GET['paperID']);
@@ -308,19 +308,19 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   
   //module drop down
   if ($properties->get_paper_type() != '3') {
-    echo "<tr><td>" . $string['module'] . "</td><td><select name=\"repmodule\" style=\"width:150px\">\n";
+    echo "<tr><td>" . $string['module'] . "</td><td><select name=\"repmodule\" id=\"repmodule\" style=\"width:150px\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
     foreach ($moduleIDs as $modID=>$modCode) {
       echo "<option value=\"" . $modID . "\">" . $modCode . "</option>\n";
     }
     echo "</select></td></tr>\n";
     
-    echo "<tr><td>" . $string['cohort'] . "</td><td><select name=\"direction\" onchange=\"checkAll();\">\n";
+    echo "<tr><td>" . $string['cohort'] . "</td><td><select name=\"direction\" id=\"direction\" onchange=\"checkAll();\">\n";
     echo "<option value=\"asc\">" . $string['allcandidates'] . "</option>\n";
     echo "<option value=\"desc\">" . $string['top'] . "</option>\n";
     echo "<option value=\"asc\">" . $string['bottom'] . "</option>\n";
     echo "</select>\n";
-    echo "<select name=\"percent\">\n";
+    echo "<select name=\"percent\" id=\"percent\">\n";
     echo "<option value=\"1\">1%</option>\n";
     echo "<option value=\"5\">5%</option>\n";
     echo "<option value=\"10\">10%</option>\n";
@@ -374,7 +374,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     }
   }
   
-  echo "</table><input type=\"hidden\" name=\"meta_no\" id=\"meta_no\" value=\"$meta_no\" /><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />";
+  echo "</table><input type=\"hidden\" name=\"meta_no\" id=\"meta_no\" value=\"$meta_no\" /><input type=\"hidden\" name=\"paperID\" id=\"paperID\" value=\"" . $_GET['paperID'] . "\" />";
 
   echo "<table style=\"width:100%; padding-bottom:5px\"><tr><td style=\"vertical-align:top; width:42%\">\n";
   
@@ -384,7 +384,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['reviews'] . "</div>\n";
     echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/review_comments.php?type=internal&',event)\">" . $string['internalpeerreview'] . "</a></div>\n";
     
-    $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id AND q_type='sct'");
+    $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper=? AND papers.question = questions.q_id AND q_type='sct'");
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
     $result->bind_result($sct_no);

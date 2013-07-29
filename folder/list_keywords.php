@@ -55,15 +55,15 @@ require_once '../classes/moduleutils.class.php';
 
     function addKeyID(keyID, clearall) {
       if (clearall) {
-        document.getElementById('keywordID').value = ',' + keyID;
+        $('#keywordID').val(',' + keyID);
       } else {
-        document.getElementById('keywordID').value = document.getElementById('keywordID').value + ',' + keyID;
+        $('#keywordID').val($('#keywordID').val() + ',' + keyID);
       }
     }
 
     function subKeyID(keyID) {
       var tmpq = ',' + keyID;
-      document.getElementById('keywordID').value = document.getElementById('keywordID').value.replace(tmpq, '');
+      $('#keywordID').val($('#keywordID').val().replace(tmpq, ''));
     }
     
     function clearAll() {
@@ -72,8 +72,8 @@ require_once '../classes/moduleutils.class.php';
   
     function selKey(questionID, evt) {
 
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
+      $('#menu1a').hide();
+      $('#menu1b').show();
 
       if (evt.ctrlKey == false) {
         clearAll();
@@ -91,19 +91,12 @@ require_once '../classes/moduleutils.class.php';
     }
     
     function selKey2(divID, evt) {
-      tmp_ID = document.myform.oldID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-        document.getElementById(tmp_ID).style.color = 'black';
-      }
+      $('#menu1a').hide();
+      $('#menu1b').show();
 
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
+      $('#id').val(divID);
 
-      document.myform.oldID.value = divID;
-      document.myform.id.value = divID;
-
-      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      $('#' + divID).css('background-color', '#B3C8E8');
       evt.cancelBubble = true;
     }
   </script>
