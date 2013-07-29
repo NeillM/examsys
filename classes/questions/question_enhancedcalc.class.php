@@ -44,7 +44,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $marks_correct = 1;
   protected $marks_incorrect = 0;
   protected $marks_partial = 0;
-  protected $marks_unit = 0;
+  protected $marks_unit = 'N/A';
   public $max_options = 10;
   public $max_stems = 10;
   protected $variable_labels = array();
