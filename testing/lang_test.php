@@ -318,7 +318,8 @@ foreach ($lang_array as $lang) {
     foreach ($strings_en as $strings_key => $strings_data)	{
       if ($strings_en[$strings_key][3]>1) {
         $data_path1 = explode("|", $strings_data[2]);
-        $data_path3 = explode("|", $strings_pl[$strings_key][2]);
+        $data_path3 = Array();
+				if (isset($strings_pl[$strings_key][2])) $data_path3 = explode("|", $strings_pl[$strings_key][2]);
         if (count($data_path3)==count($data_path1)) {
           foreach ($data_path1 as $data_path1_key => $data_path1_elem) {
             if (($data_path1[$data_path1_key]==$data_path3[$data_path1_key]))	{

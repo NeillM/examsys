@@ -27,6 +27,6 @@ $string['success'] = 'Pytania przekopiowane do <strong>%s</strong>.';
 $string['duplicatename'] = "Niestety nazwa <strong>'%s'</strong> jest już używana.";
 $string['cancel'] = 'Anuluj';
 $string['ok'] = 'OK'; //cognate
-$string['qcopyerrorno'] = 'Question copy error'; // Niko
-$string['qcopyerror'] = 'Question %d could not be copied'; // Niko
+$string['qcopyerrorno'] = 'Błąd kopiowania pytania'; 
+$string['qcopyerror'] = 'Pytanie %d nie mogło być skopiowane'; 
 ?>

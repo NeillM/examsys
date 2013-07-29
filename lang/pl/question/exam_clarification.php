@@ -14,12 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/admin/status_shared.php';
-
-//Colour picker
-$string['colour'] = 'Kolor';
-$string['themecolours'] = 'Kolory motywu';
-$string['standardcolours'] = 'Kolory standardowe';
-$string['more'] = 'Więcej...';
-$string['cancel'] = 'Anuluj';
-$string['OK'] = 'OK'; //cognate
+$string['midexamclarification'] = 'Wyjaśnienia śródegzaminacyjne';
+$string['questionscreen'] = '<strong>Pytanie %d</strong> (ekran %d)';
+?>

@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/admin/status_shared.php';
+require '../../lang/' . $language . '/include/question_types.inc';
 
-//Colour picker
-$string['colour'] = 'Kolor';
-$string['themecolours'] = 'Kolory motywu';
-$string['standardcolours'] = 'Kolory standardowe';
-$string['more'] = 'Więcej...';
-$string['cancel'] = 'Anuluj';
-$string['OK'] = 'OK'; //cognate
+$string['myunusedquestions'] = 'Moje nieużywane pytania';
+$string['allmyquestions'] = 'Moje wszystkie pytania';
+$string['team'] = 'Zespół';
+$string['question'] = 'Pytanie';
+$string['type'] = 'Typ';
+$string['modified'] = 'Zmienione';
+$string['status'] = 'Status'; //cognate
+$string['locked'] = 'Zablokowane';
+$string['warningnoleadin'] = 'Uwaga: brak wprowadzenia do pytania!';
+?>
