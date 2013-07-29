@@ -35,5 +35,5 @@ $string['warning4'] = 'Przypisz plik do webserwera (chown) i zmień jego atrybut
 $string['updatefromversion'] = 'Aktualizacja z wersji';
 $string['home'] = 'Strona główna';
 $string['startingupdate'] = 'Rozpoczynanie aktualizacji';
-$string['addinglines'] = 'Adding lines to %s file:';
+$string['addinglines'] = 'Dodawanie linii do %s pliku:';
 ?>

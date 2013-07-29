@@ -20,5 +20,5 @@ $string['question'] = 'Pytania';//ąę
 $string['type'] = 'Typ';
 $string['modified'] = 'Zmodyfikowano';
 $string['screen'] = 'Ekran';
-$string['status'] = 'Status';
+$string['status'] = 'Status'; //cognate
 ?>

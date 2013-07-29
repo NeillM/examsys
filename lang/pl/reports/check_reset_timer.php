@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['resettimer'] = 'Reset Timer';
-$string['reset'] = 'Reset';
-$string['msg1'] = 'Are you sure you wish to reset the timer?';
+$string['resettimer'] = 'Resetowanie czasomierza';
+$string['reset'] = 'Resetuj';
+$string['msg1'] = 'Czy na pewno resetowac czasomierz?';
 ?>

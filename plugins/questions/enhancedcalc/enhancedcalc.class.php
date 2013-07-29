@@ -38,6 +38,11 @@ class enhancedcalc extends Question implements questionInterface {
 
   //splits number off front of numb/unit or just number
   function splitnumbunit($input) {
+    //user selected the units from a ddl
+    if(isset($this->useranswer['uansunit'])) {
+      return array($input, $this->useranswer['uansunit']);
+    }
+    
     $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
     $out = preg_match($pattern, $input, $matches);
     if(is_array($matches) and isset($matches[0])) {
@@ -46,7 +51,7 @@ class enhancedcalc extends Question implements questionInterface {
       $numb = $matches[0];
       return array($numb, $units);
     } else {
-      return array($input, $this->useranswer['uansunit']);
+      return array($input, '');
     }
   }
 
@@ -221,6 +226,13 @@ class enhancedcalc extends Question implements questionInterface {
       
       $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans']);
       
+      //caculate distance from correct if needed
+      if($this->useranswer['status']['exact'] === false) {
+         $this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);     
+      } else {
+         $this->useranswer['cans_dist'] = "0";
+      }
+            
       if($this->useranswer['status']['exact'] === false) {
         $this->useranswer['status']['tolerance_full']     = $enhancedcalcObj->is_useranswer_within_tolerance(
                                                                                                               $this->useranswer['uansnumb'], 
@@ -263,7 +275,6 @@ class enhancedcalc extends Question implements questionInterface {
           return $returnstatus;
         }
       }
- 
       
       //assume its wrong wrong !!
       $returnstatus = Q_MARKING_WRONG;
@@ -480,11 +491,11 @@ class enhancedcalc extends Question implements questionInterface {
     if (isset($this->useranswer['cans'])) {
       if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
         echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . $this->settings['fulltoltyp'];
-        if ($this->settings['fulltoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_fullnegans'] . " - " . $this->useranswer['ans']['tolerance_fullans'] . ")";
+        if ($this->settings['fulltoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_fullansneg'] . " - " . $this->useranswer['ans']['tolerance_fullans'] . ")";
       }
       if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
         echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . $this->settings['parttoltyp'];
-        if ($this->settings['parttoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_partialnegans'] . " - " . $this->useranswer['ans']['tolerance_partialans'] . ")";
+        if ($this->settings['parttoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_partialansneg'] . " - " . $this->useranswer['ans']['tolerance_partialans'] . ")";
       }
     }
 

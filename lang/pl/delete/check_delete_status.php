@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-// Niko
-$string['confirmstatusdelete'] = 'Confirm Status Delete';
-$string['recyclebin'] = 'Recycle Bin';
-$string['msg'] = 'Are you sure you wish to delete this status?';
-$string['delete'] = 'Delete';
-$string['questionassigned'] = 'You cannot delete a question status to which questions are assigned';
+$string['confirmstatusdelete'] = 'Potwierdź usunięcie statusu';
+$string['recyclebin'] = 'Kosz';
+$string['msg'] = 'Czy na pewno usunąć ten status?';
+$string['delete'] = 'Usuń';
+$string['questionassigned'] = 'Nie można usunąć statusu, do którego przypisane są pytania';
 ?>

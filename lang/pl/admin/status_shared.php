@@ -14,22 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-// Niko
-$string['questionstatuses'] = 'Question Statuses';
-$string['createstatus'] = 'Create new Status';
-$string['edit'] = 'Edit';
-$string['add'] = 'Add';
-$string['status'] = 'Status';
-$string['deletestatus'] = 'Delete Status';
-$string['administrativetools'] = 'Administrative Tools';
-$string['statuses'] = 'Statuses';
-$string['name'] = 'Name';
-$string['excludemarking'] = 'Exclude from marking';
-$string['retired'] = 'Retired';
-$string['default'] = 'Default';
-$string['setlocked'] = 'Can set for locked questions';
-$string['validate'] = 'Validate';
-$string['displaywarning'] = 'Display warnings';
-$string['colour'] = 'Colour';
-$string['enternameofstatus'] = 'Please enter name for the status.';
-$string['duplicateerror'] = 'Status names must be unique';
+$string['questionstatuses'] = 'Statusy pytania';
+$string['createstatus'] = 'Utwórz nowy status';
+$string['edit'] = 'Edytuj';
+$string['add'] = 'Dodaj';
+$string['status'] = 'Status'; //cognate
+$string['deletestatus'] = 'Usuń Status';
+$string['administrativetools'] = 'Narzędzia administracyjne';
+$string['statuses'] = 'Statusy';
+$string['name'] = 'Nazwa';
+$string['excludemarking'] = 'Wyklucz z oceny';
+$string['retired'] = 'Wycofane';
+$string['default'] = 'Domyślny';
+$string['setlocked'] = 'Może być ustawione dla zablokowanych pytań';
+$string['validate'] = 'Zatwierdź';
+$string['displaywarning'] = 'Wyświetl ostrzeżenie';
+$string['colour'] = 'Kolor';
+$string['enternameofstatus'] = 'Podaj nazwę statusu.';
+$string['duplicateerror'] = 'Nazwy statusów muszą być unikalne';

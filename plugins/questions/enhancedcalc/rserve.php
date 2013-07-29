@@ -120,6 +120,17 @@ class enhancedcalc_rserve {
     
   }
   
+  function distance_from_correct_answer($useranswer, $correctanswer) {
+    
+    if($useranswer == '') {
+      return false;
+    }
+    
+    $res = $this->evalString("(abs($useranswer - $correctanswer)/$correctanswer) * 100");
+      
+    return $res;
+  }
+  
   function caculate_tolerance_percent($correctanswer,$percentage) {
     $cmd[] = "$correctanswer * (" . $percentage . "/100)";
     $cmd[] = "$correctanswer + ($correctanswer * (" . $percentage . "/100))";
