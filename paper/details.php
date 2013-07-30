@@ -162,7 +162,7 @@ function randomDetails($questionID) {
   $old_correct = array();
   $old_option_text = array();
 
-  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=? ");
+  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status, settings FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=? ");
   $result->bind_param('i', $questionID);
   $result->execute();
   $result->store_result();
@@ -179,6 +179,7 @@ function randomDetails($questionID) {
         $random_questions[$question_no]['scenario'] = $old_scenario;
         $random_questions[$question_no]['correct'] = $old_correct;
         $random_questions[$question_no]['status'] = $old_status;
+        $random_questions[$question_no]['settings'] = $old_settings;
         $random_questions[$question_no]['display_last_edited'] = $display_last_edited;
         $random_questions[$question_no]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
         $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
@@ -192,6 +193,7 @@ function randomDetails($questionID) {
       $old_leadin = $leadin;
       $old_scenario = $scenario;
       $old_status = $status;
+      $old_settings = $settings;
       $old_marks = $marks;
       $old_correct[] = $correct;
       $old_option_text[] = $option_text;
@@ -210,6 +212,7 @@ function randomDetails($questionID) {
     $random_questions[$question_no]['scenario'] = $old_scenario;
     $random_questions[$question_no]['correct'] = $old_correct;
     $random_questions[$question_no]['status'] = $old_status;
+    $random_questions[$question_no]['settings'] = $old_settings;
     $random_questions[$question_no]['display_last_edited'] = $display_last_edited;
     $random_questions[$question_no]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
     $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
@@ -567,14 +570,14 @@ $result->close();
   $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
   $temp_array = array();
   while ($result->fetch()) {
-    if(!is_null($settings) and !is_array($settings)) {
-      $settings=json_decode($settings,true);
+    if (!is_null($settings) and !is_array($settings)) {
+      $settings = json_decode($settings, true);
     }
-    if(isset($settings['m_correct'])) {
-      $marks_correct=$settings['m_correct'];
+    if (isset($settings['marks_correct'])) {
+      $marks_correct = $settings['marks_correct'];
     }
-    if(isset($settings['m_incorrect'])) {
-      $marks_incorrect=$settings['m_incorrect'];
+    if (isset($settings['marks_incorrect'])) {
+      $marks_incorrect = $settings['marks_incorrect'];
     }
     if ($latex == 0) {
       if ($q_type == 'random') {

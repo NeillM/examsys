@@ -445,11 +445,11 @@ function check_ebel_distinction_type($ebel) {
   $options_array = array();
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 
-  $result = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, correct_fback FROM (papers, questions, options) WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+  $result = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, correct_fback, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos, id_num");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->store_result();
-  $result->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $correct_fback);
+  $result->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $correct_fback, $settings);
   while ($result->fetch()) {
     if ($prologue_show == 1 and $current_screen == 1 and $paper_prologue != '') {
       echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
@@ -480,7 +480,7 @@ function check_ebel_distinction_type($ebel) {
 
       if (trim($notes) != '' and $q_type != 'likert') echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
 
-      if (trim($scenario) != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'calculation') {
+      if (trim($scenario) != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'enhancedcalc') {
         echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
         $li_set = 1;
       }
@@ -497,7 +497,7 @@ function check_ebel_distinction_type($ebel) {
           echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
         }
       }
-      if ($q_type != 'likert' and $q_type != 'calculation' and $q_type != 'info' and $q_type != 'hotspot' and $q_type != 'area') {
+      if ($q_type != 'likert' and $q_type != 'enhancedcalc' and $q_type != 'info' and $q_type != 'hotspot' and $q_type != 'area') {
         if ($li_set == 0) {
           echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
         }
@@ -557,7 +557,7 @@ function check_ebel_distinction_type($ebel) {
       if ($templateID == '') {
         $ebel = array('','','','','','','','','','','','','','','','','','');
       } else {
-        $result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id=?");
+        $result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?");
         $result->bind_param('i', $templateID);
         $result->execute();
         $result->bind_result($ebel[0], $ebel[1], $ebel[2], $ebel[3], $ebel[4], $ebel[5], $ebel[6], $ebel[7], $ebel[8], $ebel[9], $ebel[10], $ebel[11], $ebel[12], $ebel[13], $ebel[14], $ebel[15], $ebel[16], $ebel[17], $name);

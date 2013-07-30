@@ -25,6 +25,7 @@
 
 require_once '../classes/mathsutils.class.php';
 require_once('../classes/question.class.php');
+
 class enhancedcalc extends Question implements questionInterface {
 
   protected $configObj;
@@ -83,14 +84,13 @@ class enhancedcalc extends Question implements questionInterface {
    * 
    *  This Must handle exclusions
    */
-  public function caculateUserMark() {
+  public function calculateUserMark() {
 
     $returnstatus = null;
     if (is_null($this->useranswer)) {
       $this->error = 'No User Answer';
       return QUESTION_ERROR;
     }
-    
     
     if (!is_array($this->useranswer)) {
       $this->useranswer = json_decode($this->useranswer, true);
@@ -111,7 +111,7 @@ class enhancedcalc extends Question implements questionInterface {
     //are the units correct?
     $this->useranswer['status']['units'] = $this->are_units_correct($this->useranswer['uansunit']);
 
-    if($this->useranswer['status']['units'] === false) {
+    if ($this->useranswer['status']['units'] === false) {
       //we cant mach the units so this question must be wrong! however we need to have a formula and a unit to caculate the feedback
       // so just use the fitst one!
       foreach($this->settings['answersexp'] as $unit => $formula) {
@@ -184,16 +184,16 @@ class enhancedcalc extends Question implements questionInterface {
        * FORMAT CACULATED ANS
        * 
        */
-      if($this->settings['strictdisplay'] == 'on') {
+      if ($this->settings['strictdisplay'] == 'on') {
         
-        if(isset($this->settings['dp'])) {
+        if (isset($this->settings['dp'])) {
           $function = 'format_number_dp';
           $arg = $this->settings['dp'];
           if($this->settings['strictzeros'] == 'on') {
             $function = 'format_number_dp_strict_zeros';
           }
         }
-        if(isset($this->settings['sf'])) {
+        if (isset($this->settings['sf'])) {
           $function = 'format_number_sf';
           $arg = $this->settings['sf'];
         }
@@ -215,7 +215,7 @@ class enhancedcalc extends Question implements questionInterface {
        * MARKING
        * 
        */
-      if($this->useranswer['status']['units'] === false) {
+      if ($this->useranswer['status']['units'] === false) {
         //we can't mach the units so this question must be wrong!
         $this->qmark = $this->settings['marks_incorrect'];
         $this->useranswer['status']['exact'] = false;
@@ -227,20 +227,20 @@ class enhancedcalc extends Question implements questionInterface {
       $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans']);
       
       //caculate distance from correct if needed
-      if($this->useranswer['status']['exact'] === false) {
+      if ($this->useranswer['status']['exact'] === false) {
          $this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);     
       } else {
          $this->useranswer['cans_dist'] = "0";
       }
             
-      if($this->useranswer['status']['exact'] === false) {
+      if ($this->useranswer['status']['exact'] === false) {
         $this->useranswer['status']['tolerance_full']     = $enhancedcalcObj->is_useranswer_within_tolerance(
                                                                                                               $this->useranswer['uansnumb'], 
                                                                                                               $this->useranswer['ans']['tolerance_fullansneg'], 
                                                                                                               $this->useranswer['ans']['tolerance_fullans']
                                                                                                             );
         
-        if($this->useranswer['status']['tolerance_full'] === false) {
+        if ($this->useranswer['status']['tolerance_full'] === false) {
           $this->useranswer['status']['tolerance_partial']  = $enhancedcalcObj->is_useranswer_within_tolerance(
                                                                                                                 $this->useranswer['uansnumb'], 
                                                                                                                 $this->useranswer['ans']['tolerance_partialansneg'], 
@@ -338,11 +338,11 @@ class enhancedcalc extends Question implements questionInterface {
 
 
   /*
-   * caulate how many marks is this question worth form its options 
+   * calculate how many marks is this question worth form its options 
    *    
    *   This Must handle exclusions
    */
-  public function caculateQuestionMark() {
+  public function calculateQuestionMark() {
     return $this->settings['marks_correct'];
   }
 
@@ -350,7 +350,7 @@ class enhancedcalc extends Question implements questionInterface {
    * caculate the Random Mark for this question 
    *  This Must handle exclusions
    */
-  public function caculateRandomMark() {
+  public function calculateRandomMark() {
     return 0;
   }
 
@@ -556,9 +556,9 @@ class enhancedcalc extends Question implements questionInterface {
   }
 
   public function render_paper($extra = array()) {
-
-
     global $string;
+    
+    
     // display question on paper
     $screen_pre_submitted = null;
     if (isset($extra['screen_pre_submitted'])) {
@@ -613,9 +613,16 @@ class enhancedcalc extends Question implements questionInterface {
     $varname = array_keys($this->useranswer['vars']);
     $varvalue = array_values($this->useranswer['vars']);
 
-
-    $leadin = str_ireplace($varname, $varvalue, $this->leadin);
-
+    if (isset($extra) and $extra['reviewers']) {
+      $leadin = $this->leadin;
+      
+      foreach ($this->settings['vars'] as $key => $value) {
+        $leadin = str_replace($key, '<span style="background-color:#FFFF80">&nbsp;<strong>' . $key . '</strong>&nbsp;</span>' . $this->useranswer['vars'][$key], $leadin);
+      }
+    } else {
+      $leadin = str_ireplace($varname, $varvalue, $this->leadin);
+    }
+    
     $dispunits = '';
     if ($this->settings['show_units'] === true) {
       if (count($this->settings['answersexp']) > 1) {
@@ -631,9 +638,33 @@ class enhancedcalc extends Question implements questionInterface {
       }
     }
 
+    if (isset($extra) and $extra['reviewers']) {    // Display additional information for reviewers
+      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"padding:10px; border: 1px solid #C0C000; background-color:#FFFFC0; width:700px\">\n";
+      echo "<tr><td colspan=\"4\">" . $string['notvisible'] . "</td></tr>";
+      echo "<tr><td colspan=\"4\" style=\"text-align:justify\">" . $string['reviewermsg'] . "</td></tr>";
+      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>";
+      echo "<tr style=\"font-weight:bold\"><td style=\"width:80px; border-bottom: 1px solid #C0C000\">{$string['variable']}</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">" . $string['generated'] . "</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">" . $string['min'] . "</td><td style=\"width:460px; border-bottom: 1px solid #C0C000\">" . $string['max'] . "</td></tr>\n";
 
-    //deal with the failed variables
-
+      //echo displayGeneratedFigures($calc_original_vars);
+      foreach ($this->settings['vars'] as $key => $value) {
+        echo "<tr><td>" . $key . "</td><td>" . $this->useranswer['vars'][$key] . "</td><td>" . $value['min'] . "</td><td>" . $value['max'] . "</td></tr>\n";
+      }
+      foreach ($this->settings['answers'] as $answer) {
+        echo "<tr><td>" . $string['formula'] . "</td><td colspan=\"2\">" . $answer['formula'] . "</td><td>units: " . $answer['units'] . "</td></tr>\n";
+      }
+      if (strlen($this->settings['tolerance_full']) > 0) {
+        echo "<tr><td colspan=\"3\">{$string['tolerancefull']}</td><td>" . $this->settings['tolerance_full'];
+        if ($this->settings['fulltoltyp'] == '%') echo '%';
+        echo "</td></tr>\n";
+      }
+      if (strlen($this->settings['tolerance_partial']) > 0) {
+        echo "<tr><td colspan=\"3\">{$string['tolerancepartial']}</td><td>" . $this->settings['tolerance_partial'];
+        if ($this->settings['parttoltyp'] == '%') echo '%';
+        echo "</td></tr>\n";
+      }
+      echo "</table>\n<br />";
+    }
+    
     if ($this->scenario != '') echo "<p>" . $this->scenario . "</p>\n";
     if ($this->q_media != '') echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
 
@@ -647,7 +678,6 @@ class enhancedcalc extends Question implements questionInterface {
         if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { //or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];
 
-
           echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $this->settings['units'] . "</div>\n";
         } else {
           echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . "</div>\n";
@@ -657,6 +687,10 @@ class enhancedcalc extends Question implements questionInterface {
     }
 
     $marks = $this->settings['marks_correct'];
+  }
+  
+  public function get_vars() {
+    return $this->useranswer['vars'];
   }
 
 }
