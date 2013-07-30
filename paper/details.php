@@ -565,7 +565,7 @@ $result->close();
   $result->execute();
   $result->store_result();
   $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
-  $temp_array = array();
+
   while ($result->fetch()) {
     if(!is_null($settings) and !is_array($settings)) {
       $settings=json_decode($settings,true);
@@ -588,10 +588,10 @@ $result->close();
       $neg_marking = true;
     }
 
-    // Check for status that's excluded from marking
-    $do_marking = (($old_q_type == 'random' or $row_no2 > 0) and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
-
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
+      // Check for status that's excluded from marking
+      $do_marking = ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
+
       if ($old_display_pos != -1) {
         $temp_array[$row_no2]['options'] = $options;
         if (empty($old_o_media)) {
@@ -703,7 +703,7 @@ $result->close();
     $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
     // Check for status that's excluded from marking
-    $do_marking = !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking();
+    $do_marking = ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
 
     if ($old_q_type == 'random') {
       $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);

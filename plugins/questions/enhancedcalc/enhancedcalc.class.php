@@ -96,10 +96,6 @@ class enhancedcalc extends Question implements questionInterface {
       $this->useranswer = json_decode($this->useranswer, true);
     }
 
-    if (!is_array($this->settings)) {
-      $this->settings = json_decode($this->settings, true);
-    }
-    
     $return = $this->splitnumbunit($this->useranswer['uans']);
     $this->useranswer['uansunit'] = $return[1];
     $this->useranswer['uansnumb'] = $return[0];
@@ -346,6 +342,7 @@ class enhancedcalc extends Question implements questionInterface {
    *    
    *   This Must handle exclusions
    */
+  // TODO: Move this into the question class?
   public function caculateQuestionMark() {
     return $this->settings['marks_correct'];
   }
