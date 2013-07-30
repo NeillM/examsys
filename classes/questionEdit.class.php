@@ -1650,6 +1650,15 @@ QUERY;
 
     return $success;
   }
+
+  /**
+   * Convert PHP value of 'on' for a checked chekbox to a boolean
+   * @param  string $value Value from checkbox submission
+   * @return bool          True if the checkbox was checked
+   */
+  protected function get_checkbox_bool($value) {
+    return $value == 'on';
+  }
 }
 
 ?>

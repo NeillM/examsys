@@ -173,6 +173,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * Set whether the question requires answers to stricly match the display precision
    */
   public function set_strict_display($value) {
+    $value = $this->get_checkbox_bool($value);
     if ($value != $this->strictdisplay) {
       $this->set_modified_field('strict_display', $this->strictdisplay);
       $this->strictdisplay = $value;
@@ -191,6 +192,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * Set whether trailing zeros should be taken into account when calculating the display precision
    */
   public function set_strict_zeros($value) {
+    $value = $this->get_checkbox_bool($value);
     if ($value != $this->strictzeros) {
       $this->set_modified_field('strict_zeros', $this->strictzeros);
       $this->strictzeros = $value;
@@ -218,6 +220,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @param boolean $value
    */
   public function set_show_units($value) {
+    $value = $this->get_checkbox_bool($value);
     if ($value != $this->show_units) {
       $this->set_modified_field('show_units', $this->show_units);
       $this->show_units = $value;
