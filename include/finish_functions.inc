@@ -421,7 +421,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
       $configObj = Config::get_instance();
       $enhancedcalc = new enhancedcalc($configObj);
       $enhancedcalc->load($paper[$question]);
-      $returnarray = $enhancedcalc->caculateUserMark();
+      $returnarray = $enhancedcalc->calculateUserMark();
 
       if ($returnarray !== Q_MARKING_UNMARKED) {
         //save the extra data back into the log record.
