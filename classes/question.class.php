@@ -88,7 +88,11 @@ Class Question {
   public $std;
 
   function setsettings($settings) {
-    $this->settings = $settings;
+    if (!is_array($settings)) {
+      $this->settings = json_decode($settings, true);
+    } else {
+      $this->settings = $settings;
+    }
   }
   
   function setuseranswer($useranswer) {
@@ -126,16 +130,19 @@ Class Question {
     foreach ($array as $key => $value) {
       // if (isset($this->$key) ) {
       if (property_exists($this, $key)) {
-        $this->$key = $value;
+        $func_name = "set" . $key;
+        if (method_exists($this, "set" . $key)) {
+          $this->$func_name($value);
+        } else {
+          $this->$key = $value;
+        }
       }
       if ($key == 'q_id') {
         $this->id = $value;
       } elseif ($key == 'user_answer') {
         $this->useranswer = $value;
       }
-
     }
-
 
     if (!is_array($this->options)) {
       //convert to objects!
