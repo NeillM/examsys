@@ -95,6 +95,10 @@ Class Question {
     $this->useranswer = $useranswer;
   }
 
+  function addtouseranswer($key, $value) {
+    $this->useranswer[$key] = $value;
+  }
+  
   function exportsave(&$array) {
     $classvar = get_object_vars($this);
     foreach ($classvar as $key => $value) {

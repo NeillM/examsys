@@ -41,83 +41,6 @@ function display_std($std_value, $inline=1) {
 
   return $html;
 }
-function displayGeneratedFigures($original_vars) {
-  global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max;
-
-  $html = '';
-
-  $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
-  for ($i=0; $i<10; $i++) {
-    $master_variable = $letters[$i];
-    $min_variable = $letters[$i] . '_min';
-    $max_variable = $letters[$i] . '_max';
-    if (isset($$master_variable)) {
-      $html .= "<tr><td>\$" . $letters[$i] . "</td><td>" . $$master_variable . "</td><td>";
-
-      if (isset($original_vars[$master_variable]['min'])) {
-        $html .= 'from Q' . $_SESSION['q' . $original_vars[$master_variable]['min']];
-      } else {
-        $html .= $$min_variable;
-      }
-      $html .= "</td><td>";
-
-      if (isset($original_vars[$master_variable]['max'])) {
-        $html .= 'from Q' . $_SESSION['q' . $original_vars[$master_variable]['max']];
-      } else {
-        $html .= $$max_variable;
-      }
-      $html .= "</td></tr>\n";
-    }
-  }
-
-  return $html;
-}
-
-function overwriteCalcValues($letter, &$tmp_figures, &$original_vars) {
-  // Min variable
-  if (strpos($tmp_figures[0], 'var' . $letter) !== false) {
-    $questionID = str_replace('var' . $letter, '', $tmp_figures[0]);
-    if (isset($_SESSION['q' . $questionID])) {
-      $original_vars[$letter]['min'] = $questionID;
-    }
-
-    if (isset($_SESSION[$tmp_figures[0]])) {
-      $tmp_figures[0] = $_SESSION[$tmp_figures[0]];
-    }
-  }
-
-  // Max variable
-  if (strpos($tmp_figures[1], 'var' . $letter) !== false) {
-    $questionID = str_replace('var' . $letter, '', $tmp_figures[1]);
-    if (isset($_SESSION['q' . $questionID])) {
-      $original_vars[$letter]['max'] = $questionID;
-    }
-
-    if (isset($_SESSION[$tmp_figures[1]])) {
-      $tmp_figures[1] = $_SESSION[$tmp_figures[1]];
-    }
-  }
-
-  // Min Answer
-  if (strpos($tmp_figures[0], 'ans') !== false) {
-    if (isset($_SESSION[$tmp_figures[0]])) {
-      $tmp_figures[0] = $_SESSION[$tmp_figures[0]];
-    }
-  }
-
-  // Max Answer
-  if (strpos($tmp_figures[1], 'ans') !== false) {
-    if (isset($_SESSION[$tmp_figures[1]])) {
-      $tmp_figures[1] = $_SESSION[$tmp_figures[1]];
-    }
-  }
-}
-
-function checkVariables($number) {
-  global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
-  eval("\$new_number = \"$number\";");
-  return $new_number;
-}
 
 function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset, $start_of_day_ts) {
   global $external_review_deadline, $reviews_array, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $string, $language, $configObject;
@@ -483,7 +406,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $mode = array('reviewers'=>true);
       
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
-        $question['object']->load_all_user_answers($user_answers);
         $question['object']->render_paper($mode);
         echo '</td>';
         

@@ -143,18 +143,18 @@ class enhancedcalc extends Question implements questionInterface {
        *  CACULATE REQURED NUMERIC VALUES
        * 
        */
-      $this->useranswer['cans'] = $enhancedcalcObj->caculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);     
+      $this->useranswer['cans'] = $enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);     
       
       if (isset($this->settings['tolerance_full'])) {
         switch ($this->settings['fulltoltyp']) {
           case "%":
-            $res = $enhancedcalcObj->caculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_full']);
+            $res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_full']);
           break;
           case "#":
-            $res = $enhancedcalcObj->caculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_full']);
+            $res = $enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_full']);
           break;      
           case "sf":
-            $res = $enhancedcalcObj->caculate_tolerance_sf($this->useranswer['cans'], $this->settings['tolerance_full']);
+            $res = $enhancedcalcObj->calculate_tolerance_sf($this->useranswer['cans'], $this->settings['tolerance_full']);
            break;
         }
         $this->useranswer['ans']['tolerance_full'] = $res['tolerance'];
@@ -165,13 +165,13 @@ class enhancedcalc extends Question implements questionInterface {
       if (isset($this->settings['tolerance_partial'])) {
         switch ($this->settings['parttoltyp']) {
           case "%":
-            $res = $enhancedcalcObj->caculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_partial']);
+            $res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_partial']);
           break;
           case "#":
-            $res = $enhancedcalcObj->caculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_partial']);
+            $res = $enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_partial']);
           break;      
           case "sf":
-            $res = $enhancedcalcObj->caculate_tolerance_sf($this->useranswer['cans'], $this->settings['tolerance_partial']);
+            $res = $enhancedcalcObj->calculate_tolerance_sf($this->useranswer['cans'], $this->settings['tolerance_partial']);
            break;
         }
         $this->useranswer['ans']['tolerance_partial'] = $res['tolerance'];
@@ -617,7 +617,7 @@ class enhancedcalc extends Question implements questionInterface {
     $varname = array_keys($this->useranswer['vars']);
     $varvalue = array_values($this->useranswer['vars']);
 
-    if (isset($extra) and $extra['reviewers']) {
+    if (isset($extra['reviewers']) and $extra['reviewers']) {
       $leadin = $this->leadin;
       
       foreach ($this->settings['vars'] as $key => $value) {
@@ -642,7 +642,7 @@ class enhancedcalc extends Question implements questionInterface {
       }
     }
 
-    if (isset($extra) and $extra['reviewers']) {    // Display additional information for reviewers
+    if (isset($extra['reviewers']) and $extra['reviewers']) {    // Display additional information for reviewers
       echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"padding:10px; border: 1px solid #C0C000; background-color:#FFFFC0; width:700px\">\n";
       echo "<tr><td colspan=\"4\">" . $string['notvisible'] . "</td></tr>";
       echo "<tr><td colspan=\"4\" style=\"text-align:justify\">" . $string['reviewermsg'] . "</td></tr>";
@@ -653,8 +653,10 @@ class enhancedcalc extends Question implements questionInterface {
       foreach ($this->settings['vars'] as $key => $value) {
         echo "<tr><td>" . $key . "</td><td>" . $this->useranswer['vars'][$key] . "</td><td>" . $value['min'] . "</td><td>" . $value['max'] . "</td></tr>\n";
       }
+      $formula_no = 1;
       foreach ($this->settings['answers'] as $answer) {
-        echo "<tr><td>" . $string['formula'] . "</td><td colspan=\"2\">" . $answer['formula'] . "</td><td>units: " . $answer['units'] . "</td></tr>\n";
+        echo "<tr><td>" . $string['formula'] . " $formula_no</td><td colspan=\"2\">" . $answer['formula'] . "</td><td>units: " . $answer['units'] . "</td></tr>\n";
+        $formula_no++;
       }
       if (strlen($this->settings['tolerance_full']) > 0) {
         echo "<tr><td colspan=\"3\">{$string['tolerancefull']}</td><td>" . $this->settings['tolerance_full'];
@@ -667,6 +669,9 @@ class enhancedcalc extends Question implements questionInterface {
         echo "</td></tr>\n";
       }
       echo "</table>\n<br />";
+
+      $real_answer = $this->get_real_answer();
+      $this->addtouseranswer('uans', $real_answer);  // Get the real answer and override
     }
     
     if ($this->scenario != '') echo "<p>" . $this->scenario . "</p>\n";
@@ -674,7 +679,7 @@ class enhancedcalc extends Question implements questionInterface {
 
     echo $leadin;
     if (in_array('ERROR', $varvalue, true)) {
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled />" . $dispunits . "</p>\n";
+      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . "</p>\n";
     } else {
       if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
         echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"ecalc-answer\" />" . $dispunits . "</div>\n";
@@ -682,7 +687,7 @@ class enhancedcalc extends Question implements questionInterface {
         if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { //or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];
 
-          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $this->settings['units'] . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . "</div>\n";
         } else {
           echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . "</div>\n";
           $unanswered = true;
@@ -695,6 +700,19 @@ class enhancedcalc extends Question implements questionInterface {
   
   public function get_vars() {
     return $this->useranswer['vars'];
+  }
+  
+  public function get_real_answer() {
+    $units = $this->settings['answers'][0]['units'];
+
+    $this->addtouseranswer('uans', "1 $units");   // Set a bogus answer before marking.
+    $this->calculateUserMark();
+    
+    if ($this->settings['show_units'] == 'on') {
+      return $this->useranswer['cans'];
+    } else {
+      return $this->useranswer['cans'] . ' ' . $units;
+    }
   }
 
 }
