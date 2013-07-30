@@ -173,7 +173,7 @@ class ClassTotals {
 
   public function get_display_experimental() {
     $rval = '';
-    
+
     foreach ($this->display_experimental as $status => $questions) {
       $rval .= $status . ': ';
       $rval .= implode(', ', $questions) . '<br />';
@@ -479,7 +479,7 @@ class ClassTotals {
       }
       $i++;
     }
-    
+
     if (isset($this->student_cohort)) {
       $this->check_and_clear_cohort($this->user_results[$user_number]['username']);
     }
@@ -779,7 +779,7 @@ class ClassTotals {
     }
 
     $this->q_medians[$q_id][] = $tmp_mark;
-    
+
     return $tmp_mark;
   }
 
@@ -1066,7 +1066,7 @@ class ClassTotals {
 
     $data_array = array();
     $metadataids = array();
-    
+
     // Load started records from 'log_metadata'.
     if ($this->paper_type == '2') {
       $time_int = 2;
@@ -1088,12 +1088,12 @@ class ClassTotals {
       $metadataids[] = $metadataID;
     }
     $result->close();
-    
+
     if (count($metadataID) == 0) {
       $this->user_results = array();
       return false;
     }
-    
+
     $i                    = 0;
     $old_screen           = 0;
     $old_duration         = 0;
@@ -1120,7 +1120,7 @@ class ClassTotals {
       if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
         continue; //this user is not on the module set in repmodule so dont put them in the array
       }
-      
+
       if ($old_screen != $screen or $old_metadataID != $metadataID) {
         $user_duration += $old_duration;
       }
@@ -1130,14 +1130,14 @@ class ClassTotals {
         } else {
           $this->user_results[$old_metadataID]['module'] = '';
         }
-     
+
         $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
         $tmp_mark = 0;
         $tmp_user_mark_array = array();
         $user_duration = 0;
         $marking_complete = 1;
       }
-      
+
       $this->user_results[$metadataID]['questions']++;
       $this->user_results[$metadataID]['paper_type'] = $paper_type;
 
@@ -1155,7 +1155,7 @@ class ClassTotals {
       $i++;
     }
     $result->close();
-    
+
     if ($old_metadataID != 0) {
       if ($this->repmodule == '' or (isset($this->user_modules[$userID]['idMod']) and $this->user_modules[$userID]['idMod'] == $this->repmodule)) {
         $user_duration += $old_duration;
@@ -1171,7 +1171,7 @@ class ClassTotals {
       $this->user_results[$i] = $row;
       $i++;
     }
-    
+
    if ($this->recache and count($log_data) > 0) {
       $this->db->autocommit(false);
 
@@ -1191,7 +1191,7 @@ class ClassTotals {
     }
 
   }
-  
+
   private function add_rank() {
     $result_no = count($this->user_results);
     if ($result_no == 0) return;
@@ -1434,7 +1434,7 @@ class ClassTotals {
         require_once "../plugins/questions/{$q_type}/{$q_type}.class.php";
         $q_class = new $q_type($this->config);
         $q_class->setsettings($settings);
-        $mc = $q_class->caculateQuestionMark();
+        $mc = $q_class->calculateQuestionMark();
         break;
       default:
         $mc = $marks_correct;

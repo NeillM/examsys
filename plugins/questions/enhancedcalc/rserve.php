@@ -78,7 +78,7 @@ class enhancedcalc_rserve {
     }
   }
   
-  function caculate_correct_ans($vars,$formula) {
+  function calculate_correct_ans($vars,$formula) {
     
     if(!$this->connect()) {
       return false;
@@ -140,7 +140,7 @@ class enhancedcalc_rserve {
     return $res;
   }
   
-  function caculate_tolerance_percent($correctanswer,$percentage) {
+  function calculate_tolerance_percent($correctanswer,$percentage) {
     $cmd[] = "$correctanswer * (" . $percentage . "/100)";
     $cmd[] = "$correctanswer + ($correctanswer * (" . $percentage . "/100))";
     $cmd[] = "$correctanswer - ($correctanswer * (" . $percentage . "/100))";
@@ -153,7 +153,7 @@ class enhancedcalc_rserve {
     return $res;
   }
   
-  function caculate_tolerance_absolute($correctanswer,$value) {
+  function calculate_tolerance_absolute($correctanswer,$value) {
     
     $cmd[] = "$correctanswer + $value";
     $cmd[] = "$correctanswer - $value";
