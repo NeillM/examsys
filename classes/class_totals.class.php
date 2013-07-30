@@ -276,12 +276,13 @@ class ClassTotals {
     $old_type           = '';
     $old_score_method   = '';
 
-    $result = $this->db->prepare("SELECT options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
+    $result = $this->db->prepare("SELECT options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, status, settings FROM options AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.option_text = questions.q_id AND options1.o_id = ?");
+//    $result = $this->db->prepare("SELECT options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
     $result->bind_param('i', $questionID);
     $result->execute();
     $result->store_result();
     if ($result->num_rows > 0) {
-      $result->bind_result($q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $status);
+      $result->bind_result($q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $status, $settings);
       while ($result->fetch()) {
         if ($old_q_id != $q_id and $old_q_id != '') {
           $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
@@ -293,6 +294,7 @@ class ClassTotals {
           $random_questions[$old_q_id]['display_method']  = $old_display_method;
           $random_questions[$old_q_id]['score_method']    = $old_score_method;
           $random_questions[$old_q_id]['status']          = $old_status;
+          $random_questions[$old_q_id]['settings']        = $old_settings;
           $random_questions[$old_q_id]['marks_correct']   = $old_marks_correct;
           $random_questions[$old_q_id]['marks_incorrect'] = $old_marks_incorrect;
           $random_questions[$old_q_id]['random_mark']     = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
@@ -306,6 +308,7 @@ class ClassTotals {
         $old_leadin           = $leadin;
         $old_scenario         = $scenario;
         $old_status           = $status;
+        $old_settings         = $settings;
         $old_marks_correct    = $marks_correct;
         $old_marks_incorrect  = $marks_incorrect;
         $old_correct[]        = $correct;
@@ -326,6 +329,7 @@ class ClassTotals {
       $random_questions[$old_q_id]['display_method']  = $old_display_method;
       $random_questions[$old_q_id]['score_method']    = $old_score_method;
       $random_questions[$old_q_id]['status']          = $old_status;
+      $random_questions[$old_q_id]['settings']        = $old_settings;
       $random_questions[$old_q_id]['marks_correct']   = $old_marks_correct;
       $random_questions[$old_q_id]['marks_incorrect'] = $old_marks_incorrect;
       $random_questions[$old_q_id]['random_mark']     = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
@@ -848,7 +852,7 @@ class ClassTotals {
               $last_random = $this->paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
               $old_q_type = $last_random['q_type'];
-              $old_marks_correct = $last_random['marks_correct'];
+              $old_marks_correct = $this->get_marks_correct($last_random['q_type'], $last_random['marks_correct'], $last_random['settings']);
               $old_option_text = $last_random['option_text'];
               $old_correct = $last_random['correct'];
               $old_display_method = $last_random['display_method'];
@@ -917,7 +921,7 @@ class ClassTotals {
         $last_random = $this->paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
         $old_q_type = $last_random['q_type'];
-        $old_marks_correct = $last_random['marks_correct'];
+        $old_marks_correct = $this->get_marks_correct($last_random['q_type'], $last_random['marks_correct'], $last_random['settings']);
         $old_option_text = $last_random['option_text'];
         $old_correct = $last_random['correct'];
         $old_display_method = $last_random['display_method'];
