@@ -831,11 +831,11 @@ class ClassTotals {
     $this->display_experimental = array();
 
     // Load the correct answers into 'paper_buffer' array.
-    $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos FROM (papers, questions, options) WHERE papers.question = questions.q_id AND papers.paper = ? AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY screen, display_pos, id_num");
+    $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
     $result->bind_param('i', $this->paperID);
     $result->execute();
     $result->store_result();
-    $result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $q_type, $correct, $score_method, $option_text, $status, $display_pos);
+    $result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $q_type, $correct, $score_method, $option_text, $status, $display_pos, $settings);
     while ($result->fetch()) {
       if ($q_id != $old_q_id or $old_display_pos != $display_pos) {
         if ($old_q_id != 0) {
@@ -875,9 +875,10 @@ class ClassTotals {
         $this->paper_buffer[$question_id]['q_type']           = $q_type;
         $this->paper_buffer[$question_id]['score_method']     = $score_method;
         $this->paper_buffer[$question_id]['display_method']   = $display_method;
-        $this->paper_buffer[$question_id]['marks_correct']    = $marks_correct;
+        $this->paper_buffer[$question_id]['marks_correct']    = $this->get_marks_correct($q_type, $marks_correct, $settings);
         $this->paper_buffer[$question_id]['marks_incorrect']  = $marks_incorrect;
         $this->paper_buffer[$question_id]['status']           = $status;
+        $this->paper_buffer[$question_id]['settings']         = $settings;
 
         if ($q_type == 'blank') {
           $this->paper_buffer[$question_id]['correct'] = $this->extract_blank_correct($option_text, $score_method, $question_id);
@@ -899,9 +900,10 @@ class ClassTotals {
       $old_q_media_width    = $q_media_width;
       $old_q_media_height   = $q_media_height;
       $old_option_text[]    = $option_text;
-      $old_marks_correct    = $marks_correct;
+      $old_marks_correct    = $this->get_marks_correct($q_type, $marks_correct, $settings);
       $old_marks_incorrect  = $marks_incorrect;
       $old_status           = $status;
+      $old_settings         = $settings;
     }
     $result->close();
 
@@ -1413,6 +1415,28 @@ class ClassTotals {
       $method = SORT_STRING;
     }
     $this->user_results = array_csort($this->user_results, $tmp_sort, $this->ordering, $method);
+  }
+
+  /**
+   * Get possible marks for the question (marks correct). May come from options or settings
+   * @param string    $q_type         Type of question
+   * @param integer   $marks_correct  Marks correct if available in an option
+   * @param string    $settings       JSON encoding settings for the question. Assumed to contain the correct marks if not available in an option
+   * @return mixed
+   */
+  protected function get_marks_correct($q_type, $marks_correct, $settings) {
+    switch ($q_type) {
+      case 'enhancedcalc':
+        require_once "../plugins/questions/{$q_type}/{$q_type}.class.php";
+        $q_class = new $q_type($this->config);
+        $q_class->setsettings($settings);
+        $mc = $q_class->caculateQuestionMark();
+        break;
+      default:
+        $mc = $marks_correct;
+    }
+
+    return $mc;
   }
 
 }
