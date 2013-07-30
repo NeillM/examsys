@@ -376,13 +376,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
       break;
     case 'enhancedcalc':
-      if(isset($user_answers[$current_screen][$q_id])) {
-        $d=array();
-        $d['useranswer']=$user_answers[$current_screen][$q_id];
+      if (isset($user_answers[$current_screen][$q_id])) {
+        $d = array();
+        $d['useranswer'] = $user_answers[$current_screen][$q_id];
         $question['object']->load($d);
       }
       $question['object']->load_all_user_answers($user_answers);
-      $question['object']->render_paper();
       break;
     case 'dichotomous':
       echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -641,41 +640,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo "</td></tr>\n";
         $marks += $display_option['marks_correct'];
         break;
-      case 'calculation':
-        $vars = array(1=>'A', 2=>'B', 3=>'C', 4=>'D', 5=>'E', 6=>'F', 7=>'G', 8=>'H', 9=>'I', 10=>'J');
-        $var = $vars[$part_id];
-        if (isset($user_answers[$current_screen][$q_id])) {
-          $tmp_user_answers = explode('|',$user_answers[$current_screen][$q_id]);
-        } else {
-          $tmp_user_answers = array();
-        }
-
-        $figures = explode(',',$display_option['option_text']);
-
-        // Var must have a minimum value set to be valid
-        if ($figures[0] != '') {
-          $min = calcPreParse($figures[0],$user_answers,$vars);
-          $max = (isset($figures[1]) and $figures[1] != '') ? calcPreParse($figures[1],$user_answers,$vars) : $min;
-
-          if (!isset($user_answers[$current_screen][$q_id])) {
-            //its a normal range and user has not seen the question genarate value
-            $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
-          } else {
-            //user has seen this question before use values already presented to the student
-            $variables = explode(',', $tmp_user_answers[2]);
-            if (substr($figures[0],0,3) == 'ans' or substr($figures[1],0,3) == 'ans' or substr($figures[0],0,3) == 'var' or substr($figures[1],0,3) == 'var') {
-              $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
-            } else {
-              $$var = $variables[$part_id-1];
-            }
-          }
-        }
-
-        break;
       case 'enhancedcalc':
         // no options for enhanced calc now stored in settings
 
+        $question['object']->render_paper();
         $question['object']->load_all_user_answers($user_answers);
+
+        $marks += $question['object']->calculateQuestionMark();
+
         break;
       case 'likert':
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {

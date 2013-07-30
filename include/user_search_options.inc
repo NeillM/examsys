@@ -53,11 +53,11 @@ if (isset($_GET['calendar_year'])) {
     $('#menu' + ID).toggle();
 
     <?php
-      echo "icon = (document.getElementById('icon' + ID).getAttribute('src').indexOf('down_arrow_icon.gif')!=-1) ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
+      echo "icon = ($('#icon' + ID).attr('src').indexOf('down_arrow_icon.gif')!=-1) ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
     ?>
-    alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
-    document.getElementById('icon' + ID).setAttribute('src',icon);
-    document.getElementById('icon' + ID).setAttribute('alt',alttag);
+    alttag = ($('#icon' + ID).attr('alt') == 'Hide') ? 'Show' : 'Hide';
+    $('#icon' + ID).attr('src', icon);
+    $('#icon' + ID).attr('alt', alttag);
     
     updateState('advanced', current);
     

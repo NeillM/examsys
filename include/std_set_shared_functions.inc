@@ -98,7 +98,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     // Get any questions to exclude.
     $exclude = array();
 
-    $exclude_result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+    $exclude_result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
     $exclude_result->bind_param('i', $paperID);
     $exclude_result->execute();
     $exclude_result->store_result();
@@ -156,11 +156,11 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
           $q_sections = explode(',', $rating);
           $tmp_part = 0;
           foreach ($q_sections as $part) {
-            if (substr($tmp_exclude,$tmp_part,1) == '0') {
+            if (substr($tmp_exclude, $tmp_part, 1) == '0') {
               if ($q_type == 'textbox') {
                 $std_total += $part * (count($q_sections) - $tmp_part);
               } else {
-                $std_total += $part;
+                $std_total += $part * $marks_array[$questionID][$tmp_part];
               }
               if ($q_type != 'mrq' or $part != '') $question_no++;
             }
@@ -171,7 +171,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     }
     
     if ($reviews[$i]['method'] == 'Modified Angoff') {
-      $reviews[$i]['pass_score'] = ($question_no > 0) ? round($std_total/$question_no) : 0;
+      $reviews[$i]['pass_score'] = ($question_no > 0) ? round($std_total / $angoff_review_marks) : 0;
       $reviews[$i]['review_total'] = $angoff_review_marks;
       $reviews[$i]['distinction_score'] = 'n/a';
     } elseif ($reviews[$i]['method'] == 'Hofstee') {
@@ -222,11 +222,11 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
   $correct_no = 0;
   $old_score_method = '';
   
-  $result = $mysqli->prepare("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY q_id, o_id, id_num");
+  $result = $mysqli->prepare("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY q_id, o_id, id_num");
   $result->bind_param('i', $paper_id);
   $result->execute();
   $result->store_result();
-  $result->bind_result($q_type, $q_id, $marks_correct, $marks_incorrect, $correct, $score_method, $option_text);
+  $result->bind_result($q_type, $q_id, $marks_correct, $marks_incorrect, $correct, $score_method, $option_text, $settings);
   while ($result->fetch()) {
     if ($old_q_id != $q_id and $old_q_id != 0) {
       if ($old_q_type == 'rank' and $old_score_method == 'Bonus Mark') {
@@ -245,6 +245,10 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
     $old_q_id = $q_id;
     if (!isset($exclude[$old_q_id])) { // If no record exists set to zero (i.e. included)
       $exclude[$old_q_id] = '00000000000000000000000000000';
+    }
+    
+    if (!is_null($settings) and !is_array($settings)) {
+      $settings = json_decode($settings, true);
     }
 
     switch ($q_type) {
@@ -267,6 +271,9 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
           }
         }
         $partID++;
+        break;
+      case 'enhancedcalc':
+        $marks_array[$old_q_id][$partID] = $settings['marks_correct'];
         break;
       case 'calculation':
         if (substr($exclude[$old_q_id], $partID, 1) == '0') {

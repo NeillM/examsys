@@ -73,11 +73,11 @@ if (isset($_POST['std_setID']) and $_POST['std_setID'] != '') {
 $last_question = 0;
 $old_q_id = 0;
 
-$result = $mysqli->prepare("SELECT q_id, scenario, leadin, q_type, option_text, q_media, correct, score_method, marks_correct FROM papers, questions, options WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY display_pos, id_num");
+$result = $mysqli->prepare("SELECT q_id, scenario, leadin, q_type, option_text, q_media, correct, score_method, marks_correct, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY display_pos, id_num");
 $result->bind_param('i', $paperID);
 $result->execute();
 $result->store_result();
-$result->bind_result($q_id, $scenario, $leadin, $q_type, $option_text, $q_media, $correct, $score_method, $marks_correct);
+$result->bind_result($q_id, $scenario, $leadin, $q_type, $option_text, $q_media, $correct, $score_method, $marks_correct, $settings);
 while ($result->fetch()) {
   if ($old_q_id != $q_id) {
     if ($question_no > 0) {
@@ -138,7 +138,7 @@ while ($result->fetch()) {
     $qid = 'std' . $question_no;
     switch ($q_type) {
       case 'area':
-      case 'calculation':
+      case 'enhancedcalc':
       case 'mcq':
       case 'true_false':
         if ($question_part == 1) {

@@ -48,52 +48,53 @@ if (!$module_code) {
   .l {cursor:pointer}
   </style>
   <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="javascript">
     function selRef(divID, evt) {
-      tmp_ID = document.myform.oldID.value;
+      tmp_ID = $('#oldID').val();
       if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-        document.getElementById(tmp_ID).style.color = 'black';
+        $('#' + tmp_ID).css('background-color', 'white');
+        $('#' + tmp_ID).css('color', 'black');
       }
 
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
+      $('#menu1a').hide();
+      $('#menu1b').show();
 
-      document.myform.oldID.value = divID;
-      document.myform.divID.value = divID;
+      $('#oldID').val(divID);
+      $('#divID').val(divID);
 
-      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      $('#' + divID).css('background-color', '#B3C8E8');
       evt.cancelBubble = true;
     }
 
     function deselRef() {
-      tmp_ID = document.myform.oldID.value;
+      tmp_ID = $('#oldID').val();
       if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+        $('#' + tmp_ID).css('background-color', 'white');
       }
-      document.myform.oldID.value = '';
-      document.getElementById('menu1b').style.display = 'none';
-      document.getElementById('menu1a').style.display = 'block';
+      $('#oldID').val('');
+      $('#menu1b').hide();
+      $('#menu1a').show();
     }
 
     function lon(lineID) {
-      if (lineID != document.myform.oldID.value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      if (lineID != $('#oldID').val()) {
+        $('#' + lineID).css('background-color', '#EEEEEE');
       }
     }
 
     function loff(lineID) {
-      if (lineID != document.myform.oldID.value) {
-        document.getElementById(lineID).style.backgroundColor = '';
+      if (lineID != $('#oldID').val()) {
+        $('#' + lineID).css('background-color', '');
       }
     }
     
     function editReference() {
-      window.location="<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_ref_material.php?refID=" + document.getElementById('divID').value + "&module=<?php echo $_GET['module']; ?>";
+      window.location="<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $_GET['module']; ?>";
     }
     
     function deleteReference() {
-      notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + document.getElementById('divID').value + "&module=<?php echo $_GET['module']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $_GET['module']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       notice.moveTo(screen.width/2-210,screen.height/2-85);
       if (window.focus) {
         notice.focus();
@@ -139,7 +140,7 @@ if (!$module_code) {
 <?php
   echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./details.php?module=" . $_GET['module'] . "\">" . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . "</a></div><div style=\"margin-left:10px; font-size:200%; font-weight:bold\">" . $string['referencematerial'] . "</th>\n";
 ?>
-<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(237); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th>
+<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(237); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" /></a></th>
 </tr>
 <tr><th colspan="2" class="bevel"></th></tr>
 

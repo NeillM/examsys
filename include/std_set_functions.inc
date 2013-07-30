@@ -157,27 +157,37 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
         $marks = $options[0]['marks_correct'];
       }
       break;
-    case 'calculation':
+    case 'enhancedcalc':
       $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
       $settings = json_decode($options[0]['settings'], true);
+      
       if ($li_set == 1) {
         echo '<tr><td></td><td>';
       } else {
         echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
       }
-      $search = array('$A','$B','$C','$D','$E','$F','$G','$H','$I','$J');
+      $search = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J');
       $replace = array('<span class="fback">$A</span>', '<span class="fback">$B</span>', '<span class="fback">$C</span>', '<span class="fback">$D</span>', '<span class="fback">$E</span>', '<span class="fback">$F</span>', '<span class="fback">$G</span>', '<span class="fback">$H</span>', '<span class="fback">$I</span>', '<span class="fback">$J</span>');
-      echo "<p";
+      echo "<div";
       if (isset($exclude[$q_id])) echo ' style="color:red; text-decoration:line-through"';
-      echo ">" . str_ireplace($search,$replace,$current_leadin) . "</p>\n";
-      //echo ">" . $current_leadin . "</p>\n";
+      echo ">" . str_ireplace($search, $replace, $current_leadin) . "</div>\n<br />";
 
-      echo "<div><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />" . $settings['units'] .  "</div>\n";
-      echo "<div class=\"fback\">Answer = " . $options[0]['correct'] . "</div>\n<br />\n";
+      if ($settings['show_units']) {
+        $units = $settings['answers'][0]['units'];
+      } else {
+        $units = '';
+      }
+      
+      echo "<div><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />$units</div>\n";
+      echo "<div class=\"fback\">";
+      foreach ($settings['answers'] as $answer) {
+        echo 'Formula: ' . $answer['formula'] . ', Units: ' . $answer['units'] . '<br />';
+      }
+      echo "</div>\n<br />\n";
       echo "<div>";
-      echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
+      echo reviewScale($question_no, '', $settings['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
       echo "</div>\n";
-      $marks = $options[0]['marks_correct'];
+      $marks = $settings['marks_correct'];
       break;
     case 'dichotomous':
       echo "</blockquote></table>";

@@ -387,7 +387,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $previous_duration = 0;
   $screen_pre_submitted = 0;
   $reviews_array = array();
-  $result = $mysqli->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments WHERE q_paper=? AND screen=? AND reviewer=?");
+  $result = $mysqli->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments WHERE q_paper=? AND screen = ? AND reviewer = ?");
   $result->bind_param('iii', $property_id, $current_screen, $userObject->get_user_ID());
   $result->execute();
   $result->store_result();
@@ -409,7 +409,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $old_theme = '';
   $previous_q_type = '';
 
-  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, correct_fback, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, correct_fback, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE paper = ? AND screen = ? AND papers.question = questions.q_id ORDER BY display_pos, id_num");
   $question_data->bind_param('ii', $property_id, $current_screen);
   $question_data->execute();
   $question_data->store_result();
@@ -448,6 +448,15 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
 
   //display the questions
   foreach ($questions_array as &$question) {
+    if ($question['q_type'] == 'enhancedcalc') {
+      require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+      if (!isset($configObj)) {
+        $configObj = Config::get_instance();
+      }
+      $question['object'] = new enhancedcalc($configObj);
+      $question['object']->load($question);
+    }
+
     if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr><td colspan=\"2\"><span style=\"background-color:#FFC0C0\">&nbsp;&nbsp;&nbsp;&nbsp;</span> = unanswered question</td></tr>\n";
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";

@@ -173,7 +173,7 @@ class ClassTotals {
 
   public function get_display_experimental() {
     $rval = '';
-    
+
     foreach ($this->display_experimental as $status => $questions) {
       $rval .= $status . ': ';
       $rval .= implode(', ', $questions) . '<br />';
@@ -276,12 +276,13 @@ class ClassTotals {
     $old_type           = '';
     $old_score_method   = '';
 
-    $result = $this->db->prepare("SELECT options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
+    $result = $this->db->prepare("SELECT options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, status, settings FROM options AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.option_text = questions.q_id AND options1.o_id = ?");
+//    $result = $this->db->prepare("SELECT options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
     $result->bind_param('i', $questionID);
     $result->execute();
     $result->store_result();
     if ($result->num_rows > 0) {
-      $result->bind_result($q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $status);
+      $result->bind_result($q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $status, $settings);
       while ($result->fetch()) {
         if ($old_q_id != $q_id and $old_q_id != '') {
           $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
@@ -293,6 +294,7 @@ class ClassTotals {
           $random_questions[$old_q_id]['display_method']  = $old_display_method;
           $random_questions[$old_q_id]['score_method']    = $old_score_method;
           $random_questions[$old_q_id]['status']          = $old_status;
+          $random_questions[$old_q_id]['settings']        = $old_settings;
           $random_questions[$old_q_id]['marks_correct']   = $old_marks_correct;
           $random_questions[$old_q_id]['marks_incorrect'] = $old_marks_incorrect;
           $random_questions[$old_q_id]['random_mark']     = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
@@ -306,6 +308,7 @@ class ClassTotals {
         $old_leadin           = $leadin;
         $old_scenario         = $scenario;
         $old_status           = $status;
+        $old_settings         = $settings;
         $old_marks_correct    = $marks_correct;
         $old_marks_incorrect  = $marks_incorrect;
         $old_correct[]        = $correct;
@@ -326,6 +329,7 @@ class ClassTotals {
       $random_questions[$old_q_id]['display_method']  = $old_display_method;
       $random_questions[$old_q_id]['score_method']    = $old_score_method;
       $random_questions[$old_q_id]['status']          = $old_status;
+      $random_questions[$old_q_id]['settings']        = $old_settings;
       $random_questions[$old_q_id]['marks_correct']   = $old_marks_correct;
       $random_questions[$old_q_id]['marks_incorrect'] = $old_marks_incorrect;
       $random_questions[$old_q_id]['random_mark']     = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
@@ -475,7 +479,7 @@ class ClassTotals {
       }
       $i++;
     }
-    
+
     if (isset($this->student_cohort)) {
       $this->check_and_clear_cohort($this->user_results[$user_number]['username']);
     }
@@ -775,7 +779,7 @@ class ClassTotals {
     }
 
     $this->q_medians[$q_id][] = $tmp_mark;
-    
+
     return $tmp_mark;
   }
 
@@ -831,11 +835,11 @@ class ClassTotals {
     $this->display_experimental = array();
 
     // Load the correct answers into 'paper_buffer' array.
-    $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos FROM (papers, questions, options) WHERE papers.question = questions.q_id AND papers.paper = ? AND questions.q_id = options.o_id AND q_type != 'info' ORDER BY screen, display_pos, id_num");
+    $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
     $result->bind_param('i', $this->paperID);
     $result->execute();
     $result->store_result();
-    $result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $q_type, $correct, $score_method, $option_text, $status, $display_pos);
+    $result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $q_type, $correct, $score_method, $option_text, $status, $display_pos, $settings);
     while ($result->fetch()) {
       if ($q_id != $old_q_id or $old_display_pos != $display_pos) {
         if ($old_q_id != 0) {
@@ -848,7 +852,7 @@ class ClassTotals {
               $last_random = $this->paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
               $old_q_type = $last_random['q_type'];
-              $old_marks_correct = $last_random['marks_correct'];
+              $old_marks_correct = $this->get_marks_correct($last_random['q_type'], $last_random['marks_correct'], $last_random['settings']);
               $old_option_text = $last_random['option_text'];
               $old_correct = $last_random['correct'];
               $old_display_method = $last_random['display_method'];
@@ -875,9 +879,10 @@ class ClassTotals {
         $this->paper_buffer[$question_id]['q_type']           = $q_type;
         $this->paper_buffer[$question_id]['score_method']     = $score_method;
         $this->paper_buffer[$question_id]['display_method']   = $display_method;
-        $this->paper_buffer[$question_id]['marks_correct']    = $marks_correct;
+        $this->paper_buffer[$question_id]['marks_correct']    = $this->get_marks_correct($q_type, $marks_correct, $settings);
         $this->paper_buffer[$question_id]['marks_incorrect']  = $marks_incorrect;
         $this->paper_buffer[$question_id]['status']           = $status;
+        $this->paper_buffer[$question_id]['settings']         = $settings;
 
         if ($q_type == 'blank') {
           $this->paper_buffer[$question_id]['correct'] = $this->extract_blank_correct($option_text, $score_method, $question_id);
@@ -899,9 +904,10 @@ class ClassTotals {
       $old_q_media_width    = $q_media_width;
       $old_q_media_height   = $q_media_height;
       $old_option_text[]    = $option_text;
-      $old_marks_correct    = $marks_correct;
+      $old_marks_correct    = $this->get_marks_correct($q_type, $marks_correct, $settings);
       $old_marks_incorrect  = $marks_incorrect;
       $old_status           = $status;
+      $old_settings         = $settings;
     }
     $result->close();
 
@@ -915,7 +921,7 @@ class ClassTotals {
         $last_random = $this->paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
         $old_q_type = $last_random['q_type'];
-        $old_marks_correct = $last_random['marks_correct'];
+        $old_marks_correct = $this->get_marks_correct($last_random['q_type'], $last_random['marks_correct'], $last_random['settings']);
         $old_option_text = $last_random['option_text'];
         $old_correct = $last_random['correct'];
         $old_display_method = $last_random['display_method'];
@@ -1060,7 +1066,7 @@ class ClassTotals {
 
     $data_array = array();
     $metadataids = array();
-    
+
     // Load started records from 'log_metadata'.
     if ($this->paper_type == '2') {
       $time_int = 2;
@@ -1082,9 +1088,12 @@ class ClassTotals {
       $metadataids[] = $metadataID;
     }
     $result->close();
-    
-    unset($metadataID);
-    
+
+    if (count($metadataID) == 0) {
+      $this->user_results = array();
+      return false;
+    }
+
     $i                    = 0;
     $old_screen           = 0;
     $old_duration         = 0;
@@ -1095,7 +1104,7 @@ class ClassTotals {
     $tmp_user_mark_array  = array();
     $log_data             = array();
     $tmp_array            = array();
-    
+
     // Load 'logx' data.
     if ($this->paper_type == '0' or $this->paper_type == '1') {
       $result = $this->db->prepare("(SELECT log0.id, metadataID, 0 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log0, questions WHERE log0.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")) UNION ALL (SELECT log1.id, metadataID, 1 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log1, questions WHERE log1.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . "))");
@@ -1111,7 +1120,7 @@ class ClassTotals {
       if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
         continue; //this user is not on the module set in repmodule so dont put them in the array
       }
-      
+
       if ($old_screen != $screen or $old_metadataID != $metadataID) {
         $user_duration += $old_duration;
       }
@@ -1121,14 +1130,14 @@ class ClassTotals {
         } else {
           $this->user_results[$old_metadataID]['module'] = '';
         }
-     
+
         $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
         $tmp_mark = 0;
         $tmp_user_mark_array = array();
         $user_duration = 0;
         $marking_complete = 1;
       }
-      
+
       $this->user_results[$metadataID]['questions']++;
       $this->user_results[$metadataID]['paper_type'] = $paper_type;
 
@@ -1146,7 +1155,7 @@ class ClassTotals {
       $i++;
     }
     $result->close();
-    
+
     if ($old_metadataID != 0) {
       if ($this->repmodule == '' or (isset($this->user_modules[$userID]['idMod']) and $this->user_modules[$userID]['idMod'] == $this->repmodule)) {
         $user_duration += $old_duration;
@@ -1162,7 +1171,7 @@ class ClassTotals {
       $this->user_results[$i] = $row;
       $i++;
     }
-    
+
    if ($this->recache and count($log_data) > 0) {
       $this->db->autocommit(false);
 
@@ -1182,8 +1191,11 @@ class ClassTotals {
     }
 
   }
-  
+
   private function add_rank() {
+    $result_no = count($this->user_results);
+    if ($result_no == 0) return;
+
     // Put the whole array in marks order.
     $sortby = 'mark';
     $ordering = 'desc';
@@ -1192,8 +1204,6 @@ class ClassTotals {
     $display_rank = 1;
     $global_rank  = 1;
     $old_mark     = 0;
-
-    $result_no = count($this->user_results);
 
     for ($i=0; $i<$result_no; $i++) {
       if ($this->user_results[$i]['mark'] != $old_mark) {
@@ -1207,6 +1217,9 @@ class ClassTotals {
 
   private function flag_subpart() {
     $user_no = count($this->user_results);
+
+    if ($user_no == 0) return;
+
     if ($this->percent < 100) {
       // Sort by mark order.
       $sortby = 'mark';
@@ -1395,6 +1408,8 @@ class ClassTotals {
   }
 
   public function sort_results() {
+    if (count($this->user_results) == 0) return;
+
     $tmp_sort = ($this->sortby != 'result' and $this->sortby != 'percent') ? $this->sortby : 'percent';
     if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
     if ($tmp_sort == 'classification') $tmp_sort = 'mark';
@@ -1404,6 +1419,28 @@ class ClassTotals {
       $method = SORT_STRING;
     }
     $this->user_results = array_csort($this->user_results, $tmp_sort, $this->ordering, $method);
+  }
+
+  /**
+   * Get possible marks for the question (marks correct). May come from options or settings
+   * @param string    $q_type         Type of question
+   * @param integer   $marks_correct  Marks correct if available in an option
+   * @param string    $settings       JSON encoding settings for the question. Assumed to contain the correct marks if not available in an option
+   * @return mixed
+   */
+  protected function get_marks_correct($q_type, $marks_correct, $settings) {
+    switch ($q_type) {
+      case 'enhancedcalc':
+        require_once "../plugins/questions/{$q_type}/{$q_type}.class.php";
+        $q_class = new $q_type($this->config);
+        $q_class->setsettings($settings);
+        $mc = $q_class->calculateQuestionMark();
+        break;
+      default:
+        $mc = $marks_correct;
+    }
+
+    return $mc;
   }
 
 }

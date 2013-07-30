@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['msg1'] = 'Enter a <b>short</b> tag that will be appended to the update file name'; // Niko
-$string['tag'] = 'Tag';
-$string['create'] = 'Create';
-$string['success'] = 'Update file %s created';
-$string['createerror'] = 'Error creating update file';
-$string['runupdate'] = 'Run update';
+$string['msg1'] = 'Podaj <b>krótką</b> etykietę, która będzie dodana do nazwy pliku aktualizacji';
+$string['tag'] = 'Etykieta';
+$string['create'] = 'Utwórz';
+$string['success'] = 'Plik aktualizacji %s utworzono';
+$string['createerror'] = 'Błąd tworzenia pliku aktualizacji';
+$string['runupdate'] = 'Uruchom aktualizację';

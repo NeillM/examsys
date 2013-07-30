@@ -106,7 +106,7 @@ $result->close();
 
   <script language="JavaScript">
   function checkForm() {
-    if (document.getElementById('school').value == "" || document.getElementById('school').value == "<?php echo $string['prompt'] ?>") {
+    if ($('#school').val() == "" || $('#school').val() == "<?php echo $string['prompt'] ?>") {
       alert ('<?php echo $string['enternameofschool'] ?>');
       return false;
     }

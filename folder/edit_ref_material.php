@@ -95,13 +95,14 @@ $result->close();
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
-      if (document.getElementById(objectID).className == 'r2') {
-        document.getElementById(objectID).className = 'r1';
+      if ($('#' + objectID).hasClass('r2')) {
+        $('#' + objectID).addClass('r1');
+        $('#' + objectID).removeClass('r2');
       } else {
-        document.getElementById(objectID).className = 'r2';
+        $('#' + objectID).addClass('r2');
+        $('#' + objectID).removeClass('r1');
       }
-    }
-  </script>
+    }  </script>
 </head>
 
 <body>

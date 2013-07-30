@@ -94,9 +94,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     <?php
       echo "icon = (document.getElementById('icon' + ID).getAttribute('src').indexOf('down_arrow_icon.gif')!=-1) ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
     ?>
-    alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
-    document.getElementById('icon' + ID).setAttribute('src',icon);
-    document.getElementById('icon' + ID).setAttribute('alt',alttag);
+    alttag = ($('#icon' + ID).attr('alt') == 'Hide') ? 'Show' : 'Hide';
+    $('#icon' + ID).attr('src', icon);
+    $('#icon' + ID).attr('alt', alttag);
 
     updateState('menu' + ID, current);
   }
@@ -107,7 +107,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
 
   function selectDateRadio() {
-    document.getElementById('question_date5').checked = true;
+    $('#question_date5').attr('checked', true);
   }
 
 </script>

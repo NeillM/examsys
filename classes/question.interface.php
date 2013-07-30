@@ -29,20 +29,20 @@ interface questionInterface  {
    * 
    *  This Must handle exclusions
    */
-  public function caculateUserMark();
+  public function calculateUserMark();
   
   /*
    * caulate how many marks is this question worth form its options 
    *    
    *   This Must handle exclusions
    */
-  public function caculateQuestionMark();
+  public function calculateQuestionMark();
   
   /*
    * caculate the Random Mark for this question 
    *  This Must handle exclusions
    */
-  public function caculateRandomMark();
+  public function calculateRandomMark();
   
   
   /*
