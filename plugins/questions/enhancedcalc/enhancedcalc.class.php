@@ -57,9 +57,9 @@ class enhancedcalc extends Question implements questionInterface {
   }
 
   //arange the possible fromula by units
-  function build_formula_by_units() {
+  function build_formula_by_units($ans) {
     $formula_by_units = array();
-    foreach ($this->settings['answers'] as $key => $value) {
+    foreach ($ans as $key => $value) {
       $units = explode(',', $value['units']);
       foreach ($units as $value1) {
         $value1 = trim($value1);
@@ -71,7 +71,7 @@ class enhancedcalc extends Question implements questionInterface {
 
   function are_units_correct($unit) {
     // create array of units and functions
-    $this->settings['answersexp'] = $this->build_formula_by_units(); 
+    $this->settings['answersexp'] = $this->build_formula_by_units($this->settings['answers']); 
     if(isset($this->settings['answersexp'][$unit])) {
       return true;
     } else {
@@ -129,10 +129,10 @@ class enhancedcalc extends Question implements questionInterface {
     if (!is_null($enhancedcalcType)) {
       require_once $enhancedcalcType . '.php';
       $name = 'enhancedcalc_' . $enhancedcalcType;
-      $enhancedcalcObj = new $name($this->configObj);
+      $enhancedcalcObj = new $name($this->configObj->getbyref($enhancedcalcType));
     } else {
       require_once 'rserve.php';
-      $enhancedcalcObj = new enhancedcalc_rserve($this->configObj);
+      $enhancedcalcObj = new enhancedcalc_rserve($this->configObj->getbyref('enhancedcalculation'));
     }
     
     // run calculate through the external interface if errors catch exception and indicate its still unmarked.
@@ -247,6 +247,9 @@ class enhancedcalc extends Question implements questionInterface {
                                                                                                                 $this->useranswer['ans']['tolerance_partialans']
                                                                                                               );
         }
+      } else {
+          $this->useranswer['status']['tolerance_partial'] = true;
+          $this->useranswer['status']['tolerance_full'] = true;
       }
       //strict dp marking
       if ( $this->is_strict_dp_enabled() ) {
@@ -267,7 +270,7 @@ class enhancedcalc extends Question implements questionInterface {
       //check for strict sf
       if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']) ) {
         
-        $this->useranswer['status']['strictsf'] = $enhancedcalcObj->is_useranswer_within_tolerance_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
+        $this->useranswer['status']['strictsf'] = $enhancedcalcObj->is_useranswer_within_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
         if($this->useranswer['status']['strictsf'] === false) {
           $this->qmark = $this->settings['marks_incorrect'];
           $returnstatus = Q_MARKING_WRONG;
@@ -307,6 +310,7 @@ class enhancedcalc extends Question implements questionInterface {
       $this->useranswer['status']['overall'] = $returnstatus;
        
     } catch (Exception $e) {
+      //TODO: ctach diffrent errors "no connection", "unable to evluate"  
       $returnstatus = Q_MARKING_ERROR;
       $this->useranswer['status']['error'] = true;
       $this->useranswer['ans']['error'] = $enhancedcalcObj->error_msg;

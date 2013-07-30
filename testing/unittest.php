@@ -96,7 +96,7 @@ if(!isset($_GET['test'])) {
           if($entry == '.' or $entry == '..') {
             continue;
           }
-          \Enhance\Core::discoverTests('../plugins/questions/' + $entry);
+          \Enhance\Core::discoverTests('../plugins/questions/' . $entry . '/test/');
         }
         $folder = closedir($folder);
         $run = TRUE;

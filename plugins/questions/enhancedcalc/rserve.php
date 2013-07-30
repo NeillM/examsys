@@ -40,8 +40,8 @@ class enhancedcalc_rserve {
   public $error = false;
   public $error_msg = '';
 
-  function __construct($configObj) {
-    $this->config = $configObj->getbyref('enhancedcalculation');
+  function __construct($config) {
+    $this->config = $config;
     $this->toStrDefined = false;
     $this->powDefined = false;
   }
@@ -89,7 +89,7 @@ class enhancedcalc_rserve {
     $formula_vars_subed = str_replace($varname, $varvalue, $formula);
     
     //old caculation fomula use pow() - define a function in R for backward compatibility
-    if (stripos($formula,'pow(') === true and $this->powDefined === false) {
+    if (stripos($formula,'pow(') !== true and $this->powDefined === false) {
       self::$cnx->evalString("POW <- pow <- function(a,b) { return(a^b) }");
       $this->powDefined = true;
     }
@@ -110,8 +110,12 @@ class enhancedcalc_rserve {
       return false;
     }
     
-    $status = $this->evalString("$correctanswer == $useranswer");
-      
+    try {
+      $status = $this->evalString("$correctanswer == $useranswer");
+    } catch(Exception $e) {
+      //there is an error it cant be correct
+      return false;
+    }
     if ($status === true) {
       return true;
     } else {
@@ -123,10 +127,15 @@ class enhancedcalc_rserve {
   function distance_from_correct_answer($useranswer, $correctanswer) {
     
     if($useranswer == '') {
-      return false;
+      return 'ERROR';
     }
     
-    $res = $this->evalString("(abs($useranswer - $correctanswer)/$correctanswer) * 100");
+    try {
+       $res = $this->evalString("(abs($useranswer - $correctanswer)/$correctanswer) * 100");
+    } catch(Exception $e) {
+      //there is an error it cant be correct
+      return 'ERROR';
+    }
       
     return $res;
   }
@@ -164,7 +173,13 @@ class enhancedcalc_rserve {
       return false;
     }
     
-    $status = $this->evalString("$useranswer <= $max & $useranswer >= $min");
+    try {
+       $status = $this->evalString("$useranswer <= $max & $useranswer >= $min");
+    } catch(Exception $e) {
+      //there is an error it cant be correct
+      return false;
+    }
+    
     
     if ($status === true) {
       //correct
@@ -174,18 +189,18 @@ class enhancedcalc_rserve {
     }
   }
   
-  function is_useranswer_within_tolerance_significant_figures($useranswer, $sf, $tolerance_fullANS) {
+  function is_useranswer_within_significant_figures($useranswer, $sf) {
     
     if($useranswer == '') {
       return false;
     }
     
-    $status = $this->evalString("signif($useranswer," . $sf . ") ==  $tolerance_fullANS");
+    $status = $this->evalString("signif($useranswer," . $sf . ") ==  $useranswer");
     if ($status === true) {
       //correct
-      $useranswer['status']['tolerance_full'] = true;
+      return true;
     } else {
-      $useranswer['status']['tolerance_full'] = false;
+      return false;
     }
   }
   
@@ -195,7 +210,7 @@ class enhancedcalc_rserve {
       return false;
     }
     
-    $status = $this->evalString("format(round($useranswer," . $dp . "), nsmall = " . $dp . ") == \"$useranswer\"");
+    $status = $this->evalString("round($useranswer," . $dp . ") == $useranswer");
     if ($status === true) {
       return true;
     } else {

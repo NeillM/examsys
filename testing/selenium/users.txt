@@ -1,3 +1,11 @@
+Config Salt
+===========
+
+This salt must be set in your config file to use the database of users:
+
+'GGJaQSqFImzv86Jn'
+
+
 Users
 =====
 
