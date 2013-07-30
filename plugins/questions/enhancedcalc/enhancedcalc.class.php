@@ -336,7 +336,6 @@ class enhancedcalc extends Question implements questionInterface {
    *
    *   This Must handle exclusions
    */
-  // TODO: Move this into the question class?
   public function calculateQuestionMark() {
     return $this->settings['marks_correct'];
   }
