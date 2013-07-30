@@ -607,7 +607,7 @@ class enhancedcalc extends Question implements questionInterface {
     $varname = array_keys($this->useranswer['vars']);
     $varvalue = array_values($this->useranswer['vars']);
 
-    if (isset($extra) and $extra['reviewers']) {
+    if (isset($extra['reviewers']) and $extra['reviewers']) {
       $leadin = $this->leadin;
 
       foreach ($this->settings['vars'] as $key => $value) {
@@ -632,7 +632,7 @@ class enhancedcalc extends Question implements questionInterface {
       }
     }
 
-    if (isset($extra) and $extra['reviewers']) {    // Display additional information for reviewers
+    if (isset($extra['reviewers']) and $extra['reviewers']) {    // Display additional information for reviewers
       echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"padding:10px; border: 1px solid #C0C000; background-color:#FFFFC0; width:700px\">\n";
       echo "<tr><td colspan=\"4\">" . $string['notvisible'] . "</td></tr>";
       echo "<tr><td colspan=\"4\" style=\"text-align:justify\">" . $string['reviewermsg'] . "</td></tr>";
