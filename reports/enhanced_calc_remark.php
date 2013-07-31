@@ -30,8 +30,9 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
-$q_id     = check_var('q_id', 'GET', true, false, true);
+$q_id  = check_var('q_id', 'GET', true, false, true);
 $paperID  = check_var('paperID', 'GET', true, false, true);
 
 // Get some paper properties
@@ -43,37 +44,39 @@ if (!$propertyObj) {
 }
 $paper_type = $propertyObj->get_paper_type();
 
-// Read whole question from database.
-$result = $mysqli->prepare("SELECT option_text FROM options WHERE o_id = ?");
+// Read question from database.
+$result = $mysqli->prepare("SELECT leadin, settings FROM questions WHERE q_id = ?");
 $result->bind_param('i', $q_id);
 $result->execute();
-$result->bind_result($option_text);
-$result->fetch();
-$result->close();
-
-// Read user properties from questions.
-$result = $mysqli->prepare("SELECT score_method, marks_correct, marks_incorrect FROM questions, options WHERE questions.q_id = options.o_id AND q_id = ?");
-$result->bind_param('i', $q_id);
-$result->execute();
-$result->bind_result($score_method, $marks_correct, $marks_incorrect);
+$result->bind_result($leadin, $settings);
 $result->fetch();
 $result->close();
 
 // Read user answers from log.
 $log_answers = array();
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.user_answer FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.user_answer FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
+  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
   $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 } else {
-  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.user_answer FROM log$paper_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
+  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer FROM log$paper_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
   $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 }
 $result->execute();
-$result->bind_result($type, $id, $user_answer);
+$result->bind_result($type, $id, $mark, $user_answer);
 while ($result->fetch()) {
-  $log_answers[$type][$id] = $user_answer;
+  if ($mark != '') {
+    $answer_obj = new enhancedcalc($configObject);
+    $answer_obj->setuseranswer($user_answer);
+    $answer_obj->setsettings($settings);
+    $dist = $answer_obj->get_answer_distance();
+    if ($dist === false) $dist = $string['unknown'];
+    $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj);
+  }
 }
 $result->close();
+
+// Sort by distance
+asort($log_answers);
 
 if (isset($_POST['submit'])) {
   $option_list = '';
@@ -178,15 +181,9 @@ if (isset($_POST['submit'])) {
 
 <?php
 } else {
-  $blank_details = explode('[blank',$option_text);
-  for ($i=1; $i<count($blank_details); $i++) {
-    $end_start_tag = strpos($blank_details[$i],']');
-    $start_end_tag = strpos($blank_details[$i],'[/blank]');
-    $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
-    if ($i == $_GET['blank']) {
-      $blanks = explode(',', $blank_options);
-    }
-  }
+  $question_obj = new enhancedcalc($configObject);
+  $question_obj->setsettings($settings);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -200,7 +197,9 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
-    th {font-weight:normal; color:#001687}
+    th {font-weight:normal; color:#001687; text-align: left}
+    .alpha {padding-left: 8px;}
+    .omega {padding-right: 8px;}
     .o {text-align:right; padding-right:10px}
     .c1 {width:65px; text-align:center}
     .c2 {width:250px}
@@ -240,22 +239,65 @@ if (isset($_POST['submit'])) {
 
 <body onload="resizeList()" onresize="resizeList()">
 
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&blank=' . $_GET['blank'] . '&paperID=' . $_GET['paperID']; ?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&paperID=' . $_GET['paperID']; ?>">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/dictionary.png" width="32" height="32 alt="Word List" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['uniqueanswers']; ?></td></tr>
+  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/dictionary.png" width="32" height="32" alt="Word List" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['useranswers']; ?></strong></td></tr>
   </table>
 
   <div class="msg"><?php echo $string['msg']; ?></div>
 
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
-  <tr><th style="width:70px"><?php echo $string['correct']; ?></th><th style="width:250px"><?php echo $string['wordphrase']; ?></th><th><?php echo $string['occurrence']; ?></th></tr>
+  <tr>
+<?php
+$q_vars = $question_obj->get_question_vars();
+$alpha = ' class="alpha"';
+foreach ($q_vars as $var => $dummy) {
+?>
+  <th style="width: 50px"<?php echo $alpha ?>><?php echo $var ?></th>
+<?php
+  if ($alpha != '') {
+    $alpha = '';
+  }
+}
+?>
+      <th style="width: 80px"><?php echo $string['useranswer']; ?></th>
+      <!-- <th style="width: 50px"><?php echo $string['units']; ?></th> -->
+      <th style="width: 80px"><?php echo $string['correctans']; ?></th>
+      <th style="width: 80px"><?php echo $string['distance']; ?></th>
+      <th style="width: 50px"><?php echo $string['fullmarks']; ?></th>
+      <th style="width: 50px"><?php echo $string['partialmarks']; ?></th>
+      <th style="width: 50px"><?php echo $string['nomarks']; ?></th>
+      <th class="omega"><?php echo $string['reason']; ?></th>
+    </tr>
   </table>
 
   <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:0px 4px 8px 4px; font-size:90%" id="list">
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
 <?php
+foreach ($log_answers as $distance => $answer) {
+  echo '<tr>';
+  $u_vars = $answer['answer_obj']->get_user_vars();
+  foreach ($u_vars as $label => $value) {
+    echo "<td style=\"width: 50px\">$value</td>";
+  }
+  echo "<td style=\"width: 80px\">{$answer['answer_obj']->get_user_answer_raw()}</td>";
+  // echo '<td style=\"width: 50px\"></td>';
+  echo "<td style=\"width: 80px\">{$answer['answer_obj']->get_real_answer()}</td>";
+  echo '<td style="width: 80px">' . htmlentities($distance) . '</td>';
+?>
+  <td style="width: 50px"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="full" /></td>
+  <td style="width: 50px"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="partial" /></td>
+  <td style="width: 50px"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="none" /></td>
+  <td><?php echo $string['addreason'] ?></td>
+
+  </tr>
+<?php
+}
+
+
 // Make sure words that are already defined as correct appear in the list even if no users have
 // given them as an answer
+/*
 $unique_list = array_fill_keys($blanks, 0);
 
 foreach ($log_answers as $log_type) {
@@ -292,11 +334,10 @@ foreach ($unique_list as $word=>$occurrance) {
   }
   $word_count++;
 }
+*/
 ?>
 </table>
 </div>
-
-<input type="hidden" name="word_count" value="<?php echo $word_count; ?>" />
 <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="window.close();" /></div>
 
 </form>

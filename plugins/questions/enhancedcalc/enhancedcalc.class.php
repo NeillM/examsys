@@ -684,7 +684,15 @@ class EnhancedCalc extends Question implements questionInterface {
     $marks = $this->settings['marks_correct'];
   }
 
-  public function get_vars() {
+  /**
+   * Get the veriables as defined in the question
+   * @return array Array of defined variables indexed by the label (e.g. $A)
+   */
+  public function get_question_vars() {
+    return (isset($this->settings['vars'])) ? $this->settings['vars'] : array();
+  }
+
+  public function get_user_vars() {
     return $this->useranswer['vars'];
   }
 
@@ -707,6 +715,10 @@ class EnhancedCalc extends Question implements questionInterface {
    */
   public function get_user_answer_raw() {
     return (isset($this->useranswer['uans'])) ? $this->useranswer['uans'] : '';
+  }
+
+  public function get_answer_distance() {
+    return (isset($this->useranswer['cans_dist'])) ? $this->useranswer['cans_dist'] : false;
   }
 
 }
