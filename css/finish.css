@@ -16,6 +16,9 @@ blockquote {
 .label {
   color:#C00000
 }
+.err {
+  color:#C00000
+}
 .usermk {
   padding-left:8px;
   padding-right:8px;

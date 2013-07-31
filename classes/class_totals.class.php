@@ -1144,7 +1144,9 @@ class ClassTotals {
       $single_mark = $this->getUserMark($q_id, $user_answer, $mark, $tmp_user_mark_array);
       $tmp_mark += $single_mark;
 
-      if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
+      if (($q_type == 'textbox' or $q_type == 'enhancedcalc') and !is_numeric($mark)) {
+        $marking_complete = 0;
+      }
       $old_duration   = $duration;
       $old_screen     = $screen;
       $old_metadataID = $metadataID;

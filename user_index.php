@@ -237,7 +237,7 @@ $remaining_seconds = '';
  * BP If the duration is set then create a timer to calculate and display the remaining time
  */
 $extra_time = null;
-
+$remaining_time = 0;
 $log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 // $log_metadata->get_record will return true if this user has stared this exam. false otherwise
 $exam_started = $log_metadata->get_record();

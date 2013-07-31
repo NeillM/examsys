@@ -361,7 +361,7 @@ if (count($moduleIDs) > 0) {
 <tr><td class="ico"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="greymenuitem"><?php echo $string['editquestion']; ?></td></tr>
 <tr><td class="ico"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon_grey.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="greymenuitem"><?php echo $string['information']; ?></td></tr>
 <?php
-  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin'))) {
+  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->get_summative_lock() != 1) {
     echo "<tr><td class=\"ico\"><img src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16_grey.png\" width=\"16\" height=\"16\" alt=\"\" /></td><td class=\"greymenuitem\">" . $string['midexamclarification'] . "</td></tr>\n";
   }
 ?>
@@ -375,7 +375,7 @@ if (count($moduleIDs) > 0) {
 <tr><td class="ico"><a id="edit" onclick="editQuestion(); return false;" href="#"><img style="cursor:hand" onclick="editQuestion(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><a id="information" href="#" onclick="questionInfo(); return false;"><img style="cursor:hand" onclick="questionInfo(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <?php
-  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin'))) {
+  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->get_summative_lock() != 1) {
     echo "<tr><td class=\"ico\"><a id=\"clarification\" href=\"#\" onclick=\"examClarification(); return false;\"><img style=\"cursor:hand\" onclick=\"examClarification(); return false;\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['information'] . "\" /></a></td><td class=\"menuitem\"><a id=\"clarification\" href=\"#\" onclick=\"examClarification(); return false;\">" . $string['midexamclarification'] . "</a></td></tr>\n";
   }
 ?>
@@ -389,12 +389,12 @@ if (count($moduleIDs) > 0) {
 <tr><td class="ico"><img style="cursor:hand" onclick="editQuestion(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><img style="cursor:hand" onclick="questionInfo(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <?php
-  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin'))) {
+  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->get_summative_lock() != 1) {
     echo "<tr><td class=\"ico\"><a id=\"clarification\" href=\"#\" onclick=\"examClarification(); return false;\"><img style=\"cursor:hand\" onclick=\"examClarification(); return false;\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['information'] . "\" /></a></td><td class=\"menuitem\"><a id=\"clarification\" href=\"#\" onclick=\"examClarification(); return false;\">" . $string['midexamclarification'] . "</a></td></tr>\n";
   }
 ?>
 <tr><td class="ico"><img style="cursor:hand" onclick="copyToPaper(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
-<tr><td class="ico"><img style="cursor:hand" onclick="linkToPaper(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" width="16" height="16" alt="Link 2 Paper" border="0" /></td><td class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><?php echo $string['linktopaper']; ?></a></td></tr>
+<tr><td class="ico"><img style="cursor:hand" onclick="linkToPaper(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" width="16" height="16" alt="Link 2 Paper" /></td><td class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><?php echo $string['linktopaper']; ?></a></td></tr>
 <tr><td class="ico"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" width="16" height="16" alt="<?php echo $string['removefrompaper']; ?>" /></td><td class="greymenuitem"><?php echo $string['removefrompaper']; ?></td></tr>
 <tr><td class="ico"><a id="preview" onclick="startPaper(0, true); return false;" href="#"><img style="cursor:hand" onclick="startPaper(0, true); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play.png" width="16" height="16" alt="<?php echo $string['previewquestion']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="startPaper(0, true); return false;" href="#"><?php echo $string['previewquestion']; ?></a></td></tr>
 </table>
@@ -499,7 +499,7 @@ if ($properties->get_paper_type() == '2') {
         $internal_array[$tmp_internal] = 0;
       }
 
-       $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal' GROUP BY reviewer, reviewed");
+      $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal' GROUP BY reviewer, reviewed");
       $stmt->bind_param('i', $_GET['paperID']);
       $stmt->execute();
       $stmt->bind_result($review_records, $reviewer);
