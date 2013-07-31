@@ -33,7 +33,7 @@ $paperID   = check_var('paperID', 'POST', true, false, true);
 $startdate = check_var('startdate', 'POST', true, false, true);
 $enddate   = check_var('enddate', 'POST', true, false, true);
 
-$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', '', $mysqli);
 $report->compile_report(true);

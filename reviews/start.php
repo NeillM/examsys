@@ -92,10 +92,8 @@ $stmt->free_result();
 $stmt->close();
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($property_id, $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);    //this will exit php
-}
+$propertyObj = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
+
 $marking = $propertyObj->get_marking();
 
 // Get standards setting data

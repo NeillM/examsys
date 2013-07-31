@@ -51,7 +51,7 @@ if (!isset($folder)) {
 }
 
 if (!isset($properties)) {
-  $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
+  $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 }
 
 $modules_array = array();
