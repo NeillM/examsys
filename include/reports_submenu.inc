@@ -31,12 +31,12 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 ?>
   function go(url, evt) {
     $('#stats_menu').hide();
-    if (document.getElementById('completerpt').checked) {
+    if ($('#completerpt').attr('checked')) {
       completerpt = 1;
     } else {
       completerpt = 0;
     }
-    window.location.href = url + "paperID=" + document.stats_menu.paperID.value + "&startdate=" + document.stats_menu.start_year.value + document.stats_menu.start_month.value + document.stats_menu.start_day.value + document.stats_menu.start_time.value + "&enddate=" + document.stats_menu.end_year.value + document.stats_menu.end_month.value + document.stats_menu.end_day.value + document.stats_menu.end_time.value + "&repcourse=" + document.stats_menu.repcourse.value + "&repyear=" + document.stats_menu.repyear.value + "&sortby=surname&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&complete=" + completerpt;
+    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_time').val() + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_time').val() + "&repcourse=" + $('#repcourse').val() + "&repyear=" + $('#repyear').val() + "&sortby=surname&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&complete=" + completerpt;
     evt.cancelBubble = true;
     return false;
   }
@@ -52,7 +52,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     }
 
     $('#stats_menu').hide();
-    window.location.href = url + "paperID=" + document.stats_menu.paperID.value + "&startdate=" + document.stats_menu.start_year.value + document.stats_menu.start_month.value + document.stats_menu.start_day.value + document.stats_menu.start_time.value + "&enddate=" + document.stats_menu.end_year.value + document.stats_menu.end_month.value + document.stats_menu.end_day.value + document.stats_menu.end_time.value + "&repmodule=" + document.stats_menu.repmodule.value + "&repcourse=" + document.stats_menu.repcourse.value + extra_data + "&module=<?php echo $module_list[0]; ?>";
+    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_time').val() + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_time').val() + "&repmodule=" + $('#repmodule').val() + "&repcourse=" + $('#repcourse').val() + extra_data + "&module=<?php echo $module_list[0]; ?>";
   }
   <?php
   } else {
@@ -60,7 +60,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   function go(url, evt) {
     var extra_data = '';
 
-    for (i=1; i<document.getElementById('meta_no').value; i++) {
+    for (i=1; i<$('#meta_no').val(); i++) {
       meta_ref = 'meta' + i;
       extra_data += '&meta' + i + '=' + $('#' + meta_ref).val();
     }
@@ -71,7 +71,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     } else {
       absent = '&absent=0';
     }
-    if (document.getElementById('studentsonly').checked == true) {
+    if ($('#studentsonly').attr('checked')) {
       studentsonly = '&studentsonly=1';
     } else {
       studentsonly = '&studentsonly=0';
@@ -85,9 +85,8 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
 ?>
   function checkAll() {
-    box = document.stats_menu.direction;
-    if (box.selectedIndex == 0) {
-      document.stats_menu.percent.selectedIndex = 7;    
+    if ($('#direction')[0].selectedIndex == 0) {
+      document.getElementById('percent').selectedIndex = 7;    
     }
   }
 </script>
@@ -294,7 +293,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   
   echo "<tr><td>" . $string['course'] . "</td><td><select name=\"repcourse\" id=\"repcourse\" style=\"width:375px\">\n";
   echo "<option value=\"%\">" . $string['anycourse'] . "</option>\n";
-  $result = $mysqli->prepare("SELECT DISTINCT student_grade, description FROM log_metadata, courses WHERE log_metadata.student_grade=courses.name AND paperID=? ORDER BY student_grade");
+  $result = $mysqli->prepare("SELECT DISTINCT student_grade, description FROM log_metadata, courses WHERE log_metadata.student_grade = courses.name AND paperID = ? ORDER BY student_grade");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($student_grade, $description);
@@ -348,7 +347,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   // Get any metadata fields
   $metadata = array();
   if (count($moduleIDs) > 0) {
-    $result = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE users_metadata.idMod=modules.id AND modules.moduleid IN ('" . implode("','",$moduleIDs) . "') ORDER BY type, value");
+    $result = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.moduleid IN ('" . implode("','",$moduleIDs) . "') ORDER BY type, value");
     $result->execute();
     $result->bind_result($meta_type, $meta_value);
     while ($result->fetch()) {
@@ -384,7 +383,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['reviews'] . "</div>\n";
     echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/review_comments.php?type=internal&',event)\">" . $string['internalpeerreview'] . "</a></div>\n";
     
-    $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper=? AND papers.question = questions.q_id AND q_type='sct'");
+    $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type='sct'");
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
     $result->bind_result($sct_no);
@@ -399,8 +398,17 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
     echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
     
+    if ($properties->get_paper_type() == '2') {
+      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['calculationquestions'] . "</div>\n";
+      if ($unmarked_enhancedcalc) {
+        echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/mark_enhancedcalc.php?',event)\">" . $string['markallquestions'] . "</a></div>\n";
+      } else {
+        echo "<div style=\"line-height:150%; color:#808080\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;" . $string['markallquestions'] . "</div>\n";
+      }
+    }
+    
     if ($properties->get_paper_type() != '5') {
-      $result = $mysqli->prepare("SELECT COUNT(q_id) AS textbox_no FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id AND q_type='textbox'");
+      $result = $mysqli->prepare("SELECT COUNT(q_id) AS textbox_no FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type = 'textbox'");
       $result->bind_param('i', $_GET['paperID']);
       $result->execute();
       $result->bind_result($textbox_no);

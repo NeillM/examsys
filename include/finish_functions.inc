@@ -416,7 +416,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   }
 
   for ($question = 1; $question <= $q_no; $question++) {
-    if ($paper_type != '2' and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
+    if (($paper_type != '2' or $userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
       require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
       $configObj = Config::get_instance();
       $enhancedcalc = new enhancedcalc($configObj);
@@ -425,10 +425,10 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
       if ($returnarray !== Q_MARKING_UNMARKED) {
         //save the extra data back into the log record.
-        $sql = "UPDATE log$paper_type set mark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
+        $sql = "UPDATE log$paper_type set mark = ?, adjmark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
         $storemark = $mysqlidb->prepare($sql);
         $new_useranswerstring = $enhancedcalc->useranswer_to_string();
-        $storemark->bind_param('ddsi', $enhancedcalc->qmark, $enhancedcalc->totalpos, $new_useranswerstring, $paper[$question]['uniqid']);
+        $storemark->bind_param('dddsi', $enhancedcalc->qmark, $enhancedcalc->qmark, $enhancedcalc->totalpos, $new_useranswerstring, $paper[$question]['uniqid']);
         $storemark->execute();
         $enhancedcalc->exportsave($paper[$question]);
       }
@@ -762,6 +762,8 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         if (!isset($configObj)) {
           $configObj = Config::get_instance();
         }
+        $tmp_fback = $paper[$question]['correct_fback'];
+
         $paper[$question]['object'] = new enhancedcalc($configObj);
         $paper[$question]['object']->load($paper[$question]);
         $paper[$question]['object']->render_feedback(array('tmp_exclude' => $tmp_exclude, 'hide_if_unanswered' => $hide_if_unanswered, 'tmp_display_correct_answer' => $tmp_display_correct_answer, 'tmp_display_students_response' => $tmp_display_students_response, 'question' => $question, 'tmp_fback' => $tmp_fback, 'tmp_display_feedback' => $tmp_display_feedback));

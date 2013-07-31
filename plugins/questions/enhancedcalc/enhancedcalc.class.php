@@ -388,8 +388,7 @@ class enhancedcalc extends Question implements questionInterface {
   }
 
   public function render_feedback($extra = array()) {
-    global $string, $tmp_fback;
-    print "ENHANCED CALC QUESTION FEEDBACK";
+    global $string;
 
     //make sure data is arrays not encoded
     if (!is_array($this->useranswer)) {
@@ -423,12 +422,7 @@ class enhancedcalc extends Question implements questionInterface {
     $saved_response = $this->useranswer['uans'];
     $part_id = 1;
 
-
     $tmp_fback = $this->correct_fback;
-
-
-    //echo_content($tmp_leadin);
-
 
     echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";
     if ($extra['tmp_display_correct_answer'] == '1') {
@@ -440,11 +434,7 @@ class enhancedcalc extends Question implements questionInterface {
     }
 
     $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-    /*
-        if (!isset($this->settings['units'])) {
-          $this->settings['units'] = $this->useranswer['ans']['units'];
-        }
-        */
+
     if ($this->useranswer['uans'] == '') {
       echo "<td>" . display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
 
@@ -462,17 +452,13 @@ class enhancedcalc extends Question implements questionInterface {
       } else {
         echo display_response($extra['tmp_display_students_response'], 'unmarked');
       }
-      if ((isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_UNMARKED) or !isset($this->useranswer['status']['overall'])) {
-        echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="UNMARKED">';
-      } else {
-        echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'] . '" />'; //. $this->settings['units'];
-      }
+      echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uans'] . ' ' . $this->useranswer['uansunit'] . '" />';
     }
     if ($extra['tmp_display_correct_answer'] == '1') {
       if (!isset($this->useranswer['status'])) {
-        echo ' <strong>(<span style="color:#C00000">NOT MARKED YET!</span>)</strong>';
+        echo ' <strong>(<span class="err">' .$string['unmarked'] . '</span>)</strong>';
       } elseif (!isset($this->useranswer['cans'])) {
-        echo ' <strong>(<span style="color:#C00000">error!</span>)</strong>';
+        echo ' <strong>(<span class="err">error!</span>)</strong>';
       } else {
         echo ' <strong>(' . $this->useranswer['cans'] . ' ';
         if ($this->useranswer['ans']['units_used'] != '') echo ' ' . $this->useranswer['ans']['units_used'];
@@ -484,11 +470,11 @@ class enhancedcalc extends Question implements questionInterface {
 
     if (isset($this->useranswer['cans'])) {
       if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
-        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . $this->settings['fulltoltyp'];
+        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . str_replace('#', '', $this->settings['fulltoltyp']);
         if ($this->settings['fulltoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_fullansneg'] . " - " . $this->useranswer['ans']['tolerance_fullans'] . ")";
       }
       if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
-        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . $this->settings['parttoltyp'];
+        echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . str_replace('#', '', $this->settings['parttoltyp']);
         if ($this->settings['parttoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_partialansneg'] . " - " . $this->useranswer['ans']['tolerance_partialans'] . ")";
       }
     }
