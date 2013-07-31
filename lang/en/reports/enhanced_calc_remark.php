@@ -27,3 +27,5 @@ $string['nomarks'] = 'No marks';
 $string['reason'] = 'Reason';
 $string['unknown'] = '<unknown>';
 $string['addreason'] = 'Add reason';
+$string['nomarkmsg'] = 'No mark override selected';
+$string['saveerror'] = 'Error saving mark. Please try again';

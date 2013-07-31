@@ -162,8 +162,7 @@ if (isset($_POST['submit'])) {
     }
   }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -210,7 +209,8 @@ if (isset($_POST['submit'])) {
     .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
   </style>
 
-  <script language="JavaScript">
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript">
     function toggle(objectID) {
       if (document.getElementById(objectID).className == 'r2') {
         document.getElementById(objectID).className = 'r1';
@@ -236,10 +236,69 @@ if (isset($_POST['submit'])) {
       winH -= 160;
       document.getElementById('list').style.height = winH + 'px';
     }
+
+    var doSuccess = function (data) {
+      if (data != 'OK') {
+        alert(langStrings['saveerror']);
+        return false;
+      }
+
+      alert('OK!');
+
+      // if ($('#mark' + id).val() == 'NULL') {
+      //   $('#ans_' + id).removeClass('marked').effect("highlight", {}, 1500);;
+      // } else {
+      //   $('#ans_' + id).addClass('marked').effect("highlight", {}, 1500);;
+      // }
+
+    }
+
+
+    var doError = function () {
+      alert(langStrings['saveerror']);
+    }
+
+    var saveRow = function (e) {
+      var logID = $(this).data('logid');
+      var newMark = $('input[name=mark_' + logID + ']:checked').val();
+      var reason = $('#reason_' + logID).val();
+      var logType = $('#log_type_' + logID).val();
+
+      if (typeof newMark == 'undefined') {
+        alert('<?php echo $string['nomarkmsg'] ?>');
+      } else {
+        $.post('../ajax/reports/save_enhancedcalc_override.php',
+          {
+            log_id: logID,
+            q_id: $('#q_id').val(),
+            paper_id: $('#paper_id').val(),
+            marker_id: $('#marker_id').val(),
+            mark_type: newMark,
+            reason: reason,
+            log: logType
+          },
+          doSuccess
+        ).fail(doError);
+      }
+    }
+
+    $(function () {
+      resizeList();
+      $(window).resize(resizeList);
+
+       $.ajaxSetup({ timeout: 3000 });
+       $('#list').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
+         doError();
+       });
+
+      $('.save-row').click(saveRow);
+    })
+
+    langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
   </script>
 </head>
 
-<body onload="resizeList()" onresize="resizeList()">
+<body>
 
 <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&paperID=' . $_GET['paperID']; ?>">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
@@ -269,7 +328,8 @@ foreach ($q_vars as $var => $dummy) {
       <th class="shortcolumn"><?php echo $string['fullmarks']; ?></th>
       <th class="shortcolumn"><?php echo $string['partialmarks']; ?></th>
       <th class="shortcolumn"><?php echo $string['nomarks']; ?></th>
-      <th class="omega"><?php echo $string['reason']; ?></th>
+      <th><?php echo $string['reason']; ?></th>
+      <th class="omega">&nbsp;</th>
     </tr>
   </table>
 
@@ -287,60 +347,25 @@ foreach ($log_answers as $distance => $answer) {
   echo "<td class=\"longcolumn\">{$answer['answer_obj']->get_real_answer()}</td>";
   echo '<td class="longcolumn">' . htmlentities($distance) . '</td>';
 ?>
-  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="full" /></td>
+  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="correct" /></td>
   <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="partial" /></td>
-  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="none" /></td>
-  <td><a href="#"><?php echo $string['addreason'] ?></a></td>
+  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="incorrect" /></td>
+  <td><input type="textbox" id="reason_<?php echo $answer['id'] ?>" name="reason_<?php echo $answer['id'] ?>" size="30" maxlength="255" /></td>
+  <td>
+    <button id="save_<?php echo $answer['id'] ?>" type="button" data-logid="<?php echo $answer['id'] ?>" class="save-row"><?php echo $string['save'] ?></button>
+    <input type="hidden" id="log_type_<?php echo $answer['id'] ?>" name="log_type_<?php echo $answer['id'] ?>" value="<?php echo $answer['paper_type'] ?>" />
+  </td>
   </tr>
 <?php
 }
-
-
-// Make sure words that are already defined as correct appear in the list even if no users have
-// given them as an answer
-/*
-$unique_list = array_fill_keys($blanks, 0);
-
-foreach ($log_answers as $log_type) {
-  foreach ($log_type as $id=>$log_answer) {
-    $parts = explode('|', $log_answer);
-
-    $word = strtolower(trim($parts[$_GET['blank']]));
-
-    if ($word != 'u') {
-      if (isset($unique_list[$word])) {
-        $unique_list[$word]++;
-      } else {
-        $unique_list[$word] = 1;
-      }
-    }
-  }
-}
-
-$word_count = 0;
-ksort($unique_list);
-foreach ($unique_list as $word=>$occurrance) {
-  $match = false;
-  foreach ($blanks as $blank) {
-    if (strtolower($word) == strtolower($blank)) {
-      $match = true;
-      $word = $blank;
-    }
-  }
-
-  if ($match) {
-    echo '<tr id="div' . $word_count . '" class="r2"><td class="c1"><input type="checkbox" onclick="toggle(\'div'. $word_count . '\')" name="word' . $word_count . '" value="' . $word . '" checked="checked" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
-  } else {
-    echo '<tr id="div' . $word_count . '" class="r1"><td class="c1"><input type="checkbox" onclick="toggle(\'div'. $word_count . '\')" name="word' . $word_count . '" value="' . $word . '" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
-  }
-  $word_count++;
-}
-*/
 ?>
 </table>
 </div>
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="window.close();" /></div>
+<div style="text-align:center"><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="window.close();" /></div>
 
+  <input type="hidden" id="q_id" name="q_id" value="<?php echo $q_id ?>" />
+  <input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID ?>" />
+  <input type="hidden" id="marker_id" name="marker_id" value="<?php echo $userObject->get_user_ID() ?>" />
 </form>
 </body>
 </html>

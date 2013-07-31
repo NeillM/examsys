@@ -23,8 +23,8 @@
  * @package
  */
 
-require_once '../classes/mathsutils.class.php';
-require_once('../classes/question.class.php');
+require_once $cfg_web_root . 'classes/mathsutils.class.php';
+require_once $cfg_web_root . 'classes/question.class.php';
 
 class EnhancedCalc extends Question implements questionInterface {
 
@@ -694,6 +694,22 @@ class EnhancedCalc extends Question implements questionInterface {
 
   public function get_user_vars() {
     return $this->useranswer['vars'];
+  }
+
+  /**
+   * Get the marks as defined for the question
+   * @return array Array of marks
+   */
+  public function get_question_marks() {
+    $marks_full = isset($this->settings['marks_correct']) ? $this->settings['marks_correct'] : false;
+    $marks_partial = isset($this->settings['marks_partial']) ? $this->settings['marks_partial'] : false;
+    $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : false;
+
+    if ($marks_full and $marks_partial and $marks_incorrect) {
+      return array('correct' => $marks_full, 'partial' => $marks_partial, 'incorrect' => $marks_incorrect);
+    } else {
+      return false;
+    }
   }
 
   public function get_real_answer() {

@@ -1967,7 +1967,7 @@ QUERY;
           `q_id` int(11) DEFAULT NULL,
           `rating` text,
           `q_parts` varchar(50) DEFAULT NULL,
-          `log4_overallID` int(11) unsigned DEFAULT NULL,          
+          `log4_overallID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -2141,6 +2141,21 @@ QUERY;
           PRIMARY KEY (`lti_user_key`),
           KEY `lti_user_equ` (`lti_user_equ`)
          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['marking_override'] = <<<QUERY
+        CREATE TABLE `marking_override` (
+          `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+          `log_id` INT(11) UNSIGNED NOT NULL ,
+          `log_type` TINYINT(4) UNSIGNED NOT NULL ,
+          `q_id` INT(4) UNSIGNED NOT NULL ,
+          `marker_id` INT(10) UNSIGNED NOT NULL ,
+          `date_marked` DATETIME NOT NULL ,
+          `new_mark_type` ENUM('full', 'partial', 'none') NOT NULL ,
+          `reason` VARCHAR(255) NULL ,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `log_id` (`log_id`, `log_type`)
+          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['modules'] = <<<QUERY
