@@ -94,15 +94,19 @@ Class Question {
       $this->settings = $settings;
     }
   }
-  
+
   function set_useranswer($useranswer) {
-    $this->useranswer = $useranswer;
+    if (!is_array($useranswer)) {
+      $this->useranswer = json_decode($useranswer, true);
+    } else {
+      $this->useranswer = $useranswer;
+    }
   }
 
   function add_to_useranswer($key, $value) {
     $this->useranswer[$key] = $value;
   }
-  
+
   function export_save(&$array) {
     $classvar = get_object_vars($this);
     foreach ($classvar as $key => $value) {

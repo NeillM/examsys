@@ -701,6 +701,14 @@ class EnhancedCalc extends Question implements questionInterface {
     }
   }
 
+  /**
+   * Return the answer as entered by the user
+   * @return string The user's raw answer
+   */
+  public function get_user_answer_raw() {
+    return (isset($this->useranswer['uans'])) ? $this->useranswer['uans'] : '';
+  }
+
 }
 
 ?>
