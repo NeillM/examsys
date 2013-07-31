@@ -197,7 +197,9 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
-    th {font-weight:normal; color:#001687; text-align: left}
+    th {font-weight:normal; color:#001687; text-align: left; vertical-align: bottom}
+    .shortcolumn {width: 50px}
+    .longcolumn {width: 90px}
     .alpha {padding-left: 8px;}
     .omega {padding-right: 8px;}
     .o {text-align:right; padding-right:10px}
@@ -250,23 +252,23 @@ if (isset($_POST['submit'])) {
   <tr>
 <?php
 $q_vars = $question_obj->get_question_vars();
-$alpha = ' class="alpha"';
+$alpha = ' alpha';
 foreach ($q_vars as $var => $dummy) {
 ?>
-  <th style="width: 50px"<?php echo $alpha ?>><?php echo $var ?></th>
+  <th class="shortcolumn<?php echo $alpha ?>"><?php echo $var ?></th>
 <?php
   if ($alpha != '') {
     $alpha = '';
   }
 }
 ?>
-      <th style="width: 80px"><?php echo $string['useranswer']; ?></th>
-      <!-- <th style="width: 50px"><?php echo $string['units']; ?></th> -->
-      <th style="width: 80px"><?php echo $string['correctans']; ?></th>
-      <th style="width: 80px"><?php echo $string['distance']; ?></th>
-      <th style="width: 50px"><?php echo $string['fullmarks']; ?></th>
-      <th style="width: 50px"><?php echo $string['partialmarks']; ?></th>
-      <th style="width: 50px"><?php echo $string['nomarks']; ?></th>
+      <th class="longcolumn"><?php echo $string['useranswer']; ?></th>
+      <!-- <th class="shortcolumn"><?php echo $string['units']; ?></th> -->
+      <th class="longcolumn"><?php echo $string['correctans']; ?></th>
+      <th class="longcolumn"><?php echo $string['distance']; ?></th>
+      <th class="shortcolumn"><?php echo $string['fullmarks']; ?></th>
+      <th class="shortcolumn"><?php echo $string['partialmarks']; ?></th>
+      <th class="shortcolumn"><?php echo $string['nomarks']; ?></th>
       <th class="omega"><?php echo $string['reason']; ?></th>
     </tr>
   </table>
@@ -278,16 +280,16 @@ foreach ($log_answers as $distance => $answer) {
   echo '<tr>';
   $u_vars = $answer['answer_obj']->get_user_vars();
   foreach ($u_vars as $label => $value) {
-    echo "<td style=\"width: 50px\">$value</td>";
+    echo "<td class=\"shortcolumn\">$value</td>";
   }
-  echo "<td style=\"width: 80px\">{$answer['answer_obj']->get_user_answer_raw()}</td>";
-  // echo '<td style=\"width: 50px\"></td>';
-  echo "<td style=\"width: 80px\">{$answer['answer_obj']->get_real_answer()}</td>";
-  echo '<td style="width: 80px">' . htmlentities($distance) . '</td>';
+  echo "<td class=\"longcolumn\">{$answer['answer_obj']->get_user_answer_raw()}</td>";
+  // echo '<td class=\"shortcolumn\"></td>';
+  echo "<td class=\"longcolumn\">{$answer['answer_obj']->get_real_answer()}</td>";
+  echo '<td class="longcolumn">' . htmlentities($distance) . '</td>';
 ?>
-  <td style="width: 50px"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="full" /></td>
-  <td style="width: 50px"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="partial" /></td>
-  <td style="width: 50px"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="none" /></td>
+  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="full" /></td>
+  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="partial" /></td>
+  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="none" /></td>
   <td><?php echo $string['addreason'] ?></td>
 
   </tr>
