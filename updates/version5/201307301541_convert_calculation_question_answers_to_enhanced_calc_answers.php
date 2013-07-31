@@ -8,7 +8,7 @@
 
 require_once $cfg_web_root . 'classes/stringutils.class.php';
 
-echo "<li>Converting Calculation questions to enhanced calculation questions</li>";
+echo "<li>Converting Calculation answers to enhanced calculation answers</li>";
 
 set_time_limit(0);
 $LOG = '0';
@@ -16,26 +16,22 @@ $logarray = array('0', '1', '2', '3', '0_deleted', '1_deleted', '_late');
 
 foreach ($logarray as $LOG) {
     $loop=0;
-   // print "<br>log$LOG<br>";
+
 
     $sql = "select questions.q_id,id,user_answer,settings from questions,log$LOG where q_type='calculation' and questions.q_id=log$LOG.q_id;";
     $sql = "select questions.q_id,id,user_answer,settings from questions,log$LOG where q_type='enhancedcalc' and questions.q_id=log$LOG.q_id;";
 
- //   print $sql . '<br>';
+
     $result = $mysqli->prepare("$sql");
     $result->execute();
     $result->store_result();
     $result->bind_result($qid, $uid, $user_answer, $settings);
 
 
-   // print "kkk";
- //   print $mysqli->error;
+
 
     while ($result->fetch()) {
-//print "kdgdkgjd";
-        //   print $user_answer . '  ' . strpos($user_answer, '|') . '        ';
         if (strpos($user_answer, '{') !== false) {
-            //print " ";
         } else {
             print '.';
             unset($statusdata);
@@ -167,7 +163,7 @@ foreach ($logarray as $LOG) {
             //  print "<br><br>";
 
             $jsoned = json_encode($new_user_answer);
-print "UPD";
+
             $sql = "UPDATE log$LOG set user_answer=? where id=?";
             $update = $mysqli->prepare("$sql");
             $update->bind_param('si', $jsoned, $uid);
@@ -176,6 +172,7 @@ print "UPD";
             $loop++;
             if($loop%200==0) {
                 echo '<br>';
+                @ob_flush();
             }
         }
 
@@ -183,4 +180,4 @@ print "UPD";
     }
 
 }
-print "DONE";
+

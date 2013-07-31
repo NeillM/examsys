@@ -56,7 +56,7 @@ class enhancedcalc extends Question implements questionInterface {
     }
   }
 
-  //arange the possible fromula by units
+  //arrange the possible formula by units
   function build_formula_by_units($ans) {
     $formula_by_units = array();
     foreach ($ans as $key => $value) {
@@ -136,7 +136,7 @@ class enhancedcalc extends Question implements questionInterface {
 
       /*
        *
-       *  CACULATE REQURED NUMERIC VALUES
+       *  CALCULATE REQURED NUMERIC VALUES
        *
        */
       $this->useranswer['cans'] = $enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
@@ -205,6 +205,16 @@ class enhancedcalc extends Question implements questionInterface {
        * MARKING
        *
        */
+
+        if(trim($this->useranswer['uansnumb'])=='') {
+            //not answered
+            $this->qmark = 0;
+            $returnstatus = Q_MARKING_NOTANS;
+            $this->useranswer['status']['overall'] = $returnstatus;
+            return $returnstatus;
+        }
+
+
       if ($this->useranswer['status']['units'] === false) {
         //we can't mach the units so this question must be wrong!
         $this->qmark = $this->settings['marks_incorrect'];

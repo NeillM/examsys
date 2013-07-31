@@ -108,8 +108,9 @@ if ($updater_utils->count_rows("SELECT q_id from questions where q_type='calcula
     $update->execute();
     echo '.';
     $loop++;
-    if($loop%100==0) {
+    if($loop%200==0) {
       echo '<br>';
+        @ob_flush();
     }
   }
 
