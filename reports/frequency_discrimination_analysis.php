@@ -743,7 +743,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "$html</td>";
 
           if ($display_method == 'textboxes') {
-            echo "<td><a href=\"#\" onclick=\"return manCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
+            echo "<td><a href=\"#\" onclick=\"return blankCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
           }
           echo "</tr>";
         }
@@ -820,9 +820,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
         if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
-        echo ">$leadin</td></tr>\n";
-        echo "<tr><td colspan=\"6\">&nbsp;</td></tr>";
-        echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"4\">" . dStats($d, $q_id, 1) . "</td></tr>";
+        echo ">$leadin</td>";
+        echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
+        echo "</tr>\n";
+        echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
+        echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";
         break;
       case 'true_false':
         if (!isset($log[$q_id][1]['t'])) $log[$q_id][1]['t'] = 0;
@@ -1697,8 +1699,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       }
     }
 
-    function manCorrect(q_id, part_no) {
+    function blankCorrect(q_id, part_no) {
       window.open("blank_remark.php?q_id=" + q_id + "&blank=" + part_no + "&paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=500,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+
+      return false;
+    }
+
+    function clacCorrect(q_id) {
+      window.open("enhanced_calc_remark.php?q_id=" + q_id + "paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=500,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
 
       return false;
     }
