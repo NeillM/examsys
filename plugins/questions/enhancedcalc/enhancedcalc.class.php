@@ -462,7 +462,7 @@ class enhancedcalc extends Question implements questionInterface {
       } else {
         echo display_response($extra['tmp_display_students_response'], 'unmarked');
       }
-      echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uans'] . ' ' . $this->useranswer['uansunit'] . '" />';
+      echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'] . '" />';
     }
     if ($extra['tmp_display_correct_answer'] == '1') {
       if (!isset($this->useranswer['status'])) {
@@ -687,13 +687,13 @@ class enhancedcalc extends Question implements questionInterface {
   public function get_vars() {
     return $this->useranswer['vars'];
   }
-  
+
   public function get_real_answer() {
     $units = $this->settings['answers'][0]['units'];
 
     $this->addtouseranswer('uans', "1 $units");   // Set a bogus answer before marking.
     $this->calculateUserMark();
-    
+
     if ($this->settings['show_units'] == 'on') {
       return $this->useranswer['cans'];
     } else {
