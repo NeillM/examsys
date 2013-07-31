@@ -31,11 +31,7 @@ require_once '../classes/paperproperties.class.php';
 require_once '../classes/class_totals.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
-$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
-if (!$properties) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 // Check if the exam could still be going on.
 if (time() < $properties->get_end_date()) {

@@ -36,12 +36,7 @@ $paperID  = check_var('paperID', 'GET', true, false, true);
 $userID   = check_var('userID', 'GET', true, false, true);
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
-
-$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-if (!$propertyObj) {    // Exit if paper does not exist
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $log_type = $propertyObj->get_paper_type();
 

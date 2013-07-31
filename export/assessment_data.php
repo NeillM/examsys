@@ -38,10 +38,7 @@ $enddate    = check_var('enddate', 'GET', true, false, true);
 $displayDebug = false; //disable debug output in this script as it effects the output
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);    //this will exit php
-}
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $demo = is_demo($userObject);
 

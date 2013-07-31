@@ -35,12 +35,8 @@ $q_id     = check_var('q_id', 'GET', true, false, true);
 $paperID  = check_var('paperID', 'GET', true, false, true);
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
+$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
 
-if (!$propertyObj) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
 $paper_type = $propertyObj->get_paper_type();
 
 // Read whole question from database.

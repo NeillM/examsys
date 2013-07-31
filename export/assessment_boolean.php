@@ -36,10 +36,7 @@ $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);    //this will exit php
-}
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $paper            = $propertyObj->get_paper_title();
 $marking          = $propertyObj->get_marking();

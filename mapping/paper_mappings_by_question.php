@@ -33,11 +33,8 @@ require_once '../classes/folderutils.class.php';
 $paperID = check_var('paperID', 'GET', true, false, true);
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
-if ($propertyObj == false) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
 $paper_title = $propertyObj->get_paper_title();
 $session = $propertyObj->get_calendar_year();
 $start_date = $propertyObj->get_raw_start_date();

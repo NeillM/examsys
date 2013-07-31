@@ -94,14 +94,22 @@ class PaperProperties {
   * static helper function to load the paper properties by property_id
   *	return @PaperProperties
   */
-  static function get_paper_properties_by_id($p_id, $db) {
+  static function get_paper_properties_by_id($p_id, $db, $string, $exit_on_false = true) {
+    $configObj = Config::get_instance();
+    $notice = UserNotices::get_instance();
+
   	$paper_property = new PaperProperties($db);
   	$paper_property->set_property_id($p_id);
   	if ($paper_property->load() !== false) {
   		return $paper_property;
   	} else {
-  		return false;
-  	}
+      if ($exit_on_false) {
+        $msg = sprintf($string['furtherassistance'], $configObj->get('support_email'), $configObj->get('support_email'));
+        $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+      } else {
+        return false;
+      }
+    }
   }
 
   /*

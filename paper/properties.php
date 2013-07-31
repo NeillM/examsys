@@ -40,11 +40,8 @@ require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
-$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli);
-if (!$properties) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
 $logger = new Logger($mysqli);
 
 if ($properties->get_summative_lock() and !$userObject->has_role('SysAdmin')) {

@@ -33,10 +33,7 @@ $msg = sprintf($string['furtherassistance'], $configObject->get('support_email')
 
 if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
   $userID = $_GET['userID'];
-  $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli);
-  if ($propertyObj == false) {
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  }
+  $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
   $paperID = $_GET['paperID'];
 } elseif ($userObject->has_role('Student')) {
   $userID = $userObject->get_user_ID();

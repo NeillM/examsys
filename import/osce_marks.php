@@ -32,7 +32,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   $configObject = Config::get_instance();
 
   // Get the paper properties
-  $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $db);
+  $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $db, $string, false);
   if ($propertyObj == false) {  // No properties found
     unlink($configObject->get('cfg_tmpdir') . $userObj->get_user_ID() . '_osce_marks.csv');
     $notice->access_denied($db, $string, 'An error has occurred');    //this will exit php
