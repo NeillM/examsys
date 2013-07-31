@@ -290,8 +290,7 @@ foreach ($log_answers as $distance => $answer) {
   <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="full" /></td>
   <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="partial" /></td>
   <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="none" /></td>
-  <td><?php echo $string['addreason'] ?></td>
-
+  <td><a href="#"><?php echo $string['addreason'] ?></a></td>
   </tr>
 <?php
 }
