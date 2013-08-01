@@ -79,7 +79,7 @@ function add_random_column_standard($i, $sec, &$csv, $subsec = ''){
 }
 
 function fix_correct($q_type, $correct, $old_correct) {
-  if ($q_type == 'mcq' or $q_type == 'calculation') {
+  if ($q_type == 'mcq' or $q_type == 'enhancedcalc') {
     $old_correct = ',' . $correct;
   } elseif ($q_type != 'extmatch' and $q_type != 'matrix') {
     $old_correct .= ',' . $correct;
@@ -159,10 +159,10 @@ $old_correct = '';
 $old_correct_text = '';
 $old_random_qids = array();
 
-$result = $mysqli->prepare("SELECT q_id, q_type, screen, correct, option_text, score_method FROM (papers, questions, options) WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
+$result = $mysqli->prepare("SELECT q_id, q_type, screen, correct, option_text, score_method, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
 $result->bind_param('i', $paperID);
 $result->execute();
-$result->bind_result($q_id, $q_type, $screen, $correct, $option_text, $score_method);
+$result->bind_result($q_id, $q_type, $screen, $correct, $option_text, $score_method, $settings);
 while ($result->fetch()) {
   if ($old_q_id != $q_id and $old_q_id != -1) {
     $part = 0;
@@ -172,6 +172,7 @@ while ($result->fetch()) {
     $paper_buffer[$question_no]['correct'] = $old_correct;
     $paper_buffer[$question_no]['correct_text'] = $old_correct_text;
     $paper_buffer[$question_no]['score_method'] = $old_score_method;
+    $paper_buffer[$question_no]['settings'] = $old_settings;
     if ($old_q_type == 'random') {
       $paper_buffer[$question_no]['rand_ids'] = $old_random_qids;
       $old_random_qids = array();
@@ -203,6 +204,7 @@ while ($result->fetch()) {
   $old_screen = $screen;
   $old_score_method = $score_method;
   $old_option_text = $option_text;
+  $old_settings = $settings;
   $part++;
 }
 $result->close();
@@ -212,6 +214,7 @@ $paper_buffer[$question_no]['screen'] = $old_screen;
 $paper_buffer[$question_no]['correct'] = $old_correct;
 $paper_buffer[$question_no]['correct_text'] = $old_correct_text;
 $paper_buffer[$question_no]['score_method'] = $old_score_method;
+$paper_buffer[$question_no]['settings'] = $settings;
 if ($old_q_type == 'random') {
   $paper_buffer[$question_no]['rand_ids'] = $old_random_qids;
 }
@@ -272,14 +275,14 @@ if ($student_no > 0) {
   $rowID = 0;
   // Capture the log data.
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log0.q_id, user_answer, q_type, screen FROM (log0, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started >= ? AND started <= ?) UNION ALL (SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log1.q_id, user_answer, q_type, screen FROM (log1, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log1.metadataID = log_metadata.id AND log1.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started >= ? AND started <= ?) ORDER BY surname, first_names, started, userID");
+    $result = $mysqli->prepare("(SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log0.q_id, user_answer, q_type, screen, settings FROM (log0, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started >= ? AND started <= ?) UNION ALL (SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log1.q_id, user_answer, q_type, screen FROM (log1, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log1.metadataID = log_metadata.id AND log1.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started >= ? AND started <= ?) ORDER BY surname, first_names, started, userID");
     $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log$paper_type.q_id, user_answer, q_type, screen FROM (log$paper_type, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY surname, first_names, started, userID");
+    $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log$paper_type.q_id, user_answer, q_type, screen, settings FROM (log$paper_type, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY surname, first_names, started, userID");
     $result->bind_param('isss', $paperID, $_GET['repcourse'], $startdate, $enddate);
   }
   $result->execute();
-  $result->bind_result($student_id, $username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $q_type, $screen);
+  $result->bind_result($student_id, $username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $q_type, $screen, $settings);
   $old_username = '';
   while ($result->fetch()) {
     if ($old_username != $username or $old_started != $started) {
@@ -440,7 +443,7 @@ if ($student_no > 0) {
               }
               if ($question['score_method'] == 'other') $csv .= ',Q' . ($i+1) . '.other';
               break;
-            case 'calculation':
+            case 'enhancedcalc':
               if (!isset($excluded[$tmp_question_ID])) {
                 if ($is_random) {
                   $csv .= ',Q' . ($i+1) . ':formula';
@@ -637,15 +640,14 @@ if ($student_no > 0) {
             case 'textbox':
               if (!isset($excluded[$tmp_question_ID])) $csv .= ',';
               break;
-            case 'calculation':
+            case 'enhancedcalc':
               if (!isset($excluded[$tmp_question_ID])) {
-                $csv .= ',,';
+                $settings = json_decode($question['settings'], true);
                 if ($is_random) {
-                  $csv .= ',';
+                  $csv .= ',,,';
                 } else {
-                  $csv .= '"' . substr($question['correct'],1) . '"';
+                  $csv .= ',,"' . $settings['answers'][0]['formula'] . '",';
                 }
-                $csv .= ',';
               }
               break;
             case 'sct':
@@ -780,27 +782,22 @@ if ($student_no > 0) {
               }
             }
             break;
-          case 'calculation':
-            if (isset($individual[$tmp_screen][$tmp_question_ID])) {
-              $answer_parts = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
-            } else {
-              $answer_parts = array('','','');
-            }
-            if (!isset($excluded[$tmp_question_ID])) {
-              if ($is_random) {
-                $csv .= ',"' . substr($question['correct'],1) . '"';
+          case 'enhancedcalc':
+            $answer = json_decode($individual[$tmp_screen][$tmp_question_ID], true);
+            $csv .= ',' . $answer['uans'];
+            
+            $csv .= ',' . $answer['cans'];
+            
+            $variables = '';
+            foreach ($answer['vars'] as $var_name=>$value) {
+              if ($variables == '') {
+                $variables .= $value;
+              } else {
+                $variables .= ',' . $value;
               }
-              $vars = explode(',', $answer_parts[2]);
-              $variables = '';
-              foreach ($vars as $var) {
-                if ($variables == '') {
-                  $variables = $var;
-                } else {
-                  if ($var != '') $variables .= ',' . $var;
-                }
-              }
-              $csv .= ',"' . $answer_parts[0] . '",' . $answer_parts[1] . ',"' . $variables . '"';
             }
+            $csv .= ',"' . $variables . '"';
+
             break;
           case 'true_false':
           case 'dichotomous':

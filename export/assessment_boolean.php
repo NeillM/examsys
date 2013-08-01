@@ -150,15 +150,15 @@ if ($student_no > 0) {
   $rowID = 0;
   // Capture the log data.
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log0.q_id, user_answer, q_type, screen FROM (log0, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND started >= ? AND started <= ?) UNION ALL (SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log1.q_id, user_answer, q_type, screen FROM (log1, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log1.metadataID = log_metadata.id AND log1.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started >= ? AND started <= ?) ORDER BY surname, first_names, started, userID");
+    $result = $mysqli->prepare("(SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log0.q_id, user_answer, q_type, screen, settings FROM (log0, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND started >= ? AND started <= ?) UNION ALL (SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log1.q_id, user_answer, q_type, screen, settings FROM (log1, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log1.metadataID = log_metadata.id AND log1.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started >= ? AND started <= ?) ORDER BY surname, first_names, started, userID");
     $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log$paper_type.q_id, user_answer, q_type, screen FROM (log$paper_type, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY surname, first_names, started, userID");
+    $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log$paper_type.q_id, user_answer, q_type, screen, settings FROM (log$paper_type, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY surname, first_names, started, userID");
     $result->bind_param('isss', $paperID, $_GET['repcourse'], $startdate, $enddate);
   }
 
   $result->execute();
-  $result->bind_result($student_id, $username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $q_type, $screen);
+  $result->bind_result($student_id, $username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $q_type, $screen, $settings);
   $old_username = '';
   while ($result->fetch()) {
     if ($old_username != $username or $old_started != $started) {
@@ -176,6 +176,7 @@ if ($student_no > 0) {
     $log_array[$rowID]['first_names'] = demo_replace($first_names, $demo);
     $log_array[$rowID]['name'] = str_replace("'", "", $surname) . ',' . $first_names;
     $log_array[$rowID]['gender'] = $gender;
+    $log_array[$rowID]['$questionID'] = json_decode($settings, true);
 
     $user_no++;
     $old_username = $username;
@@ -322,7 +323,7 @@ foreach ($user_results as $individual) {
                 $parts_test_fail = true;           
                 if ($question['q_type'] == 'extmatch' and isset($log_array[$row_written])) {
                   $extmatch_parts = explode('|', $question['correct'][0]);
-                  if (strpos($extmatch_parts[$mi], '$')!==false) {
+                  if (strpos($extmatch_parts[$mi], '$') !== false) {
                     $parts_test_fail = false;
                     
                     $answer = '';
@@ -362,9 +363,9 @@ foreach ($user_results as $individual) {
                 }
               }
               $answer .= '                                   ';                  
-              $bonus_q = $bonus_a = Array();
+              $bonus_q = $bonus_a = array();
               foreach ($question['correct'] as $qi => $question_part) {
-                if ($question_part != 'n' && ($question['q_type']!='rank' || $question_part>0)) {
+                if ($question_part != 'n' and ($question['q_type'] != 'rank' or $question_part > 0)) {
                   if ($question['score_method'] == 'Bonus Mark') {
                     if ($question_part != '') {
                       array_push($bonus_q, $question_part);
@@ -378,11 +379,14 @@ foreach ($user_results as $individual) {
               if ($question['score_method'] == 'Bonus Mark') {
                 $bonus_test = count($bonus_a);
                 foreach ($bonus_a as $part_nr => $answer_part) {
-                  $csv .= ',' . (in_array($answer_part,$bonus_q) ? 1:0);
-                  $bonus_test -= (($answer_part==$bonus_q[$part_nr]) ? 1:0);
+                  $csv .= ',' . (in_array($answer_part, $bonus_q) ? 1:0);
+                  $bonus_test -= (($answer_part == $bonus_q[$part_nr]) ? 1:0);
                 }
                 $csv .= ',' . (($bonus_test == 0) ? 1:0);
               }
+            } elseif ($question['q_type'] == 'enhancedcalc') {
+              $settings = json_decode($question['settings'], true);
+              $csv .= ',' . (($individual['mark_array'][$q_id] == $settings['marks_correct']) ? 1:0);
             } else {
               $csv .= ',' . (($individual['mark_array'][$q_id] > 0) ? 1:0);
             }
@@ -410,7 +414,6 @@ foreach ($user_results as $individual) {
             }
           } else {
             if ($tmp_exclude{0} == '0') $csv .= ',0';
-            //if (!array_key_exists($q_id,$excluded)) $csv .= ',0';
           }
         }
       }
