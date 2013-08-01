@@ -78,110 +78,11 @@ $result->close();
 // Sort by distance
 asort($log_answers);
 
-if (isset($_POST['submit'])) {
-  $option_list = '';
+// Get any existing overrides
+// $sql = 'SELECT * FROM marking_override WHERE ';
 
-  // Iterate around all words marked for correction
-  for ($i=0; $i<$_POST['word_count']; $i++) {
-    if (isset($_POST['word' . $i])) {
-      if ($option_list == '') {
-        $option_list = $_POST['word' . $i];
-      } else {
-        $option_list .= ',' . $_POST['word' . $i];
-      }
-    }
-  }
-
-  $blank_details = explode('[blank', $option_text);
-  for ($i=1; $i<count($blank_details); $i++) {
-    $end_start_tag = strpos($blank_details[$i],']');
-    $start_end_tag = strpos($blank_details[$i],'[/blank]');
-    $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
-
-    $new_option_text = substr($blank_details[$i],0,($end_start_tag+1));
-  }
-
-  for ($i=1; $i<count($blank_details); $i++) {
-    $tmp_parts = explode('[/blank]', $blank_details[$i]);
-
-    if ($i == $_GET['blank']) {
-      $blank_details[$i] = ']' . $option_list . '[/blank]' . $tmp_parts[1];
-    }
-  }
-
-  $new_option_text = $blank_details[0];
-  for ($i=1; $i<count($blank_details); $i++) {
-    $new_option_text .= '[blank' . $blank_details[$i];
-  }
-
-  // Save the new option text back to the Questions table.
-  $result = $mysqli->prepare("UPDATE options SET option_text = ? WHERE o_id = ?");
-  $result->bind_param('si', $new_option_text, $q_id);
-  $result->execute();
-  $result->close();
-
-  $logger = new Logger($mysqli);
-  $success = $logger->track_change('Post-Exam Blank correction', $q_id, $userObject->get_user_ID(), $option_text, $new_option_text, 'Question/Stem');
-
-  // Remark student answers
-  $blank_details = explode("[blank", $new_option_text);
-  $no_answers = count($blank_details) - 1;
-  $have_answer = false;
-  for ($i=1; $i<=$no_answers; $i++) {
-    $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
-    $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
-    $answer_list[] = explode(',',$blank_details[$i]);
-  }
-
-  //foreach ($log_answers as $id=>$log_answer) {
-  foreach ($log_answers as $log_type) {
-    foreach ($log_type as $id=>$log_answer) {
-      $mark = 0;
-      $user_parts = explode('|', $log_answer);
-
-      for ($i=1; $i<=$no_answers; $i++) {
-        $match = false;
-        if ($user_parts[$i] != 'u') {
-          foreach ($answer_list[$i-1] as $alternative) {
-            if (trim($user_parts[$i]) == trim($alternative)) {
-              $match = true;
-            }
-          }
-          if ($match) {
-            $mark += $marks_correct;
-          } else {
-            $mark -= $marks_incorrect;
-          }
-        }
-      }
-      // Update log2 with new student marks.
-      $result = $mysqli->prepare("UPDATE log$log_type SET mark = ? WHERE id = ?");
-      $result->bind_param('ii', $mark, $id);
-      $result->execute();
-      $result->close();
-    }
-  }
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['remark'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  <script type="text/javascript">
-    function reload() {
-      window.opener.location = window.opener.location;
-      self.close();
-    }
-  </script>
-</head>
-<body onload="reload()">
-</body>
-</html>
-
-<?php
-} else {
-  $question_obj = new enhancedcalc($configObject);
-  $question_obj->setsettings($settings);
+$question_obj = new enhancedcalc($configObject);
+$question_obj->setsettings($settings);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -369,6 +270,3 @@ foreach ($log_answers as $distance => $answer) {
 </form>
 </body>
 </html>
-<?php
-}
-?>

@@ -32,6 +32,7 @@ $status = 'ERROR';
 
 $log_id = check_var('log_id', 'POST', true, false, true);
 $q_id = check_var('q_id', 'POST', true, false, true);
+$paper_id = check_var('paper_id', 'POST', true, false, true);
 $marker_id = check_var('marker_id', 'POST', true, false, true);
 $mark_type = check_var('mark_type', 'POST', true, false, true);
 $reason = check_var('reason', 'POST', true, false, true);
@@ -54,15 +55,15 @@ $q_marks = $question_obj->get_question_marks();
 
 if ($q_marks !== false) {
   $sql = <<< QUERY
-INSERT INTO marking_override (log_id, log_type, q_id, marker_id, date_marked, new_mark_type, reason)
-VALUES (?, ?, ?, ?, NOW(), ?, ?) ON DUPLICATE KEY UPDATE
+INSERT INTO marking_override (log_id, log_type, q_id, paper_id, marker_id, date_marked, new_mark_type, reason)
+VALUES (?, ?, ?, ?, ?, NOW(), ?, ?) ON DUPLICATE KEY UPDATE
 marker_id = ?, new_mark_type = ?, date_marked = NOW(), reason = ?
 QUERY;
 
   try {
     $result = $mysqli->prepare($sql);
     if ($result) {
-      $result->bind_param('iiiississ', $log_id, $log, $q_id, $marker_id, $mark_type, $reason, $marker_id, $mark_type, $reason);
+      $result->bind_param('iiiiississ', $log_id, $log, $q_id, $paper_id, $marker_id, $mark_type, $reason, $marker_id, $mark_type, $reason);
       $result2 = $result->execute();
       if ($result2 !== false) {
         $status = 'OK';
