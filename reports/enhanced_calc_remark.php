@@ -77,7 +77,7 @@ while ($result->fetch()) {
 
     // Don't include absolutely correct answers in the list
     if ($dist !== '0.00%') {
-      $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj);
+      $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark));
     }
   }
 }
@@ -101,6 +101,7 @@ $question_obj = new enhancedcalc($configObject);
 $question_obj->setsettings($settings);
 
 $q_vars = $question_obj->get_question_vars();
+$q_marks = array_flip($question_obj->get_question_marks());
 ?>
 <!DOCTYPE html>
 <html>
@@ -182,14 +183,27 @@ foreach ($log_answers as $distance => $answer) {
     $new_type = $overrides[$answer['id']]['type'];
     $reason = $overrides[$answer['id']]['reason'];
     $or_class = ' class="overridden"';
+  } else {
+    // Populate with existing mark type
+    if (isset($q_marks[$answer['mark']])) {
+      $new_type = $q_marks[$answer['mark']];
+    }
   }
   echo "<tr{$or_class}>";
   $u_vars = $answer['answer_obj']->get_user_vars();
   foreach ($u_vars as $label => $value) {
-    echo "<td class=\"shortcolumn\">$value</td>";
+    echo "<td class=\"shortcolumn\">$value</td>\n";
   }
-  echo "<td class=\"longcolumn\">{$answer['answer_obj']->get_user_answer_raw()}</td>";
-  echo "<td class=\"longcolumn\">{$answer['answer_obj']->get_real_answer()}</td>";
+  echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_user_answer_raw();
+  if ($answer['answer_obj']->get_show_units()) {
+    echo ' ' . $answer['answer_obj']->get_user_answer_units();
+  }
+  echo "</td>\n";
+  echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_real_answer();
+  if ($answer['answer_obj']->get_show_units()) {
+    echo ' ' . $answer['answer_obj']->get_user_answer_units_used();
+  }
+  echo "</td>\n";
   echo '<td class="longcolumn">' . $distance . "</td>\n";
 
   foreach ($mark_types as $mt) {

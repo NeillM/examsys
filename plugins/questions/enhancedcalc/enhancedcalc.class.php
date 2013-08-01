@@ -712,13 +712,21 @@ class EnhancedCalc extends Question implements questionInterface {
     }
   }
 
+  /**
+   * Get whether the question is set to disply uints to the user
+   * @return boolean Whether to show units for the question
+   */
+  public function get_show_units() {
+    return (isset($this->settings['show_units'])) ? ($this->settings['show_units'] == true) : false;
+  }
+
   public function get_real_answer() {
     $units = $this->settings['answers'][0]['units'];
 
     $this->add_to_useranswer('uans', "1 $units");   // Set a bogus answer before marking.
     $this->calculate_user_mark();
 
-    if ($this->settings['show_units'] == 'on') {
+    if ($this->settings['show_units'] == true) {
       return $this->useranswer['cans'];
     } else {
       return $this->useranswer['cans'] . ' ' . $units;
@@ -731,6 +739,22 @@ class EnhancedCalc extends Question implements questionInterface {
    */
   public function get_user_answer_raw() {
     return (isset($this->useranswer['uans'])) ? $this->useranswer['uans'] : '';
+  }
+
+  /**
+   * Get the units selected by a user if units have been displayed
+   * @return string Units selected by the user
+   */
+  public function get_user_answer_units() {
+    return (isset($this->useranswer['uansunit'])) ? $this->useranswer['uansunit'] : '';
+  }
+
+  /**
+   * Get the usits used when selecting the formula to match the user's answer
+   * @return string Units used to mark the answer
+   */
+  public function get_user_answer_units_used() {
+    return (isset($this->useranswer['ans']['units_used'])) ? $this->useranswer['ans']['units_used'] : '';
   }
 
   public function get_answer_distance() {
