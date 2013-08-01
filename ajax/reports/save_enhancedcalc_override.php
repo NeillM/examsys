@@ -35,8 +35,9 @@ $q_id = check_var('q_id', 'POST', true, false, true);
 $paper_id = check_var('paper_id', 'POST', true, false, true);
 $marker_id = check_var('marker_id', 'POST', true, false, true);
 $mark_type = check_var('mark_type', 'POST', true, false, true);
-$reason = check_var('reason', 'POST', true, false, true);
 $log = check_var('log', 'POST', true, false, true);
+
+$reason = (isset($_POST['reason'])) ? $_POST['reason'] : '';
 
 $mysqli->autocommit(false);
 
