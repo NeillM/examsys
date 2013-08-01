@@ -79,14 +79,21 @@ $result->close();
 asort($log_answers);
 
 // Get any existing overrides
-// $sql = 'SELECT * FROM marking_override WHERE ';
+$overrides = array();
+$sql = 'SELECT log_id, new_mark_type, reason FROM marking_override WHERE q_id = ? AND paper_id = ?';
+$result = $mysqli->prepare($sql);
+$result->bind_param('ii', $q_id, $paperID);
+$result->execute();
+$result->bind_result($log_id, $new_mark_type, $reason);
+while ($result->fetch()) {
+  $overrides[$log_id] = array('type' => $new_mark_type, 'reason' => $reason);
+}
 
 $question_obj = new enhancedcalc($configObject);
 $question_obj->setsettings($settings);
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -108,6 +115,7 @@ $question_obj->setsettings($settings);
     .r1 {background-color:white}
     .r2 {background-color:#B3C8E8}
     .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
+    .overridden { background-color: #B3C8E8; }
   </style>
 
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
@@ -138,23 +146,6 @@ $question_obj->setsettings($settings);
       document.getElementById('list').style.height = winH + 'px';
     }
 
-    var doSuccess = function (data) {
-      if (data != 'OK') {
-        alert(langStrings['saveerror']);
-        return false;
-      }
-
-      alert('OK!');
-
-      // if ($('#mark' + id).val() == 'NULL') {
-      //   $('#ans_' + id).removeClass('marked').effect("highlight", {}, 1500);;
-      // } else {
-      //   $('#ans_' + id).addClass('marked').effect("highlight", {}, 1500);;
-      // }
-
-    }
-
-
     var doError = function () {
       alert(langStrings['saveerror']);
     }
@@ -168,6 +159,7 @@ $question_obj->setsettings($settings);
       if (typeof newMark == 'undefined') {
         alert('<?php echo $string['nomarkmsg'] ?>');
       } else {
+        var row = $(this).parents('tr');
         $.post('../ajax/reports/save_enhancedcalc_override.php',
           {
             log_id: logID,
@@ -178,7 +170,14 @@ $question_obj->setsettings($settings);
             reason: reason,
             log: logType
           },
-          doSuccess
+          function (data) {
+            if (data != 'OK') {
+              alert(langStrings['saveerror']);
+              return false;
+            }
+
+            row.addClass('overridden');
+          }
         ).fail(doError);
       }
     }
@@ -237,8 +236,18 @@ foreach ($q_vars as $var => $dummy) {
   <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:0px 4px 8px 4px; font-size:90%" id="list">
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
 <?php
+$mark_types = array('correct', 'partial', 'incorrect');
+
 foreach ($log_answers as $distance => $answer) {
-  echo '<tr>';
+  $new_type = '';
+  $reason = '';
+  $or_class = '';
+  if (isset($overrides[$answer['id']])) {
+    $new_type = $overrides[$answer['id']]['type'];
+    $reason = $overrides[$answer['id']]['reason'];
+    $or_class = ' class="overridden"';
+  }
+  echo "<tr{$or_class}>";
   $u_vars = $answer['answer_obj']->get_user_vars();
   foreach ($u_vars as $label => $value) {
     echo "<td class=\"shortcolumn\">$value</td>";
@@ -246,12 +255,16 @@ foreach ($log_answers as $distance => $answer) {
   echo "<td class=\"longcolumn\">{$answer['answer_obj']->get_user_answer_raw()}</td>";
   // echo '<td class=\"shortcolumn\"></td>';
   echo "<td class=\"longcolumn\">{$answer['answer_obj']->get_real_answer()}</td>";
-  echo '<td class="longcolumn">' . htmlentities($distance) . '</td>';
+  echo '<td class="longcolumn">' . htmlentities($distance) . "</td>\n";
+
+  foreach ($mark_types as $mt) {
+    $checked = ($mt == $new_type) ? ' checked="checked"' : '';
 ?>
-  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="correct" /></td>
-  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="partial" /></td>
-  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="incorrect" /></td>
-  <td><input type="textbox" id="reason_<?php echo $answer['id'] ?>" name="reason_<?php echo $answer['id'] ?>" size="30" maxlength="255" /></td>
+  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="<?php echo $mt ?>"<?php echo $checked ?> /></td>
+<?php
+  }
+?>
+  <td><input type="textbox" id="reason_<?php echo $answer['id'] ?>" name="reason_<?php echo $answer['id'] ?>" size="30" maxlength="255" value="<?php echo $reason ?>" /></td>
   <td>
     <button id="save_<?php echo $answer['id'] ?>" type="button" data-logid="<?php echo $answer['id'] ?>" class="save-row"><?php echo $string['save'] ?></button>
     <input type="hidden" id="log_type_<?php echo $answer['id'] ?>" name="log_type_<?php echo $answer['id'] ?>" value="<?php echo $answer['paper_type'] ?>" />
