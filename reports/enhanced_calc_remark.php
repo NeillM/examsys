@@ -69,8 +69,12 @@ while ($result->fetch()) {
     $answer_obj->setuseranswer($user_answer);
     $answer_obj->setsettings($settings);
     $dist = $answer_obj->get_answer_distance();
-    if ($dist === false) $dist = $string['unknown'];
-    $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj);
+    if ($dist === false) $dist = $string['na'];
+
+    // Don't include absolutely correct answers in the list
+    if ($dist !== '0') {
+      $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj);
+    }
   }
 }
 $result->close();
