@@ -119,82 +119,9 @@ $question_obj->setsettings($settings);
   </style>
 
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery.enhancedcalc_override.js"></script>
   <script type="text/javascript">
-    function toggle(objectID) {
-      if (document.getElementById(objectID).className == 'r2') {
-        document.getElementById(objectID).className = 'r1';
-      } else {
-        document.getElementById(objectID).className = 'r2';
-      }
-    }
-
-    function resizeList() {
-      var winW = 630, winH = 460;
-      if (document.body && document.body.offsetWidth) {
-        winW = document.body.offsetWidth;
-        winH = document.body.offsetHeight;
-      }
-      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-        winW = document.documentElement.offsetWidth;
-        winH = document.documentElement.offsetHeight;
-      }
-      if (window.innerWidth && window.innerHeight) {
-        winW = window.innerWidth;
-        winH = window.innerHeight;
-      }
-      winH -= 160;
-      document.getElementById('list').style.height = winH + 'px';
-    }
-
-    var doError = function () {
-      alert(langStrings['saveerror']);
-    }
-
-    var saveRow = function (e) {
-      var logID = $(this).data('logid');
-      var newMark = $('input[name=mark_' + logID + ']:checked').val();
-      var reason = $('#reason_' + logID).val();
-      var logType = $('#log_type_' + logID).val();
-
-      if (typeof newMark == 'undefined') {
-        alert('<?php echo $string['nomarkmsg'] ?>');
-      } else {
-        var row = $(this).parents('tr');
-        $.post('../ajax/reports/save_enhancedcalc_override.php',
-          {
-            log_id: logID,
-            q_id: $('#q_id').val(),
-            paper_id: $('#paper_id').val(),
-            marker_id: $('#marker_id').val(),
-            mark_type: newMark,
-            reason: reason,
-            log: logType
-          },
-          function (data) {
-            if (data != 'OK') {
-              alert(langStrings['saveerror']);
-              return false;
-            }
-
-            row.addClass('overridden');
-          }
-        ).fail(doError);
-      }
-    }
-
-    $(function () {
-      resizeList();
-      $(window).resize(resizeList);
-
-       $.ajaxSetup({ timeout: 3000 });
-       $('#list').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
-         doError();
-       });
-
-      $('.save-row').click(saveRow);
-    })
-
-    langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
+    langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>', 'nomarkmsg' : '<?php echo $string['nomarkmsg'] ?>'};
   </script>
 </head>
 
