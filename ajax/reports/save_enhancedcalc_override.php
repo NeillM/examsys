@@ -27,10 +27,12 @@
 require_once '../../include/staff_auth.inc';
 require_once '../../include/errors.inc';
 require_once '../../plugins/questions/enhancedcalc/enhancedcalc.class.php';
+require_once '../../classes/logger.class.php';
 
 $status = 'ERROR';
 
 $log_id = check_var('log_id', 'POST', true, false, true);
+$user_id = check_var('user_id', 'POST', true, false, true);
 $q_id = check_var('q_id', 'POST', true, false, true);
 $paper_id = check_var('paper_id', 'POST', true, false, true);
 $marker_id = check_var('marker_id', 'POST', true, false, true);
@@ -53,18 +55,30 @@ $question_obj = new enhancedcalc($configObject);
 $question_obj->setsettings($settings);
 
 $q_marks = $question_obj->get_question_marks();
+$q_marks_rev = array_flip($q_marks);
 
 if ($q_marks !== false) {
+  // Get user's current mark
+  $sql = "SELECT adjmark FROM log$log WHERE id = ?";
+  $result = $mysqli->prepare($sql);
+  $result->bind_param('i', $log_id);
+  $result->execute();
+  $result->bind_result($orig_mark);
+  $result->fetch();
+  $result->close();
+
   $sql = <<< QUERY
-INSERT INTO marking_override (log_id, log_type, q_id, paper_id, marker_id, date_marked, new_mark_type, reason)
-VALUES (?, ?, ?, ?, ?, NOW(), ?, ?) ON DUPLICATE KEY UPDATE
+INSERT INTO marking_override (log_id, log_type, user_id, q_id, paper_id, marker_id, date_marked, new_mark_type, reason)
+VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?) ON DUPLICATE KEY UPDATE
 marker_id = ?, new_mark_type = ?, date_marked = NOW(), reason = ?
 QUERY;
+
+  $or_id = -1;
 
   try {
     $result = $mysqli->prepare($sql);
     if ($result) {
-      $result->bind_param('iiiiississ', $log_id, $log, $q_id, $paper_id, $marker_id, $mark_type, $reason, $marker_id, $mark_type, $reason);
+      $result->bind_param('iiiiiississ', $log_id, $log, $user_id, $q_id, $paper_id, $marker_id, $mark_type, $reason, $marker_id, $mark_type, $reason);
       $result2 = $result->execute();
       if ($result2 !== false) {
         $status = 'OK';
@@ -73,6 +87,8 @@ QUERY;
     }
 
     if ($status == 'OK') {
+      $or_id = $mysqli->insert_id;
+
       $new_mark = $q_marks[$mark_type];
 
       // Update the adjusted mark
@@ -95,6 +111,9 @@ QUERY;
     $mysqli->rollback();
   } else {
     $mysqli->commit();
+
+    $logger = new Logger($mysqli);
+    $logger->track_change('enhancedcalc_override', $or_id, $marker_id, $orig_mark, $new_mark, $q_id);
   }
 
   $mysqli->autocommit(true);

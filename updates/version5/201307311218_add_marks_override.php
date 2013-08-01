@@ -6,6 +6,7 @@ CREATE TABLE `marking_override` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `log_id` INT(11) UNSIGNED NOT NULL ,
   `log_type` TINYINT(4) UNSIGNED NOT NULL ,
+  `user_id` INT(10) UNSIGNED NOT NULL ,
   `q_id` INT(4) UNSIGNED NOT NULL ,
   `paper_id` MEDIUMINT(8) UNSIGNED NOT NULL ,
   `marker_id` INT(10) UNSIGNED NOT NULL ,

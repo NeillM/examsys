@@ -25,6 +25,7 @@ var saveRow = function (e) {
   var newMark = $('input[name=mark_' + logID + ']:checked').val();
   var reason = $('#reason_' + logID).val();
   var logType = $('#log_type_' + logID).val();
+  var userID = $('#user_id_' + logID).val();
 
   if (typeof newMark == 'undefined') {
     alert(langStrings['nomarkmsg']);
@@ -33,6 +34,7 @@ var saveRow = function (e) {
     $.post('../ajax/reports/save_enhancedcalc_override.php',
       {
         log_id: logID,
+        user_id: userID,
         q_id: $('#q_id').val(),
         paper_id: $('#paper_id').val(),
         marker_id: $('#marker_id').val(),

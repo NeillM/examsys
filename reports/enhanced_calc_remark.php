@@ -55,14 +55,14 @@ $result->close();
 // Read user answers from log.
 $log_answers = array();
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
+  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
   $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 } else {
-  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer FROM log$paper_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
+  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer, lm.userID FROM log$paper_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
   $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 }
 $result->execute();
-$result->bind_result($type, $id, $mark, $user_answer);
+$result->bind_result($type, $id, $mark, $user_answer, $user_id);
 while ($result->fetch()) {
   if ($mark != '') {
     $answer_obj = new enhancedcalc($configObject);
@@ -77,7 +77,7 @@ while ($result->fetch()) {
 
     // Don't include absolutely correct answers in the list
     if ($dist !== '0.00%') {
-      $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark));
+      $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark), 'user_id' => $user_id);
     }
   }
 }
@@ -217,6 +217,7 @@ foreach ($log_answers as $distance => $answer) {
   <td>
     <button id="save_<?php echo $answer['id'] ?>" type="button" data-logid="<?php echo $answer['id'] ?>" class="save-row"><?php echo $string['save'] ?></button>
     <input type="hidden" id="log_type_<?php echo $answer['id'] ?>" name="log_type_<?php echo $answer['id'] ?>" value="<?php echo $answer['paper_type'] ?>" />
+    <input type="hidden" id="user_id_<?php echo $answer['id'] ?>" name="user_id_<?php echo $answer['id'] ?>" value="<?php echo $answer['user_id'] ?>" />
   </td>
   </tr>
 <?php

@@ -746,6 +746,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".log_metadata TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_resource TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_context TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".marking_override TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".modules TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".modules_staff TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".modules_student TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
@@ -2148,6 +2149,7 @@ QUERY;
           `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
           `log_id` INT(11) UNSIGNED NOT NULL ,
           `log_type` TINYINT(4) UNSIGNED NOT NULL ,
+          `user_id` INT(10) UNSIGNED NOT NULL ,
           `q_id` INT(4) UNSIGNED NOT NULL ,
           `paper_id` MEDIUMINT(8) UNSIGNED NOT NULL ,
           `marker_id` INT(10) UNSIGNED NOT NULL ,
