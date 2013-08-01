@@ -15,7 +15,7 @@ $LOG = '0';
 $logarray = array('0', '1', '2', '3', '0_deleted', '1_deleted', '_late');
 
 foreach ($logarray as $LOG) {
-    $loop=0;
+    $loop = 0;
 
 
     $sql = "select questions.q_id,id,user_answer,settings from questions,log$LOG where q_type='calculation' and questions.q_id=log$LOG.q_id;";
@@ -26,8 +26,6 @@ foreach ($logarray as $LOG) {
     $result->execute();
     $result->store_result();
     $result->bind_result($qid, $uid, $user_answer, $settings);
-
-
 
 
     while ($result->fetch()) {
@@ -50,8 +48,8 @@ foreach ($logarray as $LOG) {
             $new_user_answer['uans'] = $tmp_answer[0] . ' ' . $settings['units'];
             $new_user_answer['uansunit'] = $settings['units'];
             $new_user_answer['uansnumb'] = $tmp_answer[0];
-            if(!isset($tmp_answer[1])) {
-                $tmp_answer[1]='';
+            if (!isset($tmp_answer[1])) {
+                $tmp_answer[1] = '';
             }
             $new_user_answer['cans'] = $tmp_answer[1];
             $ansdata['guessedunits'] = $settings['units'];
@@ -154,7 +152,7 @@ foreach ($logarray as $LOG) {
                 }
                 $varno++;
             }
-            if(isset($vardata)) {
+            if (isset($vardata)) {
                 $new_user_answer['vars'] = $varsdata;
             }
             $new_user_answer['original'] = $user_answer;
@@ -170,14 +168,15 @@ foreach ($logarray as $LOG) {
             $update->execute();
             $update->store_result();
             $loop++;
-            if($loop%200==0) {
+            if ($loop % 200 == 0) {
                 echo '<br>';
                 @ob_flush();
             }
+            $update->close();
         }
 
 
     }
-
+    $result->close();
 }
 
