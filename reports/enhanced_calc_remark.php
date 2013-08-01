@@ -112,7 +112,7 @@ $question_obj->setsettings($settings);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
-    th {font-weight:normal; color:#001687; text-align: left; vertical-align: bottom}
+    th {font-weight:normal; color:#001687; background-color:#F1F5FB; border-bottom: 1px solid #CCD9EA; text-align: left; vertical-align: bottom}
     .shortcolumn {width: 50px}
     .longcolumn {width: 90px}
     .alpha {padding-left: 8px;}
@@ -142,18 +142,15 @@ $question_obj->setsettings($settings);
 
   <div class="msg"><?php echo $string['msg']; ?></div>
 
+  <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:0px 4px 8px 4px; font-size:90%" id="list">
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
   <tr>
 <?php
 $q_vars = $question_obj->get_question_vars();
-$alpha = ' alpha';
 foreach ($q_vars as $var => $dummy) {
 ?>
-  <th class="shortcolumn<?php echo $alpha ?>"><?php echo $var ?></th>
+  <th class="shortcolumn"><?php echo $var ?></th>
 <?php
-  if ($alpha != '') {
-    $alpha = '';
-  }
 }
 ?>
       <th class="longcolumn"><?php echo $string['useranswer']; ?></th>
@@ -164,12 +161,9 @@ foreach ($q_vars as $var => $dummy) {
       <th class="shortcolumn"><?php echo $string['partialmarks']; ?></th>
       <th class="shortcolumn"><?php echo $string['nomarks']; ?></th>
       <th><?php echo $string['reason']; ?></th>
-      <th class="omega">&nbsp;</th>
+      <th>&nbsp;</th>
     </tr>
-  </table>
 
-  <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:0px 4px 8px 4px; font-size:90%" id="list">
-  <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
 <?php
 $mark_types = array('correct', 'partial', 'incorrect');
 

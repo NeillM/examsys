@@ -12,7 +12,7 @@ var resizeList = function () {
     winW = window.innerWidth;
     winH = window.innerHeight;
   }
-  winH -= 160;
+  winH -= 120;
   document.getElementById('list').style.height = winH + 'px';
 }
 
