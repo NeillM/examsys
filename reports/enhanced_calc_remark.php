@@ -114,7 +114,7 @@ $q_marks = array_flip($question_obj->get_question_marks());
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
-    th {text-align: center; font-weight:normal; color:#001687; background-color:#F1F5FB }
+    th {text-align: center; font-weight:normal; color:#001687; background-color:#CFDBEB }
     td { text-align: center; }
     .separate { border-bottom: 1px solid #CCD9EA; }
     .o {text-align:right; padding-right:10px}
