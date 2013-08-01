@@ -10,7 +10,7 @@ CREATE TABLE `marking_override` (
   `paper_id` MEDIUMINT(8) UNSIGNED NOT NULL ,
   `marker_id` INT(10) UNSIGNED NOT NULL ,
   `date_marked` DATETIME NOT NULL ,
-  `new_mark_type` ENUM('full', 'partial', 'none') NOT NULL ,
+  `new_mark_type` ENUM('correct', 'partial', 'incorrect') NOT NULL ,
   `reason` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`),
   UNIQUE KEY `log_id` (`log_id`, `log_type`)
