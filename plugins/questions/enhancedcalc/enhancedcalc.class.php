@@ -23,8 +23,8 @@
  * @package
  */
 
-require_once $cfg_web_root . 'classes/mathsutils.class.php';
-require_once $cfg_web_root . 'classes/question.class.php';
+require_once dirname(__FILE__) . '/../../../classes/mathsutils.class.php';
+require_once dirname(__FILE__) . '/../../../classes/question.class.php';
 
 class EnhancedCalc extends Question implements questionInterface {
 
