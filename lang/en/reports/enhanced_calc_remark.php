@@ -15,17 +15,21 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['remark'] = 'Remark';
-$string['msg'] = 'This is the instructions message.';
+$string['msg'] = 'To override a user\'s mark select whether to assign full, partial or no marks for the question and enter a reason for the change.';
 $string['useranswers'] = 'User Answers';
-$string['useranswer'] = 'User answer';
+$string['variables'] = 'Variables';
+$string['answers'] = 'Answers';
+$string['useranswer'] = 'User';
 $string['units'] = 'Units';
-$string['correctans'] = 'Correct answer';
+$string['correctans'] = 'Correct';
 $string['distance'] = 'Distance';
-$string['fullmarks'] = 'Full marks';
-$string['partialmarks'] = 'Partial marks';
-$string['nomarks'] = 'No marks';
+$string['marks'] = 'Marks';
+$string['fullmarks'] = 'Full';
+$string['partialmarks'] = 'Partial';
+$string['nomarks'] = 'None';
 $string['reason'] = 'Reason';
 $string['na'] = 'N/A';
 $string['addreason'] = 'Add reason';
 $string['nomarkmsg'] = 'No mark override selected';
 $string['saveerror'] = 'Error saving mark. Please try again';
+$string['done'] = 'Done';

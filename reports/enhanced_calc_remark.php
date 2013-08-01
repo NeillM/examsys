@@ -100,6 +100,7 @@ while ($result->fetch()) {
 $question_obj = new enhancedcalc($configObject);
 $question_obj->setsettings($settings);
 
+$q_vars = $question_obj->get_question_vars();
 ?>
 <!DOCTYPE html>
 <html>
@@ -112,17 +113,15 @@ $question_obj->setsettings($settings);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
-    th {font-weight:normal; color:#001687; background-color:#F1F5FB; border-bottom: 1px solid #CCD9EA; text-align: left; vertical-align: bottom}
-    .shortcolumn {width: 50px}
-    .longcolumn {width: 90px}
-    .alpha {padding-left: 8px;}
-    .omega {padding-right: 8px;}
+    th {text-align: center; font-weight:normal; color:#001687; background-color:#F1F5FB }
+    td { text-align: center; }
+    .separate { border-bottom: 1px solid #CCD9EA; }
     .o {text-align:right; padding-right:10px}
     .c1 {width:65px; text-align:center}
     .c2 {width:250px}
     .r1 {background-color:white}
     .r2 {background-color:#B3C8E8}
-    .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
+    .msg {margin-left:5px; font-size:90%; color:#001687}
     .overridden { background-color: #B3C8E8; }
   </style>
 
@@ -137,33 +136,41 @@ $question_obj->setsettings($settings);
 
 <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&paperID=' . $_GET['paperID']; ?>">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/dictionary.png" width="32" height="32" alt="Word List" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['useranswers']; ?></strong></td></tr>
+  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/dictionary.png" width="32" height="32" alt="Word List" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA; text-align: left"><strong><?php echo $string['useranswers']; ?></strong></td></tr>
   </table>
 
-  <div class="msg"><?php echo $string['msg']; ?></div>
+  <p class="msg"><?php echo $string['msg']; ?></p>
 
   <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:0px 4px 8px 4px; font-size:90%" id="list">
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
-  <tr>
+    <thead>
+      <tr>
+        <th colspan="<?php echo count($q_vars) ?>"><?php echo $string['variables']?></th>
+        <th colspan="2"><?php echo $string['answers']?></th>
+        <th>&nbsp;</th>
+        <th colspan="3"><?php echo $string['marks']?></th>
+        <th colspan="2">&nbsp;</th>
+      </tr>
+      <tr class="separate">
 <?php
-$q_vars = $question_obj->get_question_vars();
 foreach ($q_vars as $var => $dummy) {
 ?>
-  <th class="shortcolumn"><?php echo $var ?></th>
+        <th class="shortcolumn separate"><?php echo $var ?></th>
 <?php
 }
 ?>
-      <th class="longcolumn"><?php echo $string['useranswer']; ?></th>
-      <!-- <th class="shortcolumn"><?php echo $string['units']; ?></th> -->
-      <th class="longcolumn"><?php echo $string['correctans']; ?></th>
-      <th class="longcolumn"><?php echo $string['distance']; ?></th>
-      <th class="shortcolumn"><?php echo $string['fullmarks']; ?></th>
-      <th class="shortcolumn"><?php echo $string['partialmarks']; ?></th>
-      <th class="shortcolumn"><?php echo $string['nomarks']; ?></th>
-      <th><?php echo $string['reason']; ?></th>
-      <th>&nbsp;</th>
-    </tr>
-
+        <th class="longcolumn separate"><?php echo $string['useranswer']; ?></th>
+        <!-- <th class="shortcolumn"><?php echo $string['units']; ?></th> -->
+        <th class="longcolumn separate"><?php echo $string['correctans']; ?></th>
+        <th class="longcolumn separate"><?php echo $string['distance']; ?></th>
+        <th class="shortcolumn separate"><?php echo $string['fullmarks']; ?></th>
+        <th class="shortcolumn separate"><?php echo $string['partialmarks']; ?></th>
+        <th class="shortcolumn separate"><?php echo $string['nomarks']; ?></th>
+        <th class="separate"><?php echo $string['reason']; ?></th>
+        <th class="separate">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
 <?php
 $mark_types = array('correct', 'partial', 'incorrect');
 
@@ -201,9 +208,10 @@ foreach ($log_answers as $distance => $answer) {
 <?php
 }
 ?>
-</table>
+    </tbody>
+  </table>
 </div>
-<div style="text-align:center"><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="window.close();" /></div>
+<div style="text-align:center"><input type="button" name="cancel" value="<?php echo $string['done']; ?>" style="width:100px" onclick="window.close();" /></div>
 
   <input type="hidden" id="q_id" name="q_id" value="<?php echo $q_id ?>" />
   <input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID ?>" />
