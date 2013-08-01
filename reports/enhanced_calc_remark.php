@@ -69,10 +69,14 @@ while ($result->fetch()) {
     $answer_obj->setuseranswer($user_answer);
     $answer_obj->setsettings($settings);
     $dist = $answer_obj->get_answer_distance();
-    if ($dist === false) $dist = $string['na'];
+    if ($dist === false) {
+      $dist = $string['na'];
+    } else {
+      $dist = number_format($dist, 2) . '%';
+    }
 
     // Don't include absolutely correct answers in the list
-    if ($dist !== '0') {
+    if ($dist !== '0.00%') {
       $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj);
     }
   }
@@ -184,9 +188,8 @@ foreach ($log_answers as $distance => $answer) {
     echo "<td class=\"shortcolumn\">$value</td>";
   }
   echo "<td class=\"longcolumn\">{$answer['answer_obj']->get_user_answer_raw()}</td>";
-  // echo '<td class=\"shortcolumn\"></td>';
   echo "<td class=\"longcolumn\">{$answer['answer_obj']->get_real_answer()}</td>";
-  echo '<td class="longcolumn">' . htmlentities($distance) . "</td>\n";
+  echo '<td class="longcolumn">' . $distance . "</td>\n";
 
   foreach ($mark_types as $mt) {
     $checked = ($mt == $new_type) ? ' checked="checked"' : '';
