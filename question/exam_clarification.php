@@ -25,15 +25,22 @@
 require '../include/admin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/exam_announcements.class.php';
-require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
 require_once '../classes/questionutils.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
-$q_id = check_var('q_id', 'REQUEST', true, false, true);
-if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+
+// Check the paperID exists
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
+// Check the paper is not set to be linear
+if ($properties->get_bidirectional() == '0') {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
+
+// Check that the questionID exists
+$q_id = check_var('q_id', 'REQUEST', true, false, true);
 if (!QuestionUtils::question_exists($q_id, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -55,8 +62,16 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title><?php echo $string['midexamclarification'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script language="JavaScript">
+    $(document).ready(function() {
+      opener.location.reload();
+      window.close();
+    });
+  </script>
 </head>
-<body onload="window.close()">
+<body>
 </body>
 </html>
 exit();

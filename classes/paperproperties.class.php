@@ -338,6 +338,15 @@ class PaperProperties {
     }
 
   }
+  
+  public function is_live() {
+    if ($this->start_date !== null and date("U", time()) >= $this->start_date and $this->end_date !== null and date("U", time()) <= $this->end_date) {
+      return true;
+    } else {
+      return false;
+    }
+  
+  }
 
   private function load_summative_lock() {
     if ($this->start_date !== null and date("U", time()) >= $this->start_date and $this->paper_type == '2') {

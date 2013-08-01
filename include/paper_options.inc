@@ -361,7 +361,7 @@ if (count($moduleIDs) > 0) {
 <tr><td class="ico"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="greymenuitem"><?php echo $string['editquestion']; ?></td></tr>
 <tr><td class="ico"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon_grey.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="greymenuitem"><?php echo $string['information']; ?></td></tr>
 <?php
-  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->get_summative_lock() != 1) {
+  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1') {
     echo "<tr><td class=\"ico\"><img src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16_grey.png\" width=\"16\" height=\"16\" alt=\"\" /></td><td class=\"greymenuitem\">" . $string['midexamclarification'] . "</td></tr>\n";
   }
 ?>
@@ -375,7 +375,7 @@ if (count($moduleIDs) > 0) {
 <tr><td class="ico"><a id="edit" onclick="editQuestion(); return false;" href="#"><img style="cursor:hand" onclick="editQuestion(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><a id="information" href="#" onclick="questionInfo(); return false;"><img style="cursor:hand" onclick="questionInfo(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <?php
-  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->get_summative_lock() != 1) {
+  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1') {
     echo "<tr><td class=\"ico\"><a id=\"clarification\" href=\"#\" onclick=\"examClarification(); return false;\"><img style=\"cursor:hand\" onclick=\"examClarification(); return false;\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['information'] . "\" /></a></td><td class=\"menuitem\"><a id=\"clarification\" href=\"#\" onclick=\"examClarification(); return false;\">" . $string['midexamclarification'] . "</a></td></tr>\n";
   }
 ?>
@@ -389,7 +389,7 @@ if (count($moduleIDs) > 0) {
 <tr><td class="ico"><img style="cursor:hand" onclick="editQuestion(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><img style="cursor:hand" onclick="questionInfo(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <?php
-  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->get_summative_lock() != 1) {
+  if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1') {
     echo "<tr><td class=\"ico\"><a id=\"clarification\" href=\"#\" onclick=\"examClarification(); return false;\"><img style=\"cursor:hand\" onclick=\"examClarification(); return false;\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['information'] . "\" /></a></td><td class=\"menuitem\"><a id=\"clarification\" href=\"#\" onclick=\"examClarification(); return false;\">" . $string['midexamclarification'] . "</a></td></tr>\n";
   }
 ?>

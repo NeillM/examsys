@@ -147,7 +147,7 @@ function have_valid_labels($correct) {
 }
 
 function randomDetails($questionID) {
-  global  $configObject, $mysqli;
+  global $configObject, $mysqli;
 
   $question_no = 0;
   $random_questions = array();
