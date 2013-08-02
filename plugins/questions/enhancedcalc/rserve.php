@@ -147,9 +147,17 @@ class EnhancedCalcRrserve {
     
     $result = $this->eval_string_multi($cmd);
     $res['tolerance'] = $result[0];
-    $res['tolerance_ans'] = $result[1];
-    $res['tolerance_ansneg'] = $result[2];
-
+    
+    //
+    // Make sure the min and max are correct tolerances on negative numbers causes problems 
+    //
+    if($result[1] > $result[2]) {
+        $res['tolerance_ans'] = $result[1];
+        $res['tolerance_ansneg'] = $result[2];
+    } else {
+        $res['tolerance_ans'] = $result[2];
+        $res['tolerance_ansneg'] = $result[1];
+    }
     return $res;
   }
   

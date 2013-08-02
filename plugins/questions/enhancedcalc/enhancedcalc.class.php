@@ -206,7 +206,6 @@ class EnhancedCalc extends Question implements questionInterface {
        * MARKING
        *
        */
-
         if (trim($this->useranswer['uansnumb'])=='') {
             //not answered
             $this->qmark = 0;
@@ -625,7 +624,7 @@ class EnhancedCalc extends Question implements questionInterface {
         $dispunits = $dispunits . '</select>';
       } else {
         $dispunits = array_keys($this->settings['answersexp']);
-        $dispunits = "&nbsp;&nbsp;" . $dispunits[0];
+        $dispunits = "&nbsp;&nbsp;" . $dispunits[0] . "<input type=\"hidden\" name=\"qid[" .  $this->id . "][uansunit]\" value=\"" .$dispunits[0] . "\" />";
       }
     }
 
