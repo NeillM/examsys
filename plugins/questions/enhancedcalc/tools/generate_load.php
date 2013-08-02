@@ -6,9 +6,11 @@
  * and open the template in the editor.
  */
 
-include_once '../include/load_config.php';
+$root = str_replace('/plugins/questions/enhancedcalc/tools', '/', str_replace('\\', '/', dirname(__FILE__)));
 
-require '../plugins/questions/enhancedcalc/enhancedcalculation.class.php';
+include_once $root . 'include/load_config.php';
+
+require $configObject->get('cfg_web_root') . '/plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
 $settings = '{"strictdisplay":"on","strictzeros":true,"dp":"2","tolerance_full":"2","fulltoltyp":"%","tolerance_partial":"5","parttoltyp":"#","marks_partial":"0.5","marks_incorrect":"0","marks_correct":"1","marks_unit":0,"show_units":true,"answers":[{"formula":"$A - $B","units":"mm"},{"formula":"($A - $B)\/1000","units":"m"}],"vars":{"$A":{"min":"1000","max":"2000","inc":"5","dec":"0"},"$B":{"min":"1000","max":"100000","inc":"5","dec":"0"}}}';
 $uans[1] = '{"vars":{"$A":"182.0","$B":"88.0"},"uans":"94.00","uansunit":"mm"}';
@@ -25,10 +27,11 @@ $mtime = explode(' ', $mtime);
 $mtime = $mtime[1] + $mtime[0]; 
 $starttime = $mtime; 
 
+echo "<h1>Marking 500 User answers</h1>";
 $i = 0;
-while($i <= 300 ) {
+while($i <= 500 ) {
   $q->set_useranswer($uans[array_rand($uans)]);
-  $q->caculateUserMark();
+  $q->calculate_user_mark();
   echo "<br/> $i ::" . $q->qmark . "<br/>";
   $i++;
 }
