@@ -142,8 +142,8 @@ class EnhancedCalcRrserve {
   
   function calculate_tolerance_percent($correctanswer,$percentage) {
     $cmd[] = "$correctanswer * (" . $percentage . "/100)";
-    $cmd[] = "$correctanswer + ($correctanswer * (" . $percentage . "/100))";
-    $cmd[] = "$correctanswer - ($correctanswer * (" . $percentage . "/100))";
+    $cmd[] = "$correctanswer * (1 + (" . $percentage . "/100))";
+    $cmd[] = "$correctanswer * (1 - (" . $percentage . "/100))";
     
     $result = $this->eval_string_multi($cmd);
     $res['tolerance'] = $result[0];
