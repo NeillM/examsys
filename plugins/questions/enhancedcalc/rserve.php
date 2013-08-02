@@ -28,7 +28,7 @@
 
 require_once('rserve/Connection.php');
 
-class enhancedcalc_rserve {
+class EnhancedCalcRrserve {
 
   protected $impliments_api_calc_version = 1;
   static protected $cnx = false;
@@ -80,7 +80,7 @@ class enhancedcalc_rserve {
   
   function calculate_correct_ans($vars,$formula) {
     
-    if(!$this->connect()) {
+    if (!$this->connect()) {
       return false;
     }
     
@@ -94,24 +94,24 @@ class enhancedcalc_rserve {
       $this->powDefined = true;
     }
     
-    if($this->toStrDefined === false) {
+    if ($this->toStrDefined === false) {
       self::$cnx->evalString("toStr <- function(V) { return(paste(capture.output(print(V)),collapse='\\n')) }");
       $this->toStrDefined = true;
     }
     
-    $correctanswer = $this->evalString($formula_vars_subed);
+    $correctanswer = $this->eval_string($formula_vars_subed);
    
     return $correctanswer;
   }
   
   function is_useranswer_correct($useranswer, $correctanswer) {
     
-    if($useranswer == '') {
+    if ($useranswer == '') {
       return false;
     }
     
     try {
-      $status = $this->evalString("$correctanswer == $useranswer");
+      $status = $this->eval_string("$correctanswer == $useranswer");
     } catch(Exception $e) {
       //there is an error it cant be correct
       return false;
@@ -126,12 +126,12 @@ class enhancedcalc_rserve {
   
   function distance_from_correct_answer($useranswer, $correctanswer) {
     
-    if($useranswer == '') {
+    if ($useranswer == '') {
       return 'ERROR';
     }
     
     try {
-       $res = $this->evalString("(abs($useranswer - $correctanswer)/$correctanswer) * 100");
+       $res = $this->eval_string("(abs($useranswer - $correctanswer)/$correctanswer) * 100");
     } catch(Exception $e) {
       //there is an error it cant be correct
       return 'ERROR';
@@ -145,7 +145,7 @@ class enhancedcalc_rserve {
     $cmd[] = "$correctanswer + ($correctanswer * (" . $percentage . "/100))";
     $cmd[] = "$correctanswer - ($correctanswer * (" . $percentage . "/100))";
     
-    $result = $this->evalStringMulti($cmd);
+    $result = $this->eval_string_multi($cmd);
     $res['tolerance'] = $result[0];
     $res['tolerance_ans'] = $result[1];
     $res['tolerance_ansneg'] = $result[2];
@@ -158,7 +158,7 @@ class enhancedcalc_rserve {
     $cmd[] = "$correctanswer + $value";
     $cmd[] = "$correctanswer - $value";
 
-    $result = $this->evalStringMulti($cmd);
+    $result = $this->eval_string_multi($cmd);
 
     $res['tolerance'] = $value;
     $res['tolerance_ans'] = $result[0];
@@ -169,12 +169,12 @@ class enhancedcalc_rserve {
   
   function is_useranswer_within_tolerance($useranswer, $min, $max) {
     
-    if($useranswer == '') {
+    if ($useranswer == '') {
       return false;
     }
     
     try {
-       $status = $this->evalString("$useranswer <= $max & $useranswer >= $min");
+       $status = $this->eval_string("$useranswer <= $max & $useranswer >= $min");
     } catch(Exception $e) {
       //there is an error it cant be correct
       return false;
@@ -191,11 +191,11 @@ class enhancedcalc_rserve {
   
   function is_useranswer_within_significant_figures($useranswer, $sf) {
     
-    if($useranswer == '') {
+    if ($useranswer == '') {
       return false;
     }
     
-    $status = $this->evalString("signif($useranswer," . $sf . ") ==  $useranswer");
+    $status = $this->eval_string("signif($useranswer," . $sf . ") ==  $useranswer");
     if ($status === true) {
       //correct
       return true;
@@ -206,11 +206,11 @@ class enhancedcalc_rserve {
   
   function is_useranswer_correct_decimal_places($useranswer, $dp) {
     
-    if($useranswer == '') {
+    if ($useranswer == '') {
       return false;
     }
     
-    $status = $this->evalString("round($useranswer," . $dp . ") == $useranswer");
+    $status = $this->eval_string("round($useranswer," . $dp . ") == $useranswer");
     if ($status === true) {
       return true;
     } else {
@@ -220,7 +220,7 @@ class enhancedcalc_rserve {
   
   function is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp) {
     
-    if($useranswer == '') {
+    if ($useranswer == '') {
       return false;
     }
     
@@ -247,27 +247,27 @@ class enhancedcalc_rserve {
   }
   
   function format_number_dp($num,$dp) {
-    return $this->evalString("round(" . $num . "," . $dp . ")");
+    return $this->eval_string("round(" . $num . "," . $dp . ")");
   }
   
   function format_number_dp_strict_zeros($num,$dp) {
     
-    return $this->evalString("format(round(" . $num . "," . $dp . "), nsmall = " . $dp . ")");
+    return $this->eval_string("format(round(" . $num . "," . $dp . "), nsmall = " . $dp . ")");
   }
   
   function format_number_sf($num,$sf) {
-    return $this->evalString("signif(" . $num . "," . $sf . ")");
+    return $this->eval_string("signif(" . $num . "," . $sf . ")");
   }
   
-  private function evalString($val) {
-    if(!$this->connect()) {
+  private function eval_string($val) {
+    if (!$this->connect()) {
       return false;
     }
     return $this->extract_value(self::$cnx->evalString("toStr(" . $val . ")"));
   }
   
-  private function evalStringMulti($val) {
-    if(!$this->connect()) {
+  private function eval_string_multi($val) {
+    if (!$this->connect()) {
       return false;
     }
     $cmd = 'c(';
@@ -281,19 +281,19 @@ class enhancedcalc_rserve {
   
   private function extract_value($R_rreturn) {
     
-    if(!is_array($R_rreturn)) {
+    if (!is_array($R_rreturn)) {
       $R_rreturn = explode("\n",$R_rreturn);
     }
     
     $ret = array();
     foreach($R_rreturn as $key => $val) {
       $val = trim($val);
-      if($val == '') {
+      if ($val == '') {
         continue;
       } 
-      if($val == '[1] TRUE') {
+      if ($val == '[1] TRUE') {
         $ret[] = true;
-      } else if($val == '[1] FALSE') {
+      } else if ($val == '[1] FALSE') {
         $ret[] =  false;
       } else {
         $val = str_replace('"', '', $val);
@@ -302,7 +302,7 @@ class enhancedcalc_rserve {
       }
     }
     
-    if(count($ret) == 1) {
+    if (count($ret) == 1) {
       return $ret[0];
     } else {
       return $ret;

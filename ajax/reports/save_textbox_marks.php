@@ -67,7 +67,7 @@ QUERY;
     if ($result) {
       $result->bind_param('ii', $log_id, $phase);
       $result2 = $result->execute();
-      if ($result !== false) {
+      if ($result2 !== false) {
         $status = 'OK';
       }
       $result->close();

@@ -87,23 +87,27 @@ Class Question {
 
   public $std;
 
-  function setsettings($settings) {
+  function set_settings($settings) {
     if (!is_array($settings)) {
       $this->settings = json_decode($settings, true);
     } else {
       $this->settings = $settings;
     }
   }
-  
-  function setuseranswer($useranswer) {
-    $this->useranswer = $useranswer;
+
+  function set_useranswer($useranswer) {
+    if (!is_array($useranswer)) {
+      $this->useranswer = json_decode($useranswer, true);
+    } else {
+      $this->useranswer = $useranswer;
+    }
   }
 
-  function addtouseranswer($key, $value) {
+  function add_to_useranswer($key, $value) {
     $this->useranswer[$key] = $value;
   }
-  
-  function exportsave(&$array) {
+
+  function export_save(&$array) {
     $classvar = get_object_vars($this);
     foreach ($classvar as $key => $value) {
       if ($key == 'useranswer') {
@@ -144,7 +148,7 @@ Class Question {
       if ($key == 'q_id') {
         $this->id = $value;
       } elseif ($key == 'user_answer') {
-        $this->useranswer = $value;
+        $this->set_useranswer($value);
       }
     }
 

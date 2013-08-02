@@ -44,5 +44,5 @@ function doSuccess(data) {
 }
 
 function doError() {
-  alert('Error not implemented');
+  alert(langStrings['saveerror']);
 }

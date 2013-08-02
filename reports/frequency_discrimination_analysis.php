@@ -38,6 +38,7 @@ require_once '../classes/paperproperties.class.php';
 require_once '../classes/exclusion.class.php';
 require_once '../classes/results_cache.class.php';
 require_once '../classes/standard_setting.class.php';
+require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -133,7 +134,7 @@ function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i,
   $bottom_key_value = 0;
 
   if (!is_array($keys)) $keys = array($keys);
-  
+
   foreach($keys as $key) {
     if (isset($top_log_q_id[$i][$key])) {
       $top_key_value += $top_log_q_id[$i][$key];
@@ -200,40 +201,25 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
         }
       }
       break;
-    case 'calculation':
-      $setting_arr = json_decode($settings, true);
-      $tolerance = $setting_arr['tolerance_full'];
-      $tmp_first_split = explode('|', $answer);
-      $user_ans_clean = str_replace(',', '', str_replace(' ', '', $tmp_first_split[0]));
+    case 'enhancedcalc':
+      $configObj = Config::get_instance();
+      $calc = new enhancedcalc($configObj);
+      $calc->set_settings($settings);
+      $calc->set_useranswer($answer);
+      $user_ans = $calc->get_user_answer_raw();
+      $correct_ans = $calc->get_real_answer();
 
-      if (isset($tmp_first_split[1])) {
-        if ($user_ans_clean == $tmp_first_split[1]) {
-          if (isset($log_array[$qID][1]['correct'])) {
-            $log_array[$qID][1]['correct']++;
-          } else {
-            $log_array[$qID][1]['correct'] = 1;
-          }
+      if ($user_ans == $correct_ans) {
+        if (isset($log_array[$qID][1]['correct'])) {
+          $log_array[$qID][1]['correct']++;
         } else {
-          if ($user_ans_clean == '') {
-            if (isset($log_array[$qID][1]['u'])) {
-              $log_array[$qID][1]['u']++;
-            } else {
-              $log_array[$qID][1]['u'] = 1;
-            }
-          } elseif (abs($user_ans_clean - $tmp_first_split[1]) <= $tolerance) {
-            if (isset($log_array[$qID][1]['tolerance'])) {
-              $log_array[$qID][1]['tolerance']++;
-            } else {
-              $log_array[$qID][1]['tolerance'] = 1;
-            }
-          } else {
-            if (isset($log_array[$qID][1]['incorrect'])) {
-              $log_array[$qID][1]['incorrect']++;
-            } else {
-              $log_array[$qID][1]['incorrect'] = 1;
-            }
-          }
+          $log_array[$qID][1]['correct'] = 1;
         }
+      }
+      if (isset($log_array[$qID][1]['frac_mark'])) {
+        $log_array[$qID][1]['frac_mark'] += $mark/$totalpos;
+      } else {
+        $log_array[$qID][1]['frac_mark'] = $mark/$totalpos;
       }
       break;
     case 'dichotomous':
@@ -481,7 +467,7 @@ if (isset($_POST['submit'])) {
       display_error("Question_exclude Insert Error 2", $mysqli->error);
     }
   }
-  
+
   $new_exclusions = new Exclusion($paperID, $mysqli);
   $new_exclusions->load();
   
@@ -549,11 +535,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       }
       echo '>';
       if (trim(str_replace('&nbsp;', '', $scenario)) != '') echo "$scenario<br /><br />\n";
-      if ($q_type != 'hotspot' and $q_type != 'timedate' and $q_type != 'calculation' and $q_type != 'flash' and $q_type != 'area') echo "$leadin</div>\n";
+      if ($q_type != 'hotspot' and $q_type != 'timedate' and $q_type != 'enhancedcalc' and $q_type != 'flash' and $q_type != 'area') echo "$leadin</div>\n";
       if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'area') {
         echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
       }
-      if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'calculation' and $q_type != 'blank' and $q_type != 'flash' and $q_type != 'area') echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+      if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'enhancedcalc' and $q_type != 'blank' and $q_type != 'flash' and $q_type != 'area') echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
     }
 
     switch ($q_type) {
@@ -681,7 +667,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           } else {
             $unique_blank_options = array_intersect_key($blank_options, array_unique(array_map('strtolower', $blank_options)));
             $unique_blank_options = array_map('strtolower', $unique_blank_options);
-                     
+
             foreach ($unique_blank_options as $blank_option) {
               $blank_option = strtolower(trim($blank_option));
               if (isset($freq_log[$q_id][$i+1][$blank_option])) {
@@ -736,43 +722,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "$html</td>";
 
           if ($display_method == 'textboxes') {
-            echo "<td><a href=\"#\" onclick=\"return manCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
+            echo "<td><a href=\"#\" onclick=\"return blankCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
           }
           echo "</tr>";
         }
         echo "</table>\n";
-        break;
-      case 'calculation':
-        if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
-
-        echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
-        $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'correct');
-        if (isset($freq_log[$q_id][1]['correct'])) {
-          $t = number_format(($freq_log[$q_id][1]['correct']/$user_total)*100,0);
-        } else {
-          $t = 0;
-        }
-        if (isset($top_log[$q_id][1]['correct'])) {
-          $u = number_format(($top_log[$q_id][1]['correct']/$candidate_no)*100,0);
-        } else {
-          $u = 0;
-        }
-        if (isset($bottom_log[$q_id][1]['correct'])) {
-          $l = number_format(($bottom_log[$q_id][1]['correct']/$candidate_no)*100,0);
-        } else {
-          $l = 0;
-        }
-        if (isset($excluded[$q_id])) {
-          $tmp_exclude = $excluded[$q_id];
-        } else {
-          $tmp_exclude = '';
-        }
-
-        echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
-        if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
-        echo ">$leadin</td></tr>\n";
-        echo "<tr><td colspan=\"6\">&nbsp;</td></tr>";
-        echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"4\">" . dStats($d, $q_id, 1) . "</td></tr>";
         break;
       case 'dichotomous':
         if ($score_method == 'Mark per Question') {
@@ -816,6 +770,40 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
           echo ">$individual_option</td></tr>\n";
         }
+        break;
+      case 'enhancedcalc':
+        if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
+
+        echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+        $d = number_format(($freq_log[$q_id][1]['frac_mark']/$user_total)*100,0);
+        if (isset($freq_log[$q_id][1]['correct'])) {
+          $t = number_format(($freq_log[$q_id][1]['correct']/$user_total)*100,0);
+        } else {
+          $t = 0;
+        }
+        if (isset($top_log[$q_id][1]['correct'])) {
+          $u = number_format(($top_log[$q_id][1]['correct']/$candidate_no)*100,0);
+        } else {
+          $u = 0;
+        }
+        if (isset($bottom_log[$q_id][1]['correct'])) {
+          $l = number_format(($bottom_log[$q_id][1]['correct']/$candidate_no)*100,0);
+        } else {
+          $l = 0;
+        }
+        if (isset($excluded[$q_id])) {
+          $tmp_exclude = $excluded[$q_id];
+        } else {
+          $tmp_exclude = '';
+        }
+
+        echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
+        if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
+        echo ">$leadin</td>";
+        echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
+        echo "</tr>\n";
+        echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
+        echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";
         break;
       case 'true_false':
         if (!isset($log[$q_id][1]['t'])) $log[$q_id][1]['t'] = 0;
@@ -1690,8 +1678,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       }
     }
 
-    function manCorrect(q_id, part_no) {
+    function blankCorrect(q_id, part_no) {
       window.open("blank_remark.php?q_id=" + q_id + "&blank=" + part_no + "&paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=500,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+
+      return false;
+    }
+
+    function clacCorrect(q_id) {
+      window.open("enhanced_calc_remark.php?q_id=" + q_id + "&paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=850,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
 
       return false;
     }
@@ -1728,7 +1722,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   // Get the standards setting
   if ($marking{0} == '2') {
     $tmp_parts = explode(',', $marking);
-    
+
     $standard_setting = new StandardSetting($mysqli);
     $std_set_array = $standard_setting->get_ratings_by_question($tmp_parts[1]);
   }
@@ -1795,7 +1789,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $freq_array       = array();
   $bottom_log_array = array();
   $top_log_array    = array();
-  
+
   if ($paper_type == '0') {
     $result = $mysqli->prepare("(SELECT username, log_metadata.userID, log0.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log0, log_metadata, questions, users WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? $student_modules_sql) UNION ALL (SELECT username, log_metadata.userID, log1.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log1, log_metadata, questions,  users WHERE log1.metadataID = log_metadata.id AND log1.q_id=questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? " . str_replace('log0', 'log1', $student_modules_sql) . ")");
     $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);
@@ -1860,7 +1854,16 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     if (isset($_GET['q_ids']) and $_GET['q_ids'] != '') {
       $qids_instring = ' AND q_id IN(' . $_GET['q_ids']. ')';
 	  }
-    $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, o_media, o_media_width, o_media_height, score_method, display_method, q_media, q_media_width, q_media_height, correct, std FROM (papers, questions, options) WHERE  papers.paper = ? AND papers.question=questions.q_id AND questions.q_id = options.o_id $qids_instring ORDER BY screen, display_pos, id_num");
+
+    $sql = <<<SQL
+SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, o_media,
+ o_media_width, o_media_height, score_method, display_method, q_media, q_media_width,
+ q_media_height, correct, std
+FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id
+WHERE papers.paper = ? AND papers.question=questions.q_id $qids_instring
+ORDER BY screen, display_pos, id_num
+SQL;
+    $result = $mysqli->prepare($sql);
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $o_media, $o_media_width, $o_media_height, $score_method, $display_method, $q_media, $q_media_width, $q_media_height, $correct, $std);

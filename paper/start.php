@@ -1073,7 +1073,7 @@ if ($css != '') {
       if (!isset($configObj)) {
         $configObj = Config::get_instance();
       }
-      $question['object'] = new enhancedcalc($configObj);
+      $question['object'] = new EnhancedCalc($configObj);
       $question['object']->load($question);
     }
     $questions_array[] = $question;

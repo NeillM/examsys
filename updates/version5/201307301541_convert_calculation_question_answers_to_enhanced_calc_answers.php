@@ -169,6 +169,7 @@ foreach ($logarray as $LOG) {
             $update->store_result();
             $loop++;
             if ($loop % 200 == 0) {
+                $mysqli->commit();
                 echo '<br>';
                 @ob_flush();
             }

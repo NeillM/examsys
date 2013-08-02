@@ -1,0 +1,236 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+*
+* This script presents a list of all the unique entries (words) entered for a particular blank in
+* a fill-in-the-blank question with textboxes. The interface allows staff to tick correct alternative
+* spellings and have the system remark student scripts (only works with summative exams).
+*
+* @author Simon Wilkinson
+* @version 1.0
+* @copyright Copyright (c) 2013 The University of Nottingham
+* @package
+*/
+
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+require_once '../classes/logger.class.php';
+require_once '../classes/paperproperties.class.php';
+require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
+
+$q_id  = check_var('q_id', 'GET', true, false, true);
+$paperID  = check_var('paperID', 'GET', true, false, true);
+
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+
+if (!$propertyObj) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+$paper_type = $propertyObj->get_paper_type();
+
+// Read question from database.
+$result = $mysqli->prepare("SELECT leadin, settings FROM questions WHERE q_id = ?");
+$result->bind_param('i', $q_id);
+$result->execute();
+$result->bind_result($leadin, $settings);
+$result->fetch();
+$result->close();
+
+// Read user answers from log.
+$log_answers = array();
+if ($paper_type == '0') {
+  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
+  $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
+} else {
+  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer, lm.userID FROM log$paper_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
+  $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
+}
+$result->execute();
+$result->bind_result($type, $id, $mark, $user_answer, $user_id);
+while ($result->fetch()) {
+  if ($mark != '') {
+    $answer_obj = new enhancedcalc($configObject);
+    $answer_obj->set_useranswer($user_answer);
+    $answer_obj->set_settings($settings);
+    $dist = $answer_obj->get_answer_distance();
+    if ($dist === false) {
+      $dist = $string['na'];
+    } else {
+      $dist = number_format($dist, 2) . '%';
+    }
+
+    // Don't include absolutely correct answers in the list
+    if ($dist !== '0.00%') {
+      $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark), 'user_id' => $user_id);
+    }
+  }
+}
+$result->close();
+
+// Sort by distance
+asort($log_answers);
+
+// Get any existing overrides
+$overrides = array();
+$sql = 'SELECT log_id, new_mark_type, reason FROM marking_override WHERE q_id = ? AND paper_id = ?';
+$result = $mysqli->prepare($sql);
+$result->bind_param('ii', $q_id, $paperID);
+$result->execute();
+$result->bind_result($log_id, $new_mark_type, $reason);
+while ($result->fetch()) {
+  $overrides[$log_id] = array('type' => $new_mark_type, 'reason' => $reason);
+}
+
+$question_obj = new enhancedcalc($configObject);
+$question_obj->set_settings($settings);
+
+$q_vars = $question_obj->get_question_vars();
+$q_marks = array_flip($question_obj->get_question_marks());
+?>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+
+  <title><?php echo $string['remark'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%; background-color:#F1F5FB}
+    th {text-align: center; font-weight:normal; color:#001687; background-color:#CFDBEB }
+    td { text-align: center; }
+    .separate { border-bottom: 1px solid #CCD9EA; }
+    .o {text-align:right; padding-right:10px}
+    .c1 {width:65px; text-align:center}
+    .c2 {width:250px}
+    .r1 {background-color:white}
+    .r2 {background-color:#B3C8E8}
+    .msg {margin-left:5px; font-size:90%; color:#001687}
+    .overridden { background-color: #B3C8E8; }
+  </style>
+
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery.enhancedcalc_override.js"></script>
+  <script type="text/javascript">
+    langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>', 'nomarkmsg' : '<?php echo $string['nomarkmsg'] ?>'};
+  </script>
+</head>
+
+<body>
+
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&paperID=' . $_GET['paperID']; ?>">
+  <table cellpadding="6" cellspacing="0" border="0" width="100%">
+  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/dictionary.png" width="32" height="32" alt="Word List" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA; text-align: left"><strong><?php echo $string['useranswers']; ?></strong></td></tr>
+  </table>
+
+  <p class="msg"><?php echo $string['msg']; ?></p>
+
+  <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:0px 4px 8px 4px; font-size:90%" id="list">
+  <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
+    <thead>
+      <tr>
+        <th colspan="<?php echo count($q_vars) ?>"><?php echo $string['variables']?></th>
+        <th colspan="2"><?php echo $string['answers']?></th>
+        <th>&nbsp;</th>
+        <th colspan="3"><?php echo $string['marks']?></th>
+        <th colspan="2">&nbsp;</th>
+      </tr>
+      <tr class="separate">
+<?php
+foreach ($q_vars as $var => $dummy) {
+?>
+        <th class="shortcolumn separate"><?php echo $var ?></th>
+<?php
+}
+?>
+        <th class="longcolumn separate"><?php echo $string['useranswer']; ?></th>
+        <!-- <th class="shortcolumn"><?php echo $string['units']; ?></th> -->
+        <th class="longcolumn separate"><?php echo $string['correctans']; ?></th>
+        <th class="longcolumn separate"><?php echo $string['distance']; ?></th>
+        <th class="shortcolumn separate"><?php echo $string['fullmarks']; ?></th>
+        <th class="shortcolumn separate"><?php echo $string['partialmarks']; ?></th>
+        <th class="shortcolumn separate"><?php echo $string['nomarks']; ?></th>
+        <th class="separate"><?php echo $string['reason']; ?></th>
+        <th class="separate">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+<?php
+$mark_types = array('correct', 'partial', 'incorrect');
+
+foreach ($log_answers as $distance => $answer) {
+  $new_type = '';
+  $reason = '';
+  $or_class = '';
+  if (isset($overrides[$answer['id']])) {
+    $new_type = $overrides[$answer['id']]['type'];
+    $reason = $overrides[$answer['id']]['reason'];
+    $or_class = ' class="overridden"';
+  } else {
+    // Populate with existing mark type
+    if (isset($q_marks[$answer['mark']])) {
+      $new_type = $q_marks[$answer['mark']];
+    }
+  }
+  echo "<tr{$or_class}>";
+  $u_vars = $answer['answer_obj']->get_user_vars();
+  foreach ($u_vars as $label => $value) {
+    echo "<td class=\"shortcolumn\">$value</td>\n";
+  }
+  echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_user_answer_raw();
+  if ($answer['answer_obj']->get_show_units()) {
+    echo ' ' . $answer['answer_obj']->get_user_answer_units();
+  }
+  echo "</td>\n";
+  echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_real_answer();
+  if ($answer['answer_obj']->get_show_units()) {
+    echo ' ' . $answer['answer_obj']->get_user_answer_units_used();
+  }
+  echo "</td>\n";
+  echo '<td class="longcolumn">' . $distance . "</td>\n";
+
+  foreach ($mark_types as $mt) {
+    $checked = ($mt == $new_type) ? ' checked="checked"' : '';
+?>
+  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="<?php echo $mt ?>"<?php echo $checked ?> /></td>
+<?php
+  }
+?>
+  <td><input type="textbox" id="reason_<?php echo $answer['id'] ?>" name="reason_<?php echo $answer['id'] ?>" size="30" maxlength="255" value="<?php echo $reason ?>" /></td>
+  <td>
+    <button id="save_<?php echo $answer['id'] ?>" type="button" data-logid="<?php echo $answer['id'] ?>" class="save-row"><?php echo $string['save'] ?></button>
+    <input type="hidden" id="log_type_<?php echo $answer['id'] ?>" name="log_type_<?php echo $answer['id'] ?>" value="<?php echo $answer['paper_type'] ?>" />
+    <input type="hidden" id="user_id_<?php echo $answer['id'] ?>" name="user_id_<?php echo $answer['id'] ?>" value="<?php echo $answer['user_id'] ?>" />
+  </td>
+  </tr>
+<?php
+}
+?>
+    </tbody>
+  </table>
+</div>
+<div style="text-align:center"><input type="button" name="cancel" value="<?php echo $string['done']; ?>" style="width:100px" onclick="window.close();" /></div>
+
+  <input type="hidden" id="q_id" name="q_id" value="<?php echo $q_id ?>" />
+  <input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID ?>" />
+  <input type="hidden" id="marker_id" name="marker_id" value="<?php echo $userObject->get_user_ID() ?>" />
+</form>
+</body>
+</html>

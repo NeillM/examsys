@@ -1435,8 +1435,8 @@ class ClassTotals {
       case 'enhancedcalc':
         require_once "../plugins/questions/{$q_type}/{$q_type}.class.php";
         $q_class = new $q_type($this->config);
-        $q_class->setsettings($settings);
-        $mc = $q_class->calculateQuestionMark();
+        $q_class->set_settings($settings);
+        $mc = $q_class->calculate_question_mark();
         break;
       default:
         $mc = $marks_correct;

@@ -409,7 +409,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $question['object']->render_paper($mode);
         echo '</td>';
         
-        $marks += $question['object']->calculateQuestionMark();
+        $marks += $question['object']->calculate_question_mark();
         break;
       case 'likert':
         echo '<tr>';

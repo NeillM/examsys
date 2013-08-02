@@ -131,7 +131,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
   return $value;
 }
 
-function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $metadataid, $mysqlidb, $status_array, $preview_q_id = null) {
+function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $metadataid, $mysqlidb, $status_array, $overrides, $preview_q_id = null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $strong_on, $strong_off;
   $configObject = Config::get_instance();
   $strong_on = '';
@@ -419,9 +419,9 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     if (($paper_type != '2' or $userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
       require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
       $configObj = Config::get_instance();
-      $enhancedcalc = new enhancedcalc($configObj);
+      $enhancedcalc = new EnhancedCalc($configObj);
       $enhancedcalc->load($paper[$question]);
-      $returnarray = $enhancedcalc->calculateUserMark();
+      $returnarray = $enhancedcalc->calculate_user_mark();
 
       if ($returnarray !== Q_MARKING_UNMARKED) {
         //save the extra data back into the log record.
@@ -430,7 +430,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         $new_useranswerstring = $enhancedcalc->useranswer_to_string();
         $storemark->bind_param('dddsi', $enhancedcalc->qmark, $enhancedcalc->qmark, $enhancedcalc->totalpos, $new_useranswerstring, $paper[$question]['uniqid']);
         $storemark->execute();
-        $enhancedcalc->exportsave($paper[$question]);
+        $enhancedcalc->export_save($paper[$question]);
       }
 
       $paper[$question]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
@@ -459,13 +459,13 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     <br />
   <?php
   }
-  
+
   $midexam_clarification = $configObject->get('midexam_clarification');
- 
+
   if ($paper_type == '2') {
     if (in_array('students', $midexam_clarification) or $userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       $midexam_clarification = $configObject->get('midexam_clarification');
-     
+
       if (in_array('students', $midexam_clarification)) {
         $exam_announcementObj = new ExamAnnouncements($paperID, $mysqlidb);
         echo $exam_announcementObj->display_student_announcements();
@@ -764,7 +764,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         }
         $tmp_fback = $paper[$question]['correct_fback'];
 
-        $paper[$question]['object'] = new enhancedcalc($configObj);
+        $paper[$question]['object'] = new EnhancedCalc($configObj);
         $paper[$question]['object']->load($paper[$question]);
         $paper[$question]['object']->render_feedback(array('tmp_exclude' => $tmp_exclude, 'hide_if_unanswered' => $hide_if_unanswered, 'tmp_display_correct_answer' => $tmp_display_correct_answer, 'tmp_display_students_response' => $tmp_display_students_response, 'question' => $question, 'tmp_fback' => $tmp_fback, 'tmp_display_feedback' => $tmp_display_feedback));
 
@@ -2394,8 +2394,11 @@ echo '</script>';
     // Display any objectives mapped
     echo display_mapped_objectives($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $question, $q_type, $string, $mysqlidb);
 
+    if (isset($overrides[$paper[$question]['q_id']])) {
+      $paper[$question]['mark'] = $overrides[$paper[$question]['q_id']]['adjmark'];
+    }
     // Write out the marks for the question
-    echo display_question_mark($tmp_display_question_mark, $paper, $q_type, $question, $string, $status_array);
+    echo display_question_mark($tmp_display_question_mark, $paper, $q_type, $question, $string, $status_array, $overrides);
 
     if (!$status_array[$paper[$question]['status']]->get_exclude_marking()) {
       $total_marks += $paper[$question]['totalpos'];
@@ -2447,31 +2450,45 @@ function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $
   return $html;
 }
 
-function display_question_mark($tmp_display_question_mark, &$paper, $q_type, $question, $string, $status_array) {
+function display_override($override, $string) {
+  $configObject = Config::get_instance();
+  $date = date($configObject->get('cfg_long_date_php'), strtotime($override['date_marked']));
+  $html = " {$string['overriddenby']} {$override['title']} {$override['surname']} ({$date})";
+
+  return $html;
+}
+
+function display_question_mark($tmp_display_question_mark, &$paper, $q_type, $question, $string, $status_array, $overrides) {
   $html = '';
 
   if ($tmp_display_question_mark == '1' and $q_type != 'info' and $q_type != 'likert') {
     if (isset($paper[$question]['mark']) and is_numeric($paper[$question]['mark'])) {
       $q_status = $status_array[$paper[$question]['status']];
       if ($q_status->get_exclude_marking()) {
-        $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0 - ' . $q_status->get_name() . ' Question&nbsp;</span></p>';
+        $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0 - ' . $q_status->get_name() . ' Question&nbsp;</span>';
       } elseif ($paper[$question]['totalpos'] == 0) {
         $paper[$question]['mark'] = 0;
-        $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0&nbsp;</span></p>';
+        $html .= '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0&nbsp;</span>';
       } else {
-        $html .= '<p class="mkpad"><span class="usermk">' . round($paper[$question]['mark'],2) . ' ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+        $html .= '<p class="mkpad"><span class="usermk">' . round($paper[$question]['mark'],2) . ' ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span>';
       }
     } elseif ($q_type == 'textbox') {
       // Unmarked textbox questions.
-      $html .= '<p class="mkpad"><span class="usermk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+      $html .= '<p class="mkpad"><span class="usermk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span>';
     } elseif (is_null($paper[$question]['mark'])) {
-      $html .= '<p class="mkpad"><span class="usermk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+      $html .= '<p class="mkpad"><span class="usermk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span>';
     } else
      {
       // User has skipped over question.
-      $html .= '<p class="mkpad"><span class="usermk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+      $html .= '<p class="mkpad"><span class="usermk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span>';
     }
   }
+
+  if (isset($overrides[$paper[$question]['q_id']])) {
+    $html .= display_override($overrides[$paper[$question]['q_id']], $string);
+  }
+
+  $html .= "</p>\n";
 
   return $html;
 }

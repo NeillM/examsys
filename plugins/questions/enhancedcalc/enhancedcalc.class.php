@@ -23,10 +23,10 @@
  * @package
  */
 
-require_once '../../../../classes/mathsutils.class.php';
-require_once '../../../../classes/question.class.php';
+require_once dirname(__FILE__) . '/../../../classes/mathsutils.class.php';
+require_once dirname(__FILE__) . '/../../../classes/question.class.php';
 
-class enhancedcalc extends Question implements questionInterface {
+class EnhancedCalc extends Question implements questionInterface {
 
   protected $configObj;
   protected $db;
@@ -38,15 +38,15 @@ class enhancedcalc extends Question implements questionInterface {
   }
 
   //splits number off front of numb/unit or just number
-  function splitnumbunit($input) {
+  private function split_numb_from_unit($input) {
     //user selected the units from a ddl
-    if(isset($this->useranswer['uansunit'])) {
+    if (isset($this->useranswer['uansunit'])) {
       return array($input, $this->useranswer['uansunit']);
     }
 
     $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
     $out = preg_match($pattern, $input, $matches);
-    if(is_array($matches) and isset($matches[0])) {
+    if (is_array($matches) and isset($matches[0])) {
       $sz = strlen($matches[0]);
       $units = trim(substr($input, $sz));
       $numb = $matches[0];
@@ -57,7 +57,7 @@ class enhancedcalc extends Question implements questionInterface {
   }
 
   //arrange the possible formula by units
-  function build_formula_by_units($ans) {
+  private function build_formula_by_units($ans) {
     $formula_by_units = array();
     foreach ($ans as $key => $value) {
       $units = explode(',', $value['units']);
@@ -69,10 +69,10 @@ class enhancedcalc extends Question implements questionInterface {
     return $formula_by_units;
   }
 
-  function are_units_correct($unit) {
+  private function are_units_correct($unit) {
     // create array of units and functions
     $this->settings['answersexp'] = $this->build_formula_by_units($this->settings['answers']);
-    if(isset($this->settings['answersexp'][$unit])) {
+    if (isset($this->settings['answersexp'][$unit])) {
       return true;
     } else {
       return false;
@@ -84,7 +84,7 @@ class enhancedcalc extends Question implements questionInterface {
    *
    *  This Must handle exclusions
    */
-  public function calculateUserMark() {
+  public function calculate_user_mark() {
 
     $returnstatus = null;
     if (is_null($this->useranswer)) {
@@ -96,11 +96,11 @@ class enhancedcalc extends Question implements questionInterface {
       $this->useranswer = json_decode($this->useranswer, true);
     }
 
-    $return = $this->splitnumbunit($this->useranswer['uans']);
+    $return = $this->split_numb_from_unit($this->useranswer['uans']);
     $this->useranswer['uansunit'] = $return[1];
     $this->useranswer['uansnumb'] = $return[0];
 
-    if(isset($this->useranswer['uansunit'])) {
+    if (isset($this->useranswer['uansunit'])) {
        $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
     }
 
@@ -128,7 +128,7 @@ class enhancedcalc extends Question implements questionInterface {
       $enhancedcalcObj = new $name($this->configObj->getbyref($enhancedcalcType));
     } else {
       require_once 'rserve.php';
-      $enhancedcalcObj = new enhancedcalc_rserve($this->configObj->getbyref('enhancedcalculation'));
+      $enhancedcalcObj = new EnhancedCalcRrserve($this->configObj->getbyref('enhancedcalculation'));
     }
 
     // run calculate through the external interface if errors catch exception and indicate its still unmarked.
@@ -179,7 +179,7 @@ class enhancedcalc extends Question implements questionInterface {
         if (isset($this->settings['dp'])) {
           $function = 'format_number_dp';
           $arg = $this->settings['dp'];
-          if($this->settings['strictzeros'] == 'on') {
+          if ($this->settings['strictzeros'] == 'on') {
             $function = 'format_number_dp_strict_zeros';
           }
         }
@@ -206,7 +206,7 @@ class enhancedcalc extends Question implements questionInterface {
        *
        */
 
-        if(trim($this->useranswer['uansnumb'])=='') {
+        if (trim($this->useranswer['uansnumb'])=='') {
             //not answered
             $this->qmark = 0;
             $returnstatus = Q_MARKING_NOTANS;
@@ -254,12 +254,12 @@ class enhancedcalc extends Question implements questionInterface {
       //strict dp marking
       if ( $this->is_strict_dp_enabled() ) {
 
-        if( $this->is_strict_dp_strictzeros_enabled() ) {
+        if ( $this->is_strict_dp_strictzeros_enabled() ) {
           $this->useranswer['status']['strictdp'] = $enhancedcalcObj->is_useranswer_correct_decimal_places_strictzeros($this->useranswer['uansnumb'], $this->settings['dp']);
         } else {
           $this->useranswer['status']['strictdp'] = $enhancedcalcObj->is_useranswer_correct_decimal_places($this->useranswer['uansnumb'], $this->settings['dp']);
         }
-        if($this->useranswer['status']['strictdp'] === false) {
+        if ($this->useranswer['status']['strictdp'] === false) {
           $this->qmark = $this->settings['marks_incorrect'];
           $returnstatus = Q_MARKING_WRONG;
           $this->useranswer['status']['overall'] = $returnstatus;
@@ -271,7 +271,7 @@ class enhancedcalc extends Question implements questionInterface {
       if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']) ) {
 
         $this->useranswer['status']['strictsf'] = $enhancedcalcObj->is_useranswer_within_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
-        if($this->useranswer['status']['strictsf'] === false) {
+        if ($this->useranswer['status']['strictsf'] === false) {
           $this->qmark = $this->settings['marks_incorrect'];
           $returnstatus = Q_MARKING_WRONG;
           $this->useranswer['status']['overall'] = $returnstatus;
@@ -326,7 +326,7 @@ class enhancedcalc extends Question implements questionInterface {
     return json_encode($this->useranswer);
   }
 
-  static public function processUserAnswer(&$postdata, &$session) {
+  static public function process_user_answer(&$postdata, &$session) {
 
     $data = $session;
     foreach ($postdata as $key => $value) {
@@ -346,7 +346,7 @@ class enhancedcalc extends Question implements questionInterface {
    *
    *   This Must handle exclusions
    */
-  public function calculateQuestionMark() {
+  public function calculate_question_mark() {
     return $this->settings['marks_correct'];
   }
 
@@ -354,7 +354,7 @@ class enhancedcalc extends Question implements questionInterface {
    * caculate the Random Mark for this question
    *  This Must handle exclusions
    */
-  public function calculateRandomMark() {
+  public function calculate_random_mark() {
     return 0;
   }
 
@@ -517,7 +517,7 @@ class enhancedcalc extends Question implements questionInterface {
         }
       }
       if (!isset($uansarray['uans'])) return 'ERROR';
-      $return = $this->splitnumbunit($uansarray['uans']);
+      $return = $this->split_numb_from_unit($uansarray['uans']);
       $inputVal = $return[0];
     } elseif (substr($inputVal, 0, 3) == 'var') {
       //its a var refrance from a previous question
@@ -657,7 +657,7 @@ class enhancedcalc extends Question implements questionInterface {
       echo "</table>\n<br />";
 
       $real_answer = $this->get_real_answer();
-      $this->addtouseranswer('uans', $real_answer);  // Get the real answer and override
+      $this->add_to_useranswer('uans', $real_answer);  // Get the real answer and override
     }
 
     if ($this->scenario != '') echo "<p>" . $this->scenario . "</p>\n";
@@ -684,21 +684,81 @@ class enhancedcalc extends Question implements questionInterface {
     $marks = $this->settings['marks_correct'];
   }
 
-  public function get_vars() {
+  /**
+   * Get the veriables as defined in the question
+   * @return array Array of defined variables indexed by the label (e.g. $A)
+   */
+  public function get_question_vars() {
+    return (isset($this->settings['vars'])) ? $this->settings['vars'] : array();
+  }
+
+  public function get_user_vars() {
     return $this->useranswer['vars'];
+  }
+
+  /**
+   * Get the marks as defined for the question
+   * @return array Array of marks
+   */
+  public function get_question_marks() {
+    $marks_full = isset($this->settings['marks_correct']) ? $this->settings['marks_correct'] : false;
+    $marks_partial = isset($this->settings['marks_partial']) ? $this->settings['marks_partial'] : false;
+    $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : false;
+
+    if ($marks_full and $marks_partial and $marks_incorrect) {
+      return array('correct' => $marks_full, 'partial' => $marks_partial, 'incorrect' => $marks_incorrect);
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Get whether the question is set to disply uints to the user
+   * @return boolean Whether to show units for the question
+   */
+  public function get_show_units() {
+    return (isset($this->settings['show_units'])) ? ($this->settings['show_units'] == true) : false;
   }
 
   public function get_real_answer() {
     $units = $this->settings['answers'][0]['units'];
 
-    $this->addtouseranswer('uans', "1 $units");   // Set a bogus answer before marking.
-    $this->calculateUserMark();
+    $this->add_to_useranswer('uans', "1 $units");   // Set a bogus answer before marking.
+    $this->calculate_user_mark();
 
-    if ($this->settings['show_units'] == 'on') {
+    if ($this->settings['show_units'] == true) {
       return $this->useranswer['cans'];
     } else {
       return $this->useranswer['cans'] . ' ' . $units;
     }
+  }
+
+  /**
+   * Return the answer as entered by the user
+   * @return string The user's raw answer
+   */
+  public function get_user_answer_raw() {
+    return (isset($this->useranswer['uans'])) ? $this->useranswer['uans'] : '';
+  }
+
+  /**
+   * Get the units selected by a user if units have been displayed
+   * @return string Units selected by the user
+   */
+  public function get_user_answer_units() {
+    return (isset($this->useranswer['uansunit'])) ? $this->useranswer['uansunit'] : '';
+  }
+
+  /**
+   * Get the usits used when selecting the formula to match the user's answer
+   * @return string Units used to mark the answer
+   */
+  public function get_user_answer_units_used() {
+    return (isset($this->useranswer['ans']['units_used'])) ? $this->useranswer['ans']['units_used'] : '';
+  }
+
+  public function get_answer_distance() {
+    return (isset($this->useranswer['cans_dist'])) ? $this->useranswer['cans_dist'] : false;
   }
 
 }
