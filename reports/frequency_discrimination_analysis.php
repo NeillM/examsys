@@ -204,8 +204,8 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
     case 'enhancedcalc':
       $configObj = Config::get_instance();
       $calc = new enhancedcalc($configObj);
-      $calc->setsettings($settings);
-      $calc->setuseranswer($answer);
+      $calc->set_settings($settings);
+      $calc->set_useranswer($answer);
       $user_ans = $calc->get_user_answer_raw();
       $correct_ans = $calc->get_real_answer();
 

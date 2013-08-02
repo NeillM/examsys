@@ -52,7 +52,7 @@ $result->fetch();
 $result->close();
 
 $question_obj = new enhancedcalc($configObject);
-$question_obj->setsettings($settings);
+$question_obj->set_settings($settings);
 
 $q_marks = $question_obj->get_question_marks();
 $q_marks_rev = array_flip($q_marks);

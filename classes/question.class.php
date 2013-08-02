@@ -148,7 +148,7 @@ Class Question {
       if ($key == 'q_id') {
         $this->id = $value;
       } elseif ($key == 'user_answer') {
-        $this->setuseranswer($value);
+        $this->set_useranswer($value);
       }
     }
 

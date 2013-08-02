@@ -66,8 +66,8 @@ $result->bind_result($type, $id, $mark, $user_answer, $user_id);
 while ($result->fetch()) {
   if ($mark != '') {
     $answer_obj = new enhancedcalc($configObject);
-    $answer_obj->setuseranswer($user_answer);
-    $answer_obj->setsettings($settings);
+    $answer_obj->set_useranswer($user_answer);
+    $answer_obj->set_settings($settings);
     $dist = $answer_obj->get_answer_distance();
     if ($dist === false) {
       $dist = $string['na'];
@@ -98,7 +98,7 @@ while ($result->fetch()) {
 }
 
 $question_obj = new enhancedcalc($configObject);
-$question_obj->setsettings($settings);
+$question_obj->set_settings($settings);
 
 $q_vars = $question_obj->get_question_vars();
 $q_marks = array_flip($question_obj->get_question_marks());
