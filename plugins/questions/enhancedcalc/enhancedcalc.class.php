@@ -22,9 +22,10 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
+global $configObject;
 
-require_once '../classes/mathsutils.class.php';
-require_once('../classes/question.class.php');
+require_once $configObject->get('cfg_web_root') . 'classes/mathsutils.class.php';
+require_once $configObject->get('cfg_web_root') . 'classes/question.class.php';
 
 class EnhancedCalc extends Question implements questionInterface {
 
@@ -38,7 +39,7 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   //splits number off front of numb/unit or just number
-  private function split_numb_from_unit($input) {
+  function split_numb_from_unit($input) {
     //user selected the units from a ddl
     if (isset($this->useranswer['uansunit'])) {
       return array($input, $this->useranswer['uansunit']);
@@ -57,7 +58,7 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   //arrange the possible formula by units
-  private function build_formula_by_units($ans) {
+  function build_formula_by_units($ans) {
     $formula_by_units = array();
     foreach ($ans as $key => $value) {
       $units = explode(',', $value['units']);
@@ -69,7 +70,7 @@ class EnhancedCalc extends Question implements questionInterface {
     return $formula_by_units;
   }
 
-  private function are_units_correct($unit) {
+  function are_units_correct($unit) {
     // create array of units and functions
     $this->settings['answersexp'] = $this->build_formula_by_units($this->settings['answers']);
     if (isset($this->settings['answersexp'][$unit])) {

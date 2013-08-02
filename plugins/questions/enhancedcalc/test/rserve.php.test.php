@@ -35,7 +35,7 @@ class RserveTests extends \Enhance\TestFixture
   // SetUp
   public function setUp() {
     $enhancedcalculation = array('host' => 'suivarro.nottingham.ac.uk', 'port'=>6311,'timeout'=>5);
-    $this->target = \Enhance\Core::getCodeCoverageWrapper('enhancedcalc_rserve', array($enhancedcalculation));
+    $this->target = \Enhance\Core::getCodeCoverageWrapper('EnhancedCalcRrserve', array($enhancedcalculation));
   }
 
   // TearDown
@@ -55,74 +55,74 @@ class RserveTests extends \Enhance\TestFixture
   }
   
   #
-  # caculate_correct_ans
+  # calculate_correct_ans
   #
-  public function test_caculate_correct_ans() {
-      /*$var = array('$A'=>'1','$B'=>'1');
+  public function test_calculate_correct_ans() {
+      $var = array('$A'=>'1','$B'=>'1');
       $formula = '$A + $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("2", $res);
       
       $formula = '$A - $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("0", $res);
       
       $formula = '$A * $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("1", $res);
       
       //small numbers
       $var = array('$A'=>'1.5e-34','$B'=>'1.5e-34');
       $formula = '$A + $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("3e-34", $res);
       
       $formula = '$A - $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("0", $res);
       
       $formula = '$A * $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("2.25e-68", $res);
       
       $formula = '$A / $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("1", $res);
       
       //large number
       $var = array('$A'=>'1.5e34','$B'=>'1.5e34');
       $formula = '$A + $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("3e+34", $res);
       
       $formula = '$A - $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("0", $res);
       
       $formula = '$A * $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("2.25e+68", $res);
       
       $formula = '$A / $B';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("1", $res);
       
       //test POW function 
       $var = array('$A'=>'1.5e34');
       $formula = 'pow($A,2)';
-      $res = $this->target->caculate_correct_ans($var, $formula);
+      $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("2.25e+68", $res);
       $var = array('$A'=>'1.5e-34');
       $formula = 'POW($A,2)';
-      $res = $this->target->caculate_correct_ans($var, $formula);
-      \Enhance\Assert::areIdentical("2.25e-68", $res);*/
+      $res = $this->target->calculate_correct_ans($var, $formula);
+      \Enhance\Assert::areIdentical("2.25e-68", $res);
       
       //Invalid awnser
       $error = '';
       try {
         $var = array('$A'=>'1.5e--i34', '$B'=>'1.5e-34');
         $formula = '$A - $B';
-        $res = $this->target->caculate_correct_ans($var, $formula);
+        $res = $this->target->calculate_correct_ans($var, $formula);
       } catch(Exception $e) {
         $error = $e->getMessage();
       }
@@ -133,7 +133,7 @@ class RserveTests extends \Enhance\TestFixture
       try {
         $var = array('$A'=>'1.5e-34', '$B'=>'0');
         $formula = '$A / $B';
-        $res = $this->target->caculate_correct_ans($var, $formula);
+        $res = $this->target->calculate_correct_ans($var, $formula);
       } catch(Exception $e) {
         $error = $e->getMessage();
         echo $error;
@@ -202,42 +202,42 @@ class RserveTests extends \Enhance\TestFixture
       \Enhance\Assert::areIdentical('ERROR', $res);
   }
   
-  public function test_caculate_tolerance_percent() {
+  public function test_calculate_tolerance_percent() {
       
-     $res = $this->target->caculate_tolerance_percent('100','1');
+     $res = $this->target->calculate_tolerance_percent('100','1');
      \Enhance\Assert::areIdentical('1', $res['tolerance']);
      \Enhance\Assert::areIdentical('101', $res['tolerance_ans']);
      \Enhance\Assert::areIdentical('99', $res['tolerance_ansneg']);
      
-     $res = $this->target->caculate_tolerance_percent('200','10');
+     $res = $this->target->calculate_tolerance_percent('200','10');
      \Enhance\Assert::areIdentical('20', $res['tolerance']);
      \Enhance\Assert::areIdentical('220', $res['tolerance_ans']);
      \Enhance\Assert::areIdentical('180', $res['tolerance_ansneg']);
      
-     $res = $this->target->caculate_tolerance_percent('1.1314e-34','1');
+     $res = $this->target->calculate_tolerance_percent('1.1314e-34','1');
      \Enhance\Assert::areIdentical('1.1314e-36', $res['tolerance']);
      \Enhance\Assert::areIdentical('1.142714e-34', $res['tolerance_ans']);
      \Enhance\Assert::areIdentical('1.120086e-34', $res['tolerance_ansneg']);
      
-     $res = $this->target->caculate_tolerance_percent('1.1314e34','1');
+     $res = $this->target->calculate_tolerance_percent('1.1314e34','1');
      \Enhance\Assert::areIdentical('1.1314e+32', $res['tolerance']);
      \Enhance\Assert::areIdentical('1.142714e+34', $res['tolerance_ans']);
      \Enhance\Assert::areIdentical('1.120086e+34', $res['tolerance_ansneg']);
   }
   
-  public function test_caculate_tolerance_absolute() {
+  public function test_calculate_tolerance_absolute() {
       
-      $res = $this->target->caculate_tolerance_absolute('1000','1');
+      $res = $this->target->calculate_tolerance_absolute('1000','1');
       \Enhance\Assert::areIdentical('1', $res['tolerance']);
       \Enhance\Assert::areIdentical('1001', $res['tolerance_ans']);
       \Enhance\Assert::areIdentical('999', $res['tolerance_ansneg']);
       
-      $res = $this->target->caculate_tolerance_absolute('1000','10');
+      $res = $this->target->calculate_tolerance_absolute('1000','10');
       \Enhance\Assert::areIdentical('10', $res['tolerance']);
       \Enhance\Assert::areIdentical('1010', $res['tolerance_ans']);
       \Enhance\Assert::areIdentical('990', $res['tolerance_ansneg']);
       
-      $res = $this->target->caculate_tolerance_absolute('1e34','1e4');
+      $res = $this->target->calculate_tolerance_absolute('1e34','1e4');
       \Enhance\Assert::areIdentical('1e4', $res['tolerance']);
       \Enhance\Assert::areIdentical('1e+34', $res['tolerance_ans']);
       \Enhance\Assert::areIdentical('1e+34', $res['tolerance_ansneg']);
