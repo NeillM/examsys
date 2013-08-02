@@ -52,7 +52,7 @@ $result->close();
 
 
 foreach ($q_ids as $q_id => $setting) {
-  $enhancedcalc = new enhancedcalc($configObject);
+  $enhancedcalc = new EnhancedCalc($configObject);
   $data['settings'] = $setting;
   $data['q_id'] = $q_id;
   $enhancedcalc->load($data);
@@ -64,15 +64,15 @@ foreach ($q_ids as $q_id => $setting) {
   $result->bind_result($id, $user_answer);
   while ($result->fetch()) {
   
-    $enhancedcalc->setuseranswer($user_answer);
-    $returnarray = $enhancedcalc->calculateUserMark();
+    $enhancedcalc->set_useranswer($user_answer);
+    $returnarray = $enhancedcalc->calculate_user_mark();
 
     if ($returnarray !== Q_MARKING_UNMARKED) {
       //save the extra data back into the log record.
       $sql = "UPDATE log2 set mark = ?, adjmark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
       $storemark = $mysqli->prepare($sql);
       $new_useranswerstring = $enhancedcalc->useranswer_to_string();
-      $totalpos = $enhancedcalc->calculateQuestionMark();
+      $totalpos = $enhancedcalc->calculate_question_mark();
       $storemark->bind_param('dddsi', $enhancedcalc->qmark, $enhancedcalc->qmark, $totalpos, $new_useranswerstring, $id);
       $storemark->execute();
     }

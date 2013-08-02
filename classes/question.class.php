@@ -87,7 +87,7 @@ Class Question {
 
   public $std;
 
-  function setsettings($settings) {
+  function set_settings($settings) {
     if (!is_array($settings)) {
       $this->settings = json_decode($settings, true);
     } else {
@@ -95,15 +95,15 @@ Class Question {
     }
   }
   
-  function setuseranswer($useranswer) {
+  function set_useranswer($useranswer) {
     $this->useranswer = $useranswer;
   }
 
-  function addtouseranswer($key, $value) {
+  function add_to_useranswer($key, $value) {
     $this->useranswer[$key] = $value;
   }
   
-  function exportsave(&$array) {
+  function export_save(&$array) {
     $classvar = get_object_vars($this);
     foreach ($classvar as $key => $value) {
       if ($key == 'useranswer') {

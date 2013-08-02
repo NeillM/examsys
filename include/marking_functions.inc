@@ -444,7 +444,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         } else {
           $totalpos = null;
         }
-        $saved_response = enhancedcalc::processUserAnswer($_POST['qid'][$log_id], $_SESSION['qid'][$log_id]);
+        $saved_response = EnhancedCalc::process_user_answer($_POST['qid'][$log_id], $_SESSION['qid'][$log_id]);
         //unset($_SESSION['qid'][$log_id]);
         break;
       case 'dichotomous':

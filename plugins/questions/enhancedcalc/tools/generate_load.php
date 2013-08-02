@@ -17,8 +17,8 @@ $uans[3] = '{"vars":{"$A":"182.0","$B":"88.0"},"uans":"90.00","uansunit":"mm"}';
 $uans[4] = '{"vars":{"$A":"182.0","$B":"88.0"},"uans":"70.00","uansunit":"mm"}';
 
 //$configObj = new Config();
-$q = new enhancedcalc($configObject);
-$q->setsettings($settings);
+$q = new EnhancedCalc($configObject);
+$q->set_settings($settings);
 
 $mtime = microtime(); 
 $mtime = explode(' ', $mtime); 
@@ -27,7 +27,7 @@ $starttime = $mtime;
 
 $i = 0;
 while($i <= 300 ) {
-  $q->setuseranswer($uans[array_rand($uans)]);
+  $q->set_useranswer($uans[array_rand($uans)]);
   $q->caculateUserMark();
   echo "<br/> $i ::" . $q->qmark . "<br/>";
   $i++;

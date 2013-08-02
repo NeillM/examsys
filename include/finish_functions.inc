@@ -419,9 +419,9 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     if (($paper_type != '2' or $userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
       require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
       $configObj = Config::get_instance();
-      $enhancedcalc = new enhancedcalc($configObj);
+      $enhancedcalc = new EnhancedCalc($configObj);
       $enhancedcalc->load($paper[$question]);
-      $returnarray = $enhancedcalc->calculateUserMark();
+      $returnarray = $enhancedcalc->calculate_user_mark();
 
       if ($returnarray !== Q_MARKING_UNMARKED) {
         //save the extra data back into the log record.
@@ -430,7 +430,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         $new_useranswerstring = $enhancedcalc->useranswer_to_string();
         $storemark->bind_param('dddsi', $enhancedcalc->qmark, $enhancedcalc->qmark, $enhancedcalc->totalpos, $new_useranswerstring, $paper[$question]['uniqid']);
         $storemark->execute();
-        $enhancedcalc->exportsave($paper[$question]);
+        $enhancedcalc->export_save($paper[$question]);
       }
 
       $paper[$question]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
@@ -764,7 +764,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         }
         $tmp_fback = $paper[$question]['correct_fback'];
 
-        $paper[$question]['object'] = new enhancedcalc($configObj);
+        $paper[$question]['object'] = new EnhancedCalc($configObj);
         $paper[$question]['object']->load($paper[$question]);
         $paper[$question]['object']->render_feedback(array('tmp_exclude' => $tmp_exclude, 'hide_if_unanswered' => $hide_if_unanswered, 'tmp_display_correct_answer' => $tmp_display_correct_answer, 'tmp_display_students_response' => $tmp_display_students_response, 'question' => $question, 'tmp_fback' => $tmp_fback, 'tmp_display_feedback' => $tmp_display_feedback));
 

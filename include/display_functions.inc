@@ -646,7 +646,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $question['object']->render_paper();
         $question['object']->load_all_user_answers($user_answers);
 
-        $marks += $question['object']->calculateQuestionMark();
+        $marks += $question['object']->calculate_question_mark();
 
         break;
       case 'likert':
