@@ -11,8 +11,6 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
 echo "<li>Converting Calculation answers to enhanced calculation answers</li>";
 
 set_time_limit(0);
-ini_set('memory_limit', '2048MB');
-
 $LOG = '0';
 $logarray = array('0', '1', '2', '3', '0_deleted', '1_deleted', '_late');
 
