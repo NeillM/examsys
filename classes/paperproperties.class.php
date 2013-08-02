@@ -82,6 +82,7 @@ class PaperProperties {
   private $objective_fb_released;
   private $question_fb_released;
   private $changes;
+  private $recache_marks;
 
   private $_date_timezone = null;
 
@@ -229,7 +230,8 @@ class PaperProperties {
                   latex_needed,
                   password,
                   retired,
-                  crypt_name
+                  crypt_name,
+                  recache_marks
               FROM
                   properties";
 
@@ -295,7 +297,8 @@ class PaperProperties {
                                   $this->latex_needed,
                                   $this->password,
                                   $this->retired,
-                                  $this->crypt_name
+                                  $this->crypt_name,
+                                  $this->recache_marks
                                 );
     $paper_results->fetch();
     $paper_results->close();
@@ -318,14 +321,14 @@ class PaperProperties {
     $this->load_summative_lock();
     
     if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
-      $result = $this->db->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, external_review_deadline = ?, internal_review_deadline = ? WHERE property_id = ?");
-      $result->bind_param('siiiiiissi', $this->marking, $this->pass_mark, $this->distinction_mark, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->external_review_deadline, $this->internal_review_deadline, $this->property_id);
+      $result = $this->db->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, external_review_deadline = ?, internal_review_deadline = ?, recache_marks = ? WHERE property_id = ?");
+      $result->bind_param('siiiiiissii', $this->marking, $this->pass_mark, $this->distinction_mark, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->external_review_deadline, $this->internal_review_deadline, $this->recache_marks, $this->property_id);
     } elseif ($configObject->get('cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
-      $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, rubric = ?, calculator = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ? WHERE property_id = ?");
-      $result->bind_param('ssssssssssiississsssssssi', $this->paper_title, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->rubric, $this->calculator, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->property_id);
+      $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, rubric = ?, calculator = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ?, recache_marks = ? WHERE property_id = ?");
+      $result->bind_param('ssssssssssiississsssssssii', $this->paper_title, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->rubric, $this->calculator, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->recache_marks, $this->property_id);
     } else {
-      $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_type = ?, start_date = ?, end_date = ?, timezone = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, labs = ?, rubric = ?, calculator = ?, exam_duration = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, calendar_year = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ? WHERE property_id = ?");
-      $result->bind_param('ssssssssssssssiisssiissssssssssi', $this->paper_title, $this->paper_type, $this->raw_start_date, $this->raw_end_date, $this->timezone, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->labs, $this->rubric, $this->calculator, $this->exam_duration, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->calendar_year, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->property_id);
+      $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_type = ?, start_date = ?, end_date = ?, timezone = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, labs = ?, rubric = ?, calculator = ?, exam_duration = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, calendar_year = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ?, recache_marks = ? WHERE property_id = ?");
+      $result->bind_param('ssssssssssssssiisssiissssssssssii', $this->paper_title, $this->paper_type, $this->raw_start_date, $this->raw_end_date, $this->timezone, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->labs, $this->rubric, $this->calculator, $this->exam_duration, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->calendar_year, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->recache_marks, $this->property_id);
     }
     $result->execute();
     $result->close();
@@ -1376,6 +1379,19 @@ class PaperProperties {
     if ($old_password != $password) {
       $this->changes[] = array('old'=>$old_password, 'new'=>$password, 'part'=>'password');
     }
+  }
+
+  /**
+   * @param int recache_marks
+   */
+  public function get_recache_marks() {
+    return $this->recache_marks;
+  }
+  /**
+   * @param int recache_marks
+   */
+  public function set_recache_marks($recache_marks) {
+    $this->recache_marks = $recache_marks;
   }
 
   /**

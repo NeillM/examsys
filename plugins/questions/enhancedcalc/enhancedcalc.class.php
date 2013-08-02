@@ -22,9 +22,10 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
+global $configObject;
 
-require_once dirname(__FILE__) . '/../../../classes/mathsutils.class.php';
-require_once dirname(__FILE__) . '/../../../classes/question.class.php';
+require_once $configObject->get('cfg_web_root') . 'classes/mathsutils.class.php';
+require_once $configObject->get('cfg_web_root') . 'classes/question.class.php';
 
 class EnhancedCalc extends Question implements questionInterface {
 
@@ -38,7 +39,7 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   //splits number off front of numb/unit or just number
-  private function split_numb_from_unit($input) {
+  function split_numb_from_unit($input) {
     //user selected the units from a ddl
     if (isset($this->useranswer['uansunit'])) {
       return array($input, $this->useranswer['uansunit']);
@@ -57,7 +58,7 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   //arrange the possible formula by units
-  private function build_formula_by_units($ans) {
+  function build_formula_by_units($ans) {
     $formula_by_units = array();
     foreach ($ans as $key => $value) {
       $units = explode(',', $value['units']);
@@ -69,7 +70,7 @@ class EnhancedCalc extends Question implements questionInterface {
     return $formula_by_units;
   }
 
-  private function are_units_correct($unit) {
+  function are_units_correct($unit) {
     // create array of units and functions
     $this->settings['answersexp'] = $this->build_formula_by_units($this->settings['answers']);
     if (isset($this->settings['answersexp'][$unit])) {
@@ -108,7 +109,7 @@ class EnhancedCalc extends Question implements questionInterface {
     $this->useranswer['status']['units'] = $this->are_units_correct($this->useranswer['uansunit']);
 
     if ($this->useranswer['status']['units'] === false) {
-      //we cant mach the units so this question must be wrong! however we need to have a formula and a unit to caculate the feedback
+      //we cant mach the units so this question must be wrong! however we need to have a formula and a unit to calculate the feedback
       // so just use the fitst one!
       foreach($this->settings['answersexp'] as $unit => $formula) {
         $this->useranswer['ans']['formula_used'] = $formula;
@@ -171,7 +172,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
       /*
        *
-       * FORMAT CACULATED ANS
+       * FORMAT CALCULATED ANS
        *
        */
       if ($this->settings['strictdisplay'] == 'on') {
@@ -226,7 +227,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
       $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans']);
 
-      //caculate distance from correct if needed
+      //calculate distance from correct if needed
       if ($this->useranswer['status']['exact'] === false) {
          $this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
       } else {
@@ -351,7 +352,7 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   /*
-   * caculate the Random Mark for this question
+   * calculate the Random Mark for this question
    *  This Must handle exclusions
    */
   public function calculate_random_mark() {

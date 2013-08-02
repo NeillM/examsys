@@ -474,8 +474,14 @@ if (isset($_POST['Submit'])) {
     $properties->set_themecolor($_POST['themecolor']);
     $properties->set_labelcolor($_POST['labelcolor']);
     $properties->set_folder($_POST['folderID']);
+    
+    if ($properties->get_paper_type() == '2' and $old_marking != $properties->get_marking()) {
+      $properties->set_recache_marks(1);
+    }
 
+    // Save any adjusted properties to the database.
     $properties->save();
+    
     if (!$locked) {
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
 
@@ -690,21 +696,12 @@ if (isset($_POST['Submit'])) {
           } else {
         ?>
             window.opener.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>";
+            window.close();
         <?php
-        if ($properties->get_paper_type() != '0' and $properties->get_paper_type() != '1' and $properties->get_paper_type() != '3' and $old_marking != $properties->get_marking()) {
-          // Re-cache summary statistics because the marking method has changed.
-          $startdate = $properties->get_raw_start_date();
-          $enddate   = $properties->get_raw_end_date();
-        ?>
-          $.post('../reports/recache_class_totals.php', {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $startdate; ?>', enddate: '<?php echo $enddate; ?>'});
-        <?php
-        }
-        ?>
-        setTimeout("window.close()", 300);
-        <?php
-        }
+          }
         ?>
       }
+      
       function updateParent() {
         window.opener.parent.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>";
         window.close();

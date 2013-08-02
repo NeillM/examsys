@@ -470,34 +470,13 @@ if (isset($_POST['submit'])) {
 
   $new_exclusions = new Exclusion($paperID, $mysqli);
   $new_exclusions->load();
-  ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-    <meta http-equiv="pragma" content="no-cache" />
-
-    <title><?php echo $string['frequencydiscrimination']; ?></title>
-
-    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        <?php
-          if ($old_exclusions->excluded !== $new_exclusions->excluded) {
-        ?>
-            $.post('../reports/recache_class_totals.php', {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $_GET['startdate']; ?>', enddate: '<?php echo $_GET['enddate']; ?>'});
-        <?php
-          }
-        ?>
-        setTimeout("window.location = '../paper/details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>'", 200);
-      });
-    </script>
-  </head>
-  <body>
-  </body>
-</html>
-  <?php
+  
+  if ($old_exclusions->excluded !== $new_exclusions->excluded) {
+    $propertyObj->set_recache_marks(1);
+    $propertyObj->save();
+  }
+  
+  header("location: ../paper/details.php?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
   exit();
 }
 
