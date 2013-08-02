@@ -753,7 +753,7 @@ CREATE TABLE `question_statuses` (
   `change_locked` tinyint(3) NOT NULL DEFAULT '1',
   `validate` tinyint(3) NOT NULL DEFAULT '1',
   `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
-  PRIMARY KEY (`id`));
+  PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET={$cfg_db_charset};
 QUERY;
     $updater_utils->execute_query($sql, true);
 
@@ -811,6 +811,7 @@ QUERY;
   foreach ($files as $file) {
     if (StringUtils::ends_with($file, '.php')) {
       include $migration_path . '/' . $file;
+      $mysqli->commit();
     }
   }
 

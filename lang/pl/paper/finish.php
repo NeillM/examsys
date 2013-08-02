@@ -67,5 +67,5 @@ $string['withinshape'] = 'W obszarze';
 $string['outsideshape'] = 'Poza obszarem';
 $string['useranswererror'] = 'Błąd odpowiedzi użytkownika';
 $string['errorkeywordunique'] = 'Błąd: nie można odnaleźć unikalnego pytania dla dostarczonych słów kluczowych';
-$string['errorrandomnotfound'] = 'Błąd: Nie wybrano pytań losowych. Być może ekran był pominięty'; 
-?>
+$string['errorrandomnotfound'] = 'Błąd: Nie wybrano pytań losowych. Być może ekran był pominięty';
+$string['overriddenby'] = 'Mark adjusted by'; // Niko

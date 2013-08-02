@@ -109,7 +109,7 @@ class EnhancedCalc extends Question implements questionInterface {
     $this->useranswer['status']['units'] = $this->are_units_correct($this->useranswer['uansunit']);
 
     if ($this->useranswer['status']['units'] === false) {
-      //we cant mach the units so this question must be wrong! however we need to have a formula and a unit to caculate the feedback
+      //we cant mach the units so this question must be wrong! however we need to have a formula and a unit to calculate the feedback
       // so just use the fitst one!
       foreach($this->settings['answersexp'] as $unit => $formula) {
         $this->useranswer['ans']['formula_used'] = $formula;
@@ -172,7 +172,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
       /*
        *
-       * FORMAT CACULATED ANS
+       * FORMAT CALCULATED ANS
        *
        */
       if ($this->settings['strictdisplay'] == 'on') {
@@ -227,7 +227,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
       $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans']);
 
-      //caculate distance from correct if needed
+      //calculate distance from correct if needed
       if ($this->useranswer['status']['exact'] === false) {
          $this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
       } else {
@@ -352,7 +352,7 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   /*
-   * caculate the Random Mark for this question
+   * calculate the Random Mark for this question
    *  This Must handle exclusions
    */
   public function calculate_random_mark() {
@@ -685,8 +685,40 @@ class EnhancedCalc extends Question implements questionInterface {
     $marks = $this->settings['marks_correct'];
   }
 
-  public function get_vars() {
+  /**
+   * Get the veriables as defined in the question
+   * @return array Array of defined variables indexed by the label (e.g. $A)
+   */
+  public function get_question_vars() {
+    return (isset($this->settings['vars'])) ? $this->settings['vars'] : array();
+  }
+
+  public function get_user_vars() {
     return $this->useranswer['vars'];
+  }
+
+  /**
+   * Get the marks as defined for the question
+   * @return array Array of marks
+   */
+  public function get_question_marks() {
+    $marks_full = isset($this->settings['marks_correct']) ? $this->settings['marks_correct'] : false;
+    $marks_partial = isset($this->settings['marks_partial']) ? $this->settings['marks_partial'] : false;
+    $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : false;
+
+    if ($marks_full and $marks_partial and $marks_incorrect) {
+      return array('correct' => $marks_full, 'partial' => $marks_partial, 'incorrect' => $marks_incorrect);
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Get whether the question is set to disply uints to the user
+   * @return boolean Whether to show units for the question
+   */
+  public function get_show_units() {
+    return (isset($this->settings['show_units'])) ? ($this->settings['show_units'] == true) : false;
   }
 
   public function get_real_answer() {
@@ -695,11 +727,39 @@ class EnhancedCalc extends Question implements questionInterface {
     $this->add_to_useranswer('uans', "1 $units");   // Set a bogus answer before marking.
     $this->calculate_user_mark();
 
-    if ($this->settings['show_units'] == 'on') {
+    if ($this->settings['show_units'] == true) {
       return $this->useranswer['cans'];
     } else {
       return $this->useranswer['cans'] . ' ' . $units;
     }
+  }
+
+  /**
+   * Return the answer as entered by the user
+   * @return string The user's raw answer
+   */
+  public function get_user_answer_raw() {
+    return (isset($this->useranswer['uans'])) ? $this->useranswer['uans'] : '';
+  }
+
+  /**
+   * Get the units selected by a user if units have been displayed
+   * @return string Units selected by the user
+   */
+  public function get_user_answer_units() {
+    return (isset($this->useranswer['uansunit'])) ? $this->useranswer['uansunit'] : '';
+  }
+
+  /**
+   * Get the usits used when selecting the formula to match the user's answer
+   * @return string Units used to mark the answer
+   */
+  public function get_user_answer_units_used() {
+    return (isset($this->useranswer['ans']['units_used'])) ? $this->useranswer['ans']['units_used'] : '';
+  }
+
+  public function get_answer_distance() {
+    return (isset($this->useranswer['cans_dist'])) ? $this->useranswer['cans_dist'] : false;
   }
 
 }
