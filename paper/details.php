@@ -1041,12 +1041,31 @@ $result->close();
     $editPaper->execute();
     $editPaper->close();
   }
-  $mysqli->close();
 ?>
 </table>
+
+<?php
+  ob_flush();
+  flush();
+  
+  if ($properties->get_recache_marks() == 1) {
+    $startdate = $properties->get_raw_start_date();
+    $enddate   = $properties->get_raw_end_date();
+?>
+    <script language="JavaScript">
+      $.post('../reports/recache_class_totals.php', {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $startdate; ?>', enddate: '<?php echo $enddate; ?>'});  // AJAX off to class totals to recache marks.
+    </script>
+<?php
+    $properties->set_recache_marks(0);  // Set the recache to zero to stop it caching again.
+    $properties->save();
+  }
+  
+  $mysqli->close();
+?>
 
 <div id="response"></div>
 </div>
 
 </body>
 </html>
+
