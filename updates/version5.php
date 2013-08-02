@@ -811,6 +811,7 @@ QUERY;
   foreach ($files as $file) {
     if (StringUtils::ends_with($file, '.php')) {
       include $migration_path . '/' . $file;
+      $mysqli->commit();
     }
   }
 
