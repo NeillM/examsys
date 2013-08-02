@@ -576,7 +576,7 @@ class ClassTotals {
               }
               $exclude_on = true;
               $count_sub_paper_answers = count($sub_paper_answers);
-              for ($c=0; $c<$count_sub_paper_answers; $c++) {
+              for ($c = 0; $c < $count_sub_paper_answers; $c++) {
                 if ($tmp_exclude{$section} == '0') {
                   if (!isset($sub_user_answers[$c]) or $sub_user_answers[$c] == '' or $sub_user_answers[$c] == 'u') {
                     // Do nothing
@@ -1107,14 +1107,14 @@ class ClassTotals {
 
     // Load 'logx' data.
     if ($this->paper_type == '0' or $this->paper_type == '1') {
-      $result = $this->db->prepare("(SELECT log0.id, metadataID, 0 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log0, questions WHERE log0.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")) UNION ALL (SELECT log1.id, metadataID, 1 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log1, questions WHERE log1.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . "))");
+      $result = $this->db->prepare("(SELECT log0.id, metadataID, 0 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark, adjmark FROM log0, questions WHERE log0.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")) UNION ALL (SELECT log1.id, metadataID, 1 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark, adjmark FROM log1, questions WHERE log1.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . "))");
     } elseif ($this->paper_type == '5') {
-      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, 1 AS screen, 0 AS duration, NULL AS user_answer, q_type, mark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
+      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, 1 AS screen, 0 AS duration, NULL AS user_answer, q_type, mark, adjmark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
     } else {
-      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
+      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark, adjmark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
     }
     $result->execute();
-    $result->bind_result($log_id, $metadataID, $paper_type, $q_id, $screen, $duration, $user_answer, $q_type, $mark);
+    $result->bind_result($log_id, $metadataID, $paper_type, $q_id, $screen, $duration, $user_answer, $q_type, $mark, $adjmark);
     while ($result->fetch()) {
       $userID = $this->user_results[$metadataID]['userID'];
       if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {

@@ -23,8 +23,8 @@
  * @package
  */
 
-require_once '../classes/mathsutils.class.php';
-require_once('../classes/question.class.php');
+require_once '../../../../classes/mathsutils.class.php';
+require_once '../../../../classes/question.class.php';
 
 class enhancedcalc extends Question implements questionInterface {
 

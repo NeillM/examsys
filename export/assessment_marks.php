@@ -102,11 +102,7 @@ foreach ($user_results as $individual) {
     $q_no = 1;
     foreach ($paper_buffer as $q_id => $question) {
       $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
-      //if (array_key_exists($q_id, $excluded)) {
-      //  $tmp_exclude = $excluded[$q_id];
-      //} else {
-      //  $tmp_exclude = '0000000000000000000000000000000000000000';
-      //}
+      
       // If a random question, get the first on the associated questions from the block. If none exist, output nothing
       $skip_random = false;
       if ($question['q_type'] == 'random') {
@@ -155,7 +151,6 @@ foreach ($user_results as $individual) {
             if ($tmp_exclude{$a} == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } else {
-          //if (!array_key_exists($q_id, $excluded)) $csv .= ',Q' . $q_no;
           if ($tmp_exclude{0} == '0') $csv .= ',Q' . $q_no;
         }
         $q_no++;
@@ -174,11 +169,6 @@ foreach ($user_results as $individual) {
     foreach ($paper_buffer as $q_id => $question) {
       $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
 
-      //if (array_key_exists($q_id, $excluded)) {
-      //  $tmp_exclude = $excluded[$q_id];
-      //} else {
-      //  $tmp_exclude = '0000000000000000000000000000000000000000';
-      //}
       // If a random question, get the one that the user answered, otherwise just get the first and skip if none exist
       $skip_random = false;
       if ($question['q_type'] == 'random') {
