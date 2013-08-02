@@ -119,8 +119,8 @@ class LABELLINGCorrector extends Corrector {
             $user_split1[0] = $mark . '$' . $totalpos;
             $user_answer_new = implode(';', $user_split1);
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=?, user_answer=? WHERE id=?");
-            $updateLog->bind_param('disi', $mark, $totalpos, $user_answer_new, $id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, adjmark=?, totalpos=?, user_answer=? WHERE id=?");
+            $updateLog->bind_param('ddisi', $mark, $mark, $totalpos, $user_answer_new, $id);
             $updateLog->execute();
             $updateLog->close();
           }

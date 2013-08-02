@@ -104,8 +104,8 @@ class AREACorrector extends Corrector {
             }
 
             if ($mark != $user_mark) {
-              $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=? WHERE id=?");
-              $updateLog->bind_param('si', $mark, $id);
+              $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, adjmark=? WHERE id=?");
+              $updateLog->bind_param('ddi', $mark, $mark, $id);
               $updateLog->execute();
               $updateLog->close();
             }
