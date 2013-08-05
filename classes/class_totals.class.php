@@ -82,35 +82,37 @@ class ClassTotals {
   private $user_no;
   private $recache;
   private $question_statuses;
+  private $marking_overrides;
 
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db) {
     $userObject = UserObject::get_instance();
 
-  	$this->db               = $db;
-    $this->demo             = is_demo($userObject);
-    $this->paperID          = $propertyObj->get_property_id();
-    $this->paper_type       = $propertyObj->get_paper_type();
-    $this->calendar_year    = $propertyObj->get_calendar_year();
-    $this->startdate        = $startdate;
-    $this->enddate          = $enddate;
-    $this->absent           = $absent;
-    $this->studentsonly     = $studentsonly;
-    $this->marking          = $propertyObj->get_marking();
-    $this->percent          = $percent;
-    $this->ordering         = $ordering;
-    $this->sortby           = $sortby;
-    $this->repcourse        = $repcourse;
-    $this->repmodule        = $repmodule;
-    $this->pass_mark        = $propertyObj->get_pass_mark();
-    $this->distinction_mark = $propertyObj->get_distinction_mark();
-    $this->log_late         = array();
-    $this->q_medians        = array();
-    $this->random_q_ids     = array();
-    $this->config           = Config::get_instance();
-    $this->propertyObj      = $propertyObj;
-    $this->exclusions       = new Exclusion($this->paperID, $this->db);
-    $this->display_excluded = '';
-    $this->user_no          = 0;
+  	$this->db                 = $db;
+    $this->demo               = is_demo($userObject);
+    $this->paperID            = $propertyObj->get_property_id();
+    $this->paper_type         = $propertyObj->get_paper_type();
+    $this->calendar_year      = $propertyObj->get_calendar_year();
+    $this->startdate          = $startdate;
+    $this->enddate            = $enddate;
+    $this->absent             = $absent;
+    $this->studentsonly       = $studentsonly;
+    $this->marking            = $propertyObj->get_marking();
+    $this->percent            = $percent;
+    $this->ordering           = $ordering;
+    $this->sortby             = $sortby;
+    $this->repcourse          = $repcourse;
+    $this->repmodule          = $repmodule;
+    $this->pass_mark          = $propertyObj->get_pass_mark();
+    $this->distinction_mark   = $propertyObj->get_distinction_mark();
+    $this->log_late           = array();
+    $this->q_medians          = array();
+    $this->random_q_ids       = array();
+    $this->config             = Config::get_instance();
+    $this->propertyObj        = $propertyObj;
+    $this->exclusions         = new Exclusion($this->paperID, $this->db);
+    $this->display_excluded   = '';
+    $this->user_no            = 0;
+    $this->marking_overrides  = array();
 
     $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
   }
@@ -212,6 +214,8 @@ class ClassTotals {
 
     $this->load_metadata();                                                                                   // Query for metadata
 
+    $this->load_overrides();
+    
     $this->load_results();                                                                                    // Load the student data
 
     $this->adjust_marks();                                                                                    // Scale marks (random marks or standards setting)
@@ -528,12 +532,12 @@ class ClassTotals {
     return $correct;
   }
 
-  private function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, &$tmp_user_mark_array) {
+  private function getUserMark($q_id, $userID, $tmp_user_answer, $tmp_user_mark, &$tmp_user_mark_array) {
     $tmp_mark = 0;
 
     $tmp_exclude = $this->exclusions->get_exclusions_by_qid($q_id);
 
-    $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'labelling'=>1, 'hotspot'=>1);
+    $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'enhancedcalc'=>1, 'labelling'=>1, 'hotspot'=>1);
 
     $skip_random = false;
     if (!isset($this->paper_buffer[$q_id])) {
@@ -666,16 +670,38 @@ class ClassTotals {
             }
           }
         }
+      } elseif ($question['q_type'] == 'enhancedcalc') {
+        if ($tmp_exclude{0} == '0') {
+          $settings = json_decode($question['settings'], true);
+          
+          if (isset($this->marking_overrides[$q_id][$userID])) {
+            $new_mark_type = $this->marking_overrides[$q_id][$userID];
+            
+            if ($new_mark_type == 'correct') {
+              $tmp_mark += $settings['marks_correct'];
+              $tmp_user_mark_array[$q_id][] = $settings['marks_correct'];
+            } elseif ($new_mark_type == 'partial') {
+              $tmp_mark += $settings['marks_partial'];
+              $tmp_user_mark_array[$q_id][] = $settings['marks_partial'];
+            } else {
+              $tmp_mark += $settings['marks_incorrect'];
+              $tmp_user_mark_array[$q_id][] = $settings['marks_incorrect'];
+            }
+          } else {
+            $tmp_mark += $tmp_user_mark;
+            $tmp_user_mark_array[$q_id][] = $tmp_user_mark;
+          }
+        }
       } elseif ($question['q_type'] == 'hotspot') {
         $question_parts = explode('|', $question['correct'][0]);
         $user_answers = explode('|', $tmp_user_answer);
         $count_question_parts = count($question_parts);
         for ($i=0; $i<$count_question_parts; $i++) {
           if ($tmp_exclude{$i} == '0') {
-            if (isset($user_answers[$i]) and substr($user_answers[$i],0,1) == '1') {
+            if (isset($user_answers[$i]) and substr($user_answers[$i], 0, 1) == '1') {
               $tmp_mark += $question['marks_correct'];
               $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
-            } elseif (isset($user_answers[$i]) and substr($user_answers[$i],0,1) == '0') {
+            } elseif (isset($user_answers[$i]) and substr($user_answers[$i], 0, 1) == '0') {
               $tmp_mark += $question['marks_incorrect'];
               $tmp_user_mark_array[$q_id][] = $question['marks_incorrect'];
             } else {
@@ -699,7 +725,7 @@ class ClassTotals {
           if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
             $x = $tmp_second_split[$label_no-2];
             $y = $tmp_second_split[$label_no-1] - 25;
-            $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
+            $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no],'|'));
             if ($tmp_exclude{$i} == '0') {
               $placeholders++;
             } else {
@@ -1057,6 +1083,17 @@ class ClassTotals {
     $stmt->close();
   }
 
+  private function load_overrides() {
+    $result = $this->db->prepare("SELECT q_id, user_id, new_mark_type FROM marking_override WHERE paper_id = ?");
+    $result->bind_param('i', $this->paperID);
+    $result->execute();
+    $result->bind_result($q_id, $user_id, $new_mark_type);
+    while ($result->fetch()) {
+      $this->marking_overrides[$q_id][$user_id] = $new_mark_type;
+    }
+    $result->close();
+  }
+  
   private function load_results() {
     if ($this->studentsonly == 0) {
       $roles_sql = '';
@@ -1107,14 +1144,14 @@ class ClassTotals {
 
     // Load 'logx' data.
     if ($this->paper_type == '0' or $this->paper_type == '1') {
-      $result = $this->db->prepare("(SELECT log0.id, metadataID, 0 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark, adjmark FROM log0, questions WHERE log0.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")) UNION ALL (SELECT log1.id, metadataID, 1 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark, adjmark FROM log1, questions WHERE log1.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . "))");
+      $result = $this->db->prepare("(SELECT log0.id, metadataID, 0 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log0, questions WHERE log0.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")) UNION ALL (SELECT log1.id, metadataID, 1 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log1, questions WHERE log1.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . "))");
     } elseif ($this->paper_type == '5') {
-      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, 1 AS screen, 0 AS duration, NULL AS user_answer, q_type, mark, adjmark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
+      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, 1 AS screen, 0 AS duration, NULL AS user_answer, q_type, mark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
     } else {
-      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark, adjmark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
+      $result = $this->db->prepare("SELECT log$this->paper_type.id, metadataID, $this->paper_type AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log$this->paper_type, questions WHERE log$this->paper_type.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")");
     }
     $result->execute();
-    $result->bind_result($log_id, $metadataID, $paper_type, $q_id, $screen, $duration, $user_answer, $q_type, $mark, $adjmark);
+    $result->bind_result($log_id, $metadataID, $paper_type, $q_id, $screen, $duration, $user_answer, $q_type, $mark);
     while ($result->fetch()) {
       $userID = $this->user_results[$metadataID]['userID'];
       if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
@@ -1141,9 +1178,9 @@ class ClassTotals {
       $this->user_results[$metadataID]['questions']++;
       $this->user_results[$metadataID]['paper_type'] = $paper_type;
 
-      $single_mark = $this->getUserMark($q_id, $user_answer, $mark, $tmp_user_mark_array);
+      $single_mark = $this->getUserMark($q_id, $userID, $user_answer, $mark, $tmp_user_mark_array);
       $tmp_mark += $single_mark;
-
+      
       if (($q_type == 'textbox' or $q_type == 'enhancedcalc') and !is_numeric($mark)) {
         $marking_complete = 0;
       }

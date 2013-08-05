@@ -703,9 +703,9 @@ class EnhancedCalc extends Question implements questionInterface {
   public function get_question_marks() {
     $marks_full = isset($this->settings['marks_correct']) ? $this->settings['marks_correct'] : false;
     $marks_partial = isset($this->settings['marks_partial']) ? $this->settings['marks_partial'] : false;
-    $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : false;
+    $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : 0;
 
-    if ($marks_full and $marks_partial and $marks_incorrect) {
+    if ($marks_full and $marks_partial) {
       return array('correct' => $marks_full, 'partial' => $marks_partial, 'incorrect' => $marks_incorrect);
     } else {
       return false;
@@ -758,7 +758,7 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   public function get_answer_distance() {
-    return (isset($this->useranswer['cans_dist'])) ? $this->useranswer['cans_dist'] : false;
+    return (isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 'ERROR') ? $this->useranswer['cans_dist'] : false;
   }
 
 }

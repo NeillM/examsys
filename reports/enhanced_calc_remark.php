@@ -55,16 +55,16 @@ $result->close();
 // Read user answers from log.
 $log_answers = array();
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
+  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log0 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles='Student' OR u.roles='graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log1 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles='Student' OR u.roles='graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
   $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 } else {
-  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer, lm.userID FROM log$paper_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
+  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer, lm.userID FROM log$paper_type l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles='Student' OR u.roles='graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
   $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 }
 $result->execute();
 $result->bind_result($type, $id, $mark, $user_answer, $user_id);
 while ($result->fetch()) {
-  if ($mark != '') {
+  if ($mark !== '') {
     $answer_obj = new enhancedcalc($configObject);
     $answer_obj->set_useranswer($user_answer);
     $answer_obj->set_settings($settings);
