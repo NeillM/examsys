@@ -547,6 +547,15 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $tmp_bgcolor = $bgcolor;
         }
         ?>
+    <!-- ======================== niko_HTML5 new part ================= -->
+    <hr>
+        <canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 27); ?>"></canvas>
+        <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+        <script language="JavaScript" type="text/javascript">
+        //var num = message.substring(5,message.length);
+		</script>
+    <hr>
+    <!-- ==================================================== -->
 
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 24); ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
@@ -582,6 +591,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           write_string('</object>');
 
           sendTextToAS3('<?php echo $language; ?>','q<?php echo $question_no; ?>', 1, '<?php echo $configObject->get('cfg_root_path') . '/media/' . $question['q_media']; ?>', '<?php echo $display_option['correct']; ?>', '<?php echo $tmp_user_answer; ?>');
+          setUpQuestion(1, 'q<?php echo $question_no; ?>','<?php echo $language; ?>', '<?php echo $configObject->get('cfg_root_path') . '/media/' . $question['q_media']; ?>', '<?php echo $display_option['correct']; ?>', '<?php echo $tmp_user_answer; ?>',1,'#FFC0C0','area',1);// niko_HTML5
 
         </script>
         </div>
@@ -1024,6 +1034,16 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
         ?>
         <div align="left">
+            <!-- ======================== niko_HTML5 new part ================= -->
+    <hr>
+        <canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>"></canvas>
+        <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+        <script language="JavaScript" type="text/javascript">
+        //var num = message.substring(5,message.length);
+		</script>
+    <hr>
+    <!-- ==================================================== -->
+            setUpQuestion(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>', '<?php echo $screen_pre_submitted; ?>','#FFC0C0','hotspot','answer');//niko_HTML5
         <script language="JavaScript">
           function swfLoaded<?php echo $question_no; ?>(message) {
             var num = message.substring(5,message.length);
@@ -1156,9 +1176,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
       if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {
         if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],0,5) == 'other') {
-          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" checked /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($user_answers[$current_screen][$q_id],6) . "\" /></td></tr>\n";
+          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" checked /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($user_answers[$current_screen][$q_id],6) . "\" /></td></tr>\n";
         } else {
-          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
+          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
         }
       }
       echo '</table>';
@@ -1174,7 +1194,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } else {
         echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
       }
-      echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($answer, $part_id) . "\" /></td></tr>\n";
+      echo "<td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($answer, $part_id) . "\" /></td></tr>\n";
     }
     echo '</table>';
     if ($question['score_method'] == 'Mark per Question') {

@@ -29,7 +29,6 @@ require_once '../../classes/viewhelper.class.php';
 require_once '../../classes/stateutils.class.php';
 require_once '../../classes/moduleutils.class.php';
 require_once '../../classes/questioninfo.class.php';
-require_once '../../classes/question_status.class.php';
 require_once '../../classes/paperutils.class.php';
 require_once '../../include/edit.inc';
 require_once '../../include/media.inc';
@@ -113,6 +112,9 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
 
 if ($critical_error == '') {
   $question->add_default_correction_behaviours($cfg_web_root);
+
+  if ($mode == 'Edit') $q_no = $question->get_question_number($paper_id);
+
 
   if ($mode == 'Edit') {
     $q_no = $question->get_question_number($paper_id);
@@ -386,10 +388,17 @@ if ($critical_error == '') {
   $notice->display_notice_and_exit($mysqli, $string['error'], $critical_error, $string['error'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+/*niko_html5 echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";*/
+//niko_html5 start
 ?>
-<!DOCTYPE html>
+<!DOCTYPE html><html>
+<?php 
+/*niko_html5
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+*/
+//niko_html5 end----
+?>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -433,6 +442,14 @@ if ($question != null and $question->requires_flash()):
 ?>
 <script type="text/javascript" src="../../js/ie_fix.js"></script>
 <script type="text/javascript" src="../../js/flash_include.js"></script>
+<!--niko_html5 start ---------- -->
+<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+<script type="text/javascript" src="../../html5/html5.images.js"></script>
+<script type="text/javascript" src="../../html5/qsharedf.js"></script>
+<script type="text/javascript" src="../../html5/qlabelling.js"></script>
+<script type="text/javascript" src="../../html5/qhotspot.js"></script>
+<script type="text/javascript" src="../../html5/qarea.js"></script>
+<!--niko_html5 end-->
 <?php
 endif;
 ?>
@@ -440,7 +457,7 @@ endif;
 var qType = '<?php if (isset($question)) echo $question->get_type() ?>';
 var lang = {
 <?php
-$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'enterdescription', 'showmore', 'hidemore', 'enteroption', 'enterformula', 'enteroptionshort', 'enteroption_kw', 'mrqconvert', 'entervignette', 'enteroptiontext', 'selectarea', 'randomenterquestion', 'mappingwarning', 'markchangewarning');
+$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'enterdescription', 'showmore', 'hidemore', 'enteroption', 'enteroptionshort', 'enteroption_kw', 'mrqconvert', 'entervignette', 'enteroptiontext', 'selectarea', 'randomenterquestion', 'mappingwarning', 'markchangewarning');
 $first = true;
 foreach ($langstrings as $langstring) {
   if (!$first) {

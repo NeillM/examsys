@@ -68,9 +68,16 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
   $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
   $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 ?>
+    <!-- ======================== new HTML5 part ================= -->
+    <hr>
+        <canvas id="canvas1" width="<?php echo ($media['width'] + 300); ?>" height="<?php echo ($plugin_height); ?>"></canvas>
+        <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+    <hr>
+    <!-- ==================================================== -->
                 <script type="text/javascript">
                   function swfLoaded1(message) {
                     var num = message.substring(5,message.length);
+                    setUpQuestion(num, message, '<?php echo $language; ?>', '<?php echo $media['filename'] ?>',  '<?php echo $tmp_correct; ?>','','','#FFC0C0','hotspot','edit'); //niko_HTML5
                     
                     setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $media['filename']; ?>', '<?php echo $tmp_correct; ?>','#FFC0C0');
                   }
