@@ -66,6 +66,7 @@ class EnhancedCalcRrserve {
     if (self::$cnx === false) {
       try {
         self::$cnx = @new Rserve_Connection($this->config['host'], $this->config['port'], $timeoutarray);
+        $this->setup_R();
       } catch (exception $except) {
         self::$cnx = null;
         $this->set_error("Can Not Connect");
@@ -78,6 +79,12 @@ class EnhancedCalcRrserve {
     }
   }
   
+  function setup_R() {
+       self::$cnx->evalString("options(digits=15)");
+       self::$cnx->evalString("toStr <- function(V) { return(paste(capture.output(print(V)),collapse='\\n')) }");
+       self::$cnx->evalString("POW <- pow <- function(a,b) { return(a^b) }");
+  }
+  
   function calculate_correct_ans($vars,$formula) {
     
     if (!$this->connect()) {
@@ -87,17 +94,6 @@ class EnhancedCalcRrserve {
     $varname = array_keys($vars);
     $varvalue = array_values($vars);
     $formula_vars_subed = str_replace($varname, $varvalue, $formula);
-    
-    //old caculation fomula use pow() - define a function in R for backward compatibility
-    if (stripos($formula,'pow(') !== true and $this->powDefined === false) {
-      self::$cnx->evalString("POW <- pow <- function(a,b) { return(a^b) }");
-      $this->powDefined = true;
-    }
-    
-    if ($this->toStrDefined === false) {
-      self::$cnx->evalString("toStr <- function(V) { return(paste(capture.output(print(V)),collapse='\\n')) }");
-      $this->toStrDefined = true;
-    }
     
     $correctanswer = $this->eval_string($formula_vars_subed);
    
