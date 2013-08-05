@@ -117,6 +117,12 @@ class RserveTests extends \Enhance\TestFixture
       $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("2.25e-68", $res);
       
+      //lage number with dp
+      $var = array('$A'=>'0.0032', '$B' => '234324234' );
+      $formula = '$A + $B';
+      $res = $this->target->calculate_correct_ans($var, $formula);
+      \Enhance\Assert::areIdentical("234324234.0032", $res);
+      
       //Invalid awnser
       $error = '';
       try {
