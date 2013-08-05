@@ -191,15 +191,15 @@ class RserveTests extends \Enhance\TestFixture
       
       //large
       $res = $this->target->distance_from_correct_answer('23.2e33','23.1e33');
-      \Enhance\Assert::areIdentical('0.4329004', $res);
+      \Enhance\Assert::areIdentical('0.433', $res);
       $res = $this->target->distance_from_correct_answer('23.1e33','23.34e33');
-      \Enhance\Assert::areIdentical('1.028278', $res);
+      \Enhance\Assert::areIdentical('1.028', $res);
       
       //small
       $res = $this->target->distance_from_correct_answer('23.2e-33','23.1e-33');
-      \Enhance\Assert::areIdentical('0.4329004', $res);
+      \Enhance\Assert::areIdentical('0.433', $res);
       $res = $this->target->distance_from_correct_answer('23.1e-33','23.34e-33');
-      \Enhance\Assert::areIdentical('1.028278', $res);
+      \Enhance\Assert::areIdentical('1.028', $res);
       
       //invalid
        $res = $this->target->distance_from_correct_answer('','100');

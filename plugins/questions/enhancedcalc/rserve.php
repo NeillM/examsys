@@ -55,23 +55,23 @@ class EnhancedCalcRrserve {
       $this->set_error("Can Not Connect"); 
       return false;
     }
-
-    // if the box isnt on this timeout is ignored and is likely to be different
-    if (!isset($this->config['timeout'])) {
-      $timeoutarray = array('seconds' => 5, 'milliseconds' => 1);
-    } else {
-      $timeoutarray = array('seconds' => $this->config['timeout'], 'milliseconds' => 1);
-    }
-
+    
     if (self::$cnx === false) {
       try {
+        // if the box isnt on this timeout is ignored and is likely to be different
+        if (!isset($this->config['timeout'])) {
+          $timeoutarray = array('seconds' => 5, 'milliseconds' => 1);
+        } else {
+          $timeoutarray = array('seconds' => $this->config['timeout'], 'milliseconds' => 1);
+        }
         self::$cnx = @new Rserve_Connection($this->config['host'], $this->config['port'], $timeoutarray);
-        $this->setup_R();
       } catch (exception $except) {
         self::$cnx = null;
-        $this->set_error("Can Not Connect");
+        $this->set_error('Can Not Connect');
         return false;
       }
+
+      $this->setup_R();
       return true;
     } else {
       //We are connected
@@ -80,9 +80,9 @@ class EnhancedCalcRrserve {
   }
   
   function setup_R() {
-       self::$cnx->evalString("options(digits=15)");
-       self::$cnx->evalString("toStr <- function(V) { return(paste(capture.output(print(V)),collapse='\\n')) }");
-       self::$cnx->evalString("POW <- pow <- function(a,b) { return(a^b) }");
+       self::$cnx->evalString('options(digits=15); 1==1;');
+       self::$cnx->evalString('toStr <- function(V) { return(paste(capture.output(print(V)),collapse=\'\n\')) }');
+       self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
   }
   
   function calculate_correct_ans($vars,$formula) {
@@ -127,7 +127,7 @@ class EnhancedCalcRrserve {
     }
     
     try {
-       $res = $this->eval_string("(abs($useranswer - $correctanswer)/$correctanswer) * 100");
+       $res = $this->eval_string("round((abs($useranswer - $correctanswer)/$correctanswer) * 100,3)");
     } catch(Exception $e) {
       //there is an error it cant be correct
       return 'ERROR';
@@ -251,23 +251,23 @@ class EnhancedCalcRrserve {
   }
   
   function format_number_dp($num,$dp) {
-    return $this->eval_string("round(" . $num . "," . $dp . ")");
+    return $this->eval_string('round(' . $num . ',' . $dp . ')');
   }
   
   function format_number_dp_strict_zeros($num,$dp) {
     
-    return $this->eval_string("format(round(" . $num . "," . $dp . "), nsmall = " . $dp . ")");
+    return $this->eval_string('format(round(' . $num . ',' . $dp . '), nsmall = ' . $dp . ')');
   }
   
   function format_number_sf($num,$sf) {
-    return $this->eval_string("signif(" . $num . "," . $sf . ")");
+    return $this->eval_string('signif(' . $num . ',' . $sf . ')');
   }
   
   private function eval_string($val) {
     if (!$this->connect()) {
       return false;
     }
-    return $this->extract_value(self::$cnx->evalString("toStr(" . $val . ")"));
+    return $this->extract_value(self::$cnx->evalString('toStr(' . $val . ')'));
   }
   
   private function eval_string_multi($val) {
@@ -276,9 +276,9 @@ class EnhancedCalcRrserve {
     }
     $cmd = 'c(';
     foreach($val as $v) {
-      $cmd .= "toStr(" . $v . "),";
+      $cmd .= 'toStr(' . $v . '),';
     }
-    $cmd = rtrim($cmd, ",");
+    $cmd = rtrim($cmd, ',');
     $cmd .= ')';
     return $this->extract_value(self::$cnx->evalString($cmd));
   }
