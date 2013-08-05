@@ -273,11 +273,8 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
         $partID++;
         break;
       case 'enhancedcalc':
-        $marks_array[$old_q_id][$partID] = $settings['marks_correct'];
-        break;
-      case 'calculation':
         if (substr($exclude[$old_q_id], $partID, 1) == '0') {
-          $marks_array[$old_q_id][$partID] = $marks_correct;
+          $marks_array[$old_q_id][$partID] = $settings['marks_correct'];
         }
         break;
       case 'true_false':

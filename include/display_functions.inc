@@ -70,12 +70,6 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
               }
             }
             break;
-          case 'calculation':
-            $parts = explode('|', $current_answer);
-            if ($parts[0] == '') {
-              $incomplete_screens[$i] = 1;
-            }
-            break;
           case 'enhancedcalc':
             //TODO need more modular function for incomplete
 
@@ -352,7 +346,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
       $li_set = 1;
       if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
-      if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'calculation' and $question['q_type'] != 'enhancedcalc') echo $question['leadin'];
+      if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') echo $question['leadin'];
     }
   }
   if ($question['q_type'] == 'info') {
@@ -372,9 +366,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
   // Pre-question processing
   switch ($question['q_type']) {
-    case 'calculation':
-      $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
-      break;
     case 'enhancedcalc':
       if (isset($user_answers[$current_screen][$q_id])) {
         $d = array();
@@ -1170,50 +1161,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     } elseif ($question['display_method'] == 'dropdown') {
       echo '</select></div>';
     }
-  } elseif ($question['q_type'] == 'calculation') {
-    $settings = json_decode($question['settings'], true);
-    $new_leadin = '';
-    $search = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J');
-    $replace = array($A, $B, $C, $D, $E, $F, $G, $H, $I, $J);
-    $question['leadin'] = str_ireplace($search, $replace, $question['leadin']);
-    if (strpos($question['leadin'],'class="mee"') !== false) {
-      $question['leadin'] = calc_replace_error_safe($question['leadin'], 'ERROR', $string['unanswered']);
-    } else {
-      $question['leadin'] = str_replace('ERROR', '<span style="color:red; font-weight:bold">' . $string['unanswered'] . '</span>', $question['leadin']);
-    }
-    echo $question['leadin'];
-    if (in_array('ERROR', $replace, true)) {
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" disabled />" . $settings['units'] .  "</p>\n";
-    } else {
-      if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '') {
-        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" class=\"calc-answer\" />" . $settings['units'] .  "</div>\n";
-      } else {
-        if ((isset($tmp_user_answers[0]) and $tmp_user_answers[0] != '') or $screen_pre_submitted == 0) {
-          $ans = '';
-          if (isset($tmp_user_answers[0])){
-            $ans = $tmp_user_answers[0];
-          }
-          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $ans . "\" class=\"calc-answer\" />" . $settings['units'] .  "</div>\n";
-        } else {
-          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"unans calc-answer\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" />" . $settings['units'] .  "</div>\n";
-          $unanswered = true;
-        }
-      }
-    }
-    $answer = "echo \"" . $question['options'][0]['correct'] . "\"";
-    echo '<input type="hidden" name="q' . $question_no . '_answer" value="';
-    if (isset($A)) echo $A;
-    if (isset($B)) echo ",$B";
-    if (isset($C)) echo ",$C";
-    if (isset($D)) echo ",$D";
-    if (isset($E)) echo ",$E";
-    if (isset($F)) echo ",$F";
-    if (isset($G)) echo ",$G";
-    if (isset($H)) echo ",$H";
-    if (isset($I)) echo ",$I";
-    if (isset($J)) echo ",$J";
-    echo '" />';
-    $marks = $display_option['marks_correct'];
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
     if ($question['display_method'] == 'other') {
       $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
@@ -1366,7 +1313,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   }
 
   // Display possible marks for question (if not Survey)
-  if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'calculation' and $question['q_type'] != 'matrix') echo '</blockquote>';
+  if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'enhancedcalc' and $question['q_type'] != 'matrix') echo '</blockquote>';
   if ($paper_type < 3) {
     if ($marks == 0) {
       echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
