@@ -223,7 +223,7 @@ class EnhancedCalc extends Question implements questionInterface {
         return $returnstatus;
       }
 
-      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] == 'on'));
+      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] != 'on'));
 
       //calculate distance from correct if needed
       if ($this->useranswer['status']['exact'] === false) {
