@@ -100,14 +100,26 @@ class EnhancedCalcRrserve {
     return $correctanswer;
   }
   
-  function is_useranswer_correct($useranswer, $correctanswer) {
+  function is_useranswer_correct($useranswer, $correctanswer, $round_to_stundent_precision) {
     
     if ($useranswer == '') {
       return false;
     }
     
+    if ($round_to_stundent_precision) {
+        if ($this->is_engineering_format($useranswer)) {
+            $stundent_precision = $this->calc_sf($useranswer);
+            $calc = "signif($correctanswer,$stundent_precision) == $useranswer";
+        } else {
+            $stundent_precision = $this->calc_dp($useranswer);
+            $calc = "round($correctanswer,$stundent_precision) == $useranswer";
+        }
+    } else {
+       $calc = "$correctanswer == $useranswer";
+    }
+    
     try {
-      $status = $this->eval_string("$correctanswer == $useranswer");
+      $status = $this->eval_string($calc);
     } catch(Exception $e) {
       //there is an error it cant be correct
       return false;
@@ -234,13 +246,7 @@ class EnhancedCalcRrserve {
       return false;
     }
     
-    $strpos = strpos($useranswer, '.');
-    $strpos1 = stripos($useranswer, 'e', $strpos);
-    if ($strpos1 === false) {
-      $strpos1 = strlen($useranswer);
-    }
-    
-    $dps = $strpos1 - $strpos - 1;
+    $dps = $this->calc_dp($useranswer);
 
     if ($dps == $dp) {
       return true;
@@ -248,6 +254,46 @@ class EnhancedCalcRrserve {
       return false;
     }
     
+  }
+  
+  function calc_dp($num) {
+    $dotpos = strpos($num, '.');
+    if($dotpos === false) {
+      return 0;
+    }
+    
+    $epos = strpos($num, 'e');
+    if($epos !== false) {
+        $end = $epos;
+    } else {
+        $end = strlen($num);
+    }
+   
+    return $end - ($dotpos + 1);
+  }
+  
+  function calc_sf($num) {
+        
+    $epos = strpos($num, 'e');
+    if($epos === false) {
+      $epos = strlen($num);
+    } 
+    
+    if(strpos($num, '0.') === 0) {
+       $epos = $epos - 2;
+    } else if(strpos($num, '.') !== false) {
+      $epos = $epos - 1;
+    }
+   
+    return $epos;
+  }
+  
+  function is_engineering_format($num) {
+      $epos = strpos($num, 'e');
+      if($epos !== false) {
+         return true;
+      }
+      return false;
   }
   
   function format_number_dp($num,$dp) {
