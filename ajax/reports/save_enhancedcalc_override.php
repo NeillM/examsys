@@ -59,7 +59,7 @@ $q_marks_rev = array_flip($q_marks);
 
 if ($q_marks !== false) {
   // Get user's current mark
-  $sql = "SELECT adjmark FROM log$log WHERE id = ?";
+  $sql = "SELECT mark FROM log$log WHERE id = ?";
   $result = $mysqli->prepare($sql);
   $result->bind_param('i', $log_id);
   $result->execute();
@@ -91,14 +91,25 @@ QUERY;
 
       $new_mark = $q_marks[$mark_type];
 
-      // Update the adjusted mark
-      $sql = "UPDATE log{$log} SET adjmark = ? WHERE id = ? and q_id = ?";
+      // Update the mark mark
+      $sql = "UPDATE log{$log} SET mark = ? WHERE id = ? and q_id = ?";
       $result = $mysqli->prepare($sql);
       if ($result) {
         $result->bind_param('dii', $new_mark, $log_id, $q_id);
         $result2 = $result->execute();
+        $result->store_result();
         if ($result2 == false) {
           $status = 'ERROR';
+        } else {
+          // Invalidate the cache so it will get rebuilt with new mark
+          $cache_sql = "UPDATE properties SET recache_marks = 1 WHERE property_id = ?";
+          $cache_update = $mysqli->prepare($cache_sql);
+          $cache_update->bind_param('i', $paper_id);
+          $cache_result = $cache_update->execute();
+          if ($cache_result == false) {
+            $status = 'ERROR';
+          }
+          $cache_update->close();
         }
         $result->close();
       }
