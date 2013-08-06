@@ -102,8 +102,8 @@ class MRQCorrector extends Corrector {
               }
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, adjmark=?, totalpos=? WHERE id=?");
-            $updateLog->bind_param('ddii', $mark, $mark, $totalpos, $id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE id=?");
+            $updateLog->bind_param('dii', $mark, $totalpos, $id);
             $updateLog->execute();
             $updateLog->close();
           }
@@ -113,6 +113,10 @@ class MRQCorrector extends Corrector {
     	} catch (ValidationException $vex) {
     	  $errors[] = $vex->getMessage();
     	}
+
+      if (count($errors) == 0) {
+        $this->invalidate_paper_cache($paper_id);
+      }
     }
 
     return $errors;

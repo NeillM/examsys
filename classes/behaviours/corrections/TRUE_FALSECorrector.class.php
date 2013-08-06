@@ -106,8 +106,8 @@ class TRUE_FALSECorrector extends Corrector {
               $mark = ($mark == count($new_correct_val)) ? $mark_correct : $mark_incorrect;
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, adjmark=? WHERE id=?");
-            $updateLog->bind_param('ddi', $mark, $mark, $id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=? WHERE id=?");
+            $updateLog->bind_param('di', $mark, $id);
             $updateLog->execute();
             $updateLog->close();
           }
@@ -117,6 +117,10 @@ class TRUE_FALSECorrector extends Corrector {
     	} catch (ValidationException $vex) {
     	  $errors[] = $vex->getMessage();
     	}
+
+      if (count($errors) == 0) {
+        $this->invalidate_paper_cache($paper_id);
+      }
     }
 
     return $errors;

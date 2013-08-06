@@ -147,8 +147,8 @@ class CALCULATIONCorrector extends Corrector {
               $mark = $mark_incorrect;
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, adjmark=?, user_answer = ? WHERE id = ?");
-            $updateLog->bind_param('ddsi', $mark, $mark, $saved_response, $id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, user_answer = ? WHERE id = ?");
+            $updateLog->bind_param('dsi', $mark, $saved_response, $id);
             $updateLog->execute();
             $updateLog->close();
           }
@@ -157,6 +157,10 @@ class CALCULATIONCorrector extends Corrector {
     	} catch (ValidationException $vex) {
     	  $errors[] = $vex->getMessage();
     	}
+
+      if (count($errors) == 0) {
+        $this->invalidate_paper_cache($paper_id);
+      }
     }
 
     return $errors;
