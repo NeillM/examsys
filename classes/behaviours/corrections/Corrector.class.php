@@ -24,6 +24,7 @@
  * @package
  */
 
+global $configObject;
 require_once $configObject->get('cfg_web_root') . 'classes/paperproperties.class.php';
 
 abstract class Corrector {
