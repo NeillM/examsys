@@ -103,8 +103,8 @@ class MATRIXCorrector extends Corrector {
               }
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, adjmark=?, totalpos=? WHERE id=?");
-            $updateLog->bind_param('ddii', $mark, $mark, $totalpos, $id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE id=?");
+            $updateLog->bind_param('dii', $mark, $totalpos, $id);
             $updateLog->execute();
             $updateLog->close();
           }
