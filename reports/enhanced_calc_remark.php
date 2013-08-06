@@ -166,7 +166,7 @@ foreach ($q_vars as $var => $dummy) {
         <th class="longcolumn separate"><?php echo $string['distance']; ?></th>
         <th class="shortcolumn separate"><?php echo $string['fullmarks']; ?></th>
         <th class="shortcolumn separate"><?php echo $string['partialmarks']; ?></th>
-        <th class="shortcolumn separate"><?php echo $string['nomarks']; ?></th>
+        <th class="shortcolumn separate"><?php echo $string['incorrect']; ?></th>
         <th class="separate"><?php echo $string['reason']; ?></th>
         <th class="separate">&nbsp;</th>
       </tr>
