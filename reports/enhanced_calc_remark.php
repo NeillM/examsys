@@ -127,6 +127,7 @@ $q_marks = array_flip($question_obj->get_question_marks());
   </style>
 
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
   <script type="text/javascript" src="../../js/jquery.enhancedcalc_override.js"></script>
   <script type="text/javascript">
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>', 'nomarkmsg' : '<?php echo $string['nomarkmsg'] ?>'};
@@ -166,7 +167,7 @@ foreach ($q_vars as $var => $dummy) {
         <th class="longcolumn separate"><?php echo $string['distance']; ?></th>
         <th class="shortcolumn separate"><?php echo $string['fullmarks']; ?></th>
         <th class="shortcolumn separate"><?php echo $string['partialmarks']; ?></th>
-        <th class="shortcolumn separate"><?php echo $string['nomarks']; ?></th>
+        <th class="shortcolumn separate"><?php echo $string['incorrect']; ?></th>
         <th class="separate"><?php echo $string['reason']; ?></th>
         <th class="separate">&nbsp;</th>
       </tr>

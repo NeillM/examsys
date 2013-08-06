@@ -48,7 +48,7 @@ var saveRow = function (e) {
           return false;
         }
 
-        row.addClass('overridden');
+        row.addClass('overridden').effect("highlight", {}, 1500);
       }
     ).fail(doError);
   }

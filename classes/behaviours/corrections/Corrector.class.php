@@ -24,6 +24,9 @@
  * @package
  */
 
+global $configObject;
+require_once $configObject->get('cfg_web_root') . 'classes/paperproperties.class.php';
+
 abstract class Corrector {
   protected $_mysqli;
   protected $_lang_strings;
@@ -41,4 +44,17 @@ abstract class Corrector {
    * @param integer $paper_id
    */
   abstract function execute($new_correct, $paper_id, &$changes, $paper_type);
+
+  /**
+   * Invalidate the cache for the given paper
+   * @param  integer $paper_id ID of paper for which the cache should be invalidated
+   */
+  protected function invalidate_paper_cache($paper_id) {
+    $properties = new PaperProperties($this->_mysqli);
+    $properties->set_property_id($paper_id);
+    $properties->load();
+
+    $properties->set_recache_marks(1);
+    $properties->save();
+  }
 }

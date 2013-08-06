@@ -202,7 +202,6 @@ class EnhancedCalc extends Question implements questionInterface {
 
       /*
        *
-       *
        * MARKING
        *
        */
@@ -224,7 +223,7 @@ class EnhancedCalc extends Question implements questionInterface {
         return $returnstatus;
       }
 
-      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans']);
+      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] != 'on'));
 
       //calculate distance from correct if needed
       if ($this->useranswer['status']['exact'] === false) {
@@ -268,8 +267,7 @@ class EnhancedCalc extends Question implements questionInterface {
       }
 
       //check for strict sf
-      if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']) ) {
-
+      if ($this->is_strict_sf_enabled() ) {
         $this->useranswer['status']['strictsf'] = $enhancedcalcObj->is_useranswer_within_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
         if ($this->useranswer['status']['strictsf'] === false) {
           $this->qmark = $this->settings['marks_incorrect'];
@@ -385,6 +383,10 @@ class EnhancedCalc extends Question implements questionInterface {
 
   function is_strict_dp_strictzeros_enabled() {
     return (isset($this->settings['strictzeros']) and $this->settings['strictzeros'] == 'on');
+  }
+  
+  function is_strict_sf_enabled() {
+    return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']);
   }
 
   /*
