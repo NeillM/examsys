@@ -36,9 +36,9 @@ function doSuccess(data) {
   }
 
   if ($('#mark' + id).val() == 'NULL') {
-    $('#ans_' + id).removeClass('marked').effect("highlight", {}, 1500);;
+    $('#ans_' + id).removeClass('marked').effect("highlight", {}, 1500);
   } else {
-    $('#ans_' + id).addClass('marked').effect("highlight", {}, 1500);;
+    $('#ans_' + id).addClass('marked').effect("highlight", {}, 1500);
   }
 
 }
