@@ -33,10 +33,7 @@ require '../include/staff_auth.inc';
   <title><?php echo $string['createnewpaper'] . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {background-color:#F0F0F0; margin:6px; font-size:90%}
-    .icon {color:#001687; padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; height:74px; font-size:8pt; background-repeat:no-repeat}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
@@ -104,9 +101,9 @@ require '../include/staff_auth.inc';
 <body>
 <form name="theform" action="new_paper2.php" method="post" onsubmit="return checkForm();">
 <div style="text-align:center; border:solid 1px #7F9DB9; background-color:white">
-<table cellpadding="0" cellspacing="0" border="0" style="background-color:white; color:#001687; width:100%">
+<table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>
-<td colspan="8" style="text-align:left; font-weight:bold; background-color:#DDE7EE; color:#001687; border-bottom:1px solid #C5C5C5; padding:4px">&nbsp;<?php echo $string['papertype']; ?></td>
+<td colspan="8" class="titlebar" style="text-align:left">&nbsp;<?php echo $string['papertype']; ?></td>
 </tr>
 <tr>
 <td class="icon" onclick="activate('formative')" onmouseover="over('formative')" onmouseout="out('formative')" id="formative"><img src="../artwork/formative.png" width="48" height="48" alt="Formative Self-Assessment" /><br /><?php echo $string['formative self-assessment']; ?></td>
@@ -124,7 +121,7 @@ require '../include/staff_auth.inc';
 </table>
 </div>
 <br />
-<span style="color:#001687"><?php echo $string['name']; ?><span> <input type="text" id="paper_name" name="paper_name" value="" style="width:650px" />
+<?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="" style="width:650px" />
 <input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
 <input type="hidden" id="paper_type" name="paper_type" value="" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />

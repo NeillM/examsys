@@ -402,13 +402,13 @@ if (isset($_POST['Submit'])) {
     $first_module_id = '';
 
     for ($i=0; $i<$_POST['module_no']; $i++) {
-      if (isset($_POST['module' . $i])) {
+      if (isset($_POST['mod' . $i])) {
         if (count($paper_modules) == 0) {
-          $paper_modules[$_POST['module' . $i]] = $_POST['module' . $i];
-          $first_module_idMod = $_POST['module' . $i];
-          $first_module_id = $_POST['module' . $i];
+          $paper_modules[$_POST['mod' . $i]] = $_POST['mod' . $i];
+          $first_module_idMod = $_POST['mod' . $i];
+          $first_module_id = $_POST['mod' . $i];
         } else {
-          $paper_modules[$_POST['module' . $i]] = $_POST['module' . $i];
+          $paper_modules[$_POST['mod' . $i]] = $_POST['mod' . $i];
         }
       }
     }
@@ -816,14 +816,14 @@ if (isset($_POST['Submit'])) {
 
     function getMeta() {
       var mod_codes = '';
-      var module_no = document.getElementById('module_no').value;
+      var module_no = $('#module_no').val();
 
       for (i=0; i<module_no; i++) {
-        if (document.getElementById('module' + i).checked == true) {
+        if ($('#mod' + i).attr('checked')) {
           if (mod_codes == '') {
-            mod_codes = document.getElementById('module' + i).value;
+            mod_codes = $('#mod' + i).val();
           } else {
-            mod_codes += ',' + document.getElementById('module' + i).value;
+            mod_codes += ',' + $('#mod' + i).val();
           }
         }
       }
@@ -832,18 +832,20 @@ if (isset($_POST['Submit'])) {
     }
 
     function objreportURL() {
-      if (document.getElementById('objectives_report').checked == true) {
-        document.getElementById('objreport').style.display = 'block';
+      if ($('#objectives_report').attr('checked')) {
+        $('#objreport').show();
       } else {
-        document.getElementById('objreport').style.display = 'none';
+        $('#objreport').hide();
       }
     }
 
     function toggle(objectID) {
-      if (document.getElementById(objectID).className == 'r2') {
-        document.getElementById(objectID).className = 'r1';
+      if ($('#' + objectID).hasClass('r2')) {
+        $('#' + objectID).addClass('r1');
+        $('#' + objectID).removeClass('r2');
       } else {
-        document.getElementById(objectID).className = 'r2';
+        $('#' + objectID).addClass('r2');
+        $('#' + objectID).removeClass('r1');
       }
     }
 
@@ -859,15 +861,15 @@ if (isset($_POST['Submit'])) {
         return false;
       }
 
-      var module_no = document.getElementById('module_no').value;
+      var module_no = $('#module_no').val();
       var moduleList = '';
       for (var i = 0; i < module_no; i++) {
-        objectID = 'module' + i;
-        if (document.getElementById(objectID).checked == true) {
+        objectID = 'mod' + i;
+        if ($('#' + objectID).attr('checked')) {
           if (moduleList == '') {
-            moduleList = document.getElementById(objectID).value;
+            moduleList = $('#' + objectID).val();
           } else {
-            moduleList += ',' + document.getElementById(objectID).value;
+            moduleList += ',' + $('#' + objectID).val();
           }
         }
       }
@@ -894,16 +896,16 @@ if (isset($_POST['Submit'])) {
       }
 
       if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '4') {
-        var module_no = document.getElementById('module_no').value;
+        var module_no = $('#module_no').val();
 
         var moduleList = '';
         for (var i = 0; i < module_no; i++) {
-          objectID = 'module' + i;
-          if (document.getElementById(objectID).checked == true) {
+          objectID = 'mod' + i;
+          if ($('#' + objectID).attr('checked')) {
             if (moduleList == '') {
-              moduleList = document.getElementById(objectID).value;
+              moduleList = $('#' + objectID).val();
             } else {
-              moduleList += ',' + document.getElementById(objectID).value;
+              moduleList += ',' + $('#' + objectID).val();
             }
           }
         }
@@ -914,9 +916,9 @@ if (isset($_POST['Submit'])) {
       }
 
       var external_set = false;
-      for (var i = 0; i < document.getElementById('examiner_no').value; i++) {
+      for (var i = 0; i < $('#examiner_no').val(); i++) {
         objectID = 'examiner' + i;
-        if (document.getElementById(objectID).checked == true) {
+        if ($('#' + objectID).attr('checked')) {
           external_set = true;
         }
       }
@@ -934,9 +936,9 @@ if (isset($_POST['Submit'])) {
       }
 
       var internal_set = false;
-      for (var i = 0; i < document.getElementById('internal_no').value; i++) {
+      for (var i = 0; i < $('#internal_no').val(); i++) {
         objectID = 'internal' + i;
-        if (document.getElementById(objectID).checked == true) {
+        if ($('#' + objectID).attr('checked')) {
           internal_set = true;
         }
       }
@@ -961,42 +963,26 @@ if (isset($_POST['Submit'])) {
 
     function changeType() {
       if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '0') {
-        document.getElementById('feedback_on').style.display = 'block';
-        document.getElementById('feedback_off').style.display = 'none';
+        $('#feedback_on').show();
+        $('#feedback_off').hide();
       } else {
-        document.getElementById('feedback_on').style.display = 'none';
-        document.getElementById('feedback_off').style.display = 'block';
-      }
-      if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '3') {
-        document.getElementById('pass_mark').disabled = true;
-        document.getElementById('marking1').disabled = true;
-        document.getElementById('marking2').disabled = true;
-      } else {
-        document.getElementById('pass_mark').disabled = false;
-        document.getElementById('marking1').disabled = false;
-        document.getElementById('marking2').disabled = false;
-      }
-      if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '2') {
-        document.edit_form.tday.value = document.edit_form.fday.options[document.edit_form.fday.selectedIndex].value;
-        document.edit_form.tmonth.value = document.edit_form.fmonth.options[document.edit_form.fmonth.selectedIndex].value;
-        document.edit_form.tyear.value = document.edit_form.fyear.options[document.edit_form.fyear.selectedIndex].value;
-        if (document.getElementById('rubric_text').value == '') {
-          oEdit3.loadHTML("<?php echo $string['msg8']; ?>");
-        }
+        $('#feedback_on').hide();
+        $('#feedback_off').show();
       }
     }
 
     function buttonclick(sectionID, tabID) {
-      document.getElementById('general').style.display = 'none';
-      document.getElementById('security').style.display = 'none';
-      document.getElementById('reviewers').style.display = 'none';
-      document.getElementById('feedback').style.display = 'none';
-      document.getElementById('rubric').style.display = 'none';
-      document.getElementById('prologue').style.display = 'none';
-      document.getElementById('postscript').style.display = 'none';
-      document.getElementById('reference').style.display = 'none';
-      document.getElementById('changes').style.display = 'none';
-      document.getElementById(sectionID).style.display = '';
+      $('#general').hide();
+      $('#security').hide();
+      $('#reviewers').hide();
+      $('#feedback').hide();
+      $('#rubric').hide();
+      $('#prologue').hide();
+      $('#postscript').hide();
+      $('#reference').hide();
+      $('#changes').hide();
+
+      $('#' + sectionID).show();
 
       $('#tab1').removeClass("button_on");
       $('#tab2').removeClass("button_on");
@@ -1044,14 +1030,14 @@ if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') {
   echo "<tr><td id=\"tab1\" class=\"button_on\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab1')\" onmouseout=\"buttonout('tab1')\" onclick=\"buttonclick('general','tab1')\">&nbsp;" . $string['generaltab'] . "</td></tr>\n";
   echo "<tr><td id=\"tab2\" class=\"button_off\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab2')\" onmouseout=\"buttonout('tab2')\" onclick=\"buttonclick('security','tab2')\">&nbsp;" . $string['securitytab'] . "</td></tr>\n";
 }
-if ($properties->get_paper_type() != '6') {
+if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '6') {
   echo '<tr><td id="tab3" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab3\')" onmouseout="buttonout(\'tab3\')" onclick="buttonclick(\'feedback\',\'tab3\')">&nbsp;' . $string['feedback'] . '</td></tr>';
   echo '<tr><td id="tab4" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab4\')" onmouseout="buttonout(\'tab4\')" onclick="buttonclick(\'reviewers\',\'tab4\')">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
 } else {
   echo '<tr><td id="tab3" class="button_off" style="display:none">&nbsp;' . $string['feedback'] . '</td></tr>';
   echo '<tr><td id="tab4" class="button_off" style="display:none">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
 }
-if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
+if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
   echo '<tr><td id="tab5" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab5\')" onmouseout="buttonout(\'tab5\')" onclick="buttonclick(\'rubric\',\'tab5\')">&nbsp;' . $string['rubrictab'] . '</td></tr>';
 } else {
   echo '<tr><td id="tab5" class="button_off" style="display:none">&nbsp;' . $string['rubrictab'] . '</td></tr>';
@@ -1205,7 +1191,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     }
-    echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['marking'] . "</td></tr>\n";
+    if ($properties->get_paper_type() != '3') {
+      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['marking'] . "</td></tr>\n";
+    }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     if ($properties->get_paper_type() == '4') {    // OSCE Stations
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['passmark'] . "&nbsp;</td><td valign=\"top\">\n<select name=\"pass_mark\" id=\"pass_mark\">\n";
@@ -1280,7 +1268,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo '<input type="radio" name="review" value="0" />';
       }
       echo $string['singlereview'] . '</td></tr>';
-    } else {
+    } elseif ($properties->get_paper_type() != '3') {
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['passmark'] . "&nbsp;</td><td valign=\"top\"><select name=\"pass_mark\" id=\"pass_mark\"";
       if ($properties->get_paper_type() == '3') echo ' disabled';
       echo '>';
@@ -1634,12 +1622,12 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         }
         if ($match == true) {
           if (in_array($module['id'], $staff_modules) or $userObject->has_role('SysAdmin')) {
-            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked $disabled>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked $disabled>&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           } else {
-            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           }
         } else {
-          echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\"$disabled>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+          echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\"$disabled>&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
         }
         $module_no++;
         $old_school = $module['school'];
@@ -1746,7 +1734,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
      echo "</td></tr>\n";
 
-     if ($properties->get_paper_type() != '2' and $properties->get_paper_type() != '4') {
+     if (in_array($properties->get_paper_type(), array('2', '4'))) {
        echo "<tr><td colspan=\"2\"style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['textualfeedback'] . "</td></tr>\n";
        echo "<tr><td style=\"text-align:center\">" . $string['above'] . "</td><td style=\"text-align:center\">" . $string['message'] . "</td></tr>\n";
        for ($i=1; $i<=10; $i++) {

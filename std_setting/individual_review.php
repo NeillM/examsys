@@ -47,7 +47,7 @@ $marking = $propertyObj->get_marking();
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
 function ebelDropdown($dropdownID, $selected) {
-  $html = "<select name=\"$dropdownID\" onchange=\"recountCategories();\">\n";
+  $html = "<select name=\"$dropdownID\" id=\"$dropdownID\" onchange=\"recountCategories();\">\n";
   $html .= "<option value=\"0\"></option>\n";
   $selected = intval($selected * 100);
   for ($individual_category=0; $individual_category<=100; $individual_category++) {
@@ -139,11 +139,11 @@ function check_ebel_distinction_type($ebel) {
       var origHI = 0;
       var origHN = 0;
 
-      var question_no = parseInt(document.questions.stdIDNo.value);
+      var question_no = parseInt($('#stdIDNo').val());
 
       for (i=0; i<question_no; i++) {
-        var question_marks = parseInt(document.getElementById('std' + i + '_marks').value);
-        switch (document.getElementById('valstd' + i).value) {
+        var question_marks = parseInt($('#std' + i + '_marks').val());
+        switch ($('#valstd' + i).val()) {
           case 'EE':
             EE += question_marks;
             break;
@@ -172,7 +172,7 @@ function check_ebel_distinction_type($ebel) {
             HN += question_marks;
             break;
         }
-        switch (document.getElementById('valstd' + i).value) {
+        switch ($('#valstd' + i).val()) {
           case 'EE':
           case 'exclude_EE':
             origEE += question_marks;
@@ -211,139 +211,139 @@ function check_ebel_distinction_type($ebel) {
             break;
         }
       }
-      document.questions.ee.value = EE + ' <?php echo $string['marks']; ?>';
+      $('#ee').val(EE + ' <?php echo $string['marks']; ?>');
       if (origEE != EE) {
-        document.questions.origee.value = origEE;
-        document.questions.origee2.value = origEE;
+        $('#origee').val(origEE);
+        $('#origee2').val(origEE);
       } else {
-        document.questions.origee.value = '';
-        document.questions.origee2.value = '';
+        $('#origee').val('');
+        $('#origee2').val('');
       }
 
-      document.questions.ei.value = EI + ' <?php echo $string['marks']; ?>';
+      $('#ei').val(EI + ' <?php echo $string['marks']; ?>');
       if (origEI != EI) {
-        document.questions.origei.value = origEI;
-        document.questions.origei2.value = origEI;
+        $('#origei').val(origEI);
+        $('#origei2').val(origEI);
       } else {
-        document.questions.origei.value = '';
-        document.questions.origei2.value = '';
+        $('#origei').val('');
+        $('#origei2').val('');
       }
 
-      document.questions.en.value = EN + ' <?php echo $string['marks']; ?>';
+      $('en').val(EN + ' <?php echo $string['marks']; ?>');
       if (origEN != EN) {
-        document.questions.origen.value = origEN;
-        document.questions.origen2.value = origEN;
+        $('#origen').val(origEN);
+        $('#origen2').val(origEN);
       } else {
-        document.questions.origen.value = '';
-        document.questions.origen2.value = '';
+        $('#origen').val('');
+        $('#origen2').val('');
       }
 
-      document.questions.me.value = ME + ' <?php echo $string['marks']; ?>';
+      $('#me').val(ME + ' <?php echo $string['marks']; ?>');
       if (origME != ME) {
-        document.questions.origme.value = origME;
-        document.questions.origme2.value = origME;
+        $('#origme').val(origME);
+        $('#origme2').val(origME);
       } else {
-        document.questions.origme.value = '';
-        document.questions.origme2.value = '';
+        $('#origme').val('');
+        $('#origme2').val('');
       }
 
-      document.questions.mi.value = MI + ' <?php echo $string['marks']; ?>';
+      $('#mi').val(MI + ' <?php echo $string['marks']; ?>');
       if (origMI != MI) {
-        document.questions.origmi.value = origMI;
-        document.questions.origmi2.value = origMI;
+        $('#origmi').val(origMI);
+        $('#origmi2').val(origMI);
       } else {
-        document.questions.origmi.value = '';
-        document.questions.origmi2.value = '';
+        $('#origmi').val('');
+        $('#origmi2').val('');
       }
 
-      document.questions.mn.value = MN + ' <?php echo $string['marks']; ?>';
+      $('#mn').val(MN + ' <?php echo $string['marks']; ?>');
       if (origMN != MN) {
-        document.questions.origmn.value = origMN;
-        document.questions.origmn2.value = origMN;
+        $('#origmn').val(origMN);
+        $('#origmn2').val(origMN);
       } else {
-        document.questions.origmn.value = '';
-        document.questions.origmn2.value = '';
+        $('#origmn').val('');
+        $('#origmn2').val('');
       }
 
-      document.questions.he.value = HE + ' <?php echo $string['marks']; ?>';
+      $('#he').val(HE + ' <?php echo $string['marks']; ?>');
       if (origHE != HE) {
-        document.questions.orighe.value = origHE;
-        document.questions.orighe2.value = origHE;
+        $('#orighe').val(origHE);
+        $('#orighe2').val(origHE);
       } else {
-        document.questions.orighe.value = '';
-        document.questions.orighe2.value = '';
+        $('#orighe').val('');
+        $('#orighe2').val('');
       }
 
-      document.questions.hi.value = HI + ' <?php echo $string['marks']; ?>';
+      $('#hi').val(HI + ' <?php echo $string['marks']; ?>');
       if (origHI != HI) {
-        document.questions.orighi.value = origHI;
-        document.questions.orighi2.value = origHI;
+        $('#orighi').val(origHI);
+        $('#orighi2').val(origHI);
       } else {
-        document.questions.orighi.value = '';
-        document.questions.orighi2.value = '';
+        $('#orighi').val('');
+        $('#orighi2').val('');
       }
 
-      document.questions.hn.value = HN + ' <?php echo $string['marks']; ?>';
+      $('#hn').val(HN + ' <?php echo $string['marks']; ?>');
       if (origHN != HN) {
-        document.questions.orighn.value = origHN;
-        document.questions.orighn2.value = origHN;
+        $('#orighn').val(origHN);
+        $('#orighn2').val(origHN);
       } else {
-        document.questions.orighn.value = '';
-        document.questions.orighn2.value = '';
+        $('#orighn').val('');
+        $('#orighn2').val('');
       }
 
-      document.questions.easy_total.value = (EE + EI + EN) + ' <?php echo $string['marks']; ?>';
-      document.questions.medium_total.value = (ME + MI + MN) + ' <?php echo $string['marks']; ?>';
-      document.questions.hard_total.value = (HE + HI + HN) + ' <?php echo $string['marks']; ?>';
-      document.questions.essential_total.value = (EE + ME + HE) + ' <?php echo $string['marks']; ?>';
-      document.questions.important_total.value = (EI + MI + HI) + ' <?php echo $string['marks']; ?>';
-      document.questions.nice_total.value = (EN + MN + HN) + ' <?php echo $string['marks']; ?>';
+      $('#easy_total').val((EE + EI + EN) + ' <?php echo $string['marks']; ?>');
+      $('#medium_total').val((ME + MI + MN) + ' <?php echo $string['marks']; ?>');
+      $('#hard_total').val((HE + HI + HN) + ' <?php echo $string['marks']; ?>');
+      $('#essential_total').val((EE + ME + HE) + ' <?php echo $string['marks']; ?>');
+      $('#important_total').val((EI + MI + HI) + ' <?php echo $string['marks']; ?>');
+      $('#nice_total').val((EN + MN + HN) + ' <?php echo $string['marks']; ?>');
 
-      document.questions.easy2_total.value = (EE + EI + EN) + ' <?php echo $string['marks']; ?>';
-      document.questions.medium2_total.value = (ME + MI + MN) + ' <?php echo $string['marks']; ?>';
-      document.questions.hard2_total.value = (HE + HI + HN) + ' <?php echo $string['marks']; ?>';
-      document.questions.essential2_total.value = (EE + ME + HE) + ' <?php echo $string['marks']; ?>';
-      document.questions.important2_total.value = (EI + MI + HI) + ' <?php echo $string['marks']; ?>';
-      document.questions.nice2_total.value = (EN + MN + HN) + ' <?php echo $string['marks']; ?>';
+      $('#easy2_total').val((EE + EI + EN) + ' <?php echo $string['marks']; ?>');
+      $('#medium2_total').val((ME + MI + MN) + ' <?php echo $string['marks']; ?>');
+      $('#hard2_total').val((HE + HI + HN) + ' <?php echo $string['marks']; ?>');
+      $('#essential2_total').val((EE + ME + HE) + ' <?php echo $string['marks']; ?>');
+      $('#important2_total').val((EI + MI + HI) + ' <?php echo $string['marks']; ?>');
+      $('#nice2_total').val((EN + MN + HN) + ' <?php echo $string['marks']; ?>');
 
-      document.questions.ee2.value = EE + ' <?php echo $string['marks']; ?>';
-      document.questions.ei2.value = EI + ' <?php echo $string['marks']; ?>';
-      document.questions.en2.value = EN + ' <?php echo $string['marks']; ?>';
-      document.questions.me2.value = ME + ' <?php echo $string['marks']; ?>';
-      document.questions.mi2.value = MI + ' <?php echo $string['marks']; ?>';
-      document.questions.mn2.value = MN + ' <?php echo $string['marks']; ?>';
-      document.questions.he2.value = HE + ' <?php echo $string['marks']; ?>';
-      document.questions.hi2.value = HI + ' <?php echo $string['marks']; ?>';
-      document.questions.hn2.value = HN + ' <?php echo $string['marks']; ?>';
+      $('#ee2').val(EE + ' <?php echo $string['marks']; ?>');
+      $('#ei2').val(EI + ' <?php echo $string['marks']; ?>');
+      $('#en2').val(EN + ' <?php echo $string['marks']; ?>');
+      $('#me2').val(ME + ' <?php echo $string['marks']; ?>');
+      $('#mi2').val(MI + ' <?php echo $string['marks']; ?>');
+      $('#mn2').val(MN + ' <?php echo $string['marks']; ?>');
+      $('#he2').val(HE + ' <?php echo $string['marks']; ?>');
+      $('#hi2').val(HI + ' <?php echo $string['marks']; ?>');
+      $('#hn2').val(HN + ' <?php echo $string['marks']; ?>');
 
-      var paper_marks = document.getElementById('total_marks').value;
+      var paper_marks = $('#total_marks').val();
       var cut_marks = 0;
-      cut_marks += EE * document.questions.EE.value * 100;
-      cut_marks += EI * document.questions.EI.value * 100;
-      cut_marks += EN * document.questions.EN.value * 100;
-      cut_marks += ME * document.questions.ME.value * 100;
-      cut_marks += MI * document.questions.MI.value * 100;
-      cut_marks += MN * document.questions.MN.value * 100;
-      cut_marks += HE * document.questions.HE.value * 100;
-      cut_marks += HI * document.questions.HI.value * 100;
-      cut_marks += HN * document.questions.HN.value * 100;
+      cut_marks += EE * $('#EE').val() * 100;
+      cut_marks += EI * $('#EI').val() * 100;
+      cut_marks += EN * $('#EN').val() * 100;
+      cut_marks += ME * $('#ME').val() * 100;
+      cut_marks += MI * $('#MI').val() * 100;
+      cut_marks += MN * $('#MN').val() * 100;
+      cut_marks += HE * $('#HE').val() * 100;
+      cut_marks += HI * $('#HI').val() * 100;
+      cut_marks += HN * $('#HN').val() * 100;
       var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
       var cut_score = (cut_marks / paper_marks) * 100;
-      document.questions.cut_score.value = '<?php echo $string['papermarks']; ?>=' + paper_marks + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
+      $('#cut_score').val('<?php echo $string['papermarks']; ?>=' + paper_marks + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%');
 
       cut_marks = 0;
-      cut_marks += EE * document.questions.EE2.value * 100;
-      cut_marks += EI * document.questions.EI2.value * 100;
-      cut_marks += EN * document.questions.EN2.value * 100;
-      cut_marks += ME * document.questions.ME2.value * 100;
-      cut_marks += MI * document.questions.MI2.value * 100;
-      cut_marks += MN * document.questions.MN2.value * 100;
-      cut_marks += HE * document.questions.HE2.value * 100;
-      cut_marks += HI * document.questions.HI2.value * 100;
-      cut_marks += HN * document.questions.HN2.value * 100;
+      cut_marks += EE * $('#EE2').val() * 100;
+      cut_marks += EI * $('#EI2').val() * 100;
+      cut_marks += EN * $('#EN2').val() * 100;
+      cut_marks += ME * $('#ME2').val() * 100;
+      cut_marks += MI * $('#MI2').val() * 100;
+      cut_marks += MN * $('#MN2').val() * 100;
+      cut_marks += HE * $('#HE2').val() * 100;
+      cut_marks += HI * $('#HI2').val() * 100;
+      cut_marks += HN * $('#HN2').val() * 100;
       var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
       var cut_score = (cut_marks / paper_marks) * 100;
-      document.questions.cut_score2.value = '<?php echo $string['papermarks']; ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
+      $('#cut_score2').val('<?php echo $string['papermarks']; ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%');
     }
   <?php
     }
@@ -532,7 +532,7 @@ function check_ebel_distinction_type($ebel) {
   echo '</table>';
   if ($_GET['method'] == 'ebel') {
     if ($setterID != '') {
-      $result = $mysqli->prepare("SELECT percentage FROM ebel WHERE setterID=? AND date_set=? ORDER BY id");
+      $result = $mysqli->prepare("SELECT percentage FROM ebel WHERE setterID = ? AND date_set = ? ORDER BY id");
       $result->bind_param('is', $setterID, $date_id);
       $result->execute();
       $result->bind_result($percentage);
@@ -571,11 +571,11 @@ function check_ebel_distinction_type($ebel) {
 
     echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
     echo "<tr><td>&nbsp;</td><td style=\"width:200px; text-align:center\"><strong>" . $string['essential'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['important'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['nicetoknow'] . "</strong></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>" . $string['easy'] . "</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; background-color:#F8F8F2; border:0px; color:red; text-decoration:line-through\" name=\"origee\" size=\"3\" value=\"0\" /><input type=\"text\" style=\"text-align:right; background-color:#F8F8F2; border:0px\" name=\"ee\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE',$ebel[0]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI',$ebel[1]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN',$ebel[2]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>" . $string['medium'] . "</strong></td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px solid red; color:red; text-decoration:line-through\" name=\"origme\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"me\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('ME',$ebel[3]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origmi\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"mi\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MI',$ebel[4]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"origmn\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"mn\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MN',$ebel[5]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"medium_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>" . $string['hard'] . "</strong></td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"orighe\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"he\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HE',$ebel[6]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"orighi\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"hi\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HI',$ebel[7]) . "</td><td style=\"text-align:center; background-color:#C8C8A6\"><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px; color:red; text-decoration:line-through\" name=\"orighn\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px\" name=\"hn\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HN',$ebel[8]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"hard_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"essential_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"important_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"nice_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0px; text-align:center\" name=\"cut_score\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['easy'] . "</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; background-color:#F8F8F2; border:0px; color:red; text-decoration:line-through\" name=\"origee\" id=\"origee\" size=\"3\" value=\"0\" /><input type=\"text\" style=\"text-align:right; background-color:#F8F8F2; border:0px\" name=\"ee\" id=\"ee\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE',$ebel[0]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei\" id=\"origei\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei\" id=\"ei\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI',$ebel[1]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen\" id=\"origen\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en\" id=\"en\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN',$ebel[2]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy_total\" id=\"easy_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['medium'] . "</strong></td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px solid red; color:red; text-decoration:line-through\" name=\"origme\" id=\"origme\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"me\" id=\"me\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('ME',$ebel[3]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origmi\" id=\"origmi\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"mi\" id=\"mi\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MI',$ebel[4]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"origmn\" id=\"origmn\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"mn\" id=\"mn\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MN',$ebel[5]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"medium_total\" id=\"medium_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['hard'] . "</strong></td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"orighe\" id=\"orighe\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"he\" id=\"he\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HE',$ebel[6]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"orighi\" id=\"orighi\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"hi\" id=\"hi\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HI',$ebel[7]) . "</td><td style=\"text-align:center; background-color:#C8C8A6\"><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px; color:red; text-decoration:line-through\" name=\"orighn\" id=\"orighn\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px\" name=\"hn\" id=\"hn\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HN',$ebel[8]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"hard_total\" id=\"hard_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"essential_total\" id=\"essential_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"important_total\" id=\"important_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"nice_total\" id=\"nice_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0px; text-align:center\" name=\"cut_score\" id=\"cut_score\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
     echo "</table>\n</div>\n<br />\n";
 
     echo "<br />\n";
@@ -594,11 +594,11 @@ function check_ebel_distinction_type($ebel) {
 
     echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
     echo "<tr><td>&nbsp;</td><td style=\"width:200px; text-align:center\"><strong>" . $string['essential'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['important'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['nicetoknow'] . "</strong></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>" . $string['easy'] . "</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; border:0px; color:red; text-decoration:line-through; background-color:#F8F8F2\" name=\"origee2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; border:0px; background-color:#F8F8F2\" name=\"ee2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE2',$ebel[9]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI2',$ebel[10]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN2',$ebel[11]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>" . $string['medium'] . "</strong></td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origme2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"me2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('ME2',$ebel[12]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origmi2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"mi2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MI2',$ebel[13]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"origmn2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"mn2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MN2',$ebel[14]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"medium2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>" . $string['hard'] . "</strong></td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"orighe2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"he2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HE2',$ebel[15]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"orighi2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"hi2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HI2',$ebel[16]) . "</td><td style=\"text-align:center; background-color:#C8C8A6\"><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px; color:red; text-decoration:line-through\" name=\"orighn2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px\" name=\"hn2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HN2',$ebel[17]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"hard2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"essential2_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"important2_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"nice2_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0px; text-align:center\" name=\"cut_score2\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['easy'] . "</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; border:0px; color:red; text-decoration:line-through; background-color:#F8F8F2\" name=\"origee2\" id=\"origee2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; border:0px; background-color:#F8F8F2\" name=\"ee2\" id=\"ee2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE2',$ebel[9]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei2\" id=\"origei2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei2\" id=\"ei2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI2',$ebel[10]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen2\" id=\"origen2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en2\" id=\"en2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN2',$ebel[11]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy2_total\" id=\"easy2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['medium'] . "</strong></td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origme2\" id=\"origme2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"me2\" id=\"me2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('ME2',$ebel[12]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origmi2\" id=\"origmi2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"mi2\" id=\"mi2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MI2',$ebel[13]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"origmn2\" id=\"origmn2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"mn2\"id=\"mn2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MN2',$ebel[14]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"medium2_total\" id=\"medium2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['hard'] . "</strong></td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"orighe2\"id=\"orighe2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"he2\" id=\"he2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HE2',$ebel[15]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"orighi2\" id=\"orighi2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"hi2\" id=\"hi2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HI2',$ebel[16]) . "</td><td style=\"text-align:center; background-color:#C8C8A6\"><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px; color:red; text-decoration:line-through\" name=\"orighn2\" id=\"orighn2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px\" name=\"hn2\" id=\"hn2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HN2',$ebel[17]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"hard2_total\" id=\"hard2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"essential2_total\" id=\"essential2_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"important2_total\" id=\"important2_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"nice2_total\" id=\"nice2_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0px; text-align:center\" name=\"cut_score2\" id=\"cut_score2\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
     echo "</table>\n</div>\n<br />\n";
   }
   if ($_GET['method'] == 'modified_angoff') {
@@ -612,7 +612,7 @@ function check_ebel_distinction_type($ebel) {
   if (isset($_GET['std_setID'])) {
     echo '<input type="hidden" name="std_setID" value="' . $_GET['std_setID'] . '" />';
   }
-  echo '<input type="hidden" name="stdIDNo" value="' . $stdID . '" />';
+  echo '<input type="hidden" name="stdIDNo" id="stdIDNo" value="' . $stdID . '" />';
 ?>
 <div align="center">
 <table cellpadding="2" cellspacing="0" border="0">
