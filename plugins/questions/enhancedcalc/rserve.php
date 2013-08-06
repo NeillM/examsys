@@ -55,27 +55,34 @@ class EnhancedCalcRrserve {
       $this->set_error("Can Not Connect"); 
       return false;
     }
-
-    // if the box isnt on this timeout is ignored and is likely to be different
-    if (!isset($this->config['timeout'])) {
-      $timeoutarray = array('seconds' => 5, 'milliseconds' => 1);
-    } else {
-      $timeoutarray = array('seconds' => $this->config['timeout'], 'milliseconds' => 1);
-    }
-
+    
     if (self::$cnx === false) {
       try {
+        // if the box isnt on this timeout is ignored and is likely to be different
+        if (!isset($this->config['timeout'])) {
+          $timeoutarray = array('seconds' => 5, 'milliseconds' => 1);
+        } else {
+          $timeoutarray = array('seconds' => $this->config['timeout'], 'milliseconds' => 1);
+        }
         self::$cnx = @new Rserve_Connection($this->config['host'], $this->config['port'], $timeoutarray);
       } catch (exception $except) {
         self::$cnx = null;
-        $this->set_error("Can Not Connect");
+        $this->set_error('Can Not Connect');
         return false;
       }
+
+      $this->setup_R();
       return true;
     } else {
       //We are connected
       return true;
     }
+  }
+  
+  function setup_R() {
+       self::$cnx->evalString('options(digits=15); 1==1;');
+       self::$cnx->evalString('toStr <- function(V) { return(paste(capture.output(print(V)),collapse=\'\n\')) }');
+       self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
   }
   
   function calculate_correct_ans($vars,$formula) {
@@ -88,30 +95,31 @@ class EnhancedCalcRrserve {
     $varvalue = array_values($vars);
     $formula_vars_subed = str_replace($varname, $varvalue, $formula);
     
-    //old caculation fomula use pow() - define a function in R for backward compatibility
-    if (stripos($formula,'pow(') !== true and $this->powDefined === false) {
-      self::$cnx->evalString("POW <- pow <- function(a,b) { return(a^b) }");
-      $this->powDefined = true;
-    }
-    
-    if ($this->toStrDefined === false) {
-      self::$cnx->evalString("toStr <- function(V) { return(paste(capture.output(print(V)),collapse='\\n')) }");
-      $this->toStrDefined = true;
-    }
-    
     $correctanswer = $this->eval_string($formula_vars_subed);
    
     return $correctanswer;
   }
   
-  function is_useranswer_correct($useranswer, $correctanswer) {
+  function is_useranswer_correct($useranswer, $correctanswer, $round_to_stundent_precision) {
     
     if ($useranswer == '') {
       return false;
     }
     
+    if ($round_to_stundent_precision) {
+        if ($this->is_engineering_format($useranswer)) {
+            $stundent_precision = $this->calc_sf($useranswer);
+            $calc = "signif($correctanswer,$stundent_precision) == $useranswer";
+        } else {
+            $stundent_precision = $this->calc_dp($useranswer);
+            $calc = "round($correctanswer,$stundent_precision) == $useranswer";
+        }
+    } else {
+       $calc = "$correctanswer == $useranswer";
+    }
+    
     try {
-      $status = $this->eval_string("$correctanswer == $useranswer");
+      $status = $this->eval_string($calc);
     } catch(Exception $e) {
       //there is an error it cant be correct
       return false;
@@ -131,7 +139,7 @@ class EnhancedCalcRrserve {
     }
     
     try {
-       $res = $this->eval_string("(abs($useranswer - $correctanswer)/$correctanswer) * 100");
+       $res = $this->eval_string("round((abs($useranswer - $correctanswer)/$correctanswer) * 100,3)");
     } catch(Exception $e) {
       //there is an error it cant be correct
       return 'ERROR';
@@ -147,9 +155,17 @@ class EnhancedCalcRrserve {
     
     $result = $this->eval_string_multi($cmd);
     $res['tolerance'] = $result[0];
-    $res['tolerance_ans'] = $result[1];
-    $res['tolerance_ansneg'] = $result[2];
-
+    
+    //
+    // Make sure the min and max are correct tolerances on negative numbers causes problems 
+    //
+    if($result[1] > $result[2]) {
+        $res['tolerance_ans'] = $result[1];
+        $res['tolerance_ansneg'] = $result[2];
+    } else {
+        $res['tolerance_ans'] = $result[2];
+        $res['tolerance_ansneg'] = $result[1];
+    }
     return $res;
   }
   
@@ -230,13 +246,7 @@ class EnhancedCalcRrserve {
       return false;
     }
     
-    $strpos = strpos($useranswer, '.');
-    $strpos1 = stripos($useranswer, 'e', $strpos);
-    if ($strpos1 === false) {
-      $strpos1 = strlen($useranswer);
-    }
-    
-    $dps = $strpos1 - $strpos - 1;
+    $dps = $this->calc_dp($useranswer);
 
     if ($dps == $dp) {
       return true;
@@ -246,24 +256,64 @@ class EnhancedCalcRrserve {
     
   }
   
+  function calc_dp($num) {
+    $dotpos = strpos($num, '.');
+    if($dotpos === false) {
+      return 0;
+    }
+    
+    $epos = strpos($num, 'e');
+    if($epos !== false) {
+        $end = $epos;
+    } else {
+        $end = strlen($num);
+    }
+   
+    return $end - ($dotpos + 1);
+  }
+  
+  function calc_sf($num) {
+        
+    $epos = strpos($num, 'e');
+    if($epos === false) {
+      $epos = strlen($num);
+    } 
+    
+    if(strpos($num, '0.') === 0) {
+       $epos = $epos - 2;
+    } else if(strpos($num, '.') !== false) {
+      $epos = $epos - 1;
+    }
+   
+    return $epos;
+  }
+  
+  function is_engineering_format($num) {
+      $epos = strpos($num, 'e');
+      if($epos !== false) {
+         return true;
+      }
+      return false;
+  }
+  
   function format_number_dp($num,$dp) {
-    return $this->eval_string("round(" . $num . "," . $dp . ")");
+    return $this->eval_string('round(' . $num . ',' . $dp . ')');
   }
   
   function format_number_dp_strict_zeros($num,$dp) {
     
-    return $this->eval_string("format(round(" . $num . "," . $dp . "), nsmall = " . $dp . ")");
+    return $this->eval_string('format(round(' . $num . ',' . $dp . '), nsmall = ' . $dp . ')');
   }
   
   function format_number_sf($num,$sf) {
-    return $this->eval_string("signif(" . $num . "," . $sf . ")");
+    return $this->eval_string('signif(' . $num . ',' . $sf . ')');
   }
   
   private function eval_string($val) {
     if (!$this->connect()) {
       return false;
     }
-    return $this->extract_value(self::$cnx->evalString("toStr(" . $val . ")"));
+    return $this->extract_value(self::$cnx->evalString('toStr(' . $val . ')'));
   }
   
   private function eval_string_multi($val) {
@@ -272,9 +322,9 @@ class EnhancedCalcRrserve {
     }
     $cmd = 'c(';
     foreach($val as $v) {
-      $cmd .= "toStr(" . $v . "),";
+      $cmd .= 'toStr(' . $v . '),';
     }
-    $cmd = rtrim($cmd, ",");
+    $cmd = rtrim($cmd, ',');
     $cmd .= ')';
     return $this->extract_value(self::$cnx->evalString($cmd));
   }

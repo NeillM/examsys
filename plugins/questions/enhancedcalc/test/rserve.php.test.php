@@ -54,6 +54,69 @@ class RserveTests extends \Enhance\TestFixture
       //$enhancedcalculation = array('host' => 'this.will.not.work.com', 'port'=>6311,'timeout'=>5);
   }
   
+  public function test_calc_dp() {
+      $res = $this->target->calc_dp('0');
+      \Enhance\Assert::areIdentical(0, $res);
+      
+      $res = $this->target->calc_dp('10');
+      \Enhance\Assert::areIdentical(0, $res);
+      
+      $res = $this->target->calc_dp('10000');
+      \Enhance\Assert::areIdentical(0, $res);
+      
+      $res = $this->target->calc_dp('0.1');
+      \Enhance\Assert::areIdentical(1, $res);
+      
+      $res = $this->target->calc_dp('10.1');
+      \Enhance\Assert::areIdentical(1, $res);
+      
+      $res = $this->target->calc_dp('10000.1');
+      \Enhance\Assert::areIdentical(1, $res);
+      
+      
+      $res = $this->target->calc_dp('0.1000');
+      \Enhance\Assert::areIdentical(4, $res);
+      
+      $res = $this->target->calc_dp('10.1000');
+      \Enhance\Assert::areIdentical(4, $res);
+      
+      $res = $this->target->calc_dp('10000.1000');
+      \Enhance\Assert::areIdentical(4, $res);
+      
+      
+      $res = $this->target->calc_dp('1.13e22');
+      \Enhance\Assert::areIdentical(2, $res);
+      
+      $res = $this->target->calc_dp('10.13e-22');
+      \Enhance\Assert::areIdentical(2, $res);
+      
+      $res = $this->target->calc_dp('1000.13e22');
+      \Enhance\Assert::areIdentical(2, $res);
+  }
+  
+  public function test_calc_sf() {
+      $res = $this->target->calc_sf('0');
+      \Enhance\Assert::areIdentical(1, $res);
+      
+      $res = $this->target->calc_sf('100');
+      \Enhance\Assert::areIdentical(3, $res);
+      
+      $res = $this->target->calc_sf('100.0001');
+      \Enhance\Assert::areIdentical(7, $res);
+      
+      $res = $this->target->calc_sf('1e24');
+      \Enhance\Assert::areIdentical(1, $res);
+      
+      $res = $this->target->calc_sf('1.2e24');
+      \Enhance\Assert::areIdentical(2, $res);
+      
+      $res = $this->target->calc_sf('1.221345243e24');
+      \Enhance\Assert::areIdentical(10, $res);
+      
+      $res = $this->target->calc_sf('1.221345243e-24');
+      \Enhance\Assert::areIdentical(10, $res);
+  }
+  
   #
   # calculate_correct_ans
   #
@@ -117,6 +180,12 @@ class RserveTests extends \Enhance\TestFixture
       $res = $this->target->calculate_correct_ans($var, $formula);
       \Enhance\Assert::areIdentical("2.25e-68", $res);
       
+      //lage number with dp
+      $var = array('$A'=>'0.0032', '$B' => '234324234' );
+      $formula = '$A + $B';
+      $res = $this->target->calculate_correct_ans($var, $formula);
+      \Enhance\Assert::areIdentical("234324234.0032", $res);
+      
       //Invalid awnser
       $error = '';
       try {
@@ -144,36 +213,103 @@ class RserveTests extends \Enhance\TestFixture
   public function test_is_useranswer_correct() {
       
       //correct
-      $res = $this->target->is_useranswer_correct('1','1');
+      $res = $this->target->is_useranswer_correct('1','1', false);
       \Enhance\Assert::areIdentical(true, $res);
-      $res = $this->target->is_useranswer_correct('1.3e55','1.3e55');
+      $res = $this->target->is_useranswer_correct('1.3e55','1.3e55', false);
       \Enhance\Assert::areIdentical(true, $res);
-      $res = $this->target->is_useranswer_correct('1.000','1.0');
+      $res = $this->target->is_useranswer_correct('1.000','1.0', false);
       \Enhance\Assert::areIdentical(true, $res);
-      $res = $this->target->is_useranswer_correct('1.999999','1.999999000');
+      $res = $this->target->is_useranswer_correct('1.999999','1.999999000', false);
       \Enhance\Assert::areIdentical(true, $res);
-      $res = $this->target->is_useranswer_correct('23E-24','23e-24');
+      $res = $this->target->is_useranswer_correct('23E-24','23e-24', false);
       \Enhance\Assert::areIdentical(true, $res);
       
       //incorrect
-      $res = $this->target->is_useranswer_correct('1','2');
+      $res = $this->target->is_useranswer_correct('1','2', false);
       \Enhance\Assert::areIdentical(false, $res);
-      $res = $this->target->is_useranswer_correct('1.3e55','1.4e55');
+      $res = $this->target->is_useranswer_correct('1.3e55','1.4e55', false);
       \Enhance\Assert::areIdentical(false, $res);
-      $res = $this->target->is_useranswer_correct('1.0001','1.0');
+      $res = $this->target->is_useranswer_correct('1.0001','1.0', false);
       \Enhance\Assert::areIdentical(false, $res);
-      $res = $this->target->is_useranswer_correct('1.9999991','1.999999000');
+      $res = $this->target->is_useranswer_correct('1.9999991','1.999999000', false);
       \Enhance\Assert::areIdentical(false, $res);
-      $res = $this->target->is_useranswer_correct('23E-22','23e-24');
+      $res = $this->target->is_useranswer_correct('23E-22','23e-24', false);
       \Enhance\Assert::areIdentical(false, $res);
       
       //invlaid input
-      $res = $this->target->is_useranswer_correct('23E- 22','23e-24');
+      $res = $this->target->is_useranswer_correct('23E- 22','23e-24', false);
       \Enhance\Assert::areIdentical(false, $res);
-      $res = $this->target->is_useranswer_correct('sdfd','23e-24');
+      $res = $this->target->is_useranswer_correct('sdfd','23e-24', false);
       \Enhance\Assert::areIdentical(false, $res);
-      $res = $this->target->is_useranswer_correct('','23e-24');
+      $res = $this->target->is_useranswer_correct('','23e-24', false);
       \Enhance\Assert::areIdentical(false, $res);
+  }
+  
+  
+  public function test_is_useranswer_correct_with_round_to_stundent_precision() {
+      
+      //correct
+      $res = $this->target->is_useranswer_correct('1','1.1', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      
+      $res = $this->target->is_useranswer_correct('1.11','1.1', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      
+      $res = $this->target->is_useranswer_correct('1','1.6', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      
+      $res = $this->target->is_useranswer_correct('1','1.4', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      
+      $res = $this->target->is_useranswer_correct('1.400','1.4', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      
+      $res = $this->target->is_useranswer_correct('0.33333','0.333333333333333', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      
+      $res = $this->target->is_useranswer_correct('0.33334','0.333339933333333', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      
+      $res = $this->target->is_useranswer_correct('0.3333399e34','0.333339912312312e34', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      
+      $res = $this->target->is_useranswer_correct('0.33334e35','0.333339933333333e34', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      
+      $res = $this->target->is_useranswer_correct('3.3334e3','3333.44456', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      
+      $res = $this->target->is_useranswer_correct('3.3334e3','3333.999', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      
+      /*$res = $this->target->is_useranswer_correct('1.3e55','1.3e55', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      $res = $this->target->is_useranswer_correct('1.000','1.0', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      $res = $this->target->is_useranswer_correct('1.999999','1.999999000', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      $res = $this->target->is_useranswer_correct('23E-24','23e-24', true);
+      \Enhance\Assert::areIdentical(true, $res);
+      
+      //incorrect
+      $res = $this->target->is_useranswer_correct('1','2', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      $res = $this->target->is_useranswer_correct('1.3e55','1.4e55', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      $res = $this->target->is_useranswer_correct('1.0001','1.0', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      $res = $this->target->is_useranswer_correct('1.9999991','1.999999000', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      $res = $this->target->is_useranswer_correct('23E-22','23e-24', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      
+      //invlaid input
+      $res = $this->target->is_useranswer_correct('23E- 22','23e-24', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      $res = $this->target->is_useranswer_correct('sdfd','23e-24', true);
+      \Enhance\Assert::areIdentical(false, $res);
+      $res = $this->target->is_useranswer_correct('','23e-24', true);
+      \Enhance\Assert::areIdentical(false, $res);*/
   }
   
   public function distance_from_correct_answer() {
@@ -185,15 +321,15 @@ class RserveTests extends \Enhance\TestFixture
       
       //large
       $res = $this->target->distance_from_correct_answer('23.2e33','23.1e33');
-      \Enhance\Assert::areIdentical('0.4329004', $res);
+      \Enhance\Assert::areIdentical('0.433', $res);
       $res = $this->target->distance_from_correct_answer('23.1e33','23.34e33');
-      \Enhance\Assert::areIdentical('1.028278', $res);
+      \Enhance\Assert::areIdentical('1.028', $res);
       
       //small
       $res = $this->target->distance_from_correct_answer('23.2e-33','23.1e-33');
-      \Enhance\Assert::areIdentical('0.4329004', $res);
+      \Enhance\Assert::areIdentical('0.433', $res);
       $res = $this->target->distance_from_correct_answer('23.1e-33','23.34e-33');
-      \Enhance\Assert::areIdentical('1.028278', $res);
+      \Enhance\Assert::areIdentical('1.028', $res);
       
       //invalid
        $res = $this->target->distance_from_correct_answer('','100');

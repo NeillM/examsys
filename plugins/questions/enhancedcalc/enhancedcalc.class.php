@@ -202,11 +202,9 @@ class EnhancedCalc extends Question implements questionInterface {
 
       /*
        *
-       *
        * MARKING
        *
        */
-
         if (trim($this->useranswer['uansnumb'])=='') {
             //not answered
             $this->qmark = 0;
@@ -225,7 +223,7 @@ class EnhancedCalc extends Question implements questionInterface {
         return $returnstatus;
       }
 
-      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans']);
+      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] != 'on'));
 
       //calculate distance from correct if needed
       if ($this->useranswer['status']['exact'] === false) {
@@ -269,8 +267,7 @@ class EnhancedCalc extends Question implements questionInterface {
       }
 
       //check for strict sf
-      if ((isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']) ) {
-
+      if ($this->is_strict_sf_enabled() ) {
         $this->useranswer['status']['strictsf'] = $enhancedcalcObj->is_useranswer_within_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
         if ($this->useranswer['status']['strictsf'] === false) {
           $this->qmark = $this->settings['marks_incorrect'];
@@ -386,6 +383,10 @@ class EnhancedCalc extends Question implements questionInterface {
 
   function is_strict_dp_strictzeros_enabled() {
     return (isset($this->settings['strictzeros']) and $this->settings['strictzeros'] == 'on');
+  }
+  
+  function is_strict_sf_enabled() {
+    return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']);
   }
 
   /*
@@ -625,7 +626,7 @@ class EnhancedCalc extends Question implements questionInterface {
         $dispunits = $dispunits . '</select>';
       } else {
         $dispunits = array_keys($this->settings['answersexp']);
-        $dispunits = "&nbsp;&nbsp;" . $dispunits[0];
+        $dispunits = "&nbsp;&nbsp;" . $dispunits[0] . "<input type=\"hidden\" name=\"qid[" .  $this->id . "][uansunit]\" value=\"" .$dispunits[0] . "\" />";
       }
     }
 
@@ -704,9 +705,9 @@ class EnhancedCalc extends Question implements questionInterface {
   public function get_question_marks() {
     $marks_full = isset($this->settings['marks_correct']) ? $this->settings['marks_correct'] : false;
     $marks_partial = isset($this->settings['marks_partial']) ? $this->settings['marks_partial'] : false;
-    $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : false;
+    $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : 0;
 
-    if ($marks_full and $marks_partial and $marks_incorrect) {
+    if ($marks_full and $marks_partial) {
       return array('correct' => $marks_full, 'partial' => $marks_partial, 'incorrect' => $marks_incorrect);
     } else {
       return false;
@@ -759,7 +760,7 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   public function get_answer_distance() {
-    return (isset($this->useranswer['cans_dist'])) ? $this->useranswer['cans_dist'] : false;
+    return (isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 'ERROR') ? $this->useranswer['cans_dist'] : false;
   }
 
 }
