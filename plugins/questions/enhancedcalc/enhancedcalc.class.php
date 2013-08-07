@@ -175,12 +175,12 @@ class EnhancedCalc extends Question implements questionInterface {
        * FORMAT CALCULATED ANS
        *
        */
-      if ($this->settings['strictdisplay'] == 'on') {
+      if ($this->settings['strictdisplay'] === true) {
 
         if (isset($this->settings['dp'])) {
           $function = 'format_number_dp';
           $arg = $this->settings['dp'];
-          if ($this->settings['strictzeros'] == 'on') {
+          if ($this->settings['strictzeros'] === true) {
             $function = 'format_number_dp_strict_zeros';
           }
         }
@@ -223,7 +223,7 @@ class EnhancedCalc extends Question implements questionInterface {
         return $returnstatus;
       }
 
-      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] != 'on'));
+      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] !== true));
 
       //calculate distance from correct if needed
       if ($this->useranswer['status']['exact'] === false) {
@@ -378,11 +378,11 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   function is_strict_dp_enabled() {
-    return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === 'on' and isset($this->settings['dp']));
+    return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']));
   }
 
   function is_strict_dp_strictzeros_enabled() {
-    return (isset($this->settings['strictzeros']) and $this->settings['strictzeros'] == 'on');
+    return (isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true);
   }
   
   function is_strict_sf_enabled() {
