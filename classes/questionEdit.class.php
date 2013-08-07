@@ -76,6 +76,7 @@ Class QuestionEdit extends RogoObject {
   protected $_requires_flash = false;
   protected $_allow_mapping = true;
   protected $_allow_correction = true;
+  protected $_allow_new_options = false;
   protected $_use_bloom = true;
 
   protected $_user_id;
@@ -482,6 +483,14 @@ QUERY;
    */
   public function allow_correction() {
     return $this->_allow_correction;
+  }
+
+  /**
+   * Does this question type allow for the addition of new oiptions when locked?
+   * @return boolean
+   */
+  public function allow_new_options() {
+    return $this->_allow_new_options;
   }
 
   /**

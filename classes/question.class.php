@@ -138,8 +138,8 @@ Class Question {
     foreach ($array as $key => $value) {
       // if (isset($this->$key) ) {
       if (property_exists($this, $key)) {
-        $func_name = "set" . $key;
-        if (method_exists($this, "set" . $key)) {
+        $func_name = "set_" . $key;
+        if (method_exists($this, $func_name)) {
           $this->$func_name($value);
         } else {
           $this->$key = $value;
