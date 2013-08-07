@@ -28,7 +28,7 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
-require_once '../plugins/questions/enhancedcalc/helpers/enhancedcalc_mark_helper.php';
+require_once '../plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
 
 set_time_limit(0);
 

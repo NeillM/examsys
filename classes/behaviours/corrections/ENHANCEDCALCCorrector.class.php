@@ -24,7 +24,7 @@
  * @package
  */
 
-require_once $configObject->get('cfg_web_root') . 'plugins/questions/enhancedcalc/helpers/enhancedcalc_mark_helper.php';
+require_once $configObject->get('cfg_web_root') . 'plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
 
 class ENHANCEDCALCCorrector extends Corrector {
 
