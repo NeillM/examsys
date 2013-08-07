@@ -51,7 +51,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript">
     function hideMarked() {
-      if (document.getElementById('hidemarked').checked == 1) {
+      if ($('#hidemarked').attr('checked')) {
         setting = " checked";
       } else {
         setting = "";

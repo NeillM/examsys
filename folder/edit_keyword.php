@@ -31,6 +31,7 @@ if (isset($_POST['submit'])) {
   $result->execute();  
   $result->close();
   ?>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -48,6 +49,7 @@ if (isset($_POST['submit'])) {
   $result->fetch();
   $result->close();
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -60,7 +62,19 @@ if (isset($_POST['submit'])) {
     body {font-size:90%; background-color:#EEEEEE; padding:4px}
     h1 {font-size:120%}
   </style>
-  <script language="JavaScript">
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+    
     function illegalChar(codeID) {
       if (codeID == 35) {
         alert("<?php echo $string['character']; ?> '#' <?php echo $string['illegal']; ?>");
@@ -91,10 +105,10 @@ if (isset($_POST['submit'])) {
   </script>
 </head>
 
-<body onload="document.myform.new_keyword.focus();">
+<body>
 <h1><?php echo $string['editkeyword']; ?></h1>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<div><input type="text" style="width:99%" name="new_keyword" value="<?php echo $keyword; ?>" onkeypress="illegalChar(event.keyCode)" /><input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" /></div>
+<div><input type="text" style="width:99%" name="new_keyword" value="<?php echo $keyword; ?>" onkeypress="illegalChar(event.keyCode)" required autofocus /><input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" /></div>
 <div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></div>
 </form>
 

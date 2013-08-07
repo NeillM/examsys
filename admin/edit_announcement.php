@@ -60,7 +60,7 @@ $result->fetch();
 $result->close();
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -83,8 +83,20 @@ SCRIPT;
 
   echo $cfg_editor_javascript;
 ?>
-  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+  </script>
 </head>
 
 <body>
@@ -99,7 +111,7 @@ SCRIPT;
 <br />
 
 <br />
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
 <table style="width:875px; margin-left:auto; margin-right:auto; font-size:110%">
 <tr>
@@ -109,16 +121,16 @@ $icons = array(1=>'news_64.png', 2=>'new_64.png', 3=>'tip_64.png', 4=>'software_
 
 for ($i=1; $i<=7; $i++) {
   if ($i == $news_icon) {
-    echo "<input type=\"radio\" name=\"icon\" value=\"$i\" checked=\"checked\" /><img src=\"../artwork/" . $icons[$i] . "\" width=\"64\" height=\"64\" border=\"0\" />&nbsp;&nbsp;&nbsp;";
+    echo "<input type=\"radio\" name=\"icon\" value=\"$i\" checked=\"checked\" /><img src=\"../artwork/" . $icons[$i] . "\" width=\"64\" height=\"64\" />&nbsp;&nbsp;&nbsp;";
   } else {
-    echo "<input type=\"radio\" name=\"icon\" value=\"$i\" /><img src=\"../artwork/" . $icons[$i] . "\" width=\"64\" height=\"64\" border=\"0\" />&nbsp;&nbsp;&nbsp;";
+    echo "<input type=\"radio\" name=\"icon\" value=\"$i\" /><img src=\"../artwork/" . $icons[$i] . "\" width=\"64\" height=\"64\" />&nbsp;&nbsp;&nbsp;";
   }
 }
 ?>
 </td>
 </tr>
 <tr>
-<td class="f"><?php echo $string['Title']; ?></td><td><input type="text" name="title" size="60" value="<?php echo $news_title; ?>" /></td>
+<td class="f"><?php echo $string['Title']; ?></td><td><input type="text" name="title" size="60" maxlength="255" value="<?php echo $news_title; ?>" required /></td>
 </tr>
 <tr>
 <td class="f"><?php echo $string['Available from']; ?></td><td><?php echo date_utils::timedate_select('f', $startdate); ?></td>

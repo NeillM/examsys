@@ -62,43 +62,42 @@ if (isset($_POST['submit'])) {
   exit;
 } else {
   ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <html>
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-    <title><?php echo $string['editltikeys'] . " " . $configObject->get('cfg_install_type') ?></title>
+  <title><?php echo $string['editltikeys'] . " " . $configObject->get('cfg_install_type') ?></title>
 
-    <link rel="stylesheet" type="text/css" href="../css/body.css" />
-    <link rel="stylesheet" type="text/css" href="../css/header.css" />
-    <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-    <style type="text/css">
-      td {
-        text-align: left
-      }
-      .field {
-        font-weight: bold;
-        text-align: right;
-        padding-right: 10px
-      }
-      .mandatory {
-        font-family:'Courier New';
-        font-weight:bold;
-        color:#C00000
-      }
-    </style>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    td {
+      text-align: left
+    }
+    .field {
+      font-weight: bold;
+      text-align: right;
+      padding-right: 10px
+    }
+  </style>
 
-    <script language="JavaScript">
-      function checkForm() {
-        if (document.getElementById('ltiname').value == "" || document.getElementById('ltiname').value == "<?php echo $string['prompt1']; ?>" || document.getElementById('ltikey').value == "" || document.getElementById('ltikey').value == "<?php echo $string['prompt2']; ?>" || document.getElementById('ltisec').value == "" || document.getElementById('ltisec').value == "<?php echo  $string['prompt3']; ?>") {
-          alert('<?php echo $string['missingfields'] ?>');
-          return false;
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
         }
-      }
-    </script>
-  </head>
+      });
+      $('form').removeAttr('novalidate');
+    });
+  </script>
+</head>
 <body>
 <?php
   require '../include/lti_keys_options.inc';
@@ -118,41 +117,32 @@ if (isset($_POST['submit'])) {
     <th colspan="2" class="bevel"></th>
   </tr>
 </table>
-  <div style="text-align:center">
-    <p style="font-size: 110%">
-      <span class="mandatory">*</span> <?php echo $string['mandatory'] ?>
-    </p>
-  </div>
   <br/>
   <div align="center">
-    <form name="edit_LTIkeys" method="post" onsubmit="return checkForm()"
-          action="<?php echo $_SERVER['PHP_SELF'] . '?LTIkeysid=' . $_GET['LTIkeysid']; ?>">
+    <form id="theform" name="edit_LTIkeys" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?LTIkeysid=' . $_GET['LTIkeysid']; ?>">
       <table cellpadding="0" cellspacing="2" border="0">
         <tr>
-          <td class="field"><span class="mandatory">*</span> <?php echo $string['name']; ?></td>
-          <td><input type="text" size="70" name="ltiname" id="ltiname" value="<?php echo $ltis['name']; ?>"/>
+          <td class="field"><?php echo $string['name']; ?></td>
+          <td><input type="text" size="70" maxlength="255" name="ltiname" id="ltiname" value="<?php echo $ltis['name']; ?>" required />
           </td>
         </tr>
         <tr>
-          <td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_consume_key']; ?></td>
-          <td><input type="text" size="70" name="ltikey" id="ltikey"
-                     value="<?php echo $ltis['oauth_consumer_key']; ?>"/></td>
+          <td class="field"><?php echo $string['oauth_consume_key']; ?></td>
+          <td><input type="text" size="70" maxlength="255" name="ltikey" id="ltikey" value="<?php echo $ltis['oauth_consumer_key']; ?>" required /></td>
         </tr>
         <tr>
-          <td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_secret']; ?></td>
-          <td><input type="text" size="70" name="ltisec" id="ltisec" value="<?php echo $ltis['secret']; ?>"/>
+          <td class="field"><?php echo $string['oauth_secret']; ?></td>
+          <td><input type="text" size="70" maxlength="255" name="ltisec" id="ltisec" value="<?php echo $ltis['secret']; ?>" required />
           </td>
         </tr>
         <tr>
           <td class="field"><?php echo $string['oauth_context_id']; ?></td>
-          <td><input type="text" size="70" name="lticontext" id="lticontext" value="<?php echo $ltis['context_id']; ?>"/></td>
+          <td><input type="text" size="70" maxlength="255" name="lticontext" id="lticontext" value="<?php echo $ltis['context_id']; ?>"/></td>
         </tr>
 
 
       </table>
-      <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save'] ?>">&nbsp;&nbsp;<input
-        style="width:100px" type="button" name="home" value="<?php echo $string['cancel'] ?>"
-        onclick="javascript:history.back();"/></p>
+      <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save'] ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();"/></p>
     </form>
   </div>
   <?php

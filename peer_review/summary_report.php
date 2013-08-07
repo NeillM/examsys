@@ -65,86 +65,22 @@ require_once 'summary_report.inc';
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/popup_menu.js"></script>
   <script language="JavaScript">
-  var ie  = document.all;
-  var ns6 = document.getElementById&&!document.all;
-  var isMenu  = false;
-  var menuSelObj = null;
-  var overpopupmenu = false;
-  function mouseSelect(e) {
-    var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;
-    if (isMenu) {
-      if (overpopupmenu == false) {
-        isMenu = false ;
-        overpopupmenu = false;
-        document.getElementById('menudiv').style.display = 'none';
-        return true ;
-      }
-      return true ;
-    }
-    return false;
-  }
-  // POP UP MENU
-  function ItemSelMenu(tmpUserID, e) {
-    if (!e) var e = window.event;
-    var currentX = e.clientX;
-    var currentY = e.clientY;
-    var scrOfX = $('body,html').scrollLeft();
-    var scrOfY = $('body,html').scrollTop();
-
-    document.getElementById('userID').value = tmpUserID;
-
-    document.getElementById('menudiv').style.left = currentX+scrOfX + 'px';
-    document.getElementById('menudiv').style.top = currentY+scrOfY + 'px';
-
-    document.getElementById('menudiv').style.display = "";
-    document.getElementById('item1b').style.backgroundColor = '#FFFFFF';
-    document.getElementById('item2b').style.backgroundColor = '#FFFFFF';
-
-    isMenu = true;
-    return false ;
-  }
-
-  function menuRowOn(rowID) {
-    // Left menu column
-    document.getElementById('item'+rowID+'a').style.backgroundColor = '#FFE7A2';
-    document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #FFBD69';
-    document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #FFBD69';
-    document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #FFBD69';
-
-    // Right menu column
-    document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFE7A2';
-    document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFBD69';
-    document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFBD69';
-    document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFBD69';
-    document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFE7A2';
-  }
-
-  function menuRowOff(rowID) {
-    // Left menu column
-    document.getElementById('item'+rowID+'a').style.backgroundColor = '#F1F5FB';
-    document.getElementById('item'+rowID+'a').style.borderTop = '1px solid #F1F5FB';
-    document.getElementById('item'+rowID+'a').style.borderBottom = '1px solid #F1F5FB';
-    document.getElementById('item'+rowID+'a').style.borderLeft = '1px solid #F1F5FB';
-
-    // Right menu column
-    document.getElementById('item'+rowID+'b').style.backgroundColor = '#FFFFFF';
-    document.getElementById('item'+rowID+'b').style.borderTop = '1px solid #FFFFFF';
-    document.getElementById('item'+rowID+'b').style.borderBottom = '1px solid #FFFFFF';
-    document.getElementById('item'+rowID+'b').style.borderRight = '1px solid #FFFFFF';
-    document.getElementById('item'+rowID+'b').style.borderLeft = '1px solid #FFFFFF';
+  function setVars(tmpUserID) {
+    $('#userID').val(tmpUserID);
   }
 
   function viewProfile() {
-    document.getElementById('menudiv').style.display = 'none';
-    window.location = '../users/details.php?paperID=<?php echo $_GET['paperID']; ?>&userID=' + document.getElementById('userID').value;
+    $('#menudiv').hide();
+    window.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + $('#userID').val();
   }
 
   function viewReviews() {
-    document.getElementById('menudiv').style.display = 'none';
+    $('#menudiv').hide();
     var winwidth = screen.width-80;
     var winheight = screen.height-80;
-    window.open("display_form.php?paperID=<?php echo $_GET['paperID']; ?>&userID=" + document.getElementById('userID').value + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    window.open("display_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
   }
 
   document.onmousedown = mouseSelect;
@@ -202,7 +138,7 @@ require_once 'summary_report.inc';
   }
 
   // write out headings
-  $query_string = "percent=" . $percent . "&paperID=" . $_GET['paperID'] . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=" . $_GET['meta1'] . "";
+  $query_string = "percent=" . $percent . "&paperID=" . $paperID . "&startdate=" . $startdate . "&enddate=" . $enddate . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=" . $_GET['meta1'] . "";
   $heading = array('surname'=>$string['name'], 'student_id'=>$string['studentid'], 'have_review'=>$string['reviewed'], 'group'=>$type);
   if ($review_type == 1) {
     $heading['review_no'] = $string['reviews'];
@@ -216,7 +152,7 @@ require_once 'summary_report.inc';
 
   echo '<tr><th></th>';
   foreach ($heading as $k => $h) {
-    echo '<th class="' . $k . '"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;';
+    echo '<th class="' . $k . '"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" />&nbsp;';
     echo "<a style=\"color:black;text-decoration:none\" href=\"" . $_SERVER['PHP_SELF'] . '?' . $query_string . "&sortby=$k&ordering=$ordering" . "\">";
     echo  $h;
     if ($k == $sortby) {
@@ -302,8 +238,8 @@ require_once 'summary_report.inc';
     //if ($student_userID > 0) {
     if ($master_array[$i]['student_id'] > 0) {
       echo '<tr>';
-      echo '<td class="greyln"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" border="0" onclick="ItemSelMenu(' . $master_array[$i]['userid'] . ', event);" /></td>';
-      echo '<td class="greyln" onclick="ItemSelMenu(' . $master_array[$i]['userid'] . ', event);">' . $master_array[$i]['title'] . ' ' . $master_array[$i]['surname'] . ', <span class="fn">' . $master_array[$i]['first_names'] . '</span></td>';
+      echo '<td class="greyln"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');" /></td>';
+      echo '<td class="greyln" onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');">' . $master_array[$i]['title'] . ' ' . $master_array[$i]['surname'] . ', <span class="fn">' . $master_array[$i]['first_names'] . '</span></td>';
       echo '<td class="greyln">' . $master_array[$i]['student_id'] . '</td>';
       if ($master_array[$i]['have_review'] == 'Complete') {
         echo '<td class="greyln">' . $string['Complete'] . '</td>';
@@ -342,21 +278,6 @@ require_once 'summary_report.inc';
       echo "<td class=\"num\">&nbsp;</td></tr>\n";
     }
   }
-  /*
-  if ($review_type != '1') {
-    echo '<tr>';
-    echo '<td class="greyln">&nbsp;</td>';
-    echo '<td class="greyln" colspan="4"><strong>Mean</strong></td>';
-    foreach ($questions as $questionID => $tmp_data) {
-      if (isset($user_data[0]['means'][$questionID])) {
-        echo '<td class="num"><strong>' . padDecimals($user_data[0]['means'][$questionID], 2) . '</strong></td>';
-      } else {
-        echo '<td class="num">&nbsp;</td>';
-      }
-    }
-    echo "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-  }
-  */
 ?>
 </table>
 

@@ -610,7 +610,7 @@ if ($css != '') {
   }
 
   var changeRef = function(refID) {
-    document.getElementById('refpane').value = refID;
+    $('#refpane').val(refID);
     winH = getWinH();
     resizeReference();
     var flag = 0;
@@ -618,15 +618,15 @@ if ($css != '') {
       if (count($reference_materials) > 0) {
         echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
         echo "      if (i == refID) {\n";
-        echo "        document.getElementById('framecontent' + i).style.display = 'block';\n";
-        echo "        document.getElementById('refhead' + i).style.top = (31 * i) + 'px';\n";
+        echo "        $('#framecontent' + i).show();\n";
+        echo "        $('#refhead' + i).css('top', (31 * i) + 'px');\n";
         echo "        flag = 1;\n";
         echo "      } else {\n";
-        echo "        document.getElementById('framecontent' + i).style.display = 'none';\n";
+        echo "        $('#framecontent' + i).hide();\n";
         echo "        if (flag == 0) {\n";
-        echo "          document.getElementById('refhead' + i).style.top = (31 * i) + 'px';\n";
+        echo "          $('#refhead' + i).css('top', (31 * i) + 'px');\n";
         echo "        } else {\n";
-        echo "          document.getElementById('refhead' + i).style.top = (winH - (" . count($reference_materials) . " - i) * 31) + 'px';\n";
+        echo "          $('#refhead' + i).css('top', (winH - (" . count($reference_materials) . " - i) * 31) + 'px');\n";
         echo "        }\n";
         echo "      }\n";
         echo "    }\n";
@@ -640,7 +640,7 @@ if ($css != '') {
   if (count($reference_materials) > 0) {
     $subtract = (31 * count($reference_materials)) + 11;
     echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
-    echo "      document.getElementById('framecontent' + i).style.height = (winH - $subtract) + 'px';\n";
+    echo "      $('#framecontent' + i).css('height', (winH - $subtract) + 'px');\n";
     echo "    }\n";
 ?>
     var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
@@ -1313,7 +1313,7 @@ if (isset($_POST['refpane'])) {
 
 if ($unanswered) {
   echo "<script language=\"JavaScript\">\n";
-  echo "  document.getElementById('unansweredkey').style.display = '';\n";
+  echo "  $('#unansweredkey').show();\n";
   echo "</script>\n";
 }
 ?>

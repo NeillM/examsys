@@ -43,9 +43,10 @@
     .n {text-align:right}
   </style>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function jumpTo() {
-      document.location = 'summative_stats.php?year=' + document.getElementById('year').value;
+      document.location = 'summative_stats.php?year=' + $('#year').val();
     }
   </script>
 </head>

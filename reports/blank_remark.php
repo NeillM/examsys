@@ -205,31 +205,22 @@ if (isset($_POST['submit'])) {
     .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
-      if (document.getElementById(objectID).className == 'r2') {
-        document.getElementById(objectID).className = 'r1';
+      if ($('#' + objectID).hasClass('r2')) {
+        $('#' + objectID).addClass('r1');
+        $('#' + objectID).removeClass('r2');
       } else {
-        document.getElementById(objectID).className = 'r2';
+        $('#' + objectID).addClass('r2');
+        $('#' + objectID).removeClass('r1');
       }
     }
 
     function resizeList() {
-      var winW = 630, winH = 460;
-      if (document.body && document.body.offsetWidth) {
-        winW = document.body.offsetWidth;
-        winH = document.body.offsetHeight;
-      }
-      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-        winW = document.documentElement.offsetWidth;
-        winH = document.documentElement.offsetHeight;
-      }
-      if (window.innerWidth && window.innerHeight) {
-        winW = window.innerWidth;
-        winH = window.innerHeight;
-      }
-      winH -= 160;
-      document.getElementById('list').style.height = winH + 'px';
+      winH = $(window).height() - 160;
+
+      $('#list').css('height', winH + 'px');
     }
   </script>
 </head>

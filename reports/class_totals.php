@@ -234,7 +234,7 @@ ob_start();
 
 <body>
 <div id="noteDiv" class="studentnote">
-<div style="text-align:right; padding:2px"><img onclick="document.getElementById('noteDiv').style.display='none'" src="../artwork/close_note.png" width="16" height="16" alt="Close" style="cursor:pointer" /></div>
+<div style="text-align:right; padding:2px"><img onclick="$('#noteDiv').hide();" src="../artwork/close_note.png" width="16" height="16" alt="Close" style="cursor:pointer" /></div>
 <div id="noteMsg"></div>
 </div>
 

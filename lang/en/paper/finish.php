@@ -17,6 +17,7 @@
 require_once '../lang/' . $language . '/include/paper_security.inc';
 require_once '../lang/' . $language . '/question/sct_shared.php';
 
+$string['question'] = 'Question';
 $string['norights'] = 'You do not have rights to see this paper.';
 $string['examscript'] = 'Exam Script';
 $string['error_paper'] = 'The requested paper cannot be found.';
@@ -69,3 +70,5 @@ $string['useranswererror'] = 'User Answer Error';
 $string['errorkeywordunique'] = 'ERROR: unable to find unique question for supplied keywords';
 $string['errorrandomnotfound'] = 'ERROR: No random question selected. Perhaps this screen was skipped';
 $string['overriddenby'] = 'Mark adjusted by';
+$string['questionclarification'] = 'Question Clarification';
+?>

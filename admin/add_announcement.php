@@ -44,7 +44,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
   
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -71,6 +71,19 @@ SCRIPT;
 ?>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+  </script>
 </head>
 
 <body>
@@ -85,28 +98,28 @@ SCRIPT;
 <br />
 
 <br />
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
 <table style="width:875px; margin-left:auto; margin-right:auto; font-size:110%">
 <tr>
 <td></td><td>
-<input type="radio" name="icon" value="1" checked="checked" /><img src="../artwork/news_64.png" width="64" height="64" border="0" />
+<input type="radio" name="icon" value="1" checked="checked" /><img src="../artwork/news_64.png" width="64" height="64" />
 &nbsp;&nbsp;&nbsp;
-<input type="radio" name="icon" value="2" /><img src="../artwork/new_64.png" width="64" height="64" border="0" />
+<input type="radio" name="icon" value="2" /><img src="../artwork/new_64.png" width="64" height="64" />
 &nbsp;&nbsp;&nbsp;
-<input type="radio" name="icon" value="3" /><img src="../artwork/tip_64.png" width="64" height="64" border="0" />
+<input type="radio" name="icon" value="3" /><img src="../artwork/tip_64.png" width="64" height="64" />
 &nbsp;&nbsp;&nbsp;
-<input type="radio" name="icon" value="4" /><img src="../artwork/software_64.png" width="64" height="64" border="0" />
+<input type="radio" name="icon" value="4" /><img src="../artwork/software_64.png" width="64" height="64" />
 &nbsp;&nbsp;&nbsp;
-<input type="radio" name="icon" value="5" /><img src="../artwork/exclamation_64.png" width="64" height="64" border="0" />
+<input type="radio" name="icon" value="5" /><img src="../artwork/exclamation_64.png" width="64" height="64" />
 &nbsp;&nbsp;&nbsp;
-<input type="radio" name="icon" value="6" /><img src="../artwork/sync_64.png" width="64" height="64" border="0" />
+<input type="radio" name="icon" value="6" /><img src="../artwork/sync_64.png" width="64" height="64" />
 &nbsp;&nbsp;&nbsp;
-<input type="radio" name="icon" value="7" /><img src="../artwork/megaphone_64.png" width="64" height="64" border="0" />
+<input type="radio" name="icon" value="7" /><img src="../artwork/megaphone_64.png" width="64" height="64" />
 </td>
 </tr>
 <tr>
-<td class="field"><?php echo $string['Title']; ?></td><td><input type="text" name="title" size="60" /></td>
+<td class="field"><?php echo $string['Title']; ?></td><td><input type="text" name="title" size="60" maxlength="255" required /></td>
 </tr>
 <tr>
 <td class="field"><?php echo $string['Available from']; ?></td><td><?php echo date_utils::timedate_select('f', date('YmdH00')); ?></td>

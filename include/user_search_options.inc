@@ -41,7 +41,6 @@ if (isset($_GET['calendar_year'])) {
   $calendar_year = '';
 }
 ?>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../js/state.js"></script>
 <script language="JavaScript">
   function updateDropdownState(mySel, NameOfState) {
@@ -64,7 +63,7 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function checkRoles() {
-    if (  $('#roles').val().search("Student") == -1  ) {
+    if ($('#roles').val().search("Student") == -1) {
       $('#performancesummary2b').css('color', '#808080');
       $('#performancesummary2c').css('color', '#808080');
     } else {
@@ -78,7 +77,7 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function viewPerformanceSummary() {
-    if (  $('#roles').val().search("Student") == -1  ) {
+    if ($('#roles').val().search("Student") == -1) {
       alert("You have selected a non-student user.");
     } else {
       window.open("../students/performance_summary.php?userID=" + getLastID($('#userID').val()), "_blank");
@@ -86,7 +85,7 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function deleteUser() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_user.php?id=" + $('#userID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_user.php?id=" + $('#userID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210, screen.height/2-85);
     if (window.focus) {
       notice.focus();

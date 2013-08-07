@@ -32,6 +32,7 @@ $unique_username = true;
 $problem = false;
 
 if (isset($_POST['submit'])) {
+  echo "Submitted";
   // Check for unique username
   if (UserUtils::username_exists($_POST['new_username'], $mysqli) !== false) {
     $unique_username = false;
@@ -93,7 +94,7 @@ if (isset($_POST['submit']) and $unique_username == true) {
       $headers .= "bcc: $tmp_email\n";
       $sname = ucwords($_POST['new_surname']);
       $message = <<< MESSAGE
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <title>{$string['rogoaccount']}</title>
@@ -145,7 +146,7 @@ MESSAGE;
   }
   if (!isset($_POST['submit']) or $problem) {
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -158,53 +159,29 @@ MESSAGE;
   <style type="text/css">
     .title {font-size:160%; font-weight:bold}
     .field {font-weight:bold}
-    .warn {background-color:#FFD9D9; color:#800000; border:1px solid #800000!important}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
-  function checkForm() {
-    if (document.getElementById('new_first_names').value == "") {
-      alert("<?php echo $string['reqfirstname'] ?>");
-      return false;
-    }
-    if (document.getElementById('new_surname').value == "") {
-      alert("<?php echo $string['reqsurname'] ?>");
-      return false;
-    }
-    if (document.getElementById('new_email').value == "") {
-      alert("<?php echo $string['reqemail'] ?>");
-      return false;
-    }
-    if (document.getElementById('new_grade').options[document.getElementById('new_grade').selectedIndex].value == "") {
-      alert("<?php echo $string['reqcourse'] ?>");
-      return false;
-    }
-    if (document.getElementById('new_username').value == "") {
-      alert("<?php echo $string['requsername'] ?>");
-      return false;
-    } else {
-      username = document.newUser.new_username.value;
-      for (a=0; a<username.length; a++) {
-        char = username.substr(a,1);
-        if (char == '_') {
-          alert('<?php echo $string['usernamechars'] ?>');
-          return false;
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
         }
+      });
+      $('form').removeAttr('novalidate');
+    });
+
+
+    function ldaplookup() {
+      notice = window.open("ldaplookup.php","ldap","width=650,height=250,left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice.moveTo(screen.width/2-325, screen.height/2-125);
+      if (window.focus) {
+        notice.focus();
       }
     }
-    if (document.getElementById('new_password').value == "") {
-      alert("<?php echo $string['reqpassword'] ?>");
-      return false;
-    }
-  }
-
-  function ldaplookup() {
-    notice=window.open("ldaplookup.php","ldap","width=650,height=250,left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-325,screen.height/2-125);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
   </script>
 </head>
 
@@ -214,7 +191,7 @@ MESSAGE;
 ?>
 <div id="content" class="content">
 <br />
-<form method="post" name="newUser" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form method="post" id="theform" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <div align="center">
 <table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
 <tr><td>
@@ -250,10 +227,10 @@ foreach ($titles as $tmp_title) {
 }
 ?>
 </select></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input<?php if (isset($new_first_names) and $new_first_names == '') echo ' class="warn"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="warn"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="warn"'; ?> type="text" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="warn"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" />
+<tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="text" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" required />
 &nbsp;&nbsp;&nbsp;<span class="field"><?php echo $string['password']; ?></span> <input type="text" id="new_password" name="new_password" value="<?php
   if (isset($_POST['password'])) {
     echo $_POST['password'];
@@ -275,7 +252,7 @@ foreach ($titles as $tmp_title) {
 </select>
 </td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['typecourse']; ?></span></td><td>
-<select name="new_grade" id="new_grade" size="1" style="width:350px"<?php if (isset($new_grade) and $new_grade == '') echo ' class="warn"'; ?>>
+<select name="new_grade" id="new_grade" size="1" style="width:350px"<?php if (isset($new_grade) and $new_grade == '') echo ' class="required"'; ?> required>
 <option value=""></option>
 <optgroup label="<?php echo $string['universitystaff']; ?>">
 <option value="University Lecturer"><?php echo $string['academiclecturer']; ?></option>

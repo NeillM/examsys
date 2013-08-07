@@ -93,13 +93,13 @@ if (isset($_POST['submit'])) {
     }
 
     function lon(lineID) {
-      document.getElementById(lineID).style.backgroundColor = '#EBF3FD';
-      document.getElementById(lineID).style.border = '1px solid #B8D6FB';
+      $('#' + lineID).css('background-color', '#EBF3FD');
+      $('#' + lineID).css('border', '1px solid #B8D6FB');
     }
 
     function loff(lineID) {
-      document.getElementById(lineID).style.backgroundColor = '';
-      document.getElementById(lineID).style.border = '1px solid white';
+      $('#' + lineID).css('background-color', 'white');
+      $('#' + lineID).css('border', '1px solid white');
     }
     
     function do_resize() {

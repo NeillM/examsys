@@ -124,7 +124,9 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var) {
       }
     } elseif ($method == 'POST') {
       if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
-        display_error($string['fatalerrormsg0'], $string['fatalerrormsg2'], $headers);
+        
+        display_error($string['fatalerrormsg0'], $var_name, $headers);
+        //display_error($string['fatalerrormsg0'], $string['fatalerrormsg2'], $headers);
       }
       if ($return_var) {
         return $_POST[$var_name];
