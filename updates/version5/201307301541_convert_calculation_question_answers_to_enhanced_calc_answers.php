@@ -129,7 +129,7 @@ foreach ($logarray as $LOG) {
                 }
             }
 
-            $new_user_answer['staus'] = $statusdata;
+            $new_user_answer['status'] = $statusdata;
 
 
             $vars = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K', '$L');
