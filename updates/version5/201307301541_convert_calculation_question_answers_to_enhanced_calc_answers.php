@@ -42,17 +42,18 @@ foreach ($logarray as $LOG) {
 
             //[0] is user answer, [1] is correct answer, [2] is array variables
             //print $qid . '   ';
-            if (!isset($settings['units'])) {
-                $settings['units'] = '';
+            if (!isset($settings['answers'][0]['units'])) {
+                $settings['answers'][0]['units'] = '';
             }
-            $new_user_answer['uans'] = $tmp_answer[0] . ' ' . $settings['units'];
-            $new_user_answer['uansunit'] = $settings['units'];
+            $new_user_answer['uans'] = $tmp_answer[0] . ' ' . $settings['answers'][0]['units'];
+            $new_user_answer['uansunit'] = $settings['answers'][0]['units'];
             $new_user_answer['uansnumb'] = $tmp_answer[0];
             if (!isset($tmp_answer[1])) {
                 $tmp_answer[1] = '';
             }
             $new_user_answer['cans'] = $tmp_answer[1];
-            $ansdata['guessedunits'] = $settings['units'];
+            $ansdata['units_used'] = $settings['answers'][0]['units'];
+            $ansdata['guessedunits'] = $settings['answers'][0]['units'];
 
             $tolerance_full = $settings['tolerance_full'];
             if (StringUtils::ends_with($tolerance_full, '%')) {
