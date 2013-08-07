@@ -304,7 +304,6 @@ require '../config/finish.inc';
           INNER JOIN log{$log_type} l ON m.log_id = l.id
           WHERE user_id = ? AND paper_id = ?";
   $result = $mysqli->prepare($sql);
-  echo $mysqli->error;
   $result->bind_param('ii', $temp_userID, $paperID);
   $result->execute();
   $result->store_result();
