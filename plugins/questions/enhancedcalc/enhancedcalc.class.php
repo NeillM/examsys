@@ -472,7 +472,7 @@ class EnhancedCalc extends Question implements questionInterface {
       } elseif (!isset($this->useranswer['cans'])) {
         echo ' <strong>(<span class="err">error!</span>)</strong>';
       } else {
-        echo ' <strong>(' . $this->useranswer['cans'] . ' ';
+        echo ' <strong>(' . $this->useranswer['cans'];
         if ($this->useranswer['ans']['units_used'] != '') echo ' ' . $this->useranswer['ans']['units_used'];
         echo ')</strong>';
       }
