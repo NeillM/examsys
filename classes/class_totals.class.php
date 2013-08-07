@@ -215,7 +215,7 @@ class ClassTotals {
     $this->load_metadata();                                                                                   // Query for metadata
 
     $this->load_overrides();
-    
+
     $this->load_results();                                                                                    // Load the student data
 
     $this->adjust_marks();                                                                                    // Scale marks (random marks or standards setting)
@@ -281,7 +281,6 @@ class ClassTotals {
     $old_score_method   = '';
 
     $result = $this->db->prepare("SELECT options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, status, settings FROM options AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.option_text = questions.q_id AND options1.o_id = ?");
-//    $result = $this->db->prepare("SELECT options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=?");
     $result->bind_param('i', $questionID);
     $result->execute();
     $result->store_result();
@@ -673,10 +672,10 @@ class ClassTotals {
       } elseif ($question['q_type'] == 'enhancedcalc') {
         if ($tmp_exclude{0} == '0') {
           $settings = json_decode($question['settings'], true);
-          
+
           if (isset($this->marking_overrides[$q_id][$userID])) {
             $new_mark_type = $this->marking_overrides[$q_id][$userID];
-            
+
             if ($new_mark_type == 'correct') {
               $tmp_mark += $settings['marks_correct'];
               $tmp_user_mark_array[$q_id][] = $settings['marks_correct'];
@@ -1093,7 +1092,7 @@ class ClassTotals {
     }
     $result->close();
   }
-  
+
   private function load_results() {
     if ($this->studentsonly == 0) {
       $roles_sql = '';
@@ -1180,7 +1179,7 @@ class ClassTotals {
 
       $single_mark = $this->getUserMark($q_id, $userID, $user_answer, $mark, $tmp_user_mark_array);
       $tmp_mark += $single_mark;
-      
+
       if (($q_type == 'textbox' or $q_type == 'enhancedcalc') and !is_numeric($mark)) {
         $marking_complete = 0;
       }
