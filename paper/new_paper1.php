@@ -24,7 +24,7 @@
 
 require '../include/staff_auth.inc';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -36,7 +36,18 @@ require '../include/staff_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+
     function over(id) {
       if (id != $('#paper_type').val()) {
         $('#' + id).css('background-image', 'url("../artwork/over.png")');
@@ -89,17 +100,12 @@ require '../include/staff_auth.inc';
         alert("<?php echo $string['msg1']; ?>");
         return false;
       }
-      
-      if ($('#paper_name').val() == '') {
-        alert("<?php echo $string['msg2']; ?>");
-        return false;
-      }
     }
   </script>
 </head>
 
 <body>
-<form name="theform" action="new_paper2.php" method="post" onsubmit="return checkForm();">
+<form id="theform" name="theform" action="new_paper2.php" method="post" onsubmit="return checkForm();">
 <div style="text-align:center; border:solid 1px #7F9DB9; background-color:white">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>
@@ -121,7 +127,7 @@ require '../include/staff_auth.inc';
 </table>
 </div>
 <br />
-<?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="" style="width:650px" />
+<?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="" maxlength="255" style="width:650px" required />
 <input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
 <input type="hidden" id="paper_type" name="paper_type" value="" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />

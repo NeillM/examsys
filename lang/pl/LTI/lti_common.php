@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['name'] = 'Nazwa opisowa'; 
-$string['oauth_consume_key']= 'Klucz odbiorcy Oauth';
-$string['oauth_secret'] = 'Sekret odbiorcy Oauth';
+$string['name'] = 'Nazwa'; 
+$string['oauth_consume_key']= 'Klucz Odbiorcy';
+$string['oauth_secret'] = 'Wspólny Sekret';
 $string['oauth_context_id'] = 'Przełamowy identyfikator kontekstowy LTI';
 $string['createLTIkeys'] = 'Utwórz nowy klucz LTI';
 $string['editLTIkeys'] = 'Zmień klucz LTI';

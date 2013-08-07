@@ -65,11 +65,11 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 </body>
 </html>
 <?php
-    exit;
+    exit();
   }
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -81,17 +81,31 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
     textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
     h1 {font-size:120%}
   </style>
+  
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+  </script>
 </head>
 
-<body onload="document.myform.new_faculty.focus();">
+<body>
 <h1><?php echo $string['addfaculty']; ?></h1>
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div><?php
 if ($duplicate) {
-  echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="add_faculty" value="' . $_POST['add_faculty'] . '" />';
+  echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" id="add_faculty" name="add_faculty" value="' . $_POST['add_faculty'] . '" maxlength="80" required autofocus />';
   echo "<script language=\"JavaScript\">\nalert('" . $string['facultywarning'] . "');\n</script>\n";
 } else {
-  echo '<input type="text" style="width:99%" name="add_faculty" />';
+  echo '<input type="text" style="width:99%" id="add_faculty" name="add_faculty" maxlength="80" required autofocus />';
 }
 ?>
 </div>

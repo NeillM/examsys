@@ -35,9 +35,9 @@ if (isset($_POST['submit'])) {
   
   // Add it to the modules
   for ($i=0; $i<$_POST['module_no']; $i++) {
-    if (isset($_POST['module' . $i])) {
+    if (isset($_POST['mod' . $i])) {
       $result = $mysqli->prepare("INSERT INTO reference_modules VALUES (NULL, ?, ?)");
-      $result->bind_param('ii', $refID, $_POST['module' . $i]);
+      $result->bind_param('ii', $refID, $_POST['mod' . $i]);
       $result->execute();
     }
   }
@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
   exit;  
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -66,12 +66,25 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script language="JavaScript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+
     function toggle(objectID) {
-      if (document.getElementById(objectID).className == 'r2') {
-        document.getElementById(objectID).className = 'r1';
+      if ($('#' + objectID).hasClass('r2')) {
+        $('#' + objectID).addClass('r1');
+        $('#' + objectID).removeClass('r2');
       } else {
-        document.getElementById(objectID).className = 'r2';
+        $('#' + objectID).addClass('r2');
+        $('#' + objectID).removeClass('r1');
       }
     }
   </script>
@@ -87,10 +100,10 @@ if (isset($_POST['submit'])) {
 <tr><th class="bevel"></th></tr>
 </table>
 
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" charset="UTF-8">
+<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" charset="UTF-8">
 <br />
 <table border="0" style="text-align:left; margin-left:auto; margin-right:auto; font-size:80%">
-<tr><td><?php echo $string['name']; ?> <input type="text" name="title" size="40" />&nbsp;&nbsp;&nbsp;<?php echo $string['width']; ?> <select name="width"><?php
+<tr><td><?php echo $string['name']; ?> <input type="text" name="title" size="40" required autofocus />&nbsp;&nbsp;&nbsp;<?php echo $string['width']; ?> <select name="width"><?php
 $width = 400;
 for ($size=200; $size<850; $size+=50) {
   if ($width == $size) {
@@ -116,9 +129,9 @@ for ($size=200; $size<850; $size+=50) {
     if ($_GET['module'] == $modID) $match = true;
     
     if ($match == true) {
-      echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"$modID\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+      echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked>&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
     } else {
-      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"$modID\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\">&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
     }
     $module_no++;  
     $old_school = $module['school'];        

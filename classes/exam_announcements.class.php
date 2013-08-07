@@ -50,6 +50,10 @@ class ExamAnnouncements {
   }
 
   public function replace_announcement($q_id, $q_number, $screen, $msg) {
+    if ($msg == '') {
+      return false;
+    }
+  
     $result = $this->db->prepare("REPLACE INTO exam_announcements (paperID, q_id, q_number, screen, msg, created) VALUES (?, ?, ?, ?, ?, NOW())");
     $result->bind_param('iiiis', $this->paperID, $q_id, $q_number, $screen, $msg);
     $result->execute();
@@ -63,9 +67,9 @@ class ExamAnnouncements {
     $html = '';
     
     $html .= "<table class=\"exam_announcement_box\">\n";
-    $html .= "<tr><td rowspan=\"" . (count($exam_announcements) + 1) . "\" class=\"exam_announce_icon\" ><img src=\"../artwork/comment_48.png\" width=\"48\" height=\"48\" /></td><td class=\"exam_announce_title\">Question Clarification</td></tr>\n";
+    $html .= "<tr><td rowspan=\"" . (count($exam_announcements) + 1) . "\" class=\"exam_announce_icon\" ><img src=\"../artwork/comment_48.png\" width=\"48\" height=\"48\" /></td><td class=\"exam_announce_title\">" . $string['questionclarification'] . "</td></tr>\n";
     foreach ($exam_announcements as $exam_announcement) {
-      $html .= "<tr><td><ul><li><strong>Question ". $exam_announcement['q_number'] . "</strong> (Screen ". $exam_announcement['screen'] . ")<br />" . $exam_announcement['msg'] . "</li></ul></td></tr>\n";
+      $html .= "<tr><td><ul><li><strong>" . $string['question'] . " ". $exam_announcement['q_number'] . "</strong> (" . $string['screen'] . " " . $exam_announcement['screen'] . ")<br />" . $exam_announcement['msg'] . "</li></ul></td></tr>\n";
     }
     $html .= '</table>';
     

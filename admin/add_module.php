@@ -115,7 +115,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   exit;
 } else {
 ?>
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
   <html>
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -128,13 +128,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .field {font-weight:bold; text-align:right; padding-right:10px}
-    .error {color:#800000}
-    input.error, select.error {background-color:#FFD9D9; border:1px solid #800000}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="JavaScript">
 <?php
   $vle_apis = $configObject->get('vle_apis');
@@ -146,17 +144,18 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 ?>
 
     $(function () {
-      $('#module_form').validate({
-        messages: {
-          modulecode: '<div><?php echo $string['entermoduleid']; ?></div>',
-          fullname: '<div><?php echo $string['entermoduletitle']; ?></div>',
-          schoolid: '<div><?php echo $string['selectschool']; ?></div>'
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
         }
       });
+      $('form').removeAttr('novalidate');
+
 <?php
   if ($unique_moduleid == false) {
 ?>
-      $('#modulecode').addClass('error');
+      $('#modulecode').addClass('errfield');
 <?php
   }
 ?>
@@ -183,15 +182,15 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   </table>
   <br />
   <div align="center">
-  <form id="module_form" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+  <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
-    <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" id="modulecode" name="modulecode" value="<?php echo $tmp_modulecode ?>" class="required" /></td></tr>
-    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname']; ?>" class="required" /></td></tr>
+    <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="<?php echo $tmp_modulecode ?>" required autofocus /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname']; ?>" required /></td></tr>
 
 <?php
   $old_faculty = '';
-  echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select id=\"schoolid\" name=\"schoolid\" class=\"required\">\n<option value=\"\"></option>\n";
-  $result = $mysqli->prepare("SELECT schools.id, school, faculty.name FROM schools, faculty WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY faculty.name, school");
+  echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select id=\"schoolid\" name=\"schoolid\" required>\n<option value=\"\"></option>\n";
+  $result = $mysqli->prepare("SELECT schools.id, school, faculty.name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY faculty.name, school");
   $result->execute();
   $result->bind_result($id, $school, $faculty);
   while ($result->fetch()) {

@@ -120,11 +120,13 @@ a.greylink:hover {
   margin-left:9px;
   width:185px;
   border:none;
+  border-collapse:collapse;
 }
 
 .sidebar_tbl td {
   padding:4px;
-  border:none;
+  border-spacing:0;
+  border:0;
 }
 
 .popup {
@@ -185,7 +187,7 @@ a.greylink:hover {
 }
 
 .menuitem {
-  width:100%
+  width:100%;
 }
 
 .menuitem span {

@@ -27,9 +27,13 @@ require '../include/errors.inc';
   
 $gridID = check_var('id', 'GET', true, false, true);
 
-function ebelDropdown($dropdownID, $default) {
-  $html = "<select name=\"$dropdownID\">\n";
-  $html .= "<option value=\"0\"></option>\n";
+function ebelDropdown($dropdownID, $default, $required = false) {
+  if ($required) {
+    $html = "<select name=\"$dropdownID\" required>\n";
+  } else {
+    $html = "<select name=\"$dropdownID\">\n";
+  }
+  $html .= "<option value=\"\"></option>\n";
   for ($individual_category=0; $individual_category<=100; $individual_category++) {
     if ($individual_category == $default) {
       $html .= "<option value=\"$individual_category\" selected>$individual_category%</option>\n";
@@ -40,36 +44,48 @@ function ebelDropdown($dropdownID, $default) {
   $html .= "</select>\n";
   return $html;
 }
-  
-$result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?");
-$result->bind_param('i', $gridID);
-$result->execute();
-$result->store_result();
-$result->bind_result($EE, $EI, $EN, $ME, $MI, $MN, $HE, $HI, $HN, $EE2, $EI2, $EN2, $ME2, $MI2, $MN2, $HE2, $HI2, $HN2, $name);
-$result->fetch();
-if ($result->num_rows == 0) {
-  $result->close();
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
-$result->close();
 
 if (isset($_POST['submit'])) {
+  $types = array('EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2');
+  foreach ($types as $type) {
+    if (isset($_POST[$type])) {
+      $$type = (int)$_POST[$type];
+    } else {
+      $$type = 0;
+    }
+  }
+  
   $result = $mysqli->prepare("UPDATE ebel_grid_templates SET EE = ?, EI = ?, EN = ?, ME = ?, MI = ?, MN = ?, HE = ?, HI = ?, HN = ?, EE2 = ?, EI2 = ?, EN2 = ?, ME2 = ?, MI2 = ?, MN2 = ?, HE2 = ?, HI2 = ?, HN2 = ?, name = ? WHERE id = ?");
-  $result->bind_param('iiiiiiiiiiiiiiiiiisi', $_POST['EE'], $_POST['EI'], $_POST['EN'], $_POST['ME'], $_POST['MI'], $_POST['MN'], $_POST['HE'], $_POST['HI'], $_POST['HN'], $_POST['EE2'], $_POST['EI2'], $_POST['EN2'], $_POST['ME2'], $_POST['MI2'], $_POST['MN2'], $_POST['HE2'], $_POST['HI2'], $_POST['HN2'], $_POST['name'], $gridID);
+  $result->bind_param('iiiiiiiiiiiiiiiiiisi', $EE, $EI, $EN, $ME, $MI, $MN, $HE, $HI, $HN, $EE2, $EI2, $EN2, $ME2, $MI2, $MN2, $HE2, $HI2, $HN2, $_POST['name'], $gridID);
   $result->execute();
   $result->close();
   
   $mysqli->close();
+  
   header("location: list_ebel_grids.php");
+  exit;
 } else {
+  $result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?");
+  $result->bind_param('i', $gridID);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($EE, $EI, $EN, $ME, $MI, $MN, $HE, $HI, $HN, $EE2, $EI2, $EN2, $ME2, $MI2, $MN2, $HE2, $HI2, $HN2, $name);
+  $result->fetch();
+  if ($result->num_rows == 0) {
+    $result->close();
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
+  $result->close();
 ?>
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <html>
-  <head>
+<!DOCTYPE html>
+<html>
+<head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  
   <title><?php echo $string['edittemplate'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -79,9 +95,22 @@ if (isset($_POST['submit'])) {
   </style>
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  </head>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+  </script>
+</head>
   
-  <body>
+<body>
   <?php
     require '../include/ebel_grid_options.inc';
   ?>
@@ -92,17 +121,17 @@ if (isset($_POST['submit'])) {
   </table>
   
   <blockquote>
-  <form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>">
+  <form id="theform" name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>">
  
     <table cellpadding="5" cellspacing="0" border="0">
-    <tr><td style="text-align:right"><?php echo $string['templatename']; ?></td><td colspan="3"><input type="textbox" name="name" size="40" value="<?php echo $name; ?>" /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['templatename']; ?></td><td colspan="3"><input type="textbox" name="name" size="40" maxlength="255" value="<?php echo $name; ?>" required /></td></tr>
     
     <tr><td colspan="4"><h1><?php echo $string['passmark']; ?></h1></td></tr>
     
     <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential']; ?></td><td style="width:170px; text-align:center"><?php echo $string['important']; ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow']; ?></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['easy']; ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE', $EE); ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI', $EI); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN', $EN); ?></td><td style="border:0px"><input type="text" value="" name="easy_total" size="8" style="border:0px" /></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['medium']; ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME', $ME); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI', $MI); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN', $MN); ?></td><td style="border:0px"><input type="text" value="" name="medium_total" size="8" style="border:0px" /></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['hard']; ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE', $HE); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI', $HI); ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN', $HN); ?></td><td style="border:0px"><input type="text" value="" name="hard_total" size="8" style="border:0px" /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['easy']; ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE', $EE, true); ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI', $EI, true); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN', $EN, true); ?></td><td style="border:0px"><input type="text" value="" name="easy_total" size="8" style="border:0px" /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['medium']; ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME', $ME, true); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI', $MI, true); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN', $MN, true); ?></td><td style="border:0px"><input type="text" value="" name="medium_total" size="8" style="border:0px" /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['hard']; ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE', $HE, true); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI', $HI, true); ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN', $HN, true); ?></td><td style="border:0px"><input type="text" value="" name="hard_total" size="8" style="border:0px" /></td></tr>
     <tr><td>&nbsp;</td><td style="text-align:center"><input type="text" value="" name="essential_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="important_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="nice_total" size="8" style="text-align:center; border:0px" /></td></tr>
     
     <tr><td colspan="4">&nbsp;</td></tr>

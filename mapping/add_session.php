@@ -79,7 +79,7 @@ if (isset($_POST['Save'])) {
   $stmt->fetch();
   $stmt->close();
   ?>
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
   <html>
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -98,20 +98,17 @@ if (isset($_POST['Save'])) {
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
-      function checkForm() {
-        if ($('#session_title').val() == '' || $('#session_title').val() == ' ') {
-          alert("<?php echo $string['msg2'];?>");
-          return false;
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
         }
-      }
-
-    function clearTextbox(objectName) {
-      if ($('#' + objectName).val() == '<?php echo $string['msg1']; ?>') {
-        $('#' + objectName).val('');
-        $('#' + objectName).css('color', 'black');
-      }
-    }
+      });
+      $('form').removeAttr('novalidate');
+    });
 
     var ObjCount = 0;
     function addNew(ulId) {
@@ -120,7 +117,7 @@ if (isset($_POST['Save'])) {
       li.id = 'li_' + ulId + ObjCount;
       li.style.margin = '0.5em';
       li.style.marginLeft = '3.5em';
-      li.innerHTML = '<img src="./up_on.png" onclick="promote( \'' + li.id + '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'' + li.id + '\' )" />&nbsp<input class="editBox" name="obj_' + ObjCount + '" id="obj_' + ObjCount + '" type="text" style="color:#808080" onfocus="clearTextbox(\'obj_' + ObjCount + '\');" value="<?php echo $string['msg1']; ?>" /></li>';
+      li.innerHTML = '<img src="./up_on.png" onclick="promote( \'' + li.id + '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'' + li.id + '\' )" />&nbsp<input class="editBox" name="obj_' + ObjCount + '" id="obj_' + ObjCount + '" type="text" value="" placeholder="<?php echo $string['msg1']; ?>" /></li>';
       ul.insertBefore(li,ul.lastChild);
       updateButtons();
     }
@@ -140,7 +137,7 @@ if (isset($_POST['Save'])) {
     }
 
 
-    function promote( liId ) {
+    function promote(liId) {
       li = document.getElementById( liId );
       ul = li.parentNode;
       var i = 0;
@@ -200,8 +197,8 @@ if (isset($_POST['Save'])) {
   echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
   echo '</table><br/>';
 
-  echo "<form name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "&folder=\" method=\"post\" onsubmit=\"return checkForm();\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
-  echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"\" /></td></tr>\n";
+  echo "<form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "&folder=\" method=\"post\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
+  echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"\" required autofocus /></td></tr>\n";
 
   echo '<tr><td class="field">' . $string['session'] . '</td><td>';
     $validfrom = '<select name="session">'."\n";
@@ -288,7 +285,7 @@ if (isset($_POST['Save'])) {
       $id = $i;
       echo "\t<li id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
       echo '<img src="./up_on.png" onclick="promote( \'li_' . $id . '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'li_' . $id . '\' )" />&nbsp';
-      echo "<input class='editBox' onfocus=\"clearTextbox('obj_" . $id . "');\" id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"" . $string['msg1'] . "\" />";
+      echo "<input class='editBox' id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"\" placeholder=\"" . $string['msg1'] . "\" />";
       echo "</li>\n";
     }
     echo '<li style="margin:0.5em; margin-left:6em"><input style="width: 80px" type="button" value="' . $string['new'] . '"  onclick="addNew(\'objList\')"></li>';

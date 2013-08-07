@@ -48,7 +48,7 @@ if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 
 
 // If we're still here we should be staff
 require_once '../include/staff_auth.inc';
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+?><!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -64,9 +64,30 @@ require_once '../include/staff_auth.inc';
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script language="JavaScript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+    
+    function startPaper(paperID, fullsc) {
+      var winwidth = screen.width-80;
+      var winheight = screen.height-80;
+      if (fullsc == 0) {
+        window.open("../reviews/start.php?id="+paperID+"&review=1","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      } else {
+        window.open("../reviews/start.php?id="+paperID+"&review=1","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      }
+    }
+    
     function illegalChar(codeID) {
       if (codeID == 59) {
         alert("Character ';' illegal - please use alternative characters in folder name.");
@@ -99,7 +120,7 @@ require_once '../include/staff_auth.inc';
 ?>
 
 <div id="content" class="content">
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <?php
   // -- Create new folder ---------------------------------------------------
   $duplicate_folder = false;
@@ -112,17 +133,6 @@ require_once '../include/staff_auth.inc';
     }
   }
 ?>
-<script language="JavaScript">
-  function startPaper(paperID, fullsc) {
-    var winwidth = screen.width-80;
-    var winheight = screen.height-80;
-    if (fullsc == 0) {
-      window.open("../reviews/start.php?id="+paperID+"&review=1","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    } else {
-      window.open("../reviews/start.php?id="+paperID+"&review=1","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-  }
-</script>
 
 <table cellpadding="0" cellspacing="0" border="0" class="header">
   <tr>
@@ -232,13 +242,13 @@ require_once '../include/staff_auth.inc';
   if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' or $duplicate_folder == true) {
     if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_folder == true) {
       echo "<script language=\"JavaScript\">alert(\"" . $string['duplicatefoldername'] . "\")</script>";
-      echo "<div class=\"f\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" />&nbsp;<input style=\"background-color:#FFC0C0\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
+      echo "<div class=\"f\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" />&nbsp;<input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
     } elseif (!isset($_POST['submit'])) {
-      echo "<div class=\"f\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" />&nbsp;<input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
+      echo "<div class=\"f\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" />&nbsp;<input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
     }
   }
 
-  echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/" . RecycleBin::get_recyclebin_icon($userObject->get_user_ID(), $staff_modules, $mysqli) . "\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
+  echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/" . RecycleBin::get_recyclebin_icon($userObject->get_user_ID(), $staff_modules, $mysqli) . "\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
 ?>
 <br clear="left" />
 <?php
@@ -252,13 +262,13 @@ require_once '../include/staff_auth.inc';
 
     echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['mymodules'] . " ($module_no)</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     if ($userObject->has_role('SysAdmin')) {
-      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></td></tr></table></div>\n";
+      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></td></tr></table></div>\n";
     } elseif ($userObject->has_role('Admin')) {
-      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></td></tr></table></div>\n";
+      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></td></tr></table></div>\n";
     }
     foreach ($staff_team_array as $idMod => $folder_title) {
       $url = '../folder/details.php?module=' . $idMod;
-	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span style=\"color:#808080\">" . $folder_title['fullName'] . "</span></td></tr></table></div>\n";
+	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span style=\"color:#808080\">" . $folder_title['fullName'] . "</span></td></tr></table></div>\n";
     }
 
     if ($module_no == 0) {

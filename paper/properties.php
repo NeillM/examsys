@@ -667,9 +667,9 @@ if (isset($_POST['Submit'])) {
       $editProperties->close();
 
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $existing_ref, '', 'referencematerial');
-    }    
+    }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -680,7 +680,12 @@ if (isset($_POST['Submit'])) {
 
     <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
     <script type="text/javascript">
-      function closeWindow() {
+      $(function () {
+        $('#home').click(function () {
+          window.opener.parent.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>";
+          window.close();
+        });
+      
         <?php
           if ($_POST['caller'] == 'scheduling') {
         ?>
@@ -699,22 +704,17 @@ if (isset($_POST['Submit'])) {
             window.close();
         <?php
           }
-        ?>
-      }
-      
-      function updateParent() {
-        window.opener.parent.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>";
-        window.close();
-      }
+        ?>        
+      });
     </script></head>
-    <body onload="closeWindow();">
+    <body>
     <form>
-      <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="updateParent();" /></div>
+      <br />&nbsp;<div align="center"><input type="button" id="home" name="home" value="   OK   " /></div>
     </form>
   <?php
   } else {
   ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -771,7 +771,7 @@ if (isset($_POST['Submit'])) {
   }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -796,6 +796,7 @@ if (isset($_POST['Submit'])) {
 
   <?php echo $cfg_editor_javascript; ?>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php
@@ -812,7 +813,22 @@ if (isset($_POST['Submit'])) {
 }
 ?>
   <script type="text/javascript">
-    $(getMeta);
+    $(function () {
+      getMeta();
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+      $('form').submit(function() {
+        return checkForm();
+      });
+      $('body').click(function () {
+        hidePicker();
+      });
+    });
 
     function getMeta() {
       var mod_codes = '';
@@ -850,13 +866,13 @@ if (isset($_POST['Submit'])) {
     }
 
     function checkForm() {
-      if (document.edit_form.fyear.value > document.edit_form.tyear.value) {
+      if ($('#fyear').val() > $('#tyear').val()) {
         alert ("<?php echo $string['availablefromyear']; ?>");
         return false;
-      } else if (document.edit_form.fyear.value == document.edit_form.tyear.value && document.edit_form.fmonth.value > document.edit_form.tmonth.value) {
+      } else if ($('fyear').val() == $('#tyear').val() && $('#fmonth').val() > $('#tmonth').val()) {
         alert ("<?php echo $string['availablefrommonth']; ?>");
         return false;
-      } else if (document.edit_form.fyear.value == document.edit_form.tyear.value && document.edit_form.fmonth.value == document.edit_form.tmonth.value && document.edit_form.fday.value > document.edit_form.tday.value) {
+      } else if ($('#fyear').val() == $('#tyear').val() && $('#fmonth').val() == $('#tmonth').val() && $('#fday').val() > $('#tday').val()) {
         alert ("<?php echo $string['availablefromday']; ?>");
         return false;
       }
@@ -878,24 +894,23 @@ if (isset($_POST['Submit'])) {
         return false;
       }
 
-      if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '2') {
-        if (document.edit_form.fday.value != document.edit_form.tday.value || document.edit_form.fmonth.value != document.edit_form.tmonth.value || document.edit_form.fyear.value != document.edit_form.tyear.value) {
+      if ($('#paper_type').val() == '2') {
+        if ($('#fday').val() != $('#tday').val() || $('#fmonth').val() != $('#tmonth').val() || $('#fyear').val() != $('#tyear').val()) {
           alert ("<?php echo $string['msg2']; ?>");
           return false;
         }
-
-        if (document.edit_form.exam_duration.options[document.edit_form.exam_duration.selectedIndex].value == 'NULL') {
+        if ($('#exam_duration').val() == 'NULL') {
           alert ("<?php echo $string['msg3']; ?>");
           return false;
         }
 
-        if (document.edit_form.calendar_year.options[document.edit_form.calendar_year.selectedIndex].value == '') {
+        if ($('#session').val() == '') {
           alert ("<?php echo $string['msg4']; ?>");
           return false;
         }
       }
 
-      if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '4') {
+      if ($('#paper_type').val() == '4') {
         var module_no = $('#module_no').val();
 
         var moduleList = '';
@@ -923,13 +938,13 @@ if (isset($_POST['Submit'])) {
         }
       }
       if (external_set == true) {
-        if (document.edit_form.ext_tmonth.options[document.edit_form.ext_tmonth.selectedIndex].value == '') {
+        if ($('#ext_tmonth').val() == '') {
           alert("<?php echo $string['msg6']; ?>");
           return false;
-        } else if (document.edit_form.ext_tday.options[document.edit_form.ext_tday.selectedIndex].value == '') {
+        } else if ($('#ext_tday').val() == '') {
           alert("<?php echo $string['msg6']; ?>");
           return false;
-        } else if (document.edit_form.ext_tyear.options[document.edit_form.ext_tyear.selectedIndex].value == '') {
+        } else if ($('#ext_tyear').val() == '') {
           alert("<?php echo $string['msg6']; ?>");
           return false;
         }
@@ -943,26 +958,21 @@ if (isset($_POST['Submit'])) {
         }
       }
       if (internal_set == true) {
-        if (document.edit_form.int_tmonth.options[document.edit_form.int_tmonth.selectedIndex].value == '') {
+        if ($('#int_tmonth').val() == '') {
           alert("<?php echo $string['msg6a']; ?>");
           return false;
-        } else if (document.edit_form.int_tday.options[document.edit_form.int_tday.selectedIndex].value == '') {
+        } else if ($('#int_tday').val() == '') {
           alert("<?php echo $string['msg6a']; ?>");
           return false;
-        } else if (document.edit_form.int_tyear.options[document.edit_form.int_tyear.selectedIndex].value == '') {
+        } else if ($('#int_tyear').val() == '') {
           alert("<?php echo $string['msg6a']; ?>");
           return false;
         }
       }
-
-      if (document.edit_form.paper_title.value == '') {
-        alert ("<?php echo $string['msg7']; ?>");
-        return false;
-      }
     }
 
     function changeType() {
-      if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '0') {
+      if ($('#paper_type').val() == '0') {
         $('#feedback_on').show();
         $('#feedback_off').hide();
       } else {
@@ -1011,10 +1021,10 @@ if (isset($_POST['Submit'])) {
         $('#' + tabID).removeClass("button_over");
       }
     }
-  </script>
+    </script>
 </head>
-<body onload="window.focus()" onclick="hidePicker();">
-<form name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<body>
+<form id="theform" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <?php
   require '../tools/colour_picker/colour_picker.inc';
 ?>
@@ -1089,22 +1099,22 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
          echo "<a href=\"" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
      }
      echo "</td></tr>\n";
-     echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"" . $properties->get_paper_title() . "\" name=\"paper_title\"$disabled /><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
+     echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"" . $properties->get_paper_title() . "\" name=\"paper_title\"$disabled required /><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
    ?>
     <tr><td align="right" valign="top"><?php echo $string['type']; ?>&nbsp;</td><td>
    <?php
     if ($properties->get_paper_type() == '0') {
-      echo "<select name=\"paper_type\" onclick=\"changeType();\">";
+      echo "<select id=\"paper_type\" name=\"paper_type\" onclick=\"changeType();\">";
       echo "<option value=\"0\" selected=\"selected\" />" . $string['formative self-assessment'] . "</option>\n";
       echo "<option value=\"1\" />" . $string['progress test'] . "</option>\n";
     } elseif ($properties->get_paper_type() == '1') {
-      echo "<select name=\"paper_type\" onclick=\"changeType();\">";
+      echo "<select id=\"paper_type\" name=\"paper_type\" onclick=\"changeType();\">";
       echo "<option value=\"0\" />" . $string['formative self-assessment'] . "</option>\n";
       echo "<option value=\"1\" selected=\"selected\" />" . $string['progress test'] . "</option>\n";
     } else {
-      echo "<select name=\"paper_type\" disabled>";
+      echo "<select id=\"paper_type\" name=\"paper_type\">";
       $tmp_types = array('formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper', 'peer review');
-      echo "<option value=\"0\" selected=\"selected\" />" . $string[$tmp_types[$properties->get_paper_type()]] . "</option>\n";
+      echo "<option value=\"" . $properties->get_paper_type() . "\" selected=\"selected\" />" . $string[$tmp_types[$properties->get_paper_type()]] . "</option>\n";
     }
 
     echo "<td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\">\n";
@@ -1410,7 +1420,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
     }
     echo '</select></td>';
-    echo "<td align=\"right\">" . $string['duration'] . "</td><td><select name=\"exam_duration\"$sum_disabled>";
+    echo "<td align=\"right\">" . $string['duration'] . "</td><td><select id=\"exam_duration\" name=\"exam_duration\"$sum_disabled>";
     $minutes = array('NULL'=>$string['na'],'15'=>'15','20'=>'20','25'=>'25','30'=>'30','35'=>'35','40'=>'40','45'=>'45','50'=>'50','55'=>'55','60'=>'60','65'=>'65','70'=>'70','75'=>'75','80'=>'80','85'=>'85','90'=>'90','95'=>'95','100'=>'100','110'=>'110','120'=>'120','150'=>'150','180'=>'180');
     foreach ($minutes as $key => $value) {
       echo "<option value=\"" . $key . "\"";
@@ -1789,7 +1799,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
 
     // Available to Day
-    echo "<select name=\"int_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    echo "<select id=\"int_tday\" name=\"int_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     for ($i = 1; $i < 32; $i++) {
       if ($i < 10) {
         if ($i == $split_day) {
@@ -1809,7 +1819,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</select>\n";
     // Available to Month
-    echo "<select name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    echo "<select id=\"int_tmonth\" name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     for ($i=0; $i<12; $i++) {
       $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
       if (($split_month-1) == $i) {
@@ -1828,7 +1838,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</select>\n";
      // Available to Year
-     echo "<select name=\"int_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+     echo "<select id=\"int_tyear\" name=\"int_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
      if ($split_year < date('Y') and $split_year > 1999) {
        $start_year = $split_year;
      } else {
@@ -1860,7 +1870,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
 
     // Available to Day
-    echo "<select name=\"ext_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    echo "<select id=\"ext_tday\" name=\"ext_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     for ($i = 1; $i < 32; $i++) {
       if ($i < 10) {
         if ($i == $split_day) {
@@ -1880,7 +1890,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</select>\n";
     // Available to Month
-    echo "<select name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    echo "<select id=\"ext_tmonth\" name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     for ($i=0; $i<12; $i++) {
       $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
       if (($split_month-1) == $i) {
@@ -1899,7 +1909,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</select>\n";
     // Available to Year
-    echo "<select name=\"ext_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    echo "<select id=\"ext_tyear\" name=\"ext_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     if ($split_year < date('Y') and $split_year > 1999) {
       $start_year = $split_year;
     } else {

@@ -53,20 +53,33 @@ if (isset($_POST['moduleID'])) {
   $moduleID = 0;
 }
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+
   <title><?php echo $string['folderproperties']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <style type="text/css">
     body {background-color:#F1F5FB}
     td {font-size:90%}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script language="JavaScript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+    
     function toggle(objectID) {
       if ($('#' + objectID).css('background-color') == 'white') {
         $('#' + objectID).css('background-color', '#B3C8E8');
@@ -217,7 +230,7 @@ if ($unique_name) {
 }
 ?>
 <body>
-<form name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?folder=' . $_GET['folder']; ?>">
+<form id="theform" name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?folder=' . $_GET['folder']; ?>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
 <tr>
 <td style="width:48px; background-color:white; text-align:left"><img src="../artwork/properties.png" width="48" height="48" alt="Properties" /></td><td style="background-color:white; text-align:left">&nbsp;&nbsp;<span class="midblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['folderproperties']; ?></span></td>
@@ -236,24 +249,24 @@ if ($unique_name) {
       if (!$unique_name) {
         echo ' style="color:#800000; background-color:#FFC0C0; border:1px solid #400000"';
       }
-      echo " type=\"text\" size=\"50\" maxlength=\"255\" value=\"$current_folder\" id=\"folder\" name=\"folder\" onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"hidden\" name=\"old_folder\" value=\"$full_path\"><input type=\"hidden\" name=\"old_prefix\" value=\"$prefix\"></td></tr>\n";
+      echo " type=\"text\" size=\"50\" maxlength=\"255\" value=\"$current_folder\" id=\"folder\" name=\"folder\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"hidden\" name=\"old_folder\" value=\"$full_path\"><input type=\"hidden\" name=\"old_prefix\" value=\"$prefix\"></td></tr>\n";
       echo "<input type=\"hidden\" name=\"folderID\" value=\"" . $_GET['folder'] . "\" />";
       echo "<tr><td align=\"right\" valign=\"middle\">" . $string['colour'] . "&nbsp;</td><td>";
       echo "<input type=\"radio\" name=\"color\" value=\"yellow\"";
       if ($color == 'yellow') echo ' checked';
-      echo " /><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Yellow\" border=\"0\" />";
+      echo " /><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Yellow\" />";
       echo "<input type=\"radio\" name=\"color\" value=\"red\"";
       if ($color == 'red') echo ' checked';
-      echo " /><img src=\"../artwork/red_folder.png\" width=\"48\" height=\"48\" alt=\"Red\" border=\"0\" />";
+      echo " /><img src=\"../artwork/red_folder.png\" width=\"48\" height=\"48\" alt=\"Red\" />";
       echo "<input type=\"radio\" name=\"color\" value=\"green\"";
       if ($color == 'green') echo ' checked';
-      echo " /><img src=\"../artwork/green_folder.png\" width=\"48\" height=\"48\" alt=\"Green\" border=\"0\" />";
+      echo " /><img src=\"../artwork/green_folder.png\" width=\"48\" height=\"48\" alt=\"Green\" />";
       echo "<input type=\"radio\" name=\"color\" value=\"blue\"";
       if ($color == 'blue') echo ' checked';
-      echo " /><img src=\"../artwork/blue_folder.png\" width=\"48\" height=\"48\" alt=\"Blue\" border=\"0\" />";
+      echo " /><img src=\"../artwork/blue_folder.png\" width=\"48\" height=\"48\" alt=\"Blue\" />";
       echo "<input type=\"radio\" name=\"color\" value=\"grey\"";
       if ($color == 'grey') echo ' checked';
-      echo " /><img src=\"../artwork/grey_folder.png\" width=\"48\" height=\"48\" alt=\"Grey\" border=\"0\" />";
+      echo " /><img src=\"../artwork/grey_folder.png\" width=\"48\" height=\"48\" alt=\"Grey\" />";
       echo "</td></tr>\n";
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['owner'] . "&nbsp;</td><td>$owner</td></tr>\n";
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['created'] . "&nbsp;</td><td>$created</td></tr>\n";

@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
   if (count($bad_addresses) == 0) header("location: list_labs.php");
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -80,23 +80,17 @@ if (isset($_POST['submit'])) {
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script language="JavaScript">
-    function clearName() {
-      $('#lab_name').val('');
-      $('#lab_name').css('color', 'black');
-    }
-    
-    function checkForm() {
-      if ($('#addresses').val() == '') {
-        alert('<?php echo $string['noipaddresses']; ?>');
-        return false;
-      }
-
-      if ($('#lab_name').val() == '') {
-        alert('<?php echo $string['nolabname']; ?>');
-        return false;
-      }
-    }
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
   </script>
 </head>
 
@@ -105,7 +99,7 @@ if (isset($_POST['submit'])) {
   require '../include/lab_options.inc';
 ?>
 <div id="content" class="content">
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return checkForm()">
+<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <table class="header">
 <tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['createnewlab']; ?></div></th></tr>
 <tr><th class="bevel"></th></tr>
@@ -132,10 +126,10 @@ if (count($bad_addresses) > 0) {
 <br />
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; margin-left:10px; margin-right:10px">
 <tr><td style="vertical-align:top; width:200px"><div><strong><?php echo $string['ipaddresses']; ?></strong></div>
-<textarea cols="20" rows="28" style="width:200px; height:590px" name="addresses" id="addresses"></textarea></td><td style="width:50px"></td><td style="vertical-align:top">
+<textarea cols="20" rows="28" style="width:200px; height:590px" name="addresses" id="addresses" required></textarea></td><td style="width:50px"></td><td style="vertical-align:top">
 
 <div><strong><?php echo $string['name']; ?></strong></div>
-<div><input type="text" size="40" name="lab_name" id="lab_name" value="" /></div>
+<div><input type="text" size="40" maxlength="255" name="lab_name" id="lab_name" value="" required /></div>
 <?php
   echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n<option value=\"\"></option>\n";
   foreach ($cfg_campus_list as $choice) {
@@ -144,9 +138,9 @@ if (count($bad_addresses) > 0) {
   echo "</select></div>\n";
 ?>
 <br /><div><strong><?php echo $string['building']; ?></strong></div>
-<div><input type="text" size="40" name="building" value="" /></div>
+<div><input type="text" size="40" maxlength="255" name="building" value="" /></div>
 <br /><div><strong><?php echo $string['roomnumber']; ?></strong></div>
-<div><input type="text" size="10" name="room_no" value="" /></div>
+<div><input type="text" size="10" maxlength="255" name="room_no" value="" /></div>
 <br /><div><strong><?php echo $string['bandwidth']; ?></strong></div><div><input type="radio" name="low_bandwidth" value="1" /><?php echo $string['low']; ?>&nbsp;&nbsp;&nbsp;<input type="radio" name="low_bandwidth" value="0" checked /><?php echo $string['high']; ?></div>
 <br /><div><strong><?php echo $string['timetabling']; ?></strong></div>
 <div><textarea name="timetabling" rows="3" cols="100"></textarea></div>

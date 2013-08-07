@@ -74,19 +74,34 @@ if (isset($_POST['submit'])) {
   header("location: lab_details.php?labID=$lab_id");
 } else {
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['editcomputerlab']; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     input, textarea {line-height:140%}
   </style>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+  </script>
 </head>
 
 <body>
@@ -94,7 +109,7 @@ if (isset($_POST['submit'])) {
   require '../include/lab_options.inc';
 ?>
 <div id="content" class="content">
-<form action="<?php echo $_SERVER['PHP_SELF'] . '?labID=' . $_GET['labID']; ?>" method="post">
+<form id="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?labID=' . $_GET['labID']; ?>" method="post">
 
 <?php
   $ip_no = 0;
@@ -109,7 +124,7 @@ if (isset($_POST['submit'])) {
       echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(231); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
       echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
       echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:200px\"><div><strong>" . $string['ipaddresses'] . "</strong></div>\n";
-      echo "<textarea cols=\"20\" rows=\"28\" style=\"width:250px; height:590px\" name=\"addresses\">\n";
+      echo "<textarea cols=\"20\" rows=\"28\" style=\"width:250px; height:590px\" name=\"addresses\" required>\n";
     }
     echo $address . "\n";
     $ip_no++;
@@ -117,7 +132,7 @@ if (isset($_POST['submit'])) {
   $result->close();
   
   echo "</textarea></td><td style=\"width:50px\"></td><td style=\"vertical-align:top\">\n";
-  echo "<div><strong>" . $string['name'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" name=\"name\" value=\"$name\" /></div>\n";
+  echo "<div><strong>" . $string['name'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" maxlength=\"255\" name=\"name\" value=\"$name\" required /></div>\n";
   echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n";
   foreach ($cfg_campus_list as $choice) {
     if ($campus == $choice) {
@@ -127,8 +142,8 @@ if (isset($_POST['submit'])) {
     }
   }
   echo "</select></div>\n";
-  echo "<br /><div><strong>" . $string['building'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" name=\"building\" value=\"$building\" /></div>\n";
-  echo "<br /><div><strong>" . $string['roomnumber'] . "</strong></div>\n<div><input type=\"text\" size=\"10\" name=\"room_no\" value=\"$room_no\" /></div>\n";
+  echo "<br /><div><strong>" . $string['building'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" maxlength=\"255\" name=\"building\" value=\"$building\" /></div>\n";
+  echo "<br /><div><strong>" . $string['roomnumber'] . "</strong></div>\n<div><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"room_no\" value=\"$room_no\" /></div>\n";
   echo "<br /><div><strong>" . $string['bandwidth'] . "</strong></div>\n<div><input type=\"radio\" name=\"low_bandwidth\" value=\"1\"";
   if ($low_bandwidth == 1) echo ' checked';
   echo " />" . $string['low'] . "&nbsp;&nbsp;&nbsp;<input type=\"radio\" name=\"low_bandwidth\" value=\"0\" ";

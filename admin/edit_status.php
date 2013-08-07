@@ -79,7 +79,7 @@ $locked_checked = ($q_status->get_change_locked()) ? ' checked="checked"' : '';
 $validate_checked = ($q_status->get_validate()) ? ' checked="checked"' : '';
 $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="checked"' : '';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
   <html>
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -115,17 +115,18 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
     }
   </style>
 
-  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script language="JavaScript">
     $(function () {
-      checkForm = function () {
-        if ($('#name').val() == "") {
-          alert ("<?php echo $string['enternameofstatus']; ?>");
-          return false;
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
         }
-      }
+      });
+      $('form').removeAttr('novalidate');
 
-      $('#status_form').submit(checkForm);
       $('#span_colour').click(function (e) { e.stopPropagation(); showPicker('colour', e); });
       $('html').click(hidePicker);
     });
@@ -145,7 +146,7 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
     <tr><th colspan="2" class="bevel"></th></tr>
     </table>
 
-    <form id="status_form" name="status_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <form id="theform" name="status_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
 <?php
   require '../tools/colour_picker/colour_picker.inc';
 
@@ -156,7 +157,7 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
   }
 ?>
       <table class="admin-form">
-        <tr><th><label for="name"><?php echo $string['name'] ?></label></th><td><input type="text" size="70" id="name" name="name" value="<?php echo $q_status->get_name(); ?>" /></td></tr>
+        <tr><th><label for="name"><?php echo $string['name'] ?></label></th><td><input type="text" size="70" id="name" name="name" value="<?php echo $q_status->get_name(); ?>" required autofocus /></td></tr>
         <tr><th><label for="exclude_marking"><?php echo $string['excludemarking'] ?></label></th><td><input type="checkbox" id="exclude_marking" name="exclude_marking" <?php echo $em_checked; ?> /></td></tr>
         <tr><th><label for="retired"><?php echo $string['retired'] ?></label></th><td><input type="checkbox" id="retired" name="retired" <?php echo $es_checked; ?> /></td></tr>
         <tr><th><label for="is_default"><?php echo $string['default'] ?></label></th><td><input type="checkbox" id="is_default" name="is_default" <?php echo $default_checked; ?> /></td></tr>

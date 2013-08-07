@@ -32,6 +32,7 @@ $unique_username = true;
 $problem = false;
 
 if (isset($_POST['submit'])) {
+  echo "Submitted";
   // Check for unique username
   if (UserUtils::username_exists($_POST['new_username'], $mysqli) !== false) {
     $unique_username = false;
@@ -158,13 +159,14 @@ MESSAGE;
   <style type="text/css">
     .title {font-size:160%; font-weight:bold}
     .field {font-weight:bold}
-    .error {background-color:#FFD9D9; color:#800000; border:1px solid #800000!important}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
     $(function () {
       $('#theform').validate({
+        errorClass: 'errfield',
         errorPlacement: function(error,element) {
           return true;
         }
@@ -189,7 +191,7 @@ MESSAGE;
 ?>
 <div id="content" class="content">
 <br />
-<form method="post" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form method="post" id="theform" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <div align="center">
 <table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
 <tr><td>
@@ -225,10 +227,10 @@ foreach ($titles as $tmp_title) {
 }
 ?>
 </select></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required="required" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required="required" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="text" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required="required" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" required="required" />
+<tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="text" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" required />
 &nbsp;&nbsp;&nbsp;<span class="field"><?php echo $string['password']; ?></span> <input type="text" id="new_password" name="new_password" value="<?php
   if (isset($_POST['password'])) {
     echo $_POST['password'];
@@ -250,7 +252,7 @@ foreach ($titles as $tmp_title) {
 </select>
 </td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['typecourse']; ?></span></td><td>
-<select name="new_grade" id="new_grade" size="1" style="width:350px"<?php if (isset($new_grade) and $new_grade == '') echo ' class="required"'; ?> required="required">
+<select name="new_grade" id="new_grade" size="1" style="width:350px"<?php if (isset($new_grade) and $new_grade == '') echo ' class="required"'; ?> required>
 <option value=""></option>
 <optgroup label="<?php echo $string['universitystaff']; ?>">
 <option value="University Lecturer"><?php echo $string['academiclecturer']; ?></option>

@@ -44,8 +44,7 @@ hr {
   background-color:grey;
   border:0px
 }
-
-.required {
+.errfield {
   border: 1px solid #C00000  !important;
   box-shadow: 0 0 6px rgba(200, 0, 0, 0.85);
 }

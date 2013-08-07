@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['name'] = 'Descriptive Name';
-$string['oauth_consume_key']= 'OAuth Consumer Key';
-$string['oauth_secret'] = 'OAuth Consumer Secret';
+$string['name'] = 'Name';
+$string['oauth_consume_key']= 'Consumer Key';
+$string['oauth_secret'] = 'Shared Secret';
 $string['oauth_context_id'] = 'Override LTI Context ID';
 $string['createLTIkeys'] = 'Add new LTI Key';
 $string['editLTIkeys'] = 'Edit LTI Key';
@@ -30,5 +30,5 @@ $string['bymodulecode'] = 'By Module';
 $string['myfolders'] = 'My folders';
 $string['papersoncurrentmodule'] = 'Papers on this module';
 $string['describemodulechoice'] = 'Select Paper for Link';
-$string['missingfields'] ='Missing Fields';
+$string['missingfields'] = 'Missing Fields';
 ?>

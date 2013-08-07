@@ -55,7 +55,7 @@ if (isset($_POST['submit'])) {
 
   $exam_announcementObj->replace_announcement($q_id, $questionNo, $screenNo, $msg);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -88,7 +88,7 @@ exit();
     $msg = '';
   }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -98,7 +98,7 @@ exit();
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {background-color:#F1F5FB; font-size:80%; text-align:center}
+    body {background-color:#F1F5FB; font-size:80%; text-align:center; margin:2px}
     h1 {text-align:left; font-size:150%; margin-left:4px; font-weight:normal}
   </style>
   
@@ -109,8 +109,19 @@ exit();
   <script language="JavaScript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_announcements.js"></script>
   <script language="JavaScript">
     $(document).ready(function() {
-      var new_height = $(window).height() - 100;
+      var new_height = $(window).height() - 105;
       $('#msg').height(new_height);
+      
+      $('form').submit(function() {
+        tinyMCE.triggerSave();
+        if ($('#msg').val() == '') {
+          $('.defaultSkin table.mceLayout').css('border-color', '#C00000');
+          $('.defaultSkin table.mceLayout').css('box-shadow', '0 0 6px rgba(200, 0, 0, 0.85)');
+          $('.defaultSkin table.mceLayout tr.mceFirst td').css('border-top-color', '#C00000');
+          $('.defaultSkin table.mceLayout tr.mceLast td').css('border-bottom-color', '#C00000');
+          return false;
+        }
+      });
     });
   </script>
 </head>
