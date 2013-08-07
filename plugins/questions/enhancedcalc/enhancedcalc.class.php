@@ -41,7 +41,7 @@ class EnhancedCalc extends Question implements questionInterface {
   //splits number off front of numb/unit or just number
   function split_numb_from_unit($input) {
     //user selected the units from a ddl
-    if (isset($this->useranswer['uansunit'])) {
+    if (isset($this->useranswer['uansunit']) and $this->settings['show_units']) {
       return array($input, $this->useranswer['uansunit']);
     }
 

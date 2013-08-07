@@ -1,0 +1,60 @@
+<?php
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+*
+* Marks all enhanced calculation questions for a summative paper.
+*
+* @author Simon Wilkinson / Rob Ingram
+* @version 1.0
+* @copyright Copyright (c) 2013 The University of Nottingham
+* @package
+*/
+global $configObject;
+require_once $configObject->get('cfg_web_root') . 'plugins/questions/enhancedcalc/enhancedcalc.class.php';
+
+function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mode = 'unmarked') {
+  $configObject = Config::get_instance();
+  $enhancedcalc = new EnhancedCalc($configObject);
+  $data['settings'] = $settings;
+  $data['q_id'] = $q_id;
+  $enhancedcalc->load($data);
+
+  $mode_sql = ($mode == 'all') ? '' : ' AND mark IS NULL';
+
+  $result = $db->prepare("SELECT log{$paper_type}.id, user_answer FROM log{$paper_type}, log_metadata WHERE log{$paper_type}.metadataID = log_metadata.id AND q_id = ? AND paperID = ? {$mode_sql}");
+  $result->bind_param('ii', $q_id, $paper_id);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($id, $user_answer);
+  while ($result->fetch()) {
+
+    $enhancedcalc->set_useranswer($user_answer);
+    $returnarray = $enhancedcalc->calculate_user_mark();
+
+    if ($returnarray !== Q_MARKING_UNMARKED) {
+      //save the extra data back into the log record.
+      $sql = "UPDATE log{$paper_type} set mark = ?, adjmark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
+      $storemark = $db->prepare($sql);
+      $new_useranswerstring = $enhancedcalc->useranswer_to_string();
+      $totalpos = $enhancedcalc->calculate_question_mark();
+      $storemark->bind_param('dddsi', $enhancedcalc->qmark, $enhancedcalc->qmark, $totalpos, $new_useranswerstring, $id);
+      $storemark->execute();
+    }
+  }
+  $result->close();
+}
+

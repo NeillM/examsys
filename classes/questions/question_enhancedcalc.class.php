@@ -77,7 +77,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @throws ValidationException
    */
   public function save($clear_checkout = true) {
-    // Extract options into arrays fro JSON encoding
+    // Extract options into arrays for JSON encoding
     $this->extract_answers();
     $this->extract_vars();
 
@@ -354,6 +354,13 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     } else {
       return false;
     }
+  }
+
+  function get_settings() {
+    $this->extract_answers();
+    $this->extract_vars();
+
+    return $this->settings;
   }
 
   /**

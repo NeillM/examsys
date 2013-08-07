@@ -24,16 +24,9 @@
  * @package
  */
 
-class ENHANCEDCALCCorrector {
-  private $_mysqli;
-  private $_lang_strings;
-  private $_question;
+require_once $configObject->get('cfg_web_root') . 'plugins/questions/enhancedcalc/helpers/enhancedcalc_mark_helper.php';
 
-  function __construct($mysqli, $lang_strings, $question) {
-    $this->_mysqli = $mysqli;
-    $this->_lang_strings = $lang_strings;
-    $this->_question = $question;
-  }
+class ENHANCEDCALCCorrector extends Corrector {
 
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
@@ -85,7 +78,12 @@ class ENHANCEDCALCCorrector {
     }
 
     $strict_display = $this->_question->get_strict_display();
-    $new_strict_display = (isset($new_correct['strict_display'])) ? true : false;
+    // Need to be careful of how the correction code builds the values for check boxes
+    if (isset($new_correct['strict_display'])) {
+      $new_strict_display = (is_array($new_correct['strict_display'])) ? $new_correct['strict_display'][0] : $new_correct['strict_display'];
+    } else {
+      $new_strict_display = false;
+    }
     if ($strict_display != $new_strict_display) {
       $this->_question->set_strict_display($new_strict_display);
       $changes = true;
@@ -94,7 +92,12 @@ class ENHANCEDCALCCorrector {
     }
 
     $strict_zeros = $this->_question->get_strict_zeros();
-    $new_strict_zeros = (isset($new_correct['strict_zeros'])) ? true : false;
+    // Need to be careful of how the correction code builds the values for check boxes
+    if (isset($new_correct['strict_zeros'])) {
+      $new_strict_zeros = (is_array($new_correct['strict_zeros'])) ? $new_correct['strict_zeros'][0] : $new_correct['strict_display'];
+    } else {
+      $new_strict_zeros = false;
+    }
     if ($strict_zeros != $new_strict_zeros) {
       $this->_question->set_strict_zeros($new_strict_zeros);
       $changes = true;
@@ -110,7 +113,7 @@ class ENHANCEDCALCCorrector {
         $ans = $opts[$i]->get_formula();
         $units = $opts[$i]->get_units();
 
-        if ($new_correct['option_formula'][$i - 1] == '') {
+        if ($ans != '' and $new_correct['option_formula'][$i - 1] == '') {
           $opts[$i]->set_formula('');
           $opts[$i]->set_units('');
           $changes = true;
@@ -119,13 +122,23 @@ class ENHANCEDCALCCorrector {
           if ($ans != $new_correct['option_formula'][$i - 1]) {
             $opts[$i]->set_formula($new_correct['option_formula'][$i - 1]);
             $changes = true;
-            $this->_question->add_unified_field_modification('option_formula' . $i, 'option_formula' . $i, $ans, $new_correct['option_formula'][$i - 1], $this->_lang_strings['postexamchange']);
+
+            if ($ans != '') {
+              $this->_question->add_unified_field_modification('option_formula' . $i, 'option_formula' . $i, $ans, $new_correct['option_formula'][$i - 1], $this->_lang_strings['postexamchange']);
+            }
           }
 
           if ($units != $new_correct['option_units'][$i - 1]) {
             $opts[$i]->set_units($new_correct['option_units'][$i - 1]);
             $changes = true;
-            $this->_question->add_unified_field_modification('option_units' . $i, 'option_units' . $i, $units, $new_correct['option_units'][$i - 1], $this->_lang_strings['postexamchange']);
+
+            if ($ans != '') {
+              $this->_question->add_unified_field_modification('option_units' . $i, 'option_units' . $i, $units, $new_correct['option_units'][$i - 1], $this->_lang_strings['postexamchange']);
+            }
+          }
+
+          if ($ans == '') {
+            $this->_question->add_unified_field_modification('New Answer ' . $i, 'New Answer ' . $i, '', $new_correct['option_formula'][$i - 1] . ', ' . $new_correct['option_units'][$i - 1], $this->_lang_strings['postexamchange']);
           }
         }
       } elseif ($new_correct['option_formula'][$i - 1] != '') {
@@ -137,6 +150,21 @@ class ENHANCEDCALCCorrector {
       }
     }
 
+    if ($changes) {
+      try {
+        if (!$this->_question->save()) {
+          $errors[] = $this->_lang_strings['datasaveerror'];
+        } else {
+          enhancedcalc_remark($paper_type, $paper_id, $this->_question->id, $this->_question->get_settings(), $this->_mysqli, 'all');
+        }
+      } catch (ValidationException $vex) {
+        $errors[] = $vex->getMessage();
+      }
+
+      if (count($errors) == 0) {
+        $this->invalidate_paper_cache($paper_id);
+      }
+    }
     return $errors;
   }
 }

@@ -27,7 +27,8 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
-require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
+require_once '../plugins/questions/enhancedcalc/helpers/enhancedcalc_mark_helper.php';
 
 set_time_limit(0);
 
@@ -52,34 +53,7 @@ $result->close();
 
 
 foreach ($q_ids as $q_id => $setting) {
-  $enhancedcalc = new EnhancedCalc($configObject);
-  $data['settings'] = $setting;
-  $data['q_id'] = $q_id;
-  $enhancedcalc->load($data);
-
-  $result = $mysqli->prepare("SELECT log2.id, user_answer FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id AND q_id = ? AND paperID = ? AND mark IS NULL");
-  $result->bind_param('ii', $q_id, $paperID);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($id, $user_answer);
-  while ($result->fetch()) {
-  
-    $enhancedcalc->set_useranswer($user_answer);
-    $returnarray = $enhancedcalc->calculate_user_mark();
-
-    if ($returnarray !== Q_MARKING_UNMARKED) {
-      //save the extra data back into the log record.
-      $sql = "UPDATE log2 set mark = ?, adjmark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
-      $storemark = $mysqli->prepare($sql);
-      $new_useranswerstring = $enhancedcalc->useranswer_to_string();
-      $totalpos = $enhancedcalc->calculate_question_mark();
-      $storemark->bind_param('dddsi', $enhancedcalc->qmark, $enhancedcalc->qmark, $totalpos, $new_useranswerstring, $id);
-      $storemark->execute();
-    }
-  
-  }
-  $result->close();
-
+  enhancedcalc_remark('2', $paperID, $q_id, $setting, $mysqli);
 }
 ?>
 <html>
