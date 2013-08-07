@@ -39,5 +39,5 @@ $string['sct_short'] = 'Script Concordance';
 $string['textbox'] = 'Text Box';
 $string['true_false'] = 'True/False';
 $string['area'] = 'Area';
-$string['enhancedcalc'] = 'Enhanced Calculation';
+$string['enhancedcalc'] = 'Calculation';
 ?>

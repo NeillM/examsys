@@ -33,7 +33,7 @@
       case 'branching':
         $fullname = $string['branching'];
         break;
-      case 'calculation':
+      case 'enhancedcalc':
         $fullname = $string['calculation'];
         break;
       case 'dichotomous':

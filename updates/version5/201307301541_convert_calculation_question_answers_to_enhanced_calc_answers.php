@@ -42,25 +42,26 @@ foreach ($logarray as $LOG) {
 
             //[0] is user answer, [1] is correct answer, [2] is array variables
             //print $qid . '   ';
-            if (!isset($settings['units'])) {
-                $settings['units'] = '';
+            if (!isset($settings['answers'][0]['units'])) {
+                $settings['answers'][0]['units'] = '';
             }
-            $new_user_answer['uans'] = $tmp_answer[0] . ' ' . $settings['units'];
-            $new_user_answer['uansunit'] = $settings['units'];
+            $new_user_answer['uans'] = $tmp_answer[0] . ' ' . $settings['answers'][0]['units'];
+            $new_user_answer['uansunit'] = $settings['answers'][0]['units'];
             $new_user_answer['uansnumb'] = $tmp_answer[0];
             if (!isset($tmp_answer[1])) {
                 $tmp_answer[1] = '';
             }
             $new_user_answer['cans'] = $tmp_answer[1];
-            $ansdata['guessedunits'] = $settings['units'];
+            $ansdata['units_used'] = $settings['answers'][0]['units'];
+            $ansdata['guessedunits'] = $settings['answers'][0]['units'];
 
             $tolerance_full = $settings['tolerance_full'];
-            if (StringUtils::ends_with($tolerance_full, '%')) {
+            if ($settings['fulltoltyp'] == '%') {
                 $tolerance_perc = rtrim($tolerance_full, '%');
                 $tolerance_full = abs(round($tmp_answer[1] * ($tolerance_perc / 100), 12));
             }
             $tolerance_partial = $settings['tolerance_partial'];
-            if (StringUtils::ends_with($tolerance_partial, '%')) {
+            if ($settings['parttoltyp'] == '%') {
                 $tolerance_perc = rtrim($tolerance_partial, '%');
                 $tolerance_partial = abs(round($tmp_answer[1] * ($tolerance_perc / 100), 12));
             }
@@ -101,35 +102,36 @@ foreach ($logarray as $LOG) {
                 echo '<td>';
 
 
-                $statusdata['overall'] = 1;
                 if (isset($tmp_answer[1])) {
                     $difference = round(abs($saved_response_clean - $tmp_answer[1]), 12);
 
                     if ($saved_response_clean == $tmp_answer[1]) {
                         //$paper[$question]['mark'] = $paper[$question]['marks_correct'];
+                        $statusdata['overall'] = 1;
                         $statusdata['exact'] = true;
                     } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
                         //$paper[$question]['mark'] = $paper[$question]['marks_correct'];
+                        $statusdata['overall'] = 2;
                         $statusdata['exact'] = false;
                         $statusdata['tolerance_full'] = true;
                     } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
                         //$paper[$question]['mark'] = $paper[$question]['marks_partial'];
+                        $statusdata['overall'] = 3;
                         $statusdata['exact'] = false;
                         $statusdata['tolerance_full'] = false;
                         $statusdata['tolerance_partial'] = true;
-
                     } else {
                         //$paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
+                        $statusdata['overall'] = 0;
                         $statusdata['exact'] = false;
                         $statusdata['tolerance_full'] = false;
                         $statusdata['tolerance_partial'] = false;
-                        $statusdata['overall'] = 0;
                     }
 
                 }
             }
 
-            $new_user_answer['staus'] = $statusdata;
+            $new_user_answer['status'] = $statusdata;
 
 
             $vars = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K', '$L');
@@ -152,7 +154,7 @@ foreach ($logarray as $LOG) {
                 }
                 $varno++;
             }
-            if (isset($vardata)) {
+            if (isset($varsdata)) {
                 $new_user_answer['vars'] = $varsdata;
             }
             $new_user_answer['original'] = $user_answer;

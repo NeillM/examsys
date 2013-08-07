@@ -150,6 +150,8 @@ if ($critical_error == '') {
 
         if (is_array($compound_part_names) and in_array('correct', array_keys($compound_part_names))) {
           $loop_limit = $question->max_stems;
+        } elseif ($question->allow_new_options()) {
+          $loop_limit = $question->max_options;
         } else {
           $loop_limit = count($question->options);
         }

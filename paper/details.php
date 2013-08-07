@@ -158,12 +158,12 @@ function randomDetails($questionID) {
   $old_correct = array();
   $old_option_text = array();
 
-  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status, settings FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=? ");
+  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status, settings FROM options AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.option_text=questions.q_id AND options1.o_id=? ");
   $result->bind_param('i', $questionID);
   $result->execute();
   $result->store_result();
   if ($result->num_rows > 0) {
-    $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
+    $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status, $settings);
     while ($result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
         $old_leadin = QuestionUtils::clean_leadin($old_leadin);
@@ -734,7 +734,7 @@ $result->close();
       $result->close();
     }
   }
-  
+
   function check_unmarked_enhancedcalc($q_id, $paperID, &$unmarked, $db) {
     $result = $db->prepare("SELECT log2.id FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id AND q_id = ? AND paperID = ? AND mark IS NULL");
     $result->bind_param('ii', $q_id, $paperID);
@@ -755,11 +755,11 @@ $result->close();
       $q_type = $temp_array[$x]['q_type'];
       if ($q_type == 'enhancedcalc') {
         check_unmarked_enhancedcalc($temp_array[$x]['q_id'], $paperID, $unmarked_enhancedcalc, $mysqli);
-        
+
       }
     }
   }
-  
+
   require '../include/paper_options.inc';
 ?>
 <div id="content" class="content" style="font-size:80%">
@@ -767,7 +767,7 @@ $result->close();
 <?php
   $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli);
   $exam_announcements = $exam_announcementObj->get_announcements();
-    
+
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
 
   //blank row to preserve table layout when using table-layout: fixed - needed to increase ie8 latex rendering speed
@@ -1048,7 +1048,7 @@ $result->close();
 <?php
   ob_flush();
   flush();
-  
+
   if ($properties->get_recache_marks() == 1) {
     $startdate = $properties->get_raw_start_date();
     $enddate   = $properties->get_raw_end_date();
@@ -1060,7 +1060,7 @@ $result->close();
     $properties->set_recache_marks(0);  // Set the recache to zero to stop it caching again.
     $properties->save();
   }
-  
+
   $mysqli->close();
 ?>
 

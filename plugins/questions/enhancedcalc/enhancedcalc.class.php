@@ -41,7 +41,7 @@ class EnhancedCalc extends Question implements questionInterface {
   //splits number off front of numb/unit or just number
   function split_numb_from_unit($input) {
     //user selected the units from a ddl
-    if (isset($this->useranswer['uansunit'])) {
+    if (isset($this->useranswer['uansunit']) and $this->settings['show_units']) {
       return array($input, $this->useranswer['uansunit']);
     }
 
@@ -175,12 +175,12 @@ class EnhancedCalc extends Question implements questionInterface {
        * FORMAT CALCULATED ANS
        *
        */
-      if ($this->settings['strictdisplay'] == 'on') {
+      if ($this->settings['strictdisplay'] === true) {
 
         if (isset($this->settings['dp'])) {
           $function = 'format_number_dp';
           $arg = $this->settings['dp'];
-          if ($this->settings['strictzeros'] == 'on') {
+          if ($this->settings['strictzeros'] === true) {
             $function = 'format_number_dp_strict_zeros';
           }
         }
@@ -223,7 +223,7 @@ class EnhancedCalc extends Question implements questionInterface {
         return $returnstatus;
       }
 
-      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] != 'on'));
+      $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] !== true));
 
       //calculate distance from correct if needed
       if ($this->useranswer['status']['exact'] === false) {
@@ -378,13 +378,13 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   function is_strict_dp_enabled() {
-    return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === 'on' and isset($this->settings['dp']));
+    return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']));
   }
 
   function is_strict_dp_strictzeros_enabled() {
-    return (isset($this->settings['strictzeros']) and $this->settings['strictzeros'] == 'on');
+    return (isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true);
   }
-  
+
   function is_strict_sf_enabled() {
     return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']);
   }
@@ -472,7 +472,7 @@ class EnhancedCalc extends Question implements questionInterface {
       } elseif (!isset($this->useranswer['cans'])) {
         echo ' <strong>(<span class="err">error!</span>)</strong>';
       } else {
-        echo ' <strong>(' . $this->useranswer['cans'] . ' ';
+        echo ' <strong>(' . $this->useranswer['cans'];
         if ($this->useranswer['ans']['units_used'] != '') echo ' ' . $this->useranswer['ans']['units_used'];
         echo ')</strong>';
       }
@@ -670,7 +670,7 @@ class EnhancedCalc extends Question implements questionInterface {
       echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . "</p>\n";
     } else {
       if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
-        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"ecalc-answer\" />" . $dispunits . "</div>\n";
+        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"unans ecalc-answer\" />" . $dispunits . "</div>\n";
       } else {
         if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { //or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];

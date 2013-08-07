@@ -33,6 +33,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
     } elseif (count($user_answers[$i]) < count($screen_data[$i]) ) {   // Fewer answers than questions on that screen
       $incomplete_screens[$i] = 1;
     } else {                                                    // Right number of records but need to check if any are unanswered
+      $configObject = Config::get_instance();
       $tmp_answer_no = count($screen_data[$i]);
 
       $answers = array();
@@ -71,8 +72,11 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
             }
             break;
           case 'enhancedcalc':
-            //TODO need more modular function for incomplete
-
+            $enhancedcalc = new EnhancedCalc($configObject);
+            $enhancedcalc->set_useranswer($current_answer);
+            if ($enhancedcalc->get_user_answer_raw() == '') {
+              $incomplete_screens[$i] = 1;
+            }
             break;
           case 'dichotomous':
             if (strpos($current_answer, 'u') !== false) {
