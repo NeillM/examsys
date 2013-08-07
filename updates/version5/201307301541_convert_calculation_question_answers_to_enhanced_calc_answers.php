@@ -152,7 +152,7 @@ foreach ($logarray as $LOG) {
                 }
                 $varno++;
             }
-            if (isset($vardata)) {
+            if (isset($varsdata)) {
                 $new_user_answer['vars'] = $varsdata;
             }
             $new_user_answer['original'] = $user_answer;
