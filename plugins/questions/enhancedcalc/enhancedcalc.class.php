@@ -38,7 +38,11 @@ class EnhancedCalc extends Question implements questionInterface {
     $this->configObj = $configObj;
   }
 
-  //splits number off front of numb/unit or just number
+  /**
+   * Split answer into number and units if applicable
+   * @param  string $input User answer
+   * @return array         Number and unit components of the string
+   */
   function split_numb_from_unit($input) {
     //user selected the units from a ddl
     if (isset($this->useranswer['uansunit']) and $this->settings['show_units']) {
@@ -57,7 +61,11 @@ class EnhancedCalc extends Question implements questionInterface {
     }
   }
 
-  //arrange the possible formula by units
+  /**
+   * Build an array of formule indexed by their associated units
+   * @param  array $ans Array of possible answers containing a formula and comma separated list of units
+   * @return array      Array of formulae indexed by units string
+   */
   function build_formula_by_units($ans) {
     $formula_by_units = array();
     foreach ($ans as $key => $value) {
@@ -70,6 +78,11 @@ class EnhancedCalc extends Question implements questionInterface {
     return $formula_by_units;
   }
 
+  /**
+   * Check if the user entered units match any that are defined in the possible answers
+   * @param  string $unit Units as entered by the user
+   * @return boolean      True if the units match any defined in the answers
+   */
   function are_units_correct($unit) {
     // create array of units and functions
     $this->settings['answersexp'] = $this->build_formula_by_units($this->settings['answers']);
@@ -84,6 +97,13 @@ class EnhancedCalc extends Question implements questionInterface {
    * Mark the users answer
    *
    *  This Must handle exclusions
+   */
+  /**
+   * Calculate the user's mark for the question.
+   *
+   * Must handle exclusions
+   *
+   * @return integer Status value from marking calculation
    */
   public function calculate_user_mark() {
 
@@ -320,10 +340,20 @@ class EnhancedCalc extends Question implements questionInterface {
 
   }
 
+  /**
+   * Convert the user answer array to a JSON encoded string
+   * @return string Answer data in JSON format
+   */
   public function useranswer_to_string() {
     return json_encode($this->useranswer);
   }
 
+  /**
+   * Process the POST data for the user's answer into JSON
+   * @param  array  $postdata HTML POST data for theuser's answer
+   * @param  [type] $session  [description]
+   * @return string           JSON encoded answer data
+   */
   static public function process_user_answer(&$postdata, &$session) {
 
     $data = $session;
@@ -339,52 +369,82 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
 
-  /*
-   * calculate how many marks is this question worth form its options
-   *
-   *   This Must handle exclusions
+  /**
+   * Return the maximum number of marks for the question
+   * @return integer Marks available for correct answers
    */
   public function calculate_question_mark() {
     return $this->settings['marks_correct'];
   }
 
-  /*
-   * calculate the Random Mark for this question
-   *  This Must handle exclusions
+  /**
+   * Calculate the Random Mark for this question
+   * @return integer  Expected marks if answeing the question by guessing
    */
   public function calculate_random_mark() {
     return 0;
   }
 
-  //returns true if the question has been excluded
+  /**
+   * Is this question excluded
+   * @return boolean true if question has been exluded due to poor performance
+   */
   function is_excluded() {
     return (isset($this->excluded{0}) and $this->excluded{0} == 1);
   }
 
+  /**
+   * Is the user's answer correct
+   * @return boolean True if answer is correct
+   */
   function is_user_ans_correct() {
     return (isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === true);
   }
 
+  /**
+   * Is the user's answer within tolerance for full marks
+   * @return boolean True if answer is within tolerance for full marks
+   */
   function is_user_ans_within_fullmark_tolerance() {
     return (isset($this->useranswer['status']['tolerance_full']) and $this->useranswer['status']['tolerance_full'] === true);
   }
 
+  /**
+   * Is the user's answer within tolerance for full marks
+   * @return boolean True if answer is within tolerance for partial marks
+   */
   function is_user_ans_within_partial_tolerance() {
     return (isset($this->useranswer['status']['tolerance_partial']) and $this->useranswer['status']['tolerance_partial'] === true);
   }
 
+  /**
+   * Did the user enter correct units
+   * @return boolean True if units were correct
+   */
   function is_user_ans_units_correct() {
     return $this->useranswer['status']['units'];
   }
 
+  /**
+   * Is the question set to require answers strictly to the defined number of decimal places
+   * @return boolean True if using strict decimal places
+   */
   function is_strict_dp_enabled() {
     return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']));
   }
 
+  /**
+   * Does strict decimal places include any trailing zeros
+   * @return boolean True if trailing zeros are significant when determining strict decimal places
+   */
   function is_strict_dp_strictzeros_enabled() {
     return (isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true);
   }
 
+  /**
+   * Is the question set to require answers strictly to the defined number of significant figures
+   * @return boolean True if using strict significant figures
+   */
   function is_strict_sf_enabled() {
     return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']);
   }
@@ -399,6 +459,10 @@ class EnhancedCalc extends Question implements questionInterface {
 
   }
 
+  /**
+   * Render the querstion as required for displaying results and feedback to the user
+   * @param  array  $extra [description]
+   */
   public function render_feedback($extra = array()) {
     global $string;
 
@@ -497,10 +561,20 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
 
+  /**
+   * Load the answers for all users
+   * @param  [type] $all_user_answers [description]
+   */
   function load_all_user_answers(&$all_user_answers) {
     $this->alluseranswers = $all_user_answers;
   }
 
+  /**
+   * Substitute variable placeholders with the calculated value
+   * @param  string $inputVal     The variable definition
+   * @param  [type] $user_answers [description]
+   * @return [type]               [description]
+   */
   function variable_substitution($inputVal, $user_answers) {
     if (substr($inputVal, 0, 3) == 'ans') {
       //its a question reference get previous user answer
@@ -547,6 +621,10 @@ class EnhancedCalc extends Question implements questionInterface {
     return $inputVal;
   }
 
+  /**
+   * Render the qyestion in the format required when taking the paper
+   * @param  array  $extra [description]
+   */
   public function render_paper($extra = array()) {
     global $string;
 
@@ -722,6 +800,10 @@ class EnhancedCalc extends Question implements questionInterface {
     return (isset($this->settings['show_units'])) ? ($this->settings['show_units'] == true) : false;
   }
 
+  /**
+   * Get the full correct andwer for the question
+   * @return string Answer including units if applicable
+   */
   public function get_real_answer() {
     $units = $this->settings['answers'][0]['units'];
 
@@ -759,10 +841,12 @@ class EnhancedCalc extends Question implements questionInterface {
     return (isset($this->useranswer['ans']['units_used'])) ? $this->useranswer['ans']['units_used'] : '';
   }
 
+  /**
+   * Return the 'distance' of the user's answer from the correct answer as a percentage of the correct answer
+   * @return float Distance from the correct answer
+   */
   public function get_answer_distance() {
     return (isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 'ERROR') ? $this->useranswer['cans_dist'] : false;
   }
-
 }
-
 ?>
