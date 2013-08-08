@@ -71,16 +71,14 @@ foreach ($logarray as $LOG) {
 
             if ($tmp_answer[1] < 0) {
                 $ansdata['tolerance_fullans'] = $tmp_answer[1] - $tolerance_full;
-                $ansdata['tolerance_fullneg'] = $tmp_answer[1] + $tolerance_full;
-                $ansdata['tolerance_partans'] = $tmp_answer[1] - $tolerance_partial;
-                $ansdata['tolerance_partneg'] = $tmp_answer[1] + $tolerance_partial;
-
+                $ansdata['tolerance_fullansneg'] = $tmp_answer[1] + $tolerance_full;
+                $ansdata['tolerance_partialans'] = $tmp_answer[1] - $tolerance_partial;
+                $ansdata['tolerance_partialansneg'] = $tmp_answer[1] + $tolerance_partial;
             } else {
                 $ansdata['tolerance_fullans'] = $tmp_answer[1] + $tolerance_full;
-                $ansdata['tolerance_fullneg'] = $tmp_answer[1] - $tolerance_full;
-                $ansdata['tolerance_partans'] = $tmp_answer[1] + $tolerance_partial;
-                $ansdata['tolerance_partneg'] = $tmp_answer[1] - $tolerance_partial;
-
+                $ansdata['tolerance_fullansneg'] = $tmp_answer[1] - $tolerance_full;
+                $ansdata['tolerance_partialans'] = $tmp_answer[1] + $tolerance_partial;
+                $ansdata['tolerance_partialansneg'] = $tmp_answer[1] - $tolerance_partial;
             }
 
             $new_user_answer['ans'] = $ansdata;
