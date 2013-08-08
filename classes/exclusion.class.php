@@ -43,7 +43,29 @@ class Exclusion {
       $this->excluded[$q_id] = $parts;
     }
     $result->close();
-    
+  }
+  
+  public function clear_all_exclusions() {
+    // Clear the database of any past exclusions from the current paper.
+    if ($result = $this->db->prepare("DELETE FROM question_exclude WHERE q_paper = ?")) {
+      $result->bind_param('i', $this->paper_id);
+      $result->execute();
+      $result->close();
+    } else {
+      display_error("Question_exclude Delete Error", $this->db->error);
+    }
+  }
+  
+  public function add_exclusion($q_id, $status) {
+    $userObj = UserObject::get_instance();
+
+    if ($result = $this->db->prepare("INSERT INTO question_exclude VALUES (NULL, ?, ?, ?, {$userObj->get_user_ID()}, NOW(), '')")) {
+      $result->bind_param('iis', $this->paper_id, $q_id, $status);
+      $result->execute();
+      $result->close();
+    } else {
+      display_error("Question_exclude Insert Error 1", $this->db->error);
+    }
   }
   
   public function get_exclusions_by_qid($q_id) {

@@ -429,29 +429,18 @@ if (isset($_POST['submit'])) {
   $old_exclusions->load();
 
   // Clear the database of any past exclusions from the current paper.
-  if ($result = $mysqli->prepare("DELETE FROM question_exclude WHERE q_paper = ?")) {
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->close();
-  } else {
-    display_error("Question_exclude Delete Error", $mysqli->error);
-  }
+  $old_exclusions->clear_all_exclusions();
 
   $old_q_id = 0;
   $old_status = '';
   $excluded = false;
 
+  $new_exclusions = new Exclusion($paperID, $mysqli);
   for ($i=1; $i<=$_POST['question_no']; $i++) {
     $current_id = $_POST['id_' . $i];
     if ($current_id != $old_q_id) {
       if (strpos($old_status, '1') !== false) {
-        if ($result = $mysqli->prepare("INSERT INTO question_exclude VALUES (NULL, ?, ?, ?, {$userObject->get_user_ID()}, NOW(), '')")) {
-          $result->bind_param('iis', $paperID, $old_q_id, $old_status);
-          $result->execute();
-          $result->close();
-        } else {
-          display_error("Question_exclude Insert Error 1", $mysqli->error);
-        }
+        $new_exclusions->add_exclusion($old_q_id, $old_status);
       }
       $old_status = '';
     }
@@ -459,16 +448,9 @@ if (isset($_POST['submit'])) {
     $old_q_id = $_POST['id_' . $i];
   }
   if (strpos($old_status, '1') !== false) {
-    if ($result = $mysqli->prepare("INSERT INTO question_exclude VALUES (NULL, ?, ?, ?, {$userObject->get_user_ID()}, NOW(), '')")) {
-      $result->bind_param('iis', $paperID, $old_q_id, $old_status);
-      $result->execute();
-      $result->close();
-    } else {
-      display_error("Question_exclude Insert Error 2", $mysqli->error);
-    }
+    $new_exclusions->add_exclusion($old_q_id, $old_status);
   }
 
-  $new_exclusions = new Exclusion($paperID, $mysqli);
   $new_exclusions->load();
   
   if ($old_exclusions->excluded !== $new_exclusions->excluded) {
@@ -1810,7 +1792,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
   }
   $result->close();
-
+  
   if ($user_total == 0) {
     // No one has taken the paper yet.
     echo '<tr><th>';
@@ -1990,27 +1972,27 @@ SQL;
 
   <table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><?php echo $string['summary']; ?></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>
 
-  <table cellpadding="0" cellspacing="0" border="0" style="width:650px; font-size:100%; margin-left:40px">
+  <table cellpadding="0" cellspacing="0" style="width:650px; margin-left:40px">
   <tr><td colspan="2" style="padding-left:4px"><?php echo $string['msg']; ?></td></tr>
   <tr>
   <td style="vertical-align:top">
-  <table cellpadding="4" cellspacing="0" border="0" style="font-size:100%">
+  <table cellpadding="4" cellspacing="0">
   <tr style="font-weight:bold"><td><?php echo $string['difficulty']; ?></td><td style="text-align:center">p</td><td><?php echo $string['noofitems']; ?></td><td></td></tr>
   <tr><td><?php echo $string['veryeasy']; ?></td><td>&gt; 0.8</td><td style="text-align:right"><?php echo $pstats['ve']; ?></td><td></td></tr>
   <tr><td><?php echo $string['easy']; ?></td><td>0.6-0.8</td><td style="text-align:right"><?php echo $pstats['e']; ?></td><td></td></tr>
   <tr><td><?php echo $string['moderate']; ?></td><td>0.4-0.6</td><td style="text-align:right"><?php echo $pstats['m']; ?></td><td></td></tr>
   <tr><td><?php echo $string['hard']; ?></td><td>0.2-0.4</td><td style="text-align:right"><?php echo $pstats['h']; ?></td><td></td></tr>
-  <tr style="color:#C00000"><td><?php echo $string['veryhard']; ?></td><td>&lt; 0.2</td><td style="text-align:right"><?php echo $pstats['vh']; ?></td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="<?php echo $string['warning1']; ?>" border="0" class="in-exclusion" /></td></tr>
+  <tr style="color:#C00000"><td><?php echo $string['veryhard']; ?></td><td>&lt; 0.2</td><td style="text-align:right"><?php echo $pstats['vh']; ?></td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="<?php echo $string['warning1']; ?>" class="in-exclusion" /></td></tr>
   <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php echo number_format($pstats['total']/$pstats['no'],2); ?></td><td></td><td></td></tr>
   </table>
   </td>
   <td style="vertical-align:top">
-  <table cellpadding="4" cellspacing="0" border="0" style="font-size:100%">
+  <table cellpadding="4" cellspacing="0" >
   <tr style="font-weight:bold"><td><?php echo $string['discrimination']; ?></td><td style="text-align:center">d</td><td><?php echo $string['noofitems']; ?></td><td></td></tr>
   <tr><td><?php echo $string['highest']; ?></td><td>&gt;= 0.35</td><td style="text-align:right"><?php echo $dstats['highest']; ?></td><td></td></tr>
   <tr><td><?php echo $string['high']; ?></td><td>0.25-0.35</td><td style="text-align:right"><?php echo $dstats['high']; ?></td><td></td></tr>
   <tr><td><?php echo $string['intermediate']; ?></td><td>0.15-0.25</td><td style="text-align:right"><?php echo $dstats['intermediate']; ?></td><td></td></tr>
-  <tr style="color:#C00000"><td><?php echo $string['low']; ?></td><td>&lt; 0.15</td><td style="text-align:right"><?php echo $dstats['low']; ?></td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="<?php echo $string['warning2']; ?>" border="0" class="in-exclusion" /></td></tr>
+  <tr style="color:#C00000"><td><?php echo $string['low']; ?></td><td>&lt; 0.15</td><td style="text-align:right"><?php echo $dstats['low']; ?></td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="<?php echo $string['warning2']; ?>" class="in-exclusion" /></td></tr>
   <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
   <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php echo number_format($dstats['total']/$dstats['no'],2); ?></td><td></td><td></td></tr>
   </table>
