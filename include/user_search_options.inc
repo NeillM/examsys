@@ -77,7 +77,7 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function viewPerformanceSummary() {
-    if ($('#roles').val().search("Student") == -1) {
+    if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate")) {
       alert("You have selected a non-student user.");
     } else {
       window.open("../students/performance_summary.php?userID=" + getLastID($('#userID').val()), "_blank");
@@ -310,6 +310,6 @@ if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
 ?>
 
 <input type="hidden" id="userID" name="userID" value="" />
-<input type="hidden" id="roles" name="roles" value="" />
+<input type="hidden" id="roles" name="roles" value="<?php if (isset($tmp_roles)) echo $tmp_roles; ?>" />
 </form>
 </div>

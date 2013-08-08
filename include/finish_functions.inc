@@ -467,7 +467,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
       $midexam_clarification = $configObject->get('midexam_clarification');
 
       if (in_array('students', $midexam_clarification)) {
-        $exam_announcementObj = new ExamAnnouncements($paperID, $mysqlidb);
+        $exam_announcementObj = new ExamAnnouncements($paperID, $mysqlidb, $string);
         echo $exam_announcementObj->display_student_announcements();
       }
     }

@@ -3,7 +3,9 @@ require_once '../include/invigilator_auth.inc';
 require_once '../classes/exam_announcements.class.php';
 
 $paperID = $_GET['paperID'];
-$exam_announcementObj = new ExamAnnouncements($paperID, $mysqli);
+if (!isset($string)) $string = array();
+
+$exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
 
 $exam_announcements = $exam_announcementObj->get_announcements();
 
