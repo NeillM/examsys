@@ -1197,7 +1197,7 @@ if ($css != '') {
   $midexam_clarification = $configObject->get('midexam_clarification');
  
   if (in_array('students', $midexam_clarification)) {
-    $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli);
+    $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
     echo $exam_announcementObj->display_student_announcements();
   }
 

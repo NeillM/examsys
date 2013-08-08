@@ -765,7 +765,7 @@ $result->close();
 <div id="content" class="content" style="font-size:80%">
 
 <?php
-  $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli);
+  $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
   $exam_announcements = $exam_announcementObj->get_announcements();
 
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";

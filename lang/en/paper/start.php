@@ -60,4 +60,5 @@ $string['auto_ok'] = 'Auto Save Successful';
 $string['savefailed'] = 'Save Failed!';
 $string['tryagain'] = 'Please try again, by moving to the next or previous screens.</div>';
 $string['questionclarification'] = 'Question Clarification';
+$string['question'] = 'Question';
 ?>

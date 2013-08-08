@@ -26,10 +26,12 @@ class ExamAnnouncements {
 
   private $db;
   private $paperID;
+  private $string;
 
-  public function __construct($paperID, $db) {
+  public function __construct($paperID, $db, $string) {
   	$this->db = $db;
     $this->paperID = $paperID;
+    $this->string = $string;
   }
 
   public function get_announcements() {
@@ -67,9 +69,9 @@ class ExamAnnouncements {
     $html = '';
     
     $html .= "<table class=\"exam_announcement_box\">\n";
-    $html .= "<tr><td rowspan=\"" . (count($exam_announcements) + 1) . "\" class=\"exam_announce_icon\" ><img src=\"../artwork/comment_48.png\" width=\"48\" height=\"48\" /></td><td class=\"exam_announce_title\">" . $string['questionclarification'] . "</td></tr>\n";
+    $html .= "<tr><td rowspan=\"" . (count($exam_announcements) + 1) . "\" class=\"exam_announce_icon\" ><img src=\"../artwork/comment_48.png\" width=\"48\" height=\"48\" /></td><td class=\"exam_announce_title\">" . $this->string['questionclarification'] . "</td></tr>\n";
     foreach ($exam_announcements as $exam_announcement) {
-      $html .= "<tr><td><ul><li><strong>" . $string['question'] . " ". $exam_announcement['q_number'] . "</strong> (" . $string['screen'] . " " . $exam_announcement['screen'] . ")<br />" . $exam_announcement['msg'] . "</li></ul></td></tr>\n";
+      $html .= "<tr><td><ul><li><strong>" . $this->string['question'] . " ". $exam_announcement['q_number'] . "</strong> (" . $this->string['screen'] . " " . $exam_announcement['screen'] . ")<br />" . $exam_announcement['msg'] . "</li></ul></td></tr>\n";
     }
     $html .= '</table>';
     

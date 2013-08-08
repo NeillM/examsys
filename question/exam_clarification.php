@@ -46,7 +46,7 @@ if (!QuestionUtils::question_exists($q_id, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$exam_announcementObj = new ExamAnnouncements($paperID, $mysqli);
+$exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
   
 if (isset($_POST['submit'])) {
   $screenNo = check_var('screenNo', 'POST', true, false, true);
