@@ -53,7 +53,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
   header("location: list_courses.php");
 } else {
 ?>
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
   <html>
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -67,17 +67,18 @@ if (isset($_POST['submit']) and $unique_course == true) {
     .warn {background-color:#FFD9D9; color:#800000; border:1px solid #800000}
   </style>
 
-  <script language="JavaScript">
-  function checkForm() {
-    if (edit_course.course.value == "") {
-      alert ("<?php echo $string['codecourse']; ?>");
-      return false;
-    }
-    if (edit_course.description.value == "") {
-      alert ("<?php echo $string['titlecourse']; ?>");
-      return false;
-    }
-  }
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });  
   </script>
   </head>
 
@@ -92,19 +93,19 @@ if (isset($_POST['submit']) and $unique_course == true) {
   </table>
   <br />
   <div align="center">
-  <form name="edit_course" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+  <form id="theform" name="edit_course" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
     if ($unique_course == false) {
-      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" name=\"course\" class=\"warn\" value=\"$tmp_course\" /></td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" class=\"warn\" value=\"$tmp_course\" required /></td></tr>\n";
     } else {
     ?>
-      <tr><td class="field"><?php echo $string['code']; ?></td><td><input type="text" size="10" name="course" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" /></td></tr>
+      <tr><td class="field"><?php echo $string['code']; ?></td><td><input type="text" size="10" maxlength="255"  name="course" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" required /></td></tr>
     <?php
     }
     ?>
-    <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="description" value="<?php if (isset($_POST['description'])) echo $_POST['description']; ?>" /></td></tr>
-    <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school">
+    <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php if (isset($_POST['description'])) echo $_POST['description']; ?>" required /></td></tr>
+    <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school" required>
     <option value=""></option>
     <?php
       $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY name, school");

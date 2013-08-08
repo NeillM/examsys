@@ -80,13 +80,13 @@ if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summat
 $modules = array();
 $first = true;
 for ($i=0; $i<$_POST['module_no']; $i++) {
-  if (isset($_POST['module' . $i])) {
-    $module_code = module_utils::get_moduleid_from_id($_POST['module' . $i], $mysqli);
+  if (isset($_POST['mod' . $i])) {
+    $module_code = module_utils::get_moduleid_from_id($_POST['mod' . $i], $mysqli);
     if ($first == true) {
-      $first_module = $_POST['module' . $i];
+      $first_module = $_POST['mod' . $i];
       $first = false;
     }
-    $modules[$_POST['module' . $i]] = $module_code;
+    $modules[$_POST['mod' . $i]] = $module_code;
   }
 }
 //add the modules to the paper

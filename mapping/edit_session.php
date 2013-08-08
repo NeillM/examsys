@@ -137,8 +137,8 @@ if (isset($_POST['Edit'])) {
   header("Location: ./sessions_list.php?module=" . $moduleID . "&folder=" . $folder);
 } else {
   //display form
-  ?>
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+?>
+<!DOCTYPE html>
   <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -156,20 +156,18 @@ if (isset($_POST['Edit'])) {
       .note {width:90%}
     </style>
     <script src="../js/staff_help.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
     <script type="text/javascript">
-      function checkForm() {
-        if (document.getElementById('session_title').value == '' || document.getElementById('session_title').value == ' ') {
-          alert("<?php echo $string['entertitle']; ?>");
-          return false;
-        }
-      }
-
-      function clearTextbox(objectName) {
-        if (document.getElementById(objectName).value == '<?php echo $string['msg1']; ?>') {
-          document.getElementById(objectName).value = '';
-          document.getElementById(objectName).style.color = 'black';
-        }
-      }
+      $(function () {
+        $('#theform').validate({
+          errorClass: 'errfield',
+          errorPlacement: function(error,element) {
+            return true;
+          }
+        });
+        $('form').removeAttr('novalidate');
+      });
 
       var ObjNewCount = 0;
       var ObjCount = 0;
@@ -179,7 +177,7 @@ if (isset($_POST['Edit'])) {
         li.id = 'li_' + ulId + ObjNewCount;
         li.style.margin = '0.5em';
         li.style.marginLeft = '3.5em';
-        li.innerHTML = '<img src="./up_on.png" onclick="promote( \'' + li.id + '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'' + li.id + '\' )" />&nbsp<input class="editBox" name="objnew_' + ObjNewCount + '" id="objnew_' + ObjNewCount + '" type="text" style="color:#808080" onfocus="clearTextbox(\'objnew_' + ObjNewCount + '\');" value="<?php echo $string['msg1']; ?>" /></li>';
+        li.innerHTML = '<img src="./up_on.png" onclick="promote( \'' + li.id + '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'' + li.id + '\' )" />&nbsp<input class="editBox" name="objnew_' + ObjNewCount + '" id="objnew_' + ObjNewCount + '" type="text" value="" placeholder="<?php echo $string['msg1']; ?>" /></li>';
         ul.insertBefore(li,ul.lastChild);
         ObjNewCount++;
         updateButtons();
@@ -246,9 +244,9 @@ echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.p
 echo "<tr><th colspan=\"4\" class=\"bevel\"></td></tr>\n";
 echo '</table>';
 
-echo "<br /><form name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=$moduleID&calendar_year=$calendar_year\" method=\"post\" onsubmit=\"return checkForm();\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
+echo "<br /><form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=$moduleID&calendar_year=$calendar_year\" method=\"post\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
 
-echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"" . $sess['title'] . "\"/></td></tr>\n";
+echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"" . $sess['title'] . "\" required autofocus /></td></tr>\n";
 
 echo '<tr><td class="field">' . $string['session'] . '</td><td>';
 $validfrom = '<select name="session" disablied="disabled">'."\n";

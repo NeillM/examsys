@@ -150,41 +150,31 @@ if (isset($_POST['submit'])) {
     body {font-size:90%; background-color:#E3EFFF; margin:8px 4px 4px 4px}
     td {font-size:90%}
   </style>
+
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
-      if (document.getElementById(objectID).style.backgroundColor == 'white') {
-        document.getElementById(objectID).style.backgroundColor = '#B3C8E8';
+      if ($('#' + objectID).css('background-color') == 'white') {
+        $('#' + objectID).css('background-color', '#B3C8E8');
       } else {
-        document.getElementById(objectID).style.backgroundColor = 'white';
+        $('#' + objectID).css('background-color', 'white');
       }
     }
 
     function showTab(tabID) {
-      document.getElementById('list1').style.display = 'none';
-      document.getElementById('list2').style.display = 'none';
-      document.getElementById('list3').style.display = 'none';
+      $('#list1').hide();
+      $('#list2').hide();
+      $('#list3').hide();
 
-      document.getElementById(tabID).style.display = 'block';
+      $('#' + tabID).show();
     }
 
     function resizeList() {
-      var winW = 630, winH = 460;
-      if (document.body && document.body.offsetWidth) {
-        winW = document.body.offsetWidth;
-        winH = document.body.offsetHeight;
-      }
-      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-        winW = document.documentElement.offsetWidth;
-        winH = document.documentElement.offsetHeight;
-      }
-      if (window.innerWidth && window.innerHeight) {
-        winW = window.innerWidth;
-        winH = window.innerHeight;
-      }
-      winH -= 80;
-      document.getElementById('list1').style.height = winH + 'px';
-      document.getElementById('list2').style.height = winH + 'px';
-      document.getElementById('list3').style.height = winH + 'px';
+      winH = $(window).height() - 80;
+
+      $('#list1').css('height', winH + 'px');
+      $('#list2').css('height', winH + 'px');
+      $('#list3').css('height', winH + 'px');
     }
   </script>
 </head>
@@ -194,7 +184,7 @@ if (isset($_POST['submit'])) {
 <?php
   // Get existing modules for the user in passed calendar year.
   $student_modules = array();
-  $result = $mysqli->prepare("SELECT idMod, moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID=? AND calendar_year=?");
+  $result = $mysqli->prepare("SELECT idMod, moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND calendar_year = ?");
   $result->bind_param('is', $_GET['userID'], $session);
   $result->execute();
   $result->bind_result($idMod, $moduleid, $attempt);
@@ -209,7 +199,7 @@ if (isset($_POST['submit'])) {
   $modules = array();
   $mod_count = 0;
 
-  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid=schools.id AND active=1 ORDER BY moduleid");
+  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 ORDER BY moduleid");
   $result->execute();
   $result->store_result();
   $result->bind_result($idMod, $moduleid, $fullname);
@@ -221,7 +211,7 @@ if (isset($_POST['submit'])) {
   $result->close();
 
   if ($mod_count == 0) {
-    echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;" . $string['nomodules'] . " <strong>" . $_GET['session'] . "</strong>.</div>";
+    echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" />&nbsp;" . $string['nomodules'] . " <strong>" . $_GET['session'] . "</strong>.</div>";
   } else {
     list_modules($modules, 1, $student_modules);
     list_modules($modules, 2, $student_modules);

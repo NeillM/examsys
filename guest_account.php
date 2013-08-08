@@ -60,7 +60,7 @@ if ($paper_match == false) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
-
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -138,6 +138,7 @@ if (isset($_POST['submit'])) {
   UserUtils::update_password($free_account, $random_password, $temp_user_id, $mysqli);
   
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -148,19 +149,18 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/guest_account.css" />
   
-  <script language="JavaScript">
-    function checkForm() {
-      if (document.getElementById('first_names').value == '') {
-        alert("<?php echo $string['enterfirstname']; ?>");
-        return false;
-      }
-      
-      if (document.getElementById('surname').value == '') {
-        alert("<?php echo $string['entersurname']; ?>");
-        return false;
-      }
-      
-    }
+  <script type="text/javascript" src="./js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="./js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });  
   </script>
 </head>
 
@@ -172,9 +172,9 @@ if (isset($_POST['submit'])) {
 
 <tr><td style="text-align:center; padding:6px" colspan="2">
 <table cellpadding="2" cellspacing="0" style="width:100%; border:0px; text-align:left">
-<tr><td><?php echo $string['title']; ?></td><td><input type="radio" name="title" value="Mr" />Mr&nbsp;&nbsp;<input type="radio" name="title" value="Miss" />Miss&nbsp;&nbsp;<input type="radio" name="title" value="Mrs" />Mrs&nbsp;&nbsp;<input type="radio" name="title" value="Ms" />Ms&nbsp;&nbsp;<input type="radio" name="title" value="Dr" />Dr</td></tr>
-<tr><td><?php echo $string['firstname']; ?></td><td><input type="text" name="first_names" id="first_names" value="" size="40" /></td></tr>
-<tr><td><?php echo $string['surname']; ?></td><td><input type="text" name="surname" id="surname" value="" size="40" /></td></tr>
+<tr><td><?php echo $string['title']; ?></td><td><input type="radio" name="title" id="mr" value="Mr" /><label for="mr">Mr</label>&nbsp;&nbsp;<input type="radio" name="title" id="miss" value="Miss" /><label for="miss">Miss</label>&nbsp;&nbsp;<input type="radio" name="title" id="mrs" value="Mrs" /><label for="mrs">Mrs</label>&nbsp;&nbsp;<input type="radio" name="title" id="ms" value="Ms" /><label for="ms">Ms</label>&nbsp;&nbsp;<input type="radio" name="title" id="dr" value="Dr" /><label for="dr">Dr</label></td></tr>
+<tr><td><?php echo $string['firstname']; ?></td><td><input type="text" name="first_names" id="first_names" value="" size="40" maxlength="60" required /></td></tr>
+<tr><td><?php echo $string['surname']; ?></td><td><input type="text" name="surname" id="surname" value="" size="40" maxlength="50" required /></td></tr>
 <tr><td><?php echo $string['studentid']; ?></td><td><input type="text" name="student_id" value="" size="20" /></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:100px" /></td></tr>

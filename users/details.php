@@ -1067,9 +1067,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <td><input type="radio" onchange="updateAccessDemo()" name="bg_radio" id="bg_radio_on" value="1"<?php if ($background != '') echo ' checked'; ?> />
 <?php
   if ($background == '') {
-    echo "<div onclick=\"showPicker('background',event); document.getElementById('bg_radio_on').checked=true;\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
+    echo "<div onclick=\"showPicker('background',event); \$('#bg_radio_on').attr('checked', true);\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
   } else {
-    echo "<div onclick=\"showPicker('background',event); document.getElementById('bg_radio_on').checked=true;\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$background\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
+    echo "<div onclick=\"showPicker('background',event); \$('#bg_radio_on').attr('checked', true);\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$background\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
   }
 ?>
 </td>
@@ -1080,9 +1080,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <td><input type="radio" onchange="updateAccessDemo()" name="fg_radio" id="fg_radio_on" value="1"<?php if ($foreground != '') echo ' checked'; ?> />
 <?php
   if ($foreground == '') {
-    echo "<div onclick=\"showPicker('foreground',event); document.getElementById('fg_radio_on').checked=true;\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
+    echo "<div onclick=\"showPicker('foreground',event); \$('#fg_radio_on').attr('checked', true);\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
   } else {
-    echo "<div onclick=\"showPicker('foreground',event); document.getElementById('fg_radio_on').checked=true;\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$foreground\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
+    echo "<div onclick=\"showPicker('foreground',event); \$('#fg_radio_on').attr('checked', true);\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$foreground\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
   }
 ?>
 </td>
@@ -1093,9 +1093,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <td><input type="radio" onchange="updateAccessDemo()" name="marks_radio" id="marks_radio_on" value="1"<?php if ($marks_color != '') echo ' checked'; ?> />
 <?php
   if ($marks_color == '') {
-    echo "<div onclick=\"showPicker('marks_color',event); document.getElementById('marks_radio_on').checked=true;\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
+    echo "<div onclick=\"showPicker('marks_color',event); $('#marks_radio_on').attr('checked', true);\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
   } else {
-    echo "<div onclick=\"showPicker('marks_color',event); document.getElementById('marks_radio_on').checked=true;\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$marks_color\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
+    echo "<div onclick=\"showPicker('marks_color',event); $('#marks_radio_on').attr('checked', true);\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$marks_color\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
   }
 ?>
 </td>
@@ -1106,9 +1106,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <td><input type="radio" onchange="updateAccessDemo()" name="theme_radio" id="theme_radio_on" value="1"<?php if ($themecolor != '') echo ' checked'; ?> />
 <?php
   if ($themecolor == '') {
-    echo "<div onclick=\"showPicker('themecolor',event); document.getElementById('theme_radio_on').checked=true;\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
+    echo "<div onclick=\"showPicker('themecolor',event); $('#theme_radio_on').attr('checked', true);\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
   } else {
-    echo "<div onclick=\"showPicker('themecolor',event); document.getElementById('theme_radio_on').checked=true;\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
+    echo "<div onclick=\"showPicker('themecolor',event); $('#theme_radio_on').attr('checked', true);\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
   }
 ?>
 </td>
@@ -1119,9 +1119,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <td><input type="radio" onchange="updateAccessDemo()" name="labels_radio" id="labels_radio_on" value="1"<?php if ($labelcolor != '') echo ' checked'; ?> />
 <?php
   if ($labelcolor == '') {
-    echo "<div onclick=\"showPicker('labelcolor',event); document.getElementById('labels_radio_on').checked=true;\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
+    echo "<div onclick=\"showPicker('labelcolor',event); $('#labels_radio_on').attr('checked', true);\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
   } else {
-    echo "<div onclick=\"showPicker('labelcolor',event); document.getElementById('labels_radio_on').checked=true;\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
+    echo "<div onclick=\"showPicker('labelcolor',event); $('#labels_radio_on').attr('checked', true);\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
   }
 ?>
 </td>
@@ -1132,9 +1132,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <td><input type="radio" onchange="updateAccessDemo()" name="unanswered_radio" id="unanswered_radio_on" value="1"<?php if ($unansweredcolor != '') echo ' checked'; ?> />
 <?php
   if ($unansweredcolor == '') {
-    echo "<div onclick=\"showPicker('unansweredcolor',event); document.getElementById('unanswered_radio_on').checked=true;\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
+    echo "<div onclick=\"showPicker('unansweredcolor',event); $('#unanswered_radio_on').attr('checked', true);\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
   } else {
-    echo "<div onclick=\"showPicker('unansweredcolor',event); document.getElementById('unanswered_radio_on').checked=true;\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$unansweredcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
+    echo "<div onclick=\"showPicker('unansweredcolor',event); $('#unanswered_radio_on').attr('checked', true);\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$unansweredcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
   }
 ?>
 </td>

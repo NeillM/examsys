@@ -41,6 +41,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
     }
   }
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -59,7 +60,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <?php
   } else {
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -70,7 +71,19 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
     body {font-size:90%; background-color:#EEEEEE; padding:4px}
     h1 {font-size:120%}
   </style>
-  <script language="JavaScript">
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+    
     function illegalChar(codeID) {
       if (codeID == 35) {
         alert("<?php echo $string['character']; ?> '#' <?php echo $string['illegal']; ?>");
@@ -98,13 +111,15 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
         document.myform.submit();
       }
     }
+    
+    
   </script>
 </head>
 
-<body onload="document.myform.new_keyword.focus();">
+<body>
 <h1><?php echo $string['newkeyword']; ?></h1>
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<div><input type="text" style="width:99%" name="new_keyword" onkeypress="illegalChar(event.keyCode)" /></div>
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<div><input type="text" style="width:99%" name="new_keyword" onkeypress="illegalChar(event.keyCode)" required autofocus /></div>
 <div align="right"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
 </form>
 

@@ -64,6 +64,7 @@ if (isset($_POST['submit'])) {
     if ($name != $_POST['new_faculty']) $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $name, $_POST['new_faculty'], 'name');
 
   ?>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -78,6 +79,7 @@ if (isset($_POST['submit'])) {
   }
 }
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -88,18 +90,32 @@ if (isset($_POST['submit'])) {
   body {padding:4px; font-size:90%; background-color:#EEEEEE}
   h1 {font-size:120%}
   </style>
+  
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
+  </script>
 </head>
 
-<body onload="document.myform.new_keyword.focus();">
+<body>
 <h1><?php echo $string['editfaculty']; ?></h1>
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div>
 <?php
 if ($duplicate) {
-  echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="new_faculty" value="' . $_POST['new_faculty'] . '" />';
+  echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="new_faculty" value="' . $_POST['new_faculty'] . '" maxlength="80" required autofocus />';
   echo "<script language=\"JavaScript\">\nalert('" . $string['warning'] . "');\n</script>\n";
 } else {
-  echo '<input type="text" style="width:99%" name="new_faculty" value="' . $name . '" />';
+  echo '<input type="text" style="width:99%" name="new_faculty" value="' . $name . '" maxlength="80" required autofocus />';
 }
 ?>
 <input type="hidden" name="facultyID" value="<?php echo $facultyID; ?>" />

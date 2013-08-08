@@ -82,7 +82,7 @@ while ($result->fetch()) {
 }
 $result->close();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
   <html>
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -104,13 +104,18 @@ $result->close();
     }
   </style>
 
-  <script language="JavaScript">
-  function checkForm() {
-    if ($('#school').val() == "" || $('#school').val() == "<?php echo $string['prompt'] ?>") {
-      alert ('<?php echo $string['enternameofschool'] ?>');
-      return false;
-    }
-  }
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+    });
   </script>
   </head>
 <body>
@@ -130,7 +135,7 @@ $result->close();
 
   <br />
   <div align="center">
-  <form name="add_school" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $schoolid; ?>">
+  <form id="theform" name="add_school" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $schoolid; ?>">
 <?php
   if (isset($error) and $error = 'duplicate') {
 ?>
@@ -139,7 +144,7 @@ $result->close();
   }
 ?>
     <table cellpadding="0" cellspacing="2" border="0">
-    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="school" name="school" value="<?php echo $school; ?>" /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" maxlength="255" id="school" name="school" value="<?php echo $school; ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['faculty'] ?></td><td><select name="faculty">
     <?php
       foreach ($faculty_list as $faculty) {

@@ -135,6 +135,10 @@ Class PaperUtils {
   }
 
   public function q_feedback_enabled($moduleIDs, $db) {
+    if (count($moduleIDs) == 0) {
+      return false;
+    }
+
     $enabled = true;
     
     $module_list = implode(',', $moduleIDs);

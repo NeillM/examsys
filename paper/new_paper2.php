@@ -49,13 +49,9 @@ require '../lang/' . $language. '/include/timezones.inc';
   if (!$unique) {
 ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {background-color:#F0F0F0; margin:6px; font-size:90%}
-    .icon {color:#001687; padding: 15px 0px; vertical-align:top; width:98px; font-size:8pt}
-    select {margin:0px; padding:0px}
-    input[type="text"] {margin:0px}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
+  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
     function over(id) {
       if (id != $('#paper_type').val()) {
@@ -115,52 +111,54 @@ require '../lang/' . $language. '/include/timezones.inc';
 <div style="text-align:center; border:solid 1px #7F9DB9; background-color:white">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>
-<td colspan="8" style="text-align:left; font-weight:bold; background-color:#DDE7EE; color:#001687; border-bottom:1px solid #C5C5C5; padding:4px">&nbsp;<?php echo $string['papertype']; ?></td>
+  <td colspan="8" style="text-align:left; background-color:#CFDBEB; padding:4px">&nbsp;<?php echo $string['papertype']; ?></td>
 </tr>
 <tr>
 <?php
   if ($_POST['paper_type'] == 'formative') {
-    echo "<td class=\"icon\" onclick=\"activate('formative')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\" id=\"formative\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/formative.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Formative Self-Assessment\" /><br />" . $string['formative self-assessment'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('formative')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\" id=\"formative\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/formative.png\" width=\"48\" height=\"48\" alt=\"Formative Self-Assessment\" /><br />" . $string['formative self-assessment'] . "</td>";
   } else {
-    echo "<td class=\"icon\" onclick=\"activate('formative')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\" id=\"formative\"><img src=\"../artwork/formative.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Formative Self-Assessment\" /><br />" . $string['formative self-assessment'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('formative')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\" id=\"formative\"><img src=\"../artwork/formative.png\" width=\"48\" height=\"48\" alt=\"Formative Self-Assessment\" /><br />" . $string['formative self-assessment'] . "</td>";
   }
   if ($_POST['paper_type'] == 'progress') {
-    echo "<td class=\"icon\" onclick=\"activate('progress')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\" id=\"progress\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/progress.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Progress Test\" /><br />" . $string['progress test'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('progress')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\" id=\"progress\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/progress.png\" width=\"48\" height=\"48\" alt=\"Progress Test\" /><br />" . $string['progress test'] . "</td>";
   } else {
-    echo "<td class=\"icon\" onclick=\"activate('progress')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\" id=\"progress\"><img src=\"../artwork/progress.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Progress Test\" /><br />" . $string['progress test'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('progress')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\" id=\"progress\"><img src=\"../artwork/progress.png\" width=\"48\" height=\"48\" alt=\"Progress Test\" /><br />" . $string['progress test'] . "</td>";
   }
   if ($_POST['paper_type'] == 'summative') {
-    echo "<td class=\"icon\" onclick=\"activate('summative')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\" id=\"summative\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Summative Exam\" /><br />" . $string['summative exam'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('summative')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\" id=\"summative\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Summative Exam\" /><br />" . $string['summative exam'] . "</td>";
   } else {
-    echo "<td class=\"icon\" onclick=\"activate('summative')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\" id=\"summative\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Summative Exam\" /><br />" . $string['summative exam'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('summative')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\" id=\"summative\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Summative Exam\" /><br />" . $string['summative exam'] . "</td>";
   }
   if ($_POST['paper_type'] == 'survey') {
-    echo "<td class=\"icon\" onclick=\"activate('survey')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\" id=\"survey\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/survey.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Survey\" /><br />" . $string['survey'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('survey')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\" id=\"survey\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/survey.png\" width=\"48\" height=\"48\" alt=\"Survey\" /><br />" . $string['survey'] . "</td>";
   } else {
-    echo "<td class=\"icon\" onclick=\"activate('survey')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\" id=\"survey\"><img src=\"../artwork/survey.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Survey\" /><br />" . $string['survey'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('survey')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\" id=\"survey\"><img src=\"../artwork/survey.png\" width=\"48\" height=\"48\" alt=\"Survey\" /><br />" . $string['survey'] . "</td>";
   }
   if ($_POST['paper_type'] == 'osce') {
-    echo "<td class=\"icon\" onclick=\"activate('osce')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\" id=\"osce\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"OSCE\" /><br />" . $string['osce station'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('osce')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\" id=\"osce\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" alt=\"OSCE\" /><br />" . $string['osce station'] . "</td>";
   } else {
-    echo "<td class=\"icon\" onclick=\"activate('osce')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\" id=\"osce\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"OSCE\" /><br />" . $string['osce station'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('osce')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\" id=\"osce\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" alt=\"OSCE\" /><br />" . $string['osce station'] . "</td>";
   }
   if ($_POST['paper_type'] == 'offline') {
-    echo "<td class=\"icon\" onclick=\"activate('offline')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\" id=\"offline\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Offline\" /><br />" . $string['offline paper'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('offline')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\" id=\"offline\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" alt=\"Offline\" /><br />" . $string['offline paper'] . "</td>";
   } else {
-    echo "<td class=\"icon\" onclick=\"activate('offline')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\" id=\"offline\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Offline\" /><br />" . $string['offline paper'] . "</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('offline')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\" id=\"offline\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" alt=\"Offline\" /><br />" . $string['offline paper'] . "</td>";
   }
   if ($_POST['paper_type'] == 'peer_review') {
-    echo "<td class=\"icon\" onclick=\"activate('peer_review')\" onmouseover=\"over('peer_review')\" onmouseout=\"out('peer_review')\" id=\"peer_review\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Peer Review\" /><br />Peer Review</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('peer_review')\" onmouseover=\"over('peer_review')\" onmouseout=\"out('peer_review')\" id=\"peer_review\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/peer_review.png\" width=\"48\" height=\"48\" alt=\"Peer Review\" /><br />" . $string['peer review'] . "</td>";
   } else {
-    echo "<td class=\"icon\" onclick=\"activate('peer_review')\" onmouseover=\"over('peer_review')\" onmouseout=\"out('peer_review')\" id=\"peer_review\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Peer Review\" /><br />Peer Review</td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('peer_review')\" onmouseover=\"over('peer_review')\" onmouseout=\"out('peer_review')\" id=\"peer_review\"><img src=\"../artwork/peer_review.png\" width=\"48\" height=\"48\" alt=\"Peer Review\" /><br />" . $string['peer review'] . "</td>";
   }
 ?>
-<td>&nbsp;</td>
-</tr>
+  </tr>
+  <tr>
+    <td colspan="8" style="text-align:left; padding-top:10px; padding-left:4px; padding-right:4px; padding-bottom:6px; font-size:90%; color:black" id="description">&nbsp;</td>
+  </tr>
 </table>
 </div>
 <br />
-<div style="color:#001687"><?php echo $string['name']; ?></div> <input type="text" id="paper_name" name="paper_name" style="width:650px; background-color:#FFC0C0; color:#800000" value="<?php echo $_POST['paper_name']; ?>" style="width:650px" />
+<?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" style="width:650px; background-color:#FFC0C0" value="<?php echo $_POST['paper_name']; ?>" style="width:650px" />
 <input type="hidden" name="module" value="<?php echo $_POST['module']; ?>" />
 <input type="hidden" id="paper_type" name="paper_type" value="<?php echo $_POST['paper_type']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
@@ -206,17 +204,12 @@ require '../lang/' . $language. '/include/timezones.inc';
   $result->close();
 ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {background-color:#F0F0F0; margin:4px; font-size:90%}
-    h2 { font-size: 100%; margin: 8px 0 0 0; }
-    select {margin:0px; padding:0px}
-    input[type="text"] {margin:0px}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
+  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
 <?php
   if ($paper_types[$_POST['paper_type']] == '2' or $paper_types[$_POST['paper_type']] == '4' or $paper_types[$_POST['paper_type']] == '5') {
 ?>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
   <script type="text/javascript">
@@ -229,12 +222,12 @@ require '../lang/' . $language. '/include/timezones.inc';
 ?>
 <script language="JavaScript">
   function toggle(objectID) {
-    if (document.getElementById(objectID).style.backgroundColor == 'white') {
-      $('#' + objectID).css('background-color', 'highlight');
-      $('#' + objectID).css('color', 'white');
+    if ($('#div' + objectID).hasClass('r2')) {
+      $('#div' + objectID).addClass('r1');
+      $('#div' + objectID).removeClass('r2');
     } else {
-      $('#' + objectID).css('background-color', 'white');
-      $('#' + objectID).css('color', 'black');
+      $('#div' + objectID).addClass('r2');
+      $('#div' + objectID).removeClass('r1');
     }
   }
 
@@ -242,8 +235,8 @@ require '../lang/' . $language. '/include/timezones.inc';
     var module_no = $('#module_no').val();
     var moduleList = '';
     for (var i = 0; i < module_no; i++) {
-      objectID = 'module' + i;
-      if (document.getElementById(objectID).checked == true) {
+      objectID = 'mod' + i;
+      if ($('#' + objectID).attr('checked')) {
         if (moduleList == '') {
           moduleList = $('#' + objectID).val();
         } else {
@@ -258,20 +251,17 @@ require '../lang/' . $language. '/include/timezones.inc';
   }
 
   function checkSummativeForm() {
-    periodSelect = document.getElementById('period');
-    if (periodSelect.options[periodSelect.selectedIndex].text == '') {
-      alert ("<?php echo $string['msg7']; ?>");
+    if ($('#period').val == '') {
+        alert ("<?php echo $string['msg7']; ?>");
       return false;
     }
 
-    durationSelect = document.getElementById('duration');
-    if (durationSelect.options[durationSelect.selectedIndex].text == '') {
+    if ($('#duration').val == '') {
       alert ("<?php echo $string['msg8']; ?>");
       return false;
     }
 
-    cohortsizeSelect = document.getElementById('cohort_size');
-    if (cohortsizeSelect.options[cohortsizeSelect.selectedIndex].text == '') {
+    if ($('#cohort_size').val == '') {
       alert ("<?php echo $string['msg9']; ?>");
       return false;
     }
@@ -279,12 +269,12 @@ require '../lang/' . $language. '/include/timezones.inc';
     var module_no = $('#module_no').val();
     var moduleList = '';
     for (var i = 0; i < module_no; i++) {
-      objectID = 'module' + i;
-      if (document.getElementById(objectID).checked == true) {
+      objectID = 'mod' + i;
+      if ($('#' + objectID).attr('checked')) {
         if (moduleList == '') {
-          moduleList = document.getElementById(objectID).value;
+          moduleList = $('#' + objectID).val();
         } else {
-          moduleList += ',' + document.getElementById(objectID).value;
+          moduleList += ',' + $('#' + objectID).val();
         }
       }
     }
@@ -303,15 +293,15 @@ if ($_POST['paper_type'] == 'summative') {
   echo '<form name="myform" action="new_paper3.php" method="post" onsubmit="return checkForm()">';
 }
 ?>
-<table border="0" cellpadding="1" cellspacing="5" style="width:100%">
+<table border="0" cellpadding="0" cellspacing="4" style="width:100%">
 <tr>
 <td>
 <?php
   echo "<table width=\"100%\" border=\"0\">\n";
   if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
-    echo "<tr><td><span style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['availability'] . "<span></td></tr>\n";
+    echo "<tr><td colspan=\"6\" class=\"titlebar\">" . $string['availability'] . "</td></tr>\n";
   } else {
-    echo "<tr><td colspan=\"3\"><span style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['summativeexamdetails'] . "<span></td></tr>\n";
+    echo "<tr><td colspan=\"6\" class=\"titlebar\">" . $string['summativeexamdetails'] . "</td></tr>\n";
   }
   if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
     $next_flag = 1;
@@ -496,7 +486,7 @@ if ($_POST['paper_type'] == 'summative') {
 
   echo "</table>\n";
 
-  echo "<div style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['modules'] . "</div>";
+  echo "<div class=\"titlebar\" style=\"margin-top:5px; border-top:1px solid #95AEC8; border-left:1px solid #95AEC8; border-right:1px solid #95AEC8\">" . $string['modules'] . "</div>";
   if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
     echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
   } else {
@@ -513,9 +503,9 @@ if ($_POST['paper_type'] == 'summative') {
       $current_school = $module['school'];
     }
     if (isset($_POST['module']) and $_POST['module'] == $module['idMod']) {
-      echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked />&nbsp;<label for=\"module$module_no\">" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</label></div>\n";
+      echo "<div class=\"r2\" id=\"div$module_no\"><input type=\"checkbox\" onclick=\"toggle($module_no)\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked /><label for=\"mod$module_no\">" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</label></div>\n";
     } else {
-      echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" />&nbsp;<label for=\"module$module_no\">" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</label></div>\n";
+      echo "<div class=\"r1\" id=\"div$module_no\"><input type=\"checkbox\" onclick=\"toggle($module_no)\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" /><label for=\"mod$module_no\">" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</label></div>\n";
     }
     $module_no++;
   }

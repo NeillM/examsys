@@ -782,9 +782,10 @@ $result->close();
     $paper_modules = Paper_utils::get_modules($paperID, $mysqli);  // Get the modules from paper properties
     reset($paper_modules);
     $moduleID = key($paper_modules);
-    $module_code = $paper_modules[$moduleID];
-
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $moduleID . '">' . $module_code . '</a>';
+    if ($moduleID != '') {
+      $module_code = $paper_modules[$moduleID];
+      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $moduleID . '">' . $module_code . '</a>';
+    }
   }
   echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';
   if ($properties->get_retired() != '') {

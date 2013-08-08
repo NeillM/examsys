@@ -44,20 +44,17 @@ require_once '../classes/dateutils.class.php';
   
   function checkCopyForm() {
     if ($("#paper_type").val() == '2') {
-      periodSelect = document.getElementById('period');
-      if (periodSelect.options[periodSelect.selectedIndex].text == '') {
+      if ($('#period').val() == '') {
         alert ("<?php echo $string['msg7']; ?>");
         return false;
       }
       
-      durationSelect = document.getElementById('duration');
-      if (durationSelect.options[durationSelect.selectedIndex].text == '') {
+      if ($('#duration').val() == '') {
         alert ("<?php echo $string['msg8']; ?>");
         return false;
       }
       
-      cohortsizeSelect = document.getElementById('cohort_size');
-      if (cohortsizeSelect.options[cohortsizeSelect.selectedIndex].text == '') {
+      if ($('#cohort_size').val() == '') {
         alert ("<?php echo $string['msg9']; ?>");
         return false;
       }
