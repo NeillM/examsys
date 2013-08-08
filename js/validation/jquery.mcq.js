@@ -3,6 +3,7 @@ $(function() {
     tinyMCE.triggerSave();
   });
   $('#edit_form').validate({
+    ignore: '',
     rules: {
       leadin: 'required',
       option_text1: {
