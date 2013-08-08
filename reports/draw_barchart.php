@@ -85,7 +85,7 @@ ImageFilledRectangle($Image, $g_x1, $g_y1 + $gap3, $g_x1 + $gap1 * $student_mark
 ImageRectangle($Image, $g_x1, $g_y1 + $gap3, $g_x1 + $gap1 * $student_mark, $g_y1 + $gap4 - $gap3, $black);
 if (strlen($student_mark) > 2) {
   imagettftext($Image, 10, 0, $g_x1 + ($gap1 * $student_mark) - 20, $g_y1 + 15, $color, $bold_font, $student_mark);
-} else {
+} elseif ($student_mark > 0) {
   imagettftext($Image, 10, 0, $g_x1 + ($gap1 * $student_mark) - 10, $g_y1 + 15, $color, $bold_font, $student_mark);
 }
 
@@ -96,7 +96,7 @@ ImageRectangle($Image, $g_x1, $g_y1 + $gap4, $g_x1 + $gap1 * $median, $g_y2 - $g
 
 if (strlen($median) > 2) {
   imagettftext($Image, 10, 0, $g_x1 + ($gap1 * $median) - 19, $g_y1 + 37, $black, $font, $median);
-} else {
+} elseif ($median > 0) {
   imagettftext($Image, 10, 0, $g_x1 + ($gap1 * $median) - 9, $g_y1 + 37, $black, $font, $median);
 }
 
