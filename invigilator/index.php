@@ -428,19 +428,16 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   }
 
   function resizeLists() {
-    var myHeight = 0;
-    if (typeof( window.innerWidth ) == 'number') {
-      //Non-IE
-      myHeight = window.innerHeight;
-    } else if (document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight )) {
-      //IE 6+ in 'standards compliant mode'
-      myHeight = document.documentElement.clientHeight;
-    } else if (document.body && ( document.body.clientWidth || document.body.clientHeight )) {
-      //IE 4 compatible
-      myHeight = document.body.clientHeight;
-    }
-    myHeight = myHeight - 280;
-
+    var myHeight = $(window).height();
+    
+    <?php
+      if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
+        echo "myHeight = myHeight - 280;\n";
+      } else {
+        echo "myHeight = myHeight - 180;\n";
+      }
+    ?>
+        
     var mysheet = document.styleSheets[0];
     var totalrules = mysheet.cssRules ? mysheet.cssRules.length : mysheet.rules.length
     if (mysheet.deleteRule) { //if Firefox
@@ -745,8 +742,10 @@ if ($properties_list !== false and count($properties_list) > 0) {
             }
             ?>
           </div>
-          <div id="msg<?php echo $property_id; ?>" class="clarifymsg"><span style="color:#C0C0C0; font-size:200%; font-weight:bold">Exam question clarifications</span></div>
         <?php
+        if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
+          echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span style=\"color:#C0C0C0; font-size:200%; font-weight:bold\">Exam question clarifications</span></div>\n";
+        }
         $modules = implode('\',\'', $modules);
 
         $modules = '\'' . $modules . '\'';
