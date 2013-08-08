@@ -416,7 +416,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   }
 
   for ($question = 1; $question <= $q_no; $question++) {
-    if (($paper_type != '2' or $userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) and $paper[$question]['q_type'] == 'enhancedcalc' and is_null($paper[$question]['mark'])) {
+    if (($paper_type != '2' or $userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) and $paper[$question]['q_type'] == 'enhancedcalc' and (isset($paper[$question]['user_answer']) and is_null($paper[$question]['mark']))) {
       require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
       $configObj = Config::get_instance();
       $enhancedcalc = new EnhancedCalc($configObj);
