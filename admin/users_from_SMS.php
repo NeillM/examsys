@@ -25,9 +25,9 @@
 */
 
 // Only run from the command line!
-//if (PHP_SAPI != 'cli') {
-//  die("Please run this test from CLI!\n");
-//}
+if (PHP_SAPI != 'cli') {
+  die("Please run this test from CLI!\n");
+}
 
 set_time_limit(0);
 
