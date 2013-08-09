@@ -33,12 +33,14 @@ function setUpLabelling(num, flashId, lang, image, config, answer, extra, colour
  		console.log('image: '+image);
 		
 		this.gen_img = new Image();  
-		this.gen_img.onload = function(){
-        this.redraw_once = true;
-        this.ql_redraw_canvas;
-        ////console.log (new Array('******',this.gen_img.src));
-			}  
+		function gen_img_onload() {
+			//console.log (this.redraw_once,'******',this.gen_img);        
+			this.redraw_once = true;
+      this.ql_redraw_canvas;        
+		}
+		this.gen_img.onload = gen_img_onload.bind(this);
 		this.gen_img.src = '/media/'+image; 
+    //console.log ('******',this.gen_img);
     
 		//---------- mode 
 		console.log('mode: '+mode);
@@ -384,7 +386,10 @@ function ql_draw_box(i,temp_x,temp_y) {
     //this.context.fillRect(temp_x,temp_y,this.labelWidthEffect,this.labelHeightEffect);
     this.context.fillStyle=this.currentColours[2];
     this.context.textAlign="center";
-    this.wrapText(this.context,this.answerBox[i][2],temp_x+this.labelWidthEffect*0.5,temp_y+this.flashFontSize[this.fontSizePos]+0.5,this.labelWidthEffect);
+		//console.log('>>>',387,this.labelWidthEffect);
+    var wrapped = this.wrapText(this.answerBox[i][2],this.labelWidthEffect);
+		//console.log('xxxxx',this.labelWidthEffect,wrapped);
+		this.fillWrappedText(this.context,wrapped[0],temp_x+this.labelWidthEffect*0.5,temp_y+this.flashFontSize[this.fontSizePos]+0.5);
     this.context.fillStyle=this.currentColours[0];
     this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.labelWidthEffect,this.labelHeightEffect);
   }
@@ -650,22 +655,24 @@ function ql_redraw_canvas() {
 		  //edit box
 			if (this.qmode=='edit' && this.active_box_id>-1) {
         loc_width = this.imglabelWidth;loc_height = this.imgLabelHeight;
-        if (this.pholderBox[this.active_box_id][3]=='text') {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
-					
-				if (this.key_code!=0) console.log('key_code',this.key_code);
-				if (this.char_code!='') console.log('char_code',this.char_code);
+        if (this.pholderBox[this.active_box_id][3]=='text') {
+					loc_width = this.labelWidthEffect;
+					loc_height = this.labelHeightEffect;
+				}	
+				//if (this.key_code!=0) console.log('key_code',this.key_code);
+				//if (this.char_code!='') console.log('char_code',this.char_code);
 				var text_len = this.pholderBox[this.active_box_id][4].length;
-				if (this.key_code=='39') this.edit_box_pos++; //arror right
-				if (this.key_code=='37') this.edit_box_pos--; //arrow left
-				if (this.key_code=='35') this.edit_box_pos=text_len; //end
-				if (this.key_code=='36') this.edit_box_pos=0; //home
+				if (this.key_code=='39') this.edit_box_pos++; 				//arror right
+				if (this.key_code=='37') this.edit_box_pos--; 				//arrow left
+				if (this.key_code=='35') this.edit_box_pos=text_len; 	//end
+				if (this.key_code=='36') this.edit_box_pos=0; 				//home	
 				if (this.edit_box_pos<0) this.edit_box_pos=0;
 				if (this.edit_box_pos>text_len) this.edit_box_pos=text_len;
-				if (this.key_code==0 && this.char_code!='') {
+				if (this.key_code==0 && this.char_code!='') {					//characters
 					var temp_t = this.pholderBox[this.active_box_id][4].substr(0,this.edit_box_pos)+this.char_code+this.pholderBox[this.active_box_id][4].substr(this.edit_box_pos);
 					var metrics_temp = this.context.measureText(temp_t);
 					this.answerBox[this.active_box_id][2] = this.pholderBox[this.active_box_id][4] = temp_t;
-					console.log(this.pholderBox[this.active_box_id][4]);
+					//console.log(this.pholderBox[this.active_box_id][4]);
 					this.edit_box_pos++;
 				}
 				if (this.key_code=='46') { //del
@@ -677,21 +684,23 @@ function ql_redraw_canvas() {
 					this.answerBox[this.active_box_id][2] = this.pholderBox[this.active_box_id][4] = temp_t;
 					this.edit_box_pos--;
 				}
-
+				
 				this.char_code ='';
 				this.key_code = 0;
 			}      
 
 			//scaling up the labelwidth
-			var labelWidthTemp = labelWidth;
-			var labelHeightTemp = labelHeight;
-			var wrapTemp = 0;
+			this.labelWidthEffect = this.labelWidth;
+			this.labelHeightEffect = this.labelHeight;
       for (i=0;i<this.answerBox.length;i++) {
-			  //if (this.drag_box_id!=i && this.mov_id!=i) this.ql_redraw_box(i);
-		    wrapTemp = this.wrapText(this.context,this.answerBox[i][2],temp_x+this.labelWidthEffect*0.5,temp_y+this.flashFontSize[this.fontSizePos]+0.5,this.labelWidthEffect);
+		    //document.getElementById('canvas_edit_box').innerHTML = '';
+				var wrapTemp = this.wrapText(this.answerBox[i][2],this.labelWidthEffect);				
+				//fillWrappedText(this.context,this.answerBox[i][2],this.answerBox[i][5]+this.labelWidthEffect*0.5,this.answerBox[i][6]+this.flashFontSize[this.fontSizePos]+0.5);
+				if (wrapTemp[2] > this.labelWidthEffect) this.labelWidthEffect = wrapTemp[2]+8;
+				if (wrapTemp[1] > this.labelHeightEffect) this.labelHeightEffect = wrapTemp[1]+4;
+				//console.log(this.labelWidthEffect,this.labelHeightEffect);
+		    //document.getElementById('canvas_edit_box').innerHTML = this.labelWidthEffect+':'+this.labelHeightEffect;
       }
-			if (metrics_temp.width > this.labelWidthEffect) this.labelWidthEffect = metrics_temp.width;
-			if (metrics_temp.height > this.labelHeightEffect) this.labelHeightEffect = metrics_temp.height;
 
       //draw all initial frames and images
       for (i=0;i<this.answerBox.length;i++) {
@@ -744,19 +753,28 @@ function ql_redraw_canvas() {
 				this.edit_box_blink++;
 				if (this.edit_box_blink>40) this.edit_box_blink=0;
 				if (this.edit_box_blink>20) {
-					var metrics_all = this.context.measureText(this.pholderBox[this.active_box_id][4]);
-					var text_part = '';
-					if (this.edit_box_pos>0) text_part = this.pholderBox[this.active_box_id][4].substr(0,this.edit_box_pos);
+					var text_all = this.wrapText(this.pholderBox[this.active_box_id][4],this.labelWidthEffect)[0];
+					var text_temp = '';
+					if (this.edit_box_pos>0) text_temp = text_all.substr(0,this.edit_box_pos);
+					var wrap_temp = text_temp.split('|');
+					var text_part_line = wrap_temp.length-1;
+					
+					var text_part = wrap_temp[text_part_line]
+					var text_full = text_all.split('|')[text_part_line];
+					//console.log(text_full,text_part,text_part_line);
+										
 					var metrics_part = this.context.measureText(text_part);
+					var metrics_full = this.context.measureText(text_full);
 					
 					this.context.strokeStyle='#000000';					
 				  this.context.beginPath();
-					var temp_x = Math.round(this.pholderBox[this.active_box_id][1]+(this.labelWidthEffect-metrics_all.width)/2+metrics_part.width-2)-0.5;
-					var temp_y = Math.round(this.pholderBox[this.active_box_id][2]+4)-0.5;
+					var temp_x = Math.round(this.pholderBox[this.active_box_id][1]+(this.labelWidthEffect-metrics_full.width)/2+metrics_part.width)-0.5;
+					var temp_y = Math.round(this.flashFontSize[this.fontSizePos]*text_part_line+this.pholderBox[this.active_box_id][2]+4)-0.5;
 					this.context.moveTo(temp_x,temp_y);
-					this.context.lineTo(temp_x,temp_y+this.labelHeightEffect-6);
+					this.context.lineTo(temp_x,temp_y+this.flashFontSize[this.fontSizePos]);
 					this.context.stroke();
 					this.context.strokeStyle=this.currentColours[1];
+					
 				}
 			}
 		}
@@ -1139,6 +1157,7 @@ function rql(num) {
 	this.hexifycolour=hexifycolour;
 	this.textHeight=textHeight;
 	this.wrapText=wrapText;
+	this.fillWrappedText = fillWrappedText;
 	this.findPos=findPos;
 	this.testWithin=testWithin;
 	this.edtDot=edtDot;
@@ -1244,7 +1263,8 @@ function rql(num) {
   this.draw_limit = new Array(); 																				//used to limit polygon, ellipse and sqare positions
 	this.dragging = false;
 	this.redraw_once = false;
-	this.gen_img, this.menu_img;
+	this.gen_img;
+	this.menu_img;
 	this.gen_img_loaded = false;
 	this.menu_img_loaded = false;
   this.mov_id = -1;

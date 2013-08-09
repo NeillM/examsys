@@ -72,29 +72,75 @@ function textHeight(tt, tw) {
   return (ty + this.flashFontSize[this.fontSizePos]);
 }   
 
-//displays wrapped text with given width
-function wrapText(ctx,tt,tx,ty,tw) {
-  if (tt!=undefined) {
+
+//wrapps text with given width
+//gives back an Array: text with \n's, height, width
+function wrapText(tt,tw,elastic = true) {
+	function breakText(ctx) {
+		var words = tt.split(' ');
+		var broken = false;
+		for(var n = 0; n < words.length; n++) {
+			var metrics = ctx.measureText(words[n]);
+			if (metrics.width > tw) {
+				broken = true;
+				for(var m = 1; m < words[n].length; m++) {
+					metrics = ctx.measureText(words[n].substr(0,m));
+					if (metrics.width < tw) var div_point = m; 
+				}
+				words[n] = words[n].substr(0,div_point)+' '+words[n].substr(div_point);
+			}
+			tt = words.join(' ');
+		}
+		return broken;
+	}
+	
+	var ty = 0;
+	if (tt!=undefined) {
+		var to_brake = true;
+		if (!elastic){
+			while (to_brake) to_brake = breakText(this.context);
+		}
+		//document.getElementById('test').value = to_brake+tt;
 		var words = tt.split(' ');
 		var line = '';
-
+		var lines = '';
+		
+		//verify width (tw) against words lengths
+		if (elastic){
+			for(var n = 0; n < words.length; n++) {
+				var metrics = this.context.measureText(words[n]);
+				if (metrics.width > tw) tw = metrics.width;
+			}
+		}
 		for(var n = 0; n < words.length; n++) {
-			var testLine = line + words[n] + ' ';
+			var testLine = line;
+			if (testLine!='') testLine += ' ';
+			testLine += words[n];
+			
 			var metrics = this.context.measureText(testLine);
 			var testWidth = metrics.width;
 			if(testWidth > tw) {
-				this.context.fillText(line, tx, ty);
-				line = words[n] + ' ';
+				lines += line + '|';
+				line = words[n];
 				ty += this.flashFontSize[this.fontSizePos];
 			}
 			else {
 				line = testLine;
 			}
 		}
-		this.context.fillText(line, tx, ty);
-		return (ty + this.flashFontSize[this.fontSizePos]);
+		lines += line;
+		//document.getElementById('test').value = lines;
+		return Array(lines,ty + this.flashFontSize[this.fontSizePos],tw);
 	}
-}      
+}
+
+function fillWrappedText(ctx,tt,tx,ty) {
+	var words = tt.split('|');
+	for(var n = 0; n < words.length; n++) {
+		this.context.fillText(words[n], tx, ty);
+		ty += this.flashFontSize[this.fontSizePos];
+	}
+}
 
 
 function findPos(obj) {
@@ -627,9 +673,12 @@ function build_msgbox(mx,my,mw,mh,txt1,txt2,txt3,txt4) {
     this.context.textAlign="center";
     txt0 = txt1.split('|');
     posy = my+25;
-    for (n=0;n<txt0.length;n++) 
-      posy = this.wrapText(this.context,txt0[n], mx+mw/2, posy, mw-20)+5;
-
+    for (n=0;n<txt0.length;n++) {
+   		this.context.font="12px Arial";
+      var wrapped = this.wrapText(txt0[n], mw-20);
+			this.fillWrappedText(this.context,wrapped[0],mx+mw/2, posy);
+			posy += wrapped[1]+5;
+			}
     //posy = this.context.fillText(,mx+mw/2,posy);
     
     //buttons 

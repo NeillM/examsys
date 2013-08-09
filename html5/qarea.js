@@ -619,6 +619,7 @@ function rqa(num) {
 	this.hexifycolour=hexifycolour;
 	this.textHeight=textHeight;
 	this.wrapText=wrapText;
+	this.fillWrappedText = fillWrappedText;
 	this.findPos=findPos;
 	this.testWithin=testWithin;
 	this.edtDot=edtDot;

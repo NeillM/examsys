@@ -3,9 +3,13 @@ function setUpHotspot(num, flashId, lang, image, config, answer, extra, colour, 
   this.draw_limit = new Array(300,27,this.canvas.width-2,this.canvas.height-2);
   
 	if (this.canvas && this.canvas.getContext){
-		this.canvas.onmouseup     = this.qh_mouseDragUp.bind(this);
+		this.canvas.onmouseup   = this.qh_mouseDragUp.bind(this);
 		this.canvas.onmousedown = this.qh_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.qh_mouseDragMove.bind(this);
+		this.canvas.tabIndex 		= 1000; //force keyboard events
+		this.canvas.onkeydown   = this.qh_mouseDragMove.bind(this);
+		this.canvas.onkeyup     = this.qh_mouseDragMove.bind(this);
+		this.canvas.onkeypress  = this.qh_mouseDragMove.bind(this);
 		this.intervalID = window.setInterval(this.qh_redraw_canvas.bind(this), 10);
 	}
 	
@@ -38,7 +42,7 @@ function setUpHotspot(num, flashId, lang, image, config, answer, extra, colour, 
 			this.gen_img_loaded = true;
 			this.redraw_once = true;
 			this.qa_redraw_canvas;
-		}  
+		} 
 		this.gen_img.onload = qh_gen_img_onload.bind(this);
 		this.gen_img.src = '/media/'+image; 
 
@@ -55,38 +59,38 @@ function setUpHotspot(num, flashId, lang, image, config, answer, extra, colour, 
 
 		for (i=0; i<existingLabelInfo.length; i++) {
 			if (existingLabelInfo[i]!='') {
-				var myLabelInfo = existingLabelInfo[i].split("~");  // divides each bit of info about label		
+				var myLabelInfo = existingLabelInfo[i].split("~");  							// divides each bit of info about label		
         
-        this.labelsBox.push(i);
-        this.labelsBox[i]    = new Array ();
-        this.labelsBox[i][0] = i;					                                                //label index
-        this.labelsBox[i][1] = myLabelInfo[0];		                                  //label text
+        this.hotSpots.push(i);
+        this.hotSpots[i]    = new Array ();
+        this.hotSpots[i][0] = i;					                               //label index
+        this.hotSpots[i][1] = myLabelInfo[0];		                         //label text
         var ind =1;
         if (myLabelInfo[1] == "polygon" || myLabelInfo[1] == "rectangle" || myLabelInfo[1] == "ellipse") {
           ind++;
-          this.labelsBox[i][2] = '#0070C0';                                            // colour = blue (default)
+          this.hotSpots[i][2] = '#0070C0';                               // colour = blue (default)
         } else {
-          this.labelsBox[i][2] = this.hexifycolour(myLabelInfo[ind]);	               //colour
+          this.hotSpots[i][2] = this.hexifycolour(myLabelInfo[ind]);	   //colour
         }     
         
         //Hotspots ...
-        this.labelsBox[i][3] = (myLabelInfo.length-ind-2)/3;                   //number of HS
-        for (j=0; j<this.labelsBox[i][3];j++) {
-          this.labelsBox[i][(3+j*6+1)] = myLabelInfo[(ind+j*3+1)];         //type
-          this.labelsBox[i][(3+j*6+2)] = myLabelInfo[(ind+j*3+2)];	       //coords
-          this.labelsBox[i][(3+j*6+3)] = myLabelInfo[(ind+j*3+3)];         //id
+        this.hotSpots[i][3] = (myLabelInfo.length-ind-2)/3;              //number of HS
+        for (j=0; j<this.hotSpots[i][3];j++) {
+          this.hotSpots[i][(3+j*6+1)] = myLabelInfo[(ind+j*3+1)];        //type
+          this.hotSpots[i][(3+j*6+2)] = myLabelInfo[(ind+j*3+2)];	       //coords
+          this.hotSpots[i][(3+j*6+3)] = myLabelInfo[(ind+j*3+3)];        //id
         }  
 			}
 		}
-    //console.log('this.labelsBox');
+    //console.log('this.hotSpots');
     //console.log('existingLabelInfo');
 
     
 		//---------- answer, 
 		if (this.nikotest==1) console.log('answer:\n'+answer);
     
-    //for (i=0; i<this.labelsBox.length; i++) this.answerBox[i] = new Array('','');
-		for (i in this.labelsBox) this.answerBox[i] = new Array('','');
+    //for (i=0; i<this.hotSpots.length; i++) this.answerBox[i] = new Array('','');
+		for (i in this.hotSpots) this.answerBox[i] = new Array('','');
     if (answer != "" && answer != undefined && answer != "undefined" && answer != null && answer != "null" && answer != "u") {
       this.is_an_answer = true;
       var answer_l1 = answer.split("|");
@@ -156,12 +160,18 @@ function qh_menuBuild() {
 }
 
 function test_handler(xx,yy,ww,hh,vv) {
+	//console.log(xx,yy,ww,hh,vv);
   var nr = 0;
   var size = 3;
   //console.log(vv);
   if (vv.length>0) {
     for (var n=1;n<vv.length/2;n++) {
+			//square handlers
       if ((Math.abs(this.x-(parseInt(vv[n*2].trim(), 16)+xx+0.5))<=size),(Math.abs(this.y-(parseInt(vv[n*2+1].trim(), 16)+0.5+yy))<=size)) nr=n;
+      //round handlers
+			var temp_x = (parseInt(vv[n*2].trim(), 16) - parseInt(vv[(n-1)*2].trim(), 16))/2 + parseInt(vv[(n-1)*2].trim(), 16);
+			var temp_y = (parseInt(vv[n*2+1].trim(), 16) - parseInt(vv[(n-1)*2+1].trim(), 16))/2 + parseInt(vv[(n-1)*2+1].trim(), 16);
+			if ((Math.abs(this.x-(temp_x+xx+0.5))<=size),(Math.abs(this.y-(temp_y+0.5+yy))<=size)) nr=-n;
     }
   } else {
     if ((Math.abs(this.x-xx)<=size) && (Math.abs(this.y-yy)<=size)) nr=1;
@@ -169,7 +179,7 @@ function test_handler(xx,yy,ww,hh,vv) {
     if ((Math.abs(this.x-xx)<=size) && (Math.abs(this.y-yy-hh)<=size)) nr=3;
     if ((Math.abs(this.x-xx-ww)<=size) && (Math.abs(this.y-yy-hh)<=size)) nr=4;
   }
-  //console.log(nr);
+  //console.log('>>>',nr);
   return nr;
 }
 
@@ -178,50 +188,58 @@ function qh_test(type) {
   //if (type=='answers') 
   //console.log(type);
   this.do_the_test =false;
-  this.label_over = '';
+  this.hotspot_over = '';
   var handle_over = '';
   this.context.globalAlpha = 1;
  	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-  //for (i=0; i<this.labelsBox.length;i++) 
-	for (i in this.labelsBox) {
-    var fields = this.labelsBox[i][3];//(this.labelsBox[i].length-4)/6;
+  //for (i=0; i<this.hotSpots.length;i++) 
+	for (i in this.hotSpots) {
+		//console.log(this.hotSpots[i]);
+    var fields = this.hotSpots[i][3];//(this.hotSpots[i].length-4)/6;
     //drawing all the fileds for that label
     for (j=0; j<fields;j++) {
-      var f_type = this.labelsBox[i][(3+j*6+1)];
-      var lbCo = this.labelsBox[i][(3+j*6+2)].split(',');
-      var col1 = '#ff0000'; //this.labelsBox[i][2];
-      var col2 = '#00ff00'; //this.labelsBox[i][2];
+      var f_type = this.hotSpots[i][(3+j*6+1)];
+      this.HsCo = this.hotSpots[i][(3+j*6+2)].split(',');
+			//console.log(this.hotSpots[i]);
+      var col1 = '#ff0000'; //this.hotSpots[i][2];
+      var col2 = '#00ff00'; //this.hotSpots[i][2];
       
       if (type=='cursor') this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+			this.draw_limit = new Array(300,27,this.canvas.width-2,this.canvas.height-2);
 
       if (f_type=='ellipse') {
-        this.ellipseDraw(this.context,col1,col2,parseInt(lbCo[0], 16)+300.5,parseInt(lbCo[1], 16)+0.5+25-this.yOffset,parseInt(lbCo[2], 16)-parseInt(lbCo[0], 16),parseInt(lbCo[3], 16)-parseInt(lbCo[1], 16),this.global_edit); 
+        this.ellipseDraw(this.context,col1,col2,parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),this.global_edit); 
       }
       if (f_type=='rectangle') {
-        this.rectDraw(this.context,col1,col2,parseInt(lbCo[0], 16)+300.5,parseInt(lbCo[1], 16)+0.5+25-this.yOffset,parseInt(lbCo[2], 16)-parseInt(lbCo[0], 16),parseInt(lbCo[3], 16)-parseInt(lbCo[1], 16),this.global_edit); 
+        this.rectDraw(this.context,col1,col2,parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),this.global_edit); 
       }
       if (f_type=='polygon') {
         tmp_mode = 'a';if (this.global_edit) tmp_mode = 't';
         //console.log(354);
-        this.polyDrawH(this.context,col1,col2,300,25-this.yOffset,lbCo,tmp_mode);
+        this.polyDrawH(this.context,col1,col2,300,25-this.yOffset,this.HsCo,tmp_mode);
       }
       //testing the cursor position against above drawn labels
       if (type=='cursor') {
+				//console.log(this.x,this.y);
         var timgd = this.context.getImageData(this.x,this.y,1,1);
         var timgp = timgd.data;
         if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]))==col1) {
           //console.log('c1');
-          this.label_over = i+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$';
+          this.hotspot_over = i+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$';
           }
         if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]))==col2) {
           //console.log('c2');
-          if (f_type=='ellipse' || f_type=='rectangle') handle_over = test_handler(parseInt(lbCo[0], 16)+300.5,parseInt(lbCo[1], 16)+0.5+25-this.yOffset,parseInt(lbCo[2], 16)-parseInt(lbCo[0], 16),parseInt(lbCo[3], 16)-parseInt(lbCo[1], 16),''); 
+          if (f_type=='ellipse' || f_type=='rectangle') {
+						//console.log(this.x,parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16));
+						handle_over = this.test_handler(parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),'');
+						if (handle_over<0) handle_over = 0;
+					}
           if (f_type=='polygon') {
-            //console.log(300,25-this.yOffset,0,0,lbCo);
-            handle_over = test_handler(300,25-this.yOffset,0,0,lbCo); 
+            //console.log(300,25-this.yOffset,0,0,this.HsCo);
+            handle_over = this.test_handler(300,25-this.yOffset,0,0,this.HsCo); 
           }
           
-          this.label_over =  i+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$'+handle_over;
+          this.hotspot_over =  i+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$'+handle_over;
           }
       }
     }
@@ -231,23 +249,23 @@ function qh_test(type) {
       if (typeof this.answerBox[i][1]!='undefined' && this.answerBox[i][1]!='' && this.answerBox[i][1]!='false') {
         var timgd = this.context.getImageData((1*this.answerBox[i][1]+300),(1*this.answerBox[i][2]+25-this.yOffset),1,1);
         var timgp = timgd.data;
-        //if (('#'+((timgp[0]*256+timgp[1])*256+timgp[2]*1).toString(16))==this.labelsBox[i][2]) {
-        if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]))==this.labelsBox[i][2]) {
-          this.rectDraw(this.context,'',this.labelsBox[i][2],(1*this.answerBox[i][1]+300),(1*this.answerBox[i][2]+25-this.yOffset),5,5); 
+        //if (('#'+((timgp[0]*256+timgp[1])*256+timgp[2]*1).toString(16))==this.hotSpots[i][2]) {
+        if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]))==this.hotSpots[i][2]) {
+          this.rectDraw(this.context,'',this.hotSpots[i][2],(1*this.answerBox[i][1]+300),(1*this.answerBox[i][2]+25-this.yOffset),5,5); 
           this.answerBox[i][3]= '1';
         }
       }
     }
   }
-  //if (this.label_over!='') console.log(this.label_over);
+  //if (this.hotspot_over!='') console.log(this.hotspot_over);
   if (type=='answers') this.qh_ReturnInfo();
-  if (type=='cursor') return this.label_over;
+  if (type=='cursor') return this.hotspot_over;
 }
 
 function redraw_hotspot(i,j) {
-  var f_type = this.labelsBox[i][(3+j*6+1)];
-  //console.log(i,j,f_type,this.labelsBox[i][(3+j*6+2)]);
-  var lbCo = this.labelsBox[i][(3+j*6+2)].split(',');
+  var f_type = this.hotSpots[i][(3+j*6+1)];
+  //console.log(i,j,f_type,this.hotSpots[i][(3+j*6+2)]);
+  this.HsCo = this.hotSpots[i][(3+j*6+2)].split(',');
   var col = 4; 
   if (this.activeLabel==i) col=0; 
   var a1 = 0.25, a2 = 0.25;
@@ -264,31 +282,32 @@ function redraw_hotspot(i,j) {
   if (f_type=='ellipse') {
     this.context.globalAlpha = a1;
     //console.log(this.test_result);
-    this.ellipseDraw(this.context,cc,'',parseInt(lbCo[0], 16)+300.5,parseInt(lbCo[1], 16)+0.5+25-this.yOffset,parseInt(lbCo[2], 16)-parseInt(lbCo[0], 16),parseInt(lbCo[3], 16)-parseInt(lbCo[1], 16),local_edit); 
+    this.ellipseDraw(this.context,cc,'',parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),local_edit); 
     this.context.globalAlpha = a2;
-    this.ellipseDraw(this.context,'',cb,parseInt(lbCo[0], 16)+300.5,parseInt(lbCo[1], 16)+0.5+25-this.yOffset,parseInt(lbCo[2], 16)-parseInt(lbCo[0], 16),parseInt(lbCo[3], 16)-parseInt(lbCo[1], 16),local_edit); 
+    this.ellipseDraw(this.context,'',cb,parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),local_edit); 
   }
   if (f_type=='rectangle') {
     this.context.globalAlpha = a1;
-    this.rectDraw(this.context,cc,'',parseInt(lbCo[0], 16)+300.5,parseInt(lbCo[1], 16)+0.5+25-this.yOffset,parseInt(lbCo[2], 16)-parseInt(lbCo[0], 16),parseInt(lbCo[3], 16)-parseInt(lbCo[1], 16),local_edit); 
+    this.rectDraw(this.context,cc,'',parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),local_edit); 
     this.context.globalAlpha = a2;
-    this.rectDraw(this.context,'',cb,parseInt(lbCo[0], 16)+300.5,parseInt(lbCo[1], 16)+0.5+25-this.yOffset,parseInt(lbCo[2], 16)-parseInt(lbCo[0], 16),parseInt(lbCo[3], 16)-parseInt(lbCo[1], 16),local_edit); 
+    this.rectDraw(this.context,'',cb,parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),local_edit); 
   }
   if (f_type=='polygon') {
     tmp_mode = 'e';if (local_edit) tmp_mode = 'f';
     this.context.globalAlpha = a1;
     //console.log(429);
-    this.polyDrawH(this.context,cc,'',300,25-this.yOffset,lbCo,tmp_mode); 
+    this.polyDrawH(this.context,cc,'',300,25-this.yOffset,this.HsCo,tmp_mode); 
     this.context.globalAlpha = a2;
     //console.log(432);
-    this.polyDrawH(this.context,'',cb,300,25-this.yOffset,lbCo,tmp_mode); 
+    this.polyDrawH(this.context,'',cb,300,25-this.yOffset,this.HsCo,tmp_mode); 
   }
 
 }
 
 
 function qh_redraw_canvas() {
-	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.start_polygon)) {
+	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.start_polygon || (this.qmode=='edit' && this.activeLabelText>-1))) {
+		//console.log(this.hotSpots[this.hotSpots.length-1]);
 		//console.log(this.dragging , this.redraw_once , this.mov_id!=-1, this.start_polygon);
     this.redraw_once = false;
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
@@ -299,43 +318,41 @@ function qh_redraw_canvas() {
     if (this.do_the_test) this.qh_test('answers');
     if ((this.global_edit || this.global_erase) && !this.dragging) {
       this.test_result = this.qh_test('cursor');
-      if (this.test_result!='') console.log(this.test_result);
+      //if (this.test_result!='') console.log(this.test_result);
       //return;
     }
     this.context.drawImage(this.gen_img,300,25-this.yOffset);
       
     this.context.lineWidth = this.lineThickness;
 		this.context.strokeStyle=this.currentColours[1];
-
-    
+			
     //label bars
-    var textboxcolours = new Array('#6f7777','#c4cccc','#eeeeee','#d5dddd','#919999','#d5dddd');
+    var textboxcolours = new Array('#6f7777','#c4cccc','#eeeeee','#d5dddd','#919999','#d5dddd','#ff0000');
     var pan_y = 25-this.yOffset;
     var pan_h = 46;
-    var pan_t = 1;
-    for (i in this.labelsBox) {
-      //console.log(this.labelsBox[i]);
+    for (i in this.hotSpots) {
+      this.context.textAlign="left";
+   		this.context.font="12px Arial";
+			this.palico = 20;if (this.qmode=='answer') this.palico = 0;
+      var wrapped = this.wrapText(this.hotSpots[i][1],250-this.palico, false);
+      pan_h = 25 + wrapped[1];
+
       //reset pos_y for bpalette button
       if (this.activeLabel==i && this.qmode=='edit') this.buttonBox[this.buttonBoxNames['toolbar/ico_palette.png']][2] = pan_y+12;
 
-      pan_t = (i*1)+1;
-      this.context.textAlign="left";
-   		this.context.font="12px Arial";
-			//console.log('>>>',i,this.labelsBox[i][1]);
-      pan_h =25 + this.textHeight(this.labelsBox[i][1],245);
-      //pan_hh = 10+(pan_h-20)/2;
       //background
       this.imgdata = menuImages['toolbar/back_h1.png'];
       if (this.activeLabel==i) this.imgdata = menuImages['toolbar/back_h2.png'];
       this.context.drawImage(this.menu_img,this.imgdata.left+1,this.imgdata.top,this.imgdata.width-2,this.imgdata.height,0.5,pan_y+0.5,300,pan_h);
-      //add this.labelsBoxPanel data
-      this.labelsBoxPanel[i] = new Array(0,pan_y,300,pan_h);
+
+      //add this.hotSpotsPanel data
+      this.hotSpotsPanel[i] = new Array(0,pan_y,300,pan_h);
       //border
       this.context.strokeStyle= '#b3c7d9';
       if (this.activeLabel==i) this.context.strokeStyle= '#fed55f';
       this.context.strokeRect(0.5,pan_y+0.5,300,pan_h); 
       //color bar
-			if (this.labelsBox[i][2]!=undefined) this.context.fillStyle= this.labelsBox[i][2];
+			if (this.hotSpots[i][2]!=undefined) this.context.fillStyle= this.hotSpots[i][2];
   		this.context.fillRect(3.5,pan_y+3.5,300-6,3);
       //symbol
       this.context.fillStyle='#000000';
@@ -344,27 +361,30 @@ function qh_redraw_canvas() {
       //text background
       this.context.fillStyle=this.currentColours[0];
       if ((this.is_an_answer && this.answerBox[i][1]=='false') || this.allUnaswered==true) this.context.fillStyle=this.currentColours[3];
-      var palico = 20;
-			if (this.qmode=='answer') palico = 0;
-   		this.context.fillRect(40.5,pan_y+12.5,250-palico,pan_h-18);
+   		this.context.fillRect(40.5,pan_y+12.5,250-this.palico,pan_h-18);
       //label text
       this.context.fillStyle='#000000';
    		this.context.font="12px Arial";
-      this.wrapText(this.context,this.labelsBox[i][1],45.5,pan_y+25.5,245-palico);
+			//console.log(wrapped[0]);
+			this.fillWrappedText(this.context,wrapped[0],45.5,pan_y+25.5);
       //text frame
-      this.lineDraw(this.context,textboxcolours[0],39,pan_y+11.5,253-palico,0);
-      this.lineDraw(this.context,textboxcolours[1],39,pan_y+12.5,253-palico,0);
-      this.lineDraw(this.context,textboxcolours[2],39,pan_y+pan_h-5.5,253-palico,0);
-      this.lineDraw(this.context,textboxcolours[3],39,pan_y+pan_h-4.5,253-palico,0);
+      this.lineDraw(this.context,textboxcolours[0],39,pan_y+11.5,253-this.palico,0);
+      this.lineDraw(this.context,textboxcolours[1],39,pan_y+12.5,253-this.palico,0);
+      this.lineDraw(this.context,textboxcolours[2],39,pan_y+pan_h-5.5,253-this.palico,0);
+      this.lineDraw(this.context,textboxcolours[3],39,pan_y+pan_h-4.5,253-this.palico,0);
       this.lineDraw(this.context,textboxcolours[4],39.5,pan_y+12,0,pan_h-17);
       this.lineDraw(this.context,textboxcolours[5],40.5,pan_y+13,0,pan_h-19);
-      this.lineDraw(this.context,textboxcolours[4],39.5+252-palico,pan_y+12,0,pan_h-17);
-      this.lineDraw(this.context,textboxcolours[5],40.5+250-palico,pan_y+13,0,pan_h-19);
+      this.lineDraw(this.context,textboxcolours[4],39.5+252-this.palico,pan_y+12,0,pan_h-17);
+      this.lineDraw(this.context,textboxcolours[5],40.5+250-this.palico,pan_y+13,0,pan_h-19);
       //colour pallete button
 			if (this.qmode!='answer') {
 				this.imgdata = menuImages['toolbar/ico_palette.png'];
 				this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,275,pan_y+12,this.imgdata.width,this.imgdata.height);
 			}
+      if (this.activeLabelText==i) {
+				this.activeLabel_y = pan_y;
+				this.activeLabel_h = pan_h;
+				}
       pan_y += pan_h;
   }
     
@@ -404,7 +424,7 @@ function qh_redraw_canvas() {
           //recoloring the baloon background
           imgd = this.context.getImageData(calc_x0-fliph*30,calc_y0+flipv*18,this.imgdata.width,this.imgdata.height);
           imgp = imgd.data;
-					var calc_c = Array(parseInt(this.labelsBox[i][2].substr(1,2), 16),parseInt(this.labelsBox[i][2].substr(3,2), 16),parseInt(this.labelsBox[i][2].substr(5,2), 16));
+					var calc_c = Array(parseInt(this.hotSpots[i][2].substr(1,2), 16),parseInt(this.hotSpots[i][2].substr(3,2), 16),parseInt(this.hotSpots[i][2].substr(5,2), 16));
           for (j=0; j<imgp.length; j+=4) {
             if (imgp[j+2] == 255 && imgp[j+1] == 42) {						
 						imgp[j+0]=calc_c[0];
@@ -437,7 +457,7 @@ function qh_redraw_canvas() {
 		this.draw_limit = Array(300,27,this.canvas.width-2,this.canvas.height-2);
 
     //active fields
-    //console.log('this.labelsBox');
+    //console.log('this.hotSpots');
     
     if (this.qmode=='edit') {
       //reposition of field's handlers
@@ -445,34 +465,48 @@ function qh_redraw_canvas() {
         //setting the parameters of the 
         var led = this.label_elem_drag.split(/[@#$]/);
         var led3 = '';if (led[2]!='') led3=led[2].split(',');
-        var lbCo = this.labelsBox[led[0]][(3+led[1]*6+2)].split(',');
-        var f_type = this.labelsBox[led[0]][(3+led[1]*6+1)];
+        this.HsCo = this.hotSpots[led[0]][(3+led[1]*6+2)].split(',');
+        var f_type = this.hotSpots[led[0]][(3+led[1]*6+1)];
+				var temp_x = this.x-300;
+				var temp_y = this.y-25+this.yOffset;
+				
+				/*
+				if (temp_x<1) temp_x=1;
+        if (temp_x>this.canvas.width-300) temp_x=this.canvas.width-300;
+				if (temp_y<25) temp_y=25;
+        if (temp_y>this.canvas.height-25+this.yOffset) temp_y=this.canvas.height-25+this.yOffset;
+				*/
         if (led[3]!='') {
           //move point
           if ((f_type=='ellipse') || (f_type=='rectangle')) {
             switch(led[3])
             {
             case '1':
-              lbCo[0] = Math.round(this.x-300).toString(16);
-              lbCo[1] = Math.round(this.y-25+this.yOffset).toString(16);
+              this.HsCo[0] = Math.round(temp_x).toString(16);
+              this.HsCo[1] = Math.round(temp_y).toString(16);
               break;
             case '2':
-              lbCo[2] = Math.round(this.x-300).toString(16);
-              lbCo[1] = Math.round(this.y-25+this.yOffset).toString(16);
+              this.HsCo[2] = Math.round(temp_x).toString(16);
+              this.HsCo[1] = Math.round(temp_y).toString(16);
               break;
             case '3':
-              lbCo[0] = Math.round(this.x-300).toString(16);
-              lbCo[3] = Math.round(this.y-25+this.yOffset).toString(16);
+              this.HsCo[0] = Math.round(temp_x).toString(16);
+              this.HsCo[3] = Math.round(temp_y).toString(16);
               break;
             case '4':
-              lbCo[2] = Math.round(this.x-300).toString(16);
-              lbCo[3] = Math.round(this.y-25+this.yOffset).toString(16);
+              this.HsCo[2] = Math.round(temp_x).toString(16);
+              this.HsCo[3] = Math.round(temp_y).toString(16);
               break;
             }
           }
           if (f_type=='polygon') {
-            lbCo[led[3]*2] = Math.round(this.x-300).toString(16);
-            lbCo[led[3]*2+1] = Math.round(this.y-25+this.yOffset).toString(16);
+            this.HsCo[led[3]*2] = Math.round(this.x-300).toString(16);
+            this.HsCo[led[3]*2+1] = Math.round(this.y-25+this.yOffset).toString(16);
+						//move first if moving last
+						if ((led[3]*2+2)==this.HsCo.length) {
+							this.HsCo[0] = this.HsCo[led[3]*2];
+							this.HsCo[1] = this.HsCo[led[3]*2+1];
+						}
           } 
         } else {
           //move the whole
@@ -482,27 +516,29 @@ function qh_redraw_canvas() {
             this.label_elem_clicked_pos = x0+','+y0;
           }
           var pos0 = this.label_elem_clicked_pos.split(',');
-          for (n=0;n<lbCo.length/2;n++) {
-            lbCo[n*2+0] = Math.round(parseInt(lbCo[n*2+0], 16)+this.x-pos0[0]).toString(16);
-            lbCo[n*2+1] = Math.round(parseInt(lbCo[n*2+1], 16)+this.y-pos0[1]).toString(16);
+          for (n=0;n<this.HsCo.length/2;n++) {
+            this.HsCo[n*2+0] = Math.round(parseInt(this.HsCo[n*2+0], 16)+this.x-pos0[0]).toString(16);
+            this.HsCo[n*2+1] = Math.round(parseInt(this.HsCo[n*2+1], 16)+this.y-pos0[1]).toString(16);
           }
           if (this.label_elem_clicked_pos != '') this.label_elem_clicked_pos = this.x+','+this.y;
         }
-        this.labelsBox[led[0]][(3+led[1]*6+2)] = lbCo.join(',');
+        this.hotSpots[led[0]][(3+led[1]*6+2)] = this.HsCo.join(',');
       }
-      //for (i=0; i<this.labelsBox.length;i++) 
-			for (i in this.labelsBox) {
+      //for (i=0; i<this.hotSpots.length;i++) 
+			for (i in this.hotSpots) {
         if ((this.activeLabel==i) || this.show_all_hotspots) {
-          var fields = (this.labelsBox[i].length-4)/6;
+          var fields = (this.hotSpots[i].length-4)/6;
           //console.log(fields);
           for (j=0; j<fields;j++) {
             //display all not active
             //console.log(i,j,this.test_result);
             if ((!this.global_edit && !this.global_erase) || this.test_result.indexOf(i+'@'+j+'#')==-1) this.redraw_hotspot(i,j);
+						//console.log(i,j);
           }
         }
       }
       
+			//console.log();
       //draw temp polygon
       if (this.start_polygon && this.poly_temp!='') {
         var poly_temp_ext = this.poly_temp;
@@ -543,10 +579,10 @@ function qh_redraw_canvas() {
     this.panelOverColour = '';
     m = 0;
     //console.log(this.activeLabel);
-    for (n=0;n<this.colorReference.length;n++) if (this.labelsBox[this.activeLabel][2]==this.colorReference[n]) m = n;
+    for (n=0;n<this.colorReference.length;n++) if (this.hotSpots[this.activeLabel][2]==this.colorReference[n]) m = n;
       this.menuRebuild_panel(this.qh_panelActiveParts,this.qh_panelBox,'toolbar/ico_palette.png','toolbar/pan_colours.png',0,m);
   }
-  
+	
   //tooltip
   if (this.buttonOver!=-1) this.tooltip_draw(this.context,this.buttonBox[this.buttonOver]);
 
@@ -558,9 +594,69 @@ function qh_redraw_canvas() {
   //this.context.strokeStyle=this.twr[4];    
   //this.context.strokeRect(this.twr[0],this.twr[1],this.twr[2],this.twr[3]);
   //console.log(this.twr);
+  
+	//cursor blink
+	//document.getElementById('test').value = this.activeLabelText;
+
+	if (this.qmode=='edit' && this.activeLabelText>-1) {
+
+		//edit box
+		var label_txt = this.hotSpots[this.activeLabelText][1];
+		var text_len = label_txt.length;
+		if (this.key_code=='39') this.edit_box_pos++; 				//arror right
+		if (this.key_code=='37') this.edit_box_pos--; 				//arrow left
+		if (this.key_code=='35') this.edit_box_pos=text_len;//end
+		if (this.key_code=='36') this.edit_box_pos=0; 				//home	
+		if (this.edit_box_pos<0) this.edit_box_pos=0;
+		if (this.edit_box_pos>text_len) this.edit_box_pos=text_len;
+		if (this.key_code==0 && this.char_code!='') {					//characters
+			this.hotSpots[this.activeLabelText][1] = label_txt.substr(0,this.edit_box_pos)+this.char_code+label_txt.substr(this.edit_box_pos);
+			this.edit_box_pos++;
+		}
+		if (this.key_code=='46') { //del
+			this.hotSpots[this.activeLabelText][1] = label_txt.substr(0,this.edit_box_pos)+label_txt.substr(this.edit_box_pos+1);
+		}
+		if (this.key_code=='8') { //backspace
+			this.hotSpots[this.activeLabelText][1] = label_txt.substr(0,this.edit_box_pos-1)+label_txt.substr(this.edit_box_pos);
+			this.edit_box_pos--;
+		}	
+		this.char_code ='';
+		this.key_code = 0;
+		//document.getElementById('test').value = this.char_code+this.edit_box_pos;
+			 
+		this.edit_box_blink++;
+		//console.log(this.edit_box_blink);
+		if (this.edit_box_blink>40) this.edit_box_blink=0;
+		if (this.edit_box_blink>20) {
+   		this.context.font="12px Arial";
+			var text_all = this.wrapText(this.hotSpots[this.activeLabelText][1],250-this.palico,false)[0];
+			var text_temp = '';
+			if (this.edit_box_pos>0) text_temp = text_all.substr(0,this.edit_box_pos);
+			var wrap_temp = text_temp.split('|');
+			var text_part_line = wrap_temp.length-1;
+			
+			var text_part = wrap_temp[text_part_line];
+			var text_full = text_all.split('|')[text_part_line];
+			//console.log(text_all,text_full,text_part,text_part_line);
+			//document.getElementById('test').value = text_part+'_';
+			var metrics_part = this.context.measureText(text_part);
+			var metrics_full = this.context.measureText(text_full);
+			
+			this.context.strokeStyle='#000';					
+			this.context.beginPath();
+			//this.lineDraw(this.context,textboxcolours[1],39,pan_y+12.5,253-this.palico,0);
+			//this.lineDraw(this.context,textboxcolours[2],39,pan_y+pan_h-5.5,253-this.palico,0);
+
+			var temp_x = Math.round(45+metrics_part.width)-0.5;
+			var temp_y = Math.round(this.flashFontSize[this.fontSizePos]*text_part_line+this.activeLabel_y+16)-0.5;
+			this.context.moveTo(temp_x,temp_y);
+			//console.log((temp_x+':'+temp_y));
+			this.context.lineTo(temp_x,temp_y+this.flashFontSize[this.fontSizePos]);
+			this.context.stroke();
+			this.context.strokeStyle=this.currentColours[1];
+		}
 	}
-  
-  
+}
 /*  
 for (n=1;n<10;n++) {
   tx1 = 50;
@@ -588,47 +684,43 @@ alert('this.x');
 }
 
 function qh_mouseDragMove(e){
+	var ev = window.event ? event : e;
+	if (ev.type=='keydown') {
+		this.isShift = ev.shiftKey ? true : false;
+		this.isCtrl = ev.ctrlKey ? true : false;
+		this.ShiftChange = true;
+	}
+	if (ev.type=='keypress') { 
+		this.key_code = ev.keyCode;
+		this.char_code = String.fromCharCode(ev.charCode);
+	}
+	if (ev.type=='keyup') { 
+		this.isShift = false;
+		this.ShiftChange = true;
+		this.isCtrl = false;
+	}
+
 	this.canv_rect = this.canvas.getBoundingClientRect();
 	this.loc_lft = this.canv_rect.left;
   this.loc_top = this.canv_rect.top;
   
-  var xm = e.clientX;
-  var ym = e.clientY;
-  //var xm = e.pageX;
-  //var ym = e.pageY;
-  this.x = xm - this.loc_lft;
-	this.y = ym - this.loc_top;
+	if (ev.type=='mousemove') {
+		this.x = e.clientX - this.loc_lft;
+		this.y = e.clientY - this.loc_top;
+	}
+
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
-		if (this.drag_box_id>-1) {
-			this.labelsBox[this.drag_box_id][5] = this.x - this.sub_x;
-			this.labelsBox[this.drag_box_id][6] = this.y - this.sub_y;
+		if (this.drag_box_id>-1 && this.testWithin(this.x - this.sub_x,this.y - this.sub_y,300,25,this.canvas.width,this.canvas.height)) {
+			this.hotSpots[this.drag_box_id][5] = this.x - this.sub_x;
+			this.hotSpots[this.drag_box_id][6] = this.y - this.sub_y;
 		}
-    if (this.label_over != '') this.label_elem_drag = this.label_over;
+    if (this.hotspot_over != '') this.label_elem_drag = this.hotspot_over;
 	}
 	else { //change of cursor
     this.drag_box_id = -1;
-		if (this.testWithin(xm,ym,0,0,this.canvas.width,this.canvas.height)){
-			var over_object = false;
-			
-      /* from labels  
-      //test for labelsBoxes
-      for (i=0;i<this.labelsBox.length;i++) {
-				if (this.labelsBox[i][1]=='image') {
-
-					if (this.testWithin(this.x,this.y,this.labelsBox[i][5],this.labelsBox[i][6],imgLabelWidth,imgLabelHeight)==true) {
-						over_object = true;
-						this.drag_box_id = i;
-					}
-				}
-				if (this.labelsBox[i][1]=='text') {
-					if (this.testWithin(this.x,this.y,this.labelsBox[i][5],this.labelsBox[i][6],labelWidth,labelHeight)==true) {
-						over_object = true;
-						this.drag_box_id = i;
-					}
-				}
-			}
-      */      
+		if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
+			var over_object = false;     
       
       //test for buttons
       var buttonTest = -1;
@@ -655,14 +747,19 @@ function qh_mouseDragMove(e){
         this.qh_redraw_canvas;
       }
       
-      //test for buttonBoxPanels
-      this.labelsBoxPanelOver=-1;
-      for (var i=0;i<this.labelsBoxPanel.length;i++) {
-        if (this.testWithin(this.x,this.y,this.labelsBoxPanel[i][0],this.labelsBoxPanel[i][1],this.labelsBoxPanel[i][2],this.labelsBoxPanel[i][3])==true) {
+      this.hotSpotsPanelOver=-1;
+			this.hotSpotsPanelTextOver=-1;
+      for (var i=0;i<this.hotSpotsPanel.length;i++) {
+				//test for buttonBoxPanels
+        if (this.testWithin(this.x,this.y,this.hotSpotsPanel[i][0],this.hotSpotsPanel[i][1],this.hotSpotsPanel[i][2],this.hotSpotsPanel[i][3])==true) {
           over_object = true;
-          this.labelsBoxPanelOver=i;
+          this.hotSpotsPanelOver=i;
         }
-      }
+				//test for PanelText
+        if (this.testWithin(this.x,this.y,this.hotSpotsPanel[i][0]+40,this.hotSpotsPanel[i][1]+12,this.hotSpotsPanel[i][2]-69,this.hotSpotsPanel[i][3]-17)==true) {
+          this.hotSpotsPanelTextOver=i;
+        }
+			}
                   
       var cur = 'default';
       if (this.global_edit) cur = 'not-allowed';
@@ -673,6 +770,8 @@ function qh_mouseDragMove(e){
 
       if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
       if (this.y>25 && (this.start_rectangle || this.start_ellipse  || this.start_polygon)) cur = 'crosshair';
+      if (this.testWithin(this.x,this.y,0,0,300,this.canvas.height)) cur = 'default';
+
       e.target.style.cursor = cur;
 		}
 	}
@@ -688,9 +787,6 @@ function qh_mouseDragMove(e){
   if (this.buttonClicked>-1 && typeof this.qh_panelBox[this.buttonClicked] != 'undefined') {
 
   var tmp_but=-1,tmp_pan=-1;
-  //console.log(this.buttonClicked);
-  //console.log(this.x,this.y,this.qh_panelBox[this.buttonClicked][3],this.qh_panelBox[this.buttonClicked][4],this.qh_panelBox[this.buttonClicked][5],this.qh_panelBox[this.buttonClicked][6]);
-
   if (this.testWithin(this.x,this.y,this.qh_panelBox[this.buttonClicked][3],this.qh_panelBox[this.buttonClicked][4],this.qh_panelBox[this.buttonClicked][5],this.qh_panelBox[this.buttonClicked][6])==true) {
     tmp_but = this.buttonBox[this.buttonClicked];
     if (typeof this.qh_panelBox[this.buttonClicked][2]!='undefined') tmp_pan = this.qh_panelBox[this.buttonClicked][2];
@@ -699,8 +795,7 @@ function qh_mouseDragMove(e){
     this.drag_box_id = -1;
     for(i=0;i<this.qh_panelActiveParts[tmp_pan].length;i++) {
       var tp = this.qh_panelActiveParts[tmp_pan][i].split(',');
-                this.tw=true;
-
+      this.tw=true;
       if (this.testWithin(this.x,this.y,tmp_but[1]+1*tp[0]+0.5,tmp_but[2]+25+1*tp[1]+0.5,18,20)==true) panelOptionTest=i;
       }
     }
@@ -767,52 +862,53 @@ function qh_mouseDragDown(e){
 		this.x = e.clientX - this.loc_lft;
 		this.y = e.clientY - this.loc_top;
 		if (this.drag_box_id>-1) {
-			this.sub_x = this.x - this.labelsBox[this.drag_box_id][5];
-			this.sub_y = this.y - this.labelsBox[this.drag_box_id][6];
+			this.sub_x = this.x - this.hotSpots[this.drag_box_id][5];
+			this.sub_y = this.y - this.hotSpots[this.drag_box_id][6];
 		}
 		if (this.panelOptionOver==-1) this.dragging = true;	
 	}
+	if (this.testWithin(this.x,this.y,300,25,this.canvas.width,this.canvas.height)) {
+		if (this.start_rectangle && this.activeLabel>-1) {    
+			j = this.hotSpots[this.activeLabel][3]++;
+			this.hotSpots[this.activeLabel][(3+j*6+1)] = 'rectangle';
+			this.hotSpots[this.activeLabel][(3+j*6+2)] = Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+','+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16); 
+			this.hotSpots[this.activeLabel][(3+j*6+3)] = j; //id
+			this.hotspot_over += this.activeLabel+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$4';
+		}
 
-  if (this.start_rectangle && this.activeLabel>-1) {    
-    j = this.labelsBox[this.activeLabel][3]++;
-    this.labelsBox[this.activeLabel][(3+j*6+1)] = 'rectangle';
-    this.labelsBox[this.activeLabel][(3+j*6+2)] = Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+','+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16); 
-    this.labelsBox[this.activeLabel][(3+j*6+3)] = j; //id
-    this.label_over += this.activeLabel+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$4';
-  }
-  
-  if (this.start_ellipse && this.activeLabel>-1) {    
-    j = this.labelsBox[this.activeLabel][3]++;
-    this.labelsBox[this.activeLabel][(3+j*6+1)] = 'ellipse';
-    this.labelsBox[this.activeLabel][(3+j*6+2)] = Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+','+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16); 
-    this.labelsBox[this.activeLabel][(3+j*6+3)] = j; //id
-    this.label_over += this.activeLabel+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$4';
-  }
-  if (this.panelOverColour!='' && this.panelOverColour!=undefined) this.labelsBox[this.activeLabel][2] = this.panelOverColour;
-	//console.log (this.panelOptionOver);
-  
-  //this.global_edit = false
-  /*
-  if (this.handler_dot>-1) {
-    var pp1 = qconfig.split(',');
-    var pp2 = pp1.slice(0,this.handler_dot*2);
-    pp2.push(Math.round(this.x).toString(16));
-    pp2.push(Math.round(this.y).toString(16));
-    qconfig = pp2.join(',');
-    qconfig += ','+pp1.slice(this.handler_dot*2,pp1.length).join(',');
-    this.handler_sqr = this.handler_dot+1;
-    this.handler_dot = -1;
-    this.redraw_once = true;
-    qa_redraw_canvas;
-  }
-  */
-  
-  //this.freehand
-  if (this.start_polygon && this.y>28) {
-    this.poly_temp_points[6] = this.x;
-    this.poly_temp_points[7] = this.y;
-    this.freehand = true;
-  }
+		if (this.start_ellipse && this.activeLabel>-1) {    
+			j = this.hotSpots[this.activeLabel][3]++;
+			this.hotSpots[this.activeLabel][(3+j*6+1)] = 'ellipse';
+			this.hotSpots[this.activeLabel][(3+j*6+2)] = Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+','+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16); 
+			this.hotSpots[this.activeLabel][(3+j*6+3)] = j; //id
+			this.hotspot_over += this.activeLabel+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$4';
+		}
+		if (this.panelOverColour!='' && this.panelOverColour!=undefined) this.hotSpots[this.activeLabel][2] = this.panelOverColour;
+		//console.log (this.panelOptionOver);
+
+		//this.global_edit = false
+		/*
+		if (this.handler_dot>-1) {
+			var pp1 = qconfig.split(',');
+			var pp2 = pp1.slice(0,this.handler_dot*2);
+			pp2.push(Math.round(this.x).toString(16));
+			pp2.push(Math.round(this.y).toString(16));
+			qconfig = pp2.join(',');
+			qconfig += ','+pp1.slice(this.handler_dot*2,pp1.length).join(',');
+			this.handler_sqr = this.handler_dot+1;
+			this.handler_dot = -1;
+			this.redraw_once = true;
+			qa_redraw_canvas;
+		}
+		*/
+
+		//this.freehand
+		if (this.start_polygon && this.y>28) {
+			this.poly_temp_points[6] = this.x;
+			this.poly_temp_points[7] = this.y;
+			this.freehand = true;
+		}
+	}
 }
 
 function qh_ReturnInfo() {
@@ -854,11 +950,38 @@ for (i=0;i<this.answerBox.length;i++) {
 function qh_mouseDragUp(){
 	this.dragging = false;
   
-  //test for this.labelsBoxPanel
-  if (this.labelsBoxPanelOver>-1) {
-    this.activeLabel=this.labelsBoxPanelOver;
-    this.panelOverColour = this.labelsBox[this.activeLabel][2];
+  //test for this.hotSpotsPanel
+  if (this.hotSpotsPanelOver>-1) {
+    this.activeLabel=this.hotSpotsPanelOver;
+    this.panelOverColour = this.hotSpots[this.activeLabel][2];
   }
+	
+	this.activeLabelText=-1;
+  if (this.hotSpotsPanelTextOver>-1) {
+		this.activeLabelText=this.hotSpotsPanelTextOver;
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_ellipse.png']][5] = 0;
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_rectangle.png']][5] = 0;
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][5] = 0;
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_polygon.png']][5] = 0;
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_resize.png']][5] = 1;
+		
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_ellipse.png']][6] = 0;
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_rectangle.png']][6] = 0;
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][6] = 0;
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_polygon.png']][6] = 0;
+		this.buttonBox[this.buttonBoxNames['toolbar/ico_resize.png']][6] = 1;
+		
+		this.start_ellipse = false;
+		this.start_rectangle = false;
+		this.global_erase = false;
+		this.start_polygon = false;
+		this.global_edit = true;
+		
+		this.poly_temp = [];
+	}
+    
+	//console.log(this.hotSpotsPanelOver,this.hotSpotsPanelTextOver,this.activeLabel,this.activeLabelText);
+	
   //test for image area
   if (this.testWithin(this.x,this.y,300,0,this.canvas.width-300,this.canvas.height)) {
     this.answerBox[this.activeLabel][1]=this.x-300-5;
@@ -878,10 +1001,10 @@ function qh_mouseDragUp(){
     if (((Math.abs(this.poly_temp_points[0]-this.x)<3 && Math.abs(this.poly_temp_points[1]-this.y)<3)) || (Math.abs(this.poly_temp_points[8]-this.x)<3 && Math.abs(this.poly_temp_points[9]-this.y)<3)) {      
       //add new polygon area
       if (this.poly_temp.length>2) {
-        j = this.labelsBox[this.activeLabel][3]++;
-        this.labelsBox[this.activeLabel][(3+j*6+1)] = 'polygon';
-        this.labelsBox[this.activeLabel][(3+j*6+3)] = j; //id
-        this.labelsBox[this.activeLabel][(3+j*6+2)] = this.poly_temp + Math.round(this.poly_temp_points[0]-300).toString(16)+','+Math.round(this.poly_temp_points[1]-25+this.yOffset).toString(16);
+        j = this.hotSpots[this.activeLabel][3]++;
+        this.hotSpots[this.activeLabel][(3+j*6+1)] = 'polygon';
+        this.hotSpots[this.activeLabel][(3+j*6+3)] = j; //id
+        this.hotSpots[this.activeLabel][(3+j*6+2)] = this.poly_temp + Math.round(this.poly_temp_points[0]-300).toString(16)+','+Math.round(this.poly_temp_points[1]-25+this.yOffset).toString(16);
         this.poly_temp = '';
         this.poly_temp_points = new Array(0,0,0,0,0,0,0,0,0,0);
         global_delpoint_avail = true
@@ -923,20 +1046,21 @@ function qh_mouseDragUp(){
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][6]==2) this.global_erase = true;
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_polygon.png']][6]==2) this.start_polygon = true;
 
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_minus.png']][5]==2 && this.labelsBox.length>1 && this.activeLabel>-1) {    
-			this.labelsBox.splice(this.activeLabel,1);
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_minus.png']][5]==2 && this.hotSpots.length>1 && this.activeLabel>-1) {    
+			this.hotSpots.splice(this.activeLabel,1);
 			this.activeLabel = 0;
 		}
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_plus.png']][5]==2) {
-			i=this.labelsBox.length;
-			this.labelsBox.push(i);
-			this.labelsBox[i] = new Array ();
-			this.labelsBox[i][0] = i; //label index
-			this.labelsBox[i][1] = ''; //label text
-			this.labelsBox[i][2] = this.layerColours[i];
+			i=this.hotSpots.length;
+			this.hotSpots.push(i);
+			this.hotSpots[i] = new Array ();
+			this.hotSpots[i][0] = i; //label index
+			this.hotSpots[i][1] = ''; //label text
+			this.hotSpots[i][2] = this.layerColours[i];
+			this.hotSpots[i][3] = 0;
 			this.answerBox[i] = '';    
 
-			//console.log(this.labelsBox);
+			//console.log(this.hotSpots);
 		}
 		
 		//hold on colour button
@@ -961,8 +1085,8 @@ function qh_mouseDragUp(){
   if (this.global_erase && this.test_result!='') {
     var led = this.test_result.split(/[@#$]/);
     var led3 = '';if (led[2]!='') led3=led[2].split(',');
-    this.labelsBox[led[0]].splice((led[1])*6+4,6);
-    this.labelsBox[led[0]][3]--;
+    this.hotSpots[led[0]].splice((led[1])*6+4,6);
+    this.hotSpots[led[0]][3]--;
   }
   
 	this.redraw_once = true;
@@ -989,6 +1113,7 @@ function rqh(num) {
 	this.hexifycolour=hexifycolour;
 	this.textHeight=textHeight;
 	this.wrapText=wrapText;
+	this.fillWrappedText = fillWrappedText;
 	this.findPos=findPos;
 	this.testWithin=testWithin;
 	this.edtDot=edtDot;
@@ -1012,14 +1137,20 @@ function rqh(num) {
 	//var scale_i=1;                                          //label image scale
 	this.drag_box_id=-1;                               //index of box beeing dragged
   this.menu_ready = 1;
+	this.edit_box_blink = 0;
+	this.edit_box_pos = 0;
+	this.edit_box_pos_old = 0;
+	this.key_code = 0;
+	this.char_code = ''
+	
   this.do_the_test = false;
   this.tw = false;
   this.twr = new Array(0,0,0,0,'#000');
 	//var allImagesLoaded = false;
 	//var max_num_images = 0;
 	this.answerBox = new Array(); 			          // sublevels of this keep all the answer data
-	this.labelsBox = new Array(); 			            // sublevels of this keep all the label data
-  this.labelsBoxPanel = new Array();
+	this.hotSpots = new Array(); 			            // sublevels of this keep all the label data
+  this.hotSpotsPanel = new Array();
   this.buttonBox = new Array();                 // sublevels of this keep all the buttons data
   this.qh_panelBox = new Array();                   // sublevels of this keep the panels data
   this.buttonBoxNames = new Array();      // transcription of button names into its index in ButtonBox (?)
@@ -1029,12 +1160,16 @@ function rqh(num) {
   this.panelOptionOver =-1;                       // index of the option on panel the mouse is over
   this.panelOver =-1                                   // index of the panel the mouse is over
   this.activeLabel = 0;
-  this.labelsBoxPanelOver = -1;
+	this.activeLabelText = -1;
+	this.activeLabel_y;
+	this.activeLabel_h;
+  this.hotSpotsPanelOver = -1;
+	this.hotSpotsPanelTextOver = -1;
   this.allUnaswered = false;
   this.global_edit = false;
   this.global_erase = false;
   this.show_all_hotspots = true;
-  this.label_over = '';
+  this.hotspot_over = '';
   this.label_elem_drag = '';
   this.label_elem_clicked_pos = '';
   this.start_rectangle = this.start_ellipse = this.start_polygon = false;
