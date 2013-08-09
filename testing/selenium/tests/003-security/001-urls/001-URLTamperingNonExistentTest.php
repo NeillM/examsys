@@ -21,21 +21,24 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   //   $this->assertTextPresent('Page not Found');
   // }
 
-  // // public function testLogLateNonExistentDate() {
+  // // public function testCheckLogLateNonExistentDate() {
+  // //   // TODO: Needs data set up for paper
   // //   do_staff_login($this);
 
-  // //   $this->open("/folder/edit_team_popup.php?module=888207&calling=paper_list&folder=");
+  // //   $this->open("/reports/check_reassign_log_late.php?userID=17114&paperID=4133&started=2012-01-17 10:00:07&log_type=2");
   // //   $this->assertTextPresent('Page not Found');
   // // }
 
-  // // public function testLogLateNonExistentPaper() {
+  // // public function testCheckLogLateNonExistentPaper() {
+  // //   // TODO: Needs data set up for paper
   // //   do_staff_login($this);
 
-  // //   $this->open("/folder/edit_team_popup.php?module=888207&calling=paper_list&folder=");
+  // //   $this->open("");
   // //   $this->assertTextPresent('Page not Found');
   // // }
 
   // // public function testLogLateNonExistentUser() {
+  // //   // TODO: Needs data set up for paper
   // //   do_staff_login($this);
 
   // //   $this->open("/folder/edit_team_popup.php?module=888207&calling=paper_list&folder=");
@@ -85,14 +88,14 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   // }
 
   // public function testDeleteFolderNonExistent() {
-  //   do_admin_login($this);
+  //   do_staff_login($this);
 
   //   $this->open("delete/check_delete_folder.php?folderID=888888888");
   //   $this->assertTextPresent('Page not Found');
   // }
 
   // public function testDeleteKeywordNonExistent() {
-  //   do_admin_login($this);
+  //   do_staff_login($this);
 
   //   $this->open("delete/check_delete_team_keyword.php?keywordID=,88888888&module=");
   //   $this->assertTextPresent('Page not Found');
@@ -113,7 +116,7 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   // }
 
   // public function testDeleteReferenceNonExistent() {
-  //   do_admin_login($this);
+  //   do_staff_login($this);
 
   //   $this->open("delete/check_delete_ref_material.php?refID=888888888888&module=3");
   //   $this->assertTextPresent('Page not Found');
@@ -190,7 +193,7 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   // }
 
   // public function testEditReferenceNonExistent() {
-  //   do_admin_login($this);
+  //   do_staff_login($this);
 
   //   $this->open("folder/edit_ref_material.php?refID=88888888&module=3");
   //   $this->assertTextPresent('Page not Found');
@@ -203,25 +206,179 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   //   $this->assertTextPresent('Page not Found');
   // }
 
-  public function testFolderDetailsNonExistent() {
+  // public function testFolderDetailsNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("folder/details.php?folder=888888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testFolderPropsNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("folder/properties.php?folder=888888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testHelpStaffEditNonExistent() {
+  //   do_admin_login($this);
+
+  //   $this->open("help/staff/edit_page.php?id=888888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testHelpStudentEditNonExistent() {
+  //   do_admin_login($this);
+
+  //   $this->open("help/student/edit_page.php?id=888888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testLabDetailsNonExistent() {
+  //   do_admin_login($this);
+
+  //   $this->open("admin/lab_details.php?labID=888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testManageObjectivesNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("mapping/sessions_list.php?module=888240");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testCreateSessionNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("mapping/add_session.php?module=888888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testMidExamClarificationNonExistentPaper() {
+  //   do_admin_login($this);
+
+  //   $this->open("question/exam_clarification.php?paperID=88888888888&q_id=3&questionNo=3&screenNo=2");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testMidExamClarificationNonExistentQuestion() {
+  //   do_admin_login($this);
+
+  //   $this->open("question/exam_clarification.php?paperID=1&q_id=8888888888888&questionNo=3&screenNo=2");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testModuleContentNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("folder/details.php?module=888207");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  //  // public function testOsceNonExistentPaper() {
+  //  //   // TODO: Set up OSCE station for tests
+  //  //   do_staff_login($this);
+
+  //  //   $this->open("folder/details.php?module=888207");
+  //  //   $this->assertTextPresent('Page not Found');
+  //  // }
+
+  //  // public function testOsceNonExistentUser() {
+  //  //   // TODO: Set up OSCE station for tests
+  //  //   do_staff_login($this);
+
+  //  //   $this->open("folder/details.php?module=888207");
+  //  //   $this->assertTextPresent('Page not Found');
+  //  // }
+
+  //  // public function testOscePrintNonExistent() {
+  //  //   // TODO: Set up OSCE station for tests
+  //  //   do_staff_login($this);
+
+  //  //   $this->open("folder/details.php?module=888207");
+  //  //   $this->assertTextPresent('Page not Found');
+  //  // }
+
+  //  // public function testMappingByQuestionNonExistent() {
+  //  //   // TODO: Setup sessions and outcomes for test
+  //  //   do_staff_login($this);
+
+  //  //   $this->open("folder/details.php?module=888207");
+  //  //   $this->assertTextPresent('Page not Found');
+  //  // }
+
+  //  // public function testMappingBySessionNonExistent() {
+  //  //   // TODO: Setup sessions and outcomes for test
+  //  //   do_staff_login($this);
+
+  //  //   $this->open("folder/details.php?module=888207");
+  //  //   $this->assertTextPresent('Page not Found');
+  //  // }
+
+  // public function testPaperPropertiesNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("paper/properties.php?paperID=88883011&caller=details&module=3&folder=");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testPaperBlueScreenNonExistent() {
+  //   do_student_login($this, 'teststudent10', 'jgl!34Z^');
+
+  //   $this->open("user_index.php?id=2607128816754214438");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testPaperDetailsNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("paper/details.php?paperID=6085859&module=&folder=");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testPaperFinishNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("paper/finish.php?id=6184135298420215248&previous=20121125233045&log_type=1");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testForcePWResetNonExistent() {
+  //   do_admin_login($this);
+
+  //   $this->open("users/reset_pwd.php?userID=8888888817184");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  public function testPeerReviewNonExistent() {
     do_staff_login($this);
 
-    $this->open("folder/details.php?folder=888888888");
+    $this->open("peer_review/form.php?id=88888888888888888");
     $this->assertTextPresent('Page not Found');
   }
 
-  public function testFolderPropsNonExistent() {
+  public function testQuestionBankNonExistentModule() {
     do_staff_login($this);
 
-    $this->open("folder/properties.php?folder=888888888");
+    $this->open("question/list.php?type=%&module=888840");
     $this->assertTextPresent('Page not Found');
   }
 
-  public function testHelpStaffEditNonExistent() {
-    do_admin_login($this);
+  // public function testReassignToUserNonExistentPaper() {
+  //   // TODO: create test data
+  //   do_staff_login($this);
 
-    $this->open("help/staff/edit_page.php?id=888888888");
-    $this->assertTextPresent('Page not Found');
-  }
+  //   $this->open("question/list.php?type=%&module=888840");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testReassignToUserNonExistentUser() {
+  //   // TODO: create test data
+  //   do_staff_login($this);
+
+  //   $this->open("question/list.php?type=%&module=888840");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 }
 ?>
