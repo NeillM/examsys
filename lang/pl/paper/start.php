@@ -59,4 +59,6 @@ $string['auto_saving'] = 'Zapisane automatycznie';
 $string['auto_ok'] = 'Zapisywane automatyczne zakończone pomyślnie';
 $string['savefailed'] = 'Zapisywanie nie powiodło się!';
 $string['tryagain'] = 'Spróbuj ponownie po przejściu na następnej lub poprzedniej strony.</div>';
+$string['questionclarification'] = 'Wyjaśnienie pytania';
+$string['question'] = 'Pytanie';
 ?>

@@ -341,10 +341,15 @@ if ($textsize > 120) {
 <table cellpadding="3" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto; font-size:100%; border-top:1px solid #95AEC8;border-left:1px solid #95AEC8; border-right:1px solid #95AEC8; background-color:white; width:<?php echo $table_width; ?>%">
 <tr>
 <?php
-  $icon_types = array('formative.png', 'progress.png', 'summative.png', 'survey.png');
-  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="vertical-align:top; width:52px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . '" width="48" height="48" alt="Icon" />';
+  $icon_types = array('formative', 'progress', 'summative', 'survey');
+  if ($propertyObj->get_exam_duration() === null) {
+    $timed_filename = '';
+  } else {
+    $timed_filename = '_timed';
+  }
+  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="vertical-align:top; width:52px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . $timed_filename . '.png" width="48" height="48" alt="Icon" />';
   echo "</td><td><span class=\"title\">$paper_title</span>";
-  echo "<div class=\"logout\"><a href=\"logout.php\"><img src=\"./artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"Log Out\" /></a></div><div class=\"logout\" style=\"padding-right:8px\"><a class=\"logout\" href=\"logout.php\">" . $string['signout'] . "</a></div>";
+  echo "<div class=\"logout\"><a href=\"logout.php\"><img src=\"./artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"" . $string['signout'] . "\" /></a></div><div class=\"logout\" style=\"padding-right:8px\"><a class=\"logout\" href=\"logout.php\">" . $string['signout'] . "</a></div>";
   echo "</td>\n</tr></table></td></tr>";
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
@@ -490,7 +495,7 @@ if ($textsize > 120) {
     echo "<div style=\"color:#C00000;font-size:90%\">" . $string['timeexpired'] . "</div>\n";
   } elseif ($metadata_security === false) {
     echo "<div style=\"color:#C00000;font-size:90%\">$metadata_msg</div>\n";
-  } else {
+  } elseif ($test_type == 2) {
     echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
   }
   
