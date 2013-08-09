@@ -957,7 +957,7 @@ function qh_mouseDragUp(){
   }
 	
 	this.activeLabelText=-1;
-  if (this.hotSpotsPanelTextOver>-1) {
+  if (this.hotSpotsPanelTextOver>-1 && this.qmode=='edit') {
 		this.activeLabelText=this.hotSpotsPanelTextOver;
 		this.buttonBox[this.buttonBoxNames['toolbar/ico_ellipse.png']][5] = 0;
 		this.buttonBox[this.buttonBoxNames['toolbar/ico_rectangle.png']][5] = 0;

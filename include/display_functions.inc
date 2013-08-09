@@ -556,7 +556,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 		</script>
     <hr>
     <!-- ==================================================== -->
-
+		
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 24); ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
           write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path'); ?>/question/edit/area.swf" />');
@@ -1039,15 +1039,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         <canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>"></canvas>
         <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
         <script language="JavaScript" type="text/javascript">
-        //var num = message.substring(5,message.length);
 		</script>
     <hr>
     <!-- ==================================================== -->
-            setUpQuestion(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>', '<?php echo $screen_pre_submitted; ?>','#FFC0C0','hotspot','answer');//niko_HTML5
         <script language="JavaScript">
           function swfLoaded<?php echo $question_no; ?>(message) {
             var num = message.substring(5,message.length);
-
+						setUpQuestion(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>', '<?php echo $screen_pre_submitted; ?>','#FFC0C0','hotspot','answer');//niko_HTML5        
             setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>','<?php echo $screen_pre_submitted; ?>','#FFC0C0');
           }
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
@@ -1105,10 +1103,20 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_correct = trim($question['options'][0]['correct']);
         $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
   ?>
-    <div align="center">
+    <div align="center" style="background-color:#EEEEEE;zoom:100%" >
+    <!-- ======================== niko_HTML5 new part ================= -->
+    <hr>
+        <canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>"></canvas>
+        <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+        <script language="JavaScript" type="text/javascript">
+        //var num = message.substring(5,message.length);
+		</script>
+    <hr>
+    <!-- ==================================================== -->
     <script language="javascript">
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
+				setUpQuestion(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>', '<?php echo $display_option['marks_correct'] . '~' . $display_option['marks_incorrect'] . '~' . $question['score_method']; ?>','#FFC0C0','labelling','answer');//niko_HTML5
         setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>', '<?php echo $display_option['marks_correct'] . '~' . $display_option['marks_incorrect'] . '~' . $question['score_method']; ?>','#FFC0C0');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">');

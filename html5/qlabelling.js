@@ -4,9 +4,9 @@ function setUpLabelling(num, flashId, lang, image, config, answer, extra, colour
 	this.canv_rect = this.canvas.getBoundingClientRect();
   
 	if (this.canvas && this.canvas.getContext){
-		this.canvas.onmouseup   = ql_mouseDragUp.bind(this);
-		this.canvas.onmousedown = ql_mouseDragDown.bind(this);
-		this.canvas.onmousemove = ql_mouseDragMove.bind(this);
+		this.canvas.onmouseup   = this.ql_mouseDragUp.bind(this);
+		this.canvas.onmousedown = this.ql_mouseDragDown.bind(this);
+		this.canvas.onmousemove = this.ql_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
 		this.canvas.onkeydown   = this.ql_mouseDragMove.bind(this);
 		this.canvas.onkeyup     = this.ql_mouseDragMove.bind(this);
