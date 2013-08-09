@@ -40,17 +40,18 @@ if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
 // Redirect External Examiners if they are straying
 // $external_allowed_pages is an array that contains the set of scripts that External Examiners 
 // CAN access all other pages should redirect to the /reviews/ section
+$cfg_root_path = $configObject->get('cfg_root_path');
 $external_allowed_pages = array(   
-                              '/help/staff/index.php'=>1,
-                              '/help/staff/search.php'=>1,
-                              '/help/staff/toolbar.php'=>1,
-                              '/help/staff/toc_title.php'=>1,
-                              '/help/staff/toc.php'=>1,
-                              '/help/staff/display_page.php'=>1,
-                              '/reviews/index.php'=>1,
-                              '/reviews/start.php'=>1,
-                              '/reviews/finish.php'=>1,
-                              '/osce/form.php'=>1
+                              "$cfg_root_path/help/staff/index.php"=>1,
+                              "$cfg_root_path/help/staff/search.php"=>1,
+                              "$cfg_root_path/help/staff/toolbar.php"=>1,
+                              "$cfg_root_path/help/staff/toc_title.php"=>1,
+                              "$cfg_root_path/help/staff/toc.php"=>1,
+                              "$cfg_root_path/help/staff/display_page.php"=>1,
+                              "$cfg_root_path/reviews/index.php"=>1,
+                              "$cfg_root_path/reviews/start.php"=>1,
+                              "$cfg_root_path/reviews/finish.php"=>1,
+                              "$cfg_root_path/osce/form.php"=>1
                             );
 if ($userObject->has_role('External Examiner')) {
   if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
