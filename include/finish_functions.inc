@@ -2256,7 +2256,9 @@ echo '</script>';
 
   if ($paper_postscript != '') echo "<br />\n<blockquote>$paper_postscript</blockquote>\n";
   echo $bottom_html;
-  if ($_SERVER['PHP_SELF'] == '/paper/finish.php') {
+  $configObject = Config::get_instance();
+  $cfg_root_path = $configObject->get('cfg_root_path');
+  if ($_SERVER['PHP_SELF'] == "$cfg_root_path/paper/finish.php") {
     echo '<tr><td align="center"><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></td></tr>';
   } else {
     echo '<tr><td>&nbsp;</td></tr>';
