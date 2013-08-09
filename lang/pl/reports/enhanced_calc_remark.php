@@ -15,23 +15,22 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 
-// Niko
-$string['remark'] = 'Remark';
-$string['msg'] = 'To override a user\'s mark select whether to assign full, partial or no marks for the question and enter a reason for the change.';
-$string['useranswers'] = 'User Answers';
-$string['variables'] = 'Variables';
-$string['answers'] = 'Answers';
-$string['useranswer'] = 'User';
-$string['units'] = 'Units';
-$string['correctans'] = 'Correct';
-$string['distance'] = 'Distance';
-$string['marks'] = 'Marks';
-$string['fullmarks'] = 'Full';
-$string['partialmarks'] = 'Partial';
-$string['incorrect'] = 'Incorrect';
-$string['reason'] = 'Reason';
-$string['na'] = 'N/A';
-$string['addreason'] = 'Add reason';
-$string['nomarkmsg'] = 'No mark override selected';
-$string['saveerror'] = 'Error saving mark. Please try again';
-$string['done'] = 'Done';
+$string['remark'] = 'Komentarz';
+$string['msg'] = 'Aby nadpisać ocenę użytkownika wybierz czy przypisać ocenę pełną, częściową, czy jej brak dla tego pytania i podaj powód tej zmiany.';
+$string['useranswers'] = 'Odpowiedzi użytkownika';
+$string['variables'] = 'Zmienne';
+$string['answers'] = 'Odpowiedzi';
+$string['useranswer'] = 'Użytkownik';
+$string['units'] = 'Jednostki';
+$string['correctans'] = 'Poprawna';
+$string['distance'] = 'Odległość';
+$string['marks'] = 'Punkty';
+$string['fullmarks'] = 'Pełne';
+$string['partialmarks'] = 'Częściowe';
+$string['incorrect'] = 'Niepoprawne';
+$string['reason'] = 'Powód';
+$string['na'] = 'Brak';
+$string['addreason'] = 'Dodaj powód';
+$string['nomarkmsg'] = 'Nie wybrano nadrzędności oceny';
+$string['saveerror'] = 'Błąd zapisu oceny. Spróbuj ponownie.';
+$string['done'] = 'Wykonano';
