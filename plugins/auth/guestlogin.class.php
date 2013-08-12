@@ -55,7 +55,9 @@ class guestlogin_auth extends outline_authentication {
 
   function errordisp($displayerrformobj) {
     global $string;
-    if ($_SERVER['PHP_SELF'] == '/index.php') {
+    $configObject = Config::get_instance();
+    $cfg_root_path = $configObject->get('cfg_root_path');
+    if ($_SERVER['PHP_SELF'] == "$cfg_root_path/index.php") {
       $this->savetodebug('adding temp account notice to error screen');
       $message2 = $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a>";
       $displayerrformobj->li[] = $message2;

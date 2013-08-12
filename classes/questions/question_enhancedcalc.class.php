@@ -81,7 +81,15 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     $this->extract_answers();
     $this->extract_vars();
 
-    return parent::save($clear_checkout);
+    try {
+      $status = parent::save($clear_checkout);
+    } catch (ValidationException $ex) {
+      $this->unserialize_settings();
+
+      throw new ValidationException($ex->getMessage());
+    }
+
+    return $status;
   }
 
   // ACCESSORS
@@ -357,8 +365,13 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   }
 
   function get_settings() {
+    // Extracting answers temporarily populates answers and vars with the option data
     $this->extract_answers();
     $this->extract_vars();
+
+    // Serialise it into the setting var then extract again to reset answers and vars to option indices
+    $this->serialize_settings();
+    $this->unserialize_settings();
 
     return $this->settings;
   }
@@ -387,6 +400,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    */
   private function unserialize_answers($data) {
     $i = 1;
+    $this->answers = array();
 
     foreach ($data as $fields) {
       if (!isset($this->options[$i])) {
@@ -410,6 +424,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    */
   private function unserialize_vars($data) {
     $i = 1;
+    $this->vars[] = array();
 
     foreach ($data as $label => $fields) {
       if (!isset($this->options[$i])) {
