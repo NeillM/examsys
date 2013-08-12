@@ -150,7 +150,7 @@ function getBlinePassmk($user_results, $user_no, $propertyObj) {
   
   for ($i=0; $i<$user_no; $i++) {
     if (isBorderline($user_results[$i]['rating'], $propertyObj)) {
-      $borderlines[] = $user_results[$i]['adj_percent'];
+      $borderlines[] = $user_results[$i]['percent'];
     }
   }
   

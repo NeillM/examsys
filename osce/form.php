@@ -62,7 +62,7 @@ if (isset($_POST['submit'])) {
     $result->bind_result($insertID);
     $result->fetch();
     $result->close();
-  
+    
     if (isset($insertID)) {
       // Delete any Log4 previous submissions for this student.
       $result = $mysqli->prepare("DELETE FROM log4 WHERE log4_overallID = ?");
@@ -96,8 +96,8 @@ if (isset($_POST['submit'])) {
     }
 
     // Update Log4_overall with the overall score.
-    $result = $mysqli->prepare("UPDATE log4_overall SET numeric_score = ? WHERE id = ?");
-    $result->bind_param('ii', $numeric_score, $insertID);
+    $result = $mysqli->prepare("UPDATE log4_overall SET numeric_score = ?, overall_rating = ?, feedback = ? WHERE id = ?");
+    $result->bind_param('issi', $numeric_score, $_POST['overall_val'], $_POST['fback'], $insertID);
     $result->execute();
     $result->close();
   }
