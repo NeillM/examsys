@@ -112,11 +112,13 @@ class EnhancedCalc extends Question implements questionInterface {
     if (!is_array($this->useranswer)) {
       $this->useranswer = json_decode($this->useranswer, true);
     }
-
-    $return = $this->split_numb_from_unit($this->useranswer['uans']);
-    $this->useranswer['uansunit'] = $return[1];
-    $this->useranswer['uansnumb'] = $return[0];
-
+    
+    if(isset($this->useranswer['uans'])) {
+      $return = $this->split_numb_from_unit($this->useranswer['uans']);
+      $this->useranswer['uansunit'] = $return[1];
+      $this->useranswer['uansnumb'] = $return[0];
+    }
+    
     if (isset($this->useranswer['uansunit'])) {
        $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
     }
@@ -491,7 +493,12 @@ class EnhancedCalc extends Question implements questionInterface {
       reset_feedback($extra['hide_if_unanswered']);
     }
 
-    $saved_response = $this->useranswer['uans'];
+    $saved_response = '';
+    $saved_response_clean = '';
+    if(isset($this->useranswer['uans'])) {
+        $saved_response = $this->useranswer['uans'];
+        $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
+    }
     $part_id = 1;
 
     $tmp_fback = $this->correct_fback;
@@ -505,15 +512,12 @@ class EnhancedCalc extends Question implements questionInterface {
       echo '<td></td>';
     }
 
-    $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-
-    if ($this->useranswer['uans'] == '') {
+    if ($saved_response_clean == '') {
       echo "<td>" . display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
 
     } else {
       echo '<td>';
       if ($extra['tmp_exclude'] == '1') echo '<span class="exclude">';
-
 
       if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_EXACT or $this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
         echo display_response($extra['tmp_display_students_response'], 'tick');
@@ -530,7 +534,7 @@ class EnhancedCalc extends Question implements questionInterface {
       if (!isset($this->useranswer['status'])) {
         echo ' <strong>(<span class="err">' .$string['unmarked'] . '</span>)</strong>';
       } elseif (!isset($this->useranswer['cans'])) {
-        echo ' <strong>(<span class="err">error!</span>)</strong>';
+        echo ' <strong>(<span class="err">' . $string['EnhancedCalcCorrectError'] . '</span>)</strong>';
       } else {
         echo ' <strong>(' . $this->useranswer['cans'];
         if ($this->useranswer['ans']['units_used'] != '') echo ' ' . $this->useranswer['ans']['units_used'];
