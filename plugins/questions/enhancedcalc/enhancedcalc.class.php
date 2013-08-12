@@ -680,23 +680,21 @@ class EnhancedCalc extends Question implements questionInterface {
     $calculatevars = array();
     //check to see if variables have been previously generated if not put them in an array to be generated
     foreach($this->settings['vars'] as $key => $value) {
-        if (!isset($this->useranswer['vars'])) {
-          $calculatevars[$key] = $value;
-        } elseif ($this->is_linked_ans($value['min']) or $this->is_linked_ans($value['max'])) {
-          $calculatevars[$key] = $value;
+        if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
+          $min = $this->variable_substitution($value['min'], $this->alluseranswers);
+          $max = $this->variable_substitution($value['max'], $this->alluseranswers);
+          $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
+          $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
+          $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
+        } 
+        
+        //pull in the last userans every time
+        if($this->is_linked_ans($value['min'])) {
+          $this->useranswer['vars'][$key] = $this->variable_substitution($value['min'], $this->alluseranswers);
         }
-    }
-    
-    if (count($calculatevars) > 0) {
-      //generate variables
-      foreach ($calculatevars as $key => $value) {
-        $min = $this->variable_substitution($value['min'], $this->alluseranswers);
-        $max = $this->variable_substitution($value['max'], $this->alluseranswers);
-        $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
-        $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
-        $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
-      }
-      $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
+        
+        //update the session 
+        $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
     }
 
     $varname = array_keys($this->useranswer['vars']);
