@@ -20,7 +20,7 @@ QUERY;
 
   $updater_utils->execute_query($sql, true);
 
-  $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".marking_override TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".marking_override TO '" . $cfg_db_staff_user . "'@'" . $cfg_web_host . "'";
   $updater_utils->execute_query($sql, true);
 }
 

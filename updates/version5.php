@@ -172,6 +172,8 @@ if (!isset($_POST['update'])) {
   $cfg_db_external_user = $configObject->get('cfg_db_external_user');
   $cfg_db_inv_username  = $configObject->get('cfg_db_inv_user');
   $cfg_use_ldap         = $configObject->get('cfg_use_ldap');
+      
+  $cfg_web_host         = $configObject->get('cfg_web_host');
 
   error_reporting(-1);
   ob_start();
@@ -237,12 +239,6 @@ if (!isset($_POST['update'])) {
   $target_line = '$authentication = array';
   $updater_utils->add_line($string, '$percent_decimals', $new_lines, 80, $cfg_web_root, $target_line, 7);
 
-
-  // 08/05/2013 (uiznm) - Add permission for external examiners to see standards setting values
-  if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'standards_setting', $cfg_db_host)) {
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
-    $updater_utils->execute_query($sql, true);
-  }
 
 
   // 09/05/2013 (brzsw) - Remove $protocol and insert $cfg_secure_connection
@@ -364,10 +360,10 @@ if (!isset($_POST['update'])) {
     $sql = "CREATE TABLE cache_paper_stats (paperID mediumint(8) unsigned not null, cached int unsigned, max_mark decimal(10,5), max_percent decimal(10,5), min_mark decimal(10,5), min_percent decimal(10,5), q1 decimal(10,5), q2 decimal(10,5), q3 decimal(10,5), mean_mark decimal(10,5), mean_percent decimal(10,5), stdev_mark decimal(10,5), stdev_percent decimal(10,5), UNIQUE KEY `paperID` (`paperID`)) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
 
@@ -379,10 +375,10 @@ if (!isset($_POST['update'])) {
     $sql = "ALTER TABLE cache_student_paper_marks ADD CONSTRAINT pk_paperID_userID PRIMARY KEY (paperID, userID)";
     $updater_utils->execute_query($sql, false);
 
-    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.cache_student_paper_marks TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.cache_student_paper_marks TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_student_paper_marks TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_student_paper_marks TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
 
@@ -394,16 +390,16 @@ if (!isset($_POST['update'])) {
     $sql = "ALTER TABLE cache_median_question_marks ADD CONSTRAINT pk_paperID_questionID PRIMARY KEY (paperID, questionID)";
     $updater_utils->execute_query($sql, false);
 
-    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.cache_median_question_marks TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT, INSERT, UPDATE ON ' . $cfg_db_database . '.cache_median_question_marks TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_median_question_marks TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_median_question_marks TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
 
   // 04/06/2013 (cczsa1) - Add permission to denied log for rogo_auth
-  if (!$updater_utils->has_grant($cfg_db_username, 'INSERT', 'denied_log', $cfg_db_host)) {
-    $sql = "GRANT INSERT ON " . $cfg_db_database . ".denied_log TO '" . $cfg_db_username . "'@'" . $cfg_db_host . "'";
+  if (!$updater_utils->has_grant($cfg_db_username, 'INSERT', 'denied_log', $cfg_web_host)) {
+    $sql = "GRANT INSERT ON " . $cfg_db_database . ".denied_log TO '" . $cfg_db_username . "'@'" . $cfg_web_host . "'";
     $updater_utils->execute_query($sql, true);
   }
 
@@ -465,25 +461,25 @@ if (!isset($_POST['update'])) {
     $sql = "CREATE TABLE std_set (id int unsigned not null primary key auto_increment, setterID int(10) unsigned not null, paperID mediumint(8) unsigned not null, std_set datetime, method enum('Modified Angoff','Angoff (Yes/No)','Ebel','Hofstee'), group_review text, pass_score decimal(10,6), distinction_score decimal(10,6)) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
     $sql = "CREATE TABLE std_set_questions (id int unsigned not null primary key auto_increment, std_setID int unsigned not null, questionID int(11) unsigned not null, rating text) ENGINE=InnoDB";
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
-    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_db_host . '\'';
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
     // Query and then populate 'std_set' table.
@@ -603,7 +599,7 @@ if (!isset($_POST['update'])) {
       $sql = "CREATE TABLE hofstee (std_setID int unsigned not null, whole_numbers tinyint, x1_pass tinyint, x2_pass tinyint, y1_pass tinyint, y2_pass tinyint, x1_distinction tinyint, x2_distinction tinyint, y1_distinction tinyint, y2_distinction tinyint, marking tinyint) ENGINE=InnoDB";
       $updater_utils->execute_query($sql, true);
 
-      $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.hofstee TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_db_host . '\'';
+      $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.hofstee TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
       $updater_utils->execute_query($sql, true);
     }
     $mysqli->commit();
@@ -767,15 +763,15 @@ INSERT INTO question_statuses (name, exclude_marking, exclude_search, is_default
 QUERY;
     $updater_utils->execute_query($sql, true);
 
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_student_user . "'@'" . $cfg_web_host . "'";
     $updater_utils->execute_query($sql, true);
-    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_staff_user . "'@'" . $cfg_web_host . "'";
     $updater_utils->execute_query($sql, true);
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_external_user . "'@'" . $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_external_user . "'@'" . $cfg_web_host . "'";
     $updater_utils->execute_query($sql, true);
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $cfg_db_inv_username . "'@'" . $cfg_web_host . "'";
     $updater_utils->execute_query($sql, true);
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $configObject->get('cfg_db_sct_user') . "'@'" . $cfg_db_host . "'";
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".question_statuses TO '" . $configObject->get('cfg_db_sct_user') . "'@'" . $cfg_web_host . "'";
     $updater_utils->execute_query($sql, true);
 
     // Update existing statuses

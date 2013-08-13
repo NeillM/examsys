@@ -24,6 +24,7 @@ $string['dbusername'] = 'DB Username';
 $string['dbpassword'] = 'DB Password';
 $string['databasesetup'] = 'Database Setup';
 $string['databasehost'] = 'Database host';
+$string['webhost'] = 'WebServer host';
 $string['databaseport'] = 'Database port';
 $string['databasename'] = 'Database Name';
 $string['databasecharset'] = 'Database Character Set';
