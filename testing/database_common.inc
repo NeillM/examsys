@@ -67,6 +67,10 @@ function display_form() {
     <td><input type="password" name="test_password" size="20" /></td>
   </tr>
   <tr>
+  <td>Webhost Name</td>
+  <td colspan="3"><div align="center"><input type="text" name="webhost" size="20" /></div></td>
+  </tr>
+  <tr>
     <td colspan="4"><input type="submit" name="submit" value=" Test " /></td>
   </tr>
   </table>

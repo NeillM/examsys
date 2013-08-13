@@ -172,10 +172,13 @@ if (!isset($_POST['update'])) {
   $cfg_db_external_user = $configObject->get('cfg_db_external_user');
   $cfg_db_inv_username  = $configObject->get('cfg_db_inv_user');
   $cfg_use_ldap         = $configObject->get('cfg_use_ldap');
-      
-  $cfg_web_host         = $configObject->get('cfg_web_host');
 
-  error_reporting(-1);
+  $cfg_web_host         = $configObject->get('cfg_web_host');
+  if($cfg_web_host='') {
+      $cfg_web_host=$cfg_db_host;
+  }
+
+      error_reporting(-1);
   ob_start();
 
   echo "<div>Starting at " . date("H:i:s") . "</div>";
