@@ -71,4 +71,5 @@ $string['errorkeywordunique'] = 'ERROR: unable to find unique question for suppl
 $string['errorrandomnotfound'] = 'ERROR: No random question selected. Perhaps this screen was skipped';
 $string['overriddenby'] = 'Mark adjusted by';
 $string['questionclarification'] = 'Question Clarification';
+$string['EnhancedCalcCorrectError'] = 'Error: Correct answer could not be calculated';
 ?>

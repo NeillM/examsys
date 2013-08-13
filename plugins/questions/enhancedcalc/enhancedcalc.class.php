@@ -93,11 +93,7 @@ class EnhancedCalc extends Question implements questionInterface {
     }
   }
 
-  /*
-   * Mark the users answer
-   *
-   *  This Must handle exclusions
-   */
+  
   /**
    * Calculate the user's mark for the question.
    *
@@ -116,11 +112,13 @@ class EnhancedCalc extends Question implements questionInterface {
     if (!is_array($this->useranswer)) {
       $this->useranswer = json_decode($this->useranswer, true);
     }
-
-    $return = $this->split_numb_from_unit($this->useranswer['uans']);
-    $this->useranswer['uansunit'] = $return[1];
-    $this->useranswer['uansnumb'] = $return[0];
-
+    
+    if(isset($this->useranswer['uans'])) {
+      $return = $this->split_numb_from_unit($this->useranswer['uans']);
+      $this->useranswer['uansunit'] = $return[1];
+      $this->useranswer['uansnumb'] = $return[0];
+    }
+    
     if (isset($this->useranswer['uansunit'])) {
        $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
     }
@@ -495,7 +493,12 @@ class EnhancedCalc extends Question implements questionInterface {
       reset_feedback($extra['hide_if_unanswered']);
     }
 
-    $saved_response = $this->useranswer['uans'];
+    $saved_response = '';
+    $saved_response_clean = '';
+    if(isset($this->useranswer['uans'])) {
+        $saved_response = $this->useranswer['uans'];
+        $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
+    }
     $part_id = 1;
 
     $tmp_fback = $this->correct_fback;
@@ -509,15 +512,12 @@ class EnhancedCalc extends Question implements questionInterface {
       echo '<td></td>';
     }
 
-    $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-
-    if ($this->useranswer['uans'] == '') {
+    if ($saved_response_clean == '') {
       echo "<td>" . display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
 
     } else {
       echo '<td>';
       if ($extra['tmp_exclude'] == '1') echo '<span class="exclude">';
-
 
       if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_EXACT or $this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
         echo display_response($extra['tmp_display_students_response'], 'tick');
@@ -534,7 +534,7 @@ class EnhancedCalc extends Question implements questionInterface {
       if (!isset($this->useranswer['status'])) {
         echo ' <strong>(<span class="err">' .$string['unmarked'] . '</span>)</strong>';
       } elseif (!isset($this->useranswer['cans'])) {
-        echo ' <strong>(<span class="err">error!</span>)</strong>';
+        echo ' <strong>(<span class="err">' . $string['EnhancedCalcCorrectError'] . '</span>)</strong>';
       } else {
         echo ' <strong>(' . $this->useranswer['cans'];
         if ($this->useranswer['ans']['units_used'] != '') echo ' ' . $this->useranswer['ans']['units_used'];
@@ -576,49 +576,72 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return [type]               [description]
    */
   function variable_substitution($inputVal, $user_answers) {
-    if (substr($inputVal, 0, 3) == 'ans') {
+    if ($this->is_linked_ans($inputVal)) {
       //its a question reference get previous user answer
+      $uansarray = array();
       $find_qid = intval(substr($inputVal, 3));
       $pre_user_answers = '';
       foreach ($user_answers as $screen => $answers) {
-        foreach ($answers as $pre_qid => $ans) {
-          if ($pre_qid == $find_qid) {
-            try {
-              $uansarray = json_decode($ans, true);
-            } catch (exception $e) {
-              return 'ERROR';
-            }
-            break 2;
+        if (isset($answers[$find_qid])) {
+          try {
+            $uansarray = json_decode($answers[$find_qid], true);
+          } catch (exception $e) {
+            return 'ERROR';
           }
+          break;
         }
       }
-      if (!isset($uansarray['uans'])) return 'ERROR';
+      if (!isset($uansarray['uans']) or $uansarray['uans'] == '') {
+          return 'ERROR';
+      }
       $return = $this->split_numb_from_unit($uansarray['uans']);
       $inputVal = $return[0];
-    } elseif (substr($inputVal, 0, 3) == 'var') {
+    } elseif ($this->is_linked_question_var($inputVal)) {
       //its a var refrance from a previous question
-      $find_var = substr($inputVal, 3, 1);
-      $find_qid = intval(substr($inputVal, 4));
+      $find_var = substr($inputVal, 3, 2);
+      $find_qid = intval(substr($inputVal, 5));
       $pre_var_val = '';
       foreach ($user_answers as $screen => $answers) {
-        foreach ($answers as $pre_qid => $ans) {
-          if ($pre_qid == $find_qid) {
-            try {
-              $variables = json_decode($ans, true);
-            } catch (exception $e) {
-              return 'ERROR';
+        if (isset($answers[$find_qid])) {
+            $variables = json_decode($answers[$find_qid], true);
+            if(isset($variables['vars'][$find_var])) {
+              $inputVal = $variables['vars'][$find_var];
+              break;
+            } else {
+              $inputVal = 'ERROR';
             }
-            break 2;
-          }
+        } else {
+            $inputVal = 'ERROR';        
         }
+        
       }
-      if (!isset($variables['vars']['$' . $find_var])) return 'ERROR';
-      $inputVal = $variables['vars']['$' . $find_var]; //str_replace('var' . substr($inputVal, 3, 1) . $find_qid, $pre_var_val, $inputVal);
     }
 
-    //eval("\$inputVal = $inputVal;");
-
     return $inputVal;
+  }
+  
+  /**
+   * test to see if a var is linked to a previous answer 
+   * @param  string var min or max
+   * @return bool
+   */
+  public function is_linked_ans($varval) {
+    if (substr($varval, 0, 3) == 'ans') {
+      return true;
+    }
+    return false;
+  }
+  
+  /**
+   * test to see if a var is linked to a previous question 
+   * @param  string  var min or max
+   * @return bool
+   */
+  public function is_linked_question_var($varval) {
+      if (substr($varval, 0, 3) == 'var') {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -654,31 +677,25 @@ class EnhancedCalc extends Question implements questionInterface {
       }
     }
 
-    $calculatevars = false;
-    //check to see if variables have been previously generated if not generate them
-    if (!isset($this->useranswer['vars'])) {
-      $calculatevars = true;
-    } else {
-      foreach ($this->useranswer['vars'] as $value) {
-        if ($value == 'ERROR') {
-          $calculatevars = true;
+    $calculatevars = array();
+    //check to see if variables have been previously generated if not put them in an array to be generated
+    foreach($this->settings['vars'] as $key => $value) {
+        if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
+          $min = $this->variable_substitution($value['min'], $this->alluseranswers);
+          $max = $this->variable_substitution($value['max'], $this->alluseranswers);
+          $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
+          $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
+          $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
+        } 
+        
+        //pull in the last userans every time
+        if($this->is_linked_ans($value['min'])) {
+          $this->useranswer['vars'][$key] = $this->variable_substitution($value['min'], $this->alluseranswers);
         }
-      }
+        
+        //update the session 
+        $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
     }
-
-    if ($calculatevars === true) {
-      //need to generate variables
-      //TODO handle the link variables
-      foreach ($this->settings['vars'] as $key => $value) {
-        $min = $this->variable_substitution($value['min'], $this->alluseranswers);
-        $max = $this->variable_substitution($value['max'], $this->alluseranswers);
-        $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
-        $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
-        $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
-      }
-      $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
-    }
-    //
 
     $varname = array_keys($this->useranswer['vars']);
     $varvalue = array_values($this->useranswer['vars']);
@@ -763,7 +780,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
     $marks = $this->settings['marks_correct'];
   }
-
+  
   /**
    * Get the veriables as defined in the question
    * @return array Array of defined variables indexed by the label (e.g. $A)

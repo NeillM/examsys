@@ -45,7 +45,7 @@ Class MathsUtils {
    * @return mixed Random number based on input parameters
    */
   static function gen_random_no($min, $max, $increment, $decimals) {
-    if ($min == 'ERROR' or $max == 'ERROR') return 'ERROR';
+    if ($min === 'ERROR' or $max === 'ERROR') return 'ERROR';
     if ($decimals > 0) {
       $min = $min * (10 * $decimals);
       $max = $max * (10 * $decimals);
