@@ -174,8 +174,8 @@ if (!isset($_POST['update'])) {
   $cfg_use_ldap         = $configObject->get('cfg_use_ldap');
 
   $cfg_web_host         = $configObject->get('cfg_web_host');
-  if($cfg_web_host='') {
-      $cfg_web_host=$cfg_db_host;
+  if($cfg_web_host == '') {
+      $cfg_web_host = $cfg_db_host;
   }
 
       error_reporting(-1);
