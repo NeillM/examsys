@@ -307,6 +307,8 @@ class PaperProperties {
     $this->set_display_end_date();
     
     $this->changes = array();
+    
+    $this->load_summative_lock();
   }
   
   /*
@@ -318,8 +320,6 @@ class PaperProperties {
     $configObject = Config::get_instance();
     $userObject   = UserObject::get_instance();
   
-    $this->load_summative_lock();
-    
     if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
       $result = $this->db->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, external_review_deadline = ?, internal_review_deadline = ?, recache_marks = ? WHERE property_id = ?");
       $result->bind_param('siiiiiissii', $this->marking, $this->pass_mark, $this->distinction_mark, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->external_review_deadline, $this->internal_review_deadline, $this->recache_marks, $this->property_id);
@@ -579,6 +579,10 @@ class PaperProperties {
    * @param string $paper_title
    */
   public function set_paper_title($paper_title) {
+    if ($paper_title == '') {
+      return false;
+    }
+  
     $old_paper_title = $this->paper_title;
   
     $this->paper_title = $paper_title;

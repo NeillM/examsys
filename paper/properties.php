@@ -245,19 +245,20 @@ function modulo($n,$b) {
   return $n-$b*floor($n/$b);
 }
 
+$title_unique = true;
+
 if (isset($_POST['Submit'])) {
   $old_marking = $properties->get_marking();
   $old_externals = $properties->get_externals();
   $old_internals = $properties->get_internal_reviewers();
   
-  // Check that the new paper name is not already used by any other paper (i.e. unique).
-  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ? LIMIT 1");
-  $result->bind_param('s', $_POST['paper_title']);
-  $result->execute();
-  $result->bind_result($paper_title);
-  $result->store_result();
-  if ($result->num_rows == 0 or $properties->get_paper_title() == $_POST['paper_title']) {
-    $properties->set_paper_title($_POST['paper_title']);
+  if (isset($_POST['paper_title'])) {
+    $title_unique = Paper_utils::is_paper_title_unique($_POST['paper_title'], $mysqli);
+  }
+  if ($title_unique) {
+    if (isset($_POST['paper_title'])) {  // Check is set, could be disabled.
+      $properties->set_paper_title($_POST['paper_title']);
+    }
     if (isset($_POST['paper_type']) and ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1')) {
       $properties->set_paper_type($_POST['paper_type']);
     }
@@ -306,7 +307,7 @@ if (isset($_POST['Submit'])) {
       $properties->set_hide_if_unanswered('0');
     }
 
-    if (($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$configObject->get('cfg_summative_mgmt') or  $properties->get_paper_type() != '2') {
+    if (($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and $userObject->has_role('SysAdmin')) or !$configObject->get('cfg_summative_mgmt') or  $properties->get_paper_type() != '2') {
   		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   		$target_timezone = new DateTimeZone($_POST['timezone']);
 
@@ -587,7 +588,6 @@ if (isset($_POST['Submit'])) {
       }
     }
     
-
     // Set any metadata security
     $old_meta = '';
     $result = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ? ORDER BY name");
@@ -711,64 +711,55 @@ if (isset($_POST['Submit'])) {
     <form>
       <br />&nbsp;<div align="center"><input type="button" id="home" name="home" value="   OK   " /></div>
     </form>
-  <?php
-  } else {
-  ?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-    <title><?php echo $string['edittitle']; ?></title>
-  </head>
-  <body>
-    <form>
-      <br /><?php echo $string['warning']; ?><br />&nbsp;<div align="center"><input type="button" name="back" value="&lt; Back" onclick="javascript: history.go(-1)" /></div>
-    </form>
-  <?php
+  </body>
+</html>
+<?php
+    exit();
   }
+}
+
+$option_no = 1;
+
+// Work out if any negative marking is used
+$neg_marking = false;
+$result = $mysqli->prepare("SELECT marks_incorrect FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?");
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->bind_result($marks_incorrect);
+while ($result->fetch()) {
+  if ($marks_incorrect < 0) {
+    $neg_marking = true;
+  }
+}
+$result->close();
+
+// Load textual feedback
+$textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli);
+
+$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
+$target_timezone = new DateTimeZone($properties->get_timezone());
+
+if ($properties->get_start_date() != '') {
+  $start_date = DateTime::createFromFormat('U', $properties->get_start_date(), $local_time);
+  $start_date->setTimezone($target_timezone);
 } else {
-  $option_no = 1;
+  $start_date = '';
+}
 
-  // Work out if any negative marking is used
-  $neg_marking = false;
-  $result = $mysqli->prepare("SELECT marks_incorrect FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($marks_incorrect);
-  while ($result->fetch()) {
-    if ($marks_incorrect < 0) {
-      $neg_marking = true;
-    }
-  }
-  $result->close();
+if ($properties->get_end_date() != '') {
+  $end_date = DateTime::createFromFormat('U', $properties->get_end_date(), $local_time);
+  $end_date->setTimezone($target_timezone);
+} else {
+  $end_date = '';
+}
 
-  // Load textual feedback
-  $textual_feedback = Paper_utils::get_textual_feedback($_GET['paperID'], $mysqli);
-
-  $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
-  $target_timezone = new DateTimeZone($properties->get_timezone());
-
-  if ($properties->get_start_date() != '') {
-    $start_date = DateTime::createFromFormat('U', $properties->get_start_date(), $local_time);
-    $start_date->setTimezone($target_timezone);
-  } else {
-    $start_date = '';
-  }
-
-  if ($properties->get_end_date() != '') {
-    $end_date = DateTime::createFromFormat('U', $properties->get_end_date(), $local_time);
-    $end_date->setTimezone($target_timezone);
-  } else {
-    $end_date = '';
-  }
-
-  if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
-    $sum_disabled = ' disabled';
-  } else {
-    $sum_disabled = '';
-  }
+if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
+  $sum_disabled = ' disabled';
+} elseif ($userObject->has_role('Admin') and $locked) {
+  $sum_disabled = ' disabled';
+} else {
+  $sum_disabled = '';
+}
 
 ?>
 <!DOCTYPE html>
@@ -780,19 +771,7 @@ if (isset($_POST['Submit'])) {
   <title><?php echo $string['propertiestitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-  <style type="text/css">
-    body {background-color:#F1F5FB}
-    table {text-align:left}
-    .r1 {text-indent:-23px; padding-left:23px; background-color:white}
-    .r2 {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
-    .r1disabled {text-indent:-23px; padding-left:23px; background-color:white; color:#808080}
-    .r2disabled {text-indent:-23px; padding-left:23px; background-color:#DDDDDD; color:#808080}
-    select {margin:0px; padding:0px}
-    input[type="text"] {margin:0px}
-    .button_on {background-image:url("../artwork/2007_button_on.png")}
-    .button_over {background-image:url("../artwork/2007_button_over.png")}
-    .button_off {background-image:none}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/properties.css"/>
 
   <?php echo $cfg_editor_javascript; ?>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -843,8 +822,8 @@ if (isset($_POST['Submit'])) {
           }
         }
       }
-      $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>&session=' + $('#session').val() );
-      $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>');
+      $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=<?php echo $paperID; ?>&session=' + $('#session').val() );
+      $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=<?php echo $paperID; ?>');
     }
 
     function objreportURL() {
@@ -1099,7 +1078,13 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
          echo "<a href=\"" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
      }
      echo "</td></tr>\n";
-     echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"" . $properties->get_paper_title() . "\" name=\"paper_title\"$disabled required /><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
+     echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\">";
+     if (isset($_POST['Submit']) and !$title_unique) {
+       echo "<input type=\"text\" size=\"75\" maxlength=\"255\" class=\"errfield\" value=\"" . $_POST['paper_title'] . "\" name=\"paper_title\"$disabled required />";
+     } else {
+       echo "<input type=\"text\" size=\"75\" maxlength=\"255\" value=\"" . $properties->get_paper_title() . "\" name=\"paper_title\"$disabled required />";
+     }
+     echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\"></td></tr>\n";
    ?>
     <tr><td align="right" valign="top"><?php echo $string['type']; ?>&nbsp;</td><td>
    <?php
@@ -1310,7 +1295,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $i = 0;
       
       $std_set_details = $mysqli->prepare("SELECT std_set.id, title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, group_review FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
-      $std_set_details->bind_param('i', $_GET['paperID']);
+      $std_set_details->bind_param('i', $paperID);
       $std_set_details->execute();
       $std_set_details->bind_result($std_setID, $std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $group_review);
       while ($std_set_details->fetch()) {
@@ -1672,7 +1657,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
      $feedback_reports = array('objectives'=>'', 'questions'=>'', 'cohort_performance'=>'');
      
      $feedback_details = $mysqli->prepare("SELECT idfeedback_release, type FROM feedback_release WHERE paper_id = ?");
-     $feedback_details->bind_param('i', $_GET['paperID']);
+     $feedback_details->bind_param('i', $paperID);
      $feedback_details->execute();
      $feedback_details->bind_result($idfeedback_release, $type);
      $feedback_details->store_result();
@@ -1770,8 +1755,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 <td align="center" colspan="2">
 <table cellpadding="1" cellspacing="2" border="0">
 <tr><td colspan="3">&nbsp;<?php
-  $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id AND q_type='sct'");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type = 'sct'");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($sct_no);
   $result->fetch();
@@ -2081,6 +2066,7 @@ for ($i=0; $i<$rows; $i++) {
   if (isset($string[$part])) $part = $string[$part];
   echo "<tr><td>" . ucfirst($part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $changes[$i]['date']) . "</td><td>" . $changes[$i]['title'] . " " . $changes[$i]['surname'] . "</td><tr>\n";
 }
+$mysqli->close();
 ?>
 </table>
 </div></td></tr>
@@ -2092,11 +2078,8 @@ for ($i=0; $i<$rows; $i++) {
 </table>
 
 <input type="hidden" name="noadd" value="<?php if (isset($_GET['noadd'])) echo $_GET['noadd']; ?>" />
-<input type="hidden" name="caller" value="<?php echo $_GET['caller']; ?>" />
+<input type="hidden" name="caller" value="<?php if (isset($_GET['caller'])) echo $_GET['caller']; ?>" />
 </form>
-<?php
-  }
-$mysqli->close();
-?>
+
 </body>
 </html>
