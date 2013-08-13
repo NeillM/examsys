@@ -1682,7 +1682,8 @@ QUERY;
           CREATE TABLE `ebel` (
             `std_setID` int(10) unsigned NOT NULL,
             `category` char(3) default NULL,
-            `percentage` float default NULL
+            `percentage` float default NULL,
+            PRIMARY KEY (`std_setID`,`category`)
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1809,7 +1810,8 @@ QUERY;
           `x2_distinction` tinyint(4) DEFAULT NULL,
           `y1_distinction` tinyint(4) DEFAULT NULL,
           `y2_distinction` tinyint(4) DEFAULT NULL,
-          `marking` tinyint(4) DEFAULT NULL
+          `marking` tinyint(4) DEFAULT NULL,
+           PRIMARY KEY (`std_setID`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
