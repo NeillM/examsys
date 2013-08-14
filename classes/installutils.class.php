@@ -1739,7 +1739,7 @@ QUERY;
           `idfeedback_release` int(11) NOT NULL auto_increment,
           `paper_id` mediumint(8) unsigned default NULL,
           `date` datetime NOT NULL,
-          `type` enum('objectives','questions') default NULL,
+          `type` enum('objectives','questions','cohort_performance') default NULL,
           PRIMARY KEY  (`idfeedback_release`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -2380,6 +2380,7 @@ QUERY;
           `password` char(20) default NULL,
           `retired` datetime default NULL,
           `crypt_name` varchar(32) default NULL,
+          `recache_marks` tinyint(3) unsigned DEFAULT '0',
           PRIMARY KEY (`property_id`),
           KEY `paper_title` (`paper_title`),
           KEY `paper_owner` (`paper_ownerID`),
