@@ -793,6 +793,8 @@ QUERY;
       $status_upd->close();
     }
     echo '<li>Updated question statuses</li>';
+      $sql = 'UPDATE questions SET status = 3 WHERE status IS NULL';
+      $updater_utils->execute_query($sql, true);
 
     $sql = 'ALTER TABLE questions MODIFY COLUMN status tinyint(3) NOT NULL';
     $updater_utils->execute_query($sql, true);
