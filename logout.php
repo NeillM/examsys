@@ -22,9 +22,14 @@
  * @package
  */
 
+require_once 'classes/configobject.class.php';
+$configObject = Config::get_instance();
 
-
-session_name('RogoAuthentication');
+if($configObject->get('cfg_session_name')!='') {
+    session_name($configObject->get('cfg_session_name'));
+} else {
+    session_name('RogoAuthentication');
+}
 $return = session_start();
 
 session_unset();
