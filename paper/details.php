@@ -75,7 +75,7 @@ $exclusions->load();
 function check_duplicates($q_screens, $string) {
   foreach ($q_screens as $q_screen=>$qs) {
     if (count($qs) > 1) {
-      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['Duplicate questions'] . ":</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
+      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['Duplicate questions'] . ":</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
     }
   }
 }
@@ -936,12 +936,12 @@ $result->close();
     echo $theme_str;
     if ($temp_array[$x]['q_type'] == 'random') {
       echo $temp_array[$x]['leadin'];
-      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['warning'] . '" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
+      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
     } elseif ($temp_array[$x]['leadin'] != '') {
       echo $temp_array[$x]['leadin'];
       if ($excluded[$temp_array[$x]['q_id']] != NULL) echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
       if (isset($exam_announcements[$temp_array[$x]['q_id']])) echo ' <img src="../artwork/comment_14_11.png" width="14" height="11" alt="Exam Clarification" />';
-      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['warning'] . '" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
+      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
     } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
       echo "<img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" />";
     } elseif (strpos($temp_array[$x]['q_media'],'.flv') !== false) {
@@ -974,7 +974,7 @@ $result->close();
       if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] === 'ERR') {
         // Only ever get in here for random questions
         if (count($temp_array[$x]['marks']) > 0) {
-          echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" title="' . $string['variablenomarks'] . '" alt="' . $string['variablenomarks'] . '" /></td>';
+          echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" title="' . $string['variablenomarks'] . '" alt="' . $string['variablenomarks'] . '" /></td>';
         }
         $marks_incorrect_error = true;
       } elseif ($status_array[$temp_array[$x]['status']]->get_exclude_marking()) {
@@ -1007,7 +1007,7 @@ $result->close();
     if ($row_no > 0 and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4') {
       echo "<tr><td colspan=\"4\"></td><td id=\"marks_total\" style=\"border-top:1px solid black; padding-right:4px\" align=\"right\">";
       if ($marks_incorrect_error == true) {
-        echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['variablenomarks'] . '" />';
+        echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['variablenomarks'] . '" />';
       } else {
         echo $total_marks;
       }
@@ -1024,7 +1024,7 @@ $result->close();
   if ($properties->get_paper_type() == '2') {
     if (isset($paper_warnings['status']) and count($paper_warnings['status']) > 0) {
       $first = true;
-      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['following_questions'] . ":</strong> ";
+      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['following_questions'] . ":</strong> ";
       foreach ($paper_warnings['status'] as $name => $warn_qs) {
         if (!$first) {
           echo ', ';

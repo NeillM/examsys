@@ -5,7 +5,9 @@ table {
   margin:0px;
   padding:0px;
   font-size:100%;
-  border-spacing:0px;
+}
+table.month_grid {
+  border-spacing:5px;
 }
 select {
   margin-top:3px
@@ -13,82 +15,64 @@ select {
 .month {
   margin-left:8px;
   margin-right:8px;
-  font-size:140%;
+  font-size:150%;
+  font-weight:bold;
 }
 .monthgrid {
+  border-collapse:separate;
   border-spacing:7px;
-  background-color:#E3EFFF;
-  width:98%;
+  width:99%;
   margin-left:auto;
   margin-right:auto;
   text-align:left;
 }
 .time {
-  color:#294C7A;
+  color:#808080;
   text-align:right;
-  width:36px;
+  width:50px;
   vertical-align:top;
-  padding-right:4px
+  padding-right:8px
 }
 .timewarn {
-  color:#294C7A;
+  color:black;
   background-color:yellow;
   text-align:right;
-  width:36px;
+  width:50px;
   vertical-align:top;
-  padding-right:4px
+  padding-right:8px
 }
 a.lab {
   color:#FF6300
 }
 .month {
+  border-collapse:separate;
   border-spacing:7px;
-  background-color:#E3EFFF;
   width:98%;
   margin-left:auto;
   margin-right:auto;
   text-align:left;
 }
 .dtext {
-  border-left:1px solid #5D8CC9;
-  text-align:center; color:#6593CF; background-color:#E3EFFF;
+  color:#808080;
 }
 .dhead {
-  padding:0px;
-  height:17px;
-  background-image:url('../artwork/cal_box_gradient.png');
-  background-repeat:repeat-x;
-  border-top:1px solid #5D8CC9;
-  border-left:1px solid #5D8CC9;
-  border-bottom:1px solid #5D8CC9;
+  font-size:130%;
   padding-left:5px;
-  font-weight:bold
+  font-weight:bold;
+  border-bottom:1px solid #C0C0C0;
 }
 .dheadtoday {
-  padding:0px;
-  height:17px;
-  background-image:url('../artwork/cal_box_gradient_on.png');
-  background-repeat:repeat-x;
-  border-top:1px solid #EE9311;
-  border-left:1px solid #EE9311;
-  border-bottom:1px solid #EE9311;
+  font-size:130%;
   padding-left:5px;
-  font-weight:bold
+  font-weight:bold;
+  background-color:#FFC0C0;
+  border-bottom:1px solid #C00000;
 }
 .dheadnomonth {
   padding:0px;
-  height:17px;
-  background-image:url('../artwork/cal_box_gradient.png');
-  background-repeat:repeat-x;
-  border-top:1px solid #5D8CC9;
-  border-left:1px solid #5D8CC9;
-  border-bottom:1px solid #5D8CC9
 }
 .daynomonth {
   width:20%;
-  background-color:#A5BFE1;
-  border-left:1px solid #5D8CC9;
-  border-bottom:1px solid #5D8CC9
 }
 .day {
   text-align:left;
@@ -98,9 +82,6 @@ a.lab {
   padding-bottom:5px;
   padding-left:0px;
   padding-right:0px;
-  background-color:white;
-  border-left:1px solid #5D8CC9;
-  border-bottom:1px solid #5D8CC9
 }
 .daycur {
   text-align:left;
@@ -109,6 +90,31 @@ a.lab {
   padding_top:5px;
   padding-bottom:5px;
   background-color:white;
-  border-left:1px solid #EE9311;
-  border-bottom:1px solid #EE9311
+}
+.inspector {
+  font-size:90%;
+  background-color:white;
+  border:1px solid #A0A0A0;
+  box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50);
+  width:350px;
+  position:absolute;
+  display:none;
+  border-padding:4px;
+}
+.inspector td {
+  padding:4px;
+}
+.field {
+  vertical-align:top;
+  width:70px;
+}
+.warning {
+  font-weight:bold;
+  background-color:#FFC0C0;
+  padding-left:5px;
+  padding-right:5px;
+  display:none;
+}
+.warn_icon {
+  width:12px;
 }
