@@ -251,10 +251,15 @@ if (isset($_POST['Submit'])) {
   $old_marking = $properties->get_marking();
   $old_externals = $properties->get_externals();
   $old_internals = $properties->get_internal_reviewers();
+  $old_paper_title = $properties->get_paper_title();
   
   if (isset($_POST['paper_title'])) {
-    $title_unique = Paper_utils::is_paper_title_unique($_POST['paper_title'], $mysqli);
-  }
+	  if ($old_paper_title == $_POST['paper_title']) {
+		  $title_unique = true;
+		} else {
+			$title_unique = Paper_utils::is_paper_title_unique($_POST['paper_title'], $mysqli);
+		}
+	}
   if ($title_unique) {
     if (isset($_POST['paper_title'])) {  // Check is set, could be disabled.
       $properties->set_paper_title($_POST['paper_title']);
