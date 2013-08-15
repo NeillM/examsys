@@ -107,6 +107,28 @@ Class UpdaterUtils {
     return true;
   }
 
+    public function does_index_column_exist($table_name, $index_name, $index_column, $index_sequence = NULL) {
+        if(!is_null($index_sequence)) {
+            $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ? AND column_name = ? and seq_in_index = ?");
+            $result->bind_param('sss', $index_name, $index_column, $index_sequence);
+
+        } else {
+            $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ? AND column_name = ?");
+            $result->bind_param('ss', $index_name, $index_column);
+        }
+        $result->execute();
+        $result->store_result();
+        $num_rows =  $result->num_rows;
+
+        $result->close();
+
+        if ($num_rows < 1) {
+            return false;
+        }
+
+        return true;
+    }
+
   public function does_tables_priv_exist($user, $table, $privileges) {
     $this->mysqli->select_db('mysql');
 
