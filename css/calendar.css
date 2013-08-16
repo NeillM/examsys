@@ -108,8 +108,8 @@ a.lab {
   display:none;
 }
 .warn_icon {
-  width: 12px;
-	vertical-align: top;
+	white-space:nowrap;
+	vertical-align:top;
 }
 .notch {
 	position: absolute;
