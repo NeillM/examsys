@@ -24,7 +24,7 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-
+require_once $cfg_web_root . '/classes/lang.class.php';
 require_once $cfg_web_root . '/classes/lookup.class.php';
 require_once $cfg_web_root . '/classes/userutils.class.php';
 
@@ -730,6 +730,24 @@ class postauthfailreturn extends stdClass {
     $this->exit = false;
   }
 }
+
+class displaystdformmessage extends stdClass {
+    public $pretext;
+    public $posttext;
+    public $cssclass;
+    public $content;
+
+
+    function __construct() {
+        $this->pretext = '';
+        $this->posttext = '';
+        $this->csstype = '';
+        $this->content = '';
+
+    }
+
+}
+
 
 class displaystdformobjbutton extends stdClass {
   public $pretext;

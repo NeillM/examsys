@@ -98,7 +98,7 @@ HTML;
           foreach ($displaystdformobj->buttons as $object) {
             echo <<<HTML
 $object->pretext
-<input type="$object->type" name="$object->name" value="$object->value" style="$object->style" />
+<input type="$object->type" name="$object->name" value="$object->value" style="$object->style" class="$object->class" />
 $object->posttext
 HTML;
             }
