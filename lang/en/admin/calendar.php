@@ -28,4 +28,13 @@ $string['wednesday'] = 'Wednesday';
 $string['thursday'] = 'Thursday';
 $string['friday'] = 'Friday';
 $string['saturday'] = 'Saturday';
+// Callout
+$string['timezone'] = 'Time Zone';
+$string['time_warning'] = 'Start and End times are the same!';
+$string['lab_warning'] = 'Warning no labs set!';
+$string['duration_warning'] = 'No duration set!';
+$string['starttime'] = 'Start Time';
+$string['endtime'] = 'End Time';
+$string['duration'] = 'Duration';
+$string['labs'] = 'Labs';
 ?>

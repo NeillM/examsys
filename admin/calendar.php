@@ -57,6 +57,36 @@ function drawTabs($current_tab) {
   return $html;
 }
 
+function display_paper($day_no, $subtract, $current_year, $current_month, $paper, &$papers, &$cellID, $string) {
+  $configObj = Config::get_instance();
+	
+	if ($paper['start_time'] == $paper['end_time'] or ($paper['labs'] == '' and $paper['password'] == '') or $paper['duration'] == '') {
+		$problem = true;
+	} else {
+		$problem = false;
+	}			
+	if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
+		$papers++;
+		echo '<tr><td class="warn_icon">';
+		if ($problem) {
+			echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" align="texttop" alt="' . $string['warning'] . '" title="' . $string['warning'] . '" />';
+		}
+		if ($paper['timezone'] != $configObj->get('cfg_timezone')) {
+			echo '<img src="../artwork/timezone_16.png" width="16" height="16" align="texttop" alt="' . $string['timezone'] . '" title="' . $string['timezone'] . '" />';
+		}
+		if ($paper['password'] != '') {
+			echo '<img src="../artwork/key_12.png" width="12" height="12" alt="' . $string['password'] . '" title="' . $string['password'] . '"  />';
+		}
+		echo '</td><td class="time">' . $paper['start_hour'];
+		if ($paper['start_minute'] != 0) {
+			echo ':' . $paper['start_minute'];
+		}
+		echo '&nbsp;' . $paper['am_pm'] . '</td>';
+		echo "<td class=\"p\"><div class=\"pd\"><a id=\"$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . "&module=" . $paper['idMod'] . "&folder=\" onmouseover=\"showInspector($cellID, '" . $paper['start_time'] . "', '" . $paper['end_time'] . "', '" . $paper['duration'] . "', '" . $paper['labs'] . "', '" . $paper['password'] . "', '" . $paper['timezone'] . "')\" onmouseout=\"hideInspector()\">" . $paper['paper_title'] . "</a></div></td></tr>";
+		$cellID++;
+	}
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -64,7 +94,7 @@ function drawTabs($current_tab) {
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title>Rogō: <?php echo $string['calendar'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+<title>Rog&#333;: <?php echo $string['calendar'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
 <?php echo $configObject->get('cfg_js_root') ?>
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -91,19 +121,40 @@ function drawTabs($current_tab) {
     }
   }
   
-  function showInspector(cellID, start_time, end_time, duration, labs, password) {
+  function showInspector(cellID, start_time, end_time, duration, labs, password, timezone) {
 	var p = $('#' + cellID);
 	var position = p.position();
-	$('#inspector').css('left', position.left);
-	$('#inspector').css('top', position.top + 16);
+	
+	var left_pos = position.left;
+	if (left_pos + 250 > $(window).width()) {
+	  left_pos = $(window).width() - 262;
+		$('.notch').css('left', '180px');
+	} else {
+		$('.notch').css('left', '20px');
+	}
+	$('#inspector').css('left', left_pos);
+	$('#inspector').css('top', position.top + p.height() + 12);
 	$('#start_time').html(start_time);
 	$('#end_time').html(end_time);
-	$('#duration').html(duration);
+	$('#duration').html(duration + ' mins');
 	
 	if (start_time == end_time) {
 	  $('#time_warning').show();
 	} else {
 	  $('#time_warning').hide();
+	}
+	
+	if (duration == '') {
+	  $('#duration_warning').show();
+	} else {
+	  $('#duration_warning').hide();
+	}
+	
+	if (timezone != '<?php echo $configObject->get('cfg_timezone'); ?>') {
+	  $('#timezone').html(timezone);
+	  $('#timezone_row').show();
+	} else {
+	  $('#timezone_row').hide();
 	}
 	
 	if (labs == '' && password == '') {
@@ -143,15 +194,19 @@ function drawTabs($current_tab) {
 
 <body>
 
-<div id="inspector" class="inspector">
+<div id="inspector" class="callout border-callout">
+<b class="border-notch notch"></b>
+<b class="notch"></b>
 <table cellpadding="0" cellspacing="0" style="width:100%">
-<tr id="time_warning" class="warning"><td class="field">Warning</td><td>Start and End times are the same!</td></tr>
-<tr id="lab_warning" class="warning"><td class="field">Warning</td><td>Warning no labs set!</td></tr>
-<tr><td class="field">Start Time</td><td id="start_time"></td></tr>
-<tr><td class="field">End Time</td><td id="end_time"></td></tr>
-<tr><td class="field">Duration</td><td id="duration"></td></tr>
-<tr><td class="field">Labs</td><td id="labs"></td></tr>
-<tr id="pw_row"><td class="field">Password</td><td id="password" style="font-family:'Courier New'"></td></tr>
+<tr id="time_warning" class="warning"><td class="field"><?php echo $string['warning']; ?></td><td><?php echo $string['time_warning']; ?></td></tr>
+<tr id="lab_warning" class="warning"><td class="field"><?php echo $string['warning']; ?></td><td><?php echo $string['lab_warning']; ?></td></tr>
+<tr id="duration_warning" class="warning"><td class="field"><?php echo $string['warning']; ?></td><td><?php echo $string['duration_warning']; ?></td></tr>
+<tr id="timezone_row"><td class="field"><?php echo $string['timezone']; ?></td><td id="timezone"></td></tr>
+<tr><td class="field"><?php echo $string['starttime']; ?></td><td id="start_time"></td></tr>
+<tr><td class="field"><?php echo $string['endtime']; ?></td><td id="end_time"></td></tr>
+<tr><td class="field"><?php echo $string['duration']; ?></td><td id="duration"></td></tr>
+<tr><td class="field"><?php echo $string['labs']; ?></td><td id="labs"></td></tr>
+<tr id="pw_row"><td class="field"><?php echo $string['password']; ?></td><td id="password" style="font-family:'Courier New'"></td></tr>
 </table>
 </div>
 
@@ -288,30 +343,30 @@ function drawTabs($current_tab) {
   $paper_details = array();
   if ($schools_sql != '' or !isset($_GET['school']) or (isset($_GET['school']) and ($_GET['school'] == -1 or $_GET['school'] == ''))) {
     // Get papers running on various dates.
-    $result = $mysqli->prepare("SELECT password, exam_duration, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(start_date,'%l') AS start_hour, DATE_FORMAT(start_date,'%i') AS start_minute, DATE_FORMAT(start_date,'%p') AS am_pm, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%Y') AS cal_year, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND  properties_modules.idmod = modules.id AND start_date>=" . $current_year . "0101000000 AND end_date<=" . $current_year . "1231235959 AND paper_type='2' AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
+    $result = $mysqli->prepare("SELECT password, exam_duration, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(start_date,'%l') AS start_hour, DATE_FORMAT(start_date,'%i') AS start_minute, DATE_FORMAT(start_date,'%p') AS am_pm, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%Y') AS cal_year, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, timezone FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idmod = modules.id AND start_date >= " . $current_year . "0101000000 AND end_date <= " . $current_year . "1231235959 AND paper_type='2' AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
     $result->execute();
-    $result->bind_result($password, $duration, $main_date, $labs, $start_time, $start_hour, $start_minute, $am_pm, $end_time, $property_id, $paper_title, $month, $cal_year, $start_day, $end_date, $idMod, $paper_type);
+    $result->bind_result($password, $duration, $main_date, $labs, $start_time, $start_hour, $start_minute, $am_pm, $end_time, $property_id, $paper_title, $month, $cal_year, $start_day, $end_date, $idMod, $timezone);
     while ($result->fetch()) {
-      $paper_details[$property_id]['labs']        = $labs;
-      $paper_details[$property_id]['date']        = $main_date;
-      $paper_details[$property_id]['start_day']   = $start_day;
-      $paper_details[$property_id]['start_time']   = $start_time;
-      $paper_details[$property_id]['am_pm']       = $am_pm;
-      $paper_details[$property_id]['end_date']    = $end_date;
-      $paper_details[$property_id]['paper_title'] = str_replace('_', ' ' , $paper_title);
-      if (strlen($paper_details[$property_id]['paper_title']) > 50) {
-        $paper_details[$property_id]['paper_title'] = substr($paper_details[$property_id]['paper_title'], 0, 50) . '...';
+      $paper_details[$property_id]['labs']        	= $labs;
+      $paper_details[$property_id]['date']        	= $main_date;
+      $paper_details[$property_id]['start_day']   	= $start_day;
+      $paper_details[$property_id]['start_time']  	= $start_time;
+      $paper_details[$property_id]['am_pm']       	= $am_pm;
+      $paper_details[$property_id]['end_date']    	= $end_date;
+			$paper_details[$property_id]['paper_title'] 	= $paper_title;
+      if (strlen($paper_details[$property_id]['paper_title']) > 30) {
+        $paper_details[$property_id]['paper_title'] = str_replace('_', ' ' , $paper_details[$property_id]['paper_title']);
       }
-      $paper_details[$property_id]['property_id'] = $property_id;
-      $paper_details[$property_id]['month']       = $month;
-      $paper_details[$property_id]['cal_year']    = $cal_year;
-      $paper_details[$property_id]['start_hour']  = $start_hour;
+      $paper_details[$property_id]['property_id'] 	= $property_id;
+      $paper_details[$property_id]['month']       	= $month;
+      $paper_details[$property_id]['cal_year']    	= $cal_year;
+      $paper_details[$property_id]['start_hour']  	= $start_hour;
       $paper_details[$property_id]['start_minute']  = $start_minute;
-      $paper_details[$property_id]['end_time']    = $end_time;
-      $paper_details[$property_id]['paper_type']  = $paper_type;
-      $paper_details[$property_id]['idMod']       = $idMod;
-      $paper_details[$property_id]['password']    = $password;
-      $paper_details[$property_id]['duration']    = $duration;
+      $paper_details[$property_id]['end_time']    	= $end_time;
+      $paper_details[$property_id]['idMod']       	= $idMod;
+      $paper_details[$property_id]['password']    	= $password;
+      $paper_details[$property_id]['duration']    	= $duration;
+			$paper_details[$property_id]['timezone']			= $timezone;
     }
     $result->close();
   }
@@ -400,31 +455,7 @@ function drawTabs($current_tab) {
           $papers = 0;
           echo "<table id=\"month_grid\" style=\"width:100%\">\n";
           foreach ($paper_details as $individual_paper) {
-			if ($individual_paper['start_time'] == $individual_paper['end_time'] or ($individual_paper['labs'] == '' and $individual_paper['password'] == '' and $individual_paper['paper_type'] == '2')) {
-			  $problem = true;
-			} else {
-			  $problem = false;
-			}			
-            if ($individual_paper['start_day'] == ($day_no - $subtract) and $individual_paper['cal_year'] == $current_year and $individual_paper['month'] == $current_month) {
-              $papers++;
-			  echo '<tr><td class="warn_icon">';
-              if ($problem) {
-				echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" align="texttop" alt="Warning" />';
-			  }
-              echo '</td><td class="time">' . $individual_paper['start_hour'];
-              if ($individual_paper['start_minute'] != 0) {
-				echo ':' . $individual_paper['start_minute'];
-			  }
-			  echo ' ' . $individual_paper['am_pm'] . '</td>';
-			  echo "<td id=\"$cellID\" onmouseover=\"showInspector($cellID, '" . $individual_paper['start_time'] . "', '" . $individual_paper['end_time'] . "', '" . $individual_paper['duration'] . "', '" . $individual_paper['labs'] . "', '" . $individual_paper['password'] . "')\" onmouseout=\"hideInspector()\"><a href=\"../paper/details.php?paperID=" . $individual_paper['property_id'] . "&module=" . $individual_paper['idMod'] . "&folder=\">" . $individual_paper['paper_title'] . "</a>&nbsp;";
-              $cellID++;
-              //if ($individual_paper['labs'] == '' and $individual_paper['password'] == '' and $individual_paper['paper_type'] == '2') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" align="texttop" alt="Warning: no labs set!" />';
-              if ($individual_paper['password'] != '') {
-                echo '&nbsp;<img src="../artwork/key_12.png" width="12" height="12" alt="password" style="vertical-align:text-top" />';
-              }
-              if ($individual_paper['paper_type'] == '4') echo '<img src="../artwork/small_osce_icon.png" width="16" height="13" alt="OSCE" />';
-              echo "</td></tr>";
-            }
+					  display_paper($day_no, $subtract, $current_year, $current_month, $individual_paper, $papers, $cellID, $string);
           }
           echo "</table>\n";
           if ($papers == 0) echo '&nbsp;';
@@ -443,36 +474,7 @@ function drawTabs($current_tab) {
               echo "<br ><table style=\"width:100%\"><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr></table>";              
               echo "<table style=\"padding-top:5px; width:100%\">";            
               foreach ($paper_details as $individual_paper) {
-                if ($individual_paper['start_day'] == (($day_no + 1) - $subtract) and $individual_paper['cal_year'] == $current_year and $individual_paper['month'] == $current_month) {
-                  echo '<tr>';
-                  if ($individual_paper['start_time'] == $individual_paper['end_time']) {
-                    echo '<td class="timewarn">';
-                  } else {
-                    echo '<td class="time">';
-                  }
-                  echo $individual_paper['start_time'] . '</td>';
-                  if ($individual_paper['start_time'] == $individual_paper['end_time']) {
-                    echo '<td class="timewarn">';
-                  } else {
-                    echo '<td class="time">';
-                  }
-                  echo "</td><td id=\"$cellID\" onmouseover=\"showInspector($cellID, '" . $individual_paper['start_time'] . "', '" . $individual_paper['end_time'] . "', '" . $individual_paper['duration'] . "', '" . $individual_paper['labs'] . "', '" . $individual_paper['password'] . "')\" onmouseout=\"hideInspector()\"><a href=\"../paper/details.php?paperID=" . $individual_paper['property_id'] . "&module=" . $individual_paper['idMod'] . "&folder=\">" . $individual_paper['paper_title'] . "</a>&nbsp;";
-                  $cellID++;
-				  $rooms = explode(',',$individual_paper['labs']);
-                  $html = '';
-                  foreach ($rooms as $individual_room) {
-                    if (isset($lab_list[$individual_room]['name'])) {
-                      if ($html == '') {
-                        if ($lab_list[$individual_room]['room_no'] != '') $html = '<a class="lab" href="lab_details.php?labID=' . $individual_room . '" title="' . $lab_list[$individual_room]['name'] . '">' . $lab_list[$individual_room]['room_no'] . '</a>';
-                      } else {
-                        if ($lab_list[$individual_room]['room_no'] != '') $html .= ', <a class="lab" href="lab_details.php?labID=' . $individual_room . '" title="' . $lab_list[$individual_room]['name'] . '">' . $lab_list[$individual_room]['room_no'] . '</a>';
-                      }
-                    } 
-                  }
-                  if ($individual_paper['labs'] == '' and $individual_paper['paper_type'] == '2') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" align="texttop" alt="Warning: no labs set!" />';
-                  if ($individual_paper['paper_type'] == '4') echo '<img src="../artwork/small_osce_icon.png" width="16" height="13" alt="OSCE" />';
-                  echo "$html</td></tr>";
-                }
+								display_paper($day_no + 1, $subtract, $current_year, $current_month, $individual_paper, $papers, $cellID, $string);
               }
               echo "</table>";
             }

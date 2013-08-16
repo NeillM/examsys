@@ -1,5 +1,5 @@
 body {
-  font-size:80%
+  font-size:80%;
 }
 table {
   margin:0px;
@@ -29,17 +29,8 @@ select {
 .time {
   color:#808080;
   text-align:right;
-  width:50px;
   vertical-align:top;
-  padding-right:8px
-}
-.timewarn {
-  color:black;
-  background-color:yellow;
-  text-align:right;
-  width:50px;
-  vertical-align:top;
-  padding-right:8px
+  padding-right:8px;
 }
 a.lab {
   color:#FF6300
@@ -91,17 +82,18 @@ a.lab {
   padding-bottom:5px;
   background-color:white;
 }
-.inspector {
-  font-size:90%;
-  background-color:white;
-  border:1px solid #A0A0A0;
-  box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50);
-  width:350px;
+.callout {
+  display: none;
   position:absolute;
-  display:none;
-  border-padding:4px;
+  font-size:90%;
+	background-color: white;
+  width: 250px;
+	-moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50);
 }
-.inspector td {
+.callout td {
   padding:4px;
 }
 .field {
@@ -116,5 +108,38 @@ a.lab {
   display:none;
 }
 .warn_icon {
-  width:12px;
+  width: 12px;
+	vertical-align: top;
+}
+.notch {
+	position: absolute;
+  top: -10px;
+  left: 20px;
+	margin: 0;
+	border-top: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid white;
+	padding: 0;
+	width: 0;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+}
+.border-callout {
+	border: 1px solid #A0A0A0;
+	padding: 3px;
+}
+.border-callout .border-notch {
+	border-bottom-color: #808080;
+	top: -11px;
+}
+.p {
+	vertical-align:top;
+	width: 90%;
+}
+.pd {
+	overflow:hidden;
+	width:100%;
+	height:2.3em;
 }
