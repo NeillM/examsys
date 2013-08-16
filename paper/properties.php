@@ -362,8 +362,11 @@ if (isset($_POST['Submit'])) {
         $properties->set_raw_end_date($end_date->format('YmdHis'));
       }
       $properties->set_timezone($_POST['timezone']);
-      $properties->set_calendar_year($_POST['calendar_year']);
-      $exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
+			
+			$calendar_year = ($_POST['calendar_year'] == '') ? NULL : $_POST['calendar_year'];
+			$properties->set_calendar_year($calendar_year);
+
+			$exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
       $properties->set_exam_duration($exam_duration);
 
       $lab_string = '';
@@ -578,19 +581,20 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
 
-      for ($i=1; $i<10; $i++) {
-        $editProperties = $mysqli->prepare("INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)");
-        if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
-          $editProperties->bind_param('iis', $paperID, $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
-          $editProperties->execute();
-        }
-        $editProperties->close();
+			for ($i=1; $i<10; $i++) {
+				$editProperties = $mysqli->prepare("INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)");
+				if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
+					$editProperties->bind_param('iis', $paperID, $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
+					$editProperties->execute();
+				}
+				$editProperties->close();
 
-        if ($old_textual_feedback[$i]['msg'] != $_POST["feedback_msg$i"] or $old_textual_feedback[$i]['boundary'] != $_POST["feedback_value$i"]) {
-          // log a change
-          $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
-        }
-      }
+				if ($old_textual_feedback[$i]['msg'] != $_POST["feedback_msg$i"] or $old_textual_feedback[$i]['boundary'] != $_POST["feedback_value$i"]) {
+					// log a change
+					$logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
+				}
+			}
+			
     }
     
     // Set any metadata security
@@ -1734,7 +1738,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
      echo "</td></tr>\n";
 
-     if (in_array($properties->get_paper_type(), array('2', '4'))) {
+     if (!in_array($properties->get_paper_type(), array('2', '4'))) {
        echo "<tr><td colspan=\"2\"style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['textualfeedback'] . "</td></tr>\n";
        echo "<tr><td style=\"text-align:center\">" . $string['above'] . "</td><td style=\"text-align:center\">" . $string['message'] . "</td></tr>\n";
        for ($i=1; $i<=10; $i++) {
