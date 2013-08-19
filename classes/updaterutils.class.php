@@ -182,32 +182,43 @@ Class UpdaterUtils {
   }
 
   public function execute_query($sql, $update_display) {
+    if ($update_display) {
+      echo "<li>$sql&hellip;";
+      ob_flush();
+      flush();
+    }
+
     $this->mysqli->query($sql);
 
     if ($this->mysqli->errno == 0) {
       if ($update_display) {
-        echo "<li>$sql</li>\n";
-        ob_flush();
-        flush();
+        echo "Done</li>\n";
       }
     } elseif ($this->mysqli->warning_count>0) {
-      echo '<li class="warning">WARNING: ' . $sql . '</li>';
+      if ($update_display) echo '</li>';
+      echo '<li class="warning">WARNING: ' . $sql;
       $e = $this->mysqli->get_warnings();
       do {
-        echo "Warning No: $e->errno: - $e->message <br />\n";
+        echo "<br />Warning No: $e->errno: - $e->message\n";
       } while ($e->next());
+      echo "</li>\n";
     } else {
-      echo '<li class="error">ERROR: ' . $sql . '</li>';
+      if ($update_display) echo '</li>';
+      echo '<li class="error">ERROR: ' . $sql;
       if ($this->mysqli->error) {
         try {
           $err = $this->mysqli->error;
           $mess = $this->mysqli->errno;
           throw new Exception("MySQL error $err", $mess);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+          echo "<br />Error No: " . $e->getCode() . " - " . $e->getMessage();
         }
       }
+      echo "</li>\n";
     }
+
+    ob_flush();
+    flush();
   }
 
   public function update_version($version, $string, $cfg_web_root) {
