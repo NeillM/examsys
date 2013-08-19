@@ -51,5 +51,5 @@ findBaseUrl();
 if($.browser.msie &&  $.browser.version < 9) {
   loadjscssfile("js/mee_src_src.js",'js');
 } else {
-  //loadjscssfile("js/mee.js",'js');
+  loadjscssfile("js/mee.js",'js');
 }
