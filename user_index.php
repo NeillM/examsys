@@ -299,6 +299,7 @@ if ($exam_duration !== null) {
   <link rel="stylesheet" type="text/css" href="./css/user_index.css" />
   <style type="text/css">
     body {margin-top:25px; font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
+    .noimg {display:none; width:0; height:0}
   </style>
 
   <script type="text/javascript" src="./js/student_help.js"></script>
@@ -577,7 +578,23 @@ if ($textsize > 120) {
   }
   $mysqli->close();
   ?><div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get('rogo_version'); ?></div></td></tr></table>
-
 </form>
+    <!-- Cache Often used scripts and images -->
+    <script src="js/start.js"></script>
+    <script src="js/jquery-1.6.1.min.js" /></script>
+    <script src="js/flash_include.js" /></script>
+    <script src="js/jquery.flash_q.js" /></script>
+    <script src="tools/mee/mee/js/mee_src.js" /></script>
+    <div class="mee" style="position:absolute; left:-100px">\int sin(x)dx\pi</div>
+
+    
+    
+    <link rel="stylesheet" type="text/css" href="css/start.css" />
+    
+    <img style="display:none" width="0" height="0" src="artwork/calc.gif"/>
+    <img style="display:none" width="0" height="0" src="artwork/no_save.png"/>
+    <img style="display:none" width="0" height="0" src="artwork/fire_exit.png"/>
+    <img style="display:none" width="0" height="0" src="artwork/title_gradient.png" />
+    
 </body>
 </html>

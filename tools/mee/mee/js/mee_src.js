@@ -31,7 +31,7 @@ function checkloadjscssfile(filename, filetype) {
 }
 
 function findBaseUrl() {
-    $('head').children('script').each(function () {
+    $('head, body').children('script').each(function () {
         var script = this.src;
         var tofind = "/mee_src.js";
         if (script.substr(script.length - tofind.length) == tofind) {
