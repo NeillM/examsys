@@ -408,25 +408,21 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     $tmp_std_array = explode(',',$std);
     $std_part = 0;
 
-    $tmp_text_no = 0;
-    $tmp_media_no = 0;
-    foreach ($matching_scenarios as $single_scenario) {
-      if (trim($single_scenario) != '') $tmp_text_no++;
+    $text_scenarios = 0;
+    for ($part_id=0; $part_id<10; $part_id++) {
+      if (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id])) != '') $text_scenarios++;
     }
-    foreach ($tmp_media_array as $single_media) {
-      if (trim($single_media) != '') $tmp_media_no++;
+    $media_scenarios = 0;
+    for ($part_id=1; $part_id<=10; $part_id++) {
+      if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
     }
-    if ($tmp_text_no > $tmp_media_no) {
-      $total_scenarios = $tmp_text_no;
-    } else {
-      $total_scenarios = $tmp_media_no;
-    }
+    $scenario_no = max($text_scenarios, $media_scenarios);
 
     echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
     if ($tmp_media_array[0] != '') {
       echo "<div align=\"center\">" . display_media($tmp_media_array[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '') . "</div>\n";
     }
-    for ($i=1; $i<=$total_scenarios; $i++) {
+    for ($i=1; $i<=$scenario_no; $i++) {
       echo "<li>\n";
       if (isset($tmp_media_array[$i]) and $tmp_media_array[$i] != '') {
         echo "<div>" . display_media($tmp_media_array[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '') . "</div>\n";
