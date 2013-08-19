@@ -13,6 +13,7 @@ Options -Indexes
         Header unset Last-Modified
         Header unset ETag
         FileETag None
+        ExpiresDefault "access plus 1 day"
     </FilesMatch>
 </ifModule>
 
