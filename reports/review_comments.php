@@ -398,36 +398,34 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     echo '</table>';
     echo "</ol>\n</td></tr>\n";
   } elseif ($q_type == 'extmatch') {
-    $matching_scenarios = array();
     $matching_scenarios = explode('|', $scenario);
-    $tmp_media_array = explode('|',$q_media);
+    $matching_media = explode('|', $q_media);
     $tmp_media_width_array = explode('|',$q_media_width);
     $tmp_media_height_array = explode('|',$q_media_height);
-    $tmp_ext_scenarios = explode('|',$scenario);
     $tmp_answers_array = explode('|',$correct_buf[0]);
     $tmp_std_array = explode(',',$std);
     $std_part = 0;
 
-    $text_scenarios = 0;
-    for ($part_id=0; $part_id<10; $part_id++) {
-      if (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id])) != '') $text_scenarios++;
+    array_unshift($matching_scenarios, '');
+    $max_scenarios = max(count($matching_scenarios), count($matching_media));
+    $scenario_no = 0;
+    for ($part_id = 1; $part_id < $max_scenarios; $part_id++) {
+      if ((isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id],'<img>')) != '')
+              or (isset($matching_media[$part_id]) and $matching_media[$part_id] != '')) {
+        $scenario_no++;
+      }
     }
-    $media_scenarios = 0;
-    for ($part_id=1; $part_id<=10; $part_id++) {
-      if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
-    }
-    $scenario_no = max($text_scenarios, $media_scenarios);
 
     echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
-    if ($tmp_media_array[0] != '') {
-      echo "<div align=\"center\">" . display_media($tmp_media_array[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '') . "</div>\n";
+    if ($matching_media[0] != '') {
+      echo "<div align=\"center\">" . display_media($matching_media[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '') . "</div>\n";
     }
     for ($i=1; $i<=$scenario_no; $i++) {
       echo "<li>\n";
-      if (isset($tmp_media_array[$i]) and $tmp_media_array[$i] != '') {
-        echo "<div>" . display_media($tmp_media_array[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '') . "</div>\n";
+      if (isset($matching_media[$i]) and $matching_media[$i] != '') {
+        echo "<div>" . display_media($matching_media[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '') . "</div>\n";
       }
-      if ($tmp_ext_scenarios[$i-1]) echo $tmp_ext_scenarios[$i-1] . '<br />';
+      if ($matching_scenarios[$i]) echo $matching_scenarios[$i] . '<br />';
       $option_no = 1;
       $specific_answers = array();
       $specific_answers = explode('$', $tmp_answers_array[$i-1]);
