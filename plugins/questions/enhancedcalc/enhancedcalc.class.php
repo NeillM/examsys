@@ -682,9 +682,14 @@ class EnhancedCalc extends Question implements questionInterface {
     foreach($this->settings['vars'] as $key => $value) {
         if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
           $min = $this->variable_substitution($value['min'], $this->alluseranswers);
+          if($value['max'] == '') {
+            //value for max not set force it to min to generate a fixed value.
+            $value['max'] = $value['min']; 
+          }
           $max = $this->variable_substitution($value['max'], $this->alluseranswers);
           $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
           $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
+          
           $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
         } 
         
