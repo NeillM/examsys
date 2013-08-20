@@ -14,6 +14,22 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
+  // // public function testPersonalCohortNonExistentPaper() {
+  // //   // TODO: create test data
+  // //   do_staff_login($this);
+
+  // //   $this->open("folder/edit_team_popup.php?module=888240&calling=paper_list&folder=");
+  // //   $this->assertTextPresent('Page not Found');
+  // // }
+
+  // // public function testPersonalCohortNonExistentUser() {
+  // //   // TODO: create test data
+  // //   do_staff_login($this);
+
+  // //   $this->open("folder/edit_team_popup.php?module=888240&calling=paper_list&folder=");
+  // //   $this->assertTextPresent('Page not Found');
+  // // }
+
   // public function testAddToTeamNonExistent() {
   //   do_staff_login($this);
 
@@ -338,7 +354,7 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   // }
 
   // public function testPaperFinishNonExistent() {
-  //   do_staff_login($this);
+  //   do_student_login($this, 'teststudent10', 'jgl!34Z^');
 
   //   $this->open("paper/finish.php?id=6184135298420215248&previous=20121125233045&log_type=1");
   //   $this->assertTextPresent('Page not Found');
@@ -351,34 +367,158 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   //   $this->assertTextPresent('Page not Found');
   // }
 
-  public function testPeerReviewNonExistent() {
-    do_staff_login($this);
+  // public function testPeerReviewNonExistent() {
+  //   do_staff_login($this);
 
-    $this->open("peer_review/form.php?id=88888888888888888");
-    $this->assertTextPresent('Page not Found');
-  }
+  //   $this->open("peer_review/form.php?id=88888888888888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 
-  public function testQuestionBankNonExistentModule() {
-    do_staff_login($this);
-
-    $this->open("question/list.php?type=%&module=888840");
-    $this->assertTextPresent('Page not Found');
-  }
-
-  // public function testReassignToUserNonExistentPaper() {
-  //   // TODO: create test data
+  // public function testQuestionBankNonExistentModule() {
   //   do_staff_login($this);
 
   //   $this->open("question/list.php?type=%&module=888840");
   //   $this->assertTextPresent('Page not Found');
   // }
 
-  // public function testReassignToUserNonExistentUser() {
-  //   // TODO: create test data
+  // // public function testReassignToUserNonExistentPaper() {
+  // //   // TODO: create test data
+  // //   do_staff_login($this);
+
+  // //   $this->open("question/list.php?type=%&module=888840");
+  // //   $this->assertTextPresent('Page not Found');
+  // // }
+
+  // // public function testReassignToUserNonExistentUser() {
+  // //   // TODO: create test data
+  // //   do_staff_login($this);
+
+  // //   $this->open("question/list.php?type=%&module=888840");
+  // //   $this->assertTextPresent('Page not Found');
+  // // }
+
+  // public function testReferenceNonExistentModule() {
   //   do_staff_login($this);
 
-  //   $this->open("question/list.php?type=%&module=888840");
+  //   $this->open("folder/list_ref_material.php?module=888240");
   //   $this->assertTextPresent('Page not Found');
   // }
+
+  // public function testSSEbelNonExistentPaper() {
+  //   do_staff_login($this);
+
+  //   $this->open("std_setting/individual_review.php?paperID=8888888888&method=ebel&module=3&folder=");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testSSGroupNonExistentPaper() {
+  //   do_staff_login($this);
+
+  //   $this->open("std_setting/get_group.php?paperID=88888888888&module=69&folder=&method=modified_angoff");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testSSHofsteeNonExistentPaper() {
+  //   do_staff_login($this);
+
+  //   $this->open("std_setting/hofstee.php?paperID=88888888888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testSSModAngoffNonExistentPaper() {
+  //   do_staff_login($this);
+
+  //   $this->open("std_setting/individual_review.php?paperID=8888888888&method=modified_angoff&module=3&folder=");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testSSModDeleteNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("delete/check_delete_review.php?std_setID=8888888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testSSNonExistentPaper() {
+  //   do_staff_login($this);
+
+  //   $this->open("std_setting/index.php?paperID=88888888888&module=3&folder=");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testUserDetailsNonExistent() {
+  //   do_staff_login($this);
+
+  //   $this->open("users/details.php?search_surname=&search_username=&student_id=&moduleID=&calendar_year=2012/13&students=on&submit=Search&userID=88888888&email=&tmp_surname=&tmp_courseID=&tmp_yearID=");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testSystemErrorDetailsNonExistent() {
+  //   do_admin_login($this);
+
+  //   $this->open("admin/sys_error_details.php?errorID=8888888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // public function testTeamDialogueNonExistentModule() {
+  //   do_staff_login($this);
+
+  //   $this->open("folder/edit_team_popup.php?module=888240&calling=paper_list&folder=");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  // // public function testTextboxMarkFinaliseNonExistentPaper() {
+  // //   // TODO: create test data
+  // //   do_staff_login($this);
+
+  // //   $this->open("folder/edit_team_popup.php?module=888240&calling=paper_list&folder=");
+  // //   $this->assertTextPresent('Page not Found');
+  // // }
+
+  // // public function testTextboxMarkFinalise2NonExistentPaper() {
+  // //   // TODO: create test data
+  // //   do_staff_login($this);
+
+  // //   $this->open("folder/edit_team_popup.php?module=888240&calling=paper_list&folder=");
+  // //   $this->assertTextPresent('Page not Found');
+  // // }
+
+  // // public function testTextboxMarkPaneNonExistentPaper() {
+  // //   // TODO: create test data
+  // //   do_staff_login($this);
+
+  // //   $this->open("folder/edit_team_popup.php?module=888240&calling=paper_list&folder=");
+  // //   $this->assertTextPresent('Page not Found');
+  // // }
+
+  // // public function testTextboxMarkPane2NonExistentPaper() {
+  // //   // TODO: create test data
+  // //   do_staff_login($this);
+
+  // //   $this->open("folder/edit_team_popup.php?module=888240&calling=paper_list&folder=");
+  // //   $this->assertTextPresent('Page not Found');
+  // // }
+
+  // // public function testTextboxMarkQnSelectionNonExistentPaper() {
+  // //   // TODO: create test data
+  // //   do_staff_login($this);
+
+  // //   $this->open("folder/edit_team_popup.php?module=888240&calling=paper_list&folder=");
+  // //   $this->assertTextPresent('Page not Found');
+  // // }
+
+  // public function testUploadMarksNonExistentPaper() {
+  //   do_admin_login($this);
+
+  //   $this->open("import/offline_marks.php?paperID=88888888888&module=3&folder=");
+  //   $this->assertTextPresent('Page not Found');
+  // }
+
+  public function testUserModulesExistentUser() {
+    do_staff_login($this);
+
+    $this->open("users/edit_modules_popup.php?userID=888812423&session=2012/13&grade=S100");
+    $this->assertTextPresent('Page not Found');
+  }
 }
 ?>
