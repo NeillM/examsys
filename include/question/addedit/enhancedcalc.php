@@ -24,15 +24,17 @@
 
 require_once $cfg_web_root . 'classes/options/option_enhancedcalc.class.php';
 
+$str_decimals = strtolower($string['decimals']);
+$str_sigs = strtolower($string['sigfigures']);
 $vars = $question->get_variables();
 $num_vars = count($vars);
 $answers = $question->get_answers();
 $num_answers = count($answers);
 $decimals = array('', 0, 1, 2, 3, 4, 5, 6, 7, 8);
 $increments = array('', 0.0001, 0.001, 0.02, 0.01, 0.5, 0.2, 0.1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100, 1000);
-$marks_unit = array('0' => 'N/A', 'invalidate' => 'Award zero for question', '-0.25' => '-0.25', '-0.5' => '-0.5', '-1' => '-1', '-2' => '-2', '-3' => '-3', '-4' => '-4', '-5' => '-5', '-6' => '-6', '-7' => '-7', '-8' => '-8', '-9' => '-9', '-10' => '-10');
-$decimal_opts = array('0 dp' => '0 decimals', '1 dp' => '1 decimal', '2 dp' => '2 decimals', '3 dp' => '3 decimals', '4 dp' => '4 decimals', '5 dp' => '5 decimals');
-$sf_opts = array('1 sf' => '1 significant figure', '2 sf' => '2 significant figures', '3 sf' => '3 significant figures', '4 sf' => '4 significant figures', '5 sf' => '5 significant figures');
+$decimal_opts = array('0 dp' => '0 ' . $str_decimals, '1 dp' => '1 ' . $string['decimal'], '2 dp' => '2 ' . $str_decimals, '3 dp' => '3 ' . $str_decimals, '4 dp' => '4 ' . $str_decimals, '5 dp' => '5 ' . $str_decimals);
+$decimal_opts_zero = array('1 dp zero' => '1 ' . $string['decimal'] . ' ' . $string['withzeros'], '2 dp zero' => '2 ' . $str_decimals . ' ' . $string['withzeros'], '3 dp zero' => '3 ' . $str_decimals . ' ' . $string['withzeros'], '4 dp zero' => '4 ' . $str_decimals . ' ' . $string['withzeros'], '5 dp zero' => '5 ' . $str_decimals . ' ' . $string['withzeros']);
+$sf_opts = array('1 sf' => '1 ' . $string['sigfigure'], '2 sf' => '2 ' . $str_sigs, '3 sf' => '3 ' . $str_sigs, '4 sf' => '4 ' . $str_sigs, '5 sf' => '5 ' . $str_sigs);
 $labels = $question->get_variable_labels();
 $mark_prefix = '';
 ?>
@@ -168,17 +170,23 @@ echo ViewHelper::render_options($marks_unit, $question->get_marks_unit(), 3);
         </table>
 
         <div class="form">
-          <h2 class="midblue_header"><?php echo $string['displayprecision'] ?></h2>
+          <h2 class="midblue_header"><?php echo $string['precision'] ?></h2>
         </div>
-        <table class="form" summary="Edit question display precision">
+        <table class="form" summary="Edit question precision">
           <tbody>
             <tr>
-              <th><?php echo $string['displayto'] ?></th>
+              <th><?php echo $string['enforceto'] ?></th>
               <td>
                 <select name="answer_precision" id="answer_precision">
+                  <option value=""><?php echo $string['notenforced'] ?></option>
                   <optgroup label="<?php echo $string['decimals'] ?>">
 <?php
 echo ViewHelper::render_options($decimal_opts, $question->get_answer_precision(), 4);
+?>
+                  </optgroup>
+                  <optgroup label="<?php echo $string['decimals'] . ' ' . $string['withzeros'] ?>">
+<?php
+echo ViewHelper::render_options($decimal_opts_zero, $question->get_answer_precision(), 4);
 ?>
                   </optgroup>
                   <optgroup label="<?php echo $string['sigfigures'] ?>">
@@ -187,22 +195,6 @@ echo ViewHelper::render_options($sf_opts, $question->get_answer_precision(), 4);
 ?>
                   </optgroup>
                 </select>
-              </td>
-              <td>
-<?php
-if ($question->get_strict_display()) {
-  $checked = ' checked';
-  $disabled = '';
-} else {
-  $checked = '';
-  $disabled = ' disabled';
-}
-?>
-                <input type="checkbox" name="strict_display" id="strict_display"<?php echo $checked ?>> <label for="strict_display"><?php echo $string['enforcedisplay'] ?></label></input>
-<?php
-$checked = ($question->get_strict_zeros()) ? ' checked' : '';
-?>
-                <span id="trailing_zeros" class="indent<?php echo $disabled ?>"><input type="checkbox" name="strict_zeros" id="strict_zeros"<?php echo $checked.$disabled ?>> <label for="strict_zeros"><?php echo $string['includetrailing0'] ?></label></input></span>
               </td>
             </tr>
           </tbody>

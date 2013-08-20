@@ -58,10 +58,6 @@ $(function () {
   
   $('#addquestion').click(addQuestion);
 
-  $('#strict_display').change(toggleTrailingZeros);
-
-  $('.display_units').change(toggleDisplayUnits);
-
   $(".tiptop").tipTip({defaultPosition: 'top'});
 });
 
@@ -240,24 +236,6 @@ function showMarksWarning(element) {
     }
   }
   return rval;
-}
-
-function toggleTrailingZeros() {
-  $('#trailing_zeros').toggleClass('disabled');
-  if ($('#strict_zeros').attr('disabled')) {
-    $('#strict_zeros').removeAttr('disabled');
-  } else {
-    $('#strict_zeros').attr('disabled', 'disabled');
-  }
-}
-
-function toggleDisplayUnits(e) {
-  e.preventDefault();
-  
-  $('.display_units').each(function () {
-      toggleChecked($(this));
-  });
-  toggleChecked($(this));
 }
 
 function toggleChecked(el) {

@@ -52,10 +52,10 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $_allow_change_marking_method = false;
   protected $_allow_new_options = true;
 
-  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'strict_display', 'strict_zeros', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
-  protected $_fields_change = array('option_formula', 'option_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'answer_precision', 'strict_display', 'strict_zeros', 'marks_unit', 'tolerance_full', 'tolerance_partial');
+  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
+  protected $_fields_change = array('option_formula', 'option_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'answer_precision', 'marks_unit', 'tolerance_full', 'tolerance_partial');
   protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units', 'answers', 'vars');
-  protected $_fields_force = array('show_units', 'strict_display', 'strict_zeros');
+  protected $_fields_force = array('show_units');
 
   protected $_answer_negative = false;
 
@@ -134,15 +134,27 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @return integer
    */
   public function get_answer_precision() {
+    // If not enforced return blank
+    if (!$this->strictdisplay) {
+      return '';
+    }
+
     $rval = 0;
     $rtype = 'dp';
+    $rzeros = '';
+
     if (isset($this->dp)) {
       $rval = $this->dp;
     } elseif (isset($this->sf)) {
       $rval = $this->sf;
       $rtype = 'sf';
     }
-    return $rval . ' ' . $rtype;
+
+    if ($this->strictzeros) {
+      $rzeros = ' zero';
+    }
+
+    return $rval . ' ' . $rtype . $rzeros;
   }
 
   /**
@@ -150,25 +162,43 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @param string $value
    */
   public function set_answer_precision($value) {
-    list($cur_val, $cur_type) = explode(' ', $this->get_answer_precision());
-    list($val, $type) = explode(' ', $value);
+    if ($value == '') {
+      if ($this->strictdisplay) {
+        $this->set_modified_field('answer_precision', $this->get_answer_precision());
 
-    $changed = ($val != $cur_val or $type != $cur_type);
-
-    if ($type == 'sf') {
-      $dpval = null;
-      $sfval = $val;
+        $this->strictdisplay = false;
+        $this->strictzeros = false;
+      }
     } else {
-      $dpval = $val;
-      $sfval = null;
-    }
+      $cur_parts = explode(' ', $this->get_answer_precision());
+      $cur_val = $cur_parts[0];
+      $cur_type = (isset($cur_parts[1])) ? $cur_parts[1] : '';
+      $cur_zeros = (isset($cur_parts[2])) ? $cur_parts[2] : '';
 
-    if ($changed) {
-      $this->set_modified_field('answer_precision', $this->get_answer_precision());
-    }
+      $new_parts = explode(' ', $value);
+      $val = $new_parts[0];
+      $type = $new_parts[1];
+      $zeros = (isset($new_parts[2])) ? $new_parts[2] : '';
 
-    $this->dp = $dpval;
-    $this->sf = $sfval;
+      $changed = ($val != $cur_val or $type != $cur_type or $zeros != $cur_zeros);
+
+      if ($type == 'sf') {
+        $dpval = null;
+        $sfval = $val;
+      } else {
+        $dpval = $val;
+        $sfval = null;
+      }
+
+      if ($changed) {
+        $this->set_modified_field('answer_precision', $this->get_answer_precision());
+      }
+
+      $this->dp = $dpval;
+      $this->sf = $sfval;
+      $this->strictdisplay = true;
+      $this->strictzeros = ($zeros !== '');
+    }
   }
 
   /**
@@ -180,33 +210,11 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   }
 
   /**
-   * Set whether the question requires answers to stricly match the display precision
-   */
-  public function set_strict_display($value) {
-    $value = $this->get_checkbox_bool($value);
-    if ($value != $this->strictdisplay) {
-      $this->set_modified_field('strict_display', $this->strictdisplay);
-      $this->strictdisplay = $value;
-    }
-  }
-
-  /**
    * Get whether trailing zeros should be taken into account when calculating the display precision
    * @return boolean
    */
   public function get_strict_zeros() {
     return $this->strictzeros;
-  }
-
-  /**
-   * Set whether trailing zeros should be taken into account when calculating the display precision
-   */
-  public function set_strict_zeros($value) {
-    $value = $this->get_checkbox_bool($value);
-    if ($value != $this->strictzeros) {
-      $this->set_modified_field('strict_zeros', $this->strictzeros);
-      $this->strictzeros = $value;
-    }
   }
 
   /**
