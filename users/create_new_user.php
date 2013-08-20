@@ -32,7 +32,6 @@ $unique_username = true;
 $problem = false;
 
 if (isset($_POST['submit'])) {
-  echo "Submitted";
   // Check for unique username
   if (UserUtils::username_exists($_POST['new_username'], $mysqli) !== false) {
     $unique_username = false;
