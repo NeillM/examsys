@@ -682,9 +682,14 @@ class EnhancedCalc extends Question implements questionInterface {
     foreach($this->settings['vars'] as $key => $value) {
         if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
           $min = $this->variable_substitution($value['min'], $this->alluseranswers);
+          if($value['max'] == '') {
+            //value for max not set force it to min to generate a fixed value.
+            $value['max'] = $value['min']; 
+          }
           $max = $this->variable_substitution($value['max'], $this->alluseranswers);
           $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
           $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
+          
           $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
         } 
         
@@ -732,7 +737,6 @@ class EnhancedCalc extends Question implements questionInterface {
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>";
       echo "<tr style=\"font-weight:bold\"><td style=\"width:80px; border-bottom: 1px solid #C0C000\">{$string['variable']}</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">" . $string['generated'] . "</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">" . $string['min'] . "</td><td style=\"width:460px; border-bottom: 1px solid #C0C000\">" . $string['max'] . "</td></tr>\n";
 
-      //echo displayGeneratedFigures($calc_original_vars);
       foreach ($this->settings['vars'] as $key => $value) {
         echo "<tr><td>" . $key . "</td><td>" . $this->useranswer['vars'][$key] . "</td><td>" . $value['min'] . "</td><td>" . $value['max'] . "</td></tr>\n";
       }
@@ -759,20 +763,26 @@ class EnhancedCalc extends Question implements questionInterface {
 
     if ($this->scenario != '') echo "<p>" . $this->scenario . "</p>\n";
     if ($this->q_media != '') echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
-
+    
+    $marking_precision_feedback = "";
+    if ($this->is_strict_dp_enabled()) {
+        $marking_precision_feedback = " <span class=\"calc_fb\">(" . $string['answer_to'] . " " . $this->settings['dp'] . " " . $string['decimal_places'] . ")</span>";
+    } else if ($this->is_strict_sf_enabled()) {
+        $marking_precision_feedback = " <span class=\"calc_fb\">(" . $string['answer_to'] . " " . $this->settings['sf'] . " " . $string['significant_figures'] . ")</span>";
+    }
     echo $leadin;
     if (in_array('ERROR', $varvalue, true)) {
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . "</p>\n";
+      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . $marking_precision_feedback . "</p>\n";
     } else {
       if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
-        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"unans ecalc-answer\" />" . $dispunits . "</div>\n";
+        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"unans ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
       } else {
         if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { //or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];
 
-          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
         } else {
-          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
           $unanswered = true;
         }
       }

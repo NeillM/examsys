@@ -1186,15 +1186,18 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($matching_media[0] != '') {
       echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0], '') . '</p>';
     }
-    $text_scenarios = 0;
-    for ($part_id=0; $part_id<count($matching_scenarios); $part_id++) {
-      if (trim(strip_tags($matching_scenarios[$part_id],'<img>')) != '') $text_scenarios++;
+
+    array_unshift($matching_scenarios, '');
+    $max_scenarios = max(count($matching_scenarios), count($matching_media));
+    $scenario_no = 0;
+    for ($part_id = 1; $part_id < $max_scenarios; $part_id++) {
+      if ((isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id],'<img>')) != '')
+        or (isset($matching_media[$part_id]) and $matching_media[$part_id] != '')) {
+        $scenario_no++;
+      }
     }
-    $media_scenarios = 0;
-    for ($part_id=1; $part_id<count($matching_media); $part_id++) {
-      if ($matching_media[$part_id] != '') $media_scenarios++;
-    }
-    $scenario_no = max($text_scenarios, $media_scenarios);
+
+
 
     $col1_no = ceil(count($matching_options) / 2);
     echo "<table class=\"extmatch_opt_table\">\n<tr><td><ol>\n";
@@ -1213,7 +1216,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];
 
       echo '<li>';
-      if (isset($matching_scenarios[$part_id - 1]) and $matching_scenarios[$part_id - 1] != '') echo '<div>' . $matching_scenarios[$part_id - 1] . '</div>';
+      if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') echo '<div>' . $matching_scenarios[$part_id] . '</div>';
       if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
         echo "<div>" . display_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '') . "</div>\n<br />";
       }

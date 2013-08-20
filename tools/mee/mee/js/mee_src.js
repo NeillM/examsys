@@ -31,7 +31,7 @@ function checkloadjscssfile(filename, filetype) {
 }
 
 function findBaseUrl() {
-    $('head').children('script').each(function () {
+    $('head, body').children('script').each(function () {
         var script = this.src;
         var tofind = "/mee_src.js";
         if (script.substr(script.length - tofind.length) == tofind) {
@@ -48,8 +48,8 @@ findBaseUrl();
 //uncompressed debug
 //loadjscssfile("js/mee_src_src.js",'js');
 //compressed live
-//if($.browser.msie &&  $.browser.version < 9) {
+if($.browser.msie &&  $.browser.version < 9) {
   loadjscssfile("js/mee_src_src.js",'js');
-//} else {
-  //loadjscssfile("js/mee.js",'js');
-//}
+} else {
+  loadjscssfile("js/mee.js",'js');
+}

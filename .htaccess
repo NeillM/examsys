@@ -5,6 +5,31 @@ Options -Indexes
 </Files>
 
 ##
+## Cache-Control Headers
+##
+<ifModule mod_headers.c>
+    <filesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|mp3|wav|mp4|mpg|avi|txt|oft|svg|ttf|woff|cur|doc|docx|ppt|pptx|xls|xlsx)$">
+        Header set Cache-Control "max-age=86400, private"
+        Header unset Last-Modified
+        Header unset ETag
+        FileETag None
+    </FilesMatch>
+</ifModule>
+
+<ifModule mod_expires.c>
+    ExpiresActive On
+    <filesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|mp3|wav|mp4|mpg|avi|txt|oft|svg|ttf|woff|cur|doc|docx|ppt|pptx|xls|xlsx)$">
+        ExpiresDefault "access plus 1 day"
+    </FilesMatch>
+</ifModule>
+
+<ifModule mod_deflate.c>
+    <FilesMatch ".(js|css|php|csv|xml)$">
+        SetOutputFilter DEFLATE
+    </FilesMatch>
+</ifModule>
+
+##
 ## Down for maintenance code - uncomment during upgrades
 ##
 #Options -MultiViews +FollowSymLinks
