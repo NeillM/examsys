@@ -35,12 +35,40 @@ class UserObject extends RogoStaticSingleton {
   protected static $inst = NULL;
   protected static $class_name = 'UserObject';
   protected static $dont_construct = true;
-  private $password, $userID, $userroles, $title, $initials, $first_names, $surname, $username, $email, $grade, $year, $special_needs, $special_needs_percentage, $record_no, $split_username;
+  
+	private $password;
+	private $userID;
+	private $userroles;
+	private $title;
+	private $initials;
+	private $first_names;
+	private $surname;
+	private $username;
+	private $email;
+	private $grade;
+	private $year;
+	private $special_needs;
+	private $special_needs_percentage;
+	private $record_no;
+	private $split_username;
   private $demomode = false;
-  private $roles, $staffModules, $staffTeamModules, $studentModules, $db, $configObj;
+  private $roles;
+	private $staffModules;
+	private $staffTeamModules;
+	private $studentModules;
+	private $db;
+	private $configObj;
 
   // Special needs variables
-  private $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unanswered;
+  private $background;
+	private $foreground;
+	private $textsize;
+	private $extra_time;
+	private $marks_color;
+	private $themecolor;
+	private $labelcolor;
+	private $font;
+	private $unanswered;
 
   private $impersonateduser;
 
@@ -73,7 +101,7 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function get_bgcolor($default = '') {
-    if (!isset($this->background) && $default != '') {
+    if (!isset($this->background) and $default != '') {
       $this->background = $default;
     }
 
@@ -81,7 +109,7 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function get_fgcolor($default = '') {
-    if (!isset($this->foreground) && $default != '') {
+    if (!isset($this->foreground) and $default != '') {
       $this->foreground = $default;
     }
 
@@ -89,7 +117,7 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function get_textsize($default = '') {
-    if ($this->textsize == 0 && $default != '') {
+    if ($this->textsize == 0 and $default != '') {
       $this->textsize = $default;
     }
 
@@ -97,7 +125,7 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function get_marks_color($default = '') {
-    if (!isset($this->marks_color) && $default != '') {
+    if (!isset($this->marks_color) and $default != '') {
       $this->marks_color = $default;
     }
 
@@ -105,7 +133,7 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function get_themecolor($default = '') {
-    if (!isset($this->themecolor) && $default != '') {
+    if (!isset($this->themecolor) and $default != '') {
       $this->themecolor = $default;
     }
 
@@ -113,7 +141,7 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function get_labelcolor($default = '') {
-    if (!isset($this->labelcolor) && $default != '') {
+    if (!isset($this->labelcolor) and $default != '') {
       $this->labelcolor = $default;
     }
 
@@ -121,7 +149,7 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function get_font($default = '') {
-    if (!isset($this->font) && $default != '') {
+    if (!isset($this->font) and $default != '') {
       $this->font = $default;
     }
 
@@ -129,11 +157,11 @@ class UserObject extends RogoStaticSingleton {
   }
 
   function get_unanswered_color($default = '') {
-    if (!isset($this->unanswered_color) && $default != '') {
-      $this->unanswered_color = $default;
+    if (!isset($this->unanswered) and $default != '') {
+      $this->unanswered = $default;
     }
 
-    return $this->unanswered_color;
+    return $this->unanswered;
   }
 
   /**
