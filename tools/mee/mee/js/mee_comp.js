@@ -2,7 +2,7 @@ var filesadded = "" //list of files already added
 var mee_baseurl = null;
 
 function findBaseUrl() {
-    $(document.head).children('script').each(function () {
+    $('head, body').children('script').each(function () {
         var script = this.src;
         var tofind = "/mee.js";
         if (script.substr(script.length - tofind.length) == tofind) {
