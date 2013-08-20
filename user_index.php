@@ -52,7 +52,7 @@ function load_attempts($test_type, $paperID, $userObj, $db) {
     $prev_attempts[$log_started] = array('max_screen'=>$log_max_screen, 'max_mark'=>$log_mark, 'paper_type'=>$log_paper_type, 'temp_date'=>$log_temp_date);
   }
   $result->close();
-  
+
   if ($test_type == '0') {
     // If type is Formative query the Progress Test log table as well and add into array if max screen is not blank.
     $result = $db->prepare("SELECT MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
@@ -90,15 +90,15 @@ function has_time_remaining($propertyObj, $remaining_time) {
   if ($propertyObj->get_exam_duration() === null) {
     return true;
   }
-  
+
   if ($remaining_time === false) {
     return true;
   }
-  
+
   if ((int)$remaining_time === 0) {
     return false;
   }
-  
+
   return true;
 }
 
@@ -167,7 +167,8 @@ $total_marks = 0;
 //get paper info
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['papernotfound'], true, true);    //this will exit php
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 //get lab info
@@ -318,7 +319,7 @@ if ($exam_duration !== null) {
     }
     document.getElementById('start').value = '<?php echo $string['restart']; ?>';
   }
-  
+
   function reviewPaper(started, type) {
     exam = window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
@@ -451,7 +452,7 @@ if ($textsize > 120) {
   }
 
   $prev_attempts = load_attempts($test_type, $property_id, $userObject, $mysqli);
-  
+
   $start_label = $string['start'];
   if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
     $start_available      = true;
@@ -460,7 +461,7 @@ if ($textsize > 120) {
   } else {
     $start_available = false;
     $remaining_available = false;
-    
+
     switch ($test_type) {
       case '0':
        $start_available = is_timedate_ok($paper_start, $paper_end);
@@ -488,7 +489,7 @@ if ($textsize > 120) {
   }
 
   echo '<tr><td style="text-align:center" colspan="4"><br />';
-  
+
   if ($start_available === false) {
     echo "<div style=\"color:#C00000;font-size:90%\">" . $string['papernotavailable'] . "</div>\n";
   } elseif ($remaining_available === false) {
@@ -498,7 +499,7 @@ if ($textsize > 120) {
   } elseif ($test_type == 2) {
     echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
   }
-  
+
   echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['help'] . "\" name=\"help\" onclick=\"launchHelp(31);\" onkeypress=\"launchHelp(31);\" />\n";
   if ($test_type == 2) {
     $paper_utils = Paper_utils::get_instance();
@@ -508,7 +509,7 @@ if ($textsize > 120) {
   }
 
   $display_date = '';
-  
+
     if ($start_available and $remaining_available and $metadata_security) {
     echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
   } else {
@@ -525,7 +526,7 @@ if ($textsize > 120) {
       $temp_no = 0;
       $mark_total = 0;
       $adj_percent = 0;
-      
+
       foreach ($prev_attempts as $log_started=>$prev_details) {
         $log_max_screen = $prev_details['max_screen'];
         $log_mark       = $prev_details['max_mark'];
