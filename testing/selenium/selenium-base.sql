@@ -1068,6 +1068,7 @@ CREATE TABLE `log_late` (
   `adjmark` float DEFAULT NULL,
   `totalpos` tinyint(4) DEFAULT NULL,
   `user_answer` text,
+  `errorstate` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `screen` tinyint(3) unsigned DEFAULT NULL,
   `duration` mediumint(9) DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
@@ -2716,4 +2717,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-21 14:45:55
+-- Dump completed on 2013-08-21 15:15:42
