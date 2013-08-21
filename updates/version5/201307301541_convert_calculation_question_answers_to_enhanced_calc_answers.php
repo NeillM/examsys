@@ -8,7 +8,7 @@
 
 require_once $cfg_web_root . 'classes/stringutils.class.php';
 
-if(!file_exists("./convert_calc_ans_done.txt")) {
+if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
 
     echo "<li>Converting Calculation answers to enhanced calculation answers</li>";
 
@@ -183,6 +183,6 @@ if(!file_exists("./convert_calc_ans_done.txt")) {
         $result->close();
     }
 
-    touch("./convert_calc_ans_done.txt");
+    touch("./stopfile_convert_calc_ans_done.txt");
 }
 
