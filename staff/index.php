@@ -152,7 +152,14 @@ require_once '../include/staff_auth.inc';
 <?php
   $as_pos = strpos($configObject->get('cfg_install_type'),' as ');
   if ($as_pos !== false) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:32px\"><div class=\"greywarn\"><img src=\"../artwork/agent.png\" width=\"28\" height=\"28\" alt=\"Locked\" style=\"position:relative; left:6px; top:1px\" /></div></td><td><div class=\"greywarn\">&nbsp;&nbsp;" . $string['loggedinas'] . " " . substr($configObject->get('cfg_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:32px\"><div class=\"greywarn\"><img src=\"../artwork/agent.png\" width=\"28\" height=\"28\" alt=\"Impersonate\" style=\"position:relative; left:6px; top:1px\" /></div></td><td><div class=\"greywarn\">&nbsp;&nbsp;" . $string['loggedinas'] . " " . substr($configObject->get('cfg_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
+  }
+	if ($configObject->get('cfg_interactive_qs') == 'html5') {
+?>
+<!--[if lt IE 9]>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr><td style="width:32px"><div class="yellowwarn"><img src="../artwork/ie10.gif" width="28" height="28" alt="IE" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;Rog&#333; needs HTML5, please upgrade to Internet Explorer 9 or 10</div></td></tr></table>
+<![endif]-->
+<?php
   }
 ?>
 <div style="padding-left:6px; padding-right:14px">

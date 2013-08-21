@@ -18,6 +18,9 @@ a:hover {
   color:#0000FF;
   text-decoration:underline;
 }
+.breadcrumb a {
+  color:#0000FF !important;
+}
 img {
   border-width:0px;
 }
