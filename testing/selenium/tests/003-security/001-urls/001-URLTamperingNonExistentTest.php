@@ -37,29 +37,26 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   //   $this->assertTextPresent('Page not Found');
   // }
 
-  // // public function testCheckLogLateNonExistentDate() {
-  // //   // TODO: Needs data set up for paper
-  // //   do_staff_login($this);
+  public function testCheckLogLateNonExistentDate() {
+    do_staff_login($this);
 
-  // //   $this->open("/reports/check_reassign_log_late.php?userID=17114&paperID=4133&started=2012-01-17 10:00:07&log_type=2");
-  // //   $this->assertTextPresent('Page not Found');
-  // // }
+    $this->open("/reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=88888888&log_type=2");
+    $this->assertTextPresent('Page not Found');
+  }
 
-  // // public function testCheckLogLateNonExistentPaper() {
-  // //   // TODO: Needs data set up for paper
-  // //   do_staff_login($this);
+  // public function testCheckLogLateNonExistentPaper() {
+  //   do_staff_login($this);
 
-  // //   $this->open("");
-  // //   $this->assertTextPresent('Page not Found');
-  // // }
+  //   $this->open("/reports/check_reassign_log_late.php?userID=105&paperID=88888888&metadataID=34&log_type=2");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 
-  // // public function testLogLateNonExistentUser() {
-  // //   // TODO: Needs data set up for paper
-  // //   do_staff_login($this);
+  // public function testLogLateNonExistentUser() {
+  //   do_staff_login($this);
 
-  // //   $this->open("/folder/edit_team_popup.php?module=888207&calling=paper_list&folder=");
-  // //   $this->assertTextPresent('Page not Found');
-  // // }
+  //   $this->open("/reports/check_reassign_log_late.php?userID=88888888&paperID=7&metadataID=34&log_type=2");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 
   // public function testRetirePaperNonExistent() {
   //   do_staff_login($this);
@@ -514,11 +511,11 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   //   $this->assertTextPresent('Page not Found');
   // }
 
-  public function testUserModulesExistentUser() {
-    do_staff_login($this);
+  // public function testUserModulesExistentUser() {
+  //   do_staff_login($this);
 
-    $this->open("users/edit_modules_popup.php?userID=888812423&session=2012/13&grade=S100");
-    $this->assertTextPresent('Page not Found');
-  }
+  //   $this->open("users/edit_modules_popup.php?userID=888812423&session=2012/13&grade=S100");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 }
 ?>
