@@ -78,7 +78,7 @@ $log_type   = check_var('log_type', 'GET', true, false, true);
   $result->fetch();
   $row_no = $result->num_rows;
   $result->close();
-  
+
   if ($row_no == 0) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -142,7 +142,7 @@ $log_type   = check_var('log_type', 'GET', true, false, true);
 
   if ($row_no == 0) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-    $notice->display_notice_and_exit($mysqli, '1'.$string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
 
   // Display which records are in log_late for the current student.
