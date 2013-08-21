@@ -303,28 +303,26 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
    //   $this->assertTextPresent('Page not Found');
    // }
 
-   public function testOscePrintNonExistent() {
+   // public function testOscePrintNonExistent() {
+   //   do_staff_login($this);
+
+   //   $this->open("osce/print.php?paperID=88888888");
+   //   $this->assertTextPresent('Page not Found');
+   // }
+
+   public function testMappingByQuestionNonExistent() {
      do_staff_login($this);
 
-     $this->open("osce/print.php?paperID=88888888");
+     $this->open("mapping/paper_mappings_by_question.php?paperID=88884096&folder=&module=3");
      $this->assertTextPresent('Page not Found');
    }
 
-  //  // public function testMappingByQuestionNonExistent() {
-  //  //   // TODO: Setup sessions and outcomes for test
-  //  //   do_staff_login($this);
+   public function testMappingBySessionNonExistent() {
+     do_staff_login($this);
 
-  //  //   $this->open("folder/details.php?module=888207");
-  //  //   $this->assertTextPresent('Page not Found');
-  //  // }
-
-  //  // public function testMappingBySessionNonExistent() {
-  //  //   // TODO: Setup sessions and outcomes for test
-  //  //   do_staff_login($this);
-
-  //  //   $this->open("folder/details.php?module=888207");
-  //  //   $this->assertTextPresent('Page not Found');
-  //  // }
+     $this->open("mapping/paper_mappings_by_session.php?paperID=88884096&module=3&folder=");
+     $this->assertTextPresent('Page not Found');
+   }
 
   // public function testPaperPropertiesNonExistent() {
   //   do_staff_login($this);
