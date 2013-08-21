@@ -27,6 +27,7 @@
 require '../include/staff_auth.inc';
 require '../include/sidebar_menu.inc';
 require '../include/sort.inc';
+require_once '../lang/' . $language . '/include/timezones.inc';
 
 if (isset($_GET['calyear'])) {
   $current_year = $_GET['calyear'];
@@ -57,8 +58,7 @@ function drawTabs($current_tab) {
   return $html;
 }
 
-function display_paper($day_no, $subtract, $current_year, $current_month, $paper, &$papers, &$cellID, $string) {
-  $configObj = Config::get_instance();
+function display_paper($day_no, $subtract, $current_year, $current_month, $paper, &$papers, &$cellID, $string, $default_timezone) {
 	
 	if ($paper['start_time'] == $paper['end_time'] or ($paper['labs'] == '' and $paper['password'] == '') or $paper['duration'] == '') {
 		$problem = true;
@@ -71,7 +71,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
 		if ($problem) {
 			echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" align="texttop" alt="' . $string['warning'] . '" title="' . $string['warning'] . '" />';
 		}
-		if ($paper['timezone'] != $configObj->get('cfg_timezone')) {
+		if ($paper['timezone'] != $default_timezone) {
 			echo '<img src="../artwork/timezone_16.png" width="16" height="16" align="texttop" alt="' . $string['timezone'] . '" title="' . $string['timezone'] . '" />';
 		}
 		if ($paper['password'] != '') {
@@ -86,6 +86,8 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
 		$cellID++;
 	}
 }
+
+$default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 
 ?>
 <!DOCTYPE html>
@@ -118,31 +120,41 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
 		var position = p.position();
 		
 		var left_pos = position.left;
-		if (left_pos + 262 > $(window).width()) {
-			left_pos = $(window).width() - 262;
+		if (left_pos + 302 > $(window).width()) {
+			left_pos = $(window).width() - 302;
 			$('.notch').css('left', '180px');
 		} else {
 			$('.notch').css('left', '20px');
 		}
 		$('#callout').css('left', left_pos);
 		$('#callout').css('top', position.top + p.height() + 12);
-		$('#start_time').html(start_time);
-		$('#end_time').html(end_time);
 		$('#duration').html(duration + ' mins');
 		
 		if (start_time == end_time) {
-			$('#time_warning').show();
+			$('#start_time2').html(start_time);
+			$('#end_time2').html(end_time);
+			$('#start_time_warning').show();
+			$('#end_time_warning').show();
+			$('#start_time_ok').hide();
+			$('#end_time_ok').hide();
 		} else {
-			$('#time_warning').hide();
+			$('#start_time1').html(start_time);
+			$('#end_time1').html(end_time);
+			$('#start_time_ok').show();
+			$('#end_time_ok').show();
+			$('#start_time_warning').hide();
+			$('#end_time_warning').hide();
 		}
 		
 		if (duration == '') {
 			$('#duration_warning').show();
+			$('#duration_ok').hide();
 		} else {
+			$('#duration_ok').show();
 			$('#duration_warning').hide();
 		}
 		
-		if (timezone != '<?php echo $configObject->get('cfg_timezone'); ?>') {
+		if (timezone != '<?php echo $default_timezone; ?>') {
 			$('#timezone').html(timezone);
 			$('#timezone_row').show();
 		} else {
@@ -151,8 +163,10 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
 		
 		if (labs == '' && password == '') {
 			$('#lab_warning').show();
+			$('#lab_ok').hide();
 			lab_html = '';
 		} else {
+			$('#lab_ok').show();
 			$('#lab_warning').hide();
 			var lab_parts = labs.split(","); 
 			var lab_html = '';
@@ -201,15 +215,16 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
 <b class="border-notch notch"></b>
 <b class="notch"></b>
 <table cellpadding="0" cellspacing="0" style="width:100%">
-<tr id="time_warning" class="warning"><td class="field"><?php echo $string['warning']; ?></td><td><?php echo $string['time_warning']; ?></td></tr>
-<tr id="lab_warning" class="warning"><td class="field"><?php echo $string['warning']; ?></td><td><?php echo $string['lab_warning']; ?></td></tr>
-<tr id="duration_warning" class="warning"><td class="field"><?php echo $string['warning']; ?></td><td><?php echo $string['duration_warning']; ?></td></tr>
-<tr id="timezone_row"><td class="field"><?php echo $string['timezone']; ?></td><td id="timezone"></td></tr>
-<tr><td class="field"><?php echo $string['starttime']; ?></td><td id="start_time"></td></tr>
-<tr><td class="field"><?php echo $string['endtime']; ?></td><td id="end_time"></td></tr>
-<tr><td class="field"><?php echo $string['duration']; ?></td><td id="duration"></td></tr>
-<tr><td class="field"><?php echo $string['labs']; ?></td><td id="labs"></td></tr>
-<tr id="pw_row"><td class="field"><?php echo $string['password']; ?></td><td id="password" style="font-family:'Courier New'"></td></tr>
+<tr id="timezone_row"><td><img src="../artwork/timezone_16.png" width="16" height="16" /></td><td class="field"><?php echo $string['timezone']; ?></td><td id="timezone"></td></tr>
+<tr id="start_time_ok"><td></td><td class="field"><?php echo $string['starttime']; ?></td><td id="start_time1" style="width:90%"></td></tr>
+<tr id="end_time_ok"><td></td><td class="field"><?php echo $string['endtime']; ?></td><td id="end_time1"></td></tr>
+<tr id="start_time_warning" class="warning"><td class="warn_icon"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" /></td><td class="field"><strong><?php echo $string['starttime']; ?></strong></td><td id="start_time2" style="width:90%"></td></tr>
+<tr id="end_time_warning" class="warning"><td class="warn_icon"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" /></td><td class="field"><strong><?php echo $string['endtime']; ?></strong></td><td id="end_time2"></td></tr>
+<tr id="duration_ok"><td></td><td class="field"><?php echo $string['duration']; ?></td><td id="duration"></td></tr>
+<tr id="duration_warning" class="warning"><td class="warn_icon"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" /></td><td class="field"><strong><?php echo $string['duration']; ?></strong></td><td><?php echo $string['duration_warning']; ?></td></tr>
+<tr id="lab_ok"><td></td><td class="field"><?php echo $string['labs']; ?></td><td id="labs"></td></tr>
+<tr id="lab_warning" class="warning"><td class="warn_icon"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" /></td><td class="field"><strong><?php echo $string['labs']; ?></strong></td><td><?php echo $string['lab_warning']; ?></td></tr>
+<tr id="pw_row"><td class="warn_icon"><img src="../artwork/key_12.png" width="12" height="12" /></td><td class="field"><?php echo $string['password']; ?></td><td id="password" style="font-family:'Courier New'"></td></tr>
 </table>
 </div>
 
@@ -369,8 +384,12 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
       $paper_details[$property_id]['idMod']       	= $idMod;
       $paper_details[$property_id]['password']    	= $password;
       $paper_details[$property_id]['duration']    	= $duration;
-			$paper_details[$property_id]['timezone']			= $timezone;
-    }
+			if ($timezone == '') {
+				$paper_details[$property_id]['timezone']		= '';
+			} else {
+				$paper_details[$property_id]['timezone']		= $timezone_array[$timezone];
+			}
+		}
     $result->close();
   }
 
@@ -465,7 +484,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
           $papers = 0;
           echo "<table id=\"month_grid\" style=\"width:100%\">\n";
           foreach ($paper_details as $individual_paper) {
-					  display_paper($day_no, $subtract, $current_year, $current_month, $individual_paper, $papers, $cellID, $string);
+					  display_paper($day_no, $subtract, $current_year, $current_month, $individual_paper, $papers, $cellID, $string, $default_timezone);
           }
           echo "</table>\n";
           if ($papers == 0) echo '&nbsp;';
@@ -484,7 +503,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
               echo "<br ><table style=\"width:100%\"><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr></table>";              
               echo "<table style=\"padding-top:5px; width:100%\">";            
               foreach ($paper_details as $individual_paper) {
-								display_paper($day_no + 1, $subtract, $current_year, $current_month, $individual_paper, $papers, $cellID, $string);
+								display_paper($day_no + 1, $subtract, $current_year, $current_month, $individual_paper, $papers, $cellID, $string, $default_timezone);
               }
               echo "</table>";
             }
