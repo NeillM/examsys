@@ -118,7 +118,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
 		var position = p.position();
 		
 		var left_pos = position.left;
-		if (left_pos + 250 > $(window).width()) {
+		if (left_pos + 262 > $(window).width()) {
 			left_pos = $(window).width() - 262;
 			$('.notch').css('left', '180px');
 		} else {
