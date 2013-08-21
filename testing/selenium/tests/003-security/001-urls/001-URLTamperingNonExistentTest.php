@@ -37,12 +37,12 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   //   $this->assertTextPresent('Page not Found');
   // }
 
-  public function testCheckLogLateNonExistentDate() {
-    do_staff_login($this);
+  // public function testCheckLogLateNonExistentDate() {
+  //   do_staff_login($this);
 
-    $this->open("/reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=88888888&log_type=2");
-    $this->assertTextPresent('Page not Found');
-  }
+  //   $this->open("/reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=88888888&log_type=2");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 
   // public function testCheckLogLateNonExistentPaper() {
   //   do_staff_login($this);
@@ -289,29 +289,26 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   //   $this->assertTextPresent('Page not Found');
   // }
 
-  //  // public function testOsceNonExistentPaper() {
-  //  //   // TODO: Set up OSCE station for tests
-  //  //   do_staff_login($this);
+   // public function testOsceNonExistentPaper() {
+   //   do_staff_login($this);
 
-  //  //   $this->open("folder/details.php?module=888207");
-  //  //   $this->assertTextPresent('Page not Found');
-  //  // }
+   //   $this->open("osce/form.php?id=8888888888&userID=104");
+   //   $this->assertTextPresent('Page not Found');
+   // }
 
-  //  // public function testOsceNonExistentUser() {
-  //  //   // TODO: Set up OSCE station for tests
-  //  //   do_staff_login($this);
+   // public function testOsceNonExistentUser() {
+   //   do_staff_login($this);
 
-  //  //   $this->open("folder/details.php?module=888207");
-  //  //   $this->assertTextPresent('Page not Found');
-  //  // }
+   //   $this->open("osce/form.php?id=81377097998102&userID=88888888");
+   //   $this->assertTextPresent('Page not Found');
+   // }
 
-  //  // public function testOscePrintNonExistent() {
-  //  //   // TODO: Set up OSCE station for tests
-  //  //   do_staff_login($this);
+   public function testOscePrintNonExistent() {
+     do_staff_login($this);
 
-  //  //   $this->open("folder/details.php?module=888207");
-  //  //   $this->assertTextPresent('Page not Found');
-  //  // }
+     $this->open("osce/print.php?paperID=88888888");
+     $this->assertTextPresent('Page not Found');
+   }
 
   //  // public function testMappingByQuestionNonExistent() {
   //  //   // TODO: Setup sessions and outcomes for test
