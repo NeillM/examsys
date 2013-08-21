@@ -2065,6 +2065,7 @@ QUERY;
           `id` int(8) NOT NULL auto_increment,
           `q_id` int(4) NOT NULL default '0',
           `mark` float default NULL,
+          `adjmark` float DEFAULT NULL,
           `totalpos` tinyint(4) default NULL,
           `user_answer` text,
           `screen` tinyint(3) unsigned default NULL,
