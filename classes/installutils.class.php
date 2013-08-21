@@ -2068,6 +2068,7 @@ QUERY;
           `adjmark` float DEFAULT NULL,
           `totalpos` tinyint(4) default NULL,
           `user_answer` text,
+          `errorstate` tinyint unsigned NOT NULL DEFAULT '0',
           `screen` tinyint(3) unsigned default NULL,
           `duration` mediumint(9) default NULL,
           `updated` datetime default NULL,
