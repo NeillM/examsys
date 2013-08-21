@@ -1,6 +1,9 @@
 body {
   font-size:80%;
 }
+img {
+	padding-right:1px
+}
 table {
   margin:0px;
   padding:0px;
@@ -12,11 +15,40 @@ table.month_grid {
 select {
   margin-top:3px
 }
+td {
+	vertical-align:top;
+  text-align:right;
+}
+.tabon {
+	vertical-align:middle;
+	padding-top:0px;
+	cursor:pointer;
+	width:126px;
+	height:21px;
+	color:white;
+	text-align:center;
+	font-weight:bold;
+	font-size:100%;
+	background-image:url(../artwork/tab_on.gif);
+}
+.taboff {
+	vertical-align:middle;
+	padding-top:0px;
+	cursor:pointer;
+	width:126px;
+	height:21px;
+	color:white;
+	text-align:center;
+	font-weight:bold;
+	font-size:100%;
+	background-image:url(../artwork/tab_off.gif);
+}
 .month {
   margin-left:8px;
   margin-right:8px;
   font-size:150%;
   font-weight:bold;
+	color:black;
 }
 .monthgrid {
   border-collapse:separate;
@@ -25,15 +57,7 @@ select {
   margin-left:auto;
   margin-right:auto;
   text-align:left;
-}
-.time {
   color:#808080;
-  text-align:right;
-  vertical-align:top;
-  padding-right:8px;
-}
-a.lab {
-  color:#FF6300
 }
 .month {
   border-collapse:separate;
@@ -45,19 +69,33 @@ a.lab {
 }
 .dtext {
   color:#808080;
+	text-align:left;
 }
 .dhead {
+  color:black;
   font-size:130%;
   padding-left:5px;
   font-weight:bold;
   border-bottom:1px solid #C0C0C0;
+	text-align:left;
 }
 .dheadtoday {
   font-size:130%;
   padding-left:5px;
   font-weight:bold;
-  background-color:#FFC0C0;
+	color:white;
+  background-color:#C00000;
   border-bottom:1px solid #C00000;
+	text-align:left;
+}
+.dheadthisweek {
+  color:black;
+  font-size:130%;
+  padding-left:5px;
+  font-weight:bold;
+	background-color:#FFC0C0;
+  border-bottom:1px solid #C00000;
+	text-align:left;
 }
 .dheadnomonth {
   padding:0px;
@@ -67,7 +105,6 @@ a.lab {
 }
 .day {
   text-align:left;
-  vertical-align:top;
   width:20%;
   padding-top:5px;
   padding-bottom:5px;
@@ -95,6 +132,7 @@ a.lab {
 }
 .callout td {
   padding:4px;
+	text-align:left;
 }
 .field {
   vertical-align:top;
@@ -135,6 +173,7 @@ a.lab {
 	top: -11px;
 }
 .p {
+  text-align:left;
 	vertical-align:top;
 	width: 90%;
 }

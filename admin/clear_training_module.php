@@ -40,7 +40,7 @@ function stripTrainModule($module_string) {
 $trainIdMod = module_utils::get_idMod('TRAIN', $mysqli);
 
 // Clear the TRAIN team
-$update = $mysqli->prepare("DELETE FROM modules_staff WHERE idMod=?");
+$update = $mysqli->prepare("DELETE FROM modules_staff WHERE idMod = ?");
 $update->bind_param('i', $trainIdMod);
 $update->execute();
 $update->close();

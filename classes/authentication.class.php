@@ -629,7 +629,6 @@ class Authentication {
   function has_plugin_type($type) {
     $found = false;
 
-    $data->plugins = array();
     foreach ($this->authPluginObj as $authobj) {
       $info = $authobj->get_info();
       if ($info->classname == $type) {

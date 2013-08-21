@@ -26,7 +26,7 @@
   require '../include/sidebar_menu.inc';
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -35,47 +35,24 @@
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
-<style type="text/css">
-  a.highlight {color:black}
-  a.highlight:hover {background-color:#000080; color:white}
-  .icon {width:250px; height:110px; padding-top:20px; padding-bottom:20px; float:left; text-align:center}
-  .num {line-height:100%; display:inline-block; background-color:red; color:white; font-weight:bold; background: -moz-linear-gradient(top, #FFC0C0, #FF0000); background: -webkit-linear-gradient(top, #FFC0C0, #FF0000); background-image: -ms-linear-gradient(top, #FFC0C0 0%, #FF0000 100%); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFC0C0', endColorstr='#FF0000')}
-  .corners {border:2px solid white; display:inline-block; box-shadow: 1px 1px 2px #808080; border-radius: 15px; overflow: hidden}
-  .icon_title {display:inline-block; height:25px; line-height:25px; cursor:pointer}
-</style>
+<link rel="stylesheet" type="text/css" href="../css/admin.css" />
 
 <?php echo $configObject->get('cfg_js_root') ?>
 <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
 <script language="JavaScript" src="../js/sidebar.js"></script>
 <script language="JavaScript">
-  function highlightResource(resourceID, highlightColor) {
-    $('#' + resourceID).css('border-color', '#316AC5');
-    $('#text' + resourceID).css('background-color', highlightColor);
-    $('#text' + resourceID).css('color', 'white');
-  }
-
-  function unhighlightResource(resourceID) {
-    $('#' + resourceID).css('border-color', '#EEEEEE');
-    $('#text' + resourceID).css('background-color', 'white');
-    $('#text' + resourceID).css('color', 'black');
-  }
-
-  function callPage(targetPage) {
-    var msg = '';
-    if (targetPage == 'clear_training_module.php') {
-      msg = '<?php echo $string['msg1']; ?>';
-    } else if (targetPage == 'clear_old_logs.php') {
-      msg = '<?php echo $string['msg2']; ?>';
-    }
-    if (msg != '') {
-      var r=confirm(msg);
-      if (r==true) {
-        window.location=targetPage;
-      }
-    } else {
-      window.location=targetPage;
-    }
-  }
+  $(document).ready(function() {
+    $("#clear_training_module").click(function() {
+		  var msg = '<?php echo $string['msg1']; ?>';
+			return confirm(msg);
+		});
+		
+    $("#clear_old_logs").click(function() {
+		  var msg = '<?php echo $string['msg2']; ?>';
+			return confirm(msg);
+		});
+	});
+	
 </script>
 </head>
 
@@ -136,22 +113,21 @@
   }
 
   $titles = array($string['calendar'], $string['clearguestaccounts'], $string['clearoldlogs'], $string['clearorphanmedia'], $string['cleartraining'], $string['computerlabs'], $string['courses'], $string['deniedlogwarnings'], $string['ebelgridtemplates'], $string['faculties'], $string['imslti'], $string['modules'], $string['announcments'], $string['optimizetables'], $string['questionstatuses'], $string['schools'], $string['smsimports'], $string['summativescheduling'], $string['summativeexamstats'], $string['systemerrors'], $string['systeminformation'], $string['trac'], $string['usermanagement']);
-  $paths = array('calendar.php#' . date("n"), 'clear_guest_users.php', 'clear_old_logs.php', 'orphan_media.php', 'clear_training_module.php', 'list_labs.php', 'list_courses.php', 'view_access_denied.php', 'list_ebel_grids.php', 'list_faculties.php', '../LTI/lti_keys_list.php', 'list_modules.php', 'list_announcements.php', 'optimize_tables.php', 'list_statuses.php', 'list_schools.php', 'sms_import_summary.php', 'summative_scheduling.php', 'summative_stats.php?year=' . $summative_year, 'sys_error_list.php', 'system_info.php', 'https://suivarro.nottingham.ac.uk/trac/rogo/', '../users/search.php');
+  $paths = array('calendar.php#week' . date("W"), 'clear_guest_users.php', 'clear_old_logs.php', 'orphan_media.php', 'clear_training_module.php', 'list_labs.php', 'list_courses.php', 'view_access_denied.php', 'list_ebel_grids.php', 'list_faculties.php', '../LTI/lti_keys_list.php', 'list_modules.php', 'list_announcements.php', 'optimize_tables.php', 'list_statuses.php', 'list_schools.php', 'sms_import_summary.php', 'summative_scheduling.php', 'summative_stats.php?year=' . $summative_year, 'sys_error_list.php', 'system_info.php', 'https://suivarro.nottingham.ac.uk/trac/rogo/', '../users/search.php');
   $images = array('calendar_icon.png', 'clear_guest_users.png', 'clear_logs.png', 'remove_orphan_icon.png', 'training.png', 'computer_lab_48.png', 'courses_icon.png', 'access_denied.png', 'grid_48.png', 'faculty.png', 'ims_logo_64.png', 'modules_icon.png', 'news_48.png', 'optimize_tables_icon.png', 'status_icon.png', 'school_icon.png', 'sms_import_icon.png', 'summative_scheduling.png', 'summative_stats.png', 'bug.png', 'information.png', 'trac_logo.png', 'user_accounts_icon.png');
 
-  if (!$configObject->get('cfg_summative_mgmt')) {
+  if (!$configObject->get('cfg_summative_mgmt')) {  // Take out the summative management scheduling if not activated.
     array_splice($titles, 16, 1);
     array_splice($paths, 16, 1);
     array_splice($images, 16, 1);
   }
 
   for ($icon_no=0; $icon_no<count($titles); $icon_no++) {
-    echo "<div class=\"icon\"><table align=\"center\" id=\"" . $icon_no . "\" onmouseover=\"highlightResource('" . $icon_no . "','#316AC5')\" onmouseout=\"unhighlightResource('" . $icon_no . "')\" onclick=\"callPage('" . $paths[$icon_no] . "')\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"cursor:hand; background-color:white; width:95px; height:95px; border:1px solid #EEEEEE; text-align:center; vertical-align:middle\"><tr><td style=\"text-align:center\">";
-    echo "<img src=\"../artwork/" . $images[$icon_no] . "\" width=\"48\" height=\"48\" border=\"0\" alt=\"\"  />";
-    echo "</td></tr></table><div class=\"icon_title\" id=\"text" . $icon_no . "\" onmouseover=\"highlightResource('" . $icon_no . "','#000080')\" onmouseout=\"unhighlightResource('" . $icon_no . "')\" onclick=\"callPage('" . $paths[$icon_no] . "')\">&nbsp;" . $titles[$icon_no] . "&nbsp;</div></div>";
+	  $parts = explode('.php', $paths[$icon_no]);
+		echo '<a href="' . $paths[$icon_no] . '" id="' . $parts[0] . '">';
+		echo '<div class="container"><img src="../artwork/' . $images[$icon_no] . '" width="48" height="48" alt="" class="icon" /><br />' . $titles[$icon_no] . '</div></a>';
   }
 ?>
-
 </div>
 
 </body>

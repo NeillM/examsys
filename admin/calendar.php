@@ -47,9 +47,9 @@ function drawTabs($current_tab) {
   $start_year -= 3;
   for ($tmp_year=$start_year; $tmp_year < $start_year + 5; $tmp_year++) {
     if ($tmp_year == $current_tab) {
-      $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:100%; background-image:url(../artwork/tab_on.gif)\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra . "'\">" . $tmp_year . "</td>";
+      $html .= "<td class=\"tabon\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra . "'\">" . $tmp_year . "</td>";
     } else {
-      $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:100%; background-image:url(../artwork/tab_off.gif)\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra ."'\">" . $tmp_year . "</td>";
+      $html .= "<td class=\"taboff\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra ."'\">" . $tmp_year . "</td>";
     }
   }
   $html .= "</tr></table>";
@@ -77,18 +77,18 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
 		if ($paper['password'] != '') {
 			echo '<img src="../artwork/key_12.png" width="12" height="12" alt="' . $string['password'] . '" title="' . $string['password'] . '"  />';
 		}
-		echo '</td><td class="time">' . $paper['start_hour'];
+		echo '</td><td>' . $paper['start_hour'];
 		if ($paper['start_minute'] != 0) {
 			echo ':' . $paper['start_minute'];
 		}
 		echo '&nbsp;' . $paper['am_pm'] . '</td>';
-		echo "<td class=\"p\"><div class=\"pd\"><a id=\"$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . "&module=" . $paper['idMod'] . "&folder=\" onmouseover=\"showInspector($cellID, '" . $paper['start_time'] . "', '" . $paper['end_time'] . "', '" . $paper['duration'] . "', '" . $paper['labs'] . "', '" . $paper['password'] . "', '" . $paper['timezone'] . "')\" onmouseout=\"hideInspector()\">" . $paper['paper_title'] . "</a></div></td></tr>";
+		echo "<td class=\"p\"><div class=\"pd\"><a id=\"p$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . "&module=" . $paper['idMod'] . "&folder=\" onmouseover=\"showCallout($cellID, '" . $paper['start_time'] . "', '" . $paper['end_time'] . "', '" . $paper['duration'] . "', '" . $paper['labs'] . "', '" . $paper['password'] . "', '" . $paper['timezone'] . "')\" onmouseout=\"hideCallout()\">" . $paper['paper_title'] . "</a></div></td></tr>";
 		$cellID++;
 	}
 }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -108,84 +108,87 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
   $stmt->bind_result($id, $building, $room_no, $campus);
   while ($stmt->fetch()) {
     $lab_details[$campus][$id] = $building . ' - ' . $room_no;
-	echo "  lab_names[$id] = \"$room_no - $building\"\n";
+		echo "  lab_names[$id] = \"$room_no - $building\"\n";
   }
   $stmt->close();
 ?>
-  
-  function go() {
-    box = document.forms[0].navi;
-    destination = box.options[box.selectedIndex].value;
-    if (destination) {
-      location.href = "<?php echo $_SERVER['PHP_SELF']; ?>?year=" + destination;
-    }
+
+  function showCallout(cellID, start_time, end_time, duration, labs, password, timezone) {
+		var p = $('#p' + cellID);
+		var position = p.position();
+		
+		var left_pos = position.left;
+		if (left_pos + 250 > $(window).width()) {
+			left_pos = $(window).width() - 262;
+			$('.notch').css('left', '180px');
+		} else {
+			$('.notch').css('left', '20px');
+		}
+		$('#callout').css('left', left_pos);
+		$('#callout').css('top', position.top + p.height() + 12);
+		$('#start_time').html(start_time);
+		$('#end_time').html(end_time);
+		$('#duration').html(duration + ' mins');
+		
+		if (start_time == end_time) {
+			$('#time_warning').show();
+		} else {
+			$('#time_warning').hide();
+		}
+		
+		if (duration == '') {
+			$('#duration_warning').show();
+		} else {
+			$('#duration_warning').hide();
+		}
+		
+		if (timezone != '<?php echo $configObject->get('cfg_timezone'); ?>') {
+			$('#timezone').html(timezone);
+			$('#timezone_row').show();
+		} else {
+			$('#timezone_row').hide();
+		}
+		
+		if (labs == '' && password == '') {
+			$('#lab_warning').show();
+			lab_html = '';
+		} else {
+			$('#lab_warning').hide();
+			var lab_parts = labs.split(","); 
+			var lab_html = '';
+			$.each(lab_parts, function(key, value) {
+				if (lab_html == '') {
+					lab_html = lab_names[value];
+				} else {
+					lab_html += '<br />' + lab_names[value];
+				}
+			});
+		}
+		
+		$('#labs').html(lab_html);
+		$('#password').html(password);
+		if (password == '') {
+			$('#pw_row').hide();
+		} else {
+			$('#pw_row').show();
+		}
+		$('#callout').show();
   }
   
-  function showInspector(cellID, start_time, end_time, duration, labs, password, timezone) {
-	var p = $('#' + cellID);
-	var position = p.position();
-	
-	var left_pos = position.left;
-	if (left_pos + 250 > $(window).width()) {
-	  left_pos = $(window).width() - 262;
-		$('.notch').css('left', '180px');
-	} else {
-		$('.notch').css('left', '20px');
-	}
-	$('#inspector').css('left', left_pos);
-	$('#inspector').css('top', position.top + p.height() + 12);
-	$('#start_time').html(start_time);
-	$('#end_time').html(end_time);
-	$('#duration').html(duration + ' mins');
-	
-	if (start_time == end_time) {
-	  $('#time_warning').show();
-	} else {
-	  $('#time_warning').hide();
-	}
-	
-	if (duration == '') {
-	  $('#duration_warning').show();
-	} else {
-	  $('#duration_warning').hide();
-	}
-	
-	if (timezone != '<?php echo $configObject->get('cfg_timezone'); ?>') {
-	  $('#timezone').html(timezone);
-	  $('#timezone_row').show();
-	} else {
-	  $('#timezone_row').hide();
-	}
-	
-	if (labs == '' && password == '') {
-	  $('#lab_warning').show();
-	  lab_html = '';
-	} else {
-	  $('#lab_warning').hide();
-	  var lab_parts = labs.split(","); 
-	  var lab_html = '';
-	  $.each(lab_parts, function(key, value) {
-	    if (lab_html == '') {
-	  	  lab_html = lab_names[value];
-	    } else {
-	  	  lab_html += '<br />' + lab_names[value];
-	    }
-	  });
-	}
-	
-	$('#labs').html(lab_html);
-	$('#password').html(password);
-	if (password == '') {
-	  $('#pw_row').hide();
-	} else {
-	  $('#pw_row').show();
-	}
-	$('#inspector').show();
+  function hideCallout() {
+    $('#callout').hide();
   }
-  
-  function hideInspector() {
-    $('#inspector').hide();
-  }
+	
+	$(document).ready(function() {
+	  $('#lab').change(function() {
+		  $('#theform').submit();
+		});
+		
+	  $('#school').change(function() {
+		  $('#theform').submit();
+		});
+		
+	});
 </script>
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -194,7 +197,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
 
 <body>
 
-<div id="inspector" class="callout border-callout">
+<div id="callout" class="callout border-callout">
 <b class="border-notch notch"></b>
 <b class="notch"></b>
 <table cellpadding="0" cellspacing="0" style="width:100%">
@@ -232,7 +235,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
   $stmt->close();
 ?>
 
-<form action="" method="get">
+<form action="" method="get" id="theform">
 <table class="header">
 <tr><th>
 <?php
@@ -250,7 +253,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
 <th style="text-align:right">
 <?php
 
-  echo "<select name=\"lab\" onchange=\"this.form.submit();\">";
+  echo "<select name=\"lab\" id=\"lab\">";
   foreach ($lab_details as $campus => $lab) {
     echo "<optgroup label=\"$campus\">";
     foreach ($lab as $id => $title) {
@@ -262,7 +265,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
   }
   echo "</select>&nbsp;";
 
-  echo "<select name=\"school\" onchange=\"this.form.submit();\">";
+  echo "<select name=\"school\" id=\"school\">";
   foreach ($schools as $fac => $sch) {
     echo "<optgroup label=\"$fac\">";
     foreach ($sch as $id => $title) {
@@ -381,7 +384,6 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
     $current_full_month = date("m", mktime(0, 0, 0, $current_month, 1, $current_year));
     $days_in_month = date("t", mktime(0, 0, 0, $current_month, 1, $current_year));
     $paper_no = 0;
-    $first_day = true;
 
     echo "<div>";
     echo "<table class=\"monthgrid\">\n";
@@ -394,7 +396,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
     $day_no = 1;
     $cell_no = 1;
     $subtract = 0;
-    $start_day = getDayOfWeek(1, $current_month, $current_year,1);
+    $start_day = getDayOfWeek(1, $current_month, $current_year, 1);
     if ($start_day == 6) {
       $start_day = 1;
       $day_no = 3;
@@ -404,13 +406,27 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
     }
   
     do {
-      echo '<tr>';
+			$week_no = NULL;
+			$tmp_day_no = $day_no - $subtract;
+      for ($col=1; $col<=5; $col++) {
+        if (($tmp_day_no) <= $days_in_month) {
+				  if ($week_no == NULL) {
+					  $week_no = date("W", mktime(0, 0, 0, $current_month, $tmp_day_no, $current_year));
+					}
+				}
+        $tmp_day_no++;
+			}
+      echo "<tr id=\"week$week_no\">\n";
       for ($col=1; $col<=5; $col++) {
         if (($day_no - $subtract) <= $days_in_month) {
           if (($day_no - $subtract) != date("j") or $current_month != date("n") or $current_year != date("Y")) {
             // Day in month but not today
-            echo '<td class="dhead">';
-            if ($day_no >= $start_day) {
+            if ($week_no == date("W")) {
+							echo '<td class="dheadthisweek">';
+						} else {
+							echo '<td class="dhead">';
+            }
+						if ($day_no >= $start_day) {
               echo ($day_no-$subtract);
             } else {
               echo '&nbsp;';
@@ -419,13 +435,7 @@ function display_paper($day_no, $subtract, $current_year, $current_month, $paper
             echo '</td>';
           } elseif ($day_no >= $start_day) {
             // Today
-            echo '<td class="dheadtoday"';
-            if ($first_day == true) {
-              echo "\">" . ($day_no-$subtract) . " " . date("M", mktime(0, 0, 0, $current_month, 1, $current_year)) . "</td>\n";
-              $first_day = false;
-            } else {
-              echo "\">" . ($day_no-$subtract) . "</td>\n";
-            }
+            echo "<td class=\"dheadtoday\">" . ($day_no-$subtract) . "</td>\n";
           } else {
             // Day not in month
             echo "<td class=\"dheadnomonth\">&nbsp;</td>\n";
