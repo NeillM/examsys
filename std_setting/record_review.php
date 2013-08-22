@@ -475,9 +475,9 @@ $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
 $mysqli->close();
 if (isset($_POST['continue'])) {
   header("location: individual_review.php?&paperID=$paperID&std_setID=$std_setID&method=" . $_GET['method'] . "&module=$module&folder=$folder#$last_question");
-  exit;
+  exit();
 } else {
   header("location: index.php?paperID=$paperID&module=$module&folder=$folder");
-  exit;
+  exit();
 }
 ?>

@@ -47,7 +47,7 @@ if (isset($_POST['submit'])) {
   $mysqli->close();
   
   header("location: list_ebel_grids.php");
-  exit;
+  exit();
 } else {
 ?>
 <!DOCTYPE html>

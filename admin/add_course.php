@@ -51,6 +51,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
   $result->close();
   $mysqli->close();
   header("location: list_courses.php");
+	exit();
 } else {
 ?>
 <!DOCTYPE html>

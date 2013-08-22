@@ -59,7 +59,7 @@ if (isset($_POST['submit'])) {
   if ($ltis['context_id'] != $lticontext)     $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['context_id'], $lticontext, 'context');
 
   header("location: lti_keys_list.php");
-  exit;
+  exit();
 } else {
   ?>
 <!DOCTYPE html>

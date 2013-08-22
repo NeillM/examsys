@@ -33,6 +33,7 @@ if (isset($_POST['submit'])) {
   $lticontext = trim($_POST['lticontext']);
   $insert_id = $lti->add_lti_key($ltiname, $ltikey, $ltisec, $lticontext);
   header("location: lti_keys_list.php");
+	exit();
 } else {
   ?>
 <!DOCTYPE html>

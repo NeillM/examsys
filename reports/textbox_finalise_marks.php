@@ -70,6 +70,7 @@ if (isset($_POST['submit'])) {
     $result->close();
   }
   header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+	exit();
 } else {
   $q_id       = check_var('q_id', 'GET', true, false, true);
   $startdate  = check_var('startdate', 'GET', true, false, true);

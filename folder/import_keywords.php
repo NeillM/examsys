@@ -79,14 +79,14 @@ if (isset($_POST['submit'])) {
   if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
     if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $filename))  {
       echo uploadError($_FILES['txtfile']['error']);
-      exit;
+      exit();
     } else {
       keywords_from_file($filename, $userObject);
       unlink($filename);
       header("location: list_keywords.php?paperID=". $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
     }
     $mysqli->close();
-    exit;
+    exit();
   } else {
     $file_problem = true;
   }

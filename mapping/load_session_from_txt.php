@@ -88,6 +88,7 @@ if (isset($_POST['submit'])) {
   
   unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
   header("location: " . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $moduleID);
+	exit();
 } else {
   //display the form
 ?>

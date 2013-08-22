@@ -37,13 +37,13 @@ $userObject = UserObject::get_instance();
 // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
 if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
   header("location: ../students/");
-  exit;
+  exit();
 } elseif ($userObject->has_role('External Examiner')) {
   header("location: ../reviews/");
-  exit;
+  exit();
 } elseif ($userObject->has_role('Invigilator')) {
   header("location: ../invigilator/");
-  exit;
+  exit();
 }
 
 // If we're still here we should be staff

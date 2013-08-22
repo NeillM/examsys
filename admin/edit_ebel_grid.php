@@ -63,7 +63,7 @@ if (isset($_POST['submit'])) {
   $mysqli->close();
   
   header("location: list_ebel_grids.php");
-  exit;
+  exit();
 } else {
   $result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?");
   $result->bind_param('i', $gridID);

@@ -68,7 +68,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
   
   $mysqli->close();
   header("location: list_courses.php");
-  exit;
+  exit();
 } else {
 ?>
 <!DOCTYPE html>
