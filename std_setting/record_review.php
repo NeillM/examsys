@@ -427,9 +427,11 @@ if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
   }
 }
 
-if ($tmp_method == "Ebel") {
-  $id_array = array('EE','EI','EN','ME','MI','MN','HE','HI','HN','EE2','EI2','EN2','ME2','MI2','MN2','HE2','HI2','HN2');
-  foreach ($id_array as $individualID) {
+if ($tmp_method == 'Ebel') {
+  $id_array = array('EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2');
+  
+	$std_query = $mysqli->prepare("INSERT INTO ebel VALUES (?, ?, ?)");
+	foreach ($id_array as $individualID) {
     if (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '3') {
       if ($individualID == 'EE2' or $individualID == 'EI2' or $individualID == 'EN2' or $individualID == 'ME2' or $individualID == 'MI2' or $individualID == 'MN2' or $individualID == 'HE2' or $individualID == 'HI2' or $individualID == 'HN2') {
         $category = $individualID;
@@ -451,11 +453,11 @@ if ($tmp_method == "Ebel") {
       $percentage = $_POST[$individualID];
     }
     
-    $std_query = $mysqli->prepare("INSERT INTO ebel VALUES (?, ?, ?)");
+		$percentage = floatval($percentage);
     $std_query->bind_param('isd', $std_setID, $category, $percentage);
     $std_query->execute();
-    $std_query->close();
   }
+  $std_query->close();
 }
 
 // Alter paper properties
