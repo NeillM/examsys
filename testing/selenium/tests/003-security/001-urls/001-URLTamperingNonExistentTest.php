@@ -14,19 +14,19 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  public function testPersonalCohortNonExistentPaper() {
-    do_staff_login($this);
+  // public function testPersonalCohortNonExistentPaper() {
+  //   do_staff_login($this);
 
-    $this->open("reports/personal_cohort_performance.php?paperID=88888888&userID=104");
-    $this->assertTextPresent('Page not Found');
-  }
+  //   $this->open("reports/personal_cohort_performance.php?paperID=88888888&userID=104");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 
-  public function testPersonalCohortNonExistentUser() {
-    do_staff_login($this);
+  // public function testPersonalCohortNonExistentUser() {
+  //   do_staff_login($this);
 
-    $this->open("reports/personal_cohort_performance.php?paperID=7&userID=88888888");
-    $this->assertTextPresent('Page not Found');
-  }
+  //   $this->open("reports/personal_cohort_performance.php?paperID=7&userID=88888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 
   // public function testAddToTeamNonExistent() {
   //   do_staff_login($this);
@@ -371,21 +371,19 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   //   $this->assertTextPresent('Page not Found');
   // }
 
-  // // public function testReassignToUserNonExistentPaper() {
-  // //   // TODO: create test data
-  // //   do_staff_login($this);
+  // public function testReassignToUserNonExistentPaper() {
+  //   do_staff_login($this);
 
-  // //   $this->open("question/list.php?type=%&module=888840");
-  // //   $this->assertTextPresent('Page not Found');
-  // // }
+  //   $this->open("reports/check_reassign_script.php?userID=3&paperID=88888888");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 
-  // // public function testReassignToUserNonExistentUser() {
-  // //   // TODO: create test data
-  // //   do_staff_login($this);
+  // public function testReassignToUserNonExistentUser() {
+  //   do_staff_login($this);
 
-  // //   $this->open("question/list.php?type=%&module=888840");
-  // //   $this->assertTextPresent('Page not Found');
-  // // }
+  //   $this->open("reports/check_reassign_script.php?userID=88888888&paperID=7");
+  //   $this->assertTextPresent('Page not Found');
+  // }
 
   // public function testReferenceNonExistentModule() {
   //   do_staff_login($this);
