@@ -348,7 +348,7 @@ Class UON_SATURN extends SmsUtils {
                 $current_users[$lookup_username]['roles'] != $new_roles or
                 $current_users[$lookup_username]['email'] != $sms->Email
              ) {
-              $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email WHERE username = ?");
+              $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email = ? WHERE username = ?");
               $result->bind_param('issssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $sms->Email, $lookup_username);
               $result->execute();
               $result->close();
