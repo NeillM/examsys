@@ -1354,7 +1354,7 @@ CREATE TABLE `modules` (
   KEY `guideid` (`moduleid`),
   KEY `idx_moduleid_deleted` (`moduleid`,`mod_deleted`),
   KEY `idx_schoolid_deleted` (`schoolid`,`mod_deleted`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 PACK_KEYS=1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 PACK_KEYS=1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1363,7 +1363,7 @@ CREATE TABLE `modules` (
 
 LOCK TABLES `modules` WRITE;
 /*!40000 ALTER TABLE `modules` DISABLE KEYS */;
-INSERT INTO `modules` VALUES (1,'TRAIN','Training Module',1,'','mapping','',0,2,NULL,NULL,NULL,0,1,1,0),(2,'SYSTEM','Online Help',1,'','peer,external,stdset,mapping','',0,2,NULL,NULL,NULL,0,1,1,0),(3,'S01SET','Selenium Testing',1,'','peer,external,mapping','',0,3,1,0,NULL,0,1,1,0);
+INSERT INTO `modules` VALUES (1,'TRAIN','Training Module',1,'','mapping','',0,2,NULL,NULL,NULL,0,1,1,0),(2,'SYSTEM','Online Help',1,'','peer,external,stdset,mapping','',0,2,NULL,NULL,NULL,0,1,1,0),(3,'S01SET','Selenium Testing',1,'','peer,external,mapping','',0,3,1,0,NULL,0,1,1,0),(4,'S02SET','Selenium Testing 2',1,'','peer,external','',0,3,1,0,NULL,0,1,0,0);
 /*!40000 ALTER TABLE `modules` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2728,4 +2728,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-22 15:01:29
+-- Dump completed on 2013-08-22 16:29:34
