@@ -253,7 +253,7 @@ CREATE TABLE `denied_log` (
   `title` varchar(255) DEFAULT NULL,
   `msg` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1 PACK_KEYS=1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1 PACK_KEYS=1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,7 +262,7 @@ CREATE TABLE `denied_log` (
 
 LOCK TABLES `denied_log` WRITE;
 /*!40000 ALTER TABLE `denied_log` DISABLE KEYS */;
-INSERT INTO `denied_log` VALUES (1,17276,'2013-05-21 11:09:40','127.0.0.1','staff/index.php?','Access Denied','Access Denied'),(2,103,'2013-08-21 15:51:24','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=88888888&metadataID=34&log_type=2','Page not Found','Access Denied'),(3,103,'2013-08-21 15:53:51','127.0.0.1','reports/check_reassign_log_late.php?userID=88888888&paperID=7&metadataID=34&log_type=2','1Page not Found','Page not Found'),(4,102,'2013-08-21 15:56:39','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=88888888&log_type=2','1Page not Found','Page not Found'),(5,102,'2013-08-21 15:57:03','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=888888&metadataID=34&log_type=2','Page not Found','Page not Found'),(6,102,'2013-08-21 15:58:58','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=888888&log_type=2','1Page not Found','Page not Found'),(7,102,'2013-08-21 16:04:36','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=888888&log_type=2','Page not Found','Page not Found'),(8,103,'2013-08-21 16:08:15','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=88888888&log_type=2','Page not Found','Page not Found'),(9,102,'2013-08-21 16:21:54','127.0.0.1','osce/form.php?id=8888888888&userID=104','Page not Found','Page not Found'),(10,103,'2013-08-21 16:22:10','127.0.0.1','osce/form.php?id=8888888888&userID=104','Page not Found','Page not Found'),(11,103,'2013-08-21 16:23:07','127.0.0.1','osce/form.php?id=81377097998102&userID=88888888','Page not Found','Page not Found'),(12,102,'2013-08-21 16:24:08','127.0.0.1','osce/print.php?paperID=81377097998102','Page not Found','Page not Found'),(13,103,'2013-08-21 16:25:04','127.0.0.1','osce/print.php?paperID=88888888','Page not Found','Access Denied'),(14,103,'2013-08-22 13:59:37','127.0.0.1','reports/check_reassign_script.php?userID=3&paperID=88888888','Page not Found','Access Denied'),(15,103,'2013-08-22 14:21:31','127.0.0.1','reports/check_reassign_script.php?userID=88888888&paperID=7','Page not Found','Page not Found');
+INSERT INTO `denied_log` VALUES (1,17276,'2013-05-21 11:09:40','127.0.0.1','staff/index.php?','Access Denied','Access Denied'),(2,103,'2013-08-21 15:51:24','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=88888888&metadataID=34&log_type=2','Page not Found','Access Denied'),(3,103,'2013-08-21 15:53:51','127.0.0.1','reports/check_reassign_log_late.php?userID=88888888&paperID=7&metadataID=34&log_type=2','1Page not Found','Page not Found'),(4,102,'2013-08-21 15:56:39','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=88888888&log_type=2','1Page not Found','Page not Found'),(5,102,'2013-08-21 15:57:03','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=888888&metadataID=34&log_type=2','Page not Found','Page not Found'),(6,102,'2013-08-21 15:58:58','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=888888&log_type=2','1Page not Found','Page not Found'),(7,102,'2013-08-21 16:04:36','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=888888&log_type=2','Page not Found','Page not Found'),(8,103,'2013-08-21 16:08:15','127.0.0.1','reports/check_reassign_log_late.php?userID=105&paperID=7&metadataID=88888888&log_type=2','Page not Found','Page not Found'),(9,102,'2013-08-21 16:21:54','127.0.0.1','osce/form.php?id=8888888888&userID=104','Page not Found','Page not Found'),(10,103,'2013-08-21 16:22:10','127.0.0.1','osce/form.php?id=8888888888&userID=104','Page not Found','Page not Found'),(11,103,'2013-08-21 16:23:07','127.0.0.1','osce/form.php?id=81377097998102&userID=88888888','Page not Found','Page not Found'),(12,102,'2013-08-21 16:24:08','127.0.0.1','osce/print.php?paperID=81377097998102','Page not Found','Page not Found'),(13,103,'2013-08-21 16:25:04','127.0.0.1','osce/print.php?paperID=88888888','Page not Found','Access Denied'),(14,103,'2013-08-22 13:59:37','127.0.0.1','reports/check_reassign_script.php?userID=3&paperID=88888888','Page not Found','Access Denied'),(15,103,'2013-08-22 14:21:31','127.0.0.1','reports/check_reassign_script.php?userID=88888888&paperID=7','Page not Found','Page not Found'),(16,103,'2013-08-22 16:31:00','127.0.0.1','folder/edit_team_popup.php?module=4&calling=paper_list&folder=','Page not Found','Access Denied'),(17,103,'2013-08-22 16:35:37','127.0.0.1','folder/edit_team_popup.php?module=4&calling=paper_list&folder=','Page not Found','Access Denied'),(18,103,'2013-08-22 16:35:43','127.0.0.1','delete/check_delete_folder.php?folderID=1','Page not Found','Page not Found');
 /*!40000 ALTER TABLE `denied_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -423,7 +423,7 @@ CREATE TABLE `folders` (
   `color` enum('yellow','red','green','blue','grey') DEFAULT NULL,
   `deleted` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -432,6 +432,7 @@ CREATE TABLE `folders` (
 
 LOCK TABLES `folders` WRITE;
 /*!40000 ALTER TABLE `folders` DISABLE KEYS */;
+INSERT INTO `folders` VALUES (1,102,'Admin Folder','2013-08-22 16:34:36','yellow',NULL);
 /*!40000 ALTER TABLE `folders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2728,4 +2729,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-22 16:29:34
+-- Dump completed on 2013-08-22 16:37:36
