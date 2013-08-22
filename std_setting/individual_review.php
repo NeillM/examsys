@@ -374,7 +374,6 @@ function check_ebel_distinction_type($ebel) {
 
   $reviews = array();
   
-  $setterID = '';
   if (isset($_GET['std_setID'])) {
     $standard_setting = new StandardSetting($mysqli);
     $reviews = $standard_setting->get_ratings_by_question($_GET['std_setID']);
@@ -531,9 +530,9 @@ function check_ebel_distinction_type($ebel) {
   echo "<tr><td colspan=\"2\" style=\"border-top: dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
   echo '</table>';
   if ($_GET['method'] == 'ebel') {
-    if ($setterID != '') {
-      $result = $mysqli->prepare("SELECT percentage FROM ebel WHERE setterID = ? AND date_set = ? ORDER BY id");
-      $result->bind_param('is', $setterID, $date_id);
+    if (isset($_GET['std_setID'])) {
+      $result = $mysqli->prepare("SELECT percentage FROM ebel WHERE std_setID = ?");
+      $result->bind_param('i', $_GET['std_setID']);
       $result->execute();
       $result->bind_result($percentage);
       while ($result->fetch()) {
@@ -552,7 +551,7 @@ function check_ebel_distinction_type($ebel) {
       $result->fetch();
       $result->close();
       if ($templateID == '') {
-        $ebel = array('','','','','','','','','','','','','','','','','','');
+        $ebel = array('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
       } else {
         $result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?");
         $result->bind_param('i', $templateID);

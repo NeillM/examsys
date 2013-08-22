@@ -68,9 +68,10 @@ if (isset($_POST['Save'])) {
 
   //redirect to list sessions
   header("Location: ./sessions_list.php?module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
-
+  exit();
 } else if(isset($_POST['cancel']) and $_POST['cancel'] == 'Cancel') {
   header("Location: ./sessions_list.php?module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+	exit();
 } else {
   $stmt = $mysqli->prepare("SELECT calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND modules_student.idMod = ? ORDER BY calendar_year DESC LIMIT 1");
   $stmt->bind_param('i', $_GET['module']);

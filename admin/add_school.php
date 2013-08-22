@@ -38,7 +38,7 @@ if (isset($_POST['submit'])) {
     $insert_id = SchoolUtils::add_school($faculty, $school, $mysqli);
 
     header("location: list_schools.php");
-    exit;
+    exit();
   }
 }
 

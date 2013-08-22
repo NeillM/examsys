@@ -25,23 +25,23 @@
 require_once 'classes/configobject.class.php';
 $configObject = Config::get_instance();
 
-if($configObject->get('cfg_session_name')!='') {
-    session_name($configObject->get('cfg_session_name'));
+if ($configObject->get('cfg_session_name') != '') {
+  session_name($configObject->get('cfg_session_name'));
 } else {
-    session_name('RogoAuthentication');
+  session_name('RogoAuthentication');
 }
 $return = session_start();
 
 session_unset();
 session_destroy();
 session_write_close();
-setcookie(session_name(),'',0,'/');
+setcookie(session_name(), '', 0, '/');
 session_regenerate_id(true);
 
 header('Location: ./');
 ?>
 <html>
 <body>
-<a href="./"><h1>Now Logged Out</h1><br>Click Here to go back.</a>
+<h1>Now Logged Out</h1><p><a href="./">Click Here to go back.</a></p>
 </body>
 </html>

@@ -30,7 +30,7 @@ $gridID = check_var('gridID', 'POST', true, false, true);
 $row_no = 0;
 
 $result = $mysqli->prepare("SELECT name FROM ebel_grid_templates WHERE id = ?");
-$result->bind_param('i', $_GET['gridID']);
+$result->bind_param('i', $gridID);
 $result->execute();
 $result->store_result();
 $result->bind_result($grid_name);

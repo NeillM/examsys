@@ -112,7 +112,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   $mysqli->close();
   header("location: list_modules.php");
-  exit;
+  exit();
 } else {
 ?>
 <!DOCTYPE html>

@@ -35,6 +35,7 @@ if ($userObject->has_role('External Examiner')) {
   $cfg_root_path = $configObject->get('cfg_root_path');
   if ($_SERVER['PHP_SELF'] != "$cfg_root_path/staff/index.php" and $_SERVER['PHP_SELF'] != "$cfg_root_path/reviews/index.php" and $_SERVER['PHP_SELF'] != "$cfg_root_path/reviews/start.php" and $_SERVER['PHP_SELF'] != "$cfg_root_path/reviews/finish.php") {
     header("location: ../reviews/");
+		exit();
   }
 }
 

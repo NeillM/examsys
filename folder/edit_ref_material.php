@@ -53,7 +53,7 @@ if (isset($_POST['submit'])) {
   }
   
   header("location: list_ref_material.php?module=" . $_POST['module']);
-  exit;
+  exit();
 }
 
 $result = $mysqli->prepare("SELECT title, content, width FROM reference_material WHERE id = ?");

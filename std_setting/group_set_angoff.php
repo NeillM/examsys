@@ -165,7 +165,7 @@ if (!isset($no_screens)) {
   <div align="center">
   <table cellpadding="4" cellspacing="0" border="0" width="90%" class="key">
   <tr>
-  <td style="margin:0px"><?php echo $string['percentagemsg'] ?><br /><br /><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /><?php echo $string['warningmsg'] ?></td>
+  <td style="margin:0px"><?php echo $string['percentagemsg'] ?><br /><br /><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /><?php echo $string['warningmsg'] ?></td>
   </tr>
   </table>
 <?php

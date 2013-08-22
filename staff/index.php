@@ -37,13 +37,13 @@ $userObject = UserObject::get_instance();
 // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
 if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
   header("location: ../students/");
-  exit;
+  exit();
 } elseif ($userObject->has_role('External Examiner')) {
   header("location: ../reviews/");
-  exit;
+  exit();
 } elseif ($userObject->has_role('Invigilator')) {
   header("location: ../invigilator/");
-  exit;
+  exit();
 }
 
 // If we're still here we should be staff
@@ -279,7 +279,7 @@ require_once '../include/staff_auth.inc';
     }
 
     if ($module_no == 0) {
-      echo '<div style="color:#C00000; padding-left:15px"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
+      echo '<div style="color:#C00000; padding-left:15px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
     }
 
     echo '<br clear="left" /><br />';

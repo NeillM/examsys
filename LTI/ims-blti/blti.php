@@ -348,6 +348,7 @@ class BLTI {
     $location = $location . $host . $uri;
     $location = $this->addSession($location);
     header("Location: $location");
+		exit();
   }
 
   function dump() {

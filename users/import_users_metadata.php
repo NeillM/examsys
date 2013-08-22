@@ -216,7 +216,7 @@ if (!$module_details) {
 </select></td></tr>
 <tr><?php
 if ($file_problem) {
-  echo '<td></td><td style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" />&nbsp;Please specify a file for upload.</td></tr><tr>';
+  echo '<td></td><td style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</td></tr><tr>';
   echo '<td style="color:#C00000; font-weight:bold">' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" />';
 } else {
   echo '<td>' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" />';

@@ -34,10 +34,10 @@ require_once './classes/logger.class.php';
 // Redirect External Exminers and Invigilators to their own areas.
 if ($userObject->has_role('External Examiner')) {
   header("location: reviews/");
-  exit;
+  exit();
 } elseif ($userObject->has_role('Invigilator')) {
   header("location: invigilator/");
-  exit;
+  exit();
 }
 
 function display_duration($duration, $string) {
@@ -51,7 +51,7 @@ function display_duration($duration, $string) {
 }
 
 function display_warning($text) {
-  return '<img class="warning-img" width="16" height="16" alt="' . $text . '" title="' . $text . '" src="artwork/small_yellow_warning_icon.gif" />';
+  return '<img class="warning-img" width="12" height="11" alt="' . $text . '" title="' . $text . '" src="artwork/small_yellow_warning_icon.gif" />';
 }
 
 function get_labs($mysqli, $lablist) {
@@ -98,7 +98,7 @@ $paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $us
 
 if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   header("location: user_index.php?id=" . $paper_display[0]['crypt_name']);
-  exit;
+  exit();
 } elseif ($paper_no == 0) {
   echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>{$string['exams']}</title>\n";
   ?>

@@ -72,6 +72,7 @@ if (isset($_POST['submit'])) {
   $result->close();
 
   header("location: lab_details.php?labID=$lab_id");
+	exit();
 } else {
 ?>
 <!DOCTYPE html>

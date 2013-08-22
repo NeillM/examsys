@@ -65,7 +65,7 @@ if (isset($_POST['submit'])) {
   try {
     if ($q_status->save()) {
       header("location: list_statuses.php");
-      exit;
+      exit();
     }
   } catch (ItemExistsException $ex) {
     $error = 'duplicate';

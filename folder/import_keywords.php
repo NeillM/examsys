@@ -79,14 +79,14 @@ if (isset($_POST['submit'])) {
   if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
     if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $filename))  {
       echo uploadError($_FILES['txtfile']['error']);
-      exit;
+      exit();
     } else {
       keywords_from_file($filename, $userObject);
       unlink($filename);
       header("location: list_keywords.php?paperID=". $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
     }
     $mysqli->close();
-    exit;
+    exit();
   } else {
     $file_problem = true;
   }
@@ -131,7 +131,7 @@ if (isset($_POST['submit'])) {
 
 <?php
 if ($file_problem) {
-  echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" />&nbsp;Please specify a file for upload.</div>';
+  echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</div>';
 }
 ?>
 

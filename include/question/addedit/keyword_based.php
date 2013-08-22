@@ -79,7 +79,7 @@ if (count($keywords) > 0):
 <?php
 else:
 ?>
-                <span class="warning"><img src="../../artwork/small_yellow_warning_icon.gif" alt="!" height="16" width="16" /> <?php echo $string['keywordwarning'] ?></span>
+                <span class="warning"><img src="../../artwork/small_yellow_warning_icon.gif" alt="!" height="12" width="11" /> <?php echo $string['keywordwarning'] ?></span>
 
 <?php
 endif;
