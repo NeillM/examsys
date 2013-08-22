@@ -235,7 +235,7 @@ $paper_type = $propertyObj->get_paper_type();
     if (count($objByModule) > 0 or $temp_array[$x]['q_type'] == 'info') {
       echo '<td style="width:16px">&nbsp;</td>';
     } else {
-      echo '<td style="width:16px"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="No Mappings" /></td>';
+      echo '<td style="width:16px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="No Mappings" /></td>';
     }
 
     if ($temp_array[$x]['q_type'] == 'info') {

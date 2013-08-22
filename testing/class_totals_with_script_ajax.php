@@ -93,7 +93,7 @@ function getData($url) {
 }
 
 function tidyLine($line) {
-  $line = str_replace('<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Marking not complete" />&nbsp;', '', $line);
+  $line = str_replace('<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="Marking not complete" />&nbsp;', '', $line);
   $parts = explode('>', $line);
   $parts2 = explode('<', $parts[1]);
   

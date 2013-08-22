@@ -131,7 +131,7 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
       }
 
       echo '<tr><td style="text-align:right; vertical-align:top">';
-      if ($candidates_marked < $candidate_no) echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Warning ' . ($candidate_no - $candidates_marked) . ' marks missing" border="0" />';
+      if ($candidates_marked < $candidate_no) echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="Warning ' . ($candidate_no - $candidates_marked) . ' marks missing" />';
       echo $question_no . '.</td>';
       if ($candidates_marked == $candidate_no) {
         echo '<td>';

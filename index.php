@@ -51,7 +51,7 @@ function display_duration($duration, $string) {
 }
 
 function display_warning($text) {
-  return '<img class="warning-img" width="16" height="16" alt="' . $text . '" title="' . $text . '" src="artwork/small_yellow_warning_icon.gif" />';
+  return '<img class="warning-img" width="12" height="11" alt="' . $text . '" title="' . $text . '" src="artwork/small_yellow_warning_icon.gif" />';
 }
 
 function get_labs($mysqli, $lablist) {

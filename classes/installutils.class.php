@@ -132,7 +132,7 @@ Class InstallUtils {
           define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
         }
         if (PHP_VERSION_ID < 50302) {
-          echo "<div class=\"warning\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" /> Current PHP version " . phpversion() . " is below recommended version 5.3.2</div>\n";
+          echo "<div class=\"warning\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /> Current PHP version " . phpversion() . " is below recommended version 5.3.2</div>\n";
         }
       ?>
       <table class="h"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -1189,7 +1189,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     echo "<div class=\"error\">\n";
     if (is_array($error)) {
       foreach($error as $errCode => $message) {
-        echo "\t<div><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" /> " . $string['errors13'] . " $errCode: $message</div>\n";
+        echo "\t<div><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /> " . $string['errors13'] . " $errCode: $message</div>\n";
       }
     }
     echo "</div>\n";
