@@ -197,9 +197,9 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
         }
       }
     }
-if(isset($context) and !empty($context)) {
-  $variables = base64_encode(serialize($context));
-}
+		if (isset($context) and !empty($context)) {
+			$variables = base64_encode(serialize($context));
+		}
     $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
     $userid = 0;
     $username = 'PRE LOGIN';
@@ -207,8 +207,8 @@ if(isset($context) and !empty($context)) {
       $userid = $userObject->get_user_ID();
       $username = $userObject->get_username();
     }
-$valid_errors=array('Notice','Warning','Fatal Error','Unknown');
-    if(!in_array($error_type,$valid_errors)) {
+		$valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown');
+    if (!in_array($error_type, $valid_errors)) {
       $error_type='Unknown';
     }
 
@@ -216,7 +216,7 @@ $valid_errors=array('Notice','Warning','Fatal Error','Unknown');
     if (isset($mysqli)) {
       if (isset($mysqli->error)) {
         if (!($mysqli->error == '' or is_null($mysqli->error))) {
-          $errstr = $errstr . "\r\n<br>MySQLi Error:\r\n<br>" . $mysqli->error;
+          $errstr = $errstr . "\r\n<br />MySQLi Error:\r\n<br />" . $mysqli->error;
         }
       }
     }

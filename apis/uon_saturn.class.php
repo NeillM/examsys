@@ -348,7 +348,7 @@ Class UON_SATURN extends SmsUtils {
                 $current_users[$lookup_username]['roles'] != $new_roles or
                 $current_users[$lookup_username]['email'] != $sms->Email
              ) {
-              $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email WHERE username = ?");
+              $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email = ? WHERE username = ?");
               $result->bind_param('issssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $sms->Email, $lookup_username);
               $result->execute();
               $result->close();
@@ -362,7 +362,7 @@ Class UON_SATURN extends SmsUtils {
               $result->execute();
               $result->close();
             } else {
-              $result = $mysqli->prepare("UPDATE sid SET student_id=? WHERE userID=?");
+              $result = $mysqli->prepare("UPDATE sid SET student_id = ? WHERE userID = ?");
               $result->bind_param('si', $sms->StudentID, $current_users[$lookup_username]['userID']);
               $result->execute();
               $result->close();
@@ -403,9 +403,6 @@ Class UON_SATURN extends SmsUtils {
       $result->bind_param('sisiss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
       $result->execute();
       $result->close();
-
-      @ob_flush();
-      @flush();
     }
   }
 }
