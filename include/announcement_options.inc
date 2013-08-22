@@ -24,7 +24,7 @@
 ?>
 <script language="JavaScript">
   function editAnnouncement() {
-    window.location.href='./edit_announcement.php?announcementid=' + $('lineID').value;
+    window.location.href='./edit_announcement.php?announcementid=' + $('#lineID').val();
   }
   
   function deleteAnnouncement() {
