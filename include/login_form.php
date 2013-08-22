@@ -30,8 +30,16 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
 	<script>
-    $(document).ready(function(){
+    $(document).ready(function() {
       $('#username').focus();
+			
+<?php
+  if (isset($displaystdformobj->scripts)) {
+    foreach ($displaystdformobj->scripts as $script) {
+		  echo $script;
+		}
+	}
+?>			
 			
       $('#theform').validate({
         errorClass: 'errfield',
@@ -39,7 +47,8 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
           return true;
         }
       });
-      $('form').removeAttr('novalidate');    });
+      $('form').removeAttr('novalidate');
+		});
   </script>
 </head>
 
