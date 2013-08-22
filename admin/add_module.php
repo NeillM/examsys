@@ -110,7 +110,6 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level);
 
-  $mysqli->close();
   header("location: list_modules.php");
   exit();
 } else {
