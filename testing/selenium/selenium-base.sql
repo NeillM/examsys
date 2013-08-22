@@ -1999,7 +1999,7 @@ CREATE TABLE `reference_material` (
   `created` datetime DEFAULT NULL,
   `deleted` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2008,6 +2008,7 @@ CREATE TABLE `reference_material` (
 
 LOCK TABLES `reference_material` WRITE;
 /*!40000 ALTER TABLE `reference_material` DISABLE KEYS */;
+INSERT INTO `reference_material` VALUES (1,'Selenium Reference','<div><strong>Selenium Testing</strong></div>\r\n<div>&nbsp;</div>\r\n<div>A guide to using Selenium</div>',400,'2013-08-22 16:39:56',NULL);
 /*!40000 ALTER TABLE `reference_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2023,7 +2024,7 @@ CREATE TABLE `reference_modules` (
   `refID` mediumint(8) unsigned DEFAULT NULL,
   `idMod` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2032,6 +2033,7 @@ CREATE TABLE `reference_modules` (
 
 LOCK TABLES `reference_modules` WRITE;
 /*!40000 ALTER TABLE `reference_modules` DISABLE KEYS */;
+INSERT INTO `reference_modules` VALUES (1,1,4);
 /*!40000 ALTER TABLE `reference_modules` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2729,4 +2731,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-22 16:37:36
+-- Dump completed on 2013-08-22 16:40:55
