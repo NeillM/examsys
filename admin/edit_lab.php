@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -41,11 +41,12 @@ if ($results->num_rows == 0) {
 $results->fetch();
 $results->close();
 
+$bad_addresses = array();
 if (isset($_POST['submit'])) {
   // Delete the existing IP addresses for the lab first.
   $result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab = ?");
   $result->bind_param('i', $lab_id);
-  $result->execute();  
+  $result->execute();
   $result->close();
 
   // Insert the new IP addresses.
@@ -54,26 +55,38 @@ if (isset($_POST['submit'])) {
     $ip_address = trim($individual_address);
     if ($ip_address != '') {
       if ($configObject->get('cfg_client_lookup') == 'name') {
-        $hostname = $ip_address;
+        $test_re = '/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/';
       } else {
-        $hostname = gethostbyaddr($ip_address);
+        $test_re = '/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/';
       }
-      $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL, ?, ?, ?, ?)");
-      $result->bind_param('issi', $lab_id, $ip_address, $hostname, $_POST['low_bandwidth']);
-      $result->execute();  
-      $result->close();
+
+      if (preg_match($test_re, $ip_address)) {
+        if ($configObject->get('cfg_client_lookup') == 'name') {
+          $hostname = $ip_address;
+        } else {
+          $hostname = gethostbyaddr($ip_address);
+        }
+        $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL, ?, ?, ?, ?)");
+        $result->bind_param('issi', $lab_id, $ip_address, $hostname, $_POST['low_bandwidth']);
+        $result->execute();
+        $result->close();
+      } else {
+        $bad_addresses[] = $ip_address;
+      }
     }
   }
-  
+
   // Edit Lab table.
   $result = $mysqli->prepare("UPDATE labs SET name = ?, campus = ?, building = ?, room_no = ?, timetabling = ?, it_support = ?, plagarism = ? WHERE id = ?");
   $result->bind_param('sssssssi', $_POST['name'], $_POST['campus'], $_POST['building'], $_POST['room_no'], $_POST['timetabling'], $_POST['it_support'], $_POST['plagarism'], $lab_id);
-  $result->execute();  
+  $result->execute();
   $result->close();
 
-  header("location: lab_details.php?labID=$lab_id");
-	exit();
-} else {
+  if (count($bad_addresses) == 0) {
+    header("location: lab_details.php?labID=$lab_id");
+    exit();
+  }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -81,14 +94,14 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['editcomputerlab']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     input, textarea {line-height:140%}
   </style>
-  
+
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
@@ -123,7 +136,24 @@ if (isset($_POST['submit'])) {
       echo "<table class=\"header\">\n";
       echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php\">" . $string['administrativetools'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./list_labs.php\">" . $string['editcomputerlab'] . "</a></div><div style=\"font-size:220%; font-weight:bold; margin-left:10px\">Edit Lab</div></th>\n";
       echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(231); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
-      echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+      echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
+      if (count($bad_addresses) > 0) {
+        echo "<tr><td style=\"color: #f00; font-weight: bold\">\n";
+        $address_list = '';
+        foreach ($bad_addresses as $bad) {
+          $address_list .= $bad . ', ';
+        }
+        $address_list = rtrim($address_list, ', ');
+        printf($string['badaddressesmsg'], $address_list);
+?>
+<br /><br /><a href="./lab_details.php?labID=<?php echo $lab_id ?>"><?php echo $string['backtolab'] ?></a></td></tr>
+</table>
+</body>
+</html>
+<?php
+        exit;
+      }
+      echo "</table>\n";
       echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:200px\"><div><strong>" . $string['ipaddresses'] . "</strong></div>\n";
       echo "<textarea cols=\"20\" rows=\"28\" style=\"width:250px; height:590px\" name=\"addresses\" required>\n";
     }
@@ -131,7 +161,7 @@ if (isset($_POST['submit'])) {
     $ip_no++;
   }
   $result->close();
-  
+
   echo "</textarea></td><td style=\"width:50px\"></td><td style=\"vertical-align:top\">\n";
   echo "<div><strong>" . $string['name'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" maxlength=\"255\" name=\"name\" value=\"$name\" required /></div>\n";
   echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n";
@@ -162,6 +192,5 @@ if (isset($_POST['submit'])) {
 </body>
 </html>
 <?php
-}
 $mysqli->close();
 ?>
