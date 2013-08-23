@@ -77,9 +77,9 @@
   $module_block = false;
   $block_id=0;
   if ($userObject->has_role('SysAdmin')) {
-    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty) LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY faculty.name, school, moduleid");
+    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty) LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL AND mod_deleted IS NULL ORDER BY faculty.name, school, moduleid");
   } else {
-    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty, admin_access, modules) WHERE schools.facultyID = faculty.id AND schools.id = modules.schoolid AND schools.id = admin_access.schools_id AND admin_access.userID = ? AND schools.deleted IS NULL ORDER BY faculty.name, school, moduleid");
+    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty, admin_access, modules) WHERE schools.facultyID = faculty.id AND schools.id = modules.schoolid AND schools.id = admin_access.schools_id AND admin_access.userID = ? AND schools.deleted IS NULL AND mod_deleted IS NULL ORDER BY faculty.name, school, moduleid");
     $results->bind_param('i',$userObject->get_user_ID());
   }
   $results->execute();
