@@ -2067,7 +2067,7 @@ for ($i=0; $i<$rows; $i++) {
   } elseif ($part == 'review') {
     $old = format_review($old, $string);
     $new = format_review($new, $string);
-  } elseif ($part == 'passmark') {
+  } elseif ($part == 'passmark' or $part == 'distinction') {
     $old = format_passmark($old, $string);
     $new = format_passmark($new, $string);
   }
