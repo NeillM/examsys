@@ -36,6 +36,9 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/logger.class.php';
+require_once '../classes/question_status.class.php';
+require_once '../classes/exam_announcements.class.php';
+require_once '../LTI/ims-lti/UoN_LTI.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -181,8 +184,25 @@ require '../config/finish.inc';
   echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div></td>';
   echo $logo_html;
   echo '</table>';
-  
-  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $metadataid, $mysqli, $preview_q_id);
+
+  // Get any marking override for the paper
+  $overrides = array();
+  $sql = "SELECT m.q_id, title, surname, date_marked, new_mark_type, adjmark
+            FROM marking_override m INNER JOIN users u ON m.marker_id = u.id
+            INNER JOIN log{$log_type} l ON m.log_id = l.id
+            WHERE user_id = ? AND paper_id = ?";
+  $result = $mysqli->prepare($sql);
+  $result->bind_param('ii', $temp_userID, $paperID);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($o_q_id, $o_title, $o_surname, $o_date_marked, $o_new_mark_type, $o_adjmark);
+  while($result->fetch()) {
+    $overrides[$o_q_id] = array('q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark);
+  }
+  $result->close();
+
+  $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+  display_feedback($temp_userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $metadataid, $mysqli, $status_array, $overrides, $preview_q_id);
 
   echo "</body>\n</html>";
   $mysqli->close();
