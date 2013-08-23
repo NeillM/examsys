@@ -29,7 +29,7 @@ Class NetworkUtils {
 	 * Get the IP address or name of the computer from the server headers
    * @return mixed client ip address
 	 */
-  static function get_ipaddress() {
+  static function get_client_address() {
     $configObject = Config::get_instance();
 
     // If don't have cached version look it up

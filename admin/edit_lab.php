@@ -44,7 +44,7 @@ $results->close();
 $bad_addresses = array();
 if (isset($_POST['submit'])) {
   // Delete the existing IP addresses for the lab first.
-  $result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab = ?");
+  $result = $mysqli->prepare("DELETE FROM client_identifiers WHERE lab = ?");
   $result->bind_param('i', $lab_id);
   $result->execute();
   $result->close();
@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
         } else {
           $hostname = gethostbyaddr($ip_address);
         }
-        $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL, ?, ?, ?, ?)");
+        $result = $mysqli->prepare("INSERT INTO client_identifiers VALUES (NULL, ?, ?, ?, ?)");
         $result->bind_param('issi', $lab_id, $ip_address, $hostname, $_POST['low_bandwidth']);
         $result->execute();
         $result->close();
@@ -127,7 +127,7 @@ if (isset($_POST['submit'])) {
 
 <?php
   $ip_no = 0;
-  $result = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE lab = ?");
+  $result = $mysqli->prepare("SELECT address, low_bandwidth FROM client_identifiers WHERE lab = ?");
   $result->bind_param('i', $lab_id);
   $result->execute();
   $result->bind_result($address, $low_bandwidth);

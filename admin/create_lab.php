@@ -62,7 +62,7 @@ if (isset($_POST['submit'])) {
         } else {
           $hostname = gethostbyaddr($ip_address);
         }
-        $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL,?,?,?,?)");
+        $result = $mysqli->prepare("INSERT INTO client_identifiers VALUES (NULL,?,?,?,?)");
         $result->bind_param('issi', $labID, $ip_address, $hostname, $_POST['low_bandwidth']);
         $result->execute();
         $result->close();

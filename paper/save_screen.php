@@ -43,7 +43,7 @@ check_var('id', 'GET', true, false, false);
 
 //calculate how long this request should be processed based on the config vars and the retry number
 if ( isset($_GET['retry']) and is_numeric($_GET['retry']) and $_GET['retry'] > 0 and $_GET['retry'] <= $configObject->get('cfg_autosave_retrylimit') ) {
-  $extra_time = 1 + ceil($configObject->get('cfg_autosave_backoff_factor') * intval($_GET['retry']) *  $configObject->get('cfg_autosave_settimeout')); 
+  $extra_time = 1 + ceil($configObject->get('cfg_autosave_backoff_factor') * intval($_GET['retry']) *  $configObject->get('cfg_autosave_settimeout'));
 } else {
   $extra_time = 1;
 }
@@ -63,18 +63,18 @@ $attempt = 1;                 //default attempt to 1 overwritten if the student 
 $low_bandwidth = 0;           //default to off overwritten by (check_labs) if lab has low_bandwidth set
 $lab_name = NULL;             //default overwritten by (check_labs)
 $lab_id = NULL;
-$current_ip_address = NULL;   //default overwritten by (check_labs)
+$current_address = NULL;   //default overwritten by (check_labs)
 
-$current_ip_address = NetworkUtils::get_ipaddress();
+$current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
   $lab_id = $lab_object->get_id();
 }
 
 if ($userObject->has_role('Student')) {
 
-  //get the module Ids for this paper 
+  //get the module Ids for this paper
   $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
 
   // Check for additional password on the paper
@@ -84,11 +84,11 @@ if ($userObject->has_role('Student')) {
   check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date());
 
   //Check room security
-  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(), 
-                                $propertyObj->get_labs(), 
-                                $current_ip_address,
-                                $propertyObj->get_password(), 
-                                $string, 
+  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
+                                $propertyObj->get_labs(),
+                                $current_address,
+                                $propertyObj->get_password(),
+                                $string,
                                 $mysqli
                               );
 
@@ -129,7 +129,7 @@ try {
 }
 
 if ($ret === true) {
-  //everthing worked ;-) 
+  //everthing worked ;-)
   echo $_POST['randomPageID'];
 } else {
   echo "ERROR";

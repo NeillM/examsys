@@ -39,9 +39,9 @@ class LabFactory {
    * @param  integer  $ip_address IP address of a machine in the required lab
    * @return Lab                  Lab object for specified IP address or false if not found
    */
-  public function get_lab_based_on_ip($ip_address) {
+  public function get_lab_based_on_client($ip_address) {
 
-    $sql = 'SELECT lab, name FROM ip_addresses, labs WHERE ip_addresses.lab = labs.id AND address = ?';
+    $sql = 'SELECT lab, name FROM client_identifiers, labs WHERE client_identifiers.lab = labs.id AND address = ?';
 
     $lab_results = $this->db->prepare($sql);
 

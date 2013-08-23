@@ -41,7 +41,7 @@ Class PaperUtils {
   public function paper_exists($paperid, $db) {
     // Check for unique moduleID
     $exist = true;
-    
+
     $result = $db->prepare("SELECT property_id FROM properties WHERE property_id = ? AND deleted IS NULL");
     $result->bind_param('i', $paperid);
     $result->execute();
@@ -140,9 +140,9 @@ Class PaperUtils {
     }
 
     $enabled = true;
-    
+
     $module_list = implode(',', $moduleIDs);
-  
+
     $result = $db->prepare("SELECT exam_q_feedback FROM modules WHERE id IN ($module_list)");
     $result->execute();
     $result->bind_result($exam_q_feedback);
@@ -155,7 +155,7 @@ Class PaperUtils {
 
     return $enabled;
   }
-  
+
   /**
   * Return a array of metadata pairs assigned to a paper
   *
@@ -443,7 +443,7 @@ Class PaperUtils {
       if ($labs != '') {
         $machineOK = false;
         $labs = str_replace(",", " OR lab=", $labs);
-        $lab_info = $db->query("SELECT address FROM ip_addresses WHERE address='" . NetworkUtils::get_ipaddress() . "' AND (lab=$labs)");
+        $lab_info = $db->query("SELECT address FROM client_identifiers WHERE address='" . NetworkUtils::get_client_address() . "' AND (lab=$labs)");
         if ($lab_info->num_rows > 0) $machineOK = true;
         $lab_info->close();
       } else {

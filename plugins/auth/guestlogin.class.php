@@ -56,7 +56,7 @@ class guestlogin_auth extends outline_authentication {
 
   function loginbutton($displaystdformobj) {
     global $string;
-    
+
     $this->savetodebug('Button Check');
     $labs_list = '';
     // detect if we should display login button
@@ -79,7 +79,7 @@ class guestlogin_auth extends outline_authentication {
     $results->bind_result($labs);
     while ($results->fetch()) {
       $paper_match = true;
-      $query = "SELECT address FROM ip_addresses WHERE lab IN ($labs)";
+      $query = "SELECT address FROM client_identifiers WHERE lab IN ($labs)";
       $sub_results = $this->db->prepare($query);
       if ($this->db->error) {
         try {
@@ -96,13 +96,13 @@ class guestlogin_auth extends outline_authentication {
       $sub_results->bind_result($address);
       while ($sub_results->fetch()) {
         $labs_list = $labs_list . ' ' . $address;
-        if (NetworkUtils::get_ipaddress() == $address) $ip_match = true;
+        if (NetworkUtils::get_client_address() == $address) $ip_match = true;
       }
       $sub_results->close();
     }
     $results->close();
 
-    $this->savetodebug('Status paper_match:' . var_export($paper_match, true) . ' ip_match:' . var_export($ip_match, true) . ' ip address:' . var_export(NetworkUtils::get_ipaddress(), true) . ' <br /> ' . $labs . ' ' . $labs_list);
+    $this->savetodebug('Status paper_match:' . var_export($paper_match, true) . ' ip_match:' . var_export($ip_match, true) . ' ip address:' . var_export(NetworkUtils::get_client_address(), true) . ' <br /> ' . $labs . ' ' . $labs_list);
     if ($paper_match === true and $ip_match === true) {
       $this->savetodebug('Adding New Button');
       $newbutton = new displaystdformobjbutton();
@@ -111,7 +111,7 @@ class guestlogin_auth extends outline_authentication {
       $newbutton->name = 'guestlogin';
       $newbutton->class = 'guestlogin';
       $displaystdformobj->buttons[] = $newbutton;
-			
+
 			$newscript = "\$('.guestlogin').click(function() {\n  window.location.href = 'guest_account.php';\n});";
       $displaystdformobj->scripts[] = $newscript;
     }

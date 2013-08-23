@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -45,9 +45,9 @@ $results->close();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['labdetails']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -64,8 +64,8 @@ $results->close();
 <div id="content" class="content">
 <?php
   $ip_no = 0;
-  
-  $results = $mysqli->prepare("SELECT address, hostname, low_bandwidth FROM ip_addresses WHERE lab = ?");
+
+  $results = $mysqli->prepare("SELECT address, hostname, low_bandwidth FROM client_identifiers WHERE lab = ?");
   $results->bind_param('i', $lab_id);
   $results->execute();
   $results->store_result();
@@ -78,7 +78,7 @@ $results->close();
       echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
       echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:440px\"><div><strong>" . $string['ipaddresses'] . " (" . $results->num_rows . ")</strong></div>\n<div style=\"height:590px; overflow-y:scroll; border: 1px solid #EEEDE5\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
     }
-    
+
     if ($configObject->get('cfg_client_lookup') == 'name') {
       echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:135px\">$address</td></tr>\n";
     } else {
@@ -88,7 +88,7 @@ $results->close();
         echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:200px\">$address</td><td style=\"color:#808080\">$hostname</td></tr>\n";
       }
     }
-    
+
     $ip_no++;
   }
   $results->close();

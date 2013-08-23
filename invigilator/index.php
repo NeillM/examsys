@@ -267,11 +267,11 @@ if (isset($_POST['start_exam_form'])) {
   check_var('paper_id', 'POST', true, false, false);
 }
 
-$current_ip_address = NetworkUtils::get_ipaddress();
+$current_address = NetworkUtils::get_client_address();
 
 $lab = new LabFactory($mysqli);
 
-$lab_object = $lab->get_lab_based_on_ip($current_ip_address);
+$lab_object = $lab->get_lab_based_on_client($current_address);
 $lab_id = $lab_object->get_id();
 $room_name = $lab_object->get_name();
 
@@ -429,7 +429,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 
   function resizeLists() {
     var myHeight = $(window).height();
-    
+
     <?php
       if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
         echo "myHeight = myHeight - 280;\n";
@@ -437,7 +437,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
         echo "myHeight = myHeight - 180;\n";
       }
     ?>
-        
+
     var mysheet = document.styleSheets[0];
     var totalrules = mysheet.cssRules ? mysheet.cssRules.length : mysheet.rules.length
     if (mysheet.deleteRule) { //if Firefox
@@ -462,7 +462,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
       }
   ?>
   }
-  
+
   document.onmousedown = mouseSelect;
 
   // Register the events we need
@@ -473,7 +473,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
     resizeLists();
     $(window).unload(KillClock);
     $(window).resize(resizeLists);
-    
+
 <?php
   if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
     echo "var clarificationCall = setInterval(clarifyMethod, 10000);\n";
@@ -514,7 +514,7 @@ if ($language != 'en') {
             <div style="padding-left:10px; font-size:24pt; font-weight:bold">
               <?php
               if ($lab_object->get_name() == '') {
-                echo NetworkUtils::get_ipaddress() . $string['unknownlab'];
+                echo NetworkUtils::get_client_address() . $string['unknownlab'];
               } else {
                 echo $string['lab'] . ' ' . $lab_object->get_name();
               }
@@ -659,7 +659,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
               echo '<img src="../artwork/summative.png" align="left" width="48" height="48" alt="paper icon" />';
             }
           ?>
-              
+
           </div>
 
           <div style="margin-left:52px; display:block">
@@ -692,7 +692,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
                                 <?php for($hr=0; $hr<60; $hr++) { $selected = ''; if($hr == $end_time_m) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . str_pad($hr, 2, '0', STR_PAD_LEFT) . '</option>'; } ?>
                               </select>
                             </fieldset>
-                          <?php                          
+                          <?php
                             } else {
                           ?>
                             <fieldset id="start_exam">

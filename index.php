@@ -90,7 +90,7 @@ function display_labs($labs, $computer_lab, $string) {
 }
 
 $logger = new Logger($mysqli);
-$logger->record_access($userObject->get_user_ID(), 'Summative homepage', '/');  
+$logger->record_access($userObject->get_user_ID(), 'Summative homepage', '/');
 
 $paper_utils = Paper_utils::get_instance();
 $paper_display = array();
@@ -215,9 +215,9 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
 
   echo "<hr noshade=\"noshade\" style=\"margin-left:60px; border:0px; height:1px; color:#C0C0C0; background-color:#C0C0C0; width:500px\" align=\"left\" />\n<p style=\"margin-left:60px\">" . $string['mostLikely'] . "</p>\n<ul style=\"margin-left:80px\">\n";
 
-  $current_ip_address = NetworkUtils::get_ipaddress();
-  $ip_info = $mysqli->prepare("SELECT name, room_no FROM (labs, ip_addresses) WHERE labs.id=ip_addresses.lab AND address=?");
-  $ip_info->bind_param('s', $current_ip_address);
+  $current_address = NetworkUtils::get_client_address();
+  $ip_info = $mysqli->prepare("SELECT name, room_no FROM (labs, client_identifiers) WHERE labs.id=client_identifiers.lab AND address=?");
+  $ip_info->bind_param('s', $current_address);
   $ip_info->execute();
   $ip_info->store_result();
   $ip_info->bind_result($computer_lab, $computer_lab_short);
@@ -227,7 +227,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   }
   $computer_lab_short = ($computer_lab_short == '') ? $computer_lab : $computer_lab_short;
   $ip_info->close();
-  echo "<li>" . $string['IPaddress'] . " - " . NetworkUtils::get_ipaddress() . " $computer_lab</li>\n";
+  echo "<li>" . $string['IPaddress'] . " - " . NetworkUtils::get_client_address() . " $computer_lab</li>\n";
   echo "<li>" . $string['Time/Date'] . " - " . date('d/m/Y H:i:s') . "</li>\n";
   echo "<li>" . $string['yearofstudy'] . " - ";
 

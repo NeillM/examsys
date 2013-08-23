@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -24,7 +24,7 @@
 
 require '../include/admin_auth.inc';
 require '../include/errors.inc';
-  
+
 $labID = check_var('labID', 'POST', true, false, true);
 
 $lab_no = 0;
@@ -43,14 +43,14 @@ if ($lab_no == 0) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$result = $mysqli->prepare("DELETE FROM ip_addresses WHERE lab = ?");
+$result = $mysqli->prepare("DELETE FROM client_identifiers WHERE lab = ?");
 $result->bind_param('i', $labID);
-$result->execute();  
+$result->execute();
 $result->close();
 
 $result = $mysqli->prepare("DELETE FROM labs WHERE id = ?");
 $result->bind_param('i', $labID);
-$result->execute();  
+$result->execute();
 $result->close();
 
 $mysqli->close();
@@ -60,9 +60,9 @@ $mysqli->close();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Lab Deleted</title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
   <script type="text/javascript">
