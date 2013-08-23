@@ -77,8 +77,8 @@ if ($folder != '') {
   }
 
   $parent_list = array();
-  if (substr_count($orig_folder_name,';') > 0) {
-    $last_semicolon = strrpos($orig_folder_name,';');
+  if (substr_count($orig_folder_name, ';') > 0) {
+    $last_semicolon = strrpos($orig_folder_name, ';');
     $path = substr($orig_folder_name, 0, $last_semicolon);
     $parts = explode(';', $path);
     $part_sql = '';
@@ -268,7 +268,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
 
 // Is it a self-enrol module.
 if (isset($module_details['selfenroll']) and $module_details['selfenroll'] == 1) {
-  $selfenrol_url = $configObject->get('cfg_root_path') . '/self_enrol.php?moduleid=' . $module_details['moduleid'];
+  $selfenrol_url = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/self_enrol.php?moduleid=' . $module_details['moduleid'];
   echo "<div style=\"padding-left:10px\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /> <span style=\"color:#C00000\">" . $string['SelfenrolURL'] . ":</span> <a href=\"$selfenrol_url\">$selfenrol_url</a></div>\n<br />";
 }
 
