@@ -343,7 +343,6 @@ class Authentication {
 
           if ($createuser == true) {
             $this->debug[] = 'Going to try and create new user';
-            // $this->debug[] = 'Data is: ' . var_export($info->lookupdata, true);
             $arraycheck = array('username', 'title', 'firstname', 'surname', 'email', 'coursecode', 'gender', 'yearofstudy', 'role', 'studentID', 'school', 'coursetitle', 'initials');
             foreach ($arraycheck as $itemcheck) {
               if (!isset($info->lookupdata->$itemcheck)) {
@@ -498,7 +497,7 @@ class Authentication {
   }
 
   function get_username() {
-    if(isset($this->username) and $this->username!='') {
+    if(isset($this->username) and $this->username != '') {
       return $this->username;
     }
     return false;
@@ -590,7 +589,6 @@ class Authentication {
 
     }
 
-
     if ($formatted == false) {
       return $data;
     }
@@ -677,7 +675,6 @@ class authobjreturn {
     $this->rogoids = array();
     $this->data = new stdClass();
     $this->datas = array();
-
   }
 
   /*
@@ -688,7 +685,6 @@ class authobjreturn {
     $this->returneds[] = $this->returned;
     $this->statuses[$number] = $this->returned;
     $this->rogoid = 0;
-
   }
 
   /*
@@ -714,7 +710,6 @@ class authobjreturn {
 
 }
 
-
 class postauthfailreturn extends stdClass {
   public $attempt;
   public $form;
@@ -731,19 +726,17 @@ class postauthfailreturn extends stdClass {
 }
 
 class displaystdformmessage extends stdClass {
-    public $pretext;
-    public $posttext;
-    public $cssclass;
-    public $content;
+	public $pretext;
+	public $posttext;
+	public $cssclass;
+	public $content;
 
-
-    function __construct() {
-        $this->pretext = '';
-        $this->posttext = '';
-        $this->csstype = '';
-        $this->content = '';
-
-    }
+	function __construct() {
+		$this->pretext = '';
+		$this->posttext = '';
+		$this->csstype = '';
+		$this->content = '';
+	}
 
 }
 
@@ -778,7 +771,6 @@ class displaystdformobjfield extends stdClass {
     $this->type = '';
     $this->name = '';
     $this->defaultvalue = '';
-
   }
 
 }

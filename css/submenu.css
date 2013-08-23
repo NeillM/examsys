@@ -121,6 +121,7 @@ a.greylink:hover {
   width:185px;
   border:none;
   border-collapse:collapse;
+	line-height:0;
 }
 
 .sidebar_tbl td {
