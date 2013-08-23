@@ -1081,10 +1081,10 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
          echo $string['na'];
          break;
        case '6':
-         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
+         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
          break;
        default:
-         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
+         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
      }
      echo "</td></tr>\n";
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\">";
