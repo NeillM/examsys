@@ -41,6 +41,7 @@ require_once '../classes/userutils.class.php';
     p {margin:0px; padding:0px}
     h1 {font-size:120%; font-weight:bold}
     label.error {display:block; color:#f00}
+		td {vertical-align:top}
   </style>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 </head>
@@ -67,7 +68,7 @@ require_once '../classes/userutils.class.php';
         <br /><br /><br />
         <table class="dialog_border" style="width:600px">
         <tr>
-        <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['addingmodules']; ?> (<?php echo $_FILES['csvfile']['name'] ;?>)</td>
+        <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['importmodules']; ?></td>
         </tr>
         <tr>
         <td class="dialog_body">
@@ -164,18 +165,28 @@ require_once '../classes/userutils.class.php';
       }
       unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv");
 
-      echo "<h2>$modulesAdded " . $string['enrolementsperformed'] . "</h2>";
-      echo "<p>" . count($missing_users) . " " . $string['missingusers'] . "</p>";
-      foreach ($missing_users as $sid => $module) {
-        echo "$sid<br />";
+      echo "<table>\n";
+			echo "<tr><td>" . $string['enrolementsperformed'] . "</td><td>$modulesAdded</td></tr>\n";
+      echo "<tr><td>" . $string['missingusers'] . "</td><td><div>" . count($missing_users) . "<div>\n";
+      if (count($missing_users) > 0) echo '<ul>';
+			foreach ($missing_users as $sid => $module) {
+        echo "<li>$sid<br />";
         foreach ($module['module'] as $moduleid) {
-          echo "<p style=\"margin-left:10px\">$moduleid</p>";
+          echo "$moduleid<br />";
         }
+				echo "</li>";
       }
-      echo "<p>" . count($unknow_ModuleID) . " " . $string['missingmodules'] . "</p>";
-      foreach($unknow_ModuleID as $moduleID) {
-         echo "<p style=\"margin-left:10px\">$moduleID</p>";
+      if (count($missing_users) > 0) echo '</ul>';
+			echo "</td></tr>\n";
+			
+      echo "<tr><td>" . $string['missingmodules'] . "</td><td><div>" . count($unknow_ModuleID) . "</div>\n<ul>";
+      if (count($unknow_ModuleID) > 0) echo '<ul>';
+      foreach ($unknow_ModuleID as $moduleID) {
+        echo "<li>$moduleID</li>";
       }
+      if (count($unknow_ModuleID) > 0) echo '</ul>';
+			echo "</td></tr>\n";
+			echo "</table>\n";
       ?>
       </div>
       </td>
@@ -186,7 +197,7 @@ require_once '../classes/userutils.class.php';
       </table>
       <?php
       $mysqli->close();
-      exit;
+      exit();
     } else {
       $file_problem = true;
     }
