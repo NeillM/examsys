@@ -60,10 +60,10 @@ $title = $student['title'];
 $initials = $student['initials'];
 $surname = $student['surname'];
 
-$current_ip_address = NetworkUtils::get_ipaddress();
+$current_address = NetworkUtils::get_client_address();
 
 $lab_factory = new LabFactory($mysqli);
-$lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address);
+$lab_object = $lab_factory->get_lab_based_on_client($current_address);
 
 $propertyObj = PaperProperties::get_paper_properties_by_id($paper_id, $mysqli, $string);
 $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);

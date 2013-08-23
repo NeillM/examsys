@@ -179,7 +179,7 @@ ob_start();
       }
     }
   }
-  
+
 <?php
   if ($paper_type == '0' or $paper_type == '1') {   // Do not allow reset of timer for Summative exams.
 ?>
@@ -466,7 +466,7 @@ if ($language != 'en') {
             <td>
 
 <?php
-    echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>)</td></tr></table></td></tr>\n"; 
+    echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>)</td></tr></table></td></tr>\n";
   }
 
   $percent_decimals = $configObject->get('percent_decimals');
@@ -699,7 +699,7 @@ if ($language != 'en') {
     echo "<tr><td></td><td colspan=\"" . ($cols - 1) . "\">";
     while ($result->fetch()) {
       $lab_name = '';
-      $result2 = $mysqli->prepare("SELECT name FROM labs, ip_addresses WHERE labs.id = ip_addresses.lab AND address = ?");
+      $result2 = $mysqli->prepare("SELECT name FROM labs, client_identifiers WHERE labs.id = client_identifiers.lab AND address = ?");
       $result2->bind_param('s', $note_workstation);
       $result2->execute();
       $result2->bind_result($lab_name);
@@ -711,7 +711,7 @@ if ($language != 'en') {
     }
     echo "</td></tr>";
     $result->close();
-    
+
     $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
     $exam_announcements = $exam_announcementObj->get_announcements();
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
@@ -723,7 +723,7 @@ if ($language != 'en') {
         $msg = str_replace('<p>', '', $msg);
         $msg = str_replace('</p>', '', $msg);
       }
-      
+
       echo "<tr><td class=\"q_no\">Q" . $exam_announcement['q_number'] . "</td><td class=\"q_msg\">(" . $exam_announcement['created'] .")<br />" . $msg . "</td></tr>\n";
     }
     echo "</table></td></tr>\n";

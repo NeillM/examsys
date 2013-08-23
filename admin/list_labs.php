@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -51,20 +51,20 @@
 
       $('#menu1a').hide();
       $('#menu1b').show();
-    
+
       $('#labID').val(labID);
       $('#labNo').val(labNo);
       $('#oldLabNo').val(labNo);
-    
+
       evt.cancelBubble = true;
     }
-    
+
     function deselLab() {
       tmp_ID = $('#oldLabNo').val();
       if (tmp_ID != '') {
         $('#' + tmp_ID).css('background-color', 'white');
         $('#' + tmp_ID).css('color', 'black');
-      }  
+      }
       $('#menu1a').show();
       $('#menu1b').hide();
 
@@ -90,7 +90,7 @@
 $labs = array();
 $campus_sizes = array();
 
-$lab_data = $mysqli->prepare("SELECT labs.id, name, count(address) AS pc_number, campus, building, low_bandwidth FROM (ip_addresses, labs) WHERE ip_addresses.lab=labs.id GROUP BY labs.id ORDER BY campus, name");
+$lab_data = $mysqli->prepare("SELECT labs.id, name, count(address) AS pc_number, campus, building, low_bandwidth FROM (client_identifiers, labs) WHERE client_identifiers.lab=labs.id GROUP BY labs.id ORDER BY campus, name");
 $lab_data->execute();
 $lab_data->store_result();
 $lab_data->bind_result($id, $name, $pc_number, $campus, $building, $low_bandwidth);
@@ -123,8 +123,8 @@ if (count($labs) > 0) {
       echo ' ' . $string['machine'];
     } else {
       echo ' '. $string['machines'];
-    }  
-    if ($lab['building'] != '') echo ', ' . $lab['building']; 
+    }
+    if ($lab['building'] != '') echo ', ' . $lab['building'];
     echo '</span>';
     if ($lab['low_bandwidth'] == 1) {
       echo '<br /><span style="background-color:#C00000; color:white">&nbsp;' . $string['lowbandwidth'] . '&nbsp;</span>';

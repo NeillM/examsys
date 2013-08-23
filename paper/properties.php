@@ -198,7 +198,7 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) 
 
   $current_labs = explode(',', $labs);
 
-  $result = $db->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id = ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
+  $result = $db->prepare("SELECT labs.id, name, campus, COUNT(client_identifiers.id) FROM labs, client_identifiers WHERE labs.id = client_identifiers.lab GROUP BY client_identifiers.lab ORDER BY campus, name");
   $result->execute();
   $result->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
   $lab_no = 0;
@@ -252,7 +252,7 @@ if (isset($_POST['Submit'])) {
   $old_externals = $properties->get_externals();
   $old_internals = $properties->get_internal_reviewers();
   $old_paper_title = $properties->get_paper_title();
-  
+
   if (isset($_POST['paper_title'])) {
 	  if ($old_paper_title == $_POST['paper_title']) {
 		  $title_unique = true;
@@ -362,7 +362,7 @@ if (isset($_POST['Submit'])) {
         $properties->set_raw_end_date($end_date->format('YmdHis'));
       }
       $properties->set_timezone($_POST['timezone']);
-			
+
 			$calendar_year = ($_POST['calendar_year'] == '') ? NULL : $_POST['calendar_year'];
 			$properties->set_calendar_year($calendar_year);
 
@@ -464,7 +464,7 @@ if (isset($_POST['Submit'])) {
 
     $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
     $properties->set_distinction_mark($tmp_distinction_mark);
-    
+
     $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;
     $properties->set_calculator($tmp_calculator);
 
@@ -483,14 +483,14 @@ if (isset($_POST['Submit'])) {
     $properties->set_themecolor($_POST['themecolor']);
     $properties->set_labelcolor($_POST['labelcolor']);
     $properties->set_folder($_POST['folderID']);
-    
+
     if ($properties->get_paper_type() == '2' and $old_marking != $properties->get_marking()) {
       $properties->set_recache_marks(1);
     }
 
     // Save any adjusted properties to the database.
     $properties->save();
-    
+
     if (!$locked) {
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
 
@@ -535,7 +535,7 @@ if (isset($_POST['Submit'])) {
 
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Question-based Feedback', 'feedback');
     }
-    
+
     // Release cohort performance feedback
     if (isset($_POST['old_cohort_performance']) and $_POST['old_cohort_performance'] != '' and isset($_POST['cohort_performance']) and $_POST['cohort_performance'] == '0') {
       $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'cohort_performance'");
@@ -594,9 +594,9 @@ if (isset($_POST['Submit'])) {
 					$logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
 				}
 			}
-			
+
     }
-    
+
     // Set any metadata security
     $old_meta = '';
     $result = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ? ORDER BY name");
@@ -694,7 +694,7 @@ if (isset($_POST['Submit'])) {
           window.opener.parent.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>";
           window.close();
         });
-      
+
         <?php
           if ($_POST['caller'] == 'scheduling') {
         ?>
@@ -713,7 +713,7 @@ if (isset($_POST['Submit'])) {
             window.close();
         <?php
           }
-        ?>        
+        ?>
       });
     </script></head>
     <body>
@@ -1302,7 +1302,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       // Look for any Standard Setting reviews for the paper.
       $std_set_array = array();
       $i = 0;
-      
+
       $std_set_details = $mysqli->prepare("SELECT std_set.id, title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, group_review FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
       $std_set_details->bind_param('i', $paperID);
       $std_set_details->execute();
@@ -1331,7 +1331,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
           } else {
             echo "<option value=\"2,$std_setID\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           }
-          
+
         }
         echo "</select>\n";
       } else {
@@ -1388,7 +1388,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
     echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\"$sum_disabled>\n<option value=\"\">" . $string['na'] .  "</option>\n";
-    
+
     $stop_year = date("Y") + 3;
     for ($year=2002; $year<$stop_year; $year++) {
       $next_year = ($year - 2000) + 1;
@@ -1664,7 +1664,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
      echo "<table cellspacing=\"0\" cellpadding=\"6\" border=\"0\" style=\"margin:15px\">\n";
 
      $feedback_reports = array('objectives'=>'', 'questions'=>'', 'cohort_performance'=>'');
-     
+
      $feedback_details = $mysqli->prepare("SELECT idfeedback_release, type FROM feedback_release WHERE paper_id = ?");
      $feedback_details->bind_param('i', $paperID);
      $feedback_details->execute();
@@ -1674,7 +1674,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $feedback_reports[$type] = 1;
      }
      $feedback_details->close();
-     
+
      if (in_array($properties->get_paper_type(), array('0', '1', '2', '4', '5'))) {
        echo '<tr><td><img src="../artwork/feedback_release_icon.png" width="48" height="48" />';
        echo "<td><input type=\"hidden\" name=\"old_objectives_report\" value=\"" . $feedback_reports['objectives'] . "\" />";

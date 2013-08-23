@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -24,20 +24,20 @@
 
   require '../include/invigilator_auth.inc';
   require_once '../classes/networkutils.class.php';
-  
+
   if (isset($_POST['submit'])) {
     if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
       $note = $_POST['note'];
-      $current_ipaddress = NetworkUtils::get_ipaddress();
-    
+      $current_address = NetworkUtils::get_client_address();
+
       $result = $mysqli->prepare("INSERT INTO paper_notes VALUES (NULL,?,NOW(),?,?,?)");
-      $result->bind_param('siis', $note, $_POST['paperID'], $userObject->get_user_ID(), $current_ipaddress);
-      $result->execute();  
+      $result->bind_param('siis', $note, $_POST['paperID'], $userObject->get_user_ID(), $current_address);
+      $result->execute();
       $result->close();
     } else {
       $result = $mysqli->prepare("UPDATE paper_notes SET note=? WHERE note_id=?");
       $result->bind_param('si', $_POST['note'], $_POST['note_id']);
-      $result->execute();  
+      $result->execute();
       $result->close();
     }
   ?>
@@ -59,10 +59,10 @@
   </form>
   <?php
   } else {
-    $current_ipaddress = NetworkUtils::get_ipaddress();
-  
+    $current_address = NetworkUtils::get_client_address();
+
     $result = $mysqli->prepare("SELECT note_id, note FROM paper_notes WHERE paper_id=? AND note_workstation=?");
-    $result->bind_param('is', $_GET['paperID'], $current_ipaddress);
+    $result->bind_param('is', $_GET['paperID'], $current_address);
     $result->execute();
     $result->bind_result($note_id, $note);
     $result->fetch();

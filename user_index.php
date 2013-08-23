@@ -172,9 +172,9 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
 }
 
 //get lab info
-$current_ip_address = NetworkUtils::get_ipaddress();
+$current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
   $lab_id   = $lab_object->get_id();
 }
@@ -225,7 +225,7 @@ if ($userObject->has_role('Student')) {
   check_paper_password($password, $string, true);
 
   //Check this PC is registered for this exam
-  $low_bandwidth = check_labs($test_type, $labs, $current_ip_address, $password, $string, $mysqli);
+  $low_bandwidth = check_labs($test_type, $labs, $current_address, $password, $string, $mysqli);
 
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 }
@@ -592,6 +592,6 @@ if ($textsize > 120) {
     <img class="noimg" src="artwork/no_save.png" />
     <img class="noimg" src="artwork/fire_exit.png" />
     <img class="noimg" src="artwork/title_gradient.png" />
-    
+
 </body>
 </html>

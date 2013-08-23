@@ -37,7 +37,7 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
   $notice = UserNotices::get_instance();
 
   if ($lab_needed != '') {
-    $stmt = $db->prepare("SELECT low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($lab_needed)");
+    $stmt = $db->prepare("SELECT low_bandwidth FROM client_identifiers WHERE address=? AND lab IN ($lab_needed)");
     $stmt->bind_param('s', $address);
     $stmt->execute();
     $stmt->bind_result($low_bandwidth);

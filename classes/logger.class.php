@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Class to manage logging changes to questions etc.
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -29,7 +29,7 @@ require_once $cfg_web_root . 'classes/networkutils.class.php';
 
 Class Logger {
   private $_mysqli;
-  
+
   /**
    * Create a new logger object
    * @param db_link $mysqli Reference to database connection
@@ -37,7 +37,7 @@ Class Logger {
   function __construct($mysqli) {
     $this->_mysqli = $mysqli;
   }
-  
+
   /**
    * Save a change to the change log table
    * @param string $message Log message describing the change
@@ -66,7 +66,7 @@ Class Logger {
 
     return $success;
   }
-  
+
   /**
    * Enter description here ...
    * @param string $message Log message describing the change
@@ -80,18 +80,18 @@ Class Logger {
    */
   public function check_and_track_change($message, $object_id, $user_id, $orig_val, $new_val, $part, &$changes) {
     $success = true;
-    
+
     if ($orig_val != $new_val) {
       $success = $this->track_change($message, $object_id, $user_id, $orig_val, $new_val, $part);
       $changes = true;
     }
-    
+
     return $success;
   }
-  
+
   public function get_changes($type, $typeID) {
     $change_data = array();
-    
+
     $query = 'SELECT title, initials, surname, old, new, part, UNIX_TIMESTAMP(changed) AS changed FROM track_changes, users WHERE track_changes.editor = users.id AND type = ? AND typeID = ? ORDER BY changed desc';
     $result = $this->_mysqli->prepare($query);
     $result->bind_param('si', $type, $typeID);
@@ -104,30 +104,30 @@ Class Logger {
 
     return $change_data;
   }
-  
+
   public function record_access_denied($user_id, $title, $msg) {
-    $current_ip_address = NetworkUtils::get_ipaddress();
-    
+    $current_address = NetworkUtils::get_client_address();
+
     $configObject = Config::get_instance();
 
     $path = str_replace($configObject->get('cfg_web_root'), '', $_SERVER['SCRIPT_FILENAME']);
-    
+
     $page = $path . '?'. $_SERVER['QUERY_STRING'];
 
     $result = $this->_mysqli->prepare('INSERT INTO denied_log VALUES(NULL, ?, NOW(), ?, ?, ?, ?)');
     echo $this->_mysqli->error;
-    $result->bind_param('issss', $user_id, $current_ip_address, $page, $title, $msg);
+    $result->bind_param('issss', $user_id, $current_address, $page, $title, $msg);
     $result->execute();
     $result->close();
   }
-  
+
   public function record_access($user_id, $type, $page) {
-    $current_ip_address = NetworkUtils::get_ipaddress();
+    $current_address = NetworkUtils::get_client_address();
 
     $result = $this->_mysqli->prepare('INSERT INTO access_log VALUES(NULL, ?, ?, NOW(), ?, ?)');
-    $result->bind_param('isss', $user_id, $type, $current_ip_address, $page);
+    $result->bind_param('isss', $user_id, $type, $current_address, $page);
     $result->execute();
     $result->close();
   }
-  
+
 }

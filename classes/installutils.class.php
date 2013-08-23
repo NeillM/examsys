@@ -566,7 +566,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".admin_access TO '". self::$cfg_db_username . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".courses TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".ip_addresses TO '". self::$cfg_db_username . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".client_identifiers TO '". self::$cfg_db_username . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".labs TO '". self::$cfg_db_username . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_keys TO '". self::$cfg_db_username . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_user TO '". self::$cfg_db_username . "'@'". self::$cfg_web_host . "'";
@@ -613,7 +613,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".help_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".help_searches TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".help_tutorial_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".ip_addresses TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".client_identifiers TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".keywords_question TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".labs TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log0 TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
@@ -852,7 +852,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".exam_announcements TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".ip_addresses TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".client_identifiers TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".labs TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".log2 TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".log_metadata TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
@@ -1821,8 +1821,8 @@ QUERY;
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['ip_addresses'] = <<<QUERY
-        CREATE TABLE `ip_addresses` (
+    $this->tableList['client_identifiers'] = <<<QUERY
+        CREATE TABLE `client_identifiers` (
           `id` int(11) NOT NULL auto_increment,
           `lab` smallint(5) unsigned default NULL,
           `address` char(60) default NULL,
