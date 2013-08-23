@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -30,21 +30,21 @@ require '../include/sidebar_menu.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['deniedlogwarnings'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
-  
+
   <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 <body>
 <?php
 require '../include/admin_options.inc';
-  
+
 if (isset($_GET['sortby'])) {
   $sortby = $_GET['sortby'];
 } else {
@@ -93,7 +93,7 @@ while ($result->fetch()) {
   $tried_date = new DateTime();
   $tried_date->setTimestamp($tried);
 
-  echo "<tr class=\"l\"><td><img src=\"../artwork/access_denied_16.gif\" width=\"16\" height=\"16\" /></td><td>" . $tried_date->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php')) . "</td><td class=\"l\"><a href=\"../users/details.php?search_surname=$surname&search_username=&student_id=&moduleID=&calendar_year=&students=on&submit=Search&userID=$userID&email=&tmp_surname=&tmp_courseID=&tmp_yearID=\">$title $initials $surname</a></td><td class=\"l\">/$page</td><td class=\"l\">$msg</td></tr>\n";
+  echo "<tr class=\"l\" id=\"denied{$id}\"><td><img src=\"../artwork/access_denied_16.gif\" width=\"16\" height=\"16\" /></td><td>" . $tried_date->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php')) . "</td><td class=\"l\"><a href=\"../users/details.php?search_surname=$surname&search_username=&student_id=&moduleID=&calendar_year=&students=on&submit=Search&userID=$userID&email=&tmp_surname=&tmp_courseID=&tmp_yearID=\">$title $initials $surname</a></td><td class=\"l\">/$page</td><td class=\"l\">$msg</td></tr>\n";
   $id++;
 }
 ?>
