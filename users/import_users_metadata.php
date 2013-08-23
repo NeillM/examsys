@@ -153,8 +153,10 @@ if (!$module_details) {
                 $type = trim($heading[$i]);
                 $value = trim($cols[$i]);
                 echo "<td>$value</td>";
-                $stmt->execute();
-              }
+								if ($type != '') {
+									$stmt->execute();
+								}
+							}
               echo "</tr>\n";
             }
           }
