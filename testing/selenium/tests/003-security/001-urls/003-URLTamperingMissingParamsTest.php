@@ -14,11 +14,22 @@ class URLTamperingMissingParamsTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl($this->page_root . '/');
   }
 
-  // public function testAddQuestionsByPaperMissingParams() {
-  //   do_staff_login($this);
+  public function testAddQuestionsByPaperMissingParams() {
+    do_admin_login($this);
 
-  //   $this->open("/folder/edit_team_popup.php?module=888207&calling=paper_list&folder=");
-  //   $this->assertTextPresent('Page not Found');
-  // }
+    // Check date in denied log to within an hour - very slim chance of this generating a false failure
+    // Also, ensure that your php.ini for CLI contains the same timezone setting as the web php.ini
+    $now = date('d/m/Y H');
+    $this->open("question/add/add_questions_by_paper.php?question_paper=");
+    $this->assertTextPresent('A mandatory GET variable is missing');
+
+    // Check the denied log
+    $this->open("admin/view_access_denied.php");
+    $this->assertElementContainsText('css=#denied1 td:nth-child(2)', $now);
+    $this->assertElementContainsText('css=#denied1 td:nth-child(3)', 'Mr S Testing');
+    $this->assertElementContainsText('css=#denied1 td:nth-child(4)', '/question/add/add_questions_by_paper.php?question_paper=');
+    $this->assertElementContainsText('css=#denied1 td:nth-child(5)', 'A mandatory GET variable is missing.');
+
+  }
 }
 ?>
