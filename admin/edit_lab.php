@@ -52,26 +52,26 @@ if (isset($_POST['submit'])) {
   // Insert the new IP addresses.
   $addresses = explode('<br />',nl2br($_POST['addresses']));
   foreach ($addresses as $individual_address) {
-    $ip_address = trim($individual_address);
-    if ($ip_address != '') {
+    $address = trim($individual_address);
+    if ($address != '') {
       if ($configObject->get('cfg_client_lookup') == 'name') {
         $test_re = '/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/';
       } else {
         $test_re = '/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/';
       }
 
-      if (preg_match($test_re, $ip_address)) {
+      if (preg_match($test_re, $address)) {
         if ($configObject->get('cfg_client_lookup') == 'name') {
-          $hostname = $ip_address;
+          $hostname = $address;
         } else {
-          $hostname = gethostbyaddr($ip_address);
+          $hostname = gethostbyaddr($address);
         }
         $result = $mysqli->prepare("INSERT INTO client_identifiers VALUES (NULL, ?, ?, ?, ?)");
-        $result->bind_param('issi', $lab_id, $ip_address, $hostname, $_POST['low_bandwidth']);
+        $result->bind_param('issi', $lab_id, $address, $hostname, $_POST['low_bandwidth']);
         $result->execute();
         $result->close();
       } else {
-        $bad_addresses[] = $ip_address;
+        $bad_addresses[] = $address;
       }
     }
   }

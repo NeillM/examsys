@@ -33,7 +33,7 @@ require_once './classes/userutils.class.php';
 
 $mysqli = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_student_user'), $configObject->get('cfg_db_student_passwd'), $configObject->get('cfg_db_database'));
 
-// Check that the ip_address of the current user is within the exam lab.
+// Check that the client address of the current user is within the exam lab.
 $paper_match = false;
 $lab_match = false;
 $results = $mysqli->prepare("SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type IN ('1','2') AND labs != ''");
