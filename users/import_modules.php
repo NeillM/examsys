@@ -27,7 +27,7 @@
 require_once '../include/admin_auth.inc';
 require_once '../classes/userutils.class.php';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -43,10 +43,6 @@ require_once '../classes/userutils.class.php';
     label.error {display:block; color:#f00}
   </style>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
-    $(function () { $('#import_form').validate(); });
-  </script>
 </head>
 
   <body>
@@ -214,9 +210,9 @@ require_once '../classes/userutils.class.php';
 <?php
 if ($file_problem) {
   echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</div>';
-  echo '<p style="color:#C00000; font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" /></p>';
+  echo '<p style="color:#C00000; font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" required /></p>';
 } else {
-  echo '<p style="font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" /></p>';
+  echo '<p style="font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" required /></p>';
 }
 ?>
 <br />
