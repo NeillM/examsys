@@ -25,7 +25,9 @@
  * @package
  */
 require_once 'outline_authentication.class.php';
-include_once $configObject->get('cfg_web_root') . 'lang/en/include/common.inc';
+global $language;
+$cfg_web_root = $configObject->get('cfg_web_root');
+include_once $cfg_web_root . "lang/{$language}/include/common.inc";
 
 class ldap_auth extends outline_authentication {
 
