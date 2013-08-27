@@ -40,47 +40,66 @@ require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
+/**
+ * Define callbacks to be used when retrieving tracked changes
+ * @param  array  $changed_reviewers Array of reviewers referenced in changes
+ * @param  array  $changed_labs      Array of labs referenced in changes
+ * @return array                     Array of callbacks to be registered with the logger
+ */
+function setup_change_callbacks(&$changed_reviewers, &$changed_labs) {
+  // Define a closure to populate past reviewer IDs
+  $reviewers_cb = function($old, $new) use (&$changed_reviewers) {
+    $old_reviewers = explode(',', $old);
+    $new_reviewers = explode(',', $new);
+
+    // Add any reviewers in the current change to the $changed_reviewers array
+    foreach ($old_reviewers as $reviewer) {
+      if ($reviewer != '') {
+        $changed_reviewers[$reviewer] = false;
+      }
+    }
+    foreach ($new_reviewers as $reviewer) {
+      if ($reviewer != '') {
+        $changed_reviewers[$reviewer] = false;
+      }
+    }
+  };
+
+  // Define a closure to populate past labs
+  $labs_cb = function($old, $new) use (&$changed_labs) {
+    $old_labs = explode(',', $old);
+    $new_labs = explode(',', $new);
+
+    // Add any labs in the current change to the $changed_labs array
+    foreach ($old_labs as $lab) {
+      if ($lab != '') {
+        $changed_labs[$lab] = false;
+      }
+    }
+    foreach ($new_labs as $lab) {
+      if ($lab != '') {
+        $changed_labs[$lab] = false;
+      }
+    }
+  };
+  // Use the closure for changes to labs
+  $callbacks = array('externals' => $reviewers_cb, 'internals' => $reviewers_cb, 'labs' => $labs_cb);
+
+  return $callbacks;
+}
+
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-// Build up a list of all past reviewers for the 'changes' tab
+// Build up a list of all past reviewers and labs for the 'changes' tab
 $changed_reviewers = array();
+$changed_labs = array();
 
-// Define a closure to be used as the callback for any changes related to reviewers
-$reviewers_cb = function($old, $new) use (&$changed_reviewers) {
-  $old_reviewers = explode(',', $old);
-  $new_reviewers = explode(',', $new);
-
-  // Add any reviewers in the current change to the $changed_reviewers array
-  foreach ($old_reviewers as $reviewer) {
-    if ($reviewer != '') {
-      $changed_reviewers[$reviewer] = false;
-    }
-  }
-  foreach ($new_reviewers as $reviewer) {
-    if ($reviewer != '') {
-      $changed_reviewers[$reviewer] = false;
-    }
-  }
-};
-// Use the closure for changes to internal or external reviewers
-$callbacks = array('externalexaminers' => $reviewers_cb, 'internalreviewers' => $reviewers_cb);
+$change_callbacks = setup_change_callbacks($changed_reviewers, $changed_labs);
 
 $logger = new Logger($mysqli);
 
 // Get the changes to be used later
-$changes = $logger->get_changes('Paper', $paperID, $callbacks);
-
-// Get the details of all the reviewers (we can't rely on them still being in the list on the Reviews tab)
-$reviewer_ids = implode(',', array_keys($changed_reviewers));
-$sql = "SELECT id, surname, first_names, title FROM users WHERE id IN ($reviewer_ids)";
-$result = $mysqli->prepare($sql);
-$result->execute();
-$result->bind_result($u_id, $u_surname, $u_first_names, $u_title);
-while ($result->fetch()) {
-  $changed_reviewers[$u_id] = "$u_surname, $u_first_names. $u_title";
-}
-$result->close();
-
+$changes = $logger->get_changes('Paper', $paperID, $change_callbacks);
 
 if ($properties->get_summative_lock() and !$userObject->has_role('SysAdmin')) {
   $locked = true;
@@ -148,6 +167,10 @@ function format_user($text, $user_list) {
   return $formatted_string;
 }
 
+function format_lab($lab_id, $lab_list) {
+  return (isset($lab_list[$lab_id])) ? $lab_list[$lab_id] : $lab_id;
+}
+
 function format_method($method, $string) {
   if ($method == '0') {
     return $string['noadjustment'];
@@ -184,21 +207,6 @@ function format_passmark($method, $string) {
   }
 }
 
-function format_reviewers($reviewers, $string, $changed_reviewers) {
-  $output = '';
-
-  if ($reviewers != '') {
-    $rev_arr = explode(',', $reviewers);
-
-    foreach ($rev_arr as $rev_id) {
-      $output .= (isset($changed_reviewers[$rev_id])) ? $changed_reviewers[$rev_id] : $rev_id;
-      $output .= '; ';
-    }
-  }
-
-  return rtrim($output, '; ');
-}
-
 function format_on_off($data, $string) {
   if ($data == 0) {
     return $string['off'];
@@ -231,7 +239,7 @@ function is_leap($year) {
   }
 }
 
-function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) {
+function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$changed_labs, $db) {
   if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
@@ -271,6 +279,10 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) 
     }
     $lab_no++;
     $old_campus = $lab_campus;
+
+    if (isset($changed_labs[$lab_id])) {
+      $changed_labs[$lab_id] = $lab_name;
+    }
   }
   $result->close();
   $html .= "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div>";
@@ -551,10 +563,10 @@ if (isset($_POST['Submit'])) {
       $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
 
       if (Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli)) {
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externalexaminers');
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
       }
       if (Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli)) {
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internalreviewers');
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
       }
     }
 
@@ -1698,7 +1710,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</td>\n";
 
-    echo "<td>" . output_labs($properties->get_labs(), $configObject->get('cfg_summative_mgmt'), $properties->get_paper_type(), $userObject, $mysqli) . "</td></tr>\n";
+    echo "<td>" . output_labs($properties->get_labs(), $configObject->get('cfg_summative_mgmt'), $properties->get_paper_type(), $userObject, $changed_labs, $mysqli) . "</td></tr>\n";
 
   ?>
   </td></tr>
@@ -2062,13 +2074,16 @@ SQL;
 $modules = module_utils::get_module_list_by_id($mysqli);
 
 $user_list = array();
-$results = $mysqli->prepare("SELECT id, title, surname FROM users WHERE roles != 'student'");
-$results->execute();
-$results->bind_result($id, $title, $surname);
-while ($results->fetch()) {
-  $user_list[$id] = $title . ' ' . $surname;
+if (count($changed_reviewers) > 0) {
+  $reviewer_in = implode(',', array_keys($changed_reviewers));
+  $results = $mysqli->prepare("SELECT id, title, surname FROM users WHERE id IN ($reviewer_in)");
+  $results->execute();
+  $results->bind_result($id, $title, $surname);
+  while ($results->fetch()) {
+    $user_list[$id] = $title . ' ' . $surname;
+  }
+  $results->close();
 }
-$results->close();
 
 $reference_material = array();
 $results = $mysqli->prepare("SELECT id, title FROM reference_material");
@@ -2089,45 +2104,73 @@ for ($i=0; $i<$rows; $i++) {
 
   $old = $changes[$i]['old'];
   $new = $changes[$i]['new'];
-  if ($part == 'startdate' or $part == 'enddate') {
-    $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
-    $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
-  } elseif ($part == 'modules') {
-    $old = format_modules($old, $modules);
-    $new = format_modules($new, $modules);
-  } elseif ($part == 'folder') {
-    $old = format_folders($old, $folders);
-    $new = format_folders($new, $folders);
-  } elseif ($part == 'method') {
-    $old = format_method($old, $string);
-    $new = format_method($new, $string);
-  } elseif ($part == 'displaycalculator' or $part == 'demosoundclip' or $part == 'photos' or $part == 'ticks_crosses' or $part == 'hideallfeedback' or $part == 'textfeedback' or $part == 'correctanswerhighlight' or $part == 'question_marks') {
-    $old = format_on_off($old, $string);
-    $new = format_on_off($new, $string);
-  } elseif ($part == 'externals' or $part == 'internals') {
-    $old = format_user($old, $user_list);
-    $new = format_user($new, $user_list);
-  } elseif ($part == 'background' or $part == 'foreground' or $part == 'theme' or $part == 'labelsnotes') {
-    $old = format_color($old);
-    $new = format_color($new);
-  } elseif ($part == 'referencematerial') {
-    $old = format_referencematerial($old, $reference_material);
-    $new = format_referencematerial($new, $reference_material);
-  } elseif ($part == 'display') {
-    $old = format_display($old, $string);
-    $new = format_display($new, $string);
-  } elseif ($part == 'navigation') {
-    $old = format_navigation($old, $string);
-    $new = format_navigation($new, $string);
-  } elseif ($part == 'review') {
-    $old = format_review($old, $string);
-    $new = format_review($new, $string);
-  } elseif ($part == 'passmark' or $part == 'distinction') {
-    $old = format_passmark($old, $string);
-    $new = format_passmark($new, $string);
-  } elseif ($part == 'externalexaminers' or $part == 'internalreviewers') {
-    $old = format_reviewers($old, $string, $changed_reviewers);
-    $new = format_reviewers($new, $string, $changed_reviewers);
+
+  switch ($part) {
+    case 'startdate':
+    case 'enddate':
+      $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
+      $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
+      break;
+    case 'modules':
+      $old = format_modules($old, $modules);
+      $new = format_modules($new, $modules);
+      break;
+    case 'folder':
+      $old = format_folders($old, $folders);
+      $new = format_folders($new, $folders);
+      break;
+    case 'method':
+      $old = format_method($old, $string);
+      $new = format_method($new, $string);
+      break;
+    case 'displaycalculator':
+    case 'demosoundclip':
+    case 'photos':
+    case 'ticks_crosses':
+    case 'hideallfeedback':
+    case 'textfeedback':
+    case 'correctanswerhighlight':
+    case 'question_marks':
+      $old = format_on_off($old, $string);
+      $new = format_on_off($new, $string);
+      break;
+    case 'externals':
+    case 'internals':
+      $old = format_user($old, $user_list);
+      $new = format_user($new, $user_list);
+      break;
+    case 'background':
+    case 'foreground':
+    case 'theme':
+    case 'labelsnotes':
+      $old = format_color($old);
+      $new = format_color($new);
+      break;
+    case 'referencematerial':
+      $old = format_referencematerial($old, $reference_material);
+      $new = format_referencematerial($new, $reference_material);
+      break;
+    case 'display':
+      $old = format_display($old, $string);
+      $new = format_display($new, $string);
+      break;
+    case 'navigation':
+      $old = format_navigation($old, $string);
+      $new = format_navigation($new, $string);
+      break;
+    case 'review':
+      $old = format_review($old, $string);
+      $new = format_review($new, $string);
+      break;
+    case 'passmark':
+    case 'distinction':
+      $old = format_passmark($old, $string);
+      $new = format_passmark($new, $string);
+      break;
+    case 'labs':
+      $old = format_lab($old, $changed_labs);
+      $new = format_lab($new, $changed_labs);
+      break;
   }
 
   if (isset($string[$part])) $part = $string[$part];
