@@ -42,7 +42,45 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
+// Build up a list of all past reviewers for the 'changes' tab
+$changed_reviewers = array();
+
+// Define a closure to be used as the callback for any changes related to reviewers
+$reviewers_cb = function($old, $new) use (&$changed_reviewers) {
+  $old_reviewers = explode(',', $old);
+  $new_reviewers = explode(',', $new);
+
+  // Add any reviewers in the current change to the $changed_reviewers array
+  foreach ($old_reviewers as $reviewer) {
+    if ($reviewer != '') {
+      $changed_reviewers[$reviewer] = false;
+    }
+  }
+  foreach ($new_reviewers as $reviewer) {
+    if ($reviewer != '') {
+      $changed_reviewers[$reviewer] = false;
+    }
+  }
+};
+// Use the closure for changes to internal or external reviewers
+$callbacks = array('externalexaminers' => $reviewers_cb, 'internalreviewers' => $reviewers_cb);
+
 $logger = new Logger($mysqli);
+
+// Get the changes to be used later
+$changes = $logger->get_changes('Paper', $paperID, $callbacks);
+
+// Get the details of all the reviewers (we can't rely on them still being in the list on the Reviews tab)
+$reviewer_ids = implode(',', array_keys($changed_reviewers));
+$sql = "SELECT id, surname, first_names, title FROM users WHERE id IN ($reviewer_ids)";
+$result = $mysqli->prepare($sql);
+$result->execute();
+$result->bind_result($u_id, $u_surname, $u_first_names, $u_title);
+while ($result->fetch()) {
+  $changed_reviewers[$u_id] = "$u_surname, $u_first_names. $u_title";
+}
+$result->close();
+
 
 if ($properties->get_summative_lock() and !$userObject->has_role('SysAdmin')) {
   $locked = true;
@@ -146,6 +184,21 @@ function format_passmark($method, $string) {
   }
 }
 
+function format_reviewers($reviewers, $string, $changed_reviewers) {
+  $output = '';
+
+  if ($reviewers != '') {
+    $rev_arr = explode(',', $reviewers);
+
+    foreach ($rev_arr as $rev_id) {
+      $output .= (isset($changed_reviewers[$rev_id])) ? $changed_reviewers[$rev_id] : $rev_id;
+      $output .= '; ';
+    }
+  }
+
+  return rtrim($output, '; ');
+}
+
 function format_on_off($data, $string) {
   if ($data == 0) {
     return $string['off'];
@@ -247,11 +300,12 @@ function modulo($n,$b) {
 
 $title_unique = true;
 
+
 if (isset($_POST['Submit'])) {
   $old_marking = $properties->get_marking();
+  $old_paper_title = $properties->get_paper_title();
   $old_externals = $properties->get_externals();
   $old_internals = $properties->get_internal_reviewers();
-  $old_paper_title = $properties->get_paper_title();
 
   if (isset($_POST['paper_title'])) {
 	  if ($old_paper_title == $_POST['paper_title']) {
@@ -496,8 +550,12 @@ if (isset($_POST['Submit'])) {
 
       $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
 
-      Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli);
-      Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli);
+      if (Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli)) {
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externalexaminers');
+      }
+      if (Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli)) {
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internalreviewers');
+      }
     }
 
     // Release objectives-based feedback
@@ -2024,7 +2082,7 @@ $results->close();
 $folders = folder_utils::get_all_folders($mysqli);
 
 echo "<tr><th>" . $string['part'] . "</th><th>" . $string['old'] . "</th><th>" . $string['new'] . "</th><th>" . $string['date'] . "</th><th>" . $string['author'] . "</th></tr>";
-$changes = $logger->get_changes('Paper', $paperID);
+// Changes retrieved at beginning of file
 $rows = count($changes);
 for ($i=0; $i<$rows; $i++) {
   $part = $changes[$i]['part'];
@@ -2067,6 +2125,9 @@ for ($i=0; $i<$rows; $i++) {
   } elseif ($part == 'passmark' or $part == 'distinction') {
     $old = format_passmark($old, $string);
     $new = format_passmark($new, $string);
+  } elseif ($part == 'externalexaminers' or $part == 'internalreviewers') {
+    $old = format_reviewers($old, $string, $changed_reviewers);
+    $new = format_reviewers($new, $string, $changed_reviewers);
   }
 
   if (isset($string[$part])) $part = $string[$part];

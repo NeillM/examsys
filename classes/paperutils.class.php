@@ -211,14 +211,16 @@ Class PaperUtils {
 
   /**
   * Add/delete internal and external reviewers to a paper
-  * @param $old_list an array of the old reviewers
-  * @param $new_list an array of the new reviewers
-  * @param $type 'internal' or 'external' review type
-  * @param $paperID the id of the paper or property_id
-  * @param $db Database connection
-  * @return void
+  * @param array      $old_list     Array of the old reviewers
+  * @param array      $new_list     Array of the new reviewers
+  * @param string     $type         'internal' or 'external' review type
+  * @param integer    $paperID      ID of the paper or property_id
+  * @param mysqli     $db           Database connection
+  * @return bool      $has_changed  True if the list of reviewers has changed
   */
   public function update_reviewers($old_list, $new_list, $type, $paperID, $db) {
+    $has_changed = false;
+
     $old_list = array_flip($old_list);
     $new_list = array_flip($new_list);
 
@@ -228,6 +230,8 @@ Class PaperUtils {
         $editProperties->bind_param('iis', $paperID, $oldID, $type);
         $editProperties->execute();
         $editProperties->close();
+
+        $has_changed = true;
       }
     }
 
@@ -237,8 +241,12 @@ Class PaperUtils {
         $editProperties->bind_param('iis', $paperID, $newID, $type);
         $editProperties->execute();
         $editProperties->close();
+
+        $has_changed = true;
       }
     }
+
+    return $has_changed;
   }
 
   /**
