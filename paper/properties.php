@@ -2034,9 +2034,6 @@ for ($i=0; $i<$rows; $i++) {
   if ($part == 'startdate' or $part == 'enddate') {
     $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
     $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
-  } elseif ($part == 'externalreviewdeadline' or $part == 'internalreviewdeadline') {
-    if ($old != '') $old = date($configObject->get('cfg_long_date_php'), $old);
-    if ($new != '') $new = date($configObject->get('cfg_long_date_php'), $new);
   } elseif ($part == 'modules') {
     $old = format_modules($old, $modules);
     $new = format_modules($new, $modules);
