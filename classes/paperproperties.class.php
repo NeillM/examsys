@@ -1069,13 +1069,7 @@ class PaperProperties {
    * @param string $externals
    */
   public function set_externals($externals) {
-    $old_externals = $this->externals;
-
     $this->externals = $externals;
-
-    if ($old_externals != $externals) {
-      $this->changes[] = array('old'=>$old_externals, 'new'=>$externals, 'part'=>'externals');
-    }
   }
 
   /**
