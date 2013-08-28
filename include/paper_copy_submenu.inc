@@ -78,7 +78,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>
 <td style="text-align:right"><?php echo $string['copyname']; ?>&nbsp;</td>
-<td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title(); ?>" size="65" />
+<td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title(); ?>" size="65" required />
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $module; ?>" />
 <input type="hidden" name="folder" value="<?php echo $folder; ?>" />
