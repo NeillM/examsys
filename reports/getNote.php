@@ -24,7 +24,7 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require '../classes/student_notes.class.php';
+require '../classes/noteutils.class.php';
 
 $userID  = check_var('userID', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
