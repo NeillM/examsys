@@ -38,6 +38,11 @@ require_once '../classes/questionutils.class.php';
 require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
 
+// Marking options
+define('MARK_NO_ADJUSTMENT', '0');
+define('MARK_RANDOM', '1');
+define('MARK_STD_SET', '2');
+
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 /**
@@ -169,6 +174,26 @@ function format_user($text, $user_list) {
 
 function format_lab($lab_id, $lab_list) {
   return (isset($lab_list[$lab_id])) ? $lab_list[$lab_id] : $lab_id;
+}
+
+function format_marking($marking, $string) {
+  $marking_string = $marking;
+
+  $marking_type = $marking{0};
+
+  switch ($marking_type) {
+    case MARK_NO_ADJUSTMENT:
+      $marking_string = $string['noadjustment'];
+      break;
+    case MARK_RANDOM:
+      $marking_string = $string['calculatrrandommark'];
+      break;
+    case MARK_STD_SET:
+      $marking_string = $string['stdset'];
+      break;
+  }
+
+  return $marking_string;
 }
 
 function format_method($method, $string) {
@@ -517,8 +542,8 @@ if (isset($_POST['Submit'])) {
     }
 
     if ($_POST['marking'] == '') {
-      $properties->set_marking('0');
-    } elseif ($_POST['marking'] == '2') {
+      $properties->set_marking(MARK_NO_ADJUSTMENT);
+    } elseif ($_POST['marking'] == MARK_STD_SET) {
       $properties->set_marking($_POST['std_set']);
     } else {
       $properties->set_marking($_POST['marking']);
@@ -1355,9 +1380,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
       echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">" . $string['method'] . "&nbsp;</td><td rowspan=\"2\">";
     ?>
-       <input type="radio" id="marking1" name="marking" value="0"<?php if ($properties->get_marking() == '0') echo ' checked'; ?> /><?php echo $string['noadjustment']; ?><br />
-       <input type="radio" id="marking2" name="marking" value="1"<?php
-       if ($properties->get_marking() == '1') {
+       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) echo ' checked'; ?> /><?php echo $string['noadjustment']; ?><br />
+       <input type="radio" id="marking2" name="marking" value="<?php echo MARK_RANDOM ?>"<?php
+       if ($properties->get_marking() == MARK_RANDOM) {
           echo ' checked';
        }
        if ($neg_marking) {
@@ -1384,8 +1409,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $std_set_details->close();
 
       if (count($std_set_array) > 0) {
-        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\"";
-        if (substr($properties->get_marking(), 0, 1) == '2') echo ' checked';
+        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"" . MARK_STD_SET . "\"";
+        if (substr($properties->get_marking(), 0, 1) == MARK_STD_SET) echo ' checked';
         echo " />";
         echo $string['stdset'] . ' <select name="std_set">';
         foreach ($std_set_array as $std_set_line) {
@@ -1396,16 +1421,16 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
           $std_setID = $std_set_line['std_setID'];
           $std_set_display_date = $std_set_line['display_date'];
 
-          if ($properties->get_marking() == "2,$std_setID") {
-            echo "<option value=\"2,$std_setID\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
+          if ($properties->get_marking() == MARK_STD_SET . ",$std_setID") {
+            echo "<option value=\"" . MARK_STD_SET . ",$std_setID\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           } else {
-            echo "<option value=\"2,$std_setID\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
+            echo "<option value=\"" . MARK_STD_SET . ",$std_setID\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           }
 
         }
         echo "</select>\n";
       } else {
-        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\" disabled />";
+        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"" . MARK_STD_SET . "\" disabled />";
         echo '<span style="color:#808080">' . $string['stdset'] . '</span>';
       }
     }
@@ -2170,6 +2195,10 @@ for ($i=0; $i<$rows; $i++) {
     case 'labs':
       $old = format_lab($old, $changed_labs);
       $new = format_lab($new, $changed_labs);
+      break;
+    case 'marking':
+      $old = format_marking($old, $string);
+      $new = format_marking($new, $string);
       break;
   }
 

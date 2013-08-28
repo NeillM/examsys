@@ -109,6 +109,7 @@ Class Logger {
     while ($result->fetch()) {
       $change_data[] = array('title'=>$title, 'initials'=>$initials, 'surname'=>$surname, 'old'=>$old, 'new'=>$new, 'part'=>$part, 'date'=>$changed);
 
+      // Fire callback if defined for this part type
       if (is_array($callbacks) and isset($callbacks[$part])) {
         call_user_func($callbacks[$part], $old, $new);
       }
