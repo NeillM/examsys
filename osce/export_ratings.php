@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -24,7 +24,7 @@
 
   require '../include/staff_auth.inc';
   $paperID = $_GET['paperID'];
-  
+
   // Capture the paper makeup.
   $paper_buffer = array();
   $question_no = 0;
@@ -41,13 +41,22 @@
 
   header('Pragma: public');
   header('Content-type: application/octet-stream');
-  header("Content-Disposition: attachment; filename=" . $paper_title . ".csv");
+  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . ".csv");
 
   $log_array = array();
   $hits = 0;
   $user_no = 0;
   // Capture the log data first.
-  $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, users.username, title, surname, initials, grade, gender, started, log4.q_id, rating FROM (log4, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log4.q_id=questions.q_id AND q_paper=? AND users.id=log4.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND started>=? AND started<=?");
+  $sql = <<<SQL
+SELECT DISTINCT sid.student_id, users.username, title, surname, initials, grade, gender,
+ started, log4.q_id, rating
+FROM (log4, log4_overall, questions, users) LEFT JOIN sid ON users.id=sid.userID
+WHERE log4.log4_overallID = log4_overall.id AND log4.q_id = questions.q_id AND q_paper=?
+ AND users.id = log4_overall.userID
+ AND (users.roles = 'Student' OR users.roles = 'graduate') AND grade LIKE ?
+ AND started >= ? AND started <= ?
+SQL;
+  $result = $mysqli->prepare($sql);
   $result->bind_param('isss', $paperID, $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
   $result->execute();
   $result->bind_result($user_ID, $username, $title, $surname, $initials, $grade, $gender, $started, $q_id, $rating);
@@ -64,7 +73,7 @@
     $user_no++;
   }
   $result->close();
-  
+
   //echo "SELECT student_id, overall_rating, numeric_score, feedback, log4_overall.year, title, surname, initials FROM (log4_overall, sid, users) WHERE log4_overall.examinerID=users.id AND log4_overall.userID=sid.userID AND q_paper=$paperID AND started>='" . $_GET['startdate'] . "' AND started<='" . $_GET['enddate'] . "'<br />";
   $result = $mysqli->prepare("SELECT student_id, overall_rating, numeric_score, feedback, log4_overall.year, title, surname, initials FROM (log4_overall, sid, users) WHERE log4_overall.examinerID=users.id AND log4_overall.userID=sid.userID AND q_paper=? AND started>=? AND started<=?");
   $result->bind_param('iss', $paperID, $_GET['startdate'], $_GET['enddate']);
