@@ -24,7 +24,7 @@
  */
 
 require_once 'logger.class.php';
- 
+
 class PaperProperties {
 
   private $db;
@@ -305,12 +305,12 @@ class PaperProperties {
 
     $this->set_display_start_date();
     $this->set_display_end_date();
-    
+
     $this->changes = array();
-    
+
     $this->load_summative_lock();
   }
-  
+
   /*
   * Function to save the current properties back to the database.
   *	The fields that can be saved depends on whether the paper
@@ -319,7 +319,7 @@ class PaperProperties {
   public function save() {
     $configObject = Config::get_instance();
     $userObject   = UserObject::get_instance();
-  
+
     if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
       $result = $this->db->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, external_review_deadline = ?, internal_review_deadline = ?, recache_marks = ? WHERE property_id = ?");
       $result->bind_param('siiiiiissii', $this->marking, $this->pass_mark, $this->distinction_mark, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->external_review_deadline, $this->internal_review_deadline, $this->recache_marks, $this->property_id);
@@ -332,7 +332,7 @@ class PaperProperties {
     }
     $result->execute();
     $result->close();
-    
+
     // Record any changes
    	$logger = new Logger($this->db);
 
@@ -341,14 +341,14 @@ class PaperProperties {
     }
 
   }
-  
+
   public function is_live() {
     if ($this->start_date !== null and date("U", time()) >= $this->start_date and $this->end_date !== null and date("U", time()) <= $this->end_date) {
       return true;
     } else {
       return false;
     }
-  
+
   }
 
   private function load_summative_lock() {
@@ -403,10 +403,10 @@ class PaperProperties {
     $this->max_screen = $max_screen;
     $this->max_display_pos = $max_display_pos;
   }
-  
+
   private function load_externals() {
     $external_list = array();
-  
+
     $result = $this->db->prepare("SELECT reviewerID FROM properties_reviewers WHERE paperID = ? AND type = 'external'");
     $property_id = $this->get_property_id();
     $result->bind_param('i', $property_id);
@@ -416,13 +416,13 @@ class PaperProperties {
       $external_list[] = $reviewerID;
     }
     $result->close();
-    
+
     $this->externals = $external_list;
   }
 
   private function load_internals() {
     $internal_list = array();
-  
+
     $result = $this->db->prepare("SELECT reviewerID FROM properties_reviewers WHERE paperID = ? AND type = 'internal'");
     $property_id = $this->get_property_id();
     $result->bind_param('i', $property_id);
@@ -432,7 +432,7 @@ class PaperProperties {
       $internal_list[] = $reviewerID;
     }
     $result->close();
-    
+
     $this->internal_reviewers = $internal_list;
   }
 
@@ -443,7 +443,7 @@ class PaperProperties {
 
     return $this->summative_lock;
   }
-  
+
   public function is_objective_fb_released() {
     if (!isset($this->objective_fb_released)) {
       $this->load_objective_fb_released();
@@ -451,7 +451,7 @@ class PaperProperties {
 
     return $this->objective_fb_released;
   }
-  
+
   public function is_question_fb_released() {
     if (!isset($this->question_fb_released)) {
       $this->load_question_fb_released();
@@ -459,10 +459,10 @@ class PaperProperties {
 
     return $this->question_fb_released;
   }
-  
+
   private function load_objective_fb_released() {
     $row_no = 0;
-  
+
     $result = $this->db->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
     $property_id = $this->get_property_id();
     $result->bind_param('i', $property_id);
@@ -471,13 +471,13 @@ class PaperProperties {
     $result->store_result();
     $row_no = $result->num_rows;
     $result->close();
-    
+
     $this->objective_fb_released = $row_no > 0;
   }
-  
+
   private function load_question_fb_released() {
     $row_no = 0;
-  
+
     $result = $this->db->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
     $property_id = $this->get_property_id();
     $result->bind_param('i', $property_id);
@@ -486,7 +486,7 @@ class PaperProperties {
     $result->store_result();
     $row_no = $result->num_rows;
     $result->close();
-    
+
     $this->question_fb_released = $row_no > 0;
   }
 
@@ -582,11 +582,11 @@ class PaperProperties {
     if ($paper_title == '') {
       return false;
     }
-  
+
     $old_paper_title = $this->paper_title;
-  
+
     $this->paper_title = $paper_title;
-    
+
     if ($old_paper_title != $paper_title) {
       $this->changes[] = array('old'=>$old_paper_title, 'new'=>$paper_title, 'part'=>'name');
     }
@@ -615,7 +615,7 @@ class PaperProperties {
    */
   public function set_start_date($start_date) {
     $old_start_date = $this->start_date;
-    
+
     $this->start_date = $start_date;
 
     if ($old_start_date != $start_date) {
@@ -652,7 +652,7 @@ class PaperProperties {
   public function get_raw_end_date() {
     return $this->raw_end_date;
   }
-  
+
   public function set_raw_end_date($raw_end_date) {
     $this->raw_end_date = $raw_end_date;
   }
@@ -669,9 +669,9 @@ class PaperProperties {
    */
   public function set_end_date($end_date) {
     $old_end_date = $this->end_date;
-    
+
     $this->end_date = $end_date;
-    
+
     if ($old_end_date != $end_date) {
       $this->changes[] = array('old'=>$old_end_date, 'new'=>$end_date, 'part'=>'enddate');
     }
@@ -712,9 +712,9 @@ class PaperProperties {
    */
   public function set_timezone($timezone) {
     $old_timezone = $this->timezone;
-    
+
     $this->timezone = $timezone;
-    
+
     if ($old_timezone != $timezone) {
       $this->changes[] = array('old'=>$old_timezone, 'new'=>$timezone, 'part'=>'timezone');
     }
@@ -732,9 +732,9 @@ class PaperProperties {
    */
   public function set_paper_type($paper_type) {
     $old_paper_type = $this->paper_type;
-    
+
     $this->paper_type = $paper_type;
-    
+
     if ($old_paper_type != $paper_type) {
       $this->changes[] = array('old'=>$old_paper_type, 'new'=>$paper_type, 'part'=>'papertype');
     }
@@ -752,9 +752,9 @@ class PaperProperties {
    */
   public function set_paper_prologue($paper_prologue) {
     $old_paper_prologue = $this->paper_prologue;
-    
+
     $this->paper_prologue = $paper_prologue;
-    
+
     if ($old_paper_prologue != $paper_prologue) {
       $this->changes[] = array('old'=>$old_paper_prologue, 'new'=>$paper_prologue, 'part'=>'prologue');
     }
@@ -772,9 +772,9 @@ class PaperProperties {
    */
   public function set_paper_postscript($paper_postscript) {
     $old_paper_postscript = $this->paper_postscript;
-  
+
     $this->paper_postscript = $paper_postscript;
-    
+
     if ($old_paper_postscript != $paper_postscript) {
       $this->changes[] = array('old'=>$old_paper_postscript, 'new'=>$paper_postscript, 'part'=>'postscript');
     }
@@ -792,9 +792,9 @@ class PaperProperties {
    */
   public function set_bgcolor($bgcolor) {
     $old_bgcolor = $this->bgcolor;
-    
+
     $this->bgcolor = $bgcolor;
-    
+
     if ($old_bgcolor != $bgcolor) {
       $this->changes[] = array('old'=>$old_bgcolor, 'new'=>$bgcolor, 'part'=>'background');
     }
@@ -812,7 +812,7 @@ class PaperProperties {
    */
   public function set_fgcolor($fgcolor) {
     $old_fgcolor = $this->fgcolor;
-    
+
     $this->fgcolor = $fgcolor;
 
     if ($old_fgcolor != $fgcolor) {
@@ -852,9 +852,9 @@ class PaperProperties {
    */
   public function set_labelcolor($labelcolor) {
     $old_labelcolor = $this->labelcolor;
-    
+
     $this->labelcolor = $labelcolor;
-    
+
     if ($old_labelcolor != $labelcolor) {
       $this->changes[] = array('old'=>$old_labelcolor, 'new'=>$labelcolor, 'part'=>'labelsnotes');
     }
@@ -872,9 +872,9 @@ class PaperProperties {
    */
   public function set_fullscreen($fullscreen) {
     $old_fullscreen = $this->fullscreen;
-    
+
     $this->fullscreen = $fullscreen;
-    
+
     if ($old_fullscreen != $fullscreen) {
       $this->changes[] = array('old'=>$old_fullscreen, 'new'=>$fullscreen, 'part'=>'display');
     }
@@ -892,9 +892,9 @@ class PaperProperties {
    */
   public function set_marking($marking) {
     $old_marking = $this->marking;
-    
+
     $this->marking = $marking;
-    
+
     if ($old_marking != $marking) {
       $this->changes[] = array('old'=>$old_marking, 'new'=>$marking, 'part'=>'marking');
     }
@@ -912,9 +912,9 @@ class PaperProperties {
    */
   public function set_bidirectional($bidirectional) {
     $old_bidirectional = $this->bidirectional;
-    
+
     $this->bidirectional = $bidirectional;
-    
+
     if ($old_bidirectional != $bidirectional) {
       $this->changes[] = array('old'=>$old_bidirectional, 'new'=>$bidirectional, 'part'=>'navigation');
     }
@@ -932,9 +932,9 @@ class PaperProperties {
    */
   public function set_pass_mark($pass_mark) {
     $old_pass_mark = $this->pass_mark;
-    
+
     $this->pass_mark = $pass_mark;
-    
+
     if ($old_pass_mark != $pass_mark) {
       $this->changes[] = array('old'=>$old_pass_mark, 'new'=>$pass_mark, 'part'=>'passmark');
     }
@@ -952,9 +952,9 @@ class PaperProperties {
    */
   public function set_distinction_mark($distinction_mark) {
     $old_distinction_mark = $this->distinction_mark;
-    
+
     $this->distinction_mark = $distinction_mark;
-    
+
     if ($old_distinction_mark != $distinction_mark) {
       $this->changes[] = array('old'=>$old_distinction_mark, 'new'=>$distinction_mark, 'part'=>'distinction');
     }
@@ -986,9 +986,9 @@ class PaperProperties {
    */
   public function set_folder($folder) {
     $old_folder = $this->folder;
-    
+
     $this->folder = $folder;
-    
+
     if ($old_folder != $folder) {
       $this->changes[] = array('old'=>$old_folder, 'new'=>$folder, 'part'=>'folder');
     }
@@ -1006,9 +1006,9 @@ class PaperProperties {
    */
   public function set_labs($labs) {
     $old_labs = $this->labs;
-    
+
     $this->labs = $labs;
-    
+
     if ($old_labs != $labs) {
       $this->changes[] = array('old'=>$old_labs, 'new'=>$labs, 'part'=>'labs');
     }
@@ -1026,9 +1026,9 @@ class PaperProperties {
    */
   public function set_rubric($rubric) {
     $old_rubric = $this->rubric;
-    
+
     $this->rubric = $rubric;
-    
+
     if ($old_rubric != $rubric) {
       $this->changes[] = array('old'=>$old_rubric, 'new'=>$rubric, 'part'=>'rubric');
     }
@@ -1046,9 +1046,9 @@ class PaperProperties {
    */
   public function set_calculator($calculator) {
     $old_calculator = $this->calculator;
-    
+
     $this->calculator = $calculator;
-    
+
     if ($old_calculator != $calculator) {
       $this->changes[] = array('old'=>$old_calculator, 'new'=>$calculator, 'part'=>'displaycalculator');
     }
@@ -1061,7 +1061,7 @@ class PaperProperties {
     if (!isset($this->externals)) {
       $this->load_externals();
     }
-    
+
     return $this->externals;
   }
 
@@ -1069,13 +1069,7 @@ class PaperProperties {
    * @param string $externals
    */
   public function set_externals($externals) {
-    $old_externals = $this->externals;
-    
     $this->externals = $externals;
-    
-    if ($old_externals != $externals) {
-      $this->changes[] = array('old'=>$old_externals, 'new'=>$externals, 'part'=>'externals');
-    }
   }
 
   /**
@@ -1097,9 +1091,9 @@ class PaperProperties {
    */
   public function set_exam_duration($exam_duration) {
     $old_exam_duration = $this->exam_duration;
-    
+
     $this->exam_duration = $exam_duration;
-    
+
     if ($old_exam_duration != $exam_duration) {
       $this->changes[] = array('old'=>$old_exam_duration, 'new'=>$exam_duration, 'part'=>'duration');
     }
@@ -1173,9 +1167,9 @@ class PaperProperties {
    */
   public function set_display_correct_answer($display_correct_answer) {
     $old_display_correct_answer = $this->display_correct_answer;
-    
+
     $this->display_correct_answer = $display_correct_answer;
-    
+
     if ($old_display_correct_answer != $display_correct_answer) {
       if ($this->get_paper_type() == '6') {
         $this->changes[] = array('old'=>$old_display_correct_answer, 'new'=>$display_correct_answer, 'part'=>'photos');
@@ -1197,9 +1191,9 @@ class PaperProperties {
    */
   public function set_display_question_mark($display_question_mark) {
     $old_display_question_mark = $this->display_question_mark;
-    
+
     $this->display_question_mark = $display_question_mark;
-    
+
     if ($old_display_question_mark != $display_question_mark) {
       $this->changes[] = array('old'=>$old_display_question_mark, 'new'=>$display_question_mark, 'part'=>'review');
     }
@@ -1217,9 +1211,9 @@ class PaperProperties {
    */
   public function set_display_students_response($display_students_response) {
     $old_display_students_response = $this->display_students_response;
-    
+
     $this->display_students_response = $display_students_response;
-    
+
     if ($old_display_students_response != $display_students_response) {
       $this->changes[] = array('old'=>$old_display_students_response, 'new'=>$display_students_response, 'part'=>'ticks_crosses');
     }
@@ -1237,9 +1231,9 @@ class PaperProperties {
    */
   public function set_display_feedback($display_feedback) {
     $old_display_feedback = $this->display_feedback;
-    
+
     $this->display_feedback = $display_feedback;
-    
+
     if ($old_display_feedback != $old_display_feedback) {
       $this->changes[] = array('old'=>$old_display_feedback, 'new'=>$display_feedback, 'part'=>'textfeedback');
     }
@@ -1257,9 +1251,9 @@ class PaperProperties {
    */
   public function set_hide_if_unanswered($hide_if_unanswered) {
     $old_hide_if_unanswered = $this->hide_if_unanswered;
-    
+
     $this->hide_if_unanswered = $hide_if_unanswered;
-    
+
     if ($old_hide_if_unanswered != $hide_if_unanswered) {
       $this->changes[] = array('old'=>$old_hide_if_unanswered, 'new'=>$hide_if_unanswered, 'part'=>'hideallfeedback');
     }
@@ -1277,9 +1271,9 @@ class PaperProperties {
    */
   public function set_calendar_year($calendar_year) {
     $old_calendar_year = $this->calendar_year;
-    
+
     $this->calendar_year = $calendar_year;
-    
+
     if ($old_calendar_year != $calendar_year) {
       $this->changes[] = array('old'=>$old_calendar_year, 'new'=>$calendar_year, 'part'=>'session');
     }
@@ -1314,7 +1308,13 @@ class PaperProperties {
    * @param string $external_review_deadline
    */
   public function set_external_review_deadline($external_review_deadline) {
+    $old_external_review_deadline = $this->external_review_deadline;
+
     $this->external_review_deadline = $external_review_deadline;
+
+    if ($old_external_review_deadline != $external_review_deadline) {
+      $this->changes[] = array('old'=>$old_external_review_deadline, 'new'=>$external_review_deadline, 'part'=>'externalreviewdeadline');
+    }
   }
 
   /**
@@ -1328,7 +1328,13 @@ class PaperProperties {
    * @param string $internal_review_deadline
    */
   public function set_internal_review_deadline($internal_review_deadline) {
+    $old_internal_review_deadline = $this->internal_review_deadline;
+
     $this->internal_review_deadline = $internal_review_deadline;
+
+    if ($old_internal_review_deadline != $internal_review_deadline) {
+      $this->changes[] = array('old'=>$old_internal_review_deadline, 'new'=>$internal_review_deadline, 'part'=>'internalreviewdeadline');
+    }
   }
 
   /**
@@ -1343,9 +1349,9 @@ class PaperProperties {
    */
   public function set_sound_demo($sound_demo) {
     $old_sound_demo = $this->sound_demo;
-      
+
     $this->sound_demo = $sound_demo;
-    
+
     if ($old_sound_demo != $sound_demo) {
       $this->changes[] = array('old'=>$old_sound_demo, 'new'=>$sound_demo, 'part'=>'demosoundclip');
     }
@@ -1377,9 +1383,9 @@ class PaperProperties {
    */
   public function set_password($password) {
     $old_password = $this->password;
-    
+
     $this->password = $password;
-    
+
     if ($old_password != $password) {
       $this->changes[] = array('old'=>$old_password, 'new'=>$password, 'part'=>'password');
     }

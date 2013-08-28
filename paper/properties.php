@@ -38,11 +38,73 @@ require_once '../classes/questionutils.class.php';
 require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
 
+// Marking options
+define('MARK_NO_ADJUSTMENT', '0');
+define('MARK_RANDOM', '1');
+define('MARK_STD_SET', '2');
+
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
+
+/**
+ * Define callbacks to be used when retrieving tracked changes
+ * @param  array  $changed_reviewers Array of reviewers referenced in changes
+ * @param  array  $changed_labs      Array of labs referenced in changes
+ * @return array                     Array of callbacks to be registered with the logger
+ */
+function setup_change_callbacks(&$changed_reviewers, &$changed_labs) {
+  // Define a closure to populate past reviewer IDs
+  $reviewers_cb = function($old, $new) use (&$changed_reviewers) {
+    $old_reviewers = explode(',', $old);
+    $new_reviewers = explode(',', $new);
+
+    // Add any reviewers in the current change to the $changed_reviewers array
+    foreach ($old_reviewers as $reviewer) {
+      if ($reviewer != '') {
+        $changed_reviewers[$reviewer] = false;
+      }
+    }
+    foreach ($new_reviewers as $reviewer) {
+      if ($reviewer != '') {
+        $changed_reviewers[$reviewer] = false;
+      }
+    }
+  };
+
+  // Define a closure to populate past labs
+  $labs_cb = function($old, $new) use (&$changed_labs) {
+    $old_labs = explode(',', $old);
+    $new_labs = explode(',', $new);
+
+    // Add any labs in the current change to the $changed_labs array
+    foreach ($old_labs as $lab) {
+      if ($lab != '') {
+        $changed_labs[$lab] = false;
+      }
+    }
+    foreach ($new_labs as $lab) {
+      if ($lab != '') {
+        $changed_labs[$lab] = false;
+      }
+    }
+  };
+  // Use the closure for changes to labs
+  $callbacks = array('externals' => $reviewers_cb, 'internals' => $reviewers_cb, 'labs' => $labs_cb);
+
+  return $callbacks;
+}
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
+// Build up a list of all past reviewers and labs for the 'changes' tab
+$changed_reviewers = array();
+$changed_labs = array();
+
+$change_callbacks = setup_change_callbacks($changed_reviewers, $changed_labs);
+
 $logger = new Logger($mysqli);
+
+// Get the changes to be used later
+$changes = $logger->get_changes('Paper', $paperID, $change_callbacks);
 
 if ($properties->get_summative_lock() and !$userObject->has_role('SysAdmin')) {
   $locked = true;
@@ -108,6 +170,30 @@ function format_user($text, $user_list) {
   }
 
   return $formatted_string;
+}
+
+function format_lab($lab_id, $lab_list) {
+  return (isset($lab_list[$lab_id])) ? $lab_list[$lab_id] : $lab_id;
+}
+
+function format_marking($marking, $string) {
+  $marking_string = $marking;
+
+  $marking_type = $marking{0};
+
+  switch ($marking_type) {
+    case MARK_NO_ADJUSTMENT:
+      $marking_string = $string['noadjustment'];
+      break;
+    case MARK_RANDOM:
+      $marking_string = $string['calculatrrandommark'];
+      break;
+    case MARK_STD_SET:
+      $marking_string = $string['stdset'];
+      break;
+  }
+
+  return $marking_string;
 }
 
 function format_method($method, $string) {
@@ -178,7 +264,7 @@ function is_leap($year) {
   }
 }
 
-function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) {
+function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$changed_labs, $db) {
   if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
@@ -218,6 +304,10 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) 
     }
     $lab_no++;
     $old_campus = $lab_campus;
+
+    if (isset($changed_labs[$lab_id])) {
+      $changed_labs[$lab_id] = $lab_name;
+    }
   }
   $result->close();
   $html .= "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div>";
@@ -247,11 +337,12 @@ function modulo($n,$b) {
 
 $title_unique = true;
 
+
 if (isset($_POST['Submit'])) {
   $old_marking = $properties->get_marking();
+  $old_paper_title = $properties->get_paper_title();
   $old_externals = $properties->get_externals();
   $old_internals = $properties->get_internal_reviewers();
-  $old_paper_title = $properties->get_paper_title();
 
   if (isset($_POST['paper_title'])) {
 	  if ($old_paper_title == $_POST['paper_title']) {
@@ -451,8 +542,8 @@ if (isset($_POST['Submit'])) {
     }
 
     if ($_POST['marking'] == '') {
-      $properties->set_marking('0');
-    } elseif ($_POST['marking'] == '2') {
+      $properties->set_marking(MARK_NO_ADJUSTMENT);
+    } elseif ($_POST['marking'] == MARK_STD_SET) {
       $properties->set_marking($_POST['std_set']);
     } else {
       $properties->set_marking($_POST['marking']);
@@ -496,8 +587,12 @@ if (isset($_POST['Submit'])) {
 
       $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
 
-      Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli);
-      Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli);
+      if (Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli)) {
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
+      }
+      if (Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli)) {
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
+      }
     }
 
     // Release objectives-based feedback
@@ -1285,9 +1380,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
       echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">" . $string['method'] . "&nbsp;</td><td rowspan=\"2\">";
     ?>
-       <input type="radio" id="marking1" name="marking" value="0"<?php if ($properties->get_marking() == '0') echo ' checked'; ?> /><?php echo $string['noadjustment']; ?><br />
-       <input type="radio" id="marking2" name="marking" value="1"<?php
-       if ($properties->get_marking() == '1') {
+       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) echo ' checked'; ?> /><?php echo $string['noadjustment']; ?><br />
+       <input type="radio" id="marking2" name="marking" value="<?php echo MARK_RANDOM ?>"<?php
+       if ($properties->get_marking() == MARK_RANDOM) {
           echo ' checked';
        }
        if ($neg_marking) {
@@ -1314,8 +1409,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $std_set_details->close();
 
       if (count($std_set_array) > 0) {
-        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\"";
-        if (substr($properties->get_marking(), 0, 1) == '2') echo ' checked';
+        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"" . MARK_STD_SET . "\"";
+        if (substr($properties->get_marking(), 0, 1) == MARK_STD_SET) echo ' checked';
         echo " />";
         echo $string['stdset'] . ' <select name="std_set">';
         foreach ($std_set_array as $std_set_line) {
@@ -1326,16 +1421,16 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
           $std_setID = $std_set_line['std_setID'];
           $std_set_display_date = $std_set_line['display_date'];
 
-          if ($properties->get_marking() == "2,$std_setID") {
-            echo "<option value=\"2,$std_setID\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
+          if ($properties->get_marking() == MARK_STD_SET . ",$std_setID") {
+            echo "<option value=\"" . MARK_STD_SET . ",$std_setID\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           } else {
-            echo "<option value=\"2,$std_setID\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
+            echo "<option value=\"" . MARK_STD_SET . ",$std_setID\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           }
 
         }
         echo "</select>\n";
       } else {
-        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\" disabled />";
+        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"" . MARK_STD_SET . "\" disabled />";
         echo '<span style="color:#808080">' . $string['stdset'] . '</span>';
       }
     }
@@ -1640,7 +1735,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</td>\n";
 
-    echo "<td>" . output_labs($properties->get_labs(), $configObject->get('cfg_summative_mgmt'), $properties->get_paper_type(), $userObject, $mysqli) . "</td></tr>\n";
+    echo "<td>" . output_labs($properties->get_labs(), $configObject->get('cfg_summative_mgmt'), $properties->get_paper_type(), $userObject, $changed_labs, $mysqli) . "</td></tr>\n";
 
   ?>
   </td></tr>
@@ -2004,13 +2099,16 @@ SQL;
 $modules = module_utils::get_module_list_by_id($mysqli);
 
 $user_list = array();
-$results = $mysqli->prepare("SELECT id, title, surname FROM users WHERE roles != 'student'");
-$results->execute();
-$results->bind_result($id, $title, $surname);
-while ($results->fetch()) {
-  $user_list[$id] = $title . ' ' . $surname;
+if (count($changed_reviewers) > 0) {
+  $reviewer_in = implode(',', array_keys($changed_reviewers));
+  $results = $mysqli->prepare("SELECT id, title, surname FROM users WHERE id IN ($reviewer_in)");
+  $results->execute();
+  $results->bind_result($id, $title, $surname);
+  while ($results->fetch()) {
+    $user_list[$id] = $title . ' ' . $surname;
+  }
+  $results->close();
 }
-$results->close();
 
 $reference_material = array();
 $results = $mysqli->prepare("SELECT id, title FROM reference_material");
@@ -2024,52 +2122,84 @@ $results->close();
 $folders = folder_utils::get_all_folders($mysqli);
 
 echo "<tr><th>" . $string['part'] . "</th><th>" . $string['old'] . "</th><th>" . $string['new'] . "</th><th>" . $string['date'] . "</th><th>" . $string['author'] . "</th></tr>";
-$changes = $logger->get_changes('Paper', $paperID);
+// Changes retrieved at beginning of file
 $rows = count($changes);
 for ($i=0; $i<$rows; $i++) {
   $part = $changes[$i]['part'];
 
   $old = $changes[$i]['old'];
   $new = $changes[$i]['new'];
-  if ($part == 'startdate' or $part == 'enddate') {
-    $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
-    $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
-  } elseif ($part == 'externalreviewdeadline' or $part == 'internalreviewdeadline') {
-    if ($old != '') $old = date($configObject->get('cfg_long_date_php'), $old);
-    if ($new != '') $new = date($configObject->get('cfg_long_date_php'), $new);
-  } elseif ($part == 'modules') {
-    $old = format_modules($old, $modules);
-    $new = format_modules($new, $modules);
-  } elseif ($part == 'folder') {
-    $old = format_folders($old, $folders);
-    $new = format_folders($new, $folders);
-  } elseif ($part == 'method') {
-    $old = format_method($old, $string);
-    $new = format_method($new, $string);
-  } elseif ($part == 'displaycalculator' or $part == 'demosoundclip' or $part == 'photos' or $part == 'ticks_crosses' or $part == 'hideallfeedback' or $part == 'textfeedback' or $part == 'correctanswerhighlight' or $part == 'question_marks') {
-    $old = format_on_off($old, $string);
-    $new = format_on_off($new, $string);
-  } elseif ($part == 'externals' or $part == 'internals') {
-    $old = format_user($old, $user_list);
-    $new = format_user($new, $user_list);
-  } elseif ($part == 'background' or $part == 'foreground' or $part == 'theme' or $part == 'labelsnotes') {
-    $old = format_color($old);
-    $new = format_color($new);
-  } elseif ($part == 'referencematerial') {
-    $old = format_referencematerial($old, $reference_material);
-    $new = format_referencematerial($new, $reference_material);
-  } elseif ($part == 'display') {
-    $old = format_display($old, $string);
-    $new = format_display($new, $string);
-  } elseif ($part == 'navigation') {
-    $old = format_navigation($old, $string);
-    $new = format_navigation($new, $string);
-  } elseif ($part == 'review') {
-    $old = format_review($old, $string);
-    $new = format_review($new, $string);
-  } elseif ($part == 'passmark' or $part == 'distinction') {
-    $old = format_passmark($old, $string);
-    $new = format_passmark($new, $string);
+
+  switch ($part) {
+    case 'startdate':
+    case 'enddate':
+      $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
+      $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
+      break;
+    case 'modules':
+      $old = format_modules($old, $modules);
+      $new = format_modules($new, $modules);
+      break;
+    case 'folder':
+      $old = format_folders($old, $folders);
+      $new = format_folders($new, $folders);
+      break;
+    case 'method':
+      $old = format_method($old, $string);
+      $new = format_method($new, $string);
+      break;
+    case 'displaycalculator':
+    case 'demosoundclip':
+    case 'photos':
+    case 'ticks_crosses':
+    case 'hideallfeedback':
+    case 'textfeedback':
+    case 'correctanswerhighlight':
+    case 'question_marks':
+      $old = format_on_off($old, $string);
+      $new = format_on_off($new, $string);
+      break;
+    case 'externals':
+    case 'internals':
+      $old = format_user($old, $user_list);
+      $new = format_user($new, $user_list);
+      break;
+    case 'background':
+    case 'foreground':
+    case 'theme':
+    case 'labelsnotes':
+      $old = format_color($old);
+      $new = format_color($new);
+      break;
+    case 'referencematerial':
+      $old = format_referencematerial($old, $reference_material);
+      $new = format_referencematerial($new, $reference_material);
+      break;
+    case 'display':
+      $old = format_display($old, $string);
+      $new = format_display($new, $string);
+      break;
+    case 'navigation':
+      $old = format_navigation($old, $string);
+      $new = format_navigation($new, $string);
+      break;
+    case 'review':
+      $old = format_review($old, $string);
+      $new = format_review($new, $string);
+      break;
+    case 'passmark':
+    case 'distinction':
+      $old = format_passmark($old, $string);
+      $new = format_passmark($new, $string);
+      break;
+    case 'labs':
+      $old = format_lab($old, $changed_labs);
+      $new = format_lab($new, $changed_labs);
+      break;
+    case 'marking':
+      $old = format_marking($old, $string);
+      $new = format_marking($new, $string);
+      break;
   }
 
   if (isset($string[$part])) $part = $string[$part];

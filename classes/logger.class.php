@@ -89,7 +89,16 @@ Class Logger {
     return $success;
   }
 
-  public function get_changes($type, $typeID) {
+  /**
+   * Get all the changes from the log table for a given type of object
+   * @param  string $type      The type of object we want to examine
+   * @param  integer $typeID   ID of a particular object of type $type
+   * @param  mixed  $callbacks An array of callbacks that may be triggered for a
+   *                           particular 'part' or type of change in the format
+   *                           array(<part name> => <callback>)
+   * @return array             The list of changes
+   */
+  public function get_changes($type, $typeID, $callbacks = '') {
     $change_data = array();
 
     $query = 'SELECT title, initials, surname, old, new, part, UNIX_TIMESTAMP(changed) AS changed FROM track_changes, users WHERE track_changes.editor = users.id AND type = ? AND typeID = ? ORDER BY changed desc';
@@ -99,6 +108,11 @@ Class Logger {
     $result->bind_result($title, $initials, $surname, $old, $new, $part, $changed);
     while ($result->fetch()) {
       $change_data[] = array('title'=>$title, 'initials'=>$initials, 'surname'=>$surname, 'old'=>$old, 'new'=>$new, 'part'=>$part, 'date'=>$changed);
+
+      // Fire callback if defined for this part type
+      if (is_array($callbacks) and isset($callbacks[$part])) {
+        call_user_func($callbacks[$part], $old, $new);
+      }
     }
     $result->close();
 
