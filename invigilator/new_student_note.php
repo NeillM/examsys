@@ -22,21 +22,19 @@
 * @package
 */
 
-  require '../include/invigilator_auth.inc';
+require '../include/invigilator_auth.inc';
+require_once '../classes/userutils.class.php';
+require_once '../classes/student_notes.class.php';
 
-  if (isset($_POST['submit'])) {
-    if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
-      $result = $mysqli->prepare("INSERT INTO student_notes VALUES (NULL,?,?,NOW(),?,?)");
-      $result->bind_param('isii', $_POST['student_userID'], $_POST['note'], $_POST['paperID'], $userObject->get_user_ID());
-      $result->execute();  
-      $result->close();
-    } else {
-      $result = $mysqli->prepare("UPDATE student_notes SET note=? WHERE note_id=?");
-      $result->bind_param('si', $_POST['note'], $_POST['note_id']);
-      $result->execute();  
-      $result->close();
-    }
-  ?>
+if (isset($_POST['submit'])) {
+	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
+		StudentNotes::add_note($_POST['student_userID'], $_POST['note'], $_POST['paperID'], $userObject->get_user_ID(), $mysqli);
+	} else {
+		StudentNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
+	}
+
+?>
+<!DOCTYPE html>
   <html>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <head><title><?php echo $string['note']; ?></title>
@@ -52,57 +50,60 @@
   </form>
   <?php
   } else {
-    $result = $mysqli->prepare("SELECT username, surname, first_names, title, student_id FROM users LEFT JOIN sid ON users.id=sid.userID WHERE id=?");
-    $result->bind_param('i', $_GET['userID']);
-    $result->execute();
-    $result->bind_result($student_username, $student_surname, $student_firstnames, $student_title, $student_id);
-    $result->fetch();
-    $result->close();
-    
-    $result = $mysqli->prepare("SELECT note_id, note FROM student_notes WHERE paper_id=? AND userID=?");
-    $result->bind_param('is', $_GET['paperID'], $_GET['userID']);
-    $result->execute();
-    $result->bind_result($note_id, $note);
-    $result->fetch();
-    $result->close();
+    $student_details = UserUtils::get_user_details($_GET['userID'], $mysqli);
+		    
+		$note_details = StudentNotes::get_note($_GET['paperID'], $_GET['userID'], $mysqli);
 ?>
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title><?php echo $string['note']; ?></title>
+	<title><?php echo $string['note']; ?></title>
 
-<link rel="stylesheet" type="text/css" href="../css/body.css" />
-<style type="text/css">
-  body {background-color:#FFFFCC; font-size:90%}
-</style>
+	<link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/new_student_note.css" />
+  
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script language="JavaScript">
+    $(document).ready(function() {
+	    var noteHeight = $(document).height() - 110;
+	    $("#note").css('height', noteHeight + 'px')
+      $("#note").focus();
+    });
+	 
+	  $(window).resize(function() {
+	    var noteHeight = $(document).height() - 110;
+	    $("#note").css('height', noteHeight + 'px')
+	  });
+	</script>
 </head>
 
-<body onload="document.myform.note.focus();">
+<body>
 
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform">
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <tr>
 <?php
-  if (file_exists($cfg_web_root . 'users/photos/' . $student_username . '.jpg')) {
-    echo "<td style=\"border-left:1px solid #5582D2; background-color:white; width:180px; text-align:left; vertical-align:bottom\">&nbsp;<strong>$student_title $student_surname</strong><br />&nbsp;$student_firstnames<br />&nbsp;$student_id<br /><img src=\"../users/photos/$student_username.jpg\" width=\"180\" height=\"270\" border=\"0\" alt=\"Photo\" /></td><td>";
+  if (file_exists($cfg_web_root . 'users/photos/' . $student_details['username'] . '.jpg')) {
+    echo "<td style=\"border-left:1px solid #5582D2; width:180px; text-align:left; vertical-align:bottom\">&nbsp;<strong>" . $student_details['title'] . " " . $student_details['surname'] . "</strong><br />&nbsp;" . $student_details['first_names'] . "<br />&nbsp;" . $details['student_id'] . "<br /><img src=\"../users/photos/$student_username.jpg\" width=\"180\" height=\"270\" border=\"0\" alt=\"Photo\" /></td><td>";
   } else {
-    echo "<td><strong>" . $string['studentname'] . ":</strong> $student_title $student_surname, $student_firstnames";
-    if ($student_id != '') echo " ($student_id)";
-    echo "<br />";
+    echo '<td><strong>' . $string['studentname'] . ':</strong> ' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['first_names'];
+    if ($student_details['student_id'] != '') echo ' (' . $student_details['student_id'] . ')';
+    echo '<br />';
   }
 
   echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n";
   echo "<strong>" . $string['note'] . ":</strong><br />\n";
-  echo "<textarea name=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; background-color:#FFFFCC; width:100%\">$note</textarea><br />\n";
+  echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:100%\" required>" . $note_details['note'] . "</textarea><br />\n";
 ?>
 </td>
 </table>
 <br />
 <div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="student_userID" value="<?php echo $_GET['userID']; ?>" />
-<input type="hidden" name="note_id" value="<?php echo $note_id; ?>" />
+<input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
 </form>
 
 </body>
