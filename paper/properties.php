@@ -35,6 +35,7 @@ require_once '../lang/' . $language . '/include/timezones.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/questionutils.class.php';
+require_once '../classes/generalutils.class.php';
 require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
 
@@ -47,9 +48,9 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 /**
  * Define callbacks to be used when retrieving tracked changes
- * @param  array  $changed_reviewers Array of reviewers referenced in changes
- * @param  array  $changed_labs      Array of labs referenced in changes
- * @return array                     Array of callbacks to be registered with the logger
+ * @param  array  $changed_reviewers    Array of reviewers referenced in changes
+ * @param  array  $changed_labs         Array of labs referenced in changes
+ * @return array                        Array of callbacks to be registered with the logger
  */
 function setup_change_callbacks(&$changed_reviewers, &$changed_labs) {
   // Define a closure to populate past reviewer IDs
@@ -87,7 +88,8 @@ function setup_change_callbacks(&$changed_reviewers, &$changed_labs) {
       }
     }
   };
-  // Use the closure for changes to labs
+
+  // Use the closures for changes
   $callbacks = array('externals' => $reviewers_cb, 'internals' => $reviewers_cb, 'labs' => $labs_cb);
 
   return $callbacks;
@@ -126,22 +128,6 @@ function format_referencematerial($ID, $refID) {
   if ($ID == '') return '';
 
   return $refID[$ID];
-}
-
-function format_modules($text, $modules) {
-  if ($text == '') return '';
-
-  $formatted_string = '';
-  $parts = explode(',', $text);
-  foreach ($parts as $part) {
-    if ($formatted_string == '') {
-      $formatted_string = $modules[$part]['code'];
-    } else {
-      $formatted_string .= ', ' . $modules[$part]['code'];
-    }
-  }
-
-  return $formatted_string;
 }
 
 function format_folders($id, $folders) {
@@ -583,9 +569,16 @@ if (isset($_POST['Submit'])) {
     $properties->save();
 
     if (!$locked) {
+      $old_modules = Paper_utils::get_modules($paperID, $mysqli);
+
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
 
       $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
+
+      $utils = new GeneralUtils();
+      if (!$utils->arrays_are_equal($old_modules, $paper_modules)) {
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_modules), implode(',', $paper_modules), 'modules');
+      }
 
       if (Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli)) {
         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
@@ -2135,10 +2128,6 @@ for ($i=0; $i<$rows; $i++) {
     case 'enddate':
       $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
       $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
-      break;
-    case 'modules':
-      $old = format_modules($old, $modules);
-      $new = format_modules($new, $modules);
       break;
     case 'folder':
       $old = format_folders($old, $folders);
