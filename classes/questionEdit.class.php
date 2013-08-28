@@ -345,7 +345,7 @@ QUERY;
       $success = ($result->affected_rows > -1);
       if ($this->_mysqli->error) {
         try {
-          throw new Exception("0MySQL error " . $this->_mysqli->error . "<br /> Query:<br /> $query", $this->_mysqli->errno);
+          throw new Exception("MySQL error " . $this->_mysqli->error . "<br /> Query:<br /> $query", $this->_mysqli->errno);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
           echo nl2br($e->getTraceAsString());
@@ -997,6 +997,10 @@ QUERY;
       $this->set_modified_field('bloom', array_search($this->bloom, $this->_blooms_db));
       $this->bloom = $value_en;
     }
+		
+		if ($this->bloom == '') {
+			$this->bloom = NULL;
+		}
   }
 
   /**

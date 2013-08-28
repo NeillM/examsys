@@ -18,11 +18,12 @@ a:hover {
   color:#0000FF;
   text-decoration:underline;
 }
-.breadcrumb a {
-  color:#0000FF !important;
-}
 img {
   border-width:0px;
+}
+input[type='checkbox'] {
+  margin-left:1px;
+	margin-right:1px;
 }
 textarea, input[type=text], select, input[type=password] {
   font-family:Arial,sans-serif;
@@ -34,6 +35,9 @@ table {
 }
 table.fixed {
   table-layout:fixed;
+}
+.breadcrumb a {
+  color:#0000FF !important;
 }
 .dkblue_header {
   color:#1F497D
