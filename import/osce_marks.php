@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -37,11 +37,11 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
     unlink($configObject->get('cfg_tmpdir') . $userObj->get_user_ID() . '_osce_marks.csv');
     $notice->access_denied($db, $string, 'An error has occurred');    //this will exit php
   }
- 
+
   $session    = $propertyObj->get_calendar_year();
   $paper_date = $propertyObj->get_raw_start_date();
   $marking    = $propertyObj->get_marking();
-  
+
   // Get the questions on the paper.
   $paper = array();
   $question_no = 0;
@@ -54,9 +54,9 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
     $paper[$question_no]['id'] = $question;
   }
   $result->close();
-  
+
   $moduleIDs = implode(',', array_keys(Paper_utils::get_modules($paperID, $db)));
-  
+
   // Get student data.
   $students = array();
   $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($moduleIDs) AND calendar_year = ?");
@@ -96,10 +96,14 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
           $students[$student_id]['grade'] = $grade;
           $students[$student_id]['id'] = $id;
         }
-        $result->close();          
+        $result->close();
       }
       if (isset($students[$sid]) and $students[$sid]['username'] != '') {  // Student is in class List.
-        $result = $db->prepare("DELETE FROM log4 WHERE userID = ? AND q_paper = ?");
+
+        $save_ok = true;
+        $db->autocommit(false);
+
+        $result = $db->prepare("DELETE FROM log4 WHERE log4_overallID IN (SELECT id FROM log4_overall WHERE userID = ? AND q_paper = ?)");
         $result->bind_param('ii', $students[$sid]['id'], $paperID);
         $result->execute();
         $result->close();
@@ -110,18 +114,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
         $result->close();
 
         echo "<li>$sid -&gt; " . $students[$sid]['username'] . ", $question_no</li>";
-        
-        // Record individual questions.
-        $numeric_score = 0;
-        $result = $db->prepare("INSERT INTO log4 VALUES(NULL, ?, ?, ?, ?, ?, NULL)");
-        for ($q=1; $q<=$question_no; $q++) {
-          $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $paperID, $paper[$q]['id'], $fields[$q]);
-          $fields[$q] = trim($fields[$q]);
-          $result->execute();
-          $numeric_score += trim($fields[$q]);
-        }
-        $result->close();
-          
+
         // Record overall student/station details.
         $result = $db->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
         $fields[$question_no+1] = trim($fields[$question_no+1]);
@@ -130,45 +123,92 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
         $result->bind_result($examinerID);
         $result->fetch();
         $result->close();
-        
+
         echo $fields[$question_no+1] . ', ' . $examinerID . '<br />';
-        
+
         if ($examinerID == '') {
           $examinerID = $userObj->get_user_ID();
         }
-        
-        switch ($marking) {
-          case '3':
-            $cat2no = array('clear fail'=>1,'borderline'=>2,'clear pass'=>3);
-            break;
-          case '4':
-            $cat2no = array('fail'=>1,'borderline fail'=>2,'borderline pass'=>3,'pass'=>4,'good pass'=>5);
-            break;
-          case '5':
-            //automatic
-            $cat2no = array('unsatisfactory'=>1,'competent'=>2);
-            break;
-          case '6':
-            $cat2no = array('clear fail'=>1,'borderline'=>2,'clear pass'=>3,'honours pass'=>4);
-            break;
+
+        // Create empty overall record
+        $result = $db->prepare("INSERT INTO log4_overall VALUES(NULL, ?, ?, ?, 0, 0, '', ?, ?, 'paper', ?)");
+        $result->bind_param('isisii', $students[$sid]['id'], $paper_date, $paperID, $students[$sid]['grade'], $examinerID, $students[$sid]['year']);
+        $res = $result->execute();
+        if ($res == false) {
+          $save_ok = false;
         }
-        if (isset($cat2no[strtolower(trim($fields[$question_no+2]))])) {
-          $overall_rating = $cat2no[strtolower(trim($fields[$question_no+2]))];
-        } else {
-          $overall_rating = 'ERROR';
+        $result->close();
+
+        if ($save_ok) {
+          $log4_overall_id = $db->insert_id;
+
+          // Record individual questions.
+          $numeric_score = 0;
+          $result = $db->prepare("INSERT INTO log4 VALUES(NULL, ?, ?, NULL, ?)");
+          for ($q=1; $q<=$question_no; $q++) {
+            $result->bind_param('isi', $paper[$q]['id'], $fields[$q], $log4_overall_id);
+            $fields[$q] = trim($fields[$q]);
+            $res = $result->execute();
+            if ($res == false) {
+              $save_ok = false;
+              break;
+            }
+            $numeric_score += $fields[$q];
+          }
+          $result->close();
+
+          if ($save_ok) {
+            switch ($marking) {
+              case '3':
+                $cat2no = array('clear fail'=>1,'borderline'=>2,'clear pass'=>3);
+                break;
+              case '4':
+                $cat2no = array('fail'=>1,'borderline fail'=>2,'borderline pass'=>3,'pass'=>4,'good pass'=>5);
+                break;
+              case '5':
+                //automatic
+                $cat2no = array('unsatisfactory'=>1,'competent'=>2);
+                break;
+              case '6':
+                $cat2no = array('clear fail'=>1,'borderline'=>2,'clear pass'=>3,'honours pass'=>4);
+                break;
+            }
+            if (isset($cat2no[strtolower(trim($fields[$question_no+2]))])) {
+              $overall_rating = $cat2no[strtolower(trim($fields[$question_no+2]))];
+            } else {
+              $overall_rating = 'ERROR';
+            }
+
+            if (isset($fields[$question_no+3])) {
+              $feedback = trim($fields[$question_no+3]);
+            } else {
+              $feedback = '';
+            }
+
+            $result = $db->prepare("UPDATE log4_overall SET overall_rating = ?, numeric_score = ?, feedback = ? WHERE id = ?");
+            $result->bind_param('sisi', $overall_rating, $numeric_score, $feedback, $log4_overall_id);
+            $res = $result->execute();
+            if ($res == false) {
+              $save_ok = false;
+            }
+            $result->close();
+          }
         }
 
-        if (isset($fields[$question_no+3])) {
-          $feedback = trim($fields[$question_no+3]);
+        if ($save_ok === false) {
+          // rollback
+          $db->rollback();
+          echo "<li style=\"color:C00000\">$sid -&gt; " . sprintf($string['saveerror'], $sid) . "</li>";
         } else {
-          $feedback = '';
+          // commit the updates to the log tables
+          $db->commit();
         }
-        $result = $db->prepare("INSERT INTO log4_overall VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'paper', ?)");
-        $result->bind_param('isisissii', $students[$sid]['id'], $paper_date, $paperID, $overall_rating, $numeric_score, $feedback, $students[$sid]['grade'], $examinerID, $students[$sid]['year']);
-        $result->execute();
-        $result->close();
+
+        //turn auto commit back on so future queries function as before
+        $db->autocommit(true);
+
       } else {
-        echo "<li style=\"color:C00000\">$sid -&gt; username not found!</li>";
+        echo "<li style=\"color:C00000\">$sid -&gt; {$string['usernotfound']}</li>";
       }
     }
     $line_written++;
@@ -204,9 +244,9 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['importoscemarks']; ?></title>
-  
+
   <link rel="stylesheet" href="../css/body.css" type="text/css">
   <link rel="stylesheet" href="../css/dialog.css" type="text/css">
   <link rel="stylesheet" href="../css/submenu.css" type="text/css">

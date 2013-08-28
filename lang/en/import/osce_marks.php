@@ -22,4 +22,6 @@ $string['csvfile'] = 'CSV File:';
 $string['topmsg'] = 'This area is for bulk uploading of marks from a paper-based OSCE. A CSV file in the following format should be used:';
 $string['headerrow'] = 'File contains header row';
 $string['import'] = 'Import';
+$string['usernotfound'] = 'username not found!';
+$string['saveerror'] = 'Error saving user data for %s';
 ?>
