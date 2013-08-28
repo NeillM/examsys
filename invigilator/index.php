@@ -247,7 +247,6 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
 <?php
 }
 
-
 function emergencyNumbers($support_numbers, $string, $margin = 10) {
   echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:" . $margin . "px\">\n";
   echo "<tr><td colspan=\"3\" style=\"border-bottom: 1px solid #C0C0C0; font-weight:bold\">" . $string['emergencynumbers'] . "</td></tr>\n";
@@ -261,7 +260,6 @@ function get_timestamp_from_time($hours, $minutes, $timezone) {
   $tmp_datetime = new DateTime(date('Y-m-d') . $hours . ':' . $minutes . ':00', $timezone);
   return $tmp_datetime->getTimestamp();
 }
-
 
 if (isset($_POST['start_exam_form'])) {
   check_var('paper_id', 'POST', true, false, false);
@@ -405,6 +403,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   }
 
   function newStudentNote() {
+	  $('#menudiv').hide();
     studentnote = window.open("new_student_note.php?userID=" + $('#userID').val() + "&paperID=" + $('#paperID').val() + "", "studentnote", "width=650,height=430,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
 
     if (window.focus) {
@@ -420,6 +419,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   }
 
   function extendTime() {
+	  $('#menudiv').hide();
     papernote = window.open("extend_time.php?paperID=" + $('#paperID').val() + "&userID=" + $('#userID').val(), "extendtime", "width=250,height=150,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
 
     if (window.focus) {
