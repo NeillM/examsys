@@ -151,7 +151,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   $q_no = 0;
   while ($result->fetch()) {
     $line = 0;
-    $qData = $mysqli->prepare("SELECT * FROM questions, options WHERE q_id = ? AND questions.q_id = options.o_id ORDER BY id_num");
+    $qData = $mysqli->prepare("SELECT * FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
     $qData->bind_param('i', $question);
     $qData->execute();
     $qData->store_result();
@@ -163,7 +163,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         if ($q_type != 'info') $q_no++;
         if (trim($q_media) != '') {
           $media_array = array();
-          $media_array = explode('|',$q_media);
+          $media_array = explode('|', $q_media);
           $new_q_media = '';
           $image_part = 0;
           foreach ($media_array as $individual_media) {
@@ -172,7 +172,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
               if (trim($individual_media) != '' and trim($individual_media) != 'NULL') {
                 $new_media_name = unique_filename($individual_media);
                 if (file_exists("../media/$individual_media")) {
-                  if (!copy("../media/$individual_media","../media/$new_media_name")) {
+                  if (!copy("../media/$individual_media", "../media/$new_media_name")) {
                     $error[] = sprintf($string['copyerror'], $individual_media);
                     //if the image is missing dont put the file name in the new question
                     $new_media_name = '';
@@ -276,23 +276,23 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         $keyword_result->close();
       }
 
-      //Look for and fix links in linked calculation questions
+      // Look for and fix links in linked calculation questions
       if ($q_type == 'calculation') {
-        $options = explode(',',$option_text);
+        $options = explode(',', $option_text);
         $new_option_text = array();
         foreach ($options as $opt) {
           if (stristr($opt, 'var') !== false) {
             $old_calc_q_id = substr($opt, 4);
             if(!isset($caculation_qid_map[$old_calc_q_id])) {
-              $error[] = sprintf($string['caculation_link_update_error'], $opt);
+              $error[] = sprintf($string['calculation_link_update_error'], $opt);
               $new_option_text[] = $opt;
             } else {
               $new_option_text[] = substr($opt, 0, 4) . $caculation_qid_map[$old_calc_q_id];
             }
-          } elseif (stristr($opt,'ans') !== false){
-            $old_calc_q_id = substr($opt,3);
+          } elseif (stristr($opt, 'ans') !== false){
+            $old_calc_q_id = substr($opt, 3);
             if (!isset($caculation_qid_map[$old_calc_q_id])) {
-              $error[] = sprintf($string['caculation_link_update_error'], $opt);
+              $error[] = sprintf($string['calculation_link_update_error'], $opt);
               $new_option_text[] = $opt;
             } else {
               $new_option_text[] = substr($opt, 0, 3) . $caculation_qid_map[$old_calc_q_id];
@@ -301,13 +301,15 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
             $new_option_text[] = $opt;
           }
         }
-        $option_text = implode(',',$new_option_text);
+        $option_text = implode(',', $new_option_text);
       }
 
-      $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
-      $addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
-      $addOption->execute();
-      $addOption->close();
+      if ($q_type != 'calculation') {  // Calculation questions have no options.
+				$addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+				$addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+				$addOption->execute();
+				$addOption->close();
+			}
       $line++;
     }
     $qData->free_result();
@@ -367,13 +369,13 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   }
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō: <?php echo $string['copypaper'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['copypaper'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../body.css" />
   <link rel="stylesheet" type="text/css" href="../submenu.css" />
