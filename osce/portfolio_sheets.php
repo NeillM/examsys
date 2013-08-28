@@ -64,7 +64,10 @@ if ($userObject->has_role('Demo')) {
   $demo = false;
 }
 
-$user_results = load_results($propertyObj, $demo, $configObject, $mysqli);
+$questions = load_questions($mysqli);
+$question_no = count($questions);
+
+$user_results = load_osce_results($propertyObj, $demo, $configObject, $question_no, $mysqli);
 $user_no = count($user_results);
 if ($propertyObj->get_pass_mark() == 101) {
   $borderline_method = true;
@@ -74,15 +77,13 @@ if ($propertyObj->get_pass_mark() == 101) {
 
 if ($borderline_method) {
   $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
-} elseif ($properties->get_pass_mark() != 102) {
-  $passmark = $properties->get_pass_mark();
+} elseif ($propertyObj->get_pass_mark() != 102) {
+  $passmark = $propertyObj->get_pass_mark();
 } else {
   $passmark = 'N/A';
 }
 
 set_classification($user_results, $passmark, $user_no, $string);
-
-$questions = load_questions($mysqli);
 
 header('Pragma: public');
 header('Content-disposition: attachment; filename=report.xml');
@@ -97,7 +98,6 @@ echo '</o:LastSaved><o:Pages>2</o:Pages><o:Words>223</o:Words><o:Characters>1274
 
 $old_userID = 0;
 $student_no = 0;
-$question_no = count($questions);
 
 function get_user_no($user_no, $user_results, $userID) {
   $match = 0;
@@ -111,7 +111,21 @@ function get_user_no($user_no, $user_results, $userID) {
   return $match;
 }
 
-$result = $mysqli->prepare("SELECT log4.userID, students.title, students.surname, students.first_names, log4.q_id, rating, q_parts, REPLACE(leadin,'&amp;','&') AS leadin, REPLACE(theme,'&amp;','&') AS THEME, DATE_FORMAT(log4_overall.started,\"%d/%m/%Y %H:%i\") AS started, REPLACE(feedback,'&amp;','&') AS feedback, examiners.title, examiners.surname FROM (log4, log4_overall, papers, questions, users AS students, users AS examiners) WHERE log4.userID=log4_overall.userID AND log4.q_paper=log4_overall.q_paper AND log4.userID=students.id AND log4_overall.examinerID=examiners.id AND papers.question=questions.q_id AND papers.paper=? AND log4.q_paper=? AND log4.q_id=questions.q_id AND log4_overall.started>=? AND log4_overall.started<=? AND (students.roles='Student' OR students.roles='graduate') AND log4_overall.student_grade LIKE ? ORDER BY students.surname, students.initials, log4_overall.userID, display_pos");
+$sql = <<<SQL
+SELECT log4_overall.userID, students.title, students.surname, students.first_names, log4.q_id,
+ rating, q_parts, REPLACE(leadin,'&amp;','&') AS leadin, REPLACE(theme,'&amp;','&') AS THEME,
+ DATE_FORMAT(log4_overall.started,"%d/%m/%Y %H:%i") AS started,
+ REPLACE(feedback,'&amp;','&') AS feedback, examiners.title, examiners.surname
+FROM (log4, log4_overall, papers, questions, users AS students, users AS examiners)
+WHERE log4.log4_overallID=log4_overall.id
+ AND log4_overall.userID=students.id AND log4_overall.examinerID=examiners.id
+ AND papers.question=questions.q_id AND papers.paper=? AND log4_overall.q_paper=?
+ AND log4.q_id=questions.q_id AND log4_overall.started>=?
+ AND log4_overall.started<=? AND (students.roles='Student' OR students.roles='graduate')
+ AND log4_overall.student_grade LIKE ?
+ORDER BY students.surname, students.initials, log4_overall.userID, display_pos
+SQL;
+$result = $mysqli->prepare($sql);
 $result->bind_param('iisss', $_GET['paperID'], $_GET['paperID'], $startdate, $enddate, $_GET['repcourse']);
 $result->execute();
 $result->bind_result($userID, $title, $surname, $first_names, $q_id, $rating, $q_parts, $leadin, $theme, $started, $feedback, $examiner_title, $examiner_surname);
