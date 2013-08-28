@@ -24,8 +24,9 @@
  * @package
  */
 
-Class StudentNotes {
+require_once '../classes/networkutils.class.php';
 
+Class StudentNotes {
   static function get_note($paperID, $userID, $db) {
 		$result = $db->prepare("SELECT note_id, note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i') AS note_date, au.title, au.initials, au.surname, su.title, su.initials, su.surname, student_id, su.username FROM (student_notes, users au, users su) LEFT JOIN sid ON su.id = sid.userID WHERE student_notes.note_authorID = au.id AND student_notes.userID = su.id AND paper_id = ? AND student_notes.userID = ?");
 		$result->bind_param('ii', $paperID, $userID);
@@ -54,6 +55,34 @@ Class StudentNotes {
 		$result->execute();  
 		$result->close();
 	}
-  
+}
+
+Class PaperNotes {
+  static function get_note($paperID, $address, $db) {
+    $result = $db->prepare("SELECT note_id, note FROM paper_notes WHERE paper_id = ? AND note_workstation = ?");
+    $result->bind_param('is', $_GET['paperID'], $address);
+    $result->execute();
+    $result->bind_result($note_id, $note);
+    $result->fetch();
+    $result->close();
+		
+		return array('note_id'=>$note_id, 'note'=>$note);
+	}
+
+  static function add_note($note, $paperID, $authorID, $db) {
+		$current_address = NetworkUtils::get_client_address();
+
+		$result = $db->prepare("INSERT INTO paper_notes VALUES (NULL, ?, NOW(), ?, ?, ?)");
+		$result->bind_param('siis', $note, $paperID, $authorID, $current_address);
+		$result->execute();
+		$result->close();
+	}
+	
+	static function update_note($note, $note_id, $db) {
+		$result = $db->prepare("UPDATE paper_notes SET note = ? WHERE note_id = ?");
+    $result->bind_param('si', $note, $note_id);
+    $result->execute();
+    $result->close();
+	}
 }
 ?>

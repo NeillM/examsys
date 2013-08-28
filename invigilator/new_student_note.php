@@ -24,7 +24,7 @@
 
 require '../include/invigilator_auth.inc';
 require_once '../classes/userutils.class.php';
-require_once '../classes/student_notes.class.php';
+require_once '../classes/noteutils.class.php';
 
 if (isset($_POST['submit'])) {
 	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
@@ -63,7 +63,7 @@ if (isset($_POST['submit'])) {
 	<title><?php echo $string['note']; ?></title>
 
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/new_student_note.css" />
+  <link rel="stylesheet" type="text/css" href="../css/notes.css" />
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
