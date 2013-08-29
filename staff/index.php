@@ -76,8 +76,22 @@ require_once '../include/staff_auth.inc';
         }
       });
       $('form').removeAttr('novalidate');
-    });
+<?php
+	if ($configObject->get('cfg_interactive_qs') == 'html5') {
+?>
+			if (!isCanvasSupported()){
+			  $('#html5warn').show();
+			}
+<?php
+	}
+?>
+		});
     
+		function isCanvasSupported(){
+			var elem = document.createElement('canvas');
+			return !!(elem.getContext && elem.getContext('2d'));
+		}
+		
     function startPaper(paperID, fullsc) {
       var winwidth = screen.width-80;
       var winheight = screen.height-80;
@@ -156,9 +170,7 @@ require_once '../include/staff_auth.inc';
   }
 	if ($configObject->get('cfg_interactive_qs') == 'html5') {
 ?>
-<!--[if lt IE 9]>
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr><td style="width:32px"><div class="yellowwarn"><img src="../artwork/ie10.gif" width="28" height="28" alt="IE" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;Rog&#333; needs HTML5, please upgrade to Internet Explorer 9 or 10</div></td></tr></table>
-<![endif]-->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%; display:none" id="html5warn"><tr><td style="width:32px"><div class="yellowwarn"><img src="../artwork/html5_32.png" width="32" height="32" alt="HTML5" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;<?php echo $string['html5warn']; ?></div></td></tr></table>
 <?php
   }
 ?>
