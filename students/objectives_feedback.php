@@ -109,7 +109,7 @@ if ($paper_type == '0' or $paper_type == '1') {
   $result->bind_param('iiii', $paperID, $userID, $paperID, $userID);
   $bound = true;
 } elseif ($paper_type == '4') {
-  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log4 WHERE q_paper = ? AND userID = ? LIMIT 1");
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log4_overall WHERE q_paper = ? AND userID = ? LIMIT 1");
 } elseif ($paper_type == '5') {
   $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log5, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND userID = ? LIMIT 1");
 } else {
@@ -205,8 +205,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   if ($paper_type == '0' or $paper_type == '1') {
     $sql = "SELECT q_id, mark, totalpos, started FROM log0, log_metadata WHERE log0.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $startedSQL UNION SELECT q_id, mark, totalpos, started FROM log1, log_metadata WHERE log1.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $metadataID_SQL ORDER BY q_id, started";
   } elseif ($paper_type == '4') {
-    $metadataID_SQL = ' AND metadataID = "' . $_GET['metadataID'] . '"';;
-    $sql = "SELECT q_id, rating, NULL, NULL AS totalpos FROM log4 WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND userID = ? AND q_paper = ? $metadataID_SQL ORDER BY q_id, started";
+    $sql = "SELECT log4.q_id, log4.rating, NULL, NULL AS totalpos FROM log4 INNER JOIN log4_overall l4o ON log4.log4_overallID = l4o.id WHERE log4.q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND l4o.userID = ? AND l4o.q_paper = ? ORDER BY log4.q_id, l4o.started";
   } else {
     $sql = "SELECT q_id, mark, totalpos, NULL FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $metadataID_SQL ORDER BY q_id, started";
   }
@@ -346,7 +345,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     } else {
       $comparison = $comparison;
     }
-    
+
     echo "<tr><td class=\"symbol\"><img src=\"$img_src\" width=\"16\" height=\"16\" /></td><td></td><td class=\"r\">" . $obj_data['mark_sum'] . "</td><td>&nbsp;" . $string['outof'] . "&nbsp;</td><td>" . $obj_data['totalpos_sum'] . "</td><td></td><td class=\"r\">$comparison</td><td></td><td class=\"c\">" . $obj_data['questions'] . "</td><td></td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
   }
   echo "</table>\n";
