@@ -7,14 +7,30 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 		this.canvas.onmousedown = this.qh_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.qh_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
-		this.canvas.onkeydown   = this.qh_mouseDragMove.bind(this);
-		this.canvas.onkeyup     = this.qh_mouseDragMove.bind(this);
-		this.canvas.onkeypress  = this.qh_mouseDragMove.bind(this);
+		if (this.canvas.addEventListener)
+    {
+      this.canvas.addEventListener("keydown",	qh_mouseDragMove.bind(this),false);
+      this.canvas.addEventListener("keyup",		qh_mouseDragMove.bind(this),false);
+      this.canvas.addEventListener("keypress",qh_mouseDragMove.bind(this),false);
+    }
+    else if (this.canvas.attachEvent)
+    {
+      this.canvas.attachEvent("onkeydown", 	qh_mouseDragMove.bind(this));
+      this.canvas.attachEvent("onkeyup", 		qh_mouseDragMove.bind(this));
+      this.canvas.attachEvent("onkeypress", qh_mouseDragMove.bind(this));
+    }
+		else
+		{
+			this.canvas.onkeydown   = qh_mouseDragMove.bind(this);
+			this.canvas.onkeyup     = qh_mouseDragMove.bind(this);
+			this.canvas.onkeypress  = qh_mouseDragMove.bind(this);
+		}
 		this.intervalID = window.setInterval(this.qh_redraw_canvas.bind(this), 10);
 	}
 	
 	if (this.canvas && !this.canvas.getContext){
 		alert ('Canvas not supported');
+		//https://localhost/help/staff/index.php?id=17
 	}
   
 	if (this.canvas && this.canvas.getContext){
@@ -304,7 +320,7 @@ function qh_test(type) {
 
 function redraw_hotspot(i,j) {
   var f_type = this.hotSpots[i][(3+j*6+1)];
-  //console.log(i,j,f_type,this.hotSpots[i][(3+j*6+2)]);
+  console.log(i,j,f_type);
   this.HsCo = this.hotSpots[i][(3+j*6+2)].split(',');
   var col = 4; 
   if (this.activeLabel==i) col=0; 

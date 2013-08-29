@@ -40,14 +40,14 @@ require_once '../classes/results_cache.class.php';
 require_once '../classes/standard_setting.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
-//niko_HTML5
+//HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
 require_once '../lang/' . $language . '/question/edit/area.txt';
 require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
 require_once '../lang/' . $language . '/paper/hotspot_question.txt';
 require_once '../lang/' . $language . '/paper/label_answer.txt';
 $jstring = $string; //to pass it to JavaScript HTML5 modules
-//niko_HTML5
+//HTML5 part
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -869,7 +869,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 ?>
   <div align="center">
 
-		<!-- ======================== niko_HTML5 new part rep disc ================= -->
+		<!-- ======================== HTML5 part rep disc ================= -->
 	<canvas id="canvas<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 220); ?>" height="<?php echo $tmp_height; ?>"></canvas>
 	<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
 	<script language="JavaScript" type="text/javascript">
@@ -1011,7 +1011,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         ?>
         <div align="center">
 				
-		<!-- ======================== niko_HTML5 new part rep disc ================= -->
+		<!-- ======================== HTML5 part rep disc ================= -->
 		<canvas id="canvas<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 302); ?>" height="<?php echo ($q_media_height + 25); ?>"></canvas>
 		<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
 		<script language="JavaScript" type="text/javascript">
@@ -1662,14 +1662,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
 
-	<!-- niko_html5 start -->
+	<!-- HTML5 part start -->
 	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
 	<script type="text/javascript" src="../html5/html5.images.js"></script>
 	<script type="text/javascript" src="../html5/qsharedf.js"></script>
 	<script type="text/javascript" src="../html5/qlabelling.js"></script>
 	<script type="text/javascript" src="../html5/qhotspot.js"></script>
 	<script type="text/javascript" src="../html5/qarea.js"></script>
-	<!-- niko_html5 end -->
+	<!-- HTML5 part end -->
 
   <script language="JavaScript">
     function toggle(qID, parts, marks) {

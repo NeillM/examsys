@@ -330,7 +330,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         ?>
         <br />
 				
-				<!-- ======================== niko_HTML5 new part rev disp ================= -->
+				<!-- ======================== HTML5 part rev disp ================= -->
 				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 1); ?>"></canvas>
 				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
 				<script language="JavaScript" type="text/javascript">
@@ -687,7 +687,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
         ?>
 
-				<!-- ======================== niko_HTML5 new part rev disp ================= -->
+				<!-- ======================== HTML5 part rev disp ================= -->
 				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>"></canvas>
 				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
 				<script language="JavaScript" type="text/javascript">
@@ -777,7 +777,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $tmp_bgcolor = $bgcolor;
 ?>
 
-				<!-- ======================== niko_HTML5 new part rev disp ================= -->
+				<!-- ======================== HTML5 part rev disp ================= -->
 				<canvas id="canvas<?php echo $question_no; ?>"  width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>"></canvas>
 				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
 				<script language="JavaScript" type="text/javascript">

@@ -67,30 +67,33 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
   $tmp_correct = str_replace("'", "\'", trim($correct));
   $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
   $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-?>
-    <!-- ======================== niko_HTML5 new part ================= -->
-    <hr>
-        <canvas id="canvas1" width="<?php echo ($media['width'] + 300); ?>" height="<?php echo ($plugin_height); ?>"></canvas>
-        <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
-    <hr>
-    <!-- ==================================================== -->
-                <script type="text/javascript">
-                  function swfLoaded1(message) {
-                    var num = message.substring(5,message.length);
-                    setUpQuestion(num, message, '<?php echo $language; ?>', '<?php echo $media['filename'] ?>',  '<?php echo $tmp_correct; ?>','','','#FFC0C0','hotspot','edit'); //niko_HTML5
-                    
-                    setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $media['filename']; ?>', '<?php echo $tmp_correct; ?>','#FFC0C0');
-                  }
-                  write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($media['width'] + 306); ?>" height="<?php echo $plugin_height; ?>" align="middle">');
-                  write_string('<param name="allowScriptAccess" value="always" />');
-                  write_string('<param name="movie" value="../add/hotspot_add.swf" />');
-                  write_string('<param name="quality" value="high" />');
-                  write_string('<param name="bgcolor" value="#F1F5FB" />');
-                  write_string('<param name="wmode" value="opaque" />');
-                  write_string('<embed src="../add/hotspot_add.swf" quality="high" bgcolor="#F1F5FB" width="<?php echo ($media['width'] + 306); ?>" height="<?php echo $plugin_height; ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" wmode="opaque" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-                  write_string('</object>');
-                </script>
-<?php
+
+require_once $root . 'classes/configobject.class.php';
+$configObject          = Config::get_instance();
+$cfg_interactive_qs    = $configObject->get('cfg_interactive_qs');
+if ($cfg_interactive_qs=='html5') {
+	//<!-- ======================== HTML5 part ================= -->
+	echo "<canvas id='canvas1' width='" . ($media['width'] + 300) . "' height='" . ($plugin_height) . "'></canvas>\n";
+	echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+	echo "<script language='JavaScript' type='text/javascript'>\n";
+	echo "setUpQuestion(1, 'flash1', '" . $language . "', '" . $media['filename'] . "', '" . $tmp_correct . "','','','#FFC0C0','hotspot','edit'); \n";
+	echo "</script>\n";
+	//<!-- ==================================================== -->
+} else {
+	echo "<script type='text/javascript'>\n";
+	echo "function swfLoaded1(message) {\n";
+	echo "var num = message.substring(5,message.length);\n";
+	echo "setUpFlash(num, message, '" . $language . "', '" . $media['filename'] . "', '" . $tmp_correct . "','#FFC0C0');}\n";
+	echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash1\" width=\"" . ($media['width'] + 306) . "\" height=\"" . $plugin_height . "\" align=\"middle\">');\n";
+	echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
+	echo "write_string('<param name=\"movie\" value=\"../add/hotspot_add.swf\" />');\n";
+	echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
+	echo "write_string('<param name=\"bgcolor\" value=\"#F1F5FB\" />');\n";
+	echo "write_string('<param name=\"wmode\" value=\"opaque\" />');\n";
+	echo "write_string('<embed src=\"../add/hotspot_add.swf\" quality=\"high\" bgcolor=\"#F1F5FB\" width=\"" . ($media['width'] + 306) . "\" height=\"" . $plugin_height . "\" swliveconnect=\"true\" id=\"flash1\" name=\"flash1\" align=\"middle\" wmode=\"opaque\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+	echo "write_string('</object>');\n";
+	echo "</script>\n";
+}
 endif;
 ?>                
                   <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />

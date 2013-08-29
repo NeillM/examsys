@@ -32,6 +32,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 	}
 	if (this.canvas && !this.canvas.getContext){
 		alert ('Canvas not supported');
+		//https://localhost/help/staff/index.php?id=60
 	}
 
 	if (this.canvas && this.canvas.getContext){

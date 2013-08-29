@@ -544,7 +544,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           $paper[$question]['correct'][0] = '';
         }
         ?>
-				<!-- ======================== niko_HTML5 new part include finf ================= -->
+				<!-- ======================== HTML5 part include finf ================= -->
 				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo $paper[$question]['q_media_width'] + 2; ?>" height="<?php echo $paper[$question]['q_media_height'] + 24; ?>"></canvas>
 				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
 				<script language="JavaScript" type="text/javascript">
@@ -1995,7 +1995,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 ?>
   <div>
 	
-				<!-- ======================== niko_HTML5 new part include finf ================= -->
+				<!-- ======================== HTML5 part include finf ================= -->
 				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>"></canvas>
 				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
 				<script language="JavaScript" type="text/javascript">
@@ -2134,7 +2134,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
         echo '<div align="center">';?>
 
-				<!-- ======================== niko_HTML5 new part include finf ================= -->
+				<!-- ======================== HTML5 part include finf ================= -->
 				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>"></canvas>
 				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
 				<script language="JavaScript" type="text/javascript">

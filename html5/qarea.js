@@ -12,6 +12,7 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 	}
 	if (this.canvas && !this.canvas.getContext){
 		alert ('Canvas not supported');
+		//https://localhost/help/staff/index.php?id=305
 	}
   
 	if (this.canvas && this.canvas.getContext){

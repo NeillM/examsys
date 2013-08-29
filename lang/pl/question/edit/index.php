@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-//niko_HTML5
+//HTML5 part
 require '../../lang/' . $language . '/question/edit/hotspot_correct.txt';
 require '../../lang/' . $language . '/question/edit/area.txt';
 require '../../lang/' . $language . '/question/add/hotspot_add.txt';
 require '../../lang/' . $language . '/question/add/label_add.txt';
 $jstring = $string; //to pass it to JavaScript HTML5 modules
-//niko_HTML5
+//HTML5 part
 
 require '../../lang/' . $language . '/include/status.inc';
 require '../../lang/' . $language . '/include/blooms.inc';
