@@ -19,4 +19,8 @@ $string['qualitativeanalysis'] = 'Analiza jakościowa';
 $string['comments'] = '%d komentarzy.'; 
 $string['nocomments'] = '&lt;Brak komentarzy&gt;'; 
 $string['occurencesof'] = '%d - wystąpienie <strong>%s</strong> w %d komentarzu/ach.'; 
+$string['qualitativeanalysis'] = 'Analiza jakościowa';
+$string['highlight'] = 'Podkreślenie';
+$string['collapse'] = 'Załamanie ';
+$string['casesensitive'] = 'Rozróżnianie rozmiaru liter';
 ?>

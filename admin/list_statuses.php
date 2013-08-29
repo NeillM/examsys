@@ -28,7 +28,7 @@ require_once '../classes/question_status.class.php';
 // Check if we have any faculties
 $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />

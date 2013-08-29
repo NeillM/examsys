@@ -41,7 +41,7 @@ $start_date = $propertyObj->get_raw_start_date();
 $end_date = $propertyObj->get_raw_end_date();
 $paper_type = $propertyObj->get_paper_type();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />

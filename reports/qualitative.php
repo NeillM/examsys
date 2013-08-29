@@ -22,19 +22,255 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
+require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/folderutils.class.php';
+require_once '../classes/paperproperties.class.php';
+
+$paperID		= check_var('paperID', 'GET', true, false, true);
+$startdate	= check_var('startdate', 'GET', true, false, true);
+$enddate		= check_var('enddate', 'GET', true, false, true);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Qualitative Analysis<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+
+  <title><?php echo $string['qualitativeanalysis'] . " " . $configObject->get('cfg_install_type') ?></title>
+
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/qualitative.css" />
 </head>
-  <frameset rows="75,*" frameborder="no" border="0">
-    <frame marginwidth="0" src="qualitative_options.php?paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>&module=<?php echo $_GET['module']; ?>&repcourse=<?php echo $_GET['repcourse']; ?>&repyear=<?php echo $_GET['repyear']; ?>&folder=<?php echo $_GET['folder']; ?>" name="options">
-    <frame marginwidth="0" src="qualitative_results.php?paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>&module=<?php echo $_GET['module']; ?>&repcourse=<?php echo $_GET['repcourse']; ?>&repyear=<?php echo $_GET['repyear']; ?>" name="results">
-  </frameset>
-  <noframes>
-    Sorry, you need frames to use the Rogō.
-  </noframes>
+
+<body>
+
+<?php
+  $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
+  echo "<form name=\"analyse\" method=\"get\" action=\"" . $_SERVER['PHP_SELF'] . "\"><table class=\"header\" style=\"font-size:90%\">\n";
+  echo "<tr><th style=\"width:75%\">";
+  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  }
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div>';
+  echo "<span style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">" . $string['qualitativeanalysis'] . "</span></td>";
+  echo "<th valign=\"top\" style=\"width:25%\"><input type=\"text\" name=\"keywords\" size=\"20\" value=\"";
+  if (isset($_GET['keywords'])) echo $_GET['keywords'];
+  echo "\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['highlight'] . "\" />";
+  if (isset($_GET['collapse']) and $_GET['collapse'] == '1') {
+    echo "<br /><input type=\"checkbox\" name=\"collapse\" value=\"1\" checked />&nbsp;" . $string['collapse'];
+  } else {
+    echo "<br /><input type=\"checkbox\" name=\"collapse\" value=\"1\" />&nbsp;" . $string['collapse'];
+  }
+  echo '&nbsp;&nbsp;&nbsp;&nbsp;';
+  if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
+    echo "<br /><input type=\"checkbox\" name=\"casesensitive\" value=\"1\" checked />&nbsp;" . $string['casesensitive'];
+  } else {
+    echo "<br /><input type=\"checkbox\" name=\"casesensitive\" value=\"1\" />&nbsp;" . $string['casesensitive'];
+  }
+	$module = (isset($_GET['module']) ? $_GET['module'] : '');
+	$folder = (isset($_GET['folder']) ? $_GET['folder'] : '');
+	
+  echo '<input type="hidden" name="paperID" value="' . $_GET['paperID'] . '" />';
+  echo '<input type="hidden" name="startdate" value="' . $_GET['startdate'] . '" />';
+  echo '<input type="hidden" name="enddate" value="' . $_GET['enddate'] . '" />';
+  echo '<input type="hidden" name="module" value="' . $module . '" />';
+  echo '<input type="hidden" name="folder" value="' . $folder . '" />';
+  echo '<input type="hidden" name="repcourse" value="' . $_GET['repcourse'] . '" />';
+  echo '<input type="hidden" name="repyear" value="' . $_GET['repyear'] . '" />';
+  echo "</th></tr>";
+  echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
+?>
+</table>
+</form>
+
+<div id="main">
+<?php
+  $result = $mysqli->prepare("SELECT question FROM papers, questions WHERE papers.question = questions.q_id AND q_type != 'info' AND paper = ? ORDER BY screen, display_pos");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($question);
+  while ($result->fetch()) {
+    $paper_structure[] = $question;
+  }
+  $result->close();
+
+  $occurrence_comments = 0;
+  $occurrence_words = 0;
+  $old_leadin = '';
+  $old_theme = '';
+  $old_screen = 1;
+  $old_q_id = 0;
+  $comment_flag = 1;
+  $list_on = 0;
+  $q_no = 0;
+
+  $sql = <<< SQL
+SELECT DISTINCT l.screen, q.theme, lm.started, u.username, u.surname, l.q_id, q.leadin, l.user_answer
+FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
+INNER JOIN papers p ON p.question = l.q_id AND p.screen = l.screen AND p.paper = lm.paperID
+INNER JOIN questions q ON l.q_id = q.q_id
+INNER JOIN users u ON lm.userID = u.id
+WHERE p.paper = ?
+AND lm.student_grade LIKE ?
+AND lm.year LIKE ?
+AND q.q_type = 'textbox'
+AND lm.started >= ? AND lm.started <= ?
+AND (u.roles = 'Student' OR u.roles = 'graduate')
+ORDER BY l.screen, p.display_pos
+SQL;
+
+  $result = $mysqli->prepare($sql);
+  $result->bind_param('issss', $_GET['paperID'], $_GET['repcourse'], $_GET['repyear'], $startdate, $enddate);
+  $result->execute();
+  $result->bind_result($screen, $theme, $started, $tmp_username, $surname, $q_id, $leadin, $user_answer);
+
+  while ($result->fetch()) {
+    if ($theme != '') $old_theme = $theme;
+    if ($old_q_id != $q_id or $old_screen < $screen) {
+      if ($comment_flag == 0) echo "<div class=\"comments\">" . $string['nocomments'] . "</div>\n";
+      if ($old_q_id != 0) {
+        if ($list_on == 1) echo "</ul>\n";
+        $list_on = 0;
+        if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
+          echo "<div class=\"comments\">" . sprintf($string['occurencesof'], $occurrence_words, $_GET['keywords'], $occurrence_comments) . "</div>\n";
+        } else {
+          echo "<div class=\"comments\">" . sprintf($string['comments'], $occurrence_comments) . "</div>\n";
+        }
+      }
+      $comment_flag = 0;
+      if ($old_screen < $screen) {
+        if ($list_on == 1) echo "</ul>\n";
+        $list_on = 0;
+        echo '<br /><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
+      }
+
+      if ($old_theme != '') {
+        echo "<h1>$old_theme</h1>\n";
+      }
+      do {
+        $q_no++;
+      } while ($q_id != $paper_structure[$q_no-1] and $q_no < 9999);
+      if ($list_on == 1) echo "</ul>\n";
+      echo "<p style=\"font-weight:bold; margin-left:10px; margin-right:10px\">$q_no. $leadin</p>\n<ul>\n";
+      $occurrence_words = 0;
+      $occurrence_comments = 0;
+      $list_on = 1;
+    }
+    $response = trim(strtolower($user_answer));
+    $match = false;
+    if ($response != NULL and $response != 'n/a' and strlen($response) > 1) {
+      // Count keywords
+      if (isset($_GET['keywords'])) {
+        $content = $_GET['keywords'];
+      } else {
+        $content = '';
+      }
+      if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
+        if (substr_count($content,'and') > 0 and $content != 'and') {
+          $keywords = explode('and',$content);
+          $match = true;
+          $tmp_occurrence_comments = $occurrence_comments;
+          $tmp_occurrence_words = $occurrence_words;
+          foreach ($keywords as $individual_keyword) {
+            $individual_keyword = trim($individual_keyword);
+            if ($_GET['casesensitive'] == '1') {
+              $tmp_occur = substr_count($response, $individual_keyword);
+            } else {
+              $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
+            }
+            if ($tmp_occur == 0) {
+              $match = false;
+            }
+            $occurrence_words += $tmp_occur;
+          }
+          if ($match == true) {
+            $occurrence_comments++;
+          } else {
+            $occurrence_comments = $tmp_occurrence_comments;
+            $occurrence_words = $tmp_occurrence_words;
+          }
+        } elseif (substr_count($content,'or') > 0 and $content != 'or') {
+          $keywords = explode('or',$content);
+          foreach ($keywords as $individual_keyword) {
+            $individual_keyword = trim($individual_keyword);
+            if ($_GET['casesensitive'] == '1') {
+              $tmp_occur = substr_count($response, $individual_keyword);
+            } else {
+              $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
+            }
+            if ($tmp_occur > 0) {
+              $occurrence_comments++;
+              $match = true;
+            }
+            $occurrence_words += $tmp_occur;
+          }
+        } else {
+          $keywords = array(trim($content));
+          $individual_keyword = trim($content);
+          if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
+            $tmp_occur = substr_count($response, $individual_keyword);
+          } else {
+            $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
+          }
+          if ($tmp_occur > 0) {
+            $occurrence_comments++;
+            $match = true;
+          }
+          $occurrence_words += $tmp_occur;
+        }
+      } else {
+        $occurrence_comments++;
+        $tmp_occur = 0;
+      }
+      // Highlight keywords
+      $display_string = $user_answer;
+      if ($match == true) {
+        foreach ($keywords as $individual_keyword) {
+          $individual_keyword = trim($individual_keyword);
+          if (isset($_GET['collapse']) and $_GET['collapse'] == '1') {
+            if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
+              $display_string = preg_replace("/($individual_keyword)/","<span style=\"background-color:yellow\">\\1</span>",$display_string);
+            } else {
+              $display_string = preg_replace("/($individual_keyword)/i","<span style=\"background-color:yellow\">\\1</span>",$display_string);
+            }
+          } else {
+            if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
+              $display_string = preg_replace("/($individual_keyword)/","<span style=\"background-color:yellow\">\\1</span>",$display_string);
+            } else {
+              $display_string = preg_replace("/($individual_keyword)/i","<span style=\"background-color:yellow\">\\1</span>",$display_string);
+            }
+          }
+        }
+      }
+      if ((isset($_GET['collapse']) and $_GET['collapse'] == '1' and $match == true) or !isset($_GET['collapse'])) {
+        echo "<li>$display_string</li>\n";
+      }
+      $comment_flag = 1;
+    }
+    $old_leadin = $leadin;
+    $old_screen = $screen;
+    $old_q_id = $q_id;
+  }
+  $result->close();
+  echo "</ul>\n";
+
+  if ($comment_flag == 0) {
+    echo "<div class=\"comments\">" . $string['nocomments'] . "</div>\n";
+  } else {
+    if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
+      echo "<div class=\"comments\">" . sprintf($string['occurencesof'], $occurrence_words, $_GET['keywords'], $occurrence_comments) . "</div>\n";
+    } else {
+      echo "<div class=\"comments\">" . sprintf($string['comments'], $occurrence_comments) . "</div>\n";
+    }
+  }
+  $mysqli->close();
+?>
+</div>
+</body>
 </html>

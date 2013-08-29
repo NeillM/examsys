@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -51,9 +51,9 @@ $result->close();
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['frequencyanalysis']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -72,7 +72,7 @@ $result->close();
     }
   </script>
   </head>
-  
+
   <body>
 <?php
   echo "<table class=\"header\">\n";
@@ -82,7 +82,7 @@ $result->close();
   } else {
     $report_title = 'Frequency Analysis';
   }
-  
+
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
@@ -90,18 +90,18 @@ $result->close();
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
-  
+
   echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
 
   echo '<tr><th colspan="2" class="bevel"></th></tr></table>';
-  
+
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse\"><tr>\n";
 
   // Query Log4 to get stored ratings per question.
   $old_userID = '';
   $frequencies = array();
   $user_no = 0;
-  $result = $mysqli->prepare("SELECT q_id, rating, userID FROM log4 WHERE q_paper = ? AND started >= ? AND started <= ? ORDER BY userID");
+  $result = $mysqli->prepare("SELECT log4.q_id, log4.rating, l4o.userID FROM log4 INNER JOIN log4_overall l4o ON log4.log4_overallID = l4o.id WHERE l4o.q_paper = ? AND l4o.started >= ? AND l4o.started <= ? ORDER BY l4o.userID");
   $result->bind_param('iss', $_GET['paperID'], $startdate, $enddate);
   $result->execute();
   $result->bind_result($q_id, $rating, $userObject->get_user_ID());
@@ -116,10 +116,10 @@ $result->close();
     $old_userID = $userObject->get_user_ID();
   }
   $result->close();
-  
+
   if($user_no == 0) {
     echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
-    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;This paper has not been attempted by anyone.</td></tr></table>\n";  
+    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;This paper has not been attempted by anyone.</td></tr></table>\n";
   } else {
     // Get the questions.
     $question_no = 1;
@@ -148,7 +148,7 @@ $result->close();
         echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
       }
       echo "$leadin</td>";
-      
+
       for ($i=0; $i<$cols; $i++) {
         if (!isset($frequencies[$q_id][$i]) or $frequencies[$q_id][$i] == '') $frequencies[$q_id][$i] = 0;
         echo "<td class=\"rating\" style=\"background-color:" . $cell_colors[$i] . "\">" . $frequencies[$q_id][$i] . "</td><td class=\"rating\" style=\"background-color:" . $cell_colors[$i] . "\">" . round(($frequencies[$q_id][$i]/$user_no) * 100) . "%</td>";

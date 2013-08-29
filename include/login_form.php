@@ -24,11 +24,12 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
 
   <title>Rog&#333; - <?php echo $string['signin']; ?></title>
 
-  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css"/>
-  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css"/>
+  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css" />
+  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css" />
+  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/warnings.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery.validate.min.js"></script>
 	<script>
     $(document).ready(function() {
       $('#username').focus();
@@ -39,8 +40,16 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
 		  echo $script;
 		}
 	}
-?>			
-			
+
+	if ($this->configObj->get('cfg_interactive_qs') == 'html5') {
+?>
+			if (!isCanvasSupported()){
+			  $('#html5warn').show();
+			}
+<?php
+	}
+?>
+		    			
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {
@@ -49,10 +58,22 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
       });
       $('form').removeAttr('novalidate');
 		});
+		
+		function isCanvasSupported(){
+			var elem = document.createElement('canvas');
+			return !!(elem.getContext && elem.getContext('2d'));
+		}
   </script>
 </head>
 
 <body>
+<?php
+	if ($this->configObj->get('cfg_interactive_qs') == 'html5') {
+?>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%; display:none" id="html5warn"><tr><td style="width:32px"><div class="yellowwarn"><img src="../artwork/html5_32.png" width="32" height="32" alt="HTML5" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;<?php echo $string['html5warn']; ?></div></td></tr></table>
+<?php
+  }
+?>
 <form method="post" id="theform">
     <div class="mainbox">
 
