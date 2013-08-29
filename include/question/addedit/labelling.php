@@ -63,6 +63,7 @@ require_once 'detail_parts/details_leadin.php';
             <tr>
               <td>
 <?php
+
 if ($media['filename'] != ''):
   $img_str = '';
   if (strtolower($mode) == strtolower($string['edit'])) {
@@ -76,9 +77,16 @@ if ($media['filename'] != ''):
     }
   }
 ?>
+    <!-- ======================== niko_HTML5 new part ================= -->
+    <hr>
+        <canvas id="canvas1" width="<?php echo ($media['width'] + 222); ?>" height="<?php echo ($plugin_height); ?>"></canvas>
+        <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+    <hr>
+    <!-- ==================================================== -->
                 <script type="text/javascript">
                   function swfLoaded1(message) {
                     var num = message.substring(5,message.length);
+                    setUpQuestion(num, message, '<?php echo $language; ?>', '<?php echo $media['filename'] ?>', '<?php echo trim(str_replace('"','&#034;',str_replace("'",'&#039;',str_replace('�','&#172;',$correct)))); ?>', undefined, '<?php echo $img_str; ?>','#FFC0C0','labelling','edit');//niko_HTML5
                     setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $media['filename'] ?>', '<?php echo trim(str_replace('"','&#034;',str_replace("'",'&#039;',str_replace('�','&#172;',$correct)))); ?>', undefined, '<?php echo $img_str; ?>','#FFC0C0');
                   }
                   write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($media['width'] + 222); ?>" height="<?php echo ($plugin_height); ?>" align="middle">');
@@ -94,7 +102,7 @@ if ($media['filename'] != ''):
 endif;
 ?>                
                 <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
-                <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
+                <input type="text" size=200 id="points1" name="points1" value="<?php echo $correct ?>" />
                 <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
                 <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />
                 <input type="hidden" id="q_media_height" name="q_media_height" value="<?php echo $media['height'] ?>" />

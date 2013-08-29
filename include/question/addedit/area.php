@@ -56,6 +56,7 @@ $error_range = range(0, 50);
 //<![CDATA[
 $(function () {
   sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'../../media/" . $media['filename'] . "', '" . $correct . "'" ?>);
+  setUpQuestion(1,  'option_correct', '<?php echo $language; ?>', '<?php echo  "../../media/" . $media['filename'] ?>',  '<?php echo $correct; ?>','','','#FFC0C0','area','2');
 });
 //]]>
 </script>
@@ -81,6 +82,12 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
   $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
   $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 ?>
+    <!-- ======================== niko_HTML5 new part ================= -->
+    <hr>
+        <canvas id="canvas1" width="<?php echo $plugin_width ?>" height="<?php echo $plugin_height+3 ?>"></canvas>
+        <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+    <hr>
+    <!-- ==================================================== -->
                 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo $plugin_width ?>" height="<?php echo $plugin_height ?>" id="externalinterfaceoption_correct_1" align="top">
                   <param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />
                   <param name="quality" value="high" />

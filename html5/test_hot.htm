@@ -1,0 +1,127 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="Edit%20Question%20-%20Labelling%20%28local%29_files/ui.css" rel="stylesheet">
+</head>
+<body>
+﻿
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Hotspot</title>
+<script type="text/javascript">
+  if (typeof cfgRootPath == 'undefined') {
+    var cfgRootPath = '';
+  }
+</script> 
+<!-- niko_html5 start ---------- --> 
+<script type="text/javascript">var lang_string = {"hotspots":"Hotspots","correctAnswers":"Correct Answers","incorrectAnswers":"Incorrect Answers","But_Clear_All":"Clear All","But_Delete_point":"Delete point","But_your_answer":"Your answer","But_correct_answer":"Correct answer","But_show_error":"Show error","Magnify":"Magnify","tt_Clear_All":"Clear All","tt_Delete_point":"Delete point","tt_your_answer":"Your answer","tt_correct_answer":"Correct answer","tt_show_error":"Show error","tt_Magnify":"Magnify","Start_over":"Start over","Eraser":"Eraser","popUp_msg":"Do you want to clear all lines?","popUp_yes":"Yes","popUp_no":"No","view":"View hotspots on all layers","newLayer":"Add Question Part","deleteLayer":"Delete Question Part","edit":"Move Label\/Line","ellipse":"Oval","rectangle":"Rectangle","polygon":"Polygon","erase":"Erase Label\/Line","colour":"Colour","themecolours":"Theme Colours","standardcolours":"Standard Colours","yes":"Yes","no":"No","msgClose":"Close this message","warning":"WARNING","errormessage1":"The polygon lines have overlapped.","errormessage2":"This may result in holes in the hotspot and incorrect marking of student answers.","cancel":"Do you want to cancel the last line?","fillcolour":"Fill Colour","linecolour":"Line Colour","textcolour":"Font Colour","textsize":"Font Size","lines":"Line Thickness","line":"Draw Line","bobble":"Draw Bobble","arrow":"Draw Arrow","single":"Unique Label","multiple":"Repeated Label","label":"Draggable Label","menu":"Drop Down List","errormessage":"If you change from repeated to unique labels some of the labels on the image will be deleted.","continue":"Do you want to continue?"};
+</script> 
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="html5.images.js"></script> 
+<script type="text/javascript" src="qhotspot.js"></script> 
+<script type="text/javascript" src="qsharedf.js"></script> 
+<!-- niko_html5 end--> 
+<script type="text/javascript">
+var qType = 'labelling';
+var lang = {
+'allowpartial':'Allow partial Marks','validationerror':'There were problems with your submission. Please review the form and re-try','enterleadin':'Please enter a leadin for the question','enterdescription':'Please enter a description','showmore':'Show more','hidemore':'Hide more','enteroption':'Please enter either option text or a media file for this option','enteroptionshort':'Required','enteroption_kw':'Please select a keyword for the question','mrqconvert':'There is only one correct answer, this would be better as a MCQ question type.\r\nDo you wish to convert this question to MCQ?','entervignette':'Please enter a clinical vignette for the question','enteroptiontext':'Please enter a value for this option','selectarea':'Please draw an area','randomenterquestion':'Please select questions to be included in the block','mappingwarning':'WARNING: All mappings will be lost if this question is not added to the paper!','markchangewarning':'Warning: changing mark allocations post-exam should only be undertaken if absolutely necessary. Are you sure you want to continue?'};
+</script>
+<form id="edit_form" name="edit_form" method="post" action="/question/edit/index.php?q_id=114569&amp;paperID=6844&amp;module=315" enctype="multipart/form-data" class="clearinput">
+  <div id="tabbed-content">
+    <div id="editor" class="tab-area">
+      <div class="message">
+      </div>
+      <div id="question-holder" class="clearfix labelling">
+        <table class="form hotspot" summary="Hotspot flash movie">
+
+          <tbody>
+            <tr>
+              <td><!-- ======================== new HTML5 part ================= -->
+                
+                <hr>
+								<canvas id="canvas1" width="821" height="618"></canvas>
+								<br>
+								<input type="text" id="test" size=100>
+                <div style="width:100%;text-align: left;" id="canvasbox"></div>
+                <hr>
+                
+                <!-- ==================================================== --> 
+                <script type="text/javascript">
+										//setUpQuestion(1, 'message', 'en', '1366617655.png',  '','','','#FFC0C0','hotspot','edit'); 
+										//setUpQuestion(1, 'message', 'en', '1366617655.png',  'xxxx~16711680~ellipse~d0,64,119,c0~0~polygon~14c,c6,157,77,1a0,84,185,d9~1~polygon~70,e3,bb,d9,c7,109,90,11f~2~|zzz~0~ellipse~e7,d5,15a,111~0~rectangle~5c,63,b7,c4~1~','','','#FFC0C0','hotspot','edit'); //edit - answer
+										
+										
+										
+										setUpQuestion(1, 'flash1', 'en', '1366617655.png', '', '', '0','#FFC0C0','hotspot','edit');
+
+										//<canvas id="canvas1" width="821" height="618"></canvas>
+
+										
+                    //setUpQuestion(1, 'message', 'en', 'wedgecompressionfracture.jpg', 'Click on the most important acute abnormality on this plain radiograph:~16711680~polygon~a0,e9,108,e5,119,117,e9,12c,ab,13b,a1,11a~0~', '1,191.5,249', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','edit');//script
+										//<canvas id="canvas1" width="751" height="630"></canvas>
+
+										
+										//setUpQuestion(1, 'message', 'en', 'chondrocalcinosis.png', 'Click on the major abnormality demonstrated.~16711680~polygon~18a,e7,1ca,e9,1f3,e4,212,ce,213,f3,209,10c,1eb,104,1c0,100,19f,fa~0~polygon~59,d8,4e,e9,4f,ff,56,10b,58,fe,78,fe,96,fe,93,f5,73,f0,66,ea,5f,df~1~polygon~d8,e4,ec,dc,ff,cd,103,d6,ee,e9,df,ee,d6,f0~2~', '1,479.5,245', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','script');//script OK
+										//<canvas id="canvas1" width="956" height="522"></canvas>
+
+										//setUpQuestion(1, 'message','en', 'ankspond.jpg', 'Click on any area demonstrating the most significant pathological feature on this plain radiograph.~16711680~ellipse~86,31,a5,54~0~ellipse~9c,76,b3,8f~1~ellipse~ae,b6,ca,de~2~ellipse~c9,10e,e0,130~3~ellipse~d6,159,ec,18c~4~ellipse~b7,1bc,ef,1f8~5~ellipse~4c,40,64,5c~6~ellipse~59,83,74,a5~7~ellipse~6c,c9,88,ef~8~ellipse~88,113,9d,135~9~ellipse~91,15d,b0,185~10~ellipse~88,1a9,a4,1ca~11~', '0,197.5,326', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','script'); //script wrong
+									  //setUpQuestion(1, 'message','en', 'ankspond.jpg', 'Click on any area demonstrating the most significant pathological feature on this plain radiograph.~16711680~ellipse~86,31,a5,54~0~ellipse~9c,76,b3,8f~1~ellipse~ae,b6,ca,de~2~ellipse~c9,10e,e0,130~3~ellipse~d6,159,ec,18c~4~ellipse~b7,1bc,ef,1f8~5~ellipse~4c,40,64,5c~6~ellipse~59,83,74,a5~7~ellipse~6c,c9,88,ef~8~ellipse~88,113,9d,135~9~ellipse~91,15d,b0,185~10~ellipse~88,1a9,a4,1ca~11~', '1,190.5,200', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','script');
+										//<canvas id="canvas1" width="956" height="522"></canvas>
+										
+										//setUpQuestion(1, 'message', 'en', 'chondrocalcinosis.png', 'Click on the major abnormality demonstrated.~16711680~polygon~18a,e7,1ca,e9,1f3,e4,212,ce,213,f3,209,10c,1eb,104,1c0,100,19f,fa~0~polygon~59,d8,4e,e9,4f,ff,56,10b,58,fe,78,fe,96,fe,93,f5,73,f0,66,ea,5f,df~1~polygon~d8,e4,ec,dc,ff,cd,103,d6,ee,e9,df,ee,d6,f0~2~', '477.5,242;484.5,251;485.5,244;143.5,249;517.5,97;479.5,244;168.5,268;478.5,247;486.5,246;485.5,243;490.5,244;485.5,245;108.5,245;131.5,250;478.5,243;475.5,244;480.5,244;172.5,250;170.5,247;474.5,244;471.5,242;518.5,92;171.5,234;157.5,267;193.5,267;480.5,245;485.5,242;477.5,244;472.5,242;474.5,243;91.5,249;457.5,242;332.5,220;464.5,242;123.5,213;467.5,243;469.5,244;470.5,243;124.5,261;467.5,243;492.5,242;477.5,245;160.5,252;477.5,245;469.5,245;140.5,250;478.5,245;336.5,221;487.5,246;503.5,242;482.5,244;462.5,245;488.5,242;481.5,244;130.5,248;478.5,245;516.5,399;340.5,231;498.5,244;336.5,223;478.5,245;158.5,248;480.5,244;109.5,246;481.5,244;480.5,246;484.5,243;482.5,246;524.5,66;471.5,244;201.5,264;484.5,244;484.5,243;481.5,246;491.5,243;480.5,245;484.5,242;486.5,244;465.5,245;170.5,246;477.5,244;525.5,67;478.5,243;478.5,241;481.5,243;333.5,222;192.5,267;483.5,245;168.5,247;471.5,244;477.5,244;481.5,246;448.5,243;490.5,243;137.5,252;471.5,244;507.5,164;138.5,244;495.5,244;487.5,245;120.5,250;518.5,91;457.5,244;471.5,243;477.5,249;469.5,242;191.5,335;332.5,225;168.5,269;481.5,246;185.5,266;465.5,247;474.5,245;177.5,332;475.5,243;127.5,191;104.5,243;480.5,245;89.5,244;476.5,246;477.5,245;156.5,253;95.5,146;485.5,244;473.5,242;478.5,244;487.5,244;486.5,243;472.5,246;473.5,245;469.5,244;477.5,242;159.5,243;476.5,242;476.5,243;176.5,246;188.5,271;492.5,244;183.5,279;485.5,244;478.5,244;470.5,244;118.5,243;479.5,245;481.5,245;479.5,240;497.5,242;121.5,247;479.5,244;480.5,244;470.5,246;479.5,245;297.5,289;474.5,246;520.5,85;170.5,245;481.5,247;476.5,245;480.5,244;486.5,243;487.5,244;523.5,411;130.5,249;470.5,250;93.5,242;469.5,184;481.5,244;470.5,245;178.5,268;489.5,241;486.5,244;488.5,245;450.5,243;159.5,247;171.5,270;473.5,244;464.5,248;156.5,264;521.5,412;481.5,244;485.5,246;498.5,121;139.5,266;150.5,249;467.5,244;482.5,244;336.5,219;479.5,244;484.5,243;476.5,242;178.5,209;160.5,256;508.5,111;477.5,245;498.5,247;484.5,243;194.5,281;509.5,242;285.5,208;479.5,245;497.5,244;475.5,245;86.5,172;479.5,246;483.5,245;475.5,243;471.5,244;490.5,241;483.5,243;512.5,99;485.5,243;165.5,249;478.5,237;115.5,244;488.5,369;477.5,243;494.5,129;479.5,241;484.5,243;163.5,249;487.5,244;479.5,244;457.5,242;468.5,244;466.5,243;480.5,246;427.5,249;109.5,95;483.5,243;476.5,244;178.5,243;92.5,240;484.5,243;462.5,244;148.5,250;482.5,245;507.5,248;485.5,242;158.5,186;226.5,166;160.5,247;480.5,246;97.5,242;476.5,244;476.5,244;475.5,242;468.5,243;477.5,248;152.5,248;95.5,241;488.5,246;476.5,247;482.5,242;487.5,245;468.5,243;483.5,242;469.5,242;471.5,247;474.5,243;476.5,243;493.5,244;471.5,245;522.5,426;472.5,242;490.5,244;91.5,237;504.5,245;149.5,249;479.5,245;215.5,265;477.5,245;179.5,271;113.5,244;470.5,242;476.5,244;337.5,223;480.5,243;153.5,249;486.5,244;175.5,254;468.5,244;487.5,240;472.5,243;171.5,245;90.5,185;290.5,229;93.5,243;479.5,244;175.5,251;175.5,249;484.5,244;165.5,245;480.5,243;494.5,244;211.5,329;88.5,242;89.5,254;144.5,343;231.5,252;128.5,248;490.5,242;486.5,242;142.5,249;487.5,242;481.5,243;459.5,246;335.5,219;482.5,243;476.5,246;477.5,245;481.5,244;96.5,243;96.5,241;215.5,332;486.5,242;480.5,241;480.5,244;113.5,253;489.5,246;467.5,243;453.5,243;481.5,242;179.5,243;489.5,242;171.5,246;270.5,235;175.5,244;167.5,247;107.5,244;174.5,247;459.5,243;476.5,245;106.5,244','0','#FFC0C0','hotspot','analysis');
+
+    
+                </script>
+                <input name="optionid1" value="543385" type="hidden">
+                <input id="points1" name="points1" value="4144959;1;16777215;10;0;100;19;0;0;single;label;0$0$264$82$label a|1$0$365$185$label b|2$0$5$60$|3$0$110$60$|4$0$5$90$|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;" type="hidden">
+                <input id="q_media" name="q_media" value="1370420595.PNG" type="hidden">
+                <input id="q_media_width" name="q_media_width" value="307" type="hidden">
+                <input id="q_media_height" name="q_media_height" value="207" type="hidden"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+			
+			
+			      <div id="question-holder" class="clearfix labelling">
+        <table class="form hotspot" summary="Hotspot flash movie">
+
+          <tbody>
+            <tr>
+              <td><!-- ======================== new HTML5 part ================= -->
+                
+                <hr>
+								<canvas id="canvas2" width="821" height="618"></canvas>
+								<br>
+								
+                <div style="width:100%;text-align: left;" id="canvasbox"></div>
+                <hr>
+                
+                <!-- ==================================================== --> 
+                <script type="text/javascript">
+										//setUpQuestion(1, 'message', 'en', '1366617655.png',  '','','','#FFC0C0','hotspot','edit'); 
+										setUpQuestion(2, 'message', 'en', '1366617655.png',  'thumb kdfjghks ghksdfh kd jfghskd jfghks gksjfhkjdhkgsj dhfkjshdgksdh~16711680~ellipse~5,11d,4d,15c~0~|sss~16776960~ellipse~58,3b,93,8d~0~','','','#FFC0C0','hotspot','answer'); //edit - answer
+										
+										//<canvas id="canvas1" width="821" height="618"></canvas>
+
+    
+                </script>
+                <input name="optionid2" value="543385" type="hidden">
+                <input id="points2" name="points2" value="4144959;1;16777215;10;0;100;19;0;0;single;label;0$0$264$82$label a|1$0$365$185$label b|2$0$5$60$|3$0$110$60$|4$0$5$90$|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;" type="hidden">
+                <input id="q_media" name="q_media" value="1370420595.PNG" type="hidden">
+                <input id="q_media_width" name="q_media_width" value="307" type="hidden">
+                <input id="q_media_height" name="q_media_height" value="207" type="hidden">
+								<input type="text" name="q2" id="q2" value="u" />
+								</td>
+								
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="changes" class="tab-area"></div>
+  </div>
+</form>
+<div id="tiptip_holder" style="max-width:200px;"></div>
+</body>
+</html>

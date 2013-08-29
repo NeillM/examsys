@@ -329,6 +329,15 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
         ?>
         <br />
+				
+				<!-- ======================== niko_HTML5 new part rev disp ================= -->
+				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 1); ?>"></canvas>
+				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+				<script language="JavaScript" type="text/javascript">
+					setUpQuestion(<?php echo $question_no; ?>, 'q<?php echo $question_no; ?>','<?php echo $language; ?>', '<?php echo '../media/' . $question['q_media']; ?>', '<?php echo $display_option['correct']; ?>', '<?php echo $display_option['correct']; ?>',1,'#FFC0C0','area','review');
+				</script>
+				<!-- ==================================================== -->
+				
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 1); ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
           write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
@@ -677,6 +686,15 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
         ?>
+
+				<!-- ======================== niko_HTML5 new part rev disp ================= -->
+				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>"></canvas>
+				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+				<script language="JavaScript" type="text/javascript">
+					setUpQuestion(<?php echo $question_no; ?>, 'flash<?php echo $question_no; ?>', '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','review');        
+				</script>
+				<!-- ==================================================== -->
+
         <script language="JavaScript">
           function swfLoaded<?php echo $question_no; ?>(message) {
             var num = message.substring(5,message.length);
@@ -758,10 +776,19 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     echo "<div align=\"center\">\n";
     $tmp_bgcolor = $bgcolor;
 ?>
+
+				<!-- ======================== niko_HTML5 new part rev disp ================= -->
+				<canvas id="canvas<?php echo $question_no; ?>"  width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>"></canvas>
+				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+				<script language="JavaScript" type="text/javascript">
+					setUpQuestion(<?php echo $question_no; ?>, 'flash<?php echo $question_no; ?>', '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo trim($question['options'][0]['correct']); ?>', '<?php echo $tmp_answer; ?>','<?php if (isset($question['std'])) echo $question['std']; ?>','#FFC0C0','labelling','review');
+				</script>
+				<!-- ==================================================== -->
+
   <script language="JavaScript">
     function swfLoaded<?php echo $question_no; ?>(message) {
       var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo trim($question['options'][0]['correct']); ?>', '<?php echo $tmp_answer; ?>','<?php echo $question['std']; ?>','#FFC0C0');
+      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo trim($question['options'][0]['correct']); ?>', '<?php echo $tmp_answer; ?>','<?php if (isset($question['std'])) echo $question['std']; ?>','#FFC0C0');
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');

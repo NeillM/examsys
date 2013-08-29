@@ -567,6 +567,14 @@ if ($css != '') {
 <?php }?>
 <script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
+<!-- niko_html5 start -->
+<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+<script type="text/javascript" src="../html5/html5.images.js"></script>
+<script type="text/javascript" src="../html5/qsharedf.js"></script>
+<script type="text/javascript" src="../html5/qlabelling.js"></script>
+<script type="text/javascript" src="../html5/qhotspot.js"></script>
+<script type="text/javascript" src="../html5/qarea.js"></script>
+<!-- niko_html5 end -->
 <script language="javascript">
   window.history.go(1);
 <?php

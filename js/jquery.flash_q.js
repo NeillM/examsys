@@ -19,6 +19,7 @@ function doSend(q_no, toSend) {
 	try
   {
     var flash1 = document.getElementById("externalinterface" + q_no + "_1");
+		//console.log(flash1,toSend);
     if (flash1) {
       flash1.sendTextFromJS(toSend);
     }

@@ -40,6 +40,15 @@ require_once '../classes/results_cache.class.php';
 require_once '../classes/standard_setting.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
+//niko_HTML5
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require_once '../lang/' . $language . '/question/edit/area.txt';
+require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
+require_once '../lang/' . $language . '/paper/hotspot_question.txt';
+require_once '../lang/' . $language . '/paper/label_answer.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//niko_HTML5
+
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
@@ -859,6 +868,15 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
 ?>
   <div align="center">
+
+		<!-- ======================== niko_HTML5 new part rep disc ================= -->
+	<canvas id="canvas<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 220); ?>" height="<?php echo $tmp_height; ?>"></canvas>
+	<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+	<script language="JavaScript" type="text/javascript">
+		setUpQuestion(<?php echo $q_no; ?>, 'flash<?php echo $q_no; ?>', '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '', '','#FFC0C0','labelling','analysis');
+	</script>
+	<!-- ==================================================== -->
+	
   <script language="JavaScript">
     function swfLoaded<?php echo $q_no; ?>(message) {
       var num = message.substring(5,message.length);
@@ -992,6 +1010,15 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
         ?>
         <div align="center">
+				
+		<!-- ======================== niko_HTML5 new part rep disc ================= -->
+		<canvas id="canvas<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 302); ?>" height="<?php echo ($q_media_height + 25); ?>"></canvas>
+		<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+		<script language="JavaScript" type="text/javascript">
+			setUpQuestion(<?php echo $q_no; ?>, 'flash<?php echo $q_no; ?>', '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo $tmp_correct; ?>', '<?php echo $coords; ?>', '0','#FFC0C0','hotspot','analysis');        
+		</script>
+		<!-- ==================================================== -->
+
         <script language="JavaScript">
           function swfLoaded<?php echo $q_no; ?>(message) {
             var num = message.substring(5,message.length);
@@ -1634,6 +1661,16 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
+
+	<!-- niko_html5 start -->
+	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+	<script type="text/javascript" src="../html5/html5.images.js"></script>
+	<script type="text/javascript" src="../html5/qsharedf.js"></script>
+	<script type="text/javascript" src="../html5/qlabelling.js"></script>
+	<script type="text/javascript" src="../html5/qhotspot.js"></script>
+	<script type="text/javascript" src="../html5/qarea.js"></script>
+	<!-- niko_html5 end -->
+
   <script language="JavaScript">
     function toggle(qID, parts, marks) {
       for (i=1; i<=parts; i++) {

@@ -33,6 +33,15 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/standard_setting.class.php';
 
+//niko_HTML5
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require_once '../lang/' . $language . '/question/edit/area.txt';
+require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
+require_once '../lang/' . $language . '/paper/hotspot_question.txt';
+require_once '../lang/' . $language . '/paper/label_answer.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//niko_HTML5
+
 check_var('id', 'GET', true, false, false);
 //session_start();
 
@@ -212,6 +221,16 @@ if ($css != '') {
 <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
+
+<!-- niko_html5 start -->
+<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+<script type="text/javascript" src="../html5/html5.images.js"></script>
+<script type="text/javascript" src="../html5/qsharedf.js"></script>
+<script type="text/javascript" src="../html5/qlabelling.js"></script>
+<script type="text/javascript" src="../html5/qhotspot.js"></script>
+<script type="text/javascript" src="../html5/qarea.js"></script>
+<!-- niko_html5 end -->
+
 <script language="JavaScript" type="text/javascript">
   window.history.go(1);
 <?php

@@ -433,6 +433,14 @@ if ($question != null and $question->requires_flash()):
 ?>
 <script type="text/javascript" src="../../js/ie_fix.js"></script>
 <script type="text/javascript" src="../../js/flash_include.js"></script>
+<!--niko_html5 start ---------- -->
+<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+<script type="text/javascript" src="../../html5/html5.images.js"></script>
+<script type="text/javascript" src="../../html5/qsharedf.js"></script>
+<script type="text/javascript" src="../../html5/qlabelling.js"></script>
+<script type="text/javascript" src="../../html5/qhotspot.js"></script>
+<script type="text/javascript" src="../../html5/qarea.js"></script>
+<!--niko_html5 end-->
 <?php
 endif;
 ?>
