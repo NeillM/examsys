@@ -90,4 +90,11 @@ $string['NoFieldMetadata'] = 'W metadanych brakuje pola dla grup.';
 $string['NoGroup'] = 'Nie znaleziono żadnej grupy dla aktualnego użytkownika.';
 $string['note'] = 'Notatka';
 $string['studentname'] = 'Nazwisko Studenta';
+
+require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
+
+$string['register'] = 'Zarejestruj się jako Pracownik';
+$string['register1'] = 'Zarejestruj się jako ';
+$string['demomodule'] = 'Moduł Demonstracyjny';
+$string['name'] = 'Nazwa';
 ?>

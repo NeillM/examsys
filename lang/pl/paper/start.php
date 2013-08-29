@@ -70,4 +70,7 @@ $string['savefailed'] = 'Zapisywanie nie powiodło się!';
 $string['tryagain'] = 'Spróbuj ponownie po przejściu na następnej lub poprzedniej strony.</div>';
 $string['questionclarification'] = 'Wyjaśnienie pytania';
 $string['question'] = 'Pytanie';
+$string['answer_to'] = 'odpowiedź na';
+$string['decimal_places'] = 'miejsca dziesiętne';
+$string['significant_figures'] = 'cyfry znaczące';
 ?>
