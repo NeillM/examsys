@@ -335,7 +335,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   echo "<tr><td colspan=\"2\"><label for=\"absent\">" . $string['incabsentcandidates'] . "</label>&nbsp;<input type=\"checkbox\" name=\"absent\" id=\"absent\" value=\"1\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for=\"studentsonly\">" . $string['studentsonly'] . "</label>&nbsp;<input type=\"checkbox\" name=\"studentsonly\" id=\"studentsonly\" value=\"1\" checked=\"checked\" /></td></tr>\n";
 
   if ($properties->get_paper_type() == '3') {
-    echo "<tr><td>" . $string['year'] . "</td><td><select name=\"repyear\">\n";
+    echo "<tr><td>" . $string['year'] . "</td><td><select name=\"repyear\" id=\"repyear\">\n";
     $years = array('%'=>$string['anyyear'],'1'=>$string['year'].' 1','2'=>$string['year'].' 2','3'=>$string['year'].' 3','4'=>$string['year'].' 4','5'=>$string['year'].' 5');
     foreach ($years as $key => $value) {
       echo "<option value=\"$key\">$value</option>\n";
