@@ -45,7 +45,7 @@ Class search_utils {
    */
   static function get_keywords($db, $teams, $user_id) {	
     $keywords = array('team' => array(), 'personal' => array());
-var_dump($teams);
+
 		$teams = (is_array($teams)) ? implode("','", $teams) : $teams;
     $result = $db->prepare("SELECT m.moduleid, k.keyword, k.id FROM keywords_user k INNER JOIN modules m ON k.userID = m.id WHERE k.keyword_type = 'team' AND m.moduleid IN ('$teams') ORDER BY m.moduleid, k.keyword");
     $result->execute();

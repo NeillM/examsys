@@ -24,8 +24,8 @@
 
 $num_options = count($question->options);
 if ($num_options > 0) {
-  $first = reset($question->options);
-  $opt_id = $first->id;
+  $option = reset($question->options);
+  $opt_id = $option->id;
 } else {
   $opt_id = -1;
 }
