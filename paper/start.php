@@ -574,7 +574,7 @@ if ($css != '') {
 <script type="text/javascript" src="../html5/qlabelling.js"></script>
 <script type="text/javascript" src="../html5/qhotspot.js"></script>
 <script type="text/javascript" src="../html5/qarea.js"></script>
-<!--niko_html5 end -->
+<!-- niko_html5 end -->
 <script language="javascript">
   window.history.go(1);
 <?php

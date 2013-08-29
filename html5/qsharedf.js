@@ -7,18 +7,27 @@ function setUpQuestion(num, canvasId, lang, image, config, answer, extra, colour
 $.get('/html5/images/cur_erase.cur', function() { }); 
 $.get('/html5/images/cur_cross.cur', function() { }); 
 
-/*
-  console.log('num: '+num);
-  console.log('canvasId: '+canvasId);
-  console.log('lang: '+lang);
-  console.log('image: '+image);
-  console.log('config: '+config);
-  console.log('answer: '+answer);
-  console.log('extra: '+extra);
-  console.log('colour: '+colour);
-  console.log('type: '+type);
-  console.log('mode: '+mode);
-*/
+	nikotest = 0;
+	if (nikotest==1) {
+		console.log('num: '+num);
+		console.log('canvasId: '+canvasId);
+		console.log('lang: '+lang);
+		console.log('image: '+image);
+		console.log('config: '+config);
+		console.log('answer: '+answer);
+		console.log('extra: '+extra);
+		console.log('colour: '+colour);
+		console.log('type: '+type);
+		console.log('mode: '+mode);
+	}
+
+	if (typeof(mode)=='undefined') mode='answer';
+	if (mode=='1') mode='answer';
+	if (mode=='2') mode='edit';
+	if (mode=='3') mode='script';
+	if (mode=='4') mode='analysis';
+	if (mode=='review') mode='answer';
+	
   if (type=='labelling') {
 		rq[num] = new rql(num);
 		rq[num].setUpLabelling(num, canvasId, lang, image, config, answer, extra, colour, mode);
@@ -62,20 +71,21 @@ function textHeight(tt, tw) {
       var testWidth = metrics.width;
       if(testWidth > tw) {
         line = words[n] + ' ';
-        ty += this.flashFontSize[this.fontSizePos];
+        ty += this.fontSizes[this.fontSizePos];
       }
       else {
         line = testLine;
       }
     }
   }
-  return (ty + this.flashFontSize[this.fontSizePos]);
+  return (ty + this.fontSizes[this.fontSizePos]);
 }   
 
 
 //wrapps text with given width
 //gives back an Array: text with \n's, height, width
-function wrapText(tt,tw,elastic = true) {
+function wrapText(tt,tw,elastic) {
+	if (typeof(elastic)=='undefined') elastic = true;
 	function breakText(ctx) {
 		var words = tt.split(' ');
 		var broken = false;
@@ -122,7 +132,7 @@ function wrapText(tt,tw,elastic = true) {
 			if(testWidth > tw) {
 				lines += line + '|';
 				line = words[n];
-				ty += this.flashFontSize[this.fontSizePos];
+				ty += this.fontSizes[this.fontSizePos];
 			}
 			else {
 				line = testLine;
@@ -130,7 +140,7 @@ function wrapText(tt,tw,elastic = true) {
 		}
 		lines += line;
 		//document.getElementById('test').value = lines;
-		return Array(lines,ty + this.flashFontSize[this.fontSizePos],tw);
+		return Array(lines,ty + this.fontSizes[this.fontSizePos],tw);
 	}
 }
 
@@ -138,7 +148,7 @@ function fillWrappedText(ctx,tt,tx,ty) {
 	var words = tt.split('|');
 	for(var n = 0; n < words.length; n++) {
 		this.context.fillText(words[n], tx, ty);
-		ty += this.flashFontSize[this.fontSizePos];
+		ty += this.fontSizes[this.fontSizePos];
 	}
 }
 
@@ -158,22 +168,23 @@ function testWithin(ax,ay,bx,by,cx,cy) {
 	var testres = false;
 	if ((ax > bx) && (ax < (bx + cx)) && (ay > by) && (ay < (by + cy))) testres = true;
 	//console.log(this);
-	/*
-	if (typeof(tw)=='undefined') tw=true;
-  this.context.strokeStyle='#AAA';
-  if (tw) {
-    tw = false;
-    if (testres) {
-      this.context.strokeStyle='#0F0';
-    } else {
-      this.context.strokeStyle='#F00';
-    }
-  }
-  this.context.strokeRect(bx,by,cx,cy);
-  //console.log (bx,by,cx,cy);
-  twr = [bx,by,cx,cy,this.context.strokeStyle];
-  //console.log(twr);
-	*/
+	var showtest = false;
+	if (showtest) {
+						if (typeof(tw)=='undefined') tw=true;
+						this.context.strokeStyle='#AAA';
+						if (tw) {
+							tw = false;
+							if (testres) {
+								this.context.strokeStyle='#0F0';
+							} else {
+								this.context.strokeStyle='#F00';
+							}
+						}
+						this.context.strokeRect(bx,by,cx,cy);
+						//console.log (bx,by,cx,cy);
+						twr = [bx,by,cx,cy,this.context.strokeStyle];
+						//console.log(twr);
+	}
 	return testres;
 }
 
@@ -316,7 +327,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   
   if (cc!='') this.context.strokeStyle = cc;
   if (cb!='') this.context.fillStyle = cb;
-  if (mode =='e' || mode =='f' || mode =='t') this.context.fillStyle = this.context.strokeStyle = cc;
+  if (mode =='e' || mode =='r' || mode =='f' || mode =='t') this.context.fillStyle = this.context.strokeStyle = cc;
     
   var tpe = new Array(); //array of line equations for polygons
   var tpi = new Array(); //array of line interconnections
@@ -351,6 +362,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
     tpe[n] = new Array();
     tx1 = tx2;
     ty1 = ty2;
+		//console.log(n,pp);
     tx2 = parseInt(pp[n*2].trim(), 16)+0.5+xx
     ty2 = parseInt(pp[n*2+1].trim(), 16)+0.5+yy;
     if (Math.abs(tx2-tx1)>3 || Math.abs(ty2-ty1)>3) 
@@ -436,13 +448,14 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   }
   
   //draw handlers
-  if (mode == 'h' || mode == 'f' || mode =='t') {
+  //if (mode == 'h' || mode == 'f' || mode =='t') {
+	if (mode == 'h' || mode == 'f') {
      if (mode == 'h') {
       var lcc = '#000000'; 
       var lcb = '#ffffff';
     }
     if (mode =='f') lcc = lcb = cc;
-    if (mode =='t') lcc = lcb = cb;
+    //if (mode =='t') lcc = lcb = cb;
     this.context.globalAlpha = 1;
     this.context.lineWidth = 1;
     for (var n=1;n<qq.length/2;n++) {
@@ -543,28 +556,58 @@ function menuRebuild(ctx) {
   this.context.fillStyle = tmp_fs;
 }
 
-//recreates line, letter or colour (signed by panel_code) panel with selection highlighted
+function def_colour_panel_parts(){
+  //defining panel's active parts
+	this.panelActiveParts.push('toolbar/pan_colours.png');
+  this.panelActiveParts['toolbar/pan_colours.png'] = new Array();
+	var lw = 12;
+	var lh = 18;
+  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][00+i] = (i*lh+1)+','+(7+lw*1);
+  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][10+i] = (i*lh+1)+','+(15+lw*2);
+  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][20+i] = (i*lh+1)+','+(15+lw*3);
+  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][30+i] = (i*lh+1)+','+(15+lw*4);
+  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][40+i] = (i*lh+1)+','+(15+lw*5);
+  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][50+i] = (i*lh+1)+','+(15+lw*6);
+  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][60+i] = (i*lh+1)+','+(37+lw*7);
+}
+
+
+//recreates line 2, letter 1 or colour 0 (signed by panel_code) panel with selection highlighted
 function menuRebuild_panel (panelActiveParts,panelBox,but_name,pan_name,panel_code,selection) {
   var temp_but = this.buttonBox[this.buttonBoxNames[but_name]];
   var imgdata = menuImages[pan_name];
   this.context.lineWidth = 1;
   this.context.strokeStyle='#000088';
   this.context.fillStyle = '#FFFFFF';
-  //console.log(temp_but[5],temp_but[6]);
 
   if (temp_but[6]==2) {
 		this.context.fillRect(temp_but[1]+0.5,temp_but[2]+25.5,imgdata.width,imgdata.height);
-    var tx=19;var ty=19;
-    if (panel_code==1) {tx=21;ty=20;}
-    if (panel_code==2) {tx=129;ty=20;}  
+    //var tx=19;var ty=19;
+		var tx=12;
+		var ty=12;
+		var px=3.5;
+		var py=28.5;
+		
+    if (panel_code==1) {
+			tx=21;
+			ty=20;
+			px=0;
+			py=25;
+		}
+    if (panel_code==2) {
+			tx=129;
+			ty=20;
+			px=0;
+			py=25;
+		}  
     
     //drawing the image of the panel for colour panel
     if (panel_code==0) {
       this.context.drawImage(this.menu_img,imgdata.left,imgdata.top,imgdata.width,imgdata.height,temp_but[1],temp_but[2]+25,imgdata.width,imgdata.height);
       
-	  var tmp_but_num = this.buttonBoxNames[but_name];
-	  panelBox[tmp_but_num][3] = temp_but[1];
-	  panelBox[tmp_but_num][4] = temp_but[2]+25;
+			var tmp_but_num = this.buttonBoxNames[but_name];
+			panelBox[tmp_but_num][3] = temp_but[1];
+			panelBox[tmp_but_num][4] = temp_but[2]+25;
 	  
       this.context.textAlign="left";
       this.context.fillStyle='#00156E';
@@ -583,39 +626,49 @@ function menuRebuild_panel (panelActiveParts,panelBox,but_name,pan_name,panel_co
         }
       }
     }
-    
-    //solid option
-    if (selection>-1) {
+		//solid option
+		if (selection>-1 && panel_code>0) {
       var tp = panelActiveParts[pan_name][selection].split(',');
       var imgdatab = menuImages['toolbar/but_back2.png'];
       this.context.drawImage(this.menu_img,imgdatab.left+0.5,imgdatab.top,imgdatab.width-1,imgdatab.height,temp_but[1]+1*tp[0]+0.5,temp_but[2]+25+1*tp[1]+0.5,tx,ty);
   		this.context.strokeRect(temp_but[1]+1*tp[0]+0.5,temp_but[2]+25+1*tp[1]+0.5,tx,ty);
-    }    
-    
-    //soft option
-    if (this.panelOptionOver>-1) {
+		}
+		//soft option
+    if (this.panelOptionOver>-1 && panel_code>0) {
       var tpc = panelActiveParts[pan_name][this.panelOptionOver].split(',');
       var imgdatac = menuImages['toolbar/but_back1.png'];
       this.context.drawImage(this.menu_img,imgdatac.left+0.5,imgdatac.top,imgdatac.width-1,imgdatac.height,temp_but[1]+1*tpc[0]+0.5,temp_but[2]+25+1*tpc[1]+0.5,tx,ty);
   		this.context.strokeRect(temp_but[1]+1*tpc[0]+0.5,temp_but[2]+25+1*tpc[1]+0.5,tx,ty);
       }
-    
-    //drawing the image of the panel for lines and sizes
-    if (panel_code>0) this.context.drawImage(this.menu_img,imgdata.left,imgdata.top,imgdata.width,imgdata.height,temp_but[1],temp_but[2]+25,imgdata.width,imgdata.height);
-    
-    //push to the top the option for panel 0
-    if (panel_code==0) this.context.drawImage(this.menu_img,imgdata.left+ tp[0]*1+4.5,imgdata.top+tp[1]*1+4.5,12,11,temp_but[1]+ tp[0]*1+4.5,temp_but[2]+tp[1]*1+4.5+25,11,11);
-    if (panel_code==0 && typeof(tpc)!='undefined') this.context.drawImage(this.menu_img,imgdata.left+ tpc[0]*1+5.5,imgdata.top+tpc[1]*1+5.5,10,10,temp_but[1]+ tpc[0]*1+4.5,temp_but[2]+tpc[1]*1+4.5+25,11,11);
 
-    //testing the colour 
-    if (this.panelOptionOver>-1) {
-      var timgd = this.context.getImageData(temp_but[1]+1*tpc[0]+9,temp_but[2]+25+1*tpc[1]+9,1,1);
-      var timgp = timgd.data;
-      this.panelOverColour = hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]));
-      //console.log(panelOverColour);
-      //panelOverColour = '#'+timgp[0].toString(16)+timgp[1].toString(16)+timgp[2].toString(16);
-      //console.log(panelOverColour);
-    }
+
+		//drawing the image of the panel for lines and sizes
+		if (panel_code>0) this.context.drawImage(this.menu_img,imgdata.left,imgdata.top,imgdata.width,imgdata.height,temp_but[1],temp_but[2]+25,imgdata.width,imgdata.height);
+
+		//solid option
+		if (selection>-1 && panel_code==0) {
+			var tp = panelActiveParts[pan_name][selection].split(',');
+			if (panel_code==0) this.context.drawImage(this.menu_img,imgdata.left+ tp[0]*1+4.5,imgdata.top+tp[1]*1+4.5,12,11,temp_but[1]+ tp[0]*1+4.5,temp_but[2]+tp[1]*1+4.5+25,11,11);
+			this.context.strokeStyle='#ffe294';
+			this.context.strokeRect(temp_but[1]+1*tp[0]+px+1,temp_but[2]+1*tp[1]+py+1,tx-1,ty-1);
+			this.context.strokeStyle='#ee4810';
+			this.context.strokeRect(temp_but[1]+1*tp[0]+px,temp_but[2]+1*tp[1]+py,tx+1,ty+1);
+		 }
+
+		//soft option
+		if (this.panelOptionOver>-1 && panel_code==0) {
+			var tpc = panelActiveParts[pan_name][this.panelOptionOver].split(',');
+			if (panel_code==0 && typeof(tpc)!='undefined') this.context.drawImage(this.menu_img,imgdata.left+ tpc[0]*1+5.5,imgdata.top+tpc[1]*1+5.5,10,10,temp_but[1]+ tpc[0]*1+4.5,temp_but[2]+tpc[1]*1+4.5+25,11,11);
+    	this.context.strokeStyle='#ffe294';
+			this.context.strokeRect(temp_but[1]+1*tpc[0]+px+1,temp_but[2]+1*tpc[1]+py+1,tx-1,ty-1);
+    	this.context.strokeStyle='#f29436';
+			this.context.strokeRect(temp_but[1]+1*tpc[0]+px,temp_but[2]+1*tpc[1]+py,tx+1,ty+1);
+		 
+			//testing the colour 
+			var timgd = this.context.getImageData(temp_but[1]+1*tpc[0]+9,temp_but[2]+25+1*tpc[1]+9,1,1);
+			var timgp = timgd.data;
+			this.panelOverColour = hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]));
+		}
   }
 }
 

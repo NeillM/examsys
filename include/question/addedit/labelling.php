@@ -77,7 +77,7 @@ if ($media['filename'] != ''):
     }
   }
 ?>
-    <!-- ======================== new HTML5 part ================= -->
+    <!-- ======================== niko_HTML5 new part ================= -->
     <hr>
         <canvas id="canvas1" width="<?php echo ($media['width'] + 222); ?>" height="<?php echo ($plugin_height); ?>"></canvas>
         <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
@@ -102,7 +102,7 @@ if ($media['filename'] != ''):
 endif;
 ?>                
                 <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
-                <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
+                <input type="text" size=200 id="points1" name="points1" value="<?php echo $correct ?>" />
                 <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
                 <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />
                 <input type="hidden" id="q_media_height" name="q_media_height" value="<?php echo $media['height'] ?>" />

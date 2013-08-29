@@ -544,6 +544,15 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           $paper[$question]['correct'][0] = '';
         }
         ?>
+				<!-- ======================== niko_HTML5 new part include finf ================= -->
+				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo $paper[$question]['q_media_width'] + 2; ?>" height="<?php echo $paper[$question]['q_media_height'] + 24; ?>"></canvas>
+				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+				<script language="JavaScript" type="text/javascript">
+					setUpQuestion(<?php echo $question_no; ?>, 'q<?php echo $question_no; ?>','<?php echo $language; ?>', '<?php echo '../media/' . $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php echo $tmp_user_answer; ?>',1,'#FFC0C0','area','script');
+
+				</script>
+				<!-- ==================================================== -->
+
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo $paper[$question]['q_media_width'] + 2; ?>" height="<?php echo $paper[$question]['q_media_height'] + 24; ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
           write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
@@ -1985,6 +1994,15 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 ?>
   <div>
+	
+				<!-- ======================== niko_HTML5 new part include finf ================= -->
+				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>"></canvas>
+				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+				<script language="JavaScript" type="text/javascript">
+					setUpQuestion(<?php echo $question_no; ?>, 'flash<?php echo $question_no; ?>', '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>', '<?php echo $extra; ?>','#FFC0C0','hotspot','script');        
+				</script>
+				<!-- ==================================================== -->
+				
   <script language="JavaScript">
     function swfLoaded<?php echo $question_no; ?>(message) {
       var num = message.substring(5,message.length);
@@ -2114,8 +2132,17 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           reset_feedback($hide_if_unanswered);
         }
 
-        echo '<div align="center">';
-        echo '<script language="JavaScript">';
+        echo '<div align="center">';?>
+
+				<!-- ======================== niko_HTML5 new part include finf ================= -->
+				<canvas id="canvas<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>"></canvas>
+				<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
+				<script language="JavaScript" type="text/javascript">
+					setUpQuestion(<?php echo $question_no; ?>, 'flash<?php echo $question_no; ?>', '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','<?php echo $extra ; ?>','#FFC0C0','labelling','script');
+				</script>
+				<!-- ==================================================== -->
+				
+				<?php echo '<script language="JavaScript">';
         $extra = ',' . $tmp_exclude;
 
   $tmp_std = '';
@@ -2166,8 +2193,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   $extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
 ?>
   function swfLoaded<?php echo $question_no; ?>(message) {
-
-
     var num = message.substring(5,message.length);
     setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','<?php echo $extra ; ?>','#FFC0C0');
   }

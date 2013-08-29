@@ -43,6 +43,15 @@ require_once '../include/demo_replace.inc';
 require_once '../classes/exam_announcements.class.php';
 require_once '../LTI/ims-lti/UoN_LTI.php';
 
+//niko_HTML5
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require_once '../lang/' . $language . '/question/edit/area.txt';
+require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
+require_once '../lang/' . $language . '/paper/hotspot_question.txt';
+require_once '../lang/' . $language . '/paper/label_answer.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//niko_HTML5
+
 check_var('id', 'GET', true, false, false);
 
 if ($userObject->has_role('Demo')) {
@@ -239,6 +248,17 @@ require '../config/finish.inc';
 <script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
 <script type="text/javascript" src="../js/student_help.js"></script>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+	
+<!-- niko_html5 start -->
+<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+<script type="text/javascript" src="../html5/html5.images.js"></script>
+<script type="text/javascript" src="../html5/qsharedf.js"></script>
+<script type="text/javascript" src="../html5/qlabelling.js"></script>
+<script type="text/javascript" src="../html5/qhotspot.js"></script>
+<script type="text/javascript" src="../html5/qarea.js"></script>
+<!-- niko_html5 end -->
+	
 <script language="JavaScript">
   window.history.go(1);
 </script>
