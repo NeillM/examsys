@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -24,7 +24,7 @@
 
 function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $repmodule, $repyear, $paperID, $paper_type, $direction, &$student_no = 0, &$user_total = 0, $percent = 100) {
   global $qid_list;
-  
+
   $users_on_modules = '';
 
   // Get all the users on the module(s) the paper is on.
@@ -49,7 +49,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
   $student_modules_sql = '';
   if ($users_on_modules != '' and isset($repmodule) and $repmodule != '') {
     $student_modules_sql = " AND log$paper_type.userID IN ($users_on_modules)";
-  } 
+  }
 
   // Get order of the class.
   if ($paper_type == '0') {
@@ -62,23 +62,23 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     }
     $marks_query = "(SELECT log_metadata.userID, sum(mark) AS total_mark FROM (log0, log_metadata) WHERE log0.metadataID = log_metadata.id AND paperID = $paperID AND started >= $startdate AND started <= $enddate AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND year LIKE '" . $repyear . "'$student_modules_sql1 GROUP BY log_metadata.userID, paperID, started) UNION ALL (SELECT log_metadata.userID, sum(mark) AS total_mark FROM (log1, log_metadata) WHERE log1.metadataID = log_metadata.id AND paperID = $paperID AND started >= $startdate AND started <= $enddate AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND year LIKE '" . $repyear . "'$student_modules_sql2 GROUP BY log_metadata.userID, paperID, started) ORDER BY total_mark " . $direction;
   } elseif ($paper_type == '4') {
-    $marks_query = "SELECT userID, sum(rating) AS total_mark FROM log4 WHERE q_paper = $paperID AND DATE_ADD(started, INTERVAL 2 MINUTE)>=$startdate AND started<=$enddate$student_modules_sql GROUP BY userID, q_paper, log$paper_type.started ORDER BY total_mark " . $direction;
+    $marks_query = "SELECT l4o.userID, sum(log4.rating) AS total_mark FROM log4 INNER JOIN log4_overall l4o ON log4.log4_overallID = l4o.id WHERE l4o.q_paper = $paperID AND DATE_ADD(l4o.started, INTERVAL 2 MINUTE)>=$startdate AND l4o.started<=$enddate$student_modules_sql GROUP BY l4o.userID, l4o.q_paper, l4o.started ORDER BY total_mark " . $direction;
   } else {
     $marks_query = "SELECT log_metadata.userID, sum(mark) AS total_mark FROM (log$paper_type, log_metadata) WHERE log$paper_type.metadataID = log_metadata.id AND paperID = $paperID AND DATE_ADD(started, INTERVAL 2 MINUTE) >= $startdate AND started <= $enddate AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND student_grade LIKE '" . $repcourse . "' AND year LIKE '" . $repyear . "'$student_modules_sql GROUP BY log_metadata.userID, paperID, started ORDER BY total_mark " . $direction;
   }
-  
+
   $student_no = 0;
   $student_list = '';
-  
+
   $result = $mysqli->prepare($marks_query);
   $result->execute();
   $result->store_result();
   $result->bind_result($tmp_userID, $total_mark);
   $user_total = $result->num_rows;
-  
+
   //only take the required number of users if $percent is not 100%
   $user_limit = ($percent != 100) ? floor($user_total * ($percent/100)) : $user_total;
-  
+
   while ($result->fetch() and $student_no <= $user_limit) {
     if ($student_list == '') {
       $student_list = "'$tmp_userID'";
@@ -88,7 +88,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     $student_no++;
   }
   $result->close();
-  
+
   //get the excluded questions
   $excluded = array();
   $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
@@ -105,15 +105,15 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     $excluded = '';
   }
   $result->close();
-  
+
   //get users log data
   $qid_list = '';
   $user_count = 0;
   $question_data = array();
-  
+
   if ($student_list != '') {
     if ($paper_type == '4') {
-      $sql = "SELECT COUNT(userID) AS user_count, q_id, SUM(rating) AS mark, SUM(1) AS totalpos FROM log4 WHERE userID IN ($student_list) $excluded AND q_paper = $paperID GROUP BY q_id ORDER BY q_id";
+      $sql = "SELECT COUNT(l4o.userID) AS user_count, log4.q_id, SUM(log4.rating) AS mark, SUM(1) AS totalpos FROM log4 INNER JOIN log4_overall l4o ON log4.log4_overallID = l4o.id WHERE l4o.userID IN ($student_list) $excluded AND l4o.q_paper = $paperID GROUP BY log4.q_id ORDER BY log4.q_id";
     } else {
       $sql = "SELECT COUNT(userID) AS user_count, q_id, SUM(mark) AS mark, SUM(totalpos) AS totalpos FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND userID IN ($student_list) $excluded AND paperID = $paperID GROUP BY q_id ORDER BY q_id";
     }
@@ -122,12 +122,12 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     $result->bind_result($user_count, $q_id, $mark, $totalpos);
     while ($result->fetch()) {
       $question_data[$q_id]['totalpos'] = $totalpos;
-      $question_data[$q_id]['mark'] = $mark;    
+      $question_data[$q_id]['mark'] = $mark;
       $qid_list .= $q_id . ',';
     }
     $result->close();
-  }  
-  
+  }
+
   if ($paper_type == '4') {   // Get the maximum marks for OSCE station questions.
     $result = $mysqli->prepare("SELECT q_id, q_type, display_method, score_method FROM questions, papers WHERE papers.question = questions.q_id AND paper = ?");
     $result->bind_param('i', $paperID);
@@ -137,8 +137,8 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     while ($result->fetch()) {
       $question_data[$q_id]['totalpos'] = qMarks($q_type, '', 1, '', '', $display_method, $score_method) * $user_count;
     }
-  }  
-  
+  }
+
   return $question_data;
 }
 

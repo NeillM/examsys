@@ -39,7 +39,7 @@ class MappingUtils {
   public static function get_vle_api($idMod, $session, &$vle_api_cache, $db) {
     if (!isset($vle_api_cache[$idMod][$session])) {
       // Are there any existing relationships for the module in this session?
-      $rels = Relationship::find($db, $idMod, $session, '', '', 1);
+      $rels = Relationship::find($db, $idMod, $session, -1, '', 1);
       if ($rels !== false and count($rels) > 0) {
         $vle_api = $rels[0]->get_vle_api();
         $map_level = $rels[0]->get_map_level();
