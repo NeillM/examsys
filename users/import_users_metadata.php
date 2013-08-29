@@ -44,7 +44,7 @@ if (!$module_details) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -91,21 +91,8 @@ if (!$module_details) {
 <?php
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv"))  {
-        echo 'Problem - ';
-        if ($_FILES['csvfile']['error'] == "0") {
-          echo("Value 0: No problem, the file is uploaded.");
-        } elseif ($_FILES['csvfile']['error'] == "1") {
-          echo("Value 1: The uploaded file was bigger then  upload_max_filesize in php.ini.");
-        } elseif ($_FILES['csvfile']['error'] == "2") {
-          echo("Value 2: The uploaded file was bigger then MAX_FILE_SIZE in html-form.");
-        } elseif ($_FILES['csvfile']['error'] == "3") {
-          echo("Value 3: File partialy uploaded.");
-        } elseif ($_FILES['csvfile']['error'] == "4") {
-          echo("Value 4: No file was uploaded.");
-        } else {
-          echo("Other problem: " . $_FILES['csvfile']['error']);
-        }
-        exit;
+        echo uploadError($_FILES['csvfile']['error']);
+        exit();
       } else {
         // Load the IDs for all students in the module
         $student_id_array = array();
@@ -166,8 +153,10 @@ if (!$module_details) {
                 $type = trim($heading[$i]);
                 $value = trim($cols[$i]);
                 echo "<td>$value</td>";
-                $stmt->execute();
-              }
+								if ($type != '') {
+									$stmt->execute();
+								}
+							}
               echo "</tr>\n";
             }
           }
@@ -216,10 +205,10 @@ if (!$module_details) {
 </select></td></tr>
 <tr><?php
 if ($file_problem) {
-  echo '<td></td><td style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" />&nbsp;Please specify a file for upload.</td></tr><tr>';
-  echo '<td style="color:#C00000; font-weight:bold">' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" />';
+  echo '<td></td><td style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</td></tr><tr>';
+  echo '<td style="color:#C00000; font-weight:bold">' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" required />';
 } else {
-  echo '<td>' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" />';
+  echo '<td>' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" required />';
 }
 ?></td></tr>
 </table>

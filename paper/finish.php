@@ -108,9 +108,9 @@ $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 $modIDs = array_keys($moduleID);
 
 //get lab info
-$current_ip_address = NetworkUtils::get_ipaddress();
+$current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
   $lab_id = $lab_object->get_id();
 }
@@ -133,7 +133,7 @@ if ($userObject->has_role('Student')) {
   check_datetime($start_date, $end_date);
 
   //Check room security
-  $low_bandwidth = check_labs($paper_type, $labs, $current_ip_address, $password, $string, $mysqli);
+  $low_bandwidth = check_labs($paper_type, $labs, $current_address, $password, $string, $mysqli);
 
   // get modules if the user is a student and the paper is not formative
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);

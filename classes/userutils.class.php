@@ -251,11 +251,11 @@ Class UserUtils {
   }
   
   static function get_user_details($userID, $db) {
-    $stmt = $db->prepare("SELECT title, surname, initials, first_names, email, roles FROM users WHERE id = ? LIMIT 1");
+    $stmt = $db->prepare("SELECT username, title, surname, initials, first_names, email, roles FROM users WHERE id = ? LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($title, $surname, $initials, $first_names, $email, $roles);
+    $stmt->bind_result($username, $title, $surname, $initials, $first_names, $email, $roles);
     $exists = ($stmt->num_rows > 0);
     $stmt->fetch();
     $stmt->close();
@@ -272,9 +272,9 @@ Class UserUtils {
       $stmt->fetch();
       $stmt->close();
 
-      return array('title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>$student_id);
+      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>$student_id);
     } else {
-      return array('title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>'');
+      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>'');
     }
     
   }

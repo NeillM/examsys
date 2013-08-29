@@ -38,11 +38,10 @@ function get_table_name_from_grant($grant) {
   return $table_name;
 }
 
-function get_grants($db_name, $user, $db, $replace_name = '') {
+function get_grants($db_name, $user, $db, $webhost, $replace_name = '') {
   $details = array();
 
-  $result = $db->query("SHOW GRANTS FOR '" . $db_name . $user . "'@'localhost'");
-
+  $result = $db->query("SHOW GRANTS FOR '" . $db_name . $user . "'@'" . $webhost . "'");
   if($result === false) {
     return array();
   }
@@ -67,11 +66,11 @@ function get_grants($db_name, $user, $db, $replace_name = '') {
 
 }
 
-function compare_permissions($db_master, $db_test, $masterdb, $testdb, $dbusername) {
-  $master_details = get_grants($db_master, $dbusername, $masterdb);
+function compare_permissions($db_master, $db_test, $masterdb, $testdb, $dbusername, $webhost) {
+  $master_details = get_grants($db_master, $dbusername, $masterdb, $webhost);
   $master_grant_no = count($master_details);
 
-  $test_details = get_grants($db_test, $dbusername, $testdb, $db_master);
+  $test_details = get_grants($db_test, $dbusername, $testdb, $webhost , $db_master);
 
   $rows = array_keys($master_details);
 
@@ -131,7 +130,7 @@ if (isset($_POST['submit'])) {
   foreach ($users as $user) {
     echo "<h1>" . $_POST['master_dbname'] . $user . "</h1>\n";
 
-    compare_permissions($_POST['master_dbname'], $_POST['test_dbname'], $master_mysqli, $test_mysqli, $user);
+    compare_permissions($_POST['master_dbname'], $_POST['test_dbname'], $master_mysqli, $test_mysqli, $user, $_POST['webhost']);
   }
 } else {
   echo display_form();

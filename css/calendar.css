@@ -1,106 +1,115 @@
 body {
-  font-size:80%
+  font-size:80%;
+}
+img {
+	padding-right:1px
 }
 table {
   margin:0px;
   padding:0px;
   font-size:100%;
-  border-spacing:0px;
+}
+table.month_grid {
+  border-spacing:5px;
 }
 select {
   margin-top:3px
 }
+td {
+	vertical-align:top;
+  text-align:right;
+}
+.tabon {
+	vertical-align:middle;
+	padding-top:0px;
+	cursor:pointer;
+	width:126px;
+	height:21px;
+	color:white;
+	text-align:center;
+	font-weight:bold;
+	font-size:100%;
+	background-image:url(../artwork/tab_on.gif);
+}
+.taboff {
+	vertical-align:middle;
+	padding-top:0px;
+	cursor:pointer;
+	width:126px;
+	height:21px;
+	color:white;
+	text-align:center;
+	font-weight:bold;
+	font-size:100%;
+	background-image:url(../artwork/tab_off.gif);
+}
 .month {
   margin-left:8px;
   margin-right:8px;
-  font-size:140%;
+  font-size:150%;
+  font-weight:bold;
+	color:black;
 }
 .monthgrid {
+  border-collapse:separate;
   border-spacing:7px;
-  background-color:#E3EFFF;
-  width:98%;
+  width:99%;
   margin-left:auto;
   margin-right:auto;
   text-align:left;
-}
-.time {
-  color:#294C7A;
-  text-align:right;
-  width:36px;
-  vertical-align:top;
-  padding-right:4px
-}
-.timewarn {
-  color:#294C7A;
-  background-color:yellow;
-  text-align:right;
-  width:36px;
-  vertical-align:top;
-  padding-right:4px
-}
-a.lab {
-  color:#FF6300
+  color:#808080;
 }
 .month {
+  border-collapse:separate;
   border-spacing:7px;
-  background-color:#E3EFFF;
   width:98%;
   margin-left:auto;
   margin-right:auto;
   text-align:left;
 }
 .dtext {
-  border-left:1px solid #5D8CC9;
-  text-align:center; color:#6593CF; background-color:#E3EFFF;
+  color:#808080;
+	text-align:left;
 }
 .dhead {
-  padding:0px;
-  height:17px;
-  background-image:url('../artwork/cal_box_gradient.png');
-  background-repeat:repeat-x;
-  border-top:1px solid #5D8CC9;
-  border-left:1px solid #5D8CC9;
-  border-bottom:1px solid #5D8CC9;
+  color:black;
+  font-size:130%;
   padding-left:5px;
-  font-weight:bold
+  font-weight:bold;
+  border-bottom:1px solid #C0C0C0;
+	text-align:left;
 }
 .dheadtoday {
-  padding:0px;
-  height:17px;
-  background-image:url('../artwork/cal_box_gradient_on.png');
-  background-repeat:repeat-x;
-  border-top:1px solid #EE9311;
-  border-left:1px solid #EE9311;
-  border-bottom:1px solid #EE9311;
+  font-size:130%;
   padding-left:5px;
-  font-weight:bold
+  font-weight:bold;
+	color:white;
+  background-color:#C00000;
+  border-bottom:1px solid #C00000;
+	text-align:left;
+}
+.dheadthisweek {
+  color:black;
+  font-size:130%;
+  padding-left:5px;
+  font-weight:bold;
+	background-color:#FFC0C0;
+  border-bottom:1px solid #C00000;
+	text-align:left;
 }
 .dheadnomonth {
   padding:0px;
-  height:17px;
-  background-image:url('../artwork/cal_box_gradient.png');
-  background-repeat:repeat-x;
-  border-top:1px solid #5D8CC9;
-  border-left:1px solid #5D8CC9;
-  border-bottom:1px solid #5D8CC9
 }
 .daynomonth {
   width:20%;
-  background-color:#A5BFE1;
-  border-left:1px solid #5D8CC9;
-  border-bottom:1px solid #5D8CC9
 }
 .day {
   text-align:left;
-  vertical-align:top;
   width:20%;
   padding-top:5px;
   padding-bottom:5px;
   padding-left:0px;
   padding-right:0px;
-  background-color:white;
-  border-left:1px solid #5D8CC9;
-  border-bottom:1px solid #5D8CC9
 }
 .daycur {
   text-align:left;
@@ -109,6 +118,68 @@ a.lab {
   padding_top:5px;
   padding-bottom:5px;
   background-color:white;
-  border-left:1px solid #EE9311;
-  border-bottom:1px solid #EE9311
+}
+.callout {
+  display: none;
+  position:absolute;
+  font-size:90%;
+	background-color: white;
+  width: 290px;
+	-moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50);
+}
+.callout td {
+  padding:4px;
+	text-align:left;
+}
+.field {
+  vertical-align:top;
+  width:70px;
+	white-space:nowrap;
+}
+.warning {
+  color:#C00000;
+  padding-left:5px;
+  padding-right:5px;
+  display:none;
+}
+.warn_icon {
+	white-space:nowrap;
+	vertical-align:top;
+	width:16px;
+}
+.notch {
+	position: absolute;
+  top: -10px;
+  left: 20px;
+	margin: 0;
+	border-top: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid white;
+	padding: 0;
+	width: 0;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+}
+.border-callout {
+	border: 1px solid #808080;
+	padding: 3px;
+}
+.border-callout .border-notch {
+	border-bottom-color: #606060;
+	top: -11px;
+}
+.p {
+  text-align:left;
+	vertical-align:top;
+	width: 90%;
+}
+.pd {
+	overflow:hidden;
+	width:100%;
+	height:2.3em;
 }

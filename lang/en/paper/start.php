@@ -70,4 +70,7 @@ $string['savefailed'] = 'Save Failed!';
 $string['tryagain'] = 'Please try again, by moving to the next or previous screens.</div>';
 $string['questionclarification'] = 'Question Clarification';
 $string['question'] = 'Question';
+$string['answer_to'] = 'answer to';
+$string['decimal_places'] = 'decimal places';
+$string['significant_figures'] = 'significant figures';
 ?>

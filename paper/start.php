@@ -311,10 +311,10 @@ $attempt = 1;                 //default attempt to 1 overwritten if the student 
 $low_bandwidth = 0;           //default to off overwritten by (check_labs) if lab has low_bandwidth set
 $lab_name = NULL;             //default overwritten by (check_labs)
 $lab_id = NULL;
-$current_ip_address = NULL;   //default overwritten by (check_labs)
+$current_address = NULL;   //default overwritten by (check_labs)
 
 
-$current_ip_address = NetworkUtils::get_ipaddress();
+$current_address = NetworkUtils::get_client_address();
 
 //get the module Ids for this paper
 $modIDs = array_keys(Paper_utils::get_modules($paperID, $mysqli));
@@ -330,7 +330,7 @@ if ($userObject->has_role('Student')) {
   //Check room security
   $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
                                 $propertyObj->get_labs(),
-                                $current_ip_address,
+                                $current_address,
                                 $propertyObj->get_password(),
                                 $string,
                                 $mysqli
@@ -345,7 +345,7 @@ if ($userObject->has_role('Student')) {
 
 //get lab info used in log metadata
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)) {
+if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)) {
   $lab_name = $lab_object->get_name();
   $lab_id = $lab_object->get_id();
 }
@@ -380,11 +380,11 @@ $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)) {
 
   //in preview mode or for non-restartable papers always start a new session if we have relaunched the window
-  $log_metadata->create_new_record($current_ip_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
+  $log_metadata->create_new_record($current_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 
 } elseif ($log_metadata->get_record() == false) { //load the data and check for no records
   //we have no log_metadata record so make one
-  $log_metadata->create_new_record($current_ip_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
+  $log_metadata->create_new_record($current_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 }
 $metadataID = $log_metadata->get_metadata_id();
 
@@ -1201,9 +1201,9 @@ if ($css != '') {
   } else {
     echo '<tr><td>';
   }
-  
+
   $midexam_clarification = $configObject->get('midexam_clarification');
- 
+
   if (in_array('students', $midexam_clarification)) {
     $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
     echo $exam_announcementObj->display_student_announcements();

@@ -500,5 +500,112 @@ class RserveTests extends \Enhance\TestFixture
       $res = $this->target->is_useranswer_correct_decimal_places($useranswer, $dp);
       \Enhance\Assert::areIdentical(false,$res);
   }
+  
+  public function test_is_useranswer_correct_decimal_places_strictzeros() {
+      
+      $useranswer = '1';
+      $dp = '0';
+      $res = $this->target->is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp);
+      \Enhance\Assert::areIdentical(true,$res);
+      
+      $useranswer = '1.00';
+      $dp = '0';
+      $res = $this->target->is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp);
+      \Enhance\Assert::areIdentical(false,$res);
+      
+      $useranswer = '1.000';
+      $dp = '3';
+      $res = $this->target->is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp);
+      \Enhance\Assert::areIdentical(true,$res);
+      
+      $useranswer = '1.00';
+      $dp = '3';
+      $res = $this->target->is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp);
+      \Enhance\Assert::areIdentical(false,$res);
+      
+      $useranswer = '1.000e-25';
+      $dp = '0';
+      $res = $this->target->is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp);
+      \Enhance\Assert::areIdentical(false,$res);
+      
+      $useranswer = '1.000000e3';
+      $dp = '3';
+      $res = $this->target->is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp);
+      \Enhance\Assert::areIdentical(false,$res);
+     
+  }
+  
+  function test_is_engineering_format() {
+      $useranswer = '1.000000e3';
+      $res = $this->target->is_engineering_format($useranswer);
+      \Enhance\Assert::areIdentical(true,$res);
+      
+      $useranswer = '2300e-4';
+      $res = $this->target->is_engineering_format($useranswer);
+      \Enhance\Assert::areIdentical(true,$res);
+      
+      $useranswer = '0.00001e3';
+      $res = $this->target->is_engineering_format($useranswer);
+      \Enhance\Assert::areIdentical(true,$res);
+      
+      $useranswer = '0.00001';
+      $res = $this->target->is_engineering_format($useranswer);
+      \Enhance\Assert::areIdentical(false,$res);
+      
+      $useranswer = '12434.09239';
+      $res = $this->target->is_engineering_format($useranswer);
+      \Enhance\Assert::areIdentical(false,$res);
+      
+      $useranswer = '1';
+      $res = $this->target->is_engineering_format($useranswer);
+      \Enhance\Assert::areIdentical(false,$res);
+      
+      $useranswer = '0';
+      $res = $this->target->is_engineering_format($useranswer);
+      \Enhance\Assert::areIdentical(false,$res);
+  }
+  
+  function test_format_number_dp () {
+      $useranswer = '1.3432';
+      $dp = '0';
+      $res = $this->target->format_number_dp($useranswer,$dp);
+      \Enhance\Assert::areIdentical('1',$res);
+      
+      $useranswer = '1.343200000';
+      $dp = '2';
+      $res = $this->target->format_number_dp($useranswer,$dp);
+      \Enhance\Assert::areIdentical('1.34',$res);
+      
+      $useranswer = '1.3492';
+      $dp = '2';
+      $res = $this->target->format_number_dp($useranswer,$dp);
+      \Enhance\Assert::areIdentical('1.35',$res);
+  }
+  
+  function test_format_number_dp_strict_zeros () {
+      $useranswer = '1.3';
+      $dp = '3';
+      $res = $this->target->format_number_dp_strict_zeros($useranswer,$dp);
+      \Enhance\Assert::areIdentical('1.300',$res);
+      
+      $useranswer = '1.34';
+      $dp = '2';
+      $res = $this->target->format_number_dp_strict_zeros($useranswer,$dp);
+      \Enhance\Assert::areIdentical('1.34',$res);
+      
+      $useranswer = '1.3492';
+      $dp = '2';
+      $res = $this->target->format_number_dp_strict_zeros($useranswer,$dp);
+      \Enhance\Assert::areIdentical('1.35',$res);
+      
+      $useranswer = '1.349000';
+      $dp = '4';
+      $res = $this->target->format_number_dp_strict_zeros($useranswer,$dp);
+      \Enhance\Assert::areIdentical('1.3490',$res);
+  }
+  
+  function test_format_number_sf () {
+      
+  }
 }
 ?>

@@ -179,7 +179,7 @@ ob_start();
       }
     }
   }
-  
+
 <?php
   if ($paper_type == '0' or $paper_type == '1') {   // Do not allow reset of timer for Summative exams.
 ?>
@@ -466,7 +466,7 @@ if ($language != 'en') {
             <td>
 
 <?php
-    echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>)</td></tr></table></td></tr>\n"; 
+    echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>)</td></tr></table></td></tr>\n";
   }
 
   $percent_decimals = $configObject->get('percent_decimals');
@@ -594,18 +594,18 @@ if ($language != 'en') {
         }
         if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
           echo "<td class=\"mk $class$ordered fail r $role_css\">";
-          if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
+          if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
           echo $user_results[$i]['mark'] . "</td>";
           echo "<td class=\"$class fail r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class fail $role_css\">&nbsp;" . $string['fail'] . "</td>";
         } else {
           if (round($user_results[$i]['percent'], $percent_decimals) >= $distinction_mark) {
             echo "<td class=\"mk $class$ordered dist r $role_css\">";
-            if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
+            if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
             echo "<td class=\"dist $class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class dist $role_css\">&nbsp;" . $string['distinction'] . "</td>";
           } else {
             echo "<td class=\"mk $class$ordered r $role_css\">";
-            if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
+            if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
             echo "<td class=\"$class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class $role_css\">&nbsp;" . $string['pass'] . "</td>";
           }
@@ -639,7 +639,7 @@ if ($language != 'en') {
         }
         echo "<td class=\"$class$ordered padl $role_css\">" . $report->formatsec($user_results[$i]['duration']);
         if ($late_submissions == 'y') {
-          echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" />';
+          echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" />';
         }
         echo "</td>";
 
@@ -699,7 +699,7 @@ if ($language != 'en') {
     echo "<tr><td></td><td colspan=\"" . ($cols - 1) . "\">";
     while ($result->fetch()) {
       $lab_name = '';
-      $result2 = $mysqli->prepare("SELECT name FROM labs, ip_addresses WHERE labs.id = ip_addresses.lab AND address = ?");
+      $result2 = $mysqli->prepare("SELECT name FROM labs, client_identifiers WHERE labs.id = client_identifiers.lab AND address = ?");
       $result2->bind_param('s', $note_workstation);
       $result2->execute();
       $result2->bind_result($lab_name);
@@ -711,7 +711,7 @@ if ($language != 'en') {
     }
     echo "</td></tr>";
     $result->close();
-    
+
     $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
     $exam_announcements = $exam_announcementObj->get_announcements();
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
@@ -723,7 +723,7 @@ if ($language != 'en') {
         $msg = str_replace('<p>', '', $msg);
         $msg = str_replace('</p>', '', $msg);
       }
-      
+
       echo "<tr><td class=\"q_no\">Q" . $exam_announcement['q_number'] . "</td><td class=\"q_msg\">(" . $exam_announcement['created'] .")<br />" . $msg . "</td></tr>\n";
     }
     echo "</table></td></tr>\n";

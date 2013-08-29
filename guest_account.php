@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Looks up the next free temporary account and reserves it for the current user.
 * Use 'class_totals.php' to reassign marks after the exam.
 *
@@ -33,21 +33,21 @@ require_once './classes/userutils.class.php';
 
 $mysqli = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_student_user'), $configObject->get('cfg_db_student_passwd'), $configObject->get('cfg_db_database'));
 
-// Check that the ip_address of the current user is within the exam lab.
+// Check that the client address of the current user is within the exam lab.
 $paper_match = false;
-$ip_match = false;
+$lab_match = false;
 $results = $mysqli->prepare("SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type IN ('1','2') AND labs != ''");
 $results->execute();
 $results->store_result();
 $results->bind_result($labs);
 while ($results->fetch()) {
   $paper_match = true;
-  $sub_results = $mysqli->prepare("SELECT address FROM ip_addresses WHERE lab IN ($labs)");
+  $sub_results = $mysqli->prepare("SELECT address FROM client_identifiers WHERE lab IN ($labs)");
   $sub_results->execute();
   $sub_results->store_result();
   $sub_results->bind_result($address);
   while ($sub_results->fetch()) {
-    if (NetworkUtils::get_ipaddress() == $address) $ip_match = true;
+    if (NetworkUtils::get_client_address() == $address) $lab_match = true;
   }
   $sub_results->close();
 }
@@ -55,7 +55,7 @@ $results->close();
 
 if ($paper_match == false) {
   $notice->access_denied($mysqli, $string, $string['cannotfindexams'], false, true);
-} elseif ($ip_match == false) {
+} elseif ($lab_match == false) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -65,9 +65,9 @@ if ($paper_match == false) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['guestaccount']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/guest_account.css" />
 </head>
@@ -80,12 +80,12 @@ if (isset($_POST['submit'])) {
   $tmp_first_names = trim($_POST['first_names']);
   $tmp_surname = trim($_POST['surname']);
   $tmp_student_id = trim($_POST['student_id']);
-  
+
   $stmt = $mysqli->prepare("UPDATE temp_users SET first_names=?, surname=?, title=?, student_id=? WHERE id=?");
   $stmt->bind_param('ssssi', $tmp_first_names, $tmp_surname, $_POST['title'], $tmp_student_id, $_POST['recordID']);
   $stmt->execute();
   $stmt->close();
-  
+
   echo '<form method="post" action="' . $configObject->get('cfg_root_path') . '/index.php">';
   echo '<input type="hidden" name="ROGO_USER" value="' . $_POST['username'] . '" />';
   echo '<input type="hidden" name="ROGO_PW" value="' . $_POST['password'] . '" />';
@@ -100,7 +100,7 @@ if (isset($_POST['submit'])) {
   echo '</table></td></tr></table></div></form>';
 } else {
   $used_accounts = array();
-  
+
   $results = $mysqli->prepare("SELECT assigned_account FROM temp_users");
   $results->execute();
   $results->bind_result($assigned_account);
@@ -108,7 +108,7 @@ if (isset($_POST['submit'])) {
     $used_accounts[$assigned_account] = true;
   }
   $results->close();
-  
+
   $free_account = '';
   for ($i=1; $i<=100; $i++) {
     if (!isset($used_accounts['user' . $i])) {
@@ -116,7 +116,7 @@ if (isset($_POST['submit'])) {
       break;
     }
   }
-  
+
   // Reserve this free account first.
   $stmt = $mysqli->prepare("INSERT INTO temp_users VALUES (NULL, NULL, NULL, NULL, NULL, ?, NOW())");
   $stmt->bind_param('s', $free_account);
@@ -136,19 +136,19 @@ if (isset($_POST['submit'])) {
   $color = array('blue', 'green', 'orange', 'gold', 'silver', 'purple', 'white', 'black', 'yellow');
   $random_password = $color[rand(0, 4)] . rand(10, 99);
   UserUtils::update_password($free_account, $random_password, $temp_user_id, $mysqli);
-  
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['guestaccount']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/guest_account.css" />
-  
+
   <script type="text/javascript" src="./js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="./js/jquery.validate.min.js"></script>
   <script type="text/javascript">
@@ -160,7 +160,7 @@ if (isset($_POST['submit'])) {
         }
       });
       $('form').removeAttr('novalidate');
-    });  
+    });
   </script>
 </head>
 

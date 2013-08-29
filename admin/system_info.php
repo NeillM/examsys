@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -32,9 +32,9 @@ require_once '../classes/dateutils.class.php';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['systeminformation']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -44,7 +44,7 @@ require_once '../classes/dateutils.class.php';
     a.heading {color:#215DC6; font-weight:bold}
     a.heading:hover {color:#428EFF; font-weight:bold}
   </style>
-  
+
   <script type="text/javascript" src="../js/staff_help.js"></script>
 
 </head>
@@ -84,7 +84,7 @@ require_once '../classes/dateutils.class.php';
       $sub_result->fetch();
       $sub_result->close();
       if ($Rows > 0) {
-        echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" />&nbsp;<a href=\"log_late_details.php\">" . $string['More details'] . "</a></td>";
+        echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" />&nbsp;<a href=\"log_late_details.php\">" . $string['More details'] . "</a></td>";
         echo "<td style=\"text-align:right; color:#C00000\">" . number_format($Rows) . "</td>";
      } else {
         echo "<tr><td>" . $Name . "</td><td style=\"text-align:right\">" . number_format($Rows) . "</td>";
@@ -95,9 +95,9 @@ require_once '../classes/dateutils.class.php';
       $sub_result->store_result();
       $sub_result->bind_result($Rows);
       $sub_result->fetch();
-      $sub_result->close();        
+      $sub_result->close();
       if ($Rows > 0) {
-        echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" />&nbsp;<a href=\"clear_guest_users.php\">" . $string['More details'] . "</a></td>";
+        echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" />&nbsp;<a href=\"clear_guest_users.php\">" . $string['More details'] . "</a></td>";
         echo "<td style=\"text-align:right; color:#C00000\">" . number_format($Rows) . "</td>";
       } else {
         echo "<tr><td>" . $Name . "</td><td style=\"text-align:right\">" . number_format($Rows) . "</td>";
@@ -117,7 +117,7 @@ require_once '../classes/dateutils.class.php';
     if ($i == 0) {
       $hours = ($parts[1] / 60 / 60);
       if ($hours < 1) {
-        $hours = ($parts[1] / 60); 
+        $hours = ($parts[1] / 60);
         $units = 'minutes';
       } elseif ($hours < 24) {
         $units = 'hours';
@@ -133,7 +133,7 @@ require_once '../classes/dateutils.class.php';
     }
   }
   echo "</table>\n<br />\n";
-  
+
   $authinfo = $authentication->version_info(true, false);
 ?>
 </td>
@@ -195,7 +195,7 @@ require_once '../classes/dateutils.class.php';
   } else {
     echo "<tr><td>" . $string['processor'] . "</td><td>" . php_uname('m') . "</td></tr>\n";
   }
-      
+
   echo "<tr><td style=\"width:90px\">" . $string['servername'] . "</td><td>" . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
   echo "<tr><td>" . $string['hostname'] . "</td><td>" . $_SERVER['HTTP_HOST'] . "</td></tr>\n";
   echo "<tr><td>" . $string['ipaddress'] . "</td><td>" . apache_getenv("SERVER_ADDR") . "</td></tr>\n";
@@ -204,10 +204,10 @@ require_once '../classes/dateutils.class.php';
   echo "<tr><td>" . $string['apache'] . "</td><td>" . apache_get_version() . "</td></tr>\n";
   echo "<tr><td>" . $string['php'] . "</td><td>" . phpversion() . "</td></tr>\n";
   echo "<tr><td>" . $string['mysql'] . "</td><td>" . $mysqli->server_info . "</td></tr>\n";
-  
+
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   echo '<tr><td colspan="2" class="sechead">' . $string['clientcomputer'] . '</td></tr>';
-  echo '<tr><td>' . $string['ipaddress'] . '</td><td>' . NetworkUtils::get_ipaddress() . '</td></tr>';
+  echo '<tr><td>' . $string['ipaddress'] . '</td><td>' . NetworkUtils::get_client_address() . '</td></tr>';
   echo '<tr><td>' . $string['clock'] . '</td><td><script language="JavaScript">the_date = new Date(); document.write(the_date.toLocaleString()); </script></td></tr>';
   echo '<tr><td>' . $string['browser'] . '</td><td>' . $_SERVER['HTTP_USER_AGENT'] . '</td></tr>';
 
@@ -215,7 +215,7 @@ require_once '../classes/dateutils.class.php';
   echo '<tr><td colspan="2" class="sechead">' . $string['partitions'] . '</td></tr>';
 
   echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
-    
+
   if (php_uname('s') == 'Windows NT') {
     $disks = `fsutil fsinfo drives`;
     $disks = str_word_count($disks,1);

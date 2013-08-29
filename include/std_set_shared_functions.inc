@@ -139,6 +139,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
 
         if ($rating != '') {
           $rating_array = explode(',', $rating);
+          
           foreach ($rating_array as $individual_rating) {
             if (isset($marks_array[$questionID][$partID]) and $individual_rating != '') {
               if (isset($ebel_marks[$individual_rating])) {
@@ -150,21 +151,20 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
             }
             $partID++;
           }
-        }
     
-        if ($rating != '') {
-          $q_sections = explode(',', $rating);
-          $tmp_part = 0;
-          foreach ($q_sections as $part) {
-            if (substr($tmp_exclude, $tmp_part, 1) == '0') {
-              if ($q_type == 'textbox') {
-                $std_total += $part * (count($q_sections) - $tmp_part);
-              } else {
-                $std_total += $part * $marks_array[$questionID][$tmp_part];
+          if ($reviews[$i]['method'] == 'Modified Angoff') {
+            $tmp_part = 0;
+            foreach ($rating_array as $individual_rating) {
+              if (substr($tmp_exclude, $tmp_part, 1) == '0') {
+                if ($q_type == 'textbox') {
+                  $std_total += $individual_rating * (count($q_sections) - $tmp_part);
+                } else {
+                  $std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
+                }
+                if ($q_type != 'mrq' or $individual_rating != '') $question_no++;
               }
-              if ($q_type != 'mrq' or $part != '') $question_no++;
+              $tmp_part++;
             }
-            $tmp_part++;
           }
         }
       }
@@ -949,7 +949,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
     if ($valid) {
       $review_string = "mean=$mean%, $review_string\n";
     } else {
-      $review_string = "<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" /><span style=\"font-weight:bold\">mean=$mean%, </span><span style=\"color:#C00000; font-weight:bold\">$review_string</span>\n";
+      $review_string = "<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /><span style=\"font-weight:bold\">mean=$mean%, </span><span style=\"color:#C00000; font-weight:bold\">$review_string</span>\n";
     }
     if (isset($value['prev_review']) and $value['prev_review'] > 0) {
       $tmp_value = $value['prev_review'];

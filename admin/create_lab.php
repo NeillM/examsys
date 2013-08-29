@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -40,30 +40,42 @@ if (isset($_POST['submit'])) {
 
   $result = $mysqli->prepare("INSERT INTO labs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
   $result->bind_param('sssssss', $lab_name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
-  $result->execute();  
+  $result->execute();
   $labID = $mysqli->insert_id;
   $result->close();
 
   // Insert the new IP addresses.
   $addresses = explode('<br />',nl2br($_POST['addresses']));
   foreach ($addresses as $individual_address) {
-    $ip_address = trim($individual_address);
-    if ($ip_address != '') {
-      if (preg_match('/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $ip_address)) {
-        if ($ip_address != '') {
-          $hostname = gethostbyaddr($ip_address);
-          $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL,?,?,?,?)");
-          $result->bind_param('issi', $labID, $ip_address, $hostname, $_POST['low_bandwidth']);
-          $result->execute();  
-          $result->close();
-        }
+    $address = trim($individual_address);
+
+    if ($address != '') {
+      if ($configObject->get('cfg_client_lookup') == 'name') {
+        $test_re = '/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/';
       } else {
-        $bad_addresses[] = $ip_address;
+        $test_re = '/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/';
+      }
+
+      if (preg_match($test_re, $address)) {
+        if ($configObject->get('cfg_client_lookup') == 'name') {
+          $hostname = $address;
+        } else {
+          $hostname = gethostbyaddr($address);
+        }
+        $result = $mysqli->prepare("INSERT INTO client_identifiers VALUES (NULL,?,?,?,?)");
+        $result->bind_param('issi', $labID, $address, $hostname, $_POST['low_bandwidth']);
+        $result->execute();
+        $result->close();
+      } else {
+        $bad_addresses[] = $address;
       }
     }
   }
-  
-  if (count($bad_addresses) == 0) header("location: list_labs.php");
+
+  if (count($bad_addresses) == 0) {
+    header("location: list_labs.php");
+    exit;
+  }
 }
 ?>
 <!DOCTYPE html>

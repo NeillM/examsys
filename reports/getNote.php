@@ -24,24 +24,19 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+require '../classes/noteutils.class.php';
 
 $userID  = check_var('userID', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
 
-$result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i') AS note_date, title, initials, surname FROM student_notes, users WHERE student_notes.note_authorID = users.id AND paper_id = ? AND student_notes.userID = ?");
-$result->bind_param('ii', $paperID, $userID);
-$result->execute();
-$result->bind_result($note, $note_date, $title, $initials, $surname);
-$result->store_result();
-if ($result->num_rows == 0) {
+$details = StudentNotes::get_note($_GET['paperID'], $_GET['userID'], $mysqli);
+
+if ($details === false) {
   echo "<div style=\"padding:10px\">" . $string['err'] . "</div>\n";
 } else {
-  while ($result->fetch()) {
-    echo "<div style=\"padding:10px\">$note</div>\n";
-    echo "<div style=\"padding:10px\"><em>$title $initials $surname - $note_date</em></div>\n";
-  }
+  echo "<div style=\"padding:10px\">" . $details['note'] . "</div>\n";
+  echo "<div style=\"padding:10px\"><em>" . $details['author_title'] . " " . $details['author_initials'] . " " . $details['author_surname'] . " - " . $details['date'] . "</em></div>\n";
 }
-$result->close();
 
 $mysqli->close();
 ?>

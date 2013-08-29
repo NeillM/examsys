@@ -14,11 +14,11 @@ CREATE TABLE `exam_announcements` (
 QUERY;
   $updater_utils->execute_query($sql, true);
   
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".exam_announcements TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".exam_announcements TO '" . $cfg_db_student_user . "'@'" . $cfg_web_host . "'";
   $updater_utils->execute_query($sql, true);
-  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".exam_announcements TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".exam_announcements TO '" . $cfg_db_staff_user . "'@'" . $cfg_web_host . "'";
   $updater_utils->execute_query($sql, true);
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".exam_announcements TO '" . $cfg_db_inv_username . "'@'" . $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".exam_announcements TO '" . $cfg_db_inv_username . "'@'" . $cfg_web_host . "'";
   $updater_utils->execute_query($sql, true);
 }
 

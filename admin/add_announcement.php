@@ -41,7 +41,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
   
   $mysqli->close();
   header("location: list_announcements.php");
-  
+  exit();
 }
 ?>
 <!DOCTYPE html>

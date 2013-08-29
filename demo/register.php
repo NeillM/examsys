@@ -37,7 +37,7 @@ require_once '../classes/dateutils.class.php';
 
 if (strcmp($configObject->get('cfg_install_type'), 'demo') != 0) { // If the installation type is not set to 'demo' then exit.
   header("HTTP/1.0 404 Not Found");
-  exit;
+  exit();
 }
 
 $userroles = 'SysAdmin';

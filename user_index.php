@@ -52,7 +52,7 @@ function load_attempts($test_type, $paperID, $userObj, $db) {
     $prev_attempts[$log_started] = array('max_screen'=>$log_max_screen, 'max_mark'=>$log_mark, 'paper_type'=>$log_paper_type, 'temp_date'=>$log_temp_date);
   }
   $result->close();
-  
+
   if ($test_type == '0') {
     // If type is Formative query the Progress Test log table as well and add into array if max screen is not blank.
     $result = $db->prepare("SELECT MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
@@ -90,15 +90,15 @@ function has_time_remaining($propertyObj, $remaining_time) {
   if ($propertyObj->get_exam_duration() === null) {
     return true;
   }
-  
+
   if ($remaining_time === false) {
     return true;
   }
-  
+
   if ((int)$remaining_time === 0) {
     return false;
   }
-  
+
   return true;
 }
 
@@ -167,13 +167,14 @@ $total_marks = 0;
 //get paper info
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['papernotfound'], true, true);    //this will exit php
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 //get lab info
-$current_ip_address = NetworkUtils::get_ipaddress();
+$current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
   $lab_id   = $lab_object->get_id();
 }
@@ -224,7 +225,7 @@ if ($userObject->has_role('Student')) {
   check_paper_password($password, $string, true);
 
   //Check this PC is registered for this exam
-  $low_bandwidth = check_labs($test_type, $labs, $current_ip_address, $password, $string, $mysqli);
+  $low_bandwidth = check_labs($test_type, $labs, $current_address, $password, $string, $mysqli);
 
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 }
@@ -299,6 +300,7 @@ if ($exam_duration !== null) {
   <link rel="stylesheet" type="text/css" href="./css/user_index.css" />
   <style type="text/css">
     body {margin-top:25px; font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
+    .noimg {display:none; width:0; height:0}
   </style>
 
   <script type="text/javascript" src="./js/student_help.js"></script>
@@ -318,7 +320,7 @@ if ($exam_duration !== null) {
     }
     document.getElementById('start').value = '<?php echo $string['restart']; ?>';
   }
-  
+
   function reviewPaper(started, type) {
     exam = window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
@@ -451,7 +453,7 @@ if ($textsize > 120) {
   }
 
   $prev_attempts = load_attempts($test_type, $property_id, $userObject, $mysqli);
-  
+
   $start_label = $string['start'];
   if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
     $start_available      = true;
@@ -460,7 +462,7 @@ if ($textsize > 120) {
   } else {
     $start_available = false;
     $remaining_available = false;
-    
+
     switch ($test_type) {
       case '0':
        $start_available = is_timedate_ok($paper_start, $paper_end);
@@ -488,7 +490,7 @@ if ($textsize > 120) {
   }
 
   echo '<tr><td style="text-align:center" colspan="4"><br />';
-  
+
   if ($start_available === false) {
     echo "<div style=\"color:#C00000;font-size:90%\">" . $string['papernotavailable'] . "</div>\n";
   } elseif ($remaining_available === false) {
@@ -498,7 +500,7 @@ if ($textsize > 120) {
   } elseif ($test_type == 2) {
     echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
   }
-  
+
   echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['help'] . "\" name=\"help\" onclick=\"launchHelp(31);\" onkeypress=\"launchHelp(31);\" />\n";
   if ($test_type == 2) {
     $paper_utils = Paper_utils::get_instance();
@@ -508,7 +510,7 @@ if ($textsize > 120) {
   }
 
   $display_date = '';
-  
+
     if ($start_available and $remaining_available and $metadata_security) {
     echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
   } else {
@@ -525,7 +527,7 @@ if ($textsize > 120) {
       $temp_no = 0;
       $mark_total = 0;
       $adj_percent = 0;
-      
+
       foreach ($prev_attempts as $log_started=>$prev_details) {
         $log_max_screen = $prev_details['max_screen'];
         $log_mark       = $prev_details['max_mark'];
@@ -577,7 +579,19 @@ if ($textsize > 120) {
   }
   $mysqli->close();
   ?><div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get('rogo_version'); ?></div></td></tr></table>
-
 </form>
+    <!-- Cache often used scripts and images -->
+    <script src="js/start.js"></script>
+    <script src="js/jquery-1.6.1.min.js" /></script>
+    <script src="js/flash_include.js" /></script>
+    <script src="js/jquery.flash_q.js" /></script>
+    <script src="tools/mee/mee/js/mee_src.js" /></script>
+    <div class="mee" style="position:absolute; left:-100px">\int sin(x)dx\pi</div>
+    <link rel="stylesheet" type="text/css" href="css/start.css" />
+    <img class="noimg" src="artwork/calc.gif" />
+    <img class="noimg" src="artwork/no_save.png" />
+    <img class="noimg" src="artwork/fire_exit.png" />
+    <img class="noimg" src="artwork/title_gradient.png" />
+
 </body>
 </html>

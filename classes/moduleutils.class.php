@@ -109,7 +109,7 @@ Class module {
     
     $orig_modinfo = $modinfo = module_utils::get_full_details_by_name($orig_moduleid, $db);
     
-    if($modinfo === false) {
+    if ($modinfo === false) {
       //the module must exist to update it !
       return false;
     }
@@ -118,7 +118,7 @@ Class module {
     $orig_school_id = $modinfo['schoolid'];
     
     $changed = false; 
-    foreach($updateData as $key => $val) {
+    foreach ($updateData as $key => $val) {
       $key = strtolower($key);
       if ($key == 'idmod') {
         //never change the id :-)
@@ -130,7 +130,7 @@ Class module {
       }
     }
     
-    if(!$changed) {
+    if (!$changed) {
       // nothing has changed return
       return true;
     }
@@ -140,7 +140,7 @@ Class module {
       return false;
     }
     
-    if($orig_school_name != $modinfo['school']) {
+    if ($orig_school_name != $modinfo['school']) {
       //we have updated the school so we need to get the new id from the schools table
       if($orig_school_id != $modinfo['schoolid']) {
         //do nothing as the id has already been updated
@@ -175,7 +175,6 @@ Class module {
             ";
     
     $result = $db->prepare($sql);
-    echo $db->error;
     $result->bind_param('ssisssiiiiiiiii', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'], 
                                         $modinfo['checklist'], $modinfo['sms'], $modinfo['selfenroll'], $modinfo['schoolid'], 
                                         $modinfo['neg_marking'], $modinfo['ebel_grid_template'], $modinfo['timed_exams'], 

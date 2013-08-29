@@ -90,4 +90,11 @@ $string['NoFieldMetadata'] = 'No field in the metadata set for groups.';
 $string['NoGroup'] = 'No Group can be found for the current user.';
 $string['note'] = 'Note';
 $string['studentname'] = 'Student Name';
+
+require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
+
+$string['register'] = 'Register as Staff User';
+$string['register1'] = 'Register as ';
+$string['demomodule'] = 'Demo Module';
+$string['name'] = 'Name';
 ?>

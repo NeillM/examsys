@@ -17,7 +17,7 @@
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
 ?>
-<html xmlns="http://www.w3.org/1999/html">
+<!DOCTYPE html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $this->configObj->get('cfg_page_charset') ?>" />
@@ -28,15 +28,32 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css"/>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
 	<script>
-    $(document).ready(function(){
+    $(document).ready(function() {
       $('#username').focus();
-    });
+			
+<?php
+  if (isset($displaystdformobj->scripts)) {
+    foreach ($displaystdformobj->scripts as $script) {
+		  echo $script;
+		}
+	}
+?>			
+			
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+		});
   </script>
 </head>
 
 <body>
-<form method="post">
+<form method="post" id="theform">
     <div class="mainbox">
 
         <img src="<?php echo $cfg_root_path ?>/artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px" />
@@ -65,11 +82,11 @@ HTML;
           <table>
               <tr>
                   <td><?php echo $string['username']; ?></td>
-                  <td><input type="text" name="ROGO_USER" id="username" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" /></td>
+                  <td><input type="text" name="ROGO_USER" id="username" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" required /></td>
               </tr>
               <tr>
                   <td><?php echo $string['password']; ?></td>
-                  <td><input type="password" name="ROGO_PW" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" /></td>
+                  <td><input type="password" name="ROGO_PW" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" required /></td>
               </tr>
 <?php
 
@@ -77,10 +94,10 @@ HTML;
               foreach($displaystdformobj->fields as $field) {
                 echo '<tr>';
                 echo '<td>' . $field->description . '</td>';
-                if(isset($_POST[$field->name])) {
-                  $value=$_POST[$field->name];
-                } elseif(isset($field->defaultvalue) and $field->defaultvalue!='') {
-                  $value=$field->defaultvalue;
+                if (isset($_POST[$field->name])) {
+                  $value = $_POST[$field->name];
+                } elseif (isset($field->defaultvalue) and $field->defaultvalue != '') {
+                  $value = $field->defaultvalue;
                 } else {
                   $value='';
                 }
@@ -98,7 +115,7 @@ HTML;
           foreach ($displaystdformobj->buttons as $object) {
             echo <<<HTML
 $object->pretext
-<input type="$object->type" name="$object->name" value="$object->value" style="$object->style" />
+<input type="$object->type" name="$object->name" value="$object->value" style="$object->style" class="$object->class" />
 $object->posttext
 HTML;
             }

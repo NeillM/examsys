@@ -24,6 +24,7 @@ $string['dbusername'] = 'Użytkownik:';
 $string['dbpassword'] = 'Hasło:';
 $string['databasesetup'] = 'Ustawienia bazy danych';
 $string['databasehost'] = 'Adres:';
+$string['webhost'] = 'WebServer host'; //TODO Niko
 $string['databaseport'] = 'Port:';
 $string['databasename'] = 'Nazwa:';
 $string['databasecharset'] = 'Kodowanie znaków w bazie danych';

@@ -107,7 +107,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
 
   $mysqli->close();
   header("location: list_modules.php");
-  exit;
+  exit();
 } else {
   require_once '../classes/smsutils.class.php';
 

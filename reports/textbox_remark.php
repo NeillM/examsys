@@ -42,8 +42,10 @@ if (isset($_POST['submit'])) {
     }
   }
   header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $_GET['folder']);
+	exit();
 } elseif (isset($_POST['submit']) and $_POST['submit'] == 'Cancel') {
   header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $_GET['folder']);
+	exit();
 } else {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

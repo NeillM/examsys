@@ -34,7 +34,8 @@ require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
 $userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
-  $notice->access_denied($mysqli, $string, 'You are attempting to access a <strong>Staff Only</strong> page.', true);
+	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 // Redirect External Examiners if they are straying

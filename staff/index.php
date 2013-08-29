@@ -37,13 +37,13 @@ $userObject = UserObject::get_instance();
 // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
 if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
   header("location: ../students/");
-  exit;
+  exit();
 } elseif ($userObject->has_role('External Examiner')) {
   header("location: ../reviews/");
-  exit;
+  exit();
 } elseif ($userObject->has_role('Invigilator')) {
   header("location: ../invigilator/");
-  exit;
+  exit();
 }
 
 // If we're still here we should be staff
@@ -152,7 +152,14 @@ require_once '../include/staff_auth.inc';
 <?php
   $as_pos = strpos($configObject->get('cfg_install_type'),' as ');
   if ($as_pos !== false) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:32px\"><div class=\"greywarn\"><img src=\"../artwork/agent.png\" width=\"28\" height=\"28\" alt=\"Locked\" style=\"position:relative; left:6px; top:1px\" /></div></td><td><div class=\"greywarn\">&nbsp;&nbsp;" . $string['loggedinas'] . " " . substr($configObject->get('cfg_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:32px\"><div class=\"greywarn\"><img src=\"../artwork/agent.png\" width=\"28\" height=\"28\" alt=\"Impersonate\" style=\"position:relative; left:6px; top:1px\" /></div></td><td><div class=\"greywarn\">&nbsp;&nbsp;" . $string['loggedinas'] . " " . substr($configObject->get('cfg_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
+  }
+	if ($configObject->get('cfg_interactive_qs') == 'html5') {
+?>
+<!--[if lt IE 9]>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr><td style="width:32px"><div class="yellowwarn"><img src="../artwork/ie10.gif" width="28" height="28" alt="IE" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;Rog&#333; needs HTML5, please upgrade to Internet Explorer 9 or 10</div></td></tr></table>
+<![endif]-->
+<?php
   }
 ?>
 <div style="padding-left:6px; padding-right:14px">
@@ -272,7 +279,7 @@ require_once '../include/staff_auth.inc';
     }
 
     if ($module_no == 0) {
-      echo '<div style="color:#C00000; padding-left:15px"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
+      echo '<div style="color:#C00000; padding-left:15px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
     }
 
     echo '<br clear="left" /><br />';

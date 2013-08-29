@@ -29,12 +29,14 @@ require '../include/icon_display.inc';
 require '../config/index.inc';
 require '../classes/dateutils.class.php';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/networkutils.class.php';
 
 // Redirect External Examiners if they are straying
 if ($userObject->has_role('External Examiner')) {
   $cfg_root_path = $configObject->get('cfg_root_path');
   if ($_SERVER['PHP_SELF'] != "$cfg_root_path/staff/index.php" and $_SERVER['PHP_SELF'] != "$cfg_root_path/reviews/index.php" and $_SERVER['PHP_SELF'] != "$cfg_root_path/reviews/start.php" and $_SERVER['PHP_SELF'] != "$cfg_root_path/reviews/finish.php") {
     header("location: ../reviews/");
+		exit();
   }
 }
 
@@ -55,11 +57,13 @@ $performance_summary_years = array();
 
 if ($userObject->has_role('Student')) {
   $logger = new Logger($mysqli);
-  $logger->record_access($userObject->get_user_ID(), 'Student homepage', '/students/');  
+  $logger->record_access($userObject->get_user_ID(), 'Student homepage', '/students/');
+
+  $current_address = NetworkUtils::get_client_address();
 
   // Check if our student is in a lab
-  $lab_info = $mysqli->prepare("SELECT lab FROM ip_addresses WHERE address = ? LIMIT 1");
-  $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
+  $lab_info = $mysqli->prepare("SELECT lab FROM client_identifiers WHERE address = ? LIMIT 1");
+  $lab_info->bind_param('s', $current_address);
   $lab_info->execute();
   $lab_info->bind_result($lab);
   $lab_info->store_result();
@@ -295,13 +299,13 @@ if (!$userObject->has_role('Student')) {
 		<div id="papers-<?php echo str_replace('/', '-', $module['year']) ?>"<?php echo $visibility; ?>>
 <?php
   				$last_session = $module['year'];
-          
+
           if (isset($performance_summary_years[$module['year']])) {
             echo "<div style=\"margin-top:4px; margin-left:10px\"><a href=\"performance_summary.php#" . $module['year'] . "\"><img src=\"../artwork/link.png\" width=\"16\" height=\"16\" alt=\"arrow\" /></a>&nbsp;<a href=\"performance_summary.php#" . $module['year'] . "\">Performance Summary</a></div>";
           }
         }
 ?>
-			
+
       <br clear="all" /><table border="0" style="margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287"><tr><td><nobr><?php echo("<strong>{$mod_id}</strong>: {$module['name']} (".count($module['papers']).")"); ?></nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>
 			<br />
 <?php

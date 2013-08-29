@@ -67,7 +67,7 @@ if (isset($_POST['submit'])) {
     }
 
     header("location: list_schools.php");
-    exit;
+    exit();
   }
 }
 

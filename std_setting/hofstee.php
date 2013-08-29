@@ -123,7 +123,7 @@ if (isset($_POST['submit'])) {
   $marking = $_POST['marking'];
   
   header("location:index.php?paperID=$paperID&module=&folder=");
-  exit;
+  exit();
 
 } elseif (isset($_GET['std_setID'])) {
   $insertID = $_GET['std_setID'];

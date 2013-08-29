@@ -1125,7 +1125,7 @@ class ClassTotals {
     }
     $result->close();
 
-    if (count($metadataID) == 0) {
+    if (count($metadataids) == 0) {
       $this->user_results = array();
       return false;
     }

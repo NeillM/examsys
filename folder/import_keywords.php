@@ -24,8 +24,7 @@
 
 require '../include/staff_auth.inc';
 
-function keywords_from_file($fileName, $userObj) {
-  global $mysqli;
+function keywords_from_file($fileName, $userObj, $db) {
   
   if ($_GET['module'] == '') {
     $type = 'personal';
@@ -33,7 +32,7 @@ function keywords_from_file($fileName, $userObj) {
     
     // Get the existing personal keywords.
     $existing_keywords = array();
-    $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID = ?");
+    $result = $db->prepare("SELECT keyword FROM keywords_user WHERE userID = ?");
     $result->bind_param('i', $tmp_userID);
     $result->execute();
     $result->bind_result($keyword);
@@ -48,7 +47,7 @@ function keywords_from_file($fileName, $userObj) {
 
     // Get the existing team keywords for the folder.
     $existing_keywords = array();
-    $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID = ?");
+    $result = $db->prepare("SELECT keyword FROM keywords_user WHERE userID = ?");
     $result->bind_param('i', $_GET['module']);
     $result->execute();
     $result->bind_result($keyword);
@@ -63,7 +62,7 @@ function keywords_from_file($fileName, $userObj) {
   foreach ($lines as $separate_line) {
     $separate_line = trim($separate_line);
     if (!isset($existing_keywords[$separate_line])) {
-      $result = $mysqli->prepare("INSERT INTO keywords_user VALUES(NULL, ?, ?, ?)");
+      $result = $db->prepare("INSERT INTO keywords_user VALUES(NULL, ?, ?, ?)");
       $result->bind_param('iss', $tmp_userID, $separate_line, $type);
       $result->execute();
       $result->close();
@@ -79,20 +78,20 @@ if (isset($_POST['submit'])) {
   if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
     if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $filename))  {
       echo uploadError($_FILES['txtfile']['error']);
-      exit;
+      exit();
     } else {
-      keywords_from_file($filename, $userObject);
+      keywords_from_file($filename, $userObject, $mysqli);
       unlink($filename);
       header("location: list_keywords.php?paperID=". $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
     }
     $mysqli->close();
-    exit;
+    exit();
   } else {
     $file_problem = true;
   }
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -131,11 +130,11 @@ if (isset($_POST['submit'])) {
 
 <?php
 if ($file_problem) {
-  echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" />&nbsp;Please specify a file for upload.</div>';
+  echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</div>';
 }
 ?>
 
-<p><input type="file" size="50" name="txtfile" /></p>
+<p><input type="file" size="50" name="txtfile" required /></p>
 
 <p><input type="submit" style="width:130px" value="<?php echo $string['loadkeywordsbtn']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>

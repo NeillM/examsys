@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -80,7 +80,7 @@ $password = $propertyObj->get_password();
 $paper_prologue  = $propertyObj->get_paper_prologue ();
 
 /*
- * TODO remove nasty oveloaded database feilds 
+ * TODO remove nasty oveloaded database feilds
  */
 $display_photos = $propertyObj->get_display_correct_answer();
 $review = $propertyObj->get_display_question_mark();
@@ -104,9 +104,9 @@ if ($type == '') {   // What metadata field to use.
 }
 
 //get lab info
-$current_ip_address = NetworkUtils::get_ipaddress();
+$current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
   $lab_id = $lab_object->get_id();
 }
@@ -114,14 +114,14 @@ if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
 if ($userObject->has_role('Student')) {
   // Check time security
   check_datetime($start_date, $end_date);
-  
+
   // Check room security
   $paper_type = '6';
-  $low_bandwidth = check_labs(  $paper_type, 
-                                $propertyObj->get_labs(), 
-                                $current_ip_address,
-                                $propertyObj->get_password(), 
-                                $string, 
+  $low_bandwidth = check_labs(  $paper_type,
+                                $propertyObj->get_labs(),
+                                $current_address,
+                                $propertyObj->get_password(),
+                                $string,
                                 $mysqli
                               );
 
@@ -205,7 +205,7 @@ if (isset($_POST['submit'] )) {
   $insert_sql = '';
   $variables = array();
   $params = '';
-  
+
   $current_time = date("YmdHis");
 
   if ($review == '1') {
@@ -217,7 +217,7 @@ if (isset($_POST['submit'] )) {
     $result->bind_result($member_username, $member_title, $member_surname, $member_first_names, $member_userID);
     while ($result->fetch()) {
       if ($member_userID != $userObject->get_user_ID()) {   // Make sure current user cannot peer review themself.
-        $row_no = 0;      
+        $row_no = 0;
 
         foreach ($questions as $questionID=>$details) {
           if (isset($_POST[$member_userID . "_" . $row_no])) {
@@ -225,7 +225,7 @@ if (isset($_POST['submit'] )) {
           } else {
             $rating = NULL;
           }
-        
+
           if (isset($saved_results[$member_userID][$questionID]['id'])) {
             $result2 = $mysqli->prepare("UPDATE log6 SET started = ?, rating = ? WHERE id = ?");
             $result2->bind_param('sii', $current_time, $rating, $saved_results[$member_userID][$questionID]['id']);
@@ -245,7 +245,7 @@ if (isset($_POST['submit'] )) {
   } else {
     $member_userID = 0;
     // Get the other users in the same group.
-    $row_no = 0;      
+    $row_no = 0;
 
     foreach ($questions as $questionID=>$details) {
       if (isset($_POST[$member_userID . "_" . $row_no])) {
@@ -253,7 +253,7 @@ if (isset($_POST['submit'] )) {
       } else {
         $rating = NULL;
       }
-    
+
       if (isset($saved_results[$member_userID][$questionID]['id'])) {
         $result2 = $mysqli->prepare("UPDATE log6 SET started = NOW(), rating = ? WHERE id = ?");
         $result2->bind_param('ii', $rating, $saved_results[$member_userID][$questionID]['id']);
@@ -268,7 +268,7 @@ if (isset($_POST['submit'] )) {
       $row_no++;
     }
   }
-  
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -289,7 +289,7 @@ if (isset($_POST['submit'] )) {
     .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
     .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
   </style>
-  
+
   <script language="JavaScript">
     function changeGroup() {
       window.location = "form.php?id=<?php echo $_GET['id']; ?>&group=" + document.getElementById('group').value;
@@ -314,7 +314,7 @@ if (isset($_POST['submit'] )) {
   <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
   echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$string['Group'].':</strong> ' . $group . '</strong></div></td></tr></table>';
-  
+
   if ($language == 'en') {
     echo '<p style="margin-left:10px; font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">'.$string['Thank You'].'</p>';
   } else {
@@ -353,7 +353,7 @@ if (isset($_POST['submit'] )) {
   .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
   .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
   </style>
-  
+
   <script language="JavaScript">
     function changeGroup() {
       window.location = "form.php?id=<?php echo $_GET['id']; ?>&group=" + document.getElementById('group').value;
@@ -383,19 +383,19 @@ if (isset($_POST['submit'] )) {
       }
     }
     $result->close();
-    
+
     echo "</select>\n";
   }
   echo '</div></td><td width="160"><img src="../config/logo.png" width="160" height="67" alt="Logo" /></td></tr>';
   echo '</table>';
 
   echo "<br />\n<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" style=\"margin-left:auto; margin-right:auto\">\n";
-  
+
   if (trim($paper_prologue) != '') {
     echo "<tr><td colspan=\"" . (count($questions) + 2) . "\">" . $paper_prologue . "</td></tr>\n";
     echo "<tr><td colspan=\"" . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
   }
-  
+
   if ($review == '1') {
     // Get the other users in the same group.
     $result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year=? AND type=? AND value=? ORDER BY surname, initials");
@@ -412,17 +412,17 @@ if (isset($_POST['submit'] )) {
         }
         $first_names = explode(' ', $member_first_names);
         echo "</td><td class=\"title\" colspan=\"" . ($columns + 1) . "\">$member_title " . $first_names[0] . " $member_surname</td></tr>\n";
-        
+
         echo "<tr><td></td>";
         for ($i=0; $i<$columns; $i++) {
           echo "<td class=\"col\">" . $parts[$i] . "</td>";
         }
         echo "</tr>\n";
-        
+
         foreach ($questions as $questionID=>$details) {
           display_question($questionID, $details, $member_userID, $row_no, $columns, $marking, $saved_results);
         }
-        
+
         echo "<tr><td colspan=\"" . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
       }
     }
@@ -435,14 +435,14 @@ if (isset($_POST['submit'] )) {
       echo "<td class=\"col\">" . $parts[$i] . "</td>";
     }
     echo "</tr>\n";
-       
+
     foreach ($questions as $questionID=>$details) {
       display_question($questionID, $details, $member_userID, $row_no, $columns, $marking, $saved_results);
     }
-    
+
     echo "<tr><td colspan=\"" . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
   }
-  
+
   echo "</table>\n";
 
   echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td style=\"border-top:1px solid #164994;background-color:#2765AB;background-image:url('../artwork/title_gradient.png');background-repeat:repeat-y;background-position:center; text-align:center\">";
@@ -453,7 +453,7 @@ if (isset($_POST['submit'] )) {
   }
   echo "</td></tr>\n";
   echo "</table>\n</form>\n";
-    
+
   ?>
   </html>
   </body>

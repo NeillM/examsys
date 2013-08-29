@@ -100,12 +100,20 @@ $marking      = $propertyObj->get_marking();
   } else {
     echo '<td><img src="./test_photo.png" width="180" height="270" style="border-top:1px solid #EEEEEE; border-left:1px solid #EEEEEE; border-right:1px solid #C0C0C0; border-bottom:1px solid #C0C0C0" alt="Photo" /></td>';
   }
-  echo "<td style=\"vertical-align:top; font-weight:bold; text-align:left\"><div style=\"font-size:150%; color:#7F9DB9\">$paper_title</div><br /><br /><div style=\"font-size:150%\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><span style=\"color:#808080\">($student_id)</span></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\"><tr>";
+  echo "<td style=\"vertical-align:top; font-weight:bold; text-align:left\"><div style=\"font-size:150%; color:#7F9DB9\">$paper_title</div><br /><br /><div style=\"font-size:150%\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><span style=\"color:#808080\">($student_id)</span></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width: 100%\"><tr>";
 
   // Query Log4 just in case form has already been submitted for this user.
-  $stored_results = array();
-  $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE q_paper = ? AND userID = ?");
+  $result = $mysqli->prepare("SELECT id, feedback, overall_rating FROM log4_overall WHERE q_paper = ? AND userID = ?");
   $result->bind_param('ii', $paperID, $userID);
+  $result->execute();
+  $result->bind_result($log4_overall_id, $feedback, $overall_rating);
+  $result->fetch();
+  $result->close();
+
+
+  $stored_results = array();
+  $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE log4_overallID = ?");
+  $result->bind_param('i', $log4_overall_id);
   $result->execute();
   $result->bind_result($q_id, $rating, $q_parts);
   while ($result->fetch()) {
@@ -114,13 +122,6 @@ $marking      = $propertyObj->get_marking();
   }
   $result->close();
   
-  $result = $mysqli->prepare("SELECT feedback, overall_rating FROM log4_overall WHERE q_paper = ? AND userID = ?");
-  $result->bind_param('ii', $paperID, $userID);
-  $result->execute();
-  $result->bind_result($feedback, $overall_rating);
-  $result->fetch();
-  $result->close();
-
   // Get the questions.
   $question_no = 1;
   $sub_totals = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
@@ -139,7 +140,7 @@ $marking      = $propertyObj->get_marking();
     if (trim($theme) != '') {
       echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
     }
-    echo "<tr id=\"row_" . $question_no . "\"><td class=\"q\">";
+    echo "<tr id=\"row_" . $question_no . "\"><td class=\"q\" style=\"width: 80%\">";
     if (trim($notes) != '') {
       echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }

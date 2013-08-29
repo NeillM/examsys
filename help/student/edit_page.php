@@ -77,7 +77,7 @@ if (isset($_POST['save_changes'])) {
       
   $mysqli->close();
   header("location: ../student/display_page.php?id=$pageid");
-  exit;
+  exit();
 } elseif (isset($_POST['cancel'])) {
   // Release authoring lock.
   if ($_POST['checkout_authorID'] == $userObject->get_user_ID()) {
@@ -88,7 +88,7 @@ if (isset($_POST['save_changes'])) {
   }
   $mysqli->close();
   header("location: ../student/display_page.php?id=$pageid");
-  exit;
+  exit();
 } else {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

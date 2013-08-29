@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * This script can only be called from a paper in 'summative' mode from one of the four green fire exit icons displayed in 'start.php'.
-*  It does three main things: 
-*        1) record the current screen data to the 'log' table, 
-*        2) blank the screen to prevent plagiarism among evacuating examinees, and 
-*        3) has a 'continue' button at the bottom of the screen with passes the correct parameters back to 'start.php' if the 
+*  It does three main things:
+*        1) record the current screen data to the 'log' table,
+*        2) blank the screen to prevent plagiarism among evacuating examinees, and
+*        3) has a 'continue' button at the bottom of the screen with passes the correct parameters back to 'start.php' if the
 *           examinees are allowed to re-enter the building.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -49,17 +49,17 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
 }
 
 $property_id    = $propertyObj->get_property_id();
-$paper_type     = $propertyObj->get_paper_type(); 
-$labs           = $propertyObj->get_labs(); 
-$start_date     = $propertyObj->get_start_date(); 
-$end_date       = $propertyObj->get_end_date(); 
-$calendar_year  = $propertyObj->get_calendar_year(); 
+$paper_type     = $propertyObj->get_paper_type();
+$labs           = $propertyObj->get_labs();
+$start_date     = $propertyObj->get_start_date();
+$end_date       = $propertyObj->get_end_date();
+$calendar_year  = $propertyObj->get_calendar_year();
 $password       = $propertyObj->get_password();
 
 /*
- * 
+ *
  * Setup som feature related flags
- * 
+ *
  */
 //are we in a staff test and preview mode?
 $is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
@@ -76,11 +76,11 @@ $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $fo
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
 
 
-$original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions 
+$original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
-$current_ip_address = NetworkUtils::get_ipaddress();
+$current_address = NetworkUtils::get_client_address();
 
 if ($userObject->has_role('Student')) {
 
@@ -91,11 +91,11 @@ if ($userObject->has_role('Student')) {
   check_datetime($start_date, $end_date);
 
   //Check room security
-  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(), 
-                                $propertyObj->get_labs(), 
-                                $current_ip_address,
-                                $propertyObj->get_password(), 
-                                $string, 
+  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
+                                $propertyObj->get_labs(),
+                                $current_address,
+                                $propertyObj->get_password(),
+                                $string,
                                 $mysqli
                               );
 
@@ -108,7 +108,7 @@ if ($userObject->has_role('Student')) {
 
 //get lab info used in log metadata
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_ip($current_ip_address)){
+if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
   $lab_id = $lab_object->get_id();
 }
@@ -122,16 +122,16 @@ $log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_pr
 $sessionid = $log_metadata->get_session_id();
 
 /*
-* Save any posted answers 
-*  
-* N.B if Ajax saving is enabled: After a successful Ajax save the form is posted as the user moves to the next screen 
+* Save any posted answers
+*
+* N.B if Ajax saving is enabled: After a successful Ajax save the form is posted as the user moves to the next screen
 *                                with dont_record set to true so this is not executed
 */
 if ($is_question_preview_mode == false) {
   if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
     record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles);
   }
-} 
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

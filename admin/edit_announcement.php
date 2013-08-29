@@ -49,7 +49,7 @@ if (isset($_POST['save'])) {
   
   $mysqli->close();
   header("location: list_announcements.php");
-  exit;
+  exit();
 }
 
 $result = $mysqli->prepare("SELECT title, staff_msg, student_msg, icon, DATE_FORMAT(startdate, '%Y%m%d%H%i'), DATE_FORMAT(enddate, '%Y%m%d%H%i') FROM announcements WHERE id = ?");

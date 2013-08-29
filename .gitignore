@@ -166,3 +166,5 @@
 
 # /users/photos/
 /users/photos/*.*
+
+/updates/stopfile*

@@ -133,8 +133,10 @@ if (isset($_POST['Edit'])) {
 
   //redirect to list sessions
   header("Location: ./sessions_list.php?module=" . $moduleID . "&folder=" . $folder);
+	exit();
 } else if(isset($_POST['cancel'])) {
   header("Location: ./sessions_list.php?module=" . $moduleID . "&folder=" . $folder);
+	exit();
 } else {
   //display form
 ?>

@@ -35,14 +35,78 @@ require_once '../lang/' . $language . '/include/timezones.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/questionutils.class.php';
+require_once '../classes/generalutils.class.php';
 require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
 
+// Marking options
+define('MARK_NO_ADJUSTMENT', '0');
+define('MARK_RANDOM', '1');
+define('MARK_STD_SET', '2');
+
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
+
+/**
+ * Define callbacks to be used when retrieving tracked changes
+ * @param  array  $changed_reviewers    Array of reviewers referenced in changes
+ * @param  array  $changed_labs         Array of labs referenced in changes
+ * @return array                        Array of callbacks to be registered with the logger
+ */
+function setup_change_callbacks(&$changed_reviewers, &$changed_labs) {
+  // Define a closure to populate past reviewer IDs
+  $reviewers_cb = function($old, $new) use (&$changed_reviewers) {
+    $old_reviewers = explode(',', $old);
+    $new_reviewers = explode(',', $new);
+
+    // Add any reviewers in the current change to the $changed_reviewers array
+    foreach ($old_reviewers as $reviewer) {
+      if ($reviewer != '') {
+        $changed_reviewers[$reviewer] = false;
+      }
+    }
+    foreach ($new_reviewers as $reviewer) {
+      if ($reviewer != '') {
+        $changed_reviewers[$reviewer] = false;
+      }
+    }
+  };
+
+  // Define a closure to populate past labs
+  $labs_cb = function($old, $new) use (&$changed_labs) {
+    $old_labs = explode(',', $old);
+    $new_labs = explode(',', $new);
+
+    // Add any labs in the current change to the $changed_labs array
+    foreach ($old_labs as $lab) {
+      if ($lab != '') {
+        $changed_labs[$lab] = false;
+      }
+    }
+    foreach ($new_labs as $lab) {
+      if ($lab != '') {
+        $changed_labs[$lab] = false;
+      }
+    }
+  };
+
+  // Use the closures for changes
+  $callbacks = array('externals' => $reviewers_cb, 'internals' => $reviewers_cb, 'labs' => $labs_cb);
+
+  return $callbacks;
+}
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
+// Build up a list of all past reviewers and labs for the 'changes' tab
+$changed_reviewers = array();
+$changed_labs = array();
+
+$change_callbacks = setup_change_callbacks($changed_reviewers, $changed_labs);
+
 $logger = new Logger($mysqli);
+
+// Get the changes to be used later
+$changes = $logger->get_changes('Paper', $paperID, $change_callbacks);
 
 if ($properties->get_summative_lock() and !$userObject->has_role('SysAdmin')) {
   $locked = true;
@@ -64,22 +128,6 @@ function format_referencematerial($ID, $refID) {
   if ($ID == '') return '';
 
   return $refID[$ID];
-}
-
-function format_modules($text, $modules) {
-  if ($text == '') return '';
-
-  $formatted_string = '';
-  $parts = explode(',', $text);
-  foreach ($parts as $part) {
-    if ($formatted_string == '') {
-      $formatted_string = $modules[$part]['code'];
-    } else {
-      $formatted_string .= ', ' . $modules[$part]['code'];
-    }
-  }
-
-  return $formatted_string;
 }
 
 function format_folders($id, $folders) {
@@ -108,6 +156,30 @@ function format_user($text, $user_list) {
   }
 
   return $formatted_string;
+}
+
+function format_lab($lab_id, $lab_list) {
+  return (isset($lab_list[$lab_id])) ? $lab_list[$lab_id] : $lab_id;
+}
+
+function format_marking($marking, $string) {
+  $marking_string = $marking;
+
+  $marking_type = $marking{0};
+
+  switch ($marking_type) {
+    case MARK_NO_ADJUSTMENT:
+      $marking_string = $string['noadjustment'];
+      break;
+    case MARK_RANDOM:
+      $marking_string = $string['calculatrrandommark'];
+      break;
+    case MARK_STD_SET:
+      $marking_string = $string['stdset'];
+      break;
+  }
+
+  return $marking_string;
 }
 
 function format_method($method, $string) {
@@ -178,7 +250,7 @@ function is_leap($year) {
   }
 }
 
-function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) {
+function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$changed_labs, $db) {
   if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
@@ -198,7 +270,7 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) 
 
   $current_labs = explode(',', $labs);
 
-  $result = $db->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id = ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
+  $result = $db->prepare("SELECT labs.id, name, campus, COUNT(client_identifiers.id) FROM labs, client_identifiers WHERE labs.id = client_identifiers.lab GROUP BY client_identifiers.lab ORDER BY campus, name");
   $result->execute();
   $result->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
   $lab_no = 0;
@@ -218,6 +290,10 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) 
     }
     $lab_no++;
     $old_campus = $lab_campus;
+
+    if (isset($changed_labs[$lab_id])) {
+      $changed_labs[$lab_id] = $lab_name;
+    }
   }
   $result->close();
   $html .= "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div>";
@@ -245,19 +321,26 @@ function modulo($n,$b) {
   return $n-$b*floor($n/$b);
 }
 
+$title_unique = true;
+
+
 if (isset($_POST['Submit'])) {
   $old_marking = $properties->get_marking();
+  $old_paper_title = $properties->get_paper_title();
   $old_externals = $properties->get_externals();
   $old_internals = $properties->get_internal_reviewers();
-  
-  // Check that the new paper name is not already used by any other paper (i.e. unique).
-  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ? LIMIT 1");
-  $result->bind_param('s', $_POST['paper_title']);
-  $result->execute();
-  $result->bind_result($paper_title);
-  $result->store_result();
-  if ($result->num_rows == 0 or $properties->get_paper_title() == $_POST['paper_title']) {
-    $properties->set_paper_title($_POST['paper_title']);
+
+  if (isset($_POST['paper_title'])) {
+	  if ($old_paper_title == $_POST['paper_title']) {
+		  $title_unique = true;
+		} else {
+			$title_unique = Paper_utils::is_paper_title_unique($_POST['paper_title'], $mysqli);
+		}
+	}
+  if ($title_unique) {
+    if (isset($_POST['paper_title'])) {  // Check is set, could be disabled.
+      $properties->set_paper_title($_POST['paper_title']);
+    }
     if (isset($_POST['paper_type']) and ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1')) {
       $properties->set_paper_type($_POST['paper_type']);
     }
@@ -306,7 +389,7 @@ if (isset($_POST['Submit'])) {
       $properties->set_hide_if_unanswered('0');
     }
 
-    if (($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$configObject->get('cfg_summative_mgmt') or  $properties->get_paper_type() != '2') {
+    if (($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and $userObject->has_role('SysAdmin')) or !$configObject->get('cfg_summative_mgmt') or  $properties->get_paper_type() != '2') {
   		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   		$target_timezone = new DateTimeZone($_POST['timezone']);
 
@@ -356,8 +439,11 @@ if (isset($_POST['Submit'])) {
         $properties->set_raw_end_date($end_date->format('YmdHis'));
       }
       $properties->set_timezone($_POST['timezone']);
-      $properties->set_calendar_year($_POST['calendar_year']);
-      $exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
+
+			$calendar_year = ($_POST['calendar_year'] == '') ? NULL : $_POST['calendar_year'];
+			$properties->set_calendar_year($calendar_year);
+
+			$exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
       $properties->set_exam_duration($exam_duration);
 
       $lab_string = '';
@@ -442,8 +528,8 @@ if (isset($_POST['Submit'])) {
     }
 
     if ($_POST['marking'] == '') {
-      $properties->set_marking('0');
-    } elseif ($_POST['marking'] == '2') {
+      $properties->set_marking(MARK_NO_ADJUSTMENT);
+    } elseif ($_POST['marking'] == MARK_STD_SET) {
       $properties->set_marking($_POST['std_set']);
     } else {
       $properties->set_marking($_POST['marking']);
@@ -455,7 +541,7 @@ if (isset($_POST['Submit'])) {
 
     $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
     $properties->set_distinction_mark($tmp_distinction_mark);
-    
+
     $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;
     $properties->set_calculator($tmp_calculator);
 
@@ -474,21 +560,32 @@ if (isset($_POST['Submit'])) {
     $properties->set_themecolor($_POST['themecolor']);
     $properties->set_labelcolor($_POST['labelcolor']);
     $properties->set_folder($_POST['folderID']);
-    
+
     if ($properties->get_paper_type() == '2' and $old_marking != $properties->get_marking()) {
       $properties->set_recache_marks(1);
     }
 
     // Save any adjusted properties to the database.
     $properties->save();
-    
+
     if (!$locked) {
+      $old_modules = Paper_utils::get_modules($paperID, $mysqli);
+
       Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
 
       $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
 
-      Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli);
-      Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli);
+      $utils = new GeneralUtils();
+      if (!$utils->arrays_are_equal($old_modules, $paper_modules)) {
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_modules), implode(',', $paper_modules), 'modules');
+      }
+
+      if (Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli)) {
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
+      }
+      if (Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli)) {
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
+      }
     }
 
     // Release objectives-based feedback
@@ -526,7 +623,7 @@ if (isset($_POST['Submit'])) {
 
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Question-based Feedback', 'feedback');
     }
-    
+
     // Release cohort performance feedback
     if (isset($_POST['old_cohort_performance']) and $_POST['old_cohort_performance'] != '' and isset($_POST['cohort_performance']) and $_POST['cohort_performance'] == '0') {
       $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'cohort_performance'");
@@ -572,21 +669,21 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();
       $editProperties->close();
 
-      for ($i=1; $i<10; $i++) {
-        $editProperties = $mysqli->prepare("INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)");
-        if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
-          $editProperties->bind_param('iis', $paperID, $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
-          $editProperties->execute();
-        }
-        $editProperties->close();
+			for ($i=1; $i<10; $i++) {
+				$editProperties = $mysqli->prepare("INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)");
+				if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
+					$editProperties->bind_param('iis', $paperID, $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
+					$editProperties->execute();
+				}
+				$editProperties->close();
 
-        if ($old_textual_feedback[$i]['msg'] != $_POST["feedback_msg$i"] or $old_textual_feedback[$i]['boundary'] != $_POST["feedback_value$i"]) {
-          // log a change
-          $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
-        }
-      }
+				if ($old_textual_feedback[$i]['msg'] != $_POST["feedback_msg$i"] or $old_textual_feedback[$i]['boundary'] != $_POST["feedback_value$i"]) {
+					// log a change
+					$logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
+				}
+			}
+
     }
-    
 
     // Set any metadata security
     $old_meta = '';
@@ -685,7 +782,7 @@ if (isset($_POST['Submit'])) {
           window.opener.parent.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>";
           window.close();
         });
-      
+
         <?php
           if ($_POST['caller'] == 'scheduling') {
         ?>
@@ -704,71 +801,62 @@ if (isset($_POST['Submit'])) {
             window.close();
         <?php
           }
-        ?>        
+        ?>
       });
     </script></head>
     <body>
     <form>
       <br />&nbsp;<div align="center"><input type="button" id="home" name="home" value="   OK   " /></div>
     </form>
-  <?php
-  } else {
-  ?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-    <title><?php echo $string['edittitle']; ?></title>
-  </head>
-  <body>
-    <form>
-      <br /><?php echo $string['warning']; ?><br />&nbsp;<div align="center"><input type="button" name="back" value="&lt; Back" onclick="javascript: history.go(-1)" /></div>
-    </form>
-  <?php
+  </body>
+</html>
+<?php
+    exit();
   }
+}
+
+$option_no = 1;
+
+// Work out if any negative marking is used
+$neg_marking = false;
+$result = $mysqli->prepare("SELECT marks_incorrect FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?");
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->bind_result($marks_incorrect);
+while ($result->fetch()) {
+  if ($marks_incorrect < 0) {
+    $neg_marking = true;
+  }
+}
+$result->close();
+
+// Load textual feedback
+$textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli);
+
+$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
+$target_timezone = new DateTimeZone($properties->get_timezone());
+
+if ($properties->get_start_date() != '') {
+  $start_date = DateTime::createFromFormat('U', $properties->get_start_date(), $local_time);
+  $start_date->setTimezone($target_timezone);
 } else {
-  $option_no = 1;
+  $start_date = '';
+}
 
-  // Work out if any negative marking is used
-  $neg_marking = false;
-  $result = $mysqli->prepare("SELECT marks_incorrect FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($marks_incorrect);
-  while ($result->fetch()) {
-    if ($marks_incorrect < 0) {
-      $neg_marking = true;
-    }
-  }
-  $result->close();
+if ($properties->get_end_date() != '') {
+  $end_date = DateTime::createFromFormat('U', $properties->get_end_date(), $local_time);
+  $end_date->setTimezone($target_timezone);
+} else {
+  $end_date = '';
+}
 
-  // Load textual feedback
-  $textual_feedback = Paper_utils::get_textual_feedback($_GET['paperID'], $mysqli);
-
-  $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
-  $target_timezone = new DateTimeZone($properties->get_timezone());
-
-  if ($properties->get_start_date() != '') {
-    $start_date = DateTime::createFromFormat('U', $properties->get_start_date(), $local_time);
-    $start_date->setTimezone($target_timezone);
-  } else {
-    $start_date = '';
-  }
-
-  if ($properties->get_end_date() != '') {
-    $end_date = DateTime::createFromFormat('U', $properties->get_end_date(), $local_time);
-    $end_date->setTimezone($target_timezone);
-  } else {
-    $end_date = '';
-  }
-
-  if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
-    $sum_disabled = ' disabled';
-  } else {
-    $sum_disabled = '';
-  }
+if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
+  $sum_disabled = ' disabled';
+} elseif ($userObject->has_role('Admin') and $locked) {
+  $sum_disabled = ' disabled';
+} else {
+  $sum_disabled = '';
+}
 
 ?>
 <!DOCTYPE html>
@@ -780,19 +868,7 @@ if (isset($_POST['Submit'])) {
   <title><?php echo $string['propertiestitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-  <style type="text/css">
-    body {background-color:#F1F5FB}
-    table {text-align:left}
-    .r1 {text-indent:-23px; padding-left:23px; background-color:white}
-    .r2 {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
-    .r1disabled {text-indent:-23px; padding-left:23px; background-color:white; color:#808080}
-    .r2disabled {text-indent:-23px; padding-left:23px; background-color:#DDDDDD; color:#808080}
-    select {margin:0px; padding:0px}
-    input[type="text"] {margin:0px}
-    .button_on {background-image:url("../artwork/2007_button_on.png")}
-    .button_over {background-image:url("../artwork/2007_button_over.png")}
-    .button_off {background-image:none}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/properties.css"/>
 
   <?php echo $cfg_editor_javascript; ?>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -843,8 +919,8 @@ if (isset($_POST['Submit'])) {
           }
         }
       }
-      $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>&session=' + $('#session').val() );
-      $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>');
+      $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=<?php echo $paperID; ?>&session=' + $('#session').val() );
+      $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=<?php echo $paperID; ?>');
     }
 
     function objreportURL() {
@@ -1093,13 +1169,19 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
          echo $string['na'];
          break;
        case '6':
-         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
+         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
          break;
        default:
-         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
+         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
      }
      echo "</td></tr>\n";
-     echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"" . $properties->get_paper_title() . "\" name=\"paper_title\"$disabled required /><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
+     echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\">";
+     if (isset($_POST['Submit']) and !$title_unique) {
+       echo "<input type=\"text\" size=\"75\" maxlength=\"255\" class=\"errfield\" value=\"" . $_POST['paper_title'] . "\" name=\"paper_title\"$disabled required />";
+     } else {
+       echo "<input type=\"text\" size=\"75\" maxlength=\"255\" value=\"" . $properties->get_paper_title() . "\" name=\"paper_title\"$disabled required />";
+     }
+     echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\"></td></tr>\n";
    ?>
     <tr><td align="right" valign="top"><?php echo $string['type']; ?>&nbsp;</td><td>
    <?php
@@ -1291,9 +1373,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
       echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">" . $string['method'] . "&nbsp;</td><td rowspan=\"2\">";
     ?>
-       <input type="radio" id="marking1" name="marking" value="0"<?php if ($properties->get_marking() == '0') echo ' checked'; ?> /><?php echo $string['noadjustment']; ?><br />
-       <input type="radio" id="marking2" name="marking" value="1"<?php
-       if ($properties->get_marking() == '1') {
+       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) echo ' checked'; ?> /><?php echo $string['noadjustment']; ?><br />
+       <input type="radio" id="marking2" name="marking" value="<?php echo MARK_RANDOM ?>"<?php
+       if ($properties->get_marking() == MARK_RANDOM) {
           echo ' checked';
        }
        if ($neg_marking) {
@@ -1308,9 +1390,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       // Look for any Standard Setting reviews for the paper.
       $std_set_array = array();
       $i = 0;
-      
+
       $std_set_details = $mysqli->prepare("SELECT std_set.id, title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, group_review FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
-      $std_set_details->bind_param('i', $_GET['paperID']);
+      $std_set_details->bind_param('i', $paperID);
       $std_set_details->execute();
       $std_set_details->bind_result($std_setID, $std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $group_review);
       while ($std_set_details->fetch()) {
@@ -1320,8 +1402,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $std_set_details->close();
 
       if (count($std_set_array) > 0) {
-        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\"";
-        if (substr($properties->get_marking(), 0, 1) == '2') echo ' checked';
+        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"" . MARK_STD_SET . "\"";
+        if (substr($properties->get_marking(), 0, 1) == MARK_STD_SET) echo ' checked';
         echo " />";
         echo $string['stdset'] . ' <select name="std_set">';
         foreach ($std_set_array as $std_set_line) {
@@ -1332,16 +1414,16 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
           $std_setID = $std_set_line['std_setID'];
           $std_set_display_date = $std_set_line['display_date'];
 
-          if ($properties->get_marking() == "2,$std_setID") {
-            echo "<option value=\"2,$std_setID\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
+          if ($properties->get_marking() == MARK_STD_SET . ",$std_setID") {
+            echo "<option value=\"" . MARK_STD_SET . ",$std_setID\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           } else {
-            echo "<option value=\"2,$std_setID\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
+            echo "<option value=\"" . MARK_STD_SET . ",$std_setID\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
           }
-          
+
         }
         echo "</select>\n";
       } else {
-        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\" disabled />";
+        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"" . MARK_STD_SET . "\" disabled />";
         echo '<span style="color:#808080">' . $string['stdset'] . '</span>';
       }
     }
@@ -1394,7 +1476,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
     echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\"$sum_disabled>\n<option value=\"\">" . $string['na'] .  "</option>\n";
-    
+
     $stop_year = date("Y") + 3;
     for ($year=2002; $year<$stop_year; $year++) {
       $next_year = ($year - 2000) + 1;
@@ -1646,7 +1728,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "</td>\n";
 
-    echo "<td>" . output_labs($properties->get_labs(), $configObject->get('cfg_summative_mgmt'), $properties->get_paper_type(), $userObject, $mysqli) . "</td></tr>\n";
+    echo "<td>" . output_labs($properties->get_labs(), $configObject->get('cfg_summative_mgmt'), $properties->get_paper_type(), $userObject, $changed_labs, $mysqli) . "</td></tr>\n";
 
   ?>
   </td></tr>
@@ -1670,9 +1752,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
      echo "<table cellspacing=\"0\" cellpadding=\"6\" border=\"0\" style=\"margin:15px\">\n";
 
      $feedback_reports = array('objectives'=>'', 'questions'=>'', 'cohort_performance'=>'');
-     
+
      $feedback_details = $mysqli->prepare("SELECT idfeedback_release, type FROM feedback_release WHERE paper_id = ?");
-     $feedback_details->bind_param('i', $_GET['paperID']);
+     $feedback_details->bind_param('i', $paperID);
      $feedback_details->execute();
      $feedback_details->bind_result($idfeedback_release, $type);
      $feedback_details->store_result();
@@ -1680,7 +1762,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $feedback_reports[$type] = 1;
      }
      $feedback_details->close();
-     
+
      if (in_array($properties->get_paper_type(), array('0', '1', '2', '4', '5'))) {
        echo '<tr><td><img src="../artwork/feedback_release_icon.png" width="48" height="48" />';
        echo "<td><input type=\"hidden\" name=\"old_objectives_report\" value=\"" . $feedback_reports['objectives'] . "\" />";
@@ -1744,7 +1826,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
      echo "</td></tr>\n";
 
-     if (in_array($properties->get_paper_type(), array('2', '4'))) {
+     if (!in_array($properties->get_paper_type(), array('2', '4'))) {
        echo "<tr><td colspan=\"2\"style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['textualfeedback'] . "</td></tr>\n";
        echo "<tr><td style=\"text-align:center\">" . $string['above'] . "</td><td style=\"text-align:center\">" . $string['message'] . "</td></tr>\n";
        for ($i=1; $i<=10; $i++) {
@@ -1770,14 +1852,14 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 <td align="center" colspan="2">
 <table cellpadding="1" cellspacing="2" border="0">
 <tr><td colspan="3">&nbsp;<?php
-  $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id AND q_type='sct'");
-  $result->bind_param('i', $_GET['paperID']);
+  $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type = 'sct'");
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($sct_no);
   $result->fetch();
   $result->close();
   if ($sct_no > 0) {
-    echo '<a href="' . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '" target="_blank" style="color:blue">' . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '</a>';
+    echo '<a href="' . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '" target="_blank" style="color:blue">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '</a>';
   }
 
 ?></td></tr>
@@ -2010,13 +2092,16 @@ SQL;
 $modules = module_utils::get_module_list_by_id($mysqli);
 
 $user_list = array();
-$results = $mysqli->prepare("SELECT id, title, surname FROM users WHERE roles != 'student'");
-$results->execute();
-$results->bind_result($id, $title, $surname);
-while ($results->fetch()) {
-  $user_list[$id] = $title . ' ' . $surname;
+if (count($changed_reviewers) > 0) {
+  $reviewer_in = implode(',', array_keys($changed_reviewers));
+  $results = $mysqli->prepare("SELECT id, title, surname FROM users WHERE id IN ($reviewer_in)");
+  $results->execute();
+  $results->bind_result($id, $title, $surname);
+  while ($results->fetch()) {
+    $user_list[$id] = $title . ' ' . $surname;
+  }
+  $results->close();
 }
-$results->close();
 
 $reference_material = array();
 $results = $mysqli->prepare("SELECT id, title FROM reference_material");
@@ -2030,57 +2115,86 @@ $results->close();
 $folders = folder_utils::get_all_folders($mysqli);
 
 echo "<tr><th>" . $string['part'] . "</th><th>" . $string['old'] . "</th><th>" . $string['new'] . "</th><th>" . $string['date'] . "</th><th>" . $string['author'] . "</th></tr>";
-$changes = $logger->get_changes('Paper', $paperID);
+// Changes retrieved at beginning of file
 $rows = count($changes);
 for ($i=0; $i<$rows; $i++) {
   $part = $changes[$i]['part'];
 
   $old = $changes[$i]['old'];
   $new = $changes[$i]['new'];
-  if ($part == 'startdate' or $part == 'enddate') {
-    $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
-    $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
-  } elseif ($part == 'externalreviewdeadline' or $part == 'internalreviewdeadline') {
-    if ($old != '') $old = date($configObject->get('cfg_long_date_php'), $old);
-    if ($new != '') $new = date($configObject->get('cfg_long_date_php'), $new);
-  } elseif ($part == 'modules') {
-    $old = format_modules($old, $modules);
-    $new = format_modules($new, $modules);
-  } elseif ($part == 'folder') {
-    $old = format_folders($old, $folders);
-    $new = format_folders($new, $folders);
-  } elseif ($part == 'method') {
-    $old = format_method($old, $string);
-    $new = format_method($new, $string);
-  } elseif ($part == 'displaycalculator' or $part == 'demosoundclip' or $part == 'photos' or $part == 'ticks_crosses' or $part == 'hideallfeedback' or $part == 'textfeedback' or $part == 'correctanswerhighlight' or $part == 'question_marks') {
-    $old = format_on_off($old, $string);
-    $new = format_on_off($new, $string);
-  } elseif ($part == 'externals' or $part == 'internals') {
-    $old = format_user($old, $user_list);
-    $new = format_user($new, $user_list);
-  } elseif ($part == 'background' or $part == 'foreground' or $part == 'theme' or $part == 'labelsnotes') {
-    $old = format_color($old);
-    $new = format_color($new);
-  } elseif ($part == 'referencematerial') {
-    $old = format_referencematerial($old, $reference_material);
-    $new = format_referencematerial($new, $reference_material);
-  } elseif ($part == 'display') {
-    $old = format_display($old, $string);
-    $new = format_display($new, $string);
-  } elseif ($part == 'navigation') {
-    $old = format_navigation($old, $string);
-    $new = format_navigation($new, $string);
-  } elseif ($part == 'review') {
-    $old = format_review($old, $string);
-    $new = format_review($new, $string);
-  } elseif ($part == 'passmark') {
-    $old = format_passmark($old, $string);
-    $new = format_passmark($new, $string);
+
+  switch ($part) {
+    case 'startdate':
+    case 'enddate':
+      $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
+      $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
+      break;
+    case 'folder':
+      $old = format_folders($old, $folders);
+      $new = format_folders($new, $folders);
+      break;
+    case 'method':
+      $old = format_method($old, $string);
+      $new = format_method($new, $string);
+      break;
+    case 'displaycalculator':
+    case 'demosoundclip':
+    case 'photos':
+    case 'ticks_crosses':
+    case 'hideallfeedback':
+    case 'textfeedback':
+    case 'correctanswerhighlight':
+    case 'question_marks':
+      $old = format_on_off($old, $string);
+      $new = format_on_off($new, $string);
+      break;
+    case 'externals':
+    case 'internals':
+      $old = format_user($old, $user_list);
+      $new = format_user($new, $user_list);
+      break;
+    case 'background':
+    case 'foreground':
+    case 'theme':
+    case 'labelsnotes':
+      $old = format_color($old);
+      $new = format_color($new);
+      break;
+    case 'referencematerial':
+      $old = format_referencematerial($old, $reference_material);
+      $new = format_referencematerial($new, $reference_material);
+      break;
+    case 'display':
+      $old = format_display($old, $string);
+      $new = format_display($new, $string);
+      break;
+    case 'navigation':
+      $old = format_navigation($old, $string);
+      $new = format_navigation($new, $string);
+      break;
+    case 'review':
+      $old = format_review($old, $string);
+      $new = format_review($new, $string);
+      break;
+    case 'passmark':
+    case 'distinction':
+      $old = format_passmark($old, $string);
+      $new = format_passmark($new, $string);
+      break;
+    case 'labs':
+      $old = format_lab($old, $changed_labs);
+      $new = format_lab($new, $changed_labs);
+      break;
+    case 'marking':
+      $old = format_marking($old, $string);
+      $new = format_marking($new, $string);
+      break;
   }
 
   if (isset($string[$part])) $part = $string[$part];
   echo "<tr><td>" . ucfirst($part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $changes[$i]['date']) . "</td><td>" . $changes[$i]['title'] . " " . $changes[$i]['surname'] . "</td><tr>\n";
 }
+$mysqli->close();
 ?>
 </table>
 </div></td></tr>
@@ -2092,11 +2206,8 @@ for ($i=0; $i<$rows; $i++) {
 </table>
 
 <input type="hidden" name="noadd" value="<?php if (isset($_GET['noadd'])) echo $_GET['noadd']; ?>" />
-<input type="hidden" name="caller" value="<?php echo $_GET['caller']; ?>" />
+<input type="hidden" name="caller" value="<?php if (isset($_GET['caller'])) echo $_GET['caller']; ?>" />
 </form>
-<?php
-  }
-$mysqli->close();
-?>
+
 </body>
 </html>

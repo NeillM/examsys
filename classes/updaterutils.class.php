@@ -107,6 +107,28 @@ Class UpdaterUtils {
     return true;
   }
 
+    public function does_index_column_exist($table_name, $index_name, $index_column, $index_sequence = NULL) {
+        if(!is_null($index_sequence)) {
+            $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ? AND column_name = ? and seq_in_index = ?");
+            $result->bind_param('sss', $index_name, $index_column, $index_sequence);
+
+        } else {
+            $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ? AND column_name = ?");
+            $result->bind_param('ss', $index_name, $index_column);
+        }
+        $result->execute();
+        $result->store_result();
+        $num_rows =  $result->num_rows;
+
+        $result->close();
+
+        if ($num_rows < 1) {
+            return false;
+        }
+
+        return true;
+    }
+
   public function does_tables_priv_exist($user, $table, $privileges) {
     $this->mysqli->select_db('mysql');
 
@@ -136,6 +158,9 @@ Class UpdaterUtils {
     $result = $this->mysqli->query("SHOW GRANTS FOR '$user'@'$host'");
     echo $this->mysqli->error;
 
+      if(!is_object($result)) {
+          return false;
+      }
     while ($existing_grant = $result->fetch_array()) {
       if (stripos($existing_grant[0], ".`$table` TO") !== false) {
         $found_grant = $existing_grant[0];
@@ -157,32 +182,43 @@ Class UpdaterUtils {
   }
 
   public function execute_query($sql, $update_display) {
+    if ($update_display) {
+      echo "<li>$sql&hellip;";
+      ob_flush();
+      flush();
+    }
+
     $this->mysqli->query($sql);
 
     if ($this->mysqli->errno == 0) {
       if ($update_display) {
-        echo "<li>$sql</li>\n";
-        ob_flush();
-        flush();
+        echo "Done</li>\n";
       }
     } elseif ($this->mysqli->warning_count>0) {
-      echo '<li class="warning">WARNING: ' . $sql . '</li>';
+      if ($update_display) echo '</li>';
+      echo '<li class="warning">WARNING: ' . $sql;
       $e = $this->mysqli->get_warnings();
       do {
-        echo "Warning No: $e->errno: - $e->message <br />\n";
+        echo "<br />Warning No: $e->errno: - $e->message\n";
       } while ($e->next());
+      echo "</li>\n";
     } else {
-      echo '<li class="error">ERROR: ' . $sql . '</li>';
+      if ($update_display) echo '</li>';
+      echo '<li class="error">ERROR: ' . $sql;
       if ($this->mysqli->error) {
         try {
           $err = $this->mysqli->error;
           $mess = $this->mysqli->errno;
           throw new Exception("MySQL error $err", $mess);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+          echo "<br />Error No: " . $e->getCode() . " - " . $e->getMessage();
         }
       }
+      echo "</li>\n";
     }
+
+    ob_flush();
+    flush();
   }
 
   public function update_version($version, $string, $cfg_web_root) {
