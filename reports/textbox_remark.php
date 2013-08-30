@@ -23,19 +23,24 @@
 */
 
 require '../include/staff_auth.inc';
+require '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/mathsutils.class.php';
+
+$paperID    = check_var('paperID', 'GET', true, false, true);
 
 $module = (isset($_GET['module']) and $_GET['module'] != '') ? $_GET['module'] : '';
 
 if (isset($_POST['submit'])) {
   // Delete any previous remark records
-  $result = $mysqli->prepare("DELETE FROM textbox_remark WHERE paperID=?");
+  $result = $mysqli->prepare("DELETE FROM textbox_remark WHERE paperID = ?");
   $result->bind_param('i', $_POST['paperID']);
   $result->execute();
   $result->close();
 
   for ($student=1; $student<$_POST['student_no']; $student++) {
     if (isset($_POST["student$student"]) and $_POST["student$student"] != '') {
-      $result = $mysqli->prepare("INSERT INTO textbox_remark VALUES (NULL,?,?)");
+      $result = $mysqli->prepare("INSERT INTO textbox_remark VALUES (NULL, ?, ?)");
       $result->bind_param('ii', $_POST['paperID'], $_POST["student$student"]);
       $result->execute();
       $result->close();
@@ -47,6 +52,8 @@ if (isset($_POST['submit'])) {
   header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $_GET['folder']);
 	exit();
 } else {
+	$startdate  = check_var('startdate', 'GET', true, false, true);
+	$enddate    = check_var('enddate', 'GET', true, false, true);
 ?>
 <!DOCTYPE html>
 <html>
@@ -67,69 +74,96 @@ if (isset($_POST['submit'])) {
 <body>
 <?php
   // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_type, paper_title FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($paper_type, $paper);
-  $result->fetch();
-  $result->close();
-
-  $module_code = '';
-  if ($module != '') {
-    $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE id=? LIMIT 1");
-    $result->bind_param('i', $module);
-    $result->execute();
-    $result->bind_result($module_code);
-    $result->fetch();
-    $result->close();
-  }
-
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
-
+	$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+	
+	$paper_total = $properties->get_total_mark();
+	$pass_mark = $properties->get_pass_mark();
+	$paper_type = $properties->get_paper_type();
+	
   echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
-  echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th colspan=\"4\">";
+  echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th colspan=\"5\">";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-  if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  } elseif ($module != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
+  if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $string['secondmarkselection'] . '</div></th><th style="width:50%; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="' . $string['help'] . '" border="0" /></a></th></tr>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $string['secondmarkselection'] . '</div></th><th style="width:50%; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="' . $string['help'] . '" /></a></th></tr>';
+  echo "<tr><th colspan=\"6\" class=\"bevel\"></th></tr>\n";
 
-  echo "<tr><th colspan=\"5\" class=\"bevel\"></th></tr>\n";
-
-  $result = $mysqli->prepare("SELECT SUM(marks_correct), pass_mark FROM (properties, papers, questions, options) WHERE property_id=? AND properties.property_id=papers.paper AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type != 'info' GROUP BY paper");
+	if ($paper_type == '2') {
+		$time_int = 2;
+	} else {
+		$time_int = 0;
+	}
+	
+	// Get any previous remark settings.
+	$remark_array = array();
+	$result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($paper_total, $pass_mark);
-  $result->fetch();
-  $result->close();
-
-  $student_no = 1;
-
-  $result = $mysqli->prepare("SELECT SUM(mark) AS total_mark, users.username, users.id, student_id FROM textbox_marking, users LEFT JOIN sid ON users.id=sid.userID WHERE users.id=textbox_marking.student_userID AND paperID=? AND phase=1 GROUP BY student_userID ORDER BY student_id");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($total_mark, $username, $recordID, $student_id);
+  $result->bind_result($userID);
   while ($result->fetch()) {
-    $student_id = ($student_id == '') ? '&lt;student ID unknown&gt;' : $student_id;
+	  $remark_array[$userID] = true;
+  }
+	$result->close();
+	
+	if (count($remark_array) > 0) {
+		$prev_remark = true;
+	} else {
+		$prev_remark = false;
+	}
+	
+	// Get back total marks for the paper excluding all textboxes.
+	$marks_array = array();
+	$result = $mysqli->prepare("SELECT SUM(adjmark) AS adjmark_total, userID, username FROM log$paper_type, log_metadata, questions, users WHERE log2.metadataID = log_metadata.id AND paperID = ? AND log$paper_type.q_id = questions.q_id AND q_type NOT IN ('textbox','info') AND log_metadata.userID = users.id AND roles = 'Student' AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ? GROUP BY metadataID");
+  $result->bind_param('iss', $_GET['paperID'], $startdate, $enddate);
+  $result->execute();
+  $result->bind_result($adjmark_total, $userID, $username);
+  while ($result->fetch()) {
+	  $marks_array[$userID]['total'] = $adjmark_total;
+	  $marks_array[$userID]['userID'] = $userID;
+	  $marks_array[$userID]['username'] = $username;
+	  $marks_array[$userID]['student_id'] = '';
+  }
+	$result->close();
+
+	// Add in total marks for the textbox questions (primary mark).
+	$result = $mysqli->prepare("SELECT SUM(mark) AS sum_mark, users.username, users.id, student_id FROM textbox_marking, users LEFT JOIN sid ON users.id = sid.userID WHERE users.id = textbox_marking.student_userID AND paperID = ? AND phase = 1 GROUP BY student_userID ORDER BY student_id");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($sum_mark, $username, $userID, $student_id);
+	while ($result->fetch()) {
+	  $marks_array[$userID]['total'] += $sum_mark;
+	  $marks_array[$userID]['userID'] = $userID;
+	  $marks_array[$userID]['username'] = $username;
+	  $marks_array[$userID]['student_id'] = $student_id;
+	}
+	$result->close();
+
+	$percent_decimals = $configObject->get('percent_decimals');
+	
+  $student_no = 1;
+	foreach ($marks_array as $userID=>$user_data) {
+    $student_id = ($user_data['student_id'] == '') ? '&lt;student ID unknown&gt;' : $user_data['student_id'];
+		$username = $user_data['username'];
+		$total_mark = $user_data['total'];
+		$recordID = $user_data['userID'];
+	
+		$checked = '';
+		if ($prev_remark) {
+		  if (isset($remark_array[$recordID])) $checked = ' checked';
+		} else {
+			if (round(($total_mark/$paper_total)*100) < $pass_mark) $checked = ' checked';
+		}
+		
     if (round(($total_mark/$paper_total)*100) < $pass_mark) {
-      echo "<tr style=\"color:red\"><td class=\"pad\"><input type=\"checkbox\" name=\"student$student_no\" value=\"$recordID\" checked /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . round(($total_mark/$paper_total)*100) . "%</td><td>&nbsp;</td></tr>\n";
+      echo "<tr style=\"color:red\"><td class=\"pad\"><input type=\"checkbox\" name=\"student$student_no\" value=\"$recordID\"$checked /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . MathsUtils::formatNumber(($total_mark/$paper_total)*100, $percent_decimals) . "%</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"pad\"><input type=\"checkbox\" name=\"student$student_no\" value=\"$recordID\" /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . round(($total_mark/$paper_total)*100) . "%</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"pad\"><input type=\"checkbox\" name=\"student$student_no\" value=\"$recordID\"$checked /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . MathsUtils::formatNumber(($total_mark/$paper_total)*100, $percent_decimals) . "%</td><td>&nbsp;</td></tr>\n";
     }
     $student_no++;
   }
-  $result->close();
 ?>
 
 <tr><td colspan="5">&nbsp;</td></tr>

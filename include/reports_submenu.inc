@@ -416,9 +416,9 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
       $result->close();
       if ($textbox_no > 0) {
         echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['textboxmarking'] . "</div>\n";
-        echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?ws=1&action=mark&phase=1&',event)\">" . $string['primarymarkbyquestion'] . "</a></div>\n";
+        echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=1&',event)\">" . $string['primarymarkbyquestion'] . "</a></div>\n";
         echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/textbox_remark.php?',event)\">" . $string['selectpapersforremarking'] . "</a></div>\n";
-        echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?ws=1&action=mark&phase=2&',event)\">" . $string['secondmarkbyquestion'] . "</a></div>\n";
+        echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=2&',event)\">" . $string['secondmarkbyquestion'] . "</a></div>\n";
         echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=finalise&',event)\">" . $string['finalisemarks'] . "</a></div>\n";
       }
     }

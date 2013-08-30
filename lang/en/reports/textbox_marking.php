@@ -14,10 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['textboxmarking'] = 'Textbox Marking';
 $string['marks'] = 'marks';
 $string['saveexit'] = 'Save &amp; Exit';
 $string['nostudents'] = 'No students';
 $string['savecontinue'] = 'Save &amp; Continue';
 $string['noanswer'] = 'No answer provided';
 $string['saveerror'] = 'Error saving mark. Please try again';
+$string['hidemarked'] = 'Hide already marked';
+$string['primarymarking'] = 'Primary Marking';
+$string['secondmarking'] = 'Second Marking';
+$string['finalisemarks'] = 'Finalise Marks';
+$string['candidates'] = 'Candidates';
+$string['screen'] = 'Screen';
+$string['note'] = 'Note';
+$string['marks'] = 'marks';
 ?>

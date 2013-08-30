@@ -141,13 +141,9 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
       if ($_GET['action'] == 'finalise') {
         echo "<a href=\"textbox_finalise_marks.php";
       } else {
-        if ($_GET['ws'] == '0') {
-          echo "<a href=\"textbox_mark_frame.php";
-        } else {
-          echo "<a href=\"textbox_mark_frame_ws.php";
-        }
+        echo "<a href=\"textbox_marking.php";
       }
-      echo "?ws=1&q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">$leadin</a></td></tr>\n";
+      echo "?q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">$leadin</a></td></tr>\n";
     }
     $question_no++;
   }
