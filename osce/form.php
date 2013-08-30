@@ -32,7 +32,7 @@ check_var('id', 'GET', true, false, false);
 
 if (isset($_REQUEST['userID'])) {
   $userID = $_REQUEST['userID'];
-  
+
   if (!UserUtils::userid_exists($userID, $mysqli)) {   // Check the passed through user ID actually exists.
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -59,11 +59,13 @@ if (isset($_POST['submit'])) {
     $result = $mysqli->prepare("SELECT id FROM log4_overall WHERE q_paper = ? AND userID = ? LIMIT 1");
     $result->bind_param('ii', $paperID, $userID);
     $result->execute();
+    $result->store_result();
     $result->bind_result($insertID);
     $result->fetch();
+    $have_record = $result->num_rows > 0;
     $result->close();
-    
-    if (isset($insertID)) {
+
+    if ($have_record) {
       // Delete any Log4 previous submissions for this student.
       $result = $mysqli->prepare("DELETE FROM log4 WHERE log4_overallID = ?");
       $result->bind_param('i', $insertID);
@@ -75,7 +77,7 @@ if (isset($_POST['submit'])) {
       $result->bind_param('isisssii', $userID, $started, $paperID, $_POST['overall_val'], $_POST['fback'], $_POST['grade'], $userObject->get_user_ID(), $_POST['year']);
       $result->execute();
       $result->close();
-      
+
       $insertID = $mysqli->insert_id;
     }
 
@@ -101,7 +103,7 @@ if (isset($_POST['submit'])) {
     $result->execute();
     $result->close();
   }
-  
+
   // Redirect back to the class list to get the next student.
   header("location: " . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $_GET['id']);
   exit();
@@ -126,7 +128,7 @@ if (isset($_POST['submit'])) {
     $test = false;
   }
 
-  
+
   // Check time security
   if ($test == false) {
     if (time() < $start_date or time() > $end_date) {
@@ -149,10 +151,10 @@ if (isset($_POST['submit'])) {
   }
   ?>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  
+
+
   <title><?php echo $string['osceform']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/osce.css" />
   <style type="text/css">
@@ -165,7 +167,7 @@ if (isset($_POST['submit'])) {
     ?>
     .t {color:<?php echo $propertyObj->get_themecolor(); ?>}
   </style>
-  
+
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function ans(q_id, rating) {
@@ -260,7 +262,7 @@ if (isset($_POST['submit'])) {
       $('#overall_val').val(rating);
       checkTotals();
     }
-    
+
     $(document).ready(checkTotals);
   </script>
   </head>
@@ -316,7 +318,7 @@ if (isset($_POST['submit'])) {
       echo "<input type=\"hidden\" name=\"q" . $question_no . "_val\" id=\"q" . $question_no . "_val\" value=\"0\">";
     }
     echo "<input type=\"hidden\" name=\"q" . $question_no . "_id\" value=\"$q_id\"></td>";
-    
+
     for ($i=0; $i<$cols; $i++) {
       if (isset($stored_results[$q_id]) and $stored_results[$q_id] == $i) {
         echo "<td style=\"background-color:" . $cell_colors[$i] . "\" class=\"r\" id=\"c" . $question_no . "_" . ($i+1) . "\" onclick=\"ans($question_no," . ($i+1) . ")\">$i</td>";
@@ -328,13 +330,13 @@ if (isset($_POST['submit'])) {
     $question_no++;
   }
   $result->close();
-  
+
   if ($cols == 2) {
     echo "<tr><td></td><td class=\"totals r\"><input type=\"text\" name=\"fails\" id=\"fails\" size=\"4\" style=\"font-size:60%; font-weight:bold; border:0px; text-align:right; background-color:#EAEAEA\" value=\"0\" /></td><td class=\"totals r\"><input type=\"text\" name=\"borderlines\" size=\"4\" id=\"borderlines\" style=\"font-size:60%; font-weight:bold; border:0px; text-align:right; background-color:#EAEAEA\" value=\"0\" /></td></tr>\n";
   } else {
     echo "<tr><td></td><td class=\"totals r\"><input type=\"text\" name=\"fails\" id=\"fails\" size=\"4\" style=\"font-size:60%; font-weight:bold; border:0px; text-align:right; background-color:#EAEAEA\" value=\"0\" /></td><td class=\"totals r\"><input type=\"text\" name=\"borderlines\" size=\"4\" id=\"borderlines\" style=\"font-size:60%; font-weight:bold; border:0px; text-align:right; background-color:#EAEAEA\" value=\"0\" /></td><td class=\"totals r\"><input type=\"text\" name=\"passes\" size=\"4\" id=\"passes\" style=\"font-size:60%; font-weight:bold; border:0px; text-align:right; background-color:#EAEAEA\" value=\"0\" /></td></tr>\n";
   }
-  
+
   if ($marking == '3' or $marking == '4' or $marking == '6') {
     if (!isset($overall_rating)) $overall_rating = '0';
     echo "<tr><td colspan=\"4\" style=\"text-align:left\">" . $propertyObj->get_paper_postscript() . "</td></tr><tr><td colspan=\"4\" style=\"font-weight:bold; text-align:left\">" . $string['overallclassification'] . "<input type=\"hidden\" name=\"overall_val\" id=\"overall_val\" value=\"" . $overall_rating . "\" /></td></tr><tr><td colspan=\"4\" id=\"overall\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr>";
