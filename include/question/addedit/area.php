@@ -83,8 +83,7 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
 	
 require_once $root . 'classes/configobject.class.php';
 $configObject          = Config::get_instance();
-$cfg_interactive_qs    = $configObject->get('cfg_interactive_qs');
-if ($cfg_interactive_qs == 'html5') {
+if ($configObject->get('cfg_interactive_qs') == 'html5') {
   //<!-- ======================== HTML5 part ================= -->
   echo '<canvas id="canvas1" width="' . $plugin_width . '" height="' . ($plugin_height+3) . '"></canvas>' . "\n";
   echo '<br /><div style="width:100%;text-align: left;" id="canvasbox"></div>' . "\n";

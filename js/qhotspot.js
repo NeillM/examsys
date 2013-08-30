@@ -136,7 +136,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
       this.qa_redraw_canvas;
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
-		this.menu_img.src = '/html5/images/combined.png'; 
+		this.menu_img.src = '/js/images/combined.png'; 
 	}
 }
 
@@ -320,7 +320,7 @@ function qh_test(type) {
 
 function redraw_hotspot(i,j) {
   var f_type = this.hotSpots[i][(3+j*6+1)];
-  console.log(i,j,f_type);
+  //console.log(i,j,f_type);
   this.HsCo = this.hotSpots[i][(3+j*6+2)].split(',');
   var col = 4; 
   if (this.activeLabel==i) col=0; 
@@ -882,7 +882,7 @@ function qh_mouseDragMove(e){
       if (this.global_edit) cur = 'not-allowed';
 			if (this.global_edit && this.test_result!='') cur = 'move';
 			if (this.global_edit && this.test_result!='' && this.test_result.indexOf('$')<this.test_result.length-1) cur = 'default';
-			if (this.global_erase && this.test_result!='') cur = 'url(/html5/images/cur_erase.cur), default';//cur_cross
+			if (this.global_erase && this.test_result!='') cur = 'url(/js/images/cur_erase.cur), default';//cur_cross
 			if (over_object) cur = 'pointer';
 			if (this.handle_over != -1) cur = 'move';
 			//console.log(this.handle_over);

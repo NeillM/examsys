@@ -4,8 +4,8 @@ var rq = new Array(); //array of questions/canvases
 //main startup function
 function setUpQuestion(num, canvasId, lang, image, config, answer, extra, colour, type, mode) {
 //preload cursors
-$.get('/html5/images/cur_erase.cur', function() { }); 
-$.get('/html5/images/cur_cross.cur', function() { }); 
+$.get('/js/images/cur_erase.cur', function() { }); 
+$.get('/js/images/cur_cross.cur', function() { }); 
 
 	nikotest = 0;
 	if (nikotest==1) {

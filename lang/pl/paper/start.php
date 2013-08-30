@@ -17,9 +17,9 @@
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
 require_once '../lang/' . $language . '/question/edit/area.txt';
-require_once 'hotspot_answer.txt';
-require_once 'hotspot_question.txt';
-require_once 'label_answer.txt';
+require_once '../lang/' . $language . 'hotspot_answer.txt';
+require_once '../lang/' . $language . 'hotspot_question.txt';
+require_once '../lang/' . $language . 'label_answer.txt';
 $jstring = $string; //to pass it to JavaScript HTML5 modules
 //HTML5 part
 

@@ -85,7 +85,7 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
       this.qa_redraw_canvas;
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
-		this.menu_img.src = '/html5/images/combined.png'; 
+		this.menu_img.src = '/js/images/combined.png'; 
 	}
 	//this.redraw_once = true;
 }
@@ -538,11 +538,11 @@ function qa_mouseDragMove(e){
       //if (global_edit) cur = 'not-allowed';
 			//if (global_edit && this.test_result!='') cur = 'move';
 			//if (global_edit && this.test_result!='' && this.test_result.indexOf('$')<this.test_result.length-1) cur = 'default';
- 			if (this.global_delpoint || this.isCtrl) cur = 'url(/html5/images/cur_cross.cur), default';
+ 			if (this.global_delpoint || this.isCtrl) cur = 'url(/js/images/cur_cross.cur), default';
 			if (over_object) cur = 'pointer';
       if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
       if (this.global_clearpnl) cur = 'default';
- 			//if (this.handler_sqr>-1) cur = 'url(/html5/images/cur_cross.cur) 6 5, default';
+ 			//if (this.handler_sqr>-1) cur = 'url(/js/images/cur_cross.cur) 6 5, default';
       e.target.style.cursor = cur;
       
 		}

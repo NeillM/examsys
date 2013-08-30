@@ -592,6 +592,12 @@ if ($textsize > 120) {
     <img class="noimg" src="artwork/no_save.png" />
     <img class="noimg" src="artwork/fire_exit.png" />
     <img class="noimg" src="artwork/title_gradient.png" />
-
+		
+		<script src="js/html5.images.js"></script> 
+		<script src="js/qsharedf.js"></script> 
+		<script src="js/qarea.js"></script> 
+		<script src="js/qhotspot.js"></script> 
+		<script src="js/qlabelling.js"></script> 
+    <img class="noimg" src="js/images/combined.png" />
 </body>
 </html>

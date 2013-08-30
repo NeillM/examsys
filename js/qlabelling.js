@@ -106,8 +106,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		for (i=this.existingLabelInfo.length; i<20; i++) 
 			this.existingLabelInfo.push('$$$$');
 		
-		//console.log(this.existingLabelInfo);
-
 		//arrays of default positions of labels
 		var apx = new Array();
 		var apy = new Array();
@@ -143,14 +141,16 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			for (i=0; i<this.existingLabelInfo.length; i++) {
 				var myLabelInfo = this.existingLabelInfo[i].split("$"); //divides each bit of info about label
 				//if (typeof(myLabelInfo[4])!='undefined' || this.qmode=='edit') 
+				var mli_index = (myLabelInfo[0]!=''?Number(myLabelInfo[0]):i); 	//index
+
 				var yes_to_add = true;
 				if (typeof(myLabelInfo[4])=='undefined') yes_to_add = false;
-				if (this.qmode=='answer' && myLabelInfo[4]=='') yes_to_add = false;
+				//if (this.qmode=='answer' && myLabelInfo[4]=='') yes_to_add = false;
 				if (this.qmode=='analysis' && myLabelInfo[4]=='') yes_to_add = false;
 				if (this.qmode=='script' && myLabelInfo[4]=='') yes_to_add = false;
+				if (mli_index > 19) yes_to_add = false;				
 				
 				if (yes_to_add) {
-					var mli_index = (myLabelInfo[0]!=''?Number(myLabelInfo[0]):i); 	//index
 					var mli_combo = (myLabelInfo[1]!=''?Number(myLabelInfo[1]):0); 	//combo indicator?  >0
 					var mli_pos_xa = Number(myLabelInfo[2]);  											//pos_x
 					var mli_pos_ya = Number(myLabelInfo[3]);  											//pos_y
@@ -254,15 +254,21 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		
 		
 		//console.log(this.answerBox);
+		
 		/*
 		if (typeof(this.answerBox)!='undefined')
 		for (i=0;i<this.answerBox.length;i++) {
-			//console.log(i,this.answerBox[i]);
-			for (j=0;j<this.answerBox[i].length;j++) {
-				//console.log(i,j,this.answerBox[i][j]);
+			if (typeof(this.answerBox[i])!='undefined'){
+				console.log(i,this.answerBox[i]);
+				for (j=0;j<this.answerBox[i].length;j++) {
+					console.log(i,j,this.answerBox[i][j]);
+				}
+			} else {
+				console.log('this.answerBox for '+i+' is undefined');
 			}
 		}
 		*/
+		
 		//for (i=0;i<this.pholderBox.length;i++) console.log(this.pholderBox[i]);
 		//for (i=0;i<this.shapeBox.length;i++) console.log(this.shapeBox[i]);
 
@@ -342,27 +348,34 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			/if ((index+1)<_self.answerBox.length) ql_load_image_array(_self,index+1);
 		}
 		*/
-		
-		function gen_img_onload(){
-			this.imagesLoaded ++;
-
-			if (this.imagesLoaded == this.max_num_images) {
-				this.allImagesLoaded = true;
-				this.redraw_once = true;
-				this.ql_redraw_canvas;
-			}
-		}  		
-			
-		function ql_load_image_array(_self,index){
-			if (typeof(_self.answerBox[index])!='undefined' && index<_self.answerBox.length && _self.answerBox[index][1]=='image') {
-				_self.answerBox[index][11] = new Image();
-				_self.answerBox[index][11].onload = gen_img_onload.bind(_self);
-				_self.answerBox[index][11].src = '/media/'+_self.answerBox[index][2];
-			}
-			if ((index+1)<_self.answerBox.length) ql_load_image_array(_self,index+1);
+	function ql_gen_img_onload(){
+		//console.log('ql_gen_img_onload');
+		this.imagesLoaded ++;
+		//console.log(this.imagesLoaded, this.max_num_images);
+		if (this.imagesLoaded == this.max_num_images) {
+			this.allImagesLoaded = true;
+			this.redraw_once = true;
+			this.ql_redraw_canvas;
 		}
-		ql_load_image_array(this,0);
-		
+	}  		
+	
+		//loading images
+		if (typeof(this.answerBox)!='undefined')
+		for (i=0;i<this.answerBox.length;i++) {
+			j=0;
+			//if (typeof(this.answerBox[i])!='undefined'){
+				//for (j=0;j<this.answerBox[i].length;j++) {
+					if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1]=="image") {
+						//console.log(this.answerBox[i][j]);
+						//console.log('ql_load_image_array '+this.answerBox[index][j][2]);
+						this.answerBox[i][j][11] = new Image();
+						this.answerBox[i][j][11].onload = ql_gen_img_onload.bind(this);
+						this.answerBox[i][j][11].src = '/media/'+this.answerBox[i][j][2];
+					}
+				//}
+			//}
+		}
+
 
     if (this.max_num_images==0) {
       this.allImagesLoaded = true;
@@ -407,8 +420,8 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
     ////console.log('this.pholderBox');
     
 		//---------- answer, 
-		////console.log('answer: '+answer);
-    // sort out existing answer info
+		//console.log('answer:'+answer+'|');
+		// sort out existing answer info
     if (answer != '') this.is_an_answer = true
     if (answer != "" && answer != undefined && answer != "undefined" && answer != null && answer != "null") {
       var answer_l1 = answer.split(";");
@@ -433,6 +446,19 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
       }    
     }      
     
+		/*
+		if (typeof(this.answerBox)!='undefined')
+		for (i=0;i<this.answerBox.length;i++) {
+			if (typeof(this.answerBox[i])!='undefined'){
+				//console.log(i,this.answerBox[i]);
+				for (j=0;j<this.answerBox[i].length;j++) {
+					console.log(i,j,this.answerBox[i][j]);
+				}
+			} else {
+				console.log('this.answerBox for '+i+' is undefined');
+			}
+		}
+		*/
 		//---------- extra, 
 		//console.log('extra: '+extra);
     //1~0~Mark per Option
@@ -457,12 +483,12 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
       this.qa_redraw_canvas;
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
-		this.menu_img.src = '/html5/images/combined.png'; 
+		this.menu_img.src = '/js/images/combined.png'; 
 	}
 	//this.ql_mouseDragMovef();
 	//console.log('<<< setUpLabelling');
 }
-  
+
 function combo_scope(answer_set) {
 	var vc = '';
   for (var v=0;v<answer_set.length;v++){
@@ -483,6 +509,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
     this.context.shadowOffsetY = 0;
   
   if (this.answerBox[i][j][1]=='image') {
+		console.log(this.answerBox[i][j][11]);
 		this.context.drawImage(this.answerBox[i][j][11],temp_x+(this.imglabelWidth-this.answerBox[i][j][3])*0.5,temp_y+(this.imgLabelHeight-this.answerBox[i][j][4])*0.5);
 		this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.imglabelWidth,this.imgLabelHeight);
   }
@@ -692,7 +719,7 @@ function ql_redraw_canvas() {
     }
   }
  
-
+	console.log(this.allImagesLoaded);
 	if (this.allImagesLoaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || (this.global_add != '' &&  this.shape_x1>-1) || this.global_move || this.global_erase)){
 		this.redraw_once = false;
     //store this.lineThickness 
@@ -1087,7 +1114,7 @@ function ql_mouseDragMove(e){
 		this.char_code = String.fromCharCode(ev.charCode);
 	}	
 	//var unicode=e.keyCode? e.keyCode : e.charCode
-	console.log(ev.type,this.key_code,this.char_code);
+	//console.log(ev.type,this.key_code,this.char_code);
 
 	
 	if (ev.type=='mousemove') {
@@ -1154,8 +1181,9 @@ function ql_mouseDragMove(e){
 			
 		}
 	}	else { //change of cursor
-    this.drag_box_id = -1; 
-		this.drag_box_combo = -1;		
+    var drag_box_old = this.drag_box_id+':'+this.drag_box_combo;
+		this.drag_box_id = -1; 
+		this.drag_box_combo = -1;	
 		if (this.qmode!='analysis' && this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
 			var over_object = false;
 			
@@ -1186,7 +1214,7 @@ function ql_mouseDragMove(e){
 								if (this.drag_box_id==-1 || this.answerBox[i][j][3]!='') {
 									this.drag_box_id = i;
 									this.drag_box_combo = j;
-									if (this.qmode=='script') this.redraw_once = true;
+									//if (this.qmode=='script') this.redraw_once = true;
 									}
 								//document.getElementById('xxx').value += this.drag_box_id;
 							}
@@ -1194,6 +1222,7 @@ function ql_mouseDragMove(e){
 					}
 				}
 			}	
+			if (drag_box_old != this.drag_box_id+':'+this.drag_box_combo && this.qmode=='script') this.redraw_once = true;
       //document.getElementById('xxx').value = this.drag_box_id+':'+this.drag_box_combo;
 
       //test for buttons
@@ -1257,7 +1286,7 @@ function ql_mouseDragMove(e){
 			if (over_object) cur = 'pointer';
 			if (this.global_move && this.activ_shape>-1 && this.y>28) cur = 'move';
 			if (this.active_box_handler!=-1) cur = 'move';
- 			if (this.global_erase && this.activ_shape>-1 && this.y>28) cur = 'url(/html5/images/cur_erase.cur), default';//cur_cross
+ 			if (this.global_erase && this.activ_shape>-1 && this.y>28) cur = 'url(/js/images/cur_erase.cur), default';//cur_cross
       if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
       e.target.style.cursor = cur;
 			//console.log(cur);
@@ -1605,6 +1634,7 @@ function rql(num) {
 	this.ql_mouseDragDown 				= ql_mouseDragDown;
 	this.ql_mouseDragUp 					= ql_mouseDragUp;
 	this.def_colour_panel_parts 	=	def_colour_panel_parts;
+	//this.ql_gen_img_onload				= ql_gen_img_onload;
 
 	this.hexifycolour=hexifycolour;
 	this.textHeight=textHeight;
@@ -1647,7 +1677,7 @@ function rql(num) {
 	this.i_spacex = 5;
 	this.i_spacey = 5;//11;
 
-  this.nikotest = 0;
+  this.nikotest = 1;
 
 	this.allImagesLoaded = false;
 	this.max_num_images = 0;
@@ -1725,7 +1755,7 @@ function rql(num) {
 	this.currentColours = Array('#FFFFFF','#3F3F3F','#000000','#FF0000'); // fill, line, text, unanswered colours
 	this.lineThickness  = 1; 									                            // current thickness of borders around draggable labels and manually drawn lines / arrows (in pixels) 
 	this.fontChoices    = Array(9, 10, 11, 12, 14, 16, 18); 		          // font size in drop down menu
-	this.fontSizes  = Array(11, 12, 14, 16, 18, 20, 22); 	            // font size equivalent in Flash (not standard sizes)
+	this.fontSizes  = Array(11, 12, 14, 16, 18, 20, 22); 	            		// font size equivalent in Flash (not standard sizes)
 	this.fontSizePos    = 1; 									                            // current font size for labels (index from array above);
   this.draw_limit = new Array(); 																				//used to limit polygon, ellipse and sqare positions
 	this.dragging = false;
