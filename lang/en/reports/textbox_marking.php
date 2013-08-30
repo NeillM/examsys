@@ -28,5 +28,4 @@ $string['finalisemarks'] = 'Finalise Marks';
 $string['candidates'] = 'Candidates';
 $string['screen'] = 'Screen';
 $string['note'] = 'Note';
-$string['marks'] = 'marks';
 ?>
