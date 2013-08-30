@@ -40,7 +40,7 @@ if (!QuestionUtils::question_exists(substr($_GET['q_id'],1), $mysqli)) {
 
 if (!isset($_POST['submit'])) {
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html style="margin:0px; width:100%; height:100%;">
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -122,7 +122,7 @@ if (!isset($_POST['submit'])) {
   echo "<div align=\"center\"><input type=\"submit\" style=\"width:120px\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" style=\"width:120px\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />

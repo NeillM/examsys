@@ -310,7 +310,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
       foreach ($papers as $moduleID => $paper_list) {
         if ($moduleID != $staff_module) {
           $staff_module = $moduleID;
-          echo "<table style=\"clear:both; font-size:100%\"><tr><td class=\"subsect\">$moduleID</td><td style=\"width:98%\"><hr class=\"head-line\" /></td></tr></table>\n";
+          echo "<table style=\"clear:both; font-size:100%\"><tr><td class=\"subsect\"><nobr>$moduleID</nobr></td><td style=\"width:98%\"><hr class=\"head-line\" /></td></tr></table>\n";
         }
         foreach ($paper_list as $paper) {
           $screen_plural = ($paper['screens'] > 1) ? 'screens' : 'screen';

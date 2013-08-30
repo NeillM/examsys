@@ -51,7 +51,7 @@ $display_format = $configObject->get('cfg_long_date_php') . ' ' . $configObject-
 
 $started = $dateObj->format($display_format);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
