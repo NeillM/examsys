@@ -28,9 +28,9 @@
 Class QuestionUtils {
 
   /**
-   * Get the leading for a give question ID
-   * @param integer $q_id
-   * @param resource $db
+   * Does a given Question ID exist in the question bank.
+   * @param integer $q_id the question ID to be searched for.
+   * @param resource $db the database connection.
    * @return string The leadin
    */
   static function question_exists($q_id, $db) {
@@ -47,9 +47,29 @@ Class QuestionUtils {
   }
 
   /**
-   * Get the leading for a give question ID
-   * @param integer $q_id
-   * @param resource $db
+   * Does a given Question ID exist on a specific paper.
+   * @param integer $q_id the question ID to be searched for.
+   * @param integer $paperID the paper ID to be searched for.
+   * @param resource $db the database connection.
+   * @return string The leadin
+   */
+  static function question_exists_on_paper($q_id, $paperID, $db) {
+    $stmt = $db->prepare("SELECT q_id FROM questions, papers WHERE papers.question = questions.q_id AND paper = ? AND q_id = ? LIMIT 1");
+    $stmt->bind_param('ii', $paperID, $q_id);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($tmp_q_id);
+    $stmt->fetch();
+    $exists = ($stmt->num_rows == 0) ? false : true;
+    $stmt->close();
+
+    return $exists;
+  }
+
+  /**
+   * Get the owner ID for a particular question.
+   * @param integer $q_id the question ID to be looked up.
+   * @param resource $db the database connection.
    * @return string The leadin
    */
   static function get_ownerID($q_id, $db) {
@@ -66,8 +86,8 @@ Class QuestionUtils {
 
   /**
    * Get the leading for a give question ID
-   * @param integer $q_id
-   * @param resource $db
+   * @param integer $q_id the question ID to be looked up.
+   * @param resource $db the database connection.
    * @return string The leadin
    */
   static function get_leadin($q_id, $db) {
@@ -105,7 +125,7 @@ Class QuestionUtils {
   /**
    * returns an array of id/keywords that the question is on
    * @param intager $q_id the id of the questions
-   * @param resource $db
+   * @param resource $db the database connection.
    * @return array of keywords
    */
   static function get_keywords($q_id, $db) {
@@ -126,7 +146,7 @@ Class QuestionUtils {
   /**
    * returns an array of question IDs/module IDs
    * @param array $q_ids list of questions to check
-   * @param resource $db
+   * @param resource $db the database connection.
    * @return array of modules keyed on q_id
    */
   static function multi_get_modules($q_ids, $db) {
@@ -146,7 +166,7 @@ Class QuestionUtils {
   /**
    * returns an array of modules/teams that the question is on
    * @param integer $q_id the id of the questions
-   * @param resource $db
+   * @param resource $db the database connection.
    * @return array of modules keyed on idMod
    */
   static function get_modules($q_id, $db) {
@@ -166,8 +186,8 @@ Class QuestionUtils {
 
   /**
   * Update the modules for a question bast on the modules that the papers it is part of are on
-  * @param $modules an array of modules keyed on idMod
-  * @param $q_id the id of the questions
+  * @param integer $q_id the id of the questions.
+	* @param resource $db the database connection.
   * @return void
   */
   static function update_modules_from_papers($q_id, $db) {
@@ -204,6 +224,8 @@ SQL;
   * updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
   * @param $modules an array of modules keyed on idMod
   * @param $q_id the id of the question
+	* @param resource $db the database connection.
+	* @param object $userObj the currently authenticated user object.
   * @return void
   */
   static function update_modules($modules, $q_id, $db, $userObj) {
@@ -226,6 +248,7 @@ SQL;
   * add modules to a question ignoring any duplicates
   * @param $modules an array of modules keyed on idMod
   * @param $q_id the id of the question
+	* @param resource $db the database connection.
   * @return void
   */
   static function add_modules($modules, $q_id, $db) {
@@ -241,6 +264,7 @@ SQL;
   * add keywords to a question
   * @param $keywords an array of keywords keyed on IDs
   * @param $q_id the id of the question
+	* @param resource $db the database connection.
   * @return void
   */
   static function add_keywords($keywords, $q_id, $db) {
@@ -256,6 +280,7 @@ SQL;
   * remove a module from a question
   * @param $idMod an array of modules to remove keyed on idMod
   * @param $q_id the id of the question or property_id
+	* @param resource $db the database connection.
   * @return void
   */
   static function remove_modules($modules, $q_id, $db) {
@@ -269,8 +294,8 @@ SQL;
 
 /**
   * remove a question from rogo (N.B sets the deleted field we don't actuality delete the row form the questions table)
-  * @param $idMod an array of modules to remove keyed on idMod
   * @param $q_id the id of the question or property_id
+	* @param resource $db the database connection.
   * @return void
   */
   static function delete_question($q_id, $db) {

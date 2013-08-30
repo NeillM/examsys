@@ -24,25 +24,26 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require_once '../classes/stateutils.class.php';
+require '../include/media.inc';
 
-$state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/reports/textbox_header.php');
+require_once '../classes/stateutils.class.php';
+require_once '../classes/folderutils.class.php';
+require_once '../classes/paperproperties.class.php';
+
+$state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $q_id       = check_var('q_id', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
-$ws         = check_var('ws', 'GET', true, false, true);
 $phase      = check_var('phase', 'GET', true, false, true);
 
-// Check the paper actually exists.
-if (!Paper_utils::paper_exists($paperID, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+$paper_type = $properties->get_paper_type();
+$paper_title = $properties->get_paper_title();
 
-// Check the question exists.
-if (!QuestionUtils::question_exists($q_id, $mysqli)) {
+// Check the question exists on the paper.
+if (!QuestionUtils::question_exists_on_paper($q_id, $paperID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -73,30 +74,20 @@ HTML;
   return $html;
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Textbox Marking</title>
+  <title><?php echo $string['textboxmarking']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/textbox_marking.css" />
+	<link rel="stylesheet" type="text/css" href="../css/start.css" />
+  <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
-    body {font-size:90%}
-    td {line-height:150%; text-align:justify}
-    .heading {background-color:#EBEADB; color:black}
-    #answers {
-      width: 100%;
-      margin-right:10px
-    }
-    .number {
-      vertical-align:top;
-      text-align:right;
-      border-bottom:1px solid #CBC7B8;
-      width: 30px;
-    }
   <?php
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
     echo ".marked {color:#808080;display:none}\n";
@@ -109,40 +100,70 @@ HTML;
   <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
   <script type="text/javascript" src="../js/jquery.textbox.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
+  <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript">
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
+		
+		$(document).ready(function() {
+			window.location.hash = 'q_id<?php echo $_GET['q_id']; ?>';
+			
+			$('#hidemarked').click(function() {
+			  $('.marked').toggle();
+			});
+			
+		});
   </script>
 </head>
 
-<body style="margin:0px">
-<form id="content" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id']; ?>&amp;startdate=<?php echo $startdate; ?>&amp;enddate=<?php echo $enddate; ?>&amp;module=<?php echo $_GET['module']; ?>&amp;folder=<?php echo $_GET['folder']; ?>&amp;ws=<?php echo $ws; ?>&amp;phase=<?php echo $phase; ?>&amp;action=mark" method="post">
+<body>
+<?php
+  $candidate_no = 0;
+  if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
+    // Get how many students took the paper.
+    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles = 'Student' OR u.roles = 'graduate')");
+    $result->bind_param('iss', $paperID, $startdate, $enddate);
+    $result->execute();
+    $result->bind_result($tmp_userID);
+    while ($result->fetch()) {
+      $candidate_no++;
+    }
+    $result->close();
+  }
+
+  $phase_description = '<strong>';
+  if (!isset($_GET['phase'])) {
+    $phase_description .= $string['finalisemarks'];
+    $tmp_phase = '';
+  } elseif ($_GET['phase'] == 1) {
+    $phase_description .= $string['primarymarking'];
+    $tmp_phase = '&phase=1';
+  } elseif ($_GET['phase'] == 2) {
+    $phase_description .= $string['secondmarking'];
+    $tmp_phase = '&phase=2';
+  }
+  $phase_description .= ":</strong> " . number_format($candidate_no) . " " . $string['candidates'];
+
+?>
+<form id="content" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id']; ?>&amp;startdate=<?php echo $startdate; ?>&amp;enddate=<?php echo $enddate; ?>&amp;module=<?php echo $_GET['module']; ?>&amp;folder=<?php echo $_GET['folder']; ?>&amp;phase=<?php echo $phase; ?>&amp;action=mark" method="post">
 <input type="hidden" id="marker_id" name="marker_id" value="<?php echo $userObject->get_user_ID(); ?>" />
 <input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID; ?>" />
 <input type="hidden" id="q_id" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
 <input type="hidden" id="phase" name="phase" value="<?php echo $phase; ?>" />
 <?php
-// Get some paper properties
-if ($result = $mysqli->prepare("SELECT paper_type FROM properties WHERE property_id=?")) {
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($paper_type);
-  $result->fetch();
-  $result->close();
-} else {
-  display_error("Properties Query Error","SELECT paper_type FROM properties WHERE property_id=$paperID");
-  $mysqli->close();
-}
 
-// Get the marks for the question
-if ($result = $mysqli->prepare("SELECT marks_correct, marks_incorrect, leadin, correct_fback FROM (questions, options) WHERE questions.q_id=options.o_id AND o_id = ? LIMIT 1")) {
-  $result->bind_param('i', $q_id);
-  $result->execute();
-  $result->bind_result($marks_correct, $marks_incorrect, $leadin, $correct_fback);
-  $result->fetch();
-  $result->close();
-} else {
-  display_error("Marks Query Error",$mysqli->close());
-}
+  echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th style=\"height:52px\">";
+  echo '<div class="breadcrumb"><a href="../staff/index.php" target="_top">' . $string['home'] . '</a>';
+  if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  }
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div style="margin-left:10px; font-size:220%">' . $phase_description . '</div></th>';
+  echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
+  if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
+  echo "  /> " . $string['hidemarked'] . "</th></tr>\n";
+  echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
+  echo "</table>\n";
 
 if ($phase == 2) {
   // Get the usernames of papers to second mark.
@@ -152,16 +173,122 @@ if ($phase == 2) {
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($remark_userID);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $second_mark[] = $remark_userID;
   }
   $result->close();
 }
 
 $half_marks = true;
+
 ?>
-<table id="answers" cellpadding="4" cellspacing="0" border="0">
+<div id="question_pane">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+  <tr><td valign="top">
+  <?php
+
+  echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; border-bottom:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
+  echo '<tr><td><div class="paper">' . $paper_title . '</div>';
+  $question_offset = 1;
+	$no_screens = $properties->get_max_screen();
+  if ($no_screens > 1) {
+    echo '<table cellspacing="1" cellpadding="1" border="0" style="font-weight:bold; color:white"><tr>';
+    for ($i=1; $i<=$no_screens; $i++) {
+      echo "<td class=\"s0\">$i</td>\n";
+    }
+    echo '</tr></table>';
+  }
+  echo '</td></tr></table>';
+	
+	$marks_array = array();
+
+  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
+  $question_data->bind_param('i', $_GET['paperID']);
+  $question_data->execute();
+  $question_data->store_result();
+  $question_data->bind_result($screen, $q_type, $q_id, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback);
+  $num_rows = $question_data->num_rows;
+  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
+  echo "<col width=\"40\"><col>\n";
+  $q_no = 0;
+  $old_q_id = 0;
+  $old_screen = 1;
+  while ($question_data->fetch()) {
+	  $marks_array[$q_id] = $marks_correct;
+		
+    if ($old_screen != $screen) {
+      echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+      echo '<tr><td colspan="2"><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div></td></tr>';
+    }
+
+    if ($old_q_id != $q_id) {
+      if ($q_no+1 == $_GET['qNo'] and $q_type != 'info') {
+        $tmp_color = '#FFFFDD';
+      } else {
+        //$tmp_color = $bgcolor;
+        $tmp_color = 'white';
+      }
+    
+      $li_set = 0;
+      echo "<tr><td colspan=\"2\"><a name=\"q_id$q_id\"></a>&nbsp;</td></tr>\n";
+
+      if ($theme != '') echo '<tr><td colspan="2"><p class="theme">' . $theme . '</p></td></tr><tr><td colspan="2">&nbsp;</td></tr>';
+      if (trim($notes) != '') echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . strtoupper($string['note']) . ':</strong>&nbsp;' . $notes . '</td></tr>';
+
+      if ($scenario != '') {
+        echo "<tr style=\"background-color:$tmp_color\"><td class=\"q_no\">";
+        if ($q_type != 'info') {
+          $q_no++;
+          echo "<a name=\"q$q_no\">$q_no.&nbsp;</a>";
+        }
+        if ($properties->get_calculator() == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.gif" width="18" height="24" alt="Calculator" /></a>';
+        echo "</td><td>$scenario<br />\n<br />";
+        $li_set = 1;
+      }
+      
+      if ($q_type == 'info') {
+        echo "<tr style=\"background-color:$tmp_color\"><td>";
+        $li_set = 0;
+      } elseif ($q_type != 'info' and $li_set == 0) {
+        $q_no++;
+        echo "<tr style=\"background-color:$tmp_color\"><td class=\"q_no\">";
+        echo "<a name=\"q$q_no\">$q_no.&nbsp;</a>";
+      }
+      if ($li_set == 0) {
+        echo "</td><td style=\"background-color:$tmp_color\">";
+      }
+      if ($q_media != '' and $q_media != NULL) {
+        $media_list = explode('|', $q_media);
+        $media_list_width = explode('|', $q_media_width);
+        $media_list_height = explode('|', $q_media_height);
+        for ($i=0; $i<count($media_list); $i++) {
+          if ($media_list[$i] != '') {
+            echo '<p align="center">' . display_media($media_list[$i], $media_list_width[$i], $media_list_height[$i], '') . "</p>\n";
+          }
+        }
+      }
+      echo "$leadin</td></tr>\n";
+      
+      if ($q_type != 'info') {
+        echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"mk\"><br />($marks_correct ". $string['marks'] .")</td></tr>\n";
+        echo "<tr style=\"background-color:$tmp_color\"><td>&nbsp;</td><td class=\"fback\"><br />" . nl2br($correct_fback) . "</td></tr>\n";
+      }
+    }    
+    $old_q_id = $q_id;
+    $old_screen = $screen;
+  }
+
+  echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
+
+?>
+</td></tr></table>
+</div>
+
+<div id="answer_pane">
+<table id="answers" cellpadding="0" cellspacing="0">
 <?php
+  $q_id = $_GET['q_id'];
+	
   if ($paper_type == '0') {
 
     $sql = <<< SQL
@@ -202,7 +329,6 @@ AND l.q_id = ?
 AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
 AND lm.started <= ?;
 SQL;
-
     $result = $mysqli->prepare($sql);
     $result->bind_param('iiiss', $phase, $paperID, $q_id, $startdate, $enddate);
   }
@@ -221,13 +347,13 @@ SQL;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
            $style = ' class="marked"';
         }
-        echo "<tr id=\"ans_" . $answer_no . "\"" . $style . "><td class=\"number\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
+        echo "<tr id=\"ans_" . $answer_no . "\"" . $style . "><td class=\"number\">$answer_no.</td><td class=\"student_ans\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</td></tr>\n";
       } else {
         $answer_no++;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
           $style = ' class="marked"';
         }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" border=\"0\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
+        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td class=\"student_unans\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
       }
     }
   }
@@ -235,13 +361,6 @@ SQL;
 ?>
 </table>
 
-<div align="center"><input type="hidden" name="answer_no" value="<?php echo $answer_no; ?>" />
-<input type="hidden" name="paper_type" value="<?php echo $paper_type; ?>" />
-<table cellpadding="0" cellspacing="0" border="0">
-<?php
-  echo '<tr><td><input onclick="javascript:window.top.location=\'./textbox_select_q.php?paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&ws=1&phase=' . $phase . '&action=mark&repcourse=%\'" type="button" name="cancel" value="' . $string['ok'] . '" style="width:90px" /></td></tr>';
-?>
-</table>
 </div>
 </form>
 </body>

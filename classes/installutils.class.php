@@ -2798,7 +2798,8 @@ QUERY;
           `logtype` tinyint(4) default NULL,
           `student_userID` int(10) unsigned default NULL,
           PRIMARY KEY (`id`),
-          KEY `paperID` (`paperID`),
+          UNIQUE KEY (`idx_unique` (`phase`,`answer_id`,`logtype`),
+					KEY `paperID` (`paperID`),
           KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
