@@ -34,5 +34,5 @@ $string['plagarism'] = 'Plagiatorstwo';
 $string['ipaddresses'] = 'Adresy IP';
 $string['save'] = 'Zachowaj';
 $string['badaddressesmsg'] = 'Następujące adresy IP są niepoprawne i nie zostały dodane do pracowni: %s. Inne adresy zostały zapisane';
-$string['backtolab'] = 'Back to lab details'; // Niko
+$string['backtolab'] = 'Powrót do szczegółów pracowni'; 
 ?>

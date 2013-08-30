@@ -29,12 +29,12 @@ $string['thursday'] = 'Czwartek';
 $string['friday'] = 'Piątek';
 $string['saturday'] = 'Sobota';
 // Callout
-$string['timezone'] = 'Time Zone';
-$string['time_warning'] = 'Start and End times are the same!';
-$string['lab_warning'] = 'Warning no labs set!';
-$string['duration_warning'] = 'No duration set!';
-$string['starttime'] = 'Start Time';
-$string['endtime'] = 'End Time';
-$string['duration'] = 'Duration';
-$string['labs'] = 'Labs';
+$string['timezone'] = 'Strefa czasowa';
+$string['time_warning'] = 'Czas rozpoczęcia i zakończenia są takie same!';
+$string['lab_warning'] = 'Uwaga, nie wybrano pracowni!';
+$string['duration_warning'] = 'Nie ustalono czasu trwania!';
+$string['starttime'] = 'Czas rozpoczęcia';
+$string['endtime'] = 'Czas zakończenia';
+$string['duration'] = 'Czas trwania';
+$string['labs'] = 'Pracownie';
 ?>

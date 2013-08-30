@@ -22,6 +22,6 @@ $string['csvfile'] = 'Plik CSV:';
 $string['topmsg'] = 'Ten obszar przeznaczony jest dla skomasowanego ładowania punktacji z arkuszy OSCE. Zastosowany powinien być plik CSV o następującym układzie pól:';
 $string['headerrow'] = 'Plik zawiera wiersz nagłówka';
 $string['import'] = 'Importuj';
-$string['usernotfound'] = 'username not found!';  // Niko
-$string['saveerror'] = 'Error saving user data for %s'; // Niko
+$string['usernotfound'] = 'Nie znaleziono nazwy użytkownika!'; 
+$string['saveerror'] = 'Błąd zapisu danych użtykownika dla %s';
 ?>

@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+//HTML5 part
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require_once '../lang/' . $language . '/question/edit/area.txt';
+require_once '../lang/' . $language . 'hotspot_answer.txt';
+require_once '../lang/' . $language . 'hotspot_question.txt';
+require_once '../lang/' . $language . 'label_answer.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 require_once '../lang/' . $language . '/include/months.inc';
 require_once '../lang/' . $language . '/question/sct_shared.php';
 require_once '../lang/' . $language . '/include/paper_security.inc';
@@ -61,4 +70,7 @@ $string['savefailed'] = 'Zapisywanie nie powiodło się!';
 $string['tryagain'] = 'Spróbuj ponownie po przejściu na następnej lub poprzedniej strony.</div>';
 $string['questionclarification'] = 'Wyjaśnienie pytania';
 $string['question'] = 'Pytanie';
+$string['answer_to'] = 'odpowiedź na';
+$string['decimal_places'] = 'miejsca dziesiętne';
+$string['significant_figures'] = 'cyfry znaczące';
 ?>

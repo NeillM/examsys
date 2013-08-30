@@ -71,4 +71,5 @@ $string['errorkeywordunique'] = 'Błąd: nie można odnaleźć unikalnego pytani
 $string['errorrandomnotfound'] = 'Błąd: Nie wybrano pytań losowych. Być może ekran był pominięty';
 $string['overriddenby'] = 'Ocena skorygowana przez';
 $string['questionclarification'] = 'Wyjaśnienie pytania';
+$string['EnhancedCalcCorrectError'] = 'Błąd: Poprawna odpowiedź nie może być obliczona';
 ?>

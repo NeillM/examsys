@@ -1,0 +1,142 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="Edit%20Question%20-%20Labelling%20%28local%29_files/ui.css" rel="stylesheet">
+</head>
+<body>
+﻿
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Labelling</title>
+<script type="text/javascript">
+  if (typeof cfgRootPath == 'undefined') {
+    var cfgRootPath = '';
+  }
+</script> 
+<!--niko_html5 start ---------- --> 
+<script type="text/javascript">var lang_string = {"hotspots":"Hotspots","correctAnswers":"Correct Answers","incorrectAnswers":"Incorrect Answers","But_Clear_All":"Clear All","But_Delete_point":"Delete point","But_your_answer":"Your answer","But_correct_answer":"Correct answer","But_show_error":"Show error","Magnify":"Magnify","tt_Clear_All":"Clear All","tt_Delete_point":"Delete point","tt_your_answer":"Your answer","tt_correct_answer":"Correct answer","tt_show_error":"Show error","tt_Magnify":"Magnify","Start_over":"Start over","Eraser":"Eraser","popUp_msg":"Do you want to clear all lines?","popUp_yes":"Yes","popUp_no":"No","view":"View hotspots on all layers","newLayer":"Add Question Part","deleteLayer":"Delete Question Part","edit":"Move Label\/Line","ellipse":"Oval","rectangle":"Rectangle","polygon":"Polygon","erase":"Erase Label\/Line","colour":"Colour","themecolours":"Theme Colours","standardcolours":"Standard Colours","yes":"Yes","no":"No","msgClose":"Close this message","warning":"WARNING","errormessage1":"The polygon lines have overlapped.","errormessage2":"This may result in holes in the hotspot and incorrect marking of student answers.","cancel":"Do you want to cancel the last line?","fillcolour":"Fill Colour","linecolour":"Line Colour","textcolour":"Font Colour","textsize":"Font Size","lines":"Line Thickness","line":"Draw Line","bobble":"Draw Bobble","arrow":"Draw Arrow","single":"Unique Label","multiple":"Repeated Label","label":"Draggable Label","menu":"Drop Down List","errormessage":"If you change from repeated to unique labels some of the labels on the image will be deleted.","continue":"Do you want to continue?"};
+</script> 
+<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="/js/html5.images.js"></script> 
+<script type="text/javascript" src="/js/qlabelling.js"></script> 
+<script type="text/javascript" src="/js/qsharedf.js"></script> 
+<!--niko_html5 end--> 
+<script type="text/javascript">
+var qType = 'labelling';
+var lang = {
+'allowpartial':'Allow partial Marks','validationerror':'There were problems with your submission. Please review the form and re-try','enterleadin':'Please enter a leadin for the question','enterdescription':'Please enter a description','showmore':'Show more','hidemore':'Hide more','enteroption':'Please enter either option text or a media file for this option','enteroptionshort':'Required','enteroption_kw':'Please select a keyword for the question','mrqconvert':'There is only one correct answer, this would be better as a MCQ question type.\r\nDo you wish to convert this question to MCQ?','entervignette':'Please enter a clinical vignette for the question','enteroptiontext':'Please enter a value for this option','selectarea':'Please draw an area','randomenterquestion':'Please select questions to be included in the block','mappingwarning':'WARNING: All mappings will be lost if this question is not added to the paper!','markchangewarning':'Warning: changing mark allocations post-exam should only be undertaken if absolutely necessary. Are you sure you want to continue?'};
+</script>
+<form id="edit_form" name="edit_form" method="post" action="/question/edit/index.php?q_id=114569&amp;paperID=6844&amp;module=315" enctype="multipart/form-data" class="clearinput">
+  <div id="tabbed-content">
+    <div id="editor" class="tab-area">
+      <div class="message">
+      </div>
+      <div id="question-holder" class="clearfix labelling">
+        <table class="form hotspot" summary="Hotspot flash movie">
+
+          <tbody>
+            <tr>
+              <td><!-- ======================== HTML5 part ================= -->
+                
+                <hr>
+								<canvas id="canvas1" width="1050" height="471"></canvas>
+								<br/>
+								<!--<textarea type="text" id="canvas_edit_box" style="display:" rows=10 cols=80></textarea>-->
+                <br>
+                <div style="width:100%;text-align: left;" id="canvasbox"></div>
+                <hr>
+                
+                <!-- ==================================================== --> 
+                <script type="text/javascript">
+                    //setUpQuestion(1, 'x', 'en', '1370420595.PNG', '', undefined, '','#FFC0C0','labelling','edit');
+                  
+									//setUpQuestion(1, 'x', 'en', '1377179078.png', '', undefined, '','#FFC0C0','labelling','edit');//niko_HTML5
+
+									setUpQuestion(1, 'flash1', 'en', 'food_web1.png', '4144959;1;16777215;10;0;100;19;100;92;single;label;0$0$370$173$beetle3.png~80~75|1$0$371$300$earwig3.png~80~92|2$0$8$127$snail3.png~100~47|3$0$537$103$spider|4$0$110$224$ant|5$0$5$254$fruit|6$0$539$472$plants|7$0$5$284$|8$0$110$284$|9$0$5$314$|10$0$110$314$|11$0$5$344$|12$0$110$344$|13$0$5$374$|14$0$110$374$|15$0$5$404$|16$0$110$404$|17$0$5$434$|18$0$110$434$|19$0$5$464$|;', undefined, '','#FFC0C0','labelling','edit');
+									
+									//setUpQuestion(1, 'flash1', 'en', '1377249834.JPG', '0;1;0xc6c6c6;12;0x000000;102;41;0;0;multiple;label;0$0$220$245$Central Venous Pressure CVP (cmH2O)|0$1$5$30$Central Venous Pressure CVP (cmH2O)|1$0$445$394$Time (mins)|1$1$110$30$Time (mins)|2$0$406$105$Fluid overloaded|2$1$5$60$Fluid overloaded|3$0$590$157$Well-filled|3$1$110$60$Well-filled|4$0$599$268$Fluid deplete|4$1$5$90$Fluid deplete|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;0$arrow$488$143$512$225$;1$arrow$667$194$524$280$;2$arrow$668$310$497$328$;', '0$5;', '1~0~Mark per Option','#FFC0C0','labelling','answer');
+									
+									//setUpQuestion(1, 'flash1', 'en', 'Picture17.jpg', '0;1;0xc6c6c6;10;0x000000;103;50;0;0;single;label;0$0$8$30$Optic chiasma|1$0$8$77$Basilar artery|2$0$8$125$Olfactory tract|3$0$8$172$Temporal lobe|4$0$8$220$Posterior communicating artery|5$0$8$267$Hippocampus|6$0$8$315$Anterior communicating artery|7$0$8$362$Amygdaloid nucleus |8$0$8$410$|9$0$589$30$Basilar artery|10$0$110$30$Posterior cerebral artery|11$0$110$77$Carotid artery|12$0$110$125$|13$0$110$172$Trochlear nerve|14$0$110$220$Trigeminal nerve|15$0$747$289$Posterior communicating artery|16$0$676$355$Optic chiasma|17$0$277$103$Hippocampus|18$0$263$361$Olfactory tract|19$0$739$68$Trigeminal nerve|;0$bobble$373$156$429$193;2$bobble$587$81$506$117;4$bobble$NaN$NaN$NaN$NaN;5$bobble$677$349$520$276;7$bobble$744$287$580$229;8$bobble$737$117$637$110;82$bobble$369$359$450$380;', '', '1~0~Mark per Option','#FFC0C0','labelling','edit');
+									
+									//setUpQuestion(1, 'flash1', 'en', '1365774124.jpg', '0xff0000;2;0x313131;10;0xceffff;111;38;0;0;single;label;0$0$904$197$Marginal erosion|1$0$891$410$Sclerosis|2$0$15$125$Osteonecrosis|3$0$15$172$Cysts|4$0$221$271$Chondrocalcinosis|5$0$904$262$Medial joint space narrowing|6$0$15$315$Marginal osteophyte|7$0$15$362$Osteochondral loose body|8$0$15$410$|9$0$15$457$|;0$arrow$905$216$866$216;1$arrow$904$279$799$279;3$arrow$892$430$776$309;4$arrow$333$292$381$292;', '0$4;221$246$Marginal erosion$f$904$172$Sclerosis$f$904$237$Osteonecrosis$f$891$385$Cysts$f$','1,1,0000000000000000000000000000000000000000','#FFC0C0','labelling','script');
+
+									//setUpQuestion(1, 'x', 'en', '1370420595.PNG', '4144959;1;16777215;10;0;100;19;0;0;single;label;0$0$264$82$label a|1$0$365$185$label b|2$0$5$60$|3$0$110$60$|4$0$5$90$|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;', undefined, '','#FFC0C0','labelling','answer');
+									//setUpQuestion(1, 'flash1', 'en', '1377249817.PNG', '4144959;1;16777215;10;0;100;19;0;0;single;label;0$0$248$55$label a|1$0$5$30$|2$0$408$187$label b|3$0$110$30$|4$0$5$54$|5$0$110$54$|6$0$5$78$|7$0$110$78$|8$0$5$102$|9$0$110$102$|10$0$5$126$|11$0$110$126$|12$0$5$150$|13$0$110$150$|14$0$5$174$|15$0$110$174$|16$0$5$198$|17$0$110$198$|18$0$5$222$|19$0$110$222$|;', '', '1~0~Mark per Option','#FFC0C0','labelling','edit');
+									
+                  //setUpQuestion(1, 'x', 'en', '1376917918.png', '', undefined, '','#FFC0C0','labelling','edit');//niko_HTML5
+									//<canvas id="canvas1" width="529" height="475">
+
+                    //setUpQuestion(1, 'message', 'en', 'untitled.JPG', '0;1;0xc6c6c6;12;0x000000;102;41;0;0;multiple;label;0$0$220$245$Central Venous Pressure CVP (cmH2O)|0$1$5$30$Central Venous Pressure CVP (cmH2O)|1$0$445$394$Time (mins)|1$1$110$30$Time (mins)|1$2$345$394$Time (mins)|2$0$406$105$Fluid overloaded|2$1$5$60$Fluid overloaded|3$0$590$157$Well-filled|3$1$110$60$Well-filled|4$0$599$268$Fluid deplete|4$1$5$90$Fluid deplete|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;0$arrow$488$143$512$225$;1$arrow$667$194$524$280$;2$arrow$668$310$497$328$;', undefined, '','#FFC0C0','labelling','edit');//niko_HTML5
+										//<canvas id="canvas1" width="862" height="505"></canvas>
+																			
+									//setUpQuestion(1, 'x', 'en', '4f - arteries.jpg', '0;1;0xc6c6c6;12;0x000000;180;35;0;0;single;label;0$0$548$420$Superficial femoral artery  |1$0$552$564$Deep popliteal artery|2$0$15$125$Posterior popliteal artery|3$0$15$172$Circumflex artery|4$0$15$220$Profunda femoral artery|5$0$220$627$Anterior tibial artery |6$0$15$315$Anterior peroneal artery|7$0$594$739$Posterior tibial artery |8$0$15$410$Popliteal artery |9$0$547$680$Peroneal artery |;', '2$5;548$395$Superficial femoral artery  $t$547$655$Anterior tibial artery $f$594$714$Posterior tibial artery $t$552$539$Popliteal artery $f$220$602$Peroneal artery $f$',',0000000000000000000000000000000000000000,11110','#FFC0C0','labelling','script');
+									//<canvas id="canvas1" width="830" height="908">
+									
+									//uwaga : >>>[, '']
+									//setUpQuestion(1, 'x', 'en', '4f - arteries.jpg', '0;1;0xc6c6c6;12;0x000000;180;35;0;0;single;label;0$0$548$420$Superficial femoral artery  |1$0$552$564$Deep popliteal artery|2$0$15$125$Posterior popliteal artery|3$0$15$172$Circumflex artery|4$0$15$220$Profunda femoral artery|5$0$220$627$Anterior tibial artery |6$0$15$315$Anterior peroneal artery|7$0$594$739$Posterior tibial artery |8$0$15$410$Popliteal artery |9$0$547$680$Peroneal artery |;', '', '','#FFC0C0','labelling','edit');
+                //<canvas id="canvas1" width="830" height="908">
+                </script>
+                <input name="optionid1" value="543385" type="hidden">
+                <input id="points1" name="points1" value="4144959;1;16777215;10;0;100;19;0;0;single;label;0$0$264$82$label a|1$0$365$185$label b|2$0$5$60$|3$0$110$60$|4$0$5$90$|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;" type="hidden">
+                <input id="q_media" name="q_media" value="1370420595.PNG" type="hidden">
+                <input id="q_media_width" name="q_media_width" value="307" type="hidden">
+                <input id="q_media_height" name="q_media_height" value="207" type="hidden"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+			
+			<input id='xxx' size=200>
+			<div id="question-holder" class="clearfix labelling">
+        <table class="form hotspot" summary="Hotspot flash movie">
+
+          <tbody>
+            <tr>
+              <td><!-- ======================== HTML5 part ================= -->
+                
+                <hr>
+								<canvas id="canvas2" width="862" height="505"></canvas>
+								</canvas><br/>
+								<!--<textarea type="text" id="canvas_edit_box" style="display:" rows=10 cols=80></textarea>-->
+                <br>
+                <div style="width:100%;text-align: left;" id="canvasbox"></div>
+                <hr>
+                
+                <!-- ==================================================== --> 
+                <script type="text/javascript">
+                    //setUpQuestion(1, 'x', 'en', '1370420595.PNG', '', undefined, '','#FFC0C0','labelling','edit');
+                  //setUpQuestion(2, 'x', 'en', '1370420595.PNG', '4144959;1;16777215;10;0;100;19;0;0;single;label;0$0$264$82$label a|1$0$365$185$label xxxxx yyyyyyyyyy zzzzzzzzzzzzzzzzzzzz b|2$0$5$60$|3$0$110$60$|4$0$5$90$|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;', undefined, '','#FFC0C0','labelling','answer');
+									//<canvas id="canvas1" width="529" height="475">
+
+									//setUpQuestion(2, 'flash2', 'en', '1370420673.PNG', '4144959;1;16777215;10;0;100;19;0;0;single;label;0$0$325$53$label x|1$0$284$175$label y|2$0$5$60$|3$0$110$60$|4$0$5$90$|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;', '0$2;',',0000000000000000000000000000000000000000,11110','#FFC0C0','labelling','edit');
+									//setUpQuestion(2, 'x', 'en', '1370420595.PNG', '4144959;1;16777215;10;0;100;19;0;0;single;label;0$0$264$82$label a|1$0$365$185$label xxxxx yyyyyyyyyy zzzzzzzzzzzzzzzzzzzz b|2$0$5$60$|3$0$110$60$|4$0$5$90$|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;', undefined, '','#FFC0C0','labelling','edit');
+
+									
+									//setUpQuestion(2, 'message', 'en', 'untitled.JPG', '0;1;0xc6c6c6;12;0x000000;102;41;0;0;multiple;label;0$0$220$245$Central Venous Pressure CVP (cmH2O)|0$1$5$30$Central Venous Pressure CVP (cmH2O)|1$0$445$394$Time (mins)|1$1$110$30$Time (mins)|1$2$345$394$Time (mins)|2$0$406$105$Fluid overloaded|2$1$5$60$Fluid overloaded|3$0$590$157$Well-filled|3$1$110$60$Well-filled|4$0$599$268$Fluid deplete|4$1$5$90$Fluid deplete|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;0$arrow$488$143$512$225$;1$arrow$667$194$524$280$;2$arrow$668$310$497$328$;', undefined, '','#FFC0C0','labelling','answer');
+
+									
+									//setUpQuestion(2, 'message', 'en', '1370420595.PNG', '0;1;0xc6c6c6;10;0x000000;103;50;0;0;single;label;0$0$8$30$Optic chiasma|1$0$8$77$Basilar artery|2$0$8$125$Olfactory tract|3$0$8$172$Temporal lobe|4$0$8$220$Posterior communicating artery|5$0$8$267$Hippocampus|6$0$8$315$Anterior communicating artery|7$0$8$362$Amygdaloid nucleus |8$0$8$410$|9$0$589$30$Basilar artery|10$0$110$30$Posterior cerebral artery|11$0$110$77$Carotid artery|12$0$110$125$|13$0$110$172$Trochlear nerve|14$0$110$220$Trigeminal nerve|15$0$747$289$Posterior communicating artery|16$0$676$355$Optic chiasma|17$0$277$103$Hippocampus|18$0$263$361$Olfactory tract|19$0$739$68$Trigeminal nerve|;0$bobble$373$156$429$193;2$bobble$587$81$506$117;4$bobble$NaN$NaN$NaN$NaN;5$bobble$677$349$520$276;7$bobble$744$287$580$229;8$bobble$737$117$637$110;82$bobble$369$359$450$380;', undefined, '','#FFC0C0','labelling','edit');//niko_HTML5
+
+																		
+									//setUpQuestion(2, 'x', 'en', '4f - arteries.jpg', '0;1;0xc6c6c6;12;0x000000;180;35;0;0;single;label;0$0$548$420$Superficial femoral artery  |1$0$552$564$Deep popliteal artery|2$0$15$125$Posterior popliteal artery|3$0$15$172$Circumflex artery|4$0$15$220$Profunda femoral artery|5$0$220$627$Anterior tibial artery |6$0$15$315$Anterior peroneal artery|7$0$594$739$Posterior tibial artery |8$0$15$410$Popliteal artery |9$0$547$680$Peroneal artery |;', '2$5;548$395$Superficial femoral artery  $t$547$655$Anterior tibial artery $f$594$714$Posterior tibial artery $t$552$539$Popliteal artery $f$220$602$Peroneal artery $f$',',0000000000000000000000000000000000000000,11110','#FFC0C0','labelling','script');
+									//<canvas id="canvas1" width="830" height="908">
+									
+									//setUpQuestion(1, 'x', 'en', '4f - arteries.jpg', '0;1;0xc6c6c6;12;0x000000;180;35;0;0;single;label;0$0$548$420$Superficial femoral artery  |1$0$552$564$Deep popliteal artery|2$0$15$125$Posterior popliteal artery|3$0$15$172$Circumflex artery|4$0$15$220$Profunda femoral artery|5$0$220$627$Anterior tibial artery |6$0$15$315$Anterior peroneal artery|7$0$594$739$Posterior tibial artery |8$0$15$410$Popliteal artery |9$0$547$680$Peroneal artery |;', '','#FFC0C0','labelling','script');
+                </script>
+                <input name="optionid2" value="543385" type="hidden">
+                <input id="points2" name="points1" value="4144959;1;16777215;10;0;100;19;0;0;single;label;0$0$264$82$label a|1$0$365$185$label b|2$0$5$60$|3$0$110$60$|4$0$5$90$|5$0$110$90$|6$0$5$120$|7$0$110$120$|8$0$5$150$|9$0$110$150$|10$0$5$180$|11$0$110$180$|12$0$5$210$|13$0$110$210$|14$0$5$240$|15$0$110$240$|16$0$5$270$|17$0$110$270$|18$0$5$300$|19$0$110$300$|;" type="hidden">
+                <input id="q_media" name="q_media" value="1370420595.PNG" type="hidden">
+                <input id="q_media_width" name="q_media_width" value="307" type="hidden">
+                <input id="q_media_height" name="q_media_height" value="207" type="hidden"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+			
+    </div>
+    <div id="changes" class="tab-area"></div>
+  </div>
+</form>
+<div id="tiptip_holder" style="max-width:200px;"></div>
+</body>
+</html>

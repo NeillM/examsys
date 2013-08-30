@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+//HTML5 part
+require '../../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require '../../lang/' . $language . '/question/edit/area.txt';
+require '../../lang/' . $language . '/question/add/hotspot_add.txt';
+require '../../lang/' . $language . '/question/add/label_add.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 require '../../lang/' . $language . '/include/status.inc';
 require '../../lang/' . $language . '/include/blooms.inc';
 require '../../lang/' . $language . '/include/question_types.inc';
@@ -63,7 +71,6 @@ $string['availableoptions'] = 'Dostępne opcje';
 $string['variables'] = 'Zmienne';
 $string['min'] = 'Minimum'; //cognate
 $string['max'] = 'Maksimum';
-$string['decimal'] = 'decimal'; // Niko
 $string['decimals'] = 'Dziesiętne';
 $string['increment'] = 'Przyrost';
 $string['formula'] = 'Wzór';
@@ -105,11 +112,11 @@ $string['modified'] = 'Zmodyfikowane:';
 $string['editor'] = 'Edytor';
 $string['plaintext'] = 'Czysty tekst';
 $string['wysiwyg'] = 'WYSIWYG'; //cognate
-$string['changes'] = 'Zmiany';
+$string['changes'] = 'Zmiany'; 
 $string['comments'] = 'Komentarze';
 $string['mapping'] = 'Odwzorowanie'; //Mapowanie,odwzorowanie, projekcja
-$string['performance'] = 'Wyniki';
-$string['limitedsave'] = 'Zapisz (limit)';
+$string['performance'] = 'Wyniki';  
+$string['limitedsave'] = 'Zapisz (limit)'; 
 $string['save'] = 'Zapisz zmiany';
 $string['correct'] = 'Poprawnie';
 $string['questionlocked'] = 'To pytanie jest zablokowane dla edycji przez';
@@ -136,7 +143,7 @@ $string['commentsmsg'] = 'Nie zanotowano komentarzy dla tego pytania.';
 $string['objectives'] = 'Cele';
 $string['noobjectives'] = 'Nie odwzorowano żadnych celów';
 $string['noneabove'] = 'Żaden z powyższych';
-$string['noneabovemsg'] = 'Odznacz tu jeśli aktualne pytanie nie spełnia żadnego z powyższych celów %s.';
+$string['noneabovemsg'] = 'Odznacz tu jeśli aktualne pytanie nie spełnia żadnego z powyższych celów %s.'; 
 $string['mandatory'] = 'Wypełnienie tego pola jest <strong>wymagane</strong>.';
 $string['typeundefined'] = 'Nie zdefiniowano typu pytania.';
 $string['typeinvalid'] = 'Niewłaściwy typ pytania <em>%s</em>.';
@@ -219,7 +226,7 @@ $string['never'] = 'nigdy';
 $string['validationerror'] = 'Wystąpił problem podczas wysyłania. Przejrzyj formularz i spróbuj ponownie';
 $string['enterleadin'] = 'Sformułuj pytanie';
 $string['enterdescription'] = 'Wprowadź opis';
-$string['enteroptiontext'] = 'Wprowadź wartość dla tej opcji';
+$string['enteroptiontext'] = 'Wprowadź wartość dla tej opcji'; 
 $string['enteroption'] = 'Wprowadź tekst opcji lub plik medialny dla tej opcji';
 $string['enteroptionshort'] = 'Wymagane';
 $string['enteroption_kw'] = 'Wybierz słowo kluczowe dla tego pytania';
@@ -227,7 +234,7 @@ $string['enterquestion'] = 'Wprowadź pytanie';
 $string['enterformula'] = 'Wprowadź wzór';
 $string['entervignette'] = 'Wprowadź przypadek kliniczny dla tego pytania';
 $string['validanswers'] = 'Wprowadź przynajmniej %d właściwą odpowiedź/odpowiedzi';
-$string['selectarea'] = 'Wybierz obszar';
+$string['selectarea'] = 'Wybierz obszar'; 
 $string['randomenterquestion'] = 'Wybierz pytania dla tego zestawu';
 $string['mrqconvert'] = 'Jest tylko jedna poprawna odpowiedź - do tego celu lepsze będzie pytanie wielokrotnego wyboru.\r\nCzy chcesz przekonwertować to pytanie na pytanie wielokrotnego wyboru?';
 $string['showmore'] = 'Pokaż więcej';
@@ -244,25 +251,8 @@ $string['addquestions'] = 'Dodaj pytanie(a)';
 $string['questionbasedon'] = 'Pytanie bazujące na';
 $string['keywordwarning'] = 'Uwaga: nie znaleziono słów kluczowych, utworzenie pytania jest niemożliwe.';
 $string['mappingwarning'] = 'Uwaga: wszystkie odwzorowania będą utracone jeśli to pytanie nie zostanie dodane do arkusza!';
-$string['markchangewarning'] = 'Uwaga: zmiana parametrów oceny po egzaminie powinna być podejmowana tylko w razie najwyższej konieczności. Czy na pewno kontynuować?';
+$string['markchangewarning'] = 'Uwaga: zmiana parametrów oceny po egzaminie powinna być podejmowana tylko w razie najwyższej konieczności. Czy na pewno kontynuować?'; 
 $string['percenttolerance'] = 'Tolerancja może być wyrażona procentowo (np. 5%) jak i wartościami bezwzględnymi';
 $string['answercorrect'] = 'Odpowiedź poprawna';
-$string['marks'] = 'Punkty';
-// Extended calc
-$string['addanswers'] = 'Dodaj więcej odpowiedzi...';
-$string['newvariable'] = 'Nowa zmienna';
-$string['variable'] = 'Zmienna $';
-$string['newanswer'] = 'Nowa odpowiedż';
-$string['deletedvar'] = 'Usunięta zmnienna';
-$string['deletedanswer'] = 'Usunięta odpowiedź';
-$string['displayunits'] = 'Pokaż jednostki dla pytania';
-$string['unitmarking'] = 'Ocena jednostek';
-$string['ifincorrect'] = '(jeśli niepopprawne)';
-$string['precision'] = 'Precision';  // Niko
-$string['enforceto'] = 'Enforce answer to'; // Niko
-$string['sigfigure'] = 'significant figure';  // Niko
-$string['sigfigures'] = 'Cyfry znaczące';
-$string['withzeros'] = 'incl. trailing zeros'; // Niko
-$string['enforcedisplay'] = 'Wymuś dokładność odpowiedzi studentów';
-$string['includetrailing0'] = 'Włączając zera wiodące';
-$string['notenforced'] = 'Not enforced';
+$string['marks'] = 'Punkty'; 
+?>

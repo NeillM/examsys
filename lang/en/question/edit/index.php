@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+//HTML5 part
+require '../../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require '../../lang/' . $language . '/question/edit/area.txt';
+require '../../lang/' . $language . '/question/add/hotspot_add.txt';
+require '../../lang/' . $language . '/question/add/label_add.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 require '../../lang/' . $language . '/include/status.inc';
 require '../../lang/' . $language . '/include/blooms.inc';
 require '../../lang/' . $language . '/include/question_types.inc';
@@ -63,7 +71,6 @@ $string['availableoptions'] = 'Available Options';
 $string['variables'] = 'Variables';
 $string['min'] = 'Min';
 $string['max'] = 'Max';
-$string['decimal'] = 'decimal';
 $string['decimals'] = 'Decimals';
 $string['increment'] = 'Increment';
 $string['formula'] = 'Formula';
@@ -248,21 +255,4 @@ $string['markchangewarning'] = 'Warning: changing mark allocations post-exam sho
 $string['percenttolerance'] = 'Tolerances may now be expressed as percentages (e.g. 5%) as well as absolute numbers';
 $string['answercorrect'] = 'Answer Correct';
 $string['marks'] = 'Marks';
-// Extended calc
-$string['addanswers'] = 'Add More Answers...';
-$string['newvariable'] = 'New Variable';
-$string['variable'] = 'Variable $';
-$string['newanswer'] = 'New Answer';
-$string['deletedvar'] = 'Deleted Variable';
-$string['deletedanswer'] = 'Deleted Answer';
-$string['displayunits'] = 'Display units for question';
-$string['unitmarking'] = 'Unit marking';
-$string['ifincorrect'] = '(if incorrect)';
-$string['precision'] = 'Precision';
-$string['enforceto'] = 'Enforce answer to';
-$string['sigfigure'] = 'significant figure';
-$string['sigfigures'] = 'Significant figures';
-$string['withzeros'] = 'incl. trailing zeros';
-$string['enforcedisplay'] = 'Enforce precision of student answer';
-$string['includetrailing0'] = 'Including trailing 0s';
-$string['notenforced'] = 'Not enforced';
+?>

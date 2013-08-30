@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['html5warn'] = 'Rog&#333; needs HTML5 support, please upgrade your browser.';
+$string['html5warn'] = 'Rog&#333; wymaga obsługi HTML5 - uaktualnij swoją przegladarkę.';
 $string['furtherassistance'] = 'W celu uzyskania dalszej pomocy skontaktuj się z: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Strony nie odnaleziono';
 $string['signinmsg'] = 'Strona, którą chcesz zobaczyć wymaga uwierzytelnienia. Zaloguj się używając swojej nazwy użytkownika i hasła:';
@@ -91,4 +91,11 @@ $string['NoFieldMetadata'] = 'W metadanych brakuje pola dla grup.';
 $string['NoGroup'] = 'Nie znaleziono żadnej grupy dla aktualnego użytkownika.';
 $string['note'] = 'Notatka';
 $string['studentname'] = 'Nazwisko Studenta';
+
+require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
+
+$string['register'] = 'Zarejestruj się jako Pracownik';
+$string['register1'] = 'Zarejestruj się jako ';
+$string['demomodule'] = 'Moduł Demonstracyjny';
+$string['name'] = 'Nazwa';
 ?>

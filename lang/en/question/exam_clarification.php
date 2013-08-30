@@ -16,7 +16,4 @@
 
 $string['midexamclarification'] = 'Mid-Exam Clarification';
 $string['questionscreen'] = '<strong>Question %d</strong> (screen %d)';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
 ?>

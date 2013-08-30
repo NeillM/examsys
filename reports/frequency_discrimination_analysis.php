@@ -40,6 +40,15 @@ require_once '../classes/results_cache.class.php';
 require_once '../classes/standard_setting.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
+//HTML5 part
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require_once '../lang/' . $language . '/question/edit/area.txt';
+require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
+require_once '../lang/' . $language . '/paper/hotspot_question.txt';
+require_once '../lang/' . $language . '/paper/label_answer.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
@@ -704,7 +713,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "$html</td>";
 
           if ($display_method == 'textboxes') {
-            echo "<td><a href=\"#\" onclick=\"return blankCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
+            echo "<td><a href=\"#\" onclick=\"return blankCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
           }
           echo "</tr>";
         }
@@ -742,10 +751,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "</td>";
           if ($correct_buf[$i-1] == 't') {
             $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$i,'t');
-            echo "<td>" . pStats($freq_log[$q_id][$i]['t']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part]. "</span></td><td><strong>".$string['True']."</strong></td>";
+            echo "<td>" . pStats($freq_log[$q_id][$i]['t']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part] . "</span></td><td><strong>" . $string['True'] . "</strong></td>";
           } else {
             $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$i,'f');
-            echo "<td>" . pStats($freq_log[$q_id][$i]['f']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part]. "</span></td><td><strong>".$string['False']."</strong></td>";
+            echo "<td>" . pStats($freq_log[$q_id][$i]['f']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part] . "</span></td><td><strong>" . $string['False'] . "</strong></td>";
           }
           $std_part++;
           echo "<td id=\"q_" . $ex_no . "_1\"";
@@ -782,7 +791,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
         if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
         echo ">$leadin</td>";
-        echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
+        echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
         echo "</tr>\n";
         echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
         echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";
@@ -809,7 +818,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if ($correct_buf[0] == 't') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
           $p = $freq_log[$q_id][1]['t'] / $user_total;
-          echo '<strong>'.$string['True'].'</strong>';
+          echo '<strong>' . $string['True'] . '</strong>';
         } else {
           echo $string['True'];
         }
@@ -820,7 +829,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if ($correct_buf[0] == 'f') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'f');
           $p = $freq_log[$q_id][1]['f'] / $user_total;
-          echo '<strong>'.$string['False'].'</strong>';
+          echo '<strong>' . $string['False'] . '</strong>';
         } else {
           echo $string['True'];
         }
@@ -859,19 +868,32 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
 ?>
   <div align="center">
-  <script language="JavaScript">
-    function swfLoaded<?php echo $q_no; ?>(message) {
-      var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '','#FFC0C0');
-    }
-    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
-    write_string('<param name="allowScriptAccess" value="always" />');
-    write_string('<param name="movie" value="/reports/label_analysis.swf" />');
-    write_string('<param name="quality" value="high" />');
-    write_string('<param name="bgcolor" value="#ffffff" />');
-    write_string('<embed src="/reports/label_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-    write_string('</object>');
-  </script>
+<?php
+	require_once '../classes/configobject.class.php';
+	$configObject          = Config::get_instance();
+	if ($configObject->get('cfg_interactive_qs')=='html5') {
+		//<!-- ======================== HTML5 part rep disc ================= -->
+		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
+		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+		echo "<script language='JavaScript' type='text/javascript'>\n";
+		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
+		echo "</script>\n";
+		//<!-- ==================================================== -->
+	} else {
+		echo "<script language='JavaScript'>\n";
+		echo "function swfLoaded" . $q_no . "(message) {\n";
+		echo "var num = message.substring(5,message.length);\n";
+		echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '','#FFC0C0');}\n";
+		echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $q_no . "\" width=\"" . ($q_media_width + 250) . "\" height=\"" . $tmp_height . "\" align=\"middle\">');\n";
+		echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
+		echo "write_string('<param name=\"movie\" value=\"/reports/label_analysis.swf\" />');\n";
+		echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
+		echo "write_string('<param name=\"bgcolor\" value=\"#ffffff\" />');\n";
+		echo "write_string('<embed src=\"/reports/label_analysis.swf\" quality=\"high\" bgcolor=\"#ffffff\" width=\"" . ($q_media_width + 250) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $q_no . "\" name=\"flash" . $q_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+		echo "write_string('</object>');\n";
+		echo "</script>\n";
+	}
+	?>
   </div>
   <br />
 <?php
@@ -992,19 +1014,32 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
         ?>
         <div align="center">
-        <script language="JavaScript">
-          function swfLoaded<?php echo $q_no; ?>(message) {
-            var num = message.substring(5,message.length);
-            setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo $tmp_correct; ?>', '<?php echo $coords; ?>','0','#FFC0C0');
-          }
-          write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 302); ?>" height="<?php echo ($q_media_height + 25); ?>" align="middle">');
-          write_string('<param name="allowScriptAccess" value="always" />');
-          write_string('<param name="movie" value="/reports/hotspot_analysis.swf" />');
-          write_string('<param name="quality" value="high" />');
-          write_string('<param name="bgcolor" value="#ffffff" />');
-          write_string('<embed src="/reports/hotspot_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 302); ?>" height="<?php echo ($q_media_height + 25); ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-          write_string('</object>');
-        </script>
+				<?php
+				require_once '../classes/configobject.class.php';
+				$configObject          = Config::get_instance();
+				if ($configObject->get('cfg_interactive_qs')=='html5') {
+					//<!-- ======================== HTML5 part rep disc ================= -->
+					echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 302) . "' height='" . ($q_media_height + 25) . "'></canvas>\n";
+					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
+					echo "</script>\n";
+					//<!-- ==================================================== -->
+				} else {
+					echo "<script language='JavaScript'>\n";
+					echo "function swfLoaded" . $q_no . "(message) {\n";
+					echo "var num = message.substring(5,message.length);\n";
+					echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "','0','#FFC0C0');}\n";
+					echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $q_no . "\" width=\"" . ($q_media_width + 302) . "\" height=\"" . ($q_media_height + 25) . "\" align=\"middle\">');\n";
+					echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
+					echo "write_string('<param name=\"movie\" value=\"/reports/hotspot_analysis.swf\" />');\n";
+					echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
+					echo "write_string('<param name=\"bgcolor\" value=\"#ffffff\" />');\n";
+					echo "write_string('<embed src=\"/reports/hotspot_analysis.swf\" quality=\"high\" bgcolor=\"#ffffff\" width=\"" . ($q_media_width + 302) . "\" height=\"" . ($q_media_height + 25) . "\" swliveconnect=\"true\" id=\"flash" . $q_no . "\" name=\"flash" . $q_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+					echo "write_string('</object>');\n";
+					echo "</script>\n";
+				}
+				?>
         </div>
         <?php
 
@@ -1135,7 +1170,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
             $std_part++;
           } else {
-            echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" .$t . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td id=\"q_" . $ex_no . "_" . $i . "\"";
+            echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $t . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td id=\"q_" . $ex_no . "_" . $i . "\"";
             if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
           }
           echo ">$individual_option";
@@ -1305,8 +1340,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     $bottom_words = array_csort($bottom_words,$sortby,$ordering);
 
-    echo "<tr><td colspan=\"2\"><strong>".$string['TopGroup'].":</strong></td><td colspan=\"2\"><strong>".$string['BottomGroup'].":</strong></td></tr>\n";
-    echo "<tr><td colspan=\"2\">(".$string['meanWordCount']." = " . round($top_log[$q_id]['word_count'] / $candidate_no) . ")</td><td colspan=\"2\">(".$string['meanWordCount']." = " . round($bottom_log[$q_id]['word_count'] / $candidate_no) . ")</td></tr>";
+    echo "<tr><td colspan=\"2\"><strong>" . $string['TopGroup'] . ":</strong></td><td colspan=\"2\"><strong>" . $string['BottomGroup'] . ":</strong></td></tr>\n";
+    echo "<tr><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($top_log[$q_id]['word_count'] / $candidate_no) . ")</td><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($bottom_log[$q_id]['word_count'] / $candidate_no) . ")</td></tr>";
     for ($i=0; $i<40; $i++) {
       if (isset($top_words[$i]['word']) or isset($bottom_words[$i]['word'])) {
         echo "<tr>";
@@ -1634,6 +1669,16 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
+
+	<!-- HTML5 part start -->
+	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+	<script type="text/javascript" src="../js/html5.images.js"></script>
+	<script type="text/javascript" src="../js/qsharedf.js"></script>
+	<script type="text/javascript" src="../js/qlabelling.js"></script>
+	<script type="text/javascript" src="../js/qhotspot.js"></script>
+	<script type="text/javascript" src="../js/qarea.js"></script>
+	<!-- HTML5 part end -->
+
   <script language="JavaScript">
     function toggle(qID, parts, marks) {
       for (i=1; i<=parts; i++) {
