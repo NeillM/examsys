@@ -379,7 +379,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 				?>
         <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" />
         <?php
-        if (isset($std_parts[$part_id-1])) echo "<br /><br />".display_std($std_parts[$part_id-1]);
+        if (isset($std_parts[$part_id-1])) echo "<br /><br />" . display_std($std_parts[$part_id-1]);
         break;
       case 'dichotomous':
         if (($question['display_method'] == 'TF_NegativeAbstain') or ($question['display_method'] == 'TF_NegativeAbstainHalf') or ($question['display_method'] == 'TF_PostiveAbstain') or ($question['display_method'] == "YN_NegativeAbstain")) {
@@ -550,7 +550,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '</select></td>';
         if ($question['score_method'] == 'Bonus Mark') {
           echo "<td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td>\n</tr>\n";
-          if ($part_id == count($question['options']) && isset($std_parts[$part_id])) echo "<tr><td>".display_std($std_parts[$part_id])."</td><td  colspan=\"2\">".$string['AllItemsCorrect']."</td></tr>";
+          if ($part_id == count($question['options']) && isset($std_parts[$part_id])) echo "<tr><td>" . display_std($std_parts[$part_id])."</td><td  colspan=\"2\">" . $string['AllItemsCorrect'] . "</td></tr>";
 
 
         } else {
@@ -720,7 +720,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           if (isset($std_parts[$part_id-1])) {
             echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
             for ($part_sub=0;$part_sub<$hotspot_no;$part_sub++) {
-              echo "<tr><td>".chr(65+$part_sub).".</td>";
+              echo "<tr><td>" . chr(65+$part_sub) . ".</td>";
               echo "<td>";
               if (isset($std_parts[$part_id-1+$part_sub])) echo display_std($std_parts[$part_id-1+$part_sub]);
               echo "</td>";
@@ -730,7 +730,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             $part_std_offset--;
             echo "</table>";
           }
-        }else{
+        } else {
           if (isset($std_parts[$part_id-1+$part_std_offset])) echo display_std($std_parts[$part_id-1+$part_std_offset]);
         }
 
@@ -815,10 +815,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           if (isset($std_parts[$part_id-1])) {
             echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
             for ($part_sub=0;$part_sub<$labels_correct;$part_sub++) {
-              echo "<tr><td>".chr(65+$part_sub).".</td>";
+              echo "<tr><td>" . chr(65+$part_sub) . ".</td>";
               echo "<td>";
               if (isset($std_parts[$part_id-1+$part_sub])) echo display_std($std_parts[$part_id-1+$part_sub]);
-              echo  "</td><td>".$labels_correct_array[$part_sub];
+              echo  "</td><td>" . $labels_correct_array[$part_sub];
               echo "</td>";
               echo "</tr>\n";
               $part_std_offset++;
@@ -916,7 +916,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $_SESSION['ans' . $q_id] = $answer;
     $_SESSION['q' . $q_id] = ($question_no + $question_offset);
     echo "<table  cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n<tr><td>";
-    if (isset($std_parts[0])) echo "<p>".display_std($std_parts[0])."</p>";
+    if (isset($std_parts[0])) echo "<p>" . display_std($std_parts[0]) . "</p>";
     echo "</td>\n<td>";
     //echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"$answer\" />" . $settings['units'] . "</p>\n";
     echo "</td></tr></table>";
@@ -976,15 +976,15 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if (isset($std_parts[$part_id-1+$part_std_offset])) {
           echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
           for ($part_sub=0;$part_sub<count($sub_answers);$part_sub++) {
-            echo "<tr><td>".chr(65+$qst_order[$sub_answers[$part_sub]-1]).".</td>";
-            echo "<td>".display_std($std_parts[$part_id-1+$part_std_offset])."</td>";
+            echo "<tr><td>" . chr(65+$qst_order[$sub_answers[$part_sub]-1]) . ".</td>";
+            echo "<td>" . display_std($std_parts[$part_id-1+$part_std_offset]) . "</td>";
             echo "</tr>\n";
             $part_std_offset++;
           }
           $part_std_offset--;
           echo "</table>";
         }
-      }else{
+      } else {
         echo "<td>";
         if (isset($std_parts[$part_id-1+$part_std_offset])) echo display_std($std_parts[$part_id-1+$part_std_offset]);
       }
@@ -1039,7 +1039,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '<td align="right">' . chr(64 + $part_id) . '.</td>';
         if (isset($std_parts[$part_id-1]) && ($question['score_method'] == 'Mark per Option')) {
           echo '<td>'.display_std($std_parts[$part_id-1]).'</td><td>';
-        }else{
+        } else {
           echo "<td colspan=\"2\">";
         }
         echo $single_scenario . '</td>';

@@ -713,7 +713,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "$html</td>";
 
           if ($display_method == 'textboxes') {
-            echo "<td><a href=\"#\" onclick=\"return blankCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
+            echo "<td><a href=\"#\" onclick=\"return blankCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
           }
           echo "</tr>";
         }
@@ -751,10 +751,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "</td>";
           if ($correct_buf[$i-1] == 't') {
             $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$i,'t');
-            echo "<td>" . pStats($freq_log[$q_id][$i]['t']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part]. "</span></td><td><strong>".$string['True']."</strong></td>";
+            echo "<td>" . pStats($freq_log[$q_id][$i]['t']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part] . "</span></td><td><strong>" . $string['True'] . "</strong></td>";
           } else {
             $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$i,'f');
-            echo "<td>" . pStats($freq_log[$q_id][$i]['f']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part]. "</span></td><td><strong>".$string['False']."</strong></td>";
+            echo "<td>" . pStats($freq_log[$q_id][$i]['f']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part] . "</span></td><td><strong>" . $string['False'] . "</strong></td>";
           }
           $std_part++;
           echo "<td id=\"q_" . $ex_no . "_1\"";
@@ -791,7 +791,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
         if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
         echo ">$leadin</td>";
-        echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">".$string['Correct']."</a></td>";
+        echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
         echo "</tr>\n";
         echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
         echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";
@@ -818,7 +818,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if ($correct_buf[0] == 't') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
           $p = $freq_log[$q_id][1]['t'] / $user_total;
-          echo '<strong>'.$string['True'].'</strong>';
+          echo '<strong>' . $string['True'] . '</strong>';
         } else {
           echo $string['True'];
         }
@@ -829,7 +829,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if ($correct_buf[0] == 'f') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'f');
           $p = $freq_log[$q_id][1]['f'] / $user_total;
-          echo '<strong>'.$string['False'].'</strong>';
+          echo '<strong>' . $string['False'] . '</strong>';
         } else {
           echo $string['True'];
         }
@@ -1170,7 +1170,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
             $std_part++;
           } else {
-            echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" .$t . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td id=\"q_" . $ex_no . "_" . $i . "\"";
+            echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $t . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td id=\"q_" . $ex_no . "_" . $i . "\"";
             if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
           }
           echo ">$individual_option";
@@ -1340,8 +1340,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     $bottom_words = array_csort($bottom_words,$sortby,$ordering);
 
-    echo "<tr><td colspan=\"2\"><strong>".$string['TopGroup'].":</strong></td><td colspan=\"2\"><strong>".$string['BottomGroup'].":</strong></td></tr>\n";
-    echo "<tr><td colspan=\"2\">(".$string['meanWordCount']." = " . round($top_log[$q_id]['word_count'] / $candidate_no) . ")</td><td colspan=\"2\">(".$string['meanWordCount']." = " . round($bottom_log[$q_id]['word_count'] / $candidate_no) . ")</td></tr>";
+    echo "<tr><td colspan=\"2\"><strong>" . $string['TopGroup'] . ":</strong></td><td colspan=\"2\"><strong>" . $string['BottomGroup'] . ":</strong></td></tr>\n";
+    echo "<tr><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($top_log[$q_id]['word_count'] / $candidate_no) . ")</td><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($bottom_log[$q_id]['word_count'] / $candidate_no) . ")</td></tr>";
     for ($i=0; $i<40; $i++) {
       if (isset($top_words[$i]['word']) or isset($bottom_words[$i]['word'])) {
         echo "<tr>";

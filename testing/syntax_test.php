@@ -16,7 +16,7 @@ $excluded = explode("|",  ".|..|.ds_store|.svn|.htaccess|help|js|media|tools|art
 //set of rules: short form, correct form, similar but other
 $parts_table = Array(Array());$parts_index = 0;
 $parts_table[$parts_index++] = Array('else','} else {','else if|elseif');
-$parts_table[$parts_index++] = Array('if','if (','if !');
+$parts_table[$parts_index++] = Array('if','if (','if !|if_');
 $parts_table[$parts_index++] = Array('true','true','-');
 $parts_table[$parts_index++] = Array('br','<br />','-'); //http://dev.w3.org/html5/html-author/#the-br-element
 $parts_table[$parts_index++] = Array('switch','switch (','-');

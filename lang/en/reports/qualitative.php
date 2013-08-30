@@ -19,7 +19,6 @@ $string['highlight'] = 'Highlight';
 $string['collapse'] = 'Collapse';
 $string['casesensitive'] = 'Case-sensitive';
 $string['screen'] = 'Screen';
-$string['qualitativeanalysis'] = 'Qualitative Analysis';
 $string['comments'] = '%d comments.';
 $string['nocomments'] = '&lt;No Comments&gt;';
 $string['occurencesof'] = '%d - occurrences of <strong>%s</strong> in %d comments.';

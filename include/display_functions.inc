@@ -218,7 +218,7 @@ function calcPreParse($inputVal, $user_answers, $tmp_vars) {
     $pre_var_val = '';
     foreach ($user_answers as $screen => $answers) {
       foreach ($answers as $pre_qid => $ans) {
-        if($pre_qid == $find_qid) {
+        if ($pre_qid == $find_qid) {
           $pre_user_answers_array = explode('|',$ans);
           $variables = explode(',', $pre_user_answers_array[2]);
           $pre_var_val = $variables[array_search($find_var,$tmp_vars)-1];
@@ -995,7 +995,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             $unanswered = true;
           } else {
             $ans = '';
-            if(isset($user_answers[$current_screen][$q_id])) {
+            if (isset($user_answers[$current_screen][$q_id])) {
               $ans = $user_answers[$current_screen][$q_id];
             }
             echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea></blockquote>\n";
@@ -1041,7 +1041,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
 					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-					if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
+					if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 					echo "', '" . $screen_pre_submitted . "','#FFC0C0','hotspot','answer');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
@@ -1050,7 +1050,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           echo "function swfLoaded" . $question_no . "(message) {\n";
           echo "var num = message.substring(5,message.length);\n";
 					echo "setUpFlash(num, message, '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-					if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
+					if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 					echo "','" . $screen_pre_submitted . "','#FFC0C0');}\n";
 					echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $question_no . "\" width=\"" . ($question['q_media_width'] + 335) . "\" height=\"" . $tmp_height . "\" align=\"middle\">');\n";
 					echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
@@ -1117,7 +1117,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 				echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 				echo "<script language='JavaScript' type='text/javascript'>\n";
 				echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-				if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
+				if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 				echo "', '" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "','#FFC0C0','labelling','answer');\n";
 				echo "</script>\n";
 				//<!-- ==================================================== -->
@@ -1126,7 +1126,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 				echo "function swfLoaded" . $question_no . "(message) {\n";
 				echo "var num = message.substring(5,message.length);\n";
 				echo "setUpFlash(num, message, '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-				if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
+				if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 				echo "', '" . $display_option['marks_correct'] . '~' . $display_option['marks_incorrect'] . '~' . $question['score_method'] . "','#FFC0C0');}\n";
 				echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $question_no . "\" width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\" align=\"middle\">');\n";
 				echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
