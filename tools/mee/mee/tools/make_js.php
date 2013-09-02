@@ -3,6 +3,7 @@ echo "<h2>Building combined JS files</h2>";
 $debug = 0;
 
 $files = array();
+$files[] = "jquery/async.js";
 $files[] = "jquery/jquery.caret.js";
 $files[] = "jquery/jquery.class.js";
 $files[] = "jquery/jquery.pxem.js";

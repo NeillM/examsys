@@ -310,13 +310,16 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
 
             var mainheight = MEE.Data.getBaseSize(this.html_padding);
             this.align.height = mainheight;
-
-            var tpad = 0.1;
-            tpad = $(tpad).toPx({ 'scope': this.html_elem });
-            var bpad = 0.1;
-            bpad = $(bpad).toPx({ 'scope': this.html_elem });
-            //tpad = 0;
-
+            
+            try {
+                var tpad = 0.1;
+                tpad = $(tpad).toPx({ 'scope': this.html_elem });
+                var bpad = 0.1;
+                bpad = $(bpad).toPx({ 'scope': this.html_elem });
+                //tpad = 0;
+            } catch (err) {
+                //do nothing!
+            }
             // need to align the top half so the bottom of it is slightly above the base line and set align.top to the ammount
             // that this sits above the main element
             var top = row0align.height - Math.floor(mainheight / 2) + tpad - row0align.top;

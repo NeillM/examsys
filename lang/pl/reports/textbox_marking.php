@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['textboxmarking'] = 'Textbox Marking';
+$string['textboxmarking'] = 'Ocena pytań półotwartych';
 $string['marks'] = 'punkt/y/ów';//ąę
 $string['saveexit'] = 'Zapisz i zamknij';
 $string['nostudents'] = 'Żadnych studentów';
@@ -28,5 +28,4 @@ $string['finalisemarks'] = 'Ocena końcowa';
 $string['candidates'] = 'kandydatów';
 $string['screen'] = 'Ekran';//ąę
 $string['note'] = 'Notatka';
-$string['marks'] = 'punkt/y/ów';
 ?>

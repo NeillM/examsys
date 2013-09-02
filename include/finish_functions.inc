@@ -2147,7 +2147,9 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 					echo "<script language='JavaScript' type='text/javascript'>\n";
 					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
 					if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
-					echo "','" . $extra  . "','#FFC0C0','labelling','script');\n";
+					echo "','";
+					if (isset($extra)) echo $extra;
+					echo "','#FFC0C0','labelling','script');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
