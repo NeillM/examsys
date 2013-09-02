@@ -207,6 +207,7 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <?php
   $css = '';
   if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
@@ -238,7 +239,6 @@ require '../config/finish.inc';
   }
 
   if ($latex_needed == 1) {
-   echo "<script type=\"text/javascript\" src=\"../js/jquery-1.6.1.min.js\"></script>";
    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>";
   }
   if (($userObject->has_role('Student',1) and $paper_type < 2) or $userObject->has_role('Staff')) {
@@ -248,7 +248,6 @@ require '../config/finish.inc';
 <script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
 <script type="text/javascript" src="../js/student_help.js"></script>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 	
 <!-- HTML5 part start -->
 <script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>

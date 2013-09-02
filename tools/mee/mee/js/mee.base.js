@@ -7,22 +7,19 @@ $.Class.extend("MEE.Base",
         MEE.Base.displays = new Array();
         MEE.Base.edits = new Array();
 
-        //MEE.Base.buildDefs();
-        MEE.Base.to_process = new Array();
-
         if (!source)
             source = document.body;
-        source = $(source)
-        source.find("div.mee").each(this.callback('processDiv'));
-        source.find("span.mee").each(this.callback('processSpan'));
-        source.find("input.mee").each(this.callback('processInput'));
-
-        if (MEE.Base.to_process.length > 0)
-            MEE.Base.createProgress(MEE.Base.to_process.length);
-
-        MEE.Base.current = 0;
-
-        setTimeout("MEE.Base.ProcessNext()", 1);
+        
+        var d = new Date;
+        var eqns = $.makeArray($(source).find("div.mee, span.mee, input.mee").css('color','white'));
+        var d = new Date;
+        
+        async.each(eqns, this.Process, function () { 
+                        var d = new Date; 
+                        console.log('MEE DONE ' + d.getTime()); 
+                        $('body').trigger('mee/done',[]);
+                    });
+        
         $(document.body).click(this.callback('pageClick'));
     },
 
@@ -36,21 +33,73 @@ $.Class.extend("MEE.Base",
         }
         return true;
     },
-
+    
     //#region Process elements
-    ProcessNext: function () {
-        i = MEE.Base.current;
-        if (i >= MEE.Base.to_process.length) {
-            // dont creating HTML, 
-            MEE.Base.removeProgress();
-            return;
+    Process: function (elem, callback) {
+        
+        var proc = {
+          elem : elem,
+          type : 'display',
+          inline : false
+        };
+        
+        if(elem.tagName === 'SPAN') {
+            proc.inline = true;
         }
+        
+        if(elem.tagName === 'INPUT') {
+            delete proc.inline;
+            proc.type = 'edit';
+        }
+    
+        if (proc.type == "display") {
+            //if ($(proc.elem).attr('latex'))
+                //return;
+            var meeeqn = new MEE.Display(proc.elem, proc.inline, this.tinymce);
+            MEE.Base.displays.push(meeeqn);
+            proc.eqn = meeeqn;
+        } else if (proc.type == "edit") {
+            var meeeqn = new MEE.Edit(proc.elem);
+            MEE.Base.edits.push(meeeqn);
+        }
+        
+        async.nextTick( function () {
+            if (proc.eqn)
+                proc.eqn.Align();
 
-        var proc = this.to_process[i];
-        MEE.Base.process(proc);
-        MEE.Base.updateProgress();
-        setTimeout("MEE.Base.ProcessNext_Align()", 5);
+            $(proc.elem).css('color','');
+
+            //add some hight and padding to the parent elments to help with layout.
+            if(!$(proc.elem).hasClass('meeInMCE')) {
+              var h = MEE.Base.replacePX(proc.elem.style.height) 
+                                                  + MEE.Base.replacePX(proc.elem.style.paddingTop)
+                                                   + MEE.Base.replacePX(proc.elem.style.paddingBottom);
+
+              var elem = proc.elem.parentNode;
+              if(elem.tagName == 'SPAN') {
+                elem = elem.parentNode; // if we are in a table set the height on the tr not the td
+              } 
+              if(elem.tagName == 'TD') {
+                elem = elem.parentNode; // if we are in a table set the height on the tr not the td
+              } 
+
+              if(h == 0 && MEE.Base.replacePX(elem.style.height) == 0) {
+                elem.style.height = 'auto';
+              } else if(elem.style.height == '' || h > MEE.Base.replacePX(elem.style.height)) {
+                elem.style.minHeight = h + 'px';
+                elem.style.paddingTop = proc.elem.style.paddingTop;
+              }
+            } else {
+               var w = MEE.Base.calcWidth(proc.elem,0);
+               proc.elem.parentNode.style.width = w + 'px';
+               var h = MEE.Base.calcHeight(proc.elem,0);
+               proc.elem.parentNode.style.height = h + 'px';
+            }
+            callback();
+        });
     },
+            
+    //#region Process elements
 
     ProcessNext_Fonts: function () {
         this.fontwaitlimit--;
@@ -71,113 +120,9 @@ $.Class.extend("MEE.Base",
         setTimeout("MEE.Base.ProcessNext_Align()", 5);
     },
 
-    ProcessNext_Align: function () {
-        i = MEE.Base.current++;
-        if (i >= MEE.Base.to_process.length) {
-            MEE.Base.removeProgress();
-            return;
-        }
-
-        var proc = this.to_process[i];
-        if (proc.eqn)
-            proc.eqn.Align();
-
-        MEE.Base.updateProgress();
-        $(proc.elem).css('color','');
-        //add some hight and padding to the parent elments to help with layout.
-        if(!$(proc.elem).hasClass('meeInMCE')) {
-          var h = this.replacePX(proc.elem.style.height) 
-                                              + this.replacePX(proc.elem.style.paddingTop)
-                                               + this.replacePX(proc.elem.style.paddingBottom);
-          
-          var elem = proc.elem.parentNode;
-          if(elem.tagName == 'SPAN') {
-            elem = elem.parentNode; // if we are in a table set the height on the tr not the td
-          } 
-          if(elem.tagName == 'TD') {
-            elem = elem.parentNode; // if we are in a table set the height on the tr not the td
-          } 
-          
-          if(h == 0 && this.replacePX(elem.style.height) == 0) {
-            elem.style.height = 'auto';
-          } else if(elem.style.height == '' || h > this.replacePX(elem.style.height)) {
-            elem.style.minHeight = h + 'px';
-            elem.style.paddingTop = proc.elem.style.paddingTop;
-          }
-        } else {
-           var w = this.calcWidth(proc.elem,0);
-           proc.elem.parentNode.style.width = w + 'px';
-           //var h = this.calcHeight(proc.elem,0);
-           //proc.elem.parentNode.style.height = h + 'px';
-        }
-        setTimeout("MEE.Base.ProcessNext()", 1);
-    },
-
-    processDiv: function (elem) {
-        var proc = {
-          elem : elem,
-          type : 'display',
-          inline : false
-        };
-        $(proc.elem).css('color','white');
-        MEE.Base.to_process.push(proc);
-    },
-
-    processSpan: function (elem) {
-        var proc = {
-          elem : elem,
-          type :'display',
-          inline : true
-        }
-        $(proc.elem).css('color','white');
-        MEE.Base.to_process.push(proc);
-    },
-
-    processInput: function (elem) {
-        var proc = {
-          elem : elem,
-          type : 'edit'
-        }
-        MEE.Base.to_process.push(proc);
-    },
-
-    process: function (proc) {
-
-        if (proc.type == "display") {
-            if ($(proc.elem).attr('latex'))
-                return;
-            var meeeqn = new MEE.Display(proc.elem, proc.inline, this.tinymce);
-            MEE.Base.displays.push(meeeqn);
-            proc.eqn = meeeqn;
-        } else if (proc.type == "edit") {
-            var meeeqn = new MEE.Edit(proc.elem);
-            MEE.Base.edits.push(meeeqn);
-        }
-
-
-    },
     //#endregion 
 
-    //#region Progress bar
-    createProgress: function () {
-        MEE.Base.html_progress = $('<div>');
-        MEE.Base.html_progress.addClass('mee_progress');
-        MEE.Base.html_progress.html("Processing equations: 0%");
-        $(document.body).append(MEE.Base.html_progress);
-    },
-
-    setProgressMessage: function (message) {
-        MEE.Base.html_progress.html(message);
-    },
-    updateProgress: function () {
-        var pct = Math.ceil(MEE.Base.current / MEE.Base.to_process.length * 100);
-        MEE.Base.html_progress.html("Processing equations: " + pct + "%");
-    },
-
-    removeProgress: function () {
-        $('.mee_progress').remove();
-    },
-    //#endregion
+    
     replacePX: function (val) {
       val = parseInt(val);
       if(!val || val == 'NaN') {

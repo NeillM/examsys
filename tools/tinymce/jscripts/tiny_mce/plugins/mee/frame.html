@@ -19,7 +19,6 @@
 	</body>
     <script>
       function setupFrame() {
-          
           var eqn = $('#equation');
           if (window.parent && window.parent.parent && window.parent.parent.updateMEE)
               window.parent.parent.updateMEE(window, eqn.width(), eqn.height(), false);
@@ -48,10 +47,8 @@
         tag.addClass('meeInMCE');
         tag.html(data.latex);
         $('#equation').append(tag);
-
-        $().ready(function () {
-            setTimeout("setupFrame()", 500);
-        });
+        
+        $('body').bind('mee/done',setupFrame);
 
         $('#equation').click(function () {
             if (window.parent && window.parent.parent && window.parent.parent.clickMEEiFrame)
