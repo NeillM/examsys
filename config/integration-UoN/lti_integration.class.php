@@ -162,6 +162,9 @@ $error_type='Notice';
   static function module_code_translated_store($data) {
     $return = '';
     foreach ($data as $k => $v) {
+      if ($v[2] == '') {
+        $v[2] = 'UK';
+      }
       $module = $v[1];
       $replaced_module = str_replace('_UNMC', '', $module);
       $replaced_module = str_replace('_UNNC', '', $replaced_module);
