@@ -241,7 +241,7 @@ $extra_time = null;
 $remaining_time = 0;
 $log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 // $log_metadata->get_record will return true if this user has stared this exam. false otherwise
-$exam_started = $log_metadata->get_record();
+$exam_started = $log_metadata->get_record('', false);
 
 if ($exam_duration !== null) {
 

@@ -71,7 +71,7 @@ class LogMetadata {
    * Gets last log metadata record for this userID on this paperID
    * @return DateTime
    */
-  public function get_record($metadataID = '') {
+  public function get_record($metadataID = '', $set_start_time = true) {
     if ($metadataID == '') {
       $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID = ? AND paperID = ? ORDER BY id DESC LIMIT 1');
       $stmt->bind_param('ii', $this->userid, $this->paper_id);
@@ -98,7 +98,9 @@ class LogMetadata {
     $stmt->fetch();
     $stmt->close();
 
-    $this->populate_start_date_time();
+    if ($set_start_time or isset($this->session_id)) {
+      $this->populate_start_date_time();
+    }
 
     return true;
   }
