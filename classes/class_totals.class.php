@@ -451,7 +451,7 @@ class ClassTotals {
     $this->user_results[$user_number]['marking_complete'] = $marking_comp;
     $this->user_results[$user_number]['visible']          = true;    // Default to visible unless switched off below.
 
-    if ($this->demo) {
+		if ($this->demo) {
       $this->user_results[$user_number]['surname']     = demo_replace($this->user_results[$user_number]['surname']);
       $this->user_results[$user_number]['initials']    = demo_replace($this->user_results[$user_number]['initials']);
       $this->user_results[$user_number]['first_names'] = demo_replace($this->user_results[$user_number]['first_names']);

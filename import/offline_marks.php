@@ -176,14 +176,14 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
         if ($save_ok) {
           echo "<tr><td><img src=\"../artwork/green_plus_16.png\" wodth=\"16\" height=\"16\" alt=\"Add\" /></td><td>" . $students[$sid]['title'] . "</td><td>" . $students[$sid]['surname'] . "</td><td>" . $students[$sid]['first_names'] . "</td><td>$sid</td>";
           for ($q=1; $q<=$question_no; $q++) {
-            $result = $db->prepare("INSERT INTO log5 VALUES(NULL, ?, ?, ?, ?)");
+            $result = $db->prepare("INSERT INTO log5 VALUES(NULL, ?, ?, ?, ?, ?)");
             $mark = trim($fields[$q]);
             if ($mark > $paper[$q]['marks_correct']) {
               $save_mark = NULL;
             } else {
               $save_mark = floatval($mark);
             }
-            $result->bind_param('idii', $paper[$q]['id'], $save_mark, $paper[$q]['marks_correct'], $lmd_id);
+            $result->bind_param('iddii', $paper[$q]['id'], $save_mark, $save_mark, $paper[$q]['marks_correct'], $lmd_id);
             $res = $result->execute();
             if ($res == false) {
               echo "<td>error</td>";
