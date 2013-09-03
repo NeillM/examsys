@@ -28,6 +28,7 @@ function is_demo($userObj) {
   } else {
     $demo = false;
   }
+	return $demo;
 }
 
 /**
