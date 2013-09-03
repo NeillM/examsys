@@ -118,13 +118,45 @@ class lti_integration_extended extends lti_integration {
   }
 
   static function sms_api($data) {
+    global $mysqli;
+
+
+
     if ($data[0] != 'SMS') {
       return '';
     }
     $SMS = SmsUtils::GetSmsUtils();
-    $SMS->set_module($data[2]);
+    if ($SMS === false) {
+      $configObject = Config::get_instance();
+      $notice = UserNotices::get_instance();
+      $userObject = UserObject::get_instance();
 
-    return $SMS->url;
+      $userid = 0;
+      $username = 'PRE LOGIN';
+      if (isset($userObject)) {
+        $userid = $userObject->get_user_ID();
+        $username = $userObject->get_username();
+      }
+$error_type='Notice';
+      $errstr='ROGO:SMS not correctly setup';
+      $errfile='lti_integration.php';
+      if (is_null($configObject->get('cfg_db_port'))) {
+        $configObject->set('cfg_db_port', 3306);
+      }
+      // Query may fail if we try to insert while another statement is open.
+      // Since we don't have a handle on the original statement, create another DB link
+      $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+
+      $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
+      $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
+      $log_error->execute();
+      $log_error->close();
+      return '';
+    } else {
+      $SMS->set_module($data[2]);
+      return $SMS->url;
+    }
+
   }
 
   static function module_code_translated_store($data) {
