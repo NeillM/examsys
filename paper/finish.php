@@ -54,12 +54,7 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 
 check_var('id', 'GET', true, false, false);
 
-if ($userObject->has_role('Demo')) {
-  $demo = true;
-} else {
-  $demo = false;
-}
-
+$demo		= is_demo($userObject);
 $userID = $userObject->get_user_ID();
 
 //get the paper properties
@@ -93,7 +88,6 @@ $paper_postscript           = $propertyObj->get_paper_postscript();
 $pass_mark                  = $propertyObj->get_pass_mark();
 $latex_needed               = $propertyObj->get_latex_needed();
 $password                   = $propertyObj->get_password();
-
 
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
@@ -207,7 +201,6 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <?php
   $css = '';
   if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
@@ -235,42 +228,35 @@ require '../config/finish.inc';
     $css .= ".label {color:$labelcolor}\n";
   }
   if ($css != '') {
-    echo "<style type=\"text/css\">\n$css\n</style>\n";
+    echo "<style type=\"text/css\">\n$css</style>\n";
   }
 
   if ($latex_needed == 1) {
    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>";
   }
-  if (($userObject->has_role('Student',1) and $paper_type < 2) or $userObject->has_role('Staff')) {
-    echo "<script src=\"../js/ie_fix.js\" type=\"text/javascript\"></script>\n";
+  if (($userObject->has_role('Student', 1) and $paper_type < 2) or $userObject->has_role('Staff')) {
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
   }
 ?>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
 <script type="text/javascript" src="../js/student_help.js"></script>
 	
-<!-- HTML5 part start -->
-<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-<script type="text/javascript" src="../js/html5.images.js"></script>
-<script type="text/javascript" src="../js/qsharedf.js"></script>
-<script type="text/javascript" src="../js/qlabelling.js"></script>
-<script type="text/javascript" src="../js/qhotspot.js"></script>
-<script type="text/javascript" src="../js/qarea.js"></script>
-<!-- HTML5 part end -->
+
 	
 <script language="JavaScript">
   window.history.go(1);
+	
+	$(document).ready(function () {
+		document.oncontextmenu = function() {return false;};
+	});
 </script>
 </head>
-
+<body>
 <?php
   $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
 
-  if ($userObject->has_role('Student')) {
-    echo '<body oncontextmenu="return false;">';
-  } else {
-    echo '<body>';
-  }
   if (isset($_POST['current_screen'])) {
     $current_screen = $_POST['current_screen'];
   } else {
@@ -357,12 +343,12 @@ require '../config/finish.inc';
     }
   } else {
     echo '<blockquote>';
-    //if ($language == 'en') {
+    if ($language == 'en') {
       echo '<p style="font-size:450%;font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p>';
-    //} else {
+    } else {
       // Do not use fancy fonts for foreign lanuages due to extended character support issues.
-    //  echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
-    //}
+      echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
+    }
     echo '<p>' . sprintf($string['msg1'], $paper_title) . '</p><br />';
     if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
     echo '</blockquote>';

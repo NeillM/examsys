@@ -1,12 +1,12 @@
 html {
   overflow:hidden;
   height:100%;
-  margin:0px;
-  padding:0px
+  margin:0;
+  padding:0
 }
 body {
-  padding:0px;
-  border:0px;
+  padding:0;
+  border:0;
   font-size:90%;
   height:100%
 }
@@ -19,8 +19,8 @@ table {
   table-layout:fixed
 }
 p {
-  margin-top:0px;
-  padding-top:0px
+  margin-top:0;
+  padding-top:0;
 }
 pre {
   font-family:Arial,sans-serif;
@@ -46,10 +46,10 @@ pre {
   font-size:150%;
   padding-left:4px;
   font-weight:bold;
-  color:#316AC5
+  color:#316AC5;
 }
 .note {
-  color:#C00000
+  color:#C00000;
 }
 .mk {
   color:#808080;
@@ -250,8 +250,8 @@ pre {
   box-shadow: 3px 3px 5px #C0C0C0;
 }
 .exam_announcement_box ul {
-  margin:0px;
-  padding:0px;
+  margin:0;
+  padding:0;
 }
 .exam_announce_icon {
   width:56px;

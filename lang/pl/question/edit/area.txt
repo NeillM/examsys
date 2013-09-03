@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['But_Clear_All'] = 'Wymaż wszystko';
 $string['But_Delete_point'] = 'Usuń punkt';
 $string['But_your_answer'] = 'Twoja odpowiedź';
