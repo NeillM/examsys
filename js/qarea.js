@@ -12,26 +12,15 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 	}
 	if (this.canvas && !this.canvas.getContext){
 		alert ('Canvas not supported');
-		//https://localhost/help/staff/index.php?id=305
 	}
   
 	if (this.canvas && this.canvas.getContext){
 		this.context = this.canvas.getContext('2d');
 		this.context.lineWidth = 1;
 
-		//---------- num, 
- 		if (this.nikotest==1) console.log('num:\n'+num);
     this.q_Num = num;
-		//---------- doorId, 
- 		if (this.nikotest==1) console.log('doorId:\n'+doorId);
 		this.doorId = doorId;
-		//---------- lang, 
-    //	var langfilename = "../../lang/" + String_from_JSL + "/question/edit/area.txt";
 
- 		if (this.nikotest==1) console.log('lang:\n'+lang);
-		//---------- image,
- 		if (this.nikotest==1) console.log('image:\n'+image);
-		
 		//gen_img
 		this.gen_img = new Image();  
 		function gen_img_onload() {
@@ -41,26 +30,18 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 		}  
 		this.gen_img.onload = gen_img_onload.bind(this);
 		this.gen_img.src = ''+image; 
-
-    //console.log(this.gen_img.src);
        
 		//---------- mode 
-		if (this.nikotest==1) console.log('mode:\n'+mode);
 		this.yOffset = 2;
     this.qmode = mode;
 		if (this.qmode == 'script') this.global_zoom = false;
 		
-
-		
 		//---------- config, 
-		if (this.nikotest==1) console.log('config:\n'+config); 
     this.qconfig=this.yoffset_fix(config,this.yOffest_fix);
     //this.yOffest_fix
     if (config!='') this.global_delpoint_avail = true;
 
 		//---------- answer, 
-		if (this.nikotest==1) console.log('answer:\n'+answer);
-    //for (i=0; i<this.labelsBox.length; i++) this.answerBox[i] = new Array('','');
     if (answer != "" && answer != undefined && answer != "undefined" && answer != null && answer != "null" && answer != "u") {
       this.is_an_answer = true;
       var answer_l1 = answer.split("|");
@@ -69,11 +50,9 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
       }    
     }      
     if (answer=='u') this.allUnaswered=true;
-    //console.log('this.answerBox');
     this.qanswer=answer;
     
 		//---------- colour 
-		if (this.nikotest==1) console.log('colour:\n'+colour);
 		this.currentColours[3] = colour;
     
     //menubar
@@ -87,7 +66,6 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 		this.menu_img.onload = menu_img_onload.bind(this);
 		this.menu_img.src = '/js/images/combined.png'; 
 	}
-	//this.redraw_once = true;
 }
 
 function yoffset_fix(data,fix) {
@@ -99,7 +77,6 @@ function yoffset_fix(data,fix) {
 			data_out += (parseInt(data_in[n*2+1].trim(), 16)+fix).toString(16)+',';
 		}
 		data_out = data_out.substr(0,data_out.length-1);
-		//console.log (data_out);
 	}
   return data_out;
 }
@@ -155,7 +132,6 @@ function qa_test(type) {
   this.do_the_test = false;
   this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
   this.context.globalAlpha = 0.5;
-  //this.draw_limit = new Array(0,0,this.canvas.width*2,this.canvas.height);
   var col = '#CC0000';
   if (this.qanswer!='') this.polyDrawH(this.context,'',col,0,this.yOffset,this.qanswer.split(','),'t');     
   col = '#0000FF';  
@@ -163,7 +139,6 @@ function qa_test(type) {
   this.context.globalAlpha = 1;
 	
 	var timgd = this.context.getImageData(1,1,this.canvas.width-2,this.canvas.height-2);
-	//console.log(type);
 	if (type=='data') {
 		this.timgp = timgd.data;
 		this.do_the_test_calc = true;
@@ -181,8 +156,6 @@ function qa_test_calc(type) {
 	
 	if (type=='data') {
 		for (j=0; j<this.timgp.length; j+=4) {
-			//var col =this.hexifycolour(''+(this.timgp[j+0]*256+this.timgp[j+1])*256+this.timgp[j+2]*1);
-			//var col = '#'+this.timgp[j+0].toString(16)+this.timgp[j+1].toString(16)+this.timgp[j+2].toString(16);
 			if (this.timgp[j+0]*1 > trsh && this.timgp[j+2]*1 > trsh && this.timgp[j+1]*1 < trsh) li1++;
 			if (this.timgp[j+0]*1 > trsh && this.timgp[j+2]*1 < trsh && this.timgp[j+1]*1 < trsh) li2++;
 			if (this.timgp[j+0]*1 < trsh && this.timgp[j+2]*1 > trsh && this.timgp[j+1]*1 < trsh) li3++;
@@ -190,14 +163,12 @@ function qa_test_calc(type) {
 		var result_in = Math.round(li1/(li1+li3)*1000);
 		var result_out = Math.round(li2/(li1+li3)*1000);
 		var result_er = 1000 - result_in + result_out;
-		//console.log(this.timgp.length,result_er / 10+','+result_in / 10+','+result_out / 10+','+li1+','+li2+','+li3);
 		return result_er / 10+','+result_in / 10+','+result_out / 10+','+li1+','+li2+','+li3;
 	}
 	if (type=='image') {
 		this.timga = this.err_image.data;
 		for (j=0; j<this.timga.length; j+=4) {
 			li1=li2=li3=li4=0;
-			//var col = '#'+this.timga[j+0].toString(16)+this.timga[j+1].toString(16)+this.timga[j+2].toString(16);
 			if (this.timga[j+0]*1 > trsh && this.timga[j+2]*1 > trsh && this.timga[j+1]*1 < trsh) li1++;
 			if (this.timga[j+0]*1 > trsh && this.timga[j+2]*1 < trsh && this.timga[j+1]*1 < trsh) li2++;
 			if (this.timga[j+0]*1 < trsh && this.timga[j+2]*1 > trsh && this.timga[j+1]*1 < trsh) li3++;
@@ -284,7 +255,6 @@ function qa_redraw_canvas_main(tx,ty) {
 	if (((this.qconfig=='' && this.qmode=='edit') || (this.qanswer=='' && this.qmode=='answer'))  && this.poly_temp!='') {
 		var poly_temp_ext = this.poly_temp;
 		poly_temp_ext += Math.round(this.x).toString(16)+','+Math.round(this.y).toString(16);
-		//console.log(poly_temp_ext);
 		this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,poly_temp_ext.split(','),'d');
 		}
 	this.context.globalAlpha = 1;
@@ -292,11 +262,8 @@ function qa_redraw_canvas_main(tx,ty) {
 
 function qa_redraw_canvas() { 
 	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.mouse_moved || this.ShiftChange)) {
-		
-		//console.log(this.global_your_answer,this.global_corect_answer,this.global_show_error);
     //testing the answer
     if (this.do_the_test && typeof(this.qanswer)!='undefined' && this.qanswer!=this.last_answer) {
-			//console.log(this.qanswer);
 			this.last_answer = this.qanswer;
 			this.timgp = this.qa_test('data');
     }
@@ -304,21 +271,18 @@ function qa_redraw_canvas() {
 		if (this.qconfig!='' && this.global_show_error) {
 			if (typeof(this.err_image_final)=='undefined') {
 				this.err_image = this.qa_test('image');
-				//this.err_image_final = this.qa_test_calc('image');
 			}
 		}
 		
  		this.redraw_once = false;
     this.mouse_moved = false;
     this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-		//console.log(this.qmode);
     this.qa_redraw_canvas_main(1,28-this.yOffset);
     this.context.lineWidth = this.lineThickness;
 		this.context.strokeStyle=this.currentColours[1];
     
     //buttons
     if (this.buttonBox.length==0) this.qa_menuBuild();
-		//console.log(this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']]);
     //cross red or gray
     if (this.qmode=='edit' || this.qmode=='answer') {
 			if (this.global_delpoint_avail) {
@@ -355,7 +319,6 @@ function qa_redraw_canvas() {
     
     if (this.global_zoom  && !this.isShift && !this.global_clearpnl && this.y>26) {
       //mask
-			//console.log('zoom');
       this.context.save();
       this.context.beginPath();
       
@@ -385,12 +348,10 @@ function qa_redraw_canvas() {
 		//testing the answer
     if (this.do_the_test_calc) {
 			this.test_result = this.qa_test_calc('data');
-      //console.log('area test '+this.qmode+':'+this.test_result);
 			this.qa_ReturnInfo();
     }
     if (this.qmode =='edit' && this.last_config!=this.qconfig) {
 			this.last_config=this.qconfig;
-			//console.log('area test '+this.qmode+':'+this.test_result);
 			this.qa_ReturnInfo();
     }		
   }
@@ -418,7 +379,6 @@ function qa_mouseDragMove(e){
 		this.isCtrl = ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}
-	//console.log(this.handler_sqr,this.dragging);
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
     if (this.handler_sqr>-1) {
@@ -430,7 +390,6 @@ function qa_mouseDragMove(e){
       pp[(this.handler_sqr*2-2)] = this.x.toString(16);
       pp[(this.handler_sqr*2-1)] = this.y.toString(16);
 			//move first handler if moving last in polygon
-			//console.log(this.handler_sqr,pp.length,pp);
 			if ((this.handler_sqr*2-2)==pp.length) {
 				pp[0] = pp[this.handler_sqr*2-2];
 				pp[1] = pp[this.handler_sqr*2-1];
@@ -450,27 +409,9 @@ function qa_mouseDragMove(e){
     }
   } else { //change of cursor
     this.drag_box_id = -1;
-		//console.log(this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height));
 		if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
 			var over_object = false;
-			/*
-      //this.test for labelsBoxes
-      for (i=0;i<this.labelsBox.length;i++) {
-				if (this.labelsBox[i][1]=='image') {
-					if (this.testWithin(this.x,this.y,this.labelsBox[i][5],this.labelsBox[i][6],imgLabelWidth,imgLabelHeight)==true) {
-						over_object = true;
-						this.drag_box_id = i;
-					}
-				}
-				if (this.labelsBox[i][1]=='text') {
-					if (this.testWithin(this.x,this.y,this.labelsBox[i][5],this.labelsBox[i][6],labelWidth,labelHeight)==true) {
-						over_object = true;
-						this.drag_box_id = i;
-					}
-				}
-			}	
-			*/
-      
+	
       //this.test for buttons
       var buttonTest = -1;
       for (var i=0;i<this.buttonBox.length;i++) {
@@ -497,27 +438,13 @@ function qa_mouseDragMove(e){
         this.qa_redraw_canvas;
       }
       
-      //this.test for buttonBoxPanels
-			/*
-      this.labelsBoxPanelOver=-1;
-      for (var i=0;i<this.labelsBoxPanel.length;i++) {
-        if (this.testWithin(this.x,this.y,this.labelsBoxPanel[i][0],this.labelsBoxPanel[i][1],this.labelsBoxPanel[i][2],this.labelsBoxPanel[i][3])==true) {
-          over_object = true;
-          this.labelsBoxPanelOver=i;
-        }
-      }
-			*/
       //this.test for handler points      
       if ((this.qmode=='edit' && this.qconfig!='') || (this.qmode=='answer' && this.qanswer!='')) {
 				this.qtest = '';
 				if (this.qmode=='answer' && this.qanswer!='') this.qtest = this.qanswer;
 				if (this.qmode=='edit' && this.qconfig!='') this.qtest = this.qconfig;
-				
-				//console.log(this.qtest);
-				
+								
         var pp = this.qtest.split(',');
-				//pp.push(pp[0]);
-				//pp.push(pp[1]);
         this.handler_dot = -1;
         this.handler_sqr = -1;
         for (var n=1;n<pp.length/2;n++) {
@@ -526,23 +453,14 @@ function qa_mouseDragMove(e){
           if (this.testWithin(this.x,this.y,ttx-3,tty-3,7,7)) this.handler_dot = n;
           if (this.testWithin(this.x,this.y,parseInt(pp[n*2-2].trim(), 16)-3,parseInt(pp[n*2-1].trim(), 16)-1,7,7)) this.handler_sqr = n;					
         }
-				//console.log(this.handler_dot,this.handler_sqr);
       }
 			
-			/*
-			//console.log(411);
-			//console.log(this.qconfig);
-			//console.log(this.qanswer);*/
       var cur = 'default';
       if (this.y>25) cur = 'crosshair';
-      //if (global_edit) cur = 'not-allowed';
-			//if (global_edit && this.test_result!='') cur = 'move';
-			//if (global_edit && this.test_result!='' && this.test_result.indexOf('$')<this.test_result.length-1) cur = 'default';
  			if (this.global_delpoint || this.isCtrl) cur = 'url(/js/images/cur_cross.cur), default';
 			if (over_object) cur = 'pointer';
       if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
       if (this.global_clearpnl) cur = 'default';
- 			//if (this.handler_sqr>-1) cur = 'url(/js/images/cur_cross.cur) 6 5, default';
       e.target.style.cursor = cur;
       
 		}
@@ -552,7 +470,6 @@ function qa_mouseDragMove(e){
   this.oldy=this.y;
   
   //this.freehand draw  
-	//console.log(this.freehand);
   if (this.y>28 && this.poly_temp_points[7]!=0 && this.freehand) {
     this.angle1 = this.angle2 = this.distn = this.dx = this.dy = -1;
     if (this.poly_temp_points[3]!=0 && this.poly_temp_points[5]!=0) 
@@ -581,9 +498,7 @@ function qa_mouseDragMove(e){
       //and then dirct to add the actual one
       add_point = true;
     }
-      
-    //console.log(this.angle1,this.angle2,this.distn,Math.abs(this.angle2-this.angle1),(1/this.distn*3));  
-    
+          
     //checking the angle (dependend on the distance)
     if (this.poly_temp_points[3]!=0 && this.poly_temp_points[5]!=0 && this.distn > 10 && Math.abs(this.angle2-this.angle1)>(1/this.distn*3)) add_point = true;
         
@@ -593,9 +508,6 @@ function qa_mouseDragMove(e){
       this.poly_temp_points[3] = this.poly_temp_points[5];
       this.poly_temp_points[4] = this.x;
       this.poly_temp_points[5] = this.y;
-      //this.poly_temp_points[6] = this.x;
-      //this.poly_temp_points[7] = this.y;
-      //console.log(this.poly_temp);
     }
   }
   //this.freehand draw end
@@ -635,7 +547,6 @@ function qa_mouseDragDown(e){
 }
 
 function qa_ReturnInfo() {
-	//console.log(this.test_result+';'+this.qanswer);
   var questions_result = '';
 	if (this.qmode=='answer') {
 		questions_result = this.test_result+';'+this.qanswer+', ';
@@ -645,26 +556,23 @@ function qa_ReturnInfo() {
 		questions_result = '0,0,0,0,0,0;'+this.qconfig+', ';
 		var target_field = document.getElementById(this.doorId);
   	}
-		
-	//console.log('q'+this.q_Num,target_field,questions_result)
 	if (questions_result!='' && target_field) target_field.value = questions_result;	
-	//console.log(this.doorId,target_field,target_field.value)
 }
 
 function qa_mouseDblClick(){
-  //console.log('global_dblclick');
 	this.global_dblclick = true;
 }
 
 function qa_mouseDragUp(){
 	this.dragging = false;
-
   this.button_test();
+	
+	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') window.open('/help/staff/index.php?id=305');
+
   if (this.qmode=='edit' || this.qmode=='answer') {
 		this.global_zoom = false;
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_zoom.png']][6]==2) this.global_zoom = true;
 		this.global_delpoint = false;
-		//console.log(this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][7]);
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][6]==2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][7]=='+') this.global_delpoint = true;
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][5]==2 && this.qconfig!='') this.global_clearpnl = true;
   }
@@ -676,11 +584,9 @@ function qa_mouseDragUp(){
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][6]==2) this.global_corect_answer = true;
 		this.global_show_error = false;
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][6]==2) this.global_show_error = true;
-		//console.log(this.global_your_answer,this.global_corect_answer,this.global_show_error);
 
 		this.global_zoom = false;
 	}
-	//console.log(this.global_delpoint,this.global_clearpnl);
   //this.test panel buttons
   if (this.panel_buttons.length>0) {
     for (n=0;n<this.panel_buttons.length;n++) {
@@ -693,18 +599,11 @@ function qa_mouseDragUp(){
   this.dx = this.x - this.poly_temp_points[6]; 
   this.dy = this.y - this.poly_temp_points[7];
   this.distn = Math.sqrt(this.dx*this.dx+this.dy*this.dy);
-	//console.log(this.qconfig)
-  //if (this.qconfig=='' && this.y>28) {
   if (this.y>28) {
     //condition for the finish
     if ((this.poly_temp.length>2 && (Math.abs(this.poly_temp_points[0]-this.x)<3 && Math.abs(this.poly_temp_points[1]-this.y)<3)) || (Math.abs(this.poly_temp_points[8]-this.x)<3 && Math.abs(this.poly_temp_points[9]-this.y)<3))  {      
       if (this.qmode=='edit' && this.qconfig=='') this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
       if (this.qmode=='answer' && this.qanswer=='') this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
-			//console.log('qmode: '+this.qmode);
-			//console.log('qconfig: '+this.qconfig);
-			//console.log('qanswer: '+this.qanswer);
-			//console.log('poly_temp: '+this.poly_temp);
-			//console.log('-----');
 			this.global_delpoint_avail = true; 
       this.poly_temp = '';
       this.poly_temp_points = new Array(0,0,0,0,0,0,0,0,0,0);
@@ -725,7 +624,6 @@ function qa_mouseDragUp(){
       this.poly_temp_points[6] = 0;
       this.poly_temp_points[7] = 0;
     }
-    //console.log('>>>',this.poly_temp);
   }
   this.freehand = false;
   
@@ -734,14 +632,11 @@ function qa_mouseDragUp(){
     this.global_clearpnl = false;
     this.global_delpoint = false;
     if (this.panel_button_selected=='Y') {
-			//console.log(this.qanswer);
-			//console.log(this.poly_temp);
 			this.poly_temp = '';
       this.poly_temp_points = new Array(0,0,0,0,0,0,0,0,0,0);
 			if (this.qmode == 'edit') this.qconfig='';
 			if (this.qmode == 'answer') this.qanswer = '';
 			this.global_delpoint_avail = false;
-			//console.log(this);
 		}
     this.panel_button_selected = '';
   }  

@@ -5,6 +5,7 @@ function require(jspath) {
 }
 
 // load jquery and plugins needed
+checkloadjscssfile("jquery/async.js");
 checkloadjscssfile("jquery/jquery.caret.js");
 checkloadjscssfile("jquery/jquery.class.js");
 checkloadjscssfile("jquery/jquery.pxem.js");
