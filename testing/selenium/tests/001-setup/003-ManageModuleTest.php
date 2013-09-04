@@ -18,7 +18,7 @@ class ManageModuleTest extends PHPUnit_Extensions_SeleniumTestCase
     do_admin_login($this);
 
     $this->open("/admin/index.php");
-    $this->click("css=#11 > tbody > tr > td > img");
+    $this->click("css=#list_modules > div.container > img.icon");
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Modules' . $this->install_type);
 

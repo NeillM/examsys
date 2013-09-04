@@ -18,7 +18,7 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     do_admin_login($this);
 
     $this->open("/admin/index.php");
-    $this->click("css=#14 > tbody > tr > td > img");
+    $this->click("css=#list_statuses > div.container > img.icon");
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Question Statuses' . $this->install_type);
 

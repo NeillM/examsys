@@ -23,7 +23,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Rogō: User Management' . $this->install_type);
 
-    $this->click("link=Create new user");
+    $this->click("link=Create New User");
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Rogō: Create New User' . $this->install_type);
 
