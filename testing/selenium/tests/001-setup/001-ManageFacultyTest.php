@@ -64,28 +64,6 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextNotPresent('Faculty of Short Lived2');
   }
 
-  private function create_faculty($name) {
-    $this->open("/staff/index.php");
-    $this->click("link=Administrative Tools");
-    $this->waitForPageToLoad("30000");
-    $this->assertTitle('Rogō: Admin' . $this->install_type);
-
-    $this->click("css=#9 > tbody > tr > td > img");
-    $this->waitForPageToLoad("30000");
-    $this->assertTitle('Faculties' . $this->install_type);
-
-    $this->click("link=Create new Faculty");
-    $this->waitForPopUp("faculties", "30000");
-    $this->selectWindow("name=faculties");
-    $this->type("name=add_faculty", $name);
-    $this->click("name=ok");
-    $this->selectWindow('null');
-
-    $this->open("/admin/list_faculties.php");
-    $this->waitForPageToLoad("30000");
-    $this->assertTextPresent($name);
-  }
-
   public function testCantCreateFacultyWithoutName() {
     do_admin_login($this);
 
@@ -99,6 +77,28 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->open("/admin/list_faculties.php");
     $this->waitForPageToLoad("30000");
     $this->assertCssCount('css=tr.l', 3);
+  }
+
+  private function create_faculty($name) {
+    $this->open("/staff/index.php");
+    $this->click("link=Administrative Tools");
+    $this->waitForPageToLoad("30000");
+    $this->assertTitle('Rogō: Admin' . $this->install_type);
+
+    $this->click("css=#list_faculties > div.container > img.icon");
+    $this->waitForPageToLoad("30000");
+    $this->assertTitle('Faculties' . $this->install_type);
+
+    $this->click("link=Create new Faculty");
+    $this->waitForPopUp("faculties", "30000");
+    $this->selectWindow("name=faculties");
+    $this->type("name=add_faculty", $name);
+    $this->click("name=ok");
+    $this->selectWindow('null');
+
+    $this->open("/admin/list_faculties.php");
+    $this->waitForPageToLoad("30000");
+    $this->assertTextPresent($name);
   }
 }
 ?>
