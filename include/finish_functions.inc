@@ -2410,7 +2410,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
         $percent = MathsUtils::formatNumber(($user_mark / $total_marks) * 100);
         $gradetoret = $user_mark / $total_marks;
         if ($gradetoret < 0) $gradetoret = 0;
-        if (isset($lit) and $lti->valid) {
+        if (isset($lti) and $lti->valid) {
           //return grade back to VLE
           $lti->send_grade($gradetoret);
         }
