@@ -42,6 +42,14 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/qualitative.css" />
+
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.qualitative.js"></script>
+  <style type="text/css">
+    span.highlight {
+      background-color: yellow;
+    }
+  </style>
 </head>
 
 <body>
@@ -59,23 +67,15 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div>';
   echo "<span style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">" . $string['qualitativeanalysis'] . "</span></td>";
-  echo "<th valign=\"top\" style=\"width:25%\"><input type=\"text\" name=\"keywords\" size=\"20\" value=\"";
+  echo "<th valign=\"top\" style=\"width:25%\"><input type=\"text\" name=\"keywords\" id=\"keywords\" size=\"20\" value=\"";
   if (isset($_GET['keywords'])) echo $_GET['keywords'];
-  echo "\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['highlight'] . "\" />";
-  if (isset($_GET['collapse']) and $_GET['collapse'] == '1') {
-    echo "<br /><input type=\"checkbox\" name=\"collapse\" value=\"1\" checked />&nbsp;" . $string['collapse'];
-  } else {
-    echo "<br /><input type=\"checkbox\" name=\"collapse\" value=\"1\" />&nbsp;" . $string['collapse'];
-  }
+  echo "\" /><input type=\"button\" id=\"highlight\" value=\"" . $string['highlight'] . "\" />";
+  echo "<br /><input type=\"checkbox\" name=\"collapse\" id=\"collapse\" value=\"1\" />&nbsp;" . $string['collapse'];
   echo '&nbsp;&nbsp;&nbsp;&nbsp;';
-  if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
-    echo "<br /><input type=\"checkbox\" name=\"casesensitive\" value=\"1\" checked />&nbsp;" . $string['casesensitive'];
-  } else {
-    echo "<br /><input type=\"checkbox\" name=\"casesensitive\" value=\"1\" />&nbsp;" . $string['casesensitive'];
-  }
+  echo "<br /><input type=\"checkbox\" name=\"casesensitive\" id=\"casesensitive\" value=\"1\" />&nbsp;" . $string['casesensitive'];
 	$module = (isset($_GET['module']) ? $_GET['module'] : '');
 	$folder = (isset($_GET['folder']) ? $_GET['folder'] : '');
-	
+
   echo '<input type="hidden" name="paperID" value="' . $_GET['paperID'] . '" />';
   echo '<input type="hidden" name="startdate" value="' . $_GET['startdate'] . '" />';
   echo '<input type="hidden" name="enddate" value="' . $_GET['enddate'] . '" />';
@@ -163,94 +163,94 @@ SQL;
       $list_on = 1;
     }
     $response = trim(strtolower($user_answer));
-    $match = false;
+    // $match = false;
     if ($response != NULL and $response != 'n/a' and strlen($response) > 1) {
       // Count keywords
-      if (isset($_GET['keywords'])) {
-        $content = $_GET['keywords'];
-      } else {
-        $content = '';
-      }
-      if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
-        if (substr_count($content,'and') > 0 and $content != 'and') {
-          $keywords = explode('and',$content);
-          $match = true;
-          $tmp_occurrence_comments = $occurrence_comments;
-          $tmp_occurrence_words = $occurrence_words;
-          foreach ($keywords as $individual_keyword) {
-            $individual_keyword = trim($individual_keyword);
-            if ($_GET['casesensitive'] == '1') {
-              $tmp_occur = substr_count($response, $individual_keyword);
-            } else {
-              $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
-            }
-            if ($tmp_occur == 0) {
-              $match = false;
-            }
-            $occurrence_words += $tmp_occur;
-          }
-          if ($match == true) {
-            $occurrence_comments++;
-          } else {
-            $occurrence_comments = $tmp_occurrence_comments;
-            $occurrence_words = $tmp_occurrence_words;
-          }
-        } elseif (substr_count($content,'or') > 0 and $content != 'or') {
-          $keywords = explode('or',$content);
-          foreach ($keywords as $individual_keyword) {
-            $individual_keyword = trim($individual_keyword);
-            if ($_GET['casesensitive'] == '1') {
-              $tmp_occur = substr_count($response, $individual_keyword);
-            } else {
-              $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
-            }
-            if ($tmp_occur > 0) {
-              $occurrence_comments++;
-              $match = true;
-            }
-            $occurrence_words += $tmp_occur;
-          }
-        } else {
-          $keywords = array(trim($content));
-          $individual_keyword = trim($content);
-          if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
-            $tmp_occur = substr_count($response, $individual_keyword);
-          } else {
-            $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
-          }
-          if ($tmp_occur > 0) {
-            $occurrence_comments++;
-            $match = true;
-          }
-          $occurrence_words += $tmp_occur;
-        }
-      } else {
+      // if (isset($_GET['keywords'])) {
+      //   $content = $_GET['keywords'];
+      // } else {
+      //   $content = '';
+      // }
+      // if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
+      //   if (substr_count($content,'and') > 0 and $content != 'and') {
+      //     $keywords = explode('and',$content);
+      //     $match = true;
+      //     $tmp_occurrence_comments = $occurrence_comments;
+      //     $tmp_occurrence_words = $occurrence_words;
+      //     foreach ($keywords as $individual_keyword) {
+      //       $individual_keyword = trim($individual_keyword);
+      //       if ($_GET['casesensitive'] == '1') {
+      //         $tmp_occur = substr_count($response, $individual_keyword);
+      //       } else {
+      //         $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
+      //       }
+      //       if ($tmp_occur == 0) {
+      //         $match = false;
+      //       }
+      //       $occurrence_words += $tmp_occur;
+      //     }
+      //     if ($match == true) {
+      //       $occurrence_comments++;
+      //     } else {
+      //       $occurrence_comments = $tmp_occurrence_comments;
+      //       $occurrence_words = $tmp_occurrence_words;
+      //     }
+      //   } elseif (substr_count($content,'or') > 0 and $content != 'or') {
+      //     $keywords = explode('or',$content);
+      //     foreach ($keywords as $individual_keyword) {
+      //       $individual_keyword = trim($individual_keyword);
+      //       if ($_GET['casesensitive'] == '1') {
+      //         $tmp_occur = substr_count($response, $individual_keyword);
+      //       } else {
+      //         $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
+      //       }
+      //       if ($tmp_occur > 0) {
+      //         $occurrence_comments++;
+      //         $match = true;
+      //       }
+      //       $occurrence_words += $tmp_occur;
+      //     }
+      //   } else {
+      //     $keywords = array(trim($content));
+      //     $individual_keyword = trim($content);
+      //     if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
+      //       $tmp_occur = substr_count($response, $individual_keyword);
+      //     } else {
+      //       $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
+      //     }
+      //     if ($tmp_occur > 0) {
+      //       $occurrence_comments++;
+      //       $match = true;
+      //     }
+      //     $occurrence_words += $tmp_occur;
+      //   }
+      // } else {
         $occurrence_comments++;
         $tmp_occur = 0;
-      }
+      // }
       // Highlight keywords
       $display_string = $user_answer;
-      if ($match == true) {
-        foreach ($keywords as $individual_keyword) {
-          $individual_keyword = trim($individual_keyword);
-          if (isset($_GET['collapse']) and $_GET['collapse'] == '1') {
-            if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
-              $display_string = preg_replace("/($individual_keyword)/","<span style=\"background-color:yellow\">\\1</span>",$display_string);
-            } else {
-              $display_string = preg_replace("/($individual_keyword)/i","<span style=\"background-color:yellow\">\\1</span>",$display_string);
-            }
-          } else {
-            if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
-              $display_string = preg_replace("/($individual_keyword)/","<span style=\"background-color:yellow\">\\1</span>",$display_string);
-            } else {
-              $display_string = preg_replace("/($individual_keyword)/i","<span style=\"background-color:yellow\">\\1</span>",$display_string);
-            }
-          }
-        }
-      }
-      if ((isset($_GET['collapse']) and $_GET['collapse'] == '1' and $match == true) or !isset($_GET['collapse'])) {
-        echo "<li>$display_string</li>\n";
-      }
+      // if ($match == true) {
+      //   foreach ($keywords as $individual_keyword) {
+      //     $individual_keyword = trim($individual_keyword);
+      //     if (isset($_GET['collapse']) and $_GET['collapse'] == '1') {
+      //       if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
+      //         $display_string = preg_replace("/($individual_keyword)/","<span style=\"background-color:yellow\">\\1</span>",$display_string);
+      //       } else {
+      //         $display_string = preg_replace("/($individual_keyword)/i","<span style=\"background-color:yellow\">\\1</span>",$display_string);
+      //       }
+      //     } else {
+      //       if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
+      //         $display_string = preg_replace("/($individual_keyword)/","<span style=\"background-color:yellow\">\\1</span>",$display_string);
+      //       } else {
+      //         $display_string = preg_replace("/($individual_keyword)/i","<span style=\"background-color:yellow\">\\1</span>",$display_string);
+      //       }
+      //     }
+      //   }
+      // }
+      // if ((isset($_GET['collapse']) and $_GET['collapse'] == '1' and $match == true) or !isset($_GET['collapse'])) {
+        echo "<li class=\"response\">$display_string</li>\n";
+      // }
       $comment_flag = 1;
     }
     $old_leadin = $leadin;
