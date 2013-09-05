@@ -53,3 +53,6 @@ li {
 	bottom: 0;
 	font-size:90%;		
 }
+span.highlight {
+	background-color: yellow;
+}

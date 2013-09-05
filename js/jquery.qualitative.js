@@ -46,7 +46,7 @@ var cleanResponses = function () {
     var content = $(this).html();
     var newcontent = content.replace(/<span class="highlight">([a-zA-Z]*)<\/span>/g, '$1');
     // IE8 - Grrrrr
-    newcontent = content.replace(/<SPAN class=highlight>([a-zA-Z]*)<\/SPAN>/g, '$1');
+    newcontent = newcontent.replace(/<SPAN class=highlight>([a-zA-Z]*)<\/SPAN>/g, '$1');
     $(this).html(newcontent);
   });
 }
