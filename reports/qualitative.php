@@ -45,6 +45,10 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.qualitative.js"></script>
+  <script type="text/javascript">
+    var commentsStringMatches = '<?php echo $string['occurencesof'] ?>';
+    var commentsString = '<?php echo $string['comments'] ?>';
+  </script>
   <style type="text/css">
     span.highlight {
       background-color: yellow;
@@ -70,9 +74,9 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
   echo "<th valign=\"top\" style=\"width:25%\"><input type=\"text\" name=\"keywords\" id=\"keywords\" size=\"20\" value=\"";
   if (isset($_GET['keywords'])) echo $_GET['keywords'];
   echo "\" /><input type=\"button\" id=\"highlight\" value=\"" . $string['highlight'] . "\" />";
-  echo "<br /><input type=\"checkbox\" name=\"collapse\" id=\"collapse\" value=\"1\" />&nbsp;" . $string['collapse'];
+  echo "<br /><input type=\"checkbox\" name=\"collapse\" id=\"collapse\" value=\"1\" />&nbsp;<label for =\"collapse\">" . $string['collapse'] . "</label>";
   echo '&nbsp;&nbsp;&nbsp;&nbsp;';
-  echo "<br /><input type=\"checkbox\" name=\"casesensitive\" id=\"casesensitive\" value=\"1\" />&nbsp;" . $string['casesensitive'];
+  echo "<br /><input type=\"checkbox\" name=\"casesensitive\" id=\"casesensitive\" value=\"1\" />&nbsp;<label for =\"casesensitive\">" . $string['casesensitive'] . "</label>";
 	$module = (isset($_GET['module']) ? $_GET['module'] : '');
 	$folder = (isset($_GET['folder']) ? $_GET['folder'] : '');
 
@@ -157,7 +161,7 @@ SQL;
         $q_no++;
       } while ($q_id != $paper_structure[$q_no-1] and $q_no < 9999);
       if ($list_on == 1) echo "</ul>\n";
-      echo "<p style=\"font-weight:bold; margin-left:10px; margin-right:10px\">$q_no. $leadin</p>\n<ul>\n";
+      echo "<p style=\"font-weight:bold; margin-left:10px; margin-right:10px\">$q_no. $leadin</p>\n<ul class=\"response-list\">\n";
       $occurrence_words = 0;
       $occurrence_comments = 0;
       $list_on = 1;
@@ -263,11 +267,7 @@ SQL;
   if ($comment_flag == 0) {
     echo "<div class=\"comments\">" . $string['nocomments'] . "</div>\n";
   } else {
-    if (isset($_GET['keywords']) and $_GET['keywords'] != '') {
-      echo "<div class=\"comments\">" . sprintf($string['occurencesof'], $occurrence_words, $_GET['keywords'], $occurrence_comments) . "</div>\n";
-    } else {
-      echo "<div class=\"comments\">" . sprintf($string['comments'], $occurrence_comments) . "</div>\n";
-    }
+    echo "<div class=\"comments\"></div>\n";
   }
   $mysqli->close();
 ?>
