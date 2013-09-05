@@ -1,21 +1,29 @@
-var checkRow = function () {
+var getCheckRow = function () {
   var collapse = $('#collapse').is(':checked');
   var caseSensitive = $('#casesensitive').is(':checked');
   var term = $('#keywords').val();
 
-  if (term != '') {
-    var regexpMod = (caseSensitive) ? 'g' : 'gi';
-    var regexp = new RegExp('(' + term + ')', regexpMod); 
-    var content = $(this).html();
+  return function () {
+    if (term != '') {
+      var regexpMod = (caseSensitive) ? 'g' : 'gi';
+      var regexp = new RegExp('(' + term + ')', regexpMod); 
+      var content = $(this).html();
 
-    if (content.match(regexp)) {
-      $(this).html(content.replace(regexp, '<span class="highlight">$1</span>'));
+      var haveMatch = content.match(regexp);
+
+      if (haveMatch || !collapse) {
+        if (!$(this).is(':visible')) {
+          $(this).slideDown('slow');
+        }
+      }
+
+      if (haveMatch) {
+        $(this).html(content.replace(regexp, '<span class="highlight">$1</span>'));
+      } else if (collapse) {
+        $(this).slideUp('slow');
+      }
     }
   }
-}
-
-var doHighlight = function () {
-  $('li.response').each(checkRow);
 }
 
 var cleanResponses = function () {
@@ -29,6 +37,7 @@ $(function () {
   $('#highlight').click(function (e) {
     e.preventDefault();
     cleanResponses();
-    doHighlight();
+    var checkRow = getCheckRow();
+    $('li.response').each(checkRow);
   })
 });
