@@ -148,6 +148,10 @@ if (!$lti->isInstructor()) {
     list($c_internal_id, $upd) = $lti->lookup_lti_context();
     $session = date_utils::get_current_academic_year();
 
+
+    if(is_null($c_internal_id)) {
+   //   $lti_i::invalid_module_code($c_internal_id, $data, 'no returned data');
+    }
     $data = $lti_i::module_code_translate($c_internal_id);
 
     foreach ($data as $v) {
@@ -257,6 +261,15 @@ if (!$lti->isInstructor()) {
     }
     $mod = $returned2[0];
     $data = $lti_i::module_code_translate($mod);
+    foreach($data as $v) {
+      if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1],$mysqli) ) {
+        UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
+      } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
+        UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
+        echo "\n</body>\n</html>\n";
+        exit();
+      }
+    }
     list($c_internal_id, $upd) = $returned2;
     $moduleid = $c_internal_id;
     $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');

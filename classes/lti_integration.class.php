@@ -25,11 +25,11 @@ class lti_integration {
     // Load the appropriate  lti integration class (if new one found load that else use this)
 
     $configObject = Config::get_instance();
-    if (file_exists($configObject->get('cfg_web_root') . 'config/integration/lti_integration.class.php')) {
-      require_once $configObject->get('cfg_web_root') . 'config/integration/lti_integration.class.php';
+
+    if (!is_null($configObject->get('lti_integration')) and $configObject->get('lti_integration') != '' and $configObject->get('lti_integration') != 'default') {
+      require_once $configObject->get('cfg_web_root') . $configObject->get('lti_integration'); //'config/integration/lti_integration.class.php';
       return new lti_integration_extended();
-    }
-    else {
+    } else {
       return new lti_integration();
     }
   }

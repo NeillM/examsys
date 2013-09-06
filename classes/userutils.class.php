@@ -536,6 +536,9 @@ Class UserUtils {
     } else {
       $modid = module_utils::get_idMod($idMod, $db);
     }
+    if ($modid === false) {
+      return false;
+    }
 
     return self::is_user_on_module($tmp_userID, $modid, $session, $db);
   }
@@ -560,7 +563,8 @@ Class UserUtils {
       $result = $db->prepare("SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod)");
       $result->bind_param('i', $tmp_userID);
     } else {
-      $result = $db->prepare("SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod) AND calendar_year = ?");
+      $sql="SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod) AND calendar_year = ?";
+      $result = $db->prepare($sql);
       $result->bind_param('is', $tmp_userID, $session);
     }
     
