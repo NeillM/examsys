@@ -66,9 +66,9 @@ $result->close();
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
 <tr>
-<th><div class="col10"><?php echo $string['name']; ?>&nbsp;</div></th>
-<th class="vert_div">&nbsp;<?php echo $string['faculty']; ?>&nbsp;</th>
-<th class="vert_div">&nbsp;<?php echo $string['modules']; ?>&nbsp;</th>
+<th><div class="col10"><?php echo $string['name']; ?></div></th>
+<th class="vert_div"><?php echo $string['faculty']; ?></th>
+<th class="vert_div"><?php echo $string['modules']; ?></th>
 </tr>
 <tr><th colspan="3" class="bevel"></th></tr>
 <?php

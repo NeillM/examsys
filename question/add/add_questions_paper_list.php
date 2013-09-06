@@ -93,15 +93,15 @@ if (isset($_GET['order'])) {
 <tr><th colspan="5"style="font-size:160%; font-weight:bold">&nbsp;<?php echo $string['bypaper'];?></th></tr>
 <tr>
   <th>&nbsp;</th>
-  <th class="vert_div">&nbsp;<?php echo show_order_link($paper_type, $string['title'], 'paper_title', $order, $direction) ?></th>
-  <th class="vert_div">&nbsp;<?php echo show_order_link($paper_type, $string['module'], 'moduleID', $order, $direction) ?></th>
-  <th class="vert_div">&nbsp;<?php echo show_order_link($paper_type, $string['owner'], 'surname', $order, $direction) ?></th>
-  <th class="vert_div">&nbsp;<?php echo show_order_link($paper_type, $string['created'], 'created', $order, $direction) ?></th>
+  <th class="vert_div"><?php echo show_order_link($paper_type, $string['title'], 'paper_title', $order, $direction) ?></th>
+  <th class="vert_div"><?php echo show_order_link($paper_type, $string['module'], 'moduleID', $order, $direction) ?></th>
+  <th class="vert_div"><?php echo show_order_link($paper_type, $string['owner'], 'surname', $order, $direction) ?></th>
+  <th class="vert_div"><?php echo show_order_link($paper_type, $string['created'], 'created', $order, $direction) ?></th>
 </tr>
 <tr><th colspan="5" class="bevel"></th></tr>
 <?php
   $user_teams = $userObject->get_staff_modules();
-  $module_id_list = implode(',',array_keys($user_teams));
+  $module_id_list = implode(',', array_keys($user_teams));
 
   $my_teams = '';
   if (count($user_teams) > 0) {

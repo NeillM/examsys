@@ -149,13 +149,13 @@ $reviews_html .= <<< TABLEHEADER
 <table class="header">
 <tr>
   <th style="width:18px">&nbsp;</td>
-  <th class="vert_div" style="width:18%">&nbsp;{$string['standardsetter']}&nbsp;</th>
-  <th class="vert_div" style="width:13%">&nbsp;{$string['date']}&nbsp;</th>
-  <th class="vert_div" style="width:10%">&nbsp;{$string['passscore']}</th>
-  <th class="vert_div" style="width:10%">&nbsp;{$string['distinction']}</th>
-  <th class="vert_div" style="width:12%">&nbsp;{$string['reviewmarks']}</th>
-  <th class="vert_div" style="width:10%">&nbsp;{$string['papertotal']}</th>
-  <th class="vert_div" style="width:14%">&nbsp;{$string['method']}</th>
+  <th class="vert_div" style="width:18%">{$string['standardsetter']}</th>
+  <th class="vert_div" style="width:13%">{$string['date']}</th>
+  <th class="vert_div" style="width:10%">{$string['passscore']}</th>
+  <th class="vert_div" style="width:10%">{$string['distinction']}</th>
+  <th class="vert_div" style="width:12%">{$string['reviewmarks']}</th>
+  <th class="vert_div" style="width:10%">{$string['papertotal']}</th>
+  <th class="vert_div" style="width:14%">{$string['method']}</th>
   <th class="vert_div" width="25%">&nbsp;</th>
 </tr>
 <tr><th colspan="9" class="bevel"></th></tr>
