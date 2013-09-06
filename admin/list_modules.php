@@ -74,7 +74,7 @@ require '../include/sort.inc';
   $table_order = array($string['moduleid']=>'moduleid', $string['name']=>'name', $string['school']=>'school', $string['active']=>'active');
   foreach ($table_order as $display => $key) {
     if ($key == 'moduleid') {
-      echo '<th class="vert_div" style="padding-left:10px">';
+      echo '<th class="vert_div col10">';
     } else {
       echo '<th class="vert_div">';
     }

@@ -74,7 +74,7 @@ require '../include/sort.inc';
   $table_order = array($string['code']=>'code', $string['name']=>'name', $string['school']=>'school');
   foreach($table_order as $display => $key) {
     if ($key == 'code') {
-      echo "<th class=\"h vert_div\" style=\"padding-left:20px\">";
+      echo "<th class=\"h vert_div col10\">";
     } else {
       echo "<th class=\"h vert_div\">";
     }
