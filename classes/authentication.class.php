@@ -327,7 +327,7 @@ class Authentication {
           $authentication_fields_required_to_create_user = $this->configObj->get('authentication_fields_required_to_create_user');
           if (!is_null($authentication_fields_required_to_create_user)) {
             foreach ($authentication_fields_required_to_create_user as $value) {
-              if (!isset($info->lookupdata->$value)) {
+              if (!isset($info->lookupdata->$value) or(isset($info->lookupdata->$value) and $info->lookupdata->$value == '')) {
                 $createuser = false;
                 $this->debug[] = 'Not creating user as the ' . $value . ' field is missing';
               }
@@ -349,6 +349,7 @@ class Authentication {
                 $info->lookupdata->$itemcheck = '';
               }
             }
+
             $newuserid = UserUtils::create_extended_user($info->lookupdata->username, $info->lookupdata->title, $info->lookupdata->firstname, $info->lookupdata->surname, $info->lookupdata->email, $info->lookupdata->coursecode, $info->lookupdata->gender, $info->lookupdata->yearofstudy, $info->lookupdata->role, $info->lookupdata->studentID, $this->db, $info->lookupdata->school, $info->lookupdata->coursetitle, $info->lookupdata->initials, $this->form['std']->password);
             if ($newuserid !== false) {
               //new account created
