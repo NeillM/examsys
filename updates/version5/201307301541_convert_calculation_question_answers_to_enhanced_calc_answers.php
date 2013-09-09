@@ -177,6 +177,7 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
 
 
         }
+        $mysqli->commit();
         $update->close();
         $result->close();
     }
