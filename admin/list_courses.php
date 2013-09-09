@@ -74,9 +74,9 @@ require '../include/sort.inc';
   $table_order = array($string['code']=>'code', $string['name']=>'name', $string['school']=>'school');
   foreach($table_order as $display => $key) {
     if ($key == 'code') {
-      echo "<th class=\"h vert_div\" style=\"padding-left:10px\">";
+      echo "<th class=\"h vert_div col10\">";
     } else {
-      echo "<th class=\"h vert_div\">&nbsp;";
+      echo "<th class=\"h vert_div\">";
     }
     if ($sortby == $key and $ordering == 'asc') {
       echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th>";

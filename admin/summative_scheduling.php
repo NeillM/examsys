@@ -79,11 +79,11 @@ function getLabs($labs, $mysqlidb) {
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
 <tr>
-<th><div class="col10 s"><?php echo $string['title']; ?>&nbsp;</div></th>
-<th class="vert_div">&nbsp;<?php echo $string['month']; ?>&nbsp;</th>
-<th class="vert_div">&nbsp;<?php echo $string['campus']; ?>&nbsp;</th>
-<th class="vert_div">&nbsp;<?php echo $string['modules']; ?>&nbsp;</th>
-<th class="vert_div">&nbsp;<?php echo $string['cohortsize']; ?>&nbsp;</th>
+<th><div class="col10 s"><?php echo $string['title']; ?></div></th>
+<th class="vert_div"><?php echo $string['month']; ?></th>
+<th class="vert_div"><?php echo $string['campus']; ?></th>
+<th class="vert_div"><?php echo $string['modules']; ?></th>
+<th class="vert_div"><?php echo $string['cohortsize']; ?></th>
 
 </tr>
 <tr><th colspan="5" class="bevel"></th></tr>

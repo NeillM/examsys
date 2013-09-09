@@ -66,11 +66,11 @@ require '../include/lti_keys_options.inc';
     </tr>
     <tr>
       <th>
-        <div class="col10"><?php echo $string['name']; ?>&nbsp;</div>
+        <div class="col10"><?php echo $string['name']; ?></div>
       </th>
-      <th class="vert_div">&nbsp;<?php echo $string['oauth_consume_key']; ?>&nbsp;</th>
-      <th class="vert_div">&nbsp;<?php echo $string['oauth_secret']; ?>&nbsp;</th>
-      <th class="vert_div">&nbsp;<?php echo $string['oauth_context_id']; ?>&nbsp;</th>
+      <th class="vert_div"><?php echo $string['oauth_consume_key']; ?></th>
+      <th class="vert_div"><?php echo $string['oauth_secret']; ?></th>
+      <th class="vert_div"><?php echo $string['oauth_context_id']; ?></th>
     </tr>
     <tr>
       <th colspan="4" class="bevel"></th>

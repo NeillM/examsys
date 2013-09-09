@@ -22,7 +22,8 @@
 * @package
 */
 
-require_once '../include/staff_auth.inc';
+require '../include/staff_auth.inc';
+require_once '../include/sort.inc';
 require_once '../lang/' . $language . '/include/question_types.inc';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/moduleutils.class.php';
@@ -87,11 +88,11 @@ if (isset($_GET['checked'])) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .d {padding-left:6px; padding-right:2px; padding-top:4px; padding-bottom:2px; vertical-align:top}
-    .owner {color:#A5A5A5}
-    .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
-    .qline:hover {background-color:#eee}
-    .qline.highlight {background-color:#B3C8E8}
-
+    .o {color:#A5A5A5}
+    .q {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
+    .q:hover {background-color:#eee}
+    .q.highlight {background-color:#B3C8E8}
+    .nobr {white-space:nowrap}
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
@@ -133,7 +134,7 @@ if (isset($_GET['checked'])) {
     $bank_type = ": $module_code";
   }
   if ($_GET['type'] != '%') {
-    $bank_type = ': ' . $_GET['type'];
+    $bank_type = ': ' . $string[$_GET['type']];
   }
   $staff_modules_sql = '';
   if ($module != '') {
@@ -163,44 +164,97 @@ if (isset($_GET['checked'])) {
   $display_no = 0;
 
   $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
-
-  $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, status FROM (users, questions, questions_modules)";
+	
+	$questions = array();
+	
+  $query_string = "SELECT DISTINCT questions.q_id, title, initials, surname, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status FROM (users, questions, questions_modules)";
   if ($keyword != '%' and $keyword != '') {
-  	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
+  	$query_string .= " LEFT JOIN keywords_question ON questions.q_id = keywords_question.q_id";
   }
   if ($state_checked == 'true') {
-    $query_string .= " WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql AND users.id=questions.ownerID AND ownerID=" . $userObject->get_user_ID() . " $typeSQL $keyword AND status NOT IN ($retired_in) AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql AND users.id = questions.ownerID AND ownerID = " . $userObject->get_user_ID() . " $typeSQL $keyword AND status NOT IN ($retired_in) AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   } else {
-    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND users.id=questions.ownerID $module_sql $staff_modules_sql $typeSQL $keyword AND status NOT IN ($retired_in) AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND users.id = questions.ownerID $module_sql $staff_modules_sql $typeSQL $keyword AND status NOT IN ($retired_in) AND deleted IS NULL";
   }
   $search_results = $mysqli->prepare($query_string);
   $search_results->execute();
-  $search_results->store_result();
-  $search_results->bind_result($q_id, $title, $initials, $surname, $ownerID, $leadin, $q_type, $q_media, $last_edited, $locked, $status);
+  $search_results->bind_result($q_id, $title, $initials, $surname, $leadin, $q_type, $last_edited, $modified, $locked, $status);
+  while ($search_results->fetch()) {
+	  $questions[] = array('q_id'=>$q_id, 'owner'=>$title . ' ' . $initials . ', ' . $surname, 'leadin'=>$leadin, 'q_type'=>$string[$q_type], 'last_edited'=>$last_edited, 'modified'=>$modified, 'locked'=>$locked, 'status'=>$status_array[$status]->get_name());
+	}
+  $search_results->close();
+	
+	if (isset($_GET['sortby'])) {
+		$sortby = $_GET['sortby'];
+	} else {
+	  if (isset($state['sortby'])) {
+			$sortby = $state['sortby'];
+		} else {
+			$sortby = 'leadin';
+		}
+	}
+	
+	if (isset($_GET['ordering'])) {
+		$ordering = $_GET['ordering'];
+	} else {
+	  if (isset($state['ordering'])) {
+			$ordering = $state['ordering'];
+		} else {
+			$ordering = 'asc';
+		}
+	}
+	
+	if ($sortby == 'modified') {
+		$tmp_sortby = 'last_edited';
+	} else {
+		$tmp_sortby = $sortby;
+	}
+	if ($tmp_sortby == 'q_type' and isset($_GET['type'])) {
+	  $tmp_sortby = 'leadin';
+	}
+	$questions = array_csort($questions, $tmp_sortby, $ordering);
 
-  echo "<tr onclick=\"qOff();\"><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionbank'] . "&nbsp;(" . number_format($search_results->num_rows) . ")</strong>$bank_type</div></th>";
+  echo "<tr onclick=\"qOff();\"><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionbank'] . "&nbsp;(" . number_format(count($questions)) . ")</strong>$bank_type</div></th>";
   echo "<th colspan=\"2\" style=\"text-align:right\" nowrap><input class=\"chk\" type=\"checkbox\" onclick=\"myQuestions(this);\" name=\"myquestions\" id=\"myquestions\" value=\"on\"";
   if ($state_checked == 'true') echo ' checked="checked"';
   echo " />&nbsp;<nobr>" . $string['myquestionsonly'] . "</nobr>&nbsp;</th></tr>\n";
 
-  echo "<tr onclick=\"qOff();\"><th style=\"text-align:right; width:15px\">&nbsp;</th>\n";
-  echo "<th class=\"vert_div\">&nbsp;" . $string['question'] . "&nbsp;</td>\n";
-  echo "<th class=\"vert_div\">&nbsp;" . $string['type'] . "&nbsp;</th>\n";
-  echo "<th class=\"vert_div\">&nbsp;" . $string['modified'] . "&nbsp;</th>\n";
-  echo "<th class=\"vert_div\">&nbsp;" . $string['status'] . "&nbsp;</th></tr>\n";
+	$params = '';
+	if (isset($_GET['type'])) $params .= '&type=' . $_GET['type'];
+	if (isset($_GET['module'])) $params .= '&module=' . $_GET['module'];
+	if (isset($_GET['keyword'])) $params .= '&keyword=' . $_GET['keyword'];
+	
+  $table_order = array(''=>'', $string['question']=>'leadin', $string['type']=>'q_type', $string['modified']=>'modified', $string['status']=>'status');
+	echo "<tr style=\"font-size:110%\">\n";
+	foreach ($table_order as $display => $key) {
+		if ($key == '') {
+			echo "<th>";
+		} else {
+			echo "<th class=\"vert_div\">";
+		}
+	
+		if ($sortby == $key and $ordering == 'asc') {
+			echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc$params\">$display</a><img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" style=\"padding-left:5px\" /></th>";
+		} elseif ($sortby == $key and $ordering == 'desc') {
+			echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc$params\">$display</a><img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" style=\"padding-left:5px\" /></th>";
+		} else {
+			echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc$params\">$display</a></th>";
+		}
+	}
+	echo "</tr>\n";
   echo "<tr><th class=\"bevel\" colspan=\"5\"></th></tr>\n";
-
-  while ($search_results->fetch()) {
+	
+	foreach ($questions as $question) {
     $status_class = ' status' . $status;
-    echo '<tr class="qline' . $status_class . '"';
-    if ($locked != '') {
+    echo '<tr class="q' . $status_class . '"';
+    if ($question['locked'] != '') {
       echo " id=\"link_$display_no\" onclick=\"selQ($q_id,$display_no,'$q_type','2c',event)\" ondblclick=\"editQ(); return false;\">";
-      echo "<td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"Question Locked\" /></td>";
+      echo "<td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"Padlock\" /></td>";
     } else {
       echo " id=\"link_$display_no\" onclick=\"selQ($q_id,$display_no,'$q_type','2b',event)\" ondblclick=\"editQ(); return false;\">";
       echo "<td></td>";
     }
-    $tmp_leadin = $leadin;
+    $tmp_leadin = $question['leadin'];
 
     if (strpos($tmp_leadin,'class="mee"') === false) {
       $tmp_leadin = strip_tags($tmp_leadin);                                     // No equation, strip all tags
@@ -213,18 +267,21 @@ if (isset($_GET['checked'])) {
     }
 
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';
-    if ($userObject->has_role('Demo')) {
-      $owner = 'Dr J, Bloggs';
-    } else {
-      $owner = "$title $initials, $surname";
-    }
-    echo "<td class=\"d\">$tmp_leadin <span class=\"owner\">($owner)</span></td>";
-    echo "<td class=\"d\" onclick=\"qOff()\"><nobr>" . $string[$q_type] . "</nobr></td>";
-    echo "<td class=\"d\" onclick=\"qOff()\">$last_edited</td>\n";
-    echo "<td class=\"d\" onclick=\"qOff()\">" . $status_array[$status]->get_name() . "</td></tr>\n";
+    if ($userObject->has_role('Demo')) $question['owner'] = 'Dr J, Bloggs';
+
+    echo "<td class=\"d\">$tmp_leadin <span class=\"o\">(" . $question['owner'] . ")</span></td>";
+    echo "<td class=\"d nobr\">" . $question['q_type'] . "</td>";
+    echo "<td class=\"d\">" . $question['modified'] . "</td>\n";
+    echo "<td class=\"d\">" . $question['status'] . "</td></tr>\n";
     $display_no++;
   }
-  $search_results->close();
+	
+	if (isset($_GET['sortby'])) {
+		$stateutil->setState($userObject->get_user_ID(), 'sortby', $_GET['sortby'], $_SERVER['PHP_SELF'], $mysqli);
+	}
+	if (isset($_GET['ordering'])) {
+		$stateutil->setState($userObject->get_user_ID(), 'ordering', $_GET['ordering'], $_SERVER['PHP_SELF'], $mysqli);
+	}
   $mysqli->close();
 ?>
 </table>

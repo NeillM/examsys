@@ -110,9 +110,9 @@ if (!$module) {
 <?php  
   echo "<table class=\"header\">\n";
   echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=" . $_GET['module'] . "\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
-  echo "<tr><th class=\"vert_div col10\">" . $string['date'] . "&nbsp;</th>\n";
-  echo "<th class=\"vert_div\">&nbsp;" . $string['name'] . "&nbsp;</th>\n";
-  echo "<th class=\"vert_div\">&nbsp;" . $string['objectives'] . "&nbsp;</th><th>&nbsp;</th></tr>\n";
+  echo "<tr><th class=\"vert_div col10\">" . $string['date'] . "</th>\n";
+  echo "<th class=\"vert_div\">" . $string['name'] . "</th>\n";
+  echo "<th class=\"vert_div\">" . $string['objectives'] . "</th><th>&nbsp;</th></tr>\n";
   echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
   
   $old_session = '';

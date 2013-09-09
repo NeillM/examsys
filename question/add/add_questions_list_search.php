@@ -42,9 +42,9 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
-    body {font-size:90%}
-    p, td {font-size:90%}
-    .mee { display: inline; }
+    body {font-size: 90%}
+    p, td {font-size: 90%}
+    .mee {display: inline}
 
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
@@ -94,7 +94,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <select name="searchtype">
     <option value="%"><?php echo $string['anytype']; ?></option>
     <option value="area" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'area') echo 'selected '; ?>><?php echo $string['area']; ?></option>
-    <option value="calculation" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'calculation') echo 'selected '; ?>><?php echo $string['calculation']; ?></option>
+    <option value="enhancedcalc" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'enhancedcalc') echo 'selected '; ?>><?php echo $string['calculation']; ?></option>
     <option value="dichotomous" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'dichotomous') echo 'selected '; ?>><?php echo $string['dichotomous']; ?></option>
     <option value="extmatch" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'extmatch') echo 'selected '; ?>><?php echo $string['extmatch']; ?></option>
     <option value="blank" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'blank') echo 'selected '; ?>><?php echo $string['blank']; ?></option>
@@ -153,7 +153,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       } else {
         echo '<th class="vert_div">';
       }
-      echo '&nbsp;';
       
       $params = "sortby=$key&owner=$owner&searchterm=$searchterm&searchtype=$searchtype";
       
@@ -162,29 +161,11 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       } elseif ($sortby == $key and $ordering == 'desc') {
         echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" /></th>";
       } else {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a>&nbsp;</th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a></th>";
       }
     }
   }
   echo '</tr>';
-
-
-  /*
-  echo "<tr><th>&nbsp;</th><th>&nbsp;</th><th class=\"vert_div\">&nbsp;";
-  if ($order == 'leadin_plain' and $direction == 'asc') {
-    echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=desc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
-  } elseif ($order == 'leadin_plain' and $direction == 'desc') {
-    echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
-  } elseif ($order == 'q_type' and $direction == 'asc') {
-    echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=desc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
-  } elseif ($order == 'q_type' and $direction == 'desc') {
-    echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
-  } elseif ($order == 'last_edited' and $direction == 'asc') {
-    echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=desc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
-  } elseif ($order == 'last_edited' and $direction == 'desc') {
-    echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
-  }
-  */
 ?>
   <tr><th colspan="6" class="bevel"></th></tr>
 <?php
