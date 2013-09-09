@@ -19,31 +19,38 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
     foreach ($logarray as $LOG) {
         $loop = 0;
 
-
-        $sql = "select questions.q_id,id,user_answer,settings from questions,log$LOG where q_type='calculation' and questions.q_id=log$LOG.q_id;";
         $sql = "select questions.q_id,id,user_answer,settings from questions,log$LOG where q_type='enhancedcalc' and questions.q_id=log$LOG.q_id;";
-
 
         $result = $mysqli->prepare("$sql");
         $result->execute();
         $result->store_result();
         $result->bind_result($qid, $uid, $user_answer, $settings);
 
-
+        $vars = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K', '$L');
+        
+        //perpair the update once!
+        $sql = "UPDATE log$LOG set user_answer=? where id=?";
+        $update = $mysqli->prepare("$sql");
+                
         while ($result->fetch()) {
             if (strpos($user_answer, '{') !== false) {
             } else {
                 print '.';
                 unset($statusdata);
                 unset($ansdata);
+                unset($tmp_answer);
+                unset($new_user_answer);
+                unset($variable_array);
+                unset($varsdata);
+                unset($jsoned);
+                
                 $settings = json_decode($settings, true);
-                $userans[$qid][$uid] = $user_answer;
+                //$userans[$qid][$uid] = $user_answer;
 
                 $tmp_answer = explode('|', $user_answer);
 
 
                 //[0] is user answer, [1] is correct answer, [2] is array variables
-                //print $qid . '   ';
                 if (!isset($settings['answers'][0]['units'])) {
                     $settings['answers'][0]['units'] = '';
                 }
@@ -84,7 +91,6 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
                 }
 
                 $new_user_answer['ans'] = $ansdata;
-
 
                 $statusdata['units'] = true;
 
@@ -133,10 +139,6 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
 
                 $new_user_answer['status'] = $statusdata;
 
-
-                $vars = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K', '$L');
-                unset($variable_array);
-                unset($varsdata);
                 if (isset($tmp_answer[2])) {
                     if ($tmp_answer[2] == '') {
                         $variable_array = array('error', 'error', 'error', 'error', 'error', 'error', 'error', 'error', 'error');
@@ -158,28 +160,24 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
                     $new_user_answer['vars'] = $varsdata;
                 }
                 $new_user_answer['original'] = $user_answer;
-                //   print $user_answer;
-                //    var_dump($new_user_answer);
-                //  print "<br><br>";
-
+                
                 $jsoned = json_encode($new_user_answer);
 
-                $sql = "UPDATE log$LOG set user_answer=? where id=?";
-                $update = $mysqli->prepare("$sql");
                 $update->bind_param('si', $jsoned, $uid);
                 $update->execute();
-                $update->store_result();
+
                 $loop++;
                 if ($loop % 200 == 0) {
                     $mysqli->commit();
                     echo '<br>';
-                    @ob_flush();
+                    @ob_end_flush();
+                    @ob_start();
                 }
-                $update->close();
             }
 
 
         }
+        $update->close();
         $result->close();
     }
 
