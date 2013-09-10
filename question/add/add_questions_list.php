@@ -134,7 +134,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       } else {
         echo '<th class="vert_div">';
       }
-      echo '&nbsp;';
       
       $params = "sortby=$key&type=" . $_GET['type'];
       if ($_GET['type'] == 'team') $params .= '&teamID=' . $_GET['teamID'];
@@ -146,7 +145,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       } elseif ($sortby == $key and $ordering == 'desc') {
         echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" /></th>";
       } else {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a>&nbsp;</th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a></th>";
       }
     }
   }

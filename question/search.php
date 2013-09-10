@@ -134,9 +134,9 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
   <tr>
     <th>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
+    <th class="vert_div"><?php echo $string['question']; ?></th>
+    <th class="vert_div"><?php echo $string['type']; ?></th>
+    <th class="vert_div"><?php echo $string['modified']; ?></th>
   </tr>
   <tr>
     <th colspan="4" class="bevel"></th>
@@ -166,9 +166,9 @@ if (isset($_POST['submit'])) {
     ?>
     <tr>
     <th>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th></tr>
+    <th class="vert_div"><?php echo $string['question']; ?></th>
+    <th class="vert_div"><?php echo $string['type']; ?></th>
+    <th class="vert_div"><?php echo $string['modified']; ?></th></tr>
     <tr><th colspan="4" class="bevel"></td></tr>
     </table>
     <?php
@@ -338,10 +338,10 @@ if (isset($_POST['submit'])) {
 ?>
   <tr>
     <th>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
-    <th class="vert_div">&nbsp;<?php echo $string['status']; ?>&nbsp;</th>
+    <th class="vert_div"><?php echo $string['question']; ?></th>
+    <th class="vert_div"><?php echo $string['type']; ?></th>
+    <th class="vert_div"><?php echo $string['modified']; ?></th>
+    <th class="vert_div"><?php echo $string['status']; ?></th>
   </tr>
   <tr>
     <th colspan="5" class="bevel"></th>

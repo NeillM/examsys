@@ -92,7 +92,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   echo "<input type=\"hidden\" name=\"screen\" value=\"1\" />\n";
   echo "<table class=\"header\">\n";
   echo "<tr><th colspan=\"7\" style=\"font-size:160%; font-weight:bold\">&nbsp;$paper_title</th></tr>\n";
-  echo "<tr><th></th><th></th><th>&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['question'] . "&nbsp;</th><th class=\"vert_div\">&nbsp;" . $string['type'] . "&nbsp;</th><th style=\"width:90px\" class=\"vert_div\">&nbsp;" . $string['modified'] . "&nbsp;</th><th class=\"vert_div\" style=\"width:90px\">&nbsp;" . $string['status'] . "&nbsp;</th></tr>\n";
+  echo "<tr><th></th><th></th><th>&nbsp;</th><th class=\"vert_div\">" . $string['question'] . "</th><th class=\"vert_div\">" . $string['type'] . "</th><th style=\"width:90px\" class=\"vert_div\">" . $string['modified'] . "</th><th class=\"vert_div\" style=\"width:90px\">" . $string['status'] . "</th></tr>\n";
   echo "<tr><th colspan=\"7\" class=\"bevel\"></th></tr>\n";
 
   // Get the questions in order off the paper.

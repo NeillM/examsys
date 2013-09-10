@@ -123,7 +123,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <div style="font-size:110%"><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype">
 <option value="%"><?php echo $string['alltypes']; ?></option>
 <?php
-  $qTypes = array('area'=>$string['area'],'calculation'=>$string['calculation'],'dichotomous'=>$string['dichotomous'],'extmatch'=>$string['extmatch'],'blank'=>$string['blank'],'flash'=>$string['flash'],'hotspot'=>$string['hotspot'],'info'=>$string['info'],'labelling'=>$string['labelling'],'likert'=>$string['likert'],'matrix'=>$string['matrix'],'mcq'=>$string['mcq'],'mrq'=>$string['mrq'],'rank'=>$string['rank'],'sct'=>$string['sct'],'textbox'=>$string['textbox'],'true_false'=>$string['true_false']);
+  $qTypes = array('area'=>$string['area'],'enhancedcalc'=>$string['calculation'],'dichotomous'=>$string['dichotomous'],'extmatch'=>$string['extmatch'],'blank'=>$string['blank'],'flash'=>$string['flash'],'hotspot'=>$string['hotspot'],'info'=>$string['info'],'labelling'=>$string['labelling'],'likert'=>$string['likert'],'matrix'=>$string['matrix'],'mcq'=>$string['mcq'],'mrq'=>$string['mrq'],'rank'=>$string['rank'],'sct'=>$string['sct'],'textbox'=>$string['textbox'],'true_false'=>$string['true_false']);
   foreach ($qTypes as $tmp_type=>$tmp_title) {
     if (isset($_POST['searchtype']) and $_POST['searchtype'] == $tmp_type) {
       echo "<option value=\"$tmp_type\" selected>$tmp_title</option>\n";
@@ -135,10 +135,11 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </select></div>
 <?php
   if (isset($state['checkbox10']) and $state['checkbox10'] == 'true') {
-    echo "<input class=\"chk\" type=\"checkbox\" id=\"checkbox10\" name=\"locked\" value=\"1\" checked=\"checked\" /> " . $string['inclockedquestions'];
+    echo "<input class=\"chk\" type=\"checkbox\" id=\"checkbox10\" name=\"locked\" value=\"1\" checked=\"checked\" />";
   } else {
-    echo "<input class=\"chk\" type=\"checkbox\" id=\"checkbox10\" name=\"locked\" value=\"1\" /> " . $string['inclockedquestions'];
+    echo "<input class=\"chk\" type=\"checkbox\" id=\"checkbox10\" name=\"locked\" value=\"1\" />";
   }
+	echo ' <label for="checkbox10">' . $string['inclockedquestions'] . '</label>';
 ?>
 <br />
 
@@ -146,9 +147,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(8);"><?php echo $string['questionsections']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(8);"><?php
     if (isset($state['menu8']) and $state['menu8'] == 'block') {
-      echo "<img id=\"icon8\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" border=\"0\" />";
+      echo "<img id=\"icon8\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" />";
     } else {
-      echo "<img id=\"icon8\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" border=\"0\" />";
+      echo "<img id=\"icon8\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" />";
     }
   ?></a></td></tr>
   </table>
@@ -161,25 +162,32 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
   echo '<tr><td>';
   if (isset($state['checkbox1']) and $state['checkbox1'] == 'false') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox1\" name=\"theme\" /> " . $string['theme'] . "</div>\n";
+    $checked = '';
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox1\" name=\"theme\" checked=\"checked\" /> " . $string['theme'] . "</div>\n";
+    $checked = ' checked="checked"';
   }
+	echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox1\" name=\"theme\"$checked /> <label for=\"checkbox1\">" . $string['theme'] . "</label></div>\n";
+	
   if (isset($state['checkbox2']) and $state['checkbox2'] == 'false') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox2\" name=\"scenario\" /> " . $string['scenario'] . "</div>\n";
+    $checked = '';
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox2\" name=\"scenario\" checked=\"checked\" /> " . $string['scenario'] . "</div>\n";
+    $checked = ' checked="checked"';
   }
+	echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox2\" name=\"scenario\"$checked /> <label for=\"checkbox2\">" . $string['scenario'] . "</label></div>\n";
+
   if (isset($state['checkbox3']) and $state['checkbox3'] == 'false') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox3\" name=\"leadin\" /> " . $string['leadin'] . "</div>\n";
+    $checked = '';
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox3\" name=\"leadin\" checked=\"checked\" /> " . $string['leadin'] . "</div>\n";
+    $checked = ' checked="checked"';
   }
+	echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox3\" name=\"leadin\"$checked /> <label for=\"checkbox3\">" . $string['leadin'] . "</label></div>\n";
+
   if (isset($state['checkbox4']) and $state['checkbox4'] == 'false') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox4\" name=\"options\" /> " . $string['options'] . "</div>\n";
+    $checked = '';
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox4\" name=\"options\" checked=\"checked\" /> " . $string['options'] . "</div>\n";
+    $checked = ' checked="checked"';
   }
+	echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox4\" name=\"options\"$checked /> <label for=\"checkbox4\">" . $string['options'] . "</label></div>\n";
 ?>
 </td></tr>
 </table>
@@ -188,9 +196,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   <tr><td><a href="#" style="font-size:110%; font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['whenmodified']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(6);"><?php
     if (isset($state['menu6']) and $state['menu6'] == 'block') {
-      echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="9" height="9" alt="Hide" border="0" />';
+      echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="9" height="9" alt="Hide" />';
     } else {
-      echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="9" height="9" alt="Show" border="0" />';
+      echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="9" height="9" alt="Show" />';
     }
   ?></a></td></tr>
   </table>
@@ -336,9 +344,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   <tr><td><a href="#" style="font-weight:bold; color: black" onclick="updateMenu(9);"><?php echo $string['metadata']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(9);"><?php
     if (isset($state['menu9']) and $state['menu9'] == 'block') {
-      echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" border=\"0\" />";
+      echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" />";
     } else {
-      echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" border=\"0\" />";
+      echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" />";
     }
   ?></a></td></tr>
   </table>
