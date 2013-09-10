@@ -510,7 +510,6 @@ function qh_redraw_canvas() {
 		if (this.qmode=='analysis') {
 			if (this.global_correct) {
 				this.context.fillStyle='#00ff00';
-				//for (i=0;i<this.answers.length;i++) 
 				i = this.activeLabel;
 				{        
 					for (j=0;j<this.answers[i].length;j++) {        
@@ -520,7 +519,6 @@ function qh_redraw_canvas() {
 			}
 			if (this.global_incorrect) {
 				this.context.fillStyle='#ff0000';
-				//for (i=0;i<this.answers.length;i++) 
 				i = this.activeLabel;
 				{        
 					for (j=0;j<this.answers[i].length;j++) {        
