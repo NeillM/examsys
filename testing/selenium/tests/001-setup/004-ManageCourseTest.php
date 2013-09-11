@@ -98,13 +98,15 @@ class ManageCourseTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->type("name=description", "Test Course");
     $this->select("name=school", "label=School of Selenium Testing");
     $this->click("name=submit");
-    $this->assertEquals("Please enter a code for the course.", $this->getAlert());
+    $this->assertLocation($this->page_root . "/admin/add_course.php");
     $this->type("name=course", "S200");
     $this->type("name=description", "");
     $this->click("name=submit");
-    $this->assertEquals("Please enter a title for the course.", $this->getAlert());
-
-    // TODO: Is School required?
+    $this->assertLocation($this->page_root . "/admin/add_course.php");
+    $this->type("name=description", "Test Course");
+    $this->select("name=school", "label=");
+    $this->click("name=submit");
+    $this->assertLocation($this->page_root . "/admin/add_course.php");
   }
 }
 ?>
