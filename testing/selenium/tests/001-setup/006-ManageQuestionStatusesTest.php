@@ -50,11 +50,11 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click('id=retired');
     $this->click('id=is_default');
     $this->click('name=submit');
-    $this->assertEquals("Please enter name for the status.", $this->getAlert());
+    $this->assertLocation($this->page_root . '/admin/edit_status.php');
 
     $this->type("id=name", "");
     $this->click("name=submit");
-    $this->assertEquals("Please enter name for the status.", $this->getAlert());
+    $this->assertLocation($this->page_root . '/admin/edit_status.php');
   }
 
   /**
@@ -246,7 +246,7 @@ class ManageQuestionStatusesTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click('name=submit');
     $this->waitForPageToLoad('30000');
     $this->assertTextPresent('Status names must be unique');
-    $this->assertLocation($this->page_root . 'admin/edit_status.php');
+    $this->assertLocation($this->page_root . '/admin/edit_status.php');
   }
 }
 ?>
