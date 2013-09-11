@@ -187,15 +187,20 @@ function qh_menuBuild() {
 
 function test_handler(xx,yy,ww,hh,vv) {
   var nr = -1;
-  var size = 3;
+  var size = 5;
+	console.log(vv);
   if (vv.length>0) {
+		//square handlers
+    for (var n=0;n<vv.length/2;n++) {
+      if (Math.abs(this.x-(parseInt(vv[n*2].trim(), 16)+xx+0.5))<=size && Math.abs(this.y-(parseInt(vv[n*2+1].trim(), 16)+0.5+yy))<=size) nr=n;
+		}
+    //round handlers
+		vv.push(vv[0]);
+		vv.push(vv[1]);
     for (var n=1;n<vv.length/2;n++) {
-			//square handlers
-      if ((Math.abs(this.x-(parseInt(vv[n*2].trim(), 16)+xx+0.5))<=size),(Math.abs(this.y-(parseInt(vv[n*2+1].trim(), 16)+0.5+yy))<=size)) nr=n;
-      //round handlers
 			var temp_x = (parseInt(vv[n*2].trim(), 16) - parseInt(vv[(n-1)*2].trim(), 16))/2 + parseInt(vv[(n-1)*2].trim(), 16);
 			var temp_y = (parseInt(vv[n*2+1].trim(), 16) - parseInt(vv[(n-1)*2+1].trim(), 16))/2 + parseInt(vv[(n-1)*2+1].trim(), 16);
-			if ((Math.abs(this.x-(temp_x+xx+0.5))<=size) && (Math.abs(this.y-(temp_y+0.5+yy))<=size)) nr=-10-n;
+			if (Math.abs(this.x-(temp_x+xx+0.5))<=size && Math.abs(this.y-(temp_y+0.5+yy))<=size && nr==-1) nr=-10-n;
     }
   } else {
     if ((Math.abs(this.x-xx)<=size) && (Math.abs(this.y-yy)<=size)) nr=1;
@@ -255,7 +260,6 @@ function qh_test(type) {
           if (f_type=='polygon') {
             this.handle_over = this.test_handler(300,25-this.yOffset,0,0,this.HsCo); 
           }
-          
           this.hotspot_over =  i+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$'+this.handle_over;
         }
       }
@@ -272,9 +276,11 @@ function qh_test(type) {
 					}
 				}
 			}
-		}
-		
+		}	
   }
+
+	document.getElementById('test').value = this.hotspot_over;
+	
   if (type=='answers' && (this.qmode == 'answer' || this.qmode == 'edit')) this.qh_ReturnInfo();
   if (type=='cursor') return this.hotspot_over;
 }
