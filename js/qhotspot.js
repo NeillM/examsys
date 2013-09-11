@@ -188,7 +188,6 @@ function qh_menuBuild() {
 function test_handler(xx,yy,ww,hh,vv) {
   var nr = -1;
   var size = 5;
-	console.log(vv);
   if (vv.length>0) {
 		//square handlers
     for (var n=0;n<vv.length/2;n++) {
@@ -278,8 +277,6 @@ function qh_test(type) {
 			}
 		}	
   }
-
-	document.getElementById('test').value = this.hotspot_over;
 	
   if (type=='answers' && (this.qmode == 'answer' || this.qmode == 'edit')) this.qh_ReturnInfo();
   if (type=='cursor') return this.hotspot_over;
