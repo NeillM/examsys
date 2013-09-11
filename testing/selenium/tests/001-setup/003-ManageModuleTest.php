@@ -64,7 +64,7 @@ class ManageModuleTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->select("name=schoolid", "label=School of Selenium Testing");
     $this->click("name=submit");
 
-    $this->assertTextPresent('Please enter an Identifier for the module');
+    $this->assertLocation($this->page_root . "/admin/add_module.php");
   }
 
 
@@ -78,7 +78,7 @@ class ManageModuleTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->select("name=schoolid", "label=School of Selenium Testing");
     $this->click("name=submit");
 
-    $this->assertTextPresent('Please enter a title for the module');
+    $this->assertLocation($this->page_root . "/admin/add_module.php");
   }
 
   public function testCantCreateModuleWithoutSchool() {
@@ -91,7 +91,7 @@ class ManageModuleTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->type("name=fullname", "Should Not Exist");
     $this->click("name=submit");
 
-    $this->assertTextPresent('Please select a school for the module');
+    $this->assertLocation($this->page_root . "/admin/add_module.php");
   }
 }
 ?>
