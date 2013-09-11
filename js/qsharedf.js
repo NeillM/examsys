@@ -1,4 +1,3 @@
-var questions = new Array();
 var rq = new Array(); //array of questions/canvases
 
 //main startup function
@@ -19,6 +18,7 @@ $.get('/js/images/cur_cross.cur', function() { });
 	console.log('type: '+type);
 	console.log('mode: '+mode);
 */
+
 	if (typeof(mode)=='undefined') mode='answer';
 	if (mode=='1') mode='answer';
 	if (mode=='2') mode='edit';
@@ -159,8 +159,8 @@ function findPos(obj) {
 function testWithin(ax,ay,bx,by,cx,cy) {
 	var testres = false;
 	if ((ax > bx) && (ax < (bx + cx)) && (ay > by) && (ay < (by + cy))) testres = true;
+	
 	var showtest = false;
-	/*
 	if (showtest) {
 						if (typeof(tw)=='undefined') tw=true;
 						this.context.strokeStyle='#AAA';
@@ -175,7 +175,7 @@ function testWithin(ax,ay,bx,by,cx,cy) {
 						this.context.strokeRect(bx,by,cx,cy);
 						twr = [bx,by,cx,cy,this.context.strokeStyle];
 	}
-	*/
+	
 	return testres;
 }
 
@@ -293,8 +293,6 @@ function rectDraw(ctx,cc,cb,xx,yy,ww,hh,ee) {
     this.edtDot(ctx,cb,xx+ww,yy+hh,3);
   }
 }
-
-var tata,tbtb;
 
 //draws polygon in different modes
 function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {

@@ -457,7 +457,7 @@ function qa_mouseDragMove(e){
 			
       var cur = 'default';
       if (this.y>25) cur = 'crosshair';
- 			if (this.global_delpoint || this.isCtrl) cur = 'url(/js/images/cur_cross.cur), default';
+ 			if (this.global_delpoint || this.isCtrl) cur = 'url(/js/images/cur_cross.cur) 6 5, default'; //this works only in css3 browsers otherwise whole cursor is ignored
 			if (over_object) cur = 'pointer';
       if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
       if (this.global_clearpnl) cur = 'default';
@@ -490,12 +490,18 @@ function qa_mouseDragMove(e){
     var add_point = false;
     
     //if one just started freedrawing
-    if (this.poly_temp_points[3]==0 && this.poly_temp_points[5]==0 && this.distn > 10) {
+    if (this.poly_temp_points[3]==0 && this.distn > 10) {
       //because this is this.freehand and no point has been added - add starting one first
       this.poly_temp += Math.round(this.poly_temp_points[6]).toString(16)+','+Math.round(this.poly_temp_points[7]).toString(16)+',';
-      this.poly_temp_points[0] = this.poly_temp_points[4] = this.poly_temp_points[6];
-      this.poly_temp_points[1] = this.poly_temp_points[5] = this.poly_temp_points[7];
-      //and then dirct to add the actual one
+			if (this.poly_temp_points[5]==0){
+				this.poly_temp_points[0] = this.poly_temp_points[6];
+				this.poly_temp_points[1] = this.poly_temp_points[7];
+			}      
+			this.poly_temp_points[4] = this.poly_temp_points[6];
+			this.poly_temp_points[5] = this.poly_temp_points[7]; 
+			
+			
+				//and then dirct to add the actual one
       add_point = true;
     }
           
@@ -659,7 +665,7 @@ function qa_mouseDragUp(){
 
     //clear whole array
     var pp1 = this.qtest.split(',');
-    if (pp1.length <= 6) {
+    if (pp1.length <= 4) {
       if (this.qmode=='answer' && this.qanswer!='') this.qanswer='';
 			if (this.qmode=='edit' && this.qconfig!='') this.qconfig='';
       this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][6]=0;

@@ -54,7 +54,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
     this.qmode = mode;
 		
 		//---------- config,     
- 		if (config=='') config = '~';
+ 		if (config=='') config = '~~';
 		var existingLabelInfo = config.split('|');		
 
 		for (i=0; i<existingLabelInfo.length; i++) {
@@ -65,7 +65,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
         this.hotSpots[i]    = new Array ();
         this.hotSpots[i][0] = i;					                               //label index
         this.hotSpots[i][1] = myLabelInfo[0];		                         //label text
-        var ind =1;
+        var ind = 1;
         if (myLabelInfo[1] == "polygon" || myLabelInfo[1] == "rectangle" || myLabelInfo[1] == "ellipse") {
           ind++;
           this.hotSpots[i][2] = '#0070C0';                               // colour = blue (default)
@@ -84,7 +84,10 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 		}
     
 		//---------- answer, 
- 		for (i in this.hotSpots) this.answers[i] = new Array(new Array(0,'false','false'));
+ 		for (i in this.hotSpots) {
+			this.answers[i] = new Array(new Array(0,'false','false'));
+		}
+		
 		if (answer != "" && answer != undefined && answer != "undefined" && answer != null && answer != "null" && answer != "u") {
       this.is_an_answer = true;
 			if (this.qmode=='answer' || this.qmode=='script') {
@@ -218,8 +221,8 @@ function qh_test(type) {
       this.HsCo = this.hotSpots[i][(3+j*6+2)].split(',');
       var col1 = this.hotSpots[i][2];
       var col2 = this.hotSpots[i][2];
-      
-      if (type=='cursor') this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+
+			if (type=='cursor') this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 			this.draw_limit = new Array(300,27,this.canvas.width-2,this.canvas.height-2);
 
       if (f_type=='ellipse') {
@@ -240,11 +243,11 @@ function qh_test(type) {
         var timgd = this.context.getImageData(this.x,this.y,1,1);
         var timgp = timgd.data;
 				
-        if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]))==col1) {
+        if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase()==col1.toUpperCase()) {
           this.hotspot_over = i+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$';
         }
         
-				if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]))==col2) {
+				if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase()==col2.toUpperCase()) {
           if (f_type=='ellipse' || f_type=='rectangle') {
 						this.handle_over = this.test_handler(parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),'');
 					}
@@ -264,12 +267,13 @@ function qh_test(type) {
 				if (typeof this.answers[i][j][1]!='undefined' && this.answers[i][j][1]!='' && this.answers[i][j][1]!='false') {
 					var timgd = this.context.getImageData((1*this.answers[i][j][1]+300-0.5),(1*this.answers[i][j][2]+25-0.5-this.yOffset),1,1);
 					var timgp = timgd.data;
-					if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]))==this.hotSpots[i][2]) {
+					if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase()==this.hotSpots[i][2].toUpperCase()) {
 						this.answers[i][j][0]= '1';
 					}
 				}
 			}
 		}
+		
   }
   if (type=='answers' && (this.qmode == 'answer' || this.qmode == 'edit')) this.qh_ReturnInfo();
   if (type=='cursor') return this.hotspot_over;
@@ -286,7 +290,7 @@ function redraw_hotspot(i,j) {
   var cb=this.hsColours[col];
 	if (this.qmode == 'script') cb = cc = this.hotSpots[i][2];
   var local_edit = false;
-  if ((this.global_edit || this.global_erase) && this.test_result.indexOf(i+'@'+j+'#')>-1) {
+	if ((this.global_edit || this.global_erase) && this.test_result.indexOf(i+'@'+j+'#')>-1) {
     if (cb!='') cb='#CC0000';
     if (cc!='') cc='#CC0000';
     if (this.global_edit) local_edit = true;
@@ -510,7 +514,6 @@ function qh_redraw_canvas() {
 		if (this.qmode=='analysis') {
 			if (this.global_correct) {
 				this.context.fillStyle='#00ff00';
-				//for (i=0;i<this.answers.length;i++) 
 				i = this.activeLabel;
 				{        
 					for (j=0;j<this.answers[i].length;j++) {        
@@ -520,7 +523,6 @@ function qh_redraw_canvas() {
 			}
 			if (this.global_incorrect) {
 				this.context.fillStyle='#ff0000';
-				//for (i=0;i<this.answers.length;i++) 
 				i = this.activeLabel;
 				{        
 					for (j=0;j<this.answers[i].length;j++) {        
@@ -749,7 +751,7 @@ function qh_mouseDragMove(e){
       if (this.global_edit) cur = 'not-allowed';
 			if (this.global_edit && this.test_result!='') cur = 'move';
 			if (this.global_edit && this.test_result!='' && this.test_result.indexOf('$')<this.test_result.length-1) cur = 'default';
-			if (this.global_erase && this.test_result!='') cur = 'url(/js/images/cur_erase.cur), default';//cur_cross
+			if (this.global_erase && this.test_result!='') cur = 'url(/js/images/cur_erase.cur) 6 5, default';//this works only in css3 browsers otherwise whole cursor is ignored
 			if (over_object) cur = 'pointer';
 			if (this.handle_over != -1) cur = 'move';
 
@@ -979,7 +981,9 @@ function qh_mouseDragUp(){
 				this.hotSpots[i][1] = ''; //label text
 				this.hotSpots[i][2] = this.layerColours[i];
 				this.hotSpots[i][3] = 0;
-				this.answers[i][0] = '';    
+				//this.answers[i][0] = '';
+				this.answers[i] = new Array(new Array(0,'false','false'));
+
 			}
 			
 			//hold on colour button
