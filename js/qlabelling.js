@@ -339,7 +339,6 @@ function ql_draw_box(i,j,temp_x,temp_y) {
   }
   if (this_box[1]=='text') {
     this.context.textAlign="center";
-		this.context.font="12px Arial";
     this.context.fillStyle=this.currentColours[2];
 		this.tmp_text = this_box[2];
 		if (this.qmode=='script') {
@@ -348,7 +347,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				this.context.fillStyle=this.currentColours[2];	
 				for (var a=0;a<this.pholderBox.length;a++) 
 					if (this.pholderBox[a][5]==temp_x && this.pholderBox[a][6]==temp_y) this.tmp_text = this.pholderBox[a][2];
-			}	
+			}
 		}
 		var tmp_width = this.labelWidthEffect;
 		if (this.qType == "menu") {
@@ -360,6 +359,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				}
 			}
 		}
+		
     var wrapped = this.wrapText(this.tmp_text,tmp_width);
 		this.fillWrappedText(this.context,wrapped[0],Math.round(temp_x+tmp_width*0.5)+0.5,Math.round(temp_y+this.fontSizes[this.fontSizePos])+0.5);
     this.context.fillStyle=this.currentColours[0];
@@ -675,7 +675,7 @@ function ql_redraw_canvas() {
 
     if (this.shape_x1>-1 && this.shape_x2==-1) draw_shape(this,this.global_add,this.shape_x1,this.shape_y1-this.yOffset,this.x,this.y-this.yOffset);
  		this.context.font=this.fontSizes[this.fontSizePos]+"px Arial";
-
+		
 		var loc_width = this.imglabelWidth;
 		var loc_height = this.imglabelHeight;
       
@@ -733,6 +733,7 @@ function ql_redraw_canvas() {
 		//scaling up the labelwidth
 		this.labelWidthEffect = this.labelWidth;
 		this.labelHeightEffect = this.labelHeight;
+
 		for (i=0;i<this.answerBox.length;i++) {
 			for (j=0;j<this.answerBox[i].length;j++) {
 				if (typeof(this.answerBox[i][j])!='undefined') {
@@ -878,7 +879,8 @@ function ql_redraw_canvas() {
 				var metrics_part = this.context.measureText(text_part);
 				var metrics_full = this.context.measureText(text_full);
 				
-				this.context.strokeStyle='#000000';					
+				this.context.strokeStyle='#000000';
+				this.context.lineWidth = 1;
 				this.context.beginPath();
 				var temp_x = Math.round(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][5]+(this.labelWidthEffect-metrics_full.width)/2+metrics_part.width)-0.5;
 				var temp_y = Math.round(this.fontSizes[this.fontSizePos]*text_part_line+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][6]+4)-0.5;
@@ -1412,6 +1414,16 @@ function ql_ReturnInfo() {
 			}
 		}
 		questions_result += ';';
+		
+		
+		for (i=0;i<this.shapeBox.length;i++) {
+			for (j=0;j<this.shapeBox[i].length;j++) {
+				questions_result += this.shapeBox[i][j]+'$';
+			}
+			questions_result += ';';
+		}
+		//0$line$377$92$440$86$;1$bobble$379$113$426$114$;2$arrow$380$128$433$144$;
+
 		var target_field = document.getElementById('points'+this.q_Num);
 	}
 	if (questions_result!='' && target_field) target_field.value = questions_result;	
