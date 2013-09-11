@@ -814,13 +814,21 @@ function qh_mouseDragMove(e){
     }
     
     this.distn = Math.sqrt(this.dx*this.dx+this.dy*this.dy);
+		
     var add_point = false;
+		
     //if one just started freedrawing
-    if (this.poly_temp_points[3]==0 && this.poly_temp_points[5]==0 && this.distn > 10) {
+    if (this.poly_temp_points[3]==0 && this.distn > 10) {
       //because this is this.freehand and no point has been added - add starting one first
       this.poly_temp += Math.round(this.poly_temp_points[6]-300).toString(16)+','+Math.round(this.poly_temp_points[7]-25+this.yOffset).toString(16)+',';
-      this.poly_temp_points[0] = this.poly_temp_points[4] = this.poly_temp_points[6];
-      this.poly_temp_points[1] = this.poly_temp_points[5] = this.poly_temp_points[7];
+			
+			if (this.poly_temp_points[5]==0){
+				this.poly_temp_points[0] = this.poly_temp_points[6];
+				this.poly_temp_points[1] = this.poly_temp_points[7];
+			}      
+			this.poly_temp_points[4] = this.poly_temp_points[6];
+			this.poly_temp_points[5] = this.poly_temp_points[7]; 
+
       //and then dirct to add the actual one
       add_point = true;
     }
