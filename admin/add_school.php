@@ -25,7 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require_once '../classes/schoolutils.class.php';
 
-$school = $string['prompt'];
+$school = '';
 $faculty = '';
 
 if (isset($_POST['submit'])) {
@@ -115,7 +115,7 @@ $result->close();
   }
 ?>
     <table cellpadding="0" cellspacing="2" border="0">
-    <tr><td class="field"><?php echo $string['school']; ?></td><td><input type="text" size="70" maxlength="255" name="school" id="school" value="<?php echo $school ?>" required /></td></tr>
+    <tr><td class="field"><?php echo $string['school']; ?></td><td><input type="text" size="70" maxlength="255" name="school" id="school" value="<?php echo $school ?>" placeholder="<?php echo $string['prompt'] ?>..." required /></td></tr>
     <tr><td class="field"><?php echo $string['faculty']; ?></td><td><select name="facultyID">
     <?php
       foreach ($faculty_list as $faculty) {
