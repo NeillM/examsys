@@ -11,7 +11,7 @@
 
 
 //exclusion list
-$excluded = explode("|",  ".|..|.ds_store|.svn|.htaccess|help|js|media|tools|artwork");
+$excluded = explode("|",  ".|..|.ds_store|.svn|.htaccess|help|media|tools|artwork");
 
 //set of rules: short form, correct form, similar but other
 $parts_table = Array(Array());$parts_index = 0;
@@ -24,7 +24,7 @@ $parts_table[$parts_index++] = Array('elseif','elseif (','-');
 $parts_table[$parts_index++] = Array('.',' . ','.=|..|.php|.js|.swf|www.|.com|.gif');
 
 //calculate lengths
-foreach($parts_table as $part_index => $part_element) {
+foreach ($parts_table as $part_index => $part_element) {
   $parts_table[$part_index][3] = strpos($part_element[1],$part_element[0]);
   $parts_table[$part_index][4] = $parts_table[$part_index][5] = strlen($part_element[1]);
   foreach (explode('|',$part_element[2]) as $pp) {
@@ -45,7 +45,7 @@ function file_array($thispath, $exclude, $recurse) {
         array_push($paths, Array($thispath , $filename));
         if ($recurse) $result[] = file_array($thispath . $filename . "/", $exclude, $recurse);
       } else {
-        if ((strpos($filename,'.php',0)>0 || strpos($filename,'.inc',0)>0)) {
+        if (strpos($filename,'.php',0)>0 || strpos($filename,'.inc',0)>0  || strpos($filename,'.js',0)>0) {
           array_push($files, $thispath . $filename);
         }
       }
@@ -79,14 +79,14 @@ if ($rcs==1) {
   echo "<a href='?path=".$thispath."&rcs=1'>[search recursively]</a><br />";  
 }
 echo "<a href='?path=".dirname($thispath)."&rcs=".$rcs."'>..</a><br />";
-foreach($paths as $path) {
+foreach ($paths as $path) {
   if (isset($path[0])) 
     echo "<a href='?path=".$path[0].$path[1]."&rcs=".$rcs."'>".$path[1]."</a><br />";
 }
 echo "</td></tr></table>";
 
 //read files
-foreach($files as $filename) {
+foreach ($files as $filename) {
   $file_point=fopen($filename,"r");
   $file_content=fread($file_point, filesize($filename));
   $file_content=preg_replace('/\/\/.*\n/','¶',$file_content); 
@@ -94,7 +94,7 @@ foreach($files as $filename) {
 	
   fclose($file_point);
   
-  foreach($parts_table as $part_index => $part_element) {
+  foreach ($parts_table as $part_index => $part_element) {
    $pos=1;
    while ($pos) {            
       $pos = strpos($file_content,$part_element[0],$pos+1); //pos of short form
@@ -121,7 +121,7 @@ foreach($files as $filename) {
 //display results
 echo '<h2>'.$thispath.'</h2>';
 echo '<ol>';
-foreach($diff_table as $df) {
+foreach ($diff_table as $df) {
   if (isset($df[0])) {
     echo '<li>';
     echo '<em>'.$df[1].'</em>';

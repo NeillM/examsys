@@ -7,25 +7,19 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.canvas.onmousedown = this.ql_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.ql_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
-		if (this.canvas.addEventListener)
-    {
+		if (this.canvas.addEventListener){
       this.canvas.addEventListener("keydown",	ql_mouseDragMove.bind(this),false);
       this.canvas.addEventListener("keyup",		ql_mouseDragMove.bind(this),false);
       this.canvas.addEventListener("keypress",ql_mouseDragMove.bind(this),false);
-    }
-    else if (this.canvas.attachEvent)
-    {
+    } else if (this.canvas.attachEvent){
       this.canvas.attachEvent("onkeydown", 	ql_mouseDragMove.bind(this));
       this.canvas.attachEvent("onkeyup", 		ql_mouseDragMove.bind(this));
       this.canvas.attachEvent("onkeypress", ql_mouseDragMove.bind(this));
-    }
-		else
-		{
+    } else {
 			this.canvas.onkeydown   = ql_mouseDragMove.bind(this);
 			this.canvas.onkeyup     = ql_mouseDragMove.bind(this);
 			this.canvas.onkeypress  = ql_mouseDragMove.bind(this);
 		}
-
 		this.intervalID = window.setInterval(this.ql_redraw_canvas.bind(this), 10);
 	}
 	if (this.canvas && !this.canvas.getContext){
@@ -146,7 +140,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 					tmp_pholder[0] = mli_index;   									//index
 					if (mli_pos_xa>=220) {
 						tmp_pholder[5] = mli_pos_xa;     							//pos_x						
-					}else{
+					} else {
 						tmp_pholder[5] = -500;					
 					}
 					tmp_pholder[6] = mli_pos_ya - this.yOffset; 		//pos_y
@@ -154,8 +148,8 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 					if (myLabelType=='image') {
 						var mli_answr_label = mli_answr.split("~");
 						tmp_pholder[2] = mli_answr_label[0];	  			//answer ie. 'beetle3.png' from 'beetle3.png~80~75'
-					}else {
-					tmp_pholder[2] = mli_answr;					      			//answer ie. 'spider'
+					} else {
+						tmp_pholder[2] = mli_answr;					      			//answer ie. 'spider'
 					}
 					tmp_pholder[3] = '';	                      		//corectness					
 					tmp_pholder[4] = mli_combo;	                  	//combo
@@ -179,7 +173,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 						tmp_answer[6] = mli_pos_yb - this.yOffset;	//pos_y - new
 						tmp_answer[7] = mli_pos_xb;	                //initial pos_x
 						tmp_answer[8] = mli_pos_yb - this.yOffset;	//initial pos_y
-					}else{
+					} else {
 						tmp_answer[5] = mli_pos_xa;	                //pos_x from data
 						tmp_answer[6] = mli_pos_ya - this.yOffset;	//pos_y from data
 						tmp_answer[7] = mli_pos_xa;	                //initial pos_x
@@ -201,7 +195,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 						tmp_answer2[10] = (mli_combo+1);
 						this.answerBox[mli_index][mli_combo+1] = tmp_answer2;
 					}	
-				}else{
+				} else {
 					blank_count++;
 				}
 			}
@@ -230,9 +224,9 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			this.ql_redraw_canvas;
 			
 			//reassign images to other levels
-      for(i=0;i<this.answerBox.length;i++) {
+      for (i=0;i<this.answerBox.length;i++) {
 				if (this.answerBox[i].length>1){
-					for(j=1;j<this.answerBox[i].length;j++) {
+					for (j=1;j<this.answerBox[i].length;j++) {
 						this.answerBox[i][j][11] = this.answerBox[i][0][11];
 					}
 				}
@@ -1026,19 +1020,17 @@ function ql_mouseDragMove(e){
 		this.drag_box_id = -1; 
 		this.drag_box_combo = -1;	
 		if (this.qmode!='analysis' && this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
-			var over_object = false;
-			
+			var over_object = false;			
       for (i=0;i<this.answerBox.length;i++) {
 				for (j=0;j<this.answerBox[i].length;j++) {
 					if (typeof(this.answerBox[i][j])!='undefined' && (this.labelMulti == 'multiple' || this.answerBox[i][j][4]==0)) {
-
 						if (this.answerBox[i][j][1]=='image') {
 							if (this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.imglabelWidth,this.imglabelHeight)==true) {
 								over_object = true;
 								if (this.drag_box_id==-1 || this.answerBox[i][j][9]!='') {
 									this.drag_box_id = i;
 									this.drag_box_combo = j;
-									}
+								}
 							}
 						}
 						if (this.answerBox[i][j][1]=='text') {
@@ -1103,7 +1095,7 @@ function ql_mouseDragMove(e){
 				var test_width = 19;
 				if (tmp_pan=='toolbar/pan_sizes.png') test_width = 22;
 				if (tmp_pan=='toolbar/pan_lines.png') test_width = 130;
-        for(i=0;i<this.panelActiveParts[tmp_pan].length;i++) {
+        for (i=0;i<this.panelActiveParts[tmp_pan].length;i++) {
           var tp = this.panelActiveParts[tmp_pan][i].split(',');
           if (this.testWithin(this.x,this.y,tmp_but[1]+1*tp[0]+0.5,tmp_but[2]+25+1*tp[1]+0.5,test_width,20)==true) panelOptionTest=i;
           }
@@ -1250,13 +1242,12 @@ function ql_mouseDragUp(){
       //is it correctly dropped label
       if (this.answerBox[this.drag_box_id][this.drag_box_combo][2]==this.pholderBox[dest_box][2]) {
         this.answerBox[this.drag_box_id][this.drag_box_combo][3]='t'
-      }else{
+      } else {
         this.answerBox[this.drag_box_id][this.drag_box_combo][3]='f'
 			}
       this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.pholderBox[dest_box][5];
       this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.pholderBox[dest_box][6];
-    }
-    else {
+    } else {
       //label dropped outside and target is sent back
       this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.answerBox[this.drag_box_id][this.drag_box_combo][7];
       this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8];
@@ -1403,7 +1394,7 @@ function ql_ReturnInfo() {
 					}
 					questions_result += '|';
 				}
-			}else{
+			} else {
 				for (j=0;j<this.answerBox[i].length;j++) {
 					if (this.answerBox[i][j][2]!=''){
 						questions_result += i;
@@ -1513,11 +1504,11 @@ function rql(num) {
   
 	this.panelActiveParts.push('toolbar/pan_sizes.png');
   this.panelActiveParts['toolbar/pan_sizes.png'] = new Array();
-  for(i=0;i<7;i++) this.panelActiveParts['toolbar/pan_sizes.png'][i] = 3+','+(i*19+3);
+  for (i=0;i<7;i++) this.panelActiveParts['toolbar/pan_sizes.png'][i] = 3+','+(i*19+3);
   //'toolbar/pan_lines.png
   this.panelActiveParts.push('toolbar/pan_lines.png');
   this.panelActiveParts['toolbar/pan_lines.png'] = new Array();
-  for(i=0;i<7;i++) this.panelActiveParts['toolbar/pan_lines.png'][i] = 3+','+(i*19+3);
+  for (i=0;i<7;i++) this.panelActiveParts['toolbar/pan_lines.png'][i] = 3+','+(i*19+3);
 
 	this.labelInstanceDepth = new Array();  // depth new instances are created on inside each labelGroup clip
 	this.labelTxt = new Array(); 			      // stores text on each label

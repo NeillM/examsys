@@ -7,20 +7,15 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 		this.canvas.onmousedown = this.qh_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.qh_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
-		if (this.canvas.addEventListener)
-    {
+		if (this.canvas.addEventListener){
       this.canvas.addEventListener("keydown",	qh_mouseDragMove.bind(this),false);
       this.canvas.addEventListener("keyup",		qh_mouseDragMove.bind(this),false);
       this.canvas.addEventListener("keypress",qh_mouseDragMove.bind(this),false);
-    }
-    else if (this.canvas.attachEvent)
-    {
+    } else if (this.canvas.attachEvent) {
       this.canvas.attachEvent("onkeydown", 	qh_mouseDragMove.bind(this));
       this.canvas.attachEvent("onkeyup", 		qh_mouseDragMove.bind(this));
       this.canvas.attachEvent("onkeypress", qh_mouseDragMove.bind(this));
-    }
-		else
-		{
+    } else {
 			this.canvas.onkeydown   = qh_mouseDragMove.bind(this);
 			this.canvas.onkeyup     = qh_mouseDragMove.bind(this);
 			this.canvas.onkeypress  = qh_mouseDragMove.bind(this);
@@ -440,7 +435,7 @@ function qh_redraw_canvas() {
         if (led[3]!=-1) {
           //move point
           if ((f_type=='ellipse') || (f_type=='rectangle')) {
-            switch(led[3])
+            switch (led[3])
             {
             case '1':
               this.HsCo[0] = Math.round(temp_x).toString(16);
@@ -708,8 +703,7 @@ function qh_mouseDragMove(e){
 			this.hotSpots[this.drag_box_id][6] = this.y - this.sub_y;
 		}
     if (this.hotspot_over != '') this.label_elem_drag = this.hotspot_over;
-	}
-	else { //change of cursor
+	} else { //change of cursor
     this.drag_box_id = -1;
 		if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
 			var over_object = false;     
@@ -784,7 +778,7 @@ function qh_mouseDragMove(e){
     this.panelOver=this.buttonClicked;
     over_object = true;
     this.drag_box_id = -1;
-    for(i=0;i<this.panelActiveParts[tmp_pan].length;i++) {
+    for (i=0;i<this.panelActiveParts[tmp_pan].length;i++) {
       var tp = this.panelActiveParts[tmp_pan][i].split(',');
       this.tw=true;
       if (this.testWithin(this.x,this.y,tmp_but[1]+1*tp[0]+0.5,tmp_but[2]+25+1*tp[1]+0.5,18,20)==true) panelOptionTest=i;
@@ -1056,7 +1050,7 @@ function qh_ReturnInfo() {
 		for (i=0;i<this.answers.length;i++) {
 			if (this.answers[i][0][1]!='false') {
 				questions_result+=this.answers[i][0][0]+','+Math.round(this.answers[i][0][1])+','+Math.round(this.answers[i][0][2]);
-			}else{
+			} else {
 				questions_result+=this.answers[i][0][0]+','+this.answers[i][0][1]+','+this.answers[i][0][2];
 			}
 			if (i<this.answers.length-1) questions_result+='|';

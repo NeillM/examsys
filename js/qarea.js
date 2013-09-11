@@ -143,7 +143,7 @@ function qa_test(type) {
 		this.timgp = timgd.data;
 		this.do_the_test_calc = true;
 		return this.timgp;
-	}else{
+	} else {
 		return timgd;
 	}
 }
@@ -176,7 +176,7 @@ function qa_test_calc(type) {
 				this.timga[j+0] = 255;
 				this.timga[j+1] = 0;
 				this.timga[j+2] = 0;
-			}else{
+			} else {
 				this.timga[j+0] = 255;
 				this.timga[j+1] = 255;
 				this.timga[j+2] = 255;

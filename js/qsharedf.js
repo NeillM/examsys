@@ -60,15 +60,14 @@ function textHeight(tt, tw) {
   if (tt!='' && tt!=undefined) {
     var words = tt.split(' ');
     var line = '';
-    for(var n = 0; n < words.length; n++) {
+    for (var n = 0; n < words.length; n++) {
       var testLine = line + words[n] + ' ';
       var metrics = this.context.measureText(testLine);
       var testWidth = metrics.width;
-      if(testWidth > tw) {
+      if (testWidth > tw) {
         line = words[n] + ' ';
         ty += this.fontSizes[this.fontSizePos];
-      }
-      else {
+      } else {
         line = testLine;
       }
     }
@@ -83,11 +82,11 @@ function wrapText(tt,tw,elastic) {
 	function breakText(ctx) {
 		var words = tt.split(' ');
 		var broken = false;
-		for(var n = 0; n < words.length; n++) {
+		for (var n = 0; n < words.length; n++) {
 			var metrics = ctx.measureText(words[n]);
 			if (metrics.width > tw) {
 				broken = true;
-				for(var m = 1; m < words[n].length; m++) {
+				for (var m = 1; m < words[n].length; m++) {
 					metrics = ctx.measureText(words[n].substr(0,m));
 					if (metrics.width < tw) var div_point = m; 
 				}
@@ -110,24 +109,23 @@ function wrapText(tt,tw,elastic) {
 		
 		//verify width (tw) against words lengths
 		if (elastic){
-			for(var n = 0; n < words.length; n++) {
+			for (var n = 0; n < words.length; n++) {
 				var metrics = this.context.measureText(words[n]);
 				if (metrics.width > tw) tw = metrics.width;
 			}
 		}
-		for(var n = 0; n < words.length; n++) {
+		for (var n = 0; n < words.length; n++) {
 			var testLine = line;
 			if (testLine!='') testLine += ' ';
 			testLine += words[n];
 			
 			var metrics = this.context.measureText(testLine);
 			var testWidth = metrics.width;
-			if(testWidth > tw) {
+			if (testWidth > tw) {
 				lines += line + '|';
 				line = words[n];
 				ty += this.fontSizes[this.fontSizePos];
-			}
-			else {
+			} else {
 				line = testLine;
 			}
 		}
@@ -138,7 +136,7 @@ function wrapText(tt,tw,elastic) {
 
 function fillWrappedText(ctx,tt,tx,ty) {
 	var words = tt.split('|');
-	for(var n = 0; n < words.length; n++) {
+	for (var n = 0; n < words.length; n++) {
 		this.context.fillText(words[n], tx, ty);
 		ty += this.fontSizes[this.fontSizePos];
 	}
@@ -545,13 +543,13 @@ function def_colour_panel_parts(){
   this.panelActiveParts['toolbar/pan_colours.png'] = new Array();
 	var lw = 12;
 	var lh = 18;
-  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][00+i] = (i*lh+1)+','+(7+lw*1);
-  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][10+i] = (i*lh+1)+','+(15+lw*2);
-  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][20+i] = (i*lh+1)+','+(15+lw*3);
-  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][30+i] = (i*lh+1)+','+(15+lw*4);
-  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][40+i] = (i*lh+1)+','+(15+lw*5);
-  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][50+i] = (i*lh+1)+','+(15+lw*6);
-  for(i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][60+i] = (i*lh+1)+','+(37+lw*7);
+  for (i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][00+i] = (i*lh+1)+','+(7+lw*1);
+  for (i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][10+i] = (i*lh+1)+','+(15+lw*2);
+  for (i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][20+i] = (i*lh+1)+','+(15+lw*3);
+  for (i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][30+i] = (i*lh+1)+','+(15+lw*4);
+  for (i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][40+i] = (i*lh+1)+','+(15+lw*5);
+  for (i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][50+i] = (i*lh+1)+','+(15+lw*6);
+  for (i=0;i<10;i++) this.panelActiveParts['toolbar/pan_colours.png'][60+i] = (i*lh+1)+','+(37+lw*7);
 }
 
 //recreates line 2, letter 1 or colour 0 (signed by panel_code) panel with selection highlighted
