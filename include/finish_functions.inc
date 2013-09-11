@@ -548,7 +548,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 				if ($configObject->get('cfg_interactive_qs')=='html5') {
 					//<!-- ======================== HTML5 part include finf ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 2) . "' height='" . ($paper[$question]['q_media_height'] + 24) . "'></canvas>\n";
-					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+					echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
 					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . '../media/' . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $tmp_user_answer . "',1,'#FFC0C0','area','script');\n";
 					echo "</script>\n";
@@ -586,14 +586,15 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 					echo "write_string('</object>');\n";
 					echo "write_string('<!--<![endif]-->');\n";
 					echo "write_string('</object>');\n";
-         }
+
           if ($tmp_display_correct_answer == '1') {
             echo "sendTextToAS3('$language', 'q$question_no', 3, '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '$tmp_user_answer');\n";
           } else {
             echo "sendTextToAS3('$language', 'q$question_no', 1, '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $paper[$question]['user_answer'] . "');\n";
           }
-          ?>
-        </script>
+					echo "</script>\n<br />";
+         }          
+				?>
         <br />
         <?php
         if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\">" . $paper[$question]['correct_fback'] . "</div>\n";
