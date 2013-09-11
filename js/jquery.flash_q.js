@@ -47,8 +47,8 @@ function doSend(q_no, toSend) {
 function receiveTextFromAS3(txt) {
   parts = txt.split(";");
   
-  flashTarget = parts.shift();
+  flashTargeta = parts.shift();
   data = parts.join(";");
 
-  $('#' + flashTarget).val(data);
+  $('#' + flashTargeta).val(data);
 }
