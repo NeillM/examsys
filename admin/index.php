@@ -46,13 +46,13 @@
 		  var msg = '<?php echo $string['msg1']; ?>';
 			return confirm(msg);
 		});
-		
+
     $("#clear_old_logs").click(function() {
 		  var msg = '<?php echo $string['msg2']; ?>';
 			return confirm(msg);
 		});
 	});
-	
+
 </script>
 </head>
 
@@ -122,8 +122,8 @@ $menudata['computerlabs']=array($string['computerlabs'],'list_labs.php','compute
 $menudata['courses']=array($string['courses'],'list_courses.php','courses_icon.png');
 $menudata['deniedlogwarnings']=array($string['deniedlogwarnings'],'view_access_denied.php','access_denied.png');
 $menudata['ebelgridtemplates']=array($string['ebelgridtemplates'],'list_ebel_grids.php','grid_48.png');
-$menudata['faculties']=array($string['faculties'],'../LTI/lti_keys_list.php','faculty.png');
-$menudata['imslti']=array($string['imslti'],'list_faculties.php','ims_logo_64.png');
+$menudata['faculties']=array($string['faculties'],'list_faculties.php','faculty.png');
+$menudata['imslti']=array($string['imslti'],'../LTI/lti_keys_list.php','ims_logo_64.png');
 $menudata['modules']=array($string['modules'],'list_modules.php','modules_icon.png');
 $menudata['news']=array($string['announcments'],'list_announcements.php','news_48.png');
 $menudata['optimizetables']=array($string['optimizetables'],'optimize_tables.php','optimize_tables_icon.png');
