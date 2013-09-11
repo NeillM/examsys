@@ -618,7 +618,7 @@ function ql_redraw_canvas() {
         draw_shape(this,this.shapeBox[i][1],this.shapeBox[i][2],this.shapeBox[i][3]-this.yOffset,this.shapeBox[i][4],this.shapeBox[i][5]-this.yOffset);
         var timgd = this.context.getImageData(this.x,this.y,1,1);
         var timgp = timgd.data;
-        if (hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2]))== '#ff0000') this.activ_shape=i;
+        if (hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase()== '#FF0000') this.activ_shape=i;
       }
     }
     //testing end
@@ -1120,7 +1120,7 @@ function ql_mouseDragMove(e){
 			if (over_object) cur = 'pointer';
 			if (this.global_move && this.activ_shape>-1 && this.y>28) cur = 'move';
 			if (this.active_box_handler!=-1) cur = 'move';
- 			if (this.global_erase && this.activ_shape>-1 && this.y>28) cur = 'url(/js/images/cur_erase.cur), default';//cur_cross
+ 			if (this.global_erase && this.activ_shape>-1 && this.y>28) cur = 'url(/js/images/cur_erase.cur) 6 5, default';//this works only in css3 browsers otherwise whole cursor is ignored
       if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
       e.target.style.cursor = cur;
 		}
