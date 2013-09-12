@@ -48,8 +48,21 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		if (mode=='edit') this.yOffset = 0;
     this.qmode = mode;
 		
+		//---------- extra,
+		this.extraImgs = new Array();
+    if (extra != "" && extra != undefined && extra != "undefined" && extra != null && extra != "null") {
+      if (this.qmode == 'edit') {
+				this.extraImgs = extra.split(';');
+			} else {
+				var extra_l1 = extra.split('~');
+				this.marks_per_correct = extra_l1[0];
+				this.marks_per_incorrect = extra_l1[1];
+				this.marking_method = extra_l1[2];
+			}
+    }
+		
 		//---------- config, 
- 		if (config=='') config = '#3f3f3f;1;#ffffff;10;#000000;100;19;200;200;single;label;$$$$;';
+ 		if (config=='') config = '#3f3f3f;1;#ffffff;10;#000000;100;19;0;0;single;label;$$$$;';
 
 		var existingInfo = config.split(';');
 		this.currentColours[1] 	= existingInfo[0];	                        // line colour
@@ -71,14 +84,30 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.imglabelHeight		  = Number(existingInfo[8]);					        // image label height
 		this.labelMulti			    = existingInfo[9];							            // single/multiple
 		this.qType				      = existingInfo[10];							            // label/menu
-		this.existingLabelInfo 	= existingInfo[11];						 				      // one label?
+		this.existingLabelInfo 	= new Array();															// one label?
 		if (typeof(existingInfo[11])!='undefined') {
 			this.existingLabelInfo = existingInfo[11].split("|"); // divides each label
+		}else{
+			this.existingLabelInfo = existingInfo[11];
 		}
 		
+		//adding images loaded as extras
+		for (i=0;i<this.extraImgs.length; i++) {
+			if (this.extraImgs[i]!='') {
+				var tmp_dat = this.extraImgs[i].substr(0,this.extraImgs[i].length-1).split(",");
+				var tmp_txt = '$$$$'+tmp_dat.join('~');
+				if (this.imglabelWidth <= 1*tmp_dat[1]) this.imglabelWidth = 1*tmp_dat[1];
+				if (this.imglabelHeight <= 1*tmp_dat[2]) this.imglabelHeight = 1*tmp_dat[2];
+				this.existingLabelInfo.push(tmp_txt);
+			}
+		}
+		
+		//repairing/removing undefined labels
 		for (i=0;i<this.existingLabelInfo.length; i++) 
-			if (typeof(this.existingLabelInfo[i])=='undefined' || this.existingLabelInfo[i]=='') 
-				this.existingLabelInfo[i] = '$$$$';
+			if (typeof(this.existingLabelInfo[i])=='undefined' || this.existingLabelInfo[i]=='' || this.existingLabelInfo[i]=='$$$$') {
+				//this.existingLabelInfo[i] = '$$$$';
+		    this.existingLabelInfo.splice(i,1);
+			}
 		
 		//add empty labels to 20
 		for (i=this.existingLabelInfo.length; i<20; i++) 
@@ -149,7 +178,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 						var mli_answr_label = mli_answr.split("~");
 						tmp_pholder[2] = mli_answr_label[0];	  			//answer ie. 'beetle3.png' from 'beetle3.png~80~75'
 					} else {
-						tmp_pholder[2] = mli_answr;					      			//answer ie. 'spider'
+						tmp_pholder[2] = mli_answr;					      		//answer ie. 'spider'
 					}
 					tmp_pholder[3] = '';	                      		//corectness					
 					tmp_pholder[4] = mli_combo;	                  	//combo
@@ -165,8 +194,8 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 						var existingImageInfo = myLabelInfo[4].split("~");
 						tmp_answer[2] = existingImageInfo[0];	    	//filename
 						this.max_num_images++;
-						tmp_answer[9] = existingImageInfo[1];	    	//image oryginal width
-						tmp_answer[10] = existingImageInfo[2];	    	//image oryginal height
+						tmp_answer[9] = Number(existingImageInfo[1]);	//image oryginal width
+						tmp_answer[10] = Number(existingImageInfo[2]);	    //image oryginal height
 						}
 					if (((this.qmode=='edit' || this.qmode=='analysis') && mli_pos_xa<220) || this.qmode=='answer' || this.qmode=='script'){
 						tmp_answer[5] = mli_pos_xb;	                //pos_x - new
@@ -192,7 +221,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 						tmp_answer2[6] = mli_pos_yb - this.yOffset;
 						tmp_answer2[7] = mli_pos_xb;
 						tmp_answer2[8] = mli_pos_yb - this.yOffset;
-						tmp_answer2[10] = (mli_combo+1);
+						tmp_answer2[4] = (mli_combo+1);
 						this.answerBox[mli_index][mli_combo+1] = tmp_answer2;
 					}	
 				} else {
@@ -215,36 +244,35 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		//loading label images and drawing boxes
 		this.context.fillStyle=this.currentColours[0];
 		this.context.StrokeStyle=this.currentColours[1];
-		
-	function ql_gen_img_onload(){
-		this.imagesLoaded ++;
-		if (this.imagesLoaded == this.max_num_images) {
-			this.allImagesLoaded = true;
-			this.redraw_once = true;
-			this.ql_redraw_canvas;
 			
-			//reassign images to other levels
-      for (i=0;i<this.answerBox.length;i++) {
-				if (this.answerBox[i].length>1){
-					for (j=1;j<this.answerBox[i].length;j++) {
-						this.answerBox[i][j][11] = this.answerBox[i][0][11];
+		function ql_gen_img_onload(){
+			this.imagesLoaded ++;
+			if (this.imagesLoaded == this.max_num_images) {
+				this.allImagesLoaded = true;
+				this.redraw_once = true;
+				this.ql_redraw_canvas;
+				
+				//reassign images to other levels
+				for (i=0;i<this.answerBox.length;i++) {
+					if (this.answerBox[i].length>1){
+						for (j=1;j<this.answerBox[i].length;j++) {
+							this.answerBox[i][j][11] = this.answerBox[i][0][11];
+						}
 					}
 				}
 			}
-		}
-	}  		
-	
-	//loading images
-	if (typeof(this.answerBox)!='undefined')
-		for (i=0;i<this.answerBox.length;i++) {
-			j=0;
-			if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1]=="image") {
-				this.answerBox[i][j][11] = new Image();
-				this.answerBox[i][j][11].onload = ql_gen_img_onload.bind(this);
-				this.answerBox[i][j][11].src = '/media/'+this.answerBox[i][j][2];
+		}				
+		
+		//loading images
+		if (typeof(this.answerBox)!='undefined')
+			for (i=0;i<this.answerBox.length;i++) {
+				j=0;
+				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1]=="image") {
+					this.answerBox[i][j][11] = new Image();
+					this.answerBox[i][j][11].onload = ql_gen_img_onload.bind(this);
+					this.answerBox[i][j][11].src = '/media/'+this.answerBox[i][j][2];
+				}
 			}
-		}
-
 
     if (this.max_num_images==0) {
       this.allImagesLoaded = true;
@@ -288,13 +316,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			}
 		}
 		
-		//---------- extra, 
-    if (extra != "" && extra != undefined && extra != "undefined" && extra != null && extra != "null") {
-      var extra_l1 = extra.split('~');
-      this.marks_per_correct = extra_l1[0];
-      this.marks_per_incorrect = extra_l1[1];
-      this.marking_method = extra_l1[2];
-      }
 		//---------- colour 
 		this.currentColours[3] = colour;
     
@@ -715,15 +736,18 @@ function ql_redraw_canvas() {
 				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.char_code+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
 				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
 				this.edit_box_pos++;
+			  this.ql_ReturnInfo();
 			}
 			if (this.key_code=='46') { //del
 				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos+1);
 				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
+			  this.ql_ReturnInfo();
 			}
 			if (this.key_code=='8') { //backspace
 				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos-1)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
 				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
 				this.edit_box_pos--;
+				this.ql_ReturnInfo();
 			}
 			
 			this.char_code ='';
