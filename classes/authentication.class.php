@@ -328,6 +328,7 @@ class Authentication {
           if (!is_null($authentication_fields_required_to_create_user)) {
             foreach ($authentication_fields_required_to_create_user as $value) {
               if (!isset($info->lookupdata->$value) or(isset($info->lookupdata->$value) and $info->lookupdata->$value == '')) {
+
                 $createuser = false;
                 $this->debug[] = 'Not creating user as the ' . $value . ' field is missing';
               }
@@ -358,7 +359,21 @@ class Authentication {
               $this->userid = $authobj->rogoid;
               $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
             }
+          } else {
+            //log not creating user and why
+            $username='UNKNOWN';
+            if(isset($this->form['std']->username)) {
+            $username=$this->form['std']->username;
+            }
+            $userid=0;
+            $errfile='Authentication';
+            $errline=0;
+            $errstr = 'Couldnt create user see variables for more info';
+            $variables = array('lookup' => &$lookup, 'info' => &$info, 'authentication' => &$this);
+            //log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null)
+            log_error($userid, $username, 'Application Warning', $errstr, $errfile, $errline, '', null, $variables, null);
           }
+
 
         }
 
