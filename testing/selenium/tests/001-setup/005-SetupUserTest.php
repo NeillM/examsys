@@ -78,30 +78,42 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->type("id=new_password", "test");
     $this->select("id=new_grade", "label=Academic Lecturer");
     $this->click("css=td > input[name=\"submit\"]");
-    $this->assertEquals("Please enter the user's First names.", $this->getAlert());
+    $this->assertLocation($this->page_root . "/users/create_new_user.php");
     $this->type("id=new_first_names", "test");
     $this->type("id=new_surname", "");
     $this->click("css=td > input[name=\"submit\"]");
-    $this->assertEquals("Please enter the user's Surname.", $this->getAlert());
+    $this->assertLocation($this->page_root . "/users/create_new_user.php");
     $this->type("id=new_surname", "test");
     $this->type("id=new_email", "");
     $this->click("css=td > input[name=\"submit\"]");
-    $this->assertEquals("Please enter the user's Email Address.", $this->getAlert());
+    $this->assertLocation($this->page_root . "/users/create_new_user.php");
     $this->type("id=new_email", "test@test.com");
     $this->type("id=new_username", "");
     $this->click("css=td > input[name=\"submit\"]");
-    $this->assertEquals("Please enter a Username for the user.", $this->getAlert());
+    $this->assertLocation($this->page_root . "/users/create_new_user.php");
     $this->type("id=new_username", "test");
     $this->type("id=new_password", "");
     $this->click("css=td > input[name=\"submit\"]");
-    $this->assertEquals("Please enter a default Password for the user.", $this->getAlert());
+    $this->assertLocation($this->page_root . "/users/create_new_user.php");
     $this->type("id=new_password", "test");
     $this->select("id=new_grade", "label=");
     $this->click("css=td > input[name=\"submit\"]");
-    $this->assertEquals("Please enter a Type/Course for the user.", $this->getAlert());
+    $this->assertLocation($this->page_root . "/users/create_new_user.php");
   }
 
-  // TODO: Check valid email address?
+  public function testCantCreateUserWithoutValidEmail() {
+    do_admin_login($this);
+
+    $this->open("/users/create_new_user.php");
+    $this->type("id=new_first_names", "test");
+    $this->type("id=new_surname", "test");
+    $this->type("id=new_email", "test@test");
+    $this->type("id=new_username", "test");
+    $this->type("id=new_password", "test");
+    $this->select("id=new_grade", "label=Academic Lecturer");
+    $this->click("css=td > input[name=\"submit\"]");
+    $this->assertLocation($this->page_root . "/users/create_new_user.php");
+  }
 
   /**
    * @depends testCreateUser
@@ -118,6 +130,9 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
 
     $this->click("id=mod0");
     $this->click("name=submit");
+    $this->selectWindow('null');
+
+    // $this->waitForPageToLoad("30000");
     $this->assertTextPresent('S01SET');
   }
 

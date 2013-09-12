@@ -228,7 +228,7 @@ foreach ($titles as $tmp_title) {
 </select></td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="text" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" required />
 &nbsp;&nbsp;&nbsp;<span class="field"><?php echo $string['password']; ?></span> <input type="text" id="new_password" name="new_password" value="<?php
   if (isset($_POST['password'])) {
@@ -236,7 +236,7 @@ foreach ($titles as $tmp_title) {
   } else {
     echo gen_password();
   }
-?>" size="12" /></td></tr>
+?>" size="12" required /></td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['yearofstudy']; ?></span></td><td>
 <select id="new_yos" name="new_year">
 <?php
