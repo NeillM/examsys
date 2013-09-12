@@ -228,6 +228,38 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
 function log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null) {
 
+  if(is_null($backtrace)) {
+    $backtrace='';
+    $backtrace = DebugBackTraceDisplay(debug_backtrace());
+    try {
+      throw new Exception("New Backtrace Method:", 1);
+    }
+    catch (Exception $e) {
+      $string="Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+      $string=$string . nl2br($e->getTraceAsString());
+      $backtrace=$string . "\r\n<br>Old Method:\r\n<br>" . $backtrace;
+    }
+  }
+  if(is_null($post_data)) {
+    $post_data = '';
+    if (isset($_POST)) {
+      foreach ($_POST as $key => $value) {
+        if ($key != 'ROGO_PW') {
+          if ($post_data == '') {
+            $post_data = "$key=$value";
+          } else {
+            $post_data .= ", $key=$value";
+          }
+        } else {
+          $post_data .= ", $key=<HIDDEN>";
+        }
+      }
+    }
+
+  }
+  if($variables!='' and !is_string($variables)) {
+    $variables = base64_encode(serialize($variables));
+  }
   if(is_null($page)) {
     $page = $_SERVER['PHP_SELF'];
   }
@@ -239,6 +271,7 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
   }
 
   $configObject = Config::get_instance();
+  $notice = UserNotices::get_instance();
 
   // Query may fail if we try to insert while another statement is open.
   // Since we don't have a handle on the original statement, create another DB link
