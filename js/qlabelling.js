@@ -60,7 +60,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				this.marking_method = extra_l1[2];
 			}
     }
-		
 		//---------- config, 
  		if (config=='') config = '#3f3f3f;1;#ffffff;10;#000000;100;19;0;0;single;label;$$$$;';
 
@@ -108,6 +107,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				//this.existingLabelInfo[i] = '$$$$';
 		    this.existingLabelInfo.splice(i,1);
 			}
+		console.log(this.existingLabelInfo);		
 		
 		//add empty labels to 20
 		for (i=this.existingLabelInfo.length; i<20; i++) 
@@ -161,7 +161,11 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 					if (typeof(myLabelInfo[4])=='undefined' || myLabelInfo[4]=='') blank_count++;
 
 					var myLabelType = "text"; // text or image label?
-					if (typeof(mli_answr)!='undefined' && (mli_answr.indexOf('.jpeg') != -1 || mli_answr.indexOf('.jpg') != -1 || mli_answr.indexOf('.png') != -1 || mli_answr.indexOf('.gif') != -1)) myLabelType = "image";        
+					var mli_ext_pass = false;
+					var mli_formats = new Array('jpeg','jpg','png','gif');
+					for (a=0; a<mli_formats.length; a++) 
+						if (mli_answr.toLowerCase().indexOf('.'+mli_formats[a]) != -1) mli_ext_pass = true;
+					if (typeof(mli_answr)!='undefined' && mli_ext_pass) myLabelType = "image";        
 
 					var tmp_pholder = new Array();
 					this.pho_index = this.pholderBox.length-1;
