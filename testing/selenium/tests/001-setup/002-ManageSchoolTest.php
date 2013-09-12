@@ -95,11 +95,11 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("link=Create new School");
     $this->waitForPageToLoad("30000");
     $this->click("name=submit");
-    $this->assertEquals("Please enter name for the school.", $this->getAlert());
+    $this->assertLocation($this->page_root . "/admin/add_school.php");
 
     $this->type("id=school", "");
     $this->click("name=submit");
-    $this->assertEquals("Please enter name for the school.", $this->getAlert());
+    $this->assertLocation($this->page_root . "/admin/add_school.php");
   }
 }
 ?>

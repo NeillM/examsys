@@ -143,7 +143,7 @@ function qa_test(type) {
 		this.timgp = timgd.data;
 		this.do_the_test_calc = true;
 		return this.timgp;
-	}else{
+	} else {
 		return timgd;
 	}
 }
@@ -176,7 +176,7 @@ function qa_test_calc(type) {
 				this.timga[j+0] = 255;
 				this.timga[j+1] = 0;
 				this.timga[j+2] = 0;
-			}else{
+			} else {
 				this.timga[j+0] = 255;
 				this.timga[j+1] = 255;
 				this.timga[j+2] = 255;
@@ -493,6 +493,7 @@ function qa_mouseDragMove(e){
     if (this.poly_temp_points[3]==0 && this.distn > 10) {
       //because this is this.freehand and no point has been added - add starting one first
       this.poly_temp += Math.round(this.poly_temp_points[6]).toString(16)+','+Math.round(this.poly_temp_points[7]).toString(16)+',';
+			
 			if (this.poly_temp_points[5]==0){
 				this.poly_temp_points[0] = this.poly_temp_points[6];
 				this.poly_temp_points[1] = this.poly_temp_points[7];
@@ -500,8 +501,7 @@ function qa_mouseDragMove(e){
 			this.poly_temp_points[4] = this.poly_temp_points[6];
 			this.poly_temp_points[5] = this.poly_temp_points[7]; 
 			
-			
-				//and then dirct to add the actual one
+			//and then dirct to add the actual one
       add_point = true;
     }
           

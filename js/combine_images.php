@@ -35,14 +35,14 @@ foreach($paths as $path)
 		
 		if ($file == "." || $file == "..") continue;
 		if (array_key_exists($file,$exclude)) continue;
-		if(!is_file($filename)) continue;
+		if (!is_file($filename)) continue;
 		
 		//echo "Loading image $filename ... ";
 		
 		ob_flush();
 		$res = imagecreatefrompng($filename);
 		list($widthx, $height, $type, $attr)= getimagesize($filename); 
-		//echo "done<br>";
+		//echo "done<br />";
 		ob_flush();
 		
 		$img = array();
@@ -102,12 +102,12 @@ $output .= "'zzz': 'zzz' };\n";
 //imagealphablending( $resim, false );
 
 $target = "images/combined.png";
-echo "Saving as $target<br>";
+echo "Saving as $target<br />";
 ob_flush();
 imagepng($resim, $target);
 
 $target = "html5.images.js";
-echo "Saving js data as $target<br>";
+echo "Saving js data as $target<br />";
 file_put_contents($target, $output);
 /*echo "<pre>";
 print_r($images);
