@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 $string['view'] = 'View hotspots on all layers';
 
