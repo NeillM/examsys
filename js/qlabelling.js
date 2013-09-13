@@ -84,6 +84,8 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.labelMulti			    = existingInfo[9];							            // single/multiple
 		this.qType				      = existingInfo[10];							            // label/menu
 		this.existingLabelInfo 	= new Array();															// one label?
+
+
 		if (typeof(existingInfo[11])!='undefined') {
 			this.existingLabelInfo = existingInfo[11].split("|"); // divides each label
 		}else{
@@ -107,7 +109,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				this.existingLabelInfo.push(tmp_txt);
 			}
 		}
-		
+
 		//repairing/removing undefined labels
 		for (i=0;i<this.existingLabelInfo.length; i++) 
 			if (typeof(this.existingLabelInfo[i])=='undefined' || this.existingLabelInfo[i]=='' || this.existingLabelInfo[i]=='$$$$') {
@@ -318,14 +320,14 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
     
 		//----- menuBox
 		this.menuBox.push('');
-		for (i=this.answerBox.length-1;i>=0;i--) {
-			for (j=this.answerBox[i].length-1;j>=0;j--) {
+		for (i=0;i<this.answerBox.length;i++) {
+			for (j=0;j<this.answerBox[i].length;j++) {
 				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1]=='text' && this.answerBox[i][j][2]!='' && this.menuBox.indexOf(this.answerBox[i][j][2])==-1) {
 					this.menuBox.push(this.answerBox[i][j][2]);
+					if (this.qmode!='edit' && this.qType == 'menu') this.answerBox[i][j][2] = '';
 				}
 			}
 		}
-		
 		//---------- colour 
 		this.currentColours[3] = colour;
     
@@ -398,7 +400,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		this.fillWrappedText(this.context,wrapped[0],Math.round(temp_x+tmp_width*0.5)+0.5,Math.round(temp_y+this.fontSizes[this.fontSizePos])+0.5);
     this.context.fillStyle=this.currentColours[0];
     this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.labelWidthEffect,this.labelHeightEffect);
-		
+
 		if (this.qType == "menu") {
 			this.imgdata = menuImages['toolbar/combo.png'];
 			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,temp_x+this.labelWidthEffect-17,temp_y+this.labelHeightEffect-19,this.imgdata.width,this.imgdata.height);
@@ -411,8 +413,9 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				
 				this.menu_line = 1;
 				//finding the one already selected
-				for (var a=1;a<=this.menuBox.length;a++) 
-					if (this.menuBox[a]==this_box[2]) this.menu_line = a+1;
+
+				for (var a=this.menuBox.length-1;a>=0;a--) 
+					if (this.menuBox[a]==this.answerBox[i][2]) this.menu_line = a+1;
 					
 				//finding the one with cursor over
 				if (this.x > temp_x && this.x < temp_x+this.labelWidthEffect && this.y > temp_y+tmp_trans+this.labelHeightEffect && this.y < temp_y+tmp_trans+this.labelHeightEffect+tmp_height){
@@ -464,6 +467,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			}
 		}
   }
+	
 	if (this.qmode == 'script' && this_box[3]!='') {
 		var tmp_test = true;
 		if (this.drag_box_id == i && this.drag_box_combo == j) tmp_test = false;
@@ -780,13 +784,13 @@ function ql_redraw_canvas() {
 			this.key_code = 0;
 		}      
 
-		//scaling up the labelwidth
+		//scaling up the label width by text
 		this.labelWidthEffect = this.labelWidth;
 		this.labelHeightEffect = this.labelHeight;
 
 		for (i=0;i<this.answerBox.length;i++) {
 			for (j=0;j<this.answerBox[i].length;j++) {
-				if (typeof(this.answerBox[i][j])!='undefined') {
+				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1] == 'text') {
 					var wrapTemp = this.wrapText(this.answerBox[i][j][2],this.labelWidthEffect-this.menu_ext);				
 					if (typeof(wrapTemp)!='undefined') {
 						if (wrapTemp[2] > (this.labelWidthEffect-this.menu_ext)) this.labelWidthEffect = wrapTemp[2]+8 + this.menu_ext;
@@ -795,6 +799,7 @@ function ql_redraw_canvas() {
 				}
 			}
 		}
+
 		//rebuilding the panel of available labels
 		var tmpx = 5;
 		var tmpy = 30-this.yOffset;
@@ -1042,6 +1047,7 @@ function ql_mouseDragMove(e){
 	//dragging labels handlers
 	if (typeof(this.active_box_handler)!='undefined' && this.active_box_handler!=-1) {
 		var dim = new Array(this.answerBox[this.active_box_id][this.active_box_combo][5],this.answerBox[this.active_box_id][this.active_box_combo][6],this.answerBox[this.active_box_id][this.active_box_combo][5]+this.labelWidthEffect,this.answerBox[this.active_box_id][this.active_box_combo][6]+this.labelHeightEffect);
+		
 		if (this.active_box_handler==1 || this.active_box_handler==4) {
 			this.answerBox[this.active_box_id][this.active_box_combo][5] = this.x;
 			this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][5] = this.x;
@@ -1066,8 +1072,10 @@ function ql_mouseDragMove(e){
 			dim[0] = this.x;
 			dim[3] = this.y;			
 		}
-		this.labelWidth  = dim[2]-dim[0];
+		this.labelWidth = dim[2]-dim[0];
 		this.labelHeight = dim[3]-dim[1];
+		if (this.labelWidthEffect<this.labelWidth) this.labelWidthEffect=this.labelWidth;
+		if (this.labelHeightEffect<this.labelHeight) this.labelHeightEffect=this.labelHeight;
 	}
 	
 	if (this.dragging && this.drag_box_id>-1){ //this.dragging
@@ -1121,13 +1129,13 @@ function ql_mouseDragMove(e){
 										this.drag_box_combo = j;
 										}
 								}
-							} /*else {
+							} else {
 								if (this.pholderBox[i][5]>220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect)==true) {
 									this.drag_box_id = i;
 									this.drag_pho_id = i;
 									this.drag_box_combo = 0;
 								}
-							}*/
+							}
 						}
 					}
 				}
@@ -1209,7 +1217,7 @@ function ql_mouseDragMove(e){
       e.target.style.cursor = cur;
 		}
 	}
-
+		
 }
 
 function ql_mouseDragDown(e){
@@ -1245,6 +1253,12 @@ function ql_mouseDragUp(){
 	//dropdown labels 
 	if (this.menu_line>-1 && this.active_box_id>-1 && this.active_box_combo>-1){
 		this.answerBox[this.active_box_id][this.active_box_combo][2] = this.menuBox[this.menu_line-1];
+		//is it correctly dropped label
+		if (this.answerBox[this.active_box_id][this.active_box_combo][2]==this.pholderBox[this.active_box_id][2]) {
+			this.answerBox[this.active_box_id][this.active_box_combo][3]='t'
+		} else {
+			this.answerBox[this.active_box_id][this.active_box_combo][3]='f'
+		}
 	}
 	
 	this.active_box_id = this.drag_box_id;
@@ -1314,6 +1328,7 @@ function ql_mouseDragUp(){
 				if (this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],loc_width,loc_height)==true) 	dest_box = i;
 			}
 		}
+		if (this.qType == "menu") dest_box = this.drag_box_id;
 		
 		this.mov_id = this.drag_box_id;
 		this.mov_combo = this.drag_box_combo;
@@ -1335,11 +1350,13 @@ function ql_mouseDragUp(){
 				}
       }
       //is it correctly dropped label
+
       if (this.answerBox[this.drag_box_id][this.drag_box_combo][2]==this.pholderBox[dest_box][2]) {
         this.answerBox[this.drag_box_id][this.drag_box_combo][3]='t'
       } else {
         this.answerBox[this.drag_box_id][this.drag_box_combo][3]='f'
 			}
+			
       this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.pholderBox[dest_box][5];
       this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.pholderBox[dest_box][6];
     } else {
@@ -1508,17 +1525,15 @@ function ql_ReturnInfo() {
 		}
 		questions_result += ';';
 		
-		
 		for (i=0;i<this.shapeBox.length;i++) {
 			for (j=0;j<this.shapeBox[i].length;j++) {
 				questions_result += this.shapeBox[i][j]+'$';
 			}
 			questions_result += ';';
 		}
-		//0$line$377$92$440$86$;1$bobble$379$113$426$114$;2$arrow$380$128$433$144$;
-
-		var target_field = document.getElementById('points'+this.q_Num);
+	var target_field = document.getElementById('points'+this.q_Num);
 	}
+	
 	if (questions_result!='' && target_field) target_field.value = questions_result;	
 }
 
@@ -1536,21 +1551,14 @@ function rql(num) {
 	this.def_colour_panel_parts 	=	def_colour_panel_parts;
 
 	this.hexifycolour=hexifycolour;
-	//this.textHeight=textHeight;
 	this.wrapText=wrapText;
 	this.fillWrappedText = fillWrappedText;
-	//this.findPos=findPos;
 	this.testWithin=testWithin;
 	this.edtDot=edtDot;
-	//this.lineDraw=lineDraw;
-	//this.ellipseDraw=ellipseDraw;
 	this.rectDraw=rectDraw;
-	//this.polyDrawH=polyDrawH;
 	this.menuBuild_icons=menuBuild_icons;
 	this.menuRebuild=menuRebuild;
 	this.menuRebuild_panel=menuRebuild_panel;
-	//this.button_test=button_test;
-	//this.build_msgbox=build_msgbox;
 	this.tooltip_draw=tooltip_draw;
 	this.combo_scope = combo_scope;
 
@@ -1616,16 +1624,16 @@ function rql(num) {
   this.panelActiveParts['toolbar/pan_lines.png'] = new Array();
   for (i=0;i<7;i++) this.panelActiveParts['toolbar/pan_lines.png'][i] = 3+','+(i*19+3);
 
-	this.labelInstanceDepth = new Array();  // depth new instances are created on inside each labelGroup clip
-	this.labelTxt = new Array(); 			      // stores text on each label
-	this.labelTypes = new Array(); 			    // is label a "text" or "image" label?
-	this.imageNames = new Array(); 			    // names of images on each label
+	this.labelInstanceDepth = new Array();	// depth new instances are created on inside each labelGroup clip
+	this.labelTxt = new Array(); 				// stores text on each label
+	this.labelTypes = new Array(); 				// is label a "text" or "image" label?
+	this.imageNames = new Array(); 				// names of images on each label
 	this.imageDimensions = new Array(); 		// individual dimensions of draggable images
 
-	this.labelCoords = new Array(); 			  // coords for each label
-	this.comboCoords = new Array(); 			  // coords for comboboxes - used temporarily in setting them up
+	this.labelCoords = new Array(); 				// coords for each label
+	this.comboCoords = new Array(); 				// coords for comboboxes - used temporarily in setting them up
 
-	this.distractorTxt = new Array(); 		  // distractors in comboboxes
+	this.distractorTxt = new Array(); 			// distractors in comboboxes
 	this.depthSwapperLabel = new Array(); 	// selected labels are swapped with this clip so label will be on top 
 																					// of all others in same group
 	this.qType = "label"; 					        // draggable label ("label"), drop down menu ("menu")

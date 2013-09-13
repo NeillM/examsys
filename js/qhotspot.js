@@ -351,16 +351,19 @@ function qh_redraw_canvas() {
       //reset pos_y for bpalette button
       if (this.activeLabel==i && this.qmode=='edit') this.buttonBox[this.buttonBoxNames['toolbar/ico_palette.png']][2] = pan_y+12;
 
-      //background
-      this.imgdata = menuImages['toolbar/back_h1.png'];
-      if (this.activeLabel==i) this.imgdata = menuImages['toolbar/back_h2.png'];
-      this.context.drawImage(this.menu_img,this.imgdata.left+1,this.imgdata.top,this.imgdata.width-2,this.imgdata.height,0.5,pan_y+0.5,300,pan_h);
-
       //add this.hotSpotsPanel data
       this.hotSpotsPanel[i] = new Array(0,pan_y,300,pan_h);
-      //border
-      this.context.strokeStyle= '#b3c7d9';
-      if (this.activeLabel==i) this.context.strokeStyle= '#fed55f';
+			
+      //background & border
+      this.imgdata = menuImages['toolbar/back_h1.png'];
+      this.context.strokeStyle= '#b3c7d9';			
+      if (this.activeLabel==i && this.hotSpots.length>1) {
+				this.imgdata = menuImages['toolbar/back_h2.png'];
+				this.context.strokeStyle= '#fed55f';
+			}
+      
+			this.context.drawImage(this.menu_img,this.imgdata.left+1,this.imgdata.top,this.imgdata.width-2,this.imgdata.height,0.5,pan_y+0.5,300,pan_h);
+
       this.context.strokeRect(0.5,pan_y+0.5,300,pan_h); 
       //color bar
 			if (this.hotSpots[i][2]!=undefined) this.context.fillStyle= this.hotSpots[i][2];
@@ -369,13 +372,13 @@ function qh_redraw_canvas() {
 			if (this.qmode=='script') {
 				this.imgdata = menuImages['toolbar/ico_tick_g.png'];
 				if (this.answers[i][0][0]=='0') this.imgdata = menuImages['toolbar/ico_tick_r.png'];
-				this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,5,pan_y+12,this.imgdata.width,this.imgdata.height);
-				pos_x = 25;
+				this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,3,pan_y+12,this.imgdata.width,this.imgdata.height);
+				pos_x = 23;
 			}
       //symbol
       this.context.fillStyle='#000000';
-   		this.context.font="bold 16px Arial";
-      this.context.fillText(String.fromCharCode(65+1*i), pos_x, pan_y+25);
+   		this.context.font="bold 18px Arial";
+      this.context.fillText(String.fromCharCode(65+1*i), pos_x, pan_y+27);
       //text background
       this.context.fillStyle=this.currentColours[0];
       if ((this.is_an_answer && this.answers[i][0][1]=='false') || this.allUnaswered==true) this.context.fillStyle=this.currentColours[3];
