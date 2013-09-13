@@ -103,7 +103,7 @@ function exceptionHandler($exception) {
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   global $debug_pagestart, $dbclass;
-
+  $variables='';
   $configObject = Config::get_instance();
   $notice = UserNotices::get_instance();
   $userObject = UserObject::get_instance();
@@ -172,9 +172,6 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     if (is_null($configObject->get('cfg_db_port'))) {
       $configObject->set('cfg_db_port', 3306);
     }
-    // Query may fail if we try to insert while another statement is open.
-    // Since we don't have a handle on the original statement, create another DB link
-    $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
     $paperID = null;
     if (isset($_GET['paperID'])) {
@@ -200,7 +197,6 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 		if (isset($context) and !empty($context)) {
 			$variables = base64_encode(serialize($context));
 		}
-    $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
     $userid = 0;
     $username = 'PRE LOGIN';
     if (isset($userObject)) {
@@ -221,14 +217,71 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
       }
     }
 
-    $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
-    $log_error->execute();
-    $log_error->close();
-    $mysqli2->close();
+    //$log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
+    log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID, $post_data, $variables, $backtrace, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD']);
+
 
   }
 
   return false;
+}
+
+function log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null) {
+
+  if(is_null($backtrace)) {
+    $backtrace='';
+    $backtrace = DebugBackTraceDisplay(debug_backtrace());
+    try {
+      throw new Exception("New Backtrace Method:", 1);
+    }
+    catch (Exception $e) {
+      $string="Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+      $string=$string . nl2br($e->getTraceAsString());
+      $backtrace=$string . "\r\n<br>Old Method:\r\n<br>" . $backtrace;
+    }
+  }
+  if(is_null($post_data)) {
+    $post_data = '';
+    if (isset($_POST)) {
+      foreach ($_POST as $key => $value) {
+        if ($key != 'ROGO_PW') {
+          if ($post_data == '') {
+            $post_data = "$key=$value";
+          } else {
+            $post_data .= ", $key=$value";
+          }
+        } else {
+          $post_data .= ", $key=<HIDDEN>";
+        }
+      }
+    }
+
+  }
+  if($variables!='' and !is_string($variables)) {
+    $variables = base64_encode(serialize($variables));
+  }
+  if(is_null($page)) {
+    $page = $_SERVER['PHP_SELF'];
+  }
+  if(is_null($querystring)) {
+    $querystring = $_SERVER['QUERY_STRING'];
+  }
+  if(is_null($requestmethod)) {
+    $requestmethod = $_SERVER['REQUEST_METHOD'];
+  }
+
+  $configObject = Config::get_instance();
+  $notice = UserNotices::get_instance();
+
+  // Query may fail if we try to insert while another statement is open.
+  // Since we don't have a handle on the original statement, create another DB link
+  $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+  $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
+  $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $page, $querystring, $requestmethod, $paperID, $post_data, $variables, $backtrace);
+  $log_error->execute();
+  $log_error->close();
+  $mysqli2->close();
+
 }
 
 function error_disp($message, $level = E_USER_WARNING) {
