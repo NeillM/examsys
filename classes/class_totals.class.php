@@ -1109,10 +1109,10 @@ class ClassTotals {
     } else {
       $time_int = 0;
     }
-    $result = $this->db->prepare("SELECT log_metadata.id, users.id, username, roles, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, student_id, attempt, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, student_grade FROM log_metadata, users LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ?");
+    $result = $this->db->prepare("SELECT log_metadata.id, users.id, username, roles, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, student_id, attempt, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, started, student_grade FROM log_metadata, users LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ?");
     $result->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
     $result->execute();
-    $result->bind_result($metadataID, $userID, $username, $roles, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $student_id, $attempt, $display_started, $student_grade);
+    $result->bind_result($metadataID, $userID, $username, $roles, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $student_id, $attempt, $display_started, $started, $student_grade);
     while ($result->fetch()) {
       $tmp_name = trim(str_replace("'","",$surname) . ',' . $first_names);
       if ($lab_name == '') {
@@ -1120,7 +1120,35 @@ class ClassTotals {
       } else {
         $room = $lab_name;
       }
-      $this->user_results[$metadataID] = array('metadataID'=>$metadataID, 'userID'=>$userID, 'username'=>$username, 'roles'=>$roles, 'year'=>$year, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'name'=>$tmp_name, 'email'=>$email, 'gender'=>$gender, 'ipaddress'=>$ipaddress, 'room'=>$room, 'student_id'=>$student_id, 'attempt'=>$attempt, 'visible'=>true, 'display_started'=>$display_started, 'student_grade'=>$student_grade, 'mark'=>0, 'percent'=>0, 'questions'=>0, 'duration'=>0, 'marking_complete'=>true, 'module'=>'', 'paper_type'=>$this->paper_type);
+      $this->user_results[$metadataID] = array(
+                                                'metadataID'=>$metadataID, 
+                                                'userID'=>$userID, 
+                                                'username'=>$username, 
+                                                'roles'=>$roles, 
+                                                'year'=>$year, 
+                                                'title'=>$title, 
+                                                'surname'=>$surname, 
+                                                'initials'=>$initials, 
+                                                'first_names'=>$first_names, 
+                                                'name'=>$tmp_name, 
+                                                'email'=>$email, 
+                                                'gender'=>$gender, 
+                                                'ipaddress'=>$ipaddress, 
+                                                'room'=>$room, 
+                                                'student_id'=>$student_id, 
+                                                'attempt'=>$attempt, 
+                                                'visible'=>true, 
+                                                'display_started'=>$display_started, 
+                                                'started'=>$started, 
+                                                'student_grade'=>$student_grade, 
+                                                'mark'=>0, 
+                                                'percent'=>0, 
+                                                'questions'=>0, 
+                                                'duration'=>0, 
+                                                'marking_complete'=>true, 
+                                                'module'=>'', 
+                                                'paper_type'=>$this->paper_type
+                                               );
       $metadataids[] = $metadataID;
     }
     $result->close();
@@ -1292,6 +1320,7 @@ class ClassTotals {
         $this->user_results[$user_no]['student_grade']    = $this->student_cohort[$i]['student_grade'];
         $this->user_results[$user_no]['module']           = $this->student_cohort[$i]['module'];
         $this->user_results[$user_no]['display_started']  = '';
+        $this->user_results[$user_no]['started']  = '';
         $this->user_results[$user_no]['title']            = $this->student_cohort[$i]['title'];
         $this->user_results[$user_no]['surname']          = $this->student_cohort[$i]['surname'];
         $this->user_results[$user_no]['initials']         = $this->student_cohort[$i]['initials'];
