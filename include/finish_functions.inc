@@ -2218,7 +2218,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   	echo "write_string('<param name=\"bgcolor\" value=\"" . $bgcolor . "\" />');\n";
   	echo "write_string('<embed src=\"" . $configObject->get('cfg_root_path') . "/paper/label_answer.swf\" quality=\"high\" bgcolor=\"" . $bgcolor . "\" width=\"" . ($paper[$question]['q_media_width'] + 250) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $question_no . "\" name=\"flash" . $question_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
   	echo "write_string('</object>');\n";
-		echo "</script>;\n";
+		echo "</script>\n";
 	}
   ?>
   <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" value="" />

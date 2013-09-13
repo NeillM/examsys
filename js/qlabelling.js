@@ -95,8 +95,15 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			if (this.extraImgs[i]!='') {
 				var tmp_dat = this.extraImgs[i].substr(0,this.extraImgs[i].length-1).split(",");
 				var tmp_txt = '$$$$'+tmp_dat.join('~');
-				if (this.imglabelWidth <= 1*tmp_dat[1]) this.imglabelWidth = 1*tmp_dat[1];
-				if (this.imglabelHeight <= 1*tmp_dat[2]) this.imglabelHeight = 1*tmp_dat[2];
+				var tmp_x = Number(tmp_dat[1]);
+				var tmp_y = Number(tmp_dat[2]);
+				if (tmp_x>205) {
+					var tmp_red = 100/tmp_x;
+					tmp_x = 205;
+					tmp_y = tmp_red*tmp_y;
+				}
+				if (this.imglabelWidth <= tmp_x) this.imglabelWidth = tmp_x;
+				if (this.imglabelHeight <= tmp_y) this.imglabelHeight = tmp_y;
 				this.existingLabelInfo.push(tmp_txt);
 			}
 		}
@@ -107,7 +114,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				//this.existingLabelInfo[i] = '$$$$';
 		    this.existingLabelInfo.splice(i,1);
 			}
-		console.log(this.existingLabelInfo);		
 		
 		//add empty labels to 20
 		for (i=this.existingLabelInfo.length; i<20; i++) 
@@ -357,18 +363,21 @@ function ql_draw_box(i,j,temp_x,temp_y) {
     this.context.shadowOffsetY = 0;
   
   if (this_box[1]=='image') {
-		if (typeof(this_box[11])!='undefined'){
-			this.context.drawImage(this_box[11],temp_x+(this.imglabelWidth-this_box[9])*0.5,temp_y+(this.imglabelHeight-this_box[10])*0.5);
+		if (typeof(this_box[11])!='undefined') {
+			var tmp_red = 1; 
+			if (this_box[9]>205) tmp_red = 205/this_box[9];
+			this.context.drawImage(this_box[11],temp_x+(this.imglabelWidth-this_box[9]*tmp_red)*0.5,temp_y+(this.imglabelHeight-this_box[10]*tmp_red)*0.5,this_box[9]*tmp_red,this_box[10]*tmp_red);
 			this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.imglabelWidth,this.imglabelHeight);
 		} 
   }
   if (this_box[1]=='text') {
     this.context.textAlign="center";
+		this.context.font=this.fontSizes[this.fontSizePos]+"px Arial";
     this.context.fillStyle=this.currentColours[2];
 		this.tmp_text = this_box[2];
 		if (this.qmode=='script') {
 			this.context.fillStyle='#000';
-			if (this.drag_box_id ==i && this.drag_box_combo == j && temp_x>220){
+			if ((this.drag_pho_id == i || (this.drag_box_id == i && this.drag_box_combo == j)) && temp_x>220){
 				this.context.fillStyle=this.currentColours[2];	
 				for (var a=0;a<this.pholderBox.length;a++) 
 					if (this.pholderBox[a][5]==temp_x && this.pholderBox[a][6]==temp_y) this.tmp_text = this.pholderBox[a][2];
@@ -455,11 +464,22 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			}
 		}
   }
-	if (this.qmode=='script' && this_box[3]!='') {
-		if (!(this.qmode=='script' && this.drag_box_id ==i && this.drag_box_combo == j)){
+	if (this.qmode == 'script' && this_box[3]!='') {
+		var tmp_test = true;
+		if (this.drag_box_id == i && this.drag_box_combo == j) tmp_test = false;
+		if (this.drag_pho_id == i) tmp_test = false;
+		
+		if (tmp_test) {
 			this.imgdata = menuImages['toolbar/ico_tick_g.png'];
 			if (this_box[3]=='f') this.imgdata = menuImages['toolbar/ico_tick_r.png'];
-			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,temp_x+0.5+this.labelWidthEffect-20,temp_y+0.5+this.labelHeightEffect-20,this.imgdata.width,this.imgdata.height);
+			
+			var tmp_h = this.labelHeightEffect;
+			var tmp_w = this.labelWidthEffect;
+		  if (this_box[1]=='image') {
+				tmp_w = this.imglabelWidth;
+				tmp_h = this.imglabelHeight;
+			}
+			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,temp_x+0.5+tmp_w-20,temp_y+0.5+tmp_h-20,this.imgdata.width,this.imgdata.height);
 		}
 	}
 	if (this.qmode=='analysis' && temp_x>=220) {
@@ -477,6 +497,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 
 function ql_redraw_box(i,j) {
 	var this_box = this.answerBox[i][j];
+	if (j==99) this_box = this.pholderBox[i];
 	if (typeof this_box != 'undefined' && (this.labelMulti == 'multiple' || this_box[4]==0)) {
     temp_x = this_box[5];
     temp_y = this_box[6];
@@ -500,6 +521,7 @@ function ql_redraw_box(i,j) {
         this.mov_id = -1; //box in place -> clear mov_id -> no box to move anymore
 				this.mov_combo = -1;
         this.drag_box_id = -1;
+				this.drag_pho_id = -1;
 				this.drag_box_combo = -1;
         this.redraw_once = true;
       }     
@@ -716,7 +738,7 @@ function ql_redraw_canvas() {
 				if (this.pholderBox[i][1]=='text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
 
 				//fill and strike background rectangle
-				if (this.is_an_answer) this.context.fillRect(this.pholderBox[i][5]+0.5,this.pholderBox[i][6]+0.5,loc_width,loc_height);
+				if (this.is_an_answer && this.qmode!='script') this.context.fillRect(this.pholderBox[i][5]+0.5,this.pholderBox[i][6]+0.5,loc_width,loc_height);
 				this.context.strokeRect(this.pholderBox[i][5]+0.5,this.pholderBox[i][6]+0.5,loc_width,loc_height);
 			}
 		}
@@ -829,7 +851,9 @@ function ql_redraw_canvas() {
 		for (i=this.answerBox.length-1;i>=0;i--) {
 			for (j=this.answerBox[i].length-1;j>=0;j--) {
 				if (typeof(this.answerBox[i][j])!='undefined' && !(this.drag_box_id==i && this.drag_box_combo==j) && !(this.mov_id==i && this.mov_combo==j) && !(this.qType == "menu" && this.qmode=='answer' && this.answerBox[i][j][1]!='image')) {
+					if (this.qmode=='script' && this.answerBox[i][j][5]<220) this.context.globalAlpha = 0.5;	
 					this.ql_redraw_box(i,j);
+					this.context.globalAlpha = 1;	
 				}
 			}
 		}
@@ -845,12 +869,35 @@ function ql_redraw_canvas() {
 		var active_mix = this.active_box_id+':'+this.active_box_combo;
 		var mov_mix = this.mov_id+':'+this.mov_combo;
 		if (this.drag_box_id>-1 && drag_mix!=active_mix && !(this.qType == "menu" && this.qmode=='answer' && this.answerBox[this.drag_box_id][this.drag_box_combo][1]!='image')) {
+			if (this.qmode=='script' && this.answerBox[this.drag_box_id][this.drag_box_combo][5]<220) this.context.globalAlpha = 0.5;	
 			this.ql_redraw_box(this.drag_box_id,this.drag_box_combo);
-			}
+			this.context.globalAlpha = 1;
+		}
 		
+		//locate correct pholderBox for answerBox for script
+		if (this.qmode=='script' && this.drag_box_id>-1) {
+			var tmp_test = -1;
+			for (i=0;i<this.pholderBox.length;i++) {
+				if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]==this.pholderBox[i][5] && 
+						this.answerBox[this.drag_box_id][this.drag_box_combo][6]==this.pholderBox[i][6])
+					tmp_test=i;
+			}
+			this.drag_pho_id = tmp_test;
+		}
+
+		//redraw pholder for script
+		if (this.qmode=='script' && this.drag_pho_id>-1) {
+			var tmp_test = -1;
+			for (i=0;i<this.answerBox.length;i++) {
+				if (this.answerBox[i][0][2]==this.pholderBox[this.drag_pho_id][2]) tmp_test=i;
+			}
+			this.ql_draw_box(tmp_test,0,this.pholderBox[this.drag_pho_id][5],this.pholderBox[this.drag_pho_id][6]);
+		}
+
 		//redraw animated shape to have it on top
-		if (this.mov_id>-1 && mov_mix!=drag_mix && mov_mix!=active_mix && !(this.qType == "menu" && this.qmode=='answer' && this.answerBox[this.mov_id][this.mov_combo][1]!='image')) 
+		if (this.mov_id>-1 && mov_mix!=drag_mix && mov_mix!=active_mix && !(this.qType == "menu" && this.qmode=='answer' && this.answerBox[this.mov_id][this.mov_combo][1]!='image')) {
 			this.ql_redraw_box(this.mov_id,this.mov_combo);
+			}
 					
 		if (this.qmode=='edit' && this.active_box_id>-1 && this.active_box_id!=this.mov_id) {
 			loc_width = this.imglabelWidth;loc_height = this.imglabelHeight;
@@ -1047,17 +1094,19 @@ function ql_mouseDragMove(e){
 		}
 	}	else { //change of cursor
     var drag_box_old = this.drag_box_id+':'+this.drag_box_combo;
-		this.drag_box_id = -1; 
+		var drag_pho_old = this.drag_pho_id;
+		this.drag_box_id = -1;
+		this.drag_pho_id = -1;
 		this.drag_box_combo = -1;	
 		if (this.qmode!='analysis' && this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
-			var over_object = false;			
+			var over_object = false;		
       for (i=0;i<this.answerBox.length;i++) {
 				for (j=0;j<this.answerBox[i].length;j++) {
 					if (typeof(this.answerBox[i][j])!='undefined' && (this.labelMulti == 'multiple' || this.answerBox[i][j][4]==0)) {
 						if (this.answerBox[i][j][1]=='image') {
 							if (this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.imglabelWidth,this.imglabelHeight)==true) {
 								over_object = true;
-								if (this.drag_box_id==-1 || this.answerBox[i][j][9]!='') {
+								if (this.drag_box_id == -1 || this.answerBox[i][j][9]!='') {
 									this.drag_box_id = i;
 									this.drag_box_combo = j;
 								}
@@ -1067,22 +1116,34 @@ function ql_mouseDragMove(e){
 							if (this.qType != 'menu') {
 								if (this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect)==true) {
 									over_object = true;
-									if (this.drag_box_id==-1 || this.answerBox[i][j][9]!='') {
+									if (this.drag_box_id == -1 || this.answerBox[i][j][9]!='') {
 										this.drag_box_id = i;
 										this.drag_box_combo = j;
 										}
 								}
-							} else {
+							} /*else {
 								if (this.pholderBox[i][5]>220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect)==true) {
 									this.drag_box_id = i;
+									this.drag_pho_id = i;
 									this.drag_box_combo = 0;
 								}
-							}
+							}*/
 						}
 					}
 				}
 			}	
-			if (drag_box_old != this.drag_box_id+':'+this.drag_box_combo && this.qmode=='script') this.redraw_once = true;
+      for (i=0;i<this.pholderBox.length;i++) {
+				var tmp_test = false;
+				if (this.pholderBox[i][1]=='image' && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.imglabelWidth,this.imglabelHeight)==true) tmp_test = true;
+				if (this.pholderBox[i][1]=='text' && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect)==true) tmp_test = true;
+				
+				if (tmp_test && this.drag_box_id == -1){			
+					over_object = true;
+					this.drag_pho_id = i;
+				}	
+			}
+
+			if (drag_box_old != this.drag_box_id+':'+this.drag_box_combo && this.qmode=='script' || drag_pho_old != this.drag_pho_id) this.redraw_once = true;
 
       //test for buttons
       var buttonTest = -1;
@@ -1121,6 +1182,7 @@ function ql_mouseDragMove(e){
         this.panelOver=this.buttonClicked;
         over_object = true;
         this.drag_box_id = -1;
+				this.drag_pho_id = -1;
 				this.drag_box_combo = -1;
 				var test_width = 19;
 				if (tmp_pan=='toolbar/pan_sizes.png') test_width = 22;
@@ -1154,7 +1216,7 @@ function ql_mouseDragDown(e){
 	this.x = e.clientX - this.canv_rect.left;
 	this.y = e.clientY - this.canv_rect.top;
 	if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
-		if (this.drag_box_id>-1) {
+		if (this.drag_box_id>-1 && this.drag_box_combo<99) {
 			this.sub_x = this.x - this.answerBox[this.drag_box_id][this.drag_box_combo][5];
 			this.sub_y = this.y - this.answerBox[this.drag_box_id][this.drag_box_combo][6];
 		}
@@ -1198,14 +1260,14 @@ function ql_mouseDragUp(){
   }
   this.activ_shape_move = this.activ_shape = -1;
 
-  if (this.drag_box_id>-1 && this.qmode=='edit' && this.answerBox[this.drag_box_id][this.drag_box_combo][5]<220) {
+  if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode=='edit' && this.answerBox[this.drag_box_id][this.drag_box_combo][5]<220) {
 		this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.answerBox[this.drag_box_id][this.drag_box_combo][7];
 		this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8]; 
 		this.mov_x = this.x - this.sub_x;
 		this.mov_y = this.y - this.sub_y;
 	}
 
-  if (this.drag_box_id>-1 && this.labelMulti == 'multiple' && this.qType!='menu'){
+  if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.labelMulti == 'multiple' && this.qType!='menu'){
 		var index = this.answerBox[this.drag_box_id][this.drag_box_combo][0];
 		var combo_nr = 0;
 		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220) {
@@ -1232,21 +1294,24 @@ function ql_mouseDragUp(){
 			}
 			if (duplicate) {
 				this.answerBox[this.drag_box_id][this.drag_box_combo].splice(drag_box_combo,1);
-				this.drag_box_id = this.active_box_id = this.mov_id = -1;
+				this.drag_box_id = this.drag_pho_id = this.active_box_id = this.mov_id = -1;
 				this.drag_box_combo = this.active_box_combo = this.mov_combo = -1;			
 			}
 		}
 	}
 	
   //this.dragging shapes
-  if (this.drag_box_id>-1 && this.qmode=='answer') {
+  if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode=='answer') {
 		//testing against the position of placeholders
 		var dest_box=-1;
 		for (i=0;i<this.pholderBox.length;i++) {
 			if (typeof(this.pholderBox[i])!='undefined') {
 				var loc_width = this.imglabelWidth,loc_height = this.imglabelHeight;
-				if (this.pholderBox[i][1]=='text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
-				if (this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],loc_width,loc_height)==true) dest_box = i;
+				if (this.pholderBox[i][1]=='text' ) {
+					loc_width = this.labelWidthEffect;
+					loc_height = this.labelHeightEffect;
+				}
+				if (this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],loc_width,loc_height)==true) 	dest_box = i;
 			}
 		}
 		
@@ -1495,6 +1560,7 @@ function rql(num) {
 	this.menu_line = -1;
 	this.scale_i = 1;                          	//label image scale
 	this.drag_box_id = -1;                      //index of box beeing dragged
+	this.drag_pho_id = -1;											//index of pholder box over
 	this.drag_box_combo = -1;                      
 	this.active_box_id = -1;                    //index of box beeing active
 	this.active_box_combo = -1;                    
