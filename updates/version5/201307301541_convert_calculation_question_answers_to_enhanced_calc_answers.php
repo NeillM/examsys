@@ -33,8 +33,7 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
         $update = $mysqli->prepare("$sql");
                 
         while ($result->fetch()) {
-            if (strpos($user_answer, '{') !== false) {
-            } else {
+            if (strpos($user_answer, '{') === false) {
                 print '.';
                 unset($statusdata);
                 unset($ansdata);
@@ -170,8 +169,7 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
                 if ($loop % 200 == 0) {
                     $mysqli->commit();
                     echo '<br>';
-                    @ob_end_flush();
-                    @ob_start();
+                    @ob_flush();
                 }
             }
 
