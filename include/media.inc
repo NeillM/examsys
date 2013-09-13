@@ -140,8 +140,9 @@ function uploadFile($fileID) {
   }
 
   $bad_file = true;   // Default safe.
-
-  $unique_name = unique_filename($_FILES[$fileID]['name']);
+  
+  $filename = strtolower($_FILES[$fileID]['name']);
+  $unique_name = unique_filename($filename);
 
   $permitted = array('.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.avi', '.swf', '.flv', '.mpg', '.mpeg', '.mov', '.pdb', '.mp3', '.mid', '.wav', '.ram');
   foreach ($permitted as $extension) {

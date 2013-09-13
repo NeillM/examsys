@@ -1109,7 +1109,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_correct = trim($question['options'][0]['correct']);
         $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
   ?>
-			<div align="center" style="background-color:#EEEEEE;zoom:100%" >
+			<div align="left" >
 			<?php
 			if ($configObject->get('cfg_interactive_qs')=='html5') {
 				//<!-- ======================== HTML5 part include disp ================= -->
