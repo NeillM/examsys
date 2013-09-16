@@ -23,6 +23,7 @@ $string['Paper'] = 'Paper';
 $string['jumptopaper'] = 'Jump to Paper';
 $string['editproperties'] = 'Edit Properties';
 $string['converttoformative'] = 'Convert to Formative';
+$string['Email'] = 'Email';
 
 $string['papername'] = 'Paper Name';
 $string['paperowner'] = 'Paper Owner';
