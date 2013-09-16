@@ -248,10 +248,10 @@ if (isset($_GET['checked'])) {
     $status_class = ' status' . $status;
     echo '<tr class="q' . $status_class . '"';
     if ($question['locked'] != '') {
-      echo " id=\"link_$display_no\" onclick=\"selQ($q_id,$display_no,'$q_type','2c',event)\" ondblclick=\"editQ(); return false;\">";
+      echo " id=\"link_$display_no\" onclick=\"selQ($question[q_id],$display_no,'$question[q_type]','2c',event)\" ondblclick=\"editQ(); return false;\">";
       echo "<td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"Padlock\" /></td>";
     } else {
-      echo " id=\"link_$display_no\" onclick=\"selQ($q_id,$display_no,'$q_type','2b',event)\" ondblclick=\"editQ(); return false;\">";
+      echo " id=\"link_$display_no\" onclick=\"selQ($question[q_id],$display_no,'$question[q_type]','2b',event)\" ondblclick=\"editQ(); return false;\">";
       echo "<td></td>";
     }
     $tmp_leadin = $question['leadin'];
