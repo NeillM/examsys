@@ -201,6 +201,9 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
+
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+
 <?php
   $css = '';
   if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
@@ -238,7 +241,6 @@ require '../config/finish.inc';
     echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
   }
 ?>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
 <script type="text/javascript" src="../js/student_help.js"></script>
