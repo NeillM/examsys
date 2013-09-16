@@ -44,7 +44,9 @@ function findBaseUrl() {
         mee_baseurl = "mee/";
 }
 
-findBaseUrl();
+$(document).ready(function () {
+    findBaseUrl();
+})
 //uncompressed debug
 //loadjscssfile("js/mee_src_src.js",'js');
 //compressed live
