@@ -12,6 +12,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
       document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false);
       document.addEventListener("keyup",		ql_mouseDragMove.bind(this),false);
       document.addEventListener("keypress", ql_mouseDragMove.bind(this),false);
+			
     } else if (document.attachEvent){ //FF--, IE10-, IE9-, Ch--
 			document.attachEvent("onkeydown", 	ql_mouseDragMove.bind(this));
       document.attachEvent("onkeyup", 		ql_mouseDragMove.bind(this));
@@ -641,7 +642,6 @@ function ql_redraw_canvas() {
     var hold_lineThickness = this.lineThickness;
 		this.menu_ext = 0;if (this.qType == "menu") this.menu_ext = 18;
 
-
 		for (i=0;i<this.shapeBox.length;i++) {
 			//recalculating against limits
 			if (this.shapeBox[i][2]<this.draw_limit[0]) this.shapeBox[i][2]=this.draw_limit[0];
@@ -964,8 +964,9 @@ function ql_redraw_canvas() {
 				this.context.strokeStyle='#000000';
 				this.context.lineWidth = 1;
 				this.context.beginPath();
-				var temp_x = Math.round(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][5]+(this.labelWidthEffect-metrics_full.width)/2+metrics_part.width)+0.5;
-				var temp_y = Math.round(this.fontSizes[this.fontSizePos]*text_part_line+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][6]+4)-0.5;
+				var temp_x = Math.round(this.answerBox[this.active_box_id][this.active_box_combo][5]+(this.labelWidthEffect-metrics_full.width)/2+metrics_part.width)+0.5;
+				var temp_y = Math.round(this.fontSizes[this.fontSizePos]*text_part_line+this.answerBox[this.active_box_id][this.active_box_combo][6]+4)-0.5;
+				console.log(this.active_box_id,this.active_box_combo,temp_x,temp_y);
 				this.context.moveTo(temp_x,temp_y);
 				this.context.lineTo(temp_x,temp_y+this.fontSizes[this.fontSizePos]);
 				this.context.stroke();
