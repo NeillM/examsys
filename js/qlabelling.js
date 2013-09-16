@@ -277,6 +277,23 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			}
 		}				
 		
+		//removing empty elements
+		for (i=this.answerBox.length-1;i>0;i--) 
+			if (typeof(this.answerBox[i])=='undefined') 
+			  this.answerBox.splice(i,1);
+		//renumbering ids
+		for (i=0;i<this.answerBox.length;i++) 
+			for (j=0;j<this.answerBox[i].length;j++) 
+				this.answerBox[i][j][0]=i;
+
+		//removing empty elements
+		for (i=this.pholderBox.length-1;i>0;i--) 
+			if (typeof(this.pholderBox[i])=='undefined') 
+			  this.pholderBox.splice(i,1);
+		//renumbering ids
+		for (i=0;i<this.pholderBox.length;i++) 
+			this.pholderBox[i][0]=i;
+		
 		//loading images
 		if (typeof(this.answerBox)!='undefined')
 			for (i=0;i<this.answerBox.length;i++) {
