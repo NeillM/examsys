@@ -87,7 +87,7 @@ class ClassTotals {
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db) {
     $userObject = UserObject::get_instance();
 
-  	$this->db                 = $db;
+    $this->db                 = $db;
     $this->demo               = is_demo($userObject);
     $this->paperID            = $propertyObj->get_property_id();
     $this->paper_type         = $propertyObj->get_paper_type();
@@ -1094,6 +1094,7 @@ class ClassTotals {
   }
 
   private function load_results() {
+    
     if ($this->studentsonly == 0) {
       $roles_sql = '';
     } else {
@@ -1109,7 +1110,38 @@ class ClassTotals {
     } else {
       $time_int = 0;
     }
-    $result = $this->db->prepare("SELECT log_metadata.id, users.id, username, roles, year, title, surname, initials, first_names, email, gender, ipaddress, lab_name, student_id, attempt, DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, started, student_grade FROM log_metadata, users LEFT JOIN sid ON users.id = sid.userID WHERE log_metadata.userID = users.id AND paperID = ? AND grade LIKE ? $roles_sql AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ?");
+    $result = $this->db->prepare("SELECT 
+                                    log_metadata.id, 
+                                    users.id, 
+                                    username, 
+                                    roles, 
+                                    year, 
+                                    title, 
+                                    surname, 
+                                    initials, 
+                                    first_names, 
+                                    email, 
+                                    gender, 
+                                    ipaddress, 
+                                    lab_name, 
+                                    student_id, 
+                                    attempt, 
+                                    DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, 
+                                    started, 
+                                    student_grade 
+                                  FROM 
+                                    log_metadata, 
+                                    users 
+                                  LEFT JOIN 
+                                    sid 
+                                  ON 
+                                    users.id = sid.userID 
+                                  WHERE 
+                                    log_metadata.userID = users.id AND 
+                                    paperID = ? AND 
+                                    grade LIKE ? $roles_sql AND 
+                                    DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? 
+                                    AND started <= ?");
     $result->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
     $result->execute();
     $result->bind_result($metadataID, $userID, $username, $roles, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $student_id, $attempt, $display_started, $started, $student_grade);
@@ -1137,7 +1169,7 @@ class ClassTotals {
                                                 'room'=>$room, 
                                                 'student_id'=>$student_id, 
                                                 'attempt'=>$attempt, 
-                                                'visible'=>true, 
+                                                'visible'=>false, 
                                                 'display_started'=>$display_started, 
                                                 'started'=>$started, 
                                                 'student_grade'=>$student_grade, 
@@ -1179,12 +1211,16 @@ class ClassTotals {
     }
     $result->execute();
     $result->bind_result($log_id, $metadataID, $paper_type, $q_id, $screen, $duration, $user_answer, $q_type, $mark);
+
     while ($result->fetch()) {
       $userID = $this->user_results[$metadataID]['userID'];
       if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
         continue; //this user is not on the module set in repmodule so dont put them in the array
       }
+      
+      $this->user_results[$metadataID]['visible'] =  true;
 
+              
       if ($old_screen != $screen or $old_metadataID != $metadataID) {
         $user_duration += $old_duration;
       }
@@ -1255,7 +1291,7 @@ class ClassTotals {
       $this->db->commit();
       $this->db->autocommit(true);
     }
-
+    
   }
 
   private function add_rank() {

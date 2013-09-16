@@ -104,7 +104,6 @@ if (!isset($_POST['submit'])) {
   <table cellpadding="0" cellspacing="1" border="0" width="95%">
 <?php
 $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')) AND deleted IS NULL  ORDER BY paper_title";
-print $sql;
   $result = $mysqli->prepare($sql);
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
