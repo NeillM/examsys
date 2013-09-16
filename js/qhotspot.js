@@ -631,7 +631,7 @@ function qh_redraw_canvas() {
 			if (this.key_code=='36') this.edit_box_pos=0; 				//home	
 			if (this.edit_box_pos<0) this.edit_box_pos=0;
 			if (this.edit_box_pos>text_len) this.edit_box_pos=text_len;
-			if (this.key_code==0 && this.char_code!='') {					//characters
+			if (this.char_code!='') {					//characters
 				this.hotSpots[this.activeLabelText][1] = label_txt.substr(0,this.edit_box_pos)+this.char_code+label_txt.substr(this.edit_box_pos);
 				this.edit_box_pos++;
 			}
@@ -675,29 +675,31 @@ function qh_redraw_canvas() {
 }
 
 function qh_mouseDragMove(e){
-	var ev = window.event ? event : e;
+	var ev = e || window.event;
+	if (ev.target.id != this.canvas.id) {
+		return true;
+	}
 	if (ev.type=='keydown') {
 		this.isShift = ev.shiftKey ? true : false;
 		this.isCtrl = ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}
 	if (ev.type=='keypress') { 
-		this.key_code = ev.keyCode;
-		this.char_code = String.fromCharCode(ev.charCode);
+		this.char_code = (ev.charCode==0?'':String.fromCharCode(ev.charCode));
 	}
 	if (ev.type=='keyup') { 
 		this.isShift = false;
-		this.ShiftChange = true;
 		this.isCtrl = false;
-	}
-
+		this.ShiftChange = true;
+		this.key_code = ev.keyCode;
+	}		
 	if (ev.type=='mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
 		this.loc_lft = this.canv_rect.left;
 		this.loc_top = this.canv_rect.top;
 		this.x = ev.clientX - this.loc_lft;
 		this.y = ev.clientY - this.loc_top;
-	}
+	}	
 
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
@@ -842,6 +844,11 @@ function qh_mouseDragMove(e){
     }
   }
   //this.freehand draw end  
+	if (ev.stopPropagation) ev.stopPropagation();
+	if (ev.cancelBubble!=null) ev.cancelBubble = true;
+	if (ev.preventDefault) ev.preventDefault();
+	if (ev.returnValue) ev.returnValue = false;
+	return false;
 }
 
 function qh_mouseDragDown(e){

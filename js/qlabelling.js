@@ -7,18 +7,19 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.canvas.onmousedown = this.ql_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.ql_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
-		if (this.canvas.addEventListener){
-      this.canvas.addEventListener("keydown",	ql_mouseDragMove.bind(this),false);
-      this.canvas.addEventListener("keyup",		ql_mouseDragMove.bind(this),false);
-      this.canvas.addEventListener("keypress",ql_mouseDragMove.bind(this),false);
-    } else if (this.canvas.attachEvent){
-      this.canvas.attachEvent("onkeydown", 	ql_mouseDragMove.bind(this));
-      this.canvas.attachEvent("onkeyup", 		ql_mouseDragMove.bind(this));
-      this.canvas.attachEvent("onkeypress", ql_mouseDragMove.bind(this));
-    } else {
-			this.canvas.onkeydown   = ql_mouseDragMove.bind(this);
-			this.canvas.onkeyup     = ql_mouseDragMove.bind(this);
-			this.canvas.onkeypress  = ql_mouseDragMove.bind(this);
+		
+		if (document.addEventListener){ //FF+, IE10+
+      document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false);
+      document.addEventListener("keyup",		ql_mouseDragMove.bind(this),false);
+      document.addEventListener("keypress", ql_mouseDragMove.bind(this),false);
+    } else if (document.attachEvent){ //FF--, IE10-, IE9-, Ch--
+			document.attachEvent("onkeydown", 	ql_mouseDragMove.bind(this));
+      document.attachEvent("onkeyup", 		ql_mouseDragMove.bind(this));
+      document.attachEvent("onkeypress",  ql_mouseDragMove.bind(this));
+    } else { //FF-, IE10-, IE9-, Ch-
+			document.onkeydown   = ql_mouseDragMove.bind(this);
+			document.onkeyup     = ql_mouseDragMove.bind(this);
+			document.onkeypress  = ql_mouseDragMove.bind(this);
 		}
 		this.intervalID = window.setInterval(this.ql_redraw_canvas.bind(this), 10);
 	}
@@ -756,31 +757,32 @@ function ql_redraw_canvas() {
 				loc_height = this.labelHeightEffect;
 			}	
 			var text_len = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].length;
-			if (this.key_code=='39') this.edit_box_pos++; 				//arror right
-			if (this.key_code=='37') this.edit_box_pos--; 				//arrow left
-			if (this.key_code=='35') this.edit_box_pos=text_len; 	//end
-			if (this.key_code=='36') this.edit_box_pos=0; 				//home	
+			if (this.key_code==39) this.edit_box_pos++;				//arror right
+			if (this.key_code==37) this.edit_box_pos--; 				//arrow left
+			if (this.key_code==35) this.edit_box_pos=text_len; 	//end
+			if (this.key_code==36) this.edit_box_pos=0; 				//home	
 			if (this.edit_box_pos<0) this.edit_box_pos=0;
 			if (this.edit_box_pos>text_len) this.edit_box_pos=text_len;
-			if (this.key_code==0 && this.char_code!='') {					//characters
+			
+			if (this.char_code!='') {					//characters
 				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.char_code+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
 				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
 				this.edit_box_pos++;
 			  this.ql_ReturnInfo();
 			}
-			if (this.key_code=='46') { //del
+			if (this.key_code==46) { //del
 				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos+1);
 				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
 			  this.ql_ReturnInfo();
 			}
-			if (this.key_code=='8') { //backspace
+			if (this.key_code==8) { //backspace
 				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos-1)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
 				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
 				this.edit_box_pos--;
 				this.ql_ReturnInfo();
 			}
 			
-			this.char_code ='';
+			this.char_code = '';
 			this.key_code = 0;
 		}      
 
@@ -962,7 +964,7 @@ function ql_redraw_canvas() {
 				this.context.strokeStyle='#000000';
 				this.context.lineWidth = 1;
 				this.context.beginPath();
-				var temp_x = Math.round(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][5]+(this.labelWidthEffect-metrics_full.width)/2+metrics_part.width)-0.5;
+				var temp_x = Math.round(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][5]+(this.labelWidthEffect-metrics_full.width)/2+metrics_part.width)+0.5;
 				var temp_y = Math.round(this.fontSizes[this.fontSizePos]*text_part_line+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][6]+4)-0.5;
 				this.context.moveTo(temp_x,temp_y);
 				this.context.lineTo(temp_x,temp_y+this.fontSizes[this.fontSizePos]);
@@ -1017,24 +1019,25 @@ function ql_redraw_canvas() {
 		this.context.strokeRect(0.5,0.5,this.canvas.width-1,this.canvas.height-1); //border
 	}
 }
-			 
+
 function ql_mouseDragMove(e){
 	var ev = e || window.event;
+	if (ev.target.id != this.canvas.id) {
+		return true;
+	}
 	if (ev.type=='keydown') {
 		this.isShift = ev.shiftKey ? true : false;
 		this.isCtrl = ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}
 	if (ev.type=='keypress') { 
-		this.key_code = ev.keyCode;
-		this.char_code = String.fromCharCode(ev.charCode);
+		this.char_code = (ev.charCode==0?'':String.fromCharCode(ev.charCode));
 	}
 	if (ev.type=='keyup') { 
 		this.isShift = false;
-		this.ShiftChange = true;
 		this.isCtrl = false;
+		this.ShiftChange = true;
 		this.key_code = ev.keyCode;
-		this.char_code = String.fromCharCode(ev.charCode);
 	}		
 	if (ev.type=='mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
@@ -1043,7 +1046,7 @@ function ql_mouseDragMove(e){
 		this.x = ev.clientX - this.loc_lft;
 		this.y = ev.clientY - this.loc_top;
 	}	
-	
+
 	//dragging labels handlers
 	if (typeof(this.active_box_handler)!='undefined' && this.active_box_handler!=-1) {
 		var dim = new Array(this.answerBox[this.active_box_id][this.active_box_combo][5],this.answerBox[this.active_box_id][this.active_box_combo][6],this.answerBox[this.active_box_id][this.active_box_combo][5]+this.labelWidthEffect,this.answerBox[this.active_box_id][this.active_box_combo][6]+this.labelHeightEffect);
@@ -1217,7 +1220,12 @@ function ql_mouseDragMove(e){
       e.target.style.cursor = cur;
 		}
 	}
-		
+	
+	if (ev.stopPropagation) ev.stopPropagation();
+	if (ev.cancelBubble!=null) ev.cancelBubble = true;
+	if (ev.preventDefault) ev.preventDefault();
+	if (ev.returnValue) ev.returnValue = false;
+	return false;
 }
 
 function ql_mouseDragDown(e){
@@ -1259,6 +1267,16 @@ function ql_mouseDragUp(){
 		} else {
 			this.answerBox[this.active_box_id][this.active_box_combo][3]='f'
 		}
+	}
+	
+	for (i=0;i<this.answerBox.length;i++) {
+		for (j=0;j<this.answerBox[i].length;j++) {
+			//console.log(this.answerBox[i][j]);
+		}
+	}
+
+	for (i=0;i<this.pholderBox.length;i++) {
+		//console.log(this.pholderBox[i]);
 	}
 	
 	this.active_box_id = this.drag_box_id;

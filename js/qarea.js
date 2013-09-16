@@ -358,27 +358,30 @@ function qa_redraw_canvas() {
 }
 
 function qa_mouseDragMove(e){
-	var ev = window.event ? event : e;
-	
-	if (ev.type=='mousemove') {
-		this.canv_rect = this.canvas.getBoundingClientRect();
-		this.loc_lft = this.canv_rect.left;
-		this.loc_top = this.canv_rect.top;
-		this.x = ev.clientX - this.loc_lft;
-		this.y = ev.clientY - this.loc_top;
-	}
-	this.ShiftChange = false;
-	
-	if (ev.type=='keyup') {
-		this.isShift = false;
-		this.ShiftChange = true;
-		this.isCtrl = false;
+	var ev = e || window.event;
+	if (ev.target.id != this.canvas.id) {
+		return true;
 	}
 	if (ev.type=='keydown') {
 		this.isShift = ev.shiftKey ? true : false;
 		this.isCtrl = ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}
+	if (ev.type=='keyup') { 
+		this.isShift = false;
+		this.isCtrl = false;
+		this.ShiftChange = true;
+		this.key_code = ev.keyCode;
+		this.char_code = (ev.charCode==0?'':String.fromCharCode(ev.charCode));
+	}		
+	if (ev.type=='mousemove') {
+		this.canv_rect = this.canvas.getBoundingClientRect();
+		this.loc_lft = this.canv_rect.left;
+		this.loc_top = this.canv_rect.top;
+		this.x = ev.clientX - this.loc_lft;
+		this.y = ev.clientY - this.loc_top;
+	}	
+
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
     if (this.handler_sqr>-1) {
@@ -517,6 +520,11 @@ function qa_mouseDragMove(e){
     }
   }
   //this.freehand draw end
+	if (ev.stopPropagation) ev.stopPropagation();
+	if (ev.cancelBubble!=null) ev.cancelBubble = true;
+	if (ev.preventDefault) ev.preventDefault();
+	if (ev.returnValue) ev.returnValue = false;
+	return false;
 }
 
 function qa_mouseDragDown(e){
