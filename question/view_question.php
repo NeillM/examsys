@@ -59,16 +59,17 @@
 <div id="maincontent">
 <?php
   $old_q_id = '';
-  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, settings FROM questions LEFT JOIN options on questions.q_id=options.o_id  WHERE q_id=?  ORDER BY id_num");
   $question_data->bind_param('i', $_GET['q_id']);
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
+  $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $settings);
   $num_rows = $question_data->num_rows;
   echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   while ($question_data->fetch()) {
     if ($old_q_id != $q_id) {
+
       $question['theme'] = trim($theme);
       $question['scenario'] = trim($scenario);
       $question['leadin'] = trim($leadin);
@@ -82,6 +83,18 @@
       $question['q_media_width'] = $q_media_width;
       $question['q_media_height'] = $q_media_height;
       $question['dismiss'] = '';
+      $question['settings']=$settings;
+      if ($q_type == 'enhancedcalc') {
+        if (!is_array($settings)) {
+          $settings = json_decode($settings, true);
+        }
+        if(!isset($question['object'])) {
+          require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+          $configObj = Config::get_instance();
+          $question['object'] = new EnhancedCalc($configObj);
+          $question['object']->load($question);
+        }
+      }
     }
     $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   }
