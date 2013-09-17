@@ -419,10 +419,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'enhancedcalc':
-        $mode = array('reviewers'=>true);
+        $extra = array('num_on_screen' => $question_no, 'reviewers' => true);
       
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
-        $question['object']->render_paper($mode);
+        $question['object']->render_paper($extra);
         echo '</td>';
         
         $marks += $question['object']->calculate_question_mark();

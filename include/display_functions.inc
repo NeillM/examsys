@@ -652,7 +652,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       case 'enhancedcalc':
         // no options for enhanced calc now stored in settings
 
-        $question['object']->render_paper();
+        $extra = array('num_on_screen' => $question_no);
+
+        $question['object']->render_paper($extra);
         $question['object']->load_all_user_answers($user_answers);
 
         $marks += $question['object']->calculate_question_mark();

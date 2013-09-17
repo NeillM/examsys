@@ -780,9 +780,9 @@ class EnhancedCalc extends Question implements questionInterface {
         if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { //or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];
 
-          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
         } else {
-          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
           $unanswered = true;
         }
       }
