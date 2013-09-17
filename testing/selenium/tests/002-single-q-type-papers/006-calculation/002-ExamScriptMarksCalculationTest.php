@@ -87,27 +87,27 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     $this->assertElementContainsText('//table[2]/tbody/tr[7]/td[2]/p[4]/span', '1 out of 1');
     $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '2 out of 2');
     $text = $this->getText('//table[2]/tbody/tr[4]/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertRegExp('/with a tolerance of 1$/', $text);
     $this->assertElementContainsText('//table[3]/tbody/tr[4]/td[2]/p[4]/span', '1 out of 1');
     $this->assertElementContainsText('//table[3]/tbody/tr[6]/td[2]/p/span', '2 out of 2');
     $text = $this->getText('//table[3]/tbody/tr[6]/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertRegExp('/with a tolerance of 1$/', $text);
     $this->assertElementContainsText('//table[4]/tbody/tr[2]/td[2]/p[4]/span', '1 out of 1');
     $this->assertElementContainsText('//table[4]/tbody/tr[4]/td[2]/p/span', '2 out of 2');
     $text = $this->getText('//table[4]/tbody/tr[4]/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertRegExp('/with a tolerance of 1$/', $text);
     $this->assertElementContainsText('//table[4]/tbody/tr[7]/td[2]/p[4]/span', '1 out of 1');
     $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/p/span', '2 out of 2');
     $text = $this->getText('//table[5]/tbody/tr/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/table/tbody/tr/td[2]', 'with a tolerance of 5%');
     $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p[4]/span', '1 out of 1');
     $this->assertElementContainsText('//table[5]/tbody/tr[6]/td[2]/p/span', '2 out of 2');
     $text = $this->getText('//table[5]/tbody/tr[6]/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertElementContainsText('//table[5]/tbody/tr[6]/td[2]/table/tbody/tr/td[2]', 'with a tolerance of 5%');
 
     // Overall Marks
@@ -135,26 +135,26 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     $this->assertRegExp('/with a tolerance of 1$/', $text);
     $this->assertElementContainsText('//table[3]/tbody/tr[6]/td[2]/p/span', '1 out of 2');
     $text = $this->getText('//table[3]/tbody/tr[6]/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertRegExp('/with a tolerance of 1.5$/', $text);
     $this->assertElementContainsText('//table[4]/tbody/tr[2]/td[2]/p[4]/span', '0.5 out of 1');
     $text = $this->getText('//table[4]/tbody/tr[2]/td[2]/table/tbody/tr/td[2]');
     $this->assertRegExp('/with a tolerance of 1$/', $text);
     $this->assertElementContainsText('//table[4]/tbody/tr[4]/td[2]/p/span', '1 out of 2');
     $text = $this->getText('//table[4]/tbody/tr[4]/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertRegExp('/with a tolerance of 1.5$/', $text);
     $this->assertElementContainsText('//table[4]/tbody/tr[7]/td[2]/p[4]/span', '0.5 out of 1');
     $this->assertElementContainsText('//table[4]/tbody/tr[7]/td[2]/table/tbody/tr/td[2]', 'with a tolerance of 5%');
     $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/p/span', '1 out of 2');
     $text = $this->getText('//table[5]/tbody/tr/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/table/tbody/tr/td[2]', 'with a tolerance of 8%');
     $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p[4]/span', '0.5 out of 1');
     $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/table/tbody/tr/td[2]', 'with a tolerance of 5%');
     $this->assertElementContainsText('//table[5]/tbody/tr[6]/td[2]/p/span', '1 out of 2');
     $text = $this->getText('//table[5]/tbody/tr[6]/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertElementContainsText('//table[5]/tbody/tr[6]/td[2]/table/tbody/tr/td[2]', 'with a tolerance of 8%');
 
     // Overall Marks
@@ -207,7 +207,7 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     $this->assertElementContainsText('//table[2]/tbody/tr[7]/td[2]/p[4]/span', '-0.5 out of 1');
     $this->assertElementContainsText('//table[3]/tbody/tr/td[2]/p/span', '2 out of 2');
     $text = $this->getText('//table[3]/tbody/tr/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertRegExp('/with a tolerance of 1$/', $text);
     $this->assertElementContainsText('//table[3]/tbody/tr[4]/td[2]/p[4]/span', '0.5 out of 1');
     $text = $this->getText('//table[3]/tbody/tr[4]/td[2]/table/tbody/tr/td[2]');
@@ -216,17 +216,17 @@ class ExamScrtiptMarksCalculationTest extends PHPUnit_Extensions_SeleniumTestCas
     $this->assertElementContainsText('//table[4]/tbody/tr[2]/td[2]/p[4]/span', '1 out of 1');
     $this->assertElementContainsText('//table[4]/tbody/tr[4]/td[2]/p/span', '2 out of 2');
     $text = $this->getText('//table[4]/tbody/tr[4]/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertRegExp('/with a tolerance of 1$/', $text);
     $this->assertElementContainsText('//table[4]/tbody/tr[7]/td[2]/p[4]/span', '0 out of 1');
     $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/p/span', '1 out of 2');
     $text = $this->getText('//table[5]/tbody/tr/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertElementContainsText('//table[5]/tbody/tr/td[2]/table/tbody/tr/td[2]', 'with a tolerance of 8%');
     $this->assertElementContainsText('//table[5]/tbody/tr[4]/td[2]/p[4]/span', '1 out of 1');
     $this->assertElementContainsText('//table[5]/tbody/tr[6]/td[2]/p/span', '1 out of 2');
     $text = $this->getText('//table[5]/tbody/tr[6]/td[2]/table/tbody/tr/td[2]');
-    $this->assertRegExp('/^cm/', $text);
+    $this->assertRegExp('/ cm\)/', $text);
     $this->assertElementContainsText('//table[5]/tbody/tr[6]/td[2]/table/tbody/tr/td[2]', 'with a tolerance of 8%');
 
     // Overall Marks
