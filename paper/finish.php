@@ -303,7 +303,7 @@ require '../config/finish.inc';
       $tmp_student_name = $tmp_title . ' ' . demo_replace($tmp_surname, $demo) . ', ' . demo_replace($tmp_initials, $demo);
       $tmp_student_id = demo_replace_number($tmp_student_id, $demo);
       if (isset($_GET['userID'])) {
-        echo " for $tmp_student_name ($tmp_student_id)";
+        echo " $tmp_student_name ($tmp_student_id)";
       }
       echo '</span>';
     }
