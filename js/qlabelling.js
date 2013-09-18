@@ -144,6 +144,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				this.shapeBox.push(shapeTemp);
 			}
     }
+
     //colours recalc
     for (i=0;i<this.currentColours.length;i++) this.currentColours[i] = hexifycolour(this.currentColours[i]);
 
@@ -278,20 +279,24 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		}				
 		
 		//removing empty elements
-		for (i=this.answerBox.length-1;i>0;i--) 
+		var tmp_count = this.answerBox.length;
+		for (i=tmp_count-1;i>=0;i--) 
 			if (typeof(this.answerBox[i])=='undefined') 
 			  this.answerBox.splice(i,1);
 		//renumbering ids
-		for (i=0;i<this.answerBox.length;i++) 
+		for (i=0;i<this.answerBox.length;i++)
+			if (typeof(this.answerBox[i])!='undefined') 
 			for (j=0;j<this.answerBox[i].length;j++) 
 				this.answerBox[i][j][0]=i;
 
 		//removing empty elements
-		for (i=this.pholderBox.length-1;i>0;i--) 
+		tmp_count = this.pholderBox.length;
+		for (i=tmp_count-1;i>=0;i--) 
 			if (typeof(this.pholderBox[i])=='undefined') 
 			  this.pholderBox.splice(i,1);
 		//renumbering ids
 		for (i=0;i<this.pholderBox.length;i++) 
+			if (typeof(this.pholderBox[i])!='undefined') 
 			this.pholderBox[i][0]=i;
 		
 		//loading images
@@ -983,7 +988,6 @@ function ql_redraw_canvas() {
 				this.context.beginPath();
 				var temp_x = Math.round(this.answerBox[this.active_box_id][this.active_box_combo][5]+(this.labelWidthEffect-metrics_full.width)/2+metrics_part.width)+0.5;
 				var temp_y = Math.round(this.fontSizes[this.fontSizePos]*text_part_line+this.answerBox[this.active_box_id][this.active_box_combo][6]+4)-0.5;
-				console.log(this.active_box_id,this.active_box_combo,temp_x,temp_y);
 				this.context.moveTo(temp_x,temp_y);
 				this.context.lineTo(temp_x,temp_y+this.fontSizes[this.fontSizePos]);
 				this.context.stroke();
@@ -1287,18 +1291,10 @@ function ql_mouseDragUp(){
 		}
 	}
 	
-	for (i=0;i<this.answerBox.length;i++) {
-		for (j=0;j<this.answerBox[i].length;j++) {
-			//console.log(this.answerBox[i][j]);
-		}
+	if (this.qmode!='script') {
+		this.active_box_id = this.drag_box_id;
+		this.active_box_combo = this.drag_box_combo;
 	}
-
-	for (i=0;i<this.pholderBox.length;i++) {
-		//console.log(this.pholderBox[i]);
-	}
-	
-	this.active_box_id = this.drag_box_id;
-	this.active_box_combo = this.drag_box_combo;
 	this.dragging = false;
 	this.active_box_handler = -1;
 	
