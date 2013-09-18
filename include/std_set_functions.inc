@@ -45,10 +45,12 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
   if ($options[0]['q_type'] != 'likert') $old_likert_label = '';
 
   // Determine if negative marking is used.
+  // NOTE: Enhanced calc handled separately below
   $neg_marking = false;
   foreach ($options as $tmp_option) {
     if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
   }
+
 
   if ($options[0]['q_type'] == 'dichotomous') {
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -160,7 +162,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
     case 'enhancedcalc':
       $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
       $settings = json_decode($options[0]['settings'], true);
-      
+
       if ($li_set == 1) {
         echo '<tr><td></td><td>';
       } else {
@@ -177,7 +179,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       } else {
         $units = '';
       }
-      
+
       echo "<div><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />$units</div>\n";
       echo "<div class=\"fback\">";
       foreach ($settings['answers'] as $answer) {
@@ -188,6 +190,11 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       echo reviewScale($question_no, '', $settings['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
       echo "</div>\n";
       $marks = $settings['marks_correct'];
+
+      // Negative marked?
+      if ($settings['marks_incorrect'] < 0) {
+        $neg_marking = true;
+      }
       break;
     case 'dichotomous':
       echo "</blockquote></table>";

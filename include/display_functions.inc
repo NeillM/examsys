@@ -268,8 +268,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
   // Determine if negative marking is used.
   $neg_marking = false;
-  foreach ($question['options'] as $tmp_option) {
-    if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
+  if (isset($question['object']) and method_exists($question['object'], 'is_negative_marked')) {
+    $neg_marking = $question['object']->is_negative_marked();
+  } else {
+    foreach ($question['options'] as $tmp_option) {
+      if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
+    }
   }
 
   // Process the order
@@ -548,7 +552,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           echo "<div align=\"left\">";
           $tmp_bgcolor = $bgcolor;
         }
-        
+
 				if ($configObject->get('cfg_interactive_qs')=='html5') {
 					//<!-- ======================== HTML5 part include disp ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 2) . "' height='" . ($question['q_media_height'] + 27) . "'></canvas>\n";
@@ -648,7 +652,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       case 'enhancedcalc':
         // no options for enhanced calc now stored in settings
 
-        $question['object']->render_paper();
+        $extra = array('num_on_screen' => $question_no);
+
+        $question['object']->render_paper($extra);
         $question['object']->load_all_user_answers($user_answers);
 
         $marks += $question['object']->calculate_question_mark();

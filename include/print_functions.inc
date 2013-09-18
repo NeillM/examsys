@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'classes/mathsutils.class.php';
 function calcPreParse($inputVal, $user_answers, $tmp_vars) {
   global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
   if (substr($inputVal,0,3) == 'ans') {
-    //its a question refrance get previous user answer          
+    //its a question refrance get previous user answer
     $find_qid = intval(substr($inputVal,3));
     $pre_user_answers = '';
     foreach ($user_answers as $screen => $answers) {
@@ -74,15 +74,19 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
-  
+
   // Determine if negative marking is used.
   $neg_marking = false;
-  foreach ($question['options'] as $tmp_option) {
-    if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
+  if (isset($question['object']) and method_exists($question['object'], 'is_negative_marked')) {
+    $neg_marking = $question['object']->is_negative_marked();
+  } else {
+    foreach ($question['options'] as $tmp_option) {
+      if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
+    }
   }
-  
+
   // Process the order
-  $question['option_order'] = array(); 
+  $question['option_order'] = array();
   if (isset($question['q_option_order']) and ($question['q_option_order'] == 'random' or $question['q_option_order'] == 'alphabetic')) {
     if (!isset($user_order[$current_screen][$q_id]) or $user_order[$current_screen][$q_id] == '') {
       if ($question['q_option_order'] == 'random') {
@@ -109,7 +113,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       // Set the order array to what is stored in the users log record
       $question['option_order'] = explode(',', $user_order[$current_screen][$q_id]);
     }
-    
+
     // Re-arrange the options array
     $new_options = array();
     for ($i=0; $i<$option_no; $i++) {
@@ -122,7 +126,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $question['option_order'][$i] = $i;
     }
   }
-  
+
   $question_no++;
 
   $li_set = 0;
@@ -192,7 +196,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
     case 'mcq':
       echo '<blockquote>';
-      
+
       if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
         echo '<table cellpadding="2" cellspacing="0" border="0">';
       } elseif ($question['display_method'] == 'dropdown') {
@@ -232,7 +236,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $na = false;
       $likert_display = explode('|',$question['display_method']);
       $likert_col_no = substr_count($question['display_method'],'|');
- 
+
       if (strtolower($old_likert_label) != strtolower($question['display_method']) or $question['theme'] != '') {
         if ($likert_col_no != $old_likert_cols) {
           echo '</table><table cellpadding="4" cellspacing="0" border="0"><col width="40"><col>';
@@ -260,7 +264,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } else {
         if ($question['scenario'] != '') echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">" . $question['scenario'] . "</td></tr>\n";
       }
-      
+
       $old_likert_label = $question['display_method'];
       $old_likert_cols = $likert_col_no;
       break;
@@ -293,32 +297,32 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
         $li_set = 1;
       }
-    
+
       $sct_parts = explode('~',$question['leadin']);
       echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
       $sct_titles = array(1=>$string['hypothesis'], 2=>$string['investigation'], 3=>$string['prescription'], 4=>$string['intervention'], 5=>$string['treatment']);
       echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
       echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
       echo "</table>\n";
-      
+
       echo '<p><strong>';
       echo $string['thenthis'] . " " . mb_strtolower($sct_titles[$question['display_method']], 'UTF-8') . " " . $string['is'] . ":";
       echo '</strong></p>';
-      
+
       echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
-      
+
       $marks = 1;
       break;
     case 'true_false':
-      echo '<blockquote style="line-height:175%"><table>';           
+      echo '<blockquote style="line-height:175%"><table>';
       echo '<td align="center"><img src="../artwork/print_box_circle.png" width="24" height="24" alt="" />&nbsp;True';
       if ($question['display_method'] == 'horizontal') {
         echo '&nbsp;&nbsp;&nbsp;';
       } else {
         echo '<br />';
       }
-      echo '<td align="center"><img src="../artwork/print_box_circle.png" width="24" height="24" alt="" />&nbsp;False'; 
-      
+      echo '<td align="center"><img src="../artwork/print_box_circle.png" width="24" height="24" alt="" />&nbsp;False';
+
       echo '</table></blockquote>';
       break;
   }
@@ -358,16 +362,16 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $vars = array(1=>'A', 2=>'B', 3=>'C', 4=>'D', 5=>'E', 6=>'F', 7=>'G', 8=>'H', 9=>'I', 10=>'J');
         $var = $vars[$part_id];
         if (isset($user_answers[$current_screen][$q_id])) {
-          $tmp_user_answers = explode('|',$user_answers[$current_screen][$q_id]);		
+          $tmp_user_answers = explode('|',$user_answers[$current_screen][$q_id]);
         } else {
           $tmp_user_answers = array();
         }
-	
+
         $figures = explode(',',$display_option['option_text']);
-       
+
         $min = calcPreParse($figures[0],$user_answers,$vars);
         $max = (isset($figures[1]) and $figures[1] != '') ? calcPreParse($figures[1],$user_answers,$vars) : $min;
-        
+
         if (!isset($user_answers[$current_screen][$q_id])) {
           //its a normal range and user has not seen the question genarate value
           $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
@@ -380,7 +384,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             $$var = $variables[$part_id-1];
           }
         }
-        
+
         break;
       case 'likert':
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
@@ -455,7 +459,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
 
         echo '<tr><td class="option"><img src="../artwork/print_box_1.png" width="30" height="30" /></td>';
-        
+
         echo "<td>" . $display_option['option_text'] . "</td>\n</tr>\n";
         if ($display_option['correct'] != 0) {
           $marks += $display_option['marks_correct'];
@@ -473,7 +477,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($question['display_method'] == 'dropdown') {
           $blank_details = explode('[blank',$display_option['option_text']);
           echo '<table class="extmatch_opt_table"><tr>';
-          
+
           $no_blanks = count($blank_details);
           $blank_count = 1;
           while ($blank_count < $no_blanks) {
@@ -496,22 +500,22 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
           echo '</tr></table>';
         }
-      
+
         $blank_details = explode('[blank',$display_option['option_text']);
         $ans = '';
         $blank_mark = array();
         $display_option['option_text'] = str_replace('&nbsp;',' ',$display_option['option_text']);
-        
+
         if (isset($user_answers[$current_screen][$q_id])) {
           $user_answers[$current_screen][$q_id] = str_replace('&nbsp;',' ',$user_answers[$current_screen][$q_id]);
         }
-       
+
         if (isset($user_answers[$current_screen][$q_id])) {
           $blank_user_answers = explode('|', $user_answers[$current_screen][$q_id]);
         } else {
           $blank_user_answers = array();
         }
-        
+
         if ($question['display_method'] == 'textboxes') {
           $screen_output = array();
           $array_size = count($blank_details);
@@ -533,9 +537,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             } else {
               $blank_mark[$blank_count] = $display_option['marks_correct'];
             }
-    
+
             $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" style=\"border:1px solid black\" name=\"q" . $question_no . "_" . $blank_count . "\" value=\"\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
-            
+
             $blank_count++;
           }
           $screen_output_all = '';
@@ -561,7 +565,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             $answer_options = explode('[/blank]',$blank_details[$blank_count]);
             $answer_list = explode(',',$answer_options[0]);
             echo '<strong>' . $blank_count . '.</strong>&nbsp;<img src="../artwork/print_box_a.png" width="23" height="23" alt="" /> ';
-            
+
             echo $answer_options[1]; // Bit after the closing [/blank] tag.
             $blank_count++;
             $part_id++;
@@ -604,12 +608,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
         $tmp_correct = str_replace("'", "\'", trim($question['options'][0]['correct']));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct); 
+        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
         ?>
         <script language="JavaScript">
           function swfLoaded<?php echo $question_no; ?>(message) {
             var num = message.substring(5,message.length);
-            
+
             setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>','<?php echo $screen_pre_submitted; ?>','#FFC0C0');
           }
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
@@ -653,14 +657,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         $max_col2-=10;
         $max_label = max($max_col1, $max_col2);
-        
+
         if ($question['score_method'] == 'Mark per Question') {
           $marks = $display_option['marks_correct'];
         }
 
         $tmp_height = $question['q_media_height'];
         if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
-  
+
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
           echo "<div align=\"center\" class=\"unans\">\n";
           $tmp_bgcolor = '#FFC0C0';
@@ -684,7 +688,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       write_string('<embed src="../paper/label_question.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
  		</script>
-          
+
           </div>
         <?php
         if (!isset($user_answers[$current_screen][$q_id]) OR $user_answers[$current_screen][$q_id] == '') {
@@ -822,7 +826,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($matching_media[$part_id] != '') $media_scenarios++;
     }
     $scenario_no = max($text_scenarios, $media_scenarios);
-    
+
     $col1_no = ceil(count($matching_options) / 2);
     echo "<table class=\"extmatch_opt_table\">\n<tr><td><ol>\n";
     for ($i=0; $i<count($matching_options); $i++) {
@@ -838,7 +842,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
       $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
       $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];
-      
+
       $sub_answers = explode('$', $matching_answers[$part_id - 1]);
 
       echo '<li>';
@@ -846,11 +850,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
         echo "<div>" . display_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '') . "</div>\n";
       }
-      
+
       for ($i=0; $i<count($sub_answers); $i++) {
         echo '<img src="../artwork/print_box_a.png" width="30" height="30" />&nbsp;';
       }
-      
+
       echo '</li>';
     }
     echo '</ol>';
@@ -916,7 +920,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   }
   if ($question['q_type'] != 'info') echo "<input type=\"hidden\" name=\"order$question_no\" value=\"" . implode(',', $question['option_order']) . "\" />\n";
   $used_questions[$q_id] = $q_id;
-  
+
   //echo "</table>\n";
 }
 ?>

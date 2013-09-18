@@ -57,7 +57,6 @@ $paper_buffer = $report->get_paper_buffer();
 $exclusions   = $report->get_exclusions();
 
 $user_no = count($user_results);
-
 header('Pragma: public');
 header('Content-type: application/octet-stream');
 header("Content-Disposition: attachment; filename=new_" . str_replace(' ', '_', $paper) . "_EM.csv");
@@ -109,10 +108,10 @@ foreach ($user_results as $individual) {
         if (isset($paper_buffer[$q_id]['random_questions']) and count($paper_buffer[$q_id]['random_questions']) > 0) {
           $question = reset($paper_buffer[$q_id]['random_questions']);
 
-          if ($question['q_type'] == 'blank') {
-            $tmp_q_id = key($paper_buffer[$q_id]['random_questions']);
-            $question['correct'] = extract_blank_correct($question['option_text'][0], $question['display_method'], $paper_buffer, $tmp_q_id);
-          }
+          //if ($question['q_type'] == 'blank') {
+          //  $tmp_q_id = key($paper_buffer[$q_id]['random_questions']);
+          //  $question['correct'] = extract_blank_correct($question['option_text'][0], $question['display_method'], $paper_buffer, $tmp_q_id);
+          // }
           if ($question['q_type'] == 'labelling') {
             $question['correct_labels'] = get_correct_labels($question, $tmp_exclude);
           }
@@ -167,7 +166,7 @@ foreach ($user_results as $individual) {
       $csv .= '"' . $individual['gender'] . '","' . $individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
     }
     foreach ($paper_buffer as $q_id => $question) {
-      $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
+        $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
 
       // If a random question, get the one that the user answered, otherwise just get the first and skip if none exist
       $skip_random = false;

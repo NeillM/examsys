@@ -52,8 +52,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
   // Determine if negative marking is used.
   $neg_marking = false;
-  foreach ($question['options'] as $tmp_option) {
-    if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
+  if (isset($question['object']) and method_exists($question['object'], 'is_negative_marked')) {
+    $neg_marking = $question['object']->is_negative_marked();
+  } else {
+    foreach ($question['options'] as $tmp_option) {
+      if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
+    }
   }
 
   // Process the order
@@ -415,10 +419,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'enhancedcalc':
-        $mode = array('reviewers'=>true);
+        $extra = array('num_on_screen' => $question_no, 'reviewers' => true);
       
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
-        $question['object']->render_paper($mode);
+        $question['object']->render_paper($extra);
         echo '</td>';
         
         $marks += $question['object']->calculate_question_mark();

@@ -93,7 +93,7 @@ class EnhancedCalc extends Question implements questionInterface {
     }
   }
 
-  
+
   /**
    * Calculate the user's mark for the question.
    *
@@ -112,13 +112,13 @@ class EnhancedCalc extends Question implements questionInterface {
     if (!is_array($this->useranswer)) {
       $this->useranswer = json_decode($this->useranswer, true);
     }
-    
+
     if(isset($this->useranswer['uans'])) {
       $return = $this->split_numb_from_unit($this->useranswer['uans']);
       $this->useranswer['uansunit'] = $return[1];
       $this->useranswer['uansnumb'] = $return[0];
     }
-    
+
     if (isset($this->useranswer['uansunit'])) {
        $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
     }
@@ -611,17 +611,17 @@ class EnhancedCalc extends Question implements questionInterface {
               $inputVal = 'ERROR';
             }
         } else {
-            $inputVal = 'ERROR';        
+            $inputVal = 'ERROR';
         }
-        
+
       }
     }
 
     return $inputVal;
   }
-  
+
   /**
-   * test to see if a var is linked to a previous answer 
+   * test to see if a var is linked to a previous answer
    * @param  string var min or max
    * @return bool
    */
@@ -631,9 +631,9 @@ class EnhancedCalc extends Question implements questionInterface {
     }
     return false;
   }
-  
+
   /**
-   * test to see if a var is linked to a previous question 
+   * test to see if a var is linked to a previous question
    * @param  string  var min or max
    * @return bool
    */
@@ -684,21 +684,21 @@ class EnhancedCalc extends Question implements questionInterface {
           $min = $this->variable_substitution($value['min'], $this->alluseranswers);
           if($value['max'] == '') {
             //value for max not set force it to min to generate a fixed value.
-            $value['max'] = $value['min']; 
+            $value['max'] = $value['min'];
           }
           $max = $this->variable_substitution($value['max'], $this->alluseranswers);
           $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
           $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
-          
+
           $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
-        } 
-        
+        }
+
         //pull in the last userans every time
         if($this->is_linked_ans($value['min'])) {
           $this->useranswer['vars'][$key] = $this->variable_substitution($value['min'], $this->alluseranswers);
         }
-        
-        //update the session 
+
+        //update the session
         $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
     }
 
@@ -763,7 +763,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
     if ($this->scenario != '') echo "<p>" . $this->scenario . "</p>\n";
     if ($this->q_media != '') echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
-    
+
     $marking_precision_feedback = "";
     if ($this->is_strict_dp_enabled()) {
         $marking_precision_feedback = " <span class=\"calc_fb\">(" . $string['answer_to'] . " " . $this->settings['dp'] . " " . $string['decimal_places'] . ")</span>";
@@ -780,9 +780,9 @@ class EnhancedCalc extends Question implements questionInterface {
         if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { //or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];
 
-          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
         } else {
-          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"qid[" . $this->id . "][uans]\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
           $unanswered = true;
         }
       }
@@ -790,7 +790,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
     $marks = $this->settings['marks_correct'];
   }
-  
+
   /**
    * Get the veriables as defined in the question
    * @return array Array of defined variables indexed by the label (e.g. $A)
@@ -874,6 +874,14 @@ class EnhancedCalc extends Question implements questionInterface {
    */
   public function get_answer_distance() {
     return (isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 'ERROR') ? $this->useranswer['cans_dist'] : false;
+  }
+
+  /**
+   * Is the question negatively marked?
+   * @return boolean True if incorrect mark is less than 0
+   */
+  public function is_negative_marked() {
+    return $this->settings['marks_incorrect'] < 0;
   }
 }
 ?>
