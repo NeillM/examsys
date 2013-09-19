@@ -576,11 +576,16 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return [type]               [description]
    */
   function variable_substitution($inputVal, $user_answers) {
+
     if ($this->is_linked_ans($inputVal)) {
       //its a question reference get previous user answer
       $uansarray = array();
       $find_qid = intval(substr($inputVal, 3));
       $pre_user_answers = '';
+      if(!is_array($user_answers)) {
+        $user_answers=array();
+        $inputVal='ERROR';
+      }
       foreach ($user_answers as $screen => $answers) {
         if (isset($answers[$find_qid])) {
           try {
@@ -601,6 +606,10 @@ class EnhancedCalc extends Question implements questionInterface {
       $find_var = substr($inputVal, 3, 2);
       $find_qid = intval(substr($inputVal, 5));
       $pre_var_val = '';
+      if(!is_array($user_answers)) {
+        $user_answers=array();
+        $inputVal='ERROR';
+      }
       foreach ($user_answers as $screen => $answers) {
         if (isset($answers[$find_qid])) {
             $variables = json_decode($answers[$find_qid], true);
@@ -616,7 +625,6 @@ class EnhancedCalc extends Question implements questionInterface {
 
       }
     }
-
     return $inputVal;
   }
 
@@ -645,7 +653,7 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   /**
-   * Render the qyestion in the format required when taking the paper
+   * Render the question in the format required when taking the paper
    * @param  array  $extra [description]
    */
   public function render_paper($extra = array()) {
@@ -730,6 +738,8 @@ class EnhancedCalc extends Question implements questionInterface {
       }
     }
 
+
+
     if (isset($extra['reviewers']) and $extra['reviewers']) {    // Display additional information for reviewers
       echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"padding:10px; border: 1px solid #C0C000; background-color:#FFFFC0; width:700px\">\n";
       echo "<tr><td colspan=\"4\">" . $string['notvisible'] . "</td></tr>";
@@ -760,7 +770,10 @@ class EnhancedCalc extends Question implements questionInterface {
       $real_answer = $this->get_real_answer();
       $this->add_to_useranswer('uans', $real_answer);  // Get the real answer and override
     }
+    if(isset($extra['printhardcopy']) and $extra['printhardcopy'] === true) {
 
+  //    return;
+    }
     if ($this->scenario != '') echo "<p>" . $this->scenario . "</p>\n";
     if ($this->q_media != '') echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
 

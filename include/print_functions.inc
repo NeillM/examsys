@@ -148,14 +148,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }
-    if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch') {
+    if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
       }
       echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
       $li_set = 1;
     }
-    if ($question['q_type'] != 'likert' and $question['q_type'] != 'calculation') {
+    if ($question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
       }
@@ -181,7 +181,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
   // Pre-question processing
   switch ($question['q_type']) {
-    case 'calculation':
+    case 'enhancedcalc':
       $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
       break;
     case 'dichotomous':
@@ -196,17 +196,18 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
     case 'mcq':
       echo '<blockquote>';
-
-      if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-        echo '<table cellpadding="2" cellspacing="0" border="0">';
-      } elseif ($question['display_method'] == 'dropdown') {
+//var_dump($question);
+     // if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
+      { echo '<table cellpadding="2" cellspacing="0" border="0">';
+      }
+    /* elseif ($question['display_method'] == 'dropdown') {
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
           echo '<div class="option"><select class="unans" name="q' . $question_no . '" size="1">';
         } else {
           echo '<div class="option"><select name="q' . $question_no . '" size="1">';
         }
         echo '<option value=""></option>';
-      }
+      }*/
       break;
     case 'mrq':
       $mrq_correct = 0;
@@ -358,33 +359,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo "</td></tr>\n";
         $marks += $display_option['marks_correct'];
         break;
-      case 'calculation':
-        $vars = array(1=>'A', 2=>'B', 3=>'C', 4=>'D', 5=>'E', 6=>'F', 7=>'G', 8=>'H', 9=>'I', 10=>'J');
-        $var = $vars[$part_id];
-        if (isset($user_answers[$current_screen][$q_id])) {
-          $tmp_user_answers = explode('|',$user_answers[$current_screen][$q_id]);
-        } else {
-          $tmp_user_answers = array();
-        }
-
-        $figures = explode(',',$display_option['option_text']);
-
-        $min = calcPreParse($figures[0],$user_answers,$vars);
-        $max = (isset($figures[1]) and $figures[1] != '') ? calcPreParse($figures[1],$user_answers,$vars) : $min;
-
-        if (!isset($user_answers[$current_screen][$q_id])) {
-          //its a normal range and user has not seen the question genarate value
-          $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
-        } else {
-          //user has seen this question before use values already presented to the student
-          $variables = explode(',', $tmp_user_answers[2]);
-          if (substr($figures[0],0,3) == 'ans' or substr($figures[1],0,3) == 'ans' or substr($figures[0],0,3) == 'var' or substr($figures[1],0,3) == 'var') {
-            $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
-          } else {
-            $$var = $variables[$part_id-1];
-          }
-        }
-
+      case 'enhancedcalc':
         break;
       case 'likert':
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
@@ -411,7 +386,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           echo '<img src="../artwork/print_box_circle.png" width="24" height="24" alt="" />';
           if ($display_option['option_text'] != '') echo '&nbsp;' . $display_option['option_text'];
           if ($display_option['o_media'] != '') echo '&nbsp;' . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
-          echo '&nbsp;&nbsp;';
+          //echo '&nbsp;&nbsp;';
+         // echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
         }
         if ($tmp_part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
         break;
@@ -740,7 +716,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
     }                  // End switch
   }                    // End foreach loop
-
   if ($question['q_type'] == 'mcq') {
     if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
       if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {
@@ -752,49 +727,28 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
       echo '</table>';
     } elseif ($question['display_method'] == 'dropdown') {
-      echo '</select></div>';
+      echo '</table>';
     }
-  } elseif ($question['q_type'] == 'calculation') {
+  } elseif ($question['q_type'] == 'enhancedcalc') {
+    if(!isset($question['object'])) {
+      require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+      if (!isset($configObj)) {
+        $configObj = Config::get_instance();
+      }
+      $question['object'] = new EnhancedCalc($configObj);
+      $question['object']->load($question);
+    }
     $settings = json_decode($question['settings'], true);
     if ($li_set == 1) {
       echo '<tr><td></td><td>';
     } else {
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
     }
-    $new_leadin = '';
-    $search = array('$A','$B','$C','$D','$E','$F','$G','$H','$I','$J');
-    $replace = array($A,$B,$C,$D,$E,$F,$G,$H,$I,$J);
-    $question['leadin'] = str_ireplace($search, $replace, $question['leadin']);
-    $question['leadin'] = str_replace('ERROR', '<span style="color:red; font-weight:bold">' . $string['unanswered'] . '</span>', $question['leadin']);
-    echo "<p>" . $question['leadin'] . "</p>\n";
-    if (in_array('ERROR',$replace,true)) {
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" disabled />" . $settings['units'] .  "</p>\n";
-    } else {
-      if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '') {
-        echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" />" . $settings['units'] .  "</div>\n";
-      } else {
-        if ((isset($tmp_user_answers[0]) and $tmp_user_answers[0] != '') or $screen_pre_submitted == 0) {
-          $ans = '';
-          if(isset($tmp_user_answers[0])){
-            $ans = $tmp_user_answers[0];
-          }
-          echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $ans . "\" />" . $settings['units'] .  "</div>\n";
-        }
-      }
-    }
-    $answer = "echo \"" . $question['options'][0]['correct'] . "\"";
-    echo '<input type="hidden" name="q' . $question_no . '_answer" value="';
-    if (isset($A)) echo $A;
-    if (isset($B)) echo ",$B";
-    if (isset($C)) echo ",$C";
-    if (isset($D)) echo ",$D";
-    if (isset($E)) echo ",$E";
-    if (isset($F)) echo ",$F";
-    if (isset($G)) echo ",$G";
-    if (isset($H)) echo ",$H";
-    if (isset($I)) echo ",$I";
-    if (isset($J)) echo ",$J";
-    echo '" />';
+    $extra = array('num_on_screen' => $question_no,'printhardcopy' => true);
+
+    $question['object']->render_paper($extra);
+
+
     $marks = $display_option['marks_correct'];
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
     if ($question['display_method'] == 'other') {
