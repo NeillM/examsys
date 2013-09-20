@@ -1169,7 +1169,7 @@ class ClassTotals {
                                                 'room'=>$room, 
                                                 'student_id'=>$student_id, 
                                                 'attempt'=>$attempt, 
-                                                'visible'=>false, 
+                                                'visible'=>false, //ad students as not visible
                                                 'display_started'=>$display_started, 
                                                 'started'=>$started, 
                                                 'student_grade'=>$student_grade, 
@@ -1218,9 +1218,9 @@ class ClassTotals {
         continue; //this user is not on the module set in repmodule so dont put them in the array
       }
       
+      //we have passed the check this students should be displayed
       $this->user_results[$metadataID]['visible'] =  true;
-
-              
+      
       if ($old_screen != $screen or $old_metadataID != $metadataID) {
         $user_duration += $old_duration;
       }
