@@ -55,6 +55,10 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
     if (extra != "" && extra != undefined && extra != "undefined" && extra != null && extra != "null") {
       if (this.qmode == 'edit') {
 				this.extraImgs = extra.split(';');
+			} else if (this.qmode=='script') {
+				tmp_extra = extra.split(",");
+				this.exclusions = '00000000000000000000';
+				if (typeof(tmp_extra[2])!='undefined') this.exclusions = tmp_extra[2];
 			} else {
 				var extra_l1 = extra.split('~');
 				this.marks_per_correct = extra_l1[0];
@@ -62,6 +66,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				this.marking_method = extra_l1[2];
 			}
     }
+				
 		//---------- config, 
  		if (config=='') config = '#3f3f3f;1;#ffffff;10;#000000;100;19;0;0;single;label;$$$$;';
 
@@ -258,7 +263,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 
 		//loading label images and drawing boxes
 		this.context.fillStyle=this.currentColours[0];
-		this.context.StrokeStyle=this.currentColours[1];
+		this.context.strokeStyle=this.currentColours[1];
 			
 		function ql_gen_img_onload(){
 			this.imagesLoaded ++;
@@ -394,6 +399,12 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			if (this_box[9]>205) tmp_red = 205/this_box[9];
 			this.context.drawImage(this_box[11],temp_x+(this.imglabelWidth-this_box[9]*tmp_red)*0.5,temp_y+(this.imglabelHeight-this_box[10]*tmp_red)*0.5,this_box[9]*tmp_red,this_box[10]*tmp_red);
 			this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.imglabelWidth,this.imglabelHeight);
+			if (this.exclusions[i]=='1') {
+				var tmp_style = this.context.strokeStyle;
+				this.lineDraw(this.context,'#FF0000',temp_x+10.5,temp_y+10.5,this.imglabelWidth-20,this.imglabelHeight-20);
+				this.lineDraw(this.context,'#FF0000',temp_x+10.5,temp_y+10.5+this.imglabelHeight-20,this.imglabelWidth-20,-this.imglabelHeight+20);
+				this.context.strokeStyle = tmp_style;
+			}
 		} 
   }
   if (this_box[1]=='text') {
@@ -421,6 +432,13 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		}
 		
     var wrapped = this.wrapText(this.tmp_text,tmp_width);
+		
+		if (this.exclusions[i]=='1') {
+			this.context.fillStyle='#FF0000';
+			var tmp_style = this.context.strokeStyle;
+			this.lineDraw(this.context,'#FF0000',temp_x+5.5,temp_y+this.fontSizes[this.fontSizePos]-1.5,tmp_width-10,0);
+			this.context.strokeStyle = tmp_style;
+		}
 		this.fillWrappedText(this.context,wrapped[0],Math.round(temp_x+tmp_width*0.5)+0.5,Math.round(temp_y+this.fontSizes[this.fontSizePos])+0.5);
     this.context.fillStyle=this.currentColours[0];
     this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.labelWidthEffect,this.labelHeightEffect);
@@ -1587,6 +1605,7 @@ function rql(num) {
 	this.fillWrappedText = fillWrappedText;
 	this.testWithin=testWithin;
 	this.edtDot=edtDot;
+	this.lineDraw=lineDraw;
 	this.rectDraw=rectDraw;
 	this.menuBuild_icons=menuBuild_icons;
 	this.menuRebuild=menuRebuild;
@@ -1697,6 +1716,7 @@ function rql(num) {
   this.marks_per_incorrect = 0;
   this.marking_method = 'Mark per Option';
   this.qmode;
+	this.exclusions;
 	this.char_labels;
 	this.imglabelWidth;
 	this.imglabelHeight;

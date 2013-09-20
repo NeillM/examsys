@@ -101,7 +101,16 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 				}
 			}
     }      
-    if (answer=='u') this.allUnaswered=true;    
+    if (answer=='u') this.allUnaswered=true; 
+		
+		//---------- extra
+		if (this.qmode=='script') {
+			this.extra = extra;
+			tmp_extra = extra.split(",");
+			this.exclusions = '00000000000000000000';
+			if (typeof(tmp_extra[2])!='undefined') this.exclusions = tmp_extra[2];
+		}
+		
 		//---------- colour 
 		this.currentColours[3] = colour;
     
@@ -385,6 +394,10 @@ function qh_redraw_canvas() {
    		this.context.fillRect(40.5,pan_y+12.5,250-this.palico,pan_h-18);
       //label text
       this.context.fillStyle='#000000';
+			if (this.exclusions[i]=='1') {
+				this.context.fillStyle='#FF0000';
+	      this.lineDraw(this.context,'#FF0000',43.5,pan_y+22.5,243-this.palico,0);
+				}
    		this.context.font="12px Arial";
 			this.fillWrappedText(this.context,wrapped[0],45.5,pan_y+25.5);
       //text frame
@@ -1206,5 +1219,7 @@ function rqh(num) {
   this.marks_per_incorrect = 0;
   this.marking_method = 'Mark per Option';
   this.qmode;
+	this.extra;
+	this.exclusions;
   this.imgdata,this.imgdatab,this.imgdatac;
 }
