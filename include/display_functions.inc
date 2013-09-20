@@ -355,7 +355,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '</td><td>';
       }
       $li_set = 1;
-      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix')))) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
       if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') echo $question['leadin'];
     }
   }
