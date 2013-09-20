@@ -215,7 +215,22 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       $calc = new enhancedcalc($configObj);
       $calc->set_settings($settings);
       $calc->set_useranswer($answer);
-      $user_ans = $calc->get_user_answer_raw();
+      
+      if ($calc->is_user_ans_correct() or $calc->is_user_ans_within_fullmark_tolerance()) {
+        if (isset($log_array[$qID][1]['correct'])) {
+          $log_array[$qID][1]['correct']++;
+        } else {
+          $log_array[$qID][1]['correct'] = 1;
+        }
+      } 
+ 
+      if (isset($log_array[$qID][1]['frac_mark'])) {
+        $log_array[$qID][1]['frac_mark'] += $mark/$totalpos;
+      } else {
+        $log_array[$qID][1]['frac_mark'] = $mark/$totalpos;
+      }
+      
+      /*$user_ans = $calc->get_user_answer_raw();
       $correct_ans = $calc->get_real_answer();
 
       if ($user_ans == $correct_ans) {
@@ -229,7 +244,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
         $log_array[$qID][1]['frac_mark'] += $mark/$totalpos;
       } else {
         $log_array[$qID][1]['frac_mark'] = $mark/$totalpos;
-      }
+      }*/
       break;
     case 'dichotomous':
     case 'true_false':
