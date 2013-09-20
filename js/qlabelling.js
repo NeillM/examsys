@@ -58,7 +58,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				this.extraImgs = extra.split(';');
 			} else if (this.qmode=='script') {
 				tmp_extra = extra.split(",");
-				if (typeof(tmp_extra[2])!='undefined') this.exclusions = tmp_extra[2];
+				if (typeof(tmp_extra[1])!='undefined') this.exclusions = tmp_extra[1];
 			} else {
 				var extra_l1 = extra.split('~');
 				this.marks_per_correct = extra_l1[0];
