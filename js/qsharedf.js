@@ -24,7 +24,7 @@ $.get('/js/images/cur_cross.cur', function() { });
 	if (mode=='2') mode='edit';
 	if (mode=='3') mode='script';
 	if (mode=='4') mode='analysis';
-	if (mode=='review') mode='answer';
+	if (mode=='review') mode='script';
 	
   if (type=='labelling') {
 		rq[num] = new rql(num);
