@@ -892,6 +892,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
 
         echo '</blockquote>';
+
+        $marks = $display_option['marks_correct'];
+        
         break;
       case 'blank':
         $ans = '';
