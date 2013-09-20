@@ -104,10 +104,10 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
     if (answer=='u') this.allUnaswered=true; 
 		
 		//---------- extra
+		this.exclusions = '00000000000000000000';
 		if (this.qmode=='script') {
 			this.extra = extra;
 			tmp_extra = extra.split(",");
-			this.exclusions = '00000000000000000000';
 			if (typeof(tmp_extra[2])!='undefined') this.exclusions = tmp_extra[2];
 		}
 		
