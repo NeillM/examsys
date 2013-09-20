@@ -52,12 +52,12 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		
 		//---------- extra,
 		this.extraImgs = new Array();
+		this.exclusions = '00000000000000000000';
     if (extra != "" && extra != undefined && extra != "undefined" && extra != null && extra != "null") {
       if (this.qmode == 'edit') {
 				this.extraImgs = extra.split(';');
 			} else if (this.qmode=='script') {
 				tmp_extra = extra.split(",");
-				this.exclusions = '00000000000000000000';
 				if (typeof(tmp_extra[2])!='undefined') this.exclusions = tmp_extra[2];
 			} else {
 				var extra_l1 = extra.split('~');
@@ -432,7 +432,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		}
 		
     var wrapped = this.wrapText(this.tmp_text,tmp_width);
-		
+		//console.log(this.exclusions);
 		if (this.exclusions[i]=='1') {
 			this.context.fillStyle='#FF0000';
 			var tmp_style = this.context.strokeStyle;

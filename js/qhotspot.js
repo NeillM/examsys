@@ -44,6 +44,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 		this.gen_img.src = '/media/'+image; 
 
 		//---------- mode 
+		if (mode=='review') mode='script';
 		if (mode=='edit' || mode=='analysis') this.yOffset = 0;
 		if (mode=='answer' || mode=='script') this.yOffset = 25;
     this.qmode = mode;
