@@ -35,7 +35,7 @@
   $scale_start = 0;
   $min_mark = 100;
   $max_mark = 0;
-  for ($i=-10; $i<=100; $i++) {
+  for ($i=-100; $i<=100; $i++) {
     if (isset($mydata[$i])) {
       if ($mydata[$i] > 0) {
         if ($i > $max_mark) $max_mark = $i;
@@ -45,12 +45,13 @@
         $max_frequency = $mydata[$i];
       }
       if ($mydata[$i] > 0 and $i < 0) {
-        $negative = 70;
+        $negative = 80;
         $scale_start = -10;
       }
     }
   }
-  
+ 	if ($min_mark<-10) $min_mark=-10;
+
   // Calculate y axis scaling.
   if ($max_frequency <= 10) {
     $gap = 24;
