@@ -425,7 +425,7 @@ function qh_redraw_canvas() {
 				}
       pan_y += pan_h;
 		}
-		this.buttonBox[0][2] = pan_y+10;
+		if (this.qmode=='script' && typeof(this.buttonBox[0])!='undefined') this.buttonBox[0][2] = pan_y+10;
 		
     //frames
     this.context.strokeStyle='#7f9db9';  
@@ -617,7 +617,7 @@ function qh_redraw_canvas() {
 		
 		//buttons
 		if (this.qmode=='edit' || this.qmode=='analysis') this.menuRebuild(this.context);
-		if (this.qmode=='script') this.menuRebuild(this.context,false);
+		if (this.qmode=='script' && this.hotSpots.length>1) this.menuRebuild(this.context,false);
 		
 		//msgbox overlaping
 		this.draw_limit = Array(0,27,this.canvas.width-2,this.canvas.height-2);
