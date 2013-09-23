@@ -163,7 +163,8 @@ class VLE_UoNCM implements iVLEAPI {
     if (is_array($session['objectives'])) {
       $sess_data = array(
         'identifier' => $session['@attributes']['id'],
-        'GUID' => $session['guid'],
+        'GUID' => $session['@attributes']['guid'],
+        'ttGUID' => $session['ttguid'],
         'class_code' => $session['code'],
         'title' => $session['title'],
         'occurrance' => date('d/m/y H:i', strtotime($session['start'])),
@@ -186,12 +187,13 @@ class VLE_UoNCM implements iVLEAPI {
           $obj_data = array(
             'content' => (isset($objective['title']) and $objective['title'] != '') ? $objective['title'] : $objective['content'],
             'id' => $objective['@attributes']['id'],
+            'guid' => $objective['@attributes']['guid'],
             'mapped' => 0
           );
           $sess_data['objectives'][++$count] = $obj_data;
         }
       }
-      $sessions[$session['@attributes']['id']] = $sess_data;
+      $sessions[$session['@attributes']['guid']] = $sess_data;
     }
   }
 
@@ -206,6 +208,7 @@ class VLE_UoNCM implements iVLEAPI {
     if (is_array($learning_act['objectives'])) {
       $act_data = array(
         'identifier' => $learning_act['@attributes']['id'],
+        'guid' => $learning_act['@attributes']['guid'],
         'class_code' => '',
         'title' => $learning_act['title'],
         'occurrance' => 'Non-timetabled',
@@ -229,12 +232,13 @@ class VLE_UoNCM implements iVLEAPI {
           $obj_data = array(
             'content' => (isset($objective['title']) and $objective['title'] != '') ? $objective['title'] : $objective['content'],
             'id' => $objective['@attributes']['id'],
+            'guid' => $objective['@attributes']['guid'],
             'mapped' => 0
           );
           $act_data['objectives'][++$count] = $obj_data;
         }
       }
-      $sessions[$learning_act['@attributes']['id']] = $act_data;
+      $sessions[$learning_act['@attributes']['guid']] = $act_data;
     }
   }
 
