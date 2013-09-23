@@ -340,11 +340,12 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
           if (!empty($session['objectives'])) {
             foreach ($session['objectives'] as &$obj) {
               $old_objID = $obj['id'];
+              $old_objGUID = $obj['guid'];
                 if (isset($new_course[$module][$identifier]['objectives'])){
                   foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
-                  if ($new_obj['id'] == $old_objID and $new_obj['content'] == $obj['content']) {
+                  if (($new_obj['id'] == $old_objID or $new_obj['guid'] == $old_objGUID) and $new_obj['content'] == $obj['content']) {
                     //build a list of objectives that are still in both sessions
-                    $mappings_copy_objID[$old_objID] = $old_objID;
+                    $mappings_copy_objID[$old_objID] = $new_obj['id'];
                     break;
                   }
                 }
