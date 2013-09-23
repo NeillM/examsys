@@ -44,6 +44,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 		this.gen_img.src = '/media/'+image; 
 
 		//---------- mode 
+		if (mode=='review') mode='script';
 		if (mode=='edit' || mode=='analysis') this.yOffset = 0;
 		if (mode=='answer' || mode=='script') this.yOffset = 25;
     this.qmode = mode;
@@ -187,6 +188,10 @@ function qh_menuBuild() {
 		posx = this.menuBuild_icons('toolbar/ico_check_on.png',posx,posy,0,'-',lang_string['correctAnswers'],'')+spac;
 		posx = this.menuBuild_icons('toolbar/ico_check_on.png',posx,posy,0,'-',lang_string['incorrectAnswers'],'')+spac;
 	}
+	if (this.qmode == 'script') {
+		posx = this.menuBuild_icons('toolbar/ico_check_on.png',10,10,0,'-',lang_string['view'],'');		
+	}
+
 }
 
 function test_handler(xx,yy,ww,hh,vv) {
@@ -330,7 +335,7 @@ function qh_redraw_canvas() {
     this.redraw_once = false;
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
     //menu buttons
-    if (this.buttonBox.length==0 && (this.qmode=='edit' || this.qmode=='analysis')) this.qh_menuBuild();  
+    if (this.buttonBox.length==0 && (this.qmode=='edit' || this.qmode=='analysis' || this.qmode == 'script')) this.qh_menuBuild(); 
 
     //test against label fields  
     if (this.do_the_test && this.qmode!='script') {
@@ -352,8 +357,8 @@ function qh_redraw_canvas() {
     for (i in this.hotSpots) {
       this.context.textAlign="left";
    		this.context.font="12px Arial";
-			this.palico = 20;
-			if (this.qmode=='answer' || this.qmode=='script') this.palico = 0;
+			this.palico = 0;
+			if (this.qmode=='edit') this.palico = 20;
       var wrapped = this.wrapText(this.hotSpots[i][1],250-this.palico, false);
       pan_h = 25 + wrapped[1];
 
@@ -420,7 +425,8 @@ function qh_redraw_canvas() {
 				}
       pan_y += pan_h;
 		}
-
+		this.buttonBox[0][2] = pan_y+10;
+		
     //frames
     this.context.strokeStyle='#7f9db9';  
     this.context.strokeRect(300.5,0.5,this.canvas.width-300,this.canvas.height-1); 
@@ -611,6 +617,7 @@ function qh_redraw_canvas() {
 		
 		//buttons
 		if (this.qmode=='edit' || this.qmode=='analysis') this.menuRebuild(this.context);
+		if (this.qmode=='script') this.menuRebuild(this.context,false);
 		
 		//msgbox overlaping
 		this.draw_limit = Array(0,27,this.canvas.width-2,this.canvas.height-2);
@@ -1017,7 +1024,11 @@ function qh_mouseDragUp(){
 			//hold on colour button
 			if (this.buttonClicked==this.buttonBoxNames['toolbar/ico_palette.png'])
 				this.buttonBox[this.buttonClicked][5] = this.buttonBox[this.buttonClicked][6] = 2;
-			
+		}
+	}
+	
+	if (this.qmode == 'edit' || this.qmode == 'script') {	
+		if (this.buttonBox.length!=0) {		
 			//switch toolbar/ico_check_on.png
 			if (this.buttonClicked==this.buttonBoxNames['toolbar/ico_check_on.png']) {
 				if (this.buttonBox[this.buttonBoxNames['toolbar/ico_check_on.png']][0] == 'toolbar/ico_check_on.png') {

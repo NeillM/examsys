@@ -2141,6 +2141,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         }
 
         echo '<div align="center">';
+        $extra = ',' . $tmp_exclude;
 				if ($configObject->get('cfg_interactive_qs')=='html5') {
 					//<!-- ======================== HTML5 part include finf ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
@@ -2156,7 +2157,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 				} else {
 					echo '<script language="JavaScript">';
 				} 
-        $extra = ',' . $tmp_exclude;
 
   $tmp_std = '';
   if (is_array($paper[$question]['std'])) {

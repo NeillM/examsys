@@ -24,7 +24,6 @@ $.get('/js/images/cur_cross.cur', function() { });
 	if (mode=='2') mode='edit';
 	if (mode=='3') mode='script';
 	if (mode=='4') mode='analysis';
-	if (mode=='review') mode='answer';
 	
   if (type=='labelling') {
 		rq[num] = new rql(num);
@@ -500,7 +499,7 @@ function menuBuild_icons(name,posx,posy,state,set,text,tooltip) {
 }
 
 //recreates menu based on this.buttonBox array data
-function menuRebuild(ctx) {
+function menuRebuild(ctx,bar) {
   var tmp_lw = this.context.lineWidth;
   var tmp_ss = this.context.strokeStyle;
   var tmp_fs = this.context.fillStyle;
@@ -510,8 +509,11 @@ function menuRebuild(ctx) {
   this.context.fillStyle = '#FFFFFF';
 
   //toolbar background
-  imgdata = menuImages['toolbar/vert_0.png'];
-	this.context.drawImage(this.menu_img,imgdata.left+0.5,imgdata.top,imgdata.width-1,imgdata.height,0,0,this.canvas.width,imgdata.height);
+	if (typeof(bar)=='undefined') bar = true;
+	if (bar) {
+		imgdata = menuImages['toolbar/vert_0.png'];
+		this.context.drawImage(this.menu_img,imgdata.left+0.5,imgdata.top,imgdata.width-1,imgdata.height,0,0,this.canvas.width,imgdata.height);
+	}
   for (var n=0;n<this.buttonBox.length;n++) {
     var state = this.buttonBox[n][5];
     imgdata = menuImages[this.buttonBox[n][0]];

@@ -419,6 +419,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'enhancedcalc':
+        
+          //load old question data from the session (NB reviewer screens)
+        $question['object']->load_all_user_answers($_SESSION['allans']);
+
         $extra = array('num_on_screen' => $question_no, 'reviewers' => true);
       
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
@@ -528,9 +532,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($question['score_method'] == 'Mark per Question' && $part_id==1 && isset($std_parts[0])) echo display_std($std_parts[0]);
         if ($question['score_method'] != 'Mark per Question' && isset($std_parts[$question['option_order'][$part_id-1]])) echo display_std($std_parts[$question['option_order'][$part_id-1]]);
         echo "</td><td class=\"option\"><select name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" onchange=\"rankCheck(" . $question_no . "," . $part_id . ",$option_no,$total_rank_no);\">\n";
-        echo $question . "<option value=\"9999\"></option>\n";
+        echo  "<option value=\"9999\"></option>\n";
         if ($require_na) {
-          echo $question . "<option value=\"9990\">" . $string['na'] . "</option>\n";
+          echo  "<option value=\"9990\">" . $string['na'] . "</option>\n";
         }
         for ($i=1; $i<=$total_rank_no; $i++) {
           if ($i == $question['options'][$part_id-1]['correct']) {
@@ -889,7 +893,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   } elseif ($question['q_type'] == 'enhancedcalc') {
     $settings = json_decode($question['settings'], true);
     $answer_equation = $question['options'][0]['correct'];
+    //put the caculated awnser in the session for use in linked caculation questions (N.B only for reviewers screen!!)
+    $_SESSION['allans'][$current_screen][$question['q_id']] = $question['object']->useranswer;
     
+    //$question['object']->load_all_user_answers($_SESSION['allans']);
     //echo "<tr><td>hi</td><td>";
 
     //if ($li_set == 0) {
@@ -899,7 +906,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     //} else {
       echo '<tr><td></td><td>';
     //}
-    //var_dump($_SESSION);
+
     $question['leadin'] = str_replace('$A','<span style="background-color:#FFFF80">&nbsp;<strong>$A</strong>&nbsp;</span>' . $A,$question['leadin']);
     $question['leadin'] = str_replace('$B','<span style="background-color:#FFFF80">&nbsp;<strong>$B</strong>&nbsp;</span>' . $B,$question['leadin']);
     $question['leadin'] = str_replace('$C','<span style="background-color:#FFFF80">&nbsp;<strong>$C</strong>&nbsp;</span>' . $C,$question['leadin']);
