@@ -1,7 +1,9 @@
 <?php
 
 // Your code here
-
+function add_dollar_to_linked_var($var) {
+    return str_replace('var', 'var$', $var);
+}
 if ($updater_utils->count_rows("SELECT q_id from questions where q_type='calculation'") > 0) {
     $loop = 0;
     echo "<li>Converting Calculation questions to enhanced calculation questions</li>";
@@ -16,26 +18,33 @@ if ($updater_utils->count_rows("SELECT q_id from questions where q_type='calcula
         exit();
     }
     $vars = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K', '$L');
+    
+    $select = $mysqli->prepare("SELECT option_text,correct,id_num,marks_correct,marks_incorrect,marks_partial from  options WHERE o_id=? order by id_num;");
 
+    $sql = "DELETE from options where id_num=?";
+    $delete = $mysqli->prepare($sql);
+    
+    $sql = "UPDATE questions set settings=?,q_type='enhancedcalc' where q_id=?";
+    $update = $mysqli->prepare($sql);
+        
     foreach ($qids as $qid => $settings) {
 
-        $result = $mysqli->prepare("SELECT option_text,correct,id_num,marks_correct,marks_incorrect,marks_partial from  options WHERE o_id=? order by id_num;");
-        $result->bind_param('i', $qid);
-        $result->execute();
-        $result->store_result();
-        $result->bind_result($optiontext, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
+        $select->bind_param('i', $qid);
+        $select->execute();
+        $select->store_result();
+        $select->bind_result($optiontext, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
         $settings = json_decode($settings, true);
         $changed = false;
         $loc = 0;
         unset($optionids);
         $optionids = array();
 
-        while ($result->fetch()) {
+        while ($select->fetch()) {
             $optionids[] = $id_num;
             $changed = true;
             $opts = explode(',', $optiontext);
-            $settings['vars'][$vars[$loc]]['min'] = $opts[0];
-            $settings['vars'][$vars[$loc]]['max'] = $opts[1];
+            $settings['vars'][$vars[$loc]]['min'] = add_dollar_to_linked_var($opts[0]);
+            $settings['vars'][$vars[$loc]]['max'] = add_dollar_to_linked_var($opts[1]);
             $settings['vars'][$vars[$loc]]['inc'] = $opts[2];
             $settings['vars'][$vars[$loc]]['dec'] = $opts[3];
             $ansdat['formula'] = str_ireplace('pi()', 'pi', $correct);
@@ -45,33 +54,29 @@ if ($updater_utils->count_rows("SELECT q_id from questions where q_type='calcula
 
             $ansdat['units'] = $settings['units'];
 
-            $sql = "DELETE from options where id_num=?";
-            $delete = $mysqli->prepare($sql);
-            print $mysqli->error;
             $delete->bind_param('i', $id_num);
-
             $delete->execute();
             $loc++;
-
-
         }
+        
+        if (!isset($settings['dp'])) {
+            if (isset($settings['answer_decimals'])) {
+                $settings['dp'] = $settings['answer_decimals'];
+                unset($settings['answer_decimals']);
+            }
+        }
+
         if (!isset($settings['strictdisplay'])) {
-            $settings['strictdisplay'] = false;
+            if (isset($settings['dp'])) {
+              $settings['strictdisplay'] = true;
+            } else {
+              $settings['strictdisplay'] = false;
+            }
         }
         if (!isset($settings['strictzeros'])) {
             $settings['strictzeros'] = false;
         }
-
-        if (!isset($settings['dp'])) {
-            if (!isset($settings['answer_decimals'])) {
-                $settings['dp'] = 0;
-            } else {
-                $settings['dp'] = $settings['answer_decimals'];
-                unset($settings['answer_decimals']);
-            }
-
-        }
-
+        
         if (!isset($settings['fulltoltyp'])) {
             $rep = '#';
             if (strpos($settings['tolerance_full'], '%') !== false) {
@@ -101,8 +106,7 @@ if ($updater_utils->count_rows("SELECT q_id from questions where q_type='calcula
         $settings['answers'][] = $ansdat;
         unset($settings['units']);
 
-        $sql = "UPDATE questions set settings=?,q_type='enhancedcalc' where q_id=?";
-        $update = $mysqli->prepare($sql);
+        
         $settings = json_encode($settings);
         $update->bind_param('si', $settings, $qid);
         $update->execute();
@@ -113,8 +117,10 @@ if ($updater_utils->count_rows("SELECT q_id from questions where q_type='calcula
             @ob_flush();
         }
     }
-
-
+    
+    $select->close();
+    $delete->close();
+    $update->close();
 }
 
 /*
