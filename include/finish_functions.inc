@@ -152,7 +152,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   $exclude_query->close();
 
   if ($paper_type == '2' and ($userObj->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
-    if (!isset($_GET['userid']) and !isset($_GET['q_id'])) {
+    if (!isset($_GET['userID']) and !isset($_GET['q_id'])) { 
       $tmp_string = sprintf($string['thankyoumsg'], $paper_title);
       echo '<blockquote><p style="font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p><p>' . $tmp_string . '</p>';
       //echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>' . $tmp_string . '</p><br />';
