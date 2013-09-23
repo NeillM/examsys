@@ -589,7 +589,11 @@ class EnhancedCalc extends Question implements questionInterface {
       foreach ($user_answers as $screen => $answers) {
         if (isset($answers[$find_qid])) {
           try {
-            $uansarray = json_decode($answers[$find_qid], true);
+            if (!is_array($answers[$find_qid])) {
+                $uansarray = json_decode($answers[$find_qid], true);
+            } else {
+                $uansarray = $answers[$find_qid];
+            }
           } catch (exception $e) {
             return 'ERROR';
           }
@@ -612,7 +616,11 @@ class EnhancedCalc extends Question implements questionInterface {
       }
       foreach ($user_answers as $screen => $answers) {
         if (isset($answers[$find_qid])) {
-            $variables = json_decode($answers[$find_qid], true);
+            if(!is_array($answers[$find_qid])) {
+                $variables = json_decode($answers[$find_qid], true);
+            } else {
+                $variables = $answers[$find_qid];
+            }
             if(isset($variables['vars'][$find_var])) {
               $inputVal = $variables['vars'][$find_var];
               break;
