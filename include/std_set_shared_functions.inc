@@ -155,14 +155,16 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
           if ($reviews[$i]['method'] == 'Modified Angoff') {
             $tmp_part = 0;
             foreach ($rating_array as $individual_rating) {
-              if (substr($tmp_exclude, $tmp_part, 1) == '0') {
-                if ($q_type == 'textbox') {
-                  $std_total += $individual_rating * (count($q_sections) - $tmp_part);
-                } else {
-                  $std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
-                }
-                if ($q_type != 'mrq' or $individual_rating != '') $question_no++;
-              }
+							if (isset($marks_array[$questionID][$tmp_part]) and $individual_rating != '') {
+								if (substr($tmp_exclude, $tmp_part, 1) == '0') {
+									if ($q_type == 'textbox') {
+										$std_total += $individual_rating * (count($q_sections) - $tmp_part);
+									} else {
+										$std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
+									}
+									if ($q_type != 'mrq' or $individual_rating != '') $question_no++;
+								}
+							}
               $tmp_part++;
             }
           }
