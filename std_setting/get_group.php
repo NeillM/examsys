@@ -113,9 +113,11 @@ echo "</table>\n";
 <tr><th colspan="6" class="bevel"></th></tr>
 <?php
 $reviews = get_reviews($mysqli, 'group', $paperID, $propertyObj->get_total_mark());
+$line_no = 0;
 foreach ($reviews as $review) {
+  $line_no++;
   if ($review['group_review'] == 'No') {
-    echo "<tr><td align=\"center\"><input type=\"checkbox\" name=\"member{$review['review_no']}\" value=\"{$review['setter_id']},{$review['date']}\" checked=\"checked\" /></td><td>&nbsp;{$review['name']}</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    echo "<tr><td align=\"center\"><input type=\"checkbox\" name=\"member{$line_no}\" value=\"{$review['std_setID']}\" checked=\"checked\" /></td><td>&nbsp;{$review['name']}</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
   }
 }
 $mysqli->close();

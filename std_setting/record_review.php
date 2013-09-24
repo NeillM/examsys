@@ -48,6 +48,11 @@ if (isset($_GET['group']) and $_GET['group'] == 'true' and isset($_POST['review_
 }
 
 if (isset($_POST['std_setID']) and $_POST['std_setID'] != '') {
+  $std_query = $mysqli->prepare("UPDATE std_set SET std_set = NOW() WHERE id = ?");
+  $std_query->bind_param('i', $_POST['std_setID']);
+  $std_query->execute();
+  $std_query->close();
+  
   $std_query = $mysqli->prepare("DELETE FROM std_set_questions WHERE std_setID = ?");
   $std_query->bind_param('i', $_POST['std_setID']);
   $std_query->execute();

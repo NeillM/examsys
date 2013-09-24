@@ -76,7 +76,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
   $result->execute();
   $result->store_result();
   $result->bind_result($std_setID, $std_set, $display_date, $method, $group_review, $title, $initials, $surname, $setterID);
-  while($result->fetch()) {
+  while ($result->fetch()) {
     $reviews[] = array(
     	'std_setID' => $std_setID,
     	'group_review' => $group_review,
@@ -951,7 +951,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
     if ($valid) {
       $review_string = "mean=$mean%, $review_string\n";
     } else {
-      $review_string = "<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /><span style=\"font-weight:bold\">mean=$mean%, </span><span style=\"color:#C00000; font-weight:bold\">$review_string</span>\n";
+      $review_string = "<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;<span style=\"font-weight:bold\">mean=$mean%, </span><span style=\"color:#C00000; font-weight:bold\">$review_string</span>\n";
     }
     if (isset($value['prev_review']) and $value['prev_review'] > 0) {
       $tmp_value = $value['prev_review'];
@@ -1041,11 +1041,12 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
     $prev_review = 0;
     $ratings_array = array();
     $rating_total = 0;
-    $min = 100; $max = 0;
+    $min = 100;
+		$max = 0;
     foreach ($prev_reviews['user'] as $individual_rater) {
       if ($q_type == 'textbox') {
         $ratings_parts = explode(',',$individual_rater[$q_id]);
-        if(isset($ratings_parts[$part_no - 1])) {
+        if (isset($ratings_parts[$part_no - 1])) {
           $this_rating = $ratings_parts[count($ratings_parts) - $part_no];
         } else {
           // This is bad missing data, maybe as the result of changes to the question.  Fill in missing values with 0 temporarily
