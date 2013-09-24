@@ -159,7 +159,9 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
                 if ($q_type == 'textbox') {
                   $std_total += $individual_rating * (count($q_sections) - $tmp_part);
                 } else {
-                  $std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
+								  if ($individual_rating != '') {
+										$std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
+									}
                 }
                 if ($q_type != 'mrq' or $individual_rating != '') $question_no++;
               }
