@@ -838,7 +838,7 @@ class EnhancedCalc extends Question implements questionInterface {
     $marks_partial = isset($this->settings['marks_partial']) ? $this->settings['marks_partial'] : false;
     $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : 0;
 
-    if ($marks_full and $marks_partial) {
+    if ($marks_full !== false  and $marks_partial !== false) {
       return array('correct' => $marks_full, 'partial' => $marks_partial, 'incorrect' => $marks_incorrect);
     } else {
       return false;

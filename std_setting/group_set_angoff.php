@@ -27,8 +27,11 @@ require '../include/media.inc';
 require '../include/std_set_functions.inc';
 require_once '../include/errors.inc';
 require_once '../classes/exclusion.class.php';
+require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
+
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $rater_query   = '';
 $rater_names   = array();
@@ -37,47 +40,34 @@ $review_string = '';
 if (isset($_GET['reviewers'])) {
   $module = (isset($_GET['module'])) ? $_GET['module'] : '';
   $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
-  $prev_reviews = explode(';',$_GET['reviewers']);
-  $row_no = 0;
-  foreach ($prev_reviews as $individual_review) {
-    $parts = explode(',',$individual_review);
-    if ($row_no == 0) {
-      $setterID = $parts[0];
-      $dateID = $parts[1];
-    } else {
-      if ($rater_query == '') {
-        $rater_query = " AND ((setterID=$parts[0] AND std_set=$parts[1])";
-      } else {
-        $rater_query .= " OR (setterID=$parts[0] AND std_set=$parts[1])";
-      }
-      $review_string .= ';' . $individual_review;
-      $rater_names[] = $parts[0];
-    }
-    $row_no++;
-  }
+  
+	$review_string = $_GET['reviewers'];
 } else {
   $module = (empty($_POST['module'])) ? '' : $_POST['module'];
   $folder = (empty($_POST['folder'])) ? '' : $_POST['folder'];
   $setterID = (empty($_POST['setterID'])) ? '' : $_POST['setterID'];
-  $dateID = (empty($_POST['setterID'])) ? '' : $_POST['dateID'];
   for ($i=1; $i<=100; $i++) {
     if (isset($_POST["member$i"])) {
-      $review_string .= ';' . $_POST["member$i"];
-      $parts = explode(',',$_POST["member$i"]);
+      $std_setID = $_POST["member$i"];
       if ($rater_query == '') {
-        $rater_query = " AND ((setterID=$parts[0] AND std_set=$parts[1])";
+        $rater_query = " AND ((std_set.id=$std_setID)";
       } else {
-        $rater_query .= " OR (setterID=$parts[0] AND std_set=$parts[1])";
+        $rater_query .= " OR (std_set.id=$std_setID)";
       }
-      $rater_names[] = $parts[0];
+			if ($review_string == '') {
+				$review_string = $std_setID;
+			} else {
+				$review_string .= ',' . $std_setID;
+			}
     }
   }
+	$rater_query .= ')';
 }
 $reviews = array();
-$review_string = substr($review_string,1);
+
 
 $setterID = '';
-if (isset($_GET['std_setID'])) {
+if (isset($_GET['std_setID'])) {    // Load a pre-existing group set
   $result = $mysqli->prepare("SELECT rating, questionID FROM std_set_questions WHERE std_setID = ?");
   $result->bind_param('i', $_GET['std_setID']);
   $result->execute();
@@ -88,11 +78,22 @@ if (isset($_GET['std_setID'])) {
   $result->close();
 }
 
+
 if (isset($_GET['reviewers']) and $_GET['reviewers'] != '') {
   $stmt = $mysqli->prepare("SELECT rating, setterID, method, title, surname, questionID FROM (std_set, std_set_questions, users) WHERE std_set.setterID = users.id AND std_set.id = std_set_questions.std_setID AND std_set.id IN (" . $_GET['reviewers'] . ") ORDER BY std_set, setterID");
   $stmt->execute();
   $stmt->bind_result($rating, $setter_id, $method, $title, $surname, $questionID);
-  while($stmt->fetch()) {
+  while ($stmt->fetch()) {
+    $tmp_userID = $setter_id;
+    $reviews['user'][$tmp_userID][$questionID] = $rating;
+    $reviews['user'][$tmp_userID]['name'] = $title . ' ' . $surname;
+  }
+  $stmt->close();
+} else {
+  $stmt = $mysqli->prepare("SELECT rating, setterID, method, title, surname, questionID FROM (std_set, std_set_questions, users) WHERE std_set.setterID = users.id AND std_set.id = std_set_questions.std_setID $rater_query ORDER BY std_set, setterID");
+  $stmt->execute();
+  $stmt->bind_result($rating, $setter_id, $method, $title, $surname, $questionID);
+  while ($stmt->fetch()) {
     $tmp_userID = $setter_id;
     $reviews['user'][$tmp_userID][$questionID] = $rating;
     $reviews['user'][$tmp_userID]['name'] = $title . ' ' . $surname;
@@ -100,21 +101,10 @@ if (isset($_GET['reviewers']) and $_GET['reviewers'] != '') {
   $stmt->close();
 }
 
-// Get how many screens make up the question paper.
-if (!isset($no_screens)) {
-  $screen_data = array();
-  
-  $paper_properties = $mysqli->prepare("SELECT DISTINCT paper_title, paper_type, paper_prologue, marking, screen, bgcolor, fgcolor, themecolor, labelcolor, bidirectional FROM (properties, papers, questions) WHERE papers.question=questions.q_id AND properties.property_id=papers.paper AND paper=? ORDER BY screen, display_pos");
-  $paper_properties->bind_param('i', $paperID);
-  $paper_properties->execute();
-  $paper_properties->bind_result($paper_title, $paper_type, $paper_prologue, $marking, $screen, $bgcolor, $fgcolor, $themecolor, $labelcolor, $bidirectional);
-  while ($paper_properties->fetch()) {
-    $no_screens = strval($screen);
-    $screen_data[$no_screens] = (isset($screen_data[$no_screens])) ? $screen_data[$no_screens] + 1 : 1;
-  }
-  $paper_properties->close();
-  $current_screen = 1;
-}
+// Get some properties of the paper.
+$paper_title		= $propertyObj->get_paper_title();
+$paper_type			= $propertyObj->get_paper_type();
+$paper_prologue = $propertyObj->get_paper_prologue();
 ?>
 <!DOCTYPE html>
 <html>
@@ -152,8 +142,8 @@ if (!isset($no_screens)) {
   echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">{$string['home']}</a>";
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  } elseif (isset($_POST['module']) and $_POST['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_POST['module'] . '">' . module_utils::get_moduleid_from_id($_POST['module'], $mysqli) . '</a>';
+  } elseif ($module != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
   }
   echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
   $helpID = 98;
@@ -169,7 +159,7 @@ if (!isset($no_screens)) {
   </tr>
   </table>
 <?php
-if (count($rater_names) > count($reviews['user'])) {
+if (isset($reviews['user']) and count($rater_names) > count($reviews['user'])) {
 ?>
   </div>
   <div class="key"><?php echo $string['changedmsg']; ?></div>
@@ -179,18 +169,6 @@ if (count($rater_names) > count($reviews['user'])) {
 // Get any questions to exclude.
 $exclusions = new Exclusion($paperID, $mysqli);
 $exclusions->load();
-
-/*
-$excluded = array();
-$result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");  // FIXME
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->bind_result($q_id, $parts);
-while ($result->fetch()) {
-  $excluded[$q_id] = $parts;
-}
-$result->close();
-*/
 
 $old_leadin       = '';
 $old_q_type       = '';
@@ -210,7 +188,7 @@ $stmt->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $mar
 echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"text-align:left\">\n";
 
 while ($stmt->fetch()) {
-  if ($prologue_show == 1 and $current_screen == 1 and $paper_prologue != '') {
+  if ($prologue_show == 1 and $paper_prologue != '') {
     echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     $prologue_show = 0;
   }
@@ -295,8 +273,10 @@ echo '<input type="hidden" name="module" value="' . $module . '" />';
 echo '<input type="hidden" name="folder" value="' . $folder . '" />';
 echo '<input type="hidden" name="paperID" value="' . $paperID . '" />';
 echo '<input type="hidden" name="setterID" value="' . $setterID . '" />';
-echo '<input type="hidden" name="dateID" value="' . $dateID . '" />';
 echo '<input type="hidden" name="review_string" value="' . $review_string . '" />';
+if (isset($_GET['std_setID'])) {
+	echo '<input type="hidden" name="std_setID" value="' . $_GET['std_setID'] . '" />';
+}
 echo "<input type=\"hidden\" name=\"method\" value=\"Modified Angoff\" />\n";
 $mysqli->close();
 ?>

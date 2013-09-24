@@ -354,18 +354,40 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
           }
         }
       }
-      $mappings_copy_objID = implode(',', $mappings_copy_objID);
+      //$mappings_copy_objID = implode(',', $mappings_copy_objID);
 
       //copy the objectives for each session where the objective still exists
-      $i = 0;
+
+      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM relationships WHERE question_id = ? AND paper_id = ? AND obj_id =?)");
+      $nw_paperid = 0;
+      $nw_qid = 0;
+      $nw_mapid = 0;
+      $nw_calyr = 0;
+      $nw_oldid = 0;
+      $nw_oldpapid = 0;
+      $bw_oldoid = 0;
+      $result->bind_param('iiisiii', $nw_paperid, $nw_qid, $nw_mapid, $nw_calyr, $nw_oldid, $nw_oldpapid, $nw_oldoid);
+      if ($mysqli->error) {
+        $error[] = 'mysqli error ' . $mysql->error;
+      }
+      $i=0;
       foreach ($old_qids as $old_id) {
-        $new_question_id = $new_qids[$i];
-        $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, '$new_paper_id', '$new_question_id', obj_id, '$new_calendar_year', vle_api FROM relationships WHERE question_id = $old_id AND paper_id = ? AND obj_id IN ($mappings_copy_objID))");
-        $result->bind_param('i', $paperid);
-        $result->execute();
-        $result->close();
+        foreach ($mappings_copy_objID as $oldmapid => $newmapid) {
+          $nw_paperid = $new_paper_id;
+          $nw_qid = $new_qids[$i];
+          $nw_mapid = $newmapid;
+          $nw_calyr = $new_calendar_year;
+          $nw_oldid = $old_id;
+          $nw_oldpapid = $paperid;
+          $nw_oldoid = $oldmapid;
+          $result->execute();
+          if ($mysqli->error) {
+            $error[] = 'mysqli error ' . $mysql->error;
+          }
+        }
         $i++;
       }
+      $result->close();
     }
   }
 }

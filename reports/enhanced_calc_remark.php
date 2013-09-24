@@ -101,7 +101,11 @@ $question_obj = new enhancedcalc($configObject);
 $question_obj->set_settings($settings);
 
 $q_vars = $question_obj->get_question_vars();
-$q_marks = array_flip($question_obj->get_question_marks());
+$marks_arr = $question_obj->get_question_marks();
+if ($marks_arr == false) {
+  $marks_arr = array();
+}
+$q_marks = array_flip($marks_arr);
 ?>
 <!DOCTYPE html>
 <html>

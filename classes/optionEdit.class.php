@@ -466,8 +466,8 @@ QUERY;
    * Set the option marks for partially correct answers
    * @param string $value
    */
-  public function set_marks_partial($value) {
-    if($value != $this->marks_partial and !in_array('marks_partial', array_keys($this->_question->get_unified_fields()))) {
+  public function set_marks_partial($value, $log_change=true) {
+    if($log_change and $value != $this->marks_partial and !in_array('marks_partial', array_keys($this->_question->get_unified_fields()))) {
       $this->set_modified_field('marks_partial', $this->marks_partial);
     }
     $this->marks_partial = $value;
