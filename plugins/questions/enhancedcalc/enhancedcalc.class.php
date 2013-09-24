@@ -490,7 +490,12 @@ class EnhancedCalc extends Question implements questionInterface {
     echo_content($leadin);
 
     if (!isset($this->useranswer['uans']) or $this->useranswer['uans'] == '') {
-      reset_feedback($extra['hide_if_unanswered']);
+        if ($extra['hide_if_unanswered'] == 1) {
+            $extra['tmp_display_correct_answer'] = 0;
+            $extra['tmp_display_students_response'] = '0';
+            $extra['tmp_display_feedback'] = '0';
+            $extra['$tmp_display_question_mark'] = '0';
+        }
     }
 
     $saved_response = '';
