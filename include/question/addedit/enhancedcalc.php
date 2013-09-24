@@ -36,7 +36,6 @@ $decimal_opts = array('0 dp' => '0 ' . $str_decimals, '1 dp' => '1 ' . $string['
 $decimal_opts_zero = array('1 dp zero' => '1 ' . $string['decimal'] . ' ' . $string['withzeros'], '2 dp zero' => '2 ' . $str_decimals . ' ' . $string['withzeros'], '3 dp zero' => '3 ' . $str_decimals . ' ' . $string['withzeros'], '4 dp zero' => '4 ' . $str_decimals . ' ' . $string['withzeros'], '5 dp zero' => '5 ' . $str_decimals . ' ' . $string['withzeros']);
 $sf_opts = array('1 sf' => '1 ' . $string['sigfigure'], '2 sf' => '2 ' . $str_sigs, '3 sf' => '3 ' . $str_sigs, '4 sf' => '4 ' . $str_sigs, '5 sf' => '5 ' . $str_sigs);
 $labels = $question->get_variable_labels();
-$mark_prefix = '';
 ?>
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>

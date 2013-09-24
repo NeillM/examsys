@@ -53,7 +53,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
   protected $_allow_new_options = true;
 
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
-  protected $_fields_change = array('option_formula', 'option_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'answer_precision', 'marks_unit', 'tolerance_full', 'tolerance_partial');
+  protected $_fields_change = array('option_formula', 'option_units', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'answer_precision', 'marks_unit', 'tolerance_full', 'tolerance_partial');
   protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units', 'answers', 'vars');
   protected $_fields_force = array('show_units');
 
@@ -80,6 +80,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     // Extract options into arrays for JSON encoding
     $this->extract_answers();
     $this->extract_vars();
+    $this->extract_marks();
 
     try {
       $status = parent::save($clear_checkout);
@@ -376,6 +377,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     // Extracting answers temporarily populates answers and vars with the option data
     $this->extract_answers();
     $this->extract_vars();
+    $this->extract_marks();
 
     // Serialise it into the setting var then extract again to reset answers and vars to option indices
     $this->serialize_settings();
@@ -400,6 +402,8 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
         }
       }
     }
+
+    $this->unserialize_marks();
   }
 
   /**
@@ -452,6 +456,14 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
     }
   }
 
+  private function unserialize_marks() {
+    foreach ($this->options as $opt) {
+      $opt->set_marks_correct($this->marks_correct, false);
+      $opt->set_marks_partial($this->marks_partial, false);
+      $opt->set_marks_incorrect($this->marks_incorrect, false);
+    }
+  }
+
   private function extract_answers() {
     $this->answers = array();
 
@@ -480,6 +492,15 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
         $this->vars[$label] = array('min' => $min, 'max' => $max, 'inc' => $increment, 'dec' => $decimals);
       }
       $index++;
+    }
+  }
+
+  private function extract_marks() {
+    if (count($this->options) > 0) {
+      $first = reset($this->options);
+      $this->marks_correct = $first->get_marks_correct();
+      $this->marks_partial = $first->get_marks_partial();
+      $this->marks_incorrect = $first->get_marks_incorrect();
     }
   }
 
