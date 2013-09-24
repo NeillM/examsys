@@ -61,7 +61,10 @@ function hofstee_plot(canvas_id,result_type) {
 	if (document.getElementById('x2_'+result_type).value!='') boundaries[1] = Number(document.getElementById('x2_'+result_type).value.replace('%',''));
 	if (document.getElementById('y1_'+result_type).value!='') boundaries[2] = Number(document.getElementById('y1_'+result_type).value.replace('%',''));
 	if (document.getElementById('y2_'+result_type).value!='') boundaries[3] = Number(document.getElementById('y2_'+result_type).value.replace('%',''));
-	
+
+	if (boundaries[1]<boundaries[0]) boundaries[1] = [boundaries[0], boundaries[0] = boundaries[1]][0];
+	if (boundaries[3]<boundaries[2]) boundaries[3] = [boundaries[2], boundaries[2] = boundaries[3]][0];
+
 	canvas = document.getElementById(canvas_id);
 
 	if (canvas && canvas.getContext){
