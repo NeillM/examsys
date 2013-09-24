@@ -93,8 +93,8 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
   }
   $result->close();
   
-  $review_no = count($reviews);
-  for ($i=0 ; $i<$review_no; $i++) {
+  $no_reviews = count($reviews);
+  for ($i=0 ; $i<$no_reviews; $i++) {
     // Get any questions to exclude.
     $exclude = array();
 
