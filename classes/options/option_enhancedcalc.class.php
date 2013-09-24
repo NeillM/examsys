@@ -305,7 +305,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
    * @param string $field
    */
   protected function track_change($logger, $option_number, $old, $new, $field) {
-    $logger->track_change($this->_lang_strings['edit'] + ' ' . ucwords($field), $this->question_id, $this->_user_id, $old, $new, $this->_lang_strings['variable'] . chr(64 + $option_number));
+    $logger->track_change($this->_lang_strings['edit'] . ' ' . ucwords($field), $this->question_id, $this->_user_id, $old, $new, $this->_lang_strings['variable'] . chr(64 + $option_number));
   }
 
   /**
