@@ -25,7 +25,8 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/demo_replace.inc';
+require_once '../include/demo_replace.inc';
+require_once '../classes/paperproperties.class.php';
 
 if ($userObject->has_role('Demo')) {
   $demo = true;
@@ -36,6 +37,7 @@ $sortby = 'surname';
 $ordering = 'asc';
 $moduleID = '%';
 $calendar_year =  (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '') ? $_GET['calendar_year'] : '%';
+$tmp_moduleid = '';
 
 if ($calendar_year == '%') {
   $calendar_year_sql = '';
@@ -44,10 +46,20 @@ if ($calendar_year == '%') {
 }
 
 if (isset($_GET['paperID'])) {
-  if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
-  if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
+  if (isset($_GET['sortby'])) {
+		$sortby = $_GET['sortby'];
+  } else {
+	  $sortby = 'moduleid';
+	}
+	if (isset($_GET['ordering'])) {
+		$ordering = $_GET['ordering'];
+	} else {
+	  $ordering = 'asc';
+	}
+	$tmp_sortby = $sortby;
+	if ($tmp_sortby == 'moduleid') $tmp_sortby .= ', surname, first_names';
 
-  $needs_array = array();
+	$needs_array = array();
   $result = $mysqli->prepare("SELECT userID FROM special_needs");
   $result->execute();
   $result->bind_result($tmp_userID);
@@ -57,20 +69,14 @@ if (isset($_GET['paperID'])) {
   $result->close();
 
   // Get the year and modules from the paper properties.
-  $paper_modules = array();
-  $result = $mysqli->prepare("SELECT p.calendar_year, m.id, m.moduleid FROM properties p INNER JOIN properties_modules pm ON p.property_id = pm.property_id INNER JOIN modules m ON pm.idMod = m.id WHERE p.property_id = ?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($paper_calendar_year, $idMod, $paper_moduleID);
-  while ($result->fetch()) {
-    $paper_modules[$idMod] = $paper_moduleID;
-  }
-  $result->close();
+	$properties = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+	$paper_modules = $properties->get_modules();
+	$paper_calendar_year = $properties->get_calendar_year();
 
   $module_list = implode(',', array_keys($paper_modules));
   $roles_sql = "AND roles LIKE '%Student' AND grade != 'left'";
 
-  $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, m.moduleid FROM (users, modules_student) LEFT JOIN sid ON users.id = sid.userID INNER JOIN modules m ON modules_student.idMod=m.id WHERE users.id=modules_student.userID AND idMod IN ($module_list) AND calendar_year = '$paper_calendar_year' $roles_sql ORDER BY " . $sortby . " " . $ordering;
+  $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, m.moduleid FROM (users, modules_student) LEFT JOIN sid ON users.id = sid.userID INNER JOIN modules m ON modules_student.idMod=m.id WHERE users.id=modules_student.userID AND idMod IN ($module_list) AND calendar_year = '$paper_calendar_year' $roles_sql ORDER BY " . $tmp_sortby . " " . $ordering;
   $user_data = $mysqli->prepare($query_string);
   $user_data->execute();
   $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_moduleid);
@@ -99,11 +105,14 @@ if (isset($_GET['paperID'])) {
   }
 
   if ($module_list_safe != '') {
-    $module_list_safe = rtrim($module_list_safe, ',');
+		$tmp_sortby = $sortby;
+		if ($tmp_sortby == 'moduleid') $tmp_sortby .= ', surname, first_names';
+
+		$module_list_safe = rtrim($module_list_safe, ',');
 
     $roles_sql = "AND roles LIKE '%Student' AND grade != 'left'";
 
-    $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, m.moduleid FROM (users, modules_student) LEFT JOIN sid ON users.id=sid.userID INNER JOIN modules m ON modules_student.idMod=m.id WHERE users.id=modules_student.userID AND idMod IN ($module_list_safe) $calendar_year_sql $roles_sql ORDER BY " . $sortby . " " . $ordering;
+    $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, m.moduleid FROM (users, modules_student) LEFT JOIN sid ON users.id=sid.userID INNER JOIN modules m ON modules_student.idMod=m.id WHERE users.id=modules_student.userID AND idMod IN ($module_list_safe) $calendar_year_sql $roles_sql ORDER BY " . $tmp_sortby . " " . $ordering;
     $user_data = $mysqli->prepare($query_string);
     $user_data->execute();
     $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_moduleid);
@@ -179,20 +188,23 @@ if (isset($_GET['paperID'])) {
   }
   $result->close();
 
+	$tmp_sortby = $sortby;
+	if ($tmp_sortby == 'moduleid') $tmp_sortby .= ', surname, first_names';
+	
   $user_no = 0;
   if ($roles_sql != '') {
     if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '')) {
       if ($_GET['module'] != '') {
-        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users, modules_student, modules WHERE modules_student.idMod = modules.id AND users.id = modules_student.userID AND modules_student.idMod = '" . $_GET['module'] . "' AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql$calendar_year_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
+        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users, modules_student, modules WHERE modules_student.idMod = modules.id AND users.id = modules_student.userID AND modules_student.idMod = '" . $_GET['module'] . "' AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql$calendar_year_sql AND user_deleted IS NULL ORDER BY " . $tmp_sortby . " " . $ordering;
       } else {
-        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
+        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $tmp_sortby . " " . $ordering;
       }
     } elseif (isset($_GET['externals']) and $_GET['externals'] != '') {
-      $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
+      $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $tmp_sortby . " " . $ordering;
     } else {
       // Student search
       if ($moduleID == '%') {
-        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN sid ON users.id = sid.userID WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
+        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN sid ON users.id = sid.userID WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $tmp_sortby . " " . $ordering;
       } else {
         $roles_sql = 'AND ' . $roles_sql;
         if ($moduleID == '%') {
@@ -200,7 +212,7 @@ if (isset($_GET['paperID'])) {
         } else {
           $module_sql = " AND idMod LIKE '{$moduleID}'";
         }
-        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, modules_student) LEFT JOIN sid ON users.id=sid.userID WHERE users.id = modules_student.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
+        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, modules_student) LEFT JOIN sid ON users.id = sid.userID WHERE users.id = modules_student.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $tmp_sortby . " " . $ordering;
       }
     }
 
@@ -217,7 +229,7 @@ if (isset($_GET['paperID'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Rogō: <?php echo $string['usermanagement'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['usermanagement'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -314,7 +326,7 @@ if (isset($_GET['paperID'])) {
 <?php
 echo "<tr><th style=\"padding-left:16px\" colspan=\"7\"><div class=\"breadcrumb\" style=\"margin-left:0px\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%\"><strong>Users ($user_no):&nbsp;</strong>";
 if (isset($_GET['paperID'])) {
-  echo str_replace(',', ', ', $paper_moduleID) . ' (' . $paper_calendar_year . ')';
+  echo implode(', ', array_values($paper_modules)) . ' (' . $paper_calendar_year . ')';
 } elseif (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
   echo $_GET['search_surname'];
 } elseif (isset($_GET['module']) and $_GET['module'] != '%') {
@@ -389,22 +401,6 @@ if (isset($_GET['paperID'])) {
   $string['course'] = $string['module'];   // Override course with module if called from a paper.
 }
 
-/*
-if ($sortby == 'title') {
-  echo '<tr><th class="coltitle" style="width:16px"></th><th class="coltitle" onclick="window.location=\'search.php?sortby=title&ordering=' . $new_order . $additional_param . '\'">&nbsp;' . $string['title'] . '&nbsp;<img src="../artwork/desc.gif" width="9" height="7" border="0" /></th><th class="coltitle"></th><th class="vert_div coltitle" style="width:240px; padding-left:0px" onclick="window.location=\'search.php?sortby=surname&ordering=asc' . $additional_param . '\'">' . $string['name'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=username&ordering=asc' . $additional_param . '\'">' . $string['username'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=student_id&ordering=asc' . $additional_param . '\'">' . $string['studentid'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=yearofstudy&ordering=desc' . $additional_param . '\'">' . $string['year'] . '</th><th class="coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=grade&ordering=asc' . $additional_param . '\'">' . $string['course'] . '</th></tr>';
-} elseif ($sortby == 'surname') {
-  echo '<tr><th class="coltitle" style="width:16px"></th><th class="coltitle" onclick="window.location=\'search.php?sortby=title&ordering=asc' . $additional_param . '\'">&nbsp;' . $string['title'] . '&nbsp;</th><th class="coltitle"></th><th class="vert_div coltitle" style="width:240px; padding-left:0px" onclick="window.location=\'search.php?sortby=surname&ordering=' . $new_order . $additional_param . '\'">' . $string['name'] . '<img src="../artwork/desc.gif" width="9" height="7" /></th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=username&ordering=asc' . $additional_param . '\'">' . $string['username'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=student_id&ordering=asc' . $additional_param . '\'">' . $string['studentid'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=yearofstudy&ordering=desc' . $additional_param . '\'">' . $string['year'] . '</th><th class="coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=grade&ordering=asc' . $additional_param . '\'">' . $string['course'] . '</th></tr>';
-} elseif ($sortby == 'username') {
-  echo '<tr><th class="coltitle" style="width:16px"></th><th class="coltitle" onclick="window.location=\'search.php?sortby=title&ordering=asc' . $additional_param . '\'">&nbsp;' . $string['title'] . '&nbsp;</th><th class="coltitle"></th><th class="vert_div coltitle" style="width:240px; padding-left:0px" onclick="window.location=\'search.php?sortby=surname&ordering=asc' . $additional_param . '\'">' . $string['name'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=username&ordering=' . $new_order . $additional_param . '\'">' . $string['username'] . '&nbsp;<img src="../artwork/desc.gif" width="9" height="7"  /></th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=student_id&ordering=asc' . $additional_param . '\'">' . $string['studentid'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=yearofstudy&ordering=desc' . $additional_param . '\'">' . $string['year'] . '</th><th class="coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=grade&ordering=asc' . $additional_param . '\'">' . $string['course'] . '</th></tr>';
-} elseif ($sortby == 'student_id') {
-  echo '<tr><th class="coltitle" style="width:16px"></th><th class="coltitle" onclick="window.location=\'search.php?sortby=title&ordering=asc' . $additional_param . '\'">&nbsp;' . $string['title'] . '&nbsp;</th><th class="coltitle"></th><th class="vert_div coltitle" style="width:240px; padding-left:0px" onclick="window.location=\'search.php?sortby=surname&ordering=asc' . $additional_param . '\'">' . $string['name'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=username&ordering=desc' . $additional_param . '\'">&nbsp;' . $string['username'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=student_id&ordering=' . $new_order . $additional_param . '\'">&nbsp;' . $string['studentid'] . '&nbsp;<img src="../artwork/desc.gif" width="9" height="7" /></th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=yearofstudy&ordering=desc' . $additional_param . '\'">' . $string['year'] . '</th><th class="coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=grade&ordering=asc' . $additional_param . '\'">' . $string['course'] . '</th></tr>';
-} elseif ($sortby == 'yearofstudy') {
-  echo '<tr><th class="coltitle" style="width:16px"></th><th class="coltitle" onclick="window.location=\'search.php?sortby=title&ordering=asc' . $additional_param . '\'">&nbsp;' . $string['title'] . '&nbsp;</th><th class="coltitle"></th><th class="vert_div coltitle" style="width:240px; padding-left:0px" onclick="window.location=\'search.php?sortby=surname&ordering=asc' . $additional_param . '\'">' . $string['name'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=username&ordering=desc' . $additional_param . '\'">&nbsp;' . $string['username'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=student_id&ordering=asc' . $additional_param . '\'">&nbsp;' . $string['studentid'] . '&nbsp;</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=yearofstudy&ordering=' . $new_order . $additional_param . '\'">' . $string['year'] . '<img src="../artwork/desc.gif" width="9" height="7" /></th><th class="coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=grade&ordering=desc' . $additional_param . '\'">' . $string['course'] . '</th></tr>';
-} elseif ($sortby == 'grade') {
-  echo '<tr><th class="coltitle" style="width:16px"></th><th class="coltitle" onclick="window.location=\'search.php?sortby=title&ordering=asc' . $additional_param . '\'">&nbsp;' . $string['title'] . '&nbsp;</th><th class="coltitle"></th><th class="vert_div coltitle" style="width:240px; padding-left:0px" onclick="window.location=\'search.php?sortby=surname&ordering=asc' . $additional_param . '\'">' . $string['name'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=username&ordering=desc' . $additional_param . '\'">&nbsp;' . $string['username'] . '</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=student_id&ordering=asc' . $additional_param . '\'">&nbsp;' . $string['studentid'] . '&nbsp;</th><th class="vert_div coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=yearofstudy&ordering=desc' . $additional_param . '\'">' . $string['year'] . '</th><th class="coltitle" style="padding-left:0px" onclick="window.location=\'search.php?sortby=grade&ordering=' . $new_order . $additional_param . '\'">' . $string['course'] . '&nbsp;<img src="../artwork/desc.gif" width="9" height="7" /></th></tr>';
-}
-*/
-
 $table_order = array('#1'=>'', $string['title']=>'title', '#2'=>'', $string['name']=>'surname', $string['username']=>'username', $string['studentid']=>'student_id', $string['year']=>'yearofstudy', $string['course']=>'grade');
 echo "<tr>\n";
 foreach ($table_order as $display => $key) {
@@ -435,23 +431,27 @@ echo "</tr>\n";
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;".$string['msg2']."</td></tr></table>\n";
   }
 
-  $old_letter = '';
-  $old_title = '';
+  $old_letter		= '';
+  $old_title		= '';
   $old_username = '';
-  $old_grade = '';
-  $old_year = '';
+  $old_grade		= '';
+  $old_year			= '';
+	$old_moduleid = '';
   $x = 0;
+	
   while ($user_data->fetch()) {
     if ($old_letter != mb_strtoupper(mb_substr($tmp_surname, 0, 1)) and $sortby == 'surname') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . mb_strtoupper(mb_substr($tmp_surname,0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . mb_strtoupper(mb_substr($tmp_surname,0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_title != $tmp_title and $sortby == 'title') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . $string[mb_strtolower($tmp_title)] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . $string[mb_strtolower($tmp_title)] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_username != mb_substr($tmp_username, 0, 4) and $sortby == 'username') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . mb_substr($tmp_username,0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . mb_substr($tmp_username,0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_grade != $tmp_grade and $sortby == 'grade') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . $tmp_grade . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . $tmp_grade . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_year != $tmp_yearofstudy and $sortby == 'yearofstudy') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+    } elseif ($old_moduleid != $tmp_moduleid and $sortby == 'moduleid') {
+      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td><nobr>" . $tmp_moduleid . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     }
 
     if ($userObject->has_role('SysAdmin')) {
@@ -524,13 +524,16 @@ echo "</tr>\n";
       echo $tmp_grade;
     }
     echo "</td></tr>\n";
-    $old_letter = mb_strtoupper(mb_substr($tmp_surname, 0, 1));
-    $old_title = $tmp_title;
+		
+    $old_letter		= mb_strtoupper(mb_substr($tmp_surname, 0, 1));
+    $old_title		= $tmp_title;
     $old_username = mb_substr($tmp_username, 0, 4);
-    $old_grade = $tmp_grade;
-    $old_year = $tmp_yearofstudy;
+    $old_grade		= $tmp_grade;
+    $old_year			= $tmp_yearofstudy;
+		$old_moduleid = $tmp_moduleid;
     $x++;
   }
+	
   $user_data->close();
   $mysqli->close();
 ?>
