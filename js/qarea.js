@@ -55,7 +55,19 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 		//---------- colour 
 		this.currentColours[3] = colour;
     
-    //menubar
+		//---------- extra
+		// flash modes 1: answer, 2: edit, 3: script
+		if (this.qmode=='script') {
+			if (typeof(extra[0])!='undefined' && extra[0]=='0') this.display_students_response = false;
+			if (typeof(extra[1])!='undefined' && extra[1]=='0') this.display_correct_answer = false;
+			if (typeof(extra[4])!='undefined' && extra[4]=='1') this.hide_feedback_ifunanswered = true;
+			if (this.hide_feedback_ifunanswered && !(this.is_an_answer)) {
+				this.display_students_response = false;
+				this.display_correct_answer = false;
+			}
+		}
+		
+		//menubar
  		this.menu_img = new Image();  
 		function menu_img_onload(){
 			this.menu_img_loaded = true;
@@ -106,9 +118,24 @@ function qa_menuBuild() {
     var spac = 3;
     var posx = 3;    
     var posy = 3;
-    posx = this.menuBuild_icons('toolbar/ico_area.png',posx,posy,2,'+',lang_string['But_your_answer'],lang_string['But_your_answer'])+spac;
-    posx = this.menuBuild_icons('toolbar/ico_tick.png',posx,posy,2,'+',lang_string['But_correct_answer'],lang_string['But_correct_answer'])+spac;
-    posx = this.menuBuild_icons('toolbar/ico_warn.png',posx,posy,0,'+',lang_string['But_show_error'],lang_string['But_show_error'])+spac;
+    if (this.display_students_response) {
+			posx = this.menuBuild_icons('toolbar/ico_area.png',posx,posy,2,'+',lang_string['But_your_answer'],lang_string['But_your_answer'])+spac;
+			this.global_your_answer = true;
+		} else {
+			posx = this.menuBuild_icons('toolbar/ico_area.png',posx,posy,0,'-',lang_string['But_your_answer'],lang_string['But_your_answer'])+spac;
+			this.global_your_answer = false;
+		}
+		if (this.display_correct_answer) {
+			posx = this.menuBuild_icons('toolbar/ico_tick.png',posx,posy,2,'+',lang_string['But_correct_answer'],lang_string['But_correct_answer'])+spac;
+			posx = this.menuBuild_icons('toolbar/ico_warn.png',posx,posy,0,'+',lang_string['But_show_error'],lang_string['But_show_error'])+spac;
+			this.global_corect_answer = true;
+			this.global_show_error = false;
+		} else {
+			posx = this.menuBuild_icons('toolbar/ico_tick.png',posx,posy,0,'-',lang_string['But_correct_answer'],lang_string['But_correct_answer'])+spac;
+			posx = this.menuBuild_icons('toolbar/ico_warn.png',posx,posy,0,'-',lang_string['But_show_error'],lang_string['But_show_error'])+spac;
+			this.global_corect_answer = false;
+			this.global_show_error = false;
+		}
   }
   if (this.qmode=='edit' || this.qmode=='answer') {
     var spac = 3;
@@ -261,7 +288,11 @@ function qa_redraw_canvas_main(tx,ty) {
 }
 
 function qa_redraw_canvas() { 
-	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.mouse_moved || this.ShiftChange)) {
+		if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.mouse_moved || this.ShiftChange)) {
+		
+    //buttons
+    if (this.buttonBox.length==0) this.qa_menuBuild();
+
     //testing the answer
     if (this.do_the_test && typeof(this.qanswer)!='undefined' && this.qanswer!=this.last_answer) {
 			this.last_answer = this.qanswer;
@@ -281,8 +312,6 @@ function qa_redraw_canvas() {
     this.context.lineWidth = this.lineThickness;
 		this.context.strokeStyle=this.currentColours[1];
     
-    //buttons
-    if (this.buttonBox.length==0) this.qa_menuBuild();
     //cross red or gray
     if (this.qmode=='edit' || this.qmode=='answer') {
 			if (this.global_delpoint_avail) {
@@ -593,14 +622,15 @@ function qa_mouseDragUp(){
 
   if (this.qmode=='script') {
 		this.global_your_answer = false;	
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][6]==2) this.global_your_answer = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][7]=='+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][6]==2) this.global_your_answer = true;
 		this.global_corect_answer = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][6]==2) this.global_corect_answer = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][7]=='+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][6]==2) this.global_corect_answer = true;
 		this.global_show_error = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][6]==2) this.global_show_error = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][7]=='+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][6]==2) this.global_show_error = true;
 
 		this.global_zoom = false;
 	}
+	
   //this.test panel buttons
   if (this.panel_buttons.length>0) {
     for (n=0;n<this.panel_buttons.length;n++) {
@@ -764,8 +794,8 @@ function rqa(num) {
   this.global_delpoint_avail = false;
   this.global_clearpnl = false;
   this.global_dblclick = false;
-	this.global_your_answer = true;	
-	this.global_corect_answer = true;
+	this.global_your_answer = false;	
+	this.global_corect_answer = false;
 	this.global_show_error = false;
 
   this.panel_buttons = new Array();
@@ -810,4 +840,7 @@ function rqa(num) {
 	this.last_answer,this.last_config;
   this.imgdata,this.imgdatab,this.imgdatac;
 	this.err_image,this.err_image_final;
+	this.display_students_response = true;
+	this.display_correct_answer = true;
+	this.hide_feedback_ifunanswered = false;
 }

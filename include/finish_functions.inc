@@ -550,7 +550,8 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 2) . "' height='" . ($paper[$question]['q_media_height'] + 24) . "'></canvas>\n";
 					echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . '../media/' . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $tmp_user_answer . "',1,'#FFC0C0','area','script');\n";
+					$extra = $tmp_display_students_response.$tmp_display_correct_answer.$tmp_display_question_mark.$tmp_display_feedback.$hide_if_unanswered;			
+					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . '../media/' . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $tmp_user_answer . "',$extra,'#FFC0C0','area','script');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {

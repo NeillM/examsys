@@ -105,15 +105,19 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
     if (answer=='u') this.allUnaswered=true; 
 		
 		//---------- extra
+		// format: $tmp_display_students_response . ',' . $tmp_display_correct_answer . ',' . $tmp_exclude
 		this.exclusions = '00000000000000000000';
 		if (this.qmode=='script') {
 			this.extra = extra;
 			tmp_extra = extra.split(",");
+			if (typeof(tmp_extra[0])!='undefined' && tmp_extra[0]=='0') this.display_students_response = false;
+			if (typeof(tmp_extra[1])!='undefined' && tmp_extra[1]=='0') this.display_correct_answer = false;
 			if (typeof(tmp_extra[2])!='undefined') this.exclusions = tmp_extra[2];
 		}
 		
 		//---------- colour 
 		this.currentColours[3] = colour;
+		
     
     //menubar
  		this.menu_img = new Image();  
@@ -157,8 +161,10 @@ function qh_panelBoxBuild (but_name,pan_name) {
 }
 
 function qh_menuBuild() {
-	this.imgdata = menuImages['toolbar/vert_0.png'];
-	this.context.drawImage(this.menu_img,this.imgdata.left+0.5,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,0,0,this.canvas.width,this.imgdata.height);
+	if (this.qmode == 'edit' || this.qmode == 'analysis') {
+		this.imgdata = menuImages['toolbar/vert_0.png'];
+		this.context.drawImage(this.menu_img,this.imgdata.left+0.5,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,0,0,this.canvas.width,this.imgdata.height);
+	}	
 	var posy = 3;
 	if (this.qmode == 'edit') {
 		var spac = 3;	
@@ -383,7 +389,7 @@ function qh_redraw_canvas() {
 			if (this.hotSpots[i][2]!=undefined) this.context.fillStyle= this.hotSpots[i][2];
   		this.context.fillRect(3.5,pan_y+3.5,300-6,3);
 			var pos_x = 15;
-			if (this.qmode=='script') {
+			if (this.qmode=='script' && this.display_students_response) {
 				this.imgdata = menuImages['toolbar/ico_tick_g.png'];
 				if (this.answers[i][0][0]=='0') this.imgdata = menuImages['toolbar/ico_tick_r.png'];
 				this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,3,pan_y+12,this.imgdata.width,this.imgdata.height);
@@ -499,7 +505,7 @@ function qh_redraw_canvas() {
       }
 			if (this.qmode!='analysis' || this.global_hotspots) {
 				for (i in this.hotSpots) {
-					if ((this.activeLabel==i) || this.show_all_hotspots) {
+					if (((this.activeLabel==i) || this.show_all_hotspots) && this.display_correct_answer) {
 						var fields = (this.hotSpots[i].length-4)/6;
 						for (j=0; j<fields;j++) {
 							//display all not active
@@ -1231,6 +1237,8 @@ function rqh(num) {
   this.marking_method = 'Mark per Option';
   this.qmode;
 	this.extra;
-	this.exclusions;
+	this.exclusions = '00000000000000000000';
+	this.display_students_response = true;
+	this.display_correct_answer = true;
   this.imgdata,this.imgdatab,this.imgdatac;
 }

@@ -7,12 +7,10 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.canvas.onmousedown = this.ql_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.ql_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
-		
 		if (document.addEventListener){ //FF+, IE10+
       document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false);
       document.addEventListener("keyup",		ql_mouseDragMove.bind(this),false);
-      document.addEventListener("keypress", ql_mouseDragMove.bind(this),false);
-			
+      document.addEventListener("keypress", ql_mouseDragMove.bind(this),false);			
     } else if (document.attachEvent){ //FF--, IE10-, IE9-, Ch--
 			document.attachEvent("onkeydown", 	ql_mouseDragMove.bind(this));
       document.attachEvent("onkeyup", 		ql_mouseDragMove.bind(this));
@@ -51,6 +49,10 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
     this.qmode = mode;
 		
 		//---------- extra,
+		//format: 
+		//$extra = ',' . $tmp_exclude;
+		//$extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback (Ticks/Correct_answer_highlight/Question_Marks/Text_feedback/Hide_all_feedback_if_not_answered);
+		
 		this.extraImgs = new Array();
 		this.exclusions = '00000000000000000000';
     if (extra != "" && extra != undefined && extra != "undefined" && extra != null && extra != "null") {
@@ -58,7 +60,12 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				this.extraImgs = extra.split(';');
 			} else if (this.qmode=='script') {
 				tmp_extra = extra.split(",");
+				if (typeof(tmp_extra[0])!='undefined') this.extra_std = tmp_extra[0];
 				if (typeof(tmp_extra[1])!='undefined') this.exclusions = tmp_extra[1];
+				if (typeof(tmp_extra[2])!='undefined') this.extra_feedback = tmp_extra[2];
+				if (typeof(this.extra_feedback[0])!='undefined' && this.extra_feedback[0]=='0') this.display_ticks_crosses = false;
+				if (typeof(this.extra_feedback[1])!='undefined' && this.extra_feedback[1]=='0') this.display_correct_answer = false;
+				if (typeof(this.extra_feedback[4])!='undefined' && this.extra_feedback[4]=='0') this.hide_feedback_ifunanswered = false;
 			} else {
 				var extra_l1 = extra.split('~');
 				this.marks_per_correct = extra_l1[0];
@@ -346,7 +353,11 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
         }      
       }    
     }	
-
+		
+		if (this.hide_feedback_ifunanswered && !(this.is_an_answer)) {
+			this.display_ticks_crosses = false;
+			this.display_correct_answer = false;
+		}
 		//----- menuBox
 		this.menuBox.push('');
 		for (i=0;i<this.answerBox.length;i++) {
@@ -412,7 +423,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		this.context.font=this.fontSizes[this.fontSizePos]+"px Arial";
     this.context.fillStyle=this.currentColours[2];
 		this.tmp_text = this_box[2];
-		if (this.qmode=='script') {
+		if (this.qmode=='script' && this.display_correct_answer) {
 			this.context.fillStyle='#000';
 			if ((this.drag_pho_id == i || (this.drag_box_id == i && this.drag_box_combo == j)) && temp_x>220){
 				this.context.fillStyle=this.currentColours[2];	
@@ -432,7 +443,6 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		}
 		
     var wrapped = this.wrapText(this.tmp_text,tmp_width);
-		//console.log(this.exclusions);
 		if (this.exclusions[this.pholderBox[i][7]]=='1') {
 			this.context.fillStyle='#FF0000';
 			var tmp_style = this.context.strokeStyle;
@@ -512,8 +522,10 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 	
 	if (this.qmode == 'script' && this_box[3]!='') {
 		var tmp_test = true;
-		if (this.drag_box_id == i && this.drag_box_combo == j) tmp_test = false;
-		if (this.drag_pho_id == i) tmp_test = false;
+		if (this.drag_box_id == i && this.drag_box_combo == j && this_box[3]=='f') tmp_test = false;
+		if (this.drag_pho_id == i && this_box[3]=='f') tmp_test = false;
+		if (!(this.display_correct_answer)) tmp_test = true;
+		if (!(this.display_ticks_crosses)) tmp_test = false;
 		
 		if (tmp_test) {
 			this.imgdata = menuImages['toolbar/ico_tick_g.png'];
@@ -910,7 +922,7 @@ function ql_redraw_canvas() {
 		//redraw active label to have it on top
 		if (this.active_box_id>-1 && !(this.qType == "menu" && this.qmode=='answer' && this.answerBox[this.active_box_id][this.active_box_combo][1]!='image')) 
 			this.ql_redraw_box(this.active_box_id,this.active_box_combo);
-		
+
 		//redraw dragged shape to have it on top
 		var drag_mix = this.drag_box_id+':'+this.drag_box_combo;
 		var active_mix = this.active_box_id+':'+this.active_box_combo;
@@ -931,16 +943,14 @@ function ql_redraw_canvas() {
 			}
 			this.drag_pho_id = tmp_test;
 		}
-
 		//redraw pholder for script
-		if (this.qmode=='script' && this.drag_pho_id>-1) {
+		if (this.qmode=='script' && this.drag_pho_id>-1 && this.display_correct_answer) {
 			var tmp_test = -1;
 			for (i=0;i<this.answerBox.length;i++) {
 				if (this.answerBox[i][0][2]==this.pholderBox[this.drag_pho_id][2]) tmp_test=i;
 			}
-			this.ql_draw_box(tmp_test,0,this.pholderBox[this.drag_pho_id][5],this.pholderBox[this.drag_pho_id][6]);
+			if (tmp_test != -1) this.ql_draw_box(tmp_test,0,this.pholderBox[this.drag_pho_id][5],this.pholderBox[this.drag_pho_id][6]);
 		}
-
 		//redraw animated shape to have it on top
 		if (this.mov_id>-1 && mov_mix!=drag_mix && mov_mix!=active_mix && !(this.qType == "menu" && this.qmode=='answer' && this.answerBox[this.mov_id][this.mov_combo][1]!='image')) {
 			this.ql_redraw_box(this.mov_id,this.mov_combo);
@@ -1716,7 +1726,12 @@ function rql(num) {
   this.marks_per_incorrect = 0;
   this.marking_method = 'Mark per Option';
   this.qmode;
-	this.exclusions;
+	this.exclusions = '00000000000000000000';
+	this.extra_std = 0;
+	this.extra_feedback = '11111';
+	this.display_ticks_crosses = true;
+	this.display_correct_answer = true;
+	this.hide_feedback_ifunanswered = true;
 	this.char_labels;
 	this.imglabelWidth;
 	this.imglabelHeight;
