@@ -83,6 +83,7 @@ class PaperProperties {
   private $question_fb_released;
   private $changes;
   private $recache_marks;
+	private $modules;
 
   private $_date_timezone = null;
 
@@ -1431,6 +1432,30 @@ class PaperProperties {
   public function set_crypt_name($crypt_name) {
     $this->crypt_name = $crypt_name;
   }
+
+  /**
+   * @return string $externals
+   */
+  public function get_modules() {
+    if (!isset($this->modules)) {
+      $this->load_modules();
+    }
+
+    return $this->modules;
+  }
+	
+	private function load_modules() {
+    $paperID = $this->get_property_id();
+		
+    $result = $this->db->prepare("SELECT idMod, moduleid FROM (modules, properties_modules) WHERE idMod = id AND property_id = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($idMod, $moduleid);
+    while ($result->fetch()) {
+      $this->modules[$idMod] = $moduleid;
+    }
+    $result->close();
+	}
 
   private function get_date_time_zone() {
     if ($this->_date_timezone === null) {

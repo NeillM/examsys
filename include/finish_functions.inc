@@ -30,7 +30,9 @@ function echo_content($html) {
   echo $html;
   if (strpos($html,'<div>') === false and strpos($html,'<p>') === false and strpos($html,'<br') === false) {
     echo "<br />\n<br />\n";
-  }
+  } elseif (strpos($html,'<div>') !== false and strpos($html,'<p>') === false and strpos($html,'<br') === false) {
+    echo "<br />\n";
+	}
 }
 
 function reset_feedback($hide) {

@@ -326,6 +326,8 @@ Class UON_SATURN extends SmsUtils {
           // Check to see if any details of the user account need updating.
           if (strtoupper(substr($sms->ReasonForLeaving,0,3)) == 'W/D') {
             $new_roles = 'left';
+          } elseif (stripos($sms->ReasonForLeaving, 'not permitted to progress') !== false) {
+            $new_roles = 'left';
           } elseif ($sms->ReasonForLeaving == 'Successfully completed course') {
             $new_roles = 'graduate';
           } else {
