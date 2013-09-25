@@ -106,7 +106,7 @@ if ($userObject->has_role('Student')) {
 } else {
   $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', '/paper/feedback.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
 }
-
+echo 'xxxxxx';
 require '../config/finish.inc';
 ?>
 <!DOCTYPE html>
