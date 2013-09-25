@@ -6,8 +6,19 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 		this.canvas.onmousedown = this.qa_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.qa_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
-		this.canvas.onkeydown   = this.qa_mouseDragMove.bind(this);
-		this.canvas.onkeyup     = this.qa_mouseDragMove.bind(this);
+		if (document.addEventListener){ //FF+, IE10+, Ch+
+      document.addEventListener("keydown",	qa_mouseDragMove.bind(this),false);
+      document.addEventListener("keyup",		qa_mouseDragMove.bind(this),false);
+      document.addEventListener("keypress", qa_mouseDragMove.bind(this),false);			
+    } else if (document.attachEvent){ //FF--, IE10-, IE9-, Ch--
+			document.attachEvent("onkeydown", 	qa_mouseDragMove.bind(this));
+      document.attachEvent("onkeyup", 		qa_mouseDragMove.bind(this));
+      document.attachEvent("onkeypress",  qa_mouseDragMove.bind(this));
+    } else { //FF-, IE10-, IE9-, Ch-
+			document.onkeydown   = qa_mouseDragMove.bind(this);
+			document.onkeyup     = qa_mouseDragMove.bind(this);
+			document.onkeypress  = qa_mouseDragMove.bind(this);
+		}
 		var intervalID = window.setInterval(this.qa_redraw_canvas.bind(this), 10);
 	}
 	if (this.canvas && !this.canvas.getContext){
@@ -397,11 +408,9 @@ function qa_mouseDragMove(e){
 		this.ShiftChange = true;
 	}
 	if (ev.type=='keyup') { 
-		this.isShift = false;
-		this.isCtrl = false;
+		this.isShift = ev.shiftKey ? true : false;
+		this.isCtrl = ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
-		this.key_code = ev.keyCode;
-		this.char_code = (ev.charCode==0?'':String.fromCharCode(ev.charCode));
 	}		
 	if (ev.type=='mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
@@ -489,7 +498,7 @@ function qa_mouseDragMove(e){
 			
       var cur = 'default';
       if (this.y>25) cur = 'crosshair';
- 			if (this.global_delpoint || this.isCtrl) cur = 'url(/js/images/cur_cross.cur) 6 5, default'; //this works only in css3 browsers otherwise whole cursor is ignored
+ 			if (this.qmode!='script' && (this.global_delpoint || this.isCtrl)) cur = 'url(/js/images/cur_cross.cur) 6 5, default'; //this works only in css3 browsers otherwise whole cursor is ignored
 			if (over_object) cur = 'pointer';
       if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
       if (this.global_clearpnl) cur = 'default';
@@ -548,8 +557,7 @@ function qa_mouseDragMove(e){
       this.poly_temp_points[5] = this.y;
     }
   }
-  //this.freehand draw end
-	if (ev.stopPropagation) ev.stopPropagation();
+  //this.freehand draw end	if (ev.stopPropagation) ev.stopPropagation();
 	if (ev.cancelBubble!=null) ev.cancelBubble = true;
 	if (ev.preventDefault) ev.preventDefault();
 	if (ev.returnValue) ev.returnValue = false;

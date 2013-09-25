@@ -7,7 +7,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.canvas.onmousedown = this.ql_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.ql_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
-		if (document.addEventListener){ //FF+, IE10+
+		if (document.addEventListener){ //FF+, IE10+, Ch+
       document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false);
       document.addEventListener("keyup",		ql_mouseDragMove.bind(this),false);
       document.addEventListener("keypress", ql_mouseDragMove.bind(this),false);			
@@ -1082,13 +1082,19 @@ function ql_mouseDragMove(e){
 	}
 	if (ev.type=='keypress') { 
 		this.char_code = (ev.charCode==0?'':String.fromCharCode(ev.charCode));
+		this.keypressed = true;
 	}
 	if (ev.type=='keyup') { 
-		this.isShift = false;
-		this.isCtrl = false;
+		this.isShift = ev.shiftKey ? true : false;
+		this.isCtrl = ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 		this.key_code = ev.keyCode;
-	}		
+		if (!this.keypressed) {
+			this.char_code = (ev.which<=48?'':String.fromCharCode(ev.which));
+			if (!(this.isShift)) this.char_code = this.char_code.toLowerCase();
+		}
+		this.keypressed = false;
+	}
 	if (ev.type=='mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
 		this.loc_lft = this.canv_rect.left;
@@ -1735,4 +1741,5 @@ function rql(num) {
 	this.char_labels;
 	this.imglabelWidth;
 	this.imglabelHeight;
+	this.keypressed = false;
 }

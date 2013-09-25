@@ -7,18 +7,18 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 		this.canvas.onmousedown = this.qh_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.qh_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
-		if (this.canvas.addEventListener){
-      this.canvas.addEventListener("keydown",	qh_mouseDragMove.bind(this),false);
-      this.canvas.addEventListener("keyup",		qh_mouseDragMove.bind(this),false);
-      this.canvas.addEventListener("keypress",qh_mouseDragMove.bind(this),false);
-    } else if (this.canvas.attachEvent) {
-      this.canvas.attachEvent("onkeydown", 	qh_mouseDragMove.bind(this));
-      this.canvas.attachEvent("onkeyup", 		qh_mouseDragMove.bind(this));
-      this.canvas.attachEvent("onkeypress", qh_mouseDragMove.bind(this));
-    } else {
-			this.canvas.onkeydown   = qh_mouseDragMove.bind(this);
-			this.canvas.onkeyup     = qh_mouseDragMove.bind(this);
-			this.canvas.onkeypress  = qh_mouseDragMove.bind(this);
+		if (document.addEventListener){ //FF+, IE10+, Ch+
+      document.addEventListener("keydown",	qh_mouseDragMove.bind(this),false);
+      document.addEventListener("keyup",		qh_mouseDragMove.bind(this),false);
+      document.addEventListener("keypress", qh_mouseDragMove.bind(this),false);			
+    } else if (document.attachEvent){ //FF--, IE10-, IE9-, Ch--
+			document.attachEvent("onkeydown", 	qh_mouseDragMove.bind(this));
+      document.attachEvent("onkeyup", 		qh_mouseDragMove.bind(this));
+      document.attachEvent("onkeypress",  qh_mouseDragMove.bind(this));
+    } else { //FF-, IE10-, IE9-, Ch-
+			document.onkeydown   = qh_mouseDragMove.bind(this);
+			document.onkeyup     = qh_mouseDragMove.bind(this);
+			document.onkeypress  = qh_mouseDragMove.bind(this);
 		}
 		this.intervalID = window.setInterval(this.qh_redraw_canvas.bind(this), 10);
 	}
@@ -712,12 +712,18 @@ function qh_mouseDragMove(e){
 	}
 	if (ev.type=='keypress') { 
 		this.char_code = (ev.charCode==0?'':String.fromCharCode(ev.charCode));
+		this.keypressed = true;
 	}
 	if (ev.type=='keyup') { 
-		this.isShift = false;
-		this.isCtrl = false;
+		this.isShift = ev.shiftKey ? true : false;
+		this.isCtrl = ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 		this.key_code = ev.keyCode;
+		if (!this.keypressed) {
+			this.char_code = (ev.which<=48?'':String.fromCharCode(ev.which));
+			if (!(this.isShift)) this.char_code = this.char_code.toLowerCase();
+		}
+		this.keypressed = false;
 	}		
 	if (ev.type=='mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
@@ -1241,4 +1247,5 @@ function rqh(num) {
 	this.display_students_response = true;
 	this.display_correct_answer = true;
   this.imgdata,this.imgdatab,this.imgdatac;
+	this.keypressed = false;
 }
