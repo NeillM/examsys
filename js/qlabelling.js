@@ -364,7 +364,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			for (j=0;j<this.answerBox[i].length;j++) {
 				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1]=='text' && this.answerBox[i][j][2]!='' && this.menuBox.indexOf(this.answerBox[i][j][2])==-1) {
 					this.menuBox.push(this.answerBox[i][j][2]);
-					if (this.qmode!='edit' && this.qType == 'menu') this.answerBox[i][j][2] = '';
+					if (this.qmode!='edit' && this.qmode!='script' && this.qType == 'menu') this.answerBox[i][j][2] = '';
 				}
 			}
 		}
@@ -432,7 +432,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			}
 		}
 		var tmp_width = this.labelWidthEffect;
-		if (this.qType == "menu") {
+		if (this.qType == 'menu') {
 			this.tmp_text = '';
 			for (var a=0;a<this.answerBox.length;a++) {
 				if (this.answerBox[a][0][5]==this_box[5] && this.answerBox[a][0][6]==this_box[6]) {
@@ -877,7 +877,7 @@ function ql_redraw_canvas() {
 					
 					this.answerBox[i][j][7] = ax;
 					this.answerBox[i][j][8] = tmpy;
-					if (i!=this.drag_box_id || j!=this.drag_box_combo) {
+					if (i!=this.drag_box_id || j!=this.drag_box_combo || this.answerBox[i][j][5]==0) {
 						this.answerBox[i][j][5] = ax;
 						this.answerBox[i][j][6] = tmpy;
 						if (this.answerBox[i][j][4]==0) {
@@ -995,7 +995,7 @@ function ql_redraw_canvas() {
 		}
 		
 		//cursor blink
-		if (this.qmode=='edit' && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
+		if (this.qmode=='edit' && this.mov_id==-1 && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
 			this.edit_box_blink++;
 			if (this.edit_box_blink>40) this.edit_box_blink=0;
 			if (this.edit_box_blink>20) {
@@ -1271,7 +1271,10 @@ function ql_mouseDragMove(e){
 			if (over_object) cur = 'pointer';
 			if (this.global_move && this.activ_shape>-1 && this.y>28) cur = 'move';
 			if (this.active_box_handler!=-1) cur = 'move';
- 			if (this.global_erase && this.activ_shape>-1 && this.y>28) cur = 'url(/js/images/cur_erase.cur) 6 5, default';//this works only in css3 browsers otherwise whole cursor is ignored
+			//this works only in css3 browsers otherwise whole cursor is ignored
+ 			if (this.global_erase && this.activ_shape>-1 && this.y>28) cur = 'url(/js/images/cur_erase.cur) 6 5, default';
+ 			if (this.global_erase && this.drag_box_id>-1 && this.y>28) cur = 'url(/js/images/cur_erase.cur) 6 5, default';
+
       if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
       e.target.style.cursor = cur;
 		}
@@ -1339,12 +1342,22 @@ function ql_mouseDragUp(){
     this.shapeBox.splice(this.activ_shape,1);
   }
   this.activ_shape_move = this.activ_shape = -1;
-
+	
+	//'erase' label
+  if (this.global_erase && this.drag_box_id>-1 && this.qmode=='edit') {
+    this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.answerBox[this.drag_box_id][this.drag_box_combo][7] = 0;
+    this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8] = 0;
+		this.mov_id = this.drag_box_id;
+		this.mov_combo = this.drag_box_combo;
+  }
+	
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode=='edit' && this.answerBox[this.drag_box_id][this.drag_box_combo][5]<220) {
 		this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.answerBox[this.drag_box_id][this.drag_box_combo][7];
 		this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8]; 
 		this.mov_x = this.x - this.sub_x;
 		this.mov_y = this.y - this.sub_y;
+		this.mov_id = this.drag_box_id;
+		this.mov_combo = this.drag_box_combo;
 	}
 
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.labelMulti == 'multiple' && this.qType!='menu'){
@@ -1432,12 +1445,6 @@ function ql_mouseDragUp(){
       this.answerBox[this.drag_box_id][this.drag_box_combo][3] = '';
     }
   }
-  //'erase' label
-  if (this.global_erase && this.drag_box_id>-1) {
-    this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.answerBox[this.drag_box_id][this.drag_box_combo][7];
-    this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8];
-    this.answerBox[this.drag_box_id][this.drag_box_combo][3] = '';
-  }
     
 	if (this.buttonBox.length>0) {
 		//test for buttons
@@ -1523,7 +1530,7 @@ function ql_ReturnInfo() {
 			if (typeof(this.pholderBox[i])!='undefined' && this.pholderBox[i][2] != "" && this.pholderBox[i][5]>220) {
 				temp_answ[this.pholderBox[i][2]] = this.pholderBox[i][5]+','+this.pholderBox[i][6];
 				questions_total++;
-				}
+			}
 		}
 		for (i=0;i<this.answerBox.length;i++) {
 			for (j=0;j<this.answerBox[i].length;j++) {
