@@ -2143,6 +2143,54 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
         echo '<div align="center">';
         $extra = ',' . $tmp_exclude;
+				
+				  $tmp_std = '';
+				if (is_array($paper[$question]['std'])) {
+					foreach ($paper[$question]['std'] as $tmp_std_part) {
+						if ($tmp_std == '') {
+							$tmp_std = $tmp_std_part;
+						} else {
+							$tmp_std .= '$' . $tmp_std_part;
+						}
+					}
+				}
+
+				if (isset($paper[$question]['user_answer'])) {
+					$paper[$question]['user_answer'] = str_replace('"','&#034;',$paper[$question]['user_answer']);
+					$paper[$question]['user_answer'] = str_replace("'",'&#039;',$paper[$question]['user_answer']);
+				}
+				$paper[$question]['correct'][0] = str_replace('"','&#034;',$paper[$question]['correct'][0]);
+				$paper[$question]['correct'][0] = str_replace("'",'&#039;',$paper[$question]['correct'][0]);
+
+				$tmp_feedback = '';
+				if ($tmp_display_students_response) {
+					$tmp_feedback .= '1';
+				} else {
+					$tmp_feedback .= '0';
+				}
+				if ($tmp_display_correct_answer) {
+					$tmp_feedback .= '1';
+				} else {
+					$tmp_feedback .= '0';
+				}
+				if ($tmp_display_question_mark) {
+					$tmp_feedback .= '1';
+				} else {
+					$tmp_feedback .= '0';
+				}
+				if ($tmp_display_feedback) {
+					$tmp_feedback .= '1';
+				} else {
+					$tmp_feedback .= '0';
+				}
+				if ($hide_if_unanswered) {
+					$tmp_feedback .= '1';
+				} else {
+					$tmp_feedback .= '0';
+				}
+
+				$extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
+	
 				if ($configObject->get('cfg_interactive_qs')=='html5') {
 					//<!-- ======================== HTML5 part include finf ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
@@ -2157,70 +2205,20 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 					//<!-- ==================================================== -->
 				} else {
 					echo '<script language="JavaScript">';
-				} 
-
-  $tmp_std = '';
-  if (is_array($paper[$question]['std'])) {
-    foreach ($paper[$question]['std'] as $tmp_std_part) {
-      if ($tmp_std == '') {
-        $tmp_std = $tmp_std_part;
-      } else {
-        $tmp_std .= '$' . $tmp_std_part;
-      }
-    }
-  }
-
-  if (isset($paper[$question]['user_answer'])) {
-    $paper[$question]['user_answer'] = str_replace('"','&#034;',$paper[$question]['user_answer']);
-    $paper[$question]['user_answer'] = str_replace("'",'&#039;',$paper[$question]['user_answer']);
-  }
-  $paper[$question]['correct'][0] = str_replace('"','&#034;',$paper[$question]['correct'][0]);
-  $paper[$question]['correct'][0] = str_replace("'",'&#039;',$paper[$question]['correct'][0]);
-
-  $tmp_feedback = '';
-  if ($tmp_display_students_response) {
-    $tmp_feedback .= '1';
-  } else {
-    $tmp_feedback .= '0';
-  }
-  if ($tmp_display_correct_answer) {
-    $tmp_feedback .= '1';
-  } else {
-    $tmp_feedback .= '0';
-  }
-  if ($tmp_display_question_mark) {
-    $tmp_feedback .= '1';
-  } else {
-    $tmp_feedback .= '0';
-  }
-  if ($tmp_display_feedback) {
-    $tmp_feedback .= '1';
-  } else {
-    $tmp_feedback .= '0';
-  }
-  if ($hide_if_unanswered) {
-    $tmp_feedback .= '1';
-  } else {
-    $tmp_feedback .= '0';
-  }
-
-  $extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
-  
-	if ($configObject->get('cfg_interactive_qs')!='html5') {
-		echo "function swfLoaded" . $question_no . "(message) {\n";
-    echo "var num = message.substring(5,message.length);\n";
-    echo "setUpFlash(num, message, '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
-		if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
-		echo "','" . $extra  . "','#FFC0C0');}\n";
-		echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $question_no . "\" width=\"" . ($paper[$question]['q_media_width'] + 250) . "\" height=\"" . $tmp_height . "\" align=\"middle\">');\n";
-  	echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
-  	echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/paper/label_answer.swf\" />');\n";
-  	echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
-  	echo "write_string('<param name=\"bgcolor\" value=\"" . $bgcolor . "\" />');\n";
-  	echo "write_string('<embed src=\"" . $configObject->get('cfg_root_path') . "/paper/label_answer.swf\" quality=\"high\" bgcolor=\"" . $bgcolor . "\" width=\"" . ($paper[$question]['q_media_width'] + 250) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $question_no . "\" name=\"flash" . $question_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
-  	echo "write_string('</object>');\n";
-		echo "</script>\n";
-	}
+					echo "function swfLoaded" . $question_no . "(message) {\n";
+					echo "var num = message.substring(5,message.length);\n";
+					echo "setUpFlash(num, message, '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
+					if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
+					echo "','" . $extra  . "','#FFC0C0');}\n";
+					echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $question_no . "\" width=\"" . ($paper[$question]['q_media_width'] + 250) . "\" height=\"" . $tmp_height . "\" align=\"middle\">');\n";
+					echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
+					echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/paper/label_answer.swf\" />');\n";
+					echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
+					echo "write_string('<param name=\"bgcolor\" value=\"" . $bgcolor . "\" />');\n";
+					echo "write_string('<embed src=\"" . $configObject->get('cfg_root_path') . "/paper/label_answer.swf\" quality=\"high\" bgcolor=\"" . $bgcolor . "\" width=\"" . ($paper[$question]['q_media_width'] + 250) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $question_no . "\" name=\"flash" . $question_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+					echo "write_string('</object>');\n";
+					echo "</script>\n";
+				}
   ?>
   <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" value="" />
   </div>
