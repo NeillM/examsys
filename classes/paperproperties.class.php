@@ -1436,8 +1436,8 @@ class PaperProperties {
   /**
    * @return string $externals
    */
-  public function get_modules() {
-    if (!isset($this->modules)) {
+  public function get_modules($force_recache = false) {
+    if (!isset($this->modules) or $force_recache) {
       $this->load_modules();
     }
 
@@ -1446,11 +1446,13 @@ class PaperProperties {
 	
 	private function load_modules() {
     $paperID = $this->get_property_id();
+		$this->modules = array();
 		
     $result = $this->db->prepare("SELECT idMod, moduleid FROM (modules, properties_modules) WHERE idMod = id AND property_id = ?");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($idMod, $moduleid);
+    $result->store_result();
     while ($result->fetch()) {
       $this->modules[$idMod] = $moduleid;
     }

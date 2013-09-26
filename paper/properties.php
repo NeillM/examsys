@@ -568,13 +568,13 @@ if (isset($_POST['Submit'])) {
     // Save any adjusted properties to the database.
     $properties->save();
 
-    if (!$locked) {
-      $old_modules = Paper_utils::get_modules($paperID, $mysqli);
+    if (!$locked or $userObject->has_role(array('SysAdmin', 'Admin'))) {
+			$old_modules = $properties->get_modules(true);
 
-      Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
+     Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
 
-      $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
-
+      $paper_modules = $properties->get_modules(true);
+			
       $utils = new GeneralUtils();
       if (!$utils->arrays_are_equal($old_modules, $paper_modules)) {
         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_modules), implode(',', $paper_modules), 'modules');
@@ -1326,7 +1326,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       echo "<tr><td align=\"right\">" . $string['groupdetails'] . "&nbsp;</td><td><select name=\"type\">\n";
       echo "<option value=\"\" selected>&nbsp;</option>\n";
 
-      $modules_array = Paper_utils::get_modules($paperID, $mysqli);
+			$modules_array = $properties->get_modules();
 
       $field_details = $mysqli->prepare("SELECT DISTINCT type FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (" . implode(',', array_keys($modules_array)) . ") ORDER BY type");
       $field_details->execute();
@@ -1689,12 +1689,11 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
     echo "<div style=\"display:block; width:400px; height:425px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
 
-    //$modules_array = Paper_utils::get_modules($paperID, $mysqli);
 		$modules_array = $properties->get_modules();
 
     $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
 
-    $total_modules = array_merge($staff_modules, $modules_array);
+		$total_modules = array_merge($staff_modules, $modules_array);
 
     $module_sql = implode("','", $total_modules);
     if ($module_sql != '') $module_sql = "'$module_sql'";
