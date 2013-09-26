@@ -267,7 +267,7 @@ require_once '../include/staff_auth.inc';
     }
   }
 
-  echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/" . RecycleBin::get_recyclebin_icon($userObject->get_user_ID(), $staff_modules, $mysqli) . "\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
+  echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img class=\"f_icon\" src=\"../artwork/" . RecycleBin::get_recyclebin_icon($userObject->get_user_ID(), $staff_modules, $mysqli) . "\" alt=\"Recycle Bin\" />" . $string['recyclebin'] . "</a></div>\n";
 ?>
 <br clear="left" />
 <?php
@@ -287,7 +287,7 @@ require_once '../include/staff_auth.inc';
     }
     foreach ($staff_team_array as $idMod => $folder_title) {
       $url = '../folder/details.php?module=' . $idMod;
-	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span class=\"grey\">" . $folder_title['fullName'] . "</span></td></tr></table></div>\n";
+	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span class=\"grey\">" . $folder_title['fullName'] . "</span></td></tr></table></div>\n";
     }
 
     if ($module_no == 0) {
