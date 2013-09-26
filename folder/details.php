@@ -107,7 +107,11 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   if (!$module_details) {
    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  }
+  } elseif ($module_details['active'] == 0) {
+   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
+	}
+	
 } else {
   $module = '';
 }
@@ -153,7 +157,7 @@ if ($folder != '') {
     echo ".retired {display:none}\n";
   }
   ?>
-  </style>
+	</style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/sidebar.js"></script>
@@ -287,11 +291,7 @@ if ($folder != '') {
   while ($folder_details->fetch()) {
     $display_name = str_replace("$orig_folder_name;","",$name);
     if (substr_count($display_name,';') == 0) {
-      if (count($staff_modules) > 0) {
-        echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=$id\"><img src=\"../artwork/" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=$id\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
-      } else {
-        echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=$id\"><img src=\"../artwork/shared_" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=$id\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
-      }
+      echo "<div class=\"f\" ><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" />$display_name</a></div>\n";
     }
   }
   $folder_details->close();
@@ -299,7 +299,8 @@ if ($folder != '') {
 
 // New folder.
 if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' and !isset($_POST['submit'])) {
-  echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></td><td><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></td></tr></table></div>\n";
+  echo "<div class=\"f\"><img class=\"f_icon\" src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n<br clear=\"all\" />\n<br />";
+  //echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></td><td><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></td></tr></table></div>\n";
 }
 
 // Get current owner papers.
@@ -317,7 +318,7 @@ if ($folder != '') {
     $paper_types[$paper_type] = $no_papers;
   }
   $results->close();
-// UPDATED sql query simplified removed the modules table as no data was coming from it.  also removed distinct as group by was doing it.  the user data is returned but for some reason the icons alt tags (that contain the user data dont display
+	// UPDATED sql query simplified removed the modules table as no data was coming from it.  also removed distinct as group by was doing it.  the user data is returned but for some reason the icons alt tags (that contain the user data don't display
   $query_string = "SELECT paper_ownerID, properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = ? AND properties.paper_ownerID=users.id  AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
   $results = $mysqli->prepare($query_string);
   $results->bind_param('i', $_GET['module']);

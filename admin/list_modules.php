@@ -120,8 +120,10 @@ for ($i=0; $i<$module_no; $i++) {
   if ($modules[$i]['school'] == '') $modules[$i]['school'] = '<span style="color:#808080">unknown</span>';
   if ($modules[$i]['active'] == 1) {
     $tmp_active = $string['yes'];
+		$class = 'l';
   } else {
     $tmp_active = $string['no'];
+		$class = 'l grey';
   }
   if ($sortby == 'school' and $old_school != $modules[$i]['school']) {
     echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $modules[$i]['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
@@ -134,7 +136,8 @@ for ($i=0; $i<$module_no; $i++) {
   } elseif ($sortby == 'active' and $old_active != $modules[$i]['active']) {
     echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $tmp_active . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
-  echo "<tr class=\"l\" id=\"" . $modules[$i]['id'] . "\" onclick=\"selLine('" . $modules[$i]['id'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['id'] . "')\"><td><div class=\"col30\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
+  
+	echo "<tr class=\"$class\" id=\"" . $modules[$i]['id'] . "\" onclick=\"selLine('" . $modules[$i]['id'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['id'] . "')\"><td><div class=\"col30\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
   
   $old_moduleid_letter = mb_substr($modules[$i]['moduleid'], 0, 1);
   $old_name_letter = mb_substr($modules[$i]['name'], 0, 1);

@@ -1689,7 +1689,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
     echo "<div style=\"display:block; width:400px; height:425px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
 
-    $modules_array = Paper_utils::get_modules($paperID, $mysqli);
+    //$modules_array = Paper_utils::get_modules($paperID, $mysqli);
+		$modules_array = $properties->get_modules();
 
     $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
 

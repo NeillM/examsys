@@ -199,7 +199,7 @@ require_once '../include/staff_auth.inc';
   echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myrecentpapers'] . " (" . $result->num_rows() . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   while ($result->fetch()) {
     $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-    $moduleID = implode(',',array_keys($moduleIDs));
+    $moduleID = implode(',', array_keys($moduleIDs));
     echo "<div style=\"padding-left:22px\"><a href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
     if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
     echo "href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\">" . $paper_title . "</a></div>\n";
@@ -243,7 +243,7 @@ require_once '../include/staff_auth.inc';
   // -- Display personal folders --------------------------------------
   $module_sql = '';
   if (count($userObject->get_staff_modules()) > 0) {
-    $module_sql = " OR idMod IN (" . implode(",", array_keys($userObject->get_staff_modules())) . ")";
+    $module_sql = " OR idMod IN (" . implode(',', array_keys($userObject->get_staff_modules())) . ")";
   }
 
   $result = $mysqli->prepare("SELECT DISTINCT id, name, color FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE  (ownerID=? $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
@@ -254,16 +254,16 @@ require_once '../include/staff_auth.inc';
 
   echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myfolders'] . " (" . ($result->num_rows() + 1) . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   while ($result->fetch()) {
-    echo "<div class=\"f\" ><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" />$name</a></div>\n";
+    echo "<div class=\"f\" ><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\"  alt=\"Folder\" />$name</a></div>\n";
   }
   $result->close();
 
   if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' or $duplicate_folder == true) {
     if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_folder == true) {
       echo "<script language=\"JavaScript\">alert(\"" . $string['duplicatefoldername'] . "\")</script>";
-      echo "<div class=\"f\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" />&nbsp;<input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
+      echo "<div class=\"f\"><img class=\"f_icon\" src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /><input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
     } elseif (!isset($_POST['submit'])) {
-      echo "<div class=\"f\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" />&nbsp;<input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
+      echo "<div class=\"f\"><img class=\"f_icon\" src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
     }
   }
 
@@ -281,19 +281,19 @@ require_once '../include/staff_auth.inc';
 
     echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['mymodules'] . " ($module_no)</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     if ($userObject->has_role('SysAdmin')) {
-      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></td></tr></table></div>\n";
+      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></td></tr></table></div>\n";
     } elseif ($userObject->has_role('Admin')) {
-      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></td></tr></table></div>\n";
+      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></td></tr></table></div>\n";
     }
     foreach ($staff_team_array as $idMod => $folder_title) {
       $url = '../folder/details.php?module=' . $idMod;
-	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span style=\"color:#808080\">" . $folder_title['fullName'] . "</span></td></tr></table></div>\n";
+	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span class=\"grey\">" . $folder_title['fullName'] . "</span></td></tr></table></div>\n";
     }
 
     if ($module_no == 0) {
       echo '<div style="color:#C00000; padding-left:15px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
     }
-
+		
     echo '<br clear="left" /><br />';
 
     // -- Display papers not assigned to a module -------------------

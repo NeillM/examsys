@@ -80,7 +80,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     }
   }
   if ($retired == '') {
-    echo '  <span style="color:#808080">';
+    echo '  <span class="grey">';
   } else {
     echo '  <span style="color:#C0C0C0">';
   }
@@ -92,7 +92,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     echo $screens . ' ' . $string['screens'];
   }
   if (count($paper_modules) == 0) {
-    echo ', <span style="color:red">No modules set</span>';
+    echo ', <span style="color:#C00000">No modules set</span>';
   } else {
     if (isset($_GET['module']) and $_GET['module'] == '') echo ', ' . implode(',', $paper_modules);
   }

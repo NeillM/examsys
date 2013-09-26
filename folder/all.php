@@ -37,6 +37,7 @@
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
+	  #content img {width:16px; height:16px; padding-right:6px}
     .divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
     .sch {padding-left:32px; text-indent:-20px}
     .greysch {padding-left:12px; color:#808080}
@@ -65,7 +66,7 @@
 
 <div id="content" class="content">
 <table class="header">
-<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px"><?php echo $string['allmodules']; ?></div></td><td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th></tr>
+<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px"><?php echo $string['allmodules']; ?></div></td><td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" alt="<?php echo $string['help']; ?>" /></a></th></tr>
 <tr><th colspan="2" class="bevel"></th></tr>
 </table>
 
@@ -75,11 +76,11 @@
   $old_faculty = '';
   $old_school = '';
   $module_block = false;
-  $block_id=0;
+  $block_id = 0;
   if ($userObject->has_role('SysAdmin')) {
-    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty) LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL AND mod_deleted IS NULL ORDER BY faculty.name, school, moduleid");
+    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty) LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL AND active = 1 AND mod_deleted IS NULL ORDER BY faculty.name, school, moduleid");
   } else {
-    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty, admin_access, modules) WHERE schools.facultyID = faculty.id AND schools.id = modules.schoolid AND schools.id = admin_access.schools_id AND admin_access.userID = ? AND schools.deleted IS NULL AND mod_deleted IS NULL ORDER BY faculty.name, school, moduleid");
+    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty, admin_access, modules) WHERE schools.facultyID = faculty.id AND schools.id = modules.schoolid AND schools.id = admin_access.schools_id AND admin_access.userID = ? AND schools.deleted IS NULL AND active = 1 AND mod_deleted IS NULL ORDER BY faculty.name, school, moduleid");
     $results->bind_param('i',$userObject->get_user_ID());
   }
   $results->execute();
@@ -96,9 +97,9 @@
     }
     if ($old_school != $school) {
       if ($moduleid == '') {
-        echo "<div class=\"greysch\"><img src=\"../artwork/folder_16_grey.png\" width=\"16\" height=\"16\" alt=\"folder\" />&nbsp;$school</div>\n";
+        echo "<div class=\"greysch\"><img src=\"../artwork/folder_16_grey.png\" alt=\"folder\" />&nbsp;$school</div>\n";
       } else {
-        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" onclick=\"\$('#block$block_id').toggle()\" />&nbsp;<a href=\"\" style=\"color:blue\" onclick=\"\$('#block$block_id').toggle(); return false;\">$school</a></div>\n";
+        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" onclick=\"\$('#block$block_id').toggle()\" /><a href=\"\" style=\"color:blue\" onclick=\"\$('#block$block_id').toggle(); return false;\">$school</a></div>\n";
       }
       if ($module_block == false) {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -107,7 +108,7 @@
       }
     }
     if ($moduleid != '') {
-      echo "<div class=\"mod\"><a href=\"details.php?module=$modID\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" /></a>&nbsp;<a href=\"details.php?module=$modID\">$moduleid: $fullname</a></div>\n";
+      echo "<div class=\"mod\"><a href=\"details.php?module=$modID\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" />$moduleid: $fullname</a></div>\n";
     }
     $old_faculty = $faculty;
     $old_school = $school;
@@ -125,10 +126,10 @@
   $old_letter = '';
   $module_block = false;
   if ($userObject->has_role('SysAdmin')) {
-    $results = $mysqli->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules ORDER BY moduleid");
+    $results = $mysqli->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules WHERE active = 1 AND mod_deleted IS NULL ORDER BY moduleid");
   } else {
-    $results = $mysqli->prepare("SELECT DISTINCT modules.id, moduleid, fullname FROM (schools, admin_access, modules) WHERE schools.id = modules.schoolid AND schools.id = admin_access.schools_id AND admin_access.userID = ? ORDER BY moduleid");
-    $results->bind_param('i',$userObject->get_user_ID());
+    $results = $mysqli->prepare("SELECT DISTINCT modules.id, moduleid, fullname FROM (schools, admin_access, modules) WHERE schools.id = modules.schoolid AND schools.id = admin_access.schools_id AND admin_access.userID = ? AND active = 1 AND mod_deleted IS NULL ORDER BY moduleid");
+    $results->bind_param('i', $userObject->get_user_ID());
   }
   $results->execute();
   $results->bind_result($modID, $moduleid, $fullname);
@@ -141,7 +142,7 @@
     }
     if ($old_letter !== mb_substr($moduleid,0,1)) {
       if ($moduleid !== '') {
-        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" onclick=\"\$('#block$block_id').toggle()\" />&nbsp;<a href=\"\" style=\"color:blue\" onclick=\"\$('#block$block_id').toggle(); return false;\">" . mb_substr($moduleid,0,1) . "</a></div>\n";
+        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" onclick=\"\$('#block$block_id').toggle()\" /><a href=\"\" style=\"color:blue\" onclick=\"\$('#block$block_id').toggle(); return false;\">" . mb_substr($moduleid,0,1) . "</a></div>\n";
       }
       if ($module_block == false) {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -150,7 +151,7 @@
       }
     }
     if ($moduleid !== '') {
-      echo "<div class=\"mod\"><a href=\"details.php?module=$modID\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" /></a>&nbsp;<a href=\"details.php?module=$modID\">$moduleid: $fullname</a></div>\n";
+      echo "<div class=\"mod\"><a href=\"details.php?module=$modID\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" />$moduleid: $fullname</a></div>\n";
     }
     $old_letter = mb_substr($moduleid, 0, 1);
   }
