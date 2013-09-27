@@ -7,19 +7,16 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.canvas.onmousedown = this.ql_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.ql_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
-		if (document.addEventListener){ //FF+, IE10+, Ch+
-      document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false);
-      document.addEventListener("keyup",		ql_mouseDragMove.bind(this),false);
-      document.addEventListener("keypress", ql_mouseDragMove.bind(this),false);			
-    } else if (document.attachEvent){ //FF--, IE10-, IE9-, Ch--
-			document.attachEvent("onkeydown", 	ql_mouseDragMove.bind(this));
-      document.attachEvent("onkeyup", 		ql_mouseDragMove.bind(this));
-      document.attachEvent("onkeypress",  ql_mouseDragMove.bind(this));
-    } else { //FF-, IE10-, IE9-, Ch-
-			document.onkeydown   = ql_mouseDragMove.bind(this);
-			document.onkeyup     = ql_mouseDragMove.bind(this);
-			document.onkeypress  = ql_mouseDragMove.bind(this);
+		if (document.addEventListener){ 
+      document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false); //FF+, IE10-, Ch-
+      document.addEventListener("keypress", ql_mouseDragMove.bind(this),false); //FF+, IE10-, Ch-
+      document.addEventListener("keyup",		ql_mouseDragMove.bind(this),false); //FF+, IE10+, Ch+
+    } else {
+			document.onkeydown   = ql_mouseDragMove.bind(this); //FF+, IE10-, Ch-
+			document.onkeypress  = ql_mouseDragMove.bind(this); //FF+, IE10+, Ch+
+			document.onkeyup     = ql_mouseDragMove.bind(this); //FF+, IE10-, Ch-
 		}
+		
 		this.intervalID = window.setInterval(this.ql_redraw_canvas.bind(this), 10);
 	}
 	if (this.canvas && !this.canvas.getContext){
@@ -816,7 +813,7 @@ function ql_redraw_canvas() {
 			if (this.edit_box_pos<0) this.edit_box_pos=0;
 			if (this.edit_box_pos>text_len) this.edit_box_pos=text_len;
 			
-			if (this.char_code!='') {					//characters
+			if (this.char_code!='') {	//characters
 				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.char_code+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
 				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
 				this.edit_box_pos++;
@@ -1071,36 +1068,15 @@ function ql_redraw_canvas() {
 }
 
 function ql_mouseDragMove(e){
-	var ev = e || window.event;
-	if (ev.target.id != this.canvas.id) {
-		return true;
-	}
-	if (ev.type=='keydown') {
-		this.isShift = ev.shiftKey ? true : false;
-		this.isCtrl = ev.ctrlKey ? true : false;
-		this.ShiftChange = true;
-	}
-	if (ev.type=='keypress') { 
-		this.char_code = (ev.charCode==0?'':String.fromCharCode(ev.charCode));
-		this.keypressed = true;
-	}
-	if (ev.type=='keyup') { 
-		this.isShift = ev.shiftKey ? true : false;
-		this.isCtrl = ev.ctrlKey ? true : false;
-		this.ShiftChange = true;
-		this.key_code = ev.keyCode;
-		if (!this.keypressed) {
-			this.char_code = (ev.which<=48?'':String.fromCharCode(ev.which));
-			if (!(this.isShift)) this.char_code = this.char_code.toLowerCase();
-		}
-		this.keypressed = false;
-	}
-	if (ev.type=='mousemove') {
+	this.ev = e || window.event;
+	if (this.ev.target.id != this.canvas.id) return true;
+	this.get_char_key();
+	if (this.ev.type=='mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
 		this.loc_lft = this.canv_rect.left;
 		this.loc_top = this.canv_rect.top;
-		this.x = ev.clientX - this.loc_lft;
-		this.y = ev.clientY - this.loc_top;
+		this.x = this.ev.clientX - this.loc_lft;
+		this.y = this.ev.clientY - this.loc_top;
 	}	
 
 	//dragging labels handlers
@@ -1266,7 +1242,6 @@ function ql_mouseDragMove(e){
         this.ql_redraw_canvas;
       }
 		
-			
       var cur = 'default';
 			if (over_object) cur = 'pointer';
 			if (this.global_move && this.activ_shape>-1 && this.y>28) cur = 'move';
@@ -1279,11 +1254,15 @@ function ql_mouseDragMove(e){
       e.target.style.cursor = cur;
 		}
 	}
-	
-	if (ev.stopPropagation) ev.stopPropagation();
-	if (ev.cancelBubble!=null) ev.cancelBubble = true;
-	if (ev.preventDefault) ev.preventDefault();
-	if (ev.returnValue) ev.returnValue = false;
+  //this.freehand draw end  
+
+	//cancel propagation if BackSpace
+	if (this.ev.type=='keydown' && this.ev.keyCode<=46) {
+		if (this.ev.stopPropagation) this.ev.stopPropagation();
+		if (this.ev.cancelBubble!=null) this.ev.cancelBubble = true;
+		if (this.ev.preventDefault) this.ev.preventDefault();
+		if (this.ev.returnValue) this.ev.returnValue = false;
+	}
 	return false;
 }
 
@@ -1635,6 +1614,7 @@ function rql(num) {
 	this.menuRebuild_panel=menuRebuild_panel;
 	this.tooltip_draw=tooltip_draw;
 	this.combo_scope = combo_scope;
+	this.get_char_key =	get_char_key;
 
 	this.test; 
 	this.x,this.y,this.z,this.sub_x,this.sub_y,this.m;

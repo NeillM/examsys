@@ -701,38 +701,16 @@ function qh_redraw_canvas() {
 }
 
 function qh_mouseDragMove(e){
-	var ev = e || window.event;
-	if (ev.target.id != this.canvas.id) {
-		return true;
-	}
-	if (ev.type=='keydown') {
-		this.isShift = ev.shiftKey ? true : false;
-		this.isCtrl = ev.ctrlKey ? true : false;
-		this.ShiftChange = true;
-	}
-	if (ev.type=='keypress') { 
-		this.char_code = (ev.charCode==0?'':String.fromCharCode(ev.charCode));
-		this.keypressed = true;
-	}
-	if (ev.type=='keyup') { 
-		this.isShift = ev.shiftKey ? true : false;
-		this.isCtrl = ev.ctrlKey ? true : false;
-		this.ShiftChange = true;
-		this.key_code = ev.keyCode;
-		if (!this.keypressed) {
-			this.char_code = (ev.which<=48?'':String.fromCharCode(ev.which));
-			if (!(this.isShift)) this.char_code = this.char_code.toLowerCase();
-		}
-		this.keypressed = false;
-	}		
-	if (ev.type=='mousemove') {
+	this.ev = e || window.event;
+	if (this.ev.target.id != this.canvas.id) return true;
+	this.get_char_key();
+	if (this.ev.type=='mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
 		this.loc_lft = this.canv_rect.left;
 		this.loc_top = this.canv_rect.top;
-		this.x = ev.clientX - this.loc_lft;
-		this.y = ev.clientY - this.loc_top;
+		this.x = this.ev.clientX - this.loc_lft;
+		this.y = this.ev.clientY - this.loc_top;
 	}	
-
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
 		if (this.drag_box_id>-1 && this.testWithin(this.x - this.sub_x,this.y - this.sub_y,300,25,this.canvas.width,this.canvas.height)) {
@@ -876,10 +854,14 @@ function qh_mouseDragMove(e){
     }
   }
   //this.freehand draw end  
-	if (ev.stopPropagation) ev.stopPropagation();
-	if (ev.cancelBubble!=null) ev.cancelBubble = true;
-	if (ev.preventDefault) ev.preventDefault();
-	if (ev.returnValue) ev.returnValue = false;
+
+	//cancel propagation if BackSpace
+	if (this.ev.type=='keydown' && this.ev.keyCode<=46) {
+		if (this.ev.stopPropagation) this.ev.stopPropagation();
+		if (this.ev.cancelBubble!=null) this.ev.cancelBubble = true;
+		if (this.ev.preventDefault) this.ev.preventDefault();
+		if (this.ev.returnValue) this.ev.returnValue = false;
+	}
 	return false;
 }
 
@@ -1133,6 +1115,7 @@ function rqh(num) {
 	this.qh_ReturnInfo = qh_ReturnInfo;
 	this.qh_mouseDragUp = qh_mouseDragUp;
 	this.def_colour_panel_parts = def_colour_panel_parts;
+	this.get_char_key =	get_char_key;
 	
 	this.hexifycolour=hexifycolour;
 	this.textHeight=textHeight;
