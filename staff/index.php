@@ -226,7 +226,7 @@ require_once '../include/staff_auth.inc';
     $result2->fetch();
     $result2->close();
     echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"#\" onclick=\"startPaper('" . $crypt_name . "'," . $fullscreen . "); return false;\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" border=\"0\" /></a></td>\n";
-    echo "  <td><a href=\"#\" onclick=\"startPaper('" . $crypt_name . "'," . $fullscreen . "); return false;\">" . $paper_title . "</a><br /><div style=\"color:#C00000\">Deadline: " . $internal_review_deadline . "</div>";
+    echo "  <td><a href=\"#\" onclick=\"startPaper('" . $crypt_name . "'," . $fullscreen . "); return false;\">" . $paper_title . "</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " " . $internal_review_deadline . "</div>";
     if ($reviewed == '') {
       echo "<span style=\"color:white; background-color:#FF4040\">&nbsp;" . $string['notreviewed'] . "&nbsp;</span>";
     } else {

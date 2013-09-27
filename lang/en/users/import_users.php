@@ -18,6 +18,7 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 
 $string['sendwelcomeemail'] = 'Send welcome email to user';
 $string['csvfile'] = 'CSV File:';
+$string['specifyfile'] = 'Please specify a file for upload.';
 $string['import'] = 'Import';
 $string['msg1'] = 'New users accounts (staff or student) can be created from CSV files. The first row should be a header row containing the following fields:';
 $string['msg2'] = "The extra fields 'Modules' and 'Session' can be added to enrol the new students on the specified module at the same time.";

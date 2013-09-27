@@ -57,6 +57,7 @@ $string['author'] = 'Author';
 $string['duplicatefoldername'] = 'Duplicate folder name, please use an alternative.';
 $string['loggedinas'] = 'You are logged in as';
 $string['eassessmentmanagementsystem'] = 'eAssessment Management System';
+$string['deadline'] = 'Deadline:';
 $string['nomodules'] = 'You are not a member of any teams. For help please contact:';
 $string['papersforreview'] = 'Papers for Review';
 ?>
