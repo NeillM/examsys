@@ -18,6 +18,7 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 
 $string['sendwelcomeemail'] = 'Wyślij do użytkownika list powitalny';
 $string['csvfile'] = 'Plik CSV:';
+$string['specifyfile'] = 'Wskaż plik do załączenia.';
 $string['import'] = 'Importuj';
 $string['msg1'] = 'Nowe konta użytkowników (pracowników lub studentów) mogą być utworzone na podstawie danych z pliku CSV. <br />Pierwszy wiersz powinien być wierszem nagłówkowym zawierającym następujące pola:'; 
 $string['msg2'] = "Można dodać pola 'Modules' i 'Session' co pozwali zapisywać nowych studentów na wybrane moduły.";

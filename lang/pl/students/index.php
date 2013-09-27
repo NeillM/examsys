@@ -25,4 +25,5 @@ $string['screen'] = 'ekran';
 $string['screens'] = 'ekrany';
 $string['eassessmentmanagementsystem'] = 'System zarządzania oceną';
 $string['passwordRequired'] = 'wymagane hasło';
+$string['performsummary'] = 'Podsumowanie osiągnięć';
 ?>

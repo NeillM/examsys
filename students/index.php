@@ -301,7 +301,7 @@ if (!$userObject->has_role('Student')) {
   				$last_session = $module['year'];
 
           if (isset($performance_summary_years[$module['year']])) {
-            echo "<div style=\"margin-top:4px; margin-left:10px\"><a href=\"performance_summary.php#" . $module['year'] . "\"><img src=\"../artwork/link.png\" width=\"16\" height=\"16\" alt=\"arrow\" /></a>&nbsp;<a href=\"performance_summary.php#" . $module['year'] . "\">Performance Summary</a></div>";
+            echo "<div style=\"margin-top:4px; margin-left:10px\"><a href=\"performance_summary.php#" . $module['year'] . "\"><img src=\"../artwork/link.png\" width=\"16\" height=\"16\" alt=\"arrow\" /></a>&nbsp;<a href=\"performance_summary.php#" . $module['year'] . "\">" . $string['performsummary'] . "</a></div>";
           }
         }
 ?>

@@ -25,4 +25,5 @@ $string['screen'] = 'screen';
 $string['screens'] = 'screens';
 $string['eassessmentmanagementsystem'] = 'eAssessment Management System';
 $string['passwordRequired'] = 'password required';
+$string['performsummary'] = 'Performance Summary';
 ?>
