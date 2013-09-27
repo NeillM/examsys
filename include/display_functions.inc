@@ -331,7 +331,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   if ($question['theme'] != '') echo '<tr><td colspan="2" class="theme">' . $question['theme'] . '</td></tr>';
 
   if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
-    if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert') {
+    if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
       echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
       if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
       echo "</td><td>";
@@ -339,7 +339,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }
-    if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area') {
+    if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
         if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
@@ -355,7 +355,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '</td><td>';
       }
       $li_set = 1;
-      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix')))) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
       if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') echo $question['leadin'];
     }
   }
