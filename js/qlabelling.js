@@ -537,7 +537,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				tmp_w = this.imglabelWidth;
 				tmp_h = this.imglabelHeight;
 			}
-			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,temp_x+0.5+tmp_w-20,temp_y+0.5+tmp_h-20,this.imgdata.width,this.imgdata.height);
+			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,temp_x+tmp_w-20,temp_y+tmp_h-18,this.imgdata.width,this.imgdata.height);
 		}
 	}
 	if (this.qmode=='analysis' && temp_x>=220) {
