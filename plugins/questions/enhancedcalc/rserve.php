@@ -83,6 +83,8 @@ class EnhancedCalcRrserve {
        self::$cnx->evalString('options(digits=15); 1==1;');
        self::$cnx->evalString('toStr <- function(V) { return(paste(capture.output(print(V)),collapse=\'\n\')) }');
        self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
+       self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
+       self::$cnx->evalString('excel_round <- function(x, digits) round(x*(1+1e-15), digits)');
   }
   
   function calculate_correct_ans($vars,$formula) {
@@ -112,7 +114,7 @@ class EnhancedCalcRrserve {
             $calc = "signif($correctanswer,$stundent_precision) == $useranswer";
         } else {
             $stundent_precision = $this->calc_dp($useranswer);
-            $calc = "round($correctanswer,$stundent_precision) == $useranswer";
+            $calc = "excel_round($correctanswer,$stundent_precision) == $useranswer";
         }
     } else {
        $calc = "$correctanswer == $useranswer";
@@ -139,7 +141,7 @@ class EnhancedCalcRrserve {
     }
     
     try {
-       $res = $this->eval_string("round((abs($useranswer - $correctanswer)/$correctanswer) * 100,3)");
+       $res = $this->eval_string("excel_round((abs($useranswer - $correctanswer)/$correctanswer) * 100,3)");
     } catch(Exception $e) {
       //there is an error it cant be correct
       return 'ERROR';
@@ -226,7 +228,7 @@ class EnhancedCalcRrserve {
       return false;
     }
     
-    $status = $this->eval_string("round($useranswer," . $dp . ") == $useranswer");
+    $status = $this->eval_string("excel_round($useranswer," . $dp . ") == $useranswer");
     if ($status === true) {
       return true;
     } else {
@@ -297,12 +299,12 @@ class EnhancedCalcRrserve {
   }
   
   function format_number_dp($num,$dp) {
-    return $this->eval_string('round(' . $num . ',' . $dp . ')');
+    return $this->eval_string('excel_round(' . $num . ',' . $dp . ')');
   }
   
   function format_number_dp_strict_zeros($num,$dp) {
     
-    return $this->eval_string('format(round(' . $num . ',' . $dp . '), nsmall = ' . $dp . ')');
+    return $this->eval_string('format(excel_round(' . $num . ',' . $dp . '), nsmall = ' . $dp . ')');
   }
   
   function format_number_sf($num,$sf) {
