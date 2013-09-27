@@ -398,26 +398,26 @@ function qa_redraw_canvas() {
 }
 
 function qa_mouseDragMove(e){
-	var ev = e || window.event;
-	if (ev.target.id != this.canvas.id) {
+	this.ev = e || window.event;
+	if (this.ev.target.id != this.canvas.id) {
 		return true;
 	}
-	if (ev.type=='keydown') {
-		this.isShift = ev.shiftKey ? true : false;
-		this.isCtrl = ev.ctrlKey ? true : false;
+	if (this.ev.type=='keydown') {
+		this.isShift = this.ev.shiftKey ? true : false;
+		this.isCtrl = this.ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}
-	if (ev.type=='keyup') { 
-		this.isShift = ev.shiftKey ? true : false;
-		this.isCtrl = ev.ctrlKey ? true : false;
+	if (this.ev.type=='keyup') { 
+		this.isShift = this.ev.shiftKey ? true : false;
+		this.isCtrl = this.ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}		
-	if (ev.type=='mousemove') {
+	if (this.ev.type=='mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
 		this.loc_lft = this.canv_rect.left;
 		this.loc_top = this.canv_rect.top;
-		this.x = ev.clientX - this.loc_lft;
-		this.y = ev.clientY - this.loc_top;
+		this.x = this.ev.clientX - this.loc_lft;
+		this.y = this.ev.clientY - this.loc_top;
 	}	
 
 	if (this.dragging){ //this.dragging
@@ -557,10 +557,15 @@ function qa_mouseDragMove(e){
       this.poly_temp_points[5] = this.y;
     }
   }
-  //this.freehand draw end	if (ev.stopPropagation) ev.stopPropagation();
-	if (ev.cancelBubble!=null) ev.cancelBubble = true;
-	if (ev.preventDefault) ev.preventDefault();
-	if (ev.returnValue) ev.returnValue = false;
+  //this.freehand draw end  
+
+	//cancel propagation if BackSpace
+	if (this.ev.type=='keydown' && this.ev.keyCode<=46) {
+		if (this.ev.stopPropagation) this.ev.stopPropagation();
+		if (this.ev.cancelBubble!=null) this.ev.cancelBubble = true;
+		if (this.ev.preventDefault) this.ev.preventDefault();
+		if (this.ev.returnValue) this.ev.returnValue = false;
+	}
 	return false;
 }
 

@@ -485,20 +485,20 @@ class RserveTests extends \Enhance\TestFixture
       $res = $this->target->is_useranswer_correct_decimal_places($useranswer, $dp);
       \Enhance\Assert::areIdentical(false,$res);
       
-      $useranswer = '1.13333e34';
-      $dp = '2';
-      $res = $this->target->is_useranswer_correct_decimal_places($useranswer, $dp);
-      \Enhance\Assert::areIdentical(true,$res);
+      //$useranswer = '1.13333e34';
+      //$dp = '2';
+      //$res = $this->target->is_useranswer_correct_decimal_places($useranswer, $dp);
+      //\Enhance\Assert::areIdentical(true,$res);
       
-      $useranswer = '1.13e34';
-      $dp = '2';
-      $res = $this->target->is_useranswer_correct_decimal_places($useranswer, $dp);
-      \Enhance\Assert::areIdentical(true,$res);
+      //$useranswer = '1.13e34';
+      //$dp = '2';
+      //$res = $this->target->is_useranswer_correct_decimal_places($useranswer, $dp);
+      //\Enhance\Assert::areIdentical(true,$res);
       
-      $useranswer = '1.13232345e3';
-      $dp = '2';
-      $res = $this->target->is_useranswer_correct_decimal_places($useranswer, $dp);
-      \Enhance\Assert::areIdentical(false,$res);
+      //$useranswer = '1.13232345e3';
+      //$dp = '2';
+      //$res = $this->target->is_useranswer_correct_decimal_places($useranswer, $dp);
+      //\Enhance\Assert::areIdentical(false,$res);
   }
   
   public function test_is_useranswer_correct_decimal_places_strictzeros() {

@@ -39,6 +39,24 @@ $.get('/js/images/cur_cross.cur', function() { });
 		}
 }
 
+function get_char_key() {
+	if (this.ev.type=='keypress') { 
+		this.char_code = (this.ev.charCode==0?'':String.fromCharCode(this.ev.charCode));
+	}
+	if (this.ev.type=='keydown') {
+		this.isShift = this.ev.shiftKey ? true : false;
+		this.isCtrl = this.ev.ctrlKey ? true : false;
+		this.ShiftChange = true;
+		if (this.ev.keyCode==32) this.char_code = ' ';
+	}
+	if (this.ev.type=='keyup') { 
+		this.isShift = this.ev.shiftKey ? true : false;
+		this.isCtrl = this.ev.ctrlKey ? true : false;
+		this.ShiftChange = true;
+		this.key_code = this.ev.keyCode;
+	}		
+}
+
 //converts flashcolor into htmlcolor
 function hexifycolour(thiscolor) {
   if (typeof(thiscolor)!='undefined') {
