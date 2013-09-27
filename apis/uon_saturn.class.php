@@ -371,7 +371,7 @@ Class UON_SATURN extends SmsUtils {
             }
           }
         } else {
-          echo 'ERROR: unable to establish username for ' . $sms->Forename . ' ' . $sms->Surname . ' (' . $sms->Email . ')<br />';
+          echo 'ERROR: unable to establish username for ' . $sms->Title . ' ' . $sms->Surname . ', ' . $sms->Forename . ' (' . $sms->StudentID . ')<br />';
         }
       }
 
