@@ -9,13 +9,9 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 		this.canvas.tabIndex 		= 1000; //force keyboard events
 		if (document.addEventListener){ //FF+, IE10+, Ch+
       document.addEventListener("keydown",	qh_mouseDragMove.bind(this),false);
-      document.addEventListener("keyup",		qh_mouseDragMove.bind(this),false);
       document.addEventListener("keypress", qh_mouseDragMove.bind(this),false);			
-    } else if (document.attachEvent){ //FF--, IE10-, IE9-, Ch--
-			document.attachEvent("onkeydown", 	qh_mouseDragMove.bind(this));
-      document.attachEvent("onkeyup", 		qh_mouseDragMove.bind(this));
-      document.attachEvent("onkeypress",  qh_mouseDragMove.bind(this));
-    } else { //FF-, IE10-, IE9-, Ch-
+      document.addEventListener("keyup",		qh_mouseDragMove.bind(this),false);
+		} else { //FF-, IE10-, IE9-, Ch-
 			document.onkeydown   = qh_mouseDragMove.bind(this);
 			document.onkeyup     = qh_mouseDragMove.bind(this);
 			document.onkeypress  = qh_mouseDragMove.bind(this);
@@ -105,7 +101,8 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
     if (answer=='u') this.allUnaswered=true; 
 		
 		//---------- extra
-		// format: $tmp_display_students_response . ',' . $tmp_display_correct_answer . ',' . $tmp_exclude
+		//TODO: this needs looing at - make parameters consistent between Image Hotspot, Labelling and Area.
+    //format: $tmp_display_students_response . ',' . $tmp_display_correct_answer . ',' . $tmp_exclude
 		this.exclusions = '00000000000000000000';
 		if (this.qmode=='script') {
 			this.extra = extra;
@@ -365,7 +362,7 @@ function qh_redraw_canvas() {
    		this.context.font="12px Arial";
 			this.palico = 0;
 			if (this.qmode=='edit') this.palico = 20;
-      var wrapped = this.wrapText(this.hotSpots[i][1],250-this.palico, false);
+      var wrapped = this.wrapText(this.hotSpots[i][1],245-this.palico, false);
       pan_h = 25 + wrapped[1];
 
       //reset pos_y for bpalette button

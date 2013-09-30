@@ -8,13 +8,13 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.canvas.onmousemove = this.ql_mouseDragMove.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
 		if (document.addEventListener){ 
-      document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false); //FF+, IE10-, Ch-
-      document.addEventListener("keypress", ql_mouseDragMove.bind(this),false); //FF+, IE10-, Ch-
-      document.addEventListener("keyup",		ql_mouseDragMove.bind(this),false); //FF+, IE10+, Ch+
+      document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false); 
+      document.addEventListener("keypress", ql_mouseDragMove.bind(this),false); 
+      document.addEventListener("keyup",		ql_mouseDragMove.bind(this),false);
     } else {
-			document.onkeydown   = ql_mouseDragMove.bind(this); //FF+, IE10-, Ch-
-			document.onkeypress  = ql_mouseDragMove.bind(this); //FF+, IE10+, Ch+
-			document.onkeyup     = ql_mouseDragMove.bind(this); //FF+, IE10-, Ch-
+			document.onkeydown   = ql_mouseDragMove.bind(this);
+			document.onkeypress  = ql_mouseDragMove.bind(this);
+			document.onkeyup     = ql_mouseDragMove.bind(this);
 		}
 		
 		this.intervalID = window.setInterval(this.ql_redraw_canvas.bind(this), 10);
@@ -39,16 +39,16 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		}
 		this.gen_img.onload = gen_img_onload.bind(this);
 		this.gen_img.src = '/media/'+image; 
-    
+
 		//---------- mode 
 		this.yOffset = 25;
 		if (mode=='edit') this.yOffset = 0;
     this.qmode = mode;
 		
 		//---------- extra,
-		//format: 
+		//TODO: this needs looing at - make parameters consistent between Image Hotspot, Labelling and Area.
 		//$extra = ',' . $tmp_exclude;
-		//$extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback (Ticks/Correct_answer_highlight/Question_Marks/Text_feedback/Hide_all_feedback_if_not_answered);
+		//$extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback //(Ticks/Correct_answer_highlight/Question_Marks/Text_feedback/Hide_all_feedback_if_not_answered);
 		
 		this.extraImgs = new Array();
 		this.exclusions = '00000000000000000000';
@@ -854,7 +854,9 @@ function ql_redraw_canvas() {
 		//rebuilding the panel of available labels
 		var tmpx = 5;
 		var tmpy = 30-this.yOffset;
-		var tmpw,tmph,tmpn = 0;
+		var tmpw,tmph,tmphn = 0,tmpwn = 0;
+		//1D array i,j,width,height of those labels in the label panel
+		var tmpp = Array();
 		var tmpl = Array();
 		for (i=0;i<this.answerBox.length;i++) {
 			tmpl[i] = true;
@@ -862,38 +864,46 @@ function ql_redraw_canvas() {
 			for (j=0;j<this.answerBox[i].length;j++) {
 				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][5]<220 && tmpl[i] && (this.labelMulti=='multiple' || j==0)) {
 					tmpl[i] = false;
-					var index = this.answerBox[i][j][0];
 					var tmpw = this.labelWidthEffect;
 					var tmph = this.labelHeightEffect;
 					if (this.answerBox[i][j][1]=='image') {
 						tmpw = this.imglabelWidth;							
 						tmph = this.imglabelHeight;
 					}
-					ax = tmpx;
-					if (this.answerBox[i][j][2]=='' && (this.qmode=='answer' || this.qmode=='script')) ax = -500;
-					
-					this.answerBox[i][j][7] = ax;
-					this.answerBox[i][j][8] = tmpy;
-					if (i!=this.drag_box_id || j!=this.drag_box_combo || this.answerBox[i][j][5]==0) {
-						this.answerBox[i][j][5] = ax;
-						this.answerBox[i][j][6] = tmpy;
-						if (this.answerBox[i][j][4]==0) {
-							this.pholderBox[i][j][5] = ax;
-							this.pholderBox[i][j][6] = tmpy;
-						}
-					}
-					if (!(this.answerBox[i][j][2]=='' && (this.qmode=='answer' || this.qmode=='script'))) {
-						tmpx += this.i_spacex + tmpw;
-						if (tmpn < tmph) tmpn = tmph;									
-						if ((tmpx + tmpw)>220) {
-							tmpx = 5;
-							tmpy += tmpn + this.i_spacey;
-							tmpn = 0;
-						}
-					}
+					tmpp.push(Array(i,j,tmpw,tmph));					
 				}
 			}
 		}
+		for (a=0;a<tmpp.length;a++) {
+			i = tmpp[a][0];
+			j = tmpp[a][1];
+			tmpw = tmpp[a][2];
+			tmph = tmpp[a][3];			
+			ax = tmpx;
+			if (this.answerBox[i][j][2]=='' && (this.qmode=='answer' || this.qmode=='script')) ax = -500;
+			
+			this.answerBox[i][j][7] = ax;
+			this.answerBox[i][j][8] = tmpy;
+			if (i!=this.drag_box_id || j!=this.drag_box_combo || this.answerBox[i][j][5]==0) {
+				this.answerBox[i][j][5] = ax;
+				this.answerBox[i][j][6] = tmpy;
+				if (this.answerBox[i][j][4]==0) {
+					this.pholderBox[i][j][5] = ax;
+					this.pholderBox[i][j][6] = tmpy;
+				}
+			}
+			if (!(this.answerBox[i][j][2]=='' && (this.qmode=='answer' || this.qmode=='script'))) {
+				tmpx += this.i_spacex + tmpw;
+				if (tmphn < tmph) tmphn = tmph;
+				tmpwn = 0;if (a<(tmpp.length-1)) tmpwn = tmpp[a+1][2];
+				if ((tmpx + tmpwn)>220) {
+					tmpx = 5;
+					tmpy += tmphn + this.i_spacey;
+					tmphn = 0;
+				}
+			}
+		}
+		
 		if (this.qType == "menu" && this.qmode=='answer') {		
 			//menus
 			for (i=this.answerBox.length-1;i>=0;i--) {
