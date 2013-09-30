@@ -1000,12 +1000,12 @@ function ql_redraw_canvas() {
 				2.5+0.1*this.lineThickness);
 			this.context.strokeStyle=this.currentColours[1];
 		}
-		
+				
 		//cursor blink
 		if (this.qmode=='edit' && this.mov_id==-1 && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
 			this.edit_box_blink++;
-			if (this.edit_box_blink>40) this.edit_box_blink=0;
-			if (this.edit_box_blink>20) {
+			if (this.edit_box_blink>99) this.edit_box_blink=0;
+			if (this.edit_box_blink>50) {
 				var text_all = this.wrapText(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2],this.labelWidthEffect)[0];
 				var text_temp = '';
 				if (this.edit_box_pos>0) text_temp = text_all.substr(0,this.edit_box_pos);
