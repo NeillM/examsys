@@ -964,7 +964,8 @@ function ql_redraw_canvas() {
 			}
 					
 		if (this.qmode=='edit' && this.active_box_id>-1 && this.active_box_id!=this.mov_id) {
-			loc_width = this.imglabelWidth;loc_height = this.imglabelHeight;
+			loc_width = this.imglabelWidth;
+			loc_height = this.imglabelHeight;
 			if (this.answerBox[this.active_box_id][this.active_box_combo][1]=='text') {
 				loc_width = this.labelWidthEffect;
 				loc_height= this.labelHeightEffect;
@@ -1004,8 +1005,8 @@ function ql_redraw_canvas() {
 		//cursor blink
 		if (this.qmode=='edit' && this.mov_id==-1 && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
 			this.edit_box_blink++;
-			if (this.edit_box_blink>99) this.edit_box_blink=0;
-			if (this.edit_box_blink>50) {
+			if (this.edit_box_blink>60) this.edit_box_blink=0;
+			if (this.edit_box_blink>30) {
 				var text_all = this.wrapText(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2],this.labelWidthEffect)[0];
 				var text_temp = '';
 				if (this.edit_box_pos>0) text_temp = text_all.substr(0,this.edit_box_pos);
@@ -1323,6 +1324,31 @@ function ql_mouseDragUp(){
 	}
 	this.dragging = false;
 	this.active_box_handler = -1;
+	
+	//text cursor positioning on mouseclick
+	if (this.qmode=='edit' && this.mov_id==-1 && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
+		var temp_x = this.answerBox[this.active_box_id][this.active_box_combo][5];
+		var temp_y = this.answerBox[this.active_box_id][this.active_box_combo][6];
+		if (this.testWithin(this.x,this.y,temp_x,temp_y,this.labelWidthEffect,this.labelHeightEffect)) {
+			var text_all = this.wrapText(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2],this.labelWidthEffect);
+			var text_lines = text_all[0].split('|').length;
+			var click_line = Math.floor(text_lines*((this.y-temp_y)/this.labelHeightEffect));
+	 		this.context.font = this.fontSizes[this.fontSizePos]+"px Arial";
+			var text_full = text_all[0].split('|')[click_line];
+			var text_padd = (this.labelWidthEffect-this.context.measureText(text_full).width)/2;
+			var text_line_pos = 0;
+			for (a=1;a<=text_full.length;a++) {
+				var temp_width = this.context.measureText(text_full.substr(0,a)).width;
+				temp_lett = temp_width/a/2;
+				if ((temp_x+text_padd+temp_width-temp_lett)<=this.x) text_line_pos = a;
+			}
+			var text_arr = text_all[0].split('|');
+			var text_arr = text_all[0].split('|');
+			text_arr.splice(click_line,text_lines-click_line);
+			this.edit_box_pos = text_arr.join('|').length+text_line_pos;
+			if (click_line>0) this.edit_box_pos++;
+		}
+	}
 	
 	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') window.open('/help/staff/index.php?id=60');
 
