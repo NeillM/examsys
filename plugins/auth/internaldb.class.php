@@ -163,7 +163,11 @@ class internaldb_auth extends outline_authentication {
 
       return $authobj;
     }
-    $this->savetodebug('Password not matching');
+    if(!(time() < $password_expire )) {
+      $this->savetodebug('Password Expired');
+    } else {
+      $this->savetodebug('Password not matching');
+    }
     $authobj->fail($this->number);
 
     return $authobj;
