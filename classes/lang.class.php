@@ -29,11 +29,16 @@ Class LangUtils {
 
   static function getLang($web_root) {
     $language = '';
-    
-    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {  // Check this is set as some webservices do not have this data.
-      $langs = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-      $i = 0;
 
+    if(isset($_SESSION['ROGO_language'])) {
+        $langs[] = $_SESSION['ROGO_language'];
+    } else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {  
+      // Check this is set as some webservices do not have this data.
+      $langs = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+    }
+    
+    if(is_array($langs)) {
+      $i = 0;
       while ($i < count($langs) and $language == '') {
         $parts = explode(';', $langs[$i]);
         $test_lang = $parts[0];

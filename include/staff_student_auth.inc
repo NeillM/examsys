@@ -53,6 +53,15 @@ if (!file_exists($root . 'config/config.inc.php')) {
 }
 
 require_once $cfg_web_root . 'classes/configobject.class.php';
+
+//start the session early as the lang class looks in the session 
+if($configObject->get('cfg_session_name')!='') {
+    session_name($configObject->get('cfg_session_name'));
+} else {
+    session_name('RogoAuthentication');
+}
+$return = session_start();
+
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
@@ -84,12 +93,6 @@ if ($configObject->get('cfg_secure_connection')) {
 if (!(preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|SEB|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version))) {
   $notice->display_notice_and_exit($mysqli, 'Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', 'Browser Incompatibility', '../artwork/browser.png', $title_color = '#C00000', true, true);
 }
-if($configObject->get('cfg_session_name')!='') {
-    session_name($configObject->get('cfg_session_name'));
-} else {
-    session_name('RogoAuthentication');
-}
-$return = session_start();
 
 $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
 $authentication->do_authentication($string);

@@ -780,13 +780,14 @@ class displaystdformobjfield extends stdClass {
   public $description;
   public $type;
   public $name;
-  public $defaultvalue;
+  public $default;
 
   function __construct() {
     $this->description = '';
     $this->type = '';
     $this->name = '';
-    $this->defaultvalue = '';
+    $this->default = '';
+    $this->options = '';
   }
 
 }

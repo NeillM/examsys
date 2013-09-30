@@ -113,19 +113,34 @@ HTML;
 
             if (isset($displaystdformobj->fields)) {
               foreach($displaystdformobj->fields as $field) {
-                echo '<tr>';
-                echo '<td>' . $field->description . '</td>';
-                if (isset($_POST[$field->name])) {
-                  $value = $_POST[$field->name];
-                } elseif (isset($field->defaultvalue) and $field->defaultvalue != '') {
-                  $value = $field->defaultvalue;
+                if($field->type == 'select') {
+                    echo '<tr>';
+                    echo '<td>' . $field->description . '</td>';
+                    echo '<td><select name="' . $field->name . '">';
+                        foreach($field->options as $name => $value) {
+                          $select='';
+                          if ($value == $field->default) {
+                            $select = 'selected';
+                          }
+                          echo "<option value=\"$value\" $select>$name</option>\n";
+                        }
+                    echo '</select></td>';
+                    echo '</tr>';
                 } else {
-                  $value='';
-                }
-                echo '<td><input type="' . $field->type . '" name="' .$field->name . '" value="' . $value .'"></td>';
-                echo '</tr>';
+                    echo '<tr>';
+                    echo '<td>' . $field->description . '</td>';
+                    if (isset($_POST[$field->name])) {
+                      $value = $_POST[$field->name];
+                    } elseif (isset($field->defaultvalue) and $field->defaultvalue != '') {
+                      $value = $field->defaultvalue;
+                    } else {
+                      $value='';
+                    }
+                    echo '<td><input type="' . $field->type . '" name="' .$field->name . '" value="' . $value .'"></td>';
+                    echo '</tr>';
               }
             }
+          }
 ?>
           </table>
           <br/>
