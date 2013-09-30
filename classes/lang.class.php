@@ -56,16 +56,20 @@ Class LangUtils {
     return $language;
   }
 
-  static function loadlangfile($file) {
+  static function loadlangfile ($file, $str = null) {
+    if (is_null($str)) {
+      global $string;
+    } else {
+      $string = $str;
+    }
+    $configObj = Config::get_instance();
     $cfg_web_root = $configObj->get('cfg_web_root');
     $language = LangUtils::getLang($cfg_web_root);
-    $configObj = Config::get_instance();
-
-    $lang_path = " {$cfg_web_root}lang/$language/" . $file;
-
+    $lang_path = "{$cfg_web_root}lang/$language/" . $file;
     if (file_exists($lang_path)) {
       require $lang_path;
     }
+    return $string;
   }
 }
 
