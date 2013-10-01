@@ -668,6 +668,7 @@ class UserObject extends RogoStaticSingleton {
     $data->title            = $this->title;
     $data->initials         = $this->initials;
     $data->username         = $this->username;
+    $data->surname          = $this->surname;
     $data->email            = $this->email;
     $data->roles            = $this->roles;
     
@@ -690,7 +691,15 @@ class UserObject extends RogoStaticSingleton {
       $notice->access_denied($this->db, $string, $string['impersonatepriv'], true, true);
     }
   }
-  
+
+  function debug() {
+    if($this->impersonate === true) {
+      echo $this->impersonatedfrom->title . ' ' . $this->impersonatedfrom->initials . ' ' . $this->impersonatedfrom->surname . ' (' . $this->impersonatedfrom->username . ') Impersonating: ';
+    }
+    echo $this->title . ' ' . $this->initials . ' ' . $this->surname . ' (' . $this->username . ') [' . implode(',', array_keys($this->roles)) . ']';
+    echo "<br>\r\n";
+  }
+
   public function is_impersonated() {
     return $this->impersonate;
   }

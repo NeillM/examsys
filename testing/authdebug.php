@@ -73,7 +73,13 @@ $authinfo = $authentication->version_info();
 
 $plugin_no = count($authinfo->plugins);
 
-echo "Authentication Info:<br><table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin:10px\">\n";
+echo "<h3>User Info:</h3>";
+$getauthobj = new stdClass();
+$authentication->get_auth_obj($getauthobj);
+$userObject = UserObject::get_instance();
+$userObject->debug();
+
+echo "<h3>Authentication Info:</h3><table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin:10px\">\n";
 echo "<tr><td class=\"sechead\">" . $string['No'] . "</td><td class=\"sechead\">" . $string['Name'] . "</td><td class=\"sechead\">" . $string['Class'] . "</td><td class=\"sechead\">" . $string['Version'] . "</td></tr>";
 
 for ($i=1; $i<$plugin_no; $i++) {
@@ -82,11 +88,11 @@ for ($i=1; $i<$plugin_no; $i++) {
 echo "</table>\n";
 echo "<br />\n";
 
-echo "Authentication Debug:<br>";
+echo "<h3>Authentication Debug:</h3>";
 $authentication->display_debug();
 $included_files = get_included_files();
 
 //set string encoding for the mbstring module for interfaces
 mb_internal_encoding($configObject->get('cfg_page_charset'));
-echo "Included Files:<br>";
+echo "<h3>Included Files:</h3>";
 var_dump($included_files);
