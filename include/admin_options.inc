@@ -26,8 +26,6 @@
 <div id="left-sidebar" class="sidebar">
 <div class="submenuheading"><?php echo $string['administrativetools']; ?></div>
 
-<table class="sidebar_tbl">
-<tr><td class="ico"><a href="../staff/index.php"><img src="../artwork/house.png" width="16" height="16" alt="<?php echo $string['home']; ?>" /></a></td><td class="menuitem"><a href="../staff/index.php"><?php echo $string['home']; ?></a></td></tr>
-</table>
+<div class="menuitem" style="font-size:90%"><a href="../staff/index.php"><img class="sidebar_icon" src="../artwork/house.png"  alt="<?php echo $string['home']; ?>" /><?php echo $string['home']; ?></a></div>
 
 </div>

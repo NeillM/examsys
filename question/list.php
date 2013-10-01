@@ -81,7 +81,7 @@ if (isset($_GET['checked'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogo: <?php echo $string['questionbank'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['questionbank'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -180,7 +180,7 @@ if (isset($_GET['checked'])) {
   $search_results->execute();
   $search_results->bind_result($q_id, $title, $initials, $surname, $leadin, $q_type, $last_edited, $modified, $locked, $status);
   while ($search_results->fetch()) {
-	  $questions[] = array('q_id'=>$q_id, 'owner'=>$title . ' ' . $initials . ', ' . $surname, 'leadin'=>$leadin, 'q_type'=>$string[$q_type], 'last_edited'=>$last_edited, 'modified'=>$modified, 'locked'=>$locked, 'status'=>$status_array[$status]->get_name());
+	  $questions[] = array('q_id'=>$q_id, 'owner'=>$title . ' ' . $initials . ' ' . $surname, 'leadin'=>$leadin, 'q_type'=>$string[$q_type], 'last_edited'=>$last_edited, 'modified'=>$modified, 'locked'=>$locked, 'status'=>$status_array[$status]->get_name());
 	}
   $search_results->close();
 	
@@ -214,7 +214,7 @@ if (isset($_GET['checked'])) {
 	}
 	$questions = array_csort($questions, $tmp_sortby, $ordering);
 
-  echo "<tr onclick=\"qOff();\"><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionbank'] . "&nbsp;(" . number_format(count($questions)) . ")</strong>$bank_type</div></th>";
+  echo "<tr onclick=\"qOff();\"><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionbank'] . "&nbsp;(" . number_format(count($questions)) . ")</strong>$bank_type</div></th>";
   echo "<th colspan=\"2\" style=\"text-align:right\" nowrap><input class=\"chk\" type=\"checkbox\" onclick=\"myQuestions(this);\" name=\"myquestions\" id=\"myquestions\" value=\"on\"";
   if ($state_checked == 'true') echo ' checked="checked"';
   echo " />&nbsp;<nobr>" . $string['myquestionsonly'] . "</nobr>&nbsp;</th></tr>\n";
@@ -224,7 +224,7 @@ if (isset($_GET['checked'])) {
 	if (isset($_GET['module'])) $params .= '&module=' . $_GET['module'];
 	if (isset($_GET['keyword'])) $params .= '&keyword=' . $_GET['keyword'];
 	
-  $table_order = array(''=>'', $string['question']=>'leadin', $string['type']=>'q_type', $string['modified']=>'modified', $string['status']=>'status');
+  $table_order = array(''=>'', $string['question']=>'leadin', $string['owner']=>'owner', $string['type']=>'q_type', $string['modified']=>'modified', $string['status']=>'status');
 	echo "<tr style=\"font-size:110%\">\n";
 	foreach ($table_order as $display => $key) {
 		if ($key == '') {
@@ -242,7 +242,7 @@ if (isset($_GET['checked'])) {
 		}
 	}
 	echo "</tr>\n";
-  echo "<tr><th class=\"bevel\" colspan=\"5\"></th></tr>\n";
+  echo "<tr><th class=\"bevel\" colspan=\"6\"></th></tr>\n";
 	
 	foreach ($questions as $question) {
     $status_class = ' status' . $status;
@@ -267,9 +267,10 @@ if (isset($_GET['checked'])) {
     }
 
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';
-    if ($userObject->has_role('Demo')) $question['owner'] = 'Dr J, Bloggs';
+    if ($userObject->has_role('Demo')) $question['owner'] = 'Dr J Bloggs';
 
-    echo "<td class=\"d\">$tmp_leadin <span class=\"o\">(" . $question['owner'] . ")</span></td>";
+    echo "<td class=\"d\">$tmp_leadin</td>";
+    echo "<td class=\"d nobr\">" . $question['owner'] . "</td>";
     echo "<td class=\"d nobr\">" . $question['q_type'] . "</td>";
     echo "<td class=\"d\">" . $question['modified'] . "</td>\n";
     echo "<td class=\"d\">" . $question['status'] . "</td></tr>\n";

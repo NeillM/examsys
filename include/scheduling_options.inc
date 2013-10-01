@@ -33,16 +33,13 @@
 <form name="myform">
 <br />
 
-<table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><img src="../artwork/information_icon_grey.gif" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['viewdetails']; ?></td></tr>
-</table>
+<div style="font-size:90%" id="menu1a">
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="" /><?php echo $string['viewdetails']; ?></div>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><img onclick="viewDetails()" src="../artwork/information_icon.gif" width="16" height="16" alt="" /></td><td class="menuitem"><a href="#" onclick="viewDetails(); return false;"><?php echo $string['viewdetails']; ?></a></td></tr>
-</table>
-
-</td></tr>
-</table>
+<div style="font-size:90%; display:none" id="menu1b">
+	<div class="menuitem" onclick="viewDetails()"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="" /><a href="#" onclick="return false;"><?php echo $string['viewdetails']; ?></a></div>
+</div>
 
 <input type="hidden" id="lineID" name="lineID" value="" />
 </form>

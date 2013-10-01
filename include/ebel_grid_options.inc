@@ -41,17 +41,18 @@
 <form name="myform">
 <br />
 
-<table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="" onclick="addFaculty(); return false;"><img src="../artwork/grid_16.gif" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="add_ebel_grid.php"><?php echo $string['createnewgrid']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['editgrid']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['deletegrid']; ?></td></tr>
-</table>
+<div style="font-size:90%" id="menu1a">
+	<div class="menuitem"><a href="add_ebel_grid.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="" /><?php echo $string['createnewgrid']; ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editgrid']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletegrid']; ?></div>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="" onclick="addTemplate(); return false;"><img src="../artwork/grid_16.gif" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="add_ebel_grid.php"><?php echo $string['createnewgrid']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editTemplate()" src="../artwork/edit.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="editTemplate(); return false;"><?php echo $string['editgrid']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteTemplate()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteTemplate(); return false;"><?php echo $string['deletegrid']; ?></a></td></tr>
-</table>
+<div style="display:none; font-size:90%" id="menu1b">
+	<div class="menuitem"><a href="add_ebel_grid.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="" /><?php echo $string['createnewgrid']; ?></a></div>
+	<div class="menuitem" onclick="editTemplate()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false"><?php echo $string['editgrid']; ?></a></div>
+	<div class="menuitem" onclick="deleteTemplate()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletegrid']; ?></a></div>
+</div>
+
 
 <input type="hidden" name="LineID" id="lineID" value="" />
 </form>

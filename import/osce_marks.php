@@ -208,7 +208,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
         $db->autocommit(true);
 
       } else {
-        echo "<li style=\"color:C00000\">$sid -&gt; {$string['usernotfound']}</li>";
+        echo "<li style=\"color:#C00000\">$sid -&gt; {$string['usernotfound']}</li>";
       }
     }
     $line_written++;
@@ -250,9 +250,18 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" href="../css/body.css" type="text/css">
   <link rel="stylesheet" href="../css/dialog.css" type="text/css">
   <link rel="stylesheet" href="../css/submenu.css" type="text/css">
+	
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		  $('html').click(function() {
+			  hideMenus();
+      });
+		});
+	</script>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 <?php
   require '../include/paper_options.inc';
 ?>

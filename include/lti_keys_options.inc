@@ -42,40 +42,17 @@
   <form name="myform">
     <br/>
 
+		<div style="font-size:90%" id="menu1a">
+			<div class="menuitem"><a href="add_LTIkeys.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="<?php echo $string['createLTIkeys']; ?>" /><?php echo $string['createLTIkeys']; ?></a></div>
+			<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editLTIkeys']; ?>" /><?php echo $string['editLTIkeys']; ?></div>
+			<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deleteLTIkeys']; ?>" /><?php echo $string['deleteLTIkeys']; ?></div>
+		</div>
 
-    <table class="sidebar_tbl" id="menu1a">
-      <tr>
-        <td class="ico"><a href="add_LTIkeys.php" target="body"><img src="../artwork/ims_16.png" width="16" height="16" alt="<?php echo $string['createLTIkeys']; ?>" /></a></td>
-        <td class="menuitem"><a href="add_LTIkeys.php"><?php echo $string['createLTIkeys']; ?></a></td>
-      </tr>
-      <tr>
-        <td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editLTIkeys']; ?>" /></td>
-        <td class="greymenuitem"><?php echo $string['editLTIkeys']; ?></td>
-      </tr>
-      <tr>
-        <td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td>
-        <td class="greymenuitem"><?php echo $string['deleteLTIkeys']; ?></td>
-      </tr>
-    </table>
-
-    <table class="sidebar_tbl" style="display:none" id="menu1b">
-      <tr>
-        <td class="ico"><a href="add_LTIkeys.php" target="body"><img src="../artwork/ims_16.png" width="16" height="16" alt="<?php echo $string['createLTIkeys']; ?>" /></a></td>
-        <td class="menuitem"><a href="add_LTIkeys.php"><?php echo $string['createLTIkeys']; ?></a></td>
-      </tr>
-      <tr>
-        <td class="ico"><img onclick="editLTIkeys()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editLTIkeys']; ?>" /></td>
-        <td class="menuitem"><a href="" onclick="editLTIkeys(); return false;"><?php echo $string['editLTIkeys']; ?></a>
-        </td>
-      </tr>
-      <tr>
-        <td class="ico"><img onclick="deleteLTIkeys()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0"/></td>
-        <td class="menuitem"><a href="" onclick="deleteLTIkeys(); return false;"><?php echo $string['deleteLTIkeys']; ?></a>
-        </td>
-      </tr>
-    </table>
-    </td></tr>
-    </table>
+		<div style="font-size:90%; display:none" id="menu1b">
+			<div class="menuitem"><a href="add_LTIkeys.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="<?php echo $string['createLTIkeys']; ?>" /><?php echo $string['createLTIkeys']; ?></a></div>
+			<div class="menuitem" onclick="editLTIkeys()"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editLTIkeys']; ?>" /><a onclick="return false"><?php echo $string['editLTIkeys']; ?></a></div>
+			<div class="menuitem" onclick="deleteLTIkeys()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deleteLTIkeys']; ?>" /><a onclick="return false"><?php echo $string['deleteLTIkeys']; ?></a></div>
+		</div>
 
     <input type="hidden" id="lineID" name="lineID" value=""/>
   </form>

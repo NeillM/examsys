@@ -43,15 +43,12 @@
 
 <div class="submenuheading" id="papertasks"><?php echo $string['examtasks']; ?></div>
 
-<table class="sidebar_tbl">
-<tr><td class="ico"><a href="../paper/details.php?paperID=<?php echo $_GET['paperID']; ?>"><img src="../artwork/link.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="../paper/details.php?paperID=<?php echo $_GET['paperID']; ?>"><?php echo $string['jumptopaper']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editProperties()" src="../artwork/properties_icon.gif" width="16" height="16" alt="" /></td><td class="menuitem"><a href="#" onclick="editProperties(); return false;"><?php echo $string['editproperties']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="convtFormative()" src="../artwork/formative_16.gif" width="16" height="16" alt="" /></td><td class="menuitem"><a href="#" onclick="convtFormative(); return false;"><?php echo $string['converttoformative']; ?></a></td></tr>
-<tr><td class="ico"><a href="mailto:<?php echo $email . '?subject=Scheduling of ' . $paper_title . '&body=Dear ' . $title . ' ' . $surname . ','; ?>"><img src="../artwork/small_email.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="mailto:<?php echo $email . '?subject=Scheduling of ' . $paper_title . '&body=Dear ' . $title . ' ' . $surname . ','; ?>"><?php echo $string['Email'] . ' ' . $title . ' ' . $surname; ?></a></td></tr>
-</table>
-
-</td></tr>
-</table>
+<div style="font-size:90%">
+	<div class="menuitem"><a href="../paper/details.php?paperID=<?php echo $_GET['paperID']; ?>"><img class="sidebar_icon" src="../artwork/link.png" alt="" /><?php echo $string['jumptopaper']; ?></a></div>
+	<div class="menuitem" onclick="editProperties()"><img class="sidebar_icon" src="../artwork/properties_icon.gif" alt="" /></td><td class="menuitem"><a href="#" onclick="return false;"><?php echo $string['editproperties']; ?></a></div>
+	<div class="menuitem" onclick="convtFormative()"><img class="sidebar_icon" src="../artwork/formative_16.gif" alt="" /></td><td class="menuitem"><a href="#" onclick="return false;"><?php echo $string['converttoformative']; ?></a></div>
+	<div class="menuitem"><a href="mailto:<?php echo $email . '?subject=Scheduling of ' . $paper_title . '&body=Dear ' . $title . ' ' . $surname . ','; ?>"><img class="sidebar_icon" src="../artwork/small_email.png" alt="" /><?php echo $string['Email'] . ' ' . $title . ' ' . $surname; ?></a></div>
+</div>
 
 <input type="hidden" id="divID" name="divID" value="" />
 </form>

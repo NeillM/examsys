@@ -39,20 +39,20 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
   if ($folder != '') {       // Currently in a folder
 ?>
 <div class="submenuheading"><?php echo $string['foldertasks']; ?></div>
-<table class="sidebar_tbl">
+<div style="font-size:90%">
 <?php
 
   if ($folder_ownerID == $userObject->get_user_ID() ) {
-    echo '<tr><td class="ico"><a href="#" onclick="folderProperties(); return false;"><img src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon.gif" width="16" height="16" alt="Properties" /></a></td><td class="menuitem"><a href="#" onclick="folderProperties(); return false;">' . $string['folderproperties'] . '</a></td></tr>';
-    echo '<tr><td class="ico"><a href="' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16.png" width="16" height="16" alt="New Folder" /></a></td><td class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $_GET['folder'] . '&newfolder=y">' . $string['makesubfolder'] . '</a></td></tr>';
-    echo '<tr><td class="ico"><a href="#" onclick="deleteFolder(); return false;"><img src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross.png" width="16" height="16" alt="Delete Folder" /></a></td><td class="menuitem"><a href="#" onclick="deleteFolder(); return false;">' . $string['deletefolder'] . '</a></td></tr>';
+    echo '<div class="menuitem" onclick="folderProperties()"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon.gif" alt="Properties" /><a href="#" onclick="return false">' . $string['folderproperties'] . '</a></div>';
+    echo '<div class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16.png" alt="New Folder" />' . $string['makesubfolder'] . '</a></div>';
+    echo '<div class="menuitem" onclick="deleteFolder()"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross.png" alt="Delete Folder" /><a href="#" onclick="return false">' . $string['deletefolder'] . '</a></div>';
   } else {
-    echo '<tr><td class="ico"><img src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon_grey.gif" width="16" height="16" alt="Properties" /></td><td class="greymenuitem">' . $string['folderproperties'] . '</td></tr>';
-    echo '<tr><td class="ico"><img src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16_grey.png" width="16" height="16" alt="New Folder" /></td><td class="greymenuitem">' . $string['makesubfolder'] . '</td></tr>';
-    echo '<tr><td class="ico"><img src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross_grey.png" width="16" height="16" alt="Delete Folder" /></td><td class="greymenuitem">' . $string['deletefolder'] . '</td></tr>';
+    echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon_grey.gif" alt="Properties" />' . $string['folderproperties'] . '</div>';
+    echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16_grey.png" alt="New Folder" />' . $string['makesubfolder'] . '</div>';
+    echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross_grey.png" alt="Delete Folder" />' . $string['deletefolder'] . '</div>';
   }
 ?>
-</table>
+</div>
 
 <br />
 
@@ -62,20 +62,20 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
     if ($module != '') {
     ?>
       <div class="submenuheading"><?php echo $string['module']; ?></div>
-      <table class="sidebar_tbl">
+      <div style="font-size:90%">
     <?php
 
     if ($userObject->has_role('SysAdmin')) {
-      echo "<tr><td class=\"ico\"><a href=\"../admin/edit_module.php?moduleid=$module\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/admin_icon_16.gif\" width=\"16\" height=\"16\" alt=\"cog\" /></a></td><td class=\"menuitem\"><a href=\"../admin/edit_module.php?moduleid=$module\">" . $string['editpropertiessysadmin'] . "</a></td></tr>";
+      echo "<div class=\"menuitem\"><a href=\"../admin/edit_module.php?moduleid=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/admin_icon_16.gif\" alt=\"cog\" />" . $string['editpropertiessysadmin'] . "</a></div>";
     }
     if (strpos($module_details['checklist'],'mapping') !== false ) {     // Curriculum mapping switched on for the module
-      echo "<tr><td class=\"ico\"><a href=\"../mapping/sessions_list.php?module=" . $module . "\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /></a></td><td class=\"menuitem\"><a href=\"../mapping/sessions_list.php?module=" . $_GET['module'] . "\">" . $string['manageobjectives'] . "</a></td></tr>\n";
+      echo "<div class=\"menuitem\"><a href=\"../mapping/sessions_list.php?module=" . $module . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/module_icon_16.png\" alt=\"modules\" />" . $string['manageobjectives'] . "</a></div>\n";
     }
-    echo "<tr><td class=\"ico\"><a href=\"../folder/list_keywords.php?module=$module\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/key.png\" width=\"16\" height=\"16\" alt=\"key\" /></a></td><td class=\"menuitem\"><a href=\"../folder/list_keywords.php?module=$module\">" . $string['managekeywords'] . "</a></td></tr>";
-    echo "<tr><td class=\"ico\"><a href=\"../folder/list_ref_material.php?module=$module\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/ref_16.png\" width=\"16\" height=\"16\" alt=\"key\" /></a></td><td class=\"menuitem\"><a href=\"../folder/list_ref_material.php?module=$module\">" . $string['referencematerial'] . "</a></td></tr>";
-    echo '<tr><td class="ico"><a href="../users/load_users_metadata.php?module=' . $_GET['module'] . '"><img src="' . $configObject->get('cfg_root_path') . '/artwork/import_16.gif" width="16" height="16" alt="Import Metadata" /></a></td><td class="menuitem"><a href="../users/import_users_metadata.php?module=' . $_GET['module'] . '">' . $string['importstudentmetadata'] . '</a></td></tr>';
+    echo "<div class=\"menuitem\"><a href=\"../folder/list_keywords.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/key.png\" alt=\"key\" />" . $string['managekeywords'] . "</a></div>";
+    echo "<div class=\"menuitem\"><a href=\"../folder/list_ref_material.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ref_16.png\" alt=\"key\" />" . $string['referencematerial'] . "</a></div>";
+    echo '<div class="menuitem"><a href="../users/load_users_metadata.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/import_16.gif" alt="Import Metadata" />' . $string['importstudentmetadata'] . '</a></div>';
   ?>
-  </table>
+  </div>
 
   <br />
 
@@ -85,28 +85,28 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 ?>
 
 <div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
-<table class="sidebar_tbl">
+<div style="font-size:90%">
 <?php
   if (count($staff_modules) > 0) {
-    echo "<tr><td class=\"ico\"><a href=\"#\" onclick=\"newPaper(); return false;\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/new_paper_icon_16.gif\" width=\"16\" height=\"16\" alt=\"New Paper\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"newPaper(); return false;\">" . $string['createnewpaper'] . "</a></td></tr>\n";
+    echo "<div class=\"menuitem\" onclick=\"newPaper()\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/new_paper_icon_16.gif\" alt=\"New Paper\" /><a href=\"#\" onclick=\"return false\">" . $string['createnewpaper'] . "</a></div>\n";
   } else {
-    echo "<tr><td class=\"ico\" style=\"color:#808080\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/new_paper_icon_16.gif\" width=\"16\" height=\"16\" alt=\"New Paper\" /></td><td class=\"menuitem\">" . $string['createnewpaper'] . "</td></tr>\n";
+    echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/new_paper_icon_16.gif\" alt=\"New Paper\" />" . $string['createnewpaper'] . "</div>\n";
   }
 
 ?>
-<tr><td width="16"><a href="#" onclick="showMenu('popup0','papertasks','listpapers',myOptions0,myURLs0,event); return false;"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/list_papers_icon_16.gif" width="16" height="16" alt="List Papers" /></a></td><td class="menuitem sub"><a href="#" onclick="showMenu('popup0','papertasks','listpapers',myOptions0,myURLs0,event); return false;"><span id="listpapers"><?php echo $string['listpapers']; ?></span></a></td></tr>
-</table>
+<div class="menuitem cascade" id="listpapers" onclick="showMenu('popup0','papertasks','listpapers',myOptions0,myURLs0,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/list_papers_icon_16.gif" alt="List Papers" /><a href="#" onclick="return false"><?php echo $string['listpapers']; ?></a></div>
+</div>
 
 <br />
 
 <div class="submenuheading" id="banktasks"><?php echo $string['questionbank']; ?></div>
-<table class="sidebar_tbl">
-<tr><td class="ico"><a href="#" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Papers" /></a></td><td class="menuitem sub"><a href="#" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><span id="type"><?php echo $string['questionsbytype']; ?></span></a></td></tr>
-<tr><td class="ico"><a href="#" onclick="showMenu('popup2','banktasks','team',myOptions2,myURLs2,event); return false;"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Teams" /></a></td><td class="menuitem sub"><a href="#" onclick="showMenu('popup2','banktasks','team',myOptions2,myURLs2,event); return false;"><span id="team"><?php echo $string['questionsbyteam']; ?></span></a></td></tr>
-<tr><td class="ico"><a href="#" onclick="showMenu('popup3','banktasks','keyword',myOptions3,myURLs3,event); return false;"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Keywords" /></a></td><td class="menuitem sub"><a href="#" onclick="showMenu('popup3','banktasks','keyword',myOptions3,myURLs3,event); return false;"><span id="keyword"><?php echo $string['questionsbykeyword']; ?></span></a></td></tr>
-<tr><td class="ico"><a href="#" onclick="showMenu('popup4','banktasks','search',myOptions4,myURLs4,event); return false;"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" width="16" height="16" alt="Search" /></a></td><td class="menuitem sub"><a href="#" onclick="showMenu('popup4','banktasks','search',myOptions4,myURLs4,event); return false;"><span id="search"><?php echo $string['search']; ?></span></a></td></tr>
-<tr><td class="ico"><a href="#" onclick="showMenu('popup5','banktasks','newquestion',myOptions5,myURLs5,event); return false;"><img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" width="16" height="16" alt="newquestion" /></a></td><td class="menuitem sub"><a href="#" onclick="showMenu('popup5','banktasks','newquestion',myOptions5,myURLs5,event); return false;"><span id="newquestion"><?php echo $string['createnewquestion']; ?></span></a></td></tr>
-</table>
+<div style="font-size:90%">
+<div class="menuitem cascade" id="type" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" alt="List Papers" /><a href="#" onclick="return false"><?php echo $string['questionsbytype']; ?></a></div>
+<div class="menuitem cascade" id="team" onclick="showMenu('popup2','banktasks','team',myOptions2,myURLs2,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" alt="List Teams" /><a href="#" onclick="return false"><?php echo $string['questionsbyteam']; ?></a></div>
+<div class="menuitem cascade" id="keyword" onclick="showMenu('popup3','banktasks','keyword',myOptions3,myURLs3,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" alt="List Keywords" /><a href="#" onclick="return false"><?php echo $string['questionsbykeyword']; ?></a></div>
+<div class="menuitem cascade" id="search" onclick="showMenu('popup4','banktasks','search',myOptions4,myURLs4,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><a href="#" onclick="return false"><?php echo $string['search']; ?></a></div>
+<div class="menuitem cascade" id="newquestion" onclick="showMenu('popup5','banktasks','newquestion',myOptions5,myURLs5,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><a href="#" onclick="return false"><?php echo $string['createnewquestion']; ?></a></div>
+</div>
 
 <?php
 if ($folder != '') {

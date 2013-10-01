@@ -30,9 +30,9 @@ $string['inclockedquestions'] = 'include Locked questions';
 $string['questionsections'] = 'Question Sections';
 $string['whenmodified'] = 'When was it modified?';
 $string['metadata'] = 'Metadata';
-$string['module'] = 'Module:';
+$string['module'] = 'Module';
 $string['anymodule'] = '(any module)';
-$string['owner'] = 'Owner:';
+$string['owner'] = 'Owner';
 $string['anyowner'] = '(any owner)';
 $string['myquestionsonly'] = '(my questions only)';
 $string['status'] = 'Status';
@@ -63,4 +63,5 @@ $string['narrowyoursearch'] = 'Please narrow your search by entering a search te
 $string['notickedfields'] = 'You have not ticked any fields to search for';
 $string['notickedstatus'] = 'You have not ticked any status to search for';
 $string['entersearchterm'] = 'Please enter a search term or phrase.';
+$string['quickview'] = 'Quick View';
 ?>

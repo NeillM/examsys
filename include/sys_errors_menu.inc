@@ -36,13 +36,13 @@
 
 <br />
 
-<table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><img src="../artwork/information_icon.gif" width="16" height="16" alt="home" border="0" /></td><td class="greymenuitem"><?php echo $string['displaydetails']; ?></td></tr>
-</table>
+<div style="font-size:90%" id="menu1a">
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="<?php echo $string['displaydetails']; ?>" /><?php echo $string['displaydetails']; ?></div>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a onclick="displayDetails(); return false;"><img src="../artwork/information_icon.gif" width="16" height="16" alt="home" border="0" /></a></td><td class="menuitem"><a onclick="displayDetails(); return false;"><?php echo $string['displaydetails']; ?></a></td></tr>
-</table>
+<div style="font-size:90%; display:none" id="menu1b">
+	<div class="menuitem" onclick="displayDetails()"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails']; ?>" /><a onclick="return false"><?php echo $string['displaydetails']; ?></a></div>
+</div>
 
 <form name="errorsMenu">
 <input type="hidden" name="lineID" id="lineID" value="" />

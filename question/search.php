@@ -44,14 +44,13 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    .o {color:#A5A5A5}
     .l {padding-left:6px; vertical-align:top}
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
     .qline:hover {background-color:#eee}
     .qline.highlight {background-color:#B3C8E8}
     .retired {color:#808080}
 
-<?php echo QuestionStatus::generate_status_css($status_array); ?>
+		<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -130,16 +129,17 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
-    echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th></tr>";
+    echo "<tr><th colspan=\"6\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th></tr>";
 ?>
   <tr>
     <th>&nbsp;</th>
     <th class="vert_div"><?php echo $string['question']; ?></th>
+    <th class="vert_div"><?php echo $string['owner']; ?></th>
     <th class="vert_div"><?php echo $string['type']; ?></th>
     <th class="vert_div"><?php echo $string['modified']; ?></th>
   </tr>
   <tr>
-    <th colspan="4" class="bevel"></th>
+    <th colspan="6" class="bevel"></th>
   </tr>
   </table>
 <?php
@@ -162,14 +162,15 @@ if (isset($_POST['submit'])) {
 
   if ($error != '') {
     echo "<table class=\"header\" style=\"table-layout:fixed\">\n";
-    echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>".$string['questionsearch']."</div></th></tr>";
+    echo "<tr><th colspan=\"6\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>".$string['questionsearch']."</div></th></tr>";
     ?>
     <tr>
     <th>&nbsp;</th>
     <th class="vert_div"><?php echo $string['question']; ?></th>
+    <th class="vert_div"><?php echo $string['owner']; ?></th>
     <th class="vert_div"><?php echo $string['type']; ?></th>
     <th class="vert_div"><?php echo $string['modified']; ?></th></tr>
-    <tr><th colspan="4" class="bevel"></td></tr>
+    <tr><th colspan="6" class="bevel"></td></tr>
     </table>
     <?php
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;$error.</td></tr></table>\n";
@@ -177,6 +178,7 @@ if (isset($_POST['submit'])) {
   }
 
   echo "<table class=\"header fixed\">\n";
+  //echo "<table border=\"1\">\n";
 
   $params = '';
   $variables = array();
@@ -306,9 +308,9 @@ if (isset($_POST['submit'])) {
   }
 
   if ($keywordsSQL == '') {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status, name FROM (questions, question_statuses, users, options) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE questions.status = question_statuses.id AND questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, theme, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status, name FROM (questions, question_statuses, users, options) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE questions.status = question_statuses.id AND questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
   } else {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status, name FROM (questions, question_statuses, users, keywords_question, options) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE questions.status = question_statuses.id AND questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, theme, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status, name FROM (questions, question_statuses, users, keywords_question, options) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE questions.status = question_statuses.id AND questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
   }
   $result = $mysqli->prepare($sql);
   if (count($variables) > 0) {
@@ -320,13 +322,13 @@ if (isset($_POST['submit'])) {
   }
   $result->execute();
   $result->store_result();
-  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $leadin, $last_edited, $ownerID, $locked, $status, $status_name);
+  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $theme, $leadin, $last_edited, $ownerID, $locked, $status, $status_name);
 
   $hits = $result->num_rows;
 
   // Empty first line to fix widths
-  echo "<tr><th style=\"width: 18px\"></th><th></th><th style=\"width: 150px\"></th><th style=\"width: 80px\"></th><th style=\"width: 80px\"></th></tr>";
-  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
+  echo "<tr><th style=\"width: 18px\"></th><th></th><th style=\"width: 130px\"></th><th style=\"width: 120px\"></th><th style=\"width: 70px\"></th><th style=\"width: 70px\"></th></tr>";
+  echo "<tr><th colspan=\"6\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
   if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
     echo "'" . $_POST['searchterm'] . "'";
   } elseif (isset($_POST['searchtype']) and $_POST['searchtype'] != '%') {
@@ -339,12 +341,13 @@ if (isset($_POST['submit'])) {
   <tr>
     <th>&nbsp;</th>
     <th class="vert_div"><?php echo $string['question']; ?></th>
+    <th class="vert_div"><?php echo $string['owner']; ?></th>
     <th class="vert_div"><?php echo $string['type']; ?></th>
     <th class="vert_div"><?php echo $string['modified']; ?></th>
     <th class="vert_div"><?php echo $string['status']; ?></th>
   </tr>
   <tr>
-    <th colspan="5" class="bevel"></th>
+    <th colspan="6" class="bevel"></th>
   </tr>
 <?php
   while ($result->fetch()) {
@@ -359,7 +362,8 @@ if (isset($_POST['submit'])) {
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
 
-    echo "<td class=\"l\">$tmp_leadin <span class=\"o\">($title $initials $surname)</span></td>";
+    echo "<td class=\"l\">$tmp_leadin</td>";
+    echo "<td class=\"l\">$title $initials $surname</td>";
     echo '<td class="l"><nobr>' . $string[$q_type] . '</nobr></td>';
     echo '<td class="l">' . $last_edited . '</td>';
     echo '<td class="l">' . $status_name . '</td></tr>';

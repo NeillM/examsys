@@ -22,17 +22,17 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/question_types.inc';
-  require '../include/display_functions.inc';
-  require '../include/media.inc';
+require '../include/staff_auth.inc';
+require '../include/question_types.inc';
+require '../include/display_functions.inc';
+require '../include/media.inc';
 
-  $marks_color = '#808080';
-  $themecolor = '#316AC5';
-  $labelcolor = '#C00000';
-  $textsize = 100;
-  $question_offset = 0;
-  $question_no = 0;
+$marks_color = '#808080';
+$themecolor = '#316AC5';
+$labelcolor = '#C00000';
+$textsize = 100;
+$question_offset = 0;
+$question_no = 0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,13 +50,13 @@
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 	<!-- HTML5 part start -->
-<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-<script type="text/javascript" src="../js/html5.images.js"></script>
-<script type="text/javascript" src="../js/qsharedf.js"></script>
-<script type="text/javascript" src="../js/qlabelling.js"></script>
-<script type="text/javascript" src="../js/qhotspot.js"></script>
-<script type="text/javascript" src="../js/qarea.js"></script>
-<!-- HTML5 part end -->
+	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+	<script type="text/javascript" src="../js/html5.images.js"></script>
+	<script type="text/javascript" src="../js/qsharedf.js"></script>
+	<script type="text/javascript" src="../js/qlabelling.js"></script>
+	<script type="text/javascript" src="../js/qhotspot.js"></script>
+	<script type="text/javascript" src="../js/qarea.js"></script>
+	<!-- HTML5 part end -->
   <script language="JavaScript">
     function write_string(p_string) {
       document.write(p_string);

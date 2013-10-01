@@ -44,25 +44,20 @@
 <form name="labform">
 <br />
 
-<table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="create_lab.php" target="body"><img src="../artwork/new_lab_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="create_lab.php"><?php echo $string['createnewlab']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['vieweditdetails']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['deletelab']; ?></td></tr>
-</table>
+<div style="font-size:90%" id="menu1a">
+	<div class="menuitem"><a href="create_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab']; ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['vieweditdetails']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletelab']; ?></div>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="create_lab.php" target="body"><img src="../artwork/new_lab_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="create_lab.php"><?php echo $string['createnewlab']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="viewDetails()" src="../artwork/edit.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="viewDetails(); return false;"><?php echo $string['vieweditdetails']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteLab()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteLab(); return false;"><?php echo $string['deletelab']; ?></a></td></tr>
-</table>
-</td></tr>
-</table>
+<div style="font-size:90%; display:none" id="menu1b">
+	<div class="menuitem"><a href="create_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab']; ?></a></div>
+	<div class="menuitem" onclick="viewDetails()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false;"><?php echo $string['vieweditdetails']; ?></a></div>
+	<div class="menuitem" onclick="deleteLab()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletelab']; ?></a></div>
+</div>
 
 <input type="hidden" name="labID" id="labID" value="" />
 <input type="hidden" name="labNo" id="labNo" value="" />
 <input type="hidden" name="oldLabNo" id="oldLabNo" value="" />
 </form>
 </div>
-
-</body>
-</html>

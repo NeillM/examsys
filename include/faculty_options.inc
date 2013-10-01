@@ -51,17 +51,17 @@
 <form name="myform">
 <br />
 
-<table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="" onclick="addFaculty(); return false;"><img src="../artwork/faculty_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="" onclick="addFaculty(); return false;"><?php echo $string['createfaculty']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['editfaculty']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['deletefaculty']; ?></td></tr>
-</table>
+<div id="menu1a" style="font-size:90%">
+	<div class="menuitem" onclick="addFaculty(); return false;"><img class="sidebar_icon" src="../artwork/faculty_16.png" alt="" /><a href="" onclick="return false"><?php echo $string['createfaculty']; ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editfaculty']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletefaculty']; ?></div>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="" onclick="addFaculty(); return false;"><img src="../artwork/faculty_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="" onclick="addFaculty(); return false;"><?php echo $string['createfaculty']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editFaculty()" src="../artwork/edit.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="editFaculty(); return false;"><?php echo $string['editfaculty']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteCourse()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteFaculty(); return false;"><?php echo $string['deletefaculty']; ?></a></td></tr>
-</table>
+<div style="display:none; font-size:90%" id="menu1b">
+	<div class="menuitem" onclick="addFaculty()"><img class="sidebar_icon" src="../artwork/faculty_16.png" alt="" /><a href="" onclick="return false"><?php echo $string['createfaculty']; ?></a></div>
+	<div class="menuitem" onclick="editFaculty()"><img class="sidebar_icon" onclick="editFaculty()" src="../artwork/edit.png" alt="" /><a href="" onclick="return false"><?php echo $string['editfaculty']; ?></a></div>
+	<div class="menuitem" onclick="deleteFaculty()"><img class="sidebar_icon" onclick="deleteCourse()" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false"><?php echo $string['deletefaculty']; ?></a></div>
+</div>
 
 <input type="hidden" id="lineID" name="lineID" value="" />
 </form>

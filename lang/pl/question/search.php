@@ -30,9 +30,9 @@ $string['inclockedquestions'] = 'także pytania zablokowane';
 $string['questionsections'] = 'Składniki pytania';
 $string['whenmodified'] = 'Kiedy było zmodyfikowane?';
 $string['metadata'] = 'Metadane';
-$string['module'] = 'Moduł:';
+$string['module'] = 'Moduł';
 $string['anymodule'] = '(każdy moduł)';
-$string['owner'] = 'Właściciel:';
+$string['owner'] = 'Właściciel';
 $string['anyowner'] = '(każdy właściciel)';
 $string['myquestionsonly'] = '(tylko moje pytania)';
 $string['status'] = 'Stan'; //Status, Stan
@@ -63,4 +63,5 @@ $string['narrowyoursearch'] = 'Należy zawęzić wyszukiwania przez dobór odpow
 $string['notickedfields'] = 'Nie zaznaczono żadnych pól do wyszukiwania';
 $string['notickedstatus'] = 'Nie zaznaczono żadnego statusu do wyszukiwania';
 $string['entersearchterm'] = 'Podaj szukane słowo lub frazę.';
+$string['quickview'] = 'Quick View';
 ?>

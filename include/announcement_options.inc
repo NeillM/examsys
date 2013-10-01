@@ -41,19 +41,17 @@
 <form name="myform">
 <br />
 
-<table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="add_announcement.php"><img src="../artwork/megaphone_16.png" width="16" height="16" alt="<?php echo $string['createannouncement']; ?>" /></a></td><td class="menuitem"><a href="add_announcement.php"><?php echo $string['createannouncement']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editannouncement']; ?>" /></td><td class="greymenuitem"><?php echo $string['editannouncement']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="<?php echo $string['deleteannouncement']; ?>" /></td><td class="greymenuitem"><?php echo $string['deleteannouncement']; ?></td></tr>
-</table>
+<div style="font-size:90%" id="menu1a">
+	<div class="menuitem"><a href="add_announcement.php"><img class="sidebar_icon" src="../artwork/megaphone_16.png" alt="<?php echo $string['createannouncement']; ?>" /><?php echo $string['createannouncement']; ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editannouncement']; ?>" /><?php echo $string['editannouncement']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deleteannouncement']; ?>" /><?php echo $string['deleteannouncement']; ?></div>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="add_announcement.php"><img src="../artwork/megaphone_16.png" width="16" height="16" alt="<?php echo $string['createannouncement']; ?>" /></a></td><td class="menuitem"><a href="add_announcement.php"><?php echo $string['createannouncement']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editAnnouncement()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editannouncement']; ?>" /></td><td class="menuitem"><a href="" onclick="editAnnouncement(); return false;"><?php echo $string['editannouncement']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteAnnouncement()" src="../artwork/red_cross.png" width="16" height="16" alt="<?php echo $string['deleteannouncement']; ?>" /></td><td class="menuitem"><a href="" onclick="deleteAnnouncement(); return false;"><?php echo $string['deleteannouncement']; ?></a></td></tr>
-</table>
-</td></tr>
-</table>
+<div style="font-size:90%; display:none" id="menu1b">
+	<div class="menuitem"><a href="add_announcement.php"><img class="sidebar_icon" src="../artwork/megaphone_16.png" alt="<?php echo $string['createannouncement']; ?>" /><?php echo $string['createannouncement']; ?></a></div>
+	<div class="menuitem" onclick="editAnnouncement()"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editannouncement']; ?>" /><a href="" onclick="return false;"><?php echo $string['editannouncement']; ?></a></div>
+	<div class="menuitem" onclick="deleteAnnouncement()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deleteannouncement']; ?>" /><a href="" onclick="return false;"><?php echo $string['deleteannouncement']; ?></a></div>
+</div>
 
 <input type="hidden" name="lineID" id="lineID" value="" />
 </form>

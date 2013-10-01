@@ -129,7 +129,6 @@
 	$menudata['optimizetables']				= array('optimize_tables.php', 'optimize_tables_icon.png');
 	$menudata['questionstatuses']			= array('list_statuses.php', 'status_icon.png');
 	$menudata['schools']							= array('list_schools.php', 'school_icon.png');
-	$menudata['smsimports']						= array('sms_import_summary.php', 'sms_import_icon.png');
   if ($configObject->get('cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
 		$menudata['summativescheduling']	= array('summative_scheduling.php', 'summative_scheduling.png');
 	}
@@ -141,7 +140,7 @@
 
 	foreach($menudata as $menukey => $menuitem) {
 		$parts = explode('.php', $menuitem[0]);
-		echo '<a href="' . $menuitem[0] . '" id="' . $parts[0] . '">';
+		echo '<a class="blacklink" href="' . $menuitem[0] . '" id="' . $parts[0] . '">';
 		echo '<div class="container"><img src="../artwork/' . $menuitem[1] . '" alt="" class="icon" /><br />' . $string[$menukey] . '</div></a>';
 	}
 

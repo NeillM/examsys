@@ -41,21 +41,19 @@
 <form name="myform">
 <br />
 
-<table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="add_course.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="add_course.php"><?php echo $string['createcourse']; ?></a></td></tr>
-<tr><td class="ico"><a href="bulk_import_courses.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="bulk_import_courses.php"><?php echo $string['bulkcourseimport']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['editcourse']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['deletecourse']; ?></td></tr>
-</table>
+<div style="font-size:90%" id="menu1a">
+	<div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse']; ?></a></div>
+	<div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['bulkcourseimport']; ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editcourse']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletecourse']; ?></div>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="add_course.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="add_course.php"><?php echo $string['createcourse']; ?></a></td></tr>
-<tr><td class="ico"><a href="bulk_import_courses.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="bulk_import_courses.php"><?php echo $string['bulkcourseimport']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editCourse()" src="../artwork/edit.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="editCourse(); return false;"><?php echo $string['editcourse']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteCourse()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteCourse(); return false;"><?php echo $string['deletecourse']; ?></a></td></tr>
-</table>
-</td></tr>
-</table>
+<div style="font-size:90%; display:none" id="menu1b">
+	<div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse']; ?></a></div>
+	<div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['bulkcourseimport']; ?></a></div>
+	<div class="menuitem" onclick="editCourse()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false;"><?php echo $string['editcourse']; ?></a></div>
+	<div class="menuitem" onclick="deleteCourse()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletecourse']; ?></a></div>
+</div>
 
 <input type="hidden" name="lineID" id="lineID" value="" />
 </form>

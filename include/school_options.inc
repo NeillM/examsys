@@ -42,30 +42,28 @@
 <br />
 
 
-<table class="sidebar_tbl" id="menu1a">
-<?php
-if ($faculties > 0) {
-?>
-  <tr><td class="ico"><a href="add_school.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" /></a></td><td class="menuitem"><a href="add_school.php"><?php echo $string['createschool']; ?></a></td></tr>
-<?php
-} else {
-?>
-  <tr><td class="ico"><img src="../artwork/school_icon_16_grey.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" /></td><td class="greymenuitem"><?php echo $string['createschool']; ?></td></tr>
-<?php
-}
-?>
+<div id="menu1a" style="font-size:90%">
+	<?php
+	if ($faculties > 0) {
+	?>
+		<div class="menuitem"><a href="add_school.php"><img class="sidebar_icon" src="../artwork/school_icon_16.png" alt="<?php echo $string['createschool']; ?>" /><?php echo $string['createschool']; ?></a></div>
+	<?php
+	} else {
+	?>
+		<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/school_icon_16_grey.png" alt="<?php echo $string['createschool']; ?>" /><?php echo $string['createschool']; ?></div>
+	<?php
+	}
+	?>
 
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" /></td><td class="greymenuitem"><?php echo $string['editschool']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['deleteschool']; ?></td></tr>
-</table>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" /><?php echo $string['editschool']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /><?php echo $string['deleteschool']; ?></div>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="add_school.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" /></a></td><td class="menuitem"><a href="add_school.php"><?php echo $string['createschool']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editSchool()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" /></td><td class="menuitem"><a href="" onclick="editSchool(); return false;"><?php echo $string['editschool']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteSchool()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteSchool(); return false;"><?php echo $string['deleteschool']; ?></a></td></tr>
-</table>
-</td></tr>
-</table>
+<div style="display:none; font-size:90%" id="menu1b">
+	<div class="menuitem"><a href="add_school.php"><img class="sidebar_icon" src="../artwork/school_icon_16.png" alt="<?php echo $string['createschool']; ?>" /><?php echo $string['createschool']; ?></a></div>
+	<div class="menuitem" onclick="editSchool()"><img class="sidebar_icon" onclick="editSchool()" src="../artwork/edit.png" alt="<?php echo $string['editschool']; ?>" /><a href="" onclick="return false;"><?php echo $string['editschool']; ?></a></div>
+	<div class="menuitem" onclick="deleteSchool()"><img class="sidebar_icon" onclick="deleteSchool()" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deleteschool']; ?></a></div>
+</div>
 
 <input type="hidden" id="lineID" name="lineID" value="" />
 </form>

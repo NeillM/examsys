@@ -47,7 +47,11 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     }
   }
 
-   function editQ() {
+  function previewQ() {
+    notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=800,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+	}
+	
+	function editQ() {
     var loc = '../question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
     if ($('#qType').val() == 'random' || $('#qType').val() == 'keyword_based') {
       loc += '&type=' + $('#qType').val();
@@ -372,26 +376,26 @@ if (!isset($status_array)) {
   <option value=""></option>
 <?php
   $old_moduleID = '';
-  $stmt = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND moduleid IN ('" . implode("','",$staff_modules) . "') ORDER BY moduleid, keyword");
+  $stmt = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID = modules.id AND moduleid IN ('" . implode("','", $staff_modules) . "') AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid, keyword");
   $stmt->execute();
   $stmt->bind_result($moduleID, $keyword, $keywordID);
   while ($stmt->fetch()) {
     if ($old_moduleID != $moduleID) {
-	  if ($old_moduleID != '') echo "</optgroup>\n";
-	  echo "<optgroup label=\"$moduleID\">\n";
-	}
+			if ($old_moduleID != '') echo "</optgroup>\n";
+			echo "<optgroup label=\"$moduleID\">\n";
+		}
     if (isset($_POST['keywordID']) and $_POST['keywordID'] == $keywordID) {
       echo "<option value=\"$keywordID\" selected>$keyword</option>\n";
     } else {
       echo "<option value=\"$keywordID\">$keyword</option>\n";
     }
-	$old_moduleID = $moduleID;
+		$old_moduleID = $moduleID;
   }
   if ($stmt->num_rows > 0) echo "</optgroup>\n";
   $stmt->close();
 
   echo "<optgroup label=\"Personal Keywords\">\n";
-  $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID=? ORDER BY keyword");
+  $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID = ? ORDER BY keyword");
   $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
   $stmt->bind_result($keywordID, $keyword);
@@ -429,29 +433,32 @@ if (!isset($status_array)) {
 <br />
 <div class="submenuheading" id="banktasks"><?php echo $string['currentquestiontasks']; ?></div>
 
-<table class="sidebar_tbl" style="margin-left:12px" id="menu2a">
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="Edit" /></td><td class="greymenuitem"><?php echo $string['editquestion']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/information_icon_grey.gif" width="16" height="16" alt="Information" /></td><td class="greymenuitem"><?php echo $string['information']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/copy_icon_grey.gif" width="16" height="16" alt="Copy" /></td><td class="greymenuitem"><?php echo $string['copyontopaperx']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/link_grey.png" width="16" height="16" alt="Link 2 Paper" /></td><td class="greymenuitem"><?php echo $string['linktopaper']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Delete" /></td><td class="greymenuitem"><?php echo $string['deletequestion']; ?></td></tr>
-</table>
+<div style="margin-left:12px; font-size:90%" id="menu2a">
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/small_play_grey.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/copy_icon_grey.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/link_grey.png" alt="<?php echo $string['linktopaper']; ?>" /><?php echo $string['linktopaper']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></div>
+</div>
 
-<table class="sidebar_tbl" style="margin-left:12px; display:none" id="menu2b">
-<tr><td class="ico"><a id="edit" onclick="editQ(); return false;" href="#"><img src="../artwork/edit.png" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
-<tr><td class="ico"><a id="information" href="#" onclick="questionInfo(); return false;"><img src="../artwork/information_icon.gif" width="16" height="16" alt="Information" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
-<tr><td class="ico"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img src="../artwork/copy_icon.gif" width="16" height="16" alt="Copy" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
-<tr><td class="ico"><a id="link" href="#" onclick="linkToPaper(); return false;"><img src="../artwork/link.png" width="16" height="16" alt="Link 2 Paper" /></a></td><td class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><?php echo $string['linktopaper']; ?></a></td></tr>
-<tr><td class="ico"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><img src="../artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></td><td class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><?php echo $string['deletequestion']; ?></a></td></tr>
-</table>
+<div style="margin-left:12px; font-size:90%; display:none" id="menu2b">
+	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
+	<div class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
+	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
+	<div class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></a></div>
+	<div class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['linktopaper']; ?>" /><?php echo $string['linktopaper']; ?></a></div>
+	<div class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></a></div>
+</div>
 
-<table class="sidebar_tbl" style="margin-left:12px; display:none" id="menu2c">
-<tr><td class="ico"><a id="edit" onclick="editQ(); return false;" href="#"><img src="../artwork/edit.png" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
-<tr><td class="ico"><a id="information" href="#" onclick="questionInfo(); return false;"><img src="../artwork/information_icon.gif" width="16" height="16" alt="Information" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
-<tr><td class="ico"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img src="../artwork/copy_icon.gif" width="16" height="16" alt="Copy" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
-<tr><td class="ico"><a id="link" href="#" onclick="linkToPaper(); return false;"><img src="../artwork/link.png" width="16" height="16" alt="Link 2 Paper" /></a></td><td class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><?php echo $string['linktopaper']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Delete" /></td><td class="greymenuitem"><?php echo $string['deletequestion']; ?></td></tr>
-</table>
+<div style="margin-left:12px; font-size:90%; display:none" id="menu2c">
+	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
+	<div class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
+	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
+	<div class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></a></div>
+	<div class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['linktopaper']; ?>" /><?php echo $string['linktopaper']; ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></div>
+</div>
 
 <input type="hidden" name="questionID" id="questionID" value="" />
 <input type="hidden" name="qType" id="qType" value="" />

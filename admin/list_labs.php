@@ -69,10 +69,16 @@
       $('#menu1b').hide();
 
     }
+		
+		$(document).ready(function() {
+		  $('html').click(function() {
+			  deselLab();
+      });
+		});
   </script>
 </head>
 
-<body onclick="deselLab();">
+<body>
 <?php
   require '../include/lab_options.inc';
 ?>
@@ -116,7 +122,7 @@ if (count($labs) > 0) {
     }
     echo '<div class="foldername">';
     echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:66px; cursor:pointer" align="center">';
-    echo "  <img onclick=\"selLab('" . $lab['id'] . "','lab$lab_no',event)\" ondblclick=\"viewDetails('" . $lab['id'] . "')\" src=\"../artwork/computer_lab_48.png\" width=\"48\" height=\"48\" alt=\"" . $lab['name'] . "\" border=\"0\" /><td>\n";
+    echo "  <img onclick=\"selLab('" . $lab['id'] . "','lab$lab_no',event)\" ondblclick=\"viewDetails('" . $lab['id'] . "')\" src=\"../artwork/computer_lab_48.png\" width=\"48\" height=\"48\" alt=\"" . $lab['name'] . "\" /><td>\n";
     echo "  <td style=\"width:290px; cursor:pointer\"><span id=\"lab$lab_no\" onclick=\"selLab('" . $lab['id'] . "', 'lab$lab_no', event)\" ondblclick=\"viewDetails('" . $lab['id'] . "')\">" . $lab['name'] . "</span><br />";
     echo '  <span style="color:#808080">' . $lab['pc_number'];
     if ($lab['pc_number'] == 1) {

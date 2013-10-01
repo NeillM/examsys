@@ -27,7 +27,6 @@ require_once '../classes/dateutils.class.php';
 require_once '../classes/mappingutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
-
 $idMod = $_GET['module'];
 
 $session = date_utils::get_current_academic_year();
@@ -36,6 +35,7 @@ $vle_api_data = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mys
 $vle_api = $vle_api_data['api'];
 $map_level = $vle_api_data['level'];
 $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
+
 if ($vle_api != '') {
   $vle = VLEFactory::GetVLEAPI($vle_api);
   $vle->setMappingLevel($map_level);
@@ -129,67 +129,67 @@ if ($vle_api != '') {
 
 <div class="submenuheading" id="papertasks"><?php echo $string['sessions']; ?></div>
 
-<table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><?php echo $string['createsession']; ?></a></td></tr>
+<div style="font-size:90%" id="menu1a">
+<div class="menuitem" onclick="hideSessCopyMenu(event); addSession()"><img class="sidebar_icon" src="../artwork/new_session_16.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<tr><td class="ico"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
+  echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
   //This has not bee written yet see ticket #708
-  //echo '<tr><td class="ico"><a href="export_session_to_txt.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="export_session_to_txt.php?module=' . $_GET['module'] . '">Export Sessions</a></td></tr>';
+  //echo '<div class="menuitem"><a href="export_session_to_txt.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
 ?>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['editsession']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['deletesession']; ?></td></tr>
+<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editsession']; ?></div>
+<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletesession']; ?></div>
 <?php
 if ($vle_api == '') {
-	echo '<tr><td class="ico"><img onclick="showSessCopyMenu(event)" src="../artwork/copy_icon.gif" width="16" height="16" alt="Copy year" /></td><td class="menuitem sub"><a href="#" onclick="showSessCopyMenu(event); return false;"><span>' . $string['copyyear'] . '</span></a></td></tr>';
+	echo '<div class="menuitem cascade" onclick="showSessCopyMenu(event)"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="Copy year" /><a href="#" onclick="return false">' . $string['copyyear'] . '</a></div>';
 } else {
-	echo '<tr><td class="ico"><img onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\') return false;" src="../artwork/copy_icon.gif" width="16" height="16" alt="" /></td><td class="menuitem sub"><a href="#" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><span>' . $string['copyyear'] . '</span></a></td></tr>';
+	echo '<div class="menuitem" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="#" onclick="return false">' . $string['copyyear'] . '</a></div>';
 }
 ?>
-</table>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><?php echo $string['createsession']; ?></a></td></tr>
+<div style="font-size:90%; display:none" id="menu1b">
+<div class="menuitem" onclick="hideSessCopyMenu(event); addSession()"><img class="sidebar_icon" src="../artwork/new_session_16.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<tr><td class="ico"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
+  echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
   //This has not bee written yet see ticket #708
-  //echo '<tr><td class="ico"><a href="export_session_to_xml.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="export_session_to_xml.php?module=' . $_GET['module'] . '">Export Sessions</a></td></tr>';
+  //echo '<div class="menuitem"><a href="export_session_to_xml.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
 ?>
-<tr><td class="ico"><img onclick="hideSessCopyMenu(event); editSession()" src="../artwork/edit.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editSession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="hideSessCopyMenu(event); deleteSession()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); deleteSession(); return false;"><?php echo $string['deletesession']; ?></a></td></tr>
+<div class="menuitem" onclick="hideSessCopyMenu(event); editSession()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false"><?php echo $string['editsession']; ?></a></div>
+<div class="menuitem" onclick="hideSessCopyMenu(event); deleteSession()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false"><?php echo $string['deletesession']; ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<tr><td class="ico"><img onclick="showSessCopyMenu(event)" src="../artwork/copy_icon.gif" width="16" height="16" alt="" /></td><td class="menuitem sub"><a href="" onclick="showSessCopyMenu(event); return false;"><span>' . $string['copyyear'] . '</span></a></td></tr>';
+  echo '<div class="menuitem cascade" onclick="showSessCopyMenu(event)"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="" onclick="return false">' . $string['copyyear'] . '</a></div>';
 }
 else {
-	echo '<tr><td class="ico"><img onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\') return false;" src="../artwork/copy_icon.gif" width="16" height="16" alt="" /></td><td class="menuitem sub"><a href="#" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><span>' . $string['copyyear'] . '</span></a></td></tr>';
+	echo '<div class="menuitem cascade" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\')"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="#" onclick="return false">' . $string['copyyear'] . '</a></div>';
 }
 ?>
-</table>
+</div>
 
-<table class="sidebar_tbl" style="display:none" id="menu1c">
-<tr><td><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><?php echo $string['createsession']; ?></a></td></tr>
+<div style="font-size:90%; display:none" id="menu1c">
+<div class="menuitem" onclick="hideSessCopyMenu(event); addSession();"><img class="sidebar_icon" src="../artwork/new_session_16.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<tr><td class="ico"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
+  echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
   //This has not bee written yet see ticket #708
-  //echo '<tr><td class="ico"><a href="export_session_to_xml.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="export_session_to_xml.php?module=' . $_GET['module'] . '">Export Sessions</a></td></tr>';
+  //echo '<div class="menuitem"><a href="export_session_to_xml.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
 ?>
-<tr><td class="ico"><img onclick="hideSessCopyMenu(event); editVLESession()" src="../artwork/edit.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editVLESession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="hideSessCopyMenu(event); deleteVLESession()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); deleteVLESession(); return false;"><?php echo $string['deletesession']; ?></a></td></tr>
+<div class="menuitem" onclick="hideSessCopyMenu(event); editVLESession()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false"><?php echo $string['editsession']; ?></a></div>
+<div class="menuitem" onclick="hideSessCopyMenu(event); deleteVLESession()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false"><?php echo $string['deletesession']; ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<tr><td class="ico"><img onclick="showSessCopyMenu(event)" src="../artwork/copy_icon.gif" width="16" height="16" alt="" /></td><td class="menuitem sub"><a href="" onclick="showSessCopyMenu(event); return false;"><span>' . $string['copyyear'] . '</span></a></td></tr>';
+  echo '<div class="menuitem cascade" onclick="showSessCopyMenu(event)"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="" onclick="return false">' . $string['copyyear'] . '</a></div>';
 }
 else {
-	echo '<tr><td class="ico"><img onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\') return false;" src="../artwork/copy_icon.gif" width="16" height="16" alt="" /></td><td class="menuitem"><a href="#" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><span>' . $string['copyyear'] . '</span></a></td></tr>';
+	echo '<div class="menuitem" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\')"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="#" onclick="return false">' . $string['copyyear'] . '</a></div>';
 }
 ?>
-</table>
+</div>
 
 <input type="hidden" id="session" name="session" value="" /><br />
 <input type="hidden" id="identifier" name="identifier" value="" /><br />
