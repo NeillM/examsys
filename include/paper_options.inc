@@ -414,8 +414,8 @@ if ($properties->get_summative_lock() == true) {
 <?php
   if ($properties->get_paper_type() != '4') {
 ?>
-  <li id="add_break" class="break grey menuitem"><?php echo $string['addscreenbreak']; ?></li>
-  <li id="delete_break" class="grey menuitem"><?php echo $string['deletescreenbreak']; ?></li>
+  <li id="add_break" class="break greymenuitem"><?php echo $string['addscreenbreak']; ?></li>
+  <li id="delete_break" class="greymenuitem"><?php echo $string['deletescreenbreak']; ?></li>
 <?php
   }
   echo '</ul>';
@@ -425,8 +425,8 @@ if ($properties->get_summative_lock() == true) {
 <?php
   if ($properties->get_paper_type() != '4') {
 ?>
-  <li id="add_break" class="break grey menuitem"><a href="#"><?php echo $string['addscreenbreak']; ?></a></li>
-  <li id="delete_break" class="grey menuitem"><a href="#"><?php echo $string['deletescreenbreak']; ?></a></li>
+  <li id="add_break" class="break greymenuitem"><a href="#"><?php echo $string['addscreenbreak']; ?></a></li>
+  <li id="delete_break" class="greymenuitem"><a href="#"><?php echo $string['deletescreenbreak']; ?></a></li>
 <?php
   }
   echo '</ul>';
