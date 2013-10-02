@@ -146,8 +146,7 @@ function parseScript($data) {
       $cols = explode('>', $row);
       
       $parts = explode(' out of', $cols[4]);
-      //$mark = round($parts[0],1);  // Round it to 1 decimal because this is what Class Totals does.
-			$mark = $parts[0];
+      $mark = round($parts[0],1);  // Round it to 1 decimal because this is what Class Totals does.
     }
   }
   return $mark;
