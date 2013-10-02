@@ -28,7 +28,7 @@ $string['editmodule'] = 'Edytuj moduł';
 $string['deletemodule'] = 'Usuń moduł';  
 $string['modulefolder'] = 'Folder modułu';
 $string['studentcohort'] = 'Grupa studentów';
-$string['currentmodule'] = 'Current Module';
-$string['moduleimports'] = 'Module Imports';
-$string['importsummary'] = 'Import Summary';
+$string['currentmodule'] = 'Aktualny Moduł';
+$string['moduleimports'] = 'Importy dla modułu';
+$string['importsummary'] = 'Podsumowanie importu';
 ?>
