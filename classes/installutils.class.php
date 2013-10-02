@@ -2239,14 +2239,14 @@ QUERY;
 
     $this->tableList['objectives'] = <<<QUERY
         CREATE TABLE `objectives` (
-          `obj_id` int(11) NOT NULL,
-          `objective` text NOT NULL,
-          `idMod` int(11) unsigned NOT NULL DEFAULT '0',
-          `identifier` bigint(20) unsigned NOT NULL,
-          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL DEFAULT '2008/09',
-          `sequence` int(11) default NULL,
-          PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
-          KEY `idx_identifier_calendar_year_objective300_sequence` (`identifier`,`calendar_year`,`sequence`)
+					`obj_id` int(11) NOT NULL,
+					`objective` text NOT NULL,
+					`idMod` int(11) unsigned NOT NULL DEFAULT '0',
+					`identifier` bigint(20) unsigned NOT NULL,
+					`calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL DEFAULT '2008/09',
+					`sequence` int(11) DEFAULT NULL,
+					PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
+					KEY `idx_identifier_calendar_year_sequence` (`identifier`,`calendar_year`,`sequence`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2788,23 +2788,23 @@ QUERY;
 QUERY;
 
     $this->tableList['textbox_marking'] = <<<QUERY
-        CREATE TABLE `textbox_marking` (
-          `id` int(11) NOT NULL auto_increment,
-          `paperID` mediumint(8) unsigned default NULL,
-          `q_id` int(11) default NULL,
-          `answer_id` int(11) default NULL,
-          `markerID` int(10) unsigned default NULL,
-          `mark` float default NULL,
-          `comments` text,
-          `date` datetime default NULL,
-          `phase` tinyint(4) default NULL,
-          `logtype` tinyint(4) default NULL,
-          `student_userID` int(10) unsigned default NULL,
-          PRIMARY KEY (`id`),
-          UNIQUE KEY (`idx_unique` (`phase`,`answer_id`,`logtype`),
+				CREATE TABLE `textbox_marking` (
+					`id` int(11) NOT NULL auto_increment,
+					`paperID` mediumint(8) unsigned default NULL,
+					`q_id` int(11) default NULL,
+					`answer_id` int(11) default NULL,
+					`markerID` int(10) unsigned default NULL,
+					`mark` float default NULL,
+					`comments` text,
+					`date` datetime default NULL,
+					`phase` tinyint(4) default NULL,
+					`logtype` tinyint(4) default NULL,
+					`student_userID` int(10) unsigned default NULL,
+					PRIMARY KEY (`id`),
+					UNIQUE KEY `idx_unique` (`phase`,`answer_id`,`logtype`),
 					KEY `paperID` (`paperID`),
-          KEY `q_id` (`q_id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+					KEY `q_id` (`q_id`)
+					) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}        
 QUERY;
 
     $this->tableList['textbox_remark'] = <<<QUERY

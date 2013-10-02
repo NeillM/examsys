@@ -34,9 +34,9 @@ set_time_limit(0);
 session_write_close();
 $response = '123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
 ignore_user_abort(true);
-header("Connection: close");
-header("Content-Length: " . mb_strlen($response));
-echo $response;
+//header("Connection: close");
+//header("Content-Length: " . mb_strlen($response));
+//echo $response;
 flush();
 
 $end_dateSQL = 'NOW()';
@@ -71,8 +71,6 @@ if (isset($_POST['server']) and $_POST['server'] != '') {
 function getData($url) {
   $ch = curl_init($url);
 
-  //curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-  //curl_setopt($ch, CURLOPT_USERPWD, $_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
   curl_setopt($ch, CURLOPT_POSTFIELDS, "ROGO_USER=" . $_POST['username'] . "&ROGO_PW=" . $_POST['passwd'] . "&rogo-login-form-std=SignIn");
   curl_setopt($ch, CURLOPT_TIMEOUT, 10);
   curl_setopt($ch, CURLOPT_URL, $url);
@@ -87,7 +85,7 @@ function getData($url) {
   curl_close($ch);
   if (strpos($output,'<title>Log In</title>') !== false) {
     //V4.4 needing authentication
-    $output=null;
+    $output = null;
   }
   return $output;
 }
@@ -102,7 +100,7 @@ function tidyLine($line) {
 
 function parseRawMarks($data) {
   // No result
-  if ($data==NULL) {
+  if ($data == NULL) {
     return false;
   }
   // Asking for authentication
@@ -114,7 +112,7 @@ function parseRawMarks($data) {
   $data_line = explode('<tr', $data);
   
   foreach ($data_line as $row) {
-    if (strpos($row,'Display exam script') !== false) {
+    if (strpos($row, ' id="res') !== false) {
       $cols = explode('<td', $row);
       
       $tmp_parts = explode("setVars('", $cols[2]);
@@ -125,7 +123,7 @@ function parseRawMarks($data) {
      
       $marks[$line]['mark'] = tidyLine($cols[5]);
       $marks[$line]['percent'] = tidyLine($cols[6]);
-      $marks[$line]['started'] = $started;
+      $marks[$line]['metadataID'] = str_replace("'", "", $tmp_parts2[0]);
       $marks[$line]['userID'] = $tmp_userID;
 
       $line++;
@@ -135,17 +133,21 @@ function parseRawMarks($data) {
 }
 
 function parseScript($data) {
-  if($data==NULL) {
+  if ($data == NULL) {
     return false;
   }
-  $data_line = explode('<tr', $data);
+	$main_data = explode('<body', $data);
+	
+  $data_line = explode('<tr', $main_data[1]);
   
   foreach ($data_line as $row) {
-    if (strpos($row,'Your mark') !== false) {
+	  $found = strpos($row, 'Your mark');
+    if ($found !== false) {
       $cols = explode('>', $row);
       
       $parts = explode(' out of', $cols[4]);
-      $mark = round($parts[0],1);  // Round it to 1 decimal because this is what Class Totals does.
+      //$mark = round($parts[0],1);  // Round it to 1 decimal because this is what Class Totals does.
+			$mark = $parts[0];
     }
   }
   return $mark;
@@ -168,11 +170,11 @@ $result->close();
 $paper_no = count($papers);
 $current_no = 0;
 
-$result = $mysqli->prepare("DELETE FROM class_totals_test_local WHERE user_id=?");
+$result = $mysqli->prepare("DELETE FROM class_totals_test_local WHERE user_id = ?");
 $result->bind_param('i', $userObject->get_user_ID());
 $result->execute();
 
-$result = $mysqli->prepare("SELECT surname, first_names, username FROM users WHERE id=? LIMIT 1");
+$result = $mysqli->prepare("SELECT surname, first_names, username FROM users WHERE id = ? LIMIT 1");
 foreach ($papers as $paper) {
   $url = $server . "/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=1&folder=&percent=100&absent=0&direction=asc&studentsonly=1";
   
@@ -188,19 +190,21 @@ foreach ($papers as $paper) {
 
   $errors = '';
   if ($marks_set === false) {
-    $marks_set=array();
-    $errors= '<ul><li>Couldnt access class_totals</li>';
+    $marks_set = array();
+    $errors = "<ul><li>Couldn't access class_totals</li>\n";
   }
   foreach ($marks_set as $mark) {
-    $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&previous=" . str_replace(' ', '%20', $mark['started']) . "&userid=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
+    $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&metadataID=" . $mark['metadataID'] . "&userid=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
     $output = getData($url);
     $script_mark = parseScript($output);
-    if($script_mark === false) {
+		
+    if ($script_mark === false) {
       if ($errors == '') {
         $errors = '<ul>';
       }
-      $errors .= '<li>Couldnt access finish</li>';
+      $errors .= "<li>Couldn't access finish</li>\n";
     }
+
     if ($script_mark != $mark['mark']) {
       $result->bind_param('i', $mark['userID']);
       $result->execute();
@@ -222,9 +226,10 @@ foreach ($papers as $paper) {
     $status = 'success';
   }
 
-  $update = $mysqli->prepare("UPDATE class_totals_test_local SET status=?, errors=? WHERE user_id=? AND paper_id=?");
+  $update = $mysqli->prepare("UPDATE class_totals_test_local SET status = ?, errors = ? WHERE user_id = ? AND paper_id = ?");
   $update->bind_param('ssii', $status, $errors, $userObject->get_user_ID(), $paper['paperID']);
   $update->execute();
   $update->close();
 }
 $result->close();
+?>

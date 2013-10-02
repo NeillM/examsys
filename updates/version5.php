@@ -543,8 +543,13 @@ if (!isset($_POST['update'])) {
     }
     $result->close();
     $mysqli->commit();
+		
+		// Delete any records with std_setID still on zero (i.e. no matching parent std_set records).
+    $update = $mysqli->prepare("DELETE FROM ebel WHERE std_setID = 0");
+    $update->execute();
+    $update->close();
 
-    // Update the 'properties' table.
+  	// Update the 'properties' table.
     $result = $mysqli->prepare("SELECT property_id, marking FROM properties WHERE marking LIKE '2,%'");
     $result->execute();
     $result->store_result();
