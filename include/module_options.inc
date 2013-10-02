@@ -53,7 +53,7 @@ $session = date_utils::get_current_academic_year();
 <form name="myform">
 <br />
 
-<div class="submenuheading" id="currentmodule">Current Module</div>
+<div class="submenuheading" id="currentmodule"><?php echo $string['currentmodule']; ?></div>
 <div id="menu1a" style="font-size:90%">
 	<div class="menuitem"><a href="add_module.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="<?php echo $string['createmodule']; ?>" /><?php echo $string['createmodule']; ?></a></div>
 	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="" /><?php echo $string['bulkmoduleimport']; ?></a></div>
@@ -74,9 +74,9 @@ $session = date_utils::get_current_academic_year();
 
 <br />
 
-<div class="submenuheading" id="currentmodule">Module Imports</div>
+<div class="submenuheading" id="currentmodule"><?php echo $string['moduleimports']; ?></div>
 <div style="font-size:90%" id="menu2">
-	<div class="menuitem"><a href="sms_import_summary.php"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['studentcohort']; ?>" />Import Summary</a></div>
+	<div class="menuitem"><a href="sms_import_summary.php"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['importsummary']; ?>" /><?php echo $string['importsummary']; ?></a></div>
 </div>
 
 <input type="hidden" name="lineID" id="lineID" value="" />

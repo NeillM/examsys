@@ -28,4 +28,7 @@ $string['editmodule'] = 'Edit Module';
 $string['deletemodule'] = 'Delete Module';
 $string['modulefolder'] = 'Module Folder';
 $string['studentcohort'] = 'Student Cohort';
+$string['currentmodule'] = 'Current Module';
+$string['moduleimports'] = 'Module Imports';
+$string['importsummary'] = 'Import Summary';
 ?>
