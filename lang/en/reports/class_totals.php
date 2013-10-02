@@ -20,6 +20,7 @@ $string['paper'] = 'Paper';
 $string['temporaryaccountswarning'] = '<strong>Temporary Accounts Warning</strong>&nbsp;&nbsp;&nbsp;Please reassign to the proper student accounts.';
 $string['moredetails'] = 'Click for more details.';
 $string['latesubmissionsmsg'] = '<strong>Late Submissions</strong>&nbsp;&nbsp;&nbsp;Users have data saved after the end of the assessment';
+$string['midexamclarifications'] = 'Mid-Exam Clarifications';
 $string['candidatenotcomplete'] = 'candidates did not complete all screens';
 $string['cohortsize'] = 'Cohort Size';
 $string['nocompletions'] = 'No completions';

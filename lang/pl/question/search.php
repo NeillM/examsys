@@ -63,5 +63,5 @@ $string['narrowyoursearch'] = 'Należy zawęzić wyszukiwania przez dobór odpow
 $string['notickedfields'] = 'Nie zaznaczono żadnych pól do wyszukiwania';
 $string['notickedstatus'] = 'Nie zaznaczono żadnego statusu do wyszukiwania';
 $string['entersearchterm'] = 'Podaj szukane słowo lub frazę.';
-$string['quickview'] = 'Quick View';
+$string['quickview'] = 'Szybki podgląd';
 ?>

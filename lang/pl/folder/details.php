@@ -52,5 +52,5 @@ $string['author'] = 'Autor';
 $string['create'] = 'Utwórz';
 $string['newfolder'] = 'Nowy Folder';
 $string['sudentson'] = 'Studenci w '; 
-$string['nomodulesset'] = 'No modules set';
+$string['nomodulesset'] = 'Brak modułów';
 ?>
