@@ -593,7 +593,7 @@ if ($language != 'en') {
           $ordered = '';
         }
 				
-				//$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
+				$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
 				
         if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
           echo "<td class=\"mk $class$ordered fail r $role_css\">";
