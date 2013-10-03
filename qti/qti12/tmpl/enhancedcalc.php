@@ -52,8 +52,8 @@ $settingsdecoded=json_decode($question->settings,true);
 <?php if ($question->marks_partial != 0) : ?>
 			<respcondition title="Within range" >
 				<conditionvar>
-					<vargte respident="1"><?php echo $real_answer - $question->tolerance ?></vargte>
-					<varlte respident="1"><?php echo $real_answer + $question->tolerance ?></varlte>
+					<vargte respident="1"><?php echo $uansdata['tolerance_partialans'] ?></vargte>
+					<varlte respident="1"><?php echo $uansdata['tolerance_partialansneg'] ?></varlte>
 				</conditionvar>
 				<setvar action="Set"><?php echo $settingsdecoded['marks_partial'] ?></setvar>
 				<displayfeedback linkrefid="general"/>
@@ -61,8 +61,8 @@ $settingsdecoded=json_decode($question->settings,true);
 <?php elseif ($question->tolerance > 0) : ?>
       <respcondition title="Within range" >
 				<conditionvar>
-					<vargte respident="1"><?php echo $real_answer - $question->tolerance ?></vargte>
-					<varlte respident="1"><?php echo $real_answer + $question->tolerance ?></varlte>
+					<vargte respident="1"><?php echo $uansdata['tolerance_fullansneg'] ?></vargte>
+					<varlte respident="1"><?php echo $uansdata['tolerance_fullans'] ?></varlte>
 				</conditionvar>
 				<setvar action="Set"><?php echo $settingsdecoded['marks_correct'] ?></setvar>
 				<displayfeedback linkrefid="general"/>

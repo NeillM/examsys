@@ -276,7 +276,7 @@ $cfg_web_root=$configObject->get('cfg_web_root');
     $enhancedcalc->generate_variables();
     $real_answer = $enhancedcalc->get_real_answer();
     $enhancedcalc->add_to_useranswer('uans', $real_answer);
-
+    $uansdata = $enhancedcalc->get_uans_data();
 
 
     $question->origleadin = $question->leadin;
