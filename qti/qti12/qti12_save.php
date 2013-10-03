@@ -72,7 +72,7 @@ class IE_qti12_Save extends IE_Main {
           }
           $this->output .= "\t\t</section>\n";
         }
-        
+
         $this->output .= "\t</assessment>\n";
         $this->output .= sprintf("</questestinterop>\n");
 
@@ -106,27 +106,44 @@ class IE_qti12_Save extends IE_Main {
     echo "</pre>";
   }
 
-  function OutputQuestion(&$question) {
+  function OutputQuestion (&$question) {
     if ($question->media) {
       $this->data->files[] = new ST_File($question->media, $question->media, $this->params->dir, 'image');
     }
 
-    if ($question->type == "blank") $this->SaveBlank($question);
-    elseif ($question->type == "calculation") $this->SaveCalculation($question);
-    elseif ($question->type == "dichotomous") $this->SaveDichotomous($question);
-    elseif ($question->type == "extmatch") $this->SaveExtMatch($question);
-    elseif ($question->type == "flash") $this->SaveFlash($question);
-    elseif ($question->type == "hotspot") $this->SaveHotspot($question);
-    elseif ($question->type == "info") $this->SaveInfo($question);
-    elseif ($question->type == "labelling") $this->SaveLabelling($question);
-    elseif ($question->type == "likert") $this->SaveLikert($question);
-    elseif ($question->type == "matrix") $this->SaveMatrix($question);
-    elseif ($question->type == "mcq") $this->SaveMcq($question);
-    elseif ($question->type == "mrq") $this->SaveMrq($question);
-    elseif ($question->type == "rank") $this->SaveRank($question);
-    elseif ($question->type == "textbox") $this->SaveTextbox($question);
-    elseif ($question->type == "true_false") $this->SaveTrueFalse($question);
-    else $this->AddError("Question type ".$question->type." not yet supported", $question->load_id);
+    if ($question->type == "blank") {
+      $this->SaveBlank($question);
+    } elseif ($question->type == "calculation" or $question->type == "enhancedcalc" ) {
+      $this->SaveCalculation($question);
+    } elseif ($question->type == "dichotomous") {
+      $this->SaveDichotomous($question);
+    } elseif ($question->type == "extmatch") {
+      $this->SaveExtMatch($question);
+    } elseif ($question->type == "flash") {
+      $this->SaveFlash($question);
+    } elseif ($question->type == "hotspot") {
+      $this->SaveHotspot($question);
+    } elseif ($question->type == "info") {
+      $this->SaveInfo($question);
+    } elseif ($question->type == "labelling") {
+      $this->SaveLabelling($question);
+    } elseif ($question->type == "likert") {
+      $this->SaveLikert($question);
+    } elseif ($question->type == "matrix") {
+      $this->SaveMatrix($question);
+    } elseif ($question->type == "mcq") {
+      $this->SaveMcq($question);
+    } elseif ($question->type == "mrq") {
+      $this->SaveMrq($question);
+    } elseif ($question->type == "rank") {
+      $this->SaveRank($question);
+    } elseif ($question->type == "textbox") {
+      $this->SaveTextbox($question);
+    } elseif ($question->type == "true_false") {
+      $this->SaveTrueFalse($question);
+    } else {
+      $this->AddError("Question type " . $question->type . " not yet supported", $question->load_id);
+    }
   }
 
   function MakeQuestionHeader(&$question, $scenario = true, $image = true) {
@@ -202,7 +219,12 @@ $cfg_web_root=$configObject->get('cfg_web_root');
    * @param ST_Question_Calculation $question Reference to the question object
    * @author Adam Clarke, Rob Ingram
    */
-  function SaveCalculation(&$question) {
+  function SaveCalculation (&$question) {
+
+    if ($question->q_type == 'enhancedcalc') {
+      $this->SaveEnhancedCalc($question);
+      return;
+    }
     $question->formula = trim($question->formula);
 
     if (substr($question->formula, 0, 1) == "=") $question->formula = substr($question->formula, 1);
@@ -217,7 +239,7 @@ $cfg_web_root=$configObject->get('cfg_web_root');
       $q_text = str_ireplace("\$$var", $$var, $q_text);
     }
 
-    eval("\$answer = ".$question->formula.";");
+    eval("\$answer = " . $question->formula . ";");
 
     //echo $q_text."<BR>";
 
@@ -229,6 +251,54 @@ $cfg_web_root=$configObject->get('cfg_web_root');
     $ob = new OB();
     $ob->ClearAndSave();
     include "qti12/tmpl/calculation.php";
+    $this->output .= $ob->GetContent();
+    $ob->Restore();
+  }
+
+  /**
+   * Save 'calculation' question type to QTI XML
+   * @param ST_Question_Calculation $question Reference to the question object
+   * @author Adam Clarke, Rob Ingram, Simon Atack
+   */
+  function SaveEnhancedCalc (&$question) {
+
+    if (!isset($configObject)) {
+      $configObject = Config::get_instance();
+    }
+    $cfg_web_root=$configObject->get('cfg_web_root');
+    require_once($cfg_web_root .'/plugins/questions/enhancedcalc/enhancedcalc.class.php');
+
+    $enhancedcalc = new EnhancedCalc($configObject);
+    $enhancedcalc->load($question);
+
+
+    // replace all variables in leadin with randomly generated values
+    $enhancedcalc->generate_variables();
+    $real_answer = $enhancedcalc->get_real_answer();
+    $enhancedcalc->add_to_useranswer('uans', $real_answer);
+
+
+
+    $question->origleadin = $question->leadin;
+    // format the text for the question
+    $q_text = $enhancedcalc->replace_leadin(false);
+
+    $question->feedback = $enhancedcalc->replace_vars($question->feedback);
+
+
+    //echo $q_text."<BR>";
+
+    $question->leadin = $q_text;
+
+    list($headertext, $title) = $this->MakeQuestionHeader($question);
+    $type = "Calculation";
+
+
+
+    $ob = new OB();
+    $ob->ClearAndSave();
+    include "qti12/tmpl/enhancedcalc.php";
+
     $this->output .= $ob->GetContent();
     $ob->Restore();
   }
@@ -262,7 +332,7 @@ $cfg_web_root=$configObject->get('cfg_web_root');
 
     // header stuff
     list($headertext, $title) = $this->MakeQuestionHeader($question);
-    $type = "Dichotomous"; 
+    $type = "Dichotomous";
 
     $ob = new OB();
     $ob->ClearAndSave();
@@ -380,7 +450,7 @@ $cfg_web_root=$configObject->get('cfg_web_root');
     if (strtolower($question->score_method) == "mark per question") {
       $type = "Matrix - Marks per Question";
       include "qti12/tmpl/matrix-mark-per-question.php";
-    } else {    
+    } else {
       include "qti12/tmpl/matrix.php";
     }
     $this->output .= $ob->GetContent();
@@ -446,7 +516,7 @@ $cfg_web_root=$configObject->get('cfg_web_root');
       if ($option->is_correct) $maxanswers++;
       if ($option->marks_incorrect < 0) $negmarking = true;
     }
-    
+
     // use different template depending on marking type
     // current marking types - allnegative, selectedpositive, allitemscorrect
     // marking type other not currently supported

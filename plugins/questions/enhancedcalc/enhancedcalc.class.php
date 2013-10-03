@@ -678,6 +678,53 @@ class EnhancedCalc extends Question implements questionInterface {
    * Render the question in the format required when taking the paper
    * @param  array  $extra [description]
    */
+
+  public function generate_variables () {
+    //check to see if variables have been previously generated if not put them in an array to be generated
+    foreach ($this->settings['vars'] as $key => $value) {
+      if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
+        $min = $this->variable_substitution($value['min'], $this->alluseranswers);
+        if ($value['max'] == '') {
+          //value for max not set force it to min to generate a fixed value.
+          $value['max'] = $value['min'];
+        }
+        $max = $this->variable_substitution($value['max'], $this->alluseranswers);
+        $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
+        $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
+
+        $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
+      }
+
+//pull in the last userans every time
+      if ($this->is_linked_ans($value['min'])) {
+        $this->useranswer['vars'][$key] = $this->variable_substitution($value['min'], $this->alluseranswers);
+      }
+
+//update the session
+      $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
+    }
+  }
+
+  public function replace_leadin ($reviewers = false) {
+    if ($reviewers === false) {
+      $leadin = $this->replace_vars($this->leadin);
+    } else {
+      $leadin = $this->leadin;
+      foreach ($this->settings['vars'] as $key => $value) {
+        $leadin = str_replace($key, '<span style="background-color:#FFFF80">&nbsp;<strong>' . $key . '</strong>&nbsp;</span>' . $value, $leadin);
+      }
+    }
+
+    return $leadin;
+  }
+
+  public function replace_vars ($string) {
+    $varname = array_keys($this->useranswer['vars']);
+    $varvalue = array_values($this->useranswer['vars']);
+    $string = str_ireplace($varname, $varvalue, $string);
+    return $string;
+  }
+
   public function render_paper($extra = array()) {
     global $string;
 
@@ -708,42 +755,19 @@ class EnhancedCalc extends Question implements questionInterface {
     }
 
     $calculatevars = array();
-    //check to see if variables have been previously generated if not put them in an array to be generated
-    foreach($this->settings['vars'] as $key => $value) {
-        if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
-          $min = $this->variable_substitution($value['min'], $this->alluseranswers);
-          if($value['max'] == '') {
-            //value for max not set force it to min to generate a fixed value.
-            $value['max'] = $value['min'];
-          }
-          $max = $this->variable_substitution($value['max'], $this->alluseranswers);
-          $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
-          $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
 
-          $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
-        }
-
-        //pull in the last userans every time
-        if($this->is_linked_ans($value['min'])) {
-          $this->useranswer['vars'][$key] = $this->variable_substitution($value['min'], $this->alluseranswers);
-        }
-
-        //update the session
-        $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
-    }
+    $this->generate_variables();
 
     $varname = array_keys($this->useranswer['vars']);
     $varvalue = array_values($this->useranswer['vars']);
 
     if (isset($extra['reviewers']) and $extra['reviewers']) {
-      $leadin = $this->leadin;
-
-      foreach ($this->settings['vars'] as $key => $value) {
-        $leadin = str_replace($key, '<span style="background-color:#FFFF80">&nbsp;<strong>' . $key . '</strong>&nbsp;</span>' . $this->useranswer['vars'][$key], $leadin);
-      }
+      $leadin = $this->replace_leadin(true);
     } else {
-      $leadin = str_ireplace($varname, $varvalue, $this->leadin);
+      $leadin = $this->replace_leadin(false);
+
     }
+
 
     $dispunits = '';
     if ($this->settings['show_units'] === true) {
