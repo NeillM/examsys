@@ -506,14 +506,15 @@ function menuBuild_icons(name,posx,posy,state,set,text,tooltip) {
   this.buttonBox[this.buttonBox.length-1][0] = name;
   this.buttonBox[this.buttonBox.length-1][1] = iposx;
   this.buttonBox[this.buttonBox.length-1][2] = iposy;
-  this.buttonBox[this.buttonBox.length-1][3] = iwidth+textWidth;
+	bpad = 2; if (text == '') bpad = 0;
+  this.buttonBox[this.buttonBox.length-1][3] = iwidth+textWidth+bpad*2;
   this.buttonBox[this.buttonBox.length-1][4] = iheight;
   this.buttonBox[this.buttonBox.length-1][5] = state; //over state
   this.buttonBox[this.buttonBox.length-1][6] = state; //away state
   this.buttonBox[this.buttonBox.length-1][7] = set;
   this.buttonBox[this.buttonBox.length-1][8] = text;
   this.buttonBox[this.buttonBox.length-1][9] = tooltip;
-  return posx = iposx + iwidth + textWidth;
+  return posx = iposx + iwidth + textWidth+bpad*2;
 }
 
 //recreates menu based on this.buttonBox array data
@@ -544,7 +545,8 @@ function menuRebuild(ctx,bar) {
       this.context.strokeStyle = '#000000';
       this.context.strokeRect(this.buttonBox[n][1]+0.5,this.buttonBox[n][2]+0.5,this.buttonBox[n][3],this.buttonBox[n][4]);
     }
-    this.context.drawImage(this.menu_img,imgdata.left,imgdata.top,imgdata.width,imgdata.height,this.buttonBox[n][1]+1,this.buttonBox[n][2]+1,iwidth-2,imgdata.height);
+		bpad = 2; if (this.buttonBox[n][8] == '') bpad = 0;
+    this.context.drawImage(this.menu_img,imgdata.left,imgdata.top,imgdata.width,imgdata.height,this.buttonBox[n][1]+1+bpad,this.buttonBox[n][2]+1,iwidth-2,imgdata.height);
     if (this.buttonBox[n][8]!='') {
       this.context.textAlign="left";
       this.context.fillStyle='#000000';

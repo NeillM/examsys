@@ -369,8 +369,8 @@ function qh_redraw_canvas() {
       if (this.activeLabel==i && this.qmode=='edit') this.buttonBox[this.buttonBoxNames['toolbar/ico_palette.png']][2] = pan_y+12;
 
       //add this.hotSpotsPanel data
-      this.hotSpotsPanel[i] = new Array(0,pan_y,300,pan_h);
-			
+      this.hotSpotsPanel[i] = new Array(0,pan_y,300,pan_h,45.5,pan_y+11.5,245-this.palico,pan_h-19);
+
       //background & border
       this.imgdata = menuImages['toolbar/back_h1.png'];
       this.context.strokeStyle= '#b3c7d9';			
@@ -672,8 +672,8 @@ function qh_redraw_canvas() {
 			this.key_code = 0;
 				 
 			this.edit_box_blink++;
-			if (this.edit_box_blink>99) this.edit_box_blink=0;
-			if (this.edit_box_blink>50) {
+			if (this.edit_box_blink>60) this.edit_box_blink=0;
+			if (this.edit_box_blink>30) {
 				this.context.font="12px Arial";
 				var text_all = this.wrapText(this.hotSpots[this.activeLabelText][1],250-this.palico,false)[0];
 				var text_temp = '';
@@ -912,6 +912,31 @@ function qh_mouseDragUp(){
     this.panelOverColour = this.hotSpots[this.activeLabel][2];
   }
 	
+	//text cursor positioning on mouseclick
+	if (this.qmode=='edit' && this.activeLabel>-1) {
+		//console.log(this.hotSpotsPanel[this.activeLabel]);
+		//console.log(this.x,this.y,this.hotSpotsPanel[this.activeLabel][4],this.hotSpotsPanel[this.activeLabel][5],this.hotSpotsPanel[this.activeLabel][6],this.hotSpotsPanel[this.activeLabel][7]);
+
+		if (this.testWithin(this.x,this.y,this.hotSpotsPanel[this.activeLabel][4],this.hotSpotsPanel[this.activeLabel][5],this.hotSpotsPanel[this.activeLabel][6],this.hotSpotsPanel[this.activeLabel][7])) {
+			var text_all = this.wrapText(this.hotSpots[this.activeLabel][1],this.hotSpotsPanel[this.activeLabel][6]);
+			var text_lines = text_all[0].split('|').length;
+			var click_line = Math.floor(text_lines*((this.y-this.hotSpotsPanel[this.activeLabel][5])/this.hotSpotsPanel[this.activeLabel][7]));
+   		this.context.font="12px Arial";
+			var text_full = text_all[0].split('|')[click_line];
+			var text_line_pos = 0;
+			for (a=1;a<=text_full.length;a++) {
+				var temp_width = this.context.measureText(text_full.substr(0,a)).width;
+				temp_lett = temp_width/a/2;
+				if ((this.hotSpotsPanel[this.activeLabel][4]+temp_width-temp_lett)<=this.x) text_line_pos = a;
+			}
+			var text_arr = text_all[0].split('|');
+			var text_arr = text_all[0].split('|');
+			text_arr.splice(click_line,text_lines-click_line);
+			this.edit_box_pos = text_arr.join('|').length+text_line_pos;
+			if (click_line>0) this.edit_box_pos++;
+		}
+	}
+	
 	this.activeLabelText=-1;
   if (this.hotSpotsPanelTextOver>-1 && this.qmode=='edit') {
 		this.activeLabelText=this.hotSpotsPanelTextOver;
@@ -1012,7 +1037,6 @@ function qh_mouseDragUp(){
 				this.hotSpots[i][3] = 0;
 				//this.answers[i][0] = '';
 				this.answers[i] = new Array(new Array(0,'false','false'));
-
 			}
 			
 			//hold on colour button
@@ -1037,7 +1061,6 @@ function qh_mouseDragUp(){
 	}
 	
 	if (this.qmode == 'analysis') {
-		
 		if (this.buttonBox.length!=0) {
 			//switch toolbar/ico_check_on.png
 			if (this.buttonClicked!=-1) {
