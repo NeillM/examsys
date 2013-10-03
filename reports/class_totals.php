@@ -592,6 +592,9 @@ if ($language != 'en') {
         } else {
           $ordered = '';
         }
+				
+				//$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
+				
         if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
           echo "<td class=\"mk $class$ordered fail r $role_css\">";
           if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';

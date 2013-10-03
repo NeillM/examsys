@@ -817,12 +817,15 @@ $numb=0;
     $response = reset($source->responses);
     $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
-    list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+    list($marks_incorrect, $marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
     $dest->marks_correct = $marks_correct;
     $dest->marks_incorrect = $marks_incorrect;
     $dest->marks_partial = $marks_partial;
+    $dest->settings['marks_correct'] = $dest->marks_correct;
+    $dest->settings['marks_incorrect'] = $dest->marks_incorrect;
+    $dest->settings['marks_partial'] = $dest->marks_partial;
 
-    if($marks_partial > 0) {
+    if ($marks_partial > 0) {
       $dest->score_method = 'Allow partial Marks';
     } else {
       $dest->score_method = 'Mark per Question';
@@ -863,14 +866,64 @@ $numb=0;
         $varc = new STQ_Calc_Vars();
         list($var_id, $varc->min, $varc->max, $varc->dec, $varc->inc) = explode("|", $var);
         $dest->variables[$var_id] = $varc;
+        $datatemp = array();
+        $datatemp['min'] = $varc->min;
+        $datatemp['max'] = $varc->max;
+        $datatemp['inc'] = $varc->inc;
+        $datatemp['dec'] = $varc->dec;
+        $varlet = '$' . $var_id;
+        $dest->settings['vars'][$varlet] = $datatemp;
       }
 
       $dest->leadin = $source->params['QUESTION'];
       $dest->formula = $source->params['FORMULA'];
 
-      if (array_key_exists('UNITS', $source->params)) $dest->units = $source->params['UNITS'];
-      if (array_key_exists('DECIMALS', $source->params)) $dest->decimals = $source->params['DECIMALS'];
-      if (array_key_exists('TOLERANCE', $source->params)) $dest->tolerance = $source->params['TOLERANCE'];
+      $dataf['formula'] = $dest->formula;
+      $dataf['units'] = '';
+      if (array_key_exists('UNITS', $source->params)) {
+        $dest->units = $source->params['UNITS'];
+        $dataf['units'] = $dest->units;
+      }
+      $dest->settings['answers'][] = $dataf;
+      if (array_key_exists('DECIMALS', $source->params)) {
+        $dest->decimals = $source->params['DECIMALS'];
+        $dest->settings['dp'] = $dest->decimals;
+      }
+      if (array_key_exists('TOLERANCE', $source->params)) {
+        $dest->tolerance = $source->params['TOLERANCE'];
+        if (stripos($dest->tolerance, '%') === false) {
+          $dest->settings['tolerance_full'] = $dest->tolerance;
+          $dest->settings['fulltoltyp'] = '#';
+        } else {
+          $dest->settings['tolerance_full'] = substr($dest->tolerance, 0, stripos($dest->tolerance, '%'));
+          $dest->settings['fulltoltyp'] = '%';
+        }
+      }
+
+      if (!isset($dest->settings['tolerance_full'])) {
+        $dest->settings['tolerance_full'] = 0;
+        $dest->settings['fulltoltyp'] = '#';
+      }
+      if (!isset($dest->settings['tolerance_partial'])) {
+        $dest->settings['tolerance_partial'] = 0;
+        $dest->settings['parttoltyp'] = '#';
+      }
+      if (!isset($dest->settings['marks_unit'])) {
+        $dest->settings['marks_unit'] = 'N/A';
+      }
+      if (!isset($dest->settings['show_units'])) {
+        $dest->settings['show_units'] = true;
+      }
+
+      $dest->settings['strictdisplay'] = false;
+      $dest->settings['strictzeros'] = false;
+
+
+      $dest->settings['info']='translated QTI Import';
+      $dest->settings = json_encode($dest->settings);
+    }
+    if (array_key_exists("SETTINGS", $source->params) && array_key_exists("QUESTION", $source->params)) {
+      if (array_key_exists('SETTINGS', $source->params)) $dest->settings = $source->params['SETTINGS'];
     }
     return $dest;
   }
