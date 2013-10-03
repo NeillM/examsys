@@ -925,6 +925,8 @@ $numb=0;
     if (array_key_exists("SETTINGS", $source->params) && array_key_exists("QUESTION", $source->params)) {
       if (array_key_exists('SETTINGS', $source->params)) $dest->settings = $source->params['SETTINGS'];
     }
+
+    $dest->score_method = 'Allow partial Marks';
     return $dest;
   }
 
