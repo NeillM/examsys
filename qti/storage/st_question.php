@@ -88,6 +88,11 @@ class ST_Question_Calculation extends ST_Question {
   var $decimals = 0;
   var $tolerance = 0; 
   var $feedback;
+  var $settings = array();
+}
+
+class ST_Question_enhancedcalc extends ST_Question_Calculation {
+
 }
 
 class STQ_Dic_Options {
