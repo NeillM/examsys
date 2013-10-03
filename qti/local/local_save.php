@@ -161,11 +161,46 @@ class IE_Local_Save extends IE_Main {
 
       $this->q_row['q_option_order'] = $question->q_option_order;
 
+      if(isset($question->settings)) {
+        $this->q_row['settings']=$question->settings;
+      }
+
       $oiii = print_r($question, true);
       $t = 8;
       if ($question->type == "blank") {
         $this->SaveBlank($question);
-      } elseif ($question->type == "calculation") $this->SaveCalculation($question); elseif ($question->type == "dichotomous") $this->SaveDichotomous($question); elseif ($question->type == "extmatch") $this->SaveExtMatch($question); elseif ($question->type == "flash") $this->SaveFlash($question); elseif ($question->type == "hotspot") $this->SaveHotspot($question); elseif ($question->type == "info") $this->SaveInfo($question); elseif ($question->type == "labelling") $this->SaveLabelling($question); elseif ($question->type == "likert") $this->SaveLikert($question); elseif ($question->type == "matrix") $this->SaveMatrix($question); elseif ($question->type == "mcq") $this->SaveMcq($question); elseif ($question->type == "true_false") $this->SaveTrueFalse($question); elseif ($question->type == "mrq") $this->SaveMrq($question); elseif ($question->type == "rank") $this->SaveRank($question); elseif ($question->type == "textbox") $this->SaveTextbox($question); elseif ($question->type == "timedate") $this->SaveTimeDate($question); else {
+      } elseif ($question->type == "calculation") {
+        $this->SaveCalculation($question);
+        $this->q_row['q_type']='enhancedcalc';
+      } elseif ($question->type == "dichotomous") {
+        $this->SaveDichotomous($question);
+      } elseif ($question->type == "extmatch") {
+        $this->SaveExtMatch($question);
+      } elseif ($question->type == "flash") {
+        $this->SaveFlash($question);
+      } elseif ($question->type == "hotspot") {
+        $this->SaveHotspot($question);
+      } elseif ($question->type == "info") {
+        $this->SaveInfo($question);
+      } elseif ($question->type == "labelling") {
+        $this->SaveLabelling($question);
+      } elseif ($question->type == "likert") {
+        $this->SaveLikert($question);
+      } elseif ($question->type == "matrix") {
+        $this->SaveMatrix($question);
+      } elseif ($question->type == "mcq") {
+        $this->SaveMcq($question);
+      } elseif ($question->type == "true_false") {
+        $this->SaveTrueFalse($question);
+      } elseif ($question->type == "mrq") {
+        $this->SaveMrq($question);
+      } elseif ($question->type == "rank") {
+        $this->SaveRank($question);
+      } elseif ($question->type == "textbox") {
+        $this->SaveTextbox($question);
+      } elseif ($question->type == "timedate") {
+        $this->SaveTimeDate($question);
+      } else {
         $this->AddError("Question type " . $question->type . " not yet supported", $question->load_id);
         continue;
       }
@@ -179,13 +214,13 @@ class IE_Local_Save extends IE_Main {
       if (!empty($this->q_row['correct_fback']) && !empty($this->q_row['incorrect_fback']) && $this->q_row['correct_fback'] == $this->q_row['incorrect_fback']) $this->q_row['incorrect_fback'] = '';
 
       // if no o_row, create a blank one
-      if (count($this->o_rows) == 0) {
+      if (count($this->o_rows) == 0 and $question->type != "calculation") {
         $this->o_row['marks_correct'] = 1;
         $this->o_row['marks_incorrect'] = 0;
         $this->o_row['marks_partial'] = 0;
         $this->o_rows[] = $this->o_row;
       }
-
+var_dump($this->q_row);
       // store question row
       $this->db->InsertRow("questions", "q_id", $this->q_row);
       $question->save_id = $this->q_row['q_id'];
@@ -330,6 +365,7 @@ class IE_Local_Save extends IE_Main {
     $this->q_row['display_method'] = $question->decimals . ",0," . $question->tolerance . "," . $question->units;
     $this->q_row['score_method'] = $question->score_method;
 
+/*
     foreach ($question->variables as $varid => $variable) {
       $o_row = $this->db->GetBlankTableRow("options");
 
@@ -364,7 +400,9 @@ class IE_Local_Save extends IE_Main {
 
       $this->o_rows[] = $o_row;
     }
+*/
   }
+
 
   function SaveDichotomous($question) {
     $this->q_row['scenario'] = $question->scenario;
