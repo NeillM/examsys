@@ -46,15 +46,27 @@ class Languageselection_auth extends outline_authentication {
   function register_callback_routines() {
 
     $callbackarray[] = array(array($this, 'add_language_selection'), 'displaystdform', $this->number, $this->name);
-    $callbackarray[] = array(array($this, 'store_data'), 'sessionstore', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'store_data'), 'postauth', $this->number, $this->name);
 
     return $callbackarray;
   }
 
   function store_data($sessionstoreobj) {
+	  global $string;
+		
+		$configObj = Config::get_instance();
+		$cfg_web_root = $configObj->get('cfg_web_root');
+		
     $this->savetodebug('session store of input data key is ROGO_language');
     if (isset($_REQUEST['ROGO_language'])) {
       $_SESSION['ROGO_language'] = $_REQUEST['ROGO_language'];
+			
+			$language = LangUtils::getLang($cfg_web_root);
+			$lang_path = "{$cfg_web_root}lang/$language/" . str_replace($cfg_web_root, '', $_SERVER['SCRIPT_FILENAME']);
+
+			if (file_exists($lang_path)) {
+				require $lang_path;
+			}
     }
 
     return $sessionstoreobj;
@@ -66,7 +78,7 @@ class Languageselection_auth extends outline_authentication {
     
     $newfield = new displaystdformobjfield();
     $newfield->type = 'select';
-    $newfield->description = 'Select your language';
+    $newfield->description = '';
     $newfield->default = LangUtils::getLang($this->settings['cfg_web_root']);
     $newfield->name = 'ROGO_language';
     $newfield->options = isset($this->settings['available_languages']) ? $this->settings['available_languages'] : array('English'=>'en');
