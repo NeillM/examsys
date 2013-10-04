@@ -195,18 +195,20 @@ class EnhancedCalc extends Question implements questionInterface {
        * FORMAT CALCULATED ANS
        *
        */
-      if ($this->settings['strictdisplay'] === true) {
 
-        if (isset($this->settings['dp'])) {
+        if ($this->settings['strictdisplay'] === true and isset($this->settings['dp'])) {
           $function = 'format_number_dp';
           $arg = $this->settings['dp'];
           if ($this->settings['strictzeros'] === true) {
             $function = 'format_number_dp_strict_zeros';
           }
-        }
-        if (isset($this->settings['sf'])) {
+        } elseif ($this->settings['strictdisplay'] === true and isset($this->settings['sf'])) {
           $function = 'format_number_sf';
           $arg = $this->settings['sf'];
+        } else {
+            //round to stundent precision
+            $function = 'format_number_to_precision_of_other_number';
+            $arg = $this->useranswer['uansnumb'];
         }
 
         $this->useranswer['cans'] = $enhancedcalcObj->$function($this->useranswer['cans'], $arg);
@@ -218,7 +220,6 @@ class EnhancedCalc extends Question implements questionInterface {
         $this->useranswer['ans']['tolerance_partial'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partial'], $arg);
         $this->useranswer['ans']['tolerance_partialans'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialans'], $arg);
         $this->useranswer['ans']['tolerance_partialansneg'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialansneg'], $arg);
-      }
 
       /*
        *
