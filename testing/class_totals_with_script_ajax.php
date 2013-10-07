@@ -193,7 +193,7 @@ foreach ($papers as $paper) {
     $errors = "<ul><li>Couldn't access class_totals</li>\n";
   }
   foreach ($marks_set as $mark) {
-    $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&metadataID=" . $mark['metadataID'] . "&userid=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
+    $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&metadataID=" . $mark['metadataID'] . "&userID=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
     $output = getData($url);
     $script_mark = parseScript($output);
 		
