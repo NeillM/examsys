@@ -1098,14 +1098,17 @@ function qh_mouseDragUp(){
 function qh_ReturnInfo() {
   var questions_result = '';
 	if (this.qmode == 'answer') {
+		var no_answer_count = 0;
 		for (i=0;i<this.answers.length;i++) {
 			if (this.answers[i][0][1]!='false') {
 				questions_result+=this.answers[i][0][0]+','+Math.round(this.answers[i][0][1])+','+Math.round(this.answers[i][0][2]);
 			} else {
 				questions_result+=this.answers[i][0][0]+','+this.answers[i][0][1]+','+this.answers[i][0][2];
+				no_answer_count++;
 			}
 			if (i<this.answers.length-1) questions_result+='|';
 		}
+		if (no_answer_count==this.answers.length) questions_result='';
 		var target_field = document.getElementById('q'+this.q_Num);
 	}
 	if (this.qmode == 'edit') {

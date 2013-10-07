@@ -58,7 +58,7 @@ class IE_qti20_Save extends IE_Main {
       $this->OutputQuestion($question);
       $file = "question-".$question->load_id.".xml";
       $filename = $params->base_dir.$params->dir."/".$file;
-      file_put_contents($filename, utf8_encode($this->output));
+      file_put_contents($filename, $this->output);
       $data->files[] = new ST_File($file, trim(strip_tags($question->leadin)), $params->dir, 'question', $question->load_id);
 
       $this->outputfiles[$file] = $this->output;
@@ -77,7 +77,7 @@ class IE_qti20_Save extends IE_Main {
 
         $file = "imsmanifest.xml";
         $filename = $params->base_dir.$params->dir."/".$file;
-        file_put_contents($filename, utf8_encode($manifest));
+        file_put_contents($filename, $manifes);
         $data->files[] = new ST_File($file, "IMS Manifest", $params->dir, 'manifest', $question->load_id);
         $this->outputfiles[$file] = $manifest;
 
@@ -90,7 +90,7 @@ class IE_qti20_Save extends IE_Main {
 
         $file = "test.xml";
         $filename = $params->base_dir.$params->dir."/".$file;
-        file_put_contents($filename, utf8_encode($manifest));
+        file_put_contents($filename, $manifest);
         $data->files[] = new ST_File($file, "Test File", $params->dir, 'test', $question->load_id);
         $this->outputfiles[$file] = $manifest;
       }
@@ -106,7 +106,7 @@ class IE_qti20_Save extends IE_Main {
 
       $file = "imsmanifest.xml";
       $filename = $params->base_dir.$params->dir."/".$file;
-      file_put_contents($filename, utf8_encode($manifest));
+      file_put_contents($filename, $manifest);
       $data->files[] = new ST_File($file, "IMS Manifest", $params->dir, 'manifest', $question->load_id);
       $this->outputfiles[$file] = $manifest;
 
@@ -119,7 +119,7 @@ class IE_qti20_Save extends IE_Main {
 
       $file = "test.xml";
       $filename = $params->base_dir.$params->dir."/".$file;
-      file_put_contents($filename, utf8_encode($manifest));
+      file_put_contents($filename, $manifest);
       $data->files[] = new ST_File($file, "Test File", $params->dir, 'test', $question->load_id);
       $this->outputfiles[$file] = $manifest;
     }

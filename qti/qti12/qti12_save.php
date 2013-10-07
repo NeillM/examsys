@@ -77,7 +77,7 @@ class IE_qti12_Save extends IE_Main {
         $this->output .= sprintf("</questestinterop>\n");
 
         $filename = $params->base_dir.$params->dir."/paper-".$paper->load_id.".xml";
-        file_put_contents($filename, utf8_encode($this->output));
+        file_put_contents($filename, $this->output);
         //$data->files[$paper->paper_title] = $filename;
 
         $data->files[] = new ST_File("paper-".$paper->load_id.".xml", $paper->paper_title, $params->dir);
@@ -95,7 +95,7 @@ class IE_qti12_Save extends IE_Main {
       $this->output .= sprintf("</questestinterop>\n");
 
       $filename = $params->base_dir.$params->dir."/questions.xml";
-      file_put_contents($filename, utf8_encode($this->output));
+      file_put_contents($filename, $this->output);
       $data->files[] = new ST_File("questions.xml", "Questions", $params->dir);
 
     }
