@@ -220,7 +220,6 @@ class IE_Local_Save extends IE_Main {
         $this->o_row['marks_partial'] = 0;
         $this->o_rows[] = $this->o_row;
       }
-var_dump($this->q_row);
       // store question row
       $this->db->InsertRow("questions", "q_id", $this->q_row);
       $question->save_id = $this->q_row['q_id'];

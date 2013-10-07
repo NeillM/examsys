@@ -285,7 +285,7 @@ function MakeValidHTML($in,$trim=0) {
 
   libxml_use_internal_errors(true);
   $doc = new DOMDocument();
-  $doc->loadHTML($in);
+  $doc->loadHTML(mb_convert_encoding($in, 'HTML-ENTITIES', 'UTF-8'));
 
   $in = $doc->saveHTML();
   

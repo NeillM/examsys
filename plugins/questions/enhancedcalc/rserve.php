@@ -303,12 +303,21 @@ class EnhancedCalcRrserve {
   }
   
   function format_number_dp_strict_zeros($num,$dp) {
-    
     return $this->eval_string('format(excel_round(' . $num . ',' . $dp . '), nsmall = ' . $dp . ')');
   }
   
   function format_number_sf($num,$sf) {
     return $this->eval_string('signif(' . $num . ',' . $sf . ')');
+  }
+  
+  function format_number_to_precision_of_other_number($roundme, $likethisone) {
+      if ($this->is_engineering_format($likethisone)) {
+        $precision = $this->calc_sf($likethisone);
+        return $this->format_number_sf($roundme,$precision);
+    } else {
+        $precision = $this->calc_dp($likethisone);
+        return $this->format_number_dp($roundme,$precision);
+    }
   }
   
   private function eval_string($val) {

@@ -161,6 +161,7 @@ class EnhancedCalc extends Question implements questionInterface {
       $this->useranswer['cans'] = $enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
 
       if (isset($this->settings['tolerance_full'])) {
+        $this->settings['tolerance_full'] = $this->set_blank_to_zero($this->settings['tolerance_full']);
         switch ($this->settings['fulltoltyp']) {
           case "%":
             $res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_full']);
@@ -175,6 +176,7 @@ class EnhancedCalc extends Question implements questionInterface {
       }
 
       if (isset($this->settings['tolerance_partial'])) {
+        $this->settings['tolerance_partial'] = $this->set_blank_to_zero($this->settings['tolerance_partial']);
         switch ($this->settings['parttoltyp']) {
           case "%":
             $res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_partial']);
@@ -193,18 +195,20 @@ class EnhancedCalc extends Question implements questionInterface {
        * FORMAT CALCULATED ANS
        *
        */
-      if ($this->settings['strictdisplay'] === true) {
 
-        if (isset($this->settings['dp'])) {
+        if ($this->settings['strictdisplay'] === true and isset($this->settings['dp'])) {
           $function = 'format_number_dp';
           $arg = $this->settings['dp'];
           if ($this->settings['strictzeros'] === true) {
             $function = 'format_number_dp_strict_zeros';
           }
-        }
-        if (isset($this->settings['sf'])) {
+        } elseif ($this->settings['strictdisplay'] === true and isset($this->settings['sf'])) {
           $function = 'format_number_sf';
           $arg = $this->settings['sf'];
+        } else {
+            //round to stundent precision
+            $function = 'format_number_to_precision_of_other_number';
+            $arg = $this->useranswer['uansnumb'];
         }
 
         $this->useranswer['cans'] = $enhancedcalcObj->$function($this->useranswer['cans'], $arg);
@@ -216,7 +220,6 @@ class EnhancedCalc extends Question implements questionInterface {
         $this->useranswer['ans']['tolerance_partial'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partial'], $arg);
         $this->useranswer['ans']['tolerance_partialans'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialans'], $arg);
         $this->useranswer['ans']['tolerance_partialansneg'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialansneg'], $arg);
-      }
 
       /*
        *
@@ -446,7 +449,13 @@ class EnhancedCalc extends Question implements questionInterface {
   function is_strict_sf_enabled() {
     return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']);
   }
-
+  
+  /*
+   * return the passed value or 0 if the value is an empty string 
+   */
+  private function set_blank_to_zero($val) {
+      return ($val === '' ? 0 : $val);
+  } 
   /*
    * Display the question
    *

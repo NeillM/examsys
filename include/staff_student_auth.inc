@@ -55,10 +55,10 @@ if (!file_exists($root . 'config/config.inc.php')) {
 require_once $cfg_web_root . 'classes/configobject.class.php';
 
 //start the session early as the lang class looks in the session 
-if($configObject->get('cfg_session_name')!='') {
-    session_name($configObject->get('cfg_session_name'));
+if ($configObject->get('cfg_session_name') != '') {
+  session_name($configObject->get('cfg_session_name'));
 } else {
-    session_name('RogoAuthentication');
+  session_name('RogoAuthentication');
 }
 $return = session_start();
 
