@@ -1920,7 +1920,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
                 if (substr($tmp_exclude,$blank_count-1,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                 $have_answer = true;
               }
-              if ($tmp_display_students_response == '1'and substr($tmp_exclude,$blank_count-1,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
+              if ($tmp_display_students_response == '1' and substr($tmp_exclude,$blank_count-1,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
                 echo display_response($tmp_display_students_response, 'cross');
               } else {
                 echo display_response($tmp_display_students_response, 'blank');
