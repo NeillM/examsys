@@ -763,19 +763,19 @@ function tooltip_draw(ctx,but) {
     var metrics = this.context.measureText(but[9]);
     
     //setting the shadow
-    this.context.shadowColor = '#555';
-    this.context.shadowBlur = 4;
-    this.context.shadowOffsetX = 2;
-    this.context.shadowOffsetY = 2;
+    this.context.shadowColor = '#888';
+    this.context.shadowBlur = 6;
+    this.context.shadowOffsetX = 1;
+    this.context.shadowOffsetY = 1;
 
     this.rectDraw(ctx,'#FFF','#FFF',but[1]+10.5,but[2]+30.5,metrics.width+5,16);
     //resetting the shadow
-    this.context.shadowColor = 'white';
+    this.context.shadowColor = '#fff';
     this.context.shadowBlur = 0;
     this.context.shadowOffsetX = 0;
     this.context.shadowOffsetY = 0;
     
-    this.context.fillStyle='#000000';
+    this.context.fillStyle='#000';
     this.context.textAlign="left";
     this.context.fillText(but[9],but[1]+13,but[2]+42);
   }
