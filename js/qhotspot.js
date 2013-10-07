@@ -97,7 +97,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 					}				
 				}
 			}
-    }      
+    }    
     if (answer=='u') this.allUnaswered=true; 
 		
 		//---------- extra
@@ -386,7 +386,7 @@ function qh_redraw_canvas() {
 			if (this.hotSpots[i][2]!=undefined) this.context.fillStyle= this.hotSpots[i][2];
   		this.context.fillRect(3.5,pan_y+3.5,300-6,3);
 			var pos_x = 15;
-			if (this.qmode=='script' && this.display_students_response) {
+			if (this.qmode=='script' && this.display_students_response && !this.allUnaswered) {
 				this.imgdata = menuImages['toolbar/ico_tick_g.png'];
 				if (this.answers[i][0][0]=='0') this.imgdata = menuImages['toolbar/ico_tick_r.png'];
 				this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,3,pan_y+12,this.imgdata.width,this.imgdata.height);
