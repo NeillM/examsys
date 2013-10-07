@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/admin/list_modules.php';
+
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['entermoduleid'] = 'Podaj identyfikator modułu.';
 $string['entermoduletitle'] = 'Podaj tytuł modułu.';
