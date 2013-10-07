@@ -360,46 +360,9 @@ class IE_Local_Save extends IE_Main {
   function SaveCalculation($question) {
     $this->q_row['scenario'] = $question->scenario;
     $this->q_row['correct_fback'] = $question->feedback;
-    //fullmarks tolorance = 0
     $this->q_row['display_method'] = $question->decimals . ",0," . $question->tolerance . "," . $question->units;
     $this->q_row['score_method'] = $question->score_method;
 
-/*
-    foreach ($question->variables as $varid => $variable) {
-      $o_row = $this->db->GetBlankTableRow("options");
-
-      $o_row['option_text'] = $variable->min . "," . $variable->max . "," . $variable->inc . "," . $variable->dec;
-      $o_row['correct'] = $question->formula;
-      $o_row['marks_correct'] = $question->marks_correct;
-      $o_row['marks_incorrect'] = $question->marks_incorrect;
-      $o_row['marks_partial'] = $question->marks_partial;
-
-      // NO IDEA WHY MEDIA IS IN THE OPTIONS TABLE AS WELL AS THE QUESTION!! NOT IN ALL OPTIONS JUST SOME!
-      $o_row['o_media'] = $question->media;
-      $o_row['o_media_width'] = $question->media_width;
-      $o_row['o_media_height'] = $question->media_height;
-
-      $this->o_rows[] = $o_row;
-    }
-
-    // no variables, then create a blank one
-    if (count($question->variables) == 0) {
-      $o_row = $this->db->GetBlankTableRow("options");
-
-      $o_row['option_text'] = "0,100,1,0";
-      $o_row['correct'] = $question->formula;
-      $o_row['marks_correct'] = 1;
-      $o_row['marks_incorrect'] = 0;
-      $o_row['marks_partial'] = 0;
-
-      // NO IDEA WHY MEDIA IS IN THE OPTIONS TABLE AS WELL AS THE QUESTION!! NOT IN ALL OPTIONS JUST SOME!
-      $o_row['o_media'] = $question->media;
-      $o_row['o_media_width'] = $question->media_width;
-      $o_row['o_media_height'] = $question->media_height;
-
-      $this->o_rows[] = $o_row;
-    }
-*/
   }
 
 

@@ -316,6 +316,40 @@ class IE_Local_Load extends IE_Main {
 
   }
 
+  function LoadQuestionenhancedcalc($store, $q_row, $o_rows) {
+    // fiarly sure this is ok
+    $store->scenario = $q_row['scenario'];
+    $store->feedback = $q_row['correct_fback'];
+    $store->q_type='enhancedcalc';
+
+    $settingsdecoded=json_decode($q_row['settings'],true);
+
+    $store->marks_correct=$settingsdecoded['marks_correct'];
+    $store->marks_incorrect=$settingsdecoded['marks_incorrect'];
+    $store->marks_partial=$settingsdecoded['marks_partial'];
+
+
+/*    $store->formula = $o_rows[0]['correct'];
+
+    list($store->decimals, $store->tolerance, $store->units) = explode(",", $q_row['display_method']);
+
+    $calcvar = 0;
+    foreach ($o_rows as $o_row) {
+      $calcvarletter = chr(ord('A') + $calcvar);
+      $var = new STQ_Calc_Vars();
+      list($var->min, $var->max, $var->inc, $var->dec) = explode(",", $o_row['option_text']);
+      $store->variables[$calcvarletter] = $var;
+
+      $store->marks_correct = $o_row['marks_correct'];
+      $store->marks_incorrect = $o_row['marks_incorrect'];
+      $store->marks_partial = $o_row['marks_partial'];
+
+
+      $calcvar++;
+    }
+*/
+    $store->settings=$q_row['settings'];
+  }
   function LoadQuestionCalculation($store, $q_row, $o_rows) {
     // fiarly sure this is ok
     $store->scenario = $q_row['scenario'];
