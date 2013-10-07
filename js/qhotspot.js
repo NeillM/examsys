@@ -1,6 +1,6 @@
 function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, mode) {
 	this.canvas = document.getElementById('canvas'+num);
-  this.draw_limit = new Array(300,27,this.canvas.width-2,this.canvas.height-2);
+  this.draw_limit = new Array(300,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
   
 	if (this.canvas && this.canvas.getContext){
 		this.canvas.onmouseup   = this.qh_mouseDragUp.bind(this);
@@ -239,7 +239,7 @@ function qh_test(type) {
       var col2 = this.hotSpots[i][2];
 
 			if (type=='cursor') this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-			this.draw_limit = new Array(300,27,this.canvas.width-2,this.canvas.height-2);
+			this.draw_limit = new Array(300,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
 
       if (f_type=='ellipse') {
         this.ellipseDraw(this.context,col1,col2,parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),this.global_edit); 
@@ -433,7 +433,7 @@ function qh_redraw_canvas() {
     //frames
     this.context.strokeStyle='#7f9db9';  
     this.context.strokeRect(300.5,0.5,this.canvas.width-300,this.canvas.height-1); 
-		this.draw_limit = Array(300,27,this.canvas.width-2,this.canvas.height-2);
+		this.draw_limit = Array(300,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
 
     //active fields
 		//drawing hotspots
@@ -623,7 +623,7 @@ function qh_redraw_canvas() {
 		if (this.qmode=='script' && this.hotSpots.length>1) this.menuRebuild(this.context,false);
 		
 		//msgbox overlaping
-		this.draw_limit = Array(0,27,this.canvas.width-2,this.canvas.height-2);
+		this.draw_limit = Array(0,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
 		if (this.any_overlaping && this.overlapping_show) this.build_msgbox(30,50,260,130,lang_string['warning']+"|"+lang_string['errormessage1']+"|"+lang_string['errormessage2'],'','',lang_string['msgClose']);
 
 		m = 0;
