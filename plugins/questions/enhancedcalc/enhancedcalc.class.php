@@ -456,6 +456,7 @@ class EnhancedCalc extends Question implements questionInterface {
   private function set_blank_to_zero($val) {
       return ($val === '' ? 0 : $val);
   } 
+  
   /*
    * Display the question
    *

@@ -77,20 +77,6 @@ class ENHANCEDCALCCorrector extends Corrector {
       $this->_question->add_unified_field_modification('answer_precision', 'answer_precision', $answer_precision, $new_correct['answer_precision'], $this->_lang_strings['postexamchange']);
     }
 
-    $strict_display = $this->_question->get_strict_display();
-    // Need to be careful of how the correction code builds the values for check boxes
-    if (isset($new_correct['strict_display'])) {
-      $new_strict_display = (is_array($new_correct['strict_display'])) ? $new_correct['strict_display'][0] : $new_correct['strict_display'];
-    } else {
-      $new_strict_display = false;
-    }
-    if ($strict_display != $new_strict_display) {
-      $this->_question->set_strict_display($new_strict_display);
-      $changes = true;
-
-      $this->_question->add_unified_field_modification('strict_display', 'strict_display', $strict_display, $new_strict_display, $this->_lang_strings['postexamchange']);
-    }
-
     $strict_zeros = $this->_question->get_strict_zeros();
     // Need to be careful of how the correction code builds the values for check boxes
     if (isset($new_correct['strict_zeros'])) {

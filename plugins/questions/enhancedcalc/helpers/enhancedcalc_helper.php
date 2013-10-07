@@ -18,7 +18,7 @@
 *
 * Marks all enhanced calculation questions for a summative paper.
 *
-* @author Simon Wilkinson / Rob Ingram
+* @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
