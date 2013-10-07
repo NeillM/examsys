@@ -1598,13 +1598,13 @@ function ql_ReturnInfo() {
 				for (j=0;j<this.answerBox[i].length;j++) {
 					if (this.answerBox[i][j][2]!=''){
 						questions_result += i;
-						questions_result += '$'+this.answerBox[i][0][4];
-						questions_result += '$'+this.answerBox[i][0][5];
-						questions_result += '$'+this.answerBox[i][0][6];
-						questions_result += '$'+this.answerBox[i][0][2];
-						if (this.answerBox[i][0][1]=='image') {
-							questions_result += '~'+this.answerBox[i][0][9];
-							questions_result += '~'+this.answerBox[i][0][10];
+						questions_result += '$'+j;
+						questions_result += '$'+this.answerBox[i][j][5];
+						questions_result += '$'+this.answerBox[i][j][6];
+						questions_result += '$'+this.answerBox[i][j][2];
+						if (this.answerBox[i][j][1]=='image') {
+							questions_result += '~'+this.answerBox[i][j][9];
+							questions_result += '~'+this.answerBox[i][j][10];
 						}
 						questions_result += '|';
 					}
