@@ -416,7 +416,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		} 
   }
   if (this_box[1]=='text') {
-    this.context.textAlign="center";
+    this.context.textAlign = ((this.qType == 'menu')?"left":"center");
 		this.context.font=this.fontSizes[this.fontSizePos]+"px Arial";
     this.context.fillStyle=this.currentColours[2];
 		this.tmp_text = this_box[2];
@@ -434,7 +434,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			for (var a=0;a<this.answerBox.length;a++) {
 				if (this.answerBox[a][0][5]==this_box[5] && this.answerBox[a][0][6]==this_box[6]) {
 					this.tmp_text = this.answerBox[a][0][2];
-					tmp_width = this.labelWidthEffect - 19;
+					tmp_width = 5;//this.labelWidthEffect - 19;
 				}
 			}
 		}
@@ -505,11 +505,11 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				this.context.lineTo(temp_x+2.5,temp_y+tmp_trans+this.labelHeightEffect+1.5+tmp_height-2);
 			  this.context.stroke();
 
-				this.context.textAlign="center";
+				this.context.textAlign="left"; //menu
 				this.context.fillStyle=this.currentColours[2];
 				this.context.font=this.fontSizes[this.fontSizePos]+"px Arial";
 				for (var a=0;a<this.menuBox.length;a++) {
-					this.context.fillText(this.menuBox[a],temp_x+this.labelWidthEffect/2,temp_y+tmp_trans+this.labelHeightEffect*(a+1.5)+4);
+					this.context.fillText(this.menuBox[a],temp_x+6,temp_y+tmp_trans+this.labelHeightEffect*(a+1.5)+4); //this.labelWidthEffect/2
 				}
 				this.context.strokeStyle=this.currentColours[1];
 		    this.context.fillStyle=this.currentColours[0];
@@ -558,7 +558,7 @@ function ql_redraw_box(i,j) {
     temp_y = this_box[6];
 		
     //setting shadow
-    if (((this.drag_box_id==i && this.drag_box_combo==j) || (this.mov_id == i && this.mov_combo == j)) && this.panelOptionOver==-1 && this.qmode!='script')  {
+    if (((this.drag_box_id == i && this.drag_box_combo == j) || (this.mov_id == i && this.mov_combo == j)) && this.panelOptionOver==-1 && this.qmode!='script')  {
       this.context.shadowColor = '#AAA';
       this.context.shadowBlur = 8;
       this.context.shadowOffsetX = 2;
@@ -812,22 +812,23 @@ function ql_redraw_canvas() {
 			if (this.key_code==36) this.edit_box_pos=0; 				//home	
 			if (this.edit_box_pos<0) this.edit_box_pos=0;
 			if (this.edit_box_pos>text_len) this.edit_box_pos=text_len;
-			
+			var temp_t = '';
 			if (this.char_code!='') {	//characters
-				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.char_code+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
-				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
+				temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.char_code+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
 				this.edit_box_pos++;
-			  this.ql_ReturnInfo();
 			}
 			if (this.key_code==46) { //del
-				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos+1);
-				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
-			  this.ql_ReturnInfo();
+				temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos+1);
 			}
 			if (this.key_code==8) { //backspace
-				var temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos-1)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
-				this.answerBox[this.active_box_id][this.active_box_combo][2] = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2] = temp_t;
+				temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos-1)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
 				this.edit_box_pos--;
+			}			
+			if (temp_t != '') {
+				for (a=0;a<this.answerBox[this.active_box_id].length;a++) {
+					this.answerBox[this.active_box_id][a][2] = temp_t;
+					this.pholderBox[this.answerBox[this.active_box_id][a][0]][2] = temp_t;
+				}
 				this.ql_ReturnInfo();
 			}
 			
@@ -880,14 +881,14 @@ function ql_redraw_canvas() {
 			tmpw = tmpp[a][2];
 			tmph = tmpp[a][3];			
 			ax = tmpx;
-			if (this.answerBox[i][j][2]=='' && (this.qmode=='answer' || this.qmode=='script')) ax = -500;
+			if (this.answerBox[i][j][2] == '' && (this.qmode == 'answer' || this.qmode == 'script')) ax = -500;
 			
 			this.answerBox[i][j][7] = ax;
 			this.answerBox[i][j][8] = tmpy;
-			if (i!=this.drag_box_id || j!=this.drag_box_combo || this.answerBox[i][j][5]==0) {
+			if (i != this.drag_box_id || j != this.drag_box_combo || this.answerBox[i][j][5] == 0) {
 				this.answerBox[i][j][5] = ax;
 				this.answerBox[i][j][6] = tmpy;
-				if (this.answerBox[i][j][4]==0) {
+				if (this.answerBox[i][j][4] == 0) {
 					this.pholderBox[i][j][5] = ax;
 					this.pholderBox[i][j][6] = tmpy;
 				}
@@ -907,7 +908,7 @@ function ql_redraw_canvas() {
 		if (this.qType == "menu" && this.qmode=='answer') {		
 			//menus
 			for (i=this.answerBox.length-1;i>=0;i--) {
-				if (this.pholderBox[i][1]=='text' && this.pholderBox[i][5]>220) {
+				if (this.pholderBox[i][1] == 'text' && this.pholderBox[i][5]>220) {
 					this.ql_draw_box(i,99,this.pholderBox[i][5],this.pholderBox[i][6]);
 				}
 			}
@@ -1022,7 +1023,8 @@ function ql_redraw_canvas() {
 				this.context.strokeStyle='#000000';
 				this.context.lineWidth = 1;
 				this.context.beginPath();
-				var temp_x = Math.round(this.answerBox[this.active_box_id][this.active_box_combo][5]+(this.labelWidthEffect-metrics_full.width)/2+metrics_part.width)+0.5;
+				var temp_x = Math.round(this.answerBox[this.active_box_id][this.active_box_combo][5]+metrics_part.width)+0.5;
+				temp_x +=((this.qType == "menu")?3:(this.labelWidthEffect-metrics_full.width)/2);
 				var temp_y = Math.round(this.fontSizes[this.fontSizePos]*text_part_line+this.answerBox[this.active_box_id][this.active_box_combo][6]+4)-0.5;
 				this.context.moveTo(temp_x,temp_y);
 				this.context.lineTo(temp_x,temp_y+this.fontSizes[this.fontSizePos]);
@@ -1176,7 +1178,8 @@ function ql_mouseDragMove(e){
 										}
 								}
 							} else {
-								if (this.pholderBox[i][5]>220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect)==true) {
+								if (this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect)==true) {
+								//if (this.pholderBox[i][5]>220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect)==true) {
 									this.drag_box_id = i;
 									this.drag_pho_id = i;
 									this.drag_box_combo = 0;
@@ -1335,7 +1338,8 @@ function ql_mouseDragUp(){
 			var click_line = Math.floor(text_lines*((this.y-temp_y)/this.labelHeightEffect));
 	 		this.context.font = this.fontSizes[this.fontSizePos]+"px Arial";
 			var text_full = text_all[0].split('|')[click_line];
-			var text_padd = (this.labelWidthEffect-this.context.measureText(text_full).width)/2;
+			//var text_padd = (this.labelWidthEffect-this.context.measureText(text_full).width)/2;
+			var text_padd = ((this.qType == "menu")?3:(this.labelWidthEffect-this.context.measureText(text_full).width)/2);
 			var text_line_pos = 0;
 			for (a=1;a<=text_full.length;a++) {
 				var temp_width = this.context.measureText(text_full.substr(0,a)).width;
@@ -1378,6 +1382,7 @@ function ql_mouseDragUp(){
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.labelMulti == 'multiple' && this.qType!='menu'){
 		var index = this.answerBox[this.drag_box_id][this.drag_box_combo][0];
 		var combo_nr = 0;
+		
 		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220) {
 			for (i=0;i<this.answerBox.length;i++) {
 				for (j=0;j<this.answerBox[i].length;j++) {
@@ -1393,6 +1398,7 @@ function ql_mouseDragUp(){
 			that_box[6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8];
 			this.answerBox[this.drag_box_id][combo_nr] = that_box;
 		}
+		
 		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]<220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220) {
 			var duplicate = false;
 			for (i=0;i<this.answerBox.length;i++) {
@@ -1512,7 +1518,10 @@ function ql_mouseDragUp(){
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_multiple.png']][6]==2) this.labelMulti = 'multiple';
 
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_label.png']][6]==2) this.qType = 'label';
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_menu.png']][6]==2) this.qType = 'menu';
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_menu.png']][6]==2) {
+			this.qType = 'menu';
+			this.labelHeightEffect   = this.labelHeight = 19;
+			}
 
 		//state of drawing buttons
 		this.global_add = '';
