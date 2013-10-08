@@ -602,23 +602,6 @@ function qa_mouseDragDown(e){
   }
 }
 
-function qa_ReturnInfo() {
-  var questions_result = '';
-	if (this.qmode=='answer') {
-		questions_result = this.test_result+';'+this.qanswer+', ';
-		var target_field = document.getElementById('q'+this.q_Num);
-  	}
-	if (this.qmode=='edit') {
-		questions_result = '0,0,0,0,0,0;'+this.qconfig+', ';
-		var target_field = document.getElementById(this.doorId);
-  	}
-	if (questions_result!='' && target_field) target_field.value = questions_result;	
-}
-
-function qa_mouseDblClick(){
-	this.global_dblclick = true;
-}
-
 function qa_mouseDragUp(){
 	this.dragging = false;
   this.button_test();
@@ -732,9 +715,29 @@ function qa_mouseDragUp(){
 	this.redraw_once = true;
 	this.do_the_test = true;
 	this.qa_redraw_canvas;
-  //this.qa_ReturnInfo();
-  
+  //this.qa_ReturnInfo(); 
 }
+
+
+function qa_ReturnInfo() {
+  var questions_result = '';
+	if (this.qmode=='answer') {
+		questions_result = this.test_result+';';
+		if (this.qanswer!='') questions_result += this.qanswer+', ';
+		var target_field = document.getElementById('q'+this.q_Num);
+  	}
+	if (this.qmode=='edit') {
+		questions_result = '0,0,0,0,0,0;';
+		if (this.qanswer!='') questions_result += this.qanswer+', ';
+		var target_field = document.getElementById(this.doorId);
+  	}
+	if (questions_result!='' && target_field) target_field.value = questions_result;	
+}
+
+function qa_mouseDblClick(){
+	this.global_dblclick = true;
+}
+
 function rqa(num) {
 
 	this.setUpArea				 			= 	setUpArea;
