@@ -31,7 +31,7 @@ $num_vars = count($vars);
 $answers = $question->get_answers();
 $num_answers = count($answers);
 $decimals = array('', 0, 1, 2, 3, 4, 5, 6, 7, 8);
-$increments = array('', 0.0001, 0.001, 0.02, 0.01, 0.5, 0.2, 0.1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100, 1000);
+$increments = array('', 0.0001, 0.001, 0.02, 0.01, 0.5, 0.2, 0.1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 1000);
 $decimal_opts = array('0 dp' => '0 ' . $str_decimals, '1 dp' => '1 ' . $string['decimal'], '2 dp' => '2 ' . $str_decimals, '3 dp' => '3 ' . $str_decimals, '4 dp' => '4 ' . $str_decimals, '5 dp' => '5 ' . $str_decimals);
 $decimal_opts_zero = array('1 dp zero' => '1 ' . $string['decimal'] . ' ' . $string['withzeros'], '2 dp zero' => '2 ' . $str_decimals . ' ' . $string['withzeros'], '3 dp zero' => '3 ' . $str_decimals . ' ' . $string['withzeros'], '4 dp zero' => '4 ' . $str_decimals . ' ' . $string['withzeros'], '5 dp zero' => '5 ' . $str_decimals . ' ' . $string['withzeros']);
 $sf_opts = array('1 sf' => '1 ' . $string['sigfigure'], '2 sf' => '2 ' . $str_sigs, '3 sf' => '3 ' . $str_sigs, '4 sf' => '4 ' . $str_sigs, '5 sf' => '5 ' . $str_sigs);

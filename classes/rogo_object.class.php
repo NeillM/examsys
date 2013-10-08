@@ -39,7 +39,7 @@ Class RogoObject {
    * @param string $value
    */
   protected function set_modified_field($name, $value, $message = '') {
-    if(!array_key_exists($name, $this->_modified_fields)) {
+    if (!array_key_exists($name, $this->_modified_fields)) {
       $this->_modified_fields[$name]['value'] = $value;
       $this->_modified_fields[$name]['message'] = $message;
     }
@@ -79,7 +79,7 @@ Class RogoObject {
   protected function replace_tex($text) {
     //swap [tex] before saving to db <div class="mee">
     preg_match_all("#\[tex\](.*?)\[/tex\]#si",$text,$tex_matches);
-    if(count($tex_matches[0]) > 0) {
+    if (count($tex_matches[0]) > 0) {
       foreach($tex_matches[0] as $m) {
         $new = str_replace(array('[tex]','[/tex]'),array('<div class="mee">','</div>'),$m);
         $text = str_replace($m, $new, $text);
@@ -88,7 +88,7 @@ Class RogoObject {
     
     //swap [texi] before saving to db <div class="mee">
     preg_match_all("#\[texi\](.*?)\[/texi\]#si",$text,$tex_matches);
-    if(count($tex_matches[0]) > 0) {
+    if (count($tex_matches[0]) > 0) {
       foreach($tex_matches[0] as $m) {
         $new = str_replace(array('[texi]','[/texi]'),array('<span class="mee">','</span>'),$m);
         $text = str_replace($m, $new, $text);
@@ -105,14 +105,14 @@ Class RogoObject {
    */
   protected function replace_mee_div($text) {
     preg_match_all("#<div class=\"mee\">(.*?)\</div>#si",$text,$tex_matches);
-    if(count($tex_matches[0]) > 0) {
+    if (count($tex_matches[0]) > 0) {
       foreach($tex_matches[0] as $m) {
         $new = str_replace(array('<div class="mee">','</div>'),array('[tex]','[/tex]'),$m);
         $text = str_replace($m, $new, $text);
       }
     }
     preg_match_all("#<span class=\"mee\">(.*?)\</span>#si",$text,$tex_matches);
-    if(count($tex_matches[0]) > 0) {
+    if (count($tex_matches[0]) > 0) {
       foreach($tex_matches[0] as $m) {
         $new = str_replace(array('<span class="mee">','</span>'),array('[texi]','[/texi]'),$m);
         $text = str_replace($m, $new, $text);

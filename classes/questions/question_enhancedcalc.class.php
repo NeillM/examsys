@@ -536,7 +536,7 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
 
     // Required fields
     $missing_fields = '';
-    foreach($this->_fields_required as $req) {
+    foreach ($this->_fields_required as $req) {
       if (empty($this->$req)) $missing_fields .= $this->_pretty_names[$req] . ', ';
     }
     if ($missing_fields != '') {
