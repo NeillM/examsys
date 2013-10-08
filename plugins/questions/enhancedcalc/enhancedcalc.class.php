@@ -943,5 +943,15 @@ class EnhancedCalc extends Question implements questionInterface {
   public function is_negative_marked() {
     return $this->settings['marks_incorrect'] < 0;
   }
+
+  public function get_uans_data() {
+    if (isset ($this->useranswer['ans'])) {
+      return $this->useranswer['ans'];
+    }
+    return null;
+
+  }
+
+
 }
 ?>
