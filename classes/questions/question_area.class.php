@@ -47,7 +47,7 @@ Class QuestionAREA extends QuestionEdit {
     parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
     // Convert the max number of options into a list of variables
-    $this->option_order = 'display_order';
+    $this->option_order = 'display order';
     $this->_fields_change = array('option_marks_correct', 'option_marks_partial', 'option_marks_incorrect', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
     $this->_score_methods = array($this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial']);
