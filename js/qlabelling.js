@@ -451,8 +451,25 @@ function ql_draw_box(i,j,temp_x,temp_y) {
     this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.labelWidthEffect,this.labelHeightEffect);
 
 		if (this.qType == "menu") {
+			/*
 			this.imgdata = menuImages['toolbar/combo.png'];
 			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,temp_x+this.labelWidthEffect-17,temp_y+this.labelHeightEffect-19,this.imgdata.width,this.imgdata.height);
+			*/
+			var tmp_dim = Array(temp_x+this.labelWidthEffect-17,temp_y,17,this.labelHeightEffect);
+			this.context.fillStyle='#fafdfe';
+			this.context.fillRect(tmp_dim[0],tmp_dim[1],tmp_dim[2],tmp_dim[3]);
+			this.context.strokeStyle='#3c7fb1';
+			this.context.strokeRect(tmp_dim[0]+0.5,tmp_dim[1]+0.5,tmp_dim[2],tmp_dim[3]);
+			this.context.fillStyle='#e4f4fc';
+			this.context.fillRect(tmp_dim[0]+2,tmp_dim[1]+2,tmp_dim[2]-3,tmp_dim[3]/2);
+			this.context.fillStyle='#a7d9f5';
+			this.context.fillRect(tmp_dim[0]+2,tmp_dim[1]+Math.round(tmp_dim[3]/2),tmp_dim[2]-3,this.labelHeightEffect-Math.round(tmp_dim[3]/2)-1);
+			this.context.strokeStyle='#000';
+			for (a=0;a<4;a++) this.context.strokeRect(tmp_dim[0]+6+a,tmp_dim[1]+Math.round(tmp_dim[3]/2)+a,7-2*a,0);
+			
+	    this.context.strokeStyle=this.currentColours[1];
+			this.context.fillStyle=this.currentColours[0];
+
 			if (i==this.active_box_id && this.qmode == 'answer') {
 				var tmp_height = this.labelHeightEffect*this.menuBox.length;
 				var tmp_trans = 2;
@@ -1178,8 +1195,7 @@ function ql_mouseDragMove(e){
 										}
 								}
 							} else {
-								if (this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect)==true) {
-								//if (this.pholderBox[i][5]>220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect)==true) {
+								if ((this.qmode=='edit' && this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect)==true) || (this.qmode!='edit' && this.pholderBox[i][5]>220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect)==true)) {
 									this.drag_box_id = i;
 									this.drag_pho_id = i;
 									this.drag_box_combo = 0;

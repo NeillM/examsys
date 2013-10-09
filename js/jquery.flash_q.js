@@ -20,8 +20,10 @@ function doSend(q_no, toSend) {
   {
     var flash1 = document.getElementById("externalinterface" + q_no + "_1");
 		//console.log(flash1,toSend);
-    if (flash1) {
+		flash_fail = true;
+    if (flash1 && typeof(flash1.sendTextFromJS)!='undefined') {
       flash1.sendTextFromJS(toSend);
+			flash_fail = false;
     }
   }
   catch(error)

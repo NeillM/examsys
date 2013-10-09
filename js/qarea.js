@@ -728,9 +728,10 @@ function qa_ReturnInfo() {
   	}
 	if (this.qmode=='edit') {
 		questions_result = '0,0,0,0,0,0;';
-		if (this.qanswer!='') questions_result += this.qanswer+', ';
+		if (this.qconfig!='') questions_result += this.qconfig+', ';
 		var target_field = document.getElementById(this.doorId);
   	}
+	console.log(target_field);
 	if (questions_result!='' && target_field) target_field.value = questions_result;	
 }
 
