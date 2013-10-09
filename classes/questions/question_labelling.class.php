@@ -37,7 +37,7 @@ Class QuestionLABELLING extends QuestionEdit {
     parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
     // Convert the max number of options into a list of variables
-    $this->option_order = 'display_order';
+    $this->option_order = 'display order';
     $this->_fields_editable[] = 'points1';
     $this->_change_field_map['points1'] = 'points';
   }
