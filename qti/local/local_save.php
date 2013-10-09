@@ -59,6 +59,7 @@ class IE_Local_Save extends IE_Main {
       return;
     }
 
+    var_dump($params,$data);
     $paperid = $params->paper;
 
     $userObj = UserObject::get_instance();
@@ -790,6 +791,7 @@ class IE_Local_Save extends IE_Main {
   function SaveKeywords($q_id, $q_keywords, $moduleID, &$user_keywords, &$user_keywords2 = NULL) {
     $new_keywords = array();
 
+    var_dump($user_keywords,$q_keywords);
     // Loop through the keywords, saving against the user and question
     for ($i = 0; $i < count($q_keywords); $i++) {
       $kw_id = -1;
@@ -808,7 +810,9 @@ class IE_Local_Save extends IE_Main {
 
       // Add keyword to the keyword question link table
       if ($kw_id != -1) {
+        if(is_array($kw_id))
         $kq_row = array('q_id' => $q_id, 'keywordID' => $kw_id);
+        var_dump($kq_row);
         $this->db->InsertRow('keywords_question', '', $kq_row);
       }
     }
