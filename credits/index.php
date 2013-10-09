@@ -57,14 +57,12 @@ Anthony Brown<br />
 Simon Atack<br />
 Ben Parish<br />
 <br />
-<strong>Flash</strong><br />
-Fay Cross<br />
+<strong>HTML5</strong><br />
+Dr Nikodem Miranowicz<br />
 <br />
 <strong>QTI</strong><br />
 Adam Clarke<br />
-<br />
-<strong><?php echo $string['languagepacks']; ?></strong><br />
-Dr Nikodem Miranowicz</td>
+</td>
 
 <td style="vertical-align:top">
 <strong><?php echo $string['3rdparty']; ?></strong><br />

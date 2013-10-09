@@ -82,7 +82,7 @@ Class OptionEdit extends RogoObject {
     }
 
     // Check the type of $data
-    if(is_array($data)) {
+    if (is_array($data)) {
       // If it is an array, assume an associative array of fields for creating a new object (but not
       // saving it to the database)
       foreach($data as $field => $val) {

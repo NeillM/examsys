@@ -322,7 +322,7 @@ Class QuestionEdit extends RogoObject {
         $this->last_edited = date ('Y-m-d H:i:s');
         $params = array_merge(array('ssssssssssssssissssissssss'), $this->_data);
         $query = <<< QUERY
-INSERT INTO questions(q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method,
+INSERT INTO questions (q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method,
 display_method, q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID,
 creation_date, last_edited, locked, deleted, status, settings)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -347,7 +347,7 @@ QUERY;
         try {
           throw new Exception("MySQL error " . $this->_mysqli->error . "<br /> Query:<br /> $query", $this->_mysqli->errno);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
         }
       }
@@ -357,7 +357,7 @@ QUERY;
           $this->_logger->track_change('New Question', $this->id, $this->_user_id, $this->get_leadin(), '', '');
         } else {
           // Log any changes
-          foreach($this->_modified_fields as $key => $value) {
+          foreach ($this->_modified_fields as $key => $value) {
             $db_field = (in_array($key, array_keys($this->_field_map))) ? $this->_field_map[$key] : $key;
             $change_field = (in_array($db_field, array_keys($this->_change_field_map))) ? $this->_change_field_map[$db_field] : $db_field;
             // Exception for media as it returns an array. Need better solution if other properties do the same in the future

@@ -15,6 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['administrativetools'] = 'Administrative Tools';
+$string['modules'] = 'Modules';
 $string['schools'] = 'Schools';
 $string['smsimportsummary'] = 'SMS Import Summary';
 $string['smsimportson'] = 'SMS Imports on';

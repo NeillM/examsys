@@ -62,7 +62,7 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
           </div>
           <div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['questionstatuses']; ?></div>
         </th>
-        <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
+        <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" /></a></th>
       </tr>
       <tr><th colspan="3" class="bevel"></th></tr>
       </table>
@@ -72,7 +72,7 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
 foreach ($statuses as $status) {
   $def_mod = ($status->get_is_default()) ? ' default' : '';
 ?>
-        <li id="status_<?php echo $status->id ?>" class="selectable<?php echo $def_mod ?>" data-id="<?php echo $status->id ?>"><?php echo $status->get_name() ?></li>
+        <li id="status_<?php echo $status->id ?>" class="selectable<?php echo $def_mod ?>" data-id="<?php echo $status->id ?>"><?php echo $status->get_name(); ?></li>
 <?php
 }
 ?>
