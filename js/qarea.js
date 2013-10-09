@@ -731,7 +731,6 @@ function qa_ReturnInfo() {
 		if (this.qconfig!='') questions_result += this.qconfig+', ';
 		var target_field = document.getElementById(this.doorId);
   	}
-	console.log(target_field);
 	if (questions_result!='' && target_field) target_field.value = questions_result;	
 }
 

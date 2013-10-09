@@ -914,9 +914,6 @@ function qh_mouseDragUp(){
 	
 	//text cursor positioning on mouseclick
 	if (this.qmode=='edit' && this.activeLabel>-1) {
-		//console.log(this.hotSpotsPanel[this.activeLabel]);
-		//console.log(this.x,this.y,this.hotSpotsPanel[this.activeLabel][4],this.hotSpotsPanel[this.activeLabel][5],this.hotSpotsPanel[this.activeLabel][6],this.hotSpotsPanel[this.activeLabel][7]);
-
 		if (this.testWithin(this.x,this.y,this.hotSpotsPanel[this.activeLabel][4],this.hotSpotsPanel[this.activeLabel][5],this.hotSpotsPanel[this.activeLabel][6],this.hotSpotsPanel[this.activeLabel][7])) {
 			var text_all = this.wrapText(this.hotSpots[this.activeLabel][1],this.hotSpotsPanel[this.activeLabel][6]);
 			var text_lines = text_all[0].split('|').length;
