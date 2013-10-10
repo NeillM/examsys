@@ -83,6 +83,9 @@ class ClassTotals {
   private $recache;
   private $question_statuses;
   private $marking_overrides;
+	
+	private $unmarked_enhancedcalc;
+	private $unmarked_textbox;
 
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db) {
     $userObject = UserObject::get_instance();
@@ -113,6 +116,8 @@ class ClassTotals {
     $this->display_excluded   = '';
     $this->user_no            = 0;
     $this->marking_overrides  = array();
+		$unmarked_calculation			= false;
+		$unmarked_textbox					= false;
 
     $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
   }
@@ -1244,7 +1249,12 @@ class ClassTotals {
       $single_mark = $this->getUserMark($q_id, $userID, $user_answer, $mark, $tmp_user_mark_array);
       $tmp_mark += $single_mark;
 
-      if (($q_type == 'textbox' or $q_type == 'enhancedcalc') and !is_numeric($mark)) {
+      if (($q_type == 'textbox') and !is_numeric($mark)) {
+			  $this->unmarked_textbox = true;
+        $marking_complete = 0;
+      }
+      if ($q_type == 'enhancedcalc' and !is_numeric($mark)) {
+			  $this->unmarked_enhancedcalc = true;
         $marking_complete = 0;
       }
       $old_duration   = $duration;
@@ -1402,6 +1412,14 @@ class ClassTotals {
   private function set_user_no() {
     $this->user_no = count($this->user_results);
   }
+	
+	public function unmarked_textbox() {
+	  return $this->unmarked_textbox;
+	}
+
+	public function unmarked_enhancedcalc() {
+	  return $this->unmarked_enhancedcalc;
+	}
 
   public function generate_stats() {
     // Generate summary statistics.

@@ -468,6 +468,36 @@ if ($language != 'en') {
 <?php
     echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>)</td></tr></table></td></tr>\n";
   }
+	
+	if ($report->unmarked_enhancedcalc()) {
+?>
+    <tr>
+      <td class="redwarn" colspan="<?php echo $cols ?>">
+        <table class="warn-icon">
+          <tr>
+            <td><img src="../artwork/unmarked_questions_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td><?php echo $string['unmarkedenhancedcalc'] ?></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+<?php
+	}
+
+	if ($report->unmarked_textbox()) {
+?>
+    <tr>
+      <td class="redwarn" colspan="<?php echo $cols ?>">
+        <table class="warn-icon">
+          <tr>
+            <td><img src="../artwork/unmarked_questions_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td><?php echo $string['unmarkedtextbox'] ?></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+<?php
+	}
 
   $percent_decimals = $configObject->get('percent_decimals');
   $absent_no = 0;

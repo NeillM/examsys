@@ -84,6 +84,7 @@ class PaperProperties {
   private $changes;
   private $recache_marks;
 	private $modules;
+	private $questions;
 
   private $_date_timezone = null;
 
@@ -384,6 +385,31 @@ class PaperProperties {
     $this->max_screen = $max_screen;
     $this->max_display_pos = $max_display_pos;
   }
+	
+	private function load_questions() {
+	  $q_no = 0;
+	
+    $paper_results = $this->db->prepare("SELECT q_id, q_type, screen FROM papers, questions WHERE papers.question = questions.q_id AND paper = ? ORDER BY screen, display_pos");
+    $property_id = $this->get_property_id();
+    $paper_results->bind_param('i', $property_id);
+    $paper_results->execute();
+    $paper_results->bind_result($q_id, $q_type, $screen);
+    while ($paper_results->fetch()) {
+		  if ($q_type != 'info') {
+			  $q_no++;
+			}
+		  $this->questions[] = array('q_id'=>$q_id, 'q_no'=>$q_no, 'type'=>$q_type, 'screen'=>$screen);
+		}
+    $paper_results->close();		
+	}
+	
+	public function get_questions() {
+	  if (!isset($this->questions)) {
+		  $this->load_questions();
+		}
+		
+		return $this->questions;
+	}
 
   private function load_changes() {
     $paper_results = $this->db->prepare("SELECT q_type, screen, display_pos FROM papers, questions WHERE papers.question = questions.q_id AND paper = ?");
