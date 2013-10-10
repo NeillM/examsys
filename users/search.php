@@ -423,7 +423,7 @@ echo "</tr>\n";
 <tr><th colspan="8" class="bevel"></th></tr>
 <?php
   if ($roles_sql == '') {
-    echo "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:60px; height:32px; text-align:right\"><img src=\"../artwork/red_warning.png\" width=\"32\" height=\"32\" alt=\"Locked\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\">".$string['msg1']."</td></tr></table>\n</body>\n</html>\n";
+    echo "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:60px; height:32px; text-align:right\"><img src=\"../artwork/red_warning.png\" width=\"32\" height=\"32\" alt=\"Warning\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\">".$string['msg1']."</td></tr></table>\n</body>\n</html>\n";
     exit;
   }
 

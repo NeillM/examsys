@@ -27,6 +27,7 @@ global $configObject;
 require_once $configObject->get('cfg_web_root') . 'plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
 function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mode = 'unmarked') {
+  $status = array(-4 => 0, -3 => 0, -2 => 0, -1 => 0, 0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0);
   $configObject = Config::get_instance();
   $enhancedcalc = new EnhancedCalc($configObject);
   $data['settings'] = $settings;
@@ -44,8 +45,9 @@ function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mod
 
     $enhancedcalc->set_useranswer($user_answer);
     $returnarray = $enhancedcalc->calculate_user_mark();
+    $status[$returnarray]++;
 
-    if ($returnarray !== Q_MARKING_UNMARKED) {
+		if ($returnarray !== Q_MARKING_UNMARKED and $returnarray !== Q_MARKING_ERROR) {
       //save the extra data back into the log record.
       $sql = "UPDATE log{$paper_type} set mark = ?, adjmark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
       $storemark = $db->prepare($sql);
@@ -56,5 +58,7 @@ function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mod
     }
   }
   $result->close();
+	
+	return $status;
 }
 

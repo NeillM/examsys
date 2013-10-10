@@ -106,14 +106,14 @@ class EnhancedCalc extends Question implements questionInterface {
     $returnstatus = null;
     if (is_null($this->useranswer)) {
       $this->error = 'No User Answer';
-      return QUESTION_ERROR;
+      return Q_MARKING_UNANSWERABLE;
     }
 
     if (!is_array($this->useranswer)) {
       $this->useranswer = json_decode($this->useranswer, true);
     }
 
-    if(isset($this->useranswer['uans'])) {
+    if (isset($this->useranswer['uans'])) {
       $return = $this->split_numb_from_unit($this->useranswer['uans']);
       $this->useranswer['uansunit'] = $return[1];
       $this->useranswer['uansnumb'] = $return[0];
@@ -226,7 +226,7 @@ class EnhancedCalc extends Question implements questionInterface {
        * MARKING
        *
        */
-        if (trim($this->useranswer['uansnumb'])=='') {
+        if (!isset($this->useranswer['uansnumb']) or (isset($this->useranswer['uansnumb']) and trim($this->useranswer['uansnumb']) == '')) {
             //not answered
             $this->qmark = 0;
             $returnstatus = Q_MARKING_NOTANS;
@@ -250,7 +250,7 @@ class EnhancedCalc extends Question implements questionInterface {
       if ($this->useranswer['status']['exact'] === false) {
          $this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
       } else {
-         $this->useranswer['cans_dist'] = "0";
+         $this->useranswer['cans_dist'] = '0';
       }
 
       if ($this->useranswer['status']['exact'] === false) {
@@ -268,11 +268,11 @@ class EnhancedCalc extends Question implements questionInterface {
                                                                                                               );
         }
       } else {
-          $this->useranswer['status']['tolerance_partial'] = true;
-          $this->useranswer['status']['tolerance_full'] = true;
+        $this->useranswer['status']['tolerance_partial'] = true;
+        $this->useranswer['status']['tolerance_full'] = true;
       }
       //strict dp marking
-      if ( $this->is_strict_dp_enabled() ) {
+      if ($this->is_strict_dp_enabled()) {
 
         if ( $this->is_strict_dp_strictzeros_enabled() ) {
           $this->useranswer['status']['strictdp'] = $enhancedcalcObj->is_useranswer_correct_decimal_places_strictzeros($this->useranswer['uansnumb'], $this->settings['dp']);
@@ -329,10 +329,10 @@ class EnhancedCalc extends Question implements questionInterface {
       $this->useranswer['status']['overall'] = $returnstatus;
 
     } catch (Exception $e) {
-      //TODO: ctach diffrent errors "no connection", "unable to evluate"
+      //TODO: ctach diffrent errors "no connection", "unable to evaluate"
       $returnstatus = Q_MARKING_ERROR;
       $this->useranswer['status']['error'] = true;
-      $this->useranswer['ans']['error'] = $enhancedcalcObj->error_msg;
+      $this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
       $this->useranswer['status']['overall'] = $returnstatus;
       return $returnstatus;
     }
@@ -363,8 +363,6 @@ class EnhancedCalc extends Question implements questionInterface {
     }
 
     $return = json_encode($data);
-
-    //$this->useranswer = $return;
 
     return $return;
   }

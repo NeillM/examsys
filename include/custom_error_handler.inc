@@ -156,7 +156,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
   if ($error_type != 'Notice') { // Record errors that are not notices.
 
-    if(strpos($errstr,'customErrorHandler') !== false and strpos($errstr,"Couldn't fetch mysqli") !== false ) {
+    if (strpos($errstr,'customErrorHandler') !== false and strpos($errstr,"Couldn't fetch mysqli") !== false ) {
       return true;
     }
 
@@ -184,6 +184,9 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     if (isset($_POST)) {
       foreach ($_POST as $key => $value) {
         if ($key != 'ROGO_PW') {
+					if (is_array($value)) { 
+						$value = var_export($value, true);
+					}
           if ($post_data == '') {
             $post_data = "$key=$value";
           } else {

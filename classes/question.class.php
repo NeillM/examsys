@@ -34,6 +34,7 @@ define('Q_MARKING_WRONG', 0);
 define('Q_MARKING_UNMARKED', -1);
 define('Q_MARKING_NOTANS',-2);
 define('Q_MARKING_ERROR',-3);
+define('Q_MARKING_UNANSWERABLE',-4);
 
 
 Class Question {

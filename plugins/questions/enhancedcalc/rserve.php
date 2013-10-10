@@ -87,11 +87,12 @@ class EnhancedCalcRrserve {
        self::$cnx->evalString('excel_round <- function(x, digits) round(x*(1+1e-15), digits)');
   }
   
-  function calculate_correct_ans($vars,$formula) {
+  function calculate_correct_ans($vars, $formula) {
     
     if (!$this->connect()) {
-      return false;
-    }
+      throw new Exception('Cannot Connect');
+			return false;
+		}
     
     $varname = array_keys($vars);
     $varvalue = array_values($vars);
@@ -372,11 +373,16 @@ class EnhancedCalcRrserve {
 
   private function set_error($msg) {
     $this->error = true;
-    $this->mesage = $msg;
+    $this->error_msg = $msg;
   }
   
   private function reset_error() {
     $this->error = false;
-    $this->mesage = '';
+    $this->error_msg = '';
   }
+	
+	public function get_error() {
+    return $this->error_msg;
+  }
+	
 }
