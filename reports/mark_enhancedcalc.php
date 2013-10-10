@@ -36,6 +36,8 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
+$questions = $properties->get_questions();
+
 /*if (!Paper_utils::paper_exists($paperID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -65,15 +67,16 @@ foreach ($q_ids as $q_id => $setting) {
   $statuses[$q_id] = $data;
 }
 
-//var_dump($statuses);
+var_dump($statuses);
 
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 	
-  <title>Calculation Question Marking<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['calculationquestionmarking'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 	
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
