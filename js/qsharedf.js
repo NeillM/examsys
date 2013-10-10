@@ -19,37 +19,37 @@ $.get('/js/images/cur_cross.cur', function() { });
 	console.log('mode: '+mode);
 */
 
-	if (typeof(mode)=='undefined') mode='answer';
-	if (mode=='1') mode='answer';
-	if (mode=='2') mode='edit';
-	if (mode=='3') mode='script';
-	if (mode=='4') mode='analysis';
+	if (typeof(mode) == 'undefined') mode = 'answer';
+	if (mode == '1') mode = 'answer';
+	if (mode == '2') mode = 'edit';
+	if (mode == '3') mode = 'script';
+	if (mode == '4') mode = 'analysis';
 	
-  if (type=='labelling') {
+  if (type == 'labelling') {
 		rq[num] = new rql(num);
 		rq[num].setUpLabelling(num, canvasId, lang, image, config, answer, extra, colour, mode);
 		}
-  if (type=='hotspot') {
+  if (type == 'hotspot') {
 		rq[num] = new rqh(num);
 		rq[num].setUpHotspot(num, canvasId, lang, image, config, answer, extra, colour, mode)
 	}
-  if (type=='area') {
+  if (type == 'area') {
 		rq[num] = new rqa(num);
 		rq[num].setUpArea(num, canvasId, lang, image, config, answer, extra, colour, mode)
 		}
 }
 
 function get_char_key() {
-	if (this.ev.type=='keypress') { 
-		this.char_code = (this.ev.charCode==0?'':String.fromCharCode(this.ev.charCode));
+	if (this.ev.type == 'keypress') { 
+		this.char_code = (this.ev.charCode == 0?'':String.fromCharCode(this.ev.charCode));
 	}
-	if (this.ev.type=='keydown') {
+	if (this.ev.type == 'keydown') {
 		this.isShift = this.ev.shiftKey ? true : false;
 		this.isCtrl = this.ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
-		if (this.ev.keyCode==32) this.char_code = ' ';
+		if (this.ev.keyCode == 32) this.char_code = ' ';
 	}
-	if (this.ev.type=='keyup') { 
+	if (this.ev.type == 'keyup') { 
 		this.isShift = this.ev.shiftKey ? true : false;
 		this.isCtrl = this.ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
@@ -60,7 +60,7 @@ function get_char_key() {
 //converts flashcolor into htmlcolor
 function hexifycolour(thiscolor) {
   if (typeof(thiscolor)!='undefined') {
-		if (thiscolor!='' && thiscolor.indexOf('0x')==-1 && thiscolor.indexOf('#')==-1)
+		if (thiscolor!='' && thiscolor.indexOf('0x') == -1 && thiscolor.indexOf('#') == -1)
 			thiscolor = '#'+Number(thiscolor).toString(16);
 		if (thiscolor.indexOf('0x')>-1) thiscolor = '#'+thiscolor.substr(2,6);
 		if (thiscolor.length<7) {
@@ -95,7 +95,7 @@ function textHeight(tt, tw) {
 //wrapps text with given width
 //gives back an Array: text with \n's, height, width
 function wrapText(tt,tw,elastic) {
-	if (typeof(elastic)=='undefined') elastic = true;
+	if (typeof(elastic) == 'undefined') elastic = true;
 	function breakText(ctx) {
 		var words = tt.split(' ');
 		var broken = false;
@@ -177,7 +177,7 @@ function testWithin(ax,ay,bx,by,cx,cy) {
 	
 	var showtest = false;
 	if (showtest) {
-						if (typeof(tw)=='undefined') tw=true;
+						if (typeof(tw) == 'undefined') tw=true;
 						this.context.strokeStyle='#AAA';
 						if (tw) {
 							tw = false;
@@ -330,7 +330,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   
   if (cc!='') this.context.strokeStyle = cc;
   if (cb!='') this.context.fillStyle = cb;
-  if (mode =='e' || mode =='r' || mode =='f' || mode =='t') this.context.fillStyle = this.context.strokeStyle = cc;
+  if (mode == 'e' || mode == 'r' || mode == 'f' || mode == 't') this.context.fillStyle = this.context.strokeStyle = cc;
     
   var tpe = new Array(); //array of line equations for polygons
   var tpi = new Array(); //array of line interconnections
@@ -399,7 +399,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
         for (var m=1;m<n;m++) {
           if (tpe[m][4] != ta) {
             tx3 = (tb - tpe[m][5])/(tpe[m][4] - ta);
-            if (tx1==tx2) tx3=tx1;            
+            if (tx1 == tx2) tx3=tx1;            
             ty3 = tpe[m][4]*tx3 + tpe[m][5];
             tpe[m][6] += ','+tx3;
             tpe[m][7] += ','+ty3;
@@ -420,7 +420,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
             pos3 = Math.abs(tpe[n][2]-tpe[n][0])-Math.abs(tpe[n][2]-tx3)-Math.abs(tpe[n][0]-tx3);
             pos4 = Math.abs(tpe[n][3]-tpe[n][1])-Math.abs(tpe[n][3]-ty3)-Math.abs(tpe[n][1]-ty3);
                         
-            if (pos1==0 && pos2==0 && pos3==0 && pos4==0 && distn1>1 && distn2>1 && distn3>1 && distn4>1) {
+            if (pos1 == 0 && pos2 == 0 && pos3 == 0 && pos4 == 0 && distn1 > 1 && distn2 > 1 && distn3 > 1 && distn4 > 1) {
               tpi[++int_count] = new Array();
               tpi[int_count][0] = tx3;
               tpi[int_count][1] = ty3;
@@ -436,7 +436,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   if (cb!='') this.context.fill();
   
   //green dot for area  
-  if (mode=='d') {
+  if (mode == 'd') {
     this.context.lineWidth = 1;
     this.context.globalAlpha = 0.75;
     this.ellipseDraw(ctx,'#00ff00','#00ff00',tx0-d1,ty0-d1,d2,d2,false);
@@ -455,7 +455,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
       var lcc = '#000000'; 
       var lcb = '#ffffff';
     }
-    if (mode =='f') lcc = lcb = cc;
+    if (mode == 'f') lcc = lcb = cc;
     this.context.globalAlpha = 1;
     this.context.lineWidth = 1;
     for (var n=1;n<qq.length/2;n++) {
@@ -470,7 +470,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   this.context.lineWidth = templw;
 
   //mark intersections
-  for (var m=1;m<tpi.length;m++) {
+  for (var m =1; m < tpi.length; m++) {
     this.context.strokeStyle = '#ff0000';    
     this.context.beginPath();
     this.context.arc(tpi[m][0],tpi[m][1],3, 0, Math.PI*2, true); 
@@ -528,7 +528,7 @@ function menuRebuild(ctx,bar) {
   this.context.fillStyle = '#FFFFFF';
 
   //toolbar background
-	if (typeof(bar)=='undefined') bar = true;
+	if (typeof(bar) == 'undefined') bar = true;
 	if (bar) {
 		imgdata = menuImages['toolbar/vert_0.png'];
 		this.context.drawImage(this.menu_img,imgdata.left+0.5,imgdata.top,imgdata.width-1,imgdata.height,0,0,this.canvas.width,imgdata.height);
@@ -582,20 +582,20 @@ function menuRebuild_panel (panelActiveParts,panelBox,but_name,pan_name,panel_co
   this.context.strokeStyle='#000088';
   this.context.fillStyle = '#FFFFFF';
 
-  if (temp_but[6]==2) {
+  if (temp_but[6] == 2) {
 		this.context.fillRect(temp_but[1]+0.5,temp_but[2]+25.5,imgdata.width,imgdata.height);
 		var tx=12;
 		var ty=12;
 		var px=3.5;
 		var py=28.5;
 		
-    if (panel_code==1) {
+    if (panel_code == 1) {
 			tx=21;
 			ty=20;
 			px=0;
 			py=25;
 		}
-    if (panel_code==2) {
+    if (panel_code == 2) {
 			tx=129;
 			ty=20;
 			px=0;
@@ -603,7 +603,7 @@ function menuRebuild_panel (panelActiveParts,panelBox,but_name,pan_name,panel_co
 		}  
     
     //drawing the image of the panel for colour panel
-    if (panel_code==0) {
+    if (panel_code == 0) {
       this.context.drawImage(this.menu_img,imgdata.left,imgdata.top,imgdata.width,imgdata.height,temp_but[1],temp_but[2]+25,imgdata.width,imgdata.height);
       
 			var tmp_but_num = this.buttonBoxNames[but_name];
@@ -617,7 +617,7 @@ function menuRebuild_panel (panelActiveParts,panelBox,but_name,pan_name,panel_co
       this.context.fillText(lang_string['standardcolours'],temp_but[1]+5,temp_but[2]+25+117);
       
       //building up the this.colorReference
-      if (this.colorReference.length==0 && pan_name=='toolbar/pan_colours.png') {
+      if (this.colorReference.length == 0 && pan_name == 'toolbar/pan_colours.png') {
         for (n=0;n<panelActiveParts[pan_name].length;n++) {
           var tpc = panelActiveParts[pan_name][n].split(',');
           var timgd = this.context.getImageData(temp_but[1]+1*tpc[0]+9,temp_but[2]+25+1*tpc[1]+9,1,1);
@@ -645,9 +645,9 @@ function menuRebuild_panel (panelActiveParts,panelBox,but_name,pan_name,panel_co
 		if (panel_code>0) this.context.drawImage(this.menu_img,imgdata.left,imgdata.top,imgdata.width,imgdata.height,temp_but[1],temp_but[2]+25,imgdata.width,imgdata.height);
 
 		//solid option
-		if (selection>-1 && panel_code==0) {
+		if (selection>-1 && panel_code == 0) {
 			var tp = panelActiveParts[pan_name][selection].split(',');
-			if (panel_code==0) this.context.drawImage(this.menu_img,imgdata.left+ tp[0]*1+4.5,imgdata.top+tp[1]*1+4.5,12,11,temp_but[1]+ tp[0]*1+4.5,temp_but[2]+tp[1]*1+4.5+25,11,11);
+			if (panel_code == 0) this.context.drawImage(this.menu_img,imgdata.left+ tp[0]*1+4.5,imgdata.top+tp[1]*1+4.5,12,11,temp_but[1]+ tp[0]*1+4.5,temp_but[2]+tp[1]*1+4.5+25,11,11);
 			this.context.strokeStyle='#ffe294';
 			this.context.strokeRect(temp_but[1]+1*tp[0]+px+1,temp_but[2]+1*tp[1]+py+1,tx-1,ty-1);
 			this.context.strokeStyle='#ee4810';
@@ -655,9 +655,9 @@ function menuRebuild_panel (panelActiveParts,panelBox,but_name,pan_name,panel_co
 		 }
 
 		//soft option
-		if (this.panelOptionOver>-1 && panel_code==0) {
+		if (this.panelOptionOver>-1 && panel_code == 0) {
 			var tpc = panelActiveParts[pan_name][this.panelOptionOver].split(',');
-			if (panel_code==0 && typeof(tpc)!='undefined') this.context.drawImage(this.menu_img,imgdata.left+ tpc[0]*1+5.5,imgdata.top+tpc[1]*1+5.5,10,10,temp_but[1]+ tpc[0]*1+4.5,temp_but[2]+tpc[1]*1+4.5+25,11,11);
+			if (panel_code == 0 && typeof(tpc)!='undefined') this.context.drawImage(this.menu_img,imgdata.left+ tpc[0]*1+5.5,imgdata.top+tpc[1]*1+5.5,10,10,temp_but[1]+ tpc[0]*1+4.5,temp_but[2]+tpc[1]*1+4.5+25,11,11);
     	this.context.strokeStyle='#ffe294';
 			this.context.strokeRect(temp_but[1]+1*tpc[0]+px+1,temp_but[2]+1*tpc[1]+py+1,tx-1,ty-1);
     	this.context.strokeStyle='#f29436';
@@ -677,8 +677,8 @@ function button_test() {
   if (this.buttonOver != -1) {
     //double button?
     var m=n=this.buttonOver;
-    if (this.buttonBox[n][0]=='toolbar/ico_drop.png') n=m-1;
-    if (n<this.buttonBox.length-1 && this.buttonBox[n+1][0]=='toolbar/ico_drop.png') m=n+1;
+    if (this.buttonBox[n][0] == 'toolbar/ico_drop.png') n=m-1;
+    if (n<this.buttonBox.length-1 && this.buttonBox[n+1][0] == 'toolbar/ico_drop.png') m=n+1;
     this.buttonClicked = this.buttonOver = n;
     
     //testing button sets
@@ -692,12 +692,12 @@ function button_test() {
     
     //switch buttons without sets
     if (butSet == '' || butSet == '+') {
-      if (this.buttonBox[this.buttonClicked][6]==2) {
+      if (this.buttonBox[this.buttonClicked][6] == 2) {
         this.buttonBox[this.buttonClicked][5]=this.buttonBox[this.buttonClicked][6]=0;
       } else {
         this.buttonBox[this.buttonClicked][5]=2;
         this.buttonBox[this.buttonClicked][6]=0;        
-        if (this.buttonBox[this.buttonClicked][7]=='+') this.buttonBox[this.buttonClicked][6]=2;
+        if (this.buttonBox[this.buttonClicked][7] == '+') this.buttonBox[this.buttonClicked][6]=2;
       }
     }
   }
@@ -758,7 +758,7 @@ function build_msgbox(mx,my,mw,mh,txt1,txt2,txt3,txt4) {
 //builds tooltip
 function tooltip_draw(ctx,but) {
   //tooltip
-  if (typeof but !='undefined' && but[5]==1 && but[9]!='') {
+  if (typeof but !='undefined' && but[5] == 1 && but[9]!='') {
     this.context.font="12px Arial";
     var metrics = this.context.measureText(but[9]);
     

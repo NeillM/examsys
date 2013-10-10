@@ -60,7 +60,7 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
         this.answerBox[i] = this.yoffset_fix(answer_l1[i],this.yOffest_fix).split(",");
       }    
     }      
-    if (answer=='u') this.allUnaswered=true;
+    if (answer == 'u') this.allUnaswered=true;
     this.qanswer=answer;
     
 		//---------- colour 
@@ -68,10 +68,10 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
     
 		//---------- extra
 		// flash modes 1: answer, 2: edit, 3: script
-		if (this.qmode=='script') {
-			if (typeof(extra[0])!='undefined' && extra[0]=='0') this.display_students_response = false;
-			if (typeof(extra[1])!='undefined' && extra[1]=='0') this.display_correct_answer = false;
-			if (typeof(extra[4])!='undefined' && extra[4]=='1') this.hide_feedback_ifunanswered = true;
+		if (this.qmode == 'script') {
+			if (typeof(extra[0])!='undefined' && extra[0] == '0') this.display_students_response = false;
+			if (typeof(extra[1])!='undefined' && extra[1] == '0') this.display_correct_answer = false;
+			if (typeof(extra[4])!='undefined' && extra[4] == '1') this.hide_feedback_ifunanswered = true;
 			if (this.hide_feedback_ifunanswered && !(this.is_an_answer)) {
 				this.display_students_response = false;
 				this.display_correct_answer = false;
@@ -108,7 +108,7 @@ function qa_menuBuild() {
   this.imgdata = menuImages['toolbar/vert_0.png'];
 	this.context.drawImage(this.menu_img,this.imgdata.left+0.5,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,0,0,this.canvas.width,this.imgdata.height);
   
-  if (this.qmode=='test') {
+  if (this.qmode == 'test') {
     var spac = 3;
     var posx = 3;    
     var posy = 3;
@@ -125,7 +125,7 @@ function qa_menuBuild() {
 		area_buttons[7] = new Array('toolbar/ico_warn.png',lang_string['But_show_error']);
   }
 	
-  if (this.qmode=='script') {
+  if (this.qmode == 'script') {
     var spac = 3;
     var posx = 3;    
     var posy = 3;
@@ -148,7 +148,7 @@ function qa_menuBuild() {
 			this.global_show_error = false;
 		}
   }
-  if (this.qmode=='edit' || this.qmode=='answer') {
+  if (this.qmode == 'edit' || this.qmode == 'answer') {
     var spac = 3;
     var posx = 3;    
     var posy = 3;
@@ -177,7 +177,7 @@ function qa_test(type) {
   this.context.globalAlpha = 1;
 	
 	var timgd = this.context.getImageData(1,1,this.canvas.width-2,this.canvas.height-2);
-	if (type=='data') {
+	if (type == 'data') {
 		this.timgp = timgd.data;
 		this.do_the_test_calc = true;
 		return this.timgp;
@@ -192,7 +192,7 @@ function qa_test_calc(type) {
 	var trsh = 64;
 	this.do_the_test_calc = false;
 	
-	if (type=='data') {
+	if (type == 'data') {
 		for (j=0; j<this.timgp.length; j+=4) {
 			if (this.timgp[j+0]*1 > trsh && this.timgp[j+2]*1 > trsh && this.timgp[j+1]*1 < trsh) li1++;
 			if (this.timgp[j+0]*1 > trsh && this.timgp[j+2]*1 < trsh && this.timgp[j+1]*1 < trsh) li2++;
@@ -203,14 +203,14 @@ function qa_test_calc(type) {
 		var result_er = 1000 - result_in + result_out;
 		return result_er / 10+','+result_in / 10+','+result_out / 10+','+li1+','+li2+','+li3;
 	}
-	if (type=='image') {
+	if (type == 'image') {
 		this.timga = this.err_image.data;
 		for (j=0; j<this.timga.length; j+=4) {
 			li1=li2=li3=li4=0;
 			if (this.timga[j+0]*1 > trsh && this.timga[j+2]*1 > trsh && this.timga[j+1]*1 < trsh) li1++;
 			if (this.timga[j+0]*1 > trsh && this.timga[j+2]*1 < trsh && this.timga[j+1]*1 < trsh) li2++;
 			if (this.timga[j+0]*1 < trsh && this.timga[j+2]*1 > trsh && this.timga[j+1]*1 < trsh) li3++;
-			if (li2==1 || li3==1) {
+			if (li2 == 1 || li3 == 1) {
 				this.timga[j+0] = 255;
 				this.timga[j+1] = 0;
 				this.timga[j+2] = 0;
@@ -237,10 +237,10 @@ function qa_redraw_canvas_main(tx,ty) {
 	this.context.lineWidth = 3;
 	var col = '#385D8A';
 	//edit or answer
-	if (this.qconfig!='' && this.qmode=='edit') this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qconfig.split(','),'h'); 
-	if (this.qanswer!='' && this.qmode=='answer') this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qanswer.split(','),'h'); 
+	if (this.qconfig!='' && this.qmode == 'edit') this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qconfig.split(','),'h'); 
+	if (this.qanswer!='' && this.qmode == 'answer') this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qanswer.split(','),'h'); 
 
-	if (this.qmode=='script') {
+	if (this.qmode == 'script') {
 		if (this.qconfig!='' && this.qanswer!='' && typeof(this.err_image)!='undefined' && this.global_show_error) {
 			//combine images
 			var img_final = this.context.getImageData(1,1,this.canvas.width-2,this.canvas.height-2);
@@ -254,7 +254,7 @@ function qa_redraw_canvas_main(tx,ty) {
 				if (err_final_data[j+0]*1 > trsh && err_final_data[j+2]*1 > trsh && err_final_data[j+1]*1 < trsh) li1++;
 				if (err_final_data[j+0]*1 > trsh && err_final_data[j+2]*1 < trsh && err_final_data[j+1]*1 < trsh) li2++;
 				if (err_final_data[j+0]*1 < trsh && err_final_data[j+2]*1 > trsh && err_final_data[j+1]*1 < trsh) li3++;
-				if (li2==1 || li3==1) {
+				if (li2 == 1 || li3 == 1) {
 					img_final_data[j+0] = 240;
 					img_final_data[j+1] = img_final_data[j+1]*0.8;
 					img_final_data[j+2] = img_final_data[j+2]*0.8;
@@ -267,7 +267,7 @@ function qa_redraw_canvas_main(tx,ty) {
 			this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qanswer.split(','),'e');
 			delete img_final,img_final_data,err_final_data;
 		}
-		if (this.qconfig!='' && this.qanswer=='' && this.global_show_error) {
+		if (this.qconfig!='' && this.qanswer == '' && this.global_show_error) {
 			col = '#ee6666';
 			this.context.globalAlpha = 0.40;
 			this.polyDrawH(this.context,'',col,tx-1,ty-28+this.yOffset,this.qconfig.split(','),'e'); 
@@ -290,7 +290,7 @@ function qa_redraw_canvas_main(tx,ty) {
 		}
 	}
 	//draw temp polygon
-	if (((this.qconfig=='' && this.qmode=='edit') || (this.qanswer=='' && this.qmode=='answer'))  && this.poly_temp!='') {
+	if (((this.qconfig == '' && this.qmode == 'edit') || (this.qanswer == '' && this.qmode == 'answer'))  && this.poly_temp!='') {
 		var poly_temp_ext = this.poly_temp;
 		poly_temp_ext += Math.round(this.x).toString(16)+','+Math.round(this.y).toString(16);
 		this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,poly_temp_ext.split(','),'d');
@@ -302,7 +302,7 @@ function qa_redraw_canvas() {
 		if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.mouse_moved || this.ShiftChange)) {
 		
     //buttons
-    if (this.buttonBox.length==0) this.qa_menuBuild();
+    if (this.buttonBox.length == 0) this.qa_menuBuild();
 
     //testing the answer
     if (this.do_the_test && typeof(this.qanswer)!='undefined' && this.qanswer!=this.last_answer) {
@@ -311,7 +311,7 @@ function qa_redraw_canvas() {
     }
 		
 		if (this.qconfig!='' && this.global_show_error) {
-			if (typeof(this.err_image_final)=='undefined') {
+			if (typeof(this.err_image_final) == 'undefined') {
 				this.err_image = this.qa_test('image');
 			}
 		}
@@ -324,7 +324,7 @@ function qa_redraw_canvas() {
 		this.context.strokeStyle=this.currentColours[1];
     
     //cross red or gray
-    if (this.qmode=='edit' || this.qmode=='answer') {
+    if (this.qmode == 'edit' || this.qmode == 'answer') {
 			if (this.global_delpoint_avail) {
 				this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][0] = 'toolbar/ico_cross_on.png';
 				this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][7] = '+';
@@ -337,8 +337,8 @@ function qa_redraw_canvas() {
 		}
 
     //clear all active?
-    if (this.qmode=='edit' || this.qmode=='answer') {
-			if ((this.qmode=='edit' && this.qconfig!='') || (this.qmode=='answer' && this.qanswer!='')) {
+    if (this.qmode == 'edit' || this.qmode == 'answer') {
+			if ((this.qmode == 'edit' && this.qconfig!='') || (this.qmode == 'answer' && this.qanswer!='')) {
 				this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][7] = '';
 			} else {
 				this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][7] = '-';
@@ -390,7 +390,7 @@ function qa_redraw_canvas() {
 			this.test_result = this.qa_test_calc('data');
 			this.qa_ReturnInfo();
     }
-    if (this.qmode =='edit' && this.last_config!=this.qconfig) {
+    if (this.qmode == 'edit' && this.last_config!=this.qconfig) {
 			this.last_config=this.qconfig;
 			this.qa_ReturnInfo();
     }		
@@ -402,17 +402,17 @@ function qa_mouseDragMove(e){
 	if (this.ev.target.id != this.canvas.id) {
 		return true;
 	}
-	if (this.ev.type=='keydown') {
+	if (this.ev.type == 'keydown') {
 		this.isShift = this.ev.shiftKey ? true : false;
 		this.isCtrl = this.ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}
-	if (this.ev.type=='keyup') { 
+	if (this.ev.type == 'keyup') { 
 		this.isShift = this.ev.shiftKey ? true : false;
 		this.isCtrl = this.ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}		
-	if (this.ev.type=='mousemove') {
+	if (this.ev.type == 'mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
 		this.loc_lft = this.canv_rect.left;
 		this.loc_top = this.canv_rect.top;
@@ -424,26 +424,26 @@ function qa_mouseDragMove(e){
 		//new position of dragged element
     if (this.handler_sqr>-1) {
 			this.qtest = '';
-			if (this.qmode=='answer' && this.qanswer!='') this.qtest = this.qanswer;
-			if (this.qmode=='edit' && this.qconfig!='') this.qtest = this.qconfig;
+			if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+			if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
 
       var pp = this.qtest.split(',');
       pp[(this.handler_sqr*2-2)] = this.x.toString(16);
       pp[(this.handler_sqr*2-1)] = this.y.toString(16);
 			//move first handler if moving last in polygon
-			if ((this.handler_sqr*2-2)==pp.length) {
+			if ((this.handler_sqr*2-2) == pp.length) {
 				pp[0] = pp[this.handler_sqr*2-2];
 				pp[1] = pp[this.handler_sqr*2-1];
 			}
-			if (this.handler_sqr==1) {
+			if (this.handler_sqr == 1) {
 				pp[pp.length-2] = pp[0];
 				pp[pp.length-1] = pp[1];
 			}
 
 			this.qtest = pp.join(',');
 
-      if (this.qmode=='answer' && this.qanswer!='') this.qanswer = this.qtest;
-			if (this.qmode=='edit' && this.qconfig!='') this.qconfig = this.qtest;
+      if (this.qmode == 'answer' && this.qanswer!='') this.qanswer = this.qtest;
+			if (this.qmode == 'edit' && this.qconfig!='') this.qconfig = this.qtest;
 
       this.redraw_once = true;
       this.qa_redraw_canvas;
@@ -457,18 +457,18 @@ function qa_mouseDragMove(e){
       var buttonTest = -1;
       for (var i=0;i<this.buttonBox.length;i++) {
         this.buttonBox[i][5] = this.buttonBox[i][6];
-        //if (this.buttonBox[i][5]==2) alert(i);
-        if (this.buttonBox[i][0]=='toolbar/ico_drop.png') this.buttonBox[i][5] = this.buttonBox[i-1][5];
+        //if (this.buttonBox[i][5] == 2) alert(i);
+        if (this.buttonBox[i][0] == 'toolbar/ico_drop.png') this.buttonBox[i][5] = this.buttonBox[i-1][5];
         
-				if (this.buttonBox[i][0].indexOf('vert_')==-1 && this.testWithin(this.x,this.y,this.buttonBox[i][1],this.buttonBox[i][2],this.buttonBox[i][3],this.buttonBox[i][4])==true) {
+				if (this.buttonBox[i][0].indexOf('vert_') == -1 && this.testWithin(this.x,this.y,this.buttonBox[i][1],this.buttonBox[i][2],this.buttonBox[i][3],this.buttonBox[i][4]) == true) {
           over_object = true;
           buttonTest = i;
           this.buttonBox[i][5] = 1;
           
           //double button
           var j=i;
-          if (this.buttonBox[i][0]=='toolbar/ico_drop.png') j=i-1;
-          if (i<this.buttonBox.length-1 && this.buttonBox[i+1][0]=='toolbar/ico_drop.png') j=i+1;
+          if (this.buttonBox[i][0] == 'toolbar/ico_drop.png') j=i-1;
+          if (i<this.buttonBox.length-1 && this.buttonBox[i+1][0] == 'toolbar/ico_drop.png') j=i+1;
           this.buttonBox[j][5] = 1;
         }
       }
@@ -480,10 +480,10 @@ function qa_mouseDragMove(e){
       }
       
       //this.test for handler points      
-      if ((this.qmode=='edit' && this.qconfig!='') || (this.qmode=='answer' && this.qanswer!='')) {
+      if ((this.qmode == 'edit' && this.qconfig!='') || (this.qmode == 'answer' && this.qanswer!='')) {
 				this.qtest = '';
-				if (this.qmode=='answer' && this.qanswer!='') this.qtest = this.qanswer;
-				if (this.qmode=='edit' && this.qconfig!='') this.qtest = this.qconfig;
+				if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+				if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
 								
         var pp = this.qtest.split(',');
         this.handler_dot = -1;
@@ -500,7 +500,7 @@ function qa_mouseDragMove(e){
       if (this.y>25) cur = 'crosshair';
  			if (this.qmode!='script' && (this.global_delpoint || this.isCtrl)) cur = 'url(/js/images/cur_cross.cur) 6 5, default'; //this works only in css3 browsers otherwise whole cursor is ignored
 			if (over_object) cur = 'pointer';
-      if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
+      if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') cur = 'help';
       if (this.global_clearpnl) cur = 'default';
       e.target.style.cursor = cur;
       
@@ -518,7 +518,7 @@ function qa_mouseDragMove(e){
     if (this.poly_temp_points[5]!=0) 
       this.angle2 = Math.atan2(this.y-this.poly_temp_points[5],this.x-this.poly_temp_points[4]);
     
-    if (this.poly_temp_points[5]==0) {
+    if (this.poly_temp_points[5] == 0) {
       this.dx = this.x - this.poly_temp_points[6];
       this.dy = this.y - this.poly_temp_points[7];
     } else {
@@ -531,11 +531,11 @@ function qa_mouseDragMove(e){
     var add_point = false;
     
     //if one just started freedrawing
-    if (this.poly_temp_points[3]==0 && this.distn > 10) {
+    if (this.poly_temp_points[3] == 0 && this.distn > 10) {
       //because this is this.freehand and no point has been added - add starting one first
       this.poly_temp += Math.round(this.poly_temp_points[6]).toString(16)+','+Math.round(this.poly_temp_points[7]).toString(16)+',';
 			
-			if (this.poly_temp_points[5]==0){
+			if (this.poly_temp_points[5] == 0){
 				this.poly_temp_points[0] = this.poly_temp_points[6];
 				this.poly_temp_points[1] = this.poly_temp_points[7];
 			}      
@@ -560,7 +560,7 @@ function qa_mouseDragMove(e){
   //this.freehand draw end  
 
 	//cancel propagation if BackSpace
-	if (this.ev.type=='keydown' && this.ev.keyCode<=46) {
+	if (this.ev.type == 'keydown' && this.ev.keyCode<=46) {
 		if (this.ev.stopPropagation) this.ev.stopPropagation();
 		if (this.ev.cancelBubble!=null) this.ev.cancelBubble = true;
 		if (this.ev.preventDefault) this.ev.preventDefault();
@@ -577,8 +577,8 @@ function qa_mouseDragDown(e){
 	}
   if (this.handler_dot>-1 && !this.global_delpoint) {
 		this.qtest = '';
-		if (this.qmode=='answer' && this.qanswer!='') this.qtest = this.qanswer;
-		if (this.qmode=='edit' && this.qconfig!='') this.qtest = this.qconfig;
+		if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
 
     var pp1 = this.qtest.split(',');
     var pp2 = pp1.slice(0,this.handler_dot*2);
@@ -586,8 +586,8 @@ function qa_mouseDragDown(e){
     pp2.push(Math.round(this.y).toString(16));
     this.qtest = pp2.join(',');
     this.qtest += ','+pp1.slice(this.handler_dot*2,pp1.length).join(',');
-		if (this.qmode=='answer' && this.qanswer!='') this.qanswer = this.qtest;
-		if (this.qmode=='edit' && this.qconfig!='') this.qconfig = this.qtest;
+		if (this.qmode == 'answer' && this.qanswer!='') this.qanswer = this.qtest;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qconfig = this.qtest;
 
     this.handler_sqr = this.handler_dot+1;
     this.handler_dot = -1;
@@ -595,7 +595,7 @@ function qa_mouseDragDown(e){
     this.qa_redraw_canvas;
   }
   //this.freehand
-  if (((this.qmode=='answer' && this.qanswer=='') || (this.qmode=='edit' && this.qconfig=='')) && this.y>28) {
+  if (((this.qmode == 'answer' && this.qanswer == '') || (this.qmode == 'edit' && this.qconfig == '')) && this.y>28) {
     this.poly_temp_points[6] = this.x;
     this.poly_temp_points[7] = this.y;
     this.freehand = true;
@@ -606,23 +606,23 @@ function qa_mouseDragUp(){
 	this.dragging = false;
   this.button_test();
 	
-	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') window.open('/help/staff/index.php?id=305');
+	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') window.open('/help/staff/index.php?id=305');
 
-  if (this.qmode=='edit' || this.qmode=='answer') {
+  if (this.qmode == 'edit' || this.qmode == 'answer') {
 		this.global_zoom = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_zoom.png']][6]==2) this.global_zoom = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_zoom.png']][6] == 2) this.global_zoom = true;
 		this.global_delpoint = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][6]==2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][7]=='+') this.global_delpoint = true;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][5]==2 && this.qconfig!='') this.global_clearpnl = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][6] == 2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][7] == '+') this.global_delpoint = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][5] == 2 && this.qconfig!='') this.global_clearpnl = true;
   }
 
-  if (this.qmode=='script') {
+  if (this.qmode == 'script') {
 		this.global_your_answer = false;	
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][7]=='+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][6]==2) this.global_your_answer = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][7] == '+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][6] == 2) this.global_your_answer = true;
 		this.global_corect_answer = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][7]=='+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][6]==2) this.global_corect_answer = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][7] == '+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][6] == 2) this.global_corect_answer = true;
 		this.global_show_error = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][7]=='+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][6]==2) this.global_show_error = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][7] == '+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][6] == 2) this.global_show_error = true;
 
 		this.global_zoom = false;
 	}
@@ -642,8 +642,8 @@ function qa_mouseDragUp(){
   if (this.y>28) {
     //condition for the finish
     if ((this.poly_temp.length>2 && (Math.abs(this.poly_temp_points[0]-this.x)<3 && Math.abs(this.poly_temp_points[1]-this.y)<3)) || (Math.abs(this.poly_temp_points[8]-this.x)<3 && Math.abs(this.poly_temp_points[9]-this.y)<3))  {      
-      if (this.qmode=='edit' && this.qconfig=='') this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
-      if (this.qmode=='answer' && this.qanswer=='') this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
+      if (this.qmode == 'edit' && this.qconfig == '') this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
+      if (this.qmode == 'answer' && this.qanswer == '') this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
 			this.global_delpoint_avail = true; 
       this.poly_temp = '';
       this.poly_temp_points = new Array(0,0,0,0,0,0,0,0,0,0);
@@ -671,7 +671,7 @@ function qa_mouseDragUp(){
     this.panel_buttons = new Array();
     this.global_clearpnl = false;
     this.global_delpoint = false;
-    if (this.panel_button_selected=='Y') {
+    if (this.panel_button_selected == 'Y') {
 			this.poly_temp = '';
       this.poly_temp_points = new Array(0,0,0,0,0,0,0,0,0,0);
 			if (this.qmode == 'edit') this.qconfig='';
@@ -683,8 +683,8 @@ function qa_mouseDragUp(){
   
   if (this.handler_sqr!=-1 && (this.global_delpoint || this.isCtrl)) {
 		this.qtest = '';
-		if (this.qmode=='answer' && this.qanswer!='') this.qtest = this.qanswer;
-		if (this.qmode=='edit' && this.qconfig!='') this.qtest = this.qconfig;
+		if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
 
     var pp1 = this.qtest.split(',');
 		if (this.handler_sqr>1 && this.handler_sqr<pp1.length/2) {
@@ -694,14 +694,14 @@ function qa_mouseDragUp(){
 			this.qtest = pp1.slice(2,pp1.length-2).join(',');
 			this.qtest += ',' + pp1.slice(2,4).join(',');
 		}
-    if (this.qmode=='answer' && this.qanswer!='') this.qanswer = this.qtest;
-		if (this.qmode=='edit' && this.qconfig!='') this.qconfig = this.qtest;
+    if (this.qmode == 'answer' && this.qanswer!='') this.qanswer = this.qtest;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qconfig = this.qtest;
 
     //clear whole array
     var pp1 = this.qtest.split(',');
     if (pp1.length <= 4) {
-      if (this.qmode=='answer' && this.qanswer!='') this.qanswer='';
-			if (this.qmode=='edit' && this.qconfig!='') this.qconfig='';
+      if (this.qmode == 'answer' && this.qanswer!='') this.qanswer='';
+			if (this.qmode == 'edit' && this.qconfig!='') this.qconfig='';
       this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][6]=0;
       this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][5]=0;
       this.global_delpoint = false;      
@@ -721,12 +721,12 @@ function qa_mouseDragUp(){
 
 function qa_ReturnInfo() {
   var questions_result = '';
-	if (this.qmode=='answer') {
+	if (this.qmode == 'answer') {
 		questions_result = this.test_result+';';
 		if (this.qanswer!='') questions_result += this.qanswer+', ';
 		var target_field = document.getElementById('q'+this.q_Num);
   	}
-	if (this.qmode=='edit') {
+	if (this.qmode == 'edit') {
 		questions_result = '0,0,0,0,0,0;';
 		if (this.qconfig!='') questions_result += this.qconfig+', ';
 		var target_field = document.getElementById(this.doorId);
