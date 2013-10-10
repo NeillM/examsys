@@ -47,9 +47,9 @@ $excluded = explode("|",  ".|..|.ds_store|.svn|.htaccess|help|media|tools|artwor
 //set of rules: type, short form, searched form, similar but other ....  position translation from short to long form, short form length, max length of option
 //spaces will be ignored
 $parts_table = Array(Array());$parts_index = 0;
-$common_parts = "{|*|$|sprintf|htmlentities|strip_tags|substr|mb_|number_format|get_string|formatsec|display_|demo_|str|round|0|1|2|3|4|5|6|7|8|9";
-$parts_table[$parts_index++] = Array(1, 'value', '="|=\'', '"|\'.$|<|;|t|f|true|false|opaque|showall|allways|high|#|\|'.$common_parts);
-$parts_table[$parts_index++] = Array(1, 'title', '="|=\'', '"|\'.$|<|;|t|f|true|false|high|#|\|'.$common_parts);
+$common_parts = '{|*|$|sprintf|htmlentities|strip_tags|substr|mb_|number_format|get_string|formatsec|display_|demo_|str|round|0|1|2|3|4|5|6|7|8|9|write_string|\'.|".';
+$parts_table[$parts_index++] = Array(1, 'value', '="|=\'', '"|<|;|t|f|true|false|opaque|showall|allways|high|#|\|'.$common_parts);
+$parts_table[$parts_index++] = Array(1, 'title', '="|=\'', '"|<|;|t|f|true|false|high|#|\|'.$common_parts);
 $parts_table[$parts_index++] = Array(1, 'echo', ' "| \'', ''.$common_parts);
 
 $parts_table[$parts_index++] = Array(2, 'title', ' |>', '<?|Rog|\'\.$"|'.$common_parts);
@@ -173,11 +173,13 @@ foreach($files as $filename) {
 				
 				//cut out the existing string to compare
 				$pot0 = mb_substr($file_content,$pos1,$pos2-$pos1);
-				$pot0 = preg_replace('/[\t\n\r]/','',$pot0); //eol
-				$pot1 = preg_replace('/ /','',$pot0); //spaces
+				$pot1 = $pot0 = preg_replace('/[\t\n\r]/','',$pot0); //eol
+				$pot1 = preg_replace('/ /','',$pot1); //spaces
+				$pot1 = preg_replace('/&nbsp;/','',$pot1); //spaces
+				$pot1 = preg_replace('/\\\n/','',$pot1); //eol's
 				$pot1 = preg_replace('/\\\""./','\"',$pot1); //backslashe with quot mark and period
 				$pot1 = preg_replace('/\\\"/','"',$pot1); //backslashe with quot mark
-				
+								
 				$pop = false;
 				//included forms
 				foreach (explode('|',$part_element[2]) as $pp1) {
@@ -186,9 +188,13 @@ foreach($files as $filename) {
 				
 				//excluded forms for type 1
 				if ($part_element[0]==1) {
-					foreach (explode('|',$part_element[2]) as $pp1) 
-						foreach (explode('|',$part_element[3]) as $pp2) 
-							if (strpos($pot1,$part_element[1].$pp1.$pp2)>-1) $pop = false;					
+					foreach (explode('|',$part_element[2]) as $pp1) {
+						foreach (explode('|',$part_element[3]) as $pp2) {
+							//if (strpos($pot1,$part_element[1].$pp1.$pp2)>-1) $pop = false;
+							if (strpos($pot1,preg_replace('/ /','',$part_element[1].$pp1.$pp2))>-1) $pop = false;
+							//if ($pp2=='write_string' && strpos($pot1,$pp2)>-1) var_dump($pot1.' >>> '.$pp2);
+						}
+					}
   			
 				$pot0 = strip_tags($pot0);
 				$pot1 = strip_tags($pot1);
@@ -198,26 +204,32 @@ foreach($files as $filename) {
 
 				//excluded forms for type 2				
 				if ($part_element[0]==2) {
-					$pot0 = strip_tags(substr($pot0,strpos($pot0,'>')+1));
-					$pot1 = strip_tags(substr($pot1,strpos($pot1,'>')+1));
+					$pot1 = $pot0 = strip_tags(substr($pot0,strpos($pot0,'>')+1));
+					$pot1 = preg_replace('/ /','',$pot0); //spaces
+					$pot1 = preg_replace('/&nbsp;/','',$pot1);
 					$pot1 = preg_replace('/\\\n/','',$pot1);
 					$pot1 = preg_replace('/\\\t/','',$pot1);
-					$pot1 = preg_replace('/&nbsp;/','',$pot1);
+						$pot1 = preg_replace('/"./','%',$pot1);
+						$pot1 = preg_replace('/\'./','%',$pot1);
 					$pot1 = preg_replace('/[\["\';.?)(]/', '',$pot1);
+						$pot1 = preg_replace('/%/','".',$pot1);
+						$pot1 = preg_replace('/%/','\'.',$pot1);
+					//$pot1 = preg_replace('/[\[;?)(]/', '',$pot1);
 					$pot1 = preg_replace('/[\s]/','',$pot1);
 			
 					$trs = 1; 
-					foreach (explode('|',$part_element[3]) as $pp2) 
+					foreach (explode('|',$part_element[3]) as $pp2) {
 						if ($pot1=='' || strpos($pot1,$pp2)===0) $pop = false;
+					}
 				}
 				
 				//excluded forms for type 3
 				if ($part_element[0]==3) {
-					$pot0 = strip_tags(substr($pot0,strpos($pot0,'(')+1));
-					$pot1 = strip_tags(substr($pot1,strpos($pot1,'(')+1));
+					$pot1 = $pot0 = strip_tags(substr($pot0,strpos($pot0,'(')+1));
+					$pot1 = preg_replace('/ /','',$pot0); //spaces
+					$pot1 = preg_replace('/&nbsp;/','',$pot1);
 					$pot1 = preg_replace('/\\\n/','',$pot1);
 					$pot1 = preg_replace('/\\\t/','',$pot1);
-					$pot1 = preg_replace('/&nbsp;/','',$pot1);
 					$pot1 = preg_replace('/[\["\';.?)(]/', '',$pot1);
 					$pot1 = preg_replace('/[\s]/','',$pot1);
 			
@@ -229,6 +241,7 @@ foreach($files as $filename) {
 				if ($pop) {
 					//calculate the line number
 					$line_number = substr_count(substr($file_content,0,$pos1),'~')+1;
+					//if ($line_number==563) var_dump($filename . $line_number . $pot0);
 					$diff_table[$diff_index++] = Array($part_index,$filename,$pos1,substr($pot0,$trs-1),$line_number,$part_element[0],$part_element[1]);
 				}
 			}
