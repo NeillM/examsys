@@ -679,6 +679,10 @@ class EnhancedCalc extends Question implements questionInterface {
    */
 
   public function generate_variables () {
+    
+    //create an empty array to hold the generated variables
+    $this->useranswer['vars'] = array();
+    
     //check to see if variables have been previously generated if not put them in an array to be generated
     foreach ($this->settings['vars'] as $key => $value) {
       if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
@@ -698,10 +702,9 @@ class EnhancedCalc extends Question implements questionInterface {
       if ($this->is_linked_ans($value['min'])) {
         $this->useranswer['vars'][$key] = $this->variable_substitution($value['min'], $this->alluseranswers);
       }
-
-//update the session
-      $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
     }
+    //update the session
+    $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
   }
 
   public function replace_leadin ($reviewers = false) {
