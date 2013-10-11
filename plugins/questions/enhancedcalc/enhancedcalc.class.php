@@ -38,15 +38,27 @@ class EnhancedCalc extends Question implements questionInterface {
     $this->configObj = $configObj;
   }
 
+  public function set_settings($data) {
+    $this->settings = $data;
+  }
+
   /**
    * Split answer into number and units if applicable
    * @param  string $input User answer
    * @return array         Number and unit components of the string
    */
   function split_numb_from_unit($input) {
+    $input=trim($input);
     //user selected the units from a ddl
     if (isset($this->useranswer['uansunit']) and $this->settings['show_units']) {
-      return array($input, $this->useranswer['uansunit']);
+
+      $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
+      $out = preg_match($pattern, $input, $matches);
+      if(isset($matches[0])) {
+        return array($matches[0], $this->useranswer['uansunit']);
+      } else {
+        return array($input, $this->useranswer['uansunit']);
+      }
     }
 
     $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
