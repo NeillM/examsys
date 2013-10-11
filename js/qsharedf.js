@@ -327,7 +327,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   f - show coloured with handlers
   d - show with green dot at the start and without handlers
   */
-  
+
   if (cc!='') this.context.strokeStyle = cc;
   if (cb!='') this.context.fillStyle = cb;
   if (mode == 'e' || mode == 'r' || mode == 'f' || mode == 't') this.context.fillStyle = this.context.strokeStyle = cc;
@@ -340,16 +340,17 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   var d2 = 6;
   var int_count = 0;
   this.context.lineJoin = "round";
+	this.context.lineCap = "round";
 
   this.context.beginPath();
   var tx0,ty0,tx1,ty1,tx2,ty2,tx3,ty3,ta,tb;
   tx2 = parseInt(pp[0].trim(), 16)+xx+0.5;
   ty2 = parseInt(pp[1].trim(), 16)+yy+0.5;
-  if (tx2<this.draw_limit[0]) tx2=this.draw_limit[0];
-  if (tx2>this.draw_limit[2]) tx2=this.draw_limit[2];
+  if (this.draw_limit.length>0 && tx2<this.draw_limit[0]) tx2=this.draw_limit[0];
+  if (this.draw_limit.length>0 && tx2>this.draw_limit[2]) tx2=this.draw_limit[2];
   qq.push(tx2);
-  if (ty2<this.draw_limit[1]) ty2=this.draw_limit[1];
-  if (ty2>this.draw_limit[3]) ty2=this.draw_limit[3];
+  if (this.draw_limit.length>0 && ty2<this.draw_limit[1]) ty2=this.draw_limit[1];
+  if (this.draw_limit.length>0 && ty2>this.draw_limit[3]) ty2=this.draw_limit[3];
   qq.push(ty2);
   
   tx0 = tx2;
@@ -370,11 +371,11 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
     if (Math.abs(tx2-tx1)>3 || Math.abs(ty2-ty1)>3) 
     {
       //test points against limits
-      if (tx2<this.draw_limit[0]) tx2=this.draw_limit[0];
-      if (tx2>this.draw_limit[2]) tx2=this.draw_limit[2];
+      if (this.draw_limit.length>0 && tx2<this.draw_limit[0]) tx2=this.draw_limit[0];
+      if (this.draw_limit.length>0 && tx2>this.draw_limit[2]) tx2=this.draw_limit[2];
       qq.push(tx2);
-      if (ty2<this.draw_limit[1]) ty2=this.draw_limit[1];
-      if (ty2>this.draw_limit[3]) ty2=this.draw_limit[3];
+      if (this.draw_limit.length>0 && ty2<this.draw_limit[1]) ty2=this.draw_limit[1];
+      if (this.draw_limit.length>0 && ty2>this.draw_limit[3]) ty2=this.draw_limit[3];
       qq.push(ty2);
       
       //calculate and record line coords and equation      
