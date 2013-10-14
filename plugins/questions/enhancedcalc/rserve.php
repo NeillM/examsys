@@ -292,7 +292,7 @@ class EnhancedCalcRrserve {
   }
   
   function is_engineering_format($num) {
-      $epos = strpos($num, 'e');
+      $epos = stripos($num, 'e');
       if($epos !== false) {
          return true;
       }
