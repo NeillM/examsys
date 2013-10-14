@@ -466,8 +466,10 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
 
   private function extract_answers() {
     $this->answers = array();
-
-    foreach ($this->options as $index => $option) {
+    
+    $all_ans = array_filter ($this->options, function ($var) { return ($var->get_formula() != ''); } );
+    
+    foreach ($all_ans as $option) {
       $formula = $option->get_formula();
       $units = $option->get_units();
 

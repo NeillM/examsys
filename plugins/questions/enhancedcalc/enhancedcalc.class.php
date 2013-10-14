@@ -38,15 +38,27 @@ class EnhancedCalc extends Question implements questionInterface {
     $this->configObj = $configObj;
   }
 
+  public function set_settings($data) {
+    $this->settings = $data;
+  }
+
   /**
    * Split answer into number and units if applicable
    * @param  string $input User answer
    * @return array         Number and unit components of the string
    */
   function split_numb_from_unit($input) {
+    $input=trim($input);
     //user selected the units from a ddl
     if (isset($this->useranswer['uansunit']) and $this->settings['show_units']) {
-      return array($input, $this->useranswer['uansunit']);
+
+      $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
+      $out = preg_match($pattern, $input, $matches);
+      if(isset($matches[0])) {
+        return array($matches[0], $this->useranswer['uansunit']);
+      } else {
+        return array($input, $this->useranswer['uansunit']);
+      }
     }
 
     $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
@@ -679,6 +691,10 @@ class EnhancedCalc extends Question implements questionInterface {
    */
 
   public function generate_variables () {
+    
+    //create an empty array to hold the generated variables
+    $this->useranswer['vars'] = array();
+    
     //check to see if variables have been previously generated if not put them in an array to be generated
     foreach ($this->settings['vars'] as $key => $value) {
       if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
@@ -698,10 +714,9 @@ class EnhancedCalc extends Question implements questionInterface {
       if ($this->is_linked_ans($value['min'])) {
         $this->useranswer['vars'][$key] = $this->variable_substitution($value['min'], $this->alluseranswers);
       }
-
-//update the session
-      $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
     }
+    //update the session
+    $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
   }
 
   public function replace_leadin ($reviewers = false) {
@@ -724,6 +739,12 @@ class EnhancedCalc extends Question implements questionInterface {
     return $string;
   }
 
+  public function decode_settings() {
+    if (!is_array($this->settings)) {
+      $this->settings = json_decode($this->settings, true);
+    }
+  }
+
   public function render_paper($extra = array()) {
     global $string;
 
@@ -738,9 +759,7 @@ class EnhancedCalc extends Question implements questionInterface {
     if (!is_array($this->useranswer)) {
       $this->useranswer = json_decode($this->useranswer, true);
     }
-    if (!is_array($this->settings)) {
-      $this->settings = json_decode($this->settings, true);
-    }
+    $this->decode_settings();
 
     // create array of units and functions
     if ((isset($this->settings['answersexp']) and !is_array($this->settings['answersexp'])) or (!isset($this->settings['answersexp']))) {
@@ -939,6 +958,7 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return boolean True if incorrect mark is less than 0
    */
   public function is_negative_marked() {
+    $this->decode_settings();
     return $this->settings['marks_incorrect'] < 0;
   }
 

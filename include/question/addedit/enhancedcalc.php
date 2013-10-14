@@ -64,12 +64,15 @@ require_once 'detail_parts/details_general_feedback.php';
           </thead>
 <?php
 $index = 1;
-foreach ($question->options as $variable) {
+
+$options = array_filter ($question->options, function ($var) { return ($var->get_variable() != ''); } );
+
+foreach ($options as $variable) {
   include 'options/opt_enhancedcalc.php';
   $index++;
 }
 
-for ($index = $num_vars + 1; $index <= count($labels); $index++) {
+for ($index; $index <= count($labels); $index++) {
   $variable = new OptionENHANCEDCALC($mysqli, $userObject->get_user_ID(), $question, $index, $string, array());
   $variable->set_variable('$' . $labels[$index-1]);
   include 'options/opt_enhancedcalc.php';
@@ -104,8 +107,8 @@ if($question->get_locked() == '') {
           </thead>
 <?php
 $index = 1;
-foreach ($answers as $answer_ix) {
-  $answer = $question->options[$answer_ix];
+$all_ans = array_filter ($question->options, function ($var) { return ($var->get_formula() != ''); } );
+foreach ($all_ans as $answer) {
   include 'options/ans_enhancedcalc.php';
   $index++;
 }
