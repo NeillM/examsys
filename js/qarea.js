@@ -43,13 +43,13 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 		this.gen_img.src = ''+image; 
        
 		//---------- mode 
-		this.yOffset = 2;
+		this.yoffset = 25; //ofset of top edge of the image
     this.qmode = mode;
 		if (this.qmode == 'script') this.global_zoom = false;
 		
 		//---------- config, 
-    this.qconfig=this.yoffset_fix(config,this.yOffest_fix);
-    //this.yOffest_fix
+    this.qconfig=this.yoffset_fix(config,this.yoffset_fix_value,this.yoffset_fiy_value);
+    //this.yoffset_fix
     if (config!='') this.global_delpoint_avail = true;
 
 		//---------- answer, 
@@ -57,10 +57,10 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
       this.is_an_answer = true;
       var answer_l1 = answer.split("|");
       for (i=0; i<answer_l1.length; i++) {
-        this.answerBox[i] = this.yoffset_fix(answer_l1[i],this.yOffest_fix).split(",");
+        this.answerBox[i] = this.yoffset_fix(answer_l1[i],this.yoffset_fix_value,this.yoffset_fiy_value).split(",");
       }    
     }      
-    if (answer=='u') this.allUnaswered=true;
+    if (answer == 'u') this.allUnaswered=true;
     this.qanswer=answer;
     
 		//---------- colour 
@@ -68,10 +68,10 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
     
 		//---------- extra
 		// flash modes 1: answer, 2: edit, 3: script
-		if (this.qmode=='script') {
-			if (typeof(extra[0])!='undefined' && extra[0]=='0') this.display_students_response = false;
-			if (typeof(extra[1])!='undefined' && extra[1]=='0') this.display_correct_answer = false;
-			if (typeof(extra[4])!='undefined' && extra[4]=='1') this.hide_feedback_ifunanswered = true;
+		if (this.qmode == 'script') {
+			if (typeof(extra[0])!='undefined' && extra[0] == '0') this.display_students_response = false;
+			if (typeof(extra[1])!='undefined' && extra[1] == '0') this.display_correct_answer = false;
+			if (typeof(extra[4])!='undefined' && extra[4] == '1') this.hide_feedback_ifunanswered = true;
 			if (this.hide_feedback_ifunanswered && !(this.is_an_answer)) {
 				this.display_students_response = false;
 				this.display_correct_answer = false;
@@ -91,13 +91,13 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 	}
 }
 
-function yoffset_fix(data,fix) {
+function yoffset_fix(data,fix,fiy) {
   var data_out = '';
   if (data!='') {
 		var data_in = data.split(',');
 		for (var n=0;n<data_in.length/2;n++) {
-			data_out += data_in[n*2]+',';
-			data_out += (parseInt(data_in[n*2+1].trim(), 16)+fix).toString(16)+',';
+			data_out += Math.round(parseInt(data_in[n*2+0].trim(), 16)+fix).toString(16)+',';
+			data_out += Math.round(parseInt(data_in[n*2+1].trim(), 16)+fiy).toString(16)+',';
 		}
 		data_out = data_out.substr(0,data_out.length-1);
 	}
@@ -108,7 +108,7 @@ function qa_menuBuild() {
   this.imgdata = menuImages['toolbar/vert_0.png'];
 	this.context.drawImage(this.menu_img,this.imgdata.left+0.5,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,0,0,this.canvas.width,this.imgdata.height);
   
-  if (this.qmode=='test') {
+  if (this.qmode == 'test') {
     var spac = 3;
     var posx = 3;    
     var posy = 3;
@@ -125,7 +125,7 @@ function qa_menuBuild() {
 		area_buttons[7] = new Array('toolbar/ico_warn.png',lang_string['But_show_error']);
   }
 	
-  if (this.qmode=='script') {
+  if (this.qmode == 'script') {
     var spac = 3;
     var posx = 3;    
     var posy = 3;
@@ -148,7 +148,7 @@ function qa_menuBuild() {
 			this.global_show_error = false;
 		}
   }
-  if (this.qmode=='edit' || this.qmode=='answer') {
+  if (this.qmode == 'edit' || this.qmode == 'answer') {
     var spac = 3;
     var posx = 3;    
     var posy = 3;
@@ -171,13 +171,13 @@ function qa_test(type) {
   this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
   this.context.globalAlpha = 0.5;
   var col = '#CC0000';
-  if (this.qanswer!='') this.polyDrawH(this.context,'',col,0,this.yOffset,this.qanswer.split(','),'t');     
+  if (this.qanswer!='') this.polyDrawH(this.context,'',col,0,this.yoffset,this.qanswer.split(','),'t');     
   col = '#0000FF';  
-  if (this.qconfig!='') this.polyDrawH(this.context,'',col,0,this.yOffset,this.qconfig.split(','),'t'); 
+  if (this.qconfig!='') this.polyDrawH(this.context,'',col,0,this.yoffset,this.qconfig.split(','),'t'); 
   this.context.globalAlpha = 1;
 	
 	var timgd = this.context.getImageData(1,1,this.canvas.width-2,this.canvas.height-2);
-	if (type=='data') {
+	if (type == 'data') {
 		this.timgp = timgd.data;
 		this.do_the_test_calc = true;
 		return this.timgp;
@@ -192,7 +192,7 @@ function qa_test_calc(type) {
 	var trsh = 64;
 	this.do_the_test_calc = false;
 	
-	if (type=='data') {
+	if (type == 'data') {
 		for (j=0; j<this.timgp.length; j+=4) {
 			if (this.timgp[j+0]*1 > trsh && this.timgp[j+2]*1 > trsh && this.timgp[j+1]*1 < trsh) li1++;
 			if (this.timgp[j+0]*1 > trsh && this.timgp[j+2]*1 < trsh && this.timgp[j+1]*1 < trsh) li2++;
@@ -203,14 +203,14 @@ function qa_test_calc(type) {
 		var result_er = 1000 - result_in + result_out;
 		return result_er / 10+','+result_in / 10+','+result_out / 10+','+li1+','+li2+','+li3;
 	}
-	if (type=='image') {
+	if (type == 'image') {
 		this.timga = this.err_image.data;
 		for (j=0; j<this.timga.length; j+=4) {
 			li1=li2=li3=li4=0;
 			if (this.timga[j+0]*1 > trsh && this.timga[j+2]*1 > trsh && this.timga[j+1]*1 < trsh) li1++;
 			if (this.timga[j+0]*1 > trsh && this.timga[j+2]*1 < trsh && this.timga[j+1]*1 < trsh) li2++;
 			if (this.timga[j+0]*1 < trsh && this.timga[j+2]*1 > trsh && this.timga[j+1]*1 < trsh) li3++;
-			if (li2==1 || li3==1) {
+			if (li2 == 1 || li3 == 1) {
 				this.timga[j+0] = 255;
 				this.timga[j+1] = 0;
 				this.timga[j+2] = 0;
@@ -226,21 +226,20 @@ function qa_test_calc(type) {
 }
 
 function qa_redraw_canvas_main(tx,ty) {
-	tx+=1;
-	ty+=1;
 
 	this.context.globalAlpha = 1;
 	this.context.fillStyle='#ffffff';
 	this.context.fillRect(-30,-30,this.canvas.width+60,this.canvas.height+60); 
-	this.context.drawImage(this.gen_img,tx,ty);
+	this.context.drawImage(this.gen_img,tx+1,ty+1);
+	tx-=1; ty-=1;
 	this.context.globalAlpha = 0.75;
 	this.context.lineWidth = 3;
 	var col = '#385D8A';
 	//edit or answer
-	if (this.qconfig!='' && this.qmode=='edit') this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qconfig.split(','),'h'); 
-	if (this.qanswer!='' && this.qmode=='answer') this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qanswer.split(','),'h'); 
+	if (this.qconfig!='' && this.qmode == 'edit') this.polyDrawH(this.context,col,'',tx,ty,this.qconfig.split(','),'h'); 
+	if (this.qanswer!='' && this.qmode == 'answer') this.polyDrawH(this.context,col,'',tx,ty,this.qanswer.split(','),'h'); 
 
-	if (this.qmode=='script') {
+	if (this.qmode == 'script') {
 		if (this.qconfig!='' && this.qanswer!='' && typeof(this.err_image)!='undefined' && this.global_show_error) {
 			//combine images
 			var img_final = this.context.getImageData(1,1,this.canvas.width-2,this.canvas.height-2);
@@ -254,7 +253,7 @@ function qa_redraw_canvas_main(tx,ty) {
 				if (err_final_data[j+0]*1 > trsh && err_final_data[j+2]*1 > trsh && err_final_data[j+1]*1 < trsh) li1++;
 				if (err_final_data[j+0]*1 > trsh && err_final_data[j+2]*1 < trsh && err_final_data[j+1]*1 < trsh) li2++;
 				if (err_final_data[j+0]*1 < trsh && err_final_data[j+2]*1 > trsh && err_final_data[j+1]*1 < trsh) li3++;
-				if (li2==1 || li3==1) {
+				if (li2 == 1 || li3 == 1) {
 					img_final_data[j+0] = 240;
 					img_final_data[j+1] = img_final_data[j+1]*0.8;
 					img_final_data[j+2] = img_final_data[j+2]*0.8;
@@ -263,37 +262,37 @@ function qa_redraw_canvas_main(tx,ty) {
 			this.context.putImageData(img_final, 1,1);
 			col = '#ee6666';
 			this.context.globalAlpha = 0.75;
-			this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qconfig.split(','),'e'); 
-			this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qanswer.split(','),'e');
+			this.polyDrawH(this.context,col,'',tx,ty,this.qconfig.split(','),'e'); 
+			this.polyDrawH(this.context,col,'',tx,ty,this.qanswer.split(','),'e');
 			delete img_final,img_final_data,err_final_data;
 		}
-		if (this.qconfig!='' && this.qanswer=='' && this.global_show_error) {
+		if (this.qconfig!='' && this.qanswer == '' && this.global_show_error) {
 			col = '#ee6666';
 			this.context.globalAlpha = 0.40;
-			this.polyDrawH(this.context,'',col,tx-1,ty-28+this.yOffset,this.qconfig.split(','),'e'); 
+			this.polyDrawH(this.context,'',col,tx,ty,this.qconfig.split(','),'e'); 
 			this.context.globalAlpha = 0.75;
-			this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qconfig.split(','),'e'); 
+			this.polyDrawH(this.context,col,'',tx,ty,this.qconfig.split(','),'e'); 
 		}
 		if (this.qconfig!='' && this.global_corect_answer) {
 			col = '#0aff0a';
 			this.context.globalAlpha = 0.25;
-			this.polyDrawH(this.context,'',col,tx-1,ty-28+this.yOffset,this.qconfig.split(','),'e'); 
+			this.polyDrawH(this.context,'',col,tx,ty,this.qconfig.split(','),'e'); 
 			this.context.globalAlpha = 0.75;
-			this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qconfig.split(','),'e'); 
+			this.polyDrawH(this.context,col,'',tx,ty,this.qconfig.split(','),'e'); 
 		}
 		if (this.qanswer!='' && this.global_your_answer) {
 			col = '#385D8A';
 			this.context.globalAlpha = 0.25;
-			this.polyDrawH(this.context,'',col,tx-1,ty-28+this.yOffset,this.qanswer.split(','),'e'); 
+			this.polyDrawH(this.context,'',col,tx,ty,this.qanswer.split(','),'e'); 
 			this.context.globalAlpha = 0.75;		
-			this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,this.qanswer.split(','),'e'); 
+			this.polyDrawH(this.context,col,'',tx,ty,this.qanswer.split(','),'e'); 
 		}
 	}
 	//draw temp polygon
-	if (((this.qconfig=='' && this.qmode=='edit') || (this.qanswer=='' && this.qmode=='answer'))  && this.poly_temp!='') {
+	if (((this.qconfig == '' && this.qmode == 'edit') || (this.qanswer == '' && this.qmode == 'answer'))  && this.poly_temp!='') {
 		var poly_temp_ext = this.poly_temp;
-		poly_temp_ext += Math.round(this.x).toString(16)+','+Math.round(this.y).toString(16);
-		this.polyDrawH(this.context,col,'',tx-1,ty-28+this.yOffset,poly_temp_ext.split(','),'d');
+		poly_temp_ext += Math.round(this.x).toString(16)+','+Math.round(this.oy).toString(16);
+		this.polyDrawH(this.context,col,'',tx,ty,poly_temp_ext.split(','),'d');
 		}
 	this.context.globalAlpha = 1;
 }
@@ -302,7 +301,7 @@ function qa_redraw_canvas() {
 		if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.mouse_moved || this.ShiftChange)) {
 		
     //buttons
-    if (this.buttonBox.length==0) this.qa_menuBuild();
+    if (this.buttonBox.length == 0) this.qa_menuBuild();
 
     //testing the answer
     if (this.do_the_test && typeof(this.qanswer)!='undefined' && this.qanswer!=this.last_answer) {
@@ -311,7 +310,7 @@ function qa_redraw_canvas() {
     }
 		
 		if (this.qconfig!='' && this.global_show_error) {
-			if (typeof(this.err_image_final)=='undefined') {
+			if (typeof(this.err_image_final) == 'undefined') {
 				this.err_image = this.qa_test('image');
 			}
 		}
@@ -319,12 +318,12 @@ function qa_redraw_canvas() {
  		this.redraw_once = false;
     this.mouse_moved = false;
     this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-    this.qa_redraw_canvas_main(1,28-this.yOffset);
+    this.qa_redraw_canvas_main(0,this.yoffset);
     this.context.lineWidth = this.lineThickness;
 		this.context.strokeStyle=this.currentColours[1];
     
     //cross red or gray
-    if (this.qmode=='edit' || this.qmode=='answer') {
+    if (this.qmode == 'edit' || this.qmode == 'answer') {
 			if (this.global_delpoint_avail) {
 				this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][0] = 'toolbar/ico_cross_on.png';
 				this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][7] = '+';
@@ -337,8 +336,8 @@ function qa_redraw_canvas() {
 		}
 
     //clear all active?
-    if (this.qmode=='edit' || this.qmode=='answer') {
-			if ((this.qmode=='edit' && this.qconfig!='') || (this.qmode=='answer' && this.qanswer!='')) {
+    if (this.qmode == 'edit' || this.qmode == 'answer') {
+			if ((this.qmode == 'edit' && this.qconfig!='') || (this.qmode == 'answer' && this.qanswer!='')) {
 				this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][7] = '';
 			} else {
 				this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][7] = '-';
@@ -357,29 +356,42 @@ function qa_redraw_canvas() {
     if (this.buttonOver!=-1) this.tooltip_draw(this.context,this.buttonBox[this.buttonOver]);
   
     
-    if (this.global_zoom  && !this.isShift && !this.global_clearpnl && this.y>26) {
+    if (this.global_zoom  && !this.isShift && !this.global_clearpnl && this.oy>0) {
       //mask
       this.context.save();
       this.context.beginPath();
       
-      var px = mx = this.x;
-      var py = my = this.y;
+      this.imgdata = menuImages['toolbar/loupe.png'];
+      var loupe_x = zoom_x = this.x;
+      var loupe_y = this.oy;
+			var zoom_y = this.oy;
+			var loupe_width = this.imgdata.width; //87
+
       //reposition magnifying glas near the top edge
-      var ty = 2*43+28-this.yOffset;
-      if (this.y<ty) {py=ty; my = this.y*2-ty;}
-      //reposition magnifying glas near the right edge
-      var tx = this.canvas.width-2*43;
-      if (this.x>(tx)) {px = tx; mx = this.x*2-tx;}
+      var tx = this.canvas.width-loupe_width;
+			var ty = this.yoffset+loupe_width;
       
-      this.context.arc(px+43, py-43, 42, 0, Math.PI * 2, false);
+			if (this.oy<ty) {
+				loupe_y = ty; 
+				zoom_y = this.oy*2-ty;
+			}
+			
+      //reposition magnifying glas near the right edge
+      if (this.x>(tx)) {
+				loupe_x = tx; 
+				zoom_x = this.x*2-tx;
+			}
+      
+			this.draw_limit = [];
+			this.context.arc(loupe_x+Math.round(loupe_width/2), loupe_y-Math.round(loupe_width/2), Math.round(loupe_width/2)-2, 0, Math.PI * 2, false);
       this.context.clip();
       this.context.scale(2,2);
-      this.qa_redraw_canvas_main((1-mx)/2+22,(28-this.yOffset-my)/2-8);
+      this.qa_redraw_canvas_main((1-zoom_x)/2+Math.round(loupe_width/4),(1-zoom_y)/2-Math.round(loupe_width/4));
       this.context.restore();
+			this.draw_limit = new Array(0,27,this.canvas.width-2,this.canvas.height-2);
 
       //cursor
-      this.imgdata = menuImages['toolbar/loupe.png'];
-      this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,px,py-this.imgdata.height,this.imgdata.width,this.imgdata.height);
+      this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,loupe_x,loupe_y-this.imgdata.height,this.imgdata.width,this.imgdata.height);
     }	
     // border
     this.context.strokeStyle='#7f9db9'; 
@@ -390,7 +402,7 @@ function qa_redraw_canvas() {
 			this.test_result = this.qa_test_calc('data');
 			this.qa_ReturnInfo();
     }
-    if (this.qmode =='edit' && this.last_config!=this.qconfig) {
+    if (this.qmode == 'edit' && this.last_config!=this.qconfig) {
 			this.last_config=this.qconfig;
 			this.qa_ReturnInfo();
     }		
@@ -402,48 +414,49 @@ function qa_mouseDragMove(e){
 	if (this.ev.target.id != this.canvas.id) {
 		return true;
 	}
-	if (this.ev.type=='keydown') {
+	if (this.ev.type == 'keydown') {
 		this.isShift = this.ev.shiftKey ? true : false;
 		this.isCtrl = this.ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}
-	if (this.ev.type=='keyup') { 
+	if (this.ev.type == 'keyup') { 
 		this.isShift = this.ev.shiftKey ? true : false;
 		this.isCtrl = this.ev.ctrlKey ? true : false;
 		this.ShiftChange = true;
 	}		
-	if (this.ev.type=='mousemove') {
+	if (this.ev.type == 'mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
 		this.loc_lft = this.canv_rect.left;
 		this.loc_top = this.canv_rect.top;
 		this.x = this.ev.clientX - this.loc_lft;
 		this.y = this.ev.clientY - this.loc_top;
+		this.oy = this.y - this.yoffset;
 	}	
-
+	
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
     if (this.handler_sqr>-1) {
 			this.qtest = '';
-			if (this.qmode=='answer' && this.qanswer!='') this.qtest = this.qanswer;
-			if (this.qmode=='edit' && this.qconfig!='') this.qtest = this.qconfig;
+			if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+			if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
 
       var pp = this.qtest.split(',');
-      pp[(this.handler_sqr*2-2)] = this.x.toString(16);
-      pp[(this.handler_sqr*2-1)] = this.y.toString(16);
+      pp[(this.handler_sqr*2-2)] = Math.round(this.x).toString(16);
+      pp[(this.handler_sqr*2-1)] = Math.round(this.oy).toString(16);
 			//move first handler if moving last in polygon
-			if ((this.handler_sqr*2-2)==pp.length) {
+			if ((this.handler_sqr*2-2) == pp.length) {
 				pp[0] = pp[this.handler_sqr*2-2];
 				pp[1] = pp[this.handler_sqr*2-1];
 			}
-			if (this.handler_sqr==1) {
+			if (this.handler_sqr == 1) {
 				pp[pp.length-2] = pp[0];
 				pp[pp.length-1] = pp[1];
 			}
 
 			this.qtest = pp.join(',');
 
-      if (this.qmode=='answer' && this.qanswer!='') this.qanswer = this.qtest;
-			if (this.qmode=='edit' && this.qconfig!='') this.qconfig = this.qtest;
+      if (this.qmode == 'answer' && this.qanswer!='') this.qanswer = this.qtest;
+			if (this.qmode == 'edit' && this.qconfig!='') this.qconfig = this.qtest;
 
       this.redraw_once = true;
       this.qa_redraw_canvas;
@@ -457,18 +470,18 @@ function qa_mouseDragMove(e){
       var buttonTest = -1;
       for (var i=0;i<this.buttonBox.length;i++) {
         this.buttonBox[i][5] = this.buttonBox[i][6];
-        //if (this.buttonBox[i][5]==2) alert(i);
-        if (this.buttonBox[i][0]=='toolbar/ico_drop.png') this.buttonBox[i][5] = this.buttonBox[i-1][5];
+        //if (this.buttonBox[i][5] == 2) alert(i);
+        if (this.buttonBox[i][0] == 'toolbar/ico_drop.png') this.buttonBox[i][5] = this.buttonBox[i-1][5];
         
-				if (this.buttonBox[i][0].indexOf('vert_')==-1 && this.testWithin(this.x,this.y,this.buttonBox[i][1],this.buttonBox[i][2],this.buttonBox[i][3],this.buttonBox[i][4])==true) {
+				if (this.buttonBox[i][0].indexOf('vert_') == -1 && this.testWithin(this.x,this.y,this.buttonBox[i][1],this.buttonBox[i][2],this.buttonBox[i][3],this.buttonBox[i][4]) == true) {
           over_object = true;
           buttonTest = i;
           this.buttonBox[i][5] = 1;
           
           //double button
           var j=i;
-          if (this.buttonBox[i][0]=='toolbar/ico_drop.png') j=i-1;
-          if (i<this.buttonBox.length-1 && this.buttonBox[i+1][0]=='toolbar/ico_drop.png') j=i+1;
+          if (this.buttonBox[i][0] == 'toolbar/ico_drop.png') j=i-1;
+          if (i<this.buttonBox.length-1 && this.buttonBox[i+1][0] == 'toolbar/ico_drop.png') j=i+1;
           this.buttonBox[j][5] = 1;
         }
       }
@@ -480,10 +493,10 @@ function qa_mouseDragMove(e){
       }
       
       //this.test for handler points      
-      if ((this.qmode=='edit' && this.qconfig!='') || (this.qmode=='answer' && this.qanswer!='')) {
+      if ((this.qmode == 'edit' && this.qconfig!='') || (this.qmode == 'answer' && this.qanswer!='')) {
 				this.qtest = '';
-				if (this.qmode=='answer' && this.qanswer!='') this.qtest = this.qanswer;
-				if (this.qmode=='edit' && this.qconfig!='') this.qtest = this.qconfig;
+				if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+				if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
 								
         var pp = this.qtest.split(',');
         this.handler_dot = -1;
@@ -491,39 +504,39 @@ function qa_mouseDragMove(e){
         for (var n=1;n<pp.length/2;n++) {
           var ttx = (parseInt(pp[n*2].trim(), 16)-parseInt(pp[n*2-2].trim(), 16))/2+parseInt(pp[n*2-2].trim(), 16);
           var tty = (parseInt(pp[n*2+1].trim(), 16)-parseInt(pp[n*2-1].trim(), 16))/2+parseInt(pp[n*2-1].trim(), 16);
-          if (this.testWithin(this.x,this.y,ttx-3,tty-3,7,7)) this.handler_dot = n;
-          if (this.testWithin(this.x,this.y,parseInt(pp[n*2-2].trim(), 16)-3,parseInt(pp[n*2-1].trim(), 16)-1,7,7)) this.handler_sqr = n;					
+          if (this.testWithin(this.x,this.oy,ttx-3,tty-3,7,7)) this.handler_dot = n;
+          if (this.testWithin(this.x,this.oy,parseInt(pp[n*2-2].trim(), 16)-3,parseInt(pp[n*2-1].trim(), 16)-1,7,7)) this.handler_sqr = n;					
         }
       }
 			
       var cur = 'default';
-      if (this.y>25) cur = 'crosshair';
+      if (this.oy>0) cur = 'crosshair';
  			if (this.qmode!='script' && (this.global_delpoint || this.isCtrl)) cur = 'url(/js/images/cur_cross.cur) 6 5, default'; //this works only in css3 browsers otherwise whole cursor is ignored
 			if (over_object) cur = 'pointer';
-      if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') cur = 'help';
+      if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') cur = 'help';
       if (this.global_clearpnl) cur = 'default';
       e.target.style.cursor = cur;
       
 		}
 	}
-  if (this.oldx!=this.x || this.oldy!=this.y) this.mouse_moved = true;
+  if (this.oldx!=this.x || this.oldy!=this.oy) this.mouse_moved = true;
   this.oldx=this.x;
-  this.oldy=this.y;
+  this.oldy=this.oy;
   
   //this.freehand draw  
-  if (this.y>28 && this.poly_temp_points[7]!=0 && this.freehand) {
+  if (this.oy>0 && this.poly_temp_points[7]!=0 && this.freehand) {
     this.angle1 = this.angle2 = this.distn = this.dx = this.dy = -1;
     if (this.poly_temp_points[3]!=0 && this.poly_temp_points[5]!=0) 
       this.angle1 = Math.atan2(this.poly_temp_points[5]-this.poly_temp_points[3],this.poly_temp_points[4]-this.poly_temp_points[2]);
     if (this.poly_temp_points[5]!=0) 
-      this.angle2 = Math.atan2(this.y-this.poly_temp_points[5],this.x-this.poly_temp_points[4]);
+      this.angle2 = Math.atan2(this.oy-this.poly_temp_points[5],this.x-this.poly_temp_points[4]);
     
-    if (this.poly_temp_points[5]==0) {
+    if (this.poly_temp_points[5] == 0) {
       this.dx = this.x - this.poly_temp_points[6];
-      this.dy = this.y - this.poly_temp_points[7];
+      this.dy = this.oy - this.poly_temp_points[7];
     } else {
       this.dx = this.x - this.poly_temp_points[4];
-      this.dy = this.y - this.poly_temp_points[5];
+      this.dy = this.oy - this.poly_temp_points[5];
     }
     
     this.distn = Math.sqrt(this.dx*this.dx+this.dy*this.dy);
@@ -531,11 +544,11 @@ function qa_mouseDragMove(e){
     var add_point = false;
     
     //if one just started freedrawing
-    if (this.poly_temp_points[3]==0 && this.distn > 10) {
+    if (this.poly_temp_points[3] == 0 && this.distn > 10) {
       //because this is this.freehand and no point has been added - add starting one first
       this.poly_temp += Math.round(this.poly_temp_points[6]).toString(16)+','+Math.round(this.poly_temp_points[7]).toString(16)+',';
 			
-			if (this.poly_temp_points[5]==0){
+			if (this.poly_temp_points[5] == 0){
 				this.poly_temp_points[0] = this.poly_temp_points[6];
 				this.poly_temp_points[1] = this.poly_temp_points[7];
 			}      
@@ -550,17 +563,17 @@ function qa_mouseDragMove(e){
     if (this.poly_temp_points[3]!=0 && this.poly_temp_points[5]!=0 && this.distn > 10 && Math.abs(this.angle2-this.angle1)>(1/this.distn*3)) add_point = true;
         
     if (add_point) {
-      this.poly_temp += Math.round(this.x).toString(16)+','+Math.round(this.y).toString(16)+',';
+      this.poly_temp += Math.round(this.x).toString(16)+','+Math.round(this.oy).toString(16)+',';
       this.poly_temp_points[2] = this.poly_temp_points[4];
       this.poly_temp_points[3] = this.poly_temp_points[5];
       this.poly_temp_points[4] = this.x;
-      this.poly_temp_points[5] = this.y;
+      this.poly_temp_points[5] = this.oy;
     }
   }
   //this.freehand draw end  
 
 	//cancel propagation if BackSpace
-	if (this.ev.type=='keydown' && this.ev.keyCode<=46) {
+	if (this.ev.type == 'keydown' && this.ev.keyCode<=46) {
 		if (this.ev.stopPropagation) this.ev.stopPropagation();
 		if (this.ev.cancelBubble!=null) this.ev.cancelBubble = true;
 		if (this.ev.preventDefault) this.ev.preventDefault();
@@ -572,22 +585,24 @@ function qa_mouseDragMove(e){
 function qa_mouseDragDown(e){
 	this.x = e.clientX - this.canv_rect.left;
 	this.y = e.clientY - this.canv_rect.top;
+	this.oy = this.y - this.yoffset;
+	
 	if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
 		this.dragging = true;	
 	}
   if (this.handler_dot>-1 && !this.global_delpoint) {
 		this.qtest = '';
-		if (this.qmode=='answer' && this.qanswer!='') this.qtest = this.qanswer;
-		if (this.qmode=='edit' && this.qconfig!='') this.qtest = this.qconfig;
+		if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
 
     var pp1 = this.qtest.split(',');
     var pp2 = pp1.slice(0,this.handler_dot*2);
     pp2.push(Math.round(this.x).toString(16));
-    pp2.push(Math.round(this.y).toString(16));
+    pp2.push(Math.round(this.oy).toString(16));
     this.qtest = pp2.join(',');
     this.qtest += ','+pp1.slice(this.handler_dot*2,pp1.length).join(',');
-		if (this.qmode=='answer' && this.qanswer!='') this.qanswer = this.qtest;
-		if (this.qmode=='edit' && this.qconfig!='') this.qconfig = this.qtest;
+		if (this.qmode == 'answer' && this.qanswer!='') this.qanswer = this.qtest;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qconfig = this.qtest;
 
     this.handler_sqr = this.handler_dot+1;
     this.handler_dot = -1;
@@ -595,9 +610,9 @@ function qa_mouseDragDown(e){
     this.qa_redraw_canvas;
   }
   //this.freehand
-  if (((this.qmode=='answer' && this.qanswer=='') || (this.qmode=='edit' && this.qconfig=='')) && this.y>28) {
+  if (((this.qmode == 'answer' && this.qanswer == '') || (this.qmode == 'edit' && this.qconfig == '')) && this.oy>0) {
     this.poly_temp_points[6] = this.x;
-    this.poly_temp_points[7] = this.y;
+    this.poly_temp_points[7] = this.oy;
     this.freehand = true;
   }
 }
@@ -606,23 +621,23 @@ function qa_mouseDragUp(){
 	this.dragging = false;
   this.button_test();
 	
-	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0]=='toolbar/ico_help.png') window.open('/help/staff/index.php?id=305');
+	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') window.open('/help/staff/index.php?id=305');
 
-  if (this.qmode=='edit' || this.qmode=='answer') {
+  if (this.qmode == 'edit' || this.qmode == 'answer') {
 		this.global_zoom = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_zoom.png']][6]==2) this.global_zoom = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_zoom.png']][6] == 2) this.global_zoom = true;
 		this.global_delpoint = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][6]==2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][7]=='+') this.global_delpoint = true;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][5]==2 && this.qconfig!='') this.global_clearpnl = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][6] == 2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][7] == '+') this.global_delpoint = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][5] == 2 && this.qconfig!='') this.global_clearpnl = true;
   }
 
-  if (this.qmode=='script') {
+  if (this.qmode == 'script') {
 		this.global_your_answer = false;	
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][7]=='+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][6]==2) this.global_your_answer = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][7] == '+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_area.png']][6] == 2) this.global_your_answer = true;
 		this.global_corect_answer = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][7]=='+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][6]==2) this.global_corect_answer = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][7] == '+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_tick.png']][6] == 2) this.global_corect_answer = true;
 		this.global_show_error = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][7]=='+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][6]==2) this.global_show_error = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][7] == '+' && this.buttonBox[this.buttonBoxNames['toolbar/ico_warn.png']][6] == 2) this.global_show_error = true;
 
 		this.global_zoom = false;
 	}
@@ -637,30 +652,30 @@ function qa_mouseDragUp(){
   //polygon & this.freehand
   //distance of up from down as for "click"
   this.dx = this.x - this.poly_temp_points[6]; 
-  this.dy = this.y - this.poly_temp_points[7];
+  this.dy = this.oy - this.poly_temp_points[7];
   this.distn = Math.sqrt(this.dx*this.dx+this.dy*this.dy);
-  if (this.y>28) {
+  if (this.oy>0) {
     //condition for the finish
-    if ((this.poly_temp.length>2 && (Math.abs(this.poly_temp_points[0]-this.x)<3 && Math.abs(this.poly_temp_points[1]-this.y)<3)) || (Math.abs(this.poly_temp_points[8]-this.x)<3 && Math.abs(this.poly_temp_points[9]-this.y)<3))  {      
-      if (this.qmode=='edit' && this.qconfig=='') this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
-      if (this.qmode=='answer' && this.qanswer=='') this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
+    if ((this.poly_temp.length>2 && (Math.abs(this.poly_temp_points[0]-this.x)<3 && Math.abs(this.poly_temp_points[1]-this.oy)<3)) || (Math.abs(this.poly_temp_points[8]-this.x)<3 && Math.abs(this.poly_temp_points[9]-this.oy)<3))  {      
+      if (this.qmode == 'edit' && this.qconfig == '') this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
+      if (this.qmode == 'answer' && this.qanswer == '') this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
 			this.global_delpoint_avail = true; 
       this.poly_temp = '';
       this.poly_temp_points = new Array(0,0,0,0,0,0,0,0,0,0);
 			//this.do_the_test = true;
     } else {
       //??
-      if (!this.freehand || this.distn<5) this.poly_temp += Math.round(this.x).toString(16)+','+Math.round(this.y).toString(16)+',';
+      if (!this.freehand || this.distn<5) this.poly_temp += Math.round(this.x).toString(16)+','+Math.round(this.oy).toString(16)+',';
       //remember the starting point
       if (this.poly_temp_points[1] == 0) {
         this.poly_temp_points[0] = this.x;
-        this.poly_temp_points[1] = this.y;
+        this.poly_temp_points[1] = this.oy;
       }
       //remember the second last and the last point
       this.poly_temp_points[2] = this.poly_temp_points[4];
       this.poly_temp_points[3] = this.poly_temp_points[5];
       this.poly_temp_points[4] = this.poly_temp_points[8] = this.x;
-      this.poly_temp_points[5] = this.poly_temp_points[9] = this.y;
+      this.poly_temp_points[5] = this.poly_temp_points[9] = this.oy;
       this.poly_temp_points[6] = 0;
       this.poly_temp_points[7] = 0;
     }
@@ -671,7 +686,7 @@ function qa_mouseDragUp(){
     this.panel_buttons = new Array();
     this.global_clearpnl = false;
     this.global_delpoint = false;
-    if (this.panel_button_selected=='Y') {
+    if (this.panel_button_selected == 'Y') {
 			this.poly_temp = '';
       this.poly_temp_points = new Array(0,0,0,0,0,0,0,0,0,0);
 			if (this.qmode == 'edit') this.qconfig='';
@@ -683,8 +698,8 @@ function qa_mouseDragUp(){
   
   if (this.handler_sqr!=-1 && (this.global_delpoint || this.isCtrl)) {
 		this.qtest = '';
-		if (this.qmode=='answer' && this.qanswer!='') this.qtest = this.qanswer;
-		if (this.qmode=='edit' && this.qconfig!='') this.qtest = this.qconfig;
+		if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
 
     var pp1 = this.qtest.split(',');
 		if (this.handler_sqr>1 && this.handler_sqr<pp1.length/2) {
@@ -694,14 +709,14 @@ function qa_mouseDragUp(){
 			this.qtest = pp1.slice(2,pp1.length-2).join(',');
 			this.qtest += ',' + pp1.slice(2,4).join(',');
 		}
-    if (this.qmode=='answer' && this.qanswer!='') this.qanswer = this.qtest;
-		if (this.qmode=='edit' && this.qconfig!='') this.qconfig = this.qtest;
+    if (this.qmode == 'answer' && this.qanswer!='') this.qanswer = this.qtest;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qconfig = this.qtest;
 
     //clear whole array
     var pp1 = this.qtest.split(',');
     if (pp1.length <= 4) {
-      if (this.qmode=='answer' && this.qanswer!='') this.qanswer='';
-			if (this.qmode=='edit' && this.qconfig!='') this.qconfig='';
+      if (this.qmode == 'answer' && this.qanswer!='') this.qanswer='';
+			if (this.qmode == 'edit' && this.qconfig!='') this.qconfig='';
       this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][6]=0;
       this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][5]=0;
       this.global_delpoint = false;      
@@ -721,12 +736,12 @@ function qa_mouseDragUp(){
 
 function qa_ReturnInfo() {
   var questions_result = '';
-	if (this.qmode=='answer') {
+	if (this.qmode == 'answer') {
 		questions_result = this.test_result+';';
 		if (this.qanswer!='') questions_result += this.qanswer+', ';
 		var target_field = document.getElementById('q'+this.q_Num);
   	}
-	if (this.qmode=='edit') {
+	if (this.qmode == 'edit') {
 		questions_result = '0,0,0,0,0,0;';
 		if (this.qconfig!='') questions_result += this.qconfig+', ';
 		var target_field = document.getElementById(this.doorId);
@@ -776,7 +791,7 @@ function rqa(num) {
   this.nikotest = 0;
 
 	this.test; 
-	this.x,this.y,this.sub_x,this.sub_y;
+	this.x,this.y,this.oy;this.sub_x,this.sub_y;
   this.oldx,this.oldy;
   this.mouse_moved=false;
 	this.isCtrl = this.isShift = false;
@@ -825,8 +840,9 @@ function rqa(num) {
   this.draw_limit = new Array(); //used to limit polygon, ellipse and sqare positions
   this.any_overlaping = this.overlapping_show = false;
 
-	this.yOffset ; 						                 			// coords of everything made in label_add.swf include toolbar 
-  this.yOffest_fix =3;                          	// special fix for yOffest in area (menubar in flash was smaller)
+	this.yoffset;
+  this.yoffset_fix_value = 0;                          	// special fix for data from flash (menubar in flash was smaller)
+	this.yoffset_fiy_value = 0;
   this.is_an_answer = false;
   this.q_Num;
 
