@@ -962,6 +962,8 @@ function qh_mouseDragUp(){
   if (this.qmode == 'answer' && this.testWithin(this.x,this.y,300,0,this.canvas.width-300,this.canvas.height)) {
     this.answers[this.activeLabel][0][1]=this.x-300-5;
     this.answers[this.activeLabel][0][2]=this.y+1;
+		this.activeLabel++;
+		if (this.hotSpots.length<=this.activeLabel) this.activeLabel=0;
   }
   
   this.button_test();
