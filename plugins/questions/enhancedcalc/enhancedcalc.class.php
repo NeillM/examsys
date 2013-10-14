@@ -739,6 +739,12 @@ class EnhancedCalc extends Question implements questionInterface {
     return $string;
   }
 
+  public function decode_settings() {
+    if (!is_array($this->settings)) {
+      $this->settings = json_decode($this->settings, true);
+    }
+  }
+
   public function render_paper($extra = array()) {
     global $string;
 
@@ -753,9 +759,7 @@ class EnhancedCalc extends Question implements questionInterface {
     if (!is_array($this->useranswer)) {
       $this->useranswer = json_decode($this->useranswer, true);
     }
-    if (!is_array($this->settings)) {
-      $this->settings = json_decode($this->settings, true);
-    }
+    $this->decode_settings();
 
     // create array of units and functions
     if ((isset($this->settings['answersexp']) and !is_array($this->settings['answersexp'])) or (!isset($this->settings['answersexp']))) {
@@ -954,6 +958,7 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return boolean True if incorrect mark is less than 0
    */
   public function is_negative_marked() {
+    $this->decode_settings();
     return $this->settings['marks_incorrect'] < 0;
   }
 
