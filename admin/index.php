@@ -31,13 +31,16 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+
 <title>Rog&#333;: Admin<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/admin.css" />
 
 <?php echo $configObject->get('cfg_js_root') ?>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
 <script language="JavaScript" src="../js/sidebar.js"></script>
 <script language="JavaScript">
@@ -86,25 +89,28 @@
 
 <div id="content" class="content" style="font-size:80%">
 <table class="header">
-<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['administrativetools']; ?></div></th></tr>
-<tr><th class="bevel"></th></tr>
+<tr>
+	<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['administrativetools']; ?></div></th>
+	<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" alt="<?php echo $string['help']; ?>" /></a></th>
+</tr>
+<tr><th class="bevel" colspan="2"></th></tr>
 </table>
 
 <?php
   if ($temp_account_no > 0) {
-    $string['clearguestaccounts'] .= ' <span class="corners"><span class="num">&nbsp;' . $temp_account_no . '&nbsp;</span></span>';
+    $string['clearguestaccounts'] .= ' <span class="corners"><span class="num">' . $temp_account_no . '</span></span>';
   }
 
   if ($sys_error_no > 0) {
-    $string['systemerrors'] .= ' <span class="corners"><span class="num">&nbsp;' . $sys_error_no . '&nbsp;</span></span>';
+    $string['systemerrors'] .= ' <span class="corners"><span class="num">' . $sys_error_no . '</span></span>';
   }
 
   if ($announcement_no > 0) {
-    $string['announcments'] .= ' <span class="corners"><span class="num">&nbsp;' . $announcement_no . '&nbsp;</span></span>';
+    $string['announcments'] .= ' <span class="corners"><span class="num">' . $announcement_no . '</span></span>';
   }
 
   if ($scheduling_no > 0) {
-    $string['summativescheduling'] .= ' <span class="corners"><span class="num">&nbsp;' . $scheduling_no . '&nbsp;</span></span>';
+    $string['summativescheduling'] .= ' <span class="corners"><span class="num">' . $scheduling_no . '</span></span>';
   }
 
   $summative_year =  date('Y');
@@ -130,7 +136,7 @@
 	$menudata['questionstatuses']			= array('list_statuses.php', 'status_icon.png');
 	$menudata['schools']							= array('list_schools.php', 'school_icon.png');
   if ($configObject->get('cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
-		$menudata['summativescheduling']	= array('summative_scheduling.php', 'summative_scheduling.png');
+		$menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
 	}
 	$menudata['summativeexamstats']		= array('summative_stats.php?year=' . $summative_year, 'summative_stats.png');
 	$menudata['systemerrors']					= array('sys_error_list.php', 'bug.png');
