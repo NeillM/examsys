@@ -98,12 +98,6 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
       return winH + 'px';
     }
     
-    function cleartext() {
-      if (document.add_form.title.value == "Page Title...") {
-        document.add_form.title.value = '';
-      }
-    }
-    
     function checkForm() {
       if (document.add_form.title.value == "" || document.add_form.title.value == " ") {
         alert ("Please enter a title for this new help page.");
@@ -119,7 +113,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <form name="add_form" charset="UTF-8" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" onsubmit="return checkForm();">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
   <tr>
-  <td style="padding-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#7598C4; font-size:160%; border:1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="Page Title..." onfocus="cleartext();" /></td>
+  <td style="padding-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#7598C4; font-size:160%; border:1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="<?php echo $string['pagetitle']; ?>" /></td>
   <td style="text-align:right"><select name="page_roles"><option value="Staff">Staff</option><option value="Admin">Admin</option><option value="SysAdmin">SysAdmin</option></select></td>
   </tr>
   </table>
@@ -127,7 +121,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
   <textarea class="mceEditor" id="edit1" name="edit1" style="width:100%; height:500px"></textarea>
 
-  <div style="text-align:center; padding-top:8px""><input style="width:120px" type="submit" name="save_changes" value="Save" />&nbsp;&nbsp;<input style="width:120px" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
+  <div style="text-align:center; padding-top:8px""><input style="width:120px" type="submit" name="save_changes" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:120px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="history.back();" /></div>
 </form>
 </body>
 </html>

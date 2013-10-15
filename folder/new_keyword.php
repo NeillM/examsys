@@ -24,22 +24,37 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+
+$exists = false;
+$new_keyword = '';
   
 if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] == '1')) {
   $new_keyword = trim($_POST['new_keyword']);
   if ($new_keyword != '') {
     if ($_POST['module'] == '') {
-      $result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL, ?, ?, 'personal')");
-      $result->bind_param('is', $userObject->get_user_ID(), $new_keyword);
-      $result->execute();  
-      $result->close();
-    } else {
-      $result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL, ?, ?, 'team')");
-      $result->bind_param('is', $_POST['module'], $new_keyword);
-      $result->execute();  
-      $result->close();
-    }
-  }
+		  $type = 'personal';
+			$owner = $userObject->get_user_ID();
+		} else {
+		  $type = 'team';
+			$owner = $_POST['module'];
+		}
+		
+		$result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE keyword = ? AND userID = ? AND keyword_type = ?");
+		$result->bind_param('sis', $new_keyword, $owner, $type);
+		$result->execute();  
+    $result->store_result();
+    $result->bind_result($keyword);
+		if ($result->num_rows > 0) {
+		  $exists = true;
+		}
+		$result->close();
+		
+		if (!$exists) {
+			$result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL, ?, ?, ?)");
+			$result->bind_param('iss', $owner, $new_keyword, $type);
+			$result->execute();  
+			$result->close();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -58,7 +73,10 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 </body>
 </html>
 <?php
-  } else {
+			exit();
+		}
+	}
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -119,13 +137,22 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <body>
 <h1><?php echo $string['newkeyword']; ?></h1>
 <form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<div><input type="text" style="width:99%" name="new_keyword" onkeypress="illegalChar(event.keyCode)" required autofocus /></div>
-<div align="right"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
+<?php
+if ($exists) {
+?>
+<div><input type="text" class="errfield" style="width:99%" name="new_keyword" onkeypress="illegalChar(event.keyCode)" value="<?php echo $new_keyword; ?>" required autofocus /></div><div align="right"><span style="color:#C00000"><?php echo $string['duplicate']; ?></span>&nbsp;&nbsp;&nbsp;
+<?php
+} else {
+?>
+<div><input type="text" style="width:99%" name="new_keyword" onkeypress="illegalChar(event.keyCode)" value="<?php echo $new_keyword; ?>" required autofocus /></div><div align="right">
+<?php
+}
+?>
+<input type="submit" name="ok" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
 </form>
 
 </body>
 </html>
 <?php
-}
 $mysqli->close();
 ?>
