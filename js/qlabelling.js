@@ -74,7 +74,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				
 		//---------- config, 
  		if (config == '') config = '#3f3f3f;1;#ffffff;10;#000000;100;19;0;0;single;label;$$$$;';
-		
 		var existingInfo = config.split(';');
 		this.currentColours[1] 	= existingInfo[0];	                        // line colour
 		this.lineThickness		  = Number(existingInfo[1]);				          // line thickness
@@ -187,6 +186,16 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 						if (mli_answr.toLowerCase().indexOf('.' + mli_formats[a]) != -1) mli_ext_pass = true;
 					if (typeof(mli_answr)!='undefined' && mli_ext_pass) myLabelType = "image";        
 
+					//correction in labels text
+					if (myLabelType == "text") {
+						mli_answr = mli_answr.split('&#034').join('"');
+						mli_answr = mli_answr.split('&#039').join("'");
+						mli_answr = mli_answr.split('&#172').join('?');
+						mli_answr = mli_answr.split('&#059').join(';');
+						mli_answr = mli_answr.split('&#126').join('~');
+						mli_answr = mli_answr.split('&#124').join('|');
+					}
+					
 					var tmp_pholder = new Array();
 					this.pho_index = this.pholderBox.length-1;
 					//updating this.pholderBox array
@@ -217,7 +226,10 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 					if (myLabelType == 'image') {
 						var existingImageInfo = myLabelInfo[4].split("~");
 						tmp_answer[2] = existingImageInfo[0];	    	//filename
-						this.max_num_images++;
+						if (this.all_images.indexOf(tmp_answer[2])<0) {
+							this.all_images.push(tmp_answer[2],'');
+							this.max_num_images++;
+						}
 						tmp_answer[9] = Number(existingImageInfo[1]);	//image oryginal width
 						tmp_answer[10] = Number(existingImageInfo[2]);	    //image oryginal height
 						}
@@ -269,7 +281,8 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		//loading label images and drawing boxes
 		this.context.fillStyle=this.currentColours[0];
 		this.context.strokeStyle=this.currentColours[1];
-			
+		
+		
 		function ql_gen_img_onload(){
 			this.imagesLoaded ++;
 			if (this.imagesLoaded == this.max_num_images) {
@@ -315,10 +328,11 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		if (typeof(this.answerBox)!='undefined')
 			for (i=0;i<this.answerBox.length;i++) {
 				j=0;
-				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1] == "image") {
+				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1] == "image" && this.all_images[this.all_images.indexOf(this.answerBox[i][j][2])+1]=='') {
 					this.answerBox[i][j][11] = new Image();
 					this.answerBox[i][j][11].onload = ql_gen_img_onload.bind(this);
 					this.answerBox[i][j][11].src = '/media/'+this.answerBox[i][j][2];
+					this.all_images[this.answerBox[i][j][2]] = i+','+j;
 				}
 			}
 
@@ -332,9 +346,9 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		// sort out existing answer info
 		if (answer != '' && answer != undefined && answer != "undefined" && answer != null && answer != "null") {
       var answer_l1 = answer.split(";");
-			if (typeof(answer_l1[1]) != 'undefined' && answer_l1[1]!='') this.is_an_answer = true
+			if (typeof(answer_l1[1]) != 'undefined' && answer_l1[1]=='') this.empty_answer = true
       var answer_l2 = answer_l1[1].split('$');
-			var ans_x,ans_y,ans_n,ans_b,new_j;
+			var ans_x,ans_y,ans_n,ans_b,new_j,new_i=0;
       for (l=0; l<answer_l2.length/4; l++) {
         if (answer_l2[l*4]!='') {
           ans_x = Number(answer_l2[l*4+0]);
@@ -359,7 +373,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 								}
 							}
 						}							
-						if (this.qmode == 'answer' && typeof(this.answerBox[i][0]) != 'undefined' && this.answerBox[i][0][2] == ans_n) {
+						if (this.qmode == 'answer' && this.qType != 'menu' && typeof(this.answerBox[i][0]) != 'undefined' && ans_n!='' && this.answerBox[i][0][2] == ans_n) {
 							new_j = Number(this.answerBox[i].length) - 1;
 							if (this.answerBox[i][new_j][3] != '') {
 								this.answerBox[i].push(this.answerBox[i][j].slice(0));
@@ -373,11 +387,19 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 							ans_n = '$';
 						}
           }
+					if (this.qmode != 'edit' && this.qType == 'menu') {
+						this.answerBox[new_i][0][2] = ans_n;
+						this.answerBox[new_i][0][3] = ans_b;
+						this.answerBox[new_i][0][4] = 0;
+						this.answerBox[new_i][0][5] = ans_x;
+						this.answerBox[new_i][0][6] = ans_y+25-this.yOffset;
+						new_i++
+					}
         }      
       }    
     }	
 
-		if (this.hide_feedback_ifunanswered && !(this.is_an_answer)) {
+		if (this.hide_feedback_ifunanswered && this.empty_answer) {
 			this.display_ticks_crosses = false;
 			this.display_correct_answer = false;
 		}
@@ -387,7 +409,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			for (j=0;j<this.answerBox[i].length;j++) {
 				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1] == 'text' && this.answerBox[i][j][2]!='' && this.menuBox.indexOf(this.answerBox[i][j][2]) == -1) {
 					this.menuBox.push(this.answerBox[i][j][2]);
-					if (this.qmode!='edit' && this.qmode!='script' && this.qType == 'menu') this.answerBox[i][j][2] = '';
+					//if (this.qmode!='edit' && this.qmode!='script' && this.qType == 'menu') this.answerBox[i][j][2] = '';
 				}
 			}
 		}
@@ -405,7 +427,14 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.menu_img.onload = menu_img_onload.bind(this);
 		this.menu_img.src = '/js/images/combined.png'; 
 	}
-	
+		
+	//emptying unmarked answers for menu
+	/*
+	for (i=0;i<this.answerBox.length;i++) 
+		for (j=0;j<this.answerBox[i].length;j++) 
+			if (this.answerBox[i][j][2]!='') console.log(this.canvas.id,this.answerBox[i][j]);
+	console.log('----');
+	*/
 }
 
 function combo_scope(answer_set) {
@@ -419,7 +448,8 @@ function combo_scope(answer_set) {
 function ql_draw_box(i,j,temp_x,temp_y) {
 	var this_box = this.answerBox[i][j];
 	if (j == 99) this_box = this.pholderBox[i];
-
+	
+	if (this_box[3] == '' && this.qType == 'menu' && this.empty_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3];
   if (this_box[1] == 'image') this.context.fillRect(temp_x,temp_y,this.imglabelWidth,this.imglabelHeight);
   if (this_box[1] == 'text') this.context.fillRect(temp_x,temp_y,this.labelWidthEffect,this.labelHeightEffect);
 
@@ -433,7 +463,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			var tmp_red = 1; 
 			if (this_box[9]>205) tmp_red = 205/this_box[9];
 			this.context.drawImage(this_box[11],temp_x+(this.imglabelWidth-this_box[9]*tmp_red)*0.5,temp_y+(this.imglabelHeight-this_box[10]*tmp_red)*0.5,this_box[9]*tmp_red,this_box[10]*tmp_red);
-			this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.imglabelWidth,this.imglabelHeight);
+			this.context.strokeRect(temp_x-0.5,temp_y-0.5,this.imglabelWidth,this.imglabelHeight);
 			if (this.exclusions[this.pholderBox[i][7]] == '1') {
 				var tmp_style = this.context.strokeStyle;
 				this.lineDraw(this.context,'#FF0000',temp_x+10.5,temp_y+10.5,this.imglabelWidth-20,this.imglabelHeight-20);
@@ -446,6 +476,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
     this.context.textAlign = ((this.qType == 'menu')?"left":"center");
 		this.context.font=this.fontSizes[this.fontSizePos]+"px Arial";
     this.context.fillStyle=this.currentColours[2];
+
 		this.tmp_text = this_box[2];
 		if (this.qmode == 'script' && this.display_correct_answer) {
 			this.context.fillStyle='#000';
@@ -466,6 +497,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			}
 		}
     var wrapped = this.wrapText(this.tmp_text,tmp_width);
+
 		if (this.exclusions[this.pholderBox[i][7]] == '1') {
 			this.context.fillStyle='#FF0000';
 			var tmp_style = this.context.strokeStyle;
@@ -474,11 +506,12 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		}
 		this.fillWrappedText(this.context,wrapped[0],Math.round(temp_x+tmp_width*0.5)+0.5,Math.round(temp_y+this.fontSizes[this.fontSizePos])-0.5);
     this.context.fillStyle=this.currentColours[0];
+
 		var tmp_halfpoint = this.lineThickness/2-Math.round(this.lineThickness/2);
 		this.context.strokeRect(temp_x+tmp_halfpoint,temp_y+tmp_halfpoint,this.labelWidthEffect,this.labelHeightEffect);
 
 		if (this.qType == "menu") {
-			var tmp_dim = Array(temp_x+this.labelWidthEffect+this.lineThickness/2-18,temp_y,18-this.lineThickness/2,this.labelHeightEffect);
+			var tmp_dim = Array(temp_x+this.labelWidthEffect-1+this.lineThickness/2-18,temp_y,18-this.lineThickness/2,this.labelHeightEffect);
 			//dropdown combo button
 			this.context.fillStyle='#f7f7f7';
 			this.context.fillRect(tmp_dim[0],tmp_dim[1],tmp_dim[2],tmp_dim[3]);
@@ -487,7 +520,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			//dropdown combo triangle sign
 			this.context.lineWidth = 1
 			this.context.strokeStyle='#000';
-			for (a=0;a<4;a++) this.context.strokeRect(tmp_dim[0]+4+a,tmp_dim[1]+Math.round(tmp_dim[3]/2)+a+0.5,7-2*a,0);
+			for (a=0;a<4;a++) this.context.strokeRect(tmp_dim[0]+5+a,tmp_dim[1]+Math.round(tmp_dim[3]/2)+a-1.5,7-2*a,0);
 			
 			this.context.lineWidth = this.lineThickness;
 	    this.context.strokeStyle = this.currentColours[1];
@@ -576,7 +609,19 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				tmp_w = this.imglabelWidth;
 				tmp_h = this.imglabelHeight;
 			}
-			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,temp_x+tmp_w-20,temp_y+tmp_h-19,this.imgdata.width,this.imgdata.height);
+			this.context.globalAlpha = 0.5;
+			this.context.fillStyle='#ddd';
+			this.context.beginPath();
+			var tmp_pos = temp_x+tmp_w+11;
+			if ((tmp_pos+22)>this.canvas.width) tmp_pos = temp_x-12;
+      this.context.arc(tmp_pos,temp_y+tmp_h-10, 10, 0 , 2 * Math.PI, false);
+      this.context.fill();
+      //this.context.stroke();
+			this.context.globalAlpha = 1;	
+			this.context.strokeStyle=this.currentColours[1];
+			this.context.fillStyle=this.currentColours[0];
+			
+			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,tmp_pos-10,temp_y+tmp_h-19,this.imgdata.width,this.imgdata.height);
 		}
 	}
 	if (this.qmode == 'analysis' && temp_x>=220) {
@@ -828,7 +873,7 @@ function ql_redraw_canvas() {
 				if (typeof(this.pholderBox[i])!='undefined') {
 					//drawing background (unanswered)
 					this.context.fillStyle=this.currentColours[0];
-					if (this.pholderBox[i][3] == '' && !this.is_an_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3];
+					if (this.pholderBox[i][3] == '' && this.empty_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3];
 					//selecting width and height
 					if (this.pholderBox[i][1] == 'text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
 
@@ -1601,6 +1646,16 @@ function ql_mouseDragUp(){
   this.ql_ReturnInfo();
 }
 
+function fix_names(name) {
+	name = name.split('"').join('&#034');
+	name = name.split("'").join('&#039');
+	name = name.split('?').join('&#172');
+	name = name.split(';').join('&#059');
+	name = name.split('~').join('&#126');
+	return name;
+}
+					
+
 function ql_ReturnInfo() {
   var questions_correct = 0;
   var questions_incorrect = 0;
@@ -1656,7 +1711,7 @@ function ql_ReturnInfo() {
 					questions_result += '$'+this.answerBox[i][0][4];
 					questions_result += '$'+this.answerBox[i][0][5];
 					questions_result += '$'+this.answerBox[i][0][6];
-					questions_result += '$'+this.answerBox[i][0][2];
+					questions_result += '$'+fix_names(this.answerBox[i][0][2]);
 					if (this.answerBox[i][0][1] == 'image') {
 						questions_result += '~'+this.answerBox[i][0][9];
 						questions_result += '~'+this.answerBox[i][0][10];
@@ -1670,7 +1725,7 @@ function ql_ReturnInfo() {
 						questions_result += '$'+j;
 						questions_result += '$'+this.answerBox[i][j][5];
 						questions_result += '$'+this.answerBox[i][j][6];
-						questions_result += '$'+this.answerBox[i][j][2];
+						questions_result += '$'+fix_names(this.answerBox[i][j][2]);
 						if (this.answerBox[i][j][1] == 'image') {
 							questions_result += '~'+this.answerBox[i][j][9];
 							questions_result += '~'+this.answerBox[i][j][10];
@@ -1799,7 +1854,7 @@ function rql(num) {
 	this.labelMulti = "single"; 				    // are labels unique or repeated ("single" / "multiple")?
 	this.yOffset ; 						              // coords of everything made in label_add.swf include toolbar 
                                           // this need to be removed as image here is loaded with this.y coord = 0
-  this.is_an_answer = false;
+  this.empty_answer = false;
   this.q_Num;
 	this.doorId;
   this.slow_speed = 7;                    //parameter of slowing down speed
@@ -1834,4 +1889,5 @@ function rql(num) {
 	this.imglabelWidth;
 	this.imglabelHeight;
 	this.keypressed = false;
+	this.all_images = new Array();
 }
