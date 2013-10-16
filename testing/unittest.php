@@ -65,6 +65,9 @@ if(!isset($_GET['test'])) {
 	$configObject = Config::get_instance();
 	$cfg_web_root = $configObject->get('cfg_web_root');
 
+
+  require_once $cfg_web_root . 'classes/lang.class.php';
+  
   $language = LangUtils::getLang($cfg_web_root);
 	//load the mysqli mocking classes	
 	require_once './include/mockmysqli.class.php';
