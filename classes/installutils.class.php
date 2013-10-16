@@ -1436,6 +1436,10 @@ SCRIPT;
 <script type="text/javascript" src="\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
 SCRIPT;
 
+if(!isset(\$_SERVER['HTTP_HOST'])) {
+  \$_SERVER['HTTP_HOST']='';
+}
+
 //Server specific configuration based on hostname.
 switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   case 'rogo.local':
