@@ -555,15 +555,20 @@ class EnhancedCalc extends Question implements questionInterface {
       }
       echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'] . '" />';
     }
+		
+		if ($this->useranswer['ans']['units_used'] == '') {
+		  $display_units = '';
+		} else {
+			$display_units = ' ' . $this->useranswer['ans']['units_used'];
+		}
+		
     if ($extra['tmp_display_correct_answer'] == '1') {
       if (!isset($this->useranswer['status'])) {
-        echo ' <strong>(<span class="err">' .$string['unmarked'] . '</span>)</strong>';
+        echo ' <strong><span class="err">' . $string['unmarked'] . '</span></strong>';
       } elseif (!isset($this->useranswer['cans'])) {
-        echo ' <strong>(<span class="err">' . $string['EnhancedCalcCorrectError'] . '</span>)</strong>';
+        echo ' <strong><span class="err">' . $string['EnhancedCalcCorrectError'] . '</span></strong>';
       } else {
-        echo ' <strong>(' . $this->useranswer['cans'];
-        if ($this->useranswer['ans']['units_used'] != '') echo ' ' . $this->useranswer['ans']['units_used'];
-        echo ')</strong>';
+        echo ' <strong>' . $this->useranswer['cans'] . $display_units . '</strong>';
       }
     } else {
       echo ' ';
@@ -572,11 +577,11 @@ class EnhancedCalc extends Question implements questionInterface {
     if (isset($this->useranswer['cans'])) {
       if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
         echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . str_replace('#', '', $this->settings['fulltoltyp']);
-        if ($this->settings['fulltoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_fullansneg'] . " - " . $this->useranswer['ans']['tolerance_fullans'] . ")";
+				echo ' (' . $this->useranswer['ans']['tolerance_fullansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_fullans'] . $display_units . ')';
       }
-      if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
+			if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
         echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . str_replace('#', '', $this->settings['parttoltyp']);
-        if ($this->settings['parttoltyp'] == '%') echo " (" . $this->useranswer['ans']['tolerance_partialansneg'] . " - " . $this->useranswer['ans']['tolerance_partialans'] . ")";
+				echo ' (' . $this->useranswer['ans']['tolerance_partialansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_partialans'] . $display_units . ')';
       }
     }
 
