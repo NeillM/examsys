@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['serverconnectionerr'] = '<strong>ERROR:</strong> Connection to R server failed.';
-$string['calculationguestionmarking'] = 'Calculation Question Marking';
-$string['markingcomplete'] = 'Marking Complete';
+$string['serverconnectionerr'] = '<strong>Błąd:</strong> Połączenie z serwerem R nie udało się.';
+$string['calculationguestionmarking'] = 'Ocena pytań obliczeniowych';
+$string['markingcomplete'] = 'Ocena zakończona';
 ?>
