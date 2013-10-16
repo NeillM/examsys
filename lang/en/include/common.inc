@@ -92,6 +92,10 @@ $string['NoGroup'] = 'No Group can be found for the current user.';
 $string['note'] = 'Note';
 $string['studentname'] = 'Student Name';
 
+$configObject = Config::get_instance();
+$cfg_web_root = $configObject->get('cfg_web_root');
+$language = LangUtils::getLang($cfg_web_root);
+
 require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
 
 $string['register'] = 'Register as Staff User';
