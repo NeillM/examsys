@@ -1422,7 +1422,10 @@ class ClassTotals {
 	}
 
   public function generate_stats() {
-    // Generate summary statistics.
+		$configObject = Config::get_instance();
+		$percent_decimals = $configObject->get('percent_decimals');
+    
+		// Generate summary statistics.
     $this->set_user_no();
     $mark_total    = 0;
     $percent_total = 0;
@@ -1446,24 +1449,28 @@ class ClassTotals {
     for ($i=0; $i<$this->user_no; $i++) {
       if (isset($this->user_results[$i]['percent']) and $this->user_results[$i]['questions'] >= $this->question_no and $this->user_results[$i]['visible']) {
         $this->stats['completed_no']++;
-        $median_mark_array[] = $this->user_results[$i]['mark'];
-        $median_percent_array[] = $this->user_results[$i]['percent'];
+        $median_mark_array[] = round($this->user_results[$i]['mark'], $percent_decimals);
+        $median_percent_array[] = round($this->user_results[$i]['percent'], $percent_decimals);
 
-        $mark_total += $this->user_results[$i]['mark'];
-        $percent_total += $this->user_results[$i]['percent'];
+        $mark_total += round($this->user_results[$i]['mark'], $percent_decimals);
+        //$percent_total += $this->user_results[$i]['percent'];
+        $percent_total += round($this->user_results[$i]['percent'], $percent_decimals);  // Round to the precision being displayed on screen.
       }
       if (isset($this->user_results[$i]['mark']) and $this->user_results[$i]['visible']) {
+			  $tmp_mark = round($this->user_results[$i]['mark'], $percent_decimals);
         if (isset($this->user_results[$i]['percent'])) {
-          $marks_data[] = $this->user_results[$i]['percent'];
-          if ($this->user_results[$i]['percent'] < $this->pass_mark) $this->stats['failures']++;
-          if ($this->user_results[$i]['percent'] < $this->stats['min_percent']) $this->stats['min_percent'] = $this->user_results[$i]['percent'];
-          if ($this->user_results[$i]['percent'] > $this->stats['max_percent']) $this->stats['max_percent'] = $this->user_results[$i]['percent'];
+					$tmp_percent = round($this->user_results[$i]['percent'], $percent_decimals);
+				
+          $marks_data[] = $tmp_percent;
+          if ($tmp_percent < $this->pass_mark) $this->stats['failures']++;
+          if ($tmp_percent < $this->stats['min_percent']) $this->stats['min_percent'] = $tmp_percent;
+          if ($tmp_percent > $this->stats['max_percent']) $this->stats['max_percent'] = $tmp_percent;
         }
         if ($this->user_results[$i]['percent'] >= $this->pass_mark and $this->user_results[$i]['percent'] < $this->distinction_mark) $this->stats['passes']++;
         if ($this->user_results[$i]['percent'] >= $this->distinction_mark) $this->stats['honours']++;
-        if ($this->user_results[$i]['mark'] < $this->stats['min_mark']) $this->stats['min_mark'] = $this->user_results[$i]['mark'];
-        if ($this->user_results[$i]['mark'] > $this->stats['max_mark']) $this->stats['max_mark'] = $this->user_results[$i]['mark'];
-        $this->stats['sum_of_marks'] += $this->user_results[$i]['mark'];
+        if ($tmp_mark < $this->stats['min_mark']) $this->stats['min_mark'] = $tmp_mark;
+        if ($tmp_mark > $this->stats['max_mark']) $this->stats['max_mark'] = $tmp_mark;
+        $this->stats['sum_of_marks'] += $tmp_mark;
       }
 
       if ($this->user_results[$i]['visible']) {
@@ -1477,15 +1484,19 @@ class ClassTotals {
     $this->stats['range'] = $this->stats['max_mark'] - $this->stats['min_mark'];
     $this->stats['range_percent'] = $this->stats['max_percent'] - $this->stats['min_percent'];
 
-    // Calculate StdDev.
+    
+		// Calculate StdDev.
     $xmean_total = 0;
     $xmean_percent_total = 0;
     for ($i=0; $i<$this->user_no; $i++) {
       if (isset($this->user_results[$i]['questions']) and $this->user_results[$i]['questions'] >= $this->question_no and $this->user_results[$i]['visible'] and $this->stats['completed_no'] > 0) {
+			  $tmp_percent = round($this->user_results[$i]['percent'], $percent_decimals);
+			
         $xmean_total += (($this->user_results[$i]['mark'] - ($mark_total / $this->stats['completed_no'])) * ($this->user_results[$i]['mark'] - ($mark_total / $this->stats['completed_no'])));
-        $xmean_percent_total += (($this->user_results[$i]['percent'] - ($percent_total / $this->stats['completed_no'])) * ($this->user_results[$i]['percent'] - ($percent_total / $this->stats['completed_no'])));
+        $xmean_percent_total += (($tmp_percent - ($percent_total / $this->stats['completed_no'])) * ($tmp_percent - ($percent_total / $this->stats['completed_no'])));
       }
     }
+		
     if ($this->stats['completed_no'] > 1) {
       $this->stats['stddev_mark']    = sqrt($xmean_total / ($this->stats['completed_no'] - 1));
       $this->stats['stddev_percent'] = sqrt($xmean_percent_total / ($this->stats['completed_no'] - 1));

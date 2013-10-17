@@ -385,6 +385,7 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return integer Marks available for correct answers
    */
   public function calculate_question_mark() {
+	  $this->decode_settings();
     return $this->settings['marks_correct'];
   }
 
