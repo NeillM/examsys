@@ -95,7 +95,7 @@ Class user_notices extends RogoStaticSingleton {
       if ($user !== null and $user->get_user_ID() > 0) {
         $logger = new Logger($mysqli);
         $logger->record_access_denied($user->get_user_ID(), $title, $reason); // Record attempt in access denied log against userID.
-      } elseif ($mysqli !== null) {
+      } else {
         $logger = new Logger($mysqli);
         $logger->record_access_denied(0, $title, $reason); // Record attempt in access denied log, userID set to zero.
       }
