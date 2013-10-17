@@ -49,7 +49,7 @@ include_once $root . 'include/load_config.php';
 if (!file_exists($root . 'config/config.inc.php')) {
   $mysqli = null;
   $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
-  $notice->display_notice_and_exit($mysqli, 'Install Required', 'Rog&#333; needs installing before use. The Installer is avalable <a href="' . $cfg_root_path . '/install/index.php">here</a>.', 'Install Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
+  $notice->display_notice_and_exit(null, 'Install Required', 'Rog&#333; needs installing before use. The Installer is avalable <a href="' . $cfg_root_path . '/install/index.php">here</a>.', 'Install Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
 }
 
 require_once $cfg_web_root . 'classes/configobject.class.php';
