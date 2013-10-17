@@ -311,7 +311,7 @@ if ($language != 'en') {
 </table>
 </div>
 <?php
-  for ($i=1; $i<=100; $i++) $distribution[$i] = 0;
+  for ($i=-10; $i<=100; $i++) $distribution[$i] = 0;
 
   $notes = array();
   // Query any student notes for the current paper
@@ -540,12 +540,8 @@ if ($language != 'en') {
           $class = 'redln';
         } else {
           $class = 'greyln';
-          $temp_location = $user_results[$i]['percent'];
-          if (isset($distribution[$temp_location])) {
-            $distribution[$temp_location]++;
-          } else {
-            $distribution[$temp_location] = 1;
-          }
+          $temp_location = round($user_results[$i]['percent']);
+          $distribution[$temp_location]++;
           $scatter_data .= $temp_location . "\n" . $user_results[$i]['duration'] . "\n";
         }
         if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
@@ -718,7 +714,7 @@ if ($language != 'en') {
   $distribution_file = fopen($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat', 'w');   // Distribution data
   fwrite($distribution_file, serialize($distribution) . "\n");
   fclose($distribution_file);
-
+	
   if ($user_no > 0) {
     //Check for any paper notes
     echo "<tr><td colspan=\"" . ($cols) . "\" height=\"9\">&nbsp;</td></tr>\n";
@@ -840,24 +836,24 @@ if ($language != 'en') {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     } else {
-      echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . MathsUtils::formatNumber($ss_pass, $percent_decimals) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-      if ($ss_hon > 0) echo "<tr><td class=\"field\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . MathsUtils::formatNumber($ss_hon, $percent_decimals) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . round($ss_pass, 2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      if ($ss_hon > 0) echo "<tr><td class=\"field\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . round($ss_hon, 2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       if ($stats['completed_no'] > 0) {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . round($stats['mean_mark'], 1) . "</td><td>(" . MathsUtils::formatNumber($stats['mean_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">" . round($stats['mean_mark'], 1) . "</td><td>(" . round($stats['mean_percent'], 1) . "%)</td><td>&nbsp;</td></tr>\n";
       } else {
         echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     }
     $mid_point = round($cohort_size / 2) - 1;
-    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">" . round($stats['median_mark'], 1) . "</td><td>(" . MathsUtils::formatNumber($stats['median_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">" . round($stats['median_mark'], 1) . "</td><td>(" . round($stats['median_percent'], 1) . "%)</td><td>&nbsp;</td></tr>\n";
     if ($stats['completed_no'] == 0) {
       echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stats['stddev_mark'], 2, '.', ',') . "</td><td>(" . MathsUtils::formatNumber($stats['stddev_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stats['stddev_mark'], 2, '.', ',') . "</td><td>(" . MathsUtils::formatNumber($stats['stddev_percent'], 2) . "%)</td><td>&nbsp;</td></tr>\n";
     }
-    echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td class=\"r\">" . $stats['max_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['max_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['minmark'] . "</td><td class=\"r\">" . $stats['min_mark'] . "</td><td>(" . MathsUtils::formatNumber($stats['min_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['range'] . "</td><td class=\"r\">" . $stats['range'] . "</td><td>(" . MathsUtils::formatNumber($stats['range_percent'], $percent_decimals) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td class=\"r\">" . $stats['max_mark'] . "</td><td>(" . number_format($stats['max_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['minmark'] . "</td><td class=\"r\">" . $stats['min_mark'] . "</td><td>(" . number_format($stats['min_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['range'] . "</td><td class=\"r\">" . $stats['range'] . "</td><td>(" . number_format($stats['range_percent']) . "%)</td><td>&nbsp;</td></tr>\n";
 
     if ($stats['completed_no'] <= 1) {
       echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
@@ -880,7 +876,7 @@ if ($language != 'en') {
     for ($i=1; $i<10; $i++) {
       echo "<tr><td style=\"width:40px\">" . $i;
 			echo ($language == 'en') ? $suffix[$i] : '.';
-			echo "</td><td>" . MathsUtils::formatNumber($stats["decile$i"], $percent_decimals) . "%</td></tr>\n";
+			echo "</td><td>" . MathsUtils::formatNumber($stats["decile$i"], 1) . "%</td></tr>\n";
     }
     echo "</table></td>\n";
 
@@ -888,9 +884,9 @@ if ($language != 'en') {
 
     // Quartiles
     echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
-    echo "<tr><td style=\"width:40px\">Q1</td><td>" . MathsUtils::formatNumber($stats['q1'], $percent_decimals) . "%</td></tr>\n";
-    echo "<tr><td style=\"width:40px\">Q2</td><td>" . MathsUtils::formatNumber($stats['q2'], $percent_decimals) . "%</td></tr>\n";
-    echo "<tr><td style=\"width:40px\">Q3</td><td>" . MathsUtils::formatNumber($stats['q3'], $percent_decimals) . "%</td></tr>\n";
+    echo "<tr><td style=\"width:40px\">Q1</td><td>" . MathsUtils::formatNumber($stats['q1'], 1) . "%</td></tr>\n";
+    echo "<tr><td style=\"width:40px\">Q2</td><td>" . MathsUtils::formatNumber($stats['q2'], 1) . "%</td></tr>\n";
+    echo "<tr><td style=\"width:40px\">Q3</td><td>" . MathsUtils::formatNumber($stats['q3'], 1) . "%</td></tr>\n";
 
     echo "</table></td>\n";
 
