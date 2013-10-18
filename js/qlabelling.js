@@ -162,7 +162,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			for (i=0; i<this.existingLabelInfo.length; i++) {
 				var myLabelInfo = this.existingLabelInfo[i].split("$"); //divides each bit of info about label
 				var mli_index = (myLabelInfo[0]!=''?Number(myLabelInfo[0]):i); 	//index
-
 				var yes_to_add = true;
 				if (typeof(myLabelInfo[4]) == 'undefined') yes_to_add = false;
 				if (this.qmode == 'analysis' && myLabelInfo[4] == '') yes_to_add = false;
@@ -188,14 +187,14 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 
 					//correction in labels text
 					if (myLabelType == "text") {
-						mli_answr = mli_answr.split('&#034').join('"');
-						mli_answr = mli_answr.split('&#039').join("'");
-						mli_answr = mli_answr.split('&#172').join('?');
-						mli_answr = mli_answr.split('&#059').join(';');
-						mli_answr = mli_answr.split('&#126').join('~');
-						mli_answr = mli_answr.split('&#124').join('|');
+						mli_answr = mli_answr.split('#034').join('"');
+						mli_answr = mli_answr.split('#039').join("'");
+						mli_answr = mli_answr.split('#172').join('?');
+						mli_answr = mli_answr.split('#059').join(';');
+						mli_answr = mli_answr.split('#126').join('~');
+						mli_answr = mli_answr.split('#124').join('|');
 					}
-					
+
 					var tmp_pholder = new Array();
 					this.pho_index = this.pholderBox.length-1;
 					//updating this.pholderBox array
@@ -215,7 +214,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 					}
 					tmp_pholder[3] = '';	                      		//corectness					
 					tmp_pholder[4] = mli_combo;	                  	//combo
-					if (mli_combo == 0) this.pholderBox[mli_index] = tmp_pholder;
+					if (mli_combo == 0 || this.labelMulti=='multiple') this.pholderBox[i] = tmp_pholder;
 					
 					var tmp_answer = new Array();
 					tmp_answer[0] = mli_index;								  	//index
@@ -233,30 +232,45 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 						tmp_answer[9] = Number(existingImageInfo[1]);	//image oryginal width
 						tmp_answer[10] = Number(existingImageInfo[2]);	    //image oryginal height
 						}
-					if (((this.qmode == 'edit' || this.qmode == 'analysis' || this.qmode == 'script') && mli_pos_xa<220) || this.qmode == 'answer'){
+					var flag_position = 'keep';
+					//if ((((this.qmode == 'edit' || this.qmode == 'analysis') && mli_pos_xa<220) || this.qmode == 'answer' || this.qmode == 'script')) flag_keep_position = true;
+					if (this.qmode == 'edit' && mli_pos_xa<220) flag_position = 'new';
+					if (this.qmode == 'analysis' && mli_pos_xa<220) flag_position = 'new';
+					if (this.qmode == 'answer' && this.qType != 'menu') flag_position = 'new';
+					if (this.qmode == 'script' && this.qType != 'menu') flag_position = 'new';					
+					
+					if (flag_position == 'new') {
 						tmp_answer[5] = mli_pos_xb;	                //pos_x - new
 						tmp_answer[6] = mli_pos_yb - this.yOffset;	//pos_y - new
 						tmp_answer[7] = mli_pos_xb;	                //initial pos_x
 						tmp_answer[8] = mli_pos_yb - this.yOffset;	//initial pos_y
-					} else {
+					}
+					if (flag_position == 'keep') {
+
 						tmp_answer[5] = mli_pos_xa;	                //pos_x from data
 						tmp_answer[6] = mli_pos_ya - this.yOffset;	//pos_y from data
 						tmp_answer[7] = mli_pos_xa;	                //initial pos_x
 						tmp_answer[8] = mli_pos_ya - this.yOffset;	//initial pos_y
 					}
+					if (flag_position == 'out') {
+						tmp_answer[5] = -500
+						tmp_answer[6] = mli_pos_yb - this.yOffset;	//pos_y from data
+						tmp_answer[7] = -500
+						tmp_answer[8] = mli_pos_yb - this.yOffset;	//initial pos_y
+					}
 					tmp_answer[3] = '';	                        	//corectness
 					tmp_answer[4] = mli_combo;	                  //combo
-
+					
 					if (typeof(this.answerBox[mli_index]) == 'undefined') this.answerBox[mli_index] = new Array();
 					this.answerBox[mli_index][mli_combo] = tmp_answer;
 					
-					//duplicates in edit just in case of switch to multi
-					if (this.labelMulti == 'single' && this.qmode == 'edit' && tmp_answer[2]!=''){
+					//duplicates in edit for multi
+					if (this.qmode == 'edit' && tmp_answer[2]!=''){
 						var tmp_answer2 = tmp_answer.slice(0);
 						tmp_answer2[5] = mli_pos_xb;
 						tmp_answer2[6] = mli_pos_yb - this.yOffset;
 						tmp_answer2[7] = mli_pos_xb;
-						tmp_answer2[8] = mli_pos_yb - this.yOffset;
+						tmp_answer2[8] = mli_pos_yb - this.yOffset;					
 						tmp_answer2[4] = (mli_combo+1);
 						this.answerBox[mli_index][mli_combo+1] = tmp_answer2;
 					}	
@@ -305,13 +319,21 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		var tmp_count = this.answerBox.length;
 		for (i=tmp_count-1;i>=0;i--) 
 			if (typeof(this.answerBox[i]) == 'undefined') 
-			  this.answerBox.splice(i,1);
+				this.answerBox.splice(i,1);
+					
+		for (i=0;i<this.answerBox.length;i++) {
+			tmp_count = this.answerBox[i].length;
+			for (j=tmp_count-1;j>=0;j--) 
+				if (typeof(this.answerBox[i][j]) == 'undefined') 
+					this.answerBox[i].splice(j,1);		
+		}
 				
 		//renumbering ids
 		for (i=0;i<this.answerBox.length;i++)
-			if (typeof(this.answerBox[i])!='undefined') 
-			for (j=0;j<this.answerBox[i].length;j++) 
-				this.answerBox[i][j][0]=i;
+			for (j=0;j<this.answerBox[i].length;j++) {
+				this.answerBox[i][j][0] = i;
+				this.answerBox[i][j][4] = j;
+			}
 
 		//removing empty elements
 		tmp_count = this.pholderBox.length;
@@ -341,7 +363,20 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
       this.redraw_once = true;
       this.ql_redraw_canvas;
     }
-		    
+
+		//----- menuBox
+		if (this.qType == 'menu') {
+			this.menuBox.push('');
+			for (i=0;i<this.answerBox.length;i++) {
+				for (j=0;j<this.answerBox[i].length;j++) {
+					if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1] == 'text' && this.answerBox[i][j][2]!='' && this.menuBox.indexOf(this.answerBox[i][j][2]) == -1) {
+						this.menuBox.push(this.answerBox[i][j][2]);
+						if (this.qmode!='edit' && this.qmode!='script') this.answerBox[i][j][2] = '';
+					}
+				}
+			}
+		}
+		
 		//---------- answer, 
 		// sort out existing answer info
 		if (answer != '' && answer != undefined && answer != "undefined" && answer != null && answer != "null") {
@@ -349,15 +384,30 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			if (typeof(answer_l1[1]) != 'undefined' && answer_l1[1]=='') this.empty_answer = true
       var answer_l2 = answer_l1[1].split('$');
 			var ans_x,ans_y,ans_n,ans_b,new_j,new_i=0;
+			
+			if (this.qmode != 'edit' && this.qType == 'menu') {
+				for (i=0;i<this.answerBox.length;i++) this.answerBox[i][0][2] = '';
+			}
+			
       for (l=0; l<answer_l2.length/4; l++) {
         if (answer_l2[l*4]!='') {
           ans_x = Number(answer_l2[l*4+0]);
           ans_y = Number(answer_l2[l*4+1]);
           ans_n = answer_l2[l*4+2];
+					
+					ans_n = ans_n.split('#034').join('"');
+					ans_n = ans_n.split('#039').join("'");
+					ans_n = ans_n.split('#172').join('?');
+					ans_n = ans_n.split('#059').join(';');
+					ans_n = ans_n.split('#126').join('~');
+					ans_n = ans_n.split('#124').join('|');
           ans_b = answer_l2[l*4+3];
-					for (i=0;i<this.answerBox.length;i++) {
-						if (this.qmode=='script') {
+					
+					/*
+					if (this.qmode == 'sscript' && this.qType != 'menu') {
+						for (i=0;i<this.answerBox.length;i++) {
 							for (j=0;j<this.answerBox[i].length;j++) {
+								//if in position
 								if (typeof(this.answerBox[i][j]) != 'undefined' && Number(this.answerBox[i][j][7]) == ans_x && Number(this.answerBox[i][j][8]) == ans_y) {
 									if (this.answerBox[i][j][3]=='') {
 										new_j = j;
@@ -367,52 +417,57 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 										new_j = this.answerBox[i].length - 1;
 									}
 									this.answerBox[i][new_j][2] = ans_n;
+									this.answerBox[i][new_j][3] = ans_b;									
 									this.answerBox[i][new_j][5] = ans_x;
 									this.answerBox[i][new_j][6] = ans_y+25-this.yOffset;
-									this.answerBox[i][new_j][3] = ans_b;									
 								}
 							}
-						}							
-						if (this.qmode == 'answer' && this.qType != 'menu' && typeof(this.answerBox[i][0]) != 'undefined' && ans_n!='' && this.answerBox[i][0][2] == ans_n) {
-							new_j = Number(this.answerBox[i].length) - 1;
-							if (this.answerBox[i][new_j][3] != '') {
-								this.answerBox[i].push(this.answerBox[i][j].slice(0));
-								new_j++;
+						}		
+					}	
+					*/
+					
+					if ((this.qmode == 'answer' || this.qmode == 'script') && this.qType != 'menu') {
+						for (i=0;i<this.answerBox.length;i++) {
+							if (typeof(this.answerBox[i][0]) != 'undefined' && ans_n!='' && this.answerBox[i][0][2] == ans_n) {
+								new_j = Number(this.answerBox[i].length) - 1;
+								if (this.answerBox[i][new_j][3] != '' || this.labelMulti == 'multiple') {
+									this.answerBox[i].push(this.answerBox[i][j].slice(0));
+									new_j++;
+								}
+								$("#cb_"+i).val(3);
+								this.answerBox[i][new_j][2] = ans_n;
+								this.answerBox[i][new_j][3] = ans_b;
+								this.answerBox[i][new_j][4] = new_j;
+								this.answerBox[i][new_j][5] = ans_x;
+								this.answerBox[i][new_j][6] = ans_y+25-this.yOffset;
+								ans_n = '$';
 							}
-							this.answerBox[i][new_j][2] = ans_n;
-							this.answerBox[i][new_j][3] = ans_b;
-							this.answerBox[i][new_j][4] = new_j;
-							this.answerBox[i][new_j][5] = ans_x;
-							this.answerBox[i][new_j][6] = ans_y+25-this.yOffset;
-							ans_n = '$';
 						}
-          }
-					if (this.qmode != 'edit' && this.qType == 'menu') {
-						this.answerBox[new_i][0][2] = ans_n;
-						this.answerBox[new_i][0][3] = ans_b;
-						this.answerBox[new_i][0][4] = 0;
-						this.answerBox[new_i][0][5] = ans_x;
-						this.answerBox[new_i][0][6] = ans_y+25-this.yOffset;
-						new_i++
 					}
+					
+					if (this.qmode != 'edit' && this.qType == 'menu') {
+						var test_subst = true;
+						for (i=0;i<this.answerBox.length;i++) {
+							if (test_subst && typeof(this.answerBox[i][0]) != 'undefined' && Number(this.answerBox[i][0][7]) == ans_x && Number(this.answerBox[i][0][8]) == ans_y) {
+								this.answerBox[i][0][2] = ans_n;
+								this.answerBox[i][0][3] = ans_b;
+								this.answerBox[i][0][4] = 0;
+								this.answerBox[i][0][5] = ans_x;
+								this.answerBox[i][0][6] = ans_y+25-this.yOffset;
+								test_subst = false;
+							}
+						}
+					}
+					
         }      
       }    
     }	
-
+		
 		if (this.hide_feedback_ifunanswered && this.empty_answer) {
 			this.display_ticks_crosses = false;
 			this.display_correct_answer = false;
 		}
-		//----- menuBox
-		this.menuBox.push('');
-		for (i=0;i<this.answerBox.length;i++) {
-			for (j=0;j<this.answerBox[i].length;j++) {
-				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1] == 'text' && this.answerBox[i][j][2]!='' && this.menuBox.indexOf(this.answerBox[i][j][2]) == -1) {
-					this.menuBox.push(this.answerBox[i][j][2]);
-					//if (this.qmode!='edit' && this.qmode!='script' && this.qType == 'menu') this.answerBox[i][j][2] = '';
-				}
-			}
-		}
+
 		//---------- colour 
 		this.currentColours[3] = colour;
     
@@ -427,14 +482,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.menu_img.onload = menu_img_onload.bind(this);
 		this.menu_img.src = '/js/images/combined.png'; 
 	}
-		
-	//emptying unmarked answers for menu
-	/*
-	for (i=0;i<this.answerBox.length;i++) 
-		for (j=0;j<this.answerBox[i].length;j++) 
-			if (this.answerBox[i][j][2]!='') console.log(this.canvas.id,this.answerBox[i][j]);
-	console.log('----');
-	*/
 }
 
 function combo_scope(answer_set) {
@@ -453,7 +500,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
   if (this_box[1] == 'image') this.context.fillRect(temp_x,temp_y,this.imglabelWidth,this.imglabelHeight);
   if (this_box[1] == 'text') this.context.fillRect(temp_x,temp_y,this.labelWidthEffect,this.labelHeightEffect);
 
-    this.context.shadowColor = 'white';
+    this.context.shadowColor = '#fff';
     this.context.shadowBlur = 0;
     this.context.shadowOffsetX = 0;
     this.context.shadowOffsetY = 0;
@@ -461,8 +508,28 @@ function ql_draw_box(i,j,temp_x,temp_y) {
   if (this_box[1] == 'image') {
 		if (typeof(this_box[11])!='undefined') {
 			var tmp_red = 1; 
-			if (this_box[9]>205) tmp_red = 205/this_box[9];
-			this.context.drawImage(this_box[11],temp_x+(this.imglabelWidth-this_box[9]*tmp_red)*0.5,temp_y+(this.imglabelHeight-this_box[10]*tmp_red)*0.5,this_box[9]*tmp_red,this_box[10]*tmp_red);
+			this.tmp_image = this_box[11];
+			this.tmp_text = this_box[2];
+			var tmp_width = this_box[9];
+			var tmp_height = this_box[10];
+			if (this.qmode == 'script' && this.display_correct_answer) {
+				if ((this.drag_pho_id == i || (this.drag_box_id == i && this.drag_box_combo == j)) && temp_x>220){
+					for (var a=0;a<this.pholderBox.length;a++) 
+						if (this.pholderBox[a][5] == temp_x && this.pholderBox[a][6] == temp_y) this.tmp_text = this.pholderBox[a][2];
+					for (var a=0;a<this.answerBox.length;a++) {
+						for (var b=0;b<this.answerBox[a].length;b++) {
+							if (this.answerBox[a][b][2]==this.tmp_text) {
+								this.tmp_image = this.answerBox[a][b][11];
+								tmp_width = this.answerBox[a][b][9];
+								tmp_height = this.answerBox[a][b][10];
+							}
+						}
+					}
+				}
+			}
+			
+			if (tmp_width>205) tmp_red = 205/tmp_width;
+			this.context.drawImage(this.tmp_image,temp_x+(this.imglabelWidth-tmp_width*tmp_red)*0.5,temp_y+(this.imglabelHeight-tmp_height*tmp_red)*0.5,tmp_width*tmp_red,tmp_height*tmp_red);
 			this.context.strokeRect(temp_x-0.5,temp_y-0.5,this.imglabelWidth,this.imglabelHeight);
 			if (this.exclusions[this.pholderBox[i][7]] == '1') {
 				var tmp_style = this.context.strokeStyle;
@@ -487,17 +554,24 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			}
 		}
 		var tmp_width = this.labelWidthEffect;
+    var wrapped = this.wrapText(this.tmp_text,tmp_width);
 		if (this.qType == 'menu') {
 			this.tmp_text = '';
 			for (var a=0;a<this.answerBox.length;a++) {
 				if (this.answerBox[a][0][5] == this_box[5] && this.answerBox[a][0][6] == this_box[6]) {
 					this.tmp_text = this.answerBox[a][0][2];
-					tmp_width = 5;//this.labelWidthEffect - 19;
 				}
 			}
+			if (this.qmode == 'script' && this.display_correct_answer) {
+				if ((this.drag_pho_id == i || (this.drag_box_id == i && this.drag_box_combo == j)) && temp_x>220){
+					for (var a=0;a<this.pholderBox.length;a++) 
+						if (this.pholderBox[a][5] == temp_x && this.pholderBox[a][6] == temp_y) this.tmp_text = this.pholderBox[a][2];
+				}
+			}
+			tmp_width = this.labelWidthEffect - 19;
+			var wrapped = this.wrapText(this.tmp_text,tmp_width);
+			tmp_width = 5;
 		}
-    var wrapped = this.wrapText(this.tmp_text,tmp_width);
-
 		if (this.exclusions[this.pholderBox[i][7]] == '1') {
 			this.context.fillStyle='#FF0000';
 			var tmp_style = this.context.strokeStyle;
@@ -533,12 +607,11 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				this.context.fillStyle='#fff';
 				this.context.fillRect(temp_x+1.5,temp_y+tmp_trans+this.labelHeightEffect+0.5,this.labelWidthEffect-2,tmp_height);
 				
-				this.menu_line = 1;
 				//finding the one already selected
-
+				this.menu_line = 1;
 				for (var a=this.menuBox.length-1;a>=0;a--) 
-					if (this.menuBox[a] == this.answerBox[i][2]) this.menu_line = a+1;
-					
+					if (this.menuBox[a] == this.answerBox[i][0][2]) this.menu_line = a+1;
+				
 				//finding the one with cursor over
 				if (this.x > temp_x && this.x < temp_x+this.labelWidthEffect && this.y > temp_y+tmp_trans+this.labelHeightEffect && this.y < temp_y+tmp_trans+this.labelHeightEffect+tmp_height){
 				for (var a=1;a<=this.menuBox.length;a++) 
@@ -592,7 +665,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		}
   }
 	
-	if (this.qmode == 'script' && this_box[3]!='') {
+	if (this.qmode == 'script' && this_box[3]!='' && temp_x>=220) {
 		var tmp_test = true;
 		if (this.drag_box_id == i && this.drag_box_combo == j && this_box[3] == 'f') tmp_test = false;
 		if (this.drag_pho_id == i && this_box[3] == 'f') tmp_test = false;
@@ -613,7 +686,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			this.context.fillStyle='#ddd';
 			this.context.beginPath();
 			var tmp_pos = temp_x+tmp_w+11;
-			if ((tmp_pos+22)>this.canvas.width) tmp_pos = temp_x-12;
+			if ((tmp_pos+12)>this.canvas.width) tmp_pos = temp_x-12;
       this.context.arc(tmp_pos,temp_y+tmp_h-10, 10, 0 , 2 * Math.PI, false);
       this.context.fill();
       //this.context.stroke();
@@ -640,10 +713,16 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 function ql_redraw_box(i,j) {
 	var this_box = this.answerBox[i][j];
 	if (j == 99) this_box = this.pholderBox[i];
+
+
 	if (typeof this_box != 'undefined' && (this.labelMulti == 'multiple' || this_box[4] == 0)) {
     temp_x = this_box[5];
     temp_y = this_box[6];
-		
+	if (this.qmode == 'script' && this.qType == "menu" && this.active_box==i) {
+		this_box = this.pholderBox[i];
+		temp_x = this_box[5]-10;
+		temp_y = this_box[6]-10;
+	}		
     //setting shadow
     if (((this.drag_box_id == i && this.drag_box_combo == j) || (this.mov_id == i && this.mov_combo == j)) && this.panelOptionOver == -1 && this.qmode!='script')  {
       this.context.shadowColor = '#AAA';
@@ -731,6 +810,9 @@ function ql_menuBuild() {
 }
 
 function ql_redraw_canvas() {
+	var tmp_count = 0;
+	for (i=0;i<this.answerBox.length;i++) tmp_count += this.answerBox[i].length
+	
 	this.char_labels = 0;
 	this.draw_limit = new Array(0,27,this.canvas.width-2,this.canvas.height-2);
   function draw_shape(_self,tt,tx1,ty1,tx2,ty2) {
@@ -949,6 +1031,7 @@ function ql_redraw_canvas() {
 		//1D array i,j,width,height of those labels in the label panel
 		var tmpp = Array();
 		var tmpl = Array();
+
 		for (i=0;i<this.answerBox.length;i++) {
 			tmpl[i] = true;
 			if (typeof(this.answerBox[i])!='undefined')
@@ -965,25 +1048,38 @@ function ql_redraw_canvas() {
 				}
 			}
 		}
+		
 		for (a=0;a<tmpp.length;a++) {
 			i = tmpp[a][0];
-			j = tmpp[a][1];
-			tmpw = tmpp[a][2];
-			tmph = tmpp[a][3];			
-			ax = tmpx;
-			if (this.answerBox[i][j][2] == '' && (this.qmode == 'answer' || this.qmode == 'script')) ax = -500;
-			
-			this.answerBox[i][j][7] = ax;
-			this.answerBox[i][j][8] = tmpy;
-			if (i != this.drag_box_id || j != this.drag_box_combo || this.answerBox[i][j][5] == 0) {
-				this.answerBox[i][j][5] = ax;
-				this.answerBox[i][j][6] = tmpy;
-				if (this.answerBox[i][j][4] == 0) {
-					this.pholderBox[i][j][5] = ax;
-					this.pholderBox[i][j][6] = tmpy;
+			//j = tmpp[a][1];
+			var sum_label = '';
+			for (j=0;j<this.answerBox[i].length;j++) {
+				tmpw = tmpp[a][2];
+				tmph = tmpp[a][3];			
+				ax = tmpx;
+				if (this.answerBox[i][j][2] == '' && (this.qmode == 'answer' || this.qmode == 'script')) ax = -500;
+				
+				if (this.answerBox[i][j][7]<220) {
+					this.answerBox[i][j][7] = ax;
+					this.answerBox[i][j][8] = tmpy;
 				}
+				if (i != this.drag_box_id || j != this.drag_box_combo || this.answerBox[i][j][5] == 0) {
+					if (this.answerBox[i][j][5]<220) {
+						this.answerBox[i][j][5] = ax;
+						this.answerBox[i][j][6] = tmpy;
+					}
+					/*
+					if (this.pholderBox[i][5]<220) {
+						if (this.answerBox[i][j][4] == 0) {
+							this.pholderBox[i][5] = ax;
+							this.pholderBox[i][6] = tmpy;
+						}
+					}
+					*/
+				}
+				sum_label += this.answerBox[i][j][2];
 			}
-			if (!(this.answerBox[i][j][2] == '' && (this.qmode == 'answer' || this.qmode == 'script'))) {
+			if (!(sum_label == '' && (this.qmode == 'answer' || this.qmode == 'script'))) {
 				tmpx += this.i_spacex + tmpw + this.lineThickness - 1;
 				if (tmphn < tmph) tmphn = tmph;
 				tmpwn = 0;if (a<(tmpp.length-1)) tmpwn = tmpp[a+1][2];
@@ -995,7 +1091,7 @@ function ql_redraw_canvas() {
 			}
 		}
 		
-		if (this.qType == "menu" && this.qmode == 'answer') {		
+		if (this.qType == "menu" && (this.qmode == 'answer' || this.qmode == 'script')) {		
 			//menus
 			for (i=this.answerBox.length-1;i>=0;i--) {
 				if (this.pholderBox[i][1] == 'text' && this.pholderBox[i][5]>220) {
@@ -1008,9 +1104,11 @@ function ql_redraw_canvas() {
 		for (i=this.answerBox.length-1;i>=0;i--) {
 			for (j=this.answerBox[i].length-1;j>=0;j--) {
 				if (typeof(this.answerBox[i][j])!='undefined' && !(this.drag_box_id == i && this.drag_box_combo == j) && !(this.mov_id == i && this.mov_combo == j) && !(this.qType == "menu" && this.qmode == 'answer' && this.answerBox[i][j][1]!='image')) {
-					if (this.qmode == 'script' && this.answerBox[i][j][5]<220) this.context.globalAlpha = 0.5;	
-					this.ql_redraw_box(i,j);
-					this.context.globalAlpha = 1;	
+					if (!(this.qType == "menu" && this.qmode == 'script' && this.answerBox[i][j][5]<220)) {
+						if (this.qmode == 'script' && this.answerBox[i][j][5]<220) this.context.globalAlpha = 0.5;	
+						this.ql_redraw_box(i,j);
+						this.context.globalAlpha = 1;	
+					}
 				}
 			}
 		}
@@ -1026,7 +1124,7 @@ function ql_redraw_canvas() {
 		var active_mix = this.active_box_id+':'+this.active_box_combo;
 		var mov_mix = this.mov_id+':'+this.mov_combo;
 		if (this.drag_box_id>-1 && drag_mix!=active_mix && !(this.qType == "menu" && this.qmode == 'answer' && this.answerBox[this.drag_box_id][this.drag_box_combo][1]!='image')) {
-			if (this.qmode == 'script' && this.answerBox[this.drag_box_id][this.drag_box_combo][5]<220) this.context.globalAlpha = 0.5;	
+			if (this.qmode == 'script' && this.qType != "menu" && this.answerBox[this.drag_box_id][this.drag_box_combo][5]<220) this.context.globalAlpha = 0.5;	
 			this.ql_redraw_box(this.drag_box_id,this.drag_box_combo);
 			this.context.globalAlpha = 1;
 		}
@@ -1414,6 +1512,14 @@ function ql_mouseDragDown(e){
 		if (del_list.length>0) {
 			for (i=del_list.length;i>0;i--) this.answerBox[del_list[i-1][0]].splice(del_list[i-1][1],1);
 		}
+		//renumber answer ids
+		for (i=0;i<this.answerBox.length;i++)
+		for (j=0;j<this.answerBox[i].length;j++) {
+			this.answerBox[i][j][0] = i;
+			this.answerBox[i][j][4] = j;
+		}
+		this.drag_box_id = -1;
+		this.drag_box_combo = -1;
 	}
 }
 
@@ -1520,8 +1626,7 @@ function ql_mouseDragUp(){
 		if (duplicate) {
 			dest_box = -1;
 			next_combo_nr = -1;
-		}
-		
+		}	
 		//if new creating new instance of dragged label with new next_combo_nr 
 		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220 && dest_box>-1) {
 			var that_box = this.answerBox[this.drag_box_id][this.drag_box_combo].slice(0);
@@ -1533,6 +1638,28 @@ function ql_mouseDragUp(){
 		}
 	}
 	
+	//if new creating new instance of dragged label with new next_combo_nr 
+  if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode == 'edit' && this.labelMulti == 'multiple' && this.qType=='label'){
+		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220) {
+			next_combo_nr = this.answerBox[this.drag_box_id].length; //nr of last combo for this drag_box_id
+			var that_box = this.answerBox[this.drag_box_id][this.drag_box_combo].slice(0);
+			that_box[4] = next_combo_nr;
+			//reset copy
+			that_box[5] = this.answerBox[this.drag_box_id][this.drag_box_combo][7];
+			that_box[6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8];
+			this.answerBox[this.drag_box_id][next_combo_nr] = that_box;
+		}
+	}
+
+	
+	//renumbering ids
+	for (i=0;i<this.answerBox.length;i++)
+	for (j=0;j<this.answerBox[i].length;j++) {
+		this.answerBox[i][j][0] = i;
+		this.answerBox[i][j][4] = j;
+	}
+	
+
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode == 'answer') {
 		this.mov_id = this.drag_box_id;
 		this.mov_combo = this.drag_box_combo;
@@ -1647,11 +1774,11 @@ function ql_mouseDragUp(){
 }
 
 function fix_names(name) {
-	name = name.split('"').join('&#034');
-	name = name.split("'").join('&#039');
-	name = name.split('?').join('&#172');
-	name = name.split(';').join('&#059');
-	name = name.split('~').join('&#126');
+	name = name.split('"').join('#034');
+	name = name.split("'").join('#039');
+	name = name.split('?').join('#172');
+	name = name.split(';').join('#059');
+	name = name.split('~').join('#126');
 	return name;
 }
 					
@@ -1676,7 +1803,7 @@ function ql_ReturnInfo() {
 				if (typeof(this.answerBox[i][j])!='undefined') {
 					if (this.answerBox[i][j][3] == 't') questions_correct++;
 					if (this.answerBox[i][j][3] == 'f') questions_incorrect++;
-					if (this.answerBox[i][j][3] == 't' || this.answerBox[i][j][3] == 'f') answer_result+=this.answerBox[i][j][5]+'$'+(this.answerBox[i][j][6]-25+this.yOffset)+'$'+this.answerBox[i][j][2]+'$'+this.answerBox[i][j][3]+'$';
+					if (this.answerBox[i][j][3] == 't' || this.answerBox[i][j][3] == 'f') answer_result+=this.answerBox[i][j][5]+'$'+(this.answerBox[i][j][6]-25+this.yOffset)+'$'+fix_names(this.answerBox[i][j][2])+'$'+this.answerBox[i][j][3]+'$';
 				}
 			}
 		}  
