@@ -135,6 +135,10 @@ Class QuestionENHANCEDCALC extends QuestionEdit {
    * @return integer
    */
   public function get_answer_precision() {
+		if ($this->id == -1) {
+		  return '0 dp';  // Set up the default if a new question
+		}
+		
     // If not enforced return blank
     if (!$this->strictdisplay) {
       return '';

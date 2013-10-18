@@ -62,6 +62,8 @@ $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms);
 while ($module_data->fetch()) {
+  echo "Module:: ($idMod) --- $module \r\n";
+
   $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
 }
 $module_data->close();
