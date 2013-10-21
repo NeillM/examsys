@@ -405,12 +405,11 @@ class ClassTotals {
     $percents = $standard_setting->get_pass_distinction($mark_parts[1]);
 
     $this->ss_pass = $percents['pass_score'];
-
+		
     if ($percents['distinction_score'] == 0) {   // If zero set to top 20% of cohort performance.
       $this->set_ss_hon();
-      $this->distinction_score = $this->ss_hon;
     } else {
-      $this->distinction_score = $percents['distinction_score'];
+			$this->ss_hon = $percents['distinction_score'];
     }
   }
 
