@@ -49,6 +49,8 @@ class EnhancedCalc extends Question implements questionInterface {
    */
   function split_numb_from_unit($input) {
     $input=trim($input);
+
+    $this->decode_settings();
     //user selected the units from a ddl
     if (isset($this->useranswer['uansunit']) and $this->settings['show_units']) {
 
