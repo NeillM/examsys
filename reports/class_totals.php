@@ -311,7 +311,7 @@ if ($language != 'en') {
 </table>
 </div>
 <?php
-  for ($i=-10; $i<=100; $i++) $distribution[$i] = 0;
+  for ($i=-100; $i<=100; $i++) $distribution[$i] = 0;
 
   $notes = array();
   // Query any student notes for the current paper
