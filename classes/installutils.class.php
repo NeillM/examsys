@@ -2098,7 +2098,7 @@ QUERY;
           `userID` int(10) unsigned default NULL,
           `paperID` mediumint(8) unsigned default NULL,
           `started` datetime default NULL,
-          `ipaddress` char(15) default NULL,
+          `ipaddress` varchar(100) default NULL,
           `student_grade` char(25) default NULL,
           `year` tinyint(4) default NULL,
           `attempt` tinyint(4) default NULL,
