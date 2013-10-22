@@ -728,11 +728,12 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   public function replace_leadin ($reviewers = false) {
+
     if ($reviewers === false) {
       $leadin = $this->replace_vars($this->leadin);
     } else {
       $leadin = $this->leadin;
-      foreach ($this->settings['vars'] as $key => $value) {
+      foreach ($this->useranswer['vars'] as $key => $value) {
         $leadin = str_replace($key, '<span style="background-color:#FFFF80">&nbsp;<strong>' . $key . '</strong>&nbsp;</span>' . $value, $leadin);
       }
     }
