@@ -231,7 +231,7 @@ function check_ebel_distinction_type($ebel) {
         $('#origei2').val('');
       }
 
-      $('en').val(EN + ' <?php echo $string['marks']; ?>');
+      $('#en').val(EN + ' <?php echo $string['marks']; ?>');
       if (origEN != EN) {
         $('#origen').val(origEN);
         $('#origen2').val(origEN);
@@ -532,6 +532,7 @@ function check_ebel_distinction_type($ebel) {
   echo "<tr><td colspan=\"2\" style=\"border-top: dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
   echo '</table>';
   if ($_GET['method'] == 'ebel') {
+	
     if (isset($_GET['std_setID'])) {
       $result = $mysqli->prepare("SELECT category, percentage FROM ebel WHERE std_setID = ?");
       $result->bind_param('i', $_GET['std_setID']);
@@ -553,7 +554,7 @@ function check_ebel_distinction_type($ebel) {
       $result->fetch();
       $result->close();
       if ($templateID == '') {
-        $ebel = array('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+				$ebel = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
       } else {
         $result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?");
         $result->bind_param('i', $templateID);
