@@ -28,17 +28,35 @@ require_once '../classes/logger.class.php';
 
 check_var('questionID', 'POST', true, false, false);
 check_var('pID', 'POST', true, false, false);
-check_var('paperID', 'POST', true, false, false);
+$tmp_paperID = check_var('paperID', 'POST', true, false, true);
 
 $tmp_pIDs = explode(',', $_POST['pID']);  
-$tmp_questionIDs = explode(',', $_POST['questionID']);
-$tmp_paperID = $_POST['paperID'];
+$tmp_questionIDs = explode(',', substr($_POST['questionID'], 1));
 
 for ($i=1; $i<count($tmp_pIDs); $i++) {
   if ($result = $mysqli->prepare("DELETE FROM papers WHERE p_id = ?")) {
     $result->bind_param('i', $tmp_pIDs[$i]);
     $result->execute();
     $result->close();
+
+		// Look up any std set IDs for the paper.
+		$std_setIDs = array();
+		$result = $mysqli->prepare("SELECT id FROM std_set WHERE paperID = ?");
+    $result->bind_param('i', $tmp_paperID);
+		$result->execute();
+		$result->bind_result($id);
+		while ($result->fetch()) {
+			$std_setIDs[] = $id;
+		}
+    $result->close();
+
+		// Delete any corresponding standard setting record for that question and paper.
+		if (count($std_setIDs) > 0) {
+			$sql = "DELETE FROM std_set_questions WHERE questionID IN (" . implode(',', $tmp_questionIDs) . ") AND std_setID IN (" . implode(',', $std_setIDs) . ")";
+			$result = $mysqli->prepare($sql);
+			$result->execute();
+			$result->close();
+		}
 
     // Create a track changes record to say new question added.
     $logger = new Logger($mysqli);

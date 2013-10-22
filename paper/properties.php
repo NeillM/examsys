@@ -1480,6 +1480,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     $stop_year = date("Y") + 3;
     for ($year=2002; $year<$stop_year; $year++) {
       $next_year = ($year - 2000) + 1;
+			if (strlen($next_year) == 1) $next_year = '0' . $next_year;
       $value = $year . '/' . $next_year;
       echo "<option value=\"" . $value . "\"";
       if ($properties->get_calendar_year() == $value) echo 'selected';
