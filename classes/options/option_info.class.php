@@ -25,7 +25,8 @@
  */
 
 Class OptionINFO extends OptionEdit {
-    
+
+  protected $_fields_required = array('question_id');
   /**
    * Is this option blank?
    * @return boolean
