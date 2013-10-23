@@ -595,7 +595,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $p = 0;
         } else {
           $p = $freq_log[$q_id]['mark'] / $freq_log[$q_id]['totalpos'];
-					var_dump($freq_log);
         }
 
         $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], 1, 'correct');
