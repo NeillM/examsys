@@ -211,7 +211,7 @@ function format_review($method, $string) {
 function format_passmark($method, $string) {
   if ($method == 101) {
     return 'Borderline Method';
-  } elseif ($method == 102) {
+  } elseif ($method == 102 or $method == 127) {
     return 'N/A';
   } else {
     return $method . '%';
@@ -1429,6 +1429,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2') {
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['distinction'] . "</td><td><select name=\"distinction_mark\">";
+      echo "<option value=\"127\" selected>N/A</option>\n";    // N/A = 127 which should be impossible to ever get.
       for ($i=0; $i<=100; $i++) {
         if ($i == $properties->get_distinction_mark()) {
           echo "<option value=\"$i\" selected>$i%</option>\n";
