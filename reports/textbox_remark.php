@@ -116,15 +116,59 @@ if (isset($_POST['submit'])) {
 	
 	// Get back total marks for the paper excluding all textboxes.
 	$marks_array = array();
-	$result = $mysqli->prepare("SELECT SUM(adjmark) AS adjmark_total, userID, username FROM log$paper_type, log_metadata, questions, users WHERE log2.metadataID = log_metadata.id AND paperID = ? AND log$paper_type.q_id = questions.q_id AND q_type NOT IN ('textbox','info') AND log_metadata.userID = users.id AND roles = 'Student' AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ? GROUP BY metadataID");
-  $result->bind_param('iss', $_GET['paperID'], $startdate, $enddate);
+  if ($paper_type == '0') {
+		$sql = <<< SQL
+			SELECT SUM(adjmark) AS adjmark_total, userID, username
+				FROM log0, log_metadata, questions, users
+				WHERE log0.metadataID = log_metadata.id
+				AND paperID = ?
+				AND log0.q_id = questions.q_id
+				AND q_type NOT IN ('textbox','info')
+				AND log_metadata.userID = users.id
+				AND (roles = 'Student' OR roles = 'Graduate')
+				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
+				AND started <= ?
+			UNION ALL
+			SELECT SUM(adjmark) AS adjmark_total, userID, username
+				FROM log1, log_metadata, questions, users
+				WHERE log1.metadataID = log_metadata.id
+				AND paperID = ?
+				AND log1.q_id = questions.q_id
+				AND q_type NOT IN ('textbox','info')
+				AND log_metadata.userID = users.id
+				AND (roles = 'Student' OR roles = 'Graduate')
+				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
+				AND started <= ?
+			GROUP BY metadataID
+SQL;
+		$result = $mysqli->prepare($sql);
+		$result->bind_param('ississ', $_GET['paperID'], $startdate, $enddate, $_GET['paperID'], $startdate, $enddate);
+	} else {
+		$sql = <<< SQL
+			SELECT SUM(adjmark) AS adjmark_total, userID, username
+				FROM log$paper_type, log_metadata, questions, users
+				WHERE log$paper_type.metadataID = log_metadata.id
+				AND paperID = ?
+				AND log$paper_type.q_id = questions.q_id
+				AND q_type NOT IN ('textbox','info')
+				AND log_metadata.userID = users.id
+				AND (roles = 'Student' OR roles = 'Graduate')
+				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
+				AND started <= ?
+				GROUP BY metadataID
+SQL;
+		$result = $mysqli->prepare($sql);
+		$result->bind_param('iss', $_GET['paperID'], $startdate, $enddate);
+	}
   $result->execute();
   $result->bind_result($adjmark_total, $userID, $username);
   while ($result->fetch()) {
-	  $marks_array[$userID]['total'] = $adjmark_total;
-	  $marks_array[$userID]['userID'] = $userID;
-	  $marks_array[$userID]['username'] = $username;
-	  $marks_array[$userID]['student_id'] = '';
+	  if ($userID != '') {
+			$marks_array[$userID]['total'] = $adjmark_total;
+			$marks_array[$userID]['userID'] = $userID;
+			$marks_array[$userID]['username'] = $username;
+			$marks_array[$userID]['student_id'] = '';
+		}
   }
 	$result->close();
 
@@ -134,15 +178,19 @@ if (isset($_POST['submit'])) {
   $result->execute();
   $result->bind_result($sum_mark, $username, $userID, $student_id);
 	while ($result->fetch()) {
-	  $marks_array[$userID]['total'] += $sum_mark;
-	  $marks_array[$userID]['userID'] = $userID;
+	  if (isset($marks_array[$userID]['total'])) {
+			$marks_array[$userID]['total'] += $sum_mark;
+	  } else {
+			$marks_array[$userID]['total'] = $sum_mark;
+		}
+		$marks_array[$userID]['userID'] = $userID;
 	  $marks_array[$userID]['username'] = $username;
 	  $marks_array[$userID]['student_id'] = $student_id;
 	}
 	$result->close();
 
 	$percent_decimals = $configObject->get('percent_decimals');
-	
+		
   $student_no = 1;
 	foreach ($marks_array as $userID=>$user_data) {
     $student_id = ($user_data['student_id'] == '') ? '&lt;student ID unknown&gt;' : $user_data['student_id'];
