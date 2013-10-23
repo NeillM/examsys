@@ -231,7 +231,7 @@ if ($old_q_type == 'blank') {
 if ($q_type != 'extmatch' and $q_type != 'matrix') {
   $old_correct = ',' . $correct;
 }
-$paper_title = $propervar_dutyObj->get_paper_title();
+$paper_title = $propertyObj->get_paper_title();
 
 header('Pragma: public');
 header('Content-type: application/octet-stream');
