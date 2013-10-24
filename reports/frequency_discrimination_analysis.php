@@ -1831,7 +1831,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $freq_array       = array();
   $bottom_log_array = array();
   $top_log_array    = array();
-var_dump($sql,$paperID, $_GET['repcourse'], $startdate, $enddate,$username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $settings, $mark, $totalpos, $option_order, $started);
+
   if ($paper_type == '0') {
     $result = $mysqli->prepare("(SELECT username, log_metadata.userID, log0.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log0, log_metadata, questions, users WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? $student_modules_sql) UNION ALL (SELECT username, log_metadata.userID, log1.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log1, log_metadata, questions,  users WHERE log1.metadataID = log_metadata.id AND log1.q_id=questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND started >= ? AND started <= ? " . str_replace('log0', 'log1', $student_modules_sql) . ")");
     $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);
@@ -1849,7 +1849,7 @@ var_dump($sql,$paperID, $_GET['repcourse'], $startdate, $enddate,$username, $tmp
 
 
   while ($result->fetch()) {
-    var_dump('*******', $username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $settings, $mark, $totalpos, $option_order, $started);
+    var_dump('*******', $username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $settings, $mark, $totalpos, $option_order, $started,'****');
 
 
     storeData($freq_array, $question_ID, $tmp_answer, $q_type, $display_method, $settings, $mark, $totalpos, $stop_words, 'all');
