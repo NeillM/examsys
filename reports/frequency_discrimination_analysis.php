@@ -584,9 +584,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $partial_l = number_format(($bottom_log[$q_id][1]['partial']/$candidate_no)*100,0);
         echo "<tr><td>t=$partial_t%</td><td>u=$partial_u%</td><td>l=$partial_l%</td><td>". $string['PartialMarks'] . "</td></tr>\n";
 
-        $incorrect_t = number_format(($freq_log[$q_id][1]['partial']/$user_total)*100,0);
-        $incorrect_u = number_format(($top_log[$q_id][1]['partial']/$candidate_no)*100,0);
-        $incorrect_l = number_format(($bottom_log[$q_id][1]['partial']/$candidate_no)*100,0);
+        $incorrect_t = number_format(($freq_log[$q_id][1]['incorrect']/$user_total)*100,0);
+        $incorrect_u = number_format(($top_log[$q_id][1]['incorrect']/$candidate_no)*100,0);
+        $incorrect_l = number_format(($bottom_log[$q_id][1]['incorrect']/$candidate_no)*100,0);
         echo "<tr><td>t=$incorrect_t%</td><td>u=$incorrect_u%</td><td>l=$incorrect_l%</td><td>". $string['Incorrect'] . "</td></tr>\n";
         echo "</table>\n";
 

@@ -88,6 +88,7 @@ HTML;
 	<link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
+	.warn_icon {width:12px; height:11px; padding-left:5px; padding-right:5px}
   <?php
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
     echo ".marked {color:#808080;display:none}\n";
@@ -353,7 +354,7 @@ SQL;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
           $style = ' class="marked"';
         }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td class=\"student_unans\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_correct, $string) . "</td></tr>\n";
+        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td class=\"student_unans\"><img src=\"../artwork/small_yellow_warning_icon.gif\" alt=\"Warning\" class=\"warn_icon\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, 0, $string) . "</td></tr>\n";
       }
     }
   }
