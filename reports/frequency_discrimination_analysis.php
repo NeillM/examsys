@@ -1842,6 +1842,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $result->execute();
   $result->bind_result($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $settings, $mark, $totalpos, $option_order, $started);
 
+var_dump($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $settings, $mark, $totalpos, $option_order, $started);
+
+
   while ($result->fetch()) {
     storeData($freq_array, $question_ID, $tmp_answer, $q_type, $display_method, $settings, $mark, $totalpos, $stop_words, 'all');
     if (isset($bottom_cohort[$started][$username])) {
