@@ -1841,8 +1841,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   }
   $result->execute();
   $result->bind_result($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $settings, $mark, $totalpos, $option_order, $started);
+$sql=("SELECT username, log_metadata.userID, log$paper_type.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log$paper_type, log_metadata, questions, users WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? $student_modules_sql";
 
-var_dump($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $settings, $mark, $totalpos, $option_order, $started);
+var_dump($sql,$username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $settings, $mark, $totalpos, $option_order, $started);
 
 
   while ($result->fetch()) {
