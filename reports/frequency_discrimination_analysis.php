@@ -1849,6 +1849,9 @@ var_dump($sql,$paperID, $_GET['repcourse'], $startdate, $enddate,$username, $tmp
 
 
   while ($result->fetch()) {
+    var_dump('*******', $username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $settings, $mark, $totalpos, $option_order, $started);
+
+
     storeData($freq_array, $question_ID, $tmp_answer, $q_type, $display_method, $settings, $mark, $totalpos, $stop_words, 'all');
     if (isset($bottom_cohort[$started][$username])) {
       storeData($bottom_log_array, $question_ID, $tmp_answer, $q_type, $display_method, $settings, $mark, $totalpos, $stop_words, 'bottom');
