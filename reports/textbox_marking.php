@@ -88,7 +88,7 @@ HTML;
 	<link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
-	.warning {width:12px; height:11px; padding-left:5px; padding-right:5px}
+	.warn_icon {width:12px; height:11px; padding-left:5px; padding-right:5px}
   <?php
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
     echo ".marked {color:#808080;display:none}\n";
