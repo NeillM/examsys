@@ -7,6 +7,9 @@ $(function() {
     ignore: '',
     rules: {
       leadin: 'required',
+      option_min1: 'required',
+      option_max1: 'required',
+      option_increment1: 'required',
       option_formula1: {
         required: function () {
           var haveFormula = true;
@@ -16,13 +19,6 @@ $(function() {
             }
           });
           return haveFormula;
-        }
-      },
-      option_increment1: {
-        required: {
-          depends: function (element) {
-            return requiresIncrement(1);
-          }
         }
       },
       option_increment2: {
