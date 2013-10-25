@@ -107,27 +107,26 @@ Class UpdaterUtils {
     return true;
   }
 
-    public function does_index_column_exist($table_name, $index_name, $index_column, $index_sequence = NULL) {
-        if(!is_null($index_sequence)) {
-            $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ? AND column_name = ? and seq_in_index = ?");
-            $result->bind_param('sss', $index_name, $index_column, $index_sequence);
+	public function does_index_column_exist($table_name, $index_name, $index_column, $index_sequence = NULL) {
+		if (!is_null($index_sequence)) {
+			$result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ? AND column_name = ? and seq_in_index = ?");
+			$result->bind_param('sss', $index_name, $index_column, $index_sequence);
+		} else {
+			$result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ? AND column_name = ?");
+			$result->bind_param('ss', $index_name, $index_column);
+		}
+		$result->execute();
+		$result->store_result();
+		$num_rows =  $result->num_rows;
 
-        } else {
-            $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ? AND column_name = ?");
-            $result->bind_param('ss', $index_name, $index_column);
-        }
-        $result->execute();
-        $result->store_result();
-        $num_rows =  $result->num_rows;
+		$result->close();
 
-        $result->close();
+		if ($num_rows < 1) {
+			return false;
+		}
 
-        if ($num_rows < 1) {
-            return false;
-        }
-
-        return true;
-    }
+		return true;
+	}
 
   public function does_tables_priv_exist($user, $table, $privileges) {
     $this->mysqli->select_db('mysql');
@@ -158,9 +157,9 @@ Class UpdaterUtils {
     $result = $this->mysqli->query("SHOW GRANTS FOR '$user'@'$host'");
     echo $this->mysqli->error;
 
-      if(!is_object($result)) {
-          return false;
-      }
+		if (!is_object($result)) {
+			return false;
+		}
     while ($existing_grant = $result->fetch_array()) {
       if (stripos($existing_grant[0], ".`$table` TO") !== false) {
         $found_grant = $existing_grant[0];

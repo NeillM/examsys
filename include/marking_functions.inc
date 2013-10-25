@@ -748,9 +748,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
             $mark = $row['correct'] / $max;
           }
         }
-        if ($totalpos == 0) {
-          $totalpos += $marks_correct;
-        }
+        $totalpos = 1;  // SCT questions are always out of one.
         break;
       case 'true_false':
         $dismiss = '';
