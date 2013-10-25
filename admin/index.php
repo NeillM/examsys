@@ -129,7 +129,7 @@
 	$menudata['deniedlogwarnings']		= array('view_access_denied.php', 'access_denied.png');
 	$menudata['ebelgridtemplates']		= array('list_ebel_grids.php', 'grid_48.png');
 	$menudata['faculties']						= array('list_faculties.php', 'faculty.png');
-	$menudata['imslti']								= array('../LTI/lti_keys_list.php', 'ims_logo_64.png');
+	$menudata['imslti']								= array('../LTI/lti_keys_list.php', 'lti_key_48.png');
 	$menudata['modules']							= array('list_modules.php', 'modules_icon.png');
 	$menudata['announcments']					= array('list_announcements.php', 'news_48.png');
 	$menudata['optimizetables']				= array('optimize_tables.php', 'optimize_tables_icon.png');
@@ -141,6 +141,7 @@
 	$menudata['summativeexamstats']		= array('summative_stats.php?year=' . $summative_year, 'summative_stats.png');
 	$menudata['systemerrors']					= array('sys_error_list.php', 'bug.png');
 	$menudata['systeminformation']		= array('system_info.php', 'information.png');
+	$menudata['testing']							= array('../testing/', 'crash_test.png');
 	$menudata['trac']									= array('https://suivarro.nottingham.ac.uk/trac/rogo/', 'trac_logo.png');
 	$menudata['usermanagement']				= array('../users/search.php', 'user_accounts_icon.png');
 

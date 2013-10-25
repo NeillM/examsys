@@ -43,13 +43,13 @@
     <br/>
 
 		<div style="font-size:90%" id="menu1a">
-			<div class="menuitem"><a href="add_LTIkeys.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="<?php echo $string['createLTIkeys']; ?>" /><?php echo $string['createLTIkeys']; ?></a></div>
+			<div class="menuitem"><a href="add_LTIkeys.php"><img class="sidebar_icon" src="../artwork/key.png" alt="<?php echo $string['createLTIkeys']; ?>" /><?php echo $string['createLTIkeys']; ?></a></div>
 			<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editLTIkeys']; ?>" /><?php echo $string['editLTIkeys']; ?></div>
 			<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deleteLTIkeys']; ?>" /><?php echo $string['deleteLTIkeys']; ?></div>
 		</div>
 
 		<div style="font-size:90%; display:none" id="menu1b">
-			<div class="menuitem"><a href="add_LTIkeys.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="<?php echo $string['createLTIkeys']; ?>" /><?php echo $string['createLTIkeys']; ?></a></div>
+			<div class="menuitem"><a href="add_LTIkeys.php"><img class="sidebar_icon" src="../artwork/key.png" alt="<?php echo $string['createLTIkeys']; ?>" /><?php echo $string['createLTIkeys']; ?></a></div>
 			<div class="menuitem" onclick="editLTIkeys()"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editLTIkeys']; ?>" /><a onclick="return false"><?php echo $string['editLTIkeys']; ?></a></div>
 			<div class="menuitem" onclick="deleteLTIkeys()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deleteLTIkeys']; ?>" /><a onclick="return false"><?php echo $string['deleteLTIkeys']; ?></a></div>
 		</div>

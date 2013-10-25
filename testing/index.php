@@ -32,13 +32,14 @@ require '../include/sysadmin_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>Rog&#333; Test Harness</title>
+	<title>Test Suite</title>
 
 	<style>
-		body {font-size:90%}
+		.content {font-size:90%}
 		aside, figure, footer, header, hgroup, nav, section { display: block; clear: both; }
 		article { width:50%; height: 80%; float: left }
-		ol {list-style-type:decimal; padding:10px; margin:20px}
+		ol {list-style-type:decimal}
+		li {padding-left:10px; margin-left:40px !important}
 	</style>
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
 	<link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -47,10 +48,10 @@ require '../include/sysadmin_auth.inc';
 <body>
 <div id="content" class="content">
 	<table class="header">
-		<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px">Test Harness</div></th><th style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" alt="<?php echo $string['help']; ?>" /></a></th></tr>
+		<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px">Test Suite</div></th><th style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" style="padding-right:6px" alt="<?php echo $string['help']; ?>" /></a></th></tr>
 		<tr><th colspan="2" class="bevel"></th></tr>
 	</table>
-
+	<br />
 	<ol>
 		<li><a href="./unittest.php">Unit tests</a></li>
 		<li><a href="./selenium/README.txt">Selenium tests</a></li>
