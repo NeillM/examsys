@@ -541,7 +541,10 @@ class EnhancedCalc extends Question implements questionInterface {
     }
 
     if ($saved_response_clean == '') {
-      echo "<td>" . display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
+
+      echo '<td>';
+      if ($extra['tmp_exclude'] == '1') echo '<span class="exclude">';
+      echo  display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
 
     } else {
       echo '<td>';
