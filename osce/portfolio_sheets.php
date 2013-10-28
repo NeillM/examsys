@@ -164,12 +164,15 @@ while ($result->fetch()) {
     $table_open = 1;
   }
 
-  $leadin = parse_leadin_word_2003(strip_tags($leadin), $q_parts);
+  $leadin = StringUtils::wordToUtf8(StringUtils::clean_and_trim(strip_tags($leadin)));
+		
+  $leadin = parse_leadin_word_2003($leadin, $q_parts);
+  //$leadin = parse_leadin_word_2003(strip_tags($leadin), $q_parts);
 
   // Lead-in
   echo '<w:tr wsp:rsidR="00A11D0F" wsp:rsidRPr="00A11D0F" wsp:rsidTr="00A11D0F">';
   echo '<w:tc>';
-  echo '<w:tcPr><w:tcW w:w="8755" w:type="dxa"/></w:tcPr><w:p>' . StringUtils::wordToUtf8(trim($leadin));
+  echo '<w:tcPr><w:tcW w:w="8755" w:type="dxa"/></w:tcPr><w:p>' . $leadin;
   echo '</w:p>';
   echo '</w:tc>';
 
