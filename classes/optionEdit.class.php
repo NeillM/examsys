@@ -551,7 +551,6 @@ QUERY;
 
   private function validate() {
     $rval = true;
-
     // If there are errors return an appropriate message
     $missing_fields = '';
     foreach($this->_fields_required as $req) {

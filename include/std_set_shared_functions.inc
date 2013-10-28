@@ -123,6 +123,8 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     
     $ratings = load_question_ratings($reviews[$i]['std_setID'], $mysqli);
     $rating_no = count($ratings);
+		
+		//var_dump($ratings, $marks_array);
     
     if ($reviews[$i]['method'] == 'Modified Angoff' or $reviews[$i]['method'] == 'Ebel') {
       for ($x=0; $x<$rating_no; $x++) {  // Loop around the questions

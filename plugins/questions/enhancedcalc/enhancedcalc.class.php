@@ -49,6 +49,8 @@ class EnhancedCalc extends Question implements questionInterface {
    */
   function split_numb_from_unit($input) {
     $input=trim($input);
+
+    $this->decode_settings();
     //user selected the units from a ddl
     if (isset($this->useranswer['uansunit']) and $this->settings['show_units']) {
 
@@ -539,7 +541,10 @@ class EnhancedCalc extends Question implements questionInterface {
     }
 
     if ($saved_response_clean == '') {
-      echo "<td>" . display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
+
+      echo '<td>';
+      if ($extra['tmp_exclude'] == '1') echo '<span class="exclude">';
+      echo  display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
 
     } else {
       echo '<td>';
@@ -726,11 +731,12 @@ class EnhancedCalc extends Question implements questionInterface {
   }
 
   public function replace_leadin ($reviewers = false) {
+
     if ($reviewers === false) {
       $leadin = $this->replace_vars($this->leadin);
     } else {
       $leadin = $this->leadin;
-      foreach ($this->settings['vars'] as $key => $value) {
+      foreach ($this->useranswer['vars'] as $key => $value) {
         $leadin = str_replace($key, '<span style="background-color:#FFFF80">&nbsp;<strong>' . $key . '</strong>&nbsp;</span>' . $value, $leadin);
       }
     }

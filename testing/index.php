@@ -26,30 +26,42 @@
 
 require '../include/sysadmin_auth.inc';
 ?>
-
-
+<!DOCTYPE html>
 <html>
 <head>
-	<title>Rogō Test Harness</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+
+	<title>Test Suite</title>
+
 	<style>
-    	aside, figure, footer, header, hgroup, nav, section { display: block; clear: both; }
-        article { width:50%; height: 80%; float: left }
-    </style>
-    <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  	<link rel="stylesheet" type="text/css" href="../css/header.css" />
-  	<link rel="stylesheet" type="text/css" href="../css/screen.css" />
+		.content {font-size:90%}
+		aside, figure, footer, header, hgroup, nav, section { display: block; clear: both; }
+		article { width:50%; height: 80%; float: left }
+		ol {list-style-type:decimal}
+		li {padding-left:10px; margin-left:40px !important}
+	</style>
+	<link rel="stylesheet" type="text/css" href="../css/body.css" />
+	<link rel="stylesheet" type="text/css" href="../css/header.css" />
+	<link rel="stylesheet" type="text/css" href="../css/screen.css" />
 </head>
 <body>
-	<h1>Rogō Test Harness</h1>
+<div id="content" class="content">
+	<table class="header">
+		<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px">Test Suite</div></th><th style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" style="padding-right:6px" alt="<?php echo $string['help']; ?>" /></a></th></tr>
+		<tr><th colspan="2" class="bevel"></th></tr>
+	</table>
+	<br />
 	<ol>
 		<li><a href="./unittest.php">Unit tests</a></li>
 		<li><a href="./selenium/README.txt">Selenium tests</a></li>
 		<li><a href="./lang_test.php">Check for missing strings in language files</a></li>
-		<li><a href="./class_totals.php">Check classtotals between 2 different servers</a></li>
-		<li><a href="./class_totals_with_script.php">Check classtotals agents finish.php (internal constancy)</a></li>
+		<li><a href="./class_totals_form.php">Check Class Totals reports between 2 different servers</a></li>
+		<li><a href="./class_totals_with_script.php">Check Class Totals against Exam Script (internal constancy)</a></li>
 		<li><a href="./database_grants.php">Database grants</a></li>
 		<li><a href="./database_indexes.php">Database indexes</a></li>
 		<li><a href="./database_structure.php">Database structure</a></li>
 	</ol>
+</div>
 </body>
 </html>

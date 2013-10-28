@@ -1035,8 +1035,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     if (file_exists($rogo_path . '/config/config.inc.php')) {
-      $errors['90'] =  "<p>" . sprintf($string['errors1'],$rogo_path."/config/config.inc.php") . "</p>";
-      $errors['90'] .= "<p>" . sprintf($string['errors2'],"<a href=\"/staff\">") . "</a></p>";
+      $errors['90'] =  sprintf($string['errors1'], $rogo_path."/config/config.inc.php");
       self::displayError($errors);
     }
   }
@@ -1195,7 +1194,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     echo "<div class=\"error\">\n";
     if (is_array($error)) {
       foreach($error as $errCode => $message) {
-        echo "\t<div><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /> " . $string['errors13'] . " $errCode: $message</div>\n";
+        echo "\t<div><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /> <strong>" . $string['errors13'] . " $errCode:</strong> $message</div>\n";
       }
     }
     echo "</div>\n";
@@ -1289,11 +1288,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       <div style="color:#1F497D; font-size:9pt">System Installation (<?php echo $version; ?>)</div>
       </th>
       <th style="text-align:right; padding-right:10px">
-      <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" />
+      <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" />
       </th>
       </tr>
       <tr>
-        <td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td>
+        <th colspan="2" class="bevel"></th>
       </tr>
     </table>
     <?php
@@ -2099,7 +2098,7 @@ QUERY;
           `userID` int(10) unsigned default NULL,
           `paperID` mediumint(8) unsigned default NULL,
           `started` datetime default NULL,
-          `ipaddress` char(15) default NULL,
+          `ipaddress` varchar(100) default NULL,
           `student_grade` char(25) default NULL,
           `year` tinyint(4) default NULL,
           `attempt` tinyint(4) default NULL,

@@ -144,6 +144,8 @@ require_once '../classes/dateutils.class.php';
 <tr><td><?php echo $string['version']; ?></td><td><?php echo $configObject->get('rogo_version'); ?></td></tr>
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
+<tr><td>Lookups</td><td><?php echo $configObject->get('cfg_client_lookup'); ?></td></tr>
+<tr><td>Interactive Questions</td><td><?php echo $configObject->get('cfg_interactive_qs'); ?></td></tr>
 <tr><td><?php echo $string['authentication']; ?></td><td><?php echo $authinfo; ?> <a href="./detailed_authentication_info.php"><?php echo $string['More details']; ?></a></td></tr>
 <tr><td><?php echo $string['Session']; ?></td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>

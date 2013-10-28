@@ -72,6 +72,7 @@ $string['decile'] = 'Decile';
 $string['starttime'] = 'Start Time';
 $string['duration'] = 'Duration';
 $string['ipaddress'] = 'IP Address';
+$string['hostnames'] = 'Host Names';
 $string['%'] = '%';
 $string['adjusted%'] = 'Adjusted %';
 $string['room'] = 'Room';

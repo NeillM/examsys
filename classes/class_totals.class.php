@@ -405,12 +405,11 @@ class ClassTotals {
     $percents = $standard_setting->get_pass_distinction($mark_parts[1]);
 
     $this->ss_pass = $percents['pass_score'];
-
+		
     if ($percents['distinction_score'] == 0) {   // If zero set to top 20% of cohort performance.
       $this->set_ss_hon();
-      $this->distinction_score = $this->ss_hon;
     } else {
-      $this->distinction_score = $percents['distinction_score'];
+			$this->ss_hon = $percents['distinction_score'];
     }
   }
 
@@ -1458,16 +1457,15 @@ class ClassTotals {
       }
       if (isset($this->user_results[$i]['mark']) and $this->user_results[$i]['visible']) {
 			  $tmp_mark = round($this->user_results[$i]['mark'], $percent_decimals);
-        if (isset($this->user_results[$i]['percent'])) {
-					$tmp_percent = round($this->user_results[$i]['percent'], $percent_decimals);
-				
-          $marks_data[] = $tmp_percent;
-          if ($tmp_percent < $this->pass_mark) $this->stats['failures']++;
-          if ($tmp_percent < $this->stats['min_percent']) $this->stats['min_percent'] = $tmp_percent;
-          if ($tmp_percent > $this->stats['max_percent']) $this->stats['max_percent'] = $tmp_percent;
-        }
-        if ($this->user_results[$i]['percent'] >= $this->pass_mark and $this->user_results[$i]['percent'] < $this->distinction_mark) $this->stats['passes']++;
-        if ($this->user_results[$i]['percent'] >= $this->distinction_mark) $this->stats['honours']++;
+				$tmp_percent = round($this->user_results[$i]['percent'], $percent_decimals);
+			
+				$marks_data[] = $tmp_percent;
+				if ($tmp_percent < $this->pass_mark) $this->stats['failures']++;
+				if ($tmp_percent < $this->stats['min_percent']) $this->stats['min_percent'] = $tmp_percent;
+				if ($tmp_percent > $this->stats['max_percent']) $this->stats['max_percent'] = $tmp_percent;
+        
+        if ($tmp_percent >= $this->pass_mark and $tmp_percent < $this->distinction_mark) $this->stats['passes']++;
+        if ($tmp_percent >= $this->distinction_mark) $this->stats['honours']++;
         if ($tmp_mark < $this->stats['min_mark']) $this->stats['min_mark'] = $tmp_mark;
         if ($tmp_mark > $this->stats['max_mark']) $this->stats['max_mark'] = $tmp_mark;
         $this->stats['sum_of_marks'] += $tmp_mark;

@@ -34,6 +34,7 @@ $string['summativeexamstats'] = 'Summative Exam Stats';
 $string['systemerrors'] = 'System Errors';
 $string['summativescheduling'] = 'Summative Exam Scheduling';
 $string['systeminformation'] = 'System Information';
+$string['testing'] = 'Testing';
 $string['trac'] = 'Trac (issue tracking)';
 $string['usermanagement'] = 'User Management';
 $string['msg1'] = 'Are you sure you wish to clear all papers/questions form the Training module?';

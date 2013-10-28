@@ -372,7 +372,6 @@ if ($student_no > 0) {
     $old_started = $started;
   }
   $result->close();
-  
   $sortby = 'name';
   $ordering = 'asc';
   $log_array = array_csort($log_array, $sortby, $ordering);
@@ -849,21 +848,22 @@ if ($student_no > 0) {
             }
             break;
           case 'enhancedcalc':
-            $answer = json_decode($individual[$tmp_screen][$tmp_question_ID], true);
-            $csv .= ',' . $answer['uans'];
-            
-            $csv .= ',' . $answer['cans'];
-            
-            $variables = '';
-            foreach ($answer['vars'] as $var_name=>$value) {
-              if ($variables == '') {
-                $variables .= $value;
-              } else {
-                $variables .= ',' . $value;
-              }
-            }
-            $csv .= ',"' . $variables . '"';
+            if (!isset($excluded[$tmp_question_ID])) {
+              $answer = json_decode($individual[$tmp_screen][$tmp_question_ID], true);
+              $csv .= ',' . $answer['uans'];
 
+              $csv .= ',' . $answer['cans'];
+
+              $variables = '';
+              foreach ($answer['vars'] as $var_name => $value) {
+                if ($variables == '') {
+                  $variables .= $value;
+                } else {
+                  $variables .= ',' . $value;
+                }
+              }
+              $csv .= ',"' . $variables . '"';
+            }
             break;
           case 'true_false':
           case 'dichotomous':

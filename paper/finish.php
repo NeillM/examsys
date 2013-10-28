@@ -91,8 +91,8 @@ $password                   = $propertyObj->get_password();
 
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
-if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and isset($_GET['type'])) {
-  $log_type = $_GET['type'];  // Override from the GET if member of staff.
+if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and isset($_GET['log_type'])) {
+  $log_type = $_GET['log_type'];  // Override from the GET if member of staff.
 } else {
   $log_type = $paper_type;    // Use current paper type.
 }

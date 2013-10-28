@@ -531,6 +531,9 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
     switch ($q_type) {
       case 'area':
+        if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
+        echo_content($paper[$question]['leadin']);
+
         if (isset($paper[$question]['user_answer'])) {
           $tmp_user_answer = $paper[$question]['user_answer'];
           $answer_parts = explode(';', $tmp_user_answer);

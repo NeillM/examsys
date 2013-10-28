@@ -656,7 +656,8 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    // Call the standard_setting list page to populate the results in std_set table.
+    /*
+		// Call the standard_setting list page to populate the results in std_set table.
     $result = $mysqli->prepare("SELECT DISTINCT property_id, total_mark FROM properties WHERE marking LIKE '2,%'");
     $result->execute();
     $result->store_result();
@@ -672,6 +673,7 @@ if (!isset($_POST['update'])) {
 
     }
     $result->close();
+		*/
   }
 
   // 04/07/2013 (cczsa1) - enhanced question type config
@@ -821,7 +823,26 @@ QUERY;
     }
   }
 
-  /*
+  $mysqli->commit();
+
+	// Call the standard_setting list page to populate the results in std_set table.
+	$result = $mysqli->prepare("SELECT DISTINCT property_id, total_mark FROM properties WHERE marking LIKE '2,%'");
+	$result->execute();
+	$result->store_result();
+	$result->bind_result($property_id, $total_mark);
+	while ($result->fetch()) {
+		$no_reviews = 0;
+		$reviews = get_reviews($mysqli, 'index', $property_id, $total_mark, $no_reviews);
+		foreach ($reviews as $review) {
+			if ($review['method'] != 'Hofstee') {
+				updateDB($review, $mysqli);
+			}
+		}
+
+	}
+	$result->close();
+
+	/*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
    */
 
