@@ -327,7 +327,6 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   f - show coloured with handlers
   d - show with green dot at the start and without handlers
   */
-
   if (cc!='') this.context.strokeStyle = cc;
   if (cb!='') this.context.fillStyle = cb;
   if (mode == 'e' || mode == 'r' || mode == 'f' || mode == 't') this.context.fillStyle = this.context.strokeStyle = cc;
@@ -433,7 +432,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   }
   
   if (mode!='d') this.context.lineTo(tx0,ty0);
-  this.context.stroke();
+  if (mode!='t') this.context.stroke();
   if (cb!='') this.context.fill();
   
   //green dot for area  

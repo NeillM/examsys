@@ -628,7 +628,10 @@ function qa_mouseDragUp(){
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_zoom.png']][6] == 2) this.global_zoom = true;
 		this.global_delpoint = false;
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][6] == 2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_cross_off.png']][7] == '+') this.global_delpoint = true;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][5] == 2 && this.qconfig!='') this.global_clearpnl = true;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][5] == 2){
+			if ((this.qmode == 'edit' && this.qconfig!='') || (this.qmode == 'answer' && this.qanswer!='')) this.global_clearpnl = true;
+			this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][6] = 0;
+		}
   }
 
   if (this.qmode == 'script') {
