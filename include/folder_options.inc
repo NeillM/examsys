@@ -73,7 +73,7 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
     }
     echo "<div class=\"menuitem\"><a href=\"../folder/list_keywords.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/key.png\" alt=\"key\" />" . $string['managekeywords'] . "</a></div>";
     echo "<div class=\"menuitem\"><a href=\"../folder/list_ref_material.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ref_16.png\" alt=\"key\" />" . $string['referencematerial'] . "</a></div>";
-    echo '<div class="menuitem"><a href="../users/load_users_metadata.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/import_16.gif" alt="Import Metadata" />' . $string['importstudentmetadata'] . '</a></div>';
+    echo '<div class="menuitem"><a href="../users/import_users_metadata.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/import_16.gif" alt="Import Metadata" />' . $string['importstudentmetadata'] . '</a></div>';
   ?>
   </div>
 
