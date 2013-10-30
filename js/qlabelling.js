@@ -127,7 +127,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		    this.existingLabelInfo.splice(i,1);
 			}
 		
-		//add empty labels to 20
+		//adding empty labels to 20
 		for (i=this.existingLabelInfo.length; i<20; i++) 
 			this.existingLabelInfo.push('$$$$');
 		
@@ -446,6 +446,12 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
         }      
       }    
     }	
+		
+		//adding empty labels to 20
+		for (n=this.answerBox.length;n<20;n++) {
+			this.answerBox[n] = new Array();
+			this.answerBox[n][0] = new Array(n,"text","","",0,5,30,5,30,"","");
+		}
 		
 		if (this.hide_feedback_ifunanswered && this.empty_answer) {
 			this.display_ticks_crosses = false;
@@ -952,13 +958,16 @@ function ql_redraw_canvas() {
 		this.context.fillStyle=this.currentColours[0]; //resetting colour
 		
 		//edit box
+
 		if (this.qmode == 'edit' && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
 			loc_width = this.imglabelWidth;loc_height = this.imglabelHeight;
 			if (this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][1] == 'text') {
 				loc_width = this.labelWidthEffect;
 				loc_height = this.labelHeightEffect;
 			}	
-			var text_len = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].length;
+			var tmp_edit_text = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2];
+			if (this.labelMulti == 'multiple') tmp_edit_text = this.answerBox[this.active_box_id][this.active_box_combo][2];
+			var text_len = tmp_edit_text.length;
 			if (this.key_code == 39) this.edit_box_pos++;				//arror right
 			if (this.key_code == 37) this.edit_box_pos--; 				//arrow left
 			if (this.key_code == 35) this.edit_box_pos=text_len; 	//end
@@ -967,15 +976,15 @@ function ql_redraw_canvas() {
 			if (this.edit_box_pos>text_len) this.edit_box_pos=text_len;
 			var temp_t = '';
 			if (this.char_code!='') {	//characters
-				temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.char_code+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
+				temp_t = tmp_edit_text.substr(0,this.edit_box_pos)+this.char_code+tmp_edit_text.substr(this.edit_box_pos);
 				this.edit_box_pos++;
 			}
 			if (this.key_code == 46) { //del
-				temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos+1);
+				temp_t = tmp_edit_text.substr(0,this.edit_box_pos)+tmp_edit_text.substr(this.edit_box_pos+1);
 				if (temp_t=='') temp_t='$';
 			}
 			if (this.key_code == 8) { //backspace
-				temp_t = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(0,this.edit_box_pos-1)+this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2].substr(this.edit_box_pos);
+				temp_t = tmp_edit_text.substr(0,this.edit_box_pos-1)+tmp_edit_text.substr(this.edit_box_pos);
 				this.edit_box_pos--;
 				if (temp_t=='') temp_t='$';
 			}
@@ -1180,7 +1189,8 @@ function ql_redraw_canvas() {
 			this.edit_box_blink++;
 			if (this.edit_box_blink>60) this.edit_box_blink=0;
 			if (this.edit_box_blink>30) {
-				var text_all = this.wrapText(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2],this.labelWidthEffect)[0];
+				var text_all = this.wrapText(tmp_edit_text,this.labelWidthEffect)[0];
+
 				var text_temp = '';
 				if (this.edit_box_pos>0) text_temp = text_all.substr(0,this.edit_box_pos);
 				var wrap_temp = text_temp.split('|');
@@ -1521,7 +1531,7 @@ function ql_mouseDragUp(){
 	
 	//help link
 	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
-		window.open('/help/staff/index.php?id=60');
+			window.open('/help/staff/index.php?id=60');
 	}
 
 	if (this.qmode!='script') {
@@ -1573,8 +1583,8 @@ function ql_mouseDragUp(){
 	
 	//'erase' label by dragging it to label panel on the left
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode == 'edit' && this.answerBox[this.drag_box_id][this.drag_box_combo][5]<220) {
-		this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.answerBox[this.drag_box_id][this.drag_box_combo][7];
-		this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8]; 
+		this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.answerBox[this.drag_box_id][this.drag_box_combo][7] = 0;
+		this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8] = 0; 
 		this.mov_x = this.x - this.sub_x;
 		this.mov_y = this.y - this.sub_y;
 		this.mov_id = this.drag_box_id;
@@ -1735,25 +1745,34 @@ function ql_mouseDragUp(){
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_single.png']][6] == 2) this.labelMulti = 'single';
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_multiple.png']][6] == 2) this.labelMulti = 'multiple';
 		if (this.labelMulti != old_labelMulti) {
-			var tmp_unique_labels = [];
 			var n=0,m=0,o=0;
+			var tmp_unique_positions = [];
+			var tmp_unique_labels = [];
 			var tmp_clone_answerBox = this.answerBox.slice(0);
 			this.answerBox.length = 0;
 			for (i=0;i<tmp_clone_answerBox.length;i++) {
 				if (typeof(tmp_clone_answerBox[i])!='undefined') {
 					for (j=0;j<tmp_clone_answerBox[i].length;j++) {
 						if (typeof(tmp_clone_answerBox[i][j])!='undefined') {
-							if (this.labelMulti == 'single' && n<19) {
-								if (typeof(this.answerBox[n]) == 'undefined') this.answerBox[n] = new Array();
-								this.answerBox[n][0] = tmp_clone_answerBox[i][j];
-								this.answerBox[n][0][0] = n;
-								this.answerBox[n][0][4] = 0;
-								n++;
+							if (this.labelMulti == 'single' && n<20) {
+								var tmp_position = tmp_clone_answerBox[i][j][5]+','+tmp_clone_answerBox[i][j][6];
+								if (typeof(tmp_unique_positions[tmp_position]) == 'undefined') {
+									tmp_unique_positions[tmp_position] = n;
+									if (typeof(this.answerBox[n]) == 'undefined') this.answerBox[n] = new Array();
+									this.answerBox[n][0] = tmp_clone_answerBox[i][j];
+									this.answerBox[n][0][0] = n;
+									this.answerBox[n][0][4] = 0;
+									this.pholderBox[n][2] = this.answerBox[n][0][2];
+									this.pholderBox[n][5] = this.answerBox[n][0][5];
+									this.pholderBox[n][6] = this.answerBox[n][0][6];
+									if (this.pholderBox[n][5]<220) this.pholderBox[n][5] = -500;
+									n++;
+								}
 							}
 							if (this.labelMulti == 'multiple') {
 								var tmp_label = tmp_clone_answerBox[i][j][2];
-								if (tmp_label!='' && typeof(tmp_unique_labels [tmp_label]) == 'undefined') tmp_unique_labels[tmp_label] = o++;
-								if (tmp_label!='' && typeof(tmp_unique_labels [tmp_label]) != 'undefined') {
+								if (tmp_label!='' && typeof(tmp_unique_labels[tmp_label]) == 'undefined') tmp_unique_labels[tmp_label] = o++;
+								if (tmp_label!='' && typeof(tmp_unique_labels[tmp_label]) != 'undefined') {
 									n = tmp_unique_labels [tmp_label];
 									if (typeof(this.answerBox[n]) == 'undefined') this.answerBox[n] = new Array();
 									this.answerBox[n].push(tmp_clone_answerBox[i][j]);
@@ -1765,6 +1784,10 @@ function ql_mouseDragUp(){
 						}
 					}
 				}
+			}
+			for (n=this.answerBox.length;n<20;n++) {
+				this.answerBox[n] = new Array();
+				this.answerBox[n][0] = new Array(n,"text","","",0,5,30,5,30,"","");
 			}
 		}
 
