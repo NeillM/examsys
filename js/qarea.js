@@ -34,12 +34,13 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 
 		//gen_img
 		this.gen_img = new Image();  
-		function gen_img_onload() {
+		function qa_gen_img_onload() {
 			this.gen_img_loaded = true;
 			this.redraw_once = true;
 			this.qa_redraw_canvas;
+			console.log(this.canvas.id,this.gen_img.src,this.gen_img_loaded);
 		}  
-		this.gen_img.onload = gen_img_onload.bind(this);
+		this.gen_img.onload = qa_gen_img_onload.bind(this);
 		this.gen_img.src = ''+image; 
        
 		//---------- mode 
@@ -738,6 +739,7 @@ function qa_mouseDragUp(){
 
 
 function qa_ReturnInfo() {
+	console.log(this.canvas.id,this.gen_img.src,this.gen_img_loaded);
   var questions_result = '';
 	if (this.qmode == 'answer') {
 		questions_result = this.test_result+';';
