@@ -33,12 +33,12 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.doorId = doorId;
 		
 		this.gen_img = new Image();  
-		function gen_img_onload() {
+		function ql_gen_img_onload() {
 			this.gen_img_loaded = true;
 			this.redraw_once = true;
       this.ql_redraw_canvas;        
 		}
-		this.gen_img.onload = gen_img_onload.bind(this);
+		this.gen_img.onload = ql_gen_img_onload.bind(this);
 		this.gen_img.src = '/media/'+image; 
 
 		//---------- mode 
@@ -297,7 +297,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.context.strokeStyle=this.currentColours[1];
 		
 		
-		function ql_gen_img_onload(){
+		function ql_ans_img_onload(){
 			this.imagesLoaded ++;
 			if (this.imagesLoaded == this.max_num_images) {
 				this.allImagesLoaded = true;
@@ -352,7 +352,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				j=0;
 				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1] == "image" && this.all_images[this.all_images.indexOf(this.answerBox[i][j][2])+1]=='') {
 					this.answerBox[i][j][11] = new Image();
-					this.answerBox[i][j][11].onload = ql_gen_img_onload.bind(this);
+					this.answerBox[i][j][11].onload = ql_ans_img_onload.bind(this);
 					this.answerBox[i][j][11].src = '/media/'+this.answerBox[i][j][2];
 					this.all_images[this.answerBox[i][j][2]] = i+','+j;
 				}
@@ -403,48 +403,32 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 					ans_n = ans_n.split('#124').join('|');
           ans_b = answer_l2[l*4+3];
 					
-					/*
-					if (this.qmode == 'sscript' && this.qType != 'menu') {
+					if ((this.qmode == 'answer' || this.qmode == 'script') && this.qType != 'menu' && ans_n!='') {
+						var new_i = -1;
 						for (i=0;i<this.answerBox.length;i++) {
-							for (j=0;j<this.answerBox[i].length;j++) {
-								//if in position
-								if (typeof(this.answerBox[i][j]) != 'undefined' && Number(this.answerBox[i][j][7]) == ans_x && Number(this.answerBox[i][j][8]) == ans_y) {
-									if (this.answerBox[i][j][3]=='') {
-										new_j = j;
-										$("#cb_"+i).val(3);
-									}else{
-										this.answerBox[i].push(this.answerBox[i][j]);
-										new_j = this.answerBox[i].length - 1;
+							if (typeof(this.answerBox[i][0]) != 'undefined' && this.answerBox[i][0][2] == ans_n && this.answerBox[i][0][3] == '' && new_i == -1) {
+								new_i = i;
+								new_j = 0;
+								if (this.labelMulti == 'multiple') {
+									new_j = Number(this.answerBox[i].length) - 1;
+									if (this.answerBox[i][new_j][3] != '' || this.labelMulti == 'multiple') {
+										this.answerBox[i].push(this.answerBox[i][new_j].slice(0));
+										new_j++;
 									}
-									this.answerBox[i][new_j][2] = ans_n;
-									this.answerBox[i][new_j][3] = ans_b;									
-									this.answerBox[i][new_j][5] = ans_x;
-									this.answerBox[i][new_j][6] = ans_y+25-this.yOffset;
-								}
-							}
-						}		
-					}	
-					*/
-					
-					if ((this.qmode == 'answer' || this.qmode == 'script') && this.qType != 'menu') {
-						for (i=0;i<this.answerBox.length;i++) {
-							if (typeof(this.answerBox[i][0]) != 'undefined' && ans_n!='' && this.answerBox[i][0][2] == ans_n) {
-								new_j = Number(this.answerBox[i].length) - 1;
-								if (this.answerBox[i][new_j][3] != '' || this.labelMulti == 'multiple') {
-									this.answerBox[i].push(this.answerBox[i][j].slice(0));
-									new_j++;
-								}
-								$("#cb_"+i).val(3);
-								this.answerBox[i][new_j][2] = ans_n;
-								this.answerBox[i][new_j][3] = ans_b;
-								this.answerBox[i][new_j][4] = new_j;
-								this.answerBox[i][new_j][5] = ans_x;
-								this.answerBox[i][new_j][6] = ans_y+25-this.yOffset;
-								ans_n = '$';
+								}								
 							}
 						}
+						if (new_i > -1) {
+							$("#cb_"+new_i).val(3);
+							this.answerBox[new_i][new_j][2] = ans_n;
+							this.answerBox[new_i][new_j][3] = ans_b;
+							this.answerBox[new_i][new_j][4] = new_j;
+							this.answerBox[new_i][new_j][5] = ans_x;
+							this.answerBox[new_i][new_j][6] = ans_y+25-this.yOffset;
+							//ans_n = '$';
+						}
 					}
-					
+
 					if (this.qmode != 'edit' && this.qType == 'menu') {
 						var test_subst = true;
 						for (i=0;i<this.answerBox.length;i++) {
@@ -481,7 +465,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
 		this.menu_img.src = '/js/images/combined.png'; 
-	}
+	}		
 }
 
 function combo_scope(answer_set) {
