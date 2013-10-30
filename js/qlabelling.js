@@ -1519,6 +1519,11 @@ function ql_mouseDragUp(){
 		}
 	}
 	
+	//help link
+	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
+		window.open('/help/staff/index.php?id=60');
+	}
+
 	if (this.qmode!='script') {
 		this.active_box_id = this.drag_box_id;
 		this.active_box_combo = this.drag_box_combo;
@@ -1552,9 +1557,6 @@ function ql_mouseDragUp(){
 		}
 	}
 	
-	//help link
-	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') window.open('/help/staff/index.php?id=60');
-
   //erase shape by selecting erase button
   if (this.global_erase && this.activ_shape>-1) {
     this.shapeBox.splice(this.activ_shape,1);
@@ -1729,8 +1731,42 @@ function ql_mouseDragUp(){
 		this.global_move = false;
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_resize.png']][6] == 2) this.global_move = true;
 		
+		var old_labelMulti = this.labelMulti;
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_single.png']][6] == 2) this.labelMulti = 'single';
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_multiple.png']][6] == 2) this.labelMulti = 'multiple';
+		if (this.labelMulti != old_labelMulti) {
+			var tmp_unique_labels = [];
+			var n=0,m=0,o=0;
+			var tmp_clone_answerBox = this.answerBox.slice(0);
+			this.answerBox.length = 0;
+			for (i=0;i<tmp_clone_answerBox.length;i++) {
+				if (typeof(tmp_clone_answerBox[i])!='undefined') {
+					for (j=0;j<tmp_clone_answerBox[i].length;j++) {
+						if (typeof(tmp_clone_answerBox[i][j])!='undefined') {
+							if (this.labelMulti == 'single' && n<19) {
+								if (typeof(this.answerBox[n]) == 'undefined') this.answerBox[n] = new Array();
+								this.answerBox[n][0] = tmp_clone_answerBox[i][j];
+								this.answerBox[n][0][0] = n;
+								this.answerBox[n][0][4] = 0;
+								n++;
+							}
+							if (this.labelMulti == 'multiple') {
+								var tmp_label = tmp_clone_answerBox[i][j][2];
+								if (tmp_label!='' && typeof(tmp_unique_labels [tmp_label]) == 'undefined') tmp_unique_labels[tmp_label] = o++;
+								if (tmp_label!='' && typeof(tmp_unique_labels [tmp_label]) != 'undefined') {
+									n = tmp_unique_labels [tmp_label];
+									if (typeof(this.answerBox[n]) == 'undefined') this.answerBox[n] = new Array();
+									this.answerBox[n].push(tmp_clone_answerBox[i][j]);
+									m = this.answerBox[n].length-1;
+									this.answerBox[n][m][0] = n;
+									this.answerBox[n][m][4] = m;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_label.png']][6] == 2) this.qType = 'label';
 		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_menu.png']][6] == 2) {
