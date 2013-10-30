@@ -891,7 +891,7 @@ function qh_mouseDragDown(e){
 			this.hotSpots[this.activeLabel][(3+j*6+3)] = j; //id
 			this.hotspot_over += this.activeLabel+'@'+j+'#'+Math.round(this.x-300).toString(16)+','+Math.round(this.y-25+this.yOffset).toString(16)+'$4';
 		}
-		if (this.panelOverColour!='' && this.panelOverColour!=undefined) this.hotSpots[this.activeLabel][2] = this.panelOverColour;
+		if (this.qmode=='edit' && this.panelOverColour!='' && this.panelOverColour!=undefined) this.hotSpots[this.activeLabel][2] = this.panelOverColour;
 
 		//this.freehand
 		if (this.start_polygon && this.y>28) {
