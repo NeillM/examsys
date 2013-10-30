@@ -30,6 +30,15 @@ require_once '../include/errors.inc';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/folderutils.class.php';
 
+//HTML5 part
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require_once '../lang/' . $language . '/question/edit/area.txt';
+require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
+require_once '../lang/' . $language . '/paper/hotspot_question.txt';
+require_once '../lang/' . $language . '/paper/label_answer.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 $type = check_var('type', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -257,20 +266,33 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $correct = str_replace("'", '&#039;', $correct);
 ?>
   <div align="center">
-  <script language="JavaScript">
-    function swfLoaded<?php echo $q_no; ?>(message) {
-      var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '','#FFC0C0');
-    }
-    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
-    write_string('<param name="allowScriptAccess" value="always" />');
-    write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/reports/label_analysis.swf" />');
-    write_string('<param name="quality" value="high" />');
-    write_string('<param name="bgcolor" value="#ffffff" />');
-    write_string('<embed src="<?php echo $configObject->get('cfg_root_path') ?>/reports/label_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-    write_string('</object>');
-  </script>
-  </div>
+	<?php
+	require_once '../classes/configobject.class.php';
+	$configObject          = Config::get_instance();
+	if ($configObject->get('cfg_interactive_qs')=='html5') {
+		//<!-- ======================== HTML5 part rep disc ================= -->
+		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
+		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+		echo "<script language='JavaScript' type='text/javascript'>\n";
+		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
+		echo "</script>\n";
+		//<!-- ==================================================== -->
+	} else {
+		echo "<script language='JavaScript'>\n";
+		echo "function swfLoaded" . $q_no . "(message) {\n";
+		echo "var num = message.substring(5,message.length);\n";
+		echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '','#FFC0C0');}\n";
+		echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $q_no . "\" width=\"" . ($q_media_width + 250) . "\" height=\"" . $tmp_height . "\" align=\"middle\">');\n";
+		echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
+		echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/reports/label_analysis.swf\" />');\n";
+		echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
+		echo "write_string('<param name=\"bgcolor\" value=\"#ffffff\" />');\n";
+		echo "write_string('<embed src=\"" . $configObject->get('cfg_root_path') . "/reports/label_analysis.swf\" quality=\"high\" bgcolor=\"#ffffff\" width=\"" . ($q_media_width + 250) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $q_no . "\" name=\"flash" . $q_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+		echo "write_string('</object>');\n";
+		echo "</script>\n";
+	}
+	?>
+	</div>
   <br />
 <?php
         break;
@@ -516,6 +538,17 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
+	
+		<!-- HTML5 part start -->
+	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+	<script type="text/javascript" src="../js/html5.images.js"></script>
+	<script type="text/javascript" src="../js/qsharedf.js"></script>
+	<script type="text/javascript" src="../js/qlabelling.js"></script>
+	<script type="text/javascript" src="../js/qhotspot.js"></script>
+	<script type="text/javascript" src="../js/qarea.js"></script>
+	<!-- HTML5 part end -->
+
+	
   <script language="JavaScript">
     function getScrollXY() {
       document.getElementById('scrOfY').value = $('body,html').scrollTop();

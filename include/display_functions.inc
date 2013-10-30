@@ -530,21 +530,27 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $part_id++;
     switch ($question['q_type']) {
       case 'area':
+        
+        $default_ans  = '100,0,0,0,0,0';
+        
         if (isset($user_answers[$current_screen][$q_id])) {
           $tmp_user_answer = $user_answers[$current_screen][$q_id];
-          $answer_parts = explode(';', $tmp_user_answer);
-          if (isset($answer_parts[1])) {
-            $tmp_user_answer = substr($answer_parts[1], 0, -2);
-          } else {
-            $tmp_user_answer = '';
-          }
+        } else {
+          $tmp_user_answer = $default_ans;
+        }
+        
+        $answer_parts = explode(';', $tmp_user_answer);
+        if (isset($answer_parts[1])) {
+          $tmp_user_answer = substr($answer_parts[1], 0, -2);
+          $full_user_ans = $user_answers[$current_screen][$q_id];
         } else {
           $tmp_user_answer = '';
+          $full_user_ans = $default_ans;
         }
         ?>
         <br />
         <?php
-        if (isset($user_answers[$current_screen][$q_id]) and $tmp_user_answer == '' and  $screen_pre_submitted == 1) {
+        if (isset($user_answers[$current_screen][$q_id]) and $tmp_user_answer == $default_ans and  $screen_pre_submitted == 1) {
           echo "<div align=\"left\" class=\"unans\" style=\"padding:2px\">";
           $unanswered = true;
           $tmp_bgcolor = '#FFC0C0';
@@ -599,7 +605,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					}
 				?>
         </div>
-        <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" />
+        <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" value="<?php echo $full_user_ans; ?>"/>
         <?php
         $marks += $display_option['marks_correct'];
         break;

@@ -89,34 +89,40 @@ class StringUtils {
    */
   public static function wordToUtf8($str) {
     $wordChr = array(
-    "\\xe2\\x80\\xa6",        // ellipsis
-    "\\xe2\\x80\\x93",        // long dash
-    "\\xe2\\x80\\x94",        // long dash
-    "\x96",                   // long dash
-    "\x91",                    // single quote
-    "\x92",                    // single quote
-    "\\xe2\\x80\\x98",        // single quote opening
-    "\\xe2\\x80\\x99",        // single quote closing
-    "\\xe2\\x80\\x9c",        // double quote opening
-    "\\xe2\\x80\\x9d",        // double quote closing
-    "\\xe2\\x80\\xa2"        // dot used for bullet points
+      "&",
+			"<",
+			">",
+			"\\xe2\\x80\\xa6",        // ellipsis
+			"\\xe2\\x80\\x93",        // long dash
+			"\\xe2\\x80\\x94",        // long dash
+			"\x96",                   // long dash
+			"\x91",                    // single quote
+			"\x92",                    // single quote
+			"\\xe2\\x80\\x98",        // single quote opening
+			"\\xe2\\x80\\x99",        // single quote closing
+			"\\xe2\\x80\\x9c",        // double quote opening
+			"\\xe2\\x80\\x9d",        // double quote closing
+			"\\xe2\\x80\\xa2"        // dot used for bullet points
     );
 
     $utf8Chr = array(
-        '...',
-        '-',
-        '-',
-        '-',
-        '\'',
-        '\'',
-        '\'',
-        '\'',
-        '"',
-        '"',
-        '*'
-        );
+			'&amp;',
+			'&lt;',
+			'&gt;',
+			'...',
+			'-',
+			'-',
+			'-',
+			'\'',
+			'\'',
+			'\'',
+			'\'',
+			'"',
+			'"',
+			'*'
+    );
 
-    $str = str_replace($wordChr,$utf8Chr,$str);
-        return $str;
+    $str = str_replace($wordChr, $utf8Chr, $str);
+    return $str;
   }
 }

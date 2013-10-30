@@ -323,12 +323,14 @@ function modulo($n,$b) {
 
 $title_unique = true;
 
-
 if (isset($_POST['Submit'])) {
   $old_marking = $properties->get_marking();
   $old_paper_title = $properties->get_paper_title();
   $old_externals = $properties->get_externals();
   $old_internals = $properties->get_internal_reviewers();
+
+
+
 
   if (isset($_POST['paper_title'])) {
 	  if ($old_paper_title == $_POST['paper_title']) {
@@ -345,11 +347,10 @@ if (isset($_POST['Submit'])) {
       $properties->set_paper_type($_POST['paper_type']);
     }
 
-    if (isset($_POST['bidirectional']) and $_POST['bidirectional'] == 1) {
-      $properties->set_bidirectional(1);
-    } else {
-      $properties->set_bidirectional(0);
+    if(isset($_POST['bidirectional'])) {
+      $properties->set_bidirectional($_POST['bidirectional']);
     }
+
     if ($properties->get_paper_type() == '6') {
       if (isset($_POST['display_photos'])) {
         $properties->set_display_correct_answer(1);
@@ -389,63 +390,75 @@ if (isset($_POST['Submit'])) {
       $properties->set_hide_if_unanswered('0');
     }
 
+    if(!isset($_POST['timezone'])) {
+      $_POST['timezone'] = $properties->get_timezone();
+    }
+
     if (($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and $userObject->has_role('SysAdmin')) or !$configObject->get('cfg_summative_mgmt') or  $properties->get_paper_type() != '2') {
   		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   		$target_timezone = new DateTimeZone($_POST['timezone']);
 
-      $null_start_date = false;
-      if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['ftime'] == '') {
-        $null_start_date = true;
-        $tmp_start_date = NULL;
-      } else {
-        $leap = is_leap($_POST['fyear']);
-        if ($leap == true and $_POST['fmonth'] == '02' and ($_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '29';
-        if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '28';
-        if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') $_POST['fday'] = '30';
 
-        $start_date = new dateTime($_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'], $target_timezone);
-        $start_date->setTimezone($local_time);
 
-        if ($_POST['timezone'] < 0) {
-          $start_date->modify("+" . abs($_POST['timezone']) . " hour");
-        } elseif ($_POST['timezone'] > 0) {
-          $start_date->modify("-" . $_POST['timezone'] . " hour");
+      if (isset($_POST['fyear']) and isset($_POST['fmonth']) and isset($_POST['fday']) and isset($_POST['ftime'])) {
+        $null_start_date = false;
+        if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['ftime'] == '') {
+          $null_start_date = true;
+          $tmp_start_date = NULL;
+        } else {
+          $leap = is_leap($_POST['fyear']);
+          if ($leap == true and $_POST['fmonth'] == '02' and ($_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '29';
+          if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '28';
+          if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') $_POST['fday'] = '30';
+
+          $start_date = new dateTime($_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'], $target_timezone);
+          $start_date->setTimezone($local_time);
+
+          if ($_POST['timezone'] < 0) {
+            $start_date->modify("+" . abs($_POST['timezone']) . " hour");
+          } elseif ($_POST['timezone'] > 0) {
+            $start_date->modify("-" . $_POST['timezone'] . " hour");
+          }
+
+          $properties->set_start_date($start_date->format('U'));
+          $properties->set_raw_start_date($start_date->format('YmdHis'));
         }
-
-        $properties->set_start_date($start_date->format('U'));
-        $properties->set_raw_start_date($start_date->format('YmdHis'));
       }
 
-      $null_end_date = false;
-      if ($_POST['tyear'] == '' and $_POST['tmonth'] == '' and $_POST['tday'] == '' and $_POST['ttime'] == '') {
-        $null_end_date = true;
-        $tmp_end_date = NULL;
-      } else {
-        $leap = is_leap($_POST['tyear']);
+      if (isset($_POST['tyear']) and isset($_POST['tmonth']) and isset($_POST['tday']) and isset($_POST['ttime'])) {
+        $null_end_date = false;
+        if ($_POST['tyear'] == '' and $_POST['tmonth'] == '' and $_POST['tday'] == '' and $_POST['ttime'] == '') {
+          $null_end_date = true;
+          $tmp_end_date = NULL;
+        } else {
+          $leap = is_leap($_POST['tyear']);
 
-        if ($leap == true and $_POST['tmonth'] == '02' and ($_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '29';
-        if ($leap == false and $_POST['tmonth'] == '02' and ($_POST['tday'] == '29' or $_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '28';
-        if (($_POST['tmonth'] == '04' or $_POST['tmonth'] == '06' or $_POST['tmonth'] == '09' or $_POST['tmonth'] == '11') and $_POST['tday'] == '31') $_POST['tday'] = '30';
+          if ($leap == true and $_POST['tmonth'] == '02' and ($_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '29';
+          if ($leap == false and $_POST['tmonth'] == '02' and ($_POST['tday'] == '29' or $_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '28';
+          if (($_POST['tmonth'] == '04' or $_POST['tmonth'] == '06' or $_POST['tmonth'] == '09' or $_POST['tmonth'] == '11') and $_POST['tday'] == '31') $_POST['tday'] = '30';
 
-        $end_date = new dateTime($_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'], $target_timezone);
-        $end_date->setTimezone($local_time);
+          $end_date = new dateTime($_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'], $target_timezone);
+          $end_date->setTimezone($local_time);
 
-        if ($_POST['timezone'] < 0) {
-          $end_date->modify("+" . abs($_POST['timezone']) . " hour");
-        } elseif ($_POST['timezone'] > 0) {
-          $end_date->modify("-" . $_POST['timezone'] . " hour");
+          if ($_POST['timezone'] < 0) {
+            $end_date->modify("+" . abs($_POST['timezone']) . " hour");
+          } elseif ($_POST['timezone'] > 0) {
+            $end_date->modify("-" . $_POST['timezone'] . " hour");
+          }
+          $properties->set_end_date($end_date->format('U'));
+          $properties->set_raw_end_date($end_date->format('YmdHis'));
         }
-        $properties->set_end_date($end_date->format('U'));
-        $properties->set_raw_end_date($end_date->format('YmdHis'));
       }
       $properties->set_timezone($_POST['timezone']);
 
-			$calendar_year = ($_POST['calendar_year'] == '') ? NULL : $_POST['calendar_year'];
-			$properties->set_calendar_year($calendar_year);
-
-			$exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
-      $properties->set_exam_duration($exam_duration);
-
+      if (isset($_POST['calendar_year'])) {
+        $calendar_year = ($_POST['calendar_year'] == '') ? NULL : $_POST['calendar_year'];
+        $properties->set_calendar_year($calendar_year);
+      }
+      if (isset($_POST['exam_duration'])) {
+        $exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
+        $properties->set_exam_duration($exam_duration);
+      }
       $lab_string = '';
       for ($i=0; $i<$_POST['lab_no']; $i++) {
         if (isset($_POST["lab$i"])) {
@@ -542,8 +555,10 @@ if (isset($_POST['Submit'])) {
     $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
     $properties->set_distinction_mark($tmp_distinction_mark);
 
-    $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;
-    $properties->set_calculator($tmp_calculator);
+    if ($properties->get_summative_lock() === false or $userObject->has_role('SysAdmin')) {
+      $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;
+      $properties->set_calculator($tmp_calculator);
+    }
 
     if (isset($_POST['sound_demo'])) {
       $properties->set_sound_demo(1);
@@ -568,7 +583,7 @@ if (isset($_POST['Submit'])) {
     // Save any adjusted properties to the database.
     $properties->save();
 
-    if (!$locked or $userObject->has_role(array('SysAdmin', 'Admin'))) {
+    if (!$locked or $userObject->has_role(array('SysAdmin'))) {
 			$old_modules = $properties->get_modules(true);
 
      Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
@@ -1504,6 +1519,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
     }
     echo '</select></td>';
+
+
+
     echo "<td align=\"right\">" . $string['duration'] . "</td><td><select id=\"exam_duration\" name=\"exam_duration\"$sum_disabled>";
     $minutes = array('NULL'=>$string['na'],'5'=>'5','15'=>'15','20'=>'20','25'=>'25','30'=>'30','35'=>'35','40'=>'40','45'=>'45','50'=>'50','55'=>'55','60'=>'60','65'=>'65','70'=>'70','75'=>'75','80'=>'80','85'=>'85','90'=>'90','95'=>'95','100'=>'100','110'=>'110','120'=>'120','150'=>'150','180'=>'180');
     foreach ($minutes as $key => $value) {
