@@ -850,10 +850,16 @@ if ($student_no > 0) {
           case 'enhancedcalc':
             if (!isset($excluded[$tmp_question_ID])) {
               $answer = json_decode($individual[$tmp_screen][$tmp_question_ID], true);
-              $csv .= ',' . $answer['uans'];
-
-              $csv .= ',' . $answer['cans'];
-
+              if (isset($answer['uans'])) {
+								$csv .= ',' . $answer['uans'];
+							} else {
+								$csv .= ',error';
+							}
+							if (isset($answer['cans'])) {
+								$csv .= ',' . $answer['cans'];
+							} else {
+								$csv .= ',error';
+							}
               $variables = '';
               foreach ($answer['vars'] as $var_name => $value) {
                 if ($variables == '') {
