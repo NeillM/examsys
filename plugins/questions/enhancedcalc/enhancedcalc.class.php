@@ -885,10 +885,12 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return array Array of defined variables indexed by the label (e.g. $A)
    */
   public function get_question_vars() {
+    $this->decode_settings();
     return (isset($this->settings['vars'])) ? $this->settings['vars'] : array();
   }
 
   public function get_user_vars() {
+    $this->decode_settings();
     return $this->useranswer['vars'];
   }
 
@@ -921,6 +923,7 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return string Answer including units if applicable
    */
   public function get_real_answer() {
+    $this->decode_settings();
     $units = $this->settings['answers'][0]['units'];
 
     $this->add_to_useranswer('uans', "1 $units");   // Set a bogus answer before marking.
@@ -962,7 +965,30 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return float Distance from the correct answer
    */
   public function get_answer_distance() {
-    return (isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 'ERROR') ? $this->useranswer['cans_dist'] : false;
+
+    if(!isset($this->useranswer['cans_dist'])) {
+
+      $enhancedcalcType = $this->configObj->get('enhancedcalc_type');
+      if (!is_null($enhancedcalcType)) {
+        require_once $enhancedcalcType . '.php';
+        $name = 'enhancedcalc_' . $enhancedcalcType;
+        $enhancedcalcObj = new $name($this->configObj->getbyref($enhancedcalcType));
+      } else {
+        require_once 'rserve.php';
+        $enhancedcalcObj = new EnhancedCalcRrserve($this->configObj->getbyref('enhancedcalculation'));
+      }
+
+      if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {
+        $this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
+      } else {
+        $this->useranswer['cans_dist'] = '0';
+      }
+    }
+    $data=false;
+if(isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 'ERROR') {
+  $data=$this->useranswer['cans_dist'];
+}
+    return $data;
   }
 
   /**

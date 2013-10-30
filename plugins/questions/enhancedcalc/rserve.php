@@ -140,14 +140,15 @@ class EnhancedCalcRrserve {
     if ($useranswer == '') {
       return 'ERROR';
     }
-    
+
+
     try {
        $res = $this->eval_string("excel_round((abs($useranswer - $correctanswer)/$correctanswer) * 100,3)");
     } catch(Exception $e) {
       //there is an error it cant be correct
       return 'ERROR';
     }
-      
+
     return $res;
   }
   

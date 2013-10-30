@@ -70,21 +70,23 @@ while ($result->fetch()) {
     $answer_obj->set_settings($settings);
     $dist = $answer_obj->get_answer_distance();
     if ($dist === false) {
-      $dist = $string['na'];
+      $dist=9999999;
+      //$dist = $string['na'];
     } else {
-      $dist = number_format($dist, 2) . '%';
+      //$dist = number_format($dist, 2) . '%';
     }
 
     // Don't include absolutely correct answers in the list
-    if ($dist !== '0.00%') {
-      $log_answers[$dist] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark), 'user_id' => $user_id);
+    if ($dist !== '0') { //'0.00%'
+      $log_answers[] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark), 'user_id' => $user_id, 'distance' => $dist);
     }
   }
 }
 $result->close();
 
+
 // Sort by distance
-asort($log_answers);
+asort($log_answers,SORT_NUMERIC);
 
 // Get any existing overrides
 $overrides = array();
@@ -179,8 +181,26 @@ foreach ($q_vars as $var => $dummy) {
     <tbody>
 <?php
 $mark_types = array('correct', 'partial', 'incorrect');
+foreach($log_answers as $id => $ans) {
+  $dist=$ans['distance'];
+  $log_answers2[$dist][]=$id;
+}
+krsort($log_answers2,SORT_NUMERIC);
 
-foreach ($log_answers as $distance => $answer) {
+//var_dump($log_answers2);
+foreach($log_answers2 as $innerans) {
+foreach ($innerans as $answerin2) {
+  $answer=$log_answers[$answerin2];
+if(!isset($answer['distance'])) {
+  $answer['distance'] =$string['na'];
+}
+
+  if($answer['distance'] == 9999999) {
+    $distance = $string['na'];
+  } else {
+    $distance  = number_format($answer['distance'], 2) . '%';
+  }
+
   $new_type = '';
   $reason = '';
   $or_class = '';
@@ -226,6 +246,7 @@ foreach ($log_answers as $distance => $answer) {
   </td>
   </tr>
 <?php
+}
 }
 ?>
     </tbody>
