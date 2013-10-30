@@ -323,12 +323,14 @@ function modulo($n,$b) {
 
 $title_unique = true;
 
-
 if (isset($_POST['Submit'])) {
   $old_marking = $properties->get_marking();
   $old_paper_title = $properties->get_paper_title();
   $old_externals = $properties->get_externals();
   $old_internals = $properties->get_internal_reviewers();
+
+
+
 
   if (isset($_POST['paper_title'])) {
 	  if ($old_paper_title == $_POST['paper_title']) {
@@ -345,11 +347,10 @@ if (isset($_POST['Submit'])) {
       $properties->set_paper_type($_POST['paper_type']);
     }
 
-    if (isset($_POST['bidirectional']) and $_POST['bidirectional'] == 1) {
-      $properties->set_bidirectional(1);
-    } else {
-      $properties->set_bidirectional(0);
+    if(isset($_POST['bidirectional'])) {
+      $properties->set_bidirectional($_POST['bidirectional']);
     }
+
     if ($properties->get_paper_type() == '6') {
       if (isset($_POST['display_photos'])) {
         $properties->set_display_correct_answer(1);
@@ -554,8 +555,10 @@ if (isset($_POST['Submit'])) {
     $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
     $properties->set_distinction_mark($tmp_distinction_mark);
 
-    $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;
-    $properties->set_calculator($tmp_calculator);
+    if ($properties->get_summative_lock() === false or $userObject->has_role('SysAdmin')) {
+      $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;
+      $properties->set_calculator($tmp_calculator);
+    }
 
     if (isset($_POST['sound_demo'])) {
       $properties->set_sound_demo(1);
