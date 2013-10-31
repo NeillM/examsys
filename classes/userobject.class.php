@@ -777,8 +777,12 @@ class UserObject extends RogoStaticSingleton {
       // new security routine
 
       $notice = UserNotices::get_instance();
-      $notice->access_denied($this->db, $string, sprintf($string['denied_role'], implode(',',array_keys($this->roles))), true, true);
-    }
+			if (!is_array($this->roles)) {
+				$notice->access_denied($this->db, $string, '', true, true);
+			} else {
+				$notice->access_denied($this->db, $string, sprintf($string['denied_role'], implode(',',array_keys($this->roles))), true, true);
+			}
+		}
     if ($result == false) {
       $msg = 'This should never appear, please contact support';
       $support_email = $configObject->get('support_email');

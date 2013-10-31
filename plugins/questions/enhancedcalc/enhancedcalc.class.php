@@ -98,6 +98,7 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return boolean      True if the units match any defined in the answers
    */
   function are_units_correct($unit) {
+    $this->decode_settings();
     // create array of units and functions
     $this->settings['answersexp'] = $this->build_formula_by_units($this->settings['answers']);
     if (isset($this->settings['answersexp'][$unit])) {
@@ -164,6 +165,12 @@ class EnhancedCalc extends Question implements questionInterface {
       $enhancedcalcObj = new EnhancedCalcRrserve($this->configObj->getbyref('enhancedcalculation'));
     }
 
+    foreach($this->useranswer['vars'] as $key => $variablessplit) {
+      if ($variablessplit == 'ERROR') {
+        $this->error = "variable $key is ERROR";
+        return Q_MARKING_UNANSWERABLE;
+      }
+    }
     // run calculate through the external interface if errors catch exception and indicate its still unmarked.
     try {
 
@@ -220,7 +227,7 @@ class EnhancedCalc extends Question implements questionInterface {
           $function = 'format_number_sf';
           $arg = $this->settings['sf'];
         } else {
-            //round to stundent precision
+            //round to student precision
             $function = 'format_number_to_precision_of_other_number';
             $arg = $this->useranswer['uansnumb'];
         }

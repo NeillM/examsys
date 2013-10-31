@@ -30,6 +30,18 @@ require_once '../classes/paperproperties.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 require_once '../plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
 
+$statusinfo[QUESTION_ERROR]							= 'Q_MARKING_EXACT';
+$statusinfo[Q_MARKING_EXACT]						= 'Q_MARKING_EXACT';
+$statusinfo[Q_MARKING_FULL_TOL]					= 'Q_MARKING_FULL_TOL';
+$statusinfo[Q_MARKING_PART_TOL]					= 'Q_MARKING_PART_TOL';
+$statusinfo[Q_MARKING_PART_UNITS_WRONG] = 'Q_MARKING_PART_UNITS_WRONG';
+$statusinfo[Q_MARKING_WRONG]						= 'Q_MARKING_WRONG';
+$statusinfo[Q_MARKING_UNMARKED]					= 'Q_MARKING_UNMARKED';
+$statusinfo[Q_MARKING_NOTANS]						= 'Q_MARKING_NOTANS';
+$statusinfo[Q_MARKING_ERROR]						= 'Q_MARKING_ERROR';
+$statusinfo[Q_MARKING_UNANSWERABLE]			= 'Q_MARKING_UNANSWERABLE';
+
+
 set_time_limit(0);
 
 $paperID = check_var('paperID', 'GET', true, false, true);
@@ -44,6 +56,18 @@ $questions = $properties->get_questions();
 }
 */
 
+
+function get_question($qid, $questions) {
+  $q_no = 'error';
+	
+  foreach ($questions as $question) {
+	  if ($question['q_id'] == $qid) {
+		  $q_no = $question['q_no'];
+		}
+	}
+	
+	return $q_no;
+}
 
 // Get the enhanced calculation questions on the paper.
 $q_ids = array();
@@ -67,7 +91,7 @@ foreach ($q_ids as $q_id => $setting) {
   $statuses[$q_id] = $data;
 }
 
-var_dump($statuses);
+
 
 ?>
 <!DOCTYPE html>
@@ -84,6 +108,9 @@ var_dump($statuses);
 	<style>
 	  body {font-size:90%}
 	  h1 {font-size:140%}
+		td, th {border:1px solid #808080}
+		.data th {background-color:#808080; color:white}
+		.data td {text-align:right}
 	</style>
 	
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -93,11 +120,18 @@ var_dump($statuses);
 		  history.back();
 		})
 	});
-	
 	</script>
 </head>
 
 <body>
+<?php
+foreach($statuses as $qid => $data) {
+  foreach($data as $typ => $cnt) {
+    $statuses2[$qid][$statusinfo[$typ]] = $cnt;
+  }
+}
+?>
+
 <table class="header">
 <?php
 echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
@@ -120,8 +154,21 @@ if (!$server_connection) {
   echo "<table style=\"width:100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"redwarn\" style=\"width:30px\"><img style=\"margin-left:6px; margin-right:10px;\" src=\"../artwork/red_warning.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td class=\"redwarn\">{$string['serverconnectionerr']}</td></table>\n";
 	echo '<br /><input type="button" name="submit" id="submit" value="' . $string['back'] . '" style="width:100px" />';
 } else {
-	echo "<h1>{$string['markingcomplete']}</h1>\n";
-	echo '<input type="button" name="submit" id="submit" value="' . $string['ok'] . '" style="width:100px" />';
+
+  echo "<div style=\"margin-left:14px; margin-right:14px\">\n";
+  echo "<h1>{$string['markingcomplete']}</h1>\n";
+	
+  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\" class=\"data\">";
+  echo "<tr><th>Q</th><th>Unanswerable</th><th>Error</th><th>No Answer</th><th>Unmarked</th><th>Wrong</th><th>Exact</th><th>Full Tolerance</th><th>Partial Tolerance</th><th>Wrong Units</th></tr>";
+  foreach($statuses2 as $qid => $data) {
+    echo "<tr><td>" . get_question($qid, $questions) . ".</td>";
+    foreach ($data as $count) {
+      echo "<td>$count</td>";
+    }
+    echo "</tr>";
+  }
+  echo "</table><br />";
+  echo '<input type="button" name="submit" id="submit" value="' . $string['ok'] . '" style="width:100px" /></div>';
 }
 ?>
 
