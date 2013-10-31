@@ -6,11 +6,10 @@ function sendTextToAS3(lang, q_no, mode, image, correct, user){
   if (typeof 'user' != 'undefined' && user != '' && user != undefined) {
     toSend += user + ';';
   }
-
   // Add small delay to get around race condition that was evident in Firefox
   setTimeout(function() {
     doSend(q_no, toSend);
-  }, 600)
+  }, 1200)
 }
 
 function doSend(q_no, toSend) {
