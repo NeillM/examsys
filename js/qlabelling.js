@@ -562,7 +562,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			var wrapped = this.wrapText(this.tmp_text,tmp_width);
 			tmp_width = 5;
 		}
-		if (this.exclusions[this.pholderBox[i][7]] == '1') {
+		if (typeof(this.pholderBox[i])!='undefined' && typeof(this.pholderBox[i][7])!='undefined' && this.exclusions[this.pholderBox[i][7]] == '1') {
 			this.context.fillStyle='#FF0000';
 			var tmp_style = this.context.strokeStyle;
 			this.lineDraw(this.context,'#FF0000',temp_x+5.5,temp_y+this.fontSizes[this.fontSizePos]-1.5,tmp_width-10,0);
@@ -687,7 +687,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,tmp_pos-10,temp_y+tmp_h-19,this.imgdata.width,this.imgdata.height);
 		}
 	}
-	if (this.qmode == 'analysis' && temp_x>=220) {
+	if (typeof(this.pholderBox[i])!='undefined' && typeof(this.pholderBox[i][7])!='undefined' && this.qmode == 'analysis' && temp_x>=220) {
 		var temp_col = this.context.fillStyle;
 		this.context.fillStyle=this.currentColours[1];
 		this.context.fillRect(temp_x-16,temp_y,16,15);
@@ -1050,7 +1050,7 @@ function ql_redraw_canvas() {
 				tmpw = tmpp[a][2];
 				tmph = tmpp[a][3];			
 				ax = tmpx;
-				if (this.answerBox[i][j][2] == '' && (this.qmode == 'answer' || this.qmode == 'script')) ax = -500;
+				if (this.answerBox[i][j][2] == '' && (this.qmode == 'answer' || this.qmode == 'script' || this.qmode == 'analysis')) ax = -500;
 				
 				if (this.answerBox[i][j][7]<220) {
 					this.answerBox[i][j][7] = ax;
@@ -1098,7 +1098,7 @@ function ql_redraw_canvas() {
 			for (j=this.answerBox[i].length-1;j>=0;j--) {
 				if (typeof(this.answerBox[i][j])!='undefined' && !(this.drag_box_id == i && this.drag_box_combo == j) && !(this.mov_id == i && this.mov_combo == j) && !(this.qType == "menu" && this.qmode == 'answer' && this.answerBox[i][j][1]!='image')) {
 					if (!(this.qType == "menu" && this.qmode == 'script' && this.answerBox[i][j][5]<220)) {
-						if (this.qmode == 'script' && this.answerBox[i][j][5]<220) this.context.globalAlpha = 0.5;	
+						if ((this.qmode == 'script' || this.qmode == 'analysis') && this.answerBox[i][j][5]<220) this.context.globalAlpha = 0.5;	
 						this.ql_redraw_box(i,j);
 						this.context.globalAlpha = 1;	
 					}
