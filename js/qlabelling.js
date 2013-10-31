@@ -503,7 +503,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			var tmp_width = this_box[9];
 			var tmp_height = this_box[10];
 			if (this.qmode == 'script' && this.display_correct_answer) {
-				if ((this.drag_pho_id == i || (this.drag_box_id == i && this.drag_box_combo == j)) && temp_x>220){
+				if ((this.drag_pho_id == i && j == 99) || (this.drag_box_id == i && this.drag_box_combo == j && temp_x>220)){
 					for (var a=0;a<this.pholderBox.length;a++) 
 						if (this.pholderBox[a][5] == temp_x && this.pholderBox[a][6] == temp_y) this.tmp_text = this.pholderBox[a][2];
 					for (var a=0;a<this.answerBox.length;a++) {
@@ -537,7 +537,8 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		this.tmp_text = this_box[2];
 		if (this.qmode == 'script' && this.display_correct_answer) {
 			this.context.fillStyle='#000';
-			if ((this.drag_pho_id == i || (this.drag_box_id == i && this.drag_box_combo == j)) && temp_x>220){
+			if (this.drag_pho_id == i && j == 99) this.context.fillStyle=this.currentColours[2];	
+			if ((this.drag_box_id == i && this.drag_box_combo == j && temp_x>220)){
 				this.context.fillStyle=this.currentColours[2];	
 				for (var a=0;a<this.pholderBox.length;a++) 
 					if (this.pholderBox[a][5] == temp_x && this.pholderBox[a][6] == temp_y) this.tmp_text = this.pholderBox[a][2];
@@ -553,7 +554,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				}
 			}
 			if (this.qmode == 'script' && this.display_correct_answer) {
-				if ((this.drag_pho_id == i || (this.drag_box_id == i && this.drag_box_combo == j)) && temp_x>220){
+				if ((this.drag_pho_id == i && j== 99 ) || (this.drag_box_id == i && this.drag_box_combo == j && temp_x>220)){
 					for (var a=0;a<this.pholderBox.length;a++) 
 						if (this.pholderBox[a][5] == temp_x && this.pholderBox[a][6] == temp_y) this.tmp_text = this.pholderBox[a][2];
 				}
@@ -658,7 +659,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 	if (this.qmode == 'script' && this_box[3]!='' && temp_x>=220) {
 		var tmp_test = true;
 		if (this.drag_box_id == i && this.drag_box_combo == j && this_box[3] == 'f') tmp_test = false;
-		if (this.drag_pho_id == i && this_box[3] == 'f') tmp_test = false;
+		if (this.drag_pho_id == i && j == 99 && this_box[3] == 'f') tmp_test = false;
 		if (!(this.display_correct_answer)) tmp_test = true;
 		if (!(this.display_ticks_crosses)) tmp_test = false;
 		
@@ -1109,9 +1110,12 @@ function ql_redraw_canvas() {
 		this.context.fillStyle=this.currentColours[0]; //resetting colour
 		
 		//redraw active label to have it on top
-		if (this.active_box_id>-1 && !(this.qType == "menu" && this.qmode == 'answer' && this.answerBox[this.active_box_id][this.active_box_combo][1]!='image')) 
-			this.ql_redraw_box(this.active_box_id,this.active_box_combo);
-
+		if (this.active_box_id>-1 && !(this.qType == "menu" && this.qmode == 'answer' && this.answerBox[this.active_box_id][this.active_box_combo][1]!='image')) this.ql_redraw_box(this.active_box_id,this.active_box_combo);
+		
+		//redraw empty pholderbox in script an analysis		
+		if (this.drag_pho_id>-1 && this.qType != "menu" && (this.qmode == 'script' || this.qmode == 'analysis')) this.ql_redraw_box(this.drag_pho_id,99);
+		
+		
 		//redraw dragged shape to have it on top
 		var drag_mix = this.drag_box_id+':'+this.drag_box_combo;
 		var active_mix = this.active_box_id+':'+this.active_box_combo;
