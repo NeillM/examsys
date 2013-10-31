@@ -172,11 +172,11 @@ if (!$server_connection) {
 
   echo "<h1>{$string['markingcomplete']}</h1>\n";
   echo "<h2>statuses</h2><table border=1>";
-  echo "<tr><th>QID</th><th>UNANSWERABLE</th><th>ERROR</th><th>NOTANS</th><th>UNMARKED</th><th>WRONG</th><th>EXACT</th><th>FULL_TOL</th><th>PART_TOL</th><th>UNITS_WRONG</th></tr>";
+  echo "<tr><th>QID</th><th>Question can not be Answered<br />(eg linked calc questions with problems</th><th>Serious Error<br />eg formula not valid</th><th>Student didnt answer the question</th><th>Unmarked<br />(eg no connection to marking software)</th><th>student got answer Wrong</th><th>Student got the exact answer</th><th>student got within the full tolerance</th><th>student got within the partial tolerance</th><th>student got the units wrong</th></tr>";
   foreach($statuses2 as $qid => $data) {
     echo "<tr><td><a href=\"javascript:startPaper(0,true,$qid)\">$qid</a></td>";
     foreach($data as $count) {
-      echo "<td>$count</td>";
+      echo "<td align=\"center\">$count</td>";
     }
     echo "</tr>";
   }
