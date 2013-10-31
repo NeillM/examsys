@@ -30,6 +30,18 @@ require_once '../classes/paperproperties.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 require_once '../plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
 
+$statusinfo[QUESTION_ERROR] = 'Q_MARKING_EXACT';
+$statusinfo[Q_MARKING_EXACT] = 'Q_MARKING_EXACT';
+$statusinfo[Q_MARKING_FULL_TOL] = 'Q_MARKING_FULL_TOL';
+$statusinfo[Q_MARKING_PART_TOL] = 'Q_MARKING_PART_TOL';
+$statusinfo[Q_MARKING_PART_UNITS_WRONG] = 'Q_MARKING_PART_UNITS_WRONG';
+$statusinfo[Q_MARKING_WRONG] = 'Q_MARKING_WRONG';
+$statusinfo[Q_MARKING_UNMARKED] = 'Q_MARKING_UNMARKED';
+$statusinfo[Q_MARKING_NOTANS] = 'Q_MARKING_NOTANS';
+$statusinfo[Q_MARKING_ERROR] = 'Q_MARKING_ERROR';
+$statusinfo[Q_MARKING_UNANSWERABLE] = 'Q_MARKING_UNANSWERABLE';
+
+
 set_time_limit(0);
 
 $paperID = check_var('paperID', 'GET', true, false, true);
@@ -67,7 +79,7 @@ foreach ($q_ids as $q_id => $setting) {
   $statuses[$q_id] = $data;
 }
 
-var_dump($statuses);
+
 
 ?>
 <!DOCTYPE html>
@@ -95,9 +107,45 @@ var_dump($statuses);
 	});
 	
 	</script>
+  <script language="JavaScript">
+    function startPaper(fullsc, preview, qid) {
+      var urlMod = (typeof preview == 'undefined' || !preview) ? '' : '&q_id=' + qid;
+      <?php
+      if ($properties->get_paper_type() == '4') {      // OSCE
+      ?>
+      window.open("<?php echo $configObject->get('cfg_root_path') ?>/osce/form.php?id=<?php echo $properties->get_crypt_name(); ?>&username=test","paper","width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      <?php
+      } elseif ($properties->get_paper_type() == '6') {
+      ?>
+      window.open("<?php echo $configObject->get('cfg_root_path') ?>/peer_review/form.php?id=<?php echo $properties->get_crypt_name(); ?>","paper","width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      <?php
+      } else {
+      ?>
+      if (fullsc == 0) {
+        window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/start.php?id=<?php echo $properties->get_crypt_name(); ?>&mode=preview" + urlMod,"paper","width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+      } else {
+        window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/start.php?id=<?php echo $properties->get_crypt_name(); ?>&mode=preview" + urlMod,"paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+      }
+      <?php
+      }
+      ?>
+    }
+    </script>
 </head>
 
 <body>
+<?php
+//var_dump($statuses);
+
+foreach($statuses as $qid => $data) {
+  foreach($data as $typ =>$cnt) {
+    $statuses2[$qid][$statusinfo[$typ]]=$cnt;
+  }
+}
+
+//var_dump($statuses2);
+?>
+
 <table class="header">
 <?php
 echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
@@ -120,8 +168,20 @@ if (!$server_connection) {
   echo "<table style=\"width:100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"redwarn\" style=\"width:30px\"><img style=\"margin-left:6px; margin-right:10px;\" src=\"../artwork/red_warning.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td class=\"redwarn\">{$string['serverconnectionerr']}</td></table>\n";
 	echo '<br /><input type="button" name="submit" id="submit" value="' . $string['back'] . '" style="width:100px" />';
 } else {
-	echo "<h1>{$string['markingcomplete']}</h1>\n";
-	echo '<input type="button" name="submit" id="submit" value="' . $string['ok'] . '" style="width:100px" />';
+
+
+  echo "<h1>{$string['markingcomplete']}</h1>\n";
+  echo "<h2>statuses</h2><table border=1>";
+  echo "<tr><th>QID</th><th>UNANSWERABLE</th><th>ERROR</th><th>NOTANS</th><th>UNMARKED</th><th>WRONG</th><th>EXACT</th><th>FULL_TOL</th><th>PART_TOL</th><th>UNITS_WRONG</th></tr>";
+  foreach($statuses2 as $qid => $data) {
+    echo "<tr><td><a href=\"javascript:startPaper(0,true,$qid)\">$qid</a></td>";
+    foreach($data as $count) {
+      echo "<td>$count</td>";
+    }
+    echo "</tr>";
+  }
+  echo "</table><br />";
+  echo '<input type="button" name="submit" id="submit" value="' . $string['ok'] . '" style="width:100px" />';
 }
 ?>
 
