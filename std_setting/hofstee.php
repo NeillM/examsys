@@ -172,7 +172,7 @@ if (isset($_POST['submit'])) {
 body {font-size:85%}
 h1 {margin-left:10px; font-size:140%}
 input[type="text"] {border: 1px solid #C0C0C0}
-.pass {color:#76923C}
+.pass {color:#538135}
 .fail {color:#C00000}
 </style>
 

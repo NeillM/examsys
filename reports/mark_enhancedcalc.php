@@ -30,16 +30,16 @@ require_once '../classes/paperproperties.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 require_once '../plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
 
-$statusinfo[QUESTION_ERROR] = 'Q_MARKING_EXACT';
-$statusinfo[Q_MARKING_EXACT] = 'Q_MARKING_EXACT';
-$statusinfo[Q_MARKING_FULL_TOL] = 'Q_MARKING_FULL_TOL';
-$statusinfo[Q_MARKING_PART_TOL] = 'Q_MARKING_PART_TOL';
+$statusinfo[QUESTION_ERROR]							= 'Q_MARKING_EXACT';
+$statusinfo[Q_MARKING_EXACT]						= 'Q_MARKING_EXACT';
+$statusinfo[Q_MARKING_FULL_TOL]					= 'Q_MARKING_FULL_TOL';
+$statusinfo[Q_MARKING_PART_TOL]					= 'Q_MARKING_PART_TOL';
 $statusinfo[Q_MARKING_PART_UNITS_WRONG] = 'Q_MARKING_PART_UNITS_WRONG';
-$statusinfo[Q_MARKING_WRONG] = 'Q_MARKING_WRONG';
-$statusinfo[Q_MARKING_UNMARKED] = 'Q_MARKING_UNMARKED';
-$statusinfo[Q_MARKING_NOTANS] = 'Q_MARKING_NOTANS';
-$statusinfo[Q_MARKING_ERROR] = 'Q_MARKING_ERROR';
-$statusinfo[Q_MARKING_UNANSWERABLE] = 'Q_MARKING_UNANSWERABLE';
+$statusinfo[Q_MARKING_WRONG]						= 'Q_MARKING_WRONG';
+$statusinfo[Q_MARKING_UNMARKED]					= 'Q_MARKING_UNMARKED';
+$statusinfo[Q_MARKING_NOTANS]						= 'Q_MARKING_NOTANS';
+$statusinfo[Q_MARKING_ERROR]						= 'Q_MARKING_ERROR';
+$statusinfo[Q_MARKING_UNANSWERABLE]			= 'Q_MARKING_UNANSWERABLE';
 
 
 set_time_limit(0);
@@ -56,6 +56,18 @@ $questions = $properties->get_questions();
 }
 */
 
+
+function get_question($qid, $questions) {
+  $q_no = 'error';
+	
+  foreach ($questions as $question) {
+	  if ($question['q_id'] == $qid) {
+		  $q_no = $question['q_no'];
+		}
+	}
+	
+	return $q_no;
+}
 
 // Get the enhanced calculation questions on the paper.
 $q_ids = array();
@@ -96,6 +108,9 @@ foreach ($q_ids as $q_id => $setting) {
 	<style>
 	  body {font-size:90%}
 	  h1 {font-size:140%}
+		td, th {border:1px solid #808080}
+		.data th {background-color:#808080; color:white}
+		.data td {text-align:right}
 	</style>
 	
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -105,45 +120,16 @@ foreach ($q_ids as $q_id => $setting) {
 		  history.back();
 		})
 	});
-	
 	</script>
-  <script language="JavaScript">
-    function startPaper(fullsc, preview, qid) {
-      var urlMod = (typeof preview == 'undefined' || !preview) ? '' : '&q_id=' + qid;
-      <?php
-      if ($properties->get_paper_type() == '4') {      // OSCE
-      ?>
-      window.open("<?php echo $configObject->get('cfg_root_path') ?>/osce/form.php?id=<?php echo $properties->get_crypt_name(); ?>&username=test","paper","width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      <?php
-      } elseif ($properties->get_paper_type() == '6') {
-      ?>
-      window.open("<?php echo $configObject->get('cfg_root_path') ?>/peer_review/form.php?id=<?php echo $properties->get_crypt_name(); ?>","paper","width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      <?php
-      } else {
-      ?>
-      if (fullsc == 0) {
-        window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/start.php?id=<?php echo $properties->get_crypt_name(); ?>&mode=preview" + urlMod,"paper","width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-      } else {
-        window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/start.php?id=<?php echo $properties->get_crypt_name(); ?>&mode=preview" + urlMod,"paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-      }
-      <?php
-      }
-      ?>
-    }
-    </script>
 </head>
 
 <body>
 <?php
-//var_dump($statuses);
-
 foreach($statuses as $qid => $data) {
-  foreach($data as $typ =>$cnt) {
-    $statuses2[$qid][$statusinfo[$typ]]=$cnt;
+  foreach($data as $typ => $cnt) {
+    $statuses2[$qid][$statusinfo[$typ]] = $cnt;
   }
 }
-
-//var_dump($statuses2);
 ?>
 
 <table class="header">
@@ -169,19 +155,20 @@ if (!$server_connection) {
 	echo '<br /><input type="button" name="submit" id="submit" value="' . $string['back'] . '" style="width:100px" />';
 } else {
 
-
+  echo "<div style=\"margin-left:14px; margin-right:14px\">\n";
   echo "<h1>{$string['markingcomplete']}</h1>\n";
-  echo "<h2>statuses</h2><table border=1>";
-  echo "<tr><th>QID</th><th>Question can not be Answered<br />(eg linked calc questions with problems</th><th>Serious Error<br />eg formula not valid</th><th>Student didnt answer the question</th><th>Unmarked<br />(eg no connection to marking software)</th><th>student got answer Wrong</th><th>Student got the exact answer</th><th>student got within the full tolerance</th><th>student got within the partial tolerance</th><th>student got the units wrong</th></tr>";
+	
+  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\" class=\"data\">";
+  echo "<tr><th>Q</th><th>Unanswerable</th><th>Error</th><th>No Answer</th><th>Unmarked</th><th>Wrong</th><th>Exact</th><th>Full Tolerance</th><th>Partial Tolerance</th><th>Wrong Units</th></tr>";
   foreach($statuses2 as $qid => $data) {
-    echo "<tr><td><a href=\"javascript:startPaper(0,true,$qid)\">$qid</a></td>";
-    foreach($data as $count) {
-      echo "<td align=\"center\">$count</td>";
+    echo "<tr><td>" . get_question($qid, $questions) . ".</td>";
+    foreach ($data as $count) {
+      echo "<td>$count</td>";
     }
     echo "</tr>";
   }
   echo "</table><br />";
-  echo '<input type="button" name="submit" id="submit" value="' . $string['ok'] . '" style="width:100px" />';
+  echo '<input type="button" name="submit" id="submit" value="' . $string['ok'] . '" style="width:100px" /></div>';
 }
 ?>
 

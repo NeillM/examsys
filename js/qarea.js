@@ -70,7 +70,7 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 		//---------- extra
 		// flash modes 1: answer, 2: edit, 3: script
 		if (this.qmode == 'script') {
-			if (typeof(extra[0])!='undefined' && extra[0] == '0') this.display_students_response = false;
+			if (typeof(extra[0])!='undefined' && extra[0] == '0' || this.qanswer=='' || this.qanswer=='u') this.display_students_response = false;
 			if (typeof(extra[1])!='undefined' && extra[1] == '0') this.display_correct_answer = false;
 			if (typeof(extra[4])!='undefined' && extra[4] == '1') this.hide_feedback_ifunanswered = true;
 			if (this.hide_feedback_ifunanswered && !(this.is_an_answer)) {
@@ -139,13 +139,16 @@ function qa_menuBuild() {
 		}
 		if (this.display_correct_answer) {
 			posx = this.menuBuild_icons('toolbar/ico_tick.png',posx,posy,2,'+',lang_string['But_correct_answer'],lang_string['But_correct_answer'])+spac;
-			posx = this.menuBuild_icons('toolbar/ico_warn.png',posx,posy,0,'+',lang_string['But_show_error'],lang_string['But_show_error'])+spac;
 			this.global_corect_answer = true;
-			this.global_show_error = false;
 		} else {
 			posx = this.menuBuild_icons('toolbar/ico_tick.png',posx,posy,0,'-',lang_string['But_correct_answer'],lang_string['But_correct_answer'])+spac;
-			posx = this.menuBuild_icons('toolbar/ico_warn.png',posx,posy,0,'-',lang_string['But_show_error'],lang_string['But_show_error'])+spac;
 			this.global_corect_answer = false;
+		}
+		if (this.display_correct_answer && this.display_students_response) {
+			posx = this.menuBuild_icons('toolbar/ico_warn.png',posx,posy,0,'+',lang_string['But_show_error'],lang_string['But_show_error'])+spac;
+			this.global_show_error = false;
+		} else {
+			posx = this.menuBuild_icons('toolbar/ico_warn.png',posx,posy,0,'-',lang_string['But_show_error'],lang_string['But_show_error'])+spac;
 			this.global_show_error = false;
 		}
   }

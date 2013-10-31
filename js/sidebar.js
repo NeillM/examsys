@@ -127,9 +127,9 @@ function showMenu(submenuID, menuID, callingID, arrayID, urlID, e) {
 	
 	sidebarHeight = $('#left-sidebar').height();
 	
-	mytop = $('#' + callingID).offset().top - $(document).scrollTop() - 10;
+	mytop = $('#' + callingID).offset().top - $(document).scrollTop();
 	if ((mytop + popupHeight) > sidebarHeight) {
-		mytop = sidebarHeight - popupHeight - 10;
+		mytop = sidebarHeight - popupHeight - 6;
 	}
 	$('#' + submenuID).css('top', mytop + 'px');
 	

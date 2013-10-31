@@ -24,17 +24,16 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
 
-// Check the paper actually exists.
-if (!Paper_utils::paper_exists($paperID, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+$paper_type = $propertyObj->get_paper_type();
+$paper = $propertyObj->get_paper_title();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -59,14 +58,6 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
 
 <body>
 <?php
-  // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_type AS paper_type, paper_title FROM properties WHERE property_id = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($paper_type, $paper);
-  $result->fetch();
-  $result->close();
-
   $candidate_no = 0;
   if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.

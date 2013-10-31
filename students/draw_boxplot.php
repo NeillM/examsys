@@ -58,11 +58,11 @@ if ($scale == '1') {
 $gap = 24;
 
 $color   = ImageColorAllocate($Image, 255, 255, 255);
-$red     = ImageColorAllocate($Image, 255, 0, 0);
+$red     = ImageColorAllocate($Image, 192, 0, 0);
 $ltgrey  = ImageColorAllocate($Image, 234, 234, 234);
 $dkgrey  = ImageColorAllocate($Image, 128, 128, 128);
 $black   = ImageColorAllocate($Image, 0, 0, 0);
-$blue    = ImageColorAllocate($Image, 0, 192, 192);
+$blue    = ImageColorAllocate($Image, 91, 155, 213);
 $amber   = ImageColorAllocate($Image, 247, 150, 70);
 $ltamber = ImageColorAllocate($Image, 251, 198, 155);
 

@@ -24,16 +24,14 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperutils.class.php';
 require_once '../classes/questionutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
-// Check the paper actually exists.
-if (!Paper_utils::paper_exists($paperID, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+$paper_type = $propertyObj->get_paper_type();
 
 function displayMarks($id, $marks) {
   $html = '<select name="override' . $id . '"><option value="NULL"></option>';
@@ -64,8 +62,8 @@ if (isset($_POST['submit'])) {
     $logtype = $_POST["logtype$i"];
     $log_id = $_POST["log_id$i"];
 
-    $result = $mysqli->prepare("UPDATE log$logtype SET mark = ? WHERE id = ?");
-    $result->bind_param('di', $tmp_mark, $log_id);
+    $result = $mysqli->prepare("UPDATE log$logtype SET mark = ?, adjmark = ? WHERE id = ?");
+    $result->bind_param('ddi', $tmp_mark, $tmp_mark, $log_id);
     $result->execute();
     $result->close();
   }
@@ -82,14 +80,6 @@ if (isset($_POST['submit'])) {
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
   
-  // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_type, paper_title FROM properties WHERE property_id=?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($paper_type, $paper);
-  $result->fetch();
-  $result->close();
-
   // Get primary marks
   $primary_marks = array();
   $result = $mysqli->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = 1");
@@ -148,7 +138,7 @@ if (isset($_POST['submit'])) {
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div></th><th style="text-align:right; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th></tr>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $propertyObj->get_paper_title() . '</a></div></th><th style="text-align:right; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th></tr>';
 
   echo '<tr><th><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $string['finalisemarks'] . '</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
   echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";

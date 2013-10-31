@@ -70,7 +70,7 @@ while ($result->fetch()) {
     $answer_obj->set_settings($settings);
     $dist = $answer_obj->get_answer_distance();
     if ($dist === false) {
-      $dist=9999999;
+      $dist = 9999999;
       //$dist = $string['na'];
     } else {
       //$dist = number_format($dist, 2) . '%';
@@ -144,7 +144,7 @@ $q_marks = array_flip($marks_arr);
 
 <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&paperID=' . $_GET['paperID']; ?>">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/dictionary.png" width="32" height="32" alt="Word List" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA; text-align: left"><strong><?php echo $string['useranswers']; ?></strong></td></tr>
+  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/enhancedcalc_override.gif" width="32" height="32" alt="Correct" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA; text-align: left"><strong><?php echo $string['useranswers']; ?></strong></td></tr>
   </table>
 
   <p class="msg"><?php echo $string['msg']; ?></p>

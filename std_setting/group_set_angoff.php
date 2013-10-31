@@ -29,6 +29,15 @@ require_once '../include/errors.inc';
 require_once '../classes/exclusion.class.php';
 require_once '../classes/paperproperties.class.php';
 
+//HTML5 part
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require_once '../lang/' . $language . '/question/edit/area.txt';
+require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
+require_once '../lang/' . $language . '/paper/hotspot_question.txt';
+require_once '../lang/' . $language . '/paper/label_answer.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
@@ -131,6 +140,15 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+	
+	<!-- HTML5 part start -->
+	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+	<script type="text/javascript" src="../js/html5.images.js"></script>
+	<script type="text/javascript" src="../js/qsharedf.js"></script>
+	<script type="text/javascript" src="../js/qlabelling.js"></script>
+	<script type="text/javascript" src="../js/qhotspot.js"></script>
+	<script type="text/javascript" src="../js/qarea.js"></script>
+	<!-- HTML5 part end -->
 </head>
 <body>
   <div id="maincontent">

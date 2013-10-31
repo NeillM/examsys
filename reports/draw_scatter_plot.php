@@ -41,17 +41,16 @@
     }
   }
   
-  $color = ImageColorAllocate($Image, 255, 255, 255);
-  $red = ImageColorAllocate($Image, 255, 0, 0);
-  $ltgrey = ImageColorAllocate($Image, 234, 234, 234);
-  $dkgrey = ImageColorAllocate($Image, 128, 128, 128);
-  $black = ImageColorAllocate($Image, 0, 0, 0);
-  $dkgreen = ImageColorAllocate($Image, 0, 128, 0);
+  $color		= ImageColorAllocate($Image, 255, 255, 255);
+  $red    	= ImageColorAllocate($Image, 192, 0, 0);
+  $ltgrey 	= ImageColorAllocate($Image, 234, 234, 234);
+  $dkgrey		= ImageColorAllocate($Image, 128, 128, 128);
+  $black		= ImageColorAllocate($Image, 0, 0, 0);
+  $dkgreen	= ImageColorAllocate($Image, 83, 129, 53);
 
   $font      = '../fonts/SourceSansPro-Regular.otf';
   $bold_font = '../fonts/SourceSansPro-Semibold.otf';
 
-  ImageLine($Image, 40 + $negative, 10, 40 + $negative, 250, $dkgrey);
   ImageLine($Image, 45, 250, 740 + $negative, 250, $dkgrey);
   ImageLine($Image, 45, 190, 740 + $negative, 190, $ltgrey);
   ImageLine($Image, 45, 130, 740 + $negative, 130, $ltgrey);
@@ -79,19 +78,24 @@
   }
 
   // Label y axis
+  ImageLine($Image, 50, 10, 50, 250, $dkgrey);
+	if ($negative == 80) {
+		ImageLine($Image, 120, 10, 120, 250, $dkgrey);  // Draw extra line at zero.
+	}
   for ($label=10; $label<=250; $label+=10) {
-    ImageLine($Image, 34 + $negative, $label, 40 + $negative, $label, $dkgrey);
+    ImageLine($Image, 44, $label, 50, $label, $dkgrey);
   }
   for ($i=1; $i<=4; $i++) {
-    imagettftext($Image, 10, 0, 10 + $negative, 256-($i*60), $black, $font, $i*60);
+    imagettftext($Image, 10, 0, 20, 256-($i*60), $black, $font, $i*60);
   }
 
-  $mydata = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_scatter.dat');
+  // Plot the data points.
+	$mydata = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_scatter.dat');
   $count_mydata = count($mydata) - 2;
   for ($i=0; $i<$count_mydata; $i=$i+2) {
     $mark = trim($mydata[$i]);
-    if ($mark >= -10) {
-      $duration = round($mydata[$i + 1] / 60);
+    $duration = round($mydata[$i + 1] / 60);
+    if ($duration > 0 and $mark >= -10) {
       if ($mark < $_GET['pmk']) {
         ImageFilledRectangle($Image, ($mark * 7) + 40 + $negative, 249 - $duration, ($mark * 7) + 41 + $negative, 250 - $duration, $red);
       } elseif ($mark >= $_GET['pmk'] and $mark < $_GET['distinction_mark']) {
@@ -107,7 +111,7 @@
   } else {
     imagettftext($Image, 12, 0, 342 + (abs($scale_start)*5), 286, $black, $bold_font, $string['adjustedpercent']);
   }
-  imagettftext($Image, 12, 90, 3 + $negative, 162, $black, $bold_font, $string['time']);
+  imagettftext($Image, 12, 90, 13, 162, $black, $bold_font, $string['time']);
 
   ImagePNG($Image);
 

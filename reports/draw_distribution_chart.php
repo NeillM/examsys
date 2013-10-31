@@ -98,12 +98,12 @@
   $Image = ImageCreate(830, 300);
 
   $color   = ImageColorAllocate($Image, 255, 255, 255);
-  $red     = ImageColorAllocate($Image, 255, 0, 0);
+  $red     = ImageColorAllocate($Image, 192, 0, 0);
   $ltgrey  = ImageColorAllocate($Image, 234, 234, 234);
   $dkgrey  = ImageColorAllocate($Image, 128, 128, 128);
   $black   = ImageColorAllocate($Image, 0, 0, 0);
-  $dkgreen = ImageColorAllocate($Image, 0, 128, 0);
-  $blue    = ImageColorAllocate($Image, 0, 192, 192);
+  $dkgreen = ImageColorAllocate($Image, 83, 129, 53);
+  $blue    = ImageColorAllocate($Image, 91, 155, 213);
   
   $font      = '../fonts/SourceSansPro-Regular.otf';
   $bold_font = '../fonts/SourceSansPro-Semibold.otf';

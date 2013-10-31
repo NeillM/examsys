@@ -41,7 +41,9 @@ function hofstee_plot(canvas_id,result_type) {
 	var d_x = 40;
 	var d_y = 200;
 	var x,y,i,j,delta;
-
+	var colours = ['#C00000','#538135','#5B9BD5'];
+	var shadows = ['#FF8888','#D7E3BC',''];
+	
 	//recalculating data
 	var graph_data = [];
 	var data,last_data = 0;
@@ -94,9 +96,9 @@ function hofstee_plot(canvas_id,result_type) {
 		function act(line_nr) {
 			if (line_nr == active_line) {
 				if (line_nr == 1 || line_nr == 2) {
-					context.shadowColor = '#D7E3BC';
+					context.shadowColor = shadows[1];
 				} else {
-					context.shadowColor = '#F88';
+					context.shadowColor = shadows[0];
 				}
 				context.shadowBlur = 5;
 			} else {
@@ -165,14 +167,14 @@ function hofstee_plot(canvas_id,result_type) {
 			//moving labels
 			context.font = "13px Arial";
 			context.textAlign = "center";
-			context.fillStyle = '#76923C';
+			context.fillStyle = colours[1];
 			var divert = 0;
 			if (Math.abs(x1-x2)<50) divert = (50-Math.abs(x1-x2))/2;
 			if (divert > 15) divert = 15;
 			context.fillText(Math.round(boundaries[0]*10)/10+'%',x1,canvas.height-graph_y-graph_h-5);
 			context.fillText(Math.round(boundaries[1]*10)/10+'%',x2,canvas.height-graph_y-graph_h-5-divert);
 			context.textAlign = "right";
-			context.fillStyle = '#C00000';
+			context.fillStyle = colours[0];
 			divert = 0;
 			if ((y3-y4)<15) divert = (15-(y3-y4))/2;
 			context.fillText(Math.round(boundaries[2]*10)/10+'%',graph_x+graph_w+40,y3+5+divert);
@@ -184,16 +186,16 @@ function hofstee_plot(canvas_id,result_type) {
 			
 			//boxplot
 			var box1=5,box2=20,box3=box1+box2/2;
-			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[3]),box1,0,box2); 
-			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[1]),box1,0,box2);
-			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[3]),box3,Math.round(scale_x*(stats[4]-stats[3])),0);
-			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[6]),box3,Math.round(scale_x*(stats[1]-stats[6])),0);
+			drawLine(colours[2],Math.round(graph_x+scale_x*stats[3]),box1,0,box2); 
+			drawLine(colours[2],Math.round(graph_x+scale_x*stats[1]),box1,0,box2);
+			drawLine(colours[2],Math.round(graph_x+scale_x*stats[3]),box3,Math.floor(scale_x*(stats[4]-stats[3])),0);
+			drawLine(colours[2],Math.round(graph_x+scale_x*stats[6]),box3,Math.floor(scale_x*(stats[1]-stats[6])),0);
 			
-			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[4]),box1,0,box2);
-			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[8]),box1,0,box2);
-			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[6]),box1,0,box2);		
-			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[4]),box1,Math.round(scale_x*(stats[6]-stats[4])),0);
-			drawLine('#00C0C0',Math.round(graph_x+scale_x*stats[4]),box1+box2,Math.round(scale_x*(stats[6]-stats[4])),0);
+			drawLine(colours[2],Math.round(graph_x+scale_x*stats[4]),box1,0,box2);
+			drawLine(colours[2],Math.round(graph_x+scale_x*stats[8]),box1,0,box2);
+			drawLine(colours[2],Math.round(graph_x+scale_x*stats[6]),box1,0,box2);		
+			drawLine(colours[2],Math.round(graph_x+scale_x*stats[4]),box1,Math.floor(scale_x*(stats[6]-stats[4])),0);
+			drawLine(colours[2],Math.round(graph_x+scale_x*stats[4]),box1+box2,Math.floor(scale_x*(stats[6]-stats[4])),0);
 			
 
 
@@ -253,13 +255,13 @@ function hofstee_plot(canvas_id,result_type) {
 			//drawing boundaries
 			var gap = 0;
 			act(1);
-			drawLine('#9BBB59',Math.round(x1),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
+			drawLine(colours[1],Math.round(x1),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
 			act(2);
-			drawLine('#9BBB59',Math.round(x2),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
+			drawLine(colours[1],Math.round(x2),canvas.height-graph_y-gap,0,-graph_h+2*gap);      
 			act(3);
-			drawLine('#C00000',graph_x+gap,Math.round(y3),graph_w-2*gap,0);
+			drawLine(colours[0],graph_x+gap,Math.round(y3),graph_w-2*gap,0);
 			act(4);
-			drawLine('#C00000',graph_x+gap,Math.round(y4),graph_w-2*gap,0);
+			drawLine(colours[0],graph_x+gap,Math.round(y4),graph_w-2*gap,0);
 
 		}
 		redraw = false;
