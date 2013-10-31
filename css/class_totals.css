@@ -57,13 +57,14 @@ td {
   background-color:#FFFF80;
 }
 .papernote {
+  margin:10px;
   padding:10px;
   width:300px;
   min-height:100px;
   line-height:150%;
-  background-color:#FFFF99;
   float:left;
-  border:5px solid white;
+  background-color:#FCE699;
+	border:1px solid #E6B10D;
 }
 .studentnote {
   display:none;
@@ -73,7 +74,8 @@ td {
   width:350px;
   z-index:10000;
   font-size:90%;
-  background-color:#FFFF99;
+  background-color:#FCE699;
+	border:1px solid #E6B10D;
 }
 .staff {
   background-color:#FCD5B4;
