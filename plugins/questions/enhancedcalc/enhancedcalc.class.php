@@ -168,6 +168,7 @@ class EnhancedCalc extends Question implements questionInterface {
     foreach($this->useranswer['vars'] as $key => $variablessplit) {
       if ($variablessplit == 'ERROR') {
         $this->error = "variable $key is ERROR";
+        $this->qmark = 0;
         return Q_MARKING_UNANSWERABLE;
       }
     }
@@ -906,6 +907,7 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return array Array of marks
    */
   public function get_question_marks() {
+    $this->decode_settings();
     $marks_full = isset($this->settings['marks_correct']) ? $this->settings['marks_correct'] : false;
     $marks_partial = isset($this->settings['marks_partial']) ? $this->settings['marks_partial'] : false;
     $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : 0;
