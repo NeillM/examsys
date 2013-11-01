@@ -55,7 +55,7 @@ $question_obj = new enhancedcalc($configObject);
 $question_obj->set_settings($settings);
 
 $q_marks = $question_obj->get_question_marks();
-$q_marks_rev = array_flip($q_marks);
+//$q_marks_rev = array_flip($q_marks);
 
 if ($q_marks !== false) {
   // Get user's current mark

@@ -55,6 +55,7 @@ function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mod
       $totalpos = $enhancedcalc->calculate_question_mark();
       $storemark->bind_param('dddsi', $enhancedcalc->qmark, $enhancedcalc->qmark, $totalpos, $new_useranswerstring, $id);
       $storemark->execute();
+ //     print "markingLL:: q: " . $enhancedcalc->qmark . ' t:  ' . $totalpos . ' uas: ' . $new_useranswerstring . ' id:  ' . $id . "<br>\r\n";
     }
   }
   $result->close();
