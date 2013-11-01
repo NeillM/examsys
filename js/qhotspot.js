@@ -41,7 +41,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 
 		//---------- mode 
 		if (mode == 'review') mode='script';
-		if (mode == 'edit' || mode == 'analysis') this.yOffset = 0;
+		if (mode == 'edit' || mode == 'analysis' || mode == 'correction') this.yOffset = 0;
 		if (mode == 'answer' || mode == 'script') this.yOffset = 25;
     this.qmode = mode;
 		
@@ -88,20 +88,22 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 					this.answers[i][0] = answer_l1[i].split(",");
 				}
 			}
-			if (this.qmode == 'analysis') {
+			if (this.qmode == 'analysis' || this.qmode == 'correction') {
 				var answer_l1 = answer.split("|"); // all the hotspots
 				for (i=0; i<answer_l1.length; i++) {
 					var answer_l2 = answer_l1[i].split(";"); //all the users
 					for (j=0; j<answer_l2.length; j++) {
-						this.answers[i][j] = ('-1,'+answer_l2[j]).split(","); 
+						var tmp_ans = answer_l2[j].split(",");
+						if (this.qmode == 'analysis') this.answers[i][j] = [-1,tmp_ans[0],tmp_ans[1],0];
+						if (this.qmode == 'correction') this.answers[i][j] = [-1,tmp_ans[1],tmp_ans[2],tmp_ans[0]]; 
 					}				
 				}
 			}
-    }    
-    if (answer == 'u') this.allUnaswered=true; 
+		}    
+		if (answer == 'u') this.allUnaswered=true; 
 		
 		//---------- extra
-		//TODO: this needs looing at - make parameters consistent between Image Hotspot, Labelling and Area.
+		//TODO: this needs looking at - make parameters consistent between Image Hotspot, Labelling and Area.
     //format: $tmp_display_students_response . ',' . $tmp_display_correct_answer . ',' . $tmp_exclude
 		this.exclusions = '00000000000000000000';
 		if (this.qmode == 'script') {
@@ -158,7 +160,7 @@ function qh_panelBoxBuild (but_name,pan_name) {
 }
 
 function qh_menuBuild() {
-	if (this.qmode == 'edit' || this.qmode == 'analysis') {
+	if (this.qmode == 'edit' || this.qmode == 'analysis' || this.qmode == 'correction') {
 		this.imgdata = menuImages['toolbar/vert_0.png'];
 		this.context.drawImage(this.menu_img,this.imgdata.left+0.5,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,0,0,this.canvas.width,this.imgdata.height);
 	}	
@@ -184,7 +186,7 @@ function qh_menuBuild() {
 		posx = this.menuBuild_icons('toolbar/ico_palette.png',274,24+12,2,'','',lang_string['colour']);
 		this.qh_panelBoxBuild('toolbar/ico_palette.png','toolbar/pan_colours.png');
 	}
-	if (this.qmode == 'analysis') {
+	if (this.qmode == 'analysis' || this.qmode == 'correction') {
 		var spac = 30;	
 		posx = this.menuBuild_icons('toolbar/vert_1.png',0,0,0,'','','')+spac;
 		posx = this.menuBuild_icons('toolbar/ico_check_on.png',posx,posy,0,'-',lang_string['hotspots'],'')+spac;
@@ -290,7 +292,7 @@ function qh_test(type) {
 		}	
   }
 	
-  if (type == 'answers' && (this.qmode == 'answer' || this.qmode == 'edit')) this.qh_ReturnInfo();
+  if (type == 'answers' && (this.qmode == 'answer' || this.qmode == 'edit' || this.qmode == 'correction')) this.qh_ReturnInfo();
   if (type == 'cursor') return this.hotspot_over;
 }
 
@@ -338,7 +340,7 @@ function qh_redraw_canvas() {
     this.redraw_once = false;
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
     //menu buttons
-    if (this.buttonBox.length == 0 && (this.qmode == 'edit' || this.qmode == 'analysis' || this.qmode == 'script')) this.qh_menuBuild(); 
+    if (this.buttonBox.length == 0 && (this.qmode == 'edit' || this.qmode == 'analysis' || this.qmode == 'script' || this.qmode == 'correction')) this.qh_menuBuild(); 
 
     //test against label fields  
     if (this.do_the_test && this.qmode!='script') {
@@ -437,7 +439,7 @@ function qh_redraw_canvas() {
 
     //active fields
 		//drawing hotspots
-    if (this.qmode == 'edit' || this.qmode == 'script' || this.qmode == 'analysis') {
+    if (this.qmode == 'edit' || this.qmode == 'script' || this.qmode == 'analysis' || this.qmode == 'correction') {
       //reposition of field's handlers
       if (this.label_elem_drag!='') {
         //setting the parameters of the 
@@ -500,7 +502,7 @@ function qh_redraw_canvas() {
         }
         this.hotSpots[led[0]][(3+led[1]*6+2)] = this.HsCo.join(',');
       }
-			if (this.qmode!='analysis' || this.global_hotspots) {
+			if (this.qmode!='analysis' || this.qmode == 'correction' || this.global_hotspots) {
 				for (i in this.hotSpots) {
 					if (((this.activeLabel == i) || this.show_all_hotspots) && this.display_correct_answer) {
 						var fields = (this.hotSpots[i].length-4)/6;
@@ -534,7 +536,7 @@ function qh_redraw_canvas() {
       this.context.globalAlpha = 1;
     }
 
-		if (this.qmode == 'analysis') {
+		if (this.qmode == 'analysis' || this.qmode == 'correction') {
 			if (this.global_correct) {
 				this.context.fillStyle='#00ff00';
 				i = this.activeLabel;
@@ -619,7 +621,7 @@ function qh_redraw_canvas() {
     }	
 		
 		//buttons
-		if (this.qmode == 'edit' || this.qmode == 'analysis') this.menuRebuild(this.context);
+		if (this.qmode == 'edit' || this.qmode == 'analysis' || this.qmode == 'correction') this.menuRebuild(this.context);
 		if (this.qmode == 'script' && this.hotSpots.length>1) this.menuRebuild(this.context,false);
 		
 		//msgbox overlaping
@@ -644,7 +646,6 @@ function qh_redraw_canvas() {
 		
 		//cursor blink
 		if (this.qmode == 'edit' && this.activeLabelText>-1) {
-
 			//edit box
 			var label_txt = this.hotSpots[this.activeLabelText][1];
 			var text_len = label_txt.length;
@@ -1059,7 +1060,7 @@ function qh_mouseDragUp(){
 		}
 	}
 	
-	if (this.qmode == 'analysis') {
+	if (this.qmode == 'analysis' || this.qmode == 'correction') {
 		if (this.buttonBox.length!=0) {
 			//switch toolbar/ico_check_on.png
 			if (this.buttonClicked!=-1) {
@@ -1110,6 +1111,24 @@ function qh_ReturnInfo() {
 		if (no_answer_count == this.answers.length) questions_result='';
 		var target_field = document.getElementById('q'+this.q_Num);
 	}
+
+	if (this.qmode == 'correction') {
+		for (i=0;i<this.answers.length;i++) {
+			if (typeof(this.answers[i])!='undefined') {
+				for (j=0;j<this.answers[i].length;j++) {
+					if (this.answers[i][j][1]!='false') {
+						questions_result+=this.answers[i][j][3]+','+this.answers[i][j][0]+','+Math.round(this.answers[i][j][1])+','+Math.round(this.answers[i][j][2]);
+					} else {
+						questions_result+=this.answers[i][j][3]+','+this.answers[i][j][0]+','+this.answers[i][j][1]+','+this.answers[i][j][2];
+					}
+					questions_result+=';';
+				}
+			}
+			if (i<this.answers.length-1) questions_result+='|';
+		}
+		var target_field = document.getElementById('option_correct'+this.q_Num);
+	}
+
 	if (this.qmode == 'edit') {
 		for (i=0;i<this.hotSpots.length;i++) {
 			questions_result+=this.hotSpots[i][1]+'~';

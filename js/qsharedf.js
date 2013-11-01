@@ -6,24 +6,12 @@ function setUpQuestion(num, canvasId, lang, image, config, answer, extra, colour
 $.get('/js/images/cur_erase.cur', function() { }); 
 $.get('/js/images/cur_cross.cur', function() { }); 
 
-/*
-	console.log('num: '+num);
-	console.log('canvasId: '+canvasId);
-	console.log('lang: '+lang);
-	console.log('image: '+image);
-	console.log('config: '+config);
-	console.log('answer: '+answer);
-	console.log('extra: '+extra);
-	console.log('colour: '+colour);
-	console.log('type: '+type);
-	console.log('mode: '+mode);
-*/
-
 	if (typeof(mode) == 'undefined') mode = 'answer';
 	if (mode == '1') mode = 'answer';
 	if (mode == '2') mode = 'edit';
 	if (mode == '3') mode = 'script';
 	if (mode == '4') mode = 'analysis';
+	if (mode == '5') mode = 'correction';
 	
   if (type == 'labelling') {
 		rq[num] = new rql(num);
