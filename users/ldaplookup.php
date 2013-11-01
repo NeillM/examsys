@@ -95,7 +95,7 @@ if(isset($_REQUEST['LOOKUP'])) {
 
     ?>
 
-    <body onload="writeDetails('<?php echo $output->lookupdata->title; ?>','<?php echo $output->lookupdata->firstname; ?>','<?php echo $output->lookupdata->surname ?>','<?php echo $output->lookupdata->username; ?>','<?php echo $output->lookupdata->email; ?>','<?php echo $output->lookupdata->yearofstudy; ?>','<?php echo $output->lookupdata->gender; ?>','<?php echo $output->lookupdata->coursecode; ?>','<?php echo $output->lookupdata->studentID; ?>');">
+    <body onload="writeDetails('<?php echo $output->lookupdata->title; ?>',\"<?php echo $output->lookupdata->firstname; ?>\",\"<?php echo $output->lookupdata->surname ?>\",'<?php echo $output->lookupdata->username; ?>',\"<?php echo $output->lookupdata->email; ?>\",'<?php echo $output->lookupdata->yearofstudy; ?>','<?php echo $output->lookupdata->gender; ?>','<?php echo $output->lookupdata->coursecode; ?>','<?php echo $output->lookupdata->studentID; ?>');">
     CLOSING WINDOW
     </body>
     <?php
