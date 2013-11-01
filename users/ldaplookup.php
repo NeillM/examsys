@@ -99,7 +99,7 @@ if(isset($_REQUEST['LOOKUP'])) {
         var surname = "<?php echo $output->lookupdata->surname; ?>";
         var email = "<?php echo $output->lookupdata->email; ?>";
     </script>
-    <body onload="writeDetails('<?php echo $output->lookupdata->title; ?>',firstname,surname','<?php echo $output->lookupdata->username; ?>',email,'<?php echo $output->lookupdata->yearofstudy; ?>','<?php echo $output->lookupdata->gender; ?>','<?php echo $output->lookupdata->coursecode; ?>','<?php echo $output->lookupdata->studentID; ?>');">
+    <body onload="writeDetails('<?php echo $output->lookupdata->title; ?>',firstname,surname,'<?php echo $output->lookupdata->username; ?>',email,'<?php echo $output->lookupdata->yearofstudy; ?>','<?php echo $output->lookupdata->gender; ?>','<?php echo $output->lookupdata->coursecode; ?>','<?php echo $output->lookupdata->studentID; ?>');">
     CLOSING WINDOW
     </body>
     <?php
