@@ -400,7 +400,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     
     if ($properties->get_paper_type() == '2') {
       echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['calculationquestions'] . "</div>\n";
-      if ($unmarked_enhancedcalc) {
+      if (isset($unmarked_enhancedcalc) and $unmarked_enhancedcalc) {
         echo "<div style=\"line-height:150%\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../reports/mark_enhancedcalc.php?',event)\">" . $string['markallquestions'] . "</a></div>\n";
       } else {
         echo "<div style=\"line-height:150%; color:#808080\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;" . $string['markallquestions'] . "</div>\n";
