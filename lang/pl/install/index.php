@@ -109,8 +109,8 @@ $string['installscript'] = 'Skrypt instalacyjny Rog&#333;';
 $string['systeminstallation'] = 'Instalacja systemu';
 
 $string['interactivequestions'] = "Ustawienia dotyczące pytań interaktywnych";
-$string['flash'] = "Adobe Flash";
-$string['html5'] = "HTML5";
+$string['flash'] = "Adobe Flash"; //cognate
+$string['html5'] = "HTML5"; //cognate
 
 $string['labsecuritytype'] = "Bezpieczeństwo pracowni egzaminów końcowych";
 $string['IP'] = "Adresy IP";
