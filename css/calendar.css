@@ -128,7 +128,6 @@ td {
 	-moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50);
 }
 .callout td {
   padding:4px;
@@ -138,6 +137,7 @@ td {
   vertical-align:top;
   width:70px;
 	white-space:nowrap;
+	color:#606060;
 }
 .warning {
   color:#C00000;
