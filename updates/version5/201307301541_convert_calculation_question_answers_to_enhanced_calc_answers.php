@@ -7,8 +7,28 @@
  */
 
 require_once $cfg_web_root . 'classes/stringutils.class.php';
+$mysqli->autocommit(false);
+
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
 if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
+
+  $configObj=Config::get_instance();
+
+
+  $root=$configObj->get('root');
+
+  $enhancedcalcType = $configObj->get('enhancedcalc_type');
+  if (!is_null($enhancedcalcType)) {
+    require_once $enhancedcalcType . '.php';
+    $name = 'enhancedcalc_' . $enhancedcalcType;
+    $enhancedcalcObj = new $name($configObj->getbyref('enhancedcalculation'));
+  } else {
+    require_once $root . '/plugins/questions/enhancedcalc/rserve.php';
+    $enhancedcalcObj = new EnhancedCalcRrserve($configObj->getbyref('enhancedcalculation'));
+  }
+
 
     echo "<li>Converting Calculation answers to enhanced calculation answers</li>";
 
@@ -159,7 +179,10 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
                     $new_user_answer['vars'] = $varsdata;
                 }
                 $new_user_answer['original'] = $user_answer;
-                
+
+
+              //calculate distance from correct if needed
+                $new_user_answer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($new_user_answer['uansnumb'], $new_user_answer['cans']);
                 $jsoned = json_encode($new_user_answer);
 
                 $update->bind_param('si', $jsoned, $uid);

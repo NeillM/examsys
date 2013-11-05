@@ -953,6 +953,15 @@ class EnhancedCalc extends Question implements questionInterface {
     return (isset($this->useranswer['uans'])) ? $this->useranswer['uans'] : '';
   }
 
+
+ public function get_user_answer_full() {
+   $ret='';
+   if(isset($this->useranswer['uansnumb'])) {
+     $ret=$this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'];
+   }
+   return $ret;
+ }
+
   /**
    * Get the units selected by a user if units have been displayed
    * @return string Units selected by the user
@@ -976,7 +985,6 @@ class EnhancedCalc extends Question implements questionInterface {
   public function get_answer_distance() {
 
     if(!isset($this->useranswer['cans_dist'])) {
-
       $enhancedcalcType = $this->configObj->get('enhancedcalc_type');
       if (!is_null($enhancedcalcType)) {
         require_once $enhancedcalcType . '.php';
