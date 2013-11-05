@@ -180,7 +180,7 @@ if (isset($_GET['checked'])) {
   $search_results->execute();
   $search_results->bind_result($q_id, $title, $initials, $surname, $leadin, $q_type, $last_edited, $modified, $locked, $status);
   while ($search_results->fetch()) {
-	  $questions[] = array('q_id'=>$q_id, 'owner'=>$title . ' ' . $initials . ' ' . $surname, 'leadin'=>$leadin, 'q_type'=>$string[$q_type], 'last_edited'=>$last_edited, 'modified'=>$modified, 'locked'=>$locked, 'status'=>$status_array[$status]->get_name());
+	  $questions[] = array('q_id'=>$q_id, 'owner'=>$title . ' ' . $initials . ' ' . $surname, 'leadin'=>$leadin, 'q_type'=>$q_type, 'last_edited'=>$last_edited, 'modified'=>$modified, 'locked'=>$locked, 'status'=>$status_array[$status]->get_name());
 	}
   $search_results->close();
 	
@@ -271,7 +271,7 @@ if (isset($_GET['checked'])) {
 
     echo "<td class=\"d\">$tmp_leadin</td>";
     echo "<td class=\"d nobr\">" . $question['owner'] . "</td>";
-    echo "<td class=\"d nobr\">" . $question['q_type'] . "</td>";
+    echo "<td class=\"d nobr\">" . $string[$question['q_type']] . "</td>";
     echo "<td class=\"d\">" . $question['modified'] . "</td>\n";
     echo "<td class=\"d\">" . $question['status'] . "</td></tr>\n";
     $display_no++;

@@ -107,4 +107,14 @@ $string['errors15'] = 'Warning';
 $string['errors16'] = 'Rog&#333; requires ability to write its config file %s/include/load_config.php, One way to fix this is you can temporarily allow write access to %s/config and change permissions once update has run.';
 $string['installscript'] = 'Rog&#333; Install script';
 $string['systeminstallation'] = 'System Installation';
+
+$string['interactivequestions'] = "Interactive Questions Rendering Settings";
+$string['flash'] = "Adobe Flash";
+$string['html5'] = "HTML5";
+
+$string['labsecuritytype'] = "Summative Exam Lab Security";
+$string['IP'] = "IP address";
+$string['hostname'] = "Machine hostname";
+
+
 ?>

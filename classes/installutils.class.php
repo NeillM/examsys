@@ -98,6 +98,9 @@ Class InstallUtils {
 
   public static $cfg_uselookupLdap = 'false';
   public static $cfg_uselookupXML = 'false';
+  
+  public static $cfg_labsecuritytype;
+  public static $cfg_interactivequestions;
 
   public static $cfg_support_email;
   public static $emergency_support_numbers;
@@ -242,7 +245,15 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
       <table class="h"><tr><td><nobr><?php echo $string['helpdb']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" /></div>
-
+        
+      <table class="h"><tr><td><nobr><?php echo $string['interactivequestions']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
+        <div><label><?php echo $string['html5']; ?></label> <input name="interactivequestions" type="radio" value="html5" checked = "checked"/></div>
+        
+      <table class="h"><tr><td><nobr><?php echo $string['labsecuritytype']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
+        <div><label><?php echo $string['hostname']; ?></label> <input name="labsecuritytype" type="radio" value="hostname" /></div>
+      
       <table class="h"><tr><td><nobr><?php echo $string['supportemaila']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div></div>
         <br />
@@ -344,7 +355,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     self::$emergency_support_numbers = rtrim(self::$emergency_support_numbers, ', ');
     self::$emergency_support_numbers .= ')';
-
+    
+    
+    //Other settings 
+    self::$cfg_labsecuritytype = $_POST['labsecuritytype'];
+    self::$cfg_interactivequestions = $_POST['interactivequestions'];
+  
     // Check we can write to the config file first if not passwords will be lost!
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
 
@@ -1337,7 +1353,8 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
 \$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.
-\$cfg_client_lookup = 'ipaddress';
+\$cfg_client_lookup = '{labsecuritytype}'; //ipadress or hostname
+\$cfg_interactive_qs = '{interactivequestions}'; //flash or html5
 
 
   \$cfg_web_host = '{cfg_web_host}';
@@ -1511,6 +1528,9 @@ CONFIG;
     $config = str_replace('{cfg_short_time_php}', self::$cfg_short_time_php, $config);
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
+    
+    $config = str_replace('{labsecuritytype}', self::$cfg_labsecuritytype, $config);
+    $config = str_replace('{interactivequestions}', self::$cfg_interactivequestions, $config);
 
 
 

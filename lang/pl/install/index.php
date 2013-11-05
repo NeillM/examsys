@@ -107,4 +107,12 @@ $string['errors15'] = 'Uwaga';
 $string['errors16'] = 'Rog&#333; wymaga prawa zapisu w swym pliku konfiguracyjnym %s/include/load_config.php. Jednym ze sposobów realizacji tego jest tymczasowe udzielenie praw zapisu do  %s/config i przywrócenie oryginalnych przywilejów zaraz po dokonaniu aktualizacji.';
 $string['installscript'] = 'Skrypt instalacyjny Rog&#333;';
 $string['systeminstallation'] = 'Instalacja systemu';
+
+$string['interactivequestions'] = "Ustawienia dotyczące pytań interaktywnych";
+$string['flash'] = "Adobe Flash"; //cognate
+$string['html5'] = "HTML5"; //cognate
+
+$string['labsecuritytype'] = "Bezpieczeństwo pracowni egzaminów końcowych";
+$string['IP'] = "Adresy IP";
+$string['hostname'] = "Nazwa hosta maszyny";
 ?>
