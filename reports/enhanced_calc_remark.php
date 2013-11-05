@@ -86,7 +86,7 @@ $result->close();
 
 
 // Sort by distance
-asort($log_answers,SORT_NUMERIC);
+//asort($log_answers,SORT_NUMERIC);
 
 // Get any existing overrides
 $overrides = array();
@@ -198,6 +198,9 @@ if(!isset($answer['distance'])) {
   if($answer['distance'] == 9999999) {
     $distance = $string['na'];
   } else {
+    if($answer['distance'] == 'Inf' or $answer['distance'] == '-Inf' ) {
+      $answer['distance'] = 0;
+    }
     $distance  = number_format($answer['distance'], 2) . '%';
   }
 
@@ -219,10 +222,10 @@ if(!isset($answer['distance'])) {
   foreach ($u_vars as $label => $value) {
     echo "<td class=\"shortcolumn\">$value</td>\n";
   }
-  echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_user_answer_raw();
-  if ($answer['answer_obj']->get_show_units()) {
-    echo ' ' . $answer['answer_obj']->get_user_answer_units();
-  }
+  echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_user_answer_full();
+ // if ($answer['answer_obj']->get_show_units()) {
+ //   echo ' ' . $answer['answer_obj']->get_user_answer_units();
+  //}
   echo "</td>\n";
   echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_real_answer();
   if ($answer['answer_obj']->get_show_units()) {
