@@ -319,36 +319,44 @@ foreach ($user_results as $individual) {
           if (is_array($individual['mark_array'][$q_id])) {
                          
             foreach ($individual['mark_array'][$q_id] as $mi => $tmp_mark) {
-                // ----- parts (extmatch)-----                
-                $parts_test_fail = true;           
-                if ($question['q_type'] == 'extmatch' and isset($log_array[$row_written])) {
-                  $extmatch_parts = explode('|', $question['correct'][0]);
-                  if (strpos($extmatch_parts[$mi], '$') !== false) {
-                    $parts_test_fail = false;
-                    
-                    $answer = '';
-                    foreach ($log_array[$row_written] as $kb => $vb) {
-                      if (is_array($vb)) {
-                        foreach ($vb as $kc => $vc) {
-                          if ($q_id==$kc) $answer = preg_replace('/,/', '', $vc);
-                        }
-                      }
-                    }        
-                    $answer_parts = explode('|', $answer);
-                    
-                    $extmatch_parts_correct = explode('$', $extmatch_parts[$mi]);
-                    $answer_subparts = explode('$', $answer_parts[$mi]);
-                    
-                    foreach ($extmatch_parts_correct as $qi => $question_part) {
-                      if (in_array($question_part, $answer_subparts)) {
-                        $csv .= ',1';
-                      } else {
-                        $csv .= ',0';
-                      }
-                    }                      
-                  }
-                }           
-              if ($question['q_type'] != 'labelling' or substr($tmp_exclude,$mi,1) == '0') {
+							// ----- parts (extmatch)-----                
+							$parts_test_fail = true;           
+							if ($question['q_type'] == 'extmatch' and isset($log_array[$row_written])) {
+								$extmatch_parts = explode('|', $question['correct'][0]);
+								if (strpos($extmatch_parts[$mi], '$') !== false) {
+									$parts_test_fail = false;
+									
+									$answer = '';
+									foreach ($log_array[$row_written] as $kb => $vb) {
+										if (is_array($vb)) {
+											foreach ($vb as $kc => $vc) {
+												if ($q_id == $kc) $answer = preg_replace('/,/', '', $vc);
+											}
+										}
+									}        
+									$answer_parts = explode('|', $answer);
+									
+									$extmatch_parts_correct = explode('$', $extmatch_parts[$mi]);
+									$answer_subparts = explode('$', $answer_parts[$mi]);
+									
+									foreach ($extmatch_parts_correct as $qi => $question_part) {
+										if (in_array($question_part, $answer_subparts)) {
+											$csv .= ',1';
+										} else {
+											$csv .= ',0';
+										}
+									}                      
+								}
+							}
+						  if ($question['q_type'] == 'enhancedcalc' and substr($tmp_exclude,$mi,1) == '0') {
+							  if ($tmp_mark === null) {
+									$csv .= ',unmarked';
+								} elseif ($tmp_mark == 0) {
+									$csv .= ',0';
+								} else {
+									$csv .= ',1';
+								}
+              } elseif ($question['q_type'] != 'labelling' or substr($tmp_exclude,$mi,1) == '0') {
                 if ($parts_test_fail) $csv .= ',' . (($tmp_mark > 0) ? 1:0);  
               }
             }
@@ -384,9 +392,6 @@ foreach ($user_results as $individual) {
                 }
                 $csv .= ',' . (($bonus_test == 0) ? 1:0);
               }
-            } elseif ($question['q_type'] == 'enhancedcalc') {
-              $settings = json_decode($question['settings'], true);
-              $csv .= ',' . (($individual['mark_array'][$q_id] == $settings['marks_correct']) ? 1:0);
             } else {
               $csv .= ',' . (($individual['mark_array'][$q_id] > 0) ? 1:0);
             }
@@ -412,6 +417,8 @@ foreach ($user_results as $individual) {
             for ($a=0; $a<count($paper_answers); $a++) {
               if ($tmp_exclude{$a} == '0') $csv .= ',0';
             }
+					} elseif ($question['q_type'] == 'enhancedcalc') {
+            if ($tmp_exclude{0} == '0') $csv .= ',unmarked';
           } else {
             if ($tmp_exclude{0} == '0') $csv .= ',0';
           }

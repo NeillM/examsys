@@ -215,7 +215,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       $calc = new enhancedcalc($configObj);
       $calc->set_settings($settings);
       $calc->set_useranswer($answer);
-      
+			
       if ($calc->is_user_ans_correct() or $calc->is_user_ans_within_fullmark_tolerance()) {
         if (isset($log_array[$qID][1]['correct'])) {
           $log_array[$qID][1]['correct']++;
@@ -224,27 +224,8 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
         }
       } 
  
-      if (isset($log_array[$qID][1]['frac_mark'])) {
-        $log_array[$qID][1]['frac_mark'] += $mark/$totalpos;
-      } else {
-        $log_array[$qID][1]['frac_mark'] = $mark/$totalpos;
-      }
-      
-      /*$user_ans = $calc->get_user_answer_raw();
-      $correct_ans = $calc->get_real_answer();
-
-      if ($user_ans == $correct_ans) {
-        if (isset($log_array[$qID][1]['correct'])) {
-          $log_array[$qID][1]['correct']++;
-        } else {
-          $log_array[$qID][1]['correct'] = 1;
-        }
-      }
-      if (isset($log_array[$qID][1]['frac_mark'])) {
-        $log_array[$qID][1]['frac_mark'] += $mark/$totalpos;
-      } else {
-        $log_array[$qID][1]['frac_mark'] = $mark/$totalpos;
-      }*/
+      $log_array[$qID]['mark'] += $mark;
+      $log_array[$qID]['totalpos'] += $totalpos;
       break;
     case 'dichotomous':
     case 'true_false':
@@ -552,7 +533,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       case 'area':
         echo "<div id=\"q_" . ($ex_no+1) . "_1\"";
         if (isset($excluded[$q_id])) {
-           echo ' class="excluded"';
+          echo ' class="excluded"';
         }
         echo ">$leadin\n";
         if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') {
@@ -780,20 +761,21 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       case 'enhancedcalc':
         if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
 
-        echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
-        $d = number_format(($freq_log[$q_id][1]['frac_mark']/$user_total)*100,0);
+	
+        $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], 1, 'correct');
+				
         if (isset($freq_log[$q_id][1]['correct'])) {
-          $t = number_format(($freq_log[$q_id][1]['correct']/$user_total)*100,0);
+          $t = number_format(($freq_log[$q_id][1]['correct'] / $user_total)*100, 0);
         } else {
           $t = 0;
         }
         if (isset($top_log[$q_id][1]['correct'])) {
-          $u = number_format(($top_log[$q_id][1]['correct']/$candidate_no)*100,0);
+          $u = number_format(($top_log[$q_id][1]['correct'] / $candidate_no)*100, 0);
         } else {
           $u = 0;
         }
         if (isset($bottom_log[$q_id][1]['correct'])) {
-          $l = number_format(($bottom_log[$q_id][1]['correct']/$candidate_no)*100,0);
+          $l = number_format(($bottom_log[$q_id][1]['correct'] / $candidate_no)*100, 0);
         } else {
           $l = 0;
         }
@@ -803,6 +785,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $tmp_exclude = '';
         }
 
+        echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
         if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
         echo ">$leadin</td>";

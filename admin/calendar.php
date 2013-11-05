@@ -224,7 +224,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <tr id="duration_warning" class="warning"><td class="warn_icon"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" /></td><td class="field"><strong><?php echo $string['duration']; ?></strong></td><td><?php echo $string['duration_warning']; ?></td></tr>
 <tr id="lab_ok"><td></td><td class="field"><?php echo $string['labs']; ?></td><td id="labs"></td></tr>
 <tr id="lab_warning" class="warning"><td class="warn_icon"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" /></td><td class="field"><strong><?php echo $string['labs']; ?></strong></td><td><?php echo $string['lab_warning']; ?></td></tr>
-<tr id="pw_row"><td class="warn_icon"><img src="../artwork/key_12.png" width="12" height="12" /></td><td class="field"><?php echo $string['password']; ?></td><td id="password" style="font-family:'Courier New'"></td></tr>
+<tr id="pw_row"><td class="warn_icon"><img src="../artwork/key_12.png" width="12" height="12" /></td><td class="field"><?php echo $string['password']; ?></td><td id="password" style="font-family:'Courier New'; font-weight:bold"></td></tr>
 </table>
 </div>
 

@@ -505,10 +505,10 @@ if ($properties->get_paper_type() == '2') {
         $internal_array[$tmp_internal] = 0;
       }
 
-      $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal' GROUP BY reviewer, reviewed");
+      $stmt = $mysqli->prepare("SELECT DISTINCT reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal'");
       $stmt->bind_param('i', $_GET['paperID']);
       $stmt->execute();
-      $stmt->bind_result($review_records, $reviewer);
+      $stmt->bind_result($reviewer);
       while ($stmt->fetch()) {
         $internal_array[$reviewer] = 1;
       }
@@ -542,23 +542,23 @@ if ($properties->get_paper_type() == '2') {
       }
 
       $reviews_complete = 0;
-      $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'external' GROUP BY reviewer, reviewed");
+      $stmt = $mysqli->prepare("SELECT DISTINCT reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'external'");
       $stmt->bind_param('i', $_GET['paperID']);
       $stmt->execute();
-      $stmt->bind_result($review_records, $reviewer);
+      $stmt->bind_result($reviewer);
       while ($stmt->fetch()) {
-        if (isset($external_array[$reviewer]) AND $external_array[$reviewer] === 0) {
+        if (isset($external_array[$reviewer]) and $external_array[$reviewer] === 0) {
           $reviews_complete++;
         }
       }
       $stmt->close();
 
       if ($reviews_complete < count($external_array)) {
-	    if ($reviews_complete == 0) {
-		  $tmp_color = '#C00000';
-		} else {
-		  $tmp_color = '#F27000';
-		}
+				if ($reviews_complete == 0) {
+					$tmp_color = '#C00000';
+				} else {
+					$tmp_color = '#F27000';
+				}
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($external_array) . "</strong></td></tr>\n";
       } else {
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";

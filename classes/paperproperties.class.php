@@ -85,6 +85,7 @@ class PaperProperties {
   private $recache_marks;
 	private $modules;
 	private $questions;
+	private $unmarked_enhancedcalc;
 
   private $_date_timezone = null;
 
@@ -1491,4 +1492,67 @@ class PaperProperties {
     }
     return $this->_date_timezone;
   }
+	
+	public function unmarked_enhancedcalc() {
+	  if ($this->unmarked_enhancedcalc === null) {
+			$this->load_unmarked_enhancedcalc();
+		}
+		
+		return $this->unmarked_enhancedcalc;
+	}
+	
+	private function load_unmarked_enhancedcalc() {
+	  $this->unmarked_enhancedcalc = false;
+		
+		if (!isset($this->questions)) {
+		  $this->load_questions();
+		}
+		
+		$enhancedcalc_ids = array();
+		foreach ($this->questions as $question) {
+		  if ($question['type'] == 'enhancedcalc') {
+				$enhancedcalc_ids[] = $question['q_id'];
+			}
+		}
+		
+		if (count($enhancedcalc_ids) > 0) {
+			$paperID = $this->get_property_id();
+			
+			$result = $this->db->prepare("SELECT log2.id FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL");
+			$result->bind_param('i', $paperID);
+			$result->execute();
+			$result->store_result();
+			$result->bind_result($id);
+			if ($result->num_rows > 0) {
+				$this->unmarked_enhancedcalc = true;
+			}
+			$result->close();
+		}
+	}
+	
+	public function q_type_exist($type) {
+		$paperID = $this->get_property_id();
+
+		$result = $this->db->prepare("SELECT COUNT(q_id) AS q_no FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type = ?");
+		$result->bind_param('is', $paperID, $type);
+		$result->execute();
+		$result->bind_result($q_no);
+		$result->fetch();
+		$result->close();
+		
+		if ($q_no > 0) {
+		  return true;
+		} else {
+		  return false;
+		}	
+	}
+	
+	public function is_active() {
+	  if (date('U') > $this->start_date and date('U') < $this->end_date) {
+		  return true;
+		} else {
+		  return false;
+		}
+	}
+	
 }
