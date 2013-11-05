@@ -777,7 +777,7 @@ class UserObject extends RogoStaticSingleton {
       // new security routine
 
       $notice = UserNotices::get_instance();
-			if (!is_array($this->roles)) {
+			if (!is_array($this->roles) or (isset($this->roles['']) and $this->roles[''] == 1)) {
 				$notice->access_denied($this->db, $string, '', true, true);
 			} else {
 				$notice->access_denied($this->db, $string, sprintf($string['denied_role'], implode(',',array_keys($this->roles))), true, true);
