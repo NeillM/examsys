@@ -191,3 +191,16 @@ select {
 input {
   margin:0px;
 }
+.bullet {
+	line-height:150%;
+	background-image:url('../artwork/bullet_outline.gif');
+	background-repeat:no-repeat;
+	padding-left:20px;
+}
+.greybullet {
+	line-height:150%;
+	background-image:url('../artwork/grey_bullet_outline.gif');
+	background-repeat:no-repeat;
+	padding-left:20px;
+	color:#808080;
+}

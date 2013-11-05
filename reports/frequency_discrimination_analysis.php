@@ -215,36 +215,26 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       $calc = new enhancedcalc($configObj);
       $calc->set_settings($settings);
       $calc->set_useranswer($answer);
-      
+			
       if ($calc->is_user_ans_correct() or $calc->is_user_ans_within_fullmark_tolerance()) {
         if (isset($log_array[$qID][1]['correct'])) {
           $log_array[$qID][1]['correct']++;
         } else {
           $log_array[$qID][1]['correct'] = 1;
         }
+				echo "hi - $qID, ";
+				
       } 
  
-      if (isset($log_array[$qID][1]['frac_mark'])) {
-        $log_array[$qID][1]['frac_mark'] += $mark/$totalpos;
+      $log_array[$qID]['mark'] += $mark;
+      $log_array[$qID]['totalpos'] += $totalpos;
+      /*
+			if (isset($log_array[$qID][1]['frac_mark'])) {
+        $log_array[$qID][1]['frac_mark'] += $mark / $totalpos;
       } else {
-        $log_array[$qID][1]['frac_mark'] = $mark/$totalpos;
+        $log_array[$qID][1]['frac_mark'] = $mark / $totalpos;
       }
-      
-      /*$user_ans = $calc->get_user_answer_raw();
-      $correct_ans = $calc->get_real_answer();
-
-      if ($user_ans == $correct_ans) {
-        if (isset($log_array[$qID][1]['correct'])) {
-          $log_array[$qID][1]['correct']++;
-        } else {
-          $log_array[$qID][1]['correct'] = 1;
-        }
-      }
-      if (isset($log_array[$qID][1]['frac_mark'])) {
-        $log_array[$qID][1]['frac_mark'] += $mark/$totalpos;
-      } else {
-        $log_array[$qID][1]['frac_mark'] = $mark/$totalpos;
-      }*/
+			*/
       break;
     case 'dichotomous':
     case 'true_false':
@@ -781,19 +771,28 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
 
         echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
-        $d = number_format(($freq_log[$q_id][1]['frac_mark']/$user_total)*100,0);
+				//var_dump($freq_log[$q_id][1]['correct'], $user_total);
+				//var_dump($freq_log[$q_id][1]['frac_mark'], $user_total);
+        //$d = number_format(($freq_log[$q_id][1]['frac_mark'] / $user_total)*100, 0);
+				
+        if (empty($top_log[$q_id]['totalpos']) or empty($bottom_log[$q_id]['totalpos'])) {
+          $d = 0;
+        } else {
+          $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
+        }
+				
         if (isset($freq_log[$q_id][1]['correct'])) {
-          $t = number_format(($freq_log[$q_id][1]['correct']/$user_total)*100,0);
+          $t = number_format(($freq_log[$q_id][1]['correct'] / $user_total)*100, 0);
         } else {
           $t = 0;
         }
         if (isset($top_log[$q_id][1]['correct'])) {
-          $u = number_format(($top_log[$q_id][1]['correct']/$candidate_no)*100,0);
+          $u = number_format(($top_log[$q_id][1]['correct'] / $candidate_no)*100, 0);
         } else {
           $u = 0;
         }
         if (isset($bottom_log[$q_id][1]['correct'])) {
-          $l = number_format(($bottom_log[$q_id][1]['correct']/$candidate_no)*100,0);
+          $l = number_format(($bottom_log[$q_id][1]['correct'] / $candidate_no)*100, 0);
         } else {
           $l = 0;
         }

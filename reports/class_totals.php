@@ -70,6 +70,77 @@ $question_no  = $report->get_question_no();
 $log_late     = $report->get_log_late();
 $user_no      = $report->get_user_no();
 
+if ($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyObj->is_active()) {
+// Only mark calculation questions when the exam is not active.
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+
+<title><?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
+<link rel="stylesheet" type="text/css" href="../css/header.css" />
+<link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script language="JavaScript">
+	$(document).ready(function() {
+		// fire off the request to mark_all_enhancedcalc.php
+    var request = $.ajax({
+      url: "../ajax/reports/mark_all_enhancedcalc.php",
+      type: "post",
+      data: {paperID: <?php echo $paperID; ?>},
+			dataType: "text",
+			success: function (data, textStatus, jqXHR) {
+				data = data.replace(/(\r\n|\n|\r)/gm,"");
+			  if (data == 'Complete') {
+				  window.location.reload();
+				} else {
+					$("#msg").html(data);
+				}
+			},
+			error: function (xhr, textStatus, errorThrown) {
+				$("#msg").html('Error: ' + errorThrown);
+			},
+			fail: function (jqXHR, textStatus) {
+				$("#msg").html('Failed: ' + textStatus);
+			},
+    });
+
+	});
+</script>
+</head>
+<body>
+<?php
+  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
+  echo "<tr><th class=\"h\">";
+
+  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '' ) {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  }
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - Marking Calculation Questions</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>\n";
+
+  echo '<tr><th colspan="2" class="bevel"></th></tr></table>';
+?>
+
+<div id="msg">Marking...</div>
+
+</body>
+</html>
+<?php
+exit();
+}
+
 ob_start();
 ?>
 <!DOCTYPE html>
@@ -249,10 +320,10 @@ if ($language != 'en') {
   <tr><td>
     <table cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white; width:100%">
       <tr>
-        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
+        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
       </tr>
       <tr>
-        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
+        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
       </tr>
       <tr>
         <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
@@ -391,7 +462,7 @@ if ($language != 'en') {
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>\n";
 
   if (isset($_GET['folder'])) {
     $tmp_folder = '&folder=' . $_GET['folder'];

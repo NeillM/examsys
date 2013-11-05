@@ -735,31 +735,6 @@ $result->close();
     }
   }
 
-  function check_unmarked_enhancedcalc($q_id, $paperID, &$unmarked, $db) {
-    $result = $db->prepare("SELECT log2.id FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id AND q_id = ? AND paperID = ? AND mark IS NULL");
-    $result->bind_param('ii', $q_id, $paperID);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id);
-    if ($result->num_rows > 0 and $unmarked === false) {
-      $unmarked = true;
-    }
-    $result->close();
-  }
-
-
-  // Check for unmarked enhanced calculation questions.
-  $unmarked_enhancedcalc = false;
-  if ($properties->get_paper_type() == '2') {
-    for ($x=1; $x<=$row_no; $x++) {
-      $q_type = $temp_array[$x]['q_type'];
-      if ($q_type == 'enhancedcalc') {
-        check_unmarked_enhancedcalc($temp_array[$x]['q_id'], $paperID, $unmarked_enhancedcalc, $mysqli);
-
-      }
-    }
-  }
-
   require '../include/paper_options.inc';
 ?>
 <div id="content" class="content" style="font-size:80%">
