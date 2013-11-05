@@ -222,19 +222,10 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
         } else {
           $log_array[$qID][1]['correct'] = 1;
         }
-				echo "hi - $qID, ";
-				
       } 
  
       $log_array[$qID]['mark'] += $mark;
       $log_array[$qID]['totalpos'] += $totalpos;
-      /*
-			if (isset($log_array[$qID][1]['frac_mark'])) {
-        $log_array[$qID][1]['frac_mark'] += $mark / $totalpos;
-      } else {
-        $log_array[$qID][1]['frac_mark'] = $mark / $totalpos;
-      }
-			*/
       break;
     case 'dichotomous':
     case 'true_false':
@@ -542,7 +533,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       case 'area':
         echo "<div id=\"q_" . ($ex_no+1) . "_1\"";
         if (isset($excluded[$q_id])) {
-           echo ' class="excluded"';
+          echo ' class="excluded"';
         }
         echo ">$leadin\n";
         if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') {
@@ -770,16 +761,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       case 'enhancedcalc':
         if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
 
-        echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
-				//var_dump($freq_log[$q_id][1]['correct'], $user_total);
-				//var_dump($freq_log[$q_id][1]['frac_mark'], $user_total);
-        //$d = number_format(($freq_log[$q_id][1]['frac_mark'] / $user_total)*100, 0);
-				
-        if (empty($top_log[$q_id]['totalpos']) or empty($bottom_log[$q_id]['totalpos'])) {
-          $d = 0;
-        } else {
-          $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
-        }
+	
+        $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], 1, 'correct');
 				
         if (isset($freq_log[$q_id][1]['correct'])) {
           $t = number_format(($freq_log[$q_id][1]['correct'] / $user_total)*100, 0);
@@ -802,6 +785,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $tmp_exclude = '';
         }
 
+        echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
         if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
         echo ">$leadin</td>";

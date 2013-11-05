@@ -505,10 +505,10 @@ if ($properties->get_paper_type() == '2') {
         $internal_array[$tmp_internal] = 0;
       }
 
-      $stmt = $mysqli->prepare("SELECT count(id), reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal' GROUP BY reviewer, reviewed");
+      $stmt = $mysqli->prepare("SELECT DISTINCT reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal'");
       $stmt->bind_param('i', $_GET['paperID']);
       $stmt->execute();
-      $stmt->bind_result($review_records, $reviewer);
+      $stmt->bind_result($reviewer);
       while ($stmt->fetch()) {
         $internal_array[$reviewer] = 1;
       }
