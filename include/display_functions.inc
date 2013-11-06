@@ -692,7 +692,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       case 'mcq':
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
         if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-          if (isset($user_answers[$current_screen][$q_id]) AND $tmp_part_id == $user_answers[$current_screen][$q_id]) {
+          if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
             echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" checked /></td><td>";
           } else {
             echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" /></td><td>";
@@ -1214,8 +1214,23 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
         }
       }
+			if ($display_option['marks_incorrect'] < 0) {
+			  if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
+					echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"a\" checked=\"checked\" /></td><td style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</td></tr>\n";
+				} else {
+					echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"a\" /></td><td style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</td></tr>\n";
+				}
+			}
       echo '</table>';
-    } elseif ($question['display_method'] == 'dropdown') {
+    } elseif ($question['display_method'] == 'horizontal') {
+		  if ($display_option['marks_incorrect'] < 0) {
+				if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
+					echo '&nbsp;&nbsp;<input type="radio" name="q' . $question_no . '" value="a" checked="checked" /><span style="color:' . $labelcolor . '">&lt;' . $string['abstain'] . '&gt;</span>';
+				} else {
+					echo '&nbsp;&nbsp;<input type="radio" name="q' . $question_no . '" value="a" /><span style="color:' . $labelcolor . '">&lt;' . $string['abstain'] . '&gt;</span>';
+				}
+			}
+		} elseif ($question['display_method'] == 'dropdown') {
       echo '</select></div>';
     }
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {

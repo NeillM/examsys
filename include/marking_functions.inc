@@ -500,7 +500,9 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         }
         if ($saved_response == '') $saved_response = '0';
         if ($totalpos == 0) {
-          if ($saved_response == $correct) {
+				  if ($saved_response == 'a') {
+						$mark += 0;  // Abstain
+          } elseif ($saved_response == $correct) {
             $mark += $marks_correct;
           } elseif ($saved_response != '0') {
             $mark += $marks_incorrect;
