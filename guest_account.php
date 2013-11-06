@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
   $tmp_surname = trim($_POST['surname']);
   $tmp_student_id = trim($_POST['student_id']);
 
-  $stmt = $mysqli->prepare("UPDATE temp_users SET first_names=?, surname=?, title=?, student_id=? WHERE id=?");
+  $stmt = $mysqli->prepare("UPDATE temp_users SET first_names = ?, surname = ?, title = ?, student_id = ? WHERE id = ?");
   $stmt->bind_param('ssssi', $tmp_first_names, $tmp_surname, $_POST['title'], $tmp_student_id, $_POST['recordID']);
   $stmt->execute();
   $stmt->close();
@@ -89,7 +89,7 @@ if (isset($_POST['submit'])) {
   echo '<form method="post" action="' . $configObject->get('cfg_root_path') . '/index.php">';
   echo '<input type="hidden" name="ROGO_USER" value="' . $_POST['username'] . '" />';
   echo '<input type="hidden" name="ROGO_PW" value="' . $_POST['password'] . '" />';
-  echo '<div align="center"><table cellpadding="0" cellspacing="0" style="text-align:left; width:450px; border:1px #C8C8C8 solid">';
+  echo '<div align="center"><table cellpadding="0" cellspacing="0" style="text-align:left; width:450px; border:1px #7F9DB9 solid; background-color:#F1F5FB">';
   echo '<tr><td class="topbar" style="padding-left:6px; width:60px"><img src="./artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px">' . $string['allocatedaccount'] . '</td></tr>';
   echo '<tr><td colspan="2" style="padding:8px">' . $string['msg'] . '</td></tr>';
   echo '<tr><td colspan="2"><table style="width:100%; text-align:left"><tr><td style="padding:6px">' . $string['username'] . '</td><td><tt>' . $_POST['username'] . '</tt></td></tr>';
@@ -167,7 +167,7 @@ if (isset($_POST['submit'])) {
 <body>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return checkForm();">
 <div style="text-align:center">
-<table cellpadding="0" cellspacing="0" style="text-align:left; margin-left:auto; margin-right:auto; width:450px; border:1px #C8C8C8 solid">
+<table cellpadding="0" cellspacing="0" style="text-align:left; margin-left:auto; margin-right:auto; width:450px; border:1px #7F9DB9 solid; background-color:#F1F5FB">
 <tr><td class="topbar" style="padding-left:6px; width:60px"><img src="./artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px"><?php echo $string['guestaccountreg']; ?></td></tr>
 
 <tr><td style="text-align:center; padding:6px" colspan="2">
