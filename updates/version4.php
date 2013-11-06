@@ -2443,7 +2443,7 @@ if (!isset($_POST['update'])) {
   $result->free_result();
   $result->close();
   if ($rows == 0) {
-    $scoolID = SchoolUtils::add_school($facultyID, 'UNKNOWN School', $mysqli);
+    $schoolID = SchoolUtils::add_school($facultyID, 'UNKNOWN School', $mysqli);
     echo "<li>Adding Unknown School</li>\n";
   }
 

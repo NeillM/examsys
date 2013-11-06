@@ -51,6 +51,57 @@ Class FacultyUtils {
     return $exist;
   }
 
+
+  /**
+   * Checks if a faculty name already exists.
+   * @param string $facultyname - The ID of the faculty to be checked
+   * @param object $db        - Link to mysqli
+   * @return bool             - True if the faculty ID already exists and is not deleted
+   */
+  static function facultyname_exists($facultyname, $db) {
+    $result = $db->prepare("SELECT id FROM faculty WHERE name = ? AND deleted IS NULL");
+    $result->bind_param('s', $facultyname);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($tmp_paperid);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $exist = false;
+    } else {
+      $exist = true;
+    }
+    $result->free_result();
+    $result->close();
+
+    return $exist;
+  }
+
+
+
+  /**
+   * gets faculty id by namename already exists.
+   * @param string $facultyname - The ID of the faculty to be checked
+   * @param object $db        - Link to mysqli
+   * @return bool             - True if the faculty ID already exists and is not deleted
+   */
+  static function facultyid_by_name($facultyname, $db) {
+    $result = $db->prepare("SELECT id FROM faculty WHERE name = ? AND deleted IS NULL");
+    $result->bind_param('s', $facultyname);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($tmp_facultyid);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $exist = false;
+    } else {
+      $exist = $tmp_facultyid;
+    }
+    $result->free_result();
+    $result->close();
+
+    return $exist;
+  }
+
 /**
  * Creates a new faculty.
  * @param string $faculty - The name of the faculty to be added

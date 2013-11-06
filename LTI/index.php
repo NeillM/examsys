@@ -216,6 +216,7 @@ if (!$lti->isInstructor()) {
       //no context
       $data = $lti_i::module_code_translate($lti->getCourseName(), $lti->get_context_title());
 
+      $problem=false;
       foreach ($data as $v) {
         if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) ) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
@@ -242,6 +243,9 @@ if (!$lti->isInstructor()) {
           $sms_api = $lti_i::sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1, 0, 1, 1);
+          if ($modcreate === false) {
+            $problem = true;
+          }
         } elseif (!module_utils::module_exists($v[1], $mysqli) and  !$lti_i::allow_module_create($v)) {
           UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png','#C00000');
           echo "\n</body>\n</html>\n";
@@ -256,7 +260,9 @@ if (!$lti->isInstructor()) {
         }
       }
       $module_store = $lti_i::module_code_translated_store($data);
-      $lti->add_lti_context($module_store);
+      if($problem === false ) {
+        $lti->add_lti_context($module_store);
+      }
       $returned2 = $lti->lookup_lti_context();
     }
     $mod = $returned2[0];
