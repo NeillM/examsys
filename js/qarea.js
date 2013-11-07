@@ -38,7 +38,6 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 			this.gen_img_loaded = true;
 			this.redraw_once = true;
 			this.qa_redraw_canvas;
-			console.log(this.canvas.id,this.gen_img.src,this.gen_img_loaded);
 		}  
 		this.gen_img.onload = qa_gen_img_onload.bind(this);
 		this.gen_img.src = ''+image; 
@@ -175,9 +174,9 @@ function qa_test(type) {
   this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
   this.context.globalAlpha = 0.5;
   var col = '#CC0000';
-  if (this.qanswer!='') this.polyDrawH(this.context,'',col,0,this.yoffset,this.qanswer.split(','),'t');     
+  if (this.qanswer!='') this.polyDrawH(this.context,'',col,-0.5,this.yoffset-0.5,this.qanswer.split(','),'t');     
   col = '#0000FF';  
-  if (this.qconfig!='') this.polyDrawH(this.context,'',col,0,this.yoffset,this.qconfig.split(','),'t'); 
+  if (this.qconfig!='') this.polyDrawH(this.context,'',col,-0.5,this.yoffset-0.5,this.qconfig.split(','),'t'); 
   this.context.globalAlpha = 1;
 	
 	var timgd = this.context.getImageData(1,1,this.canvas.width-2,this.canvas.height-2);
@@ -323,7 +322,7 @@ function qa_redraw_canvas() {
     this.mouse_moved = false;
     this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
     this.qa_redraw_canvas_main(0,this.yoffset);
-    this.context.lineWidth = this.lineThickness;
+    this.context.lineWidth = 1;
 		this.context.strokeStyle=this.currentColours[1];
     
     //cross red or gray
@@ -742,7 +741,6 @@ function qa_mouseDragUp(){
 
 
 function qa_ReturnInfo() {
-	console.log(this.canvas.id,this.gen_img.src,this.gen_img_loaded);
   var questions_result = '';
 	if (this.qmode == 'answer') {
 		questions_result = this.test_result+';';
@@ -855,7 +853,6 @@ function rqa(num) {
   this.q_Num;
 
 	this.currentColours = Array('#FFFFFF','#3F3F3F','#000000','#FF0000'); // fill, line, text colours
-	this.lineThickness  = 1; 									                    				// current thickness of borders around
 																																				// draggable labels and manually drawn 
 																																				// lines / arrows (in pixels) 
 	//var fontChoices    = Array(9, 10, 11, 12, 14, 16, 18); 		          // font size in drop down menu
