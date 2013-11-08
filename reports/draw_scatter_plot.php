@@ -48,18 +48,13 @@
   $black		= ImageColorAllocate($Image, 0, 0, 0);
   $dkgreen	= ImageColorAllocate($Image, 83, 129, 53);
 
-  $font      = '../fonts/SourceSansPro-Regular.otf';
-  $bold_font = '../fonts/SourceSansPro-Semibold.otf';
+  $font      = '../fonts/SourceSansPro-Regular.ttf';
+  $bold_font = '../fonts/SourceSansPro-Semibold.ttf';
 
   ImageLine($Image, 45, 250, 740 + $negative, 250, $dkgrey);
   ImageLine($Image, 45, 190, 740 + $negative, 190, $ltgrey);
   ImageLine($Image, 45, 130, 740 + $negative, 130, $ltgrey);
   ImageLine($Image, 45, 70, 740 + $negative, 70, $ltgrey);
-
-  // Convert strings from UTF8 to Latin
-  $string['time'] = mb_convert_encoding($string['time'], 'ISO-8859-2', 'UTF-8');
-  $string['percent'] = mb_convert_encoding($string['percent'], 'ISO-8859-2', 'UTF-8');
-  $string['adjustedpercent'] = mb_convert_encoding($string['adjustedpercent'], 'ISO-8859-2', 'UTF-8');
 
   // Label x axis
   if (!isset($_GET['plotuser'])) {

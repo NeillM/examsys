@@ -350,7 +350,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		if (typeof(this.answerBox)!='undefined')
 			for (i=0;i<this.answerBox.length;i++) {
 				j=0;
-				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][1] == "image" && this.all_images[this.all_images.indexOf(this.answerBox[i][j][2])+1]=='') {
+				if (typeof(this.answerBox[i][j]) != 'undefined' && this.answerBox[i][j][1] == "image" && this.all_images[this.all_images.indexOf(this.answerBox[i][j][2])+1] == '') {
 					this.answerBox[i][j][11] = new Image();
 					this.answerBox[i][j][11].onload = ql_ans_img_onload.bind(this);
 					this.answerBox[i][j][11].src = '/media/'+this.answerBox[i][j][2];
@@ -381,7 +381,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		// sort out existing answer info
 		if (answer != '' && answer != undefined && answer != "undefined" && answer != null && answer != "null") {
       var answer_l1 = answer.split(";");
-			if (typeof(answer_l1[1]) != 'undefined' && answer_l1[1]=='') this.empty_answer = true
+			if (typeof(answer_l1[1]) != 'undefined' && answer_l1[1] == '') this.empty_answer = true
       var answer_l2 = answer_l1[1].split('$');
 			var ans_x,ans_y,ans_n,ans_b,new_j,new_i=0;
 			
@@ -1527,9 +1527,9 @@ function ql_mouseDragUp(){
 		this.answerBox[this.active_box_id][this.active_box_combo][2] = this.menuBox[this.menu_line-1];
 		//is it correctly dropped label
 		if (this.answerBox[this.active_box_id][this.active_box_combo][2] == this.pholderBox[this.active_box_id][2]) {
-			this.answerBox[this.active_box_id][this.active_box_combo][3]='t'
+			this.answerBox[this.active_box_id][this.active_box_combo][3] = 't'
 		} else {
-			this.answerBox[this.active_box_id][this.active_box_combo][3]='f'
+			this.answerBox[this.active_box_id][this.active_box_combo][3] = 'f'
 		}
 	}
 	
@@ -1683,9 +1683,9 @@ function ql_mouseDragUp(){
       //is it correctly dropped label
 
       if (this.answerBox[this.drag_box_id][this.drag_box_combo][2] == this.pholderBox[dest_box][2]) {
-        this.answerBox[this.drag_box_id][this.drag_box_combo][3]='t'
+        this.answerBox[this.drag_box_id][this.drag_box_combo][3] = 't'
       } else {
-        this.answerBox[this.drag_box_id][this.drag_box_combo][3]='f'
+        this.answerBox[this.drag_box_id][this.drag_box_combo][3] = 'f'
 			}
 			
       this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.pholderBox[dest_box][5];

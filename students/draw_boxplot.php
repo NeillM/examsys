@@ -66,8 +66,8 @@ $blue    = ImageColorAllocate($Image, 91, 155, 213);
 $amber   = ImageColorAllocate($Image, 247, 150, 70);
 $ltamber = ImageColorAllocate($Image, 251, 198, 155);
 
-$font      = '../fonts/SourceSansPro-Regular.otf';
-$bold_font = '../fonts/SourceSansPro-Semibold.otf';
+$font      = '../fonts/SourceSansPro-Regular.ttf';
+$bold_font = '../fonts/SourceSansPro-Semibold.ttf';
 
 if ($scale == '1') {   // Scale mode
   for ($label=1; $label<10; $label++) {
@@ -96,11 +96,11 @@ $trans2 = 20;
 
 if (strlen($exam) > 35) {
   $break = find_break($exam);
-  $line1 = mb_convert_encoding(trim(substr($exam, 0, $break)), 'UTF-8','ISO-8859-2');
-  $line2 = mb_convert_encoding(trim(substr($exam, $break)), 'UTF-8','ISO-8859-2');
+  $line1 = trim(substr($exam, 0, $break));
+  $line2 = trim(substr($exam, $break));
 } else {
   $line1 = '';
-  $line2 = mb_convert_encoding($exam, 'UTF-8','ISO-8859-2');
+  $line2 = $exam;
 }
 
 // halflines y axis

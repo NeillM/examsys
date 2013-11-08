@@ -22,7 +22,7 @@ $string['message'] = 'Wiadomość';
 $string['file'] = 'Plik';
 $string['lineno'] = 'Nr. linii';
 $string['user'] = 'Użytkownik';
-$string['userid'] = 'Id. użytkownika';
+$string['userid'] = 'ID użytkownika';
 $string['showfixed'] = 'Pokaż błędy usunięte';
 $string['displaydetails'] = 'Wyświetl szczegóły';
 ?>
