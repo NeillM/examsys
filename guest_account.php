@@ -69,6 +69,7 @@ if ($paper_match == false) {
   <title><?php echo $string['guestaccount']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
+  <link rel="stylesheet" type="text/css" href="./css/notice.css" />
   <link rel="stylesheet" type="text/css" href="./css/guest_account.css" />
 </head>
 
@@ -80,6 +81,10 @@ if (isset($_POST['submit'])) {
   $tmp_first_names = trim($_POST['first_names']);
   $tmp_surname = trim($_POST['surname']);
   $tmp_student_id = trim($_POST['student_id']);
+	
+	if ($tmp_first_names == '' or $tmp_surname == '') {
+		$notice->display_notice_and_exit($mysqli, $string['error'], $string['mandatory'], $string['error'], '../artwork/bomb.png', '#C00000', false, true);
+	}
 
   $stmt = $mysqli->prepare("UPDATE temp_users SET first_names = ?, surname = ?, title = ?, student_id = ? WHERE id = ?");
   $stmt->bind_param('ssssi', $tmp_first_names, $tmp_surname, $_POST['title'], $tmp_student_id, $_POST['recordID']);
@@ -165,7 +170,7 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return checkForm();">
+<form name="theform" id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div style="text-align:center">
 <table cellpadding="0" cellspacing="0" style="text-align:left; margin-left:auto; margin-right:auto; width:450px; border:1px #7F9DB9 solid; background-color:#F1F5FB">
 <tr><td class="topbar" style="padding-left:6px; width:60px"><img src="./artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px"><?php echo $string['guestaccountreg']; ?></td></tr>
