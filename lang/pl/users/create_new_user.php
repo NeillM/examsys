@@ -17,7 +17,7 @@
 require $cfg_web_root . '/lang/' . $language . '/include/user_search_options.inc';
 require $cfg_web_root . '/lang/' . $language . '/include/titles.inc';
 
-$string['createnewuser'] = 'Zdefiniuj nowego użytkownika';
+$string['createnewuser'] = 'Zdefiniuj użytkownika';
 $string['getldapdetails'] = 'Uzyskaj szczegóły LDAP';
 $string['lastname'] = 'Nazwisko';
 $string['firstnames'] = 'Imiona';
