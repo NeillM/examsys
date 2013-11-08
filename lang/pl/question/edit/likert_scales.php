@@ -37,7 +37,7 @@ $string['disagre5pointneither'] = 'Zdecydowanie się nie zgadzam, Nie zgadzam si
 $string['disagre5pointuncertain'] = 'Zdecydowanie się nie zgadzam, Nie zgadzam się, Nie jestem pewien, Zgadzam się, Zdecydowanie się zgadzam';
 $string['disagre5pointneutral'] = 'Zdecydowanie się nie zgadzam, Nie zgadzam się, Obojętny, Zgadzam się, Zdecydowanie się zgadzam';
 $string['custom'] = 'Własna';
-$string['na_abstain'] = 'Brak|Wstrzymany|Nie dotyczy'; 
+$string['na_abstain'] = 'Brak|Odmowa odpowiedzi|Nie dotyczy'; 
 // QMP for QTI import
 $string['qmpagree3'] = 'Zgadzam się|Nie mam zdania|Nie zgadzam się';
 $string['qmplike3'] = 'Lubię to|Neutralny/a|Nie lubię tego';

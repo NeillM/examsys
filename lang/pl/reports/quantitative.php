@@ -24,5 +24,5 @@ $string['true'] = 'Prawda';
 $string['false'] = 'Fałsz';
 $string['yes'] = 'Tak';
 $string['no'] = 'Nie';
-$string['abstain'] = 'Wstrzymany';
+$string['abstain'] = 'Odmowa odpowiedzi';
 ?>
