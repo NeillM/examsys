@@ -354,6 +354,7 @@ if ($student_no > 0) {
     if ($old_username != $username or $old_started != $started) {
       $rowID++;
     }
+		
     $log_array[$rowID][$screen][$question_ID] = $user_answer;
     $log_array[$rowID]['student_id'] = demo_replace_number($student_id, $demo);
     $log_array[$rowID]['userID'] = $uID;
@@ -585,7 +586,7 @@ if ($student_no > 0) {
             case 'extmatch':
               $correct_parts = explode(',',$question['correct']);
               $correct_text_parts = explode("\t", $question['correct_text']);
-              $partID=1;
+              $partID = 1;
               for ($outer=1; $outer < count($correct_parts); $outer++) {
                 if ($correct_parts[$outer] != '' and substr($tmp_exclude,$partID-1,1) == '0') {
                   if ($is_random) {
