@@ -333,7 +333,7 @@ function hofstee_plot(canvas_id,result_type) {
 
 	function tfchange(event,keys) {
 		if (result_type == event.target.name.substr(3)) {
-			target = ((event.target.name[0]=='x')?0:2)+1*event.target.name[1]-1;
+			target = ((event.target.name[0] == 'x')?0:2)+1*event.target.name[1]-1;
 			var ev0 = boundaries[target];
 			var ev = Number(event.target.value.replace('%',''));
 			if (isNaN(ev)) ev = ev0;

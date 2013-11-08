@@ -126,6 +126,7 @@ foreach ($files as $filename) {
   $file_content=fread($file_point, filesize($filename));
   $file_content=preg_replace('/\/\/.*\n/','¶',$file_content); 
 	$file_content=preg_replace('/\n/','¶',$file_content);
+	$file_content=preg_replace('/\t/','  ',$file_content);
 	
   fclose($file_point);
   

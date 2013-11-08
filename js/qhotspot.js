@@ -280,12 +280,12 @@ function qh_test(type) {
     //testing the answer against above drawn labels
     if (type == 'answers') {
 			for (j=0;j<this.answers[i].length;j++) {        
-				this.answers[i][j][0]= '0';
+				this.answers[i][j][0] = '0';
 				if (typeof this.answers[i][j][1]!='undefined' && this.answers[i][j][1]!='' && this.answers[i][j][1]!='false') {
 					var timgd = this.context.getImageData((1*this.answers[i][j][1]+300-0.5),(1*this.answers[i][j][2]+25-0.5-this.yOffset),1,1);
 					var timgp = timgd.data;
 					if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() == this.hotSpots[i][2].toUpperCase()) {
-						this.answers[i][j][0]= '1';
+						this.answers[i][j][0] = '1';
 					}
 				}
 			}
@@ -669,7 +669,7 @@ function qh_redraw_canvas() {
 				this.edit_box_pos--;
 				this.qh_ReturnInfo()
 			}	
-			this.char_code ='';
+			this.char_code = '';
 			this.key_code = 0;
 				 
 			this.edit_box_blink++;
