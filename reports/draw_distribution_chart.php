@@ -105,14 +105,8 @@
   $dkgreen = ImageColorAllocate($Image, 83, 129, 53);
   $blue    = ImageColorAllocate($Image, 91, 155, 213);
   
-  $font      = '../fonts/SourceSansPro-Regular.otf';
-  $bold_font = '../fonts/SourceSansPro-Semibold.otf';
-  
-  // Convert strings from UTF8 to Latin
-  $string['occurrance'] = mb_convert_encoding($string['occurrance'], 'ISO-8859-2', 'UTF-8');
-  $string['percent'] = mb_convert_encoding($string['percent'], 'ISO-8859-2', 'UTF-8');
-  $string['adjustedpercent'] = mb_convert_encoding($string['adjustedpercent'], 'ISO-8859-2', 'UTF-8');
-  
+  $font      = '../fonts/SourceSansPro-Regular.ttf';
+  $bold_font = '../fonts/SourceSansPro-Semibold.ttf';
 
   // Label x axis
   if (!isset($_GET['plotuser'])) {
