@@ -1,6 +1,6 @@
 function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, mode) {
 	this.canvas = document.getElementById('canvas'+num);
-  this.draw_limit = new Array(300,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
+  this.draw_limit = new Array(302,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
   
 	if (this.canvas && this.canvas.getContext){
 		this.canvas.onmouseup   = this.qh_mouseDragUp.bind(this);
@@ -241,7 +241,7 @@ function qh_test(type) {
       var col2 = this.hotSpots[i][2];
 
 			if (type == 'cursor') this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-			this.draw_limit = new Array(300,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
+			this.draw_limit = new Array(302,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
 
       if (f_type == 'ellipse') {
         this.ellipseDraw(this.context,col1,col2,parseInt(this.HsCo[0], 16)+300.5,parseInt(this.HsCo[1], 16)+0.5+25-this.yOffset,parseInt(this.HsCo[2], 16)-parseInt(this.HsCo[0], 16),parseInt(this.HsCo[3], 16)-parseInt(this.HsCo[1], 16),this.global_edit); 
@@ -435,13 +435,13 @@ function qh_redraw_canvas() {
     //frames
     this.context.strokeStyle='#7f9db9';  
     this.context.strokeRect(300.5,0.5,this.canvas.width-300,this.canvas.height-1); 
-		this.draw_limit = Array(300,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
+		this.draw_limit = Array(302,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
 
     //active fields
 		//drawing hotspots
     if (this.qmode == 'edit' || this.qmode == 'script' || this.qmode == 'analysis' || this.qmode == 'correction') {
       //reposition of field's handlers
-      if (this.label_elem_drag!='') {
+      if (this.label_elem_drag!='' && this.testWithin(this.x,this.y,this.draw_limit[0],this.draw_limit[1],this.draw_limit[2],this.draw_limit[3])) {
         //setting the parameters of the 
         var led = this.label_elem_drag.split(/[@#$]/);
         var led3 = '';if (led[2]!='') led3=led[2].split(',');
