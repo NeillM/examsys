@@ -303,8 +303,8 @@ if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
   echo "<div class=\"submenuheading\">{$string['cohorttasks']}</div>\n";
 
   echo "<div style=\"font-size:90%\">\n";
-  echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/upload_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
-  echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/upload_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
+  echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
+  echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
   echo "</div>\n";
 }
 ?>

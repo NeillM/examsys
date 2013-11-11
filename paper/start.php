@@ -505,7 +505,7 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 require '../config/start.inc';
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n";
+echo "<!DOCTYPE html>\n<html>\n<head>\n";
 
 $url_mod = ($is_question_preview_mode) ? '&q_id=' . $_GET['q_id'] : '';
 ?>

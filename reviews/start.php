@@ -67,7 +67,7 @@ $stmt->close();
 
 // Get how many screens make up the question paper.
 $screen_data = array();
-$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, q_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, UNIX_TIMESTAMP(external_review_deadline), UNIX_TIMESTAMP(internal_review_deadline), latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
+$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, q_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, UNIX_TIMESTAMP(external_review_deadline), UNIX_TIMESTAMP(internal_review_deadline), latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id = papers.paper AND crypt_name = ? AND papers.question = questions.q_id ORDER BY screen");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
@@ -150,7 +150,7 @@ if (isset($_POST['sessionid'])) {
   $sessionid = date("YmdHis", time());
 }
 
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+echo "<!DOCTYPE html>\n";
 echo "<html>\n<head>\n";
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
