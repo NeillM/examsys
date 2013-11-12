@@ -39,18 +39,18 @@
 }
 
 .breadcrumb a:link {
-  color:blue;
+  color:#295AAD;
   text-decoration:none;
   cursor:pointer
 }
 .breadcrumb a:visited {
-  color:blue;
+  color:#295AAD;
   text-decoration:none;
   cursor:pointer
 }
 
 .breadcrumb a:hover {
-  color:blue;
+  color:#295AAD;
   text-decoration:underline;
   cursor:pointer
 }

@@ -9,13 +9,13 @@ a {
   text-decoration:none;
 }
 a:link {
-  color:#0000FF;
+  color:#316AC5;
 }
 a:visited {
-  color:#0000FF;
+  color:#316AC5;
 }
 a:hover {
-  color:#0000FF;
+  color:#316AC5;
   text-decoration:underline;
 }
 img {
@@ -37,7 +37,7 @@ table.fixed {
   table-layout:fixed;
 }
 .breadcrumb a {
-  color:#0000FF !important;
+  color:#316AC5 !important;
 }
 .dkblue_header {
   color:#1F497D

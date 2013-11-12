@@ -99,7 +99,7 @@
       if ($moduleid == '') {
         echo "<div class=\"greysch\"><img src=\"../artwork/folder_16_grey.png\" alt=\"folder\" />&nbsp;$school</div>\n";
       } else {
-        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" onclick=\"\$('#block$block_id').toggle()\" /><a href=\"\" style=\"color:blue\" onclick=\"\$('#block$block_id').toggle(); return false;\">$school</a></div>\n";
+        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" onclick=\"\$('#block$block_id').toggle()\" /><a href=\"\" onclick=\"\$('#block$block_id').toggle(); return false;\">$school</a></div>\n";
       }
       if ($module_block == false) {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -142,7 +142,7 @@
     }
     if ($old_letter !== mb_substr($moduleid,0,1)) {
       if ($moduleid !== '') {
-        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" onclick=\"\$('#block$block_id').toggle()\" /><a href=\"\" style=\"color:blue\" onclick=\"\$('#block$block_id').toggle(); return false;\">" . mb_substr($moduleid,0,1) . "</a></div>\n";
+        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" onclick=\"\$('#block$block_id').toggle()\" /><a href=\"\" onclick=\"\$('#block$block_id').toggle(); return false;\">" . mb_substr($moduleid,0,1) . "</a></div>\n";
       }
       if ($module_block == false) {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
