@@ -32,6 +32,6 @@ $string['cannotfindexams'] = 'Rogō nie odnalazło żadnego egzaminu';
 $string['msg'] = 'Zanotuj przedstawione poniżej detale logowania na wypadek koniczności restartu komputera w czasie egzaminu.'; 
 $string['enterfirstname'] = "Wpisz imię.";
 $string['entersurname'] = "Wpisz nazwisko.";
-$string['error'] = 'Error';
-$string['mandatory'] = 'Mandatory data missing.';
+$string['error'] = 'Błąd';
+$string['mandatory'] = 'Brak wymaganych danych.';
 ?>
