@@ -520,7 +520,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			
 			if (tmp_width>205) tmp_red = 205/tmp_width;
 			this.context.drawImage(this.tmp_image,temp_x+(this.imglabelWidth-tmp_width*tmp_red)*0.5,temp_y+(this.imglabelHeight-tmp_height*tmp_red)*0.5,tmp_width*tmp_red,tmp_height*tmp_red);
-			this.context.strokeRect(temp_x-0.5,temp_y-0.5,this.imglabelWidth,this.imglabelHeight);
+			this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.imglabelWidth,this.imglabelHeight);
 			if (this.exclusions[this.pholderBox[i][7]] == '1') {
 				var tmp_style = this.context.strokeStyle;
 				this.lineDraw(this.context,'#FF0000',temp_x+10.5,temp_y+10.5,this.imglabelWidth-20,this.imglabelHeight-20);
@@ -951,8 +951,8 @@ function ql_redraw_canvas() {
 					if (this.pholderBox[i][1] == 'text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
 
 					//fill and strike background rectangle
-					if (this.qmode!='script') this.context.fillRect(this.pholderBox[i][5]-0.5,this.pholderBox[i][6]-0.5,loc_width,loc_height);
-					this.context.strokeRect(this.pholderBox[i][5]-0.5,this.pholderBox[i][6]-0.5,loc_width,loc_height);
+					if (this.qmode!='script') this.context.fillRect(this.pholderBox[i][5]+0.5,this.pholderBox[i][6]+0.5,loc_width,loc_height);
+					this.context.strokeRect(this.pholderBox[i][5]+0.5,this.pholderBox[i][6]+0.5,loc_width,loc_height);
 				}
 			}
 		}
