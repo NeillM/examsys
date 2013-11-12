@@ -472,15 +472,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.menu_img.onload = menu_img_onload.bind(this);
 		this.menu_img.src = '/js/images/combined.png'; 
 	}		
-	
-			//renumbering ids
-		for (i=0;i<this.answerBox.length;i++)
-			for (j=0;j<this.answerBox[i].length;j++) 
-				console.log(i,j,this.answerBox[i][j])
-
-		//renumbering ids
-		for (i=0;i<this.pholderBox.length;i++) 
-			console.log(i,this.pholderBox[i])
 }
 
 function combo_scope(answer_set) {
