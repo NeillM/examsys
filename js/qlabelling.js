@@ -483,6 +483,7 @@ function combo_scope(answer_set) {
 }
 	
 function ql_draw_box(i,j,temp_x,temp_y) {
+	if (this.qType != "menu") {temp_x++;temp_y++;}
 	var this_box = this.answerBox[i][j];
 	if (j == 99) this_box = this.pholderBox[i];
 	
@@ -520,7 +521,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			
 			if (tmp_width>205) tmp_red = 205/tmp_width;
 			this.context.drawImage(this.tmp_image,temp_x+(this.imglabelWidth-tmp_width*tmp_red)*0.5,temp_y+(this.imglabelHeight-tmp_height*tmp_red)*0.5,tmp_width*tmp_red,tmp_height*tmp_red);
-			this.context.strokeRect(temp_x-0.5,temp_y-0.5,this.imglabelWidth,this.imglabelHeight);
+			this.context.strokeRect(temp_x+0.5,temp_y+0.5,this.imglabelWidth,this.imglabelHeight);
 			if (this.exclusions[this.pholderBox[i][7]] == '1') {
 				var tmp_style = this.context.strokeStyle;
 				this.lineDraw(this.context,'#FF0000',temp_x+10.5,temp_y+10.5,this.imglabelWidth-20,this.imglabelHeight-20);
@@ -569,10 +570,10 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			this.lineDraw(this.context,'#FF0000',temp_x+5.5,temp_y+this.fontSizes[this.fontSizePos]-1.5,tmp_width-10,0);
 			this.context.strokeStyle = tmp_style;
 		}
-		this.fillWrappedText(this.context,wrapped[0],Math.round(temp_x+tmp_width*0.5)+0.5,Math.round(temp_y+this.fontSizes[this.fontSizePos])-0.5);
+		this.fillWrappedText(this.context,wrapped[0],Math.round(temp_x+tmp_width*0.5)+0.5,Math.round(temp_y+this.fontSizes[this.fontSizePos])+0.5);
     this.context.fillStyle=this.currentColours[0];
 
-		var tmp_halfpoint = this.lineThickness/2-Math.round(this.lineThickness/2);
+		var tmp_halfpoint = Math.round(this.lineThickness/2)-this.lineThickness/2;
 		this.context.strokeRect(temp_x+tmp_halfpoint,temp_y+tmp_halfpoint,this.labelWidthEffect,this.labelHeightEffect);
 
 		if (this.qType == "menu") {
@@ -585,7 +586,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			//dropdown combo triangle sign
 			this.context.lineWidth = 1
 			this.context.strokeStyle='#000';
-			for (a=0;a<4;a++) this.context.strokeRect(tmp_dim[0]+5+a,tmp_dim[1]+Math.round(tmp_dim[3]/2)+a-1.5,7-2*a,0);
+			for (a=0;a<4;a++) this.context.strokeRect(tmp_dim[0]+6+a,tmp_dim[1]+Math.round(tmp_dim[3]/2)+a-1.5,7-2*a,0);
 			
 			this.context.lineWidth = this.lineThickness;
 	    this.context.strokeStyle = this.currentColours[1];
@@ -879,7 +880,7 @@ function ql_redraw_canvas() {
     //testing end
 
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
- 		this.context.drawImage(this.gen_img,220,25-this.yOffset);
+ 		this.context.drawImage(this.gen_img,221,26-this.yOffset);
 
     //frames
     this.context.lineWidth = 1;
@@ -951,8 +952,8 @@ function ql_redraw_canvas() {
 					if (this.pholderBox[i][1] == 'text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
 
 					//fill and strike background rectangle
-					if (this.qmode!='script') this.context.fillRect(this.pholderBox[i][5]-0.5,this.pholderBox[i][6]-0.5,loc_width,loc_height);
-					this.context.strokeRect(this.pholderBox[i][5]-0.5,this.pholderBox[i][6]-0.5,loc_width,loc_height);
+					if (this.qmode!='script') this.context.fillRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
+					this.context.strokeRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
 				}
 			}
 		}
@@ -1088,7 +1089,7 @@ function ql_redraw_canvas() {
 		if (this.qType == "menu" && (this.qmode == 'answer' || this.qmode == 'script')) {		
 			//menus
 			for (i=this.answerBox.length-1;i>=0;i--) {
-				if (this.pholderBox[i][1] == 'text' && this.pholderBox[i][5]>220) {
+				if (typeof(this.pholderBox[i])!='undefined' && this.pholderBox[i][1] == 'text' && this.pholderBox[i][5]>220) {
 					this.ql_draw_box(i,99,this.pholderBox[i][5],this.pholderBox[i][6]);
 				}
 			}
@@ -1160,30 +1161,30 @@ function ql_redraw_canvas() {
 			//draw handlers for active label
 			this.context.strokeStyle='#cc0000';
 			this.context.strokeRect(
-				this.answerBox[this.active_box_id][this.active_box_combo][5]-this.lineThickness/2-0.5,
-				this.answerBox[this.active_box_id][this.active_box_combo][6]-this.lineThickness/2-0.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][5]-this.lineThickness/2+1.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][6]-this.lineThickness/2+1.5,
 				loc_width+this.lineThickness,
 				loc_height+this.lineThickness);
 
 			this.edtDot(
 				this.context,'#cc0000',
-				this.answerBox[this.active_box_id][this.active_box_combo][5]-this.lineThickness/2-0.5,
-				this.answerBox[this.active_box_id][this.active_box_combo][6]-this.lineThickness/2-0.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][5]-this.lineThickness/2+1.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][6]-this.lineThickness/2+1.5,
 				2.5+0.1*this.lineThickness);
 			this.edtDot(
 				this.context,'#cc0000',
-				this.answerBox[this.active_box_id][this.active_box_combo][5]-this.lineThickness/2-0.5,
-				this.answerBox[this.active_box_id][this.active_box_combo][6]+loc_height+this.lineThickness/2-0.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][5]-this.lineThickness/2+1.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][6]+loc_height+this.lineThickness/2+1.5,
 				2.5+0.1*this.lineThickness);
 			this.edtDot(
 				this.context,'#cc0000',
-				this.answerBox[this.active_box_id][this.active_box_combo][5]+loc_width+this.lineThickness/2-0.5,
-				this.answerBox[this.active_box_id][this.active_box_combo][6]-this.lineThickness/2-0.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][5]+loc_width+this.lineThickness/2+1.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][6]-this.lineThickness/2+1.5,
 				2.5+0.1*this.lineThickness);
 			this.edtDot(
 				this.context,'#cc0000',
-				this.answerBox[this.active_box_id][this.active_box_combo][5]+loc_width+this.lineThickness/2-0.5,
-				this.answerBox[this.active_box_id][this.active_box_combo][6]+loc_height+this.lineThickness/2-0.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][5]+loc_width+this.lineThickness/2+1.5,
+				this.answerBox[this.active_box_id][this.active_box_combo][6]+loc_height+this.lineThickness/2+1.5,
 				2.5+0.1*this.lineThickness);
 			this.context.strokeStyle=this.currentColours[1];
 		}
@@ -1364,7 +1365,7 @@ function ql_mouseDragMove(e){
 										}
 								}
 							} else {
-								if ((this.qmode == 'edit' && this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect) == true) || (this.qmode!='edit' && this.pholderBox[i][5]>220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect) == true)) {
+								if (typeof(this.pholderBox[i])!='undefined' && ((this.qmode == 'edit' && this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect) == true) || (this.qmode!='edit' && this.pholderBox[i][5]>220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect) == true))) {
 									this.drag_box_id = i;
 									this.drag_pho_id = i;
 									this.drag_box_combo = 0;
