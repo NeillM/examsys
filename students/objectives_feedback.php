@@ -169,7 +169,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   </style>
 </head>
 <body>
-    <table style="position:relative; border: 1px solid #808080; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); z-index:10; float:right; top:10px; right:10px; font-size:90%; background-color:#FFFFEE; margin-bottom:8px; padding-left:6px; padding-right:6px">
+    <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:10px; right:10px; font-size:90%; background-color:#FFFFEE; margin-bottom:8px; padding-left:6px; padding-right:6px">
     <tr><td><img src="../artwork/ok_comment.png" width="16" height="16" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon']; ?></td></tr>
     <tr><td><img src="../artwork/minor_comment.png" width="16" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon']; ?></td></tr>
     <tr><td><img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon']; ?></td></tr>

@@ -61,6 +61,11 @@ require_once '../include/staff_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
+	
+	
+	<style>
+	.recent_icon {width:16px; height:16px; padding-right:8px}
+	</style>
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -200,7 +205,7 @@ require_once '../include/staff_auth.inc';
   while ($result->fetch()) {
     $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
     $moduleID = implode(',', array_keys($moduleIDs));
-    echo "<div style=\"padding-left:22px\"><a href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
+    echo "<div style=\"padding-left:22px\"><a href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" class=\"recent_icon\" alt=\"" . $paper_type . "\" /></a><a ";
     if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
     echo "href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\">" . $paper_title . "</a></div>\n";
   }
