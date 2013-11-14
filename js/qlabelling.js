@@ -468,6 +468,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
       this.menu_ready++;
       this.redraw_once = true;
       this.qa_redraw_canvas;
+			this.ql_ReturnInfo();
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
 		this.menu_img.src = '/js/images/combined.png'; 
@@ -580,7 +581,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			var tmp_dim = Array(temp_x+this.labelWidthEffect-1+this.lineThickness/2-18,temp_y,18-this.lineThickness/2,this.labelHeightEffect);
 			//dropdown combo button
 			this.context.fillStyle='#f7f7f7';
-			this.context.fillRect(tmp_dim[0],tmp_dim[1],tmp_dim[2],tmp_dim[3]);
+			this.context.fillRect(Math.round(tmp_dim[0])+tmp_halfpoint,Math.round(tmp_dim[1])+tmp_halfpoint,Math.round(tmp_dim[2]),Math.round(tmp_dim[3]));
 			this.context.strokeRect(Math.round(tmp_dim[0])+tmp_halfpoint,Math.round(tmp_dim[1])+tmp_halfpoint,Math.round(tmp_dim[2]),Math.round(tmp_dim[3]));
 			
 			//dropdown combo triangle sign
