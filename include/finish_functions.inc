@@ -592,12 +592,13 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 					echo "write_string('</object>');\n";
 					echo "write_string('<!--<![endif]-->');\n";
 					echo "write_string('</object>');\n";
-
+					echo "sendTextToAS3('$language', 'q$question_no', 3, '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '";
           if ($tmp_display_correct_answer == '1') {
-            echo "sendTextToAS3('$language', 'q$question_no', 3, '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '$tmp_user_answer');\n";
+            echo $tmp_user_answer;
           } else {
-            echo "sendTextToAS3('$language', 'q$question_no', 1, '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $paper[$question]['user_answer'] . "');\n";
+            echo $paper[$question]['user_answer'];
           }
+					echo "');\n";
 					echo "</script>\n<br />";
          }          
 				?>
