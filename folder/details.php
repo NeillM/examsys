@@ -218,7 +218,7 @@ if (count($parent_list) > 0) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
   }
 }
-echo "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
+echo "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>\n";
 
 echo '<tr><th><div style="margin-left:10px; font-size:200%; font-weight:bold">';
 if ($folder != '') {
@@ -253,14 +253,14 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
       $tmp_html .= "<li><span style=\"color:#254280\">" . demo_replace_name($i) . "</span></li>\n";
       $i++;
     } elseif ($userObject->has_role(array('SysAdmin', 'Admin'))) {
-      $tmp_html .= "<li><a style=\"color:#254280\" href=\"../users/details.php?userID=$tmp_userID&module=" . $_GET['module'] . "\" target=\"_top\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</a></li>\n";
+      $tmp_html .= "<li><a style=\"color:#254280\" href=\"../users/details.php?userID=$tmp_userID&module=" . $_GET['module'] . "\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</a></li>\n";
     } else {
       $tmp_html .= "<li><span style=\"color:#254280\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</span></li>\n";
     }
     if ($tmp_userID == $userObject->get_user_ID() and $module_details['add_team_members'] == 1) $add_member = true;
   }
   if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
-  echo '<div style="box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC">';
+  echo '<div style="float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC">';
   if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
     echo '<div style="float:left; width:95%; padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" border="0" /></a></div></div>';
   } else {
@@ -339,7 +339,7 @@ if ($display_papers) {
 
         echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string[strtolower($types_array[$paper_type])] . " (" . $paper_types[$paper_type] . ")";
         if ($paper_type == 2) {
-          echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" alt=\"Calendar\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">" . $string['calendar'] . "</a></span>\n";
+          echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"16\" alt=\"Calendar\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">" . $string['calendar'] . "</a></span>\n";
         }
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
         echo "<br />\n";

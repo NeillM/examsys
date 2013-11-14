@@ -1818,16 +1818,26 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $bottom_cohort = array();
   $user_no = round(($result->num_rows / 100) * $cohort_percent);
   $user_total = $result->num_rows;
-  while ($result->fetch()) {
-    if ($student_no < $user_no) {
-      $bottom_cohort[$started][$username] = '';
-    } elseif ($student_no >= ($user_total - $user_no)) {
-      $top_cohort[$started][$username] = '';
-    }
-    $student_no++;
-  }
+	if ($user_total == 1) {
+	  // If a single user load them into top and bottom cohorts.
+		$result->fetch();
+		$bottom_cohort[$started][$username] = '';
+		$top_cohort[$started][$username] = '';
+		$student_no = 1;
+		$user_no = 1;
+		$cohort_percent = 100;
+	} else {
+		while ($result->fetch()) {
+			if ($student_no < $user_no) {
+				$bottom_cohort[$started][$username] = '';
+			} elseif ($student_no >= ($user_total - $user_no)) {
+				$top_cohort[$started][$username] = '';
+			}
+			$student_no++;
+		}
+	}
   $result->close();
-
+	
   // Capture the log data first.
   $freq_array       = array();
   $bottom_log_array = array();
@@ -1869,21 +1879,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(154); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
     echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['PaperNotAttempted'] . "</td></tr></table>\n";
-  } elseif ($user_no == 0) {
-    // Not enough data for relevant cohort at selected percentage
-    echo '<tr><th>';
-
-    echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-    if (isset($_GET['folder']) and $_GET['folder'] != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-    } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-    }
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
-
-    echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(154); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
-    echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
-    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['NotEnoughData'] . "</td></tr></table>\n";
   } else {
   	// Capture the paper makeup.
     $display_header = true;
