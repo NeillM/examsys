@@ -1849,7 +1849,7 @@ function ql_ReturnInfo() {
 		}
 		for (i=0;i<this.answerBox.length;i++) {
 			for (j=0;j<this.answerBox[i].length;j++) {
-				if (typeof(this.answerBox[i][j])!='undefined') {
+				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][2]!='') {
 					if (this.answerBox[i][j][3] == 't') questions_correct++;
 					if (this.answerBox[i][j][3] == 'f') questions_incorrect++;
 					if (this.answerBox[i][j][3] == 't' || this.answerBox[i][j][3] == 'f') answer_result+=this.answerBox[i][j][5]+'$'+(this.answerBox[i][j][6]-25+this.yOffset)+'$'+fix_names(this.answerBox[i][j][2])+'$'+this.answerBox[i][j][3]+'$';
