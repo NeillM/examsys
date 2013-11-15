@@ -85,7 +85,7 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 	<div class="menuitem cascade" id="newquestion" onclick="showMenu('popup5','banktasks','newquestion',myOptions5,myURLs5,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><a href="#" onclick="return false"><?php echo $string['createnewquestion']; ?></a></div>
 </div>
 
-<div style="position:absolute; bottom:15px; text-align:center; width:90%; cursor:pointer; font-size:90%; font-weight:bold"><a href="#" onclick="displayCredits(); return false;">Rog&#333; <?php echo $configObject->get('rogo_version'); ?> - &copy; 2013</a></div>
+<div style="position:absolute; bottom:15px; text-align:center; width:90%; cursor:pointer; font-size:90%; color:#295AAD; font-weight:bold"><a href="#" onclick="displayCredits(); return false;">Rog&#333; <?php echo $configObject->get('rogo_version'); ?> - &copy; 2013</a></div>
 </div>
 
 <?php

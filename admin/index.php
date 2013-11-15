@@ -139,7 +139,7 @@
 		$menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
 	}
 	$menudata['summativeexamstats']		= array('summative_stats.php?year=' . $summative_year, 'summative_stats.png');
-	$menudata['systemerrors']					= array('sys_error_list.php', 'bug.png');
+	$menudata['systemerrors']					= array('sys_error_list.php', 'system_errors.png');
 	$menudata['systeminformation']		= array('system_info.php', 'information.png');
 	$menudata['testing']							= array('../testing/', 'crash_test.png');
 	$menudata['trac']									= array('https://suivarro.nottingham.ac.uk/trac/rogo/', 'trac_logo.png');
