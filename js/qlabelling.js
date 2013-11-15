@@ -484,7 +484,8 @@ function combo_scope(answer_set) {
 }
 	
 function ql_draw_box(i,j,temp_x,temp_y) {
-	if (this.qType != "menu") {temp_x++;temp_y++;}
+	temp_x++;
+	temp_y++;
 	var this_box = this.answerBox[i][j];
 	if (j == -1) this_box = this.answerBox[i][0];
 	if (j == 99) this_box = this.pholderBox[i];
@@ -578,7 +579,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		var tmp_halfpoint = Math.round(this.lineThickness/2)-this.lineThickness/2;
 		this.context.strokeRect(temp_x+tmp_halfpoint,temp_y+tmp_halfpoint,this.labelWidthEffect,this.labelHeightEffect);
 
-		if (this.qType == "menu") {
+		if (this.qType == 'menu') {
 			var tmp_dim = Array(temp_x+this.labelWidthEffect-1+this.lineThickness/2-18,temp_y,18-this.lineThickness/2,this.labelHeightEffect);
 			//dropdown combo button
 			this.context.fillStyle='#f7f7f7';
@@ -973,9 +974,34 @@ function ql_redraw_canvas() {
 			var tmp_edit_text = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2];
 			if (this.labelMulti == 'multiple') tmp_edit_text = this.answerBox[this.active_box_id][this.active_box_combo][2];
 			var text_len = tmp_edit_text.length;
-			if (this.key_code == 39) this.edit_box_pos++;				//arror right
-			if (this.key_code == 37) this.edit_box_pos--; 				//arrow left
-			if (this.key_code == 35) this.edit_box_pos=text_len; 	//end
+			if (this.key_code == 39) { //arror right
+				if (this.edit_box_id>-1) {
+					this.edit_box_pos++;
+				}else{
+					this.answerBox[this.active_box_id][this.active_box_combo][5]++;
+					this.ql_ReturnInfo();
+				}
+			}
+			if (this.key_code == 37) { //arrow left
+				if (this.edit_box_id>-1) {
+					this.edit_box_pos--;
+				}else{
+					this.answerBox[this.active_box_id][this.active_box_combo][5]--;
+					this.ql_ReturnInfo();
+				}
+			}
+			if (this.key_code == 38) { //arror up
+				if (this.edit_box_id==-1) {
+					this.answerBox[this.active_box_id][this.active_box_combo][6]--;
+					this.ql_ReturnInfo();
+				}
+			}
+			if (this.key_code == 40) { //arrow down
+				if (this.edit_box_id==-1) {
+					this.answerBox[this.active_box_id][this.active_box_combo][6]++;
+					this.ql_ReturnInfo();
+				}
+			}			if (this.key_code == 35) this.edit_box_pos=text_len; 	//end
 			if (this.key_code == 36) this.edit_box_pos=0; 				//home	
 			if (this.edit_box_pos<0) this.edit_box_pos=0;
 			if (this.edit_box_pos>text_len) this.edit_box_pos=text_len;
@@ -1198,7 +1224,7 @@ function ql_redraw_canvas() {
 		}
 				
 		//cursor blink
-		if (this.qmode == 'edit' && this.mov_id == -1 && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
+		if (this.qmode == 'edit' && this.mov_id == -1 && this.edit_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
 			this.edit_box_blink++;
 			if (this.edit_box_blink>60) this.edit_box_blink=0;
 			if (this.edit_box_blink>30) {
@@ -1544,15 +1570,42 @@ function ql_mouseDragUp(){
 	
 	//help link
 	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
-			window.open('/help/staff/index.php?id=60');
+			/*
+			console.log('>>>> answerBox >>>>');
+			for (i=0;i<this.answerBox.length;i++) 
+				if (typeof(this.answerBox[i])!='undefined')
+					for (j=0;j<this.answerBox[i].length;j++) 
+						console.log(i,j,this.answerBox[i][j]);
+			console.log('----');
+			
+			console.log('>>>> pholderBox >>>>');
+			for (i=0;i<this.pholderBox.length;i++) 
+				console.log(i,this.pholderBox[i]);
+			console.log('----');
+			*/
+			
+			//window.open('/help/staff/index.php?id=60');
 	}
 
+
 	if (this.qmode!='script') {
+		if (this.drag_box_id == this.active_box_id && this.drag_box_combo == this.active_box_combo) {
+			this.edit_box_id = this.drag_box_id;
+			this.edit_box_combo = this.drag_box_combo;
+		}
+		if (this.edit_box_id == this.active_box_id && this.edit_box_combo == this.active_box_combo && !(this.drag_box_id == this.active_box_id && this.drag_box_combo == this.active_box_combo)) {			
+			this.edit_box_id = -1;
+			this.edit_box_combo = -1;
+		}
 		this.active_box_id = this.drag_box_id;
 		this.active_box_combo = this.drag_box_combo;
 	}
 	this.dragging = false;
 	this.active_box_handler = -1;
+			console.log('drag',this.drag_box_id,this.drag_box_combo);
+			console.log('move',this.move_box_id,this.move_box_combo);
+			console.log('active',this.active_box_id,this.active_box_combo);
+			console.log('edit',this.edit_box_id,this.edit_box_combo);
 	
 	//text cursor positioning on mouseclick
 	if (this.qmode == 'edit' && this.mov_id == -1 && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
@@ -1965,10 +2018,12 @@ function rql(num) {
 	this.menu_line = -1;
 	this.scale_i = 1;                          	//label image scale
 	this.drag_box_id = -1;                      //index of box beeing dragged
-	this.drag_pho_id = -1;											//index of pholder box over
 	this.drag_box_combo = -1;                      
+	this.drag_pho_id = -1;											//index of pholder box over
 	this.active_box_id = -1;                    //index of box beeing active
 	this.active_box_combo = -1;                    
+	this.edit_box_id = -1;                    	//index of box beeing edited
+	this.edit_box_combo = -1;                    
   this.mov_id = -1;														//index of box beeing animated (to position)
   this.mov_combo = -1;
   this.mov_x=0;
