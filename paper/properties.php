@@ -1175,19 +1175,19 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
      echo '<tr><td align="right" valign="top">' . $string['url'] . '&nbsp;</td><td colspan="3">';
      switch ($properties->get_paper_type()) {
        case '2':
-         echo "<a href=\"" . $configObject->get('cfg_root_path') . "\" target=\"_blank\" style=\"color:blue\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "</a> " . $string['onlyonexamday'];
+         echo "<a href=\"" . $configObject->get('cfg_root_path') . "\" target=\"_blank\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "</a> " . $string['onlyonexamday'];
          break;
        case '4':
-         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/osce/\" target=\"_blank\" style=\"color:blue\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/</a> " . $string['onlyonexamday'];
+         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/osce/\" target=\"_blank\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/</a> " . $string['onlyonexamday'];
          break;
        case '5':
          echo $string['na'];
          break;
        case '6':
-         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
+         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
          break;
        default:
-         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\" style=\"color:blue\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
+         echo "<a href=\"" . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."\" target=\"_blank\">" . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($properties->get_crypt_name()) ."</a>";
      }
      echo "</td></tr>\n";
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\">";
@@ -1791,7 +1791,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        } else {
          echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" checked=\"checked\" />". $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" />" . $string['off'] . "</td>";
        }
-       echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
+       echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
      }
      if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '4', '5'))) {
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
@@ -1805,7 +1805,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
        }
        echo "<td>" . $string['questionfeedback'] . "<br />";
        if ($properties->get_paper_type() == '2') echo '<span style="color:#C00000">' . $string['feedbackwarning'] . '</span></br />';
-       echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
+       echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
      }
 
      if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
@@ -1879,7 +1879,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
   $result->fetch();
   $result->close();
   if ($sct_no > 0) {
-    echo '<a href="' . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '" target="_blank" style="color:blue">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '</a>';
+    echo '<a href="' . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '</a>';
   }
 
 ?></td></tr>

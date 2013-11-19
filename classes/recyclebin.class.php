@@ -24,61 +24,7 @@
 * @package
 */
 
-Class RecycleBin {
-	/**
-	 * Determine what icon to show for the recycle bin
-   * @param integer $userID ID of the current user
-   * @param array $staff_modules array of modules the staff user is on
-   * @param resource $db database connection
-	 * @return string the relevant icon empty/fill
-	 */
-	static function get_recyclebin_icon($userID, $staff_modules, $db)	{
-    $recycle_bin_no = 0;
-    
-    if (count($staff_modules) == 0) {
-      $staff_module_in = '';
-    } else {
-      $staff_module_in = "OR idMod IN (" . implode(",", array_keys($staff_modules)) . ")";
-    }
-    $stmt = $db->prepare("SELECT properties.property_id FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID = ? $staff_module_in) AND deleted IS NOT NULL LIMIT 1");
-    $stmt->bind_param('i', $userID);
-    $stmt->execute();
-    $stmt->bind_result($no_deleted);
-    $stmt->fetch();
-    $stmt->close();
-    $recycle_bin_no += $no_deleted;
-    
-    if (count($staff_modules) == 0) {
-      $staff_module_sql = '';
-    } else {
-      $staff_module_sql = " OR idmod IN (" . implode(',', array_keys($staff_modules)) . ")";
-    }
-
-    $stmt = $db->prepare("SELECT questions.q_id FROM questions LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE (ownerID = ? $staff_module_sql) AND deleted IS NOT NULL LIMIT 1");
-    $stmt->bind_param('i', $userID);
-    $stmt->execute();
-    $stmt->bind_result($no_deleted);
-    $stmt->fetch();
-    $stmt->close();
-    $recycle_bin_no += $no_deleted;
-    
-    $stmt = $db->prepare("SELECT id FROM folders WHERE ownerID = ? AND deleted IS NOT NULL LIMIT 1");
-    $stmt->bind_param('i', $userID);
-    $stmt->execute();
-    $stmt->bind_result($no_deleted);
-    $stmt->fetch();
-    $stmt->close();
-    $recycle_bin_no += $no_deleted;
-		
-    if ($recycle_bin_no == 0) {
-      $icon = 'empty_bin.png';
-    } else {
-      $icon = 'full_bin.png';
-    }
-    
-    return $icon;
-	}
-  
+Class RecycleBin {  
 	/**
 	 * Get a list of recycle bin contents for the current user
    * @param object $userObj current user object

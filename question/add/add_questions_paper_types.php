@@ -40,6 +40,7 @@ require '../../include/staff_auth.inc';
     a:hover {color:black}
     .divider {font-size:90%; padding-left:16px; padding-bottom:2px; font-weight:bold}
     .f {float:left; width:375px; padding-left:12px; font-size:90%}
+		img {padding:5px}
   </style>
 </head>
 
@@ -47,12 +48,12 @@ require '../../include/staff_auth.inc';
 <br />
 <table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr><?php echo $string['papersbytype']; ?> (6)</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%" /></td></tr></table>
 <br />
-<div class="f"><a href="add_questions_paper_list.php?paper_type=0" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=0"><?php echo $string['formative self-assessment']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=1" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=1"><?php echo $string['progress test']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=2" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=2"><?php echo $string['summative exam']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=3" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=3"><?php echo $string['survey']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=4" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=4"><?php echo $string['osce station']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=5" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=5"><?php echo $string['offline paper']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=0" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a><a href="add_questions_paper_list.php?paper_type=0"><?php echo $string['formative self-assessment']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=1" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a><a href="add_questions_paper_list.php?paper_type=1"><?php echo $string['progress test']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=2" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a><a href="add_questions_paper_list.php?paper_type=2"><?php echo $string['summative exam']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=3" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a><a href="add_questions_paper_list.php?paper_type=3"><?php echo $string['survey']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=4" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a><a href="add_questions_paper_list.php?paper_type=4"><?php echo $string['osce station']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=5" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a><a href="add_questions_paper_list.php?paper_type=5"><?php echo $string['offline paper']; ?></a></div>
 <br clear="all" />
 <?php
   $teams = $userObject->get_staff_modules();
@@ -63,7 +64,7 @@ require '../../include/staff_auth.inc';
 <?php
 
   foreach ($teams as $teamID=>$team_name) {
-    echo '<div class="f"><a href="add_questions_paper_list.php?teamID=' . $teamID . '"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?teamID=' . $teamID . '">' . $team_name .  '</a></div>';
+    echo '<div class="f"><a href="add_questions_paper_list.php?teamID=' . $teamID . '"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a><a href="add_questions_paper_list.php?teamID=' . $teamID . '">' . $team_name .  '</a></div>';
   }
 ?>
 

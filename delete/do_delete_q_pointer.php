@@ -30,10 +30,12 @@ check_var('questionID', 'POST', true, false, false);
 check_var('pID', 'POST', true, false, false);
 $tmp_paperID = check_var('paperID', 'POST', true, false, true);
 
-$tmp_pIDs = explode(',', $_POST['pID']);  
+$tmp_pIDs = explode(',', substr($_POST['pID'], 1));  
 $tmp_questionIDs = explode(',', substr($_POST['questionID'], 1));
 
-for ($i=1; $i<count($tmp_pIDs); $i++) {
+var_dump($tmp_pIDs);
+
+for ($i=0; $i<count($tmp_pIDs); $i++) {
   if ($result = $mysqli->prepare("DELETE FROM papers WHERE p_id = ?")) {
     $result->bind_param('i', $tmp_pIDs[$i]);
     $result->execute();
