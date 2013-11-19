@@ -1289,9 +1289,9 @@ if ($css != '') {
     }
     echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
     if ($current_screen > $no_screens) {
-      echo "<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;\n";
+      echo "<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;";
     } else {
-      echo "<input id=\"next\" type=\"submit\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;\n";
+      echo "<input id=\"next\" type=\"submit\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;";
     }
     echo '</td></tr></table>';
   }

@@ -123,7 +123,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
     echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>";
-    echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+    echo "</table>\n";
   }
 
   if (isset($_POST['submit'])) {
@@ -141,7 +141,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
     $results->bind_result($property_id, $title, $initials, $surname, $moduleID, $paper_ownerID, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $retired);
 
     echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papers'] . " (" . number_format($results->num_rows) . "):&nbsp;</strong>" . $_POST['searchterm'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
-    echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+    echo "</table>\n";
     if ($results->num_rows > 0) {
       echo '<br />';
       while ($results->fetch()) {

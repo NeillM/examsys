@@ -77,7 +77,6 @@ if (isset($_GET['scrOfY'])) {
 <body>
 <table class="header">
 <tr><th colspan="5" style="font-size:160%; font-weight:bold">&nbsp;<?php echo $string['byteam']; ?></th></tr>
-<tr><th colspan="5" class="bevel"></th></tr>
 </table>
 <?php
   $sql = "SELECT modules.id, modules.moduleid, fullname, COUNT(groupID) AS count_no FROM (modules_staff, modules) WHERE modules_staff.idMod=modules.id AND idMod IN (" . implode(',', array_keys($userObject->get_staff_modules())) . ") GROUP BY fullname";

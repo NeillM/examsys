@@ -87,9 +87,6 @@ if (isset($_POST['submit'])) {
       <div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['addltikeys']; ?></th>
     <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" /></a></th>
   </tr>
-  <tr>
-    <th colspan="2" class="bevel"></th>
-  </tr>
 </table>
   <br/>
   <div align="center">

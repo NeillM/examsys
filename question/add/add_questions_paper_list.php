@@ -98,7 +98,6 @@ if (isset($_GET['order'])) {
   <th class="vert_div"><?php echo show_order_link($paper_type, $string['owner'], 'surname', $order, $direction) ?></th>
   <th class="vert_div"><?php echo show_order_link($paper_type, $string['created'], 'created', $order, $direction) ?></th>
 </tr>
-<tr><th colspan="5" class="bevel"></th></tr>
 <?php
   $user_teams = $userObject->get_staff_modules();
   $module_id_list = implode(',', array_keys($user_teams));

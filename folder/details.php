@@ -231,7 +231,7 @@ echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding
 if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';
 echo " /> " . $string['showretired'] . "</th></tr>\n";
 
-echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n<br />\n";
+echo "</table>\n<br />\n";
 
 $display_papers = true;
 // Get members of current folder.
@@ -247,7 +247,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   if ($userObject->has_role('Demo')) {
     $i = 0;
   }
-  if ($member_details->num_rows > 0) $tmp_html = '<ul type="square" style="line-height:155%; font-size:90%; color:#8492A6; margin-top:4px; margin-bottom:4px; margin-left:20px; padding-left:0px">';
+  if ($member_details->num_rows > 0) $tmp_html = '<ul type="square" style="line-height:155%; font-size:90%; color:#C0C0C0; margin-top:4px; margin-bottom:4px; margin-left:20px; padding-left:0px">';
   while ($member_details->fetch()) {
     if ($userObject->has_role('Demo')) {
       $tmp_html .= "<li><span style=\"color:#254280\">" . demo_replace_name($i) . "</span></li>\n";
@@ -260,11 +260,11 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
     if ($tmp_userID == $userObject->get_user_ID() and $module_details['add_team_members'] == 1) $add_member = true;
   }
   if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
-  echo '<div style="float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC">';
+  echo '<div style="float:right; width:165px; margin-right:10px; border:1px solid #C0C0C0">';
   if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
-    echo '<div style="float:left; width:95%; padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" border="0" /></a></div></div>';
+    echo '<div style="float:left; width:95%; padding:4px; background-color:#F1F5FB"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" border="0" /></a></div></div>';
   } else {
-    echo '<div style="padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB">' . $string['teammembers'] . '</div>';
+    echo '<div style="padding:4px; background-color:#F1F5FB">' . $string['teammembers'] . '</div>';
   }
   echo "<br clear=\"all\" />$tmp_html</div>\n";
   $member_details->close();
@@ -300,7 +300,6 @@ if ($folder != '') {
 // New folder.
 if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' and !isset($_POST['submit'])) {
   echo "<div class=\"f\"><img class=\"f_icon\" src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n<br clear=\"all\" />\n<br />";
-  //echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></td><td><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></td></tr></table></div>\n";
 }
 
 // Get current owner papers.

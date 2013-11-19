@@ -138,9 +138,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     <th class="vert_div"><?php echo $string['type']; ?></th>
     <th class="vert_div"><?php echo $string['modified']; ?></th>
   </tr>
-  <tr>
-    <th colspan="6" class="bevel"></th>
-  </tr>
   </table>
 <?php
   }
@@ -170,7 +167,6 @@ if (isset($_POST['submit'])) {
     <th class="vert_div"><?php echo $string['owner']; ?></th>
     <th class="vert_div"><?php echo $string['type']; ?></th>
     <th class="vert_div"><?php echo $string['modified']; ?></th></tr>
-    <tr><th colspan="6" class="bevel"></td></tr>
     </table>
     <?php
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;$error.</td></tr></table>\n";
@@ -345,9 +341,6 @@ if (isset($_POST['submit'])) {
     <th class="vert_div"><?php echo $string['type']; ?></th>
     <th class="vert_div"><?php echo $string['modified']; ?></th>
     <th class="vert_div"><?php echo $string['status']; ?></th>
-  </tr>
-  <tr>
-    <th colspan="6" class="bevel"></th>
   </tr>
 <?php
   while ($result->fetch()) {

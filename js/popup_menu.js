@@ -46,30 +46,16 @@ function popMenu(option_no, e) {
 function menuRowOn(rowID) {
   // Left menu column
   $('#item'+rowID+'a').css('background-color', '#FFE7A2');
-  $('#item'+rowID+'a').css('border-top', '1px solid #FFBD69');
-  $('#item'+rowID+'a').css('border-bottom', '1px solid #FFBD69');
-  $('#item'+rowID+'a').css('border-left', '1px solid #FFBD69');
   
   // Right menu column
   $('#item'+rowID+'b').css('background-color', '#FFE7A2');
-  $('#item'+rowID+'b').css('border-top', '1px solid #FFBD69');
-  $('#item'+rowID+'b').css('border-bottom', '1px solid #FFBD69');
-  $('#item'+rowID+'b').css('border-left', '1px solid #FFE7A2');
-  $('#item'+rowID+'b').css('border-right', '1px solid #FFBD69');
 }
 
 function menuRowOff(rowID) {
   // Left menu column
   $('#item'+rowID+'a').css('background-color', '#F1F5FB');
-  $('#item'+rowID+'a').css('border-top', '1px solid #F1F5FB');
-  $('#item'+rowID+'a').css('border-bottom', '1px solid #F1F5FB');
-  $('#item'+rowID+'a').css('border-left', '1px solid #F1F5FB');
   
   // Right menu column
   $('#item'+rowID+'b').css('background-color', '#FFFFFF');
-  $('#item'+rowID+'b').css('border-top', '1px solid #FFFFFF');
-  $('#item'+rowID+'b').css('border-bottom', '1px solid #FFFFFF');
-  $('#item'+rowID+'b').css('border-left', '1px solid #FFFFFF');
-  $('#item'+rowID+'b').css('border-right', '1px solid #FFFFFF');
 }    
 

@@ -143,7 +143,6 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
       <th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_statuses.php"><?php echo $string['statuses'] ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $title ?></th>
       <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th>
     </tr>
-    <tr><th colspan="2" class="bevel"></th></tr>
     </table>
 
     <form id="theform" name="status_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">

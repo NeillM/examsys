@@ -398,8 +398,6 @@ if (isset($_POST['Submit'])) {
   		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   		$target_timezone = new DateTimeZone($_POST['timezone']);
 
-
-
       if (isset($_POST['fyear']) and isset($_POST['fmonth']) and isset($_POST['fday']) and isset($_POST['ftime'])) {
         $null_start_date = false;
         if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['ftime'] == '') {
@@ -1085,31 +1083,28 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 
       $('#' + sectionID).show();
 
-      $('#tab1').removeClass("button_on");
-      $('#tab2').removeClass("button_on");
-      $('#tab3').removeClass("button_on");
-      $('#tab4').removeClass("button_on");
-      $('#tab5').removeClass("button_on");
-      $('#tab6').removeClass("button_on");
-      $('#tab7').removeClass("button_on");
-      $('#tab8').removeClass("button_on");
-      $('#tab9').removeClass("button_on");
+      $('#tab1').css('background-color', 'white');
+      $('#tab2').css('background-color', 'white');
+      $('#tab3').css('background-color', 'white');
+      $('#tab4').css('background-color', 'white');
+      $('#tab5').css('background-color', 'white');
+      $('#tab6').css('background-color', 'white');
+      $('#tab7').css('background-color', 'white');
+      $('#tab8').css('background-color', 'white');
+      $('#tab9').css('background-color', 'white');
 
-      $('#' + tabID).addClass("button_on");
-      $('#' + tabID).removeClass("button_over");
+ 			$('#' + tabID).css('background-color', '#FFBD69');
     }
 
     function buttonover(tabID) {
-      if (!$('#' + tabID).hasClass("button_on")) {
-        $('#' + tabID).addClass("button_over");
-        $('#' + tabID).removeClass("button_off");
+      if ($('#' + tabID).css('background-color') != "rgb(255, 189, 105)") {
+ 				$('#' + tabID).css('background-color', '#FFE7A2');
       }
     }
 
     function buttonout(tabID) {
-      if ($('#' + tabID).hasClass("button_over")) {
-        $('#' + tabID).addClass("button_off");
-        $('#' + tabID).removeClass("button_over");
+      if ($('#' + tabID).css('background-color') != "rgb(255, 189, 105)") {
+ 				$('#' + tabID).css('background-color', 'white');
       }
     }
     </script>
@@ -1125,38 +1120,38 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 <table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:140px">
 <?php
 if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') {
-  echo "<tr><td id=\"tab1\" class=\"button_off\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab1')\" onmouseout=\"buttonout('tab1')\" onclick=\"buttonclick('general','tab1')\">&nbsp;" . $string['generaltab'] . "</td></tr>\n";
-  echo "<tr><td id=\"tab2\" class=\"button_on\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab2')\" onmouseout=\"buttonout('tab2')\" onclick=\"buttonclick('security','tab2')\">&nbsp;" . $string['securitytab'] . "</td></tr>\n";
+  echo "<tr><td id=\"tab1\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab1')\" onmouseout=\"buttonout('tab1')\" onclick=\"buttonclick('general','tab1')\">&nbsp;" . $string['generaltab'] . "</td></tr>\n";
+  echo "<tr><td id=\"tab2\" style=\"background-color:#FFBD69; height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab2')\" onmouseout=\"buttonout('tab2')\" onclick=\"buttonclick('security','tab2')\">&nbsp;" . $string['securitytab'] . "</td></tr>\n";
 } else {
-  echo "<tr><td id=\"tab1\" class=\"button_on\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab1')\" onmouseout=\"buttonout('tab1')\" onclick=\"buttonclick('general','tab1')\">&nbsp;" . $string['generaltab'] . "</td></tr>\n";
-  echo "<tr><td id=\"tab2\" class=\"button_off\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab2')\" onmouseout=\"buttonout('tab2')\" onclick=\"buttonclick('security','tab2')\">&nbsp;" . $string['securitytab'] . "</td></tr>\n";
+  echo "<tr><td id=\"tab1\" style=\"background-color:#FFBD69; height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab1')\" onmouseout=\"buttonout('tab1')\" onclick=\"buttonclick('general','tab1')\">&nbsp;" . $string['generaltab'] . "</td></tr>\n";
+  echo "<tr><td id=\"tab2\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab2')\" onmouseout=\"buttonout('tab2')\" onclick=\"buttonclick('security','tab2')\">&nbsp;" . $string['securitytab'] . "</td></tr>\n";
 }
 if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '6') {
-  echo '<tr><td id="tab3" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab3\')" onmouseout="buttonout(\'tab3\')" onclick="buttonclick(\'feedback\',\'tab3\')">&nbsp;' . $string['feedback'] . '</td></tr>';
-  echo '<tr><td id="tab4" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab4\')" onmouseout="buttonout(\'tab4\')" onclick="buttonclick(\'reviewers\',\'tab4\')">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
+  echo '<tr><td id="tab3" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab3\')" onmouseout="buttonout(\'tab3\')" onclick="buttonclick(\'feedback\',\'tab3\')">&nbsp;' . $string['feedback'] . '</td></tr>';
+  echo '<tr><td id="tab4" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab4\')" onmouseout="buttonout(\'tab4\')" onclick="buttonclick(\'reviewers\',\'tab4\')">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
 } else {
-  echo '<tr><td id="tab3" class="button_off" style="display:none">&nbsp;' . $string['feedback'] . '</td></tr>';
-  echo '<tr><td id="tab4" class="button_off" style="display:none">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
+  echo '<tr><td id="tab3" style="display:none">&nbsp;' . $string['feedback'] . '</td></tr>';
+  echo '<tr><td id="tab4" style="display:none">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
 }
 if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
-  echo '<tr><td id="tab5" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab5\')" onmouseout="buttonout(\'tab5\')" onclick="buttonclick(\'rubric\',\'tab5\')">&nbsp;' . $string['rubrictab'] . '</td></tr>';
+  echo '<tr><td id="tab5" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab5\')" onmouseout="buttonout(\'tab5\')" onclick="buttonclick(\'rubric\',\'tab5\')">&nbsp;' . $string['rubrictab'] . '</td></tr>';
 } else {
-  echo '<tr><td id="tab5" class="button_off" style="display:none">&nbsp;' . $string['rubrictab'] . '</td></tr>';
+  echo '<tr><td id="tab5" style="display:none">&nbsp;' . $string['rubrictab'] . '</td></tr>';
 }
 if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5') {
-  echo '<tr><td id="tab6" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab6\')" onmouseout="buttonout(\'tab6\')" onclick="buttonclick(\'prologue\',\'tab6\')">&nbsp;' . $string['prologuetab'] . '</td></tr>';
-  echo '<tr><td id="tab7" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab7\')" onmouseout="buttonout(\'tab7\')" onclick="buttonclick(\'postscript\',\'tab7\')">&nbsp;' . $string['postscripttab'] . '</td></tr>';
+  echo '<tr><td id="tab6" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab6\')" onmouseout="buttonout(\'tab6\')" onclick="buttonclick(\'prologue\',\'tab6\')">&nbsp;' . $string['prologuetab'] . '</td></tr>';
+  echo '<tr><td id="tab7" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab7\')" onmouseout="buttonout(\'tab7\')" onclick="buttonclick(\'postscript\',\'tab7\')">&nbsp;' . $string['postscripttab'] . '</td></tr>';
 } else {
-  echo '<tr><td id="tab6" class="button_off" style="display:none">&nbsp;' . $string['prologuetab'] . '</td></tr>';
-  echo '<tr><td id="tab7" class="button_off" style="display:none">&nbsp;' . $string['postscripttab'] . '</td></tr>';
+  echo '<tr><td id="tab6" style="display:none">&nbsp;' . $string['prologuetab'] . '</td></tr>';
+  echo '<tr><td id="tab7" style="display:none">&nbsp;' . $string['postscripttab'] . '</td></tr>';
 }
 if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
-  echo '<tr><td id="tab8" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab8\')" onmouseout="buttonout(\'tab8\')" onclick="buttonclick(\'reference\',\'tab8\')">&nbsp;' . $string['referencematerial'] . '</td></tr>';
+  echo '<tr><td id="tab8" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover(\'tab8\')" onmouseout="buttonout(\'tab8\')" onclick="buttonclick(\'reference\',\'tab8\')">&nbsp;' . $string['referencematerial'] . '</td></tr>';
 } else {
-  echo '<tr><td id="tab8" class="button_off" style="display:none">&nbsp;' . $string['referencematerial'] . '</td></tr>';
+  echo '<tr><td id="tab8" style="display:none">&nbsp;' . $string['referencematerial'] . '</td></tr>';
 }
 ?>
-<tr><td id="tab9" class="button_off" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab9')" onmouseout="buttonout('tab9')" onclick="buttonclick('changes','tab9')">&nbsp;<?php echo $string['changes']; ?></td></tr>
+<tr><td id="tab9" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('tab9')" onmouseout="buttonout('tab9')" onclick="buttonclick('changes','tab9')">&nbsp;<?php echo $string['changes']; ?></td></tr>
 </table>
 
 </td>

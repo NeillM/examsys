@@ -89,7 +89,6 @@ require '../include/sort.inc';
   
 ?>
 </tr>
-<tr><th colspan="3" class="bevel"></th></tr>
 <?php
 $course_no = 0;
 $courses = array();

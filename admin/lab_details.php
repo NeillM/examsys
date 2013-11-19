@@ -75,17 +75,17 @@ $results->close();
       echo "<table class=\"header\">\n";
       echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php\">" . $string['administrativetools'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./list_labs.php\">" . $string['computerlabs'] . "</a></div><div style=\"font-size:220%; font-weight:bold; margin-left:10px\">$name</div></th>\n";
       echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(231); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
-      echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+      echo "</table>\n";
       echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:440px\"><div><strong>" . $string['ipaddresses'] . " (" . $results->num_rows . ")</strong></div>\n<div style=\"height:590px; overflow-y:scroll; border: 1px solid #EEEDE5\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
     }
 
     if ($configObject->get('cfg_client_lookup') == 'name') {
-      echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:135px\">$address</td></tr>\n";
+      echo "<tr><td><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:135px\">$address</td></tr>\n";
     } else {
       if ($address == $hostname) {
-        echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:200px; color:red\">$address</td><td style=\"color:red\">$hostname</td></tr>\n";
+        echo "<tr><td><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:200px; color:red\">$address</td><td style=\"color:red\">$hostname</td></tr>\n";
       } else {
-        echo "<tr><td><img src=\"../artwork/screen_icon.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:200px\">$address</td><td style=\"color:#808080\">$hostname</td></tr>\n";
+        echo "<tr><td><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:200px\">$address</td><td style=\"color:#808080\">$hostname</td></tr>\n";
       }
     }
 

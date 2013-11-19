@@ -158,7 +158,6 @@ $reviews_html .= <<< TABLEHEADER
   <th class="vert_div" style="width:14%">{$string['method']}</th>
   <th class="vert_div" width="25%">&nbsp;</th>
 </tr>
-<tr><th colspan="9" class="bevel"></th></tr>
 TABLEHEADER;
 
 $no_reviews = 0;

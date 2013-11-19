@@ -86,7 +86,6 @@ function getLabs($labs, $mysqlidb) {
 <th class="vert_div"><?php echo $string['cohortsize']; ?></th>
 
 </tr>
-<tr><th colspan="5" class="bevel"></th></tr>
   <tr><td colspan="5"><table border="0" class="subsect" style="width:98%"><tr><td><nobr><?php echo $string['unscheduled']; ?></nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>
 <?php
   $rowID = 0;

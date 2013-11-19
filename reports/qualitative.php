@@ -83,7 +83,6 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
   echo '<input type="hidden" name="repcourse" value="' . $_GET['repcourse'] . '" />';
   echo '<input type="hidden" name="repyear" value="' . $_GET['repyear'] . '" />';
   echo "</th></tr>";
-  echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
 ?>
 </table>
 </form>

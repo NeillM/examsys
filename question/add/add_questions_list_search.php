@@ -166,9 +166,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     }
   }
   echo '</tr>';
-?>
-  <tr><th colspan="6" class="bevel"></th></tr>
-<?php
+
   echo "<form name=\"theform\" method=\"post\" action=\"\">\n";
   echo '<input type="hidden" name="screen" value="1" />';
 

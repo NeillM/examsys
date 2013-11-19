@@ -1307,9 +1307,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" />
       </th>
       </tr>
-      <tr>
-        <th colspan="2" class="bevel"></th>
-      </tr>
     </table>
     <?php
   }

@@ -115,7 +115,8 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
         body {
             font-size: 90%;
             background-color: #FCFCFC;
-            color: #575757
+            color: #575757;
+						margin-top: 8px;
         }
 
         h1 {
@@ -124,7 +125,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
         }
 
         #summ_test {
-            margin: 36px 0 0 58px;
+            margin: 36px 0 0 90px;
         }
 
         #summ_test  a {
@@ -206,17 +207,17 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     </style>
   <?php
   echo "</head>\n<body>\n";
-  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
-  echo "<h1 class=\"dkblue_header\" style=\"margin-left:60px\">" . $string['cannotfindexams'] . "</h1>\n";
+  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/exclamation_64.png\" width=\"64\" height=\"64\" /></div>\n";
+  echo "<h1 class=\"dkblue_header\" style=\"margin-left:90px\">" . $string['cannotfindexams'] . "</h1>\n";
 
   if ($userObject->has_role('Staff')) {
-    echo "<p style=\"margin-left:60px; color:#C00000\">" . $string['note1'] . " <img src=\"{$configObject->get('cfg_root_path')}/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"staff/index.php\" style=\"color:blue\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
+    echo "<p style=\"margin-left:90px; color:#C00000\">" . $string['note1'] . " <img src=\"{$configObject->get('cfg_root_path')}/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"staff/index.php\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
   }
 
-  echo "<hr noshade=\"noshade\" style=\"margin-left:60px; border:0px; height:1px; color:#C0C0C0; background-color:#C0C0C0; width:500px\" align=\"left\" />\n<p style=\"margin-left:60px\">" . $string['mostLikely'] . "</p>\n<ul style=\"margin-left:80px\">\n";
+  echo "<hr noshade=\"noshade\" style=\"margin-left:90px; border:0px; height:1px; color:#C0C0C0; background-color:#C0C0C0; width:500px\" align=\"left\" />\n<p style=\"margin-left:90px\">" . $string['mostLikely'] . "</p>\n<ul style=\"margin-left:80px\">\n";
 
   $current_address = NetworkUtils::get_client_address();
-  $ip_info = $mysqli->prepare("SELECT name, room_no FROM (labs, client_identifiers) WHERE labs.id=client_identifiers.lab AND address=?");
+  $ip_info = $mysqli->prepare("SELECT name, room_no FROM (labs, client_identifiers) WHERE labs.id = client_identifiers.lab AND address = ?");
   $ip_info->bind_param('s', $current_address);
   $ip_info->execute();
   $ip_info->store_result();
@@ -280,7 +281,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
       }
     }
   }
-  echo "</li>\n</ul>\n<p style=\"margin-left:60px\">" . $string['try'] . ":</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['f5'] . "</li>\n<li>" . $string['RaiseYourHand '] . "</li>\n</ul>\n";
+  echo "</li>\n</ul>\n<p style=\"margin-left:90px\">" . $string['try'] . ":</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['f5'] . "</li>\n<li>" . $string['RaiseYourHand '] . "</li>\n</ul>\n";
 
   // Show staff a list of summative papers in the next 6 weeks with a link to test & preview
   if ($userObject->has_role('Staff')) {

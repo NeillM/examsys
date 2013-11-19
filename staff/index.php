@@ -164,9 +164,6 @@ require_once '../include/staff_auth.inc';
     </th>
     <th style="text-align:right; padding-right:10px"><?php echo $logo_html; ?></th>
   </tr>
-  <tr>
-    <td colspan="2" class="bevel"></td>
-  </tr>
 </table>
 <?php
   $as_pos = strpos($configObject->get('cfg_install_type'),' as ');

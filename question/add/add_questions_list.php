@@ -150,7 +150,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     }
   }
   echo '</tr>';
-  echo "<tr><th colspan=\"6\" class=\"bevel\"></th></tr>\n";
 
   $id = 0;
   if ($sortby == 'leadin') $sortby = 'leadin_plain';

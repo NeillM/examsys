@@ -25,7 +25,7 @@
 ?>
 <script language="JavaScript">
   function restoreItem() {
-    document.location.href='restore_item.php?item_id=' + $('#itemID').val();
+    document.location.href = 'restore_item.php?item_id=' + $('#itemID').val();
   }
 </script>
 
@@ -36,11 +36,11 @@
 <div style="font-weight:bold"><?php echo $string['recyclebintasks']; ?></div>
 
 <div style="font-size:90%" id="menu1a">
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/restore_grey.png" alt="" /><?php echo $string['restorethisitem']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/import_grey_16.gif" alt="" /><?php echo $string['restorethisitem']; ?></div>
 </div>
 
 <div style="font-size:90%; display:none" id="menu1b">
-	<div clss="menuitem" id="restore" onclick="restoreItem()"><img class="sidebar_icon" src="../artwork/restore.png" alt="" /><a onclick="return false" href="#"><?php echo $string['restorethisitem']; ?></a></div>
+	<div clss="menuitem" id="restore" onclick="restoreItem()"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><a onclick="return false" href="#"><?php echo $string['restorethisitem']; ?></a></div>
 </div>
 
 <input type="hidden" id="itemID" name="itemID" value="" />

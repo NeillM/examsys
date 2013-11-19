@@ -150,7 +150,6 @@ require_once '../classes/moduleutils.class.php';
 ?>
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(237); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['mypersonalkeywords']; ?>" border="0" /></a></th>
 </tr>
-<tr><th colspan="2" class="bevel"></th></tr>
 <?php
 foreach ($keyword_list as $keywordID => $keyword) {
   echo "<tr class=\"qline\" id=\"link_$keywordID\" onclick=\"selKey($keywordID, event)\" ondblclick=\"editKeyword($keywordID)\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";

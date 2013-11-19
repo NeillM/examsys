@@ -95,7 +95,7 @@ $paper = $propertyObj->get_paper_title();
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%">' . $phase_description . '</div></th>';
   echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(214); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
-  echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+  echo "</table>\n";
 
   echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n";
 

@@ -118,8 +118,7 @@ if (!$module) {
   echo "<tr><th class=\"vert_div col10\">" . $string['date'] . "</th>\n";
   echo "<th class=\"vert_div\">" . $string['name'] . "</th>\n";
   echo "<th class=\"vert_div\">" . $string['objectives'] . "</th><th>&nbsp;</th></tr>\n";
-  echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
-  
+
   $old_session = '';
   $id = 0;
 	$first = true;
