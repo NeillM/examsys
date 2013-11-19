@@ -36,7 +36,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		function ql_gen_img_onload() {
 			this.gen_img_loaded = true;
 			this.redraw_once = true;
-      this.ql_redraw_canvas;        
+      this.ql_redraw_canvas();        
 		}
 		this.gen_img.onload = ql_gen_img_onload.bind(this);
 		this.gen_img.src = '/media/'+image; 
@@ -302,7 +302,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			if (this.imagesLoaded == this.max_num_images) {
 				this.allImagesLoaded = true;
 				this.redraw_once = true;
-				this.ql_redraw_canvas;
+				this.ql_redraw_canvas();
 				
 				//reassign images to other levels
 				for (i=0;i<this.answerBox.length;i++) {
@@ -361,7 +361,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
     if (this.max_num_images == 0) {
       this.allImagesLoaded = true;
       this.redraw_once = true;
-      this.ql_redraw_canvas;
+      this.ql_redraw_canvas();
     }
 
 		//----- menuBox
@@ -806,11 +806,11 @@ function ql_menuBuild() {
 }
 
 function ql_redraw_canvas() {
-	var tmp_count = 0;
-	for (i=0;i<this.answerBox.length;i++) tmp_count += this.answerBox[i].length
+	var tmp_count = 0;for (i=0;i<this.answerBox.length;i++) tmp_count += this.answerBox[i].length //?
 	
 	this.char_labels = 0;
 	this.draw_limit = new Array(0,27,this.canvas.width-2,this.canvas.height-2);
+	
   function draw_shape(_self,tt,tx1,ty1,tx2,ty2) {
     //drawing the line, bobble or arrow...
     _self.context.beginPath();
@@ -850,6 +850,7 @@ function ql_redraw_canvas() {
     }
   }
  
+	//main redrawing part
 	if (this.allImagesLoaded && this.menu_img_loaded && this.gen_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || (this.global_add != '' &&  this.shape_x1>-1) || this.global_move || this.global_erase)){
 		this.redraw_once = false;
     //store this.lineThickness 
@@ -857,7 +858,7 @@ function ql_redraw_canvas() {
 		this.menu_ext = 0;if (this.qType == "menu") this.menu_ext = 18;
 
 		for (i=0;i<this.shapeBox.length;i++) {
-			//recalculating against limits
+			//recalculating shapes against limits
 			if (this.shapeBox[i][2]<this.draw_limit[0]) this.shapeBox[i][2]=this.draw_limit[0];
 			if (this.shapeBox[i][4]<this.draw_limit[0]) this.shapeBox[i][4]=this.draw_limit[0];
 			if (this.shapeBox[i][2]>this.draw_limit[2]) this.shapeBox[i][2]=this.draw_limit[2];
@@ -866,11 +867,12 @@ function ql_redraw_canvas() {
 			if (this.shapeBox[i][5]<this.draw_limit[1]) this.shapeBox[i][5]=this.draw_limit[1];
 			if (this.shapeBox[i][3]>this.draw_limit[3]) this.shapeBox[i][3]=this.draw_limit[3];
 			if (this.shapeBox[i][5]>this.draw_limit[3]) this.shapeBox[i][5]=this.draw_limit[3];
-		}    
+		}
+		
 		//testing
     if ((this.global_move || this.global_erase) && typeof this.x != 'undefined') {
       this.lineThickness = 1.5*hold_lineThickness+2;
-      this.activ_shape = -1;
+      this.active_shape = -1;
       this.context.lineWidth = this.lineThickness;
       this.context.fillStyle = this.context.strokeStyle='#ff0000';
       for (i=0;i<this.shapeBox.length;i++) {
@@ -878,11 +880,12 @@ function ql_redraw_canvas() {
         draw_shape(this,this.shapeBox[i][1],this.shapeBox[i][2],this.shapeBox[i][3]-this.yOffset,this.shapeBox[i][4],this.shapeBox[i][5]-this.yOffset);
         var timgd = this.context.getImageData(this.x,this.y,1,1);
         var timgp = timgd.data;
-        if (hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() == '#FF0000') this.activ_shape=i;
+        if (hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() == '#FF0000') this.active_shape=i;
       }
     }
-    //testing end
-
+    //testing - end
+		
+		
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
  		this.context.drawImage(this.gen_img,221,26-this.yOffset);
 
@@ -891,32 +894,32 @@ function ql_redraw_canvas() {
     this.context.strokeStyle='#7f9db9';  
     this.context.strokeRect(220.5,0.5,this.canvas.width-220,this.canvas.height-1); 
     
-    if (this.global_move && this.activ_shape_move>-1) {      
-      var tx = this.activ_shape_x - this.x;
-      var ty = this.activ_shape_y - this.y;      
+    if (this.global_move && this.active_shape_move>-1) {      
+      var tx = this.active_shape_x - this.x;
+      var ty = this.active_shape_y - this.y;      
       var shape_end = 0
-      if (Math.abs(this.shapeBox[this.activ_shape_move][2]-this.activ_shape_x)<5 && Math.abs(this.shapeBox[this.activ_shape_move][3]-this.activ_shape_y)<5) shape_end =1;
-      if (Math.abs(this.shapeBox[this.activ_shape_move][4]-this.activ_shape_x)<5 && Math.abs(this.shapeBox[this.activ_shape_move][5]-this.activ_shape_y)<5) shape_end =2;
+      if (Math.abs(this.shapeBox[this.active_shape_move][2]-this.active_shape_x)<5 && Math.abs(this.shapeBox[this.active_shape_move][3]-this.active_shape_y)<5) shape_end =1;
+      if (Math.abs(this.shapeBox[this.active_shape_move][4]-this.active_shape_x)<5 && Math.abs(this.shapeBox[this.active_shape_move][5]-this.active_shape_y)<5) shape_end =2;
       
       //move whole
       if (shape_end == 0 || shape_end == 1) {
-        this.shapeBox[this.activ_shape_move][2] -= tx; 
-        this.shapeBox[this.activ_shape_move][3] -= ty;
+        this.shapeBox[this.active_shape_move][2] -= tx; 
+        this.shapeBox[this.active_shape_move][3] -= ty;
       }
       if (shape_end == 0 || shape_end == 2) {
-        this.shapeBox[this.activ_shape_move][4] -= tx;
-        this.shapeBox[this.activ_shape_move][5] -= ty;
+        this.shapeBox[this.active_shape_move][4] -= tx;
+        this.shapeBox[this.active_shape_move][5] -= ty;
       }
-      this.activ_shape_x = this.x;
-      this.activ_shape_y = this.y;
+      this.active_shape_x = this.x;
+      this.active_shape_y = this.y;
     }
     
     //draw background for active shape
-    if ((this.global_move || this.global_erase) && this.activ_shape>-1) {
+    if ((this.global_move || this.global_erase) && this.active_shape>-1) {
       this.context.lineWidth = this.lineThickness;
       this.context.fillStyle = this.context.strokeStyle='#ffaaaa';
       this.context.lineCap = 'round';
-      draw_shape(this,this.shapeBox[this.activ_shape][1],this.shapeBox[this.activ_shape][2],this.shapeBox[this.activ_shape][3]-this.yOffset,this.shapeBox[this.activ_shape][4],this.shapeBox[this.activ_shape][5]-this.yOffset);
+      draw_shape(this,this.shapeBox[this.active_shape][1],this.shapeBox[this.active_shape][2],this.shapeBox[this.active_shape][3]-this.yOffset,this.shapeBox[this.active_shape][4],this.shapeBox[this.active_shape][5]-this.yOffset);
     }
     
     //restore this.lineThickness 
@@ -931,9 +934,9 @@ function ql_redraw_canvas() {
     }		
 		
 		//draw handlers for active shape
-    if (this.global_move && this.activ_shape>-1) {
-			this.edtDot(this.context,'#cc0000',this.shapeBox[this.activ_shape][2],this.shapeBox[this.activ_shape][3]-this.yOffset,2+0.1*this.lineThickness);
-			this.edtDot(this.context,'#cc0000',this.shapeBox[this.activ_shape][4],this.shapeBox[this.activ_shape][5]-this.yOffset,2+0.1*this.lineThickness);
+    if (this.global_move && this.active_shape>-1) {
+			this.edtDot(this.context,'#cc0000',this.shapeBox[this.active_shape][2],this.shapeBox[this.active_shape][3]-this.yOffset,2+0.1*this.lineThickness);
+			this.edtDot(this.context,'#cc0000',this.shapeBox[this.active_shape][4],this.shapeBox[this.active_shape][5]-this.yOffset,2+0.1*this.lineThickness);
 
 			this.context.strokeStyle=this.currentColours[1];
 			this.context.fillStyle = this.currentColours[1];
@@ -942,10 +945,10 @@ function ql_redraw_canvas() {
     if (this.shape_x1>-1 && this.shape_x2 == -1) draw_shape(this,this.global_add,this.shape_x1,this.shape_y1-this.yOffset,this.x,this.y-this.yOffset);
  		this.context.font=this.fontSizes[this.fontSizePos]+"px Arial";
 		
+      
+		//draw labels placeholders
 		var loc_width = this.imglabelWidth;
 		var loc_height = this.imglabelHeight;
-      
-		//draw placeholders
 		if (this.qmode != 'edit' && this.qType != 'menu') {
 			for (i=0;i<this.pholderBox.length;i++) {
 				if (typeof(this.pholderBox[i])!='undefined') {
@@ -963,8 +966,40 @@ function ql_redraw_canvas() {
 		}
 		this.context.fillStyle=this.currentColours[0]; //resetting colour
 		
-		//edit box
+		//moving shapes by arrow keys
+		if (this.qmode == 'edit' && this.active_shape>-1) {
+			if (this.key_code == 39) { //arror right
+				this.shapeBox[this.active_shape][2]++;
+				this.shapeBox[this.active_shape][4]++;
+			}
+			if (this.key_code == 37) { //arrow left
+				this.shapeBox[this.active_shape][2]--;
+				this.shapeBox[this.active_shape][4]--;
+			}
+			if (this.key_code == 38) { //arrow up
+				this.shapeBox[this.active_shape][3]--;
+				this.shapeBox[this.active_shape][5]--;			
+			}
+			if (this.key_code == 40) { //arrow down
+				this.shapeBox[this.active_shape][3]++;
+				this.shapeBox[this.active_shape][5]++;			
+			}
+		}
 
+		//accessibility tab select of labels
+		if (this.qmode == 'edit' && this.key_code == 9) { //tab
+			this.active_box_combo++;
+			if (this.answerBox[this.active_box_id].length<=this.active_box_combo) {
+				this.active_box_id++;
+				this.active_box_combo = 0;
+			}
+			if (this.answerBox.length<=this.active_box_id) {
+				this.active_box_id = 0;
+				this.active_box_combo = 0;
+			}			
+		}
+
+		//edit box
 		if (this.qmode == 'edit' && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
 			loc_width = this.imglabelWidth;loc_height = this.imglabelHeight;
 			if (this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][1] == 'text') {
@@ -990,7 +1025,8 @@ function ql_redraw_canvas() {
 					this.ql_ReturnInfo();
 				}
 			}
-			if (this.key_code == 38) { //arror up
+			if (this.key_code == 38) { //arrow up
+				//if (activ_shape
 				if (this.edit_box_id==-1) {
 					this.answerBox[this.active_box_id][this.active_box_combo][6]--;
 					this.ql_ReturnInfo();
@@ -1001,7 +1037,9 @@ function ql_redraw_canvas() {
 					this.answerBox[this.active_box_id][this.active_box_combo][6]++;
 					this.ql_ReturnInfo();
 				}
-			}			if (this.key_code == 35) this.edit_box_pos=text_len; 	//end
+			}			
+			
+			if (this.key_code == 35) this.edit_box_pos=text_len; 	//end
 			if (this.key_code == 36) this.edit_box_pos=0; 				//home	
 			if (this.edit_box_pos<0) this.edit_box_pos=0;
 			if (this.edit_box_pos>text_len) this.edit_box_pos=text_len;
@@ -1027,7 +1065,9 @@ function ql_redraw_canvas() {
 				}
 				this.ql_ReturnInfo();
 			}
-			
+		}
+		
+		if (this.qmode == 'edit' && (this.active_shape>-1 || (this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image'))) {
 			this.char_code = '';
 			this.key_code = 0;
 		}      
@@ -1174,7 +1214,6 @@ function ql_redraw_canvas() {
 					//if (this.answerBox[i][0][5] == this.pholderBox[this.drag_pho_id][5] && this.answerBox[i][0][6] == this.pholderBox[this.drag_pho_id][6]) tmp_test=i;
 					if (this.answerBox[i][0][1] == this.pholderBox[this.drag_pho_id][1] && this.answerBox[i][0][2] == this.pholderBox[this.drag_pho_id][2]) tmp_test=i;
 				}
-				console.log(tmp_test,this.drag_pho_id);
 				if (tmp_test != -1 && this.qType != "menu") this.ql_draw_box(tmp_test,-1,this.pholderBox[this.drag_pho_id][5],this.pholderBox[this.drag_pho_id][6]);
 			}
 		}
@@ -1184,6 +1223,45 @@ function ql_redraw_canvas() {
 			this.ql_redraw_box(this.mov_id,this.mov_combo);
 			}
 					
+		if (this.qmode == 'answer'){
+			this.context.lineWidth = 3;
+			if (this.answer_access_id>-1) {
+				loc_width = this.imglabelWidth;
+				loc_height = this.imglabelHeight;
+				if (this.answerBox[this.answer_access_id][0][1] == 'text') {
+					loc_width = this.labelWidthEffect;
+					loc_height= this.labelHeightEffect;
+				}
+
+				//draw handlers for active label
+				this.context.strokeStyle='#FFBD69';
+				this.context.strokeRect(
+					this.answerBox[this.answer_access_id][0][5]-this.context.lineWidth/2+1.5,
+					this.answerBox[this.answer_access_id][0][6]-this.context.lineWidth/2+1.5,
+					loc_width+this.context.lineWidth,
+					loc_height+this.context.lineWidth);
+				this.context.strokeStyle=this.currentColours[1];
+			}
+			if (this.pholder_access_id>-1) {
+				loc_width = this.imglabelWidth;
+				loc_height = this.imglabelHeight;
+				if (this.pholderBox[this.pholder_access_id][1] == 'text') {
+					loc_width = this.labelWidthEffect;
+					loc_height= this.labelHeightEffect;
+				}
+
+				//draw handlers for active label
+				this.context.strokeStyle='#FFBD69';
+				this.context.strokeRect(
+					this.pholderBox[this.pholder_access_id][5]-this.context.lineWidth/2+1.5,
+					this.pholderBox[this.pholder_access_id][6]-this.context.lineWidth/2+1.5,
+					loc_width+this.context.lineWidth,
+					loc_height+this.context.lineWidth);
+				this.context.strokeStyle=this.currentColours[1];
+			}
+	    this.context.lineWidth = this.lineThickness;
+		}
+
 		if (this.qmode == 'edit' && this.active_box_id>-1 && this.active_box_id!=this.mov_id) {
 			loc_width = this.imglabelWidth;
 			loc_height = this.imglabelHeight;
@@ -1444,7 +1522,7 @@ function ql_mouseDragMove(e){
       if (this.buttonOver != buttonTest) {
         this.buttonOver = buttonTest;
         this.redraw_once = true;
-        this.ql_redraw_canvas;
+        this.ql_redraw_canvas();
       }
 
       //test for panels
@@ -1473,15 +1551,15 @@ function ql_mouseDragMove(e){
       if (this.panelOptionOver != panelOptionTest) {
         this.panelOptionOver = panelOptionTest;
         this.redraw_once = true;
-        this.ql_redraw_canvas;
+        this.ql_redraw_canvas();
       }
 		
       var cur = 'default';
 			if (over_object) cur = 'pointer';
-			if (this.global_move && this.activ_shape>-1 && this.y>28) cur = 'move';
+			if (this.global_move && this.active_shape>-1 && this.y>28) cur = 'move';
 			if (this.active_box_handler!=-1) cur = 'move';
 			//this works only in css3 browsers otherwise whole cursor is ignored
- 			if (this.global_erase && this.activ_shape>-1 && this.y>28) cur = 'url(/js/images/cur_erase.cur) 6 5, default';
+ 			if (this.global_erase && this.active_shape>-1 && this.y>28) cur = 'url(/js/images/cur_erase.cur) 6 5, default';
  			if (this.global_erase && this.drag_box_id>-1 && this.y>28) cur = 'url(/js/images/cur_erase.cur) 6 5, default';
 
       if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') cur = 'help';
@@ -1489,7 +1567,53 @@ function ql_mouseDragMove(e){
 		}
 	}
   //this.freehand draw end  
+	
+	if (this.qmode == 'answer'){
+		if (this.char_code == ' ') { //space
+			this.access_switch ++;
+			if (this.access_switch==2) {
+				this.access_switch = 0;
+				
+				//simulating drag and drop
+				/*
+				this.x = this.pholderBox[this.pholder_access_id][5]+1;
+				this.y = this.pholderBox[this.pholder_access_id][6]+1;
+				*/
+				this.drag_box_id = this.answer_access_id;
+				this.drag_box_combo = 0;
+				this.mov_id = this.answer_access_id;
+				this.mov_combo = 0;
+				//this.answerBox[this.answer_access_id][0][5]+=200;
+				this.ql_mouseDragUp();
+				
+			}
+		}
+		if (this.key_code == 9) { //tab
+			if (this.access_switch==-1) this.access_switch ++;
+			
+			if (this.access_switch==0) {
+				this.answer_access_combo = 0;
+				this.answer_access_id++;
+				if (this.answerBox[this.answer_access_id][0][2]=='') 
+					for (var a=this.answer_access_id;a<this.answerBox.length;a++) 
+						if (this.answerBox[this.answer_access_id][0][2]=='') this.answer_access_id=a;
+				if ((this.answerBox.length-1)<=this.answer_access_id) this.answer_access_id = 0;
+			}
 
+			if (this.access_switch==1) {
+				this.pholder_access_id++;
+				if (this.pholderBox[this.pholder_access_id][2]=='') 
+					for (var a=this.pholder_access_id;a<this.pholderBox.length;a++) 
+						if (this.pholderBox[this.pholder_access_id][2]=='') this.pholder_access_id=a;
+				if ((this.pholderBox.length-1)<=this.pholder_access_id) this.pholder_access_id = 0;
+			}
+		}
+		this.char_code = '';
+		this.key_code = 0;
+		this.redraw_once = true;
+		this.ql_redraw_canvas();
+	}
+		
 	//cancel propagation if BackSpace
 	if (this.ev.type == 'keydown' && this.ev.keyCode<=46) {
 		if (this.ev.stopPropagation) this.ev.stopPropagation();
@@ -1511,9 +1635,9 @@ function ql_mouseDragDown(e){
 		if (this.panelOptionOver == -1) this.dragging = true;	
 	}
   
-  this.activ_shape_move = this.activ_shape;
-  this.activ_shape_x = this.x;
-  this.activ_shape_y = this.y;
+  this.active_shape_move = this.active_shape;
+  this.active_shape_x = this.x;
+  this.active_shape_y = this.y;
 	
 	//test for label handlers
 	if (this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] == 'text') {
@@ -1570,23 +1694,8 @@ function ql_mouseDragUp(){
 	
 	//help link
 	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
-			/*
-			console.log('>>>> answerBox >>>>');
-			for (i=0;i<this.answerBox.length;i++) 
-				if (typeof(this.answerBox[i])!='undefined')
-					for (j=0;j<this.answerBox[i].length;j++) 
-						console.log(i,j,this.answerBox[i][j]);
-			console.log('----');
-			
-			console.log('>>>> pholderBox >>>>');
-			for (i=0;i<this.pholderBox.length;i++) 
-				console.log(i,this.pholderBox[i]);
-			console.log('----');
-			*/
-			
-			//window.open('/help/staff/index.php?id=60');
+		window.open('/help/staff/index.php?id=60');
 	}
-
 
 	if (this.qmode!='script') {
 		if (this.drag_box_id == this.active_box_id && this.drag_box_combo == this.active_box_combo) {
@@ -1602,11 +1711,7 @@ function ql_mouseDragUp(){
 	}
 	this.dragging = false;
 	this.active_box_handler = -1;
-			console.log('drag',this.drag_box_id,this.drag_box_combo);
-			console.log('move',this.move_box_id,this.move_box_combo);
-			console.log('active',this.active_box_id,this.active_box_combo);
-			console.log('edit',this.edit_box_id,this.edit_box_combo);
-	
+			
 	//text cursor positioning on mouseclick
 	if (this.qmode == 'edit' && this.mov_id == -1 && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
 		var temp_x = this.answerBox[this.active_box_id][this.active_box_combo][5];
@@ -1634,10 +1739,10 @@ function ql_mouseDragUp(){
 	}
 	
   //erase shape by selecting erase button
-  if (this.global_erase && this.activ_shape>-1) {
-    this.shapeBox.splice(this.activ_shape,1);
+  if (this.global_erase && this.active_shape>-1) {
+    this.shapeBox.splice(this.active_shape,1);
   }
-  this.activ_shape_move = this.activ_shape = -1;
+  this.active_shape_move = this.active_shape = -1;
 	
 	//'erase' label by selecting erase button
   if (this.global_erase && this.drag_box_id>-1 && this.qmode == 'edit') {
@@ -1657,9 +1762,8 @@ function ql_mouseDragUp(){
 		this.mov_combo = this.drag_box_combo;
 	}
 	
-	
 	//testing dragged labels (sigle or multiple) over pholder to get dest_box
-	var dest_box=-1; //when it's >-1 than it's over some dstination holder
+	var dest_box=-1; //when it's >-1 than it's over some destination holder
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode == 'answer') {
 		//testing against the position of placeholders
 		for (i=0;i<this.pholderBox.length;i++) {
@@ -1675,7 +1779,9 @@ function ql_mouseDragUp(){
 		if (this.qType == "menu") dest_box = this.drag_box_id;
 	}	
 	
-	//verify if the label beeing dragged is not the same as already there
+	if (this.pholder_access_id>-1) dest_box = this.pholder_access_id;
+	
+	//verify if the label being dragged is not the same as already there
 	var duplicate = false;
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode == 'answer' && this.labelMulti == 'multiple' && this.qType=='label' && dest_box>-1){
 		var next_combo_nr = this.answerBox[this.drag_box_id].length; //nr of last combo for this drag_box_id
@@ -1700,7 +1806,7 @@ function ql_mouseDragUp(){
 		}
 	}
 	
-	//if new creating new instance of dragged label with new next_combo_nr 
+	//if creating new instance of dragged label with new next_combo_nr 
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode == 'edit' && this.labelMulti == 'multiple' && this.qType=='label'){
 		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220) {
 			next_combo_nr = this.answerBox[this.drag_box_id].length; //nr of last combo for this drag_box_id
@@ -1713,7 +1819,6 @@ function ql_mouseDragUp(){
 		}
 	}
 
-	
 	//renumbering ids
 	for (i=0;i<this.answerBox.length;i++)
 	for (j=0;j<this.answerBox[i].length;j++) {
@@ -1721,12 +1826,19 @@ function ql_mouseDragUp(){
 		this.answerBox[i][j][4] = j;
 	}
 	
-
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode == 'answer') {
 		this.mov_id = this.drag_box_id;
 		this.mov_combo = this.drag_box_combo;
 		this.mov_x = this.x - this.sub_x;
 		this.mov_y = this.y - this.sub_y;
+		if (this.pholder_access_id>-1) { //fix for accessibility
+			this.mov_x = this.answerBox[this.answer_access_id][this.answer_access_combo][5];
+			this.mov_y = this.answerBox[this.answer_access_id][this.answer_access_combo][6];
+			this.answer_access_id = -1;
+			this.answer_access_combo = -1;
+			this.pholder_access_id = -1;			
+		}
+
 		if (dest_box>-1 && this.answerBox[this.drag_box_id][this.drag_box_combo][1] == this.pholderBox[dest_box][1]) {
       //removing any shape previously put into that position
       for (i=0;i<this.answerBox.length;i++) {
@@ -1742,7 +1854,7 @@ function ql_mouseDragUp(){
 					}
 				}
 			}
-      //is it correctly dropped label
+      //is it correctly dropped label?
 
       if (this.answerBox[this.drag_box_id][this.drag_box_combo][2] == this.pholderBox[dest_box][2]) {
         this.answerBox[this.drag_box_id][this.drag_box_combo][3] = 't'
@@ -1878,7 +1990,7 @@ function ql_mouseDragUp(){
   if (this.panelOver == 9) this.lineThickness = this.panelOptionOver+1;
 
 	this.redraw_once = true;
-	this.ql_redraw_canvas;
+	this.ql_redraw_canvas();
   this.ql_ReturnInfo();
 }
 
@@ -2013,18 +2125,26 @@ function rql(num) {
 	this.get_char_key =	get_char_key;
 
 	this.test; 
-	this.x,this.y,this.z,this.sub_x,this.sub_y,this.m;
+	this.x,this.y,this.z,this.m;
+	this.sub_x = this.sub_y = 0;
 	this.i,this.j;
 	this.menu_line = -1;
 	this.scale_i = 1;                          	//label image scale
-	this.drag_box_id = -1;                      //index of box beeing dragged
+	this.drag_box_id = -1;                      //index of box being dragged
 	this.drag_box_combo = -1;                      
 	this.drag_pho_id = -1;											//index of pholder box over
-	this.active_box_id = -1;                    //index of box beeing active
+	this.active_box_id = -1;                    //index of box being active
 	this.active_box_combo = -1;                    
-	this.edit_box_id = -1;                    	//index of box beeing edited
+	
+	this.access_switch = -1;
+	this.answer_access_id = -1;                 //index of box being accessed
+	this.answer_access_combo = -1;                    
+	this.pholder_access_id = -1;                //index of box being accessed
+	this.pholder_access_combo = -1;                    
+	
+	this.edit_box_id = -1;                    	//index of box being edited
 	this.edit_box_combo = -1;                    
-  this.mov_id = -1;														//index of box beeing animated (to position)
+  this.mov_id = -1;														//index of box being animated (to position)
   this.mov_combo = -1;
   this.mov_x=0;
   this.mov_y=0;
@@ -2062,7 +2182,7 @@ function rql(num) {
   this.shape_x1 = this.shape_y1 = this.shape_x2 = this.shape_y2 = -1  // temporary params of a new line/arrow/bobble
   this.global_add = '';
   this.global_move = false;
-  this.activ_shape = this.activ_shape_move = this.activ_shape_x = this.activ_shape_y = -1;
+  this.active_shape = this.active_shape_move = this.active_shape_x = this.active_shape_y = -1;
 
   //defining panel's active parts
   //toolbar/pan_colours.png
