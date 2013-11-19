@@ -1228,7 +1228,7 @@ function ql_redraw_canvas() {
 			if (this.answer_access_id>-1) {
 				loc_width = this.imglabelWidth;
 				loc_height = this.imglabelHeight;
-				if (this.answerBox[this.answer_access_id][0][1] == 'text') {
+				if (this.answerBox[this.answer_access_id][this.answer_access_combo][1] == 'text') {
 					loc_width = this.labelWidthEffect;
 					loc_height= this.labelHeightEffect;
 				}
@@ -1236,8 +1236,8 @@ function ql_redraw_canvas() {
 				//draw handlers for active label
 				this.context.strokeStyle='#FFBD69';
 				this.context.strokeRect(
-					this.answerBox[this.answer_access_id][0][5]-this.context.lineWidth/2+1.5,
-					this.answerBox[this.answer_access_id][0][6]-this.context.lineWidth/2+1.5,
+					this.answerBox[this.answer_access_id][this.answer_access_combo][5]-this.context.lineWidth/2+1.5,
+					this.answerBox[this.answer_access_id][this.answer_access_combo][6]-this.context.lineWidth/2+1.5,
 					loc_width+this.context.lineWidth,
 					loc_height+this.context.lineWidth);
 				this.context.strokeStyle=this.currentColours[1];
@@ -1575,15 +1575,10 @@ function ql_mouseDragMove(e){
 				this.access_switch = 0;
 				
 				//simulating drag and drop
-				/*
-				this.x = this.pholderBox[this.pholder_access_id][5]+1;
-				this.y = this.pholderBox[this.pholder_access_id][6]+1;
-				*/
 				this.drag_box_id = this.answer_access_id;
-				this.drag_box_combo = 0;
+				this.drag_box_combo = this.answer_access_combo;
 				this.mov_id = this.answer_access_id;
 				this.mov_combo = 0;
-				//this.answerBox[this.answer_access_id][0][5]+=200;
 				this.ql_mouseDragUp();
 				
 			}
@@ -1592,19 +1587,71 @@ function ql_mouseDragMove(e){
 			if (this.access_switch==-1) this.access_switch ++;
 			
 			if (this.access_switch==0) {
-				this.answer_access_combo = 0;
-				this.answer_access_id++;
-				if (this.answerBox[this.answer_access_id][0][2]=='') 
-					for (var a=this.answer_access_id;a<this.answerBox.length;a++) 
-						if (this.answerBox[this.answer_access_id][0][2]=='') this.answer_access_id=a;
+				//creating sorted list of labels and selecting next available
+				var tmp_pos_array = [];
+				var tmp_sort_array = [];
+				for (i=this.answerBox.length-1;i>=0;i--) 
+				for (j=this.answerBox[i].length-1;j>=0;j--) 
+					if (this.answerBox[i][j][5]>0) tmp_pos_array[(1000+this.answerBox[i][j][6])+'.'+(1000+this.answerBox[i][j][5])] = i+','+j;
+				
+				//sort tmp array of labels positions
+				for (key in tmp_pos_array) tmp_sort_array.push(key);
+				tmp_sort_array.sort();
+				
+				//locate position of the selected
+				var tmp_pos = '';
+				for (key in tmp_pos_array) 
+					if (tmp_pos_array[key] == this.answer_access_id+','+this.answer_access_combo) tmp_pos = key;
+				
+				//locate index and selecting next
+				var tmp_i = -1;
+				for (i=0;i<tmp_sort_array.length;i++) 
+					if (tmp_sort_array[i]==tmp_pos) tmp_i = i;
+				tmp_i++;
+				if (tmp_i == tmp_sort_array.length) tmp_i=0;
+				tmp_pos = tmp_sort_array[tmp_i];
+				
+				this.answer_access_id = tmp_pos_array[tmp_pos].split(',')[0];
+				this.answer_access_combo = tmp_pos_array[tmp_pos].split(',')[1];
+
 				if ((this.answerBox.length-1)<=this.answer_access_id) this.answer_access_id = 0;
 			}
 
+			/*
 			if (this.access_switch==1) {
 				this.pholder_access_id++;
 				if (this.pholderBox[this.pholder_access_id][2]=='') 
-					for (var a=this.pholder_access_id;a<this.pholderBox.length;a++) 
-						if (this.pholderBox[this.pholder_access_id][2]=='') this.pholder_access_id=a;
+					for (i=this.pholder_access_id;i<this.pholderBox.length;i++) 
+						if (this.pholderBox[this.pholder_access_id][2]=='') this.pholder_access_id=i;
+				if ((this.pholderBox.length-1)<=this.pholder_access_id) this.pholder_access_id = 0;
+			}
+			*/
+			if (this.access_switch==1) {
+				//creating sorted list of labels and selecting next available
+				var tmp_pos_array = [];
+				var tmp_sort_array = [];
+				for (i=this.pholderBox.length-1;i>=0;i--) 
+					if (this.pholderBox[i][5]>0) tmp_pos_array[(1000+this.pholderBox[i][6])+'.'+(1000+this.pholderBox[i][5])] = i;
+				
+				//sort tmp array of labels positions
+				for (key in tmp_pos_array) tmp_sort_array.push(key);
+				tmp_sort_array.sort();
+				
+				//locate position of the selected
+				var tmp_pos = '';
+				for (key in tmp_pos_array) 
+					if (tmp_pos_array[key] == this.pholder_access_id) tmp_pos = key;
+				
+				//locate index and selecting next
+				var tmp_i = -1;
+				for (i=0;i<tmp_sort_array.length;i++) 
+					if (tmp_sort_array[i]==tmp_pos) tmp_i = i;
+				tmp_i++;
+				if (tmp_i == tmp_sort_array.length) tmp_i=0;
+				tmp_pos = tmp_sort_array[tmp_i];
+				
+				this.pholder_access_id = tmp_pos_array[tmp_pos];
+
 				if ((this.pholderBox.length-1)<=this.pholder_access_id) this.pholder_access_id = 0;
 			}
 		}
@@ -1795,8 +1842,8 @@ function ql_mouseDragUp(){
 			dest_box = -1;
 			next_combo_nr = -1;
 		}	
-		//if new creating new instance of dragged label with new next_combo_nr 
-		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220 && dest_box>-1) {
+		//if new - create new instance of the dragged label with new next_combo_nr 
+		if (this.pholder_access_id>-1 || (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220 && dest_box>-1)) {
 			var that_box = this.answerBox[this.drag_box_id][this.drag_box_combo].slice(0);
 			that_box[4] = next_combo_nr;
 			//reset copy
@@ -1806,7 +1853,7 @@ function ql_mouseDragUp(){
 		}
 	}
 	
-	//if creating new instance of dragged label with new next_combo_nr 
+	//if new  - create new instance of the dragged label with new next_combo_nr 
   if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode == 'edit' && this.labelMulti == 'multiple' && this.qType=='label'){
 		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220) {
 			next_combo_nr = this.answerBox[this.drag_box_id].length; //nr of last combo for this drag_box_id
@@ -1831,6 +1878,7 @@ function ql_mouseDragUp(){
 		this.mov_combo = this.drag_box_combo;
 		this.mov_x = this.x - this.sub_x;
 		this.mov_y = this.y - this.sub_y;
+		
 		if (this.pholder_access_id>-1) { //fix for accessibility
 			this.mov_x = this.answerBox[this.answer_access_id][this.answer_access_combo][5];
 			this.mov_y = this.answerBox[this.answer_access_id][this.answer_access_combo][6];
@@ -2140,7 +2188,6 @@ function rql(num) {
 	this.answer_access_id = -1;                 //index of box being accessed
 	this.answer_access_combo = -1;                    
 	this.pholder_access_id = -1;                //index of box being accessed
-	this.pholder_access_combo = -1;                    
 	
 	this.edit_box_id = -1;                    	//index of box being edited
 	this.edit_box_combo = -1;                    
