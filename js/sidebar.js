@@ -80,12 +80,10 @@ function scrollDownEnd() {
 
 function menuRowOn(rowID) {
 	$('#' + rowID).css('background-color', '#FFE7A2');
-	$('#' + rowID).css('border-color', '#FFBD69');
 }
 
 function menuRowOff(rowID) {
 	$('#' + rowID).css('background-color', 'white');
-	$('#' + rowID).css('border-color', 'white');
 }
 
 function showMenu(submenuID, menuID, callingID, arrayID, urlID, e) {    

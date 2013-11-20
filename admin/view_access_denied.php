@@ -80,9 +80,6 @@ foreach ($table_order as $display => $key) {
     echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a></th>";
   }
 }
-?>
-<tr><th colspan="5" class="bevel"></th></tr>
-<?php
 
 $id = 1;
 $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(tried), ipaddress, page, msg, users.id, users.title, initials, surname FROM denied_log, users WHERE denied_log.userID = users.id ORDER BY $sortby $ordering");

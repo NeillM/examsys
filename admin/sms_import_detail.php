@@ -74,7 +74,6 @@ function get_list($list, $db) {
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" /></a></th>
 </tr>
 <tr><th class="vert_div col10"><?php echo $string['moduleid']; ?></div></th><th class="vert_div"><?php echo $string['enrolements']; ?></th><th class="vert_div"><?php echo $string['enrolementdetails']; ?></th><th class="vert_div"><?php echo $string['deletions']; ?></th><th class="vert_div"><?php echo $string['deletiondetails']; ?></th><th class="vert_div"><?php echo $string['importtype']; ?></th></tr>
-<tr><th colspan="7" class="bevel"></th></tr>
 
 <?php
   $result = $mysqli->prepare("SELECT idMod, moduleid, enrolements, enrolement_details, deletions, deletion_details, import_type FROM sms_imports, modules WHERE sms_imports.idMod=modules.id AND updated=? ORDER BY moduleid");

@@ -199,6 +199,7 @@ class Authentication {
   }
 
   function register_callback($callback, $section, $number, $name, $insert = false) {
+    global $string;
     if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
       //attempting to register callback to invalid section
       //maybe log name of function as well?

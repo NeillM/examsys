@@ -22,11 +22,9 @@ function getInternetExplorerVersion() {
 function resizeTOC() {
   if ((parseInt(navigator.appVersion)>3 && navigator.appName=="Netscape") || (parseInt(getInternetExplorerVersion())>8 && navigator.appName=="Microsoft Internet Explorer")) {
     winW = window.innerWidth;
-    winW = winW - 8;
     document.getElementById("main").style.width = winW + 'px';
 
     winH = window.innerHeight;
-    winH = winH - 6;
     document.getElementById("main").style.height = winH + 'px';
   }
 }

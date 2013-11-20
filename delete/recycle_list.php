@@ -157,7 +157,6 @@ if ($sortby == 'name') {
     echo "<tr><th colspan=\"2\" class=\"col10\"><a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=name&ordering=asc\">" . $string['name'] . "</a>&nbsp;</th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=deleted&ordering=asc\">" . $string['datedeleted'] . "</a></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=subtype&ordering=asc\">" . $string['type'] . "</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" /></th></tr>\n";
   }
 }
-echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
 
 $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
 $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_review_16.gif');

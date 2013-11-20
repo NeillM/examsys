@@ -49,6 +49,9 @@ class ldap_auth extends outline_authentication {
     if ($this->createnewuserassociation !== true) {
       return $postauthsuccessobj;
     }
+    if (isset($this->settings['enable_fudgecreateuser']) and $this->settings['enable_fudgecreateuser'] !== true) {
+      return $postauthsuccessobj;
+    }
 
     $username_col = $this->settings['username_col'];
     $id_col = $this->settings['id_col'];
@@ -203,9 +206,12 @@ class ldap_auth extends outline_authentication {
           }
           $data->{$this->settings['search_field']} = $this->form['std']->username;
 
-          $this->createnewuserassociation = true;
+          if (isset($this->settings['enable_fudgecreateuser']) and $this->settings['enable_fudgecreateuser'] == true) {
+            $this->createnewuserassociation = true;
+          }
 
           if (isset($this->settings['disable_ldapmissing']) and $this->settings['disable_ldapmissing'] == true) {
+            $this->savetodebug('setting is set to disable lookup');
             $authobj->fail($this->number);
           } else {
             $authobj->lookupmissing($this->number, $data);

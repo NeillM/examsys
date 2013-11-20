@@ -49,7 +49,6 @@ require '../include/sysadmin_auth.inc';
 <div id="content" class="content">
 	<table class="header">
 		<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px">Test Suite</div></th><th style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" style="padding-right:6px" alt="<?php echo $string['help']; ?>" /></a></th></tr>
-		<tr><th colspan="2" class="bevel"></th></tr>
 	</table>
 	<br />
 	<ol>

@@ -163,7 +163,6 @@ HTML;
   echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
   echo "  /> " . $string['hidemarked'] . "</th></tr>\n";
-  echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
   echo "</table>\n";
 
 if ($phase == 2) {

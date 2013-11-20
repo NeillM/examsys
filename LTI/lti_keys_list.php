@@ -70,9 +70,6 @@ require '../include/lti_keys_options.inc';
       <th class="vert_div"><?php echo $string['oauth_secret']; ?></th>
       <th class="vert_div"><?php echo $string['oauth_context_id']; ?></th>
     </tr>
-    <tr>
-      <th colspan="4" class="bevel"></th>
-    </tr>
     <?php
     $id = 0;
     $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE deleted IS NULL ORDER BY name");

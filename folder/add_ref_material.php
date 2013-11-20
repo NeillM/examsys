@@ -97,7 +97,6 @@ if (isset($_POST['submit'])) {
   <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?module=<?php echo $_GET['module']; ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
   <div style="font-size:220%; font-weight:bold; margin-left:10px"><?php echo $string['newreferencematerial']; ?></div>
 </th></tr>
-<tr><th class="bevel"></th></tr>
 </table>
 
 <form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" charset="UTF-8">

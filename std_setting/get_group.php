@@ -110,7 +110,6 @@ echo "</table>\n";
 	<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['method'] ?></th>
 	<th style="width:25%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp</th>
 </tr>
-<tr><th colspan="6" class="bevel"></th></tr>
 <?php
 $reviews = get_reviews($mysqli, 'group', $paperID, $propertyObj->get_total_mark());
 $line_no = 0;

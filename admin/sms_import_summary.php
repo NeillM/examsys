@@ -54,7 +54,6 @@
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" /></a></th>
 </tr>
 <tr><th><div style="padding-left:10px"><?php echo $string['date']; ?></div></th><th class="vert_div"><?php echo $string['modules']; ?></th><th class="vert_div"><?php echo $string['enroled']; ?></th><th class="vert_div"><?php echo $string['deleted']; ?></th><th style="width:50%">&nbsp;</th></tr>
-<tr><th colspan="5" class="bevel"></th></tr>
 
 <?php
   $id = 1;

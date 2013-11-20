@@ -93,7 +93,6 @@
 	<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['administrativetools']; ?></div></th>
 	<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" alt="<?php echo $string['help']; ?>" /></a></th>
 </tr>
-<tr><th class="bevel" colspan="2"></th></tr>
 </table>
 
 <?php
@@ -139,7 +138,7 @@
 		$menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
 	}
 	$menudata['summativeexamstats']		= array('summative_stats.php?year=' . $summative_year, 'summative_stats.png');
-	$menudata['systemerrors']					= array('sys_error_list.php', 'bug.png');
+	$menudata['systemerrors']					= array('sys_error_list.php', 'system_errors.png');
 	$menudata['systeminformation']		= array('system_info.php', 'information.png');
 	$menudata['testing']							= array('../testing/', 'crash_test.png');
 	$menudata['trac']									= array('https://suivarro.nottingham.ac.uk/trac/rogo/', 'trac_logo.png');

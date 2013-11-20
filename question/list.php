@@ -242,8 +242,7 @@ if (isset($_GET['checked'])) {
 		}
 	}
 	echo "</tr>\n";
-  echo "<tr><th class=\"bevel\" colspan=\"6\"></th></tr>\n";
-	
+
 	foreach ($questions as $question) {
     $status_class = ' status' . $status;
     echo '<tr class="q' . $status_class . '"';

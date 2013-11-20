@@ -161,7 +161,7 @@ require_once 'summary_report.inc';
     echo "</a>";
     echo '</th>';
   }
-  echo "<th class=\"num\">&nbsp;</th></tr>\n<tr><th colspan=\"" . ($heading_no + 8) . "\" class=\"bevel\"></th></tr>";
+  echo "<th class=\"num\">&nbsp;</th></tr>\n";
 
   // Take the arrays and form one master array which can be sorted for on-screen display.
   $master_array = array();

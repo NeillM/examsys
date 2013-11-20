@@ -113,9 +113,6 @@ if (isset($_POST['submit'])) {
                                                                                             onclick="launchHelp(233); return false;"><img
       src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0"/></a></th>
   </tr>
-  <tr>
-    <th colspan="2" class="bevel"></th>
-  </tr>
 </table>
   <br/>
   <div align="center">

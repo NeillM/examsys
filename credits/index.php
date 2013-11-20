@@ -38,9 +38,9 @@
 <body>
 
 <div style="position:absolute; top:12px; left:25px; width:300px">
-  <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
-  <div style="color:#1F497D; font-size:30pt; font-weight:bold; line-height:110%">Rogō</div>
-  <div style="color:#1F497D; font-size:9pt">eAssessment Management System</div>
+  <img src="../artwork/r_logo.gif" width="47" height="51" alt="logo" style="float:left; padding-right:8px" />
+  <div style="color:#4A74B9; font-size:30pt; font-weight:bold; line-height:110%; position:relative; top:-6px">Rog&#333;</div>
+  <div style="color:#4A74B9; font-size:9pt; position:relative; top:-6px">eAssessment Management System</div>
 </div>
 
 <div style="position:absolute; top:10px; left:510px"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="University of Nottingham" /></div>

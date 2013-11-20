@@ -157,15 +157,12 @@ require_once '../include/staff_auth.inc';
   <tr>
     <th style="padding-left:16px; padding-top:5px">
 
-    <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px" />
-    <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rog&#333;</div>
-    <div style="color:#1F497D; font-size:9pt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
+    <img src="../artwork/r_logo.gif" width="47" height="51" alt="logo" style="float:left; padding-right:8px" />
+    <div style="color:#4A74B9; font-size:28pt; font-weight:bold; position:relative; top:-6px">Rog&#333;</div>
+    <div style="color:#4A74B9; font-size:9pt; position:relative; top:-3px"><?php echo $string['eassessmentmanagementsystem']; ?></div>
 
     </th>
     <th style="text-align:right; padding-right:10px"><?php echo $logo_html; ?></th>
-  </tr>
-  <tr>
-    <td colspan="2" class="bevel"></td>
   </tr>
 </table>
 <?php
@@ -272,7 +269,7 @@ require_once '../include/staff_auth.inc';
     }
   }
 
-  echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img class=\"f_icon\" src=\"../artwork/" . RecycleBin::get_recyclebin_icon($userObject->get_user_ID(), $staff_modules, $mysqli) . "\" alt=\"Recycle Bin\" />" . $string['recyclebin'] . "</a></div>\n";
+  echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img class=\"f_icon\" src=\"../artwork/recycle_bin.png\" alt=\"" . $string['recyclebin'] . "\" />" . $string['recyclebin'] . "</a></div>\n";
 ?>
 <br clear="left" />
 <?php

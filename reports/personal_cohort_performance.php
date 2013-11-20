@@ -133,7 +133,6 @@ $name = demo_replace($student_details['title'], $demo) . ' ' . demo_replace($stu
 
 echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
 echo "<tr><th><div style=\"padding-left:10px; font-size:200%; font-weight:bold\">" . $propertyObj->get_paper_title() . "</div><div style=\"padding-left:10px\">$name</div></th></tr>\n";
-echo '<tr><th class="bevel"></th></tr>';
 echo "</table>\n<ol>";
 
 // Get the questions on the paper

@@ -33,12 +33,3 @@ select {
 input[type="text"] {
   margin:0px;
 }
-.button_on {
-  background-image:url("../artwork/2007_button_on.png");
-}
-.button_over {
-  background-image:url("../artwork/2007_button_over.png");
-}
-.button_off {
-  background-image:none;
-}

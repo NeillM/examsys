@@ -534,9 +534,6 @@ if ($language != 'en') {
           ?>&nbsp;
         </th>
     </tr>
-    <tr>
-        <th colspan="2" class="bevel"></th>
-    </tr>
 </table>
 <?php
 

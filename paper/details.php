@@ -796,11 +796,10 @@ $result->close();
     <th class="m vert_div">&nbsp;<?php echo $string['marks']; ?>&nbsp;</th>
     <th class="d vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
     </tr>
-    <tr><th colspan="6" class="bevel"></th></tr>
   <?php
 
   if ($properties->get_summative_lock()) {
-    echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" style=\"position:relative; top:2px\" />&nbsp;&nbsp;</div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td><td style=\"text-align:right\"><div class=\"yellowwarn\">";
+    echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"24\" height=\"24\" alt=\"Locked\" style=\"position:relative; top:2px\" />&nbsp;&nbsp;</div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td><td style=\"text-align:right\"><div class=\"yellowwarn\">";
     if ($userObject->has_role(array('SysAdmin'))) {
       $record_no = 0;
       $result = $mysqli->prepare("SELECT COUNT(log_metadata.id) FROM log_metadata, users WHERE paperID = ? AND log_metadata.userID = users.id AND roles = 'Student'");
@@ -820,11 +819,11 @@ $result->close();
   } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
     $tmp_hour = date("G", $properties->get_start_date());
     if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
-      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['farfuturewarning'], $properties->get_display_start_date());
       echo "</td></tr>\n";
     } elseif ($tmp_hour < $configObject->get('cfg_hour_warning')) {
-      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['earlywarning'], $configObject->get('cfg_hour_warning'));
       echo "</td></tr>\n";
     }

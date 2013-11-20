@@ -142,11 +142,10 @@ if (!$module_code) {
 ?>
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(237); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" /></a></th>
 </tr>
-<tr><th colspan="2" class="bevel"></th></tr>
 
 <?php
 foreach ($reference_materials as $id => $details) {
-  echo "<tr id=\"$id\" onclick=\"selRef($id,event)\" ondblclick=\"editReference($id)\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td><img src=\"/artwork/ref_16.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"\">&nbsp;" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
+  echo "<tr id=\"$id\" onclick=\"selRef($id,event)\" ondblclick=\"editReference($id)\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td><img src=\"/artwork/ref_16.png\" width=\"16\" height=\"16\" alt=\"\">&nbsp;" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
 }
 echo "</table>\n";
 $mysqli->close();

@@ -55,7 +55,6 @@
 </tr>
 <tr>
 <th><div class="col10"><?php echo $string['gridnames']; ?>&nbsp;</div></th><th>&nbsp;</th></tr>
-<tr><th colspan="2" class="bevel"></th></tr>
 <?php
 $old_faculty = '';
 $id = 0;
