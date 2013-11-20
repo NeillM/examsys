@@ -1366,6 +1366,12 @@ function ql_mouseDragMove(e){
 	this.ev = e || window.event;
 	if (this.ev.target.id != this.canvas.id) return true;
 	this.get_char_key();
+	
+	if (this.ev.type == 'keydown') {
+		this.isShift = this.ev.shiftKey ? true : false;
+		this.isCtrl = this.ev.ctrlKey ? true : false;
+		this.ShiftChange = true;
+	}
 	if (this.ev.type == 'mousemove') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
 		this.loc_lft = this.canv_rect.left;
@@ -1622,8 +1628,16 @@ function ql_mouseDragMove(e){
 				var tmp_i = -1;
 				for (i=0;i<tmp_sort_array.length;i++) 
 					if (tmp_sort_array[i]==tmp_pos) tmp_i = i;
-				tmp_i++;
-				if (tmp_i == tmp_sort_array.length) tmp_i=0;
+				
+				if (!this.isShift) {
+					tmp_i++;				
+					if (tmp_i == tmp_sort_array.length) tmp_i=0;
+				}
+				if (this.isShift) {
+					tmp_i--;
+					if (tmp_i < 0) tmp_i=tmp_sort_array.length-1;
+				}
+				
 				tmp_pos = tmp_sort_array[tmp_i];
 				
 				this.answer_access_id = tmp_pos_array[tmp_pos].split(',')[0];
@@ -1651,7 +1665,14 @@ function ql_mouseDragMove(e){
 				var tmp_i = -1;
 				for (i=0;i<tmp_sort_array.length;i++) 
 					if (tmp_sort_array[i]==tmp_pos) tmp_i = i;
-				tmp_i++;
+				if (!this.isShift) {
+					tmp_i++;				
+					if (tmp_i == tmp_sort_array.length) tmp_i=0;
+				}
+				if (this.isShift) {
+					tmp_i--;
+					if (tmp_i < 0) tmp_i=tmp_sort_array.length-1;
+				}
 				if (tmp_i == tmp_sort_array.length) tmp_i=0;
 				tmp_pos = tmp_sort_array[tmp_i];
 				
@@ -1687,7 +1708,12 @@ function ql_mouseDragDown(e){
 		if (this.panelOptionOver == -1) this.dragging = true;	
 	}
   
-  this.active_shape_move = this.active_shape;
+  this.answer_access_id = -1;
+	this.answer_access_combo = -1;
+  this.pholder_access_id = -1;
+	this.access_switch = 0;
+
+	this.active_shape_move = this.active_shape;
   this.active_shape_x = this.x;
   this.active_shape_y = this.y;
 	
@@ -2264,6 +2290,10 @@ function rql(num) {
 	this.labelMulti = "single"; 				    // are labels unique or repeated ("single" / "multiple")?
 	this.yOffset ; 						              // coords of everything made in label_add.swf include toolbar 
                                           // this need to be removed as image here is loaded with this.y coord = 0
+
+	this.isCtrl = this.isShift = false;
+  this.ShiftChange = false;
+
   this.empty_answer = false;
   this.q_Num;
 	this.doorId;
