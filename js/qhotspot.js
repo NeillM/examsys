@@ -459,10 +459,15 @@ function qh_redraw_canvas() {
         var led3 = '';if (led[2]!='') led3=led[2].split(',');
         this.HsCo = this.hotSpots[led[0]][(3+led[1]*6+2)].split(',');
         var f_type = this.hotSpots[led[0]][(3+led[1]*6+1)];
+				var tmp_arrow_move_x = 0;
+				var tmp_arrow_move_y = 0;
+				if (this.arrow_move > 0) tmp_arrow_move_x = this.arrow_move-2;
+				if (this.arrow_move < 0) tmp_arrow_move_y = this.arrow_move+2;
+
 				var temp_x = this.x-300;
 				var temp_y = this.y-25+this.yOffset;
-				
-        if (f_type == 'polygon' && led[3]<-10) {
+
+        if (f_type == 'polygon' && led[3]<-10) { //circular handlers - breaking the edge
 					var brk = -led[3]-10;
 					this.HsCo.splice(brk*2, 0, ''+Math.round(temp_x).toString(16), ''+Math.round(temp_y).toString(16));
 					led[3] = brk; 
@@ -477,26 +482,46 @@ function qh_redraw_canvas() {
             switch (led[3])
             {
             case '1':
+							if (this.arrow_move != 0) {
+								temp_x = parseInt(this.HsCo[0],16) + tmp_arrow_move_x;
+								temp_y = parseInt(this.HsCo[1],16) + tmp_arrow_move_y;
+							}
               this.HsCo[0] = Math.round(temp_x).toString(16);
               this.HsCo[1] = Math.round(temp_y).toString(16);
               break;
             case '2':
+							if (this.arrow_move != 0) {
+								temp_x = parseInt(this.HsCo[2],16) + tmp_arrow_move_x;
+								temp_y = parseInt(this.HsCo[1],16) + tmp_arrow_move_y;
+							}
               this.HsCo[2] = Math.round(temp_x).toString(16);
               this.HsCo[1] = Math.round(temp_y).toString(16);
               break;
             case '3':
+							if (this.arrow_move != 0) {
+								temp_x = parseInt(this.HsCo[0],16) + tmp_arrow_move_x;
+								temp_y = parseInt(this.HsCo[3],16) + tmp_arrow_move_y;
+							}
               this.HsCo[0] = Math.round(temp_x).toString(16);
               this.HsCo[3] = Math.round(temp_y).toString(16);
               break;
             case '4':
+							if (this.arrow_move != 0) {
+								temp_x = parseInt(this.HsCo[2],16) + tmp_arrow_move_x;
+								temp_y = parseInt(this.HsCo[3],16) + tmp_arrow_move_y;
+							}
               this.HsCo[2] = Math.round(temp_x).toString(16);
               this.HsCo[3] = Math.round(temp_y).toString(16);
               break;
             }
           }
           if (f_type == 'polygon') {
-						this.HsCo[led[3]*2] = Math.round(this.x-300).toString(16);
-            this.HsCo[led[3]*2+1] = Math.round(this.y-25+this.yOffset).toString(16);
+						if (this.arrow_move != 0) {
+							temp_x = parseInt(this.HsCo[led[3]*2+0],16) + tmp_arrow_move_x;
+							temp_y = parseInt(this.HsCo[led[3]*2+1],16) + tmp_arrow_move_y;
+						}
+						this.HsCo[led[3]*2+0] = Math.round(temp_x).toString(16);
+            this.HsCo[led[3]*2+1] = Math.round(temp_y).toString(16);
           } 
         } else {
           //move the whole
@@ -506,20 +531,19 @@ function qh_redraw_canvas() {
             this.label_elem_clicked_pos = x0+','+y0;
           }
           var pos0 = this.label_elem_clicked_pos.split(',');
-					if (this.label_elem_drag!='') {
+					if (this.label_elem_drag!='') { //for mouse dragging
 						for (n=0;n<this.HsCo.length/2;n++) {
 							this.HsCo[n*2+0] = Math.round(parseInt(this.HsCo[n*2+0], 16)+this.x-pos0[0]).toString(16);
 							this.HsCo[n*2+1] = Math.round(parseInt(this.HsCo[n*2+1], 16)+this.y-pos0[1]).toString(16);
 						}
 					}
-          if (this.arrow_move > 0) 
-						for (n=0;n<this.HsCo.length/2;n++) 
-							this.HsCo[n*2+0] = Math.round(parseInt(this.HsCo[n*2+0], 16)+this.arrow_move-2).toString(16);
-          if (this.arrow_move < 0) 
-						for (n=0;n<this.HsCo.length/2;n++) 
-							this.HsCo[n*2+1] = Math.round(parseInt(this.HsCo[n*2+1], 16)+this.arrow_move+2).toString(16);
-					if (this.arrow_move != 0) this.qh_ReturnInfo();
-		
+          if (this.arrow_move != 0) { //for arrow keys manipulation
+						for (n=0;n<this.HsCo.length/2;n++) {
+							this.HsCo[n*2+0] = Math.round(parseInt(this.HsCo[n*2+0], 16)+tmp_arrow_move_x).toString(16);
+          		this.HsCo[n*2+1] = Math.round(parseInt(this.HsCo[n*2+1], 16)+tmp_arrow_move_y).toString(16);
+						}
+						this.qh_ReturnInfo();
+					}		
           if (this.label_elem_clicked_pos != '') this.label_elem_clicked_pos = this.x+','+this.y;
         }
         this.hotSpots[led[0]][(3+led[1]*6+2)] = this.HsCo.join(',');
@@ -1256,7 +1280,7 @@ function rqh(num) {
 	this.global_incorrect = true;
 
 
-  this.layerColours = new Array('#FF0000', '#FFFF00', '#00B050', '#0070C0', '#7030A0', '#C00000', '#FFC000', '#92D050', '#00B0F0', '#002060', '#FFFFFF', '#F2F2F2', '#D8D8D8', '#BFBFBF', '#A5A5A5', '#7F7F7F', '#000000', '#7F7F7F', '#595959', '#3F3F3F', '#262626', '#0C0C0C', '#EEECE1', '#DDD9C3', '#C4BD97', '#938953', '#494429', '#1D1B10', '#1F497D', '#C6D9F0', '#8DB3E2', '#548DD4', '#17365D', '#0F243E', '#4F81BD', '#DBE5F1', '#B8CCE4', '#95B3D7', '#366092', '#244061', '#C0504D', '#F2DCDB', '#E5B9B7', '#D99694', '#953734', '#632423', '#9BBB59', '#EBF1DD', '#D7E3BC', '#C3D69B', '#76923C', '#4F6128', '#8064A2', '#E5E0EC', '#CCC1D9', '#B2A2C7', '#5F497A', '#3F3151', '#4BACC6', '#DBEEF3', '#B7DDE8', '#92CDDC', '#31859B', '#205867', '#F79646', '#FDEADA', '#FBD5B5', '#FAC08F', '#E36C09', '#974806');
+  this.layerColours   =  new Array('#FF0000', '#FFFF00', '#00B050', '#0070C0', '#7030A0', '#C00000', '#FFC000', '#92D050', '#00B0F0', '#002060', '#FFFFFF', '#F2F2F2', '#D8D8D8', '#BFBFBF', '#A5A5A5', '#7F7F7F', '#000000', '#7F7F7F', '#595959', '#3F3F3F', '#262626', '#0C0C0C', '#EEECE1', '#DDD9C3', '#C4BD97', '#938953', '#494429', '#1D1B10', '#1F497D', '#C6D9F0', '#8DB3E2', '#548DD4', '#17365D', '#0F243E', '#4F81BD', '#DBE5F1', '#B8CCE4', '#95B3D7', '#366092', '#244061', '#C0504D', '#F2DCDB', '#E5B9B7', '#D99694', '#953734', '#632423', '#9BBB59', '#EBF1DD', '#D7E3BC', '#C3D69B', '#76923C', '#4F6128', '#8064A2', '#E5E0EC', '#CCC1D9', '#B2A2C7', '#5F497A', '#3F3151', '#4BACC6', '#DBEEF3', '#B7DDE8', '#92CDDC', '#31859B', '#205867', '#F79646', '#FDEADA', '#FBD5B5', '#FAC08F', '#E36C09', '#974806');
   
   this.hsColours = new Array('#6FEB6F', '#00CC33', '#FF0000', '#CC0000', '#FFFFFF', '#CCCCCC'); 
 																													// green fill/stroke, red fill/stroke, 

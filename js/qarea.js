@@ -414,9 +414,8 @@ function qa_redraw_canvas() {
 
 function qa_mouseDragMove(e){
 	this.ev = e || window.event;
-	if (this.ev.target.id != this.canvas.id) {
-		return true;
-	}
+	if (this.ev.target.id != this.canvas.id) return true;
+	
 	if (this.ev.type == 'keydown') {
 		this.isShift = this.ev.shiftKey ? true : false;
 		this.isCtrl = this.ev.ctrlKey ? true : false;
