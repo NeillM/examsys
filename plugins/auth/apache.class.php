@@ -47,9 +47,17 @@ class apache_auth extends outline_authentication {
 
     extract($this->settings);
 
+    if(!isset($_SERVER[$this->settings['usernamefield']])) {
+      $this->savetodebug('Didnt detect the ' . $this->settings['usernamefield'] . ' field in the $_SERVER php variable');
+      $authobj->fail($this->number);
+      return $authobj;
+    }
+
     $username = $_SERVER[$this->settings['usernamefield']];
 
-    $this->savetodebug('Now looking up userid in table from username');
+
+
+    $this->savetodebug('Now looking up userid in table from username: '. $username);
     if(!isset($sql_extra)) {
       $sql_extra = '';
     }
