@@ -88,7 +88,6 @@ $enddate = check_var('enddate', 'GET', true, false, true);
     echo ' (' . module_utils::get_moduleid_from_id($_GET['repmodule'], $mysqli) . ' ' . $string['studentsonly'] . ')';
   }
   echo "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>\n";
-  echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
 
   if ($student_no == 0) {
     echo "</table>\n<table style=\"margin:0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['msg1'] . "</td></tr></table>\n<div>\n</body>\n</html>";

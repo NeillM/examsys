@@ -108,8 +108,6 @@ require_once '../../classes/questionutils.class.php';
     echo "<tr><th colspan=\"2\">&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   }
 
-  echo "<tr><th colspan=\"5\" class=\"bevel\"></th></tr>\n";
-
   if (!isset($_POST['keyword_no'])) {
     echo "</table>\n</body>\n</html>\n";
     exit;

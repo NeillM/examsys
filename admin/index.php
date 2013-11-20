@@ -93,7 +93,6 @@
 	<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['administrativetools']; ?></div></th>
 	<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" alt="<?php echo $string['help']; ?>" /></a></th>
 </tr>
-<tr><th class="bevel" colspan="2"></th></tr>
 </table>
 
 <?php

@@ -29,15 +29,12 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Rogō <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333; <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 </head>
-<frameset rows="52,*" border="0" frameborder="0" framespacing="0">
+<frameset rows="26,*" border="0" frameborder="0" framespacing="0">
   <frame name="toolbar" noresize src="toolbar.php<?php if (isset($_GET['highlight'])) echo '?highlight=' . $_GET['highlight']; ?>" scrolling="no" border="0" frameborder="0" marginheight="0" marginwidth="0">
-  <frameset cols="25%,*" border="0">
-    <frameset rows="20,*" border="0" frameborder="0" framespacing="0">
-      <frame name="toc_title" src="toc_title.php" scrolling="no" border="0" frameborder="0" marginheight="0" marginwidth="0">
+  <frameset cols="26%,*" border="0">
       <frame src="toc.php<?php if (isset($_GET['id'])) echo '?id=' . $_GET['id']; ?>" name="navigation" id="navigation" scrolling="no" title="Navigation"/>
-    </frameset>
       <?php
         if (isset($_GET['id'])) {
           $tmp_highlight = '';

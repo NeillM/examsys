@@ -315,7 +315,7 @@ if (isset($_GET['paperID'])) {
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
     echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['usersearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(92); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>";
-    echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n</div>\n</body></html>\n";
+    echo "</table>\n</div>\n</body></html>\n";
     exit;
   }
 ?>
@@ -417,11 +417,8 @@ foreach ($table_order as $display => $key) {
 		}
 	}
 	echo "</th>";
-}
-echo "</tr>\n";
-?>
-<tr><th colspan="8" class="bevel"></th></tr>
-<?php
+  }
+  echo "</tr>\n";
   if ($roles_sql == '') {
     echo "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:60px; height:32px; text-align:right\"><img src=\"../artwork/red_warning.png\" width=\"32\" height=\"32\" alt=\"Warning\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\">".$string['msg1']."</td></tr></table>\n</body>\n</html>\n";
     exit;

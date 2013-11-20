@@ -75,7 +75,6 @@ for ($i=2005; $i<=date('Y'); $i++) {
 ?>
 </select></th>
 </tr>
-<tr><th colspan="3" class="bevel"></th></tr>
 </table>
 
 <blockquote>

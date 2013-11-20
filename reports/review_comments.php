@@ -664,7 +664,7 @@ if (isset($_GET['scrOfY'])) {
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
       echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string[$type . 'report'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
-      echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+      echo "</table>\n";
       if (count($reviewer_data) == 0) {
         echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:46px; height:32px; padding-left:6px; text-align:right\"><img src=\"../artwork/warning_user_icon.gif\" style=\"padding-top:1px\" width=\"32\" height=\"30\" alt=\"!\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\">" . $string['noreviewers'] . "</td></tr></table>\n</body>\n</html>\n";
         exit;

@@ -252,8 +252,6 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
     echo "</tr>\n";
   }
   
-  echo "\n<tr><th colspan=\"" . $column_no . "\" class=\"bevel\"></th></tr>\n";
-
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
       echo "<tr class=\"nonattend\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../users/details.php?userID=" . $user_results[$i]['userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";

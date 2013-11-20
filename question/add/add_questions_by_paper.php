@@ -93,7 +93,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   echo "<table class=\"header\">\n";
   echo "<tr><th colspan=\"7\" style=\"font-size:160%; font-weight:bold\">&nbsp;$paper_title</th></tr>\n";
   echo "<tr><th></th><th></th><th>&nbsp;</th><th class=\"vert_div\">" . $string['question'] . "</th><th class=\"vert_div\">" . $string['type'] . "</th><th style=\"width:90px\" class=\"vert_div\">" . $string['modified'] . "</th><th class=\"vert_div\" style=\"width:90px\">" . $string['status'] . "</th></tr>\n";
-  echo "<tr><th colspan=\"7\" class=\"bevel\"></th></tr>\n";
 
   // Get the questions in order off the paper.
   $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts, status FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id = question_exclude.q_id WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos");

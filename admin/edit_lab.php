@@ -136,7 +136,6 @@ if (isset($_POST['submit'])) {
       echo "<table class=\"header\">\n";
       echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php\">" . $string['administrativetools'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./list_labs.php\">" . $string['editcomputerlab'] . "</a></div><div style=\"font-size:220%; font-weight:bold; margin-left:10px\">Edit Lab</div></th>\n";
       echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(231); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
-      echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
       if (count($bad_addresses) > 0) {
         echo "<tr><td style=\"color: #f00; font-weight: bold\">\n";
         $address_list = '';

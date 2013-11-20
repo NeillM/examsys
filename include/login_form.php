@@ -77,10 +77,10 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
 <form method="post" id="theform">
     <div class="mainbox">
 
-        <img src="<?php echo $cfg_root_path ?>/artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px" />
+        <img src="<?php echo $cfg_root_path ?>/artwork/r_logo.gif" width="47" height="51" alt="logo" style="float:left; padding-right:8px" />
 
-        <div style="color:#1F497D;font-size:28pt; font-weight:bold">Rog&#333;</div>
-        <div style="color:#1F497D;font-size:9pt">e-Assessment Management System</div>
+        <div style="color:#4A74B9; font-size:28pt; font-weight:bold; position:relative; top:-6px">Rog&#333;</div>
+        <div style="color:#4A74B9; font-size:9pt; position:relative; top:-4px">e-Assessment Management System</div>
 
         <br/>
         <br/>

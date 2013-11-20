@@ -474,7 +474,6 @@
   if ($module != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
   echo "<span style=\"margin-left:10px; font-size:220%; color:black; font-weight:bold\">" . $string['quantitativereport'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(33); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
-  echo '<tr><th colspan="11" class="bevel"></th></tr>';
   echo "\n</table>\n";
 
   echo '<table cellpadding="2" cellspacing="0" border="0" width="100%">';

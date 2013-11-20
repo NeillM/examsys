@@ -89,7 +89,6 @@ if (isset($_POST['submit'])) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $string['secondmarkselection'] . '</div></th><th style="width:50%; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="' . $string['help'] . '" /></a></th></tr>';
-  echo "<tr><th colspan=\"6\" class=\"bevel\"></th></tr>\n";
 
 	if ($paper_type == '2') {
 		$time_int = 2;

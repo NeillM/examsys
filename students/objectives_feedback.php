@@ -181,7 +181,6 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   echo "<table class=\"header\">\n";
   echo "<tr><th style=\"padding:10px\"><div style=\"font-size:220%; font-weight:bold\">$paper_title</div>\n";
   echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th></tr>\n";
-  echo "<tr><th class=\"bevel\"></th></tr>\n";
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and !isset($_GET['userID'])) {
     echo "<tr><td class=\"yellowwarn\"><div style=\"margin-left:10px\">" . $string['staffmsg'] . "</div></td></tr>\n";

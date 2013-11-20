@@ -55,7 +55,6 @@
 </tr>
 <tr>
 <th class="col10"><?php echo $string['name']; ?></th><th class="vert_div"><?php echo $string['schoolno']; ?></th><th style="width:50%" class="vert_div"></th></tr>
-<tr><th colspan="3" class="bevel"></th></tr>
 <?php
 $old_faculty = '';
 $id = 0;

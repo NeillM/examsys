@@ -67,7 +67,6 @@
 <div id="content" class="content">
 <table class="header">
 <tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px"><?php echo $string['allmodules']; ?></div></th><th style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" alt="<?php echo $string['help']; ?>" /></a></th></tr>
-<tr><th colspan="2" class="bevel"></th></tr>
 </table>
 
 <table style="width:100%">

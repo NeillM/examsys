@@ -50,7 +50,7 @@ require '../include/staff_auth.inc';
 
     function over(id) {
       if (id != $('#paper_type').val()) {
-        $('#' + id).css('background-image', 'url("../artwork/over.png")');
+				$('#' + id).css('background-color', '#FFE7A2');
       }
       switch (id) {
         case 'formative':
@@ -79,19 +79,19 @@ require '../include/staff_auth.inc';
 
     function out(id) {
       if (id != $('#paper_type').val()) {
-        $('#' + id).css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+				$('#' + id).css('background-color', 'white');
       }
     }
 
     function activate(id) {
-      $('#formative').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
-      $('#progress').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
-      $('#summative').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
-      $('#survey').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
-      $('#osce').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
-      $('#offline').css('background-image', 'url("../artwork/blank_tick_cross.gif")');
+      $('#formative').css('background-color', 'white');
+      $('#progress').css('background-color', 'white');
+      $('#summative').css('background-color', 'white');
+      $('#survey').css('background-color', 'white');
+      $('#osce').css('background-color', 'white');
+      $('#offline').css('background-color', 'white');
 
-      $('#' + id).css('background-image', 'url("../artwork/on.png")');
+			$('#' + id).css('background-color', '#FFBD69');
       $('#paper_type').val(id);
     }
 

@@ -65,9 +65,6 @@ $old_version = $configObject->get('rogo_version');
       </th>
       <th style="text-align:right; padding-right:10px"><img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" /></th>
     </tr>
-    <tr>
-      <th colspan="2" class="bevel"></th>
-    </tr>
   </table>
 <?php
 if (round($old_version,0) < 5) {

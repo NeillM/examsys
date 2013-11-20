@@ -87,7 +87,6 @@ require '../include/sysadmin_auth.inc';
   }
 ?>
 </tr>
-<tr><th colspan="4" class="bevel"></th></tr>
 <?php
 $announce_no = 0;
 $announcements = array();

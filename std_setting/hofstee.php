@@ -198,7 +198,6 @@ input[type="text"] {border: 1px solid #C0C0C0}
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="index.php?paperID=' . $paperID . '&module=&folder=">' . $string['standardssetting'] . '</a></div>';
 
   echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['hofstee'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a></th></tr>\n";
-  echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n";
   echo "</table>\n";
   
   echo "<table style=\"margin:10px\">";

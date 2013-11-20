@@ -61,7 +61,6 @@
 <th><?php echo $string['papertitle']; ?></th>
 <th style="width:50%"><?php echo $string['studentslate']; ?></th>
 </tr>
-<tr><th colspan="3" class="bevel"></th></tr>
 
 <?php
   $icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif');

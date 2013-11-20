@@ -148,7 +148,7 @@ echo "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2
 echo '<tr><th><div style="margin-left:10px; font-size:200%; font-weight:bold">' . $string['calculationguestionmarking'] . '</div></th>';
 echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"></th></tr>\n";
 
-echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+echo "</table>\n";
 
 if (!$server_connection) {
   echo "<table style=\"width:100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"redwarn\" style=\"width:30px\"><img style=\"margin-left:6px; margin-right:10px;\" src=\"../artwork/red_warning.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td class=\"redwarn\">{$string['serverconnectionerr']}</td></table>\n";

@@ -64,7 +64,6 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
         </th>
         <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" /></a></th>
       </tr>
-      <tr><th colspan="3" class="bevel"></th></tr>
       </table>
 
       <ul id="statuses" class="selectlist">

@@ -93,7 +93,7 @@ $result->close();
 
   echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
 
-  echo '<tr><th colspan="2" class="bevel"></th></tr></table>';
+  echo '</table>';
 
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse\"><tr>\n";
 
@@ -117,8 +117,8 @@ $result->close();
   }
   $result->close();
 
-  if($user_no == 0) {
-    echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+  if ($user_no == 0) {
+    echo "</table>\n";
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;This paper has not been attempted by anyone.</td></tr></table>\n";
   } else {
     // Get the questions.

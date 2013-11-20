@@ -70,7 +70,6 @@ $result->close();
 <th class="vert_div"><?php echo $string['faculty']; ?></th>
 <th class="vert_div"><?php echo $string['modules']; ?></th>
 </tr>
-<tr><th colspan="3" class="bevel"></th></tr>
 <?php
 
 if ($faculties > 0) {

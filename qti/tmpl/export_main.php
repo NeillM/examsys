@@ -106,7 +106,6 @@ echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7
 
 echo "<div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['exporttoqti'] . "</div>";
 echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
-echo "<tr><th colspan=\"6\" class=\"bevel\"></th></tr>";
 echo "</table>";
 ?>
 

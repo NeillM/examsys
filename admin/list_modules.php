@@ -38,13 +38,16 @@ require '../include/sort.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
+	<style>
+	  th a {color:black !important}
+	</style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script language="javascript">
     function edit(moduleID) {
-      document.location.href='./edit_module.php?moduleid=' + moduleID;
+      document.location.href = './edit_module.php?moduleid=' + moduleID;
     }
   </script>
 </head>
@@ -58,7 +61,7 @@ require '../include/sort.inc';
 <table class="header">
 <tr>
 <th colspan="3"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['modules']; ?></div></th>
-<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
+<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" /></a></th>
 </tr>
 <tr>
 <?php
@@ -74,7 +77,7 @@ require '../include/sort.inc';
   $table_order = array($string['moduleid']=>'moduleid', $string['name']=>'name', $string['school']=>'school', $string['active']=>'active');
   foreach ($table_order as $display => $key) {
     if ($key == 'moduleid') {
-      echo '<th class="vert_div col10">';
+      echo '<th class="col10">';
     } else {
       echo '<th class="vert_div">';
     }
@@ -89,7 +92,6 @@ require '../include/sort.inc';
   }
 ?>
 </tr>
-<tr><th colspan="4" class="bevel"></th></tr>
 <?php
 $old_school = '';
 $id = 0;

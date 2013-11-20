@@ -167,7 +167,7 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   $helpID = 98;
   echo '<div style="font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $paper_title . '</div><div style="position:relative; left:12px; top:-3px; font-size:90%">' . $string['standardssetting'] . ': ' . $string['angoffmethod'] . ' - ' . $string['groupreview'] . '</div>';
   echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"{$string['help']}\" border=\"0\" /></a></th></tr>\n";
-  echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+  echo "</table>\n";
 ?>
   <br />
   <div align="center">
