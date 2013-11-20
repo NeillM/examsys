@@ -19,30 +19,6 @@ td {
 	vertical-align:top;
   text-align:right;
 }
-.tabon {
-	vertical-align:middle;
-	padding-top:0px;
-	cursor:pointer;
-	width:126px;
-	height:21px;
-	color:white;
-	text-align:center;
-	font-weight:bold;
-	font-size:100%;
-	background-image:url(../artwork/tab_on.gif);
-}
-.taboff {
-	vertical-align:middle;
-	padding-top:0px;
-	cursor:pointer;
-	width:126px;
-	height:21px;
-	color:white;
-	text-align:center;
-	font-weight:bold;
-	font-size:100%;
-	background-image:url(../artwork/tab_off.gif);
-}
 .month {
   margin-left:8px;
   margin-right:8px;

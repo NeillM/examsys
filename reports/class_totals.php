@@ -520,8 +520,8 @@ if ($language != 'en') {
       <td class="redwarn" colspan="<?php echo $cols ?>">
         <table class="warn-icon">
           <tr>
-            <td><img src="../artwork/temp_account_warning.png" width="28" height="28" alt="Warning" /></td>
-            <td><?php echo $string['temporaryaccountswarning'] ?></td>
+            <td>&nbsp;<img src="../artwork/temp_account_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td>&nbsp;<?php echo $string['temporaryaccountswarning'] ?></td>
           </tr>
         </table>
       </td>

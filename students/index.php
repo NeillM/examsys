@@ -44,10 +44,14 @@ function drawTabs($tab_array, $current_tab) {
 	$html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%; float: right"><tr>';
 	foreach($tab_array as $individual_tab) {
 		$button_id = 'button-'.str_replace('/', '-', $individual_tab);
-		$bg_mod =  ($individual_tab == $current_tab) ? '_on' : '_off';
-		$html .= "<td id=\"{$button_id}\" style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab{$bg_mod}.gif)\" onclick=\"switchYear('{$individual_tab}'); return false;\">$individual_tab</td>";
+		if ($individual_tab == $current_tab) {
+			$html .= "<td id=\"{$button_id}\" class=\"tabon\" onclick=\"switchYear('{$individual_tab}'); return false;\">$individual_tab</td>";
+		} else {
+			$html .= "<td id=\"{$button_id}\" class=\"taboff\" onclick=\"switchYear('{$individual_tab}'); return false;\">$individual_tab</td>";
+		}
 	}
 	$html .= "</tr></table>\n";
+	
 	return $html;
 }
 
@@ -210,6 +214,7 @@ $paper_utils = Paper_utils::get_instance();
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
   <style type="text/css">
     body {padding-left:0px}
@@ -225,7 +230,7 @@ $paper_utils = Paper_utils::get_instance();
       if (target != null) {
         target.style.display = (years[i] == toShow) ? 'block' : 'none';
         if (link != null) {
-          link.style.backgroundImage = (years[i] == toShow) ? 'url(../artwork/tab_on.gif)' : 'url(../artwork/tab_off.gif)';
+          link.style.backgroundColor = (years[i] == toShow) ? '#1E3C7B' : '#517DBF';
         }
       }
     }
@@ -237,9 +242,9 @@ $paper_utils = Paper_utils::get_instance();
 	<table cellpadding="0" cellspacing="0" border="0" width="100%">
 		<tr>
       <td rowspan="2"style="background-color:#F1F5FB; height:70px; padding-left:10px">
-        <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
-        <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogō</div>
-        <div style="color:#1F497D; font-size:9pt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
+        <img src="../artwork/r_logo.gif" width="47" height="51" alt="logo" style="float:left; padding-right:8px" />
+				<div style="color:#4A74B9; font-size:28pt; font-weight:bold; position:relative; top:-6px">Rog&#333;</div>
+				<div style="color:#4A74B9; font-size:9pt; position:relative; top:-3px"><?php echo $string['eassessmentmanagementsystem']; ?></div>
       </td>
       <td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
     </tr>

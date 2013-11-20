@@ -475,7 +475,7 @@ endif;
   <div id="debug" class="debug"></div>
 	<div id="page-header">
 		<div id="page-help">
-			<a href="#" onclick="launchHelp(1); return false;"><img src="../../artwork/small_help_icon.gif" alt="Help" border="0" height="16" width="16" />
+			<a href="#" onclick="launchHelp(1); return false;"><img src="../../artwork/small_help_icon.gif" alt="Help" height="16" width="16" />
 			</a>
 		</div>
 		<div id="page-header-inner">
@@ -515,11 +515,11 @@ if ($critical_error == '') {
 
     if ($q_disabled == 'locked') {
 ?>
-    <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div>
+    <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="24" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div>
 <?php
     } elseif ($q_disabled == ' disabled') {
 ?>
-      <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['questionlocked'] . " $editor. " . $string['isinreadonly'] ?></div>
+      <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="24" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['questionlocked'] . " $editor. " . $string['isinreadonly'] ?></div>
 <?php
     }
   }

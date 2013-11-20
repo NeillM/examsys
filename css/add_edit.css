@@ -266,11 +266,12 @@ td.separated:last-child {
   float: left;
   list-style: none;
   text-align: center;
-  background: #dfecff url('../artwork/tab_off.gif') no-repeat top left;
+	background-color:#517DBF;
+  border-right: 1px solid #DFECFF;
 }
 
 .tabs li.on {
-  background-image: url('../artwork/tab_on.gif');
+	background-color:#1E3C7B;
 }
 
 .tabs li.disabled {

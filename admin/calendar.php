@@ -207,6 +207,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/calendar.css" />
+<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
 </head>
 
 <body>
