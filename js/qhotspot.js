@@ -351,6 +351,7 @@ function qh_redraw_canvas() {
     if ((this.global_edit || this.global_erase) && !this.dragging) {
       this.test_result = this.qh_test('cursor');
     }
+		
     this.context.drawImage(this.gen_img,300,25-this.yOffset);
     this.context.lineWidth = this.lineThickness;
 		this.context.strokeStyle=this.currentColours[1];
@@ -437,13 +438,24 @@ function qh_redraw_canvas() {
     this.context.strokeRect(300.5,0.5,this.canvas.width-300,this.canvas.height-1); 
 		this.draw_limit = Array(302,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
 
+		
+		//moving shapes by arrow keys
+		this.arrow_move = 0;
+		if (this.qmode == 'edit' && this.hotspot_over!='') {
+			if (this.key_code == 39) this.arrow_move = 3; //arror right
+			if (this.key_code == 37) this.arrow_move = 1; //arrow left
+			if (this.key_code == 38) this.arrow_move = -3; //arrow up
+			if (this.key_code == 40) this.arrow_move = -1; //arrow down
+		this.key_code = 0;
+		}				
     //active fields
 		//drawing hotspots
     if (this.qmode == 'edit' || this.qmode == 'script' || this.qmode == 'analysis' || this.qmode == 'correction') {
       //reposition of field's handlers
-      if (this.label_elem_drag!='' && this.testWithin(this.x,this.y,this.draw_limit[0],this.draw_limit[1],this.draw_limit[2],this.draw_limit[3])) {
+      if ((this.arrow_move != 0 || this.label_elem_drag!='') && this.testWithin(this.x,this.y,this.draw_limit[0],this.draw_limit[1],this.draw_limit[2],this.draw_limit[3])) {
         //setting the parameters of the 
         var led = this.label_elem_drag.split(/[@#$]/);
+				if (this.arrow_move != 0) led = this.hotspot_over.split(/[@#$]/);
         var led3 = '';if (led[2]!='') led3=led[2].split(',');
         this.HsCo = this.hotSpots[led[0]][(3+led[1]*6+2)].split(',');
         var f_type = this.hotSpots[led[0]][(3+led[1]*6+1)];
@@ -494,10 +506,20 @@ function qh_redraw_canvas() {
             this.label_elem_clicked_pos = x0+','+y0;
           }
           var pos0 = this.label_elem_clicked_pos.split(',');
-          for (n=0;n<this.HsCo.length/2;n++) {
-            this.HsCo[n*2+0] = Math.round(parseInt(this.HsCo[n*2+0], 16)+this.x-pos0[0]).toString(16);
-            this.HsCo[n*2+1] = Math.round(parseInt(this.HsCo[n*2+1], 16)+this.y-pos0[1]).toString(16);
-          }
+					if (this.label_elem_drag!='') {
+						for (n=0;n<this.HsCo.length/2;n++) {
+							this.HsCo[n*2+0] = Math.round(parseInt(this.HsCo[n*2+0], 16)+this.x-pos0[0]).toString(16);
+							this.HsCo[n*2+1] = Math.round(parseInt(this.HsCo[n*2+1], 16)+this.y-pos0[1]).toString(16);
+						}
+					}
+          if (this.arrow_move > 0) 
+						for (n=0;n<this.HsCo.length/2;n++) 
+							this.HsCo[n*2+0] = Math.round(parseInt(this.HsCo[n*2+0], 16)+this.arrow_move-2).toString(16);
+          if (this.arrow_move < 0) 
+						for (n=0;n<this.HsCo.length/2;n++) 
+							this.HsCo[n*2+1] = Math.round(parseInt(this.HsCo[n*2+1], 16)+this.arrow_move+2).toString(16);
+					if (this.arrow_move != 0) this.qh_ReturnInfo();
+		
           if (this.label_elem_clicked_pos != '') this.label_elem_clicked_pos = this.x+','+this.y;
         }
         this.hotSpots[led[0]][(3+led[1]*6+2)] = this.HsCo.join(',');
@@ -619,7 +641,7 @@ function qh_redraw_canvas() {
         }
       }
     }	
-		
+			
 		//buttons
 		if (this.qmode == 'edit' || this.qmode == 'analysis' || this.qmode == 'correction') this.menuRebuild(this.context);
 		if (this.qmode == 'script' && this.hotSpots.length>1) this.menuRebuild(this.context,false);
@@ -714,13 +736,15 @@ function qh_mouseDragMove(e){
 	}	
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
+		/*
 		if (this.drag_box_id>-1 && this.testWithin(this.x - this.sub_x,this.y - this.sub_y,300,25,this.canvas.width,this.canvas.height)) {
 			this.hotSpots[this.drag_box_id][5] = this.x - this.sub_x;
 			this.hotSpots[this.drag_box_id][6] = this.y - this.sub_y;
 		}
+		*/
     if (this.hotspot_over != '') this.label_elem_drag = this.hotspot_over;
 	} else { //change of cursor
-    this.drag_box_id = -1;
+    //this.drag_box_id = -1;
 		if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
 			var over_object = false;     
       
@@ -793,7 +817,7 @@ function qh_mouseDragMove(e){
     if (typeof this.qh_panelBox[this.buttonClicked][2]!='undefined') tmp_pan = this.qh_panelBox[this.buttonClicked][2];
     this.panelOver=this.buttonClicked;
     over_object = true;
-    this.drag_box_id = -1;
+    //this.drag_box_id = -1;
     for (i=0;i<this.panelActiveParts[tmp_pan].length;i++) {
       var tp = this.panelActiveParts[tmp_pan][i].split(',');
       this.tw=true;
@@ -870,10 +894,12 @@ function qh_mouseDragDown(e){
 	this.x = e.clientX - this.canv_rect.left;
 	this.y = e.clientY - this.canv_rect.top;
 	if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
+		/*
 		if (this.drag_box_id>-1) {
 			this.sub_x = this.x - this.hotSpots[this.drag_box_id][5];
 			this.sub_y = this.y - this.hotSpots[this.drag_box_id][6];
 		}
+		*/
 		if (this.panelOptionOver == -1) this.dragging = true;	
 	}
 	if (this.qmode!='script' && this.testWithin(this.x,this.y,300,25,this.canvas.width,this.canvas.height)) {
@@ -1185,7 +1211,7 @@ function rqh(num) {
 	this.test_result = '';
 	this.x,this.y,this.sub_x,this.sub_y;
 
-	this.drag_box_id=-1;                         //index of box beeing dragged
+	//this.drag_box_id=-1;                         //index of box beeing dragged
   this.menu_ready = 1;
 	this.edit_box_blink = 0;
 	this.edit_box_pos = 0;
