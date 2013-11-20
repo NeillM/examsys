@@ -98,16 +98,23 @@ HTML;
       if (!(isset($displaystdformobj->replace) and $displaystdformobj->replace === true)) {
         echo "<div class=\"msg\">{$string['signinmsg']}</div>\n";
       }
+
+      if (isset($displaystdformobj->disablerequired) and $displaystdformobj->disablerequired == true) {
+        $required = '';
+      } else {
+        $required = 'required';
+      }
+
       ?>
         <div style="margin-left:65px">
           <table>
               <tr>
                   <td><?php echo $string['username']; ?></td>
-                  <td><input type="text" name="ROGO_USER" id="username" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" required /></td>
+                  <td><input type="text" name="ROGO_USER" id="username" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" <?php echo $required; ?> /></td>
               </tr>
               <tr>
                   <td><?php echo $string['password']; ?></td>
-                  <td><input type="password" name="ROGO_PW" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" required /></td>
+                  <td><input type="password" name="ROGO_PW" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" <?php echo $required; ?> /></td>
               </tr>
 <?php
 
