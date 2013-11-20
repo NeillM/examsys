@@ -301,8 +301,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			this.imagesLoaded ++;
 			if (this.imagesLoaded == this.max_num_images) {
 				this.allImagesLoaded = true;
-				this.redraw_once = true;
-				this.ql_redraw_canvas();
 				
 				//reassign images to other levels
 				for (i=0;i<this.answerBox.length;i++) {
@@ -312,6 +310,8 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 						}
 					}
 				}
+				this.redraw_once = true;
+				this.ql_redraw_canvas();				
 			}
 		}				
 		
@@ -494,11 +494,11 @@ function ql_draw_box(i,j,temp_x,temp_y) {
   if (this_box[1] == 'image') this.context.fillRect(temp_x,temp_y,this.imglabelWidth,this.imglabelHeight);
   if (this_box[1] == 'text') this.context.fillRect(temp_x,temp_y,this.labelWidthEffect,this.labelHeightEffect);
 
-    this.context.shadowColor = '#fff';
-    this.context.shadowBlur = 0;
-    this.context.shadowOffsetX = 0;
-    this.context.shadowOffsetY = 0;
-  
+	this.context.shadowColor = '#fff';
+	this.context.shadowBlur = 0;
+	this.context.shadowOffsetX = 0;
+	this.context.shadowOffsetY = 0;
+
   if (this_box[1] == 'image') {
 		if (typeof(this_box[11])!='undefined') {
 			var tmp_red = 1; 
@@ -967,78 +967,63 @@ function ql_redraw_canvas() {
 		this.context.fillStyle=this.currentColours[0]; //resetting colour
 		
 		//moving shapes by arrow keys
-		if (this.qmode == 'edit' && this.active_shape>-1) {
-			if (this.key_code == 39) { //arror right
-				this.shapeBox[this.active_shape][2]++;
-				this.shapeBox[this.active_shape][4]++;
+		if (this.qmode == 'edit') {
+		  if (this.active_shape>-1) {
+				if (this.key_code == 39) { //arror right
+					this.shapeBox[this.active_shape][2]++;
+					this.shapeBox[this.active_shape][4]++;
+				}
+				if (this.key_code == 37) { //arrow left
+					this.shapeBox[this.active_shape][2]--;
+					this.shapeBox[this.active_shape][4]--;
+				}
+				if (this.key_code == 38) { //arrow up
+					this.shapeBox[this.active_shape][3]--;
+					this.shapeBox[this.active_shape][5]--;			
+				}
+				if (this.key_code == 40) { //arrow down
+					this.shapeBox[this.active_shape][3]++;
+					this.shapeBox[this.active_shape][5]++;			
+				}
 			}
-			if (this.key_code == 37) { //arrow left
-				this.shapeBox[this.active_shape][2]--;
-				this.shapeBox[this.active_shape][4]--;
+		}		
+		//tab select of labels
+		if (this.qmode == 'edit' && this.edit_box_id==-1) {
+			if (this.key_code == 9) { //tab
+				this.active_box_combo++;
+				if (this.active_box_id<0) this.active_box_id = 0;
+				if (this.answerBox[this.active_box_id].length<=this.active_box_combo) {
+					this.active_box_id++;
+					this.active_box_combo = 0;
+				}
+				if (this.answerBox.length<=this.active_box_id) {
+					this.active_box_id = 0;
+					this.active_box_combo = 0;
+				}
 			}
-			if (this.key_code == 38) { //arrow up
-				this.shapeBox[this.active_shape][3]--;
-				this.shapeBox[this.active_shape][5]--;			
+			if (typeof(this.answerBox[this.active_box_id])!='undefined' && typeof(this.answerBox[this.active_box_id][this.active_box_combo])!='undefined') {
+				if (this.key_code == 39) this.answerBox[this.active_box_id][this.active_box_combo][5]++; //arrow right				
+				if (this.key_code == 37) this.answerBox[this.active_box_id][this.active_box_combo][5]--; //arrow left				
+				if (this.key_code == 38) this.answerBox[this.active_box_id][this.active_box_combo][6]--; //arrow up
+				if (this.key_code == 40) this.answerBox[this.active_box_id][this.active_box_combo][6]++; //arrow down
+				
 			}
-			if (this.key_code == 40) { //arrow down
-				this.shapeBox[this.active_shape][3]++;
-				this.shapeBox[this.active_shape][5]++;			
-			}
-		}
-
-		//accessibility tab select of labels
-		if (this.qmode == 'edit' && this.key_code == 9) { //tab
-			this.active_box_combo++;
-			if (this.answerBox[this.active_box_id].length<=this.active_box_combo) {
-				this.active_box_id++;
-				this.active_box_combo = 0;
-			}
-			if (this.answerBox.length<=this.active_box_id) {
-				this.active_box_id = 0;
-				this.active_box_combo = 0;
-			}			
+			if (this.key_code >= 37 && this.key_code <= 40) this.ql_ReturnInfo();
 		}
 
 		//edit box
 		if (this.qmode == 'edit' && this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
-			loc_width = this.imglabelWidth;loc_height = this.imglabelHeight;
-			if (this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][1] == 'text') {
-				loc_width = this.labelWidthEffect;
-				loc_height = this.labelHeightEffect;
-			}	
+			//loc_width = this.imglabelWidth;loc_height = this.imglabelHeight;
+			//if (this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][1] == 'text') {
+			//	loc_width = this.labelWidthEffect;
+			//	loc_height = this.labelHeightEffect;
+			//}	
 			var tmp_edit_text = this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2];
 			if (this.labelMulti == 'multiple') tmp_edit_text = this.answerBox[this.active_box_id][this.active_box_combo][2];
 			var text_len = tmp_edit_text.length;
-			if (this.key_code == 39) { //arror right
-				if (this.edit_box_id>-1) {
-					this.edit_box_pos++;
-				}else{
-					this.answerBox[this.active_box_id][this.active_box_combo][5]++;
-					this.ql_ReturnInfo();
-				}
-			}
-			if (this.key_code == 37) { //arrow left
-				if (this.edit_box_id>-1) {
-					this.edit_box_pos--;
-				}else{
-					this.answerBox[this.active_box_id][this.active_box_combo][5]--;
-					this.ql_ReturnInfo();
-				}
-			}
-			if (this.key_code == 38) { //arrow up
-				//if (activ_shape
-				if (this.edit_box_id==-1) {
-					this.answerBox[this.active_box_id][this.active_box_combo][6]--;
-					this.ql_ReturnInfo();
-				}
-			}
-			if (this.key_code == 40) { //arrow down
-				if (this.edit_box_id==-1) {
-					this.answerBox[this.active_box_id][this.active_box_combo][6]++;
-					this.ql_ReturnInfo();
-				}
-			}			
-			
+			if (this.key_code == 39) this.edit_box_pos++; //arrow right
+			if (this.key_code == 37) this.edit_box_pos--; //arrow left
+
 			if (this.key_code == 35) this.edit_box_pos=text_len; 	//end
 			if (this.key_code == 36) this.edit_box_pos=0; 				//home	
 			if (this.edit_box_pos<0) this.edit_box_pos=0;
@@ -1065,13 +1050,11 @@ function ql_redraw_canvas() {
 				}
 				this.ql_ReturnInfo();
 			}
-		}
-		
-		if (this.qmode == 'edit' && (this.active_shape>-1 || (this.active_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image'))) {
+		}      
+		if (this.qmode == 'edit') {
 			this.char_code = '';
 			this.key_code = 0;
-		}      
-
+		}
 		//scaling up the label width by text
 		this.labelWidthEffect = this.labelWidth;
 		this.labelHeightEffect = this.labelHeight;
@@ -1570,19 +1553,51 @@ function ql_mouseDragMove(e){
 	
 	if (this.qmode == 'answer'){
 		if (this.char_code == ' ') { //space
-			this.access_switch ++;
-			if (this.access_switch==2) {
-				this.access_switch = 0;
-				
-				//simulating drag and drop
-				this.drag_box_id = this.answer_access_id;
-				this.drag_box_combo = this.answer_access_combo;
-				this.mov_id = this.answer_access_id;
-				this.mov_combo = 0;
-				this.ql_mouseDragUp();
-				
+			if (this.qType=='menu') {
+				if (this.active_box_id == this.answer_access_id) {
+					this.active_box_id = -1;
+				}else{
+					this.active_box_id = this.answer_access_id; 
+				}
+				this.active_box_combo = 0;
+				this.redraw_once = true;
+				this.ql_redraw_canvas();
+			}else{
+				this.access_switch ++;
+				if (this.access_switch == 2) {
+					this.access_switch = 0;
+					
+					//simulating drag and drop
+					this.drag_box_id = this.answer_access_id;
+					this.drag_box_combo = this.answer_access_combo;
+					this.mov_id = this.answer_access_id;
+					this.mov_combo = 0;
+					this.ql_mouseDragUp();
+				}	
 			}
 		}
+		if (this.key_code == 38 && this.qType=='menu') { //arrow up			
+			if (this.menu_line<0) this.menu_line=0;
+			if (this.menu_line>1) this.menu_line--;
+			this.active_box_id = this.answer_access_id; 
+			this.active_box_combo = 0;
+			if (typeof(this.answerBox[this.active_box_id]) != 'undefined' && typeof(this.menuBox[this.menu_line-1]) != 'undefined') this.answerBox[this.active_box_id][0][2] = this.menuBox[this.menu_line-1];
+			this.ql_mouseDragUp();
+			this.active_box_id = this.answer_access_id;
+			this.active_box_combo = 0;
+		}
+		if (this.key_code == 40 && this.qType=='menu') { //arrow down
+			if (this.menu_line<0) this.menu_line=0;
+			if (this.menu_line<this.menuBox.length) this.menu_line++;
+			this.active_box_id = this.answer_access_id; 
+			this.active_box_combo = 0;
+			if (typeof(this.answerBox[this.active_box_id]) != 'undefined' && typeof(this.menuBox[this.menu_line-1]) != 'undefined') this.answerBox[this.active_box_id][0][2] = this.menuBox[this.menu_line-1];
+			this.ql_mouseDragUp();
+			this.active_box_id = this.answer_access_id; 
+			this.active_box_combo = 0;
+		}
+
+		//accessibility tab select of labels
 		if (this.key_code == 9) { //tab
 			if (this.access_switch==-1) this.access_switch ++;
 			
@@ -1616,16 +1631,6 @@ function ql_mouseDragMove(e){
 
 				if ((this.answerBox.length-1)<=this.answer_access_id) this.answer_access_id = 0;
 			}
-
-			/*
-			if (this.access_switch==1) {
-				this.pholder_access_id++;
-				if (this.pholderBox[this.pholder_access_id][2]=='') 
-					for (i=this.pholder_access_id;i<this.pholderBox.length;i++) 
-						if (this.pholderBox[this.pholder_access_id][2]=='') this.pholder_access_id=i;
-				if ((this.pholderBox.length-1)<=this.pholder_access_id) this.pholder_access_id = 0;
-			}
-			*/
 			if (this.access_switch==1) {
 				//creating sorted list of labels and selecting next available
 				var tmp_pos_array = [];
