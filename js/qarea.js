@@ -105,9 +105,8 @@ function yoffset_fix(data,fix,fiy) {
 }
 
 function qa_menuBuild() {
-  this.imgdata = menuImages['toolbar/vert_0.png'];
-	this.context.drawImage(this.menu_img,this.imgdata.left+0.5,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,0,0,this.canvas.width,this.imgdata.height);
-  
+  //this.imgdata = menuImages['toolbar/vert_0.png'];
+	//this.context.drawImage(this.menu_img,this.imgdata.left+0.5,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,0,0,this.canvas.width,this.imgdata.height);
   if (this.qmode == 'test') {
     var spac = 3;
     var posx = 3;    
@@ -350,7 +349,7 @@ function qa_redraw_canvas() {
     this.menuRebuild(this.context);
 
     //frames
-    this.context.strokeStyle='#7f9db9'; 
+    this.context.strokeStyle='#cccccc';//'#7f9db9'; 
     this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 
     
     if (this.global_clearpnl) this.build_msgbox((this.canvas.width/2-130),(this.canvas.height/2-40),260,80,lang_string['popUp_msg'],lang_string['popUp_yes'],lang_string['popUp_no'],'');

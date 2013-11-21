@@ -161,8 +161,8 @@ function qh_panelBoxBuild (but_name,pan_name) {
 
 function qh_menuBuild() {
 	if (this.qmode == 'edit' || this.qmode == 'analysis' || this.qmode == 'correction') {
-		this.imgdata = menuImages['toolbar/vert_0.png'];
-		this.context.drawImage(this.menu_img,this.imgdata.left+0.5,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,0,0,this.canvas.width,this.imgdata.height);
+		//this.imgdata = menuImages['toolbar/vert_0.png'];
+		//this.context.drawImage(this.menu_img,this.imgdata.left+0.5,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,0,0,this.canvas.width,this.imgdata.height);
 	}	
 	var posy = 3;
 	if (this.qmode == 'edit') {
@@ -434,6 +434,9 @@ function qh_redraw_canvas() {
 		if (this.qmode == 'script' && typeof(this.buttonBox[0])!='undefined') this.buttonBox[0][2] = pan_y+10;
 		
     //frames
+    this.context.strokeStyle='#cccccc';//'#7f9db9'; 
+    this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 
+
     this.context.strokeStyle='#7f9db9';  
     this.context.strokeRect(300.5,0.5,this.canvas.width-300,this.canvas.height-1); 
 		this.draw_limit = Array(302,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);

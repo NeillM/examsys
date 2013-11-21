@@ -518,20 +518,24 @@ function menuRebuild(ctx,bar) {
   //toolbar background
 	if (typeof(bar) == 'undefined') bar = true;
 	if (bar) {
-		imgdata = menuImages['toolbar/vert_0.png'];
-		this.context.drawImage(this.menu_img,imgdata.left+0.5,imgdata.top,imgdata.width-1,imgdata.height,0,0,this.canvas.width,imgdata.height);
+		//imgdata = menuImages['toolbar/vert_0.png'];
+		//this.context.drawImage(this.menu_img,imgdata.left+0.5,imgdata.top,imgdata.width-1,imgdata.height,0,0,this.canvas.width,imgdata.height);
+		this.context.fillRect(0,0,this.canvas.width,25);
 	}
   for (var n=0;n<this.buttonBox.length;n++) {
     var state = this.buttonBox[n][5];
     imgdata = menuImages[this.buttonBox[n][0]];
-    imgdatab = menuImages['toolbar/but_back'+state+'.png'];
+    //imgdatab = menuImages['toolbar/but_back'+state+'.png'];
     var iwidth = imgdata.width+2;
     if (this.buttonBox[n][0] == 'toolbar/ico_drop.png') iwidth = 12;
     //button background
     if (state!=0 && this.buttonBox[n][7]!='-') {
-      this.context.drawImage(this.menu_img,imgdatab.left+0.5,imgdatab.top,imgdatab.width-1,imgdatab.height,this.buttonBox[n][1],this.buttonBox[n][2],this.buttonBox[n][3],this.buttonBox[n][4]);
-      this.context.strokeStyle = '#000000';
-      this.context.strokeRect(this.buttonBox[n][1]+0.5,this.buttonBox[n][2]+0.5,this.buttonBox[n][3],this.buttonBox[n][4]);
+			this.context.fillStyle = '#ffd389';
+			if (state == 1) this.context.fillStyle = '#ffeab7';
+      this.context.fillRect(this.buttonBox[n][1]-0.5,this.buttonBox[n][2]-0.5,this.buttonBox[n][3]+1,this.buttonBox[n][4]+2);
+			//this.context.drawImage(this.menu_img,imgdatab.left+0.5,imgdatab.top,imgdatab.width-1,imgdatab.height,this.buttonBox[n][1],this.buttonBox[n][2],this.buttonBox[n][3],this.buttonBox[n][4]);
+      //this.context.strokeStyle = '#000000';
+      //this.context.strokeRect(this.buttonBox[n][1]+0.5,this.buttonBox[n][2]+0.5,this.buttonBox[n][3],this.buttonBox[n][4]);
     }
 		bpad = 2; if (this.buttonBox[n][8] == '') bpad = 0;
     this.context.drawImage(this.menu_img,imgdata.left,imgdata.top,imgdata.width,imgdata.height,this.buttonBox[n][1]+1+bpad,this.buttonBox[n][2]+1,iwidth-2,imgdata.height);
@@ -617,16 +621,20 @@ function menuRebuild_panel (panelActiveParts,panelBox,but_name,pan_name,panel_co
 		//solid option
 		if (selection>-1 && panel_code>0) {
       var tp = panelActiveParts[pan_name][selection].split(',');
-      var imgdatab = menuImages['toolbar/but_back2.png'];
-      this.context.drawImage(this.menu_img,imgdatab.left+0.5,imgdatab.top,imgdatab.width-1,imgdatab.height,temp_but[1]+1*tp[0]+0.5,temp_but[2]+25+1*tp[1]+0.5,tx,ty);
-  		this.context.strokeRect(temp_but[1]+1*tp[0]+0.5,temp_but[2]+25+1*tp[1]+0.5,tx,ty);
+      //var imgdatab = menuImages['toolbar/but_back2.png'];
+      //this.context.drawImage(this.menu_img,imgdatab.left+0.5,imgdatab.top,imgdatab.width-1,imgdatab.height,temp_but[1]+1*tp[0]+0.5,temp_but[2]+25+1*tp[1]+0.5,tx,ty);
+  		//this.context.strokeRect(temp_but[1]+1*tp[0]+0.5,temp_but[2]+25+1*tp[1]+0.5,tx,ty);
+			this.context.fillStyle = '#ffd389';
+  		this.context.fillRect(temp_but[1]+1*tp[0]+0.5,temp_but[2]+25+1*tp[1]+0.5,tx,ty);
 		}
 		//soft option
     if (this.panelOptionOver>-1 && panel_code>0) {
       var tpc = panelActiveParts[pan_name][this.panelOptionOver].split(',');
-      var imgdatac = menuImages['toolbar/but_back1.png'];
-      this.context.drawImage(this.menu_img,imgdatac.left+0.5,imgdatac.top,imgdatac.width-1,imgdatac.height,temp_but[1]+1*tpc[0]+0.5,temp_but[2]+25+1*tpc[1]+0.5,tx,ty);
-  		this.context.strokeRect(temp_but[1]+1*tpc[0]+0.5,temp_but[2]+25+1*tpc[1]+0.5,tx,ty);
+      //var imgdatac = menuImages['toolbar/but_back1.png'];
+      //this.context.drawImage(this.menu_img,imgdatac.left+0.5,imgdatac.top,imgdatac.width-1,imgdatac.height,temp_but[1]+1*tpc[0]+0.5,temp_but[2]+25+1*tpc[1]+0.5,tx,ty);
+  		//this.context.strokeRect(temp_but[1]+1*tpc[0]+0.5,temp_but[2]+25+1*tpc[1]+0.5,tx,ty);
+			this.context.fillStyle = '#ffeab7';
+  		this.context.fillRect(temp_but[1]+1*tpc[0]+0.5,temp_but[2]+25+1*tpc[1]+0.5,tx,ty);
       }
 
 		//drawing the image of the panel for lines and sizes
