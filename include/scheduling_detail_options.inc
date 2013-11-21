@@ -44,7 +44,7 @@
 <div class="submenuheading" id="papertasks"><?php echo $string['examtasks']; ?></div>
 
 <div style="font-size:90%">
-	<div class="menuitem"><a href="../paper/details.php?paperID=<?php echo $_GET['paperID']; ?>"><img class="sidebar_icon" src="../artwork/link.png" alt="" /><?php echo $string['jumptopaper']; ?></a></div>
+	<div class="menuitem"><a href="../paper/details.php?paperID=<?php echo $_GET['paperID']; ?>"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="" /><?php echo $string['jumptopaper']; ?></a></div>
 	<div class="menuitem" onclick="editProperties()"><img class="sidebar_icon" src="../artwork/properties_icon.gif" alt="" /></td><td class="menuitem"><a href="#" onclick="return false;"><?php echo $string['editproperties']; ?></a></div>
 	<div class="menuitem" onclick="convtFormative()"><img class="sidebar_icon" src="../artwork/formative_16.gif" alt="" /></td><td class="menuitem"><a href="#" onclick="return false;"><?php echo $string['converttoformative']; ?></a></div>
 	<div class="menuitem"><a href="mailto:<?php echo $email . '?subject=Scheduling of ' . $paper_title . '&body=Dear ' . $title . ' ' . $surname . ','; ?>"><img class="sidebar_icon" src="../artwork/small_email.png" alt="" /><?php echo $string['Email'] . ' ' . $title . ' ' . $surname; ?></a></div>

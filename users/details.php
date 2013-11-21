@@ -74,9 +74,9 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color) 
 
   foreach($tab_array as $individual_tab) {
     if ($individual_tab == $current_tab) {
-      $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:100%; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('" . $individual_tab . "_tab')\">" . $string[strtolower($individual_tab)] . "</td>";
+      $html .= "<td class=\"tabon\" onclick=\"showTab('" . $individual_tab . "_tab')\">" . $string[strtolower($individual_tab)] . "</td>";
     } else {
-      $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:100%; background-image:url(../artwork/tab_off.gif)\" onclick=\"showTab('" . $individual_tab . "_tab')\">" . $string[strtolower($individual_tab)] . "</td>";
+      $html .= "<td class=\"taboff\" onclick=\"showTab('" . $individual_tab . "_tab')\">" . $string[strtolower($individual_tab)] . "</td>";
     }
   }
   $html .= "</tr></table></td><td align=\"right\" style=\"background-color:$bg_color\">$right_text</td></tr>\n";
@@ -221,6 +221,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <style type="text/css">
     td {padding-top:1px}
     .coltitle {cursor:hand; background-color:#1E3C7B; color:white}

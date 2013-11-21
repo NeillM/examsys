@@ -39,3 +39,7 @@ Options -Indexes
 #RewriteCond %{REMOTE_ADDR} !128.243.253.107 [NC]
 #RewriteRule !(maintenance/.*)$ /maintenance/? [R=307,L]
 
+#AuthType Basic
+#AuthName "My6776Protected Are337878a787878"
+#AuthUserFile c:\dev\web\rogo8080\t2\htpasswd.htpasswd
+#Require valid-user
