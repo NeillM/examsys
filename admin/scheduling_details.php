@@ -88,7 +88,7 @@ $results->close();
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
     .data {border-collapse:collapse; margin-left:30px; margin-top:20px}
-    .data td {border:1px solid #C0C0C0}
+    .data td {border:1px solid #EAEAEA}
     .f1 {background-color:#EAEAEA}
   </style>
   
@@ -104,7 +104,7 @@ $results->close();
 <table class="header">
 <tr>
 <th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="summative_scheduling.php"><?php echo $string['summativescheduling']; ?></a></div><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['Paper']; ?>:</strong> <?php echo $paper_title; ?></th>
-<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
+<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" /></a></th>
 </tr>
 </table>
 

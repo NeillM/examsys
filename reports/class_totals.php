@@ -517,11 +517,11 @@ if ($language != 'en') {
   if ($temp_user_no > 0) {
 ?>
     <tr>
-      <td class="redwarn" colspan="<?php echo $cols ?>">
-        <table class="warn-icon">
+      <td colspan="<?php echo $cols ?>">
+        <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
           <tr>
-            <td>&nbsp;<img src="../artwork/temp_account_warning.png" width="28" height="28" alt="Warning" /></td>
-            <td>&nbsp;<?php echo $string['temporaryaccountswarning'] ?></td>
+            <td class="redwarn" style="width:32px"><img src="../artwork/temp_account_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td class="redwarn"><?php echo $string['temporaryaccountswarning'] ?></td>
           </tr>
         </table>
       </td>
@@ -532,24 +532,26 @@ if ($language != 'en') {
   if (count($log_late) > 0) {
 ?>
     <tr>
-      <td class="redwarn" colspan="<?php echo $cols ?>">
-        <table class="warn-icon">
+      <td colspan="<?php echo $cols ?>">
+        <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
           <tr>
-            <td><img src="../artwork/late_warning_icon.png" width="28" height="28" alt="<?php echo strip_tags($string['latesubmissionsmsg']) ?>" /></td>
-            <td>
-
-<?php
-    echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>)</td></tr></table></td></tr>\n";
+            <td class="redwarn" style="width:32px"><img src="../artwork/late_warning_icon.png" width="28" height="28" alt="<?php echo strip_tags($string['latesubmissionsmsg']) ?>" /></td>
+            <td class="redwarn"><?php echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . ' (<a style="color:black" href="#" onclick="launchHelp(221); return false;">' . $string['moredetails'] . '</a>)'; ?></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	<?php
   }
 	
 	if ($report->unmarked_enhancedcalc()) {
 ?>
     <tr>
-      <td class="redwarn" colspan="<?php echo $cols ?>">
-        <table class="warn-icon">
+      <td colspan="<?php echo $cols ?>">
+        <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
           <tr>
-            <td><img src="../artwork/unmarked_questions_warning.png" width="28" height="28" alt="Warning" /></td>
-            <td><?php echo $string['unmarkedenhancedcalc'] ?></td>
+            <td class="redwarn" style="width:32px"><img src="../artwork/unmarked_questions_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td class="redwarn"><?php echo $string['unmarkedenhancedcalc'] ?></td>
           </tr>
         </table>
       </td>
@@ -560,11 +562,11 @@ if ($language != 'en') {
 	if ($report->unmarked_textbox()) {
 ?>
     <tr>
-      <td class="redwarn" colspan="<?php echo $cols ?>">
-        <table class="warn-icon">
+      <td colspan="<?php echo $cols ?>">
+        <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
           <tr>
-            <td><img src="../artwork/unmarked_questions_warning.png" width="28" height="28" alt="Warning" /></td>
-            <td><?php echo $string['unmarkedtextbox'] ?></td>
+            <td class="redwarn" style="width:32px"><img src="../artwork/unmarked_questions_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td class="redwarn"><?php echo $string['unmarkedtextbox'] ?></td>
           </tr>
         </table>
       </td>
