@@ -1026,7 +1026,6 @@ function ql_redraw_canvas() {
 				}
 				
 				tmp_pos = tmp_sort_array[tmp_i];
-				console.log(tmp_pos_array,tmp_pos);
 				
 				this.active_box_id = tmp_pos_array[tmp_pos].split(',')[0];
 				this.active_box_combo = tmp_pos_array[tmp_pos].split(',')[1];
@@ -1819,23 +1818,7 @@ function ql_mouseDragUp(){
 	
 	//help link
 	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
-			console.log('>>>> answerBox >>>>');
-			for (i=0;i<this.answerBox.length;i++) 
-				if (typeof(this.answerBox[i])!='undefined')
-					for (j=0;j<this.answerBox[i].length;j++) 
-						console.log(i,j,this.answerBox[i][j]);
-			console.log('----');
-			
-			console.log('>>>> pholderBox >>>>');
-			for (i=0;i<this.pholderBox.length;i++) 
-				console.log(i,this.pholderBox[i]);
-			console.log('----');
-			
-			console.log('drag',this.drag_box_id,this.drag_box_combo);
-			console.log('move',this.move_box_id,this.move_box_combo);
-			console.log('active',this.active_box_id,this.active_box_combo);
-			
-			//window.open('/help/staff/index.php?id=60');
+		window.open('/help/staff/index.php?id=60');
 	}
 
 	if (this.qmode!='script') {

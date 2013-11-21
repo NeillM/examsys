@@ -240,7 +240,19 @@ function qa_redraw_canvas_main(tx,ty) {
 	//edit or answer
 	if (this.qconfig!='' && this.qmode == 'edit') this.polyDrawH(this.context,col,'',tx,ty,this.qconfig.split(','),'h'); 
 	if (this.qanswer!='' && this.qmode == 'answer') this.polyDrawH(this.context,col,'',tx,ty,this.qanswer.split(','),'h'); 
-
+	
+	//niko
+	if (this.access_sel > -1) {
+		if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
+    if (this.qtest.length>0){
+			var pp = this.qtest.split(',');
+			this.context.strokeStyle = '#FFBD69';
+			this.context.lineWidth = 3;
+			this.context.strokeRect(tx+parseInt(pp[(this.access_sel*2+0)].trim(), 16)-3.5,ty+parseInt(pp[(this.access_sel*2+1)].trim(), 16)-3.5,9,9); 
+		}
+	}
+	
 	if (this.qmode == 'script') {
 		if (this.qconfig!='' && this.qanswer!='' && typeof(this.err_image)!='undefined' && this.global_show_error) {
 			//combine images
@@ -414,6 +426,7 @@ function qa_redraw_canvas() {
 function qa_mouseDragMove(e){
 	this.ev = e || window.event;
 	if (this.ev.target.id != this.canvas.id) return true;
+	this.get_char_key();
 	
 	if (this.ev.type == 'keydown') {
 		this.isShift = this.ev.shiftKey ? true : false;
@@ -433,7 +446,48 @@ function qa_mouseDragMove(e){
 		this.y = this.ev.clientY - this.loc_top;
 		this.oy = this.y - this.yoffset;
 	}	
-	
+
+	//tab select 
+	if (this.key_code == 9) { //tab
+		if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
+    if (this.qtest.length>0){
+			var pp = this.qtest.split(',');
+			if (!this.isShift) {
+				this.access_sel++;
+				if ((pp.length/2-2)<this.access_sel) this.access_sel = 0;
+			}
+			if (this.isShift) {
+				this.access_sel--;
+				if (0>this.access_sel) this.access_sel = pp.length/2-2;
+			}
+		}
+		this.key_code = 0;
+	}
+
+	if (this.key_code >= 37 && this.key_code <= 40 && this.access_sel > -1) {
+		if (this.qmode == 'answer' && this.qanswer!='') this.qtest = this.qanswer;
+		if (this.qmode == 'edit' && this.qconfig!='') this.qtest = this.qconfig;
+    if (this.qtest.length>0){
+			var pp = this.qtest.split(',');
+			var ttx = parseInt(pp[(this.access_sel*2+0)].trim(), 16);
+			var tty = parseInt(pp[(this.access_sel*2+1)].trim(), 16);
+			if (this.key_code == 39) ttx++; //arror right
+			if (this.key_code == 37) ttx--; //arrow left
+			if (this.key_code == 38) tty--; //arrow up
+			if (this.key_code == 40) tty++; //arrow down		
+			pp[(this.access_sel*2+0)] = Math.round(ttx).toString(16);
+			pp[(this.access_sel*2+1)] = Math.round(tty).toString(16);
+			if (this.qmode == 'answer') this.qanswer = pp.join(',');
+			if (this.qmode == 'edit') this.qconfig = pp.join(',');
+
+			this.qa_ReturnInfo();
+			this.redraw_once = true;
+			this.qa_redraw_canvas;
+		}
+		this.key_code = 0;
+	}
+	 
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
     if (this.handler_sqr>-1) {
@@ -587,6 +641,7 @@ function qa_mouseDragDown(e){
 	this.x = e.clientX - this.canv_rect.left;
 	this.y = e.clientY - this.canv_rect.top;
 	this.oy = this.y - this.yoffset;
+	this.access_sel = -1;
 	
 	if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
 		this.dragging = true;	
@@ -772,6 +827,7 @@ function rqa(num) {
 	this.qa_mouseDragUp	   			= 	qa_mouseDragUp;
 	this.rqa	 						 			= 	rqa	;
 	this.qa_redraw_canvas_main 	= qa_redraw_canvas_main;
+	this.get_char_key 					=	get_char_key;
 
 	this.hexifycolour=hexifycolour;
 	this.textHeight=textHeight;
@@ -836,7 +892,7 @@ function rqa(num) {
   this.panel_buttons = new Array();
   this.panel_button_selected = '';
   //vars for polygon
-  this.handler_dot = this.handler_sqr = this.handler_clk = -1;
+  this.handler_dot = this.handler_sqr = this.handler_clk = this.access_sel = -1;
   this.poly_temp = '';
   this.freehand = false;
   this.angle1, this.angle2, this.distn, this.dx, this.dy;
