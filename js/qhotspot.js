@@ -435,7 +435,7 @@ function qh_redraw_canvas() {
 		
     //frames
     this.context.strokeStyle='#cccccc';//'#7f9db9'; 
-    this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 
+    if (this.qmode == 'edit') this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 
 
     this.context.strokeStyle='#7f9db9';  
     this.context.strokeRect(300.5,0.5,this.canvas.width-300,this.canvas.height-1); 

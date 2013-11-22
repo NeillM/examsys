@@ -892,7 +892,7 @@ function ql_redraw_canvas() {
     //frames
     this.context.lineWidth = 1;
     this.context.strokeStyle='#cccccc';//'#7f9db9'; 
-    this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 		
+    if (this.qmode == 'edit') this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 		
     this.context.strokeStyle='#7f9db9';  
     this.context.strokeRect(220.5,0.5,this.canvas.width-220,this.canvas.height-1); 
     
