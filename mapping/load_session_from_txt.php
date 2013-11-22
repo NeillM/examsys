@@ -97,9 +97,10 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Rogo: <?php echo $string['importfromfile'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['importfromfile'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .editBox {width:90%}
@@ -115,8 +116,7 @@ if (isset($_POST['submit'])) {
 <div id="content" class="content" style="font-size:80%">
 <?php
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$moduleID\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['importfromfile'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
-  echo "<tr><td colspan=\"2\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
+  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$moduleID\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['importfromfile'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a></td></tr>\n";
   echo "</table>\n";
 ?>
 
@@ -125,12 +125,12 @@ if (isset($_POST['submit'])) {
 
 <div align="center">
 
-<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #C0C0C0; width:600px">
+<table class="dialog_border" style="width:600px">
 <tr>
-<td valign="middle" align="left" style="background-color:white"><img src="../artwork/import.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-size:160%; font-weight:bold; color:#5582D2"><?php echo $string['importobjectives']; ?></span></td>
+<td align="left" style="background-color:white; width:32px"><img src="../artwork/import.gif" width="32" height="32" alt="Icon" /></td><td><span style="font-size:160%; font-weight:bold; color:#5582D2"><?php echo $string['importobjectives']; ?></span></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#EEEEEE">
+<td align="left" class="dialog_body" colspan="2">
 
 <p><?php echo $string['msg']; ?></p>
 

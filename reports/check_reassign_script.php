@@ -197,14 +197,14 @@ if (count($target_student) == 0) {
       $user_icon = 'user_male_64.png';
     } elseif ($individual['title'] == 'Dr') {
       if ($individual['gender'] == 'female') {
-        $user_icon = 'user_female_64.png';
+        $user_icon = 'user_female_48.png';
       } else {
-        $user_icon = 'user_male_64.png';
+        $user_icon = 'user_male_48.png';
       }
     } else {
-      $user_icon = 'user_female_64.png';
+      $user_icon = 'user_female_48.png';
     }
-    echo "<div style=\"border:1px solid white; cursor:hand\" onclick=\"doReassign($individualID)\" onmouseover=\"lon($individualID)\" onmouseout=\"loff($individualID)\" id=\"$individualID\"><table border=\"0\"><tr><td><img src=\"../artwork/$user_icon\" width=\"64\" height=\"64\" alt=\"user\" /></td><td>" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
+    echo "<div style=\"border:1px solid white; cursor:hand\" onclick=\"doReassign($individualID)\" onmouseover=\"lon($individualID)\" onmouseout=\"loff($individualID)\" id=\"$individualID\"><table border=\"0\"><tr><td><img src=\"../artwork/$user_icon\" width=\"48\" height=\"48\" alt=\"user\" /></td><td>" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
     echo implode(', ',$individual['modules']);
     echo "</td></tr></table></div>";
   }

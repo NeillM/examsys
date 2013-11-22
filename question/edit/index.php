@@ -515,11 +515,11 @@ if ($critical_error == '') {
 
     if ($q_disabled == 'locked') {
 ?>
-    <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="24" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div>
+    <div class="yellowwarn" style="vertical-align:middle; font-size:90%"><img src="../../artwork/paper_locked_padlock.png" width="24" height="24" alt="Locked" style="float:left" /><div style="float:left">&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div></div>
 <?php
     } elseif ($q_disabled == ' disabled') {
 ?>
-      <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="24" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['questionlocked'] . " $editor. " . $string['isinreadonly'] ?></div>
+      <div class="yellowwarn" style="font-size:90%"><img src="../../artwork/paper_locked_padlock.png" width="24" height="24" alt="Locked" />&nbsp;&nbsp;<?php echo $string['questionlocked'] . " $editor. " . $string['isinreadonly'] ?></div>
 <?php
     }
   }
