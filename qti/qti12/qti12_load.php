@@ -1488,7 +1488,9 @@ $numb=0;
     // should only be 1 response, so get it
     $response = reset($source->responses);
     $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
-
+//print '********';
+//var_dump($source);
+//print '^^^^^^^';
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
 
     $choiceno = 1;
@@ -2134,8 +2136,8 @@ $numbb=1;
     // question mark and rogo doesnt support above 20 fix it to 1 to allow user editing
 
     $max=round($max);
-    $min=round($min);
-    $part=round($part);
+    //$min=round($min); // min can be fractional marks so dont round (especially when negative)
+    //$part=round($part); // partial marks can be fractional especially when max marks is 1!
 
     if($max>20) $max=1;
     if($min>20) $min=1;
