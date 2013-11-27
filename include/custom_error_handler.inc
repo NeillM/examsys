@@ -197,9 +197,18 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
         }
       }
     }
-		if (isset($context) and !empty($context)) {
-			$variables = base64_encode(serialize($context));
-		}
+    if (isset($context) and !empty($context)) {
+      try {
+        $variables = base64_encode(serialize($context));
+      } catch (Exception $e) {
+        try {
+          $context = array('had a problem with the capture context due to exception:: ' . $e->getMessage(),'using alternative method var_export to string instead',var_export($context, TRUE));
+        } catch (Exception $e) {
+          $context = 'Couldnt capture context due to exception:: ' . $e->getMessage();
+        }
+        $variables = base64_encode(serialize($context));
+      }
+    }
     $userid = 0;
     $username = 'PRE LOGIN';
     if (isset($userObject)) {
