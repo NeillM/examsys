@@ -1573,7 +1573,13 @@ $numb=0;
       unset($incorrectfb);
       $incorrectfb=array();
     }
-
+// fix so that if no common feedback you dont get an error message
+    if(is_null($generalfb)) {
+      $generalfb = array();
+    }
+    print "888^^***";
+    var_dump($correctfb,$incorrectfb,$generalfb);
+    print "***^^888";
     $dest->feedback = $this->GetFeedbackFromArray($source, $generalfb);
 
     $dest->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
