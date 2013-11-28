@@ -228,8 +228,10 @@ function hofstee_plot(canvas_id,result_type) {
 				
 				if ((cx>=tx2) && (cx<=tx1) && ((cy>=ty2 && cy<=ty1) || (cy>=ty1 && cy<=ty2))) {
 					if (cx>=x1 && cx<=x2 && cy>=y4 && cy<=y3) {
-						xs = Math.round((cx-graph_x)/scale_x*10)/10;
-						ys = Math.round(-(cy-canvas.height+graph_y)/scale_y*10)/10;
+						xs = (cx-graph_x)/scale_x;
+						xs = Math.round(xs*100)/100;
+						ys = -(cy-canvas.height+graph_y)/scale_y;
+						ys = Math.round(ys*100)/100;
 						var dcx = Math.round(cx);
 						var dcy = Math.round(cy);
 						for (j=1;j<(ys*scale_y/5);j++) drawLine('#A5A5A5',dcx,dcy+5*j,0,-3);
