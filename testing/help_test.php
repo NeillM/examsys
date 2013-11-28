@@ -67,7 +67,7 @@ require '../include/staff_auth.inc';
 				if (isset($help_toc[$link])) {
 					$help_toc[$link]['links'] .= $help_item['id'].',';
 				} else {
-					$result .= 'link reference is missing in: "<strong>'.$help_item['title'].'</strong>" (id=<strong>'.$help_item['id'].'</strong>) to: "'.$text.'" (id='.$link.')<br />';
+					$result .= 'link reference is missing in: "<strong><a href="https://localhost/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['title'].'</a></strong>" (id=<strong><a href="https://localhost/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></strong>) to: "'.$text.'" (id='.$link.')<br />';
 				}	
 			}
 		}
