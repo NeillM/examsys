@@ -2120,6 +2120,48 @@ $numbb=1;
     return array($positive, $zero, $negative);
   }
 
+  // 2nd parameter is type of round to apply.  1 for correct marks, 2 for parital marks, 3 for incorrect marks
+  function RoundFunction($number, $type = 1) {
+    if ($type == 1) {
+      //correct marks
+      if ($number < 1) {
+        $number = 1;
+      } elseif ($number > 20) {
+        $number = 20;
+      } else {
+        $number = round($number);
+      }
+    } elseif ($type == 2) {
+      //partial marks
+      if ($number < 0) {
+        $number = 0;
+      } elseif ($number > 0 and $number < 1) {
+        $number = round($number, 1);
+      } elseif ($number > 5) {
+        $number = 5;
+      } else {
+        $number = round($number);
+      }
+    } else {
+      //incorrect marks
+      if ($number > 0) {
+        $number = 0;
+      } elseif ($number > -0.125 and $number < 0) {
+        $number = 0;
+      } elseif ($number > -0.375 and $number <= -0.125) {
+        $number = -0.25;
+      } elseif ($number > -0.75 and $number <= -0.375) {
+        $number = -0.5;
+      } elseif ($number > -1 and $number <= -0.75) {
+        $number = -1;
+      } else {
+        $number = round($number);
+      }
+    }
+
+    return $number;
+  }
+
   // returns the Max and Min mark for a question
   //
   //  as an array (min,max)
@@ -2141,13 +2183,19 @@ $numbb=1;
     // Fix for webCT output where it gives output as a percentage and as this is upto 100 and and doesnt include the
     // question mark and rogo doesnt support above 20 fix it to 1 to allow user editing
 
-    $max=round($max);
+    //$max=round($max);
     //$min=round($min); // min can be fractional marks so dont round (especially when negative)
     //$part=round($part); // partial marks can be fractional especially when max marks is 1!
 
+    //webct fix as it gives percentages!! just fix so they display
     if($max>20) $max=1;
     if($min>20) $min=1;
     if($part>20) $part=1;
+
+
+    $max = $this->RoundFunction($max, 1);
+    $min = $this->RoundFunction($min, 3);
+    $part = $this->RoundFunction($part, 2);
     return array($min,$part,$max);
   }
 
