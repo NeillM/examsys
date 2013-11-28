@@ -67,7 +67,7 @@ require '../include/staff_auth.inc';
 				if (isset($help_toc[$link])) {
 					$help_toc[$link]['links'] .= $help_item['id'].',';
 				} else {
-					$result .= 'link reference is missing in: "<strong><a href="https://localhost/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['title'].'</a></strong>" (id=<strong><a href="https://localhost/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></strong>) to: "'.$text.'" (id='.$link.')<br />';
+					$result .= 'link reference is missing in: "<strong><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></strong>) to: "'.$text.'" (id='.$link.')<br />';
 				}	
 			}
 		}
@@ -82,7 +82,7 @@ require '../include/staff_auth.inc';
 	*/
 	
 	echo '<hr><h2>Help pages ids:</h2><ol>';
-	foreach ($help_toc as $help_item) echo '<li><a href="https://localhost/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></li>';
+	foreach ($help_toc as $help_item) echo '<li><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></li>';
 	echo '</ol>';
 ?>
 </div>
