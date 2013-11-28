@@ -70,7 +70,7 @@ function hofstee_plot(canvas_id,result_type) {
 	canvas = document.getElementById(canvas_id);
 
 	if (canvas && canvas.getContext){
-		canvas.onmouseup   = g_mouseDragUp;
+		document.onmouseup   = g_mouseDragUp;
 		canvas.onmousedown = g_mouseDragDown;
 		canvas.onmousemove = g_mouseDragMove;
 		var intervalID = window.setInterval(g_redraw_canvas, 10);
