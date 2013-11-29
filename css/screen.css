@@ -126,9 +126,11 @@ label.error {
 }
 
 .qline:hover {
-	background-color:#eee
+	background-color:#FFE7A2
 }
-.qline.highlight {background-color:#B3C8E8}
+.qline.highlight {
+	background-color:#FFBD69
+}
 
 #content .breakline td, .breakline td {
   padding-top:9px;

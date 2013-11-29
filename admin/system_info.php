@@ -143,8 +143,8 @@ require_once '../classes/dateutils.class.php';
 <tr><td><?php echo $string['version']; ?></td><td><?php echo $configObject->get('rogo_version'); ?></td></tr>
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
-<tr><td>Lookups</td><td><?php echo $configObject->get('cfg_client_lookup'); ?></td></tr>
-<tr><td>Interactive Questions</td><td><?php echo $configObject->get('cfg_interactive_qs'); ?></td></tr>
+<tr><td><?php echo $string['lookups']; ?></td><td><?php echo $configObject->get('cfg_client_lookup'); ?></td></tr>
+<tr><td><?php echo $string['interactivequestions']; ?></td><td><?php echo $configObject->get('cfg_interactive_qs'); ?></td></tr>
 <tr><td><?php echo $string['authentication']; ?></td><td><?php echo $authinfo; ?> <a href="./detailed_authentication_info.php"><?php echo $string['More details']; ?></a></td></tr>
 <tr><td><?php echo $string['Session']; ?></td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
@@ -250,15 +250,17 @@ require_once '../classes/dateutils.class.php';
   }
   for ($i=1; $i<($row_no-1);$i++) {
     if ($master_array[$i][5] != '' and $master_array[$i][1] != '0K') {
-      echo '<tr><td><img src="../artwork/drive_icon.png" width="48" height="48" alt="' . $string['driveicon'] . '" border="0" /></td><td>' . $master_array[$i][5] . '<br /><span style="border: 1px solid #808080; display:block; height:11px; width:150px">';
+      echo '<tr><td><img src="../artwork/drive_icon.png" width="48" height="48" alt="' . $string['driveicon'] . '" border="0" /></td><td>' . $master_array[$i][5] . '<br />';
+			echo '<span style="border: 1px solid #808080; display:block; height:11px; width:150px">';
       if (intval($master_array[$i][3]) < intval($master_array[$i][1])) {
+			  $bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
         if ((intval($master_array[$i][1]) - intval($master_array[$i][3])) > (intval($master_array[$i][1]) * 0.9)) {
-          echo '<img src="red_bar.png" width="' . round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148) . '" height="11" alt="" border="0" />';
-        } else {
-          echo '<img src="blue_bar.png" width="' . round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148) . '" height="11" alt="" border="0" />';
+          echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#DA2626"></span>';  // Red bar
+				} else {
+          echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#26A0DA"></span>';  // Blue bar
         }
       } else {
-        echo '<img src="blank_bar.png" width="20" height="11" border="0" />';
+        echo '<img src="blank_bar.png" width="20" height="11" />';
       }
       echo '</span><span style="color:#808080">' . sprintf($string['freespace'], $master_array[$i][3], $master_array[$i][1]) . '</span></td></tr>';
     }

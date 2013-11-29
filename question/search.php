@@ -46,8 +46,8 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <style type="text/css">
     .l {padding-left:6px; vertical-align:top}
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
-    .qline:hover {background-color:#eee}
-    .qline.highlight {background-color:#B3C8E8}
+    .qline:hover {background-color:#FFE7A2}
+    .qline.highlight {background-color:#FFBD69}
     .retired {color:#808080}
 
 		<?php echo QuestionStatus::generate_status_css($status_array); ?>

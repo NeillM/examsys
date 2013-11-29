@@ -16,13 +16,13 @@
 }
 .l:hover {
   cursor:pointer;
-  background-color:#eee
+  background-color:#FFE7A2;
 }
 .highlight {
-  background-color:#B3C8E8!important
+  background-color:#FFBD69 !important
 }
 .deleted {
-  color:#808080
+  color:#808080;
 }
 .no {
   text-align:right;

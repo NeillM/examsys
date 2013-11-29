@@ -275,8 +275,7 @@ td.separated:last-child {
 }
 
 .tabs li.disabled {
-  background-image: url('../artwork/tab_disabled.gif');
-  background-color:
+  background-color:#808080;
 }
 
 .tabs li a {
@@ -474,11 +473,11 @@ input[type=text] {
 }
 
 .radio-list label.fullwidth:hover {
-  background-color: #eee;
+  background-color: #FFE7A2;
 }
 
 .radio-list label.fullwidth.on {
-	background-color: #b3c8e8;
+	background-color: #FFBD69;
 }
 	
 .select-area {

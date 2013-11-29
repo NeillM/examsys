@@ -502,7 +502,7 @@ $result->close();
       echo "<li>" . $string['deleted_msg2'] . "</li>\n";
     } else {
       $tmp_owner = $properties->get_paper_ownerid();
-      $result = $mysqli->prepare("SELECT title, surname, email FROM users WHERE id=?");
+      $result = $mysqli->prepare("SELECT title, surname, email FROM users WHERE id = ?");
       $result->bind_param('i', $tmp_owner);
       $result->execute();
       $result->bind_result($tmp_title, $tmp_surname, $tmp_email);
@@ -767,7 +767,7 @@ $result->close();
     echo ' class="retired"';
   }
   echo '>' . $properties->get_paper_title() . '</div>';
-  echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+  echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a></th></tr>\n";
   if ($properties->get_retired() == '') {
     echo "<tr>\n";
   } else {
@@ -895,7 +895,7 @@ $result->close();
     if ($temp_array[$x]['q_type'] == 'random') {
       $dice_no = rand(1,6);
       if ($temp_array[$x]['leadin'] == '') $temp_array[$x]['leadin'] = 'Random question block';
-      echo '<img src="../artwork/dice' . $dice_no . '.png" width="14" height="14" alt="folder" border="0" style="position:relative; left:1px;" />';
+      echo '<img src="../artwork/dice' . $dice_no . '.png" width="14" height="14" alt="folder" style="position:relative; left:1px;" />';
     }
     echo '</td>';
 

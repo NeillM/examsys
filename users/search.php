@@ -239,8 +239,8 @@ if (isset($_GET['paperID'])) {
     .coltitle {cursor:hand; background-color:#F1F5FB; color:black}
     #usertable td {padding-left:6px}
     .fn {color:#A5A5A5}
-    .uline:hover {background-color:#eee}
-    .uline.highlight {background-color:#B3C8E8}
+    .uline:hover {background-color:#FFE7A2}
+    .uline.highlight {background-color:#FFBD69}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
