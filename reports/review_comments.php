@@ -60,7 +60,7 @@ function displayRank($rank_position, $string) {
 function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_data, $type, $string, $language) {
 
   $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
-  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" style=\"cursor:pointer\" src=\"../artwork/edit.png\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" border=\"0\" /></td></tr>\n";
+  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" style=\"cursor:pointer\" src=\"../artwork/edit.png\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
   $html .= "<tr><td style=\"width:20px\"><div class=\"reviewbar\">&nbsp;</div></td><td style=\"width:20%\"><div class=\"reviewbar\">" . $string['reviewer'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['comment'] . "</div></td><td style=\"width:10%\"><div class=\"reviewbar\">" . $string['action'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['response'] . "</div></td></tr>\n";
   
   foreach ($reviewer_data as $reviewerID=>$rev_data) {
@@ -536,19 +536,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
     }
     .reviewbar {
+		  color:white;
+			background-color:#295AAD;
+			width:100%;
       padding:2px;
-      color:black;
-      width:100%;
-      background: -moz-linear-gradient(top, #FFFFFF, #C5DEFF);
-      background: -webkit-linear-gradient(top, #FFFFFF, #C5DEFF);
-      background-image: -ms-linear-gradient(top, #FFFFFF 0%, #C5DEFF 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#C5DEFF');
-      border-top: 1px solid #6593CF;
-      border-bottom: 1px solid #6593CF;
-    }
+		}
     .reviewline {
       padding:2px;
-      border-bottom:solid 1px #E3EFFF;
+      border-bottom:solid 1px #C0C0C0;
     }
   </style>
 

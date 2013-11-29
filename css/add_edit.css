@@ -266,20 +266,21 @@ td.separated:last-child {
   float: left;
   list-style: none;
   text-align: center;
-	background-color:#517DBF;
+  background-color:#517DBF;
   border-right: 1px solid #DFECFF;
 }
 
 .tabs li.on {
-	background-color:#1E3C7B;
+  background-color:#1E3C7B;
 }
 
 .tabs li.disabled {
   background-image: url('../artwork/tab_disabled.gif');
+  background-color:
 }
 
 .tabs li a {
-	display: block;
+  display: block;
   color: white;
   font-weight: bold;
   font-size: 90%;
