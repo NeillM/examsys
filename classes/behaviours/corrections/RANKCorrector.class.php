@@ -48,10 +48,10 @@ class RANKCorrector extends Corrector {
         $changes = true;
 
         $opt_no = $i + 1;
-//        $this->_question->add_unified_field_modification('correct', "Correct Option $opt_no", $option->get_correct(), $new_correct_val[$i], $this->_lang_strings['postexamchange']);
       }
       $i++;
     }
+		$changes = true;
 
     if ($changes) {
       try {
@@ -68,7 +68,7 @@ class RANKCorrector extends Corrector {
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $user_answers = explode(',', $user_answer);
             $totalpos = 0;
             $mark = 0;
@@ -111,7 +111,7 @@ class RANKCorrector extends Corrector {
               $mark = ($order_correct) ? $totalpos : $mark;
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE id=?");
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ? WHERE id = ?");
             $updateLog->bind_param('dii', $mark, $totalpos, $id);
             $updateLog->execute();
             $updateLog->close();

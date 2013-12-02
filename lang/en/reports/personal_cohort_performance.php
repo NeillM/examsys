@@ -15,5 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['personalcohortperformance'] = 'Personal/Cohort Performance';
-
+$string['availablemarks'] = 'Available Marks';
+$string['studentsmark'] = 'Student\'s Mark';
+$string['medianclassmark'] = 'Median Class Mark';
 ?>

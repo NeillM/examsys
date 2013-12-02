@@ -2690,6 +2690,7 @@ QUERY;
           `labelcolor` varchar(20) default NULL,
           `font` varchar(50) default NULL,
           `unanswered` varchar(20) default NULL,
+					`dismiss` varchar(20) default NULL,
           PRIMARY KEY (`special_id`),
           UNIQUE KEY `idx_userID` (`userID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}

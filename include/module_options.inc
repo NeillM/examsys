@@ -56,7 +56,7 @@ $session = date_utils::get_current_academic_year();
 <div class="submenuheading" id="currentmodule"><?php echo $string['currentmodule']; ?></div>
 <div id="menu1a" style="font-size:90%">
 	<div class="menuitem"><a href="add_module.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="<?php echo $string['createmodule']; ?>" /><?php echo $string['createmodule']; ?></a></div>
-	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="" /><?php echo $string['bulkmoduleimport']; ?></a></div>
+	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport']; ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editmodule']; ?>" /><?php echo $string['editmodule']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deletemodule']; ?>" /><?php echo $string['deletemodule']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/shortcut_16_grey.png" alt="<?php echo $string['modulefolder']; ?>" /><?php echo $string['modulefolder']; ?></div>
@@ -65,7 +65,7 @@ $session = date_utils::get_current_academic_year();
 
 <div style="display:none; font-size:90%" id="menu1b">
 	<div class="menuitem"><a href="add_module.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="<?php echo $string['createmodule']; ?>" /><?php echo $string['createmodule']; ?></a></div>
-	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="" /><?php echo $string['bulkmoduleimport']; ?></a></div>
+	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport']; ?></a></div>
 	<div class="menuitem" onclick="editModule()"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editmodule']; ?>" /><a href="" onclick="return false"><?php echo $string['editmodule']; ?></a></div>
 	<div class="menuitem" onclick="deleteModule()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletemodule']; ?>" /><a href="" onclick="return false"><?php echo $string['deletemodule']; ?></a></div>
 	<div class="menuitem" onclick="jumpToModule()"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['modulefolder']; ?>" /><a href="" onclick="return false"><?php echo $string['modulefolder']; ?></a></div>

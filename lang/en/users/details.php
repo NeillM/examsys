@@ -78,6 +78,7 @@ $string['markscolour'] = 'Marks Colour';
 $string['themecolour'] = 'Heading/Theme Colour';
 $string['labelscolour'] = 'Labels Colour';
 $string['unanswered'] = 'Unanswered';
+$string['dismisscolor'] = 'Dismiss Color';
 $string['default'] = 'Default';
 $string['noextratime'] = 'no extra time';
 $string['angledefault'] = '&lt;default&gt;';

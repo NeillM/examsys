@@ -16,16 +16,16 @@
 }
 
 .objectives .top a {
-  background: url('../artwork/plus.png') no-repeat 0px 2px;
+  background: url('../artwork/blue_plus.png') no-repeat 0px 2px;
   padding-left: 16px;
   margin-bottom: 6px;
-	color: #316AC5;
+	color: #2B5BAB;
 	font-weight: bold;
 	text-decoration: none;
 }
 
 .objectives .top.open a {
-  background: url('../artwork/minus.png') no-repeat 0px 2px;
+  background: url('../artwork/blue_minus.png') no-repeat 0px 2px;
 }
 
 .objectives .top ul {

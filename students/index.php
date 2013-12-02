@@ -18,7 +18,7 @@
 *
 * Display a list of the papers that are currently available to a student
 *
-* @author Rob Ingram
+* @author Rob Ingram, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
@@ -241,12 +241,12 @@ $paper_utils = Paper_utils::get_instance();
 <div id="content" class="content">
 	<table cellpadding="0" cellspacing="0" border="0" width="100%">
 		<tr>
-      <td rowspan="2"style="background-color:#F1F5FB; height:70px; padding-left:10px">
+      <td rowspan="2" style="background-color:#F1F5FB; height:70px; width:320px; padding-left:10px">
         <img src="../artwork/r_logo.gif" width="47" height="51" alt="logo" style="float:left; padding-right:8px" />
 				<div style="color:#4A74B9; font-size:28pt; font-weight:bold; position:relative; top:-6px">Rog&#333;</div>
-				<div style="color:#4A74B9; font-size:9pt; position:relative; top:-3px"><?php echo $string['eassessmentmanagementsystem']; ?></div>
+				<div style="color:#4A74B9; font-size:9pt; position:relative; top:-3px"><nobr><?php echo $string['eassessmentmanagementsystem']; ?></nobr></div>
       </td>
-      <td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
+      <td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help"  /></a></td>
     </tr>
 	  <tr>
 	    <td style="background-color:#F1F5FB; text-align:right; vertical-align:bottom">
@@ -306,7 +306,7 @@ if (!$userObject->has_role('Student')) {
   				$last_session = $module['year'];
 
           if (isset($performance_summary_years[$module['year']])) {
-            echo "<div style=\"margin-top:4px; margin-left:10px\"><a href=\"performance_summary.php#" . $module['year'] . "\"><img src=\"../artwork/link.png\" width=\"16\" height=\"16\" alt=\"arrow\" /></a>&nbsp;<a href=\"performance_summary.php#" . $module['year'] . "\">" . $string['performsummary'] . "</a></div>";
+            echo "<div style=\"margin-top:4px; margin-left:10px\"><a href=\"performance_summary.php#" . $module['year'] . "\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" alt=\"arrow\" /></a>&nbsp;<a href=\"performance_summary.php#" . $module['year'] . "\">" . $string['performsummary'] . "</a></div>";
           }
         }
 ?>

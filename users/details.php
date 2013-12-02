@@ -185,15 +185,17 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   if ($_POST['labels_radio'] == '0') $labelcolor = NULL;
   $unansweredcolor = $_POST['unansweredcolor'];
   if ($_POST['unanswered_radio'] == '0') $unansweredcolor = NULL;
+  $dismisscolor = $_POST['dismisscolor'];
+  if ($_POST['dismiss_radio'] == '0') $dismisscolor = NULL;
 
   $result = $mysqli->prepare("DELETE FROM special_needs WHERE userID = ?");
   $result->bind_param('i', $_GET['userID']);
   $result->execute();
   $result->close();
 
-  if ($background != NULL or $foreground != NULL or $marks_color != NULL or $textsize != 0 or $extra_time != 0 or $font != NULL or $themecolor != NULL or $labelcolor != NULL or $unansweredcolor != NULL) {
-    $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('issiisssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor);
+  if ($background != NULL or $foreground != NULL or $marks_color != NULL or $textsize != 0 or $extra_time != 0 or $font != NULL or $themecolor != NULL or $labelcolor != NULL or $unansweredcolor != NULL or $dismisscolor != NULL) {
+    $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $result->bind_param('issiissssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor);
     $result->execute();
     $result->close();
 
@@ -930,11 +932,11 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"padding-top:20px; text-align:left\">";
 
-  $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userID = ? LIMIT 1");
+  $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss FROM special_needs WHERE userID = ? LIMIT 1");
   $result->bind_param('i', $tmp_id);
   $result->execute();
   $result->store_result();
-  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor);
+  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor);
   $result->fetch();
   if ($result->num_rows > 0) {
     $special_needs = true;
@@ -948,6 +950,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   if (!isset($extra_time))  $extra_time = 0;
   if (!isset($font))        $font = '';
   if (!isset($unansweredcolor)) $unansweredcolor = '';
+  if (!isset($dismisscolor)) $dismisscolor = '';
   $result->close();
 ?>
 <tr>
@@ -1098,6 +1101,19 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     echo "<div onclick=\"showPicker('unansweredcolor',event); $('#unanswered_radio_on').attr('checked', true);\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
   } else {
     echo "<div onclick=\"showPicker('unansweredcolor',event); $('#unanswered_radio_on').attr('checked', true);\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$unansweredcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
+  }
+?>
+</td>
+</tr>
+<tr>
+<td><?php echo $string['dismisscolor']; ?></td>
+<td><input type="radio" name="dismiss_radio" value="0"<?php if ($dismisscolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input type="radio" name="dismiss_radio" id="dismiss_radio_on" value="1"<?php if ($dismisscolor != '') echo ' checked'; ?> />
+<?php
+  if ($dismisscolor == '') {
+    echo "<div onclick=\"showPicker('dismisscolor',event); $('#dismiss_radio_on').attr('checked', true);\" id=\"span_dismisscolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"dismisscolor\" name=\"dismisscolor\" value=\"$dismisscolor\" />";
+  } else {
+    echo "<div onclick=\"showPicker('dismisscolor',event); $('#dismiss_radio_on').attr('checked', true);\" id=\"span_dismisscolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$dismisscolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"dismisscolor\" name=\"dismisscolor\" value=\"$dismisscolor\" />";
   }
 ?>
 </td>

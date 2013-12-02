@@ -118,11 +118,11 @@ li {padding-bottom:10px}
 
 </head>
 <body>
-<div style="position:relative; width:260px; height:88px; border: 1px solid #808080; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); z-index:10; float:right; top:10px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:white; color:#404040">
+<div style="position:relative; width:260px; height:88px; border: 2px solid #FCE699; z-index:10; float:right; top:10px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:#FFFFEE; color:#404040">
 <img src="../artwork/barchart_key.png" width="218" height="65" alt="Key" style="position:relative; top:10px; left:0" />
-<div style="left:100px; top:-67px" class="label">Available Marks</div>
-<div style="left:155px; top:-9px" class="label">Student's Mark</div>
-<div style="left:60px; top:-9px; width:160px" class="label">Median Class Mark</div>
+<div style="left:100px; top:-67px" class="label"><?php echo $string['availablemarks']; ?></div>
+<div style="left:155px; top:-9px" class="label"><?php echo $string['studentsmark']; ?></div>
+<div style="left:60px; top:-9px; width:160px" class="label"><?php echo $string['medianclassmark']; ?></div>
 </div>
 
 <div style="position:absolute; top:0px; left:0px; width:100%">

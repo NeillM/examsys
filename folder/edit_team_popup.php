@@ -85,7 +85,7 @@ if (isset($_POST['submit'])) {
     body {font-size:90%; background-color:#F1F5FB}
     hr {width:100%; border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5}
     .r1 {background-color:white}
-    .r2 {background-color:#B3C8E8}
+    .r2 {background-color:#FFBD69}
     .g {color:#808080}
     .letter {padding-bottom:5px; width:95%; background-color:white; color:#1E3287}
   </style>
@@ -102,7 +102,7 @@ if (isset($_POST['submit'])) {
     }
     
     function resizeList() {
-      winH = $(window).height() - 105;
+      winH = $(window).height() - 110;
 
       $('#list').css('height', winH + 'px');
     }
@@ -111,8 +111,8 @@ if (isset($_POST['submit'])) {
 <body onload="resizeList()" onresize="resizeList()">
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 
-  <table cellpadding="6" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/team_members.png" width="32" height="32 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $module_details['moduleid']; ?></td></tr>
+  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr><td style="width:66px; background-color:white; border-bottom:1px solid #CCD9EA; text-align:center"><img src="../artwork/user_accounts_icon.png" width="48" height="48 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $module_details['moduleid']; ?></td></tr>
   </table>
 
 <?php

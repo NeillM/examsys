@@ -54,7 +54,7 @@ function getPaper($paperID) {
 
  // Get any questions to exclude.
   $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $parts);
@@ -106,11 +106,12 @@ function getPaper($paperID) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō: <?php echo $string['mappingbyyear'] . " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: <?php echo $string['mappingbyyear'] . " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
@@ -152,9 +153,9 @@ function getPaper($paperID) {
 <table class="header">
 <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
-  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
-  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
-  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)"><?php echo $string['longitudinal']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
+  <td class="tabon"><?php echo $string['longitudinal']; ?></td>
   </table>
 </th><th style="width:100%; text-align:right">&nbsp;</th>
 </tr>
@@ -255,7 +256,7 @@ foreach ($allsession as $moduleID => $module) {
     if ($session['class_code'] != '') {
       echo $session['class_code'] . ': ';
     }
-    echo $session['title'] . '&nbsp;<a target="_blank" href="' . $session['source_url'] . '"><img src="../artwork/small_link.png" width="12" height="12" /></a></td></tr>';
+    echo $session['title'] . '&nbsp;<a target="_blank" href="' . $session['source_url'] . '"><img src="../artwork/small_link.png" width="11" height="11" /></a></td></tr>';
 
     foreach ($session['objectives'] as $objID => $obj) {
       echo "<tr>\n\t<td style=\"width:2%\">&nbsp;</td><td style=\"width:48%\" class=\"obj\"><li>" . strip_tags($obj['content'], '<b><i><strong><em><sub><sup>') . "</li></td>\n";

@@ -517,7 +517,7 @@
   // -->
   </script>
 </head>
-<body style="background-color:#ECE9D8" onload="nb(); document.calc.focus();" onkeydown="return checkButton(event);" onkeyup="return checkShift(event);">
+<body style="background-color:#DCDDDE" onload="nb(); document.calc.focus();" onkeydown="return checkButton(event);" onkeyup="return checkShift(event);">
 
   <div align="center" style="margin-top:6px">
 <?php

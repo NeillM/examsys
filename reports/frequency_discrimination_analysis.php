@@ -95,7 +95,7 @@ function pStats($value, $qid, $part_no) {
   }
 
   if ($value < 0.2) {
-    $html = '<nobr><span style="color:#C00000">p=' . number_format($value,2) . '</span><img src="../artwork/red_flag.png" width="14" height="14" alt="' . $string['warning1'] . '" border="0" class="in-exclusion" /></nobr>';
+    $html = '<nobr><span style="color:#C00000">p=' . number_format($value,2) . '</span>&nbsp;<img src="../artwork/red_flag.png" width="14" height="14" alt="' . $string['warning1'] . '" class="in-exclusion" /></nobr>';
   } else {
     $html = 'p=' . number_format($value,2);
   }
@@ -128,7 +128,7 @@ function dStats($value, $qid, $part_no) {
     $dstats['no'] = 1;
   }
   if ($value < 0.15) {
-    $html = '<nobr><span style="color:#C00000">d=' . number_format($value,2) . '</span><img src="../artwork/red_flag.png" width="14" height="14" alt="' . $string['warning2'] . '" border="0" class="in-exclusion" /></nobr>';
+    $html = '<nobr><span style="color:#C00000">d=' . number_format($value,2) . '</span>&nbsp;<img src="../artwork/red_flag.png" width="14" height="14" alt="' . $string['warning2'] . '" class="in-exclusion" /></nobr>';
   } else {
     $html = 'd=' . number_format($value,2);
   }
@@ -472,11 +472,11 @@ function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {
   if (strpos($status,'1') !== false) {
     $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '1';
-    $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_on.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
+    $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_on.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" alt=\"Exclude\" class=\"in-exclusion\" />";
   } else {
     $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '0';
-    $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
+    $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" alt=\"Exclude\" class=\"in-exclusion\" />";
   }
 
   return $html;

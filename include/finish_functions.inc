@@ -1352,7 +1352,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           }
 
           echo '<td>';
-
+					
           if (isset($rank_answers[$tmp_part_id-1]) and ($rank_answers[$tmp_part_id-1] != 'u' or $paper[$question]['score_method'] == 'Mark per Option')) {
             if ($tmp_exclude{0} == '0') {
               if (($paper[$question]['score_method'] == 'Bonus Mark' or $paper[$question]['score_method'] == 'Allow partial Marks') and $rank_answers[$tmp_part_id-1] == '0' and $paper[$question]['correct'][$tmp_part_id-1] == '0') {
@@ -1380,7 +1380,21 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
                     // Not all correct if Bonus Mark but not exact match
                     if ($rank_answers[$tmp_part_id-1] != $paper[$question]['correct'][$tmp_part_id-1]) $all_correct = false;
                   } else {
-                    if (($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') or ($paper[$question]['score_method'] == 'Mark per Option' and $rank_answers[$tmp_part_id-1] != 'u')) {
+                    //if (($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') or ($paper[$question]['score_method'] == 'Mark per Option' and $rank_answers[$tmp_part_id-1] != 'u')) {
+										//$tmp = ($tmp_part_id-1);
+										//var_dump($rank_answers,$tmp);
+                    
+										if ($rank_answers[$tmp_part_id-1] != 'u') {
+										
+										  if ($paper[$question]['score_method'] == 'Mark per Option' or $paper[$question]['score_method'] == 'Mark per Question') {
+												echo display_response($tmp_display_students_response, 'cross');
+												$paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+												$all_correct = false;
+											}
+										
+										}
+										
+										if (($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] > '0') or ($paper[$question]['score_method'] == 'Mark per Option' and $rank_answers[$tmp_part_id-1] != 'u')) {
                       echo display_response($tmp_display_students_response, 'cross');
                       $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                       $all_correct = false;
@@ -1456,7 +1470,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
         }
         echo "</table>\n";
-
+				
         if ($paper[$question]['score_method'] == 'Mark per Question') {
           if ($all_correct) {
             $paper[$question]['mark'] = $paper[$question]['marks_correct'];

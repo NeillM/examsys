@@ -47,12 +47,13 @@ $paper_type = $propertyObj->get_paper_type();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō: <?php echo $string['mappingbyquestion'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['mappingbyquestion'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
   <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
@@ -97,7 +98,7 @@ $paper_type = $propertyObj->get_paper_type();
   //build excluded array
   // Get any questions to exclude.
   $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $parts);
@@ -110,9 +111,9 @@ $paper_type = $propertyObj->get_paper_type();
   <table class="header">
   <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
-  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
-  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)"><?php echo $string['byquestion']; ?></td>
-  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
+  <td class="tabon"><?php echo $string['byquestion']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
   </table>
   </th><th style="width:100%; text-align:right">&nbsp;</th>
   </tr>
@@ -284,7 +285,7 @@ $paper_type = $propertyObj->get_paper_type();
                 echo "$module: ";
               }
               echo strip_tags($mappingData['content'], '<b><i><strong><em><sub><sup>');
-              echo "&nbsp;&nbsp;&nbsp;<span title=\"$sessiontitle\" class=\"mapping\"><a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\">" . $sessiondata ."</a></span>";
+              echo "&nbsp;&nbsp;&nbsp;<span title=\"$sessiontitle\" class=\"mapping\"><a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\">" . $sessiondata ."</a></span>";
               echo '</li>';
             }
           }

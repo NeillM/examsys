@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['personalcohortperformance'] = 'Osiągnięcia Osobiste/Grupowe';
-$string['availablemarks'] = 'Available Marks';
-$string['studentsmark'] = 'Student\'s Mark';
-$string['medianclassmark'] = 'Median Class Mark';
+//require '../../lang/' . $language . '/help/staff/index.php';
+$string['pagetitle'] = 'Page Title...';
+
 ?>
