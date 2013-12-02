@@ -303,8 +303,8 @@ $do_restart = ($is_first_launch and ($original_paper_type == 1 or $original_pape
 * Set the default colour scheme for this paper and allow current users' special settings to override
 * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
 */
-$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
 
 $attempt = 1;                 //default attempt to 1 overwritten if the student is resit candidate by (check_modules)
@@ -312,7 +312,6 @@ $low_bandwidth = 0;           //default to off overwritten by (check_labs) if la
 $lab_name = NULL;             //default overwritten by (check_labs)
 $lab_id = NULL;
 $current_address = NULL;   //default overwritten by (check_labs)
-
 
 $current_address = NetworkUtils::get_client_address();
 
@@ -433,7 +432,7 @@ $screen_pre_submitted = 0;
 
 // Get users previous answers from the log.
 if ($propertyObj->get_paper_type() == '_late') {
-  //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
+  // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
   $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE metadataID = ?");
   $log_data->bind_param('i', $metadataID);
   $log_data->execute();
@@ -456,7 +455,7 @@ if ($propertyObj->get_paper_type() == '_late') {
   }
   $log_data->close();
 }
-//get user answers from whichever log is pointed to by log$paper_type
+// Get user answers from whichever log is pointed to by log$paper_type
 $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
 $log_data->bind_param('i', $metadataID);
 $log_data->execute();
@@ -524,7 +523,7 @@ if ($propertyObj->get_paper_type() == '3') {
 }
 
 $css = '';
-if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
+if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF' and $bgcolor != 'white') {
   $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
 }
 if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
@@ -551,6 +550,9 @@ if ($fgcolor != '#000000' and $fgcolor != 'black') {
 if ($unanswered_color != '#FFC0C0') {
   $css .= ".unans {background-color:$unanswered_color}\n";
   $css .= ".scr_un {background-color:$unanswered_color}\n";
+}
+if ($dismiss_color != '#A5A5A5') {
+  $css .= ".inact {color:$dismiss_color}";
 }
 if (count($reference_materials) > 0) {
   $css .= "#maincontent {position:fixed; right:" . ($max_ref_width + 1) . "px}\n";
@@ -920,9 +922,9 @@ if ($css != '') {
     submitType = 'userSubmit';
     document.questions.button_pressed.value='fire_exit';
     if (usingAjax) {
-        document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>&dont_record=true";
+      document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>&dont_record=true";
     } else {
-        document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
+      document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
     }
     ajaxSave();
   }

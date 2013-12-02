@@ -556,7 +556,7 @@ class PaperProperties {
    * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
    *
    */
-  public function set_paper_colour_scheme($userObject, &$bgcolor, &$fgcolor, &$textsize, &$marks_color, &$themecolor, &$labelcolor, &$font, &$unanswered_color) {
+  public function set_paper_colour_scheme($userObject, &$bgcolor, &$fgcolor, &$textsize, &$marks_color, &$themecolor, &$labelcolor, &$font, &$unanswered_color, &$dismiss_color) {
     /*
     *  DEFAULT colour scheme
     */
@@ -568,6 +568,7 @@ class PaperProperties {
     $labelcolor = $this->get_labelcolor();
     $font = 'Arial';
     $unanswered_color = '#FFC0C0';
+		$dismiss_color = '#A5A5A5';
 
     // If set overwrite the default colours with the current users' special settings
     if ($userObject->is_special_needs()) {
@@ -579,6 +580,7 @@ class PaperProperties {
       $labelcolor = $userObject->get_labelcolor($labelcolor);
       $font = $userObject->get_font($font);
       $unanswered_color = $userObject->get_unanswered_color($unanswered_color);
+      $dismiss_color = $userObject->get_dismiss_color($dismiss_color);
     }
   }
 

@@ -69,6 +69,7 @@ class UserObject extends RogoStaticSingleton {
 	private $labelcolor;
 	private $font;
 	private $unanswered;
+	private $dismiss;
 
   private $impersonateduser;
 
@@ -162,6 +163,14 @@ class UserObject extends RogoStaticSingleton {
     }
 
     return $this->unanswered;
+  }
+
+  function get_dismiss_color($default = '') {
+    if (!isset($this->dismiss) and $default != '') {
+      $this->dismiss = $default;
+    }
+
+    return $this->dismiss;
   }
 
   /**
@@ -722,11 +731,11 @@ class UserObject extends RogoStaticSingleton {
 
     // Add additional special needs data.
     if ($this->special_needs == 1) {
-      $stmt = $this->db->prepare('SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered FROM special_needs WHERE userID = ?');
+      $stmt = $this->db->prepare('SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss FROM special_needs WHERE userID = ?');
       $stmt->bind_param('i', $userID);
       $stmt->execute();
       $stmt->store_result();
-      $stmt->bind_result($this->background, $this->foreground, $this->textsize, $this->extra_time, $this->marks_color, $this->themecolor, $this->labelcolor, $this->font, $this->unanswered);
+      $stmt->bind_result($this->background, $this->foreground, $this->textsize, $this->extra_time, $this->marks_color, $this->themecolor, $this->labelcolor, $this->font, $this->unanswered, $this->dismiss);
       $stmt->fetch();
       $stmt->close();
     }
