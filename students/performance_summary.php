@@ -183,7 +183,7 @@ if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 
 <body>
 
-<div style="position:relative; width:300px; height:173px; border: 2px solid #E6B10D; z-index:10; float:right; top:10px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:#FFFFEE; color:#404040">
+<div style="position:relative; width:300px; height:173px; border: 2px solid #FCE699; z-index:10; float:right; top:10px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:#FFFFEE; color:#404040">
 <img src="../artwork/boxplot_key.png" width="170" height="173" alt="Key" />
 <div style="top:-175px" class="label"><?php echo $string['maximumscore']; ?></div>
 <div style="top:-163px" class="label"><?php echo $string['studentsposition']; ?></div>

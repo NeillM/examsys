@@ -78,6 +78,7 @@ $string['markscolour'] = 'Kolor znaczników';
 $string['themecolour'] = 'Kolor nagłówków/motywu';
 $string['labelscolour'] = 'Kolor etykiet';
 $string['unanswered'] = 'Nie odpowiedziane';
+$string['dismisscolor'] = 'Dismiss Color';
 $string['default'] = 'Domyślny';
 $string['noextratime'] = 'Brak czasu dodatkowego';
 $string['angledefault'] = '&lt;domyślny&gt;';
