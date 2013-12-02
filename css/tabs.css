@@ -24,3 +24,16 @@
 	background-color:#517DBF;
 	border-left:1px solid #F1F5FB;
 }
+.tabyellow {
+	vertical-align:middle;
+	padding-top:0px;
+	cursor:pointer;
+	width:180px;
+	height:21px;
+	color:black;
+	text-align:center;
+	font-weight:bold;
+	font-size:100%;
+	background-color:#ECB01F;
+	border-left:1px solid #ECB01F;
+}

@@ -68,8 +68,8 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
 * Set the default colour scheme for this paper and allow current users' special settings to override
 * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
 */
-$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismisscolor = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismisscolor);
 
 $paperID                    = $propertyObj->get_property_id();
 $labs                       = $propertyObj->get_labs();
