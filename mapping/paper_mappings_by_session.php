@@ -54,6 +54,7 @@ $paper_type  = $propertyObj->get_paper_type();
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
   <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
@@ -92,7 +93,7 @@ $paper_type  = $propertyObj->get_paper_type();
   //build excluded array
   // Get any questions to exclude.
   $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $parts);
@@ -139,9 +140,9 @@ $paper_type  = $propertyObj->get_paper_type();
   <table class="header">
   <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
-  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)"><?php echo $string['bysession']; ?></td>
-  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
-  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
+  <td class="tabon"><?php echo $string['bysession']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
   </table>
   </th><th style="width:100%; text-align:right">&nbsp;</th>
   </tr>
@@ -191,7 +192,7 @@ $paper_type  = $propertyObj->get_paper_type();
         if ($sessionData['class_code'] != '') {
           echo $sessionData['class_code'] . ': ';
         }
-        echo $sessionData['title'] . ' <a href="' . $sessionData['source_url'] . '" rel="external"><img src="../artwork/small_link.png" width="12" height="12" alt="" /></a> ';
+        echo $sessionData['title'] . ' <a href="' . $sessionData['source_url'] . '" rel="external"><img src="../artwork/small_link.png" width="11" height="11" alt="" /></a> ';
 
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
         if (isset($sessionData["objectives"]) and is_array($sessionData["objectives"])) {
