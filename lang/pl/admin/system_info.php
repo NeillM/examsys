@@ -57,4 +57,6 @@ $string['na'] = 'Brak';
 $string['driveicon'] = 'Ikona dysku';
 $string['freespace'] = '%s wolnych z %s';
 $string['More details'] = 'Więcej...';
+$string['lookups'] = 'Odnośniki';
+$string['interactivequestions'] = 'Pytania Interaktywne';
 ?>
