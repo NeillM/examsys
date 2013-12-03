@@ -623,7 +623,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
           $end_datetime = $log_lab_end_time->save($invigilator_id, $time);
         } else {
           $notice = UserNotices::get_instance();
-          $notice->display_notice($string['timeerror'], sprintf($string['timeerrormsg'], $exam_duration), '../artwork/red_warning_48.png', '#C00000', false, false);
+          $notice->display_notice($string['timeerror'], sprintf($string['timeerrormsg'], $exam_duration), '../artwork/summative_scheduling.png', '#C00000', false, false);
         }
       }
     }
