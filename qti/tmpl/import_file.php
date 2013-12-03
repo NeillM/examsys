@@ -28,15 +28,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-	<title><?php echo $string['importfromqti'] ?></title>
+	<title>Rog&#333;: <?php echo $string['importfromqti'] ?></title>
+	
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../../css/dialog.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/highlight.css" /> 
-	<link rel="stylesheet" type="text/css" href="../../css/wizard.css" /> 
   <link rel="stylesheet" type="text/css" href="../../css/submenu.css" />
 	<style type="text/css">
 		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
@@ -50,11 +49,12 @@
     .paper_head {font-size:140%}
     .screen_head {font-size:120%}
     label.error {display:block; color:#f00}
-	</style
+	</style>
   
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+	<script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../../js/staff_help.js"></script>
+  <script type="text/javascript" src="../../js/toprightmenu.js"></script>
   <script language="JavaScript">
     // Popup window code
     function newPopup(url) {
@@ -68,8 +68,12 @@
   </script>
 </head>
 
+<body>
 <?php
 require '../include/paper_options.inc';
+require '../include/toprightmenu.inc';
+
+echo draw_toprightmenu();
 ?>
 <div id="content" class="content" style="font-size:80%">
 <?php
@@ -86,7 +90,7 @@ if ($module != '') {
   echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
 }
 echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
+echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 echo "</table>";
 ?>
 <br/>

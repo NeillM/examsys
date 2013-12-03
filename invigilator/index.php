@@ -288,7 +288,6 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 
 <link rel="stylesheet" type="text/css" href="../css/body.css"/>
 <link rel="stylesheet" type="text/css" href="../css/header.css"/>
-<link rel="stylesheet" type="text/css" href="../css/warnings.css"/>
 <link rel="stylesheet" type="text/css" href="../css/invigilator.css"/>
 
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>

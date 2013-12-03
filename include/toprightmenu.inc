@@ -1,4 +1,6 @@
 <?php
+echo $configObject->get('cfg_js_root');
+
 function draw_toprightmenu($helpID = 1) {
   $configObject = Config::get_instance();
 

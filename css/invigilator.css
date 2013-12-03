@@ -16,7 +16,6 @@ fieldset {
   border-left: 2px solid #eee;
   border-bottom: 2px solid #999;
   border-right: 2px solid #999;
-  border-radius: 4px;
   cursor: pointer;
 }
 #start_exam_button {
@@ -74,4 +73,7 @@ fieldset {
 }
 .q_msg {
   padding-bottom:10px;
+}
+.redwarn {
+  background-color:#FFC0C0;
 }
