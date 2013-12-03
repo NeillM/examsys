@@ -42,6 +42,7 @@ require '../include/staff_auth.inc';
   $result = $mysqli->prepare("SELECT id, body, title, type FROM rogo.staff_help ORDER BY id;");
   $result->execute();  
 	$help_toc = array();
+	$help_img = array();
 
   $result->bind_result($id, $body, $title, $type);
   while ($result->fetch()) {
@@ -54,6 +55,8 @@ require '../include/staff_auth.inc';
   $result->close();
   $mysqli->close();
   echo '<h1>Help pages internal consistency test</h1>';
+	
+	//internal links
 	$result = '';
 	foreach ($help_toc as $help_item) {
 		$test = explode('?id=',$help_item['body']);
@@ -73,17 +76,43 @@ require '../include/staff_auth.inc';
 		}
 	}
 	echo $result;
-	if ($result=='') echo 'No inconsistencies detected.';
-  /*
+	if ($result=='') echo 'Missing internal links - not detected.';
 	echo '<hr>';
-	foreach ($help_toc as $help_item) {
-		if ($help_item['links']!='') echo '<small>id='.$help_item['id'].' is linked from '.$help_item['links'].'</small><br>';
-	}
-	*/
 	
-	echo '<hr><h2>Help pages ids:</h2><ol>';
-	foreach ($help_toc as $help_item) echo '<li><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></li>';
-	echo '</ol>';
+	//incorporated images
+	$result = '';
+	foreach ($help_toc as $help_item) {
+		$test = explode(' src=',$help_item['body']);
+		if (count($test)>1) {
+			for ($i=1;$i<count($test);$i++) {
+				$code = preg_split("/\'|\"/",$test[$i]);
+				if (!isset($help_img[$code[1]])) $help_img[$code[1]] = '';
+				if (count($code)>=2) $help_img[$code[1]] .= $help_item['id'].',';
+			}
+		}
+	}
+	foreach ($help_img as $img_item => $img_ids) {
+		if (!@getimagesize("../help/staff/".$img_item)) {
+			$result .= 'image is missing for: "<strong><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></strong>) to: "'.$img_item.'"<br />';	
+		}
+	}
+	echo $result;
+	if ($result=='') echo 'Missing images - not detected.<br />';
+	
+	
+	echo '<hr><h2>Help pages ids:</h2>';
+	$div_num = round(count($help_toc)/15);
+	echo '<table><tr><td><ol>';
+	$i=0;$j=1;
+	foreach ($help_toc as $help_item) {
+		$i++;
+		if ($i>($div_num*$j)) {
+			$j++;
+			echo '</ol></td><td><ol start='.$i.'>';
+		}
+		echo '<li><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></li>';
+	}
+	echo '</ol></td></tr></table>';
 ?>
 </div>
 </body>
