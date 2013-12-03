@@ -115,7 +115,7 @@ require '../include/staff_auth.inc';
 				{
 					if ($help_img[$img_item][$item_id][1]=='-1' || $help_img[$img_item][$item_id][2]=='-1') {
 						$result3 = 'Dimensions ( width="'.$help_img[$img_item][$item_id][3].'" height="'.$help_img[$img_item][$item_id][4].'" ) for image "'.$img_item.'" are ';
-						$result3 .= 'not set ';
+						$result3 .= 'not fully set ';
 						$result3 .= 'in: "<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
 						$result_array_3[$item_val[0]*1000+$i]=$result3;
 					}else{
