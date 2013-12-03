@@ -113,14 +113,14 @@ require '../include/staff_auth.inc';
 				array_push($help_img[$img_item][$item_id],$img_size[0],$img_size[1]);
 				if (($help_img[$img_item][$item_id][1]*1!=$help_img[$img_item][$item_id][3]) || ($help_img[$img_item][$item_id][2]*1!=$help_img[$img_item][$item_id][4])) 
 				{
-					if ($help_img[$img_item][$item_id][1]=='-1') {
-						$result3 = 'Dimensions ('.$help_img[$img_item][$item_id][3].':'.$help_img[$img_item][$item_id][4].') for image "'.$img_item.'" are ';
+					if ($help_img[$img_item][$item_id][1]=='-1' || $help_img[$img_item][$item_id][2]=='-1') {
+						$result3 = 'Dimensions ( width="'.$help_img[$img_item][$item_id][3].'" height="'.$help_img[$img_item][$item_id][4].'" ) for image "'.$img_item.'" are ';
 						$result3 .= 'not set ';
 						$result3 .= 'in: "<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
 						$result_array_3[$item_val[0]*1000+$i]=$result3;
 					}else{
-						$result2 = 'Dimensions ('.$help_img[$img_item][$item_id][3].':'.$help_img[$img_item][$item_id][4].') for image "'.$img_item.'" are ';
-						$result2 .= 'set to ('.$help_img[$img_item][$item_id][1].':'.$help_img[$img_item][$item_id][2].') ';
+						$result2 = 'Dimensions ( width="'.$help_img[$img_item][$item_id][3].'" height="'.$help_img[$img_item][$item_id][4].'" ) for image "'.$img_item.'" are ';
+						$result2 .= 'set to ( width="'.$help_img[$img_item][$item_id][1].'" height="'.$help_img[$img_item][$item_id][2].'" ) ';
 						$result2 .= 'in: "<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
 						$result_array_2[$item_val[0]*1000+$i]=$result2;
 					}
