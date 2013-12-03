@@ -43,7 +43,7 @@ require '../include/staff_auth.inc';
   $result->execute();  
 	$help_toc = array();
 	$help_img = array();
-
+	
   $result->bind_result($id, $body, $title, $type);
   while ($result->fetch()) {
     $help_toc[$id]['id'] = $id;
@@ -80,24 +80,55 @@ require '../include/staff_auth.inc';
 	echo '<hr>';
 	
 	//incorporated images
-	$result = '';
 	foreach ($help_toc as $help_item) {
 		$test = explode(' src=',$help_item['body']);
 		if (count($test)>1) {
 			for ($i=1;$i<count($test);$i++) {
 				$code = preg_split("/\'|\"/",$test[$i]);
-				if (!isset($help_img[$code[1]])) $help_img[$code[1]] = '';
-				if (count($code)>=2) $help_img[$code[1]] .= $help_item['id'].',';
+				$w=-1;$h=-1;
+				foreach($code as $ci => $cv) {
+					if (trim($cv)=='width=' && $w==-1) $w=$code[$ci+1];
+					if (trim($cv)=='height=' && $h==-1) $h=$code[$ci+1];
+				}
+				if (!isset($help_img[$code[1]])) $help_img[$code[1]] = Array();
+				if (count($code)>=2) {
+					array_push($help_img[$code[1]],Array($help_item['id'],$w,$h));
+				}
 			}
 		}
 	}
+	$result1 = '';
+	$result2 = '';
+	$result3 = '';
 	foreach ($help_img as $img_item => $img_ids) {
-		if (!@getimagesize("../help/staff/".$img_item)) {
-			$result .= 'image is missing for: "<strong><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></strong>) to: "'.$img_item.'"<br />';	
+		$img_size = @getimagesize("../help/staff/".$img_item);
+		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing from: ';
+		foreach ($img_ids as $item_id => $item_val) {
+			if (!$img_size && $item_val!='') $result1 .= '"<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)';
+			if ($img_size) {
+				array_push($help_img[$img_item][$item_id],$img_size[0],$img_size[1]);
+				if (($help_img[$img_item][$item_id][1]*1!=$help_img[$img_item][$item_id][3]) || ($help_img[$img_item][$item_id][2]*1!=$help_img[$img_item][$item_id][4])) 
+				{
+					if ($help_img[$img_item][$item_id][1]=='-1') {
+						$result3 .= 'Dimensions ('.$help_img[$img_item][$item_id][3].':'.$help_img[$img_item][$item_id][4].') for image "'.$img_item.'" are ';
+						$result3 .= 'not set ';
+						$result3 .= 'in: "<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
+					}else{
+						$result2 .= 'Dimensions ('.$help_img[$img_item][$item_id][3].':'.$help_img[$img_item][$item_id][4].') for image "'.$img_item.'" are ';
+						$result2 .= 'set to ('.$help_img[$img_item][$item_id][1].':'.$help_img[$img_item][$item_id][2].') ';
+						$result2 .= 'in: "<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
+					}
+				}
+			}
 		}
+		if (!$img_size) $result1 .= '<br />';
 	}
-	echo $result;
-	if ($result=='') echo 'Missing images - not detected.<br />';
+	echo $result1;
+	if ($result1=='') echo 'Missing images - not detected.<br />';
+	echo '<hr>';
+	echo $result2;
+	echo $result3;
+	if ($result3=='' && $result2=='') echo 'dimensions inconsitencies - not detected.<br />';
 	
 	
 	echo '<hr><h2>Help pages ids:</h2>';
