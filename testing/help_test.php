@@ -100,23 +100,29 @@ require '../include/staff_auth.inc';
 	$result1 = '';
 	$result2 = '';
 	$result3 = '';
+	$result_array_2 = Array();
+	$result_array_3 = Array();
+	$i=0;
 	foreach ($help_img as $img_item => $img_ids) {
 		$img_size = @getimagesize("../help/staff/".$img_item);
 		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing from: ';
 		foreach ($img_ids as $item_id => $item_val) {
+			$i++;
 			if (!$img_size && $item_val!='') $result1 .= '"<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)';
 			if ($img_size) {
 				array_push($help_img[$img_item][$item_id],$img_size[0],$img_size[1]);
 				if (($help_img[$img_item][$item_id][1]*1!=$help_img[$img_item][$item_id][3]) || ($help_img[$img_item][$item_id][2]*1!=$help_img[$img_item][$item_id][4])) 
 				{
 					if ($help_img[$img_item][$item_id][1]=='-1') {
-						$result3 .= 'Dimensions ('.$help_img[$img_item][$item_id][3].':'.$help_img[$img_item][$item_id][4].') for image "'.$img_item.'" are ';
+						$result3 = 'Dimensions ('.$help_img[$img_item][$item_id][3].':'.$help_img[$img_item][$item_id][4].') for image "'.$img_item.'" are ';
 						$result3 .= 'not set ';
 						$result3 .= 'in: "<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
+						$result_array_3[$item_val[0]*1000+$i]=$result3;
 					}else{
-						$result2 .= 'Dimensions ('.$help_img[$img_item][$item_id][3].':'.$help_img[$img_item][$item_id][4].') for image "'.$img_item.'" are ';
+						$result2 = 'Dimensions ('.$help_img[$img_item][$item_id][3].':'.$help_img[$img_item][$item_id][4].') for image "'.$img_item.'" are ';
 						$result2 .= 'set to ('.$help_img[$img_item][$item_id][1].':'.$help_img[$img_item][$item_id][2].') ';
 						$result2 .= 'in: "<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
+						$result_array_2[$item_val[0]*1000+$i]=$result2;
 					}
 				}
 			}
@@ -126,9 +132,11 @@ require '../include/staff_auth.inc';
 	echo $result1;
 	if ($result1=='') echo 'Missing images - not detected.<br />';
 	echo '<hr>';
-	echo $result2;
-	echo $result3;
-	if ($result3=='' && $result2=='') echo 'dimensions inconsitencies - not detected.<br />';
+	ksort($result_array_2);
+	foreach ($result_array_2 as $result2) echo $result2;
+	ksort($result_array_3);
+	foreach ($result_array_3 as $result3) echo $result3;
+	if (count($result_array_3)==0 && count($result_array_2)==0) echo 'dimensions inconsitencies - not detected.<br />';
 	
 	
 	echo '<hr><h2>Help pages ids:</h2>';
