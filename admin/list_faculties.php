@@ -30,7 +30,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['faculties'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['faculties'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -38,20 +38,24 @@
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script src="../js/list.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/list.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
 <body>
 <?php
   require '../include/faculty_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
 
 <table class="header">
 <tr>
 <th colspan="2"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['faculties']; ?></th>
-<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" /></a></th>
+<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
 <tr>
 <th class="col10"><?php echo $string['name']; ?></th><th class="vert_div"><?php echo $string['schoolno']; ?></th><th style="width:50%" class="vert_div"></th></tr>

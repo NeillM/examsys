@@ -80,7 +80,7 @@ HTML;
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['textboxmarking']; ?></title>
+  <title>Rog&#333;: <?php echo $string['textboxmarking']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -102,6 +102,7 @@ HTML;
   <script type="text/javascript" src="../js/jquery.textbox.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript">
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
 		
@@ -118,6 +119,10 @@ HTML;
 
 <body>
 <?php
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu();
+
   $candidate_no = 0;
   if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
@@ -160,9 +165,9 @@ HTML;
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div style="margin-left:10px; font-size:220%">' . $phase_description . '</div></th>';
-  echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
+  echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
-  echo "  /> " . $string['hidemarked'] . "</th></tr>\n";
+  echo "  /> " . $string['hidemarked'] . "&nbsp;</th></tr>\n";
   echo "</table>\n";
 
 if ($phase == 2) {

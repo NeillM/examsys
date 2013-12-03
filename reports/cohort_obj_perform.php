@@ -41,7 +41,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['learningobjectiveanalysis'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['learningobjectiveanalysis'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -51,8 +51,17 @@ $enddate = check_var('enddate', 'GET', true, false, true);
     h1 {margin-left:15px; font-size:18pt}
     p {margin-left:15px; margin-right:15px}
   </style>
+	
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 <body>
+<?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu(30);
+?>
 <table class="header" style="font-size:90%">
 <?php
   // Get some paper properties
@@ -87,7 +96,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     echo ' (' . module_utils::get_moduleid_from_id($_GET['repmodule'], $mysqli) . ' ' . $string['studentsonly'] . ')';
   }
-  echo "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>\n";
+  echo "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
   if ($student_no == 0) {
     echo "</table>\n<table style=\"margin:0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['msg1'] . "</td></tr></table>\n<div>\n</body>\n</html>";
@@ -146,7 +155,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
     <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/ok_comment.png" width="16" height="16" alt="<?php echo $string['completely']; ?>" /></td><td><?php echo $string['key1']; ?></td></tr>
     <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/minor_comment.png" width="16" height="16" alt="<?php echo $string['partically']; ?>" /></td><td><?php echo $string['key2']; ?></td></tr>
     <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/major_comment.png" width="16" height="16" alt="<?php echo $string['mostly']; ?>" /></td><td><?php echo $string['key3']; ?></td></tr>
-    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/small_link.png" width="12" height="12" alt="<?php echo $string['shortcut']; ?>" /></td><td><?php echo $string['key4']; ?></td></tr>
+    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/small_link.png" width="11" height="11" alt="<?php echo $string['shortcut']; ?>" /></td><td><?php echo $string['key4']; ?></td></tr>
     </table></div>
     <h1><?php echo $string['learningobjectives']; ?></h1>
     <p><?php printf($string['msg'], count($objectives)); ?></p>
@@ -167,7 +176,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
         $tmp_identifier = '';
       }
       if (isset($obj_data['session']['specificguide'])) {
-        $session_string = "&nbsp;&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" /></a>&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\">" . $obj_data['session']['sessiontitle'] . "</a>";
+        $session_string = "&nbsp;&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" /></a>&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\">" . $obj_data['session']['sessiontitle'] . "</a>";
       }
       echo "<tr><td><img src=\"$img_src\" alt=\"" . $obj_data['mark_sum'] . ' out of ' . $obj_data['totalpos_sum'] . " objectives acquired\" width=\"16\" height=\"16\" /></td><td>" . floor(($obj_data['mark_sum']/$obj_data['totalpos_sum'])*100) . "%</td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
     }

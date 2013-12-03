@@ -32,7 +32,7 @@ require '../include/sysadmin_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>Test Suite</title>
+	<title>Rog&#333;: Test Suite</title>
 
 	<style>
 		.content {font-size:90%}
@@ -44,11 +44,20 @@ require '../include/sysadmin_auth.inc';
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
 	<link rel="stylesheet" type="text/css" href="../css/header.css" />
 	<link rel="stylesheet" type="text/css" href="../css/screen.css" />
+	
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 <body>
+<?php
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu();
+?>
 <div id="content" class="content">
 	<table class="header">
-		<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px">Test Suite</div></th><th style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" style="padding-right:6px" alt="<?php echo $string['help']; ?>" /></a></th></tr>
+		<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px">Test Suite</div></th><th style="text-align:right; vertical-align:top; padding-right:6px"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
 	</table>
 	<br />
 	<ol>

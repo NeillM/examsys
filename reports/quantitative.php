@@ -417,12 +417,18 @@
     .q_no {text-align:right; width:40px}
   </style>
 
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
 <body>
 <?php
-  $result = $mysqli->prepare("SELECT COUNT(question) AS question_no, paper_title FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND papers.question=questions.q_id AND q_type!='info' AND paper=? GROUP BY property_id");
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu(33);
+
+  $result = $mysqli->prepare("SELECT COUNT(question) AS question_no, paper_title FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND papers.question=questions.q_id AND q_type != 'info' AND paper = ? GROUP BY property_id");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($number_of_questions, $paper);
@@ -431,7 +437,7 @@
 
   $exclude = '';
   if ($_GET['complete'] == 1) {
-    $result = $mysqli->prepare("SELECT userID, COUNT(id) AS answer_no FROM log3 WHERE q_paper=? AND started>=? AND started<=? GROUP BY userID");
+    $result = $mysqli->prepare("SELECT userID, COUNT(id) AS answer_no FROM log3 WHERE q_paper = ? AND started >= ? AND started <= ? GROUP BY userID");
     $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
     $result->execute();
     $result->bind_result($tmp_userID, $answer_no);
@@ -461,7 +467,7 @@
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
+    $result = $mysqli->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
     $result->bind_param('i', $folder);
     $result->execute();
     $result->bind_result($folder_name);
@@ -473,7 +479,7 @@
   if ($folder != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   if ($module != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
-  echo "<span style=\"margin-left:10px; font-size:220%; color:black; font-weight:bold\">" . $string['quantitativereport'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(33); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:220%; color:black; font-weight:bold\">" . $string['quantitativereport'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
   echo "\n</table>\n";
 
   echo '<table cellpadding="2" cellspacing="0" border="0" width="100%">';

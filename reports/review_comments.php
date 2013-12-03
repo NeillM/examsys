@@ -506,7 +506,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo ucfirst($type); ?> Comments Report</title>
+  <title>Rog&#333;: <?php echo ucfirst($type); ?> Comments Report</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -553,8 +553,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
-	
-		<!-- HTML5 part start -->
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+	<!-- HTML5 part start -->
 	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
 	<script type="text/javascript" src="../js/html5.images.js"></script>
 	<script type="text/javascript" src="../js/qsharedf.js"></script>
@@ -592,6 +592,10 @@ if (isset($_GET['scrOfY'])) {
 <form name="theform">
 <table class="header">
 <?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu(30);
+	
   $comments_array = array();
   
   // Get some paper properties
@@ -658,7 +662,7 @@ if (isset($_GET['scrOfY'])) {
       }
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
-      echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string[$type . 'report'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
+      echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string[$type . 'report'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
       echo "</table>\n";
       if (count($reviewer_data) == 0) {
         echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:46px; height:32px; padding-left:6px; text-align:right\"><img src=\"../artwork/warning_user_icon.gif\" style=\"padding-top:1px\" width=\"32\" height=\"30\" alt=\"!\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\">" . $string['noreviewers'] . "</td></tr></table>\n</body>\n</html>\n";

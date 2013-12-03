@@ -144,7 +144,7 @@ if ($folder != '') {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -164,6 +164,7 @@ if ($folder != '') {
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     function addQuestion(qType) {
       top.location.href='../question/edit/?type=' + qType + 'folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>';
@@ -207,6 +208,9 @@ if ($folder != '') {
 <body onclick="hideMenus()">
 <?php
   require '../include/folder_options.inc';
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
@@ -218,7 +222,7 @@ if (count($parent_list) > 0) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
   }
 }
-echo "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>\n";
+echo "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
 echo '<tr><th><div style="margin-left:10px; font-size:200%; font-weight:bold">';
 if ($folder != '') {
@@ -262,9 +266,9 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
   echo '<div style="float:right; width:165px; margin-right:10px; border:1px solid #C0C0C0">';
   if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
-    echo '<div style="float:left; width:95%; padding:4px; background-color:#F1F5FB"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" border="0" /></a></div></div>';
+    echo '<div style="float:left; width:95%; padding:4px; background-color:#EBF3FF"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" border="0" /></a></div></div>';
   } else {
-    echo '<div style="padding:4px; background-color:#F1F5FB">' . $string['teammembers'] . '</div>';
+    echo '<div style="padding:4px; background-color:#EBF3FF">' . $string['teammembers'] . '</div>';
   }
   echo "<br clear=\"all\" />$tmp_html</div>\n";
   $member_details->close();

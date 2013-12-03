@@ -48,7 +48,7 @@ if (isset($_GET['folder'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō: <?php echo $string['recyclebin'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['recyclebin'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -58,11 +58,12 @@ if (isset($_GET['folder'])) {
     .icon {width:20px; text-align:right; padding-right:8px}
     .f {float:left; width:375px; height:74px; padding-left:12px}
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
-    .qline:hover {background-color:#eee}
+    .qline:hover {background-color:#FFE7A2}
     .qline.highlight {background-color:#B3C8E8}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript">
     function addQID(qID, clearall) {
       if (clearall) {
@@ -116,12 +117,15 @@ if (isset($_GET['folder'])) {
 <body onselectstart="return false">
 <?php
   require '../include/recycle_options_menu.inc';
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
 <table class="header">
 <?php
-echo '<tr onclick="qOff();"><th colspan="4"><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a></div><div style="font-size:200%; margin-left:10px; font-weight:bold">' . $string['recyclebin'] . '</div>';
+echo '<tr onclick="qOff();"><th colspan="3"><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a></div><div style="font-size:200%; margin-left:10px; font-weight:bold">' . $string['recyclebin'] . '</div>';
 
 $recycle_bin = RecycleBin::get_recyclebin_contents($userObject, $mysqli);
 
@@ -137,7 +141,7 @@ if (count($recycle_bin) > 0) {
   $recycle_bin = array_csort($recycle_bin, $sortby, $ordering);
 }
 
-echo "</td></tr>\n";
+echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 if ($sortby == 'name') {
   if ($ordering == 'asc') {
     echo "<tr><th colspan=\"2\" class=\"col10\"><a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=name&ordering=desc\">" . $string['name'] . "</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=deleted&ordering=asc\">" . $string['datedeleted'] . "</a></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=subtype&ordering=asc\">" . $string['type'] . "</a></th></tr>\n";

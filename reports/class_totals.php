@@ -87,6 +87,7 @@ if ($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyO
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script language="JavaScript">
 	$(document).ready(function() {
 		// fire off the request to mark_all_enhancedcalc.php
@@ -116,6 +117,10 @@ if ($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyO
 </head>
 <body>
 <?php
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu(30);
+
   echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
   echo "<tr><th class=\"h\">";
 
@@ -128,7 +133,7 @@ if ($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyO
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - Marking Calculation Questions</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - Marking Calculation Questions</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
   echo '</table>';
 ?>
@@ -159,6 +164,7 @@ ob_start();
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../js/staff_help.js"></script>
 <script type="text/javascript" src="../js/popup_menu.js"></script>
+<script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script language="JavaScript">
   function setVars(tmpMetadataID, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
     $('#metadataID').val(tmpMetadataID);
@@ -310,6 +316,10 @@ ob_start();
 </div>
 
 <?php
+require '../include/toprightmenu.inc';
+
+echo draw_toprightmenu(30);
+
 $popup_width = 180;
 if ($language != 'en') {
   $popup_width = 300;
@@ -462,7 +472,7 @@ if ($language != 'en') {
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
   if (isset($_GET['folder'])) {
     $tmp_folder = '&folder=' . $_GET['folder'];

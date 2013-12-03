@@ -90,8 +90,8 @@ if (isset($_GET['checked'])) {
     .d {padding-left:6px; padding-right:2px; padding-top:4px; padding-bottom:2px; vertical-align:top}
     .o {color:#A5A5A5}
     .q {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
-    .q:hover {background-color:#eee}
-    .q.highlight {background-color:#B3C8E8}
+    .q:hover {background-color:#FFE7A2}
+    .q.highlight {background-color:#FFBD69}
     .nobr {white-space:nowrap}
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
@@ -99,6 +99,7 @@ if (isset($_GET['checked'])) {
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     function myQuestions(thisObj) {
       var content = $(thisObj).is(':checked');
@@ -116,6 +117,9 @@ if (isset($_GET['checked'])) {
 <body onclick="hideMenus(event)" onselectstart="return false">
 <?php
   require '../include/question_list_options.inc';
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu();
 ?>
 
 <div id="content" class="content" onclick="hideMenus(event)">
@@ -215,9 +219,9 @@ if (isset($_GET['checked'])) {
 	$questions = array_csort($questions, $tmp_sortby, $ordering);
 
   echo "<tr onclick=\"qOff();\"><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionbank'] . "&nbsp;(" . number_format(count($questions)) . ")</strong>$bank_type</div></th>";
-  echo "<th colspan=\"2\" style=\"text-align:right\" nowrap><input class=\"chk\" type=\"checkbox\" onclick=\"myQuestions(this);\" name=\"myquestions\" id=\"myquestions\" value=\"on\"";
+  echo "<th colspan=\"2\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"><br /><nobr><input class=\"chk\" type=\"checkbox\" onclick=\"myQuestions(this);\" name=\"myquestions\" id=\"myquestions\" value=\"on\"";
   if ($state_checked == 'true') echo ' checked="checked"';
-  echo " />&nbsp;<nobr>" . $string['myquestionsonly'] . "</nobr>&nbsp;</th></tr>\n";
+  echo " />&nbsp;" . $string['myquestionsonly'] . "</nobr>&nbsp;</th></tr>\n";
 
 	$params = '';
 	if (isset($_GET['type'])) $params .= '&type=' . $_GET['type'];

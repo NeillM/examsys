@@ -353,6 +353,7 @@ $result->close();
   <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script defer="defer" type="text/javascript">
   var paperID='<?php echo $_GET['paperID'] ?>';
 
@@ -736,6 +737,9 @@ $result->close();
   }
 
   require '../include/paper_options.inc';
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu();
 ?>
 <div id="content" class="content" style="font-size:80%">
 
@@ -767,7 +771,7 @@ $result->close();
     echo ' class="retired"';
   }
   echo '>' . $properties->get_paper_title() . '</div>';
-  echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a></th></tr>\n";
+  echo "</th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
   if ($properties->get_retired() == '') {
     echo "<tr>\n";
   } else {

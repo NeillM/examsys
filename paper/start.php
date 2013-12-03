@@ -410,7 +410,7 @@ if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($p
 /*
 * Save any posted answers
 *
-* N.B if Ajax saving is enabled: After a successful Ajax save the form is posted as the user moves to the next screen
+* Note: if Ajax saving is enabled: After a successful Ajax save the form is posted as the user moves to the next screen
 *                                with dont_record set to true so this is not executed
 */
 if ($is_question_preview_mode == false) {
@@ -422,8 +422,8 @@ if ($is_question_preview_mode == false) {
 /*
 * Load up any previously submitted user answers from the appropriate log table(s)
 *
-* N.B If the user has gone passed the end of the exam (possible in some cases if security is relaxed)
-*     records could exist in 2 logs the original paper type log and log_late
+* Note: If the user has gone passed the end of the exam (possible in some cases if security is relaxed)
+*       records could exist in 2 logs the original paper type log and log_late
 *
 */
 $user_answers = array();
@@ -787,8 +787,9 @@ if ($css != '') {
     var formData = $('#qForm').serialize();
 
     <?php //only auto save if the data has changed ?>
-    if(last_saved_user_awnsers !== formData) {
+    if (last_saved_user_awnsers !== formData) {
       $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
+      //$('#savemsg').html("<img src=\"../artwork/floppy_disk.gif\" width=\"34\" height=\"34\" />")
       ajaxSave();
     } else {
       <?php //rereister the autosave timer ?>

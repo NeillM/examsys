@@ -1,7 +1,16 @@
-<div id="toprightmenu">
+<?php
+function draw_toprightmenu($helpID = 1) {
+  $configObject = Config::get_instance();
 
-<div>Help &amp; Support</div>
-<div><a href="/logout.php">Log out</a></div>
-<div id="aboutrogo">About Rogo 5.1</div>
+  $html = '';
+  $html .= '<div id="toprightmenu">';
 
-</div>
+  $html .= "<div class=\"trm_div\" onclick=\"launchHelp($helpID)\">Help &amp; Support</div>";
+  $html .= '<div class="trm_div" id="logout">Log out</div>';
+  $html .= '<div class="trm_div" id="aboutrogo">About Rogo ' . $configObject->get('rogo_version') . '</div>';
+
+  $html .= '</div>';
+	
+  return $html;
+}
+?>

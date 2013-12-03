@@ -52,7 +52,7 @@ $result->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['frequencyanalysis']; ?></title>
+  <title>Rog&#333;: <?php echo $string['frequencyanalysis']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -64,6 +64,9 @@ $result->close();
     .overall {border:1px solid #7F9DB9; width:20%; height:35px; text-align:center}
     ul {margin-top:0px; margin-bottom:0px}
   </style>
+	
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     function reviewOSCE(userid) {
       var winwidth = 750;
@@ -75,6 +78,10 @@ $result->close();
 
   <body>
 <?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
+	
   echo "<table class=\"header\">\n";
   echo "<tr><th>";
   if(isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
@@ -91,7 +98,7 @@ $result->close();
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
   echo '</table>';
 

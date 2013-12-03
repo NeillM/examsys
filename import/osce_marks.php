@@ -272,7 +272,7 @@ if (isset($_POST['submit'])) {
 
 <table class="dialog_border" style="width:600px">
 <tr>
-<td class="dialog_header" style="width:52px"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td>
+<td class="dialog_header" style="width:52px"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td>
 <td class="dialog_header" style="width:90%"><?php echo $string['importoscemarks']; ?></td>
 </tr>
 <tr>

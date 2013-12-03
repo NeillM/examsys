@@ -130,6 +130,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">    
     function setVars(metadataID, currentUserID) {
       $('#metadataID').val(metadataID);
@@ -160,7 +161,11 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   </head>
 
   <body>
-
+<?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
+?>
 <div id="menudiv" class="popupmenu" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
 <table width="180" cellspacing="2" cellpadding="0" border="0" style="font-size:90%; background-color:white">
   <tr><td>
@@ -218,7 +223,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
   if (isset($_GET['folder'])) {
     $tmp_folder = '&folder=' . $_GET['folder'];

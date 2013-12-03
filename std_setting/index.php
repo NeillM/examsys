@@ -77,7 +77,7 @@ function displayReview($review, $userObj) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['listsettings'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['listsettings'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -86,6 +86,7 @@ function displayReview($review, $userObj) {
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     var groupReview;
 
@@ -95,7 +96,6 @@ function displayReview($review, $userObj) {
       tmp_ID = $('#oldReviewID').val();
       if (tmp_ID != '') {
         $('#review' + tmp_ID).css('background-color', 'white');
-        $('#review' + tmp_ID).css('color', 'black');
       }
       $('#menu2a').hide();
       $('#menu2b').hide();
@@ -106,8 +106,7 @@ function displayReview($review, $userObj) {
       $('#setterID').val(setterID);
       $('#method').val(methodType);
 
-      $('#review' + reviewID).css('background-color', '#316AC5');
-      $('#review' + reviewID).css('color', 'white');
+      $('#review' + reviewID).css('background-color', '#FFBD69');
       $('#oldReviewID').val(reviewID);
       evt.cancelBubble = true;
     }
@@ -119,7 +118,6 @@ function displayReview($review, $userObj) {
       tmp_ID = $('#oldReviewID').val();
       if (tmp_ID != '') {
         $('#review' + tmp_ID).css('background-color', 'white');
-        $('#review' + tmp_ID).css('color', 'black');
       }
     }
 
@@ -133,6 +131,7 @@ function displayReview($review, $userObj) {
 <body onclick="reviewOff()">
 
 <?php
+	
 $reviews_html = '';
 $total_marks = 0;
 
@@ -143,7 +142,7 @@ $reviews_html .= '<table class="header"><tr><th><div class="breadcrumb"><a href=
 if (isset($_GET['module']) and $_GET['module'] != '') {
   $reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
-$reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">' . $string['standardssetting'] . '</div></th><th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th></tr></table>';
+$reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">' . $string['standardssetting'] . '</div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr></table>';
 
 $reviews_html .= <<< TABLEHEADER
 <table class="header">
@@ -170,6 +169,9 @@ foreach ($reviews as $review) {
   }
 }
 require '../include/std_set_menu.inc';
+require '../include/toprightmenu.inc';
+
+echo draw_toprightmenu(97);
 ?>
 <div id="content" class="content" style="font-size:80%">
 <?php

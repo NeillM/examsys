@@ -45,6 +45,7 @@ require_once '../classes/moduleutils.class.php';
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="javascript">
     function getLastID(IDs) {
       var id_list = IDs.split(",");
@@ -104,6 +105,10 @@ require_once '../classes/moduleutils.class.php';
 
 <body>
 <?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu(237);
+
   $keyword_list = array();
   
   if (isset($_GET['module']) and $_GET['module'] != '') {
@@ -148,7 +153,7 @@ require_once '../classes/moduleutils.class.php';
     echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"margin-left:10px; font-size:200%\">" . $string['mypersonalkeywords'] . "</th>\n";
   }
 ?>
-<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(237); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['mypersonalkeywords']; ?>" border="0" /></a></th>
+<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
 <?php
 foreach ($keyword_list as $keywordID => $keyword) {

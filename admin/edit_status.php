@@ -84,7 +84,7 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $title . " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: <?php echo $title . " " . $configObject->get('cfg_install_type') ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -117,6 +117,8 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     $(function () {
       $('#theform').validate({
@@ -136,12 +138,15 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
 <body>
 <?php
   require '../include/status_options.inc.php';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
 ?>
   <div id="content" class="content">
     <table class="header">
     <tr>
       <th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_statuses.php"><?php echo $string['statuses'] ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $title ?></th>
-      <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th>
+      <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
     </tr>
     </table>
 

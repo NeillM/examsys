@@ -43,6 +43,7 @@
 <script src="../js/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
 <script language="JavaScript" src="../js/sidebar.js"></script>
+<script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script language="JavaScript">
   $(document).ready(function() {
     $("#clear_training_module").click(function() {
@@ -63,6 +64,9 @@
 
 <?php
   require '../include/admin_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
 
   // How many guest accounts are reserved
   $results = $mysqli->query("SELECT id FROM temp_users");
@@ -91,7 +95,7 @@
 <table class="header">
 <tr>
 	<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['administrativetools']; ?></div></th>
-	<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" alt="<?php echo $string['help']; ?>" /></a></th>
+	<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
 </table>
 
